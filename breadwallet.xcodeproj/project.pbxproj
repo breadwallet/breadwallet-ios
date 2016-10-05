@@ -1,0 +1,1199 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7931DA5934300A983D8 /* AppDelegate.swift */; };
+		75A2A7961DA5934300A983D8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7951DA5934300A983D8 /* ViewController.swift */; };
+		75A2A7991DA5934300A983D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7971DA5934300A983D8 /* Main.storyboard */; };
+		75A2A79B1DA5934300A983D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A79A1DA5934300A983D8 /* Assets.xcassets */; };
+		75A2A79E1DA5934300A983D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */; };
+		75A2A7A91DA5934300A983D8 /* breadwalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7A81DA5934300A983D8 /* breadwalletTests.swift */; };
+		75A2A7B41DA5934300A983D8 /* breadwalletUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7B31DA5934300A983D8 /* breadwalletUITests.swift */; };
+		75A2A7B91DA5934300A983D8 /* breadwallet WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 75A2A7B81DA5934300A983D8 /* breadwallet WatchKit App.app */; };
+		75A2A7BF1DA5934300A983D8 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7BD1DA5934300A983D8 /* Interface.storyboard */; };
+		75A2A7C11DA5934300A983D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7C01DA5934300A983D8 /* Assets.xcassets */; };
+		75A2A7C81DA5934300A983D8 /* breadwallet WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 75A2A7C71DA5934300A983D8 /* breadwallet WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		75A2A7CF1DA5934300A983D8 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7CE1DA5934300A983D8 /* InterfaceController.swift */; };
+		75A2A7D11DA5934300A983D8 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7D01DA5934300A983D8 /* ExtensionDelegate.swift */; };
+		75A2A7D31DA5934300A983D8 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7D21DA5934300A983D8 /* NotificationController.swift */; };
+		75A2A7D51DA5934300A983D8 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7D41DA5934300A983D8 /* ComplicationController.swift */; };
+		75A2A7D71DA5934400A983D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7D61DA5934300A983D8 /* Assets.xcassets */; };
+		75A2A7F31DA5935F00A983D8 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75A2A7F21DA5935F00A983D8 /* Messages.framework */; };
+		75A2A7F61DA5935F00A983D8 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7F51DA5935F00A983D8 /* MessagesViewController.swift */; };
+		75A2A7F91DA5935F00A983D8 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7F71DA5935F00A983D8 /* MainInterface.storyboard */; };
+		75A2A7FB1DA5935F00A983D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7FA1DA5935F00A983D8 /* Assets.xcassets */; };
+		75A2A7FF1DA5935F00A983D8 /* MessagesExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 75A2A7F01DA5935F00A983D8 /* MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		75A2A80A1DA5936F00A983D8 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75A2A8091DA5936F00A983D8 /* NotificationCenter.framework */; };
+		75A2A80D1DA5936F00A983D8 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A80C1DA5936F00A983D8 /* TodayViewController.swift */; };
+		75A2A8101DA5936F00A983D8 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A80E1DA5936F00A983D8 /* MainInterface.storyboard */; };
+		75A2A8141DA5936F00A983D8 /* TodayExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 75A2A8081DA5936F00A983D8 /* TodayExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		75A2A81F1DA5938500A983D8 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A81E1DA5938500A983D8 /* NotificationService.swift */; };
+		75A2A8231DA5938500A983D8 /* NotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 75A2A81C1DA5938500A983D8 /* NotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		75A2A7A51DA5934300A983D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 75A2A78F1DA5934300A983D8;
+			remoteInfo = breadwallet;
+		};
+		75A2A7B01DA5934300A983D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 75A2A78F1DA5934300A983D8;
+			remoteInfo = breadwallet;
+		};
+		75A2A7BA1DA5934300A983D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 75A2A7B71DA5934300A983D8;
+			remoteInfo = "breadwallet WatchKit App";
+		};
+		75A2A7C91DA5934300A983D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 75A2A7C61DA5934300A983D8;
+			remoteInfo = "breadwallet WatchKit Extension";
+		};
+		75A2A7FD1DA5935F00A983D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 75A2A7EF1DA5935F00A983D8;
+			remoteInfo = MessagesExtension;
+		};
+		75A2A8121DA5936F00A983D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 75A2A8071DA5936F00A983D8;
+			remoteInfo = TodayExtension;
+		};
+		75A2A8211DA5938500A983D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 75A2A81B1DA5938500A983D8;
+			remoteInfo = NotificationServiceExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		75A2A7DE1DA5934400A983D8 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				75A2A7C81DA5934300A983D8 /* breadwallet WatchKit Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7E21DA5934400A983D8 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				75A2A7B91DA5934300A983D8 /* breadwallet WatchKit App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A8031DA5935F00A983D8 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				75A2A8141DA5936F00A983D8 /* TodayExtension.appex in Embed App Extensions */,
+				75A2A8231DA5938500A983D8 /* NotificationServiceExtension.appex in Embed App Extensions */,
+				75A2A7FF1DA5935F00A983D8 /* MessagesExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		75A2A7901DA5934300A983D8 /* breadwallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = breadwallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		75A2A7931DA5934300A983D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		75A2A7951DA5934300A983D8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		75A2A7981DA5934300A983D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		75A2A79A1DA5934300A983D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		75A2A79D1DA5934300A983D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		75A2A79F1DA5934300A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75A2A7A41DA5934300A983D8 /* breadwalletTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = breadwalletTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		75A2A7A81DA5934300A983D8 /* breadwalletTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = breadwalletTests.swift; sourceTree = "<group>"; };
+		75A2A7AA1DA5934300A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75A2A7AF1DA5934300A983D8 /* breadwalletUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = breadwalletUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		75A2A7B31DA5934300A983D8 /* breadwalletUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = breadwalletUITests.swift; sourceTree = "<group>"; };
+		75A2A7B51DA5934300A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75A2A7B81DA5934300A983D8 /* breadwallet WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "breadwallet WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		75A2A7BE1DA5934300A983D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		75A2A7C01DA5934300A983D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		75A2A7C21DA5934300A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75A2A7C71DA5934300A983D8 /* breadwallet WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "breadwallet WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		75A2A7CD1DA5934300A983D8 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		75A2A7CE1DA5934300A983D8 /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
+		75A2A7D01DA5934300A983D8 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
+		75A2A7D21DA5934300A983D8 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		75A2A7D41DA5934300A983D8 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
+		75A2A7D61DA5934300A983D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		75A2A7D81DA5934400A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75A2A7F01DA5935F00A983D8 /* MessagesExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MessagesExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		75A2A7F21DA5935F00A983D8 /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
+		75A2A7F51DA5935F00A983D8 /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
+		75A2A7F81DA5935F00A983D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		75A2A7FA1DA5935F00A983D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		75A2A7FC1DA5935F00A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75A2A8081DA5936F00A983D8 /* TodayExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TodayExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		75A2A8091DA5936F00A983D8 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		75A2A80C1DA5936F00A983D8 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
+		75A2A80F1DA5936F00A983D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		75A2A8111DA5936F00A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75A2A81C1DA5938500A983D8 /* NotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		75A2A81E1DA5938500A983D8 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		75A2A8201DA5938500A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		75A2A78D1DA5934300A983D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7A11DA5934300A983D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7AC1DA5934300A983D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7C41DA5934300A983D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7ED1DA5935F00A983D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A7F31DA5935F00A983D8 /* Messages.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A8051DA5936F00A983D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A80A1DA5936F00A983D8 /* NotificationCenter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A8191DA5938500A983D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		75A2A7871DA5934300A983D8 = {
+			isa = PBXGroup;
+			children = (
+				75A2A7921DA5934300A983D8 /* breadwallet */,
+				75A2A7A71DA5934300A983D8 /* breadwalletTests */,
+				75A2A7B21DA5934300A983D8 /* breadwalletUITests */,
+				75A2A7BC1DA5934300A983D8 /* breadwallet WatchKit App */,
+				75A2A7CB1DA5934300A983D8 /* breadwallet WatchKit Extension */,
+				75A2A7F41DA5935F00A983D8 /* MessagesExtension */,
+				75A2A80B1DA5936F00A983D8 /* TodayExtension */,
+				75A2A81D1DA5938500A983D8 /* NotificationServiceExtension */,
+				75A2A7F11DA5935F00A983D8 /* Frameworks */,
+				75A2A7911DA5934300A983D8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		75A2A7911DA5934300A983D8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				75A2A7901DA5934300A983D8 /* breadwallet.app */,
+				75A2A7A41DA5934300A983D8 /* breadwalletTests.xctest */,
+				75A2A7AF1DA5934300A983D8 /* breadwalletUITests.xctest */,
+				75A2A7B81DA5934300A983D8 /* breadwallet WatchKit App.app */,
+				75A2A7C71DA5934300A983D8 /* breadwallet WatchKit Extension.appex */,
+				75A2A7F01DA5935F00A983D8 /* MessagesExtension.appex */,
+				75A2A8081DA5936F00A983D8 /* TodayExtension.appex */,
+				75A2A81C1DA5938500A983D8 /* NotificationServiceExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		75A2A7921DA5934300A983D8 /* breadwallet */ = {
+			isa = PBXGroup;
+			children = (
+				75A2A7931DA5934300A983D8 /* AppDelegate.swift */,
+				75A2A7951DA5934300A983D8 /* ViewController.swift */,
+				75A2A7971DA5934300A983D8 /* Main.storyboard */,
+				75A2A79A1DA5934300A983D8 /* Assets.xcassets */,
+				75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */,
+				75A2A79F1DA5934300A983D8 /* Info.plist */,
+			);
+			path = breadwallet;
+			sourceTree = "<group>";
+		};
+		75A2A7A71DA5934300A983D8 /* breadwalletTests */ = {
+			isa = PBXGroup;
+			children = (
+				75A2A7A81DA5934300A983D8 /* breadwalletTests.swift */,
+				75A2A7AA1DA5934300A983D8 /* Info.plist */,
+			);
+			path = breadwalletTests;
+			sourceTree = "<group>";
+		};
+		75A2A7B21DA5934300A983D8 /* breadwalletUITests */ = {
+			isa = PBXGroup;
+			children = (
+				75A2A7B31DA5934300A983D8 /* breadwalletUITests.swift */,
+				75A2A7B51DA5934300A983D8 /* Info.plist */,
+			);
+			path = breadwalletUITests;
+			sourceTree = "<group>";
+		};
+		75A2A7BC1DA5934300A983D8 /* breadwallet WatchKit App */ = {
+			isa = PBXGroup;
+			children = (
+				75A2A7BD1DA5934300A983D8 /* Interface.storyboard */,
+				75A2A7C01DA5934300A983D8 /* Assets.xcassets */,
+				75A2A7C21DA5934300A983D8 /* Info.plist */,
+			);
+			path = "breadwallet WatchKit App";
+			sourceTree = "<group>";
+		};
+		75A2A7CB1DA5934300A983D8 /* breadwallet WatchKit Extension */ = {
+			isa = PBXGroup;
+			children = (
+				75A2A7CE1DA5934300A983D8 /* InterfaceController.swift */,
+				75A2A7D01DA5934300A983D8 /* ExtensionDelegate.swift */,
+				75A2A7D21DA5934300A983D8 /* NotificationController.swift */,
+				75A2A7D41DA5934300A983D8 /* ComplicationController.swift */,
+				75A2A7D61DA5934300A983D8 /* Assets.xcassets */,
+				75A2A7D81DA5934400A983D8 /* Info.plist */,
+				75A2A7CC1DA5934300A983D8 /* Supporting Files */,
+			);
+			path = "breadwallet WatchKit Extension";
+			sourceTree = "<group>";
+		};
+		75A2A7CC1DA5934300A983D8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				75A2A7CD1DA5934300A983D8 /* PushNotificationPayload.apns */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		75A2A7F11DA5935F00A983D8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				75A2A7F21DA5935F00A983D8 /* Messages.framework */,
+				75A2A8091DA5936F00A983D8 /* NotificationCenter.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		75A2A7F41DA5935F00A983D8 /* MessagesExtension */ = {
+			isa = PBXGroup;
+			children = (
+				75A2A7F51DA5935F00A983D8 /* MessagesViewController.swift */,
+				75A2A7F71DA5935F00A983D8 /* MainInterface.storyboard */,
+				75A2A7FA1DA5935F00A983D8 /* Assets.xcassets */,
+				75A2A7FC1DA5935F00A983D8 /* Info.plist */,
+			);
+			path = MessagesExtension;
+			sourceTree = "<group>";
+		};
+		75A2A80B1DA5936F00A983D8 /* TodayExtension */ = {
+			isa = PBXGroup;
+			children = (
+				75A2A80C1DA5936F00A983D8 /* TodayViewController.swift */,
+				75A2A80E1DA5936F00A983D8 /* MainInterface.storyboard */,
+				75A2A8111DA5936F00A983D8 /* Info.plist */,
+			);
+			path = TodayExtension;
+			sourceTree = "<group>";
+		};
+		75A2A81D1DA5938500A983D8 /* NotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				75A2A81E1DA5938500A983D8 /* NotificationService.swift */,
+				75A2A8201DA5938500A983D8 /* Info.plist */,
+			);
+			path = NotificationServiceExtension;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		75A2A78F1DA5934300A983D8 /* breadwallet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75A2A7E31DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwallet" */;
+			buildPhases = (
+				75A2A78C1DA5934300A983D8 /* Sources */,
+				75A2A78D1DA5934300A983D8 /* Frameworks */,
+				75A2A78E1DA5934300A983D8 /* Resources */,
+				75A2A7E21DA5934400A983D8 /* Embed Watch Content */,
+				75A2A8031DA5935F00A983D8 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				75A2A7BB1DA5934300A983D8 /* PBXTargetDependency */,
+				75A2A7FE1DA5935F00A983D8 /* PBXTargetDependency */,
+				75A2A8131DA5936F00A983D8 /* PBXTargetDependency */,
+				75A2A8221DA5938500A983D8 /* PBXTargetDependency */,
+			);
+			name = breadwallet;
+			productName = breadwallet;
+			productReference = 75A2A7901DA5934300A983D8 /* breadwallet.app */;
+			productType = "com.apple.product-type.application";
+		};
+		75A2A7A31DA5934300A983D8 /* breadwalletTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75A2A7E61DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwalletTests" */;
+			buildPhases = (
+				75A2A7A01DA5934300A983D8 /* Sources */,
+				75A2A7A11DA5934300A983D8 /* Frameworks */,
+				75A2A7A21DA5934300A983D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				75A2A7A61DA5934300A983D8 /* PBXTargetDependency */,
+			);
+			name = breadwalletTests;
+			productName = breadwalletTests;
+			productReference = 75A2A7A41DA5934300A983D8 /* breadwalletTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		75A2A7AE1DA5934300A983D8 /* breadwalletUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75A2A7E91DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwalletUITests" */;
+			buildPhases = (
+				75A2A7AB1DA5934300A983D8 /* Sources */,
+				75A2A7AC1DA5934300A983D8 /* Frameworks */,
+				75A2A7AD1DA5934300A983D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				75A2A7B11DA5934300A983D8 /* PBXTargetDependency */,
+			);
+			name = breadwalletUITests;
+			productName = breadwalletUITests;
+			productReference = 75A2A7AF1DA5934300A983D8 /* breadwalletUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		75A2A7B71DA5934300A983D8 /* breadwallet WatchKit App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75A2A7DF1DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwallet WatchKit App" */;
+			buildPhases = (
+				75A2A7B61DA5934300A983D8 /* Resources */,
+				75A2A7DE1DA5934400A983D8 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				75A2A7CA1DA5934300A983D8 /* PBXTargetDependency */,
+			);
+			name = "breadwallet WatchKit App";
+			productName = "breadwallet WatchKit App";
+			productReference = 75A2A7B81DA5934300A983D8 /* breadwallet WatchKit App.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		75A2A7C61DA5934300A983D8 /* breadwallet WatchKit Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75A2A7DB1DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwallet WatchKit Extension" */;
+			buildPhases = (
+				75A2A7C31DA5934300A983D8 /* Sources */,
+				75A2A7C41DA5934300A983D8 /* Frameworks */,
+				75A2A7C51DA5934300A983D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "breadwallet WatchKit Extension";
+			productName = "breadwallet WatchKit Extension";
+			productReference = 75A2A7C71DA5934300A983D8 /* breadwallet WatchKit Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
+		75A2A7EF1DA5935F00A983D8 /* MessagesExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75A2A8001DA5935F00A983D8 /* Build configuration list for PBXNativeTarget "MessagesExtension" */;
+			buildPhases = (
+				75A2A7EC1DA5935F00A983D8 /* Sources */,
+				75A2A7ED1DA5935F00A983D8 /* Frameworks */,
+				75A2A7EE1DA5935F00A983D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MessagesExtension;
+			productName = MessagesExtension;
+			productReference = 75A2A7F01DA5935F00A983D8 /* MessagesExtension.appex */;
+			productType = "com.apple.product-type.app-extension.messages";
+		};
+		75A2A8071DA5936F00A983D8 /* TodayExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75A2A8151DA5936F00A983D8 /* Build configuration list for PBXNativeTarget "TodayExtension" */;
+			buildPhases = (
+				75A2A8041DA5936F00A983D8 /* Sources */,
+				75A2A8051DA5936F00A983D8 /* Frameworks */,
+				75A2A8061DA5936F00A983D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TodayExtension;
+			productName = TodayExtension;
+			productReference = 75A2A8081DA5936F00A983D8 /* TodayExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		75A2A81B1DA5938500A983D8 /* NotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 75A2A8241DA5938500A983D8 /* Build configuration list for PBXNativeTarget "NotificationServiceExtension" */;
+			buildPhases = (
+				75A2A8181DA5938500A983D8 /* Sources */,
+				75A2A8191DA5938500A983D8 /* Frameworks */,
+				75A2A81A1DA5938500A983D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NotificationServiceExtension;
+			productName = NotificationServiceExtension;
+			productReference = 75A2A81C1DA5938500A983D8 /* NotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		75A2A7881DA5934300A983D8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = BR;
+				LastSwiftUpdateCheck = 0800;
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = "breadwallet LLC";
+				TargetAttributes = {
+					75A2A78F1DA5934300A983D8 = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					75A2A7A31DA5934300A983D8 = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 75A2A78F1DA5934300A983D8;
+					};
+					75A2A7AE1DA5934300A983D8 = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 75A2A78F1DA5934300A983D8;
+					};
+					75A2A7B71DA5934300A983D8 = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					75A2A7C61DA5934300A983D8 = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					75A2A7EF1DA5935F00A983D8 = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					75A2A8071DA5936F00A983D8 = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					75A2A81B1DA5938500A983D8 = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 75A2A78B1DA5934300A983D8 /* Build configuration list for PBXProject "breadwallet" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 75A2A7871DA5934300A983D8;
+			productRefGroup = 75A2A7911DA5934300A983D8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				75A2A78F1DA5934300A983D8 /* breadwallet */,
+				75A2A7A31DA5934300A983D8 /* breadwalletTests */,
+				75A2A7AE1DA5934300A983D8 /* breadwalletUITests */,
+				75A2A7B71DA5934300A983D8 /* breadwallet WatchKit App */,
+				75A2A7C61DA5934300A983D8 /* breadwallet WatchKit Extension */,
+				75A2A7EF1DA5935F00A983D8 /* MessagesExtension */,
+				75A2A8071DA5936F00A983D8 /* TodayExtension */,
+				75A2A81B1DA5938500A983D8 /* NotificationServiceExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		75A2A78E1DA5934300A983D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A79E1DA5934300A983D8 /* LaunchScreen.storyboard in Resources */,
+				75A2A79B1DA5934300A983D8 /* Assets.xcassets in Resources */,
+				75A2A7991DA5934300A983D8 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7A21DA5934300A983D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7AD1DA5934300A983D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7B61DA5934300A983D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A7C11DA5934300A983D8 /* Assets.xcassets in Resources */,
+				75A2A7BF1DA5934300A983D8 /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7C51DA5934300A983D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A7D71DA5934400A983D8 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7EE1DA5935F00A983D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A7FB1DA5935F00A983D8 /* Assets.xcassets in Resources */,
+				75A2A7F91DA5935F00A983D8 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A8061DA5936F00A983D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A8101DA5936F00A983D8 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A81A1DA5938500A983D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		75A2A78C1DA5934300A983D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A7961DA5934300A983D8 /* ViewController.swift in Sources */,
+				75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7A01DA5934300A983D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A7A91DA5934300A983D8 /* breadwalletTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7AB1DA5934300A983D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A7B41DA5934300A983D8 /* breadwalletUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7C31DA5934300A983D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A7D31DA5934300A983D8 /* NotificationController.swift in Sources */,
+				75A2A7D51DA5934300A983D8 /* ComplicationController.swift in Sources */,
+				75A2A7D11DA5934300A983D8 /* ExtensionDelegate.swift in Sources */,
+				75A2A7CF1DA5934300A983D8 /* InterfaceController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A7EC1DA5935F00A983D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A7F61DA5935F00A983D8 /* MessagesViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A8041DA5936F00A983D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A80D1DA5936F00A983D8 /* TodayViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75A2A8181DA5938500A983D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75A2A81F1DA5938500A983D8 /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		75A2A7A61DA5934300A983D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 75A2A78F1DA5934300A983D8 /* breadwallet */;
+			targetProxy = 75A2A7A51DA5934300A983D8 /* PBXContainerItemProxy */;
+		};
+		75A2A7B11DA5934300A983D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 75A2A78F1DA5934300A983D8 /* breadwallet */;
+			targetProxy = 75A2A7B01DA5934300A983D8 /* PBXContainerItemProxy */;
+		};
+		75A2A7BB1DA5934300A983D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 75A2A7B71DA5934300A983D8 /* breadwallet WatchKit App */;
+			targetProxy = 75A2A7BA1DA5934300A983D8 /* PBXContainerItemProxy */;
+		};
+		75A2A7CA1DA5934300A983D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 75A2A7C61DA5934300A983D8 /* breadwallet WatchKit Extension */;
+			targetProxy = 75A2A7C91DA5934300A983D8 /* PBXContainerItemProxy */;
+		};
+		75A2A7FE1DA5935F00A983D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 75A2A7EF1DA5935F00A983D8 /* MessagesExtension */;
+			targetProxy = 75A2A7FD1DA5935F00A983D8 /* PBXContainerItemProxy */;
+		};
+		75A2A8131DA5936F00A983D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 75A2A8071DA5936F00A983D8 /* TodayExtension */;
+			targetProxy = 75A2A8121DA5936F00A983D8 /* PBXContainerItemProxy */;
+		};
+		75A2A8221DA5938500A983D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 75A2A81B1DA5938500A983D8 /* NotificationServiceExtension */;
+			targetProxy = 75A2A8211DA5938500A983D8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		75A2A7971DA5934300A983D8 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				75A2A7981DA5934300A983D8 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				75A2A79D1DA5934300A983D8 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		75A2A7BD1DA5934300A983D8 /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				75A2A7BE1DA5934300A983D8 /* Base */,
+			);
+			name = Interface.storyboard;
+			sourceTree = "<group>";
+		};
+		75A2A7F71DA5935F00A983D8 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				75A2A7F81DA5935F00A983D8 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+		75A2A80E1DA5936F00A983D8 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				75A2A80F1DA5936F00A983D8 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		75A2A7D91DA5934400A983D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		75A2A7DA1DA5934400A983D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		75A2A7DC1DA5934400A983D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = "breadwallet WatchKit Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		75A2A7DD1DA5934400A983D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = "breadwallet WatchKit Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Release;
+		};
+		75A2A7E01DA5934400A983D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				IBSC_MODULE = breadwallet_WatchKit_Extension;
+				INFOPLIST_FILE = "breadwallet WatchKit App/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		75A2A7E11DA5934400A983D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				IBSC_MODULE = breadwallet_WatchKit_Extension;
+				INFOPLIST_FILE = "breadwallet WatchKit App/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Release;
+		};
+		75A2A7E41DA5934400A983D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = breadwallet/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		75A2A7E51DA5934400A983D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = breadwallet/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		75A2A7E71DA5934400A983D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = breadwalletTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
+			};
+			name = Debug;
+		};
+		75A2A7E81DA5934400A983D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = breadwalletTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
+			};
+			name = Release;
+		};
+		75A2A7EA1DA5934400A983D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = breadwalletUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = breadwallet;
+			};
+			name = Debug;
+		};
+		75A2A7EB1DA5934400A983D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = breadwalletUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = breadwallet;
+			};
+			name = Release;
+		};
+		75A2A8011DA5935F00A983D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = MessagesExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.MessagesExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		75A2A8021DA5935F00A983D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = MessagesExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.MessagesExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		75A2A8161DA5936F00A983D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = TodayExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.TodayExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		75A2A8171DA5936F00A983D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = TodayExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.TodayExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		75A2A8251DA5938500A983D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = NotificationServiceExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.NotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		75A2A8261DA5938500A983D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				INFOPLIST_FILE = NotificationServiceExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.NotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		75A2A78B1DA5934300A983D8 /* Build configuration list for PBXProject "breadwallet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A2A7D91DA5934400A983D8 /* Debug */,
+				75A2A7DA1DA5934400A983D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		75A2A7DB1DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwallet WatchKit Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A2A7DC1DA5934400A983D8 /* Debug */,
+				75A2A7DD1DA5934400A983D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		75A2A7DF1DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwallet WatchKit App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A2A7E01DA5934400A983D8 /* Debug */,
+				75A2A7E11DA5934400A983D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		75A2A7E31DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwallet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A2A7E41DA5934400A983D8 /* Debug */,
+				75A2A7E51DA5934400A983D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		75A2A7E61DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwalletTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A2A7E71DA5934400A983D8 /* Debug */,
+				75A2A7E81DA5934400A983D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		75A2A7E91DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwalletUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A2A7EA1DA5934400A983D8 /* Debug */,
+				75A2A7EB1DA5934400A983D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		75A2A8001DA5935F00A983D8 /* Build configuration list for PBXNativeTarget "MessagesExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A2A8011DA5935F00A983D8 /* Debug */,
+				75A2A8021DA5935F00A983D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		75A2A8151DA5936F00A983D8 /* Build configuration list for PBXNativeTarget "TodayExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A2A8161DA5936F00A983D8 /* Debug */,
+				75A2A8171DA5936F00A983D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		75A2A8241DA5938500A983D8 /* Build configuration list for PBXNativeTarget "NotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75A2A8251DA5938500A983D8 /* Debug */,
+				75A2A8261DA5938500A983D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 75A2A7881DA5934300A983D8 /* Project object */;
+}
