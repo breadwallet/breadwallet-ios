@@ -18,10 +18,54 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>42</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>bitcoin</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>bitcoin</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>org.voisine.bread</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>bread</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>bitid</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>bitid</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>42</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Used to scan barcodes</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Used to determine where you are - never recorded or shared with anyone</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
