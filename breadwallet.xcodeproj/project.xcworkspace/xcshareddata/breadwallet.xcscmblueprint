@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "1B4A383C7E647177607E427759689F64AD5DEAFF",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "89A5E58482D8620A30DE4E9857B72FF8047DA8B2" : 9223372036854775807,
+    "1B4A383C7E647177607E427759689F64AD5DEAFF" : 9223372036854775807,
+    "C43FC9FBDB60287822D5EC0C44D936A08E5BC482" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "99527E75-BA99-41A4-8DEA-1949714CE4E9",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "89A5E58482D8620A30DE4E9857B72FF8047DA8B2" : "breadwallet-ios\/breadwallet-core\/secp256k1\/",
+    "1B4A383C7E647177607E427759689F64AD5DEAFF" : "breadwallet-ios\/",
+    "C43FC9FBDB60287822D5EC0C44D936A08E5BC482" : "breadwallet-ios\/breadwallet-core\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "breadwallet",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "breadwallet.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:breadwallet\/breadwallet-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1B4A383C7E647177607E427759689F64AD5DEAFF"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/bitcoin\/secp256k1.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "89A5E58482D8620A30DE4E9857B72FF8047DA8B2"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/breadwallet\/breadwallet-core.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C43FC9FBDB60287822D5EC0C44D936A08E5BC482"
+    }
+  ]
+}
