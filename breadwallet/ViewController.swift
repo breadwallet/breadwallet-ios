@@ -8,6 +8,7 @@
 
 import UIKit
 import BRCore
+import libunbound
 
 class ViewController: UIViewController {
 
@@ -17,8 +18,18 @@ class ViewController: UIViewController {
         
         var key = BRKey()
         var secret = UInt256(u64: (0, 0, 0, 1))
+        let mpk = BRMasterPubKey()
+        var tx = BRTransactionNew()
+        let wallet = BRWalletNew(&tx, 0, mpk)
         
-        BRKeySetSecret(&key, &secret, 0)        
+        BRKeySetSecret(&key, &secret, 0)
+        
+        BRWalletFree(wallet)
+        BRTransactionFree(tx)
+
+        let ctx = ub_ctx_create()
+        
+        ub_ctx_delete(ctx)
     }
 
     override func didReceiveMemoryWarning() {

@@ -4,3 +4,9 @@
 [submodule "Modules/secp256k1"]
 	path = Modules/secp256k1
 	url = https://github.com/bitcoin-core/secp256k1.git
+[submodule "Modules/unbound"]
+	path = Modules/unbound
+	url = https://github.com/breadwallet/unbound.git
+[submodule "Modules/nettle"]
+	path = Modules/nettle
+	url = https://github.com/breadwallet/nettle.git
