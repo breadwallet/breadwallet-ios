@@ -3015,7 +3015,6 @@
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/breadwallet-core";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
@@ -3061,7 +3060,6 @@
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/breadwallet-core";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
