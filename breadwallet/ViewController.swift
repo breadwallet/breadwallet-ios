@@ -37,8 +37,8 @@ class ViewController: UIViewController {
 
         var addr = BRWalletReceiveAddress(wallet)
         
-        print("wallet created with first receive address:", withUnsafePointer(to: &addr.s) {
-            $0.withMemoryRebound(to: CChar.self, capacity: MemoryLayout<BRAddress>.stride) { String(cString:$0) }
+        print("wallet created with first receive address:", withUnsafePointer(to: &addr.s) { ptr -> String in
+            return String(cString: UnsafeRawPointer(ptr).assumingMemoryBound(to: CChar.self))
         })
         
         let manager = BRPeerManagerNew(wallet, UInt32(BIP39_CREATION_TIME), nil, 0, nil, 0);
@@ -51,7 +51,7 @@ class ViewController: UIViewController {
                 print("sync succeeded")
             },
             { (info, error) in // syncFailed
-                print("sync failed: ", strerror(error))
+                print("sync failed:", String(cString:strerror(error)))
             },
             { (info) in // txStatusUpdate
             },
