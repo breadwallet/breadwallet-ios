@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
 		752438751DAAC50800844BEC /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6761DAA0E400075898E /* alloc.c */; };
 		752438761DAAC52700844BEC /* config_file.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD67A1DAA0E400075898E /* config_file.c */; };
 		752438771DAAC55C00844BEC /* net_help.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6981DAA0E400075898E /* net_help.c */; };
@@ -187,6 +188,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 75C735AE1DAA1C9F00251ECF;
 			remoteInfo = nettle;
+		};
+		759DA0DB1DAC86B5008CC49B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 759DA0D71DAC8668008CC49B;
+			remoteInfo = submodules;
+		};
+		759DA0DD1DAC86BC008CC49B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 759DA0D71DAC8668008CC49B;
+			remoteInfo = submodules;
+		};
+		759DA0DF1DAC86C3008CC49B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 759DA0D71DAC8668008CC49B;
+			remoteInfo = submodules;
 		};
 		75A2A7A51DA5934300A983D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2143,6 +2165,23 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXLegacyTarget section */
+		759DA0D71DAC8668008CC49B /* submodules */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "-c 'git submodule init && git submodule update && git -C Modules/breadwallet-core submodule init && git -C Modules/breadwallet-core submodule update'";
+			buildConfigurationList = 759DA0DA1DAC8668008CC49B /* Build configuration list for PBXLegacyTarget "submodules" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = "";
+			dependencies = (
+			);
+			name = submodules;
+			passBuildSettingsInEnvironment = 1;
+			productName = submodules;
+		};
+/* End PBXLegacyTarget section */
+
 /* Begin PBXNativeTarget section */
 		755CD9C31DAA18420075898E /* unbound */ = {
 			isa = PBXNativeTarget;
@@ -2155,6 +2194,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				759DA0DC1DAC86B5008CC49B /* PBXTargetDependency */,
 			);
 			name = unbound;
 			productName = unbound;
@@ -2172,6 +2212,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				759DA0DE1DAC86BC008CC49B /* PBXTargetDependency */,
 			);
 			name = BRCore;
 			productName = BRCore;
@@ -2336,6 +2377,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				759DA0E01DAC86C3008CC49B /* PBXTargetDependency */,
 			);
 			name = nettle;
 			productName = nettle;
@@ -2358,6 +2400,10 @@
 						ProvisioningStyle = Automatic;
 					};
 					755CD9D01DAA197C0075898E = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					759DA0D71DAC8668008CC49B = {
 						CreatedOnToolsVersion = 8.0;
 						ProvisioningStyle = Automatic;
 					};
@@ -2439,6 +2485,7 @@
 				755CD9C31DAA18420075898E /* unbound */,
 				755CD9D01DAA197C0075898E /* BRCore */,
 				75C735AE1DAA1C9F00251ECF /* nettle */,
+				759DA0D71DAC8668008CC49B /* submodules */,
 			);
 		};
 /* End PBXProject section */
@@ -2689,6 +2736,7 @@
 				759DA0B31DAC1654008CC49B /* ecc-mul-g.c in Sources */,
 				759DA0A51DAC0D9F008CC49B /* ecdsa-verify.c in Sources */,
 				754868E51DAB5B9200732D70 /* rsa-verify.c in Sources */,
+				751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */,
 				754868F31DAB5DEB00732D70 /* sha512-compress.c in Sources */,
 				759DA0AE1DAC15A0008CC49B /* ecc-add-jja.c in Sources */,
 				754868F11DAB5D9900732D70 /* sha256-compress.c in Sources */,
@@ -2739,6 +2787,21 @@
 			isa = PBXTargetDependency;
 			target = 75C735AE1DAA1C9F00251ECF /* nettle */;
 			targetProxy = 759DA0C31DAC72BB008CC49B /* PBXContainerItemProxy */;
+		};
+		759DA0DC1DAC86B5008CC49B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 759DA0D71DAC8668008CC49B /* submodules */;
+			targetProxy = 759DA0DB1DAC86B5008CC49B /* PBXContainerItemProxy */;
+		};
+		759DA0DE1DAC86BC008CC49B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 759DA0D71DAC8668008CC49B /* submodules */;
+			targetProxy = 759DA0DD1DAC86BC008CC49B /* PBXContainerItemProxy */;
+		};
+		759DA0E01DAC86C3008CC49B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 759DA0D71DAC8668008CC49B /* submodules */;
+			targetProxy = 759DA0DF1DAC86C3008CC49B /* PBXContainerItemProxy */;
 		};
 		75A2A7A61DA5934300A983D8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2943,6 +3006,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/Modules/breadwallet-core",
 					"${SRCROOT}/Modules/breadwallet-core/secp256k1",
@@ -2956,12 +3020,25 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/Modules/breadwallet-core",
 					"${SRCROOT}/Modules/breadwallet-core/secp256k1",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		759DA0D81DAC8668008CC49B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		759DA0D91DAC8668008CC49B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
 			};
 			name = Release;
 		};
@@ -3349,6 +3426,15 @@
 			buildConfigurations = (
 				755CD9D81DAA197D0075898E /* Debug */,
 				755CD9D91DAA197D0075898E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		759DA0DA1DAC8668008CC49B /* Build configuration list for PBXLegacyTarget "submodules" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				759DA0D81DAC8668008CC49B /* Debug */,
+				759DA0D91DAC8668008CC49B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
