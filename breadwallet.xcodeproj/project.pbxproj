@@ -181,6 +181,13 @@
 			remoteGlobalIDString = 755CD9D01DAA197C0075898E;
 			remoteInfo = BRCore;
 		};
+		759DA0C31DAC72BB008CC49B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 75C735AE1DAA1C9F00251ECF;
+			remoteInfo = nettle;
+		};
 		75A2A7A51DA5934300A983D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
@@ -236,13 +243,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 755CD9C31DAA18420075898E;
 			remoteInfo = unbound;
-		};
-		75C735B81DAA1D0800251ECF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 75C735AE1DAA1C9F00251ECF;
-			remoteInfo = nettle;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -2155,7 +2155,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				75C735B91DAA1D0800251ECF /* PBXTargetDependency */,
 			);
 			name = unbound;
 			productName = unbound;
@@ -2192,6 +2191,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				759DA0C41DAC72BB008CC49B /* PBXTargetDependency */,
 				759DA0BD1DAC369C008CC49B /* PBXTargetDependency */,
 				75C735A91DAA1B8700251ECF /* PBXTargetDependency */,
 				75A2A7BB1DA5934300A983D8 /* PBXTargetDependency */,
@@ -2735,6 +2735,11 @@
 			target = 755CD9D01DAA197C0075898E /* BRCore */;
 			targetProxy = 759DA0BC1DAC369C008CC49B /* PBXContainerItemProxy */;
 		};
+		759DA0C41DAC72BB008CC49B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 75C735AE1DAA1C9F00251ECF /* nettle */;
+			targetProxy = 759DA0C31DAC72BB008CC49B /* PBXContainerItemProxy */;
+		};
 		75A2A7A61DA5934300A983D8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 75A2A78F1DA5934300A983D8 /* breadwallet */;
@@ -2774,11 +2779,6 @@
 			isa = PBXTargetDependency;
 			target = 755CD9C31DAA18420075898E /* unbound */;
 			targetProxy = 75C735A81DAA1B8700251ECF /* PBXContainerItemProxy */;
-		};
-		75C735B91DAA1D0800251ECF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 75C735AE1DAA1C9F00251ECF /* nettle */;
-			targetProxy = 75C735B81DAA1D0800251ECF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -3312,8 +3312,10 @@
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				HEADER_SEARCH_PATHS = "${SRCROOT}/Modules/nettle";
+				OTHER_CFLAGS = "-DHAVE_CONFIG_H=1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				USE_HEADERMAP = NO;
 			};
 			name = Debug;
 		};
@@ -3323,8 +3325,10 @@
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				HEADER_SEARCH_PATHS = "${SRCROOT}/Modules/nettle";
+				OTHER_CFLAGS = "-DHAVE_CONFIG_H=1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				USE_HEADERMAP = NO;
 			};
 			name = Release;
 		};
