@@ -15,16 +15,21 @@ class ApplicationController {
     let window = UIWindow()
 
     func launch(options: [UIApplicationLaunchOptionsKey: Any]?) {
-        window.makeKeyAndVisible()
+        setupAppearance()
         setupRootViewController()
+        window.makeKeyAndVisible()
+    }
+
+    private func setupAppearance() {
+        window.tintColor = .brand
     }
 
     private func setupRootViewController() {
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [
-            SendViewController(tabBarItem: UITabBarItem(title: "SEND", image: nil, selectedImage: nil)),
-            ReceiveViewController(tabBarItem: UITabBarItem(title: "RECEIVE", image: nil, selectedImage: nil)),
-            MenuViewController(tabBarItem: UITabBarItem(title: "MENU", image: nil, selectedImage: nil))
+            SendViewController(tabBarItem: UITabBarItem(title: "SEND", image: #imageLiteral(resourceName: "SendTabIcon"), selectedImage: nil)),
+            ReceiveViewController(tabBarItem: UITabBarItem(title: "RECEIVE", image: #imageLiteral(resourceName: "ReceiveTabIcon"), selectedImage: nil)),
+            MenuViewController(tabBarItem: UITabBarItem(title: "MENU", image: #imageLiteral(resourceName: "MenuTabIcon"), selectedImage: nil))
         ]
         window.rootViewController = tabBarController
     }

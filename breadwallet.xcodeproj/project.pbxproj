@@ -176,6 +176,7 @@
 		CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F51DBAF77D00C8397A /* UIViewController+BRWAdditions.swift */; };
 		CE20C8F81DBB047700C8397A /* ReceiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F71DBB047700C8397A /* ReceiveViewController.swift */; };
 		CE20C8FA1DBB04C900C8397A /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F91DBB04C900C8397A /* MenuViewController.swift */; };
+		CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1095,6 +1096,7 @@
 		CE20C8F51DBAF77D00C8397A /* UIViewController+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewController+BRWAdditions.swift"; path = "src/Extensions/UIViewController+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CE20C8F71DBB047700C8397A /* ReceiveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReceiveViewController.swift; path = src/ViewControllers/ReceiveViewController.swift; sourceTree = "<group>"; };
 		CE20C8F91DBB04C900C8397A /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuViewController.swift; path = src/ViewControllers/MenuViewController.swift; sourceTree = "<group>"; };
+		CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIColor+BRWAdditions.swift"; path = "src/Extensions/UIColor+BRWAdditions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2184,6 +2186,7 @@
 			isa = PBXGroup;
 			children = (
 				CE20C8F51DBAF77D00C8397A /* UIViewController+BRWAdditions.swift */,
+				CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2694,6 +2697,7 @@
 				CE20C8F81DBB047700C8397A /* ReceiveViewController.swift in Sources */,
 				75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */,
 				CE20C8F41DBAF73E00C8397A /* SendViewController.swift in Sources */,
+				CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

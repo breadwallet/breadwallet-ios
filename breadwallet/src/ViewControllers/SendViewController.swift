@@ -9,5 +9,10 @@
 import UIKit
 
 class SendViewController: UIViewController {
+
+    override func viewDidLoad() {
+        view.backgroundColor = .white
+    }
     
+
 }
