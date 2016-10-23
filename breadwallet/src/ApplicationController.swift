@@ -12,12 +12,19 @@ class ApplicationController {
 
     //Ideally the window would be private, but is unfortunately required
     //by the UIApplicationDelegate Protocol
-    let window = UIWindow()
+    let window =                    UIWindow()
+    private let store =             Store()
+    private let sendTabBarItem =    UITabBarItem(title: "SEND", image: #imageLiteral(resourceName: "SendTabIcon"), selectedImage: nil)
+    private let receiveTabBarItem = UITabBarItem(title: "RECEIVE", image: #imageLiteral(resourceName: "ReceiveTabIcon"), selectedImage: nil)
+    private let menuTabBarItem =    UITabBarItem(title: "MENU", image: #imageLiteral(resourceName: "MenuTabIcon"), selectedImage: nil)
+
+    private var startFlowController: StartFlowController?
 
     func launch(options: [UIApplicationLaunchOptionsKey: Any]?) {
         setupAppearance()
         setupRootViewController()
         window.makeKeyAndVisible()
+        store.perform(action: ShowStartFlow())
     }
 
     private func setupAppearance() {
@@ -27,10 +34,11 @@ class ApplicationController {
     private func setupRootViewController() {
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [
-            SendViewController(tabBarItem: UITabBarItem(title: "SEND", image: #imageLiteral(resourceName: "SendTabIcon"), selectedImage: nil)),
-            ReceiveViewController(tabBarItem: UITabBarItem(title: "RECEIVE", image: #imageLiteral(resourceName: "ReceiveTabIcon"), selectedImage: nil)),
-            MenuViewController(tabBarItem: UITabBarItem(title: "MENU", image: #imageLiteral(resourceName: "MenuTabIcon"), selectedImage: nil))
+            SendViewController(store: store, tabBarItem: sendTabBarItem),
+            ReceiveViewController(tabBarItem: receiveTabBarItem),
+            MenuViewController(tabBarItem: menuTabBarItem)
         ]
         window.rootViewController = tabBarController
+        startFlowController = StartFlowController(store: store, rootViewController: tabBarController)
     }
 }

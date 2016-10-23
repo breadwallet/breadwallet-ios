@@ -9,9 +9,7 @@
 import UIKit
 
 class MenuViewController: UIViewController {
-
     override func viewDidLoad() {
         view.backgroundColor = .white
     }
-
 }

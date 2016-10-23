@@ -177,6 +177,11 @@
 		CE20C8F81DBB047700C8397A /* ReceiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F71DBB047700C8397A /* ReceiveViewController.swift */; };
 		CE20C8FA1DBB04C900C8397A /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F91DBB04C900C8397A /* MenuViewController.swift */; };
 		CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */; };
+		CE20C8FE1DBB133A00C8397A /* SimpleRedux.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8FD1DBB133A00C8397A /* SimpleRedux.swift */; };
+		CE20C9011DBBFFF800C8397A /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9001DBBFFF800C8397A /* Actions.swift */; };
+		CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9061DBC587200C8397A /* StartViewController.swift */; };
+		CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */; };
+		CE20C90C1DBC59E600C8397A /* StartFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C90B1DBC59E600C8397A /* StartFlowController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1097,6 +1102,11 @@
 		CE20C8F71DBB047700C8397A /* ReceiveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReceiveViewController.swift; path = src/ViewControllers/ReceiveViewController.swift; sourceTree = "<group>"; };
 		CE20C8F91DBB04C900C8397A /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuViewController.swift; path = src/ViewControllers/MenuViewController.swift; sourceTree = "<group>"; };
 		CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIColor+BRWAdditions.swift"; path = "src/Extensions/UIColor+BRWAdditions.swift"; sourceTree = "<group>"; };
+		CE20C8FD1DBB133A00C8397A /* SimpleRedux.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleRedux.swift; path = src/SimpleRedux.swift; sourceTree = "<group>"; };
+		CE20C9001DBBFFF800C8397A /* Actions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Actions.swift; path = src/SimpleRedux/Actions.swift; sourceTree = "<group>"; };
+		CE20C9061DBC587200C8397A /* StartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartViewController.swift; path = src/ViewControllers/StartViewController.swift; sourceTree = "<group>"; };
+		CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinCreationViewController.swift; path = src/ViewControllers/PinCreationViewController.swift; sourceTree = "<group>"; };
+		CE20C90B1DBC59E600C8397A /* StartFlowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartFlowController.swift; path = src/FlowControllers/StartFlowController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2008,6 +2018,8 @@
 				75A2A87C1DA59E4E00A983D8 /* breadwallet.entitlements */,
 				75A2A7931DA5934300A983D8 /* AppDelegate.swift */,
 				CE20C8F11DBAF71500C8397A /* ApplicationController.swift */,
+				CE20C90A1DBC59C500C8397A /* FlowControllers */,
+				CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */,
 				CE20C8EF1DBAF6D300C8397A /* ViewControllers */,
 				CE20C8F01DBAF6E100C8397A /* Extensions */,
 				75A2A79A1DA5934300A983D8 /* Assets.xcassets */,
@@ -2178,6 +2190,8 @@
 				CE20C8F31DBAF73E00C8397A /* SendViewController.swift */,
 				CE20C8F71DBB047700C8397A /* ReceiveViewController.swift */,
 				CE20C8F91DBB04C900C8397A /* MenuViewController.swift */,
+				CE20C9061DBC587200C8397A /* StartViewController.swift */,
+				CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -2189,6 +2203,23 @@
 				CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */ = {
+			isa = PBXGroup;
+			children = (
+				CE20C8FD1DBB133A00C8397A /* SimpleRedux.swift */,
+				CE20C9001DBBFFF800C8397A /* Actions.swift */,
+			);
+			name = SimpleRedux;
+			sourceTree = "<group>";
+		};
+		CE20C90A1DBC59C500C8397A /* FlowControllers */ = {
+			isa = PBXGroup;
+			children = (
+				CE20C90B1DBC59E600C8397A /* StartFlowController.swift */,
+			);
+			name = FlowControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2696,7 +2727,12 @@
 				CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */,
 				CE20C8F81DBB047700C8397A /* ReceiveViewController.swift in Sources */,
 				75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */,
+				CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */,
+				CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */,
 				CE20C8F41DBAF73E00C8397A /* SendViewController.swift in Sources */,
+				CE20C9011DBBFFF800C8397A /* Actions.swift in Sources */,
+				CE20C8FE1DBB133A00C8397A /* SimpleRedux.swift in Sources */,
+				CE20C90C1DBC59E600C8397A /* StartFlowController.swift in Sources */,
 				CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
