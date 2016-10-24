@@ -10,9 +10,9 @@ import UIKit
 
 class StartFlowController: Subscriber {
 
-    let store: Store
-    let rootViewController: UIViewController
-    var startNavigationController: UINavigationController?
+    private let store: Store
+    private let rootViewController: UIViewController
+    private var startNavigationController: UINavigationController?
 
     init(store: Store, rootViewController: UIViewController) {
         self.store = store
@@ -21,22 +21,23 @@ class StartFlowController: Subscriber {
     }
 
     private func addStoreSubscription() {
-        //TODO - If subscrib had the ability to have granular notifications,
-        //this check for a nil startNavigationController wouldn't be necessary
-        store.subscribe(self) { state in
-            if state.isStartFlowVisible && self.startNavigationController == nil {
+        let subscription = GranularSubscription(selector: { $0.isStartFlowVisible }, callback: { isStartFlowVisible in
+            if isStartFlowVisible {
                 self.presentStartFlow()
-            } else if !state.isStartFlowVisible && self.startNavigationController != nil {
+            } else {
                 self.dismissStartFlow()
             }
-        }
+        })
+        store.granularSubscription(self, subscription: subscription)
     }
 
     private func presentStartFlow() {
         let startViewController = StartViewController()
         startViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(self.dismiss))
-        self.startNavigationController = UINavigationController(rootViewController: startViewController)
-        self.rootViewController.present(self.startNavigationController!, animated: false, completion: {})
+        startNavigationController = UINavigationController(rootViewController: startViewController)
+        if let startFlow = startNavigationController {
+            rootViewController.present(startFlow, animated: false, completion: nil)
+        }
     }
 
     private func dismissStartFlow() {

@@ -57,12 +57,14 @@ class Store {
     private var state = State.initial {
         didSet {
             granularSubscriptions.forEach {
-                if let subscription = $1 as? GranularSubscription<Int> {
-                    let newValue = subscription.selector(state)
-                    let oldValue = subscription.selector(oldValue)
-                    if (newValue != oldValue) {
-                        subscription.callback(newValue)
-                    }
+                //TODO - come up with a more generic way to do this
+                switch $1 {
+                    case let subscription as GranularSubscription<Int>:
+                        updateGranularSubscription(oldState: oldValue, subscription: subscription)
+                    case let subscription as GranularSubscription<Bool>:
+                        updateGranularSubscription(oldState: oldValue, subscription: subscription)
+                    default:
+                        print("Warning - unimplemented granulat subscription type")
                 }
             }
 
@@ -76,13 +78,15 @@ class Store {
         state = action.reduce(state)
     }
 
-    //Subscription callback is called with current State value on subscription
+    //Subscription callback is immediately called with current State value on subscription
     //and then any time the selected value changes
     func granularSubscription<T>(_ subscriber: Subscriber, subscription: GranularSubscription<T>) {
         granularSubscriptions[subscriber.hashValue] = subscription
         subscription.callback(subscription.selector(state))
     }
 
+    //Subscription callback is immediately called with current State value on subscription
+    //and then any time the entire state changes
     func subscribe(_ subscriber: Subscriber, callback: @escaping StateUpdatedCallback) {
         subscriptions[subscriber.hashValue] = callback
         callback(state)
@@ -90,5 +94,12 @@ class Store {
 
     func unsubscribe(_ subscriber: Subscriber) {
         subscriptions.removeValue(forKey: subscriber.hashValue)
+    }
+
+    private func updateGranularSubscription<T: Equatable>(oldState: State, subscription: GranularSubscription<T>) {
+        let newValue = subscription.selector(state)
+        if (newValue != subscription.selector(oldState)) {
+            subscription.callback(newValue)
+        }
     }
 }
