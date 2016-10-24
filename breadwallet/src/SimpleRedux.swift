@@ -48,16 +48,39 @@ extension State {
 
 typealias StateUpdatedCallback = (State) -> ()
 
+struct GranularSubscription<T>{
+    let selector: ((State) -> T)
+    let callback: (T) -> ()
+}
+
 class Store {
     private var state = State.initial {
         didSet {
+            granularSubscriptions.forEach {
+                if let subscription = $1 as? GranularSubscription<Int> {
+                    let newValue = subscription.selector(state)
+                    let oldValue = subscription.selector(oldValue)
+                    if (newValue != oldValue) {
+                        subscription.callback(newValue)
+                    }
+                }
+            }
+
             subscriptions.forEach { $1(state) }
         }
     }
     private var subscriptions = [Int: StateUpdatedCallback]()
+    private var granularSubscriptions = [Int: Any]()
 
     func perform(action: Action) {
         state = action.reduce(state)
+    }
+
+    //Subscription callback is called with current State value on subscription
+    //and then any time the selected value changes
+    func granularSubscription<T>(_ subscriber: Subscriber, subscription: GranularSubscription<T>) {
+        granularSubscriptions[subscriber.hashValue] = subscription
+        subscription.callback(subscription.selector(state))
     }
 
     func subscribe(_ subscriber: Subscriber, callback: @escaping StateUpdatedCallback) {

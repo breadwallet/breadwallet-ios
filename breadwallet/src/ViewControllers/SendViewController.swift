@@ -58,9 +58,11 @@ class SendViewController: UIViewController, Subscriber {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        store.subscribe(self) { state in
-            self.label.text = "\(self.tabBarItem!.title!) Important number: \(state.count)"
-        }
+
+        let subscription = GranularSubscription(selector: { $0.count }, callback: { count in
+            self.label.text = "\(self.tabBarItem!.title!) Important number: \(count)"
+        })
+        store.granularSubscription(self, subscription: subscription)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
