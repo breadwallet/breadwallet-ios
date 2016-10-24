@@ -12,8 +12,8 @@ class StartViewController: UIViewController {
 
     private let circle =    Circle(color: .brand)
     private let brand =     UILabel()
-    private let create =    UIButton(type: .system)
-    private let recover =   UIButton(type: .system)
+    private let create =    UIButton.makeSolidButton(title: "Create New Wallet")
+    private let recover =   UIButton.makeOutlineButton(title: "Recover Wallet")
 
     private let store: Store
 
@@ -31,8 +31,6 @@ class StartViewController: UIViewController {
 
     func setData() {
         brand.text = "Bread"
-        create.setTitle("Create New Wallet", for: .normal)
-        recover.setTitle("Recover Wallet", for: .normal)
     }
 
     func addSubviews() {
@@ -57,11 +55,13 @@ class StartViewController: UIViewController {
                 recover.constraint(.leading, toView: view, constant: Constants.Padding.double),
                 recover.constraint(.bottom, toView: view, constant: -Constants.Padding.triple),
                 recover.constraint(.trailing, toView: view, constant: -Constants.Padding.double),
+                recover.constraint(.height, constant: Constants.Sizes.buttonHeight)
             ])
         create.constrain([
                 create.constraint(toTop: recover, constant: -Constants.Padding.double),
                 create.constraint(.centerX, toView: recover, constant: nil),
-                create.constraint(.width, toView: recover, constant: nil)
+                create.constraint(.width, toView: recover, constant: nil),
+                create.constraint(.height, constant: Constants.Sizes.buttonHeight)
             ])
     }
 
