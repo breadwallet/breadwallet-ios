@@ -22,30 +22,32 @@ class StartFlowController: Subscriber {
     }
 
     private func addStartSubscription() {
-        let subscription = GranularSubscription(selector: { $0.isStartFlowVisible }, callback: { isStartFlowVisible in
-            if isStartFlowVisible {
-                self.presentStartFlow()
-            } else {
-                self.dismissStartFlow()
-            }
-        })
-        store.granularSubscription(self, subscription: subscription)
+        store.subscribe(self, subscription: Subscription(
+            selector: { $0.isStartFlowVisible != $1.isStartFlowVisible },
+            callback: {
+                if $0.isStartFlowVisible {
+                    self.presentStartFlow()
+                } else {
+                    self.dismissStartFlow()
+                }
+            }))
     }
 
     private func addPinCreationSubscription() {
-        let subscription = GranularSubscription(selector: { $0.pinCreationStep }, callback: { pinStep in
-            switch pinStep {
-                case .start:
-                    print("start")
-                case .confirm:
-                    print("confirm")
-                case .save:
-                    print("save")
-                case .none:
-                    print("none")
-            }
-        })
-        store.granularSubscription(self, subscription: subscription)
+        store.subscribe(self, subscription: Subscription(
+            selector: { $0.pinCreationStep != $1.pinCreationStep },
+            callback: {
+                switch $0.pinCreationStep {
+                    case .start:
+                        print("start")
+                    case .confirm:
+                        print("confirm")
+                    case .save:
+                        print("save")
+                    case .none:
+                        print("none")
+                }
+        }))
     }
 
     private func presentStartFlow() {
