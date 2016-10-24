@@ -41,12 +41,8 @@ class Store {
                             updateGranularSubscription(oldState: oldValue, subscription: subscription)
                         case let subscription as GranularSubscription<Bool>:
                             updateGranularSubscription(oldState: oldValue, subscription: subscription)
-                        case let subscription as GranularSubscription<PinCreationState?>:
-                            let newValue = subscription.selector(state)
-                            let oldValue = subscription.selector(oldValue)
-                            if (newValue != oldValue) {
-                                subscription.callback(newValue)
-                            }
+                        case let subscription as GranularSubscription<PinCreationStep>:
+                            updateGranularSubscription(oldState: oldValue, subscription: subscription)
                     default:
                         print("Warning - unimplemented granular subscription type")
                     }

@@ -11,18 +11,19 @@ import Foundation
 struct State {
     let count: Int
     let isStartFlowVisible: Bool
-    let pinCreation: PinCreationState?
+    let pinCreationStep: PinCreationStep
 }
 
 extension State {
     static var initial: State {
         return State(   count:              0,
                         isStartFlowVisible: false,
-                        pinCreation:        nil)
+                        pinCreationStep:    .none)
     }
 }
 
-enum PinCreationState {
+enum PinCreationStep {
+    case none
     case start
     case confirm
     case save

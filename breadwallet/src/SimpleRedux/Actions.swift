@@ -35,19 +35,19 @@ struct HideStartFlow: Action {
 struct PinCreation {
     struct Start: Action {
         let reduce: Reducer = {
-            return $0.clone(pinCreation: .start)
+            return $0.clone(pinCreationStep: .start)
         }
     }
 
     struct Confirm: Action {
         let reduce: Reducer = {
-            return $0.clone(pinCreation: .confirm)
+            return $0.clone(pinCreationStep: .confirm)
         }
     }
 
     struct Save: Action {
         let reduce: Reducer = {
-            return $0.clone(pinCreation: .save)
+            return $0.clone(pinCreationStep: .save)
         }
     }
 }
@@ -56,18 +56,18 @@ extension State {
     func clone(newCount: Int) -> State {
         return State(count: newCount,
                      isStartFlowVisible: self.isStartFlowVisible,
-                     pinCreation: self.pinCreation)
+                     pinCreationStep: self.pinCreationStep)
     }
 
     func clone(isStartFlowVisible: Bool) -> State {
         return State(count: self.count,
                      isStartFlowVisible: isStartFlowVisible,
-                     pinCreation: self.pinCreation)
+                     pinCreationStep: self.pinCreationStep)
     }
 
-    func clone(pinCreation: PinCreationState) -> State {
+    func clone(pinCreationStep: PinCreationStep) -> State {
         return State(count: self.count,
                      isStartFlowVisible: self.isStartFlowVisible,
-                     pinCreation: pinCreation)
+                     pinCreationStep: pinCreationStep)
     }
 }

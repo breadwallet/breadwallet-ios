@@ -33,15 +33,16 @@ class StartFlowController: Subscriber {
     }
 
     private func addPinCreationSubscription() {
-        let subscription = GranularSubscription(selector: { $0.pinCreation }, callback: { pinState in
-            guard let state = pinState else { return }
-            switch state {
+        let subscription = GranularSubscription(selector: { $0.pinCreationStep }, callback: { pinStep in
+            switch pinStep {
                 case .start:
                     print("start")
                 case .confirm:
                     print("confirm")
                 case .save:
                     print("save")
+                case .none:
+                    print("none")
             }
         })
         store.granularSubscription(self, subscription: subscription)
