@@ -23,29 +23,6 @@ extension Subscriber {
     }
 }
 
-struct State {
-    let count: Int
-    let isStartFlowVisible: Bool
-}
-
-extension State {
-    func clone(newCount: Int) -> State {
-        return State(count: newCount, isStartFlowVisible: self.isStartFlowVisible)
-    }
-
-    func clone(isStartFlowVisible: Bool) -> State {
-        return State(count: self.count, isStartFlowVisible: isStartFlowVisible)
-    }
-
-    func clone(test: Bool) -> State {
-        return State(count: self.count, isStartFlowVisible: test)
-    }
-
-    static var initial: State {
-        return State(count: 0, isStartFlowVisible: false)
-    }
-}
-
 typealias StateUpdatedCallback = (State) -> ()
 
 struct GranularSubscription<T>{
@@ -57,14 +34,22 @@ class Store {
     private var state = State.initial {
         didSet {
             granularSubscriptions.forEach {
-                //TODO - come up with a more generic way to do this
-                switch $1 {
-                    case let subscription as GranularSubscription<Int>:
-                        updateGranularSubscription(oldState: oldValue, subscription: subscription)
-                    case let subscription as GranularSubscription<Bool>:
-                        updateGranularSubscription(oldState: oldValue, subscription: subscription)
+                $1.forEach {
+                    //TODO - come up with a more generic way to do this
+                    switch $0 {
+                        case let subscription as GranularSubscription<Int>:
+                            updateGranularSubscription(oldState: oldValue, subscription: subscription)
+                        case let subscription as GranularSubscription<Bool>:
+                            updateGranularSubscription(oldState: oldValue, subscription: subscription)
+                        case let subscription as GranularSubscription<PinCreationState?>:
+                            let newValue = subscription.selector(state)
+                            let oldValue = subscription.selector(oldValue)
+                            if (newValue != oldValue) {
+                                subscription.callback(newValue)
+                            }
                     default:
-                        print("Warning - unimplemented granulat subscription type")
+                        print("Warning - unimplemented granular subscription type")
+                    }
                 }
             }
 
@@ -72,7 +57,7 @@ class Store {
         }
     }
     private var subscriptions = [Int: StateUpdatedCallback]()
-    private var granularSubscriptions = [Int: Any]()
+    private var granularSubscriptions = [Int: [Any]]()
 
     func perform(action: Action) {
         state = action.reduce(state)
@@ -81,7 +66,12 @@ class Store {
     //Subscription callback is immediately called with current State value on subscription
     //and then any time the selected value changes
     func granularSubscription<T>(_ subscriber: Subscriber, subscription: GranularSubscription<T>) {
-        granularSubscriptions[subscriber.hashValue] = subscription
+        let key = subscriber.hashValue
+        if granularSubscriptions[key] != nil {
+            granularSubscriptions[key]?.append(subscription)
+        } else {
+            granularSubscriptions[key] = [subscription]
+        }
         subscription.callback(subscription.selector(state))
     }
 

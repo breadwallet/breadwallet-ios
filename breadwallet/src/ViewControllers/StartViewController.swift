@@ -27,20 +27,21 @@ class StartViewController: UIViewController {
         setData()
         addSubviews()
         addConstraints()
+        addButtonActions()
     }
 
-    func setData() {
+    private func setData() {
         brand.text = "Bread"
     }
 
-    func addSubviews() {
+    private func addSubviews() {
         view.addSubview(circle)
         view.addSubview(brand)
         view.addSubview(create)
         view.addSubview(recover)
     }
 
-    func addConstraints() {
+    private func addConstraints() {
         circle.constrain([
                 circle.constraint(.centerX, toView: view, constant: nil),
                 circle.constraint(.top, toView: view, constant: 120.0),
@@ -63,6 +64,19 @@ class StartViewController: UIViewController {
                 create.constraint(.width, toView: recover, constant: nil),
                 create.constraint(.height, constant: Constants.Sizes.buttonHeight)
             ])
+    }
+
+    private func addButtonActions() {
+        create.addTarget(self, action: #selector(createWallet), for: .touchUpInside)
+        recover.addTarget(self, action: #selector(recoverWallet), for: .touchUpInside)
+    }
+
+    @objc private func recoverWallet() {
+        //TODO - implement recover wallet flow
+    }
+
+    @objc private func createWallet() {
+        store.perform(action: PinCreation.Start())
     }
 
     required init?(coder aDecoder: NSCoder) {

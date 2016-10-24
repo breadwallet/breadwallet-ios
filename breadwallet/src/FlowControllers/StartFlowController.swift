@@ -17,15 +17,31 @@ class StartFlowController: Subscriber {
     init(store: Store, rootViewController: UIViewController) {
         self.store = store
         self.rootViewController = rootViewController
-        addStoreSubscription()
+        addStartSubscription()
+        addPinCreationSubscription()
     }
 
-    private func addStoreSubscription() {
+    private func addStartSubscription() {
         let subscription = GranularSubscription(selector: { $0.isStartFlowVisible }, callback: { isStartFlowVisible in
             if isStartFlowVisible {
                 self.presentStartFlow()
             } else {
                 self.dismissStartFlow()
+            }
+        })
+        store.granularSubscription(self, subscription: subscription)
+    }
+
+    private func addPinCreationSubscription() {
+        let subscription = GranularSubscription(selector: { $0.pinCreation }, callback: { pinState in
+            guard let state = pinState else { return }
+            switch state {
+                case .start:
+                    print("start")
+                case .confirm:
+                    print("confirm")
+                case .save:
+                    print("save")
             }
         })
         store.granularSubscription(self, subscription: subscription)
