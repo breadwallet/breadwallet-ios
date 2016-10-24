@@ -182,6 +182,7 @@
 		CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9061DBC587200C8397A /* StartViewController.swift */; };
 		CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */; };
 		CE20C90C1DBC59E600C8397A /* StartFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C90B1DBC59E600C8397A /* StartFlowController.swift */; };
+		CE20C90E1DBE52B000C8397A /* UIView+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C90D1DBE52B000C8397A /* UIView+BRWAdditions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1107,6 +1108,7 @@
 		CE20C9061DBC587200C8397A /* StartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartViewController.swift; path = src/ViewControllers/StartViewController.swift; sourceTree = "<group>"; };
 		CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinCreationViewController.swift; path = src/ViewControllers/PinCreationViewController.swift; sourceTree = "<group>"; };
 		CE20C90B1DBC59E600C8397A /* StartFlowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartFlowController.swift; path = src/FlowControllers/StartFlowController.swift; sourceTree = "<group>"; };
+		CE20C90D1DBE52B000C8397A /* UIView+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+BRWAdditions.swift"; path = "src/Extensions/UIView+BRWAdditions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2201,6 +2203,7 @@
 			children = (
 				CE20C8F51DBAF77D00C8397A /* UIViewController+BRWAdditions.swift */,
 				CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */,
+				CE20C90D1DBE52B000C8397A /* UIView+BRWAdditions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2725,6 +2728,7 @@
 				CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */,
 				CE20C8FA1DBB04C900C8397A /* MenuViewController.swift in Sources */,
 				CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */,
+				CE20C90E1DBE52B000C8397A /* UIView+BRWAdditions.swift in Sources */,
 				CE20C8F81DBB047700C8397A /* ReceiveViewController.swift in Sources */,
 				75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */,
 				CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */,
