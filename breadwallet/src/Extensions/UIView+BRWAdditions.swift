@@ -33,4 +33,21 @@ extension UIView {
         return NSLayoutConstraint(item: self, attribute: attribute, relatedBy: .equal, toItem: toView, attribute: attribute, multiplier: 1.0, constant: constant ?? 0.0)
     }
 
+    func constraint(_ attribute: NSLayoutAttribute, constant: CGFloat) -> NSLayoutConstraint {
+        guard superview != nil else { assert(false, "Superview cannot be nil when adding contraints") }
+        translatesAutoresizingMaskIntoConstraints = false
+        return NSLayoutConstraint(item: self, attribute: attribute, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: constant)
+    }
+
+    func constraint(toBottom: UIView, constant: CGFloat) -> NSLayoutConstraint {
+        guard superview != nil else { assert(false, "Superview cannot be nil when adding contraints") }
+        translatesAutoresizingMaskIntoConstraints = false
+        return NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: toBottom, attribute: .bottom, multiplier: 1.0, constant: constant)
+    }
+
+    func constraint(toTop: UIView, constant: CGFloat) -> NSLayoutConstraint {
+        guard superview != nil else { assert(false, "Superview cannot be nil when adding contraints") }
+        translatesAutoresizingMaskIntoConstraints = false
+        return NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: toTop, attribute: .top , multiplier: 1.0, constant: constant)
+    }
 }

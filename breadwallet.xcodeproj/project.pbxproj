@@ -183,6 +183,8 @@
 		CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */; };
 		CE20C90C1DBC59E600C8397A /* StartFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C90B1DBC59E600C8397A /* StartFlowController.swift */; };
 		CE20C90E1DBE52B000C8397A /* UIView+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C90D1DBE52B000C8397A /* UIView+BRWAdditions.swift */; };
+		CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9101DBE5B6F00C8397A /* Circle.swift */; };
+		CE20C9131DBE67CA00C8397A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9121DBE67CA00C8397A /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1109,6 +1111,8 @@
 		CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinCreationViewController.swift; path = src/ViewControllers/PinCreationViewController.swift; sourceTree = "<group>"; };
 		CE20C90B1DBC59E600C8397A /* StartFlowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartFlowController.swift; path = src/FlowControllers/StartFlowController.swift; sourceTree = "<group>"; };
 		CE20C90D1DBE52B000C8397A /* UIView+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+BRWAdditions.swift"; path = "src/Extensions/UIView+BRWAdditions.swift"; sourceTree = "<group>"; };
+		CE20C9101DBE5B6F00C8397A /* Circle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Circle.swift; path = src/Views/Circle.swift; sourceTree = "<group>"; };
+		CE20C9121DBE67CA00C8397A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = src/Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2020,9 +2024,11 @@
 				75A2A87C1DA59E4E00A983D8 /* breadwallet.entitlements */,
 				75A2A7931DA5934300A983D8 /* AppDelegate.swift */,
 				CE20C8F11DBAF71500C8397A /* ApplicationController.swift */,
+				CE20C9121DBE67CA00C8397A /* Constants.swift */,
 				CE20C90A1DBC59C500C8397A /* FlowControllers */,
-				CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */,
 				CE20C8EF1DBAF6D300C8397A /* ViewControllers */,
+				CE20C90F1DBE5B5100C8397A /* Views */,
+				CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */,
 				CE20C8F01DBAF6E100C8397A /* Extensions */,
 				75A2A79A1DA5934300A983D8 /* Assets.xcassets */,
 				75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */,
@@ -2223,6 +2229,14 @@
 				CE20C90B1DBC59E600C8397A /* StartFlowController.swift */,
 			);
 			name = FlowControllers;
+			sourceTree = "<group>";
+		};
+		CE20C90F1DBE5B5100C8397A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CE20C9101DBE5B6F00C8397A /* Circle.swift */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2730,8 +2744,10 @@
 				CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */,
 				CE20C90E1DBE52B000C8397A /* UIView+BRWAdditions.swift in Sources */,
 				CE20C8F81DBB047700C8397A /* ReceiveViewController.swift in Sources */,
+				CE20C9131DBE67CA00C8397A /* Constants.swift in Sources */,
 				75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */,
 				CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */,
+				CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */,
 				CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */,
 				CE20C8F41DBAF73E00C8397A /* SendViewController.swift in Sources */,
 				CE20C9011DBBFFF800C8397A /* Actions.swift in Sources */,

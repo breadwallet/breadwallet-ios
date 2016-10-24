@@ -32,10 +32,11 @@ class StartFlowController: Subscriber {
     }
 
     private func presentStartFlow() {
-        let startViewController = StartViewController()
+        let startViewController = StartViewController(store: store)
         startViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(self.dismiss))
         startNavigationController = UINavigationController(rootViewController: startViewController)
         if let startFlow = startNavigationController {
+            startFlow.setNavigationBarHidden(true, animated: false)
             rootViewController.present(startFlow, animated: false, completion: nil)
         }
     }

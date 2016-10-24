@@ -11,6 +11,9 @@ import UIKit
 class SendViewController: UIViewController, Subscriber {
 
     let store: Store
+
+    //TODO - delete all these views, this is all just for playing
+    //with store subscriptions
     let label = UILabel(frame: CGRect(x: 0, y: 100, width: 320, height: 44))
     let upButton: UIButton = {
         let button: UIButton = UIButton(type: .system)
