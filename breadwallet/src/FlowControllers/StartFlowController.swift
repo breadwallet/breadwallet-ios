@@ -39,7 +39,7 @@ class StartFlowController: Subscriber {
             callback: {
                 switch $0.pinCreationStep {
                     case .start:
-                        print("start")
+                        self.pushPinCreationViewController()
                     case .confirm:
                         print("confirm")
                     case .save:
@@ -52,7 +52,6 @@ class StartFlowController: Subscriber {
 
     private func presentStartFlow() {
         let startViewController = StartViewController(store: store)
-        startViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(self.dismiss))
         startNavigationController = UINavigationController(rootViewController: startViewController)
         if let startFlow = startNavigationController {
             startFlow.setNavigationBarHidden(true, animated: false)
@@ -66,7 +65,14 @@ class StartFlowController: Subscriber {
         }
     }
 
-    @objc func dismiss() {
-        store.perform(action: HideStartFlow())
+    private func pushPinCreationViewController() {
+        let pinCreationViewController = PinCreationViewController()
+        pinCreationViewController.title = "Create New Wallet"
+        
+        //Access the view as we want to trigger viewDidLoad before it gets pushed.
+        //This makes the keyboard slide in from the right.
+        let _ = pinCreationViewController.view
+        startNavigationController?.setNavigationBarHidden(false, animated: false)
+        startNavigationController?.pushViewController(pinCreationViewController, animated: true)
     }
 }
