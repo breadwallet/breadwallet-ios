@@ -8,18 +8,6 @@
 
 import Foundation
 
-struct IncrementImportantValue: Action {
-    let reduce: Reducer = {
-        return $0.clone(newCount: $0.count + 1)
-    }
-}
-
-struct DecrementImportantValue: Action {
-    let reduce: Reducer = {
-        return $0.clone(newCount: $0.count - 1)
-    }
-}
-
 struct ShowStartFlow: Action {
     let reduce: Reducer = {
         return $0.clone(isStartFlowVisible: true)
@@ -54,20 +42,17 @@ struct PinCreation {
 
 extension State {
     func clone(newCount: Int) -> State {
-        return State(count: newCount,
-                     isStartFlowVisible: self.isStartFlowVisible,
+        return State(isStartFlowVisible: self.isStartFlowVisible,
                      pinCreationStep: self.pinCreationStep)
     }
 
     func clone(isStartFlowVisible: Bool) -> State {
-        return State(count: self.count,
-                     isStartFlowVisible: isStartFlowVisible,
+        return State(isStartFlowVisible: isStartFlowVisible,
                      pinCreationStep: self.pinCreationStep)
     }
 
     func clone(pinCreationStep: PinCreationStep) -> State {
-        return State(count: self.count,
-                     isStartFlowVisible: self.isStartFlowVisible,
+        return State(isStartFlowVisible: self.isStartFlowVisible,
                      pinCreationStep: pinCreationStep)
     }
 }

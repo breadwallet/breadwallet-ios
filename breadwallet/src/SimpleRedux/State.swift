@@ -9,15 +9,13 @@
 import Foundation
 
 struct State {
-    let count: Int
     let isStartFlowVisible: Bool
     let pinCreationStep: PinCreationStep
 }
 
 extension State {
     static var initial: State {
-        return State(   count:              0,
-                        isStartFlowVisible: false,
+        return State(   isStartFlowVisible: false,
                         pinCreationStep:    .none)
     }
 }
