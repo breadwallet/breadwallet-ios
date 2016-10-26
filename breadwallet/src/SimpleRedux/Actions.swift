@@ -8,6 +8,7 @@
 
 import Foundation
 
+//MARK: Start Flow
 struct ShowStartFlow: Action {
     let reduce: Reducer = {
         return $0.clone(isStartFlowVisible: true)
@@ -20,6 +21,7 @@ struct HideStartFlow: Action {
     }
 }
 
+//MARK: Pin Creation
 struct PinCreation {
 
     struct PinEntryComplete: Action {
@@ -56,19 +58,38 @@ fileprivate func stateForNewPin(newPin: String, previousPin: String, state: Stat
     }
 }
 
+//MARK: Paper Phrase
+struct PaperPhrase {
+    struct Start: Action {
+        let reduce: Reducer = {
+            return $0.clone(paperPhraseStep: .start)
+        }
+    }
+}
+
+//MARK: State Creation Helpers
 extension State {
     func clone(newCount: Int) -> State {
-        return State(isStartFlowVisible: self.isStartFlowVisible,
-                     pinCreationStep: self.pinCreationStep)
+        return State(isStartFlowVisible:    self.isStartFlowVisible,
+                     pinCreationStep:       self.pinCreationStep,
+                     paperPhraseStep:       self.paperPhraseStep)
     }
 
     func clone(isStartFlowVisible: Bool) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
-                     pinCreationStep: self.pinCreationStep)
+        return State(isStartFlowVisible:    isStartFlowVisible,
+                     pinCreationStep:       self.pinCreationStep,
+                     paperPhraseStep:       self.paperPhraseStep)
     }
 
     func clone(pinCreationStep: PinCreationStep) -> State {
-        return State(isStartFlowVisible: self.isStartFlowVisible,
-                     pinCreationStep: pinCreationStep)
+        return State(isStartFlowVisible:    self.isStartFlowVisible,
+                     pinCreationStep:       pinCreationStep,
+                     paperPhraseStep:       self.paperPhraseStep)
+    }
+
+    func clone(paperPhraseStep: PaperPhraseStep) -> State {
+        return State(isStartFlowVisible:    self.isStartFlowVisible,
+                     pinCreationStep:       self.pinCreationStep,
+                     paperPhraseStep:       paperPhraseStep)
     }
 }

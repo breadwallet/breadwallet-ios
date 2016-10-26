@@ -188,6 +188,7 @@
 		CE20C9131DBE67CA00C8397A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9121DBE67CA00C8397A /* Constants.swift */; };
 		CE20C9171DBE6F2A00C8397A /* UIButton+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9161DBE6F2A00C8397A /* UIButton+BRWAdditions.swift */; };
 		CE20C9191DBE7B8200C8397A /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9181DBE7B8200C8397A /* State.swift */; };
+		CEAA9E8F1DC074410066731D /* PaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E8E1DC074410066731D /* PaperPhraseViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1119,6 +1120,7 @@
 		CE20C9121DBE67CA00C8397A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = src/Constants.swift; sourceTree = "<group>"; };
 		CE20C9161DBE6F2A00C8397A /* UIButton+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIButton+BRWAdditions.swift"; path = "src/Extensions/UIButton+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CE20C9181DBE7B8200C8397A /* State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = State.swift; path = src/SimpleRedux/State.swift; sourceTree = "<group>"; };
+		CEAA9E8E1DC074410066731D /* PaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaperPhraseViewController.swift; path = src/ViewControllers/PaperPhraseViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2207,6 +2209,7 @@
 				CE20C8F91DBB04C900C8397A /* MenuViewController.swift */,
 				CE20C9061DBC587200C8397A /* StartViewController.swift */,
 				CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */,
+				CEAA9E8E1DC074410066731D /* PaperPhraseViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -2753,6 +2756,7 @@
 				CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */,
 				CE20C90E1DBE52B000C8397A /* UIView+BRWAdditions.swift in Sources */,
 				CE20C8F81DBB047700C8397A /* ReceiveViewController.swift in Sources */,
+				CEAA9E8F1DC074410066731D /* PaperPhraseViewController.swift in Sources */,
 				CE20C9171DBE6F2A00C8397A /* UIButton+BRWAdditions.swift in Sources */,
 				CE20C9131DBE67CA00C8397A /* Constants.swift in Sources */,
 				CE0CD1591DBFBCF5004023DA /* AlertCoordinator.swift in Sources */,

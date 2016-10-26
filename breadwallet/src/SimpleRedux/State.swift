@@ -11,12 +11,14 @@ import Foundation
 struct State {
     let isStartFlowVisible: Bool
     let pinCreationStep: PinCreationStep
+    let paperPhraseStep: PaperPhraseStep
 }
 
 extension State {
     static var initial: State {
         return State(   isStartFlowVisible: false,
-                        pinCreationStep:    .none)
+                        pinCreationStep:    .none,
+                        paperPhraseStep:    .none)
     }
 }
 
@@ -27,6 +29,14 @@ enum PinCreationStep {
     case confirmFail(pin: String)
     case save(pin: String)
 }
+
+enum PaperPhraseStep {
+    case none
+    case start
+    case confirm
+    case save
+}
+
 
 extension PinCreationStep: Equatable {}
 
