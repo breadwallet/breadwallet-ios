@@ -21,6 +21,19 @@ struct HideStartFlow: Action {
 }
 
 struct PinCreation {
+
+    struct PinEntryComplete: Action {
+        let reduce: Reducer = {
+            if $0.pinCreationStep == .start {
+                return $0.clone(pinCreationStep: .confirm)
+            } else if $0.pinCreationStep == .confirm {
+                return $0.clone(pinCreationStep: .save)
+            } else {
+                assert(false, "warning - invalid state")
+            }
+        }
+    }
+
     struct Start: Action {
         let reduce: Reducer = {
             return $0.clone(pinCreationStep: .start)

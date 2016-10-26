@@ -66,7 +66,7 @@ class StartFlowController: Subscriber {
     }
 
     private func pushPinCreationViewController() {
-        let pinCreationViewController = PinCreationViewController()
+        let pinCreationViewController = PinCreationViewController(store: store)
         pinCreationViewController.title = "Create New Wallet"
         
         //Access the view as we want to trigger viewDidLoad before it gets pushed.

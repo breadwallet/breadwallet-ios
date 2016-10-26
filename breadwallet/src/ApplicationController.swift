@@ -19,10 +19,12 @@ class ApplicationController {
     private let menuTabBarItem =    UITabBarItem(title: "MENU", image: #imageLiteral(resourceName: "MenuTabIcon"), selectedImage: nil)
 
     private var startFlowController: StartFlowController?
+    private var alertCoordinator: AlertCoordinator?
 
     func launch(options: [UIApplicationLaunchOptionsKey: Any]?) {
         setupAppearance()
         setupRootViewController()
+        setupAlertCoordinator()
         window.makeKeyAndVisible()
         store.perform(action: ShowStartFlow())
     }
@@ -40,5 +42,9 @@ class ApplicationController {
         ]
         window.rootViewController = tabBarController
         startFlowController = StartFlowController(store: store, rootViewController: tabBarController)
+    }
+
+    private func setupAlertCoordinator() {
+        alertCoordinator = AlertCoordinator(store: store, window: window)
     }
 }

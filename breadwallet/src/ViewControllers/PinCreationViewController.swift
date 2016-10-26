@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PinCreationViewController: UIViewController {
+class PinCreationViewController: UIViewController, Subscriber {
 
     private let instruction: UILabel = {
         let label = UILabel()
@@ -36,7 +36,10 @@ class PinCreationViewController: UIViewController {
         return label
     }()
 
-    init() {
+    fileprivate let maxPinLength = 6
+    private let store: Store
+    init(store: Store) {
+        self.store = store
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
     }
@@ -51,10 +54,17 @@ class PinCreationViewController: UIViewController {
         addSubviews()
         addConstraints()
         pin.becomeFirstResponder()
+        pin.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: .editingChanged)
+        pin.delegate = self
+        addStoreSubscriptions()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        store.unsubscribe(self)
     }
 
     private func setData() {
-        instruction.text = "Set PIN"
         caption.text = "Your PIN will be used to login to Bread."
         body.text = "Write down your PIN and store it in a place you can access even if your phone is broken or lost."
     }
@@ -96,7 +106,44 @@ class PinCreationViewController: UIViewController {
             ])
     }
 
+    private func addStoreSubscriptions() {
+        store.subscribe(self, subscription: Subscription(
+            selector: { $0.pinCreationStep != $1.pinCreationStep },
+            callback: { state in
+                switch state.pinCreationStep {
+                    case .start:
+                        self.instruction.text = "Set PIN"
+                    case .confirm:
+                        self.instruction.text = "Re-Enter PIN"
+                        self.pin.text = ""
+                    case .save:
+                        self.instruction.text = "Re-Enter PIN"
+                    case .none:
+                        self.instruction.text = ""
+                }
+        }))
+    }
+
+
+    @objc private func textFieldDidChange(textField: UITextField) {
+        if textField.text?.lengthOfBytes(using: .utf8) == maxPinLength {
+            store.perform(action: PinCreation.PinEntryComplete())
+        }
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+extension PinCreationViewController: UITextFieldDelegate {
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let oldLength = textField.text?.lengthOfBytes(using: .utf8) else { return true }
+        let replacementLength = string.lengthOfBytes(using: .utf8)
+        let rangeLength = range.length
+        let newLength = oldLength - rangeLength + replacementLength
+        return newLength <= maxPinLength
+    }
+
 }
