@@ -33,6 +33,7 @@ enum PinCreationStep {
 enum PaperPhraseStep {
     case none
     case start
+    case write
     case confirm
     case save
 }

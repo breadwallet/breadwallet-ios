@@ -62,7 +62,17 @@ fileprivate func stateForNewPin(newPin: String, previousPin: String, state: Stat
 struct PaperPhrase {
     struct Start: Action {
         let reduce: Reducer = {
-            return $0.clone(paperPhraseStep: .start)
+            return State(isStartFlowVisible:    $0.isStartFlowVisible,
+                         pinCreationStep:       .none,
+                         paperPhraseStep:       .start)
+        }
+    }
+
+    struct Write: Action {
+        let reduce: Reducer = {
+            return State(isStartFlowVisible:    $0.isStartFlowVisible,
+                         pinCreationStep:       .none,
+                         paperPhraseStep:       .write)
         }
     }
 }
@@ -85,11 +95,5 @@ extension State {
         return State(isStartFlowVisible:    self.isStartFlowVisible,
                      pinCreationStep:       pinCreationStep,
                      paperPhraseStep:       self.paperPhraseStep)
-    }
-
-    func clone(paperPhraseStep: PaperPhraseStep) -> State {
-        return State(isStartFlowVisible:    self.isStartFlowVisible,
-                     pinCreationStep:       self.pinCreationStep,
-                     paperPhraseStep:       paperPhraseStep)
     }
 }

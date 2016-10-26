@@ -19,6 +19,7 @@ class StartFlowController: Subscriber {
         self.rootViewController = rootViewController
         addStartSubscription()
         addPinCreationSubscription()
+        addPaperPhraseCreationSubscription()
     }
 
     private func addStartSubscription() {
@@ -39,6 +40,20 @@ class StartFlowController: Subscriber {
             callback: {
                 if case .start = $0.pinCreationStep {
                     self.pushPinCreationViewController()
+                }
+        }))
+    }
+
+    private func addPaperPhraseCreationSubscription() {
+        store.subscribe(self, subscription: Subscription(
+            selector: { $0.paperPhraseStep != $1.paperPhraseStep },
+            callback: {
+                if case .start = $0.paperPhraseStep {
+                    self.pushStartPaperPhraseCreationViewController()
+                }
+
+                if case .write = $0.paperPhraseStep {
+                    self.pushWritePaperPhraseViewController()
                 }
         }))
     }
@@ -67,5 +82,18 @@ class StartFlowController: Subscriber {
         let _ = pinCreationViewController.view
         startNavigationController?.setNavigationBarHidden(false, animated: false)
         startNavigationController?.pushViewController(pinCreationViewController, animated: true)
+    }
+
+    private func pushStartPaperPhraseCreationViewController() {
+        let paperPhraseViewController = StartPaperPhraseViewController(store: store)
+        paperPhraseViewController.title = "Paper Key"
+        paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
+        startNavigationController?.pushViewController(paperPhraseViewController, animated: true)
+    }
+
+    private func pushWritePaperPhraseViewController() {
+        let writeViewController = WritePaperPhraseViewController(store: store)
+        writeViewController.title = "Paper Key"
+        startNavigationController?.pushViewController(writeViewController, animated: true)
     }
 }

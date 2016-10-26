@@ -56,13 +56,26 @@ class AlertCoordinator: Subscriber {
             ])
         keyboardWindow.layoutIfNeeded()
         if #available(iOS 10.0, *) {
-            let springParameters = UISpringTimingParameters(dampingRatio: 0.7)
-            let animator = UIViewPropertyAnimator(duration: 0.6, timingParameters: springParameters)
-            animator.addAnimations {
+
+            let presentAnimator = UIViewPropertyAnimator.springAnimation {
                 topConstraint.constant = size.height - self.alertHeight
                 keyboardWindow.layoutIfNeeded()
             }
-            animator.startAnimation()
+
+            let dismissAnimator = UIViewPropertyAnimator.springAnimation {
+                topConstraint.constant = size.height
+                keyboardWindow.layoutIfNeeded()
+            }
+
+            presentAnimator.addCompletion { _ in
+                dismissAnimator.startAnimation(afterDelay: 2.0)
+            }
+
+            dismissAnimator.addCompletion { _ in
+                self.store.perform(action: PaperPhrase.Start())
+            }
+
+            presentAnimator.startAnimation()
         }
     }
 

@@ -38,6 +38,7 @@ class PinCreationViewController: UIViewController, Subscriber {
 
     fileprivate let maxPinLength = 6
     private let store: Store
+
     init(store: Store) {
         self.store = store
         super.init(nibName: nil, bundle: nil)
@@ -130,7 +131,7 @@ class PinCreationViewController: UIViewController, Subscriber {
                         self.instruction.text = "Wrong pin, please try again"
                         self.pin.text = ""
                     case .none:
-                        self.instruction.text = ""
+                        print("noop")
                 }
         }))
     }
