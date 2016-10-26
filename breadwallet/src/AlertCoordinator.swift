@@ -31,7 +31,7 @@ class AlertCoordinator: Subscriber {
         store.subscribe(self, subscription: Subscription(
             selector: { _,_ in true },
             callback: { state in
-                if state.pinCreationStep == .save {
+                if case .save(_) = state.pinCreationStep {
                     self.presentAlert()
                 }
         }))

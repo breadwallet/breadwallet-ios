@@ -37,15 +37,8 @@ class StartFlowController: Subscriber {
         store.subscribe(self, subscription: Subscription(
             selector: { $0.pinCreationStep != $1.pinCreationStep },
             callback: {
-                switch $0.pinCreationStep {
-                    case .start:
-                        self.pushPinCreationViewController()
-                    case .confirm:
-                        print("confirm")
-                    case .save:
-                        print("save")
-                    case .none:
-                        print("none")
+                if case .start = $0.pinCreationStep {
+                    self.pushPinCreationViewController()
                 }
         }))
     }

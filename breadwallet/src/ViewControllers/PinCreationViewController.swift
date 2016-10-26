@@ -108,7 +108,15 @@ class PinCreationViewController: UIViewController, Subscriber {
 
     private func addStoreSubscriptions() {
         store.subscribe(self, subscription: Subscription(
-            selector: { $0.pinCreationStep != $1.pinCreationStep },
+            selector: {
+                //It's possible to get repeat confirmFail state updates, so
+                //we need to subscribe to all of them, even if the state doesn't change
+                if case .confirmFail(_) = $0.pinCreationStep {
+                    return true
+                } else {
+                    return $0.pinCreationStep != $1.pinCreationStep
+                }
+            },
             callback: { state in
                 switch state.pinCreationStep {
                     case .start:
@@ -118,6 +126,9 @@ class PinCreationViewController: UIViewController, Subscriber {
                         self.pin.text = ""
                     case .save:
                         self.instruction.text = "Re-Enter PIN"
+                    case .confirmFail:
+                        self.instruction.text = "Wrong pin, please try again"
+                        self.pin.text = ""
                     case .none:
                         self.instruction.text = ""
                 }
@@ -127,7 +138,7 @@ class PinCreationViewController: UIViewController, Subscriber {
 
     @objc private func textFieldDidChange(textField: UITextField) {
         if textField.text?.lengthOfBytes(using: .utf8) == maxPinLength {
-            store.perform(action: PinCreation.PinEntryComplete())
+            store.perform(action: PinCreation.PinEntryComplete(newPin: textField.text!))
         }
     }
 

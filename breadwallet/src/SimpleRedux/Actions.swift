@@ -23,13 +23,20 @@ struct HideStartFlow: Action {
 struct PinCreation {
 
     struct PinEntryComplete: Action {
-        let reduce: Reducer = {
-            if $0.pinCreationStep == .start {
-                return $0.clone(pinCreationStep: .confirm)
-            } else if $0.pinCreationStep == .confirm {
-                return $0.clone(pinCreationStep: .save)
-            } else {
-                assert(false, "warning - invalid state")
+        let reduce: Reducer
+
+        init(newPin: String) {
+            reduce = {
+                switch $0.pinCreationStep {
+                    case .start:
+                        return $0.clone(pinCreationStep: .confirm(pin: newPin))
+                    case .confirm(let previousPin):
+                        return stateForNewPin(newPin: newPin, previousPin: previousPin, state: $0)
+                    case .confirmFail(let previousPin):
+                        return stateForNewPin(newPin: newPin, previousPin: previousPin, state: $0)
+                    default:
+                        assert(false, "Warning - invalid state")
+                }
             }
         }
     }
@@ -39,17 +46,13 @@ struct PinCreation {
             return $0.clone(pinCreationStep: .start)
         }
     }
+}
 
-    struct Confirm: Action {
-        let reduce: Reducer = {
-            return $0.clone(pinCreationStep: .confirm)
-        }
-    }
-
-    struct Save: Action {
-        let reduce: Reducer = {
-            return $0.clone(pinCreationStep: .save)
-        }
+fileprivate func stateForNewPin(newPin: String, previousPin: String, state: State) -> State {
+    if newPin == previousPin {
+        return state.clone(pinCreationStep: .save(pin: newPin))
+    } else {
+        return state.clone(pinCreationStep: .confirmFail(pin: previousPin))
     }
 }
 
