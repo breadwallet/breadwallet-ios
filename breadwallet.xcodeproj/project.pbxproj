@@ -191,6 +191,8 @@
 		CEAA9E8F1DC074410066731D /* StartPaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */; };
 		CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */; };
 		CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */; };
+		CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */; };
+		CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E961DC18E1F0066731D /* PhraseView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1125,6 +1127,8 @@
 		CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartPaperPhraseViewController.swift; path = src/ViewControllers/StartPaperPhraseViewController.swift; sourceTree = "<group>"; };
 		CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewPropertyAnimator+BRWAdditions.swift"; path = "src/Extensions/UIViewPropertyAnimator+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WritePaperPhraseViewController.swift; path = src/ViewControllers/WritePaperPhraseViewController.swift; sourceTree = "<group>"; };
+		CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UILabel+BRWAdditions.swift"; path = "src/Extensions/UILabel+BRWAdditions.swift"; sourceTree = "<group>"; };
+		CEAA9E961DC18E1F0066731D /* PhraseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhraseView.swift; path = src/Views/PhraseView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2227,6 +2231,7 @@
 				CE20C90D1DBE52B000C8397A /* UIView+BRWAdditions.swift */,
 				CE20C9161DBE6F2A00C8397A /* UIButton+BRWAdditions.swift */,
 				CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */,
+				CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2253,6 +2258,7 @@
 			isa = PBXGroup;
 			children = (
 				CE20C9101DBE5B6F00C8397A /* Circle.swift */,
+				CEAA9E961DC18E1F0066731D /* PhraseView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2767,10 +2773,12 @@
 				CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */,
 				CE20C9131DBE67CA00C8397A /* Constants.swift in Sources */,
 				CE0CD1591DBFBCF5004023DA /* AlertCoordinator.swift in Sources */,
+				CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */,
 				75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */,
 				CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */,
 				CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */,
 				CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */,
+				CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */,
 				CE20C8F41DBAF73E00C8397A /* SendViewController.swift in Sources */,
 				CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */,
 				CE20C9011DBBFFF800C8397A /* Actions.swift in Sources */,

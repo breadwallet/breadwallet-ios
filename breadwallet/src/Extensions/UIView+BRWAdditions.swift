@@ -50,4 +50,30 @@ extension UIView {
         translatesAutoresizingMaskIntoConstraints = false
         return NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: toTop, attribute: .top , multiplier: 1.0, constant: constant)
     }
+
+    func constrainTopCorners(sidePadding: CGFloat, topPadding: CGFloat, topLayoutGuide: UILayoutSupport) {
+        guard let view = superview else { assert(false, "Superview cannot be nil when adding contraints") }
+        constrain([
+                constraint(.leading, toView: view, constant: sidePadding),
+                NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: topPadding),
+                constraint(.trailing, toView: view, constant: -sidePadding)
+            ])
+    }
+
+    func constrainBottomCorners(sidePadding: CGFloat, bottomPadding: CGFloat) {
+        guard let view = superview else { assert(false, "Superview cannot be nil when adding contraints") }
+        constrain([
+                constraint(.leading, toView: view, constant: sidePadding),
+                constraint(.bottom, toView: view, constant: -bottomPadding),
+                constraint(.trailing, toView: view, constant: -sidePadding)
+            ])
+    }
+
+    func constrainToCenter() {
+        guard let view = superview else { assert(false, "Superview cannot be nil when adding contraints") }
+        constrain([
+            constraint(.centerX, toView: view, constant: 0.0),
+            constraint(.centerY, toView: view, constant: 0.0)
+        ])
+    }
 }

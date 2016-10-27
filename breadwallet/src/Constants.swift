@@ -14,7 +14,7 @@ struct Constants {
         static let single: CGFloat =    8.0
         static let double: CGFloat =    16.0
         static let triple: CGFloat =    24.0
-        static let quadr: CGFloat =     32.0
+        static let quad: CGFloat =     32.0
     }
     struct Sizes {
         static let buttonHeight: CGFloat = 48.0
