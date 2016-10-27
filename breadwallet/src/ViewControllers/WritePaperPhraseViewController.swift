@@ -13,6 +13,8 @@ class WritePaperPhraseViewController: UIViewController {
     private let store: Store
     private let words = ["belong", "mountains", "liverish", "resin", "camion", "negus", "turn", "mandarin", "stumpy", "acerb", "pinworm", "hopeful"]
     private let label = UILabel.makeWrappingLabel(font: UIFont.preferredFont(forTextStyle: .body))
+    private let stepLabel = UILabel.makeWrappingLabel(font: UIFont.preferredFont(forTextStyle: .body))
+
     private lazy var phraseViews: [PhraseView] = {
         return self.words.map { PhraseView(phrase: $0) }
     }()
@@ -24,7 +26,11 @@ class WritePaperPhraseViewController: UIViewController {
     private var phraseOffscreenOffset: CGFloat {
         return view.bounds.width/2.0 + PhraseView.defaultSize.width/2.0
     }
-    private var currentPhraseIndex = 0
+    private var currentPhraseIndex = 0 {
+        didSet {
+            stepLabel.text = "\(currentPhraseIndex + 1) of \(words.count)"
+        }
+    }
 
     init(store: Store) {
         self.store = store
@@ -34,6 +40,9 @@ class WritePaperPhraseViewController: UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = .white
         label.text = "Write down each word on a piece of paper and store it in a safe place."
+        stepLabel.text = "1 of \(words.count)"
+        stepLabel.textAlignment = .center
+        stepLabel.textColor = .darkGray
         addSubviews()
         addConstraints()
         addButtonTargets()
@@ -41,6 +50,7 @@ class WritePaperPhraseViewController: UIViewController {
 
     private func addSubviews() {
         view.addSubview(label)
+        view.addSubview(stepLabel)
         view.addSubview(proceed)
         view.addSubview(previous)
         phraseViews.forEach { view.addSubview($0) }
@@ -61,6 +71,12 @@ class WritePaperPhraseViewController: UIViewController {
                     xConstraint
                 ])
         }
+
+        stepLabel.constrain([
+                NSLayoutConstraint(item: stepLabel, attribute: .top, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: PhraseView.defaultSize.height/2.0 + Constants.Padding.single),
+                stepLabel.constraint(.centerX, toView: view, constant: 0.0),
+                stepLabel.constraint(.width, constant: 200.0) //The transitions are smoother if this view is forced to be wider than it needs to be
+            ])
 
         proceedWidth = proceed.constraint(.width, toView: view, constant: -Constants.Padding.double*2)
         proceed.constrain([
@@ -86,7 +102,6 @@ class WritePaperPhraseViewController: UIViewController {
 
     @objc private func proceedTapped() {
         guard currentPhraseIndex < phraseViews.count - 1 else {
-            print("count: \(currentPhraseIndex)")
             return store.perform(action: PaperPhrase.Confirm()) }
         if currentPhraseIndex == 0 {
             showBothButtons()
