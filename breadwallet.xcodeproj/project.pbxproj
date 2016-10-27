@@ -194,6 +194,7 @@
 		CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */; };
 		CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E961DC18E1F0066731D /* PhraseView.swift */; };
 		CEAA9E991DC262800066731D /* ConfirmPaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E981DC262800066731D /* ConfirmPaperPhraseViewController.swift */; };
+		CEAA9E9B1DC2B9320066731D /* ConfirmPhrase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E9A1DC2B9320066731D /* ConfirmPhrase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1131,6 +1132,7 @@
 		CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UILabel+BRWAdditions.swift"; path = "src/Extensions/UILabel+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CEAA9E961DC18E1F0066731D /* PhraseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhraseView.swift; path = src/Views/PhraseView.swift; sourceTree = "<group>"; };
 		CEAA9E981DC262800066731D /* ConfirmPaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConfirmPaperPhraseViewController.swift; path = src/ViewControllers/ConfirmPaperPhraseViewController.swift; sourceTree = "<group>"; };
+		CEAA9E9A1DC2B9320066731D /* ConfirmPhrase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConfirmPhrase.swift; path = src/Views/ConfirmPhrase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2262,6 +2264,7 @@
 			children = (
 				CE20C9101DBE5B6F00C8397A /* Circle.swift */,
 				CEAA9E961DC18E1F0066731D /* PhraseView.swift */,
+				CEAA9E9A1DC2B9320066731D /* ConfirmPhrase.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2777,6 +2780,7 @@
 				CE20C9131DBE67CA00C8397A /* Constants.swift in Sources */,
 				CE0CD1591DBFBCF5004023DA /* AlertCoordinator.swift in Sources */,
 				CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */,
+				CEAA9E9B1DC2B9320066731D /* ConfirmPhrase.swift in Sources */,
 				75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */,
 				CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */,
 				CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */,
