@@ -18,7 +18,7 @@ class ApplicationController {
     private let receiveTabBarItem = UITabBarItem(title: "RECEIVE", image: #imageLiteral(resourceName: "ReceiveTabIcon"), selectedImage: nil)
     private let menuTabBarItem =    UITabBarItem(title: "MENU", image: #imageLiteral(resourceName: "MenuTabIcon"), selectedImage: nil)
 
-    private var startFlowController: StartFlowController?
+    private var startFlowController: StartFlowPresenter?
     private var alertCoordinator: AlertCoordinator?
 
     func launch(options: [UIApplicationLaunchOptionsKey: Any]?) {
@@ -41,7 +41,7 @@ class ApplicationController {
             MenuViewController(tabBarItem: menuTabBarItem)
         ]
         window.rootViewController = tabBarController
-        startFlowController = StartFlowController(store: store, rootViewController: tabBarController)
+        startFlowController = StartFlowPresenter(store: store, rootViewController: tabBarController)
     }
 
     private func setupAlertCoordinator() {

@@ -1,5 +1,5 @@
 //
-//  StartFlowController.swift
+//  StartFlowPresenter.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-10-22.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StartFlowController: Subscriber {
+class StartFlowPresenter: Subscriber {
 
     private let store: Store
     private let rootViewController: UIViewController
