@@ -16,7 +16,7 @@ class WritePaperPhraseViewController: UIViewController {
     private lazy var phraseViews: [PhraseView] = {
         return self.words.map { PhraseView(phrase: $0) }
     }()
-    private let proceed = UIButton.makeOutlineButton(title: "Next")
+    private let proceed = UIButton.makeOutlineButton(title: "Next") //This is awkwardly named because nextResponder is now named next is swift 3 :(
     private let previous = UIButton.makeOutlineButton(title: "Previous")
     private var proceedWidth: NSLayoutConstraint?
     private var previousWidth: NSLayoutConstraint?
@@ -24,7 +24,7 @@ class WritePaperPhraseViewController: UIViewController {
     private var phraseOffscreenOffset: CGFloat {
         return view.bounds.width/2.0 + PhraseView.defaultSize.width/2.0
     }
-    private var count = 0
+    private var currentPhraseIndex = 0
 
     init(store: Store) {
         self.store = store
@@ -77,7 +77,6 @@ class WritePaperPhraseViewController: UIViewController {
                 previous.constraint(.bottom, toView: view, constant: -Constants.Padding.quad),
                 previousWidth!
             ])
-
     }
 
     private func addButtonTargets() {
@@ -86,25 +85,29 @@ class WritePaperPhraseViewController: UIViewController {
     }
 
     @objc private func proceedTapped() {
-        guard count < phraseViews.count - 1 else { return }
-        transitionTo(isNext: true)
-        if self.count == 0 {
+        guard currentPhraseIndex < phraseViews.count - 1 else { return }
+        if currentPhraseIndex == 0 {
             showBothButtons()
         }
+        transitionTo(isNext: true)
     }
 
     @objc private func previousTapped() {
-        guard count > 0 else { return }
-        transitionTo(isNext: false)
-        if self.count == 1 {
+        guard currentPhraseIndex > 0 else { return }
+        if currentPhraseIndex == 1 {
             showOneButton()
         }
+        transitionTo(isNext: false)
     }
 
     private func transitionTo(isNext: Bool) {
-        let viewToHide = phraseViews[count]
-        let viewToShow = phraseViews[isNext ? count + 1 : count - 1]
-
+        let viewToHide = phraseViews[currentPhraseIndex]
+        let viewToShow = phraseViews[isNext ? currentPhraseIndex + 1 : currentPhraseIndex - 1]
+        if isNext {
+            currentPhraseIndex += 1
+        } else {
+            currentPhraseIndex -= 1
+        }
         if #available(iOS 10.0, *) {
             let animator = UIViewPropertyAnimator.springAnimation {
                 viewToHide.xConstraint?.constant = isNext ? -self.phraseOffscreenOffset : self.phraseOffscreenOffset
@@ -112,13 +115,6 @@ class WritePaperPhraseViewController: UIViewController {
                 self.view.layoutIfNeeded()
             }
             animator.startAnimation()
-            animator.addCompletion { _ in
-                if isNext {
-                    self.count += 1
-                } else {
-                    self.count -= 1
-                }
-            }
         }
     }
 
