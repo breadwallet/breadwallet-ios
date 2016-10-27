@@ -86,58 +86,55 @@ class WritePaperPhraseViewController: UIViewController {
     }
 
     @objc private func proceedTapped() {
-
         guard count < phraseViews.count - 1 else { return }
-
-        let viewToHide = phraseViews[count]
-        let viewToShow = phraseViews[count + 1]
-
-        if #available(iOS 10.0, *) {
-            let animator = UIViewPropertyAnimator.springAnimation { 
-                viewToHide.xConstraint?.constant = -self.phraseOffscreenOffset
-                viewToShow.xConstraint?.constant = 0
-                self.view.layoutIfNeeded()
-            }
-            animator.startAnimation()
-            animator.addCompletion { _ in
-
-                self.count += 1
-            }
-        }
+        transitionTo(isNext: true)
         if self.count == 0 {
-            UIView.animate(withDuration: 0.4) {
-                self.proceedWidth?.constant = -self.view.bounds.width/2.0 - Constants.Padding.double - Constants.Padding.half
-                self.previousWidth?.constant = -self.view.bounds.width/2.0 - Constants.Padding.double - Constants.Padding.half
-                self.view.layoutIfNeeded()
-            }
+            showBothButtons()
         }
-
     }
 
     @objc private func previousTapped() {
         guard count > 0 else { return }
+        transitionTo(isNext: false)
+        if self.count == 1 {
+            showOneButton()
+        }
+    }
 
+    private func transitionTo(isNext: Bool) {
         let viewToHide = phraseViews[count]
-        let viewToShow = phraseViews[count - 1]
+        let viewToShow = phraseViews[isNext ? count + 1 : count - 1]
 
         if #available(iOS 10.0, *) {
             let animator = UIViewPropertyAnimator.springAnimation {
-                viewToHide.xConstraint?.constant = self.phraseOffscreenOffset
+                viewToHide.xConstraint?.constant = isNext ? -self.phraseOffscreenOffset : self.phraseOffscreenOffset
                 viewToShow.xConstraint?.constant = 0
                 self.view.layoutIfNeeded()
             }
             animator.startAnimation()
             animator.addCompletion { _ in
-
-                self.count -= 1
+                if isNext {
+                    self.count += 1
+                } else {
+                    self.count -= 1
+                }
             }
         }
-        if self.count == 1 {
-            UIView.animate(withDuration: 0.4) {
-                self.proceedWidth?.constant = -Constants.Padding.double*2
-                self.previousWidth?.constant = -self.view.bounds.width
-                self.view.layoutIfNeeded()
-            }
+    }
+
+    private func showBothButtons() {
+        UIView.animate(withDuration: 0.4) {
+            self.proceedWidth?.constant = -self.view.bounds.width/2.0 - Constants.Padding.double - Constants.Padding.half
+            self.previousWidth?.constant = -self.view.bounds.width/2.0 - Constants.Padding.double - Constants.Padding.half
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    private func showOneButton() {
+        UIView.animate(withDuration: 0.4) {
+            self.proceedWidth?.constant = -Constants.Padding.double*2
+            self.previousWidth?.constant = -self.view.bounds.width
+            self.view.layoutIfNeeded()
         }
     }
 
