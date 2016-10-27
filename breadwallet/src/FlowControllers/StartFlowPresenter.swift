@@ -55,6 +55,10 @@ class StartFlowPresenter: Subscriber {
                 if case .write = $0.paperPhraseStep {
                     self.pushWritePaperPhraseViewController()
                 }
+
+                if case .confirm = $0.paperPhraseStep {
+                    self.pushConfirmPaperPhraseViewController()
+                }
         }))
     }
 
@@ -95,5 +99,11 @@ class StartFlowPresenter: Subscriber {
         let writeViewController = WritePaperPhraseViewController(store: store)
         writeViewController.title = "Paper Key"
         startNavigationController?.pushViewController(writeViewController, animated: true)
+    }
+
+    private func pushConfirmPaperPhraseViewController() {
+        let confirmViewController = ConfirmPaperPhraseViewController(store: store)
+        confirmViewController.title = "Paper Key"
+        startNavigationController?.pushViewController(confirmViewController, animated: true)
     }
 }

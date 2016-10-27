@@ -85,7 +85,9 @@ class WritePaperPhraseViewController: UIViewController {
     }
 
     @objc private func proceedTapped() {
-        guard currentPhraseIndex < phraseViews.count - 1 else { return }
+        guard currentPhraseIndex < phraseViews.count - 1 else {
+            print("count: \(currentPhraseIndex)")
+            return store.perform(action: PaperPhrase.Confirm()) }
         if currentPhraseIndex == 0 {
             showBothButtons()
         }

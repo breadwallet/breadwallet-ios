@@ -75,6 +75,14 @@ struct PaperPhrase {
                          paperPhraseStep:       .write)
         }
     }
+
+    struct Confirm: Action {
+        let reduce: Reducer = {
+            return State(isStartFlowVisible:    $0.isStartFlowVisible,
+                         pinCreationStep:       .none,
+                         paperPhraseStep:       .confirm)
+        }
+    }
 }
 
 //MARK: State Creation Helpers
