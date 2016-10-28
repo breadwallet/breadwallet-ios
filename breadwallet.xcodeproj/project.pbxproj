@@ -199,6 +199,7 @@
 		CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */; };
 		CEAA9EA31DC2FC700066731D /* CircularPro-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA11DC2FC700066731D /* CircularPro-Book.otf */; };
 		CEAA9EA41DC2FC700066731D /* CircularPro-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */; };
+		CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1141,6 +1142,7 @@
 		CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+BRWAdditions.swift"; path = "src/Extensions/UIFont+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CEAA9EA11DC2FC700066731D /* CircularPro-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularPro-Book.otf"; path = "Fonts/CircularPro-Book.otf"; sourceTree = "<group>"; };
 		CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularPro-Medium.otf"; path = "Fonts/CircularPro-Medium.otf"; sourceTree = "<group>"; };
+		CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartNavigationDelegate.swift; path = src/FlowControllers/StartNavigationDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2265,6 +2267,7 @@
 			isa = PBXGroup;
 			children = (
 				CE20C90B1DBC59E600C8397A /* StartFlowPresenter.swift */,
+				CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */,
 			);
 			name = FlowControllers;
 			sourceTree = "<group>";
@@ -2811,6 +2814,7 @@
 				CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */,
 				CE20C8F41DBAF73E00C8397A /* SendViewController.swift in Sources */,
 				CEAA9E991DC262800066731D /* ConfirmPaperPhraseViewController.swift in Sources */,
+				CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */,
 				CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */,
 				CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */,
 				CE20C9011DBBFFF800C8397A /* Actions.swift in Sources */,

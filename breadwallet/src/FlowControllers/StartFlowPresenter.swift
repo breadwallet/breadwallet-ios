@@ -13,10 +13,12 @@ class StartFlowPresenter: Subscriber {
     private let store: Store
     private let rootViewController: UIViewController
     private var navigationController: UINavigationController?
+    private let navigationControllerDelegate: StartNavigationDelegate
 
     init(store: Store, rootViewController: UIViewController) {
         self.store = store
         self.rootViewController = rootViewController
+        self.navigationControllerDelegate = StartNavigationDelegate(store: store)
         addStartSubscription()
         addPinCreationSubscription()
         addPaperPhraseCreationSubscription()
@@ -65,6 +67,7 @@ class StartFlowPresenter: Subscriber {
     private func presentStartFlow() {
         let startViewController = StartViewController(store: store)
         navigationController = UINavigationController(rootViewController: startViewController)
+        navigationController?.delegate = navigationControllerDelegate
         if let startFlow = navigationController {
             startFlow.setNavigationBarHidden(true, animated: false)
             rootViewController.present(startFlow, animated: false, completion: nil)
@@ -97,6 +100,11 @@ class StartFlowPresenter: Subscriber {
     }
 
     private func pushWritePaperPhraseViewController() {
+        //TODO - This is a pretty back hack. It's due to a limitation in the architecture, where the write state
+        //will get triggered when the back button is pressed on the phrase confirm screen
+        let writeViewInStack = (navigationController?.viewControllers.filter { $0 is WritePaperPhraseViewController}.count)! > 0
+        guard !writeViewInStack else { return }
+
         let writeViewController = WritePaperPhraseViewController(store: store)
         writeViewController.title = "Paper Key"
 
