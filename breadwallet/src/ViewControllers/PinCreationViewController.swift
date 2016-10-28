@@ -22,12 +22,13 @@ class PinCreationViewController: UIViewController, Subscriber {
         return label
     }()
 
-    private let pin: UITextField = {
+    //This hidden Textfield is used under the hood for pin entry
+    //PinView is what actually gets displayed on the screen
+    private let hiddenPin: UITextField = {
         let textField = UITextField()
         textField.keyboardType = .numberPad
         textField.isSecureTextEntry = true
-        textField.placeholder = "●●●●●●"
-        textField.font = UIFont.preferredFont(forTextStyle: .headline)
+        textField.isHidden = true
         return textField
     }()
 
@@ -59,9 +60,9 @@ class PinCreationViewController: UIViewController, Subscriber {
         setData()
         addSubviews()
         addConstraints()
-        pin.becomeFirstResponder()
-        pin.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: .editingChanged)
-        pin.delegate = self
+        hiddenPin.becomeFirstResponder()
+        hiddenPin.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: .editingChanged)
+        hiddenPin.delegate = self
         addStoreSubscriptions()
     }
 
@@ -78,7 +79,7 @@ class PinCreationViewController: UIViewController, Subscriber {
     private func addSubviews() {
         view.addSubview(instruction)
         view.addSubview(caption)
-        view.addSubview(pin)
+        view.addSubview(hiddenPin)
         view.addSubview(body)
         view.addSubview(pinView)
     }
@@ -99,16 +100,11 @@ class PinCreationViewController: UIViewController, Subscriber {
                 caption.constraint(toBottom: instruction, constant: Constants.Padding.double),
                 caption.constraint(.leading, toView: instruction, constant: nil)
             ])
-        pin.constrain([
-                pin.constraint(toBottom: caption, constant: Constants.Padding.triple),
-                pin.constraint(.centerX, toView: view, constant: nil)
-            ])
-        pin.isHidden = true
         pinView.constrain([
                 pinView.constraint(toBottom: caption, constant: Constants.Padding.triple),
                 pinView.constraint(.centerX, toView: view, constant: nil),
-                pinView.constraint(.height, constant: 16.0),
-                pinView.constraint(.width, constant: 16.0*6 + 8.0*6)
+                pinView.constraint(.height, constant: PinView.defaultPinSize),
+                pinView.constraint(.width, constant: PinView.defaultPinSize*6 + Constants.Padding.single*6)
             ])
     }
 
@@ -137,16 +133,20 @@ class PinCreationViewController: UIViewController, Subscriber {
                         self.instruction.text = "Set PIN"
                     case .confirm:
                         self.instruction.text = "Re-Enter PIN"
-                        self.pin.text = ""
-                        self.pinView.fill(0)
-
+                        self.hiddenPin.text = ""
+                        //If this delay isn't here, the last pin filling in is never seen
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                            self?.pinView.fill(0)
+                        }
                     case .save:
                         self.instruction.text = "Re-Enter PIN"
                     case .confirmFail:
                         self.instruction.text = "Wrong pin, please try again"
-                        self.pin.text = ""
+                        self.hiddenPin.text = ""
                         self.pinView.shake()
-
+                        DispatchQueue.main.asyncAfter(deadline: .now() + PinView.shakeDuration) { [weak self] in
+                            self?.pinView.fill(0)
+                        }
                     case .none:
                         print("noop")
                 }

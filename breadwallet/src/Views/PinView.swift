@@ -14,6 +14,9 @@ class PinView: UIView {
     private let unFilled = (0...5).map { _ in Circle(color: .borderGray) }
     private let filled = (0...5).map { _ in Circle(color: .black) }
 
+    static let defaultPinSize: CGFloat = 24.0
+    static let shakeDuration: CFTimeInterval = 0.6
+
     init(store: Store) {
         self.store = store
         super.init(frame: CGRect())
@@ -39,7 +42,7 @@ class PinView: UIView {
         }
         let shakeGroup: CAAnimationGroup = CAAnimationGroup()
         shakeGroup.animations = [translation, rotation]
-        shakeGroup.duration = 0.6
+        shakeGroup.duration = PinView.shakeDuration
         self.layer.add(shakeGroup, forKey: "shakeIt")
     }
 
@@ -63,8 +66,8 @@ class PinView: UIView {
                 leadingConstraint = NSLayoutConstraint(item: circle, attribute: .leading, relatedBy: .equal, toItem: circles[index - 1], attribute: .trailing, multiplier: 1.0, constant: 8.0)
             }
             circle.constrain([
-                    circle.constraint(.width, constant: 16.0),
-                    circle.constraint(.height, constant: 16.0),
+                    circle.constraint(.width, constant: PinView.defaultPinSize),
+                    circle.constraint(.height, constant: PinView.defaultPinSize),
                     circle.constraint(.centerY, toView: self, constant: nil),
                     leadingConstraint
                 ])
