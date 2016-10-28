@@ -32,12 +32,20 @@ class AlertCoordinator: Subscriber {
             selector: { _,_ in true },
             callback: { state in
                 if case .save(_) = state.pinCreationStep {
-                    self.presentAlert()
+                    self.presentAlert() {
+                        self.store.perform(action: PaperPhrase.Start())
+                    }
+                }
+
+                if case .confirmed(_) = state.paperPhraseStep {
+                    self.presentAlert() {
+                        self.store.perform(action: HideStartFlow())
+                    }
                 }
         }))
     }
 
-    func presentAlert() {
+    func presentAlert(completion: @escaping ()->Void) {
 
         //TODO - This is a total hack to grab the window that keyboard is in
         //After pin creation, the alert view needs to be presented over the keyboard
@@ -72,7 +80,7 @@ class AlertCoordinator: Subscriber {
             }
 
             dismissAnimator.addCompletion { _ in
-                self.store.perform(action: PaperPhrase.Start())
+                completion()
             }
 
             presentAnimator.startAnimation()

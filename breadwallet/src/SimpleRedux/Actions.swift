@@ -16,8 +16,10 @@ struct ShowStartFlow: Action {
 }
 
 struct HideStartFlow: Action {
-    let reduce: Reducer = {
-        return $0.clone(isStartFlowVisible: false)
+    let reduce: Reducer = { _ in 
+        return State(isStartFlowVisible:    false,
+                     pinCreationStep:       .none,
+                     paperPhraseStep:       .none)
     }
 }
 
@@ -83,15 +85,18 @@ struct PaperPhrase {
                          paperPhraseStep:       .confirm)
         }
     }
+
+    struct Confirmed: Action {
+        let reduce: Reducer = {
+            return State(isStartFlowVisible:    $0.isStartFlowVisible,
+                         pinCreationStep:       .none,
+                         paperPhraseStep:       .confirmed)
+        }
+    }
 }
 
 //MARK: State Creation Helpers
 extension State {
-    func clone(newCount: Int) -> State {
-        return State(isStartFlowVisible:    self.isStartFlowVisible,
-                     pinCreationStep:       self.pinCreationStep,
-                     paperPhraseStep:       self.paperPhraseStep)
-    }
 
     func clone(isStartFlowVisible: Bool) -> State {
         return State(isStartFlowVisible:    isStartFlowVisible,

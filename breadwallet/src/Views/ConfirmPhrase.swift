@@ -12,8 +12,8 @@ import UIKit
 class ConfirmPhrase: UIView {
 
     private let label =     UILabel()
-    private let textField = UITextField()
     private let separator = UIView()
+    let textField =         UITextField()
 
     init(text: String) {
         super.init(frame: CGRect())

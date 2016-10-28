@@ -35,7 +35,7 @@ enum PaperPhraseStep {
     case start
     case write
     case confirm
-    case save
+    case confirmed
 }
 
 

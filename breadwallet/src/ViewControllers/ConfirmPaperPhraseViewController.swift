@@ -14,12 +14,18 @@ class ConfirmPaperPhraseViewController: UIViewController {
     private let separator =             UIView()
     private let confirmFirstPhrase =    ConfirmPhrase(text: "Word 3")
     private let confirmSecondPhrase =   ConfirmPhrase(text: "Word 8")
-    
+    private let submit =                UIButton.makeSolidButton(title: "Submit")
+
     private let store: Store
 
     init(store: Store) {
         self.store = store
         super.init(nibName: nil, bundle: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     override func viewDidLoad() {
@@ -29,6 +35,8 @@ class ConfirmPaperPhraseViewController: UIViewController {
         addSubviews()
         addConstraints()
         addButtonActions()
+
+        confirmFirstPhrase.textField.becomeFirstResponder()
     }
 
     private func addSubviews() {
@@ -36,6 +44,7 @@ class ConfirmPaperPhraseViewController: UIViewController {
         view.addSubview(separator)
         view.addSubview(confirmFirstPhrase)
         view.addSubview(confirmSecondPhrase)
+        view.addSubview(submit)
     }
 
     private func addConstraints() {
@@ -58,7 +67,29 @@ class ConfirmPaperPhraseViewController: UIViewController {
     }
 
     private func addButtonActions() {
+        submit.addTarget(self, action: #selector(checkTextFields), for: .touchUpInside)
+    }
 
+    private func addSubmitButtonConstraints(keyboardHeight: CGFloat) {
+        submit.constrain([
+                NSLayoutConstraint(item: submit, attribute: .bottom, relatedBy: .equal, toItem: bottomLayoutGuide, attribute: .top, multiplier: 1.0, constant: -Constants.Padding.single - keyboardHeight),
+                submit.constraint(.leading, toView: view, constant: Constants.Padding.double),
+                submit.constraint(.trailing, toView: view, constant: -Constants.Padding.double),
+                submit.constraint(.height, constant: Constants.Sizes.buttonHeight)
+            ])
+    }
+
+    @objc private func checkTextFields() {
+        if confirmFirstPhrase.textField.text == "liverish" && confirmSecondPhrase.textField.text == "mandarin" {
+            store.perform(action: PaperPhrase.Confirmed())
+        }
+    }
+
+    @objc private func keyboardWillShow(notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+        if let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue {
+            self.addSubmitButtonConstraints(keyboardHeight: frameValue.cgRectValue.height)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
