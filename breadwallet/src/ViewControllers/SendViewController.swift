@@ -10,6 +10,8 @@ import UIKit
 
 class SendViewController: UIViewController, Subscriber {
 
+    let button = UIButton.makeSolidButton(title: "Present Start Flow")
+
     let store: Store
     init(store: Store, tabBarItem: UITabBarItem) {
         self.store = store
@@ -19,6 +21,18 @@ class SendViewController: UIViewController, Subscriber {
 
     override func viewDidLoad() {
         view.backgroundColor = .white
+        view.addSubview(button)
+        button.constrain([
+                button.constraint(.height, constant: Constants.Sizes.buttonHeight),
+                button.constraint(.leading, toView: view, constant: Constants.Padding.double),
+                button.constraint(.trailing, toView: view, constant: -Constants.Padding.double),
+                button.constraint(.centerY, toView: view, constant: nil)
+            ])
+        button.addTarget(self, action: #selector(presentStart), for: .touchUpInside)
+    }
+
+    @objc private func presentStart() {
+        store.perform(action: ShowStartFlow())
     }
 
     required init?(coder aDecoder: NSCoder) {
