@@ -10,8 +10,7 @@ import UIKit
 
 class ConfirmPaperPhraseViewController: UIViewController {
 
-    private let label =                 UILabel.makeWrappingLabel(font: UIFont.preferredFont(forTextStyle: .body))
-    private let separator =             UIView()
+    private let label =                 UILabel.makeWrappingLabel(font: UIFont.customBody(size: 16.0))
     private let confirmFirstPhrase =    ConfirmPhrase(text: "Word 3")
     private let confirmSecondPhrase =   ConfirmPhrase(text: "Word 8")
     private let submit =                UIButton.makeSolidButton(title: "Submit")
@@ -31,7 +30,6 @@ class ConfirmPaperPhraseViewController: UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = .white
         label.text = "Prove you wrote down your paper key by answering the following questions."
-        separator.backgroundColor = .darkGray
         addSubviews()
         addConstraints()
         addButtonActions()
@@ -41,21 +39,15 @@ class ConfirmPaperPhraseViewController: UIViewController {
 
     private func addSubviews() {
         view.addSubview(label)
-        view.addSubview(separator)
         view.addSubview(confirmFirstPhrase)
         view.addSubview(confirmSecondPhrase)
         view.addSubview(submit)
     }
 
     private func addConstraints() {
-        label.constrainTopCorners(sidePadding: Constants.Padding.double, topPadding: Constants.Padding.triple, topLayoutGuide: topLayoutGuide)
-        separator.constrain([
-                separator.constraint(toBottom: label, constant: Constants.Padding.double),
-                separator.constraint(.height, constant: 1.0),
-                separator.constraint(.width, toView: view, constant: 0.0)
-            ])
+        label.constrainTopCorners(sidePadding: Constants.Padding.double, topPadding: Constants.Padding.double, topLayoutGuide: topLayoutGuide)
         confirmFirstPhrase.constrain([
-                confirmFirstPhrase.constraint(toBottom: separator, constant: 0.0),
+                confirmFirstPhrase.constraint(toBottom: label, constant: 0.0),
                 confirmFirstPhrase.constraint(.width, toView: view, constant: 0.0),
                 confirmFirstPhrase.constraint(.centerX, toView: view, constant: 0.0)
             ])

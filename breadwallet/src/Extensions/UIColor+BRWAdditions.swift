@@ -20,4 +20,12 @@ extension UIColor {
     static var borderGray: UIColor {
         return UIColor(white: 221.0/255.0, alpha: 1.0)
     }
+
+    static var separatorGray: UIColor {
+        return UIColor(white: 221.0/255.0, alpha: 1.0)
+    }
+
+    static var grayText: UIColor {
+        return UIColor(white: 136.0/255.0, alpha: 1.0)
+    }
 }

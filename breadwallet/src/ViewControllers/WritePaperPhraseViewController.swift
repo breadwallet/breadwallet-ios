@@ -12,8 +12,8 @@ class WritePaperPhraseViewController: UIViewController {
 
     private let store: Store
     private let words = ["belong", "mountains", "liverish", "resin", "camion", "negus", "turn", "mandarin", "stumpy", "acerb", "pinworm", "hopeful"]
-    private let label = UILabel.makeWrappingLabel(font: UIFont.preferredFont(forTextStyle: .body))
-    private let stepLabel = UILabel.makeWrappingLabel(font: UIFont.preferredFont(forTextStyle: .body))
+    private let label = UILabel.makeWrappingLabel(font: UIFont.customBody(size: 16.0))
+    private let stepLabel = UILabel.makeWrappingLabel(font: UIFont.customMedium(size: 13.0))
 
     private lazy var phraseViews: [PhraseView] = {
         return self.words.map { PhraseView(phrase: $0) }
@@ -39,10 +39,14 @@ class WritePaperPhraseViewController: UIViewController {
 
     override func viewDidLoad() {
         view.backgroundColor = .white
+
         label.text = "Write down each word on a piece of paper and store it in a safe place."
+        label.textAlignment = .center
+
         stepLabel.text = "1 of \(words.count)"
         stepLabel.textAlignment = .center
-        stepLabel.textColor = .darkGray
+        stepLabel.textColor = UIColor(white: 170.0/255.0, alpha: 1.0)
+
         addSubviews()
         addConstraints()
         addButtonTargets()

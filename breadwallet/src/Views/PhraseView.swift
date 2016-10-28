@@ -28,6 +28,7 @@ class PhraseView: UIView {
         label.constrainToCenter()
         label.textColor = .white
         label.text = phrase
+        label.font = UIFont.customBold(size: 16.0)
         backgroundColor = .brand
         layer.cornerRadius = 10.0
     }

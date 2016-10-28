@@ -15,6 +15,7 @@ extension UIButton {
         button.backgroundColor = .brand
         button.layer.cornerRadius = 5.0
         button.tintColor = .white
+        button.titleLabel?.font = UIFont.customMedium(size: 16.0)
         return button
     }
 
@@ -26,6 +27,7 @@ extension UIButton {
         button.layer.borderWidth = 1.0
         button.layer.cornerRadius = 5.0
         button.tintColor = .black
+        button.titleLabel?.font = UIFont.customMedium(size: 16.0)
         return button
     }
 }
