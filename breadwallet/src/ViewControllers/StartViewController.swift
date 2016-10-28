@@ -32,6 +32,7 @@ class StartViewController: UIViewController {
 
     private func setData() {
         brand.text = "Bread"
+        brand.font = UIFont.customBold(size: 26.0)
     }
 
     private func addSubviews() {

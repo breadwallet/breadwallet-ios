@@ -31,6 +31,7 @@ class ApplicationController {
 
     private func setupAppearance() {
         window.tintColor = .brand
+        UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: UIFont.header]
     }
 
     private func setupRootViewController() {

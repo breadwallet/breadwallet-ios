@@ -18,18 +18,21 @@ class ConfirmPhrase: UIView {
     init(text: String) {
         super.init(frame: CGRect())
         label.text = text
-        separator.backgroundColor = .darkGray
+        separator.backgroundColor = .separatorGray
         setupSubviews()
     }
 
     private func setupSubviews() {
+        label.font = UIFont.customBody(size: 14.0)
+        label.textColor = UIColor(white: 170.0/255.0, alpha: 1.0)
+
         addSubview(label)
         addSubview(textField)
         addSubview(separator)
 
         label.constrain([
                 label.constraint(.leading, toView: self, constant: Constants.Padding.single),
-                label.constraint(.top, toView: self, constant: Constants.Padding.quad)
+                label.constraint(.top, toView: self, constant: Constants.Padding.single)
             ])
         textField.constrain([
                 textField.constraint(.leading, toView: label, constant: nil),

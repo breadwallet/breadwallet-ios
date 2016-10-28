@@ -12,11 +12,13 @@ class PinCreationViewController: UIViewController, Subscriber {
 
     private let instruction: UILabel = {
         let label = UILabel()
+        label.font = UIFont.customBold(size: 16.0)
         return label
     }()
 
     private let caption: UILabel = {
         let label = UILabel()
+        label.font = UIFont.customBody(size: 14.0)
         return label
     }()
 
@@ -33,6 +35,8 @@ class PinCreationViewController: UIViewController, Subscriber {
         let label = UILabel()
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
+        label.font = UIFont.customBody(size: 13.0)
+        label.textColor = .grayText
         return label
     }()
 
