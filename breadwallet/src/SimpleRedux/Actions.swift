@@ -45,6 +45,12 @@ struct PinCreation {
         }
     }
 
+    struct Reset: Action {
+        let reduce: Reducer = {
+            return $0.clone(pinCreationStep: .none)
+        }
+    }
+
     struct Start: Action {
         let reduce: Reducer = {
             return $0.clone(pinCreationStep: .start)
