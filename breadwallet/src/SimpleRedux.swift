@@ -48,6 +48,9 @@ class Store {
 
     //Subscription callback is immediately called with current State value on subscription
     //and then any time the selected value changes
+
+    //TODO - The callsites of this function could be cleaned up quite a bit if the
+    //instantiation of the Subscription struct was brought into this function.
     func subscribe(_ subscriber: Subscriber, subscription: Subscription) {
         let key = subscriber.hashValue
         if subscriptions[key] != nil {

@@ -72,6 +72,8 @@ class ConfirmPaperPhraseViewController: UIViewController {
     }
 
     @objc private func checkTextFields() {
+
+        //TODO - These strings should be received from the store and more feedback for incorrect strings should be added
         if confirmFirstPhrase.textField.text == "liverish" && confirmSecondPhrase.textField.text == "mandarin" {
             store.perform(action: PaperPhrase.Confirmed())
         }
