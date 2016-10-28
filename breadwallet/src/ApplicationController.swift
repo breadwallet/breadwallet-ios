@@ -33,7 +33,7 @@ class ApplicationController {
         window.tintColor = .brand
         UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: UIFont.header]
         //Hack to globally hide the back button text
-        UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffsetMake(0, -500.0), for: .default)
+        UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffsetMake(-500.0, -500.0), for: .default)
     }
 
     private func setupRootViewController() {
