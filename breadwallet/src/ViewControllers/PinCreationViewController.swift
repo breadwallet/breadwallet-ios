@@ -39,12 +39,13 @@ class PinCreationViewController: UIViewController, Subscriber {
         label.textColor = .grayText
         return label
     }()
-
+    private let pinView: PinView
     fileprivate let maxPinLength = 6
     private let store: Store
 
     init(store: Store) {
         self.store = store
+        self.pinView = PinView(store: store)
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
     }
@@ -79,6 +80,7 @@ class PinCreationViewController: UIViewController, Subscriber {
         view.addSubview(caption)
         view.addSubview(pin)
         view.addSubview(body)
+        view.addSubview(pinView)
     }
 
     @objc private func keyboardWillShow(notification: Notification) {
@@ -100,6 +102,13 @@ class PinCreationViewController: UIViewController, Subscriber {
         pin.constrain([
                 pin.constraint(toBottom: caption, constant: Constants.Padding.triple),
                 pin.constraint(.centerX, toView: view, constant: nil)
+            ])
+        pin.isHidden = true
+        pinView.constrain([
+                pinView.constraint(toBottom: caption, constant: Constants.Padding.triple),
+                pinView.constraint(.centerX, toView: view, constant: nil),
+                pinView.constraint(.height, constant: 16.0),
+                pinView.constraint(.width, constant: 16.0*6 + 8.0*6)
             ])
     }
 
@@ -129,11 +138,15 @@ class PinCreationViewController: UIViewController, Subscriber {
                     case .confirm:
                         self.instruction.text = "Re-Enter PIN"
                         self.pin.text = ""
+                        self.pinView.fill(0)
+
                     case .save:
                         self.instruction.text = "Re-Enter PIN"
                     case .confirmFail:
                         self.instruction.text = "Wrong pin, please try again"
                         self.pin.text = ""
+                        self.pinView.shake()
+
                     case .none:
                         print("noop")
                 }
@@ -142,7 +155,9 @@ class PinCreationViewController: UIViewController, Subscriber {
 
 
     @objc private func textFieldDidChange(textField: UITextField) {
-        if textField.text?.lengthOfBytes(using: .utf8) == maxPinLength {
+        guard let pinLength = textField.text?.lengthOfBytes(using: .utf8) else { return }
+        pinView.fill(pinLength)
+        if pinLength == maxPinLength {
             store.perform(action: PinCreation.PinEntryComplete(newPin: textField.text!))
         }
     }

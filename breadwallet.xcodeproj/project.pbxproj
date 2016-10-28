@@ -200,6 +200,7 @@
 		CEAA9EA31DC2FC700066731D /* CircularPro-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA11DC2FC700066731D /* CircularPro-Book.otf */; };
 		CEAA9EA41DC2FC700066731D /* CircularPro-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */; };
 		CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */; };
+		CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA71DC3342E0066731D /* PinView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1143,6 +1144,7 @@
 		CEAA9EA11DC2FC700066731D /* CircularPro-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularPro-Book.otf"; path = "Fonts/CircularPro-Book.otf"; sourceTree = "<group>"; };
 		CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularPro-Medium.otf"; path = "Fonts/CircularPro-Medium.otf"; sourceTree = "<group>"; };
 		CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartNavigationDelegate.swift; path = src/FlowControllers/StartNavigationDelegate.swift; sourceTree = "<group>"; };
+		CEAA9EA71DC3342E0066731D /* PinView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinView.swift; path = src/Views/PinView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2278,6 +2280,7 @@
 				CE20C9101DBE5B6F00C8397A /* Circle.swift */,
 				CEAA9E961DC18E1F0066731D /* PhraseView.swift */,
 				CEAA9E9A1DC2B9320066731D /* ConfirmPhrase.swift */,
+				CEAA9EA71DC3342E0066731D /* PinView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2797,6 +2800,7 @@
 			files = (
 				CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */,
 				CE20C8FA1DBB04C900C8397A /* MenuViewController.swift in Sources */,
+				CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */,
 				CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */,
 				CE20C90E1DBE52B000C8397A /* UIView+BRWAdditions.swift in Sources */,
 				CE20C8F81DBB047700C8397A /* ReceiveViewController.swift in Sources */,
