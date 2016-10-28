@@ -10,7 +10,7 @@ import UIKit
 
 class Circle: UIView {
 
-    let color: UIColor
+    private let color: UIColor
 
     static let defaultSize: CGFloat = 64.0
 
