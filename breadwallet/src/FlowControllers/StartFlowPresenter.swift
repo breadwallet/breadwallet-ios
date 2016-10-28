@@ -12,7 +12,7 @@ class StartFlowPresenter: Subscriber {
 
     private let store: Store
     private let rootViewController: UIViewController
-    private var startNavigationController: UINavigationController?
+    private var navigationController: UINavigationController?
 
     init(store: Store, rootViewController: UIViewController) {
         self.store = store
@@ -64,46 +64,62 @@ class StartFlowPresenter: Subscriber {
 
     private func presentStartFlow() {
         let startViewController = StartViewController(store: store)
-        startNavigationController = UINavigationController(rootViewController: startViewController)
-        if let startFlow = startNavigationController {
+        navigationController = UINavigationController(rootViewController: startViewController)
+        if let startFlow = navigationController {
             startFlow.setNavigationBarHidden(true, animated: false)
             rootViewController.present(startFlow, animated: false, completion: nil)
         }
     }
 
     private func dismissStartFlow() {
-        startNavigationController?.dismiss(animated: true) { [weak self] in
-            self?.startNavigationController = nil
+        navigationController?.dismiss(animated: true) { [weak self] in
+            self?.navigationController = nil
         }
     }
 
     private func pushPinCreationViewController() {
         let pinCreationViewController = PinCreationViewController(store: store)
         pinCreationViewController.title = "Create New Wallet"
-        
+
         //Access the view as we want to trigger viewDidLoad before it gets pushed.
         //This makes the keyboard slide in from the right.
         let _ = pinCreationViewController.view
-        startNavigationController?.setNavigationBarHidden(false, animated: false)
-        startNavigationController?.pushViewController(pinCreationViewController, animated: true)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        setBackArrow()
+        navigationController?.pushViewController(pinCreationViewController, animated: true)
     }
 
     private func pushStartPaperPhraseCreationViewController() {
         let paperPhraseViewController = StartPaperPhraseViewController(store: store)
         paperPhraseViewController.title = "Paper Key"
         paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
-        startNavigationController?.pushViewController(paperPhraseViewController, animated: true)
+        navigationController?.pushViewController(paperPhraseViewController, animated: true)
     }
 
     private func pushWritePaperPhraseViewController() {
         let writeViewController = WritePaperPhraseViewController(store: store)
         writeViewController.title = "Paper Key"
-        startNavigationController?.pushViewController(writeViewController, animated: true)
+
+        let button = UIButton.makeCloseButton()
+        button.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        writeViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
+        navigationController?.pushViewController(writeViewController, animated: true)
     }
 
     private func pushConfirmPaperPhraseViewController() {
         let confirmViewController = ConfirmPaperPhraseViewController(store: store)
         confirmViewController.title = "Paper Key"
-        startNavigationController?.pushViewController(confirmViewController, animated: true)
+        navigationController?.pushViewController(confirmViewController, animated: true)
+    }
+
+    private func setBackArrow() {
+        let image = #imageLiteral(resourceName: "Back")
+        let renderedImage = image.withRenderingMode(.alwaysOriginal)
+        navigationController?.navigationBar.backIndicatorImage = renderedImage
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = renderedImage
+    }
+
+    @objc private func closeButtonTapped() {
+        store.perform(action: HideStartFlow())
     }
 }

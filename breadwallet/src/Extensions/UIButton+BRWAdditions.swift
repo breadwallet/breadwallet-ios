@@ -30,4 +30,12 @@ extension UIButton {
         button.titleLabel?.font = UIFont.customMedium(size: 16.0)
         return button
     }
+
+    static func makeCloseButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        button.setImage(#imageLiteral(resourceName: "Close"), for: .normal)
+        button.tintColor = .black
+        return button
+    }
 }
