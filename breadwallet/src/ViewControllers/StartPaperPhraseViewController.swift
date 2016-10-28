@@ -10,9 +10,12 @@ import UIKit
 
 class StartPaperPhraseViewController: UIViewController {
 
-    private let paperKey = UIButton.makeSolidButton(title: "Write Down Paper Key")
-    private let skip = UIButton.makeOutlineButton(title: "Skip")
-
+    private let paperKey =      UIButton.makeSolidButton(title: "Write Down Paper Key")
+    private let skip =          UIButton.makeOutlineButton(title: "Skip")
+    private let illustration =  UIImageView(image: #imageLiteral(resourceName: "PaperKey"))
+    private let explanation =   UILabel.makeWrappingLabel(font: UIFont.customBody(size: 16.0))
+    private let explanationString = "Protect your wallet against theft and ensure you can recover your wallet after replacing your phone or updating it’s software. "
+    private let linkString = "LEARN MORE"
     private let store: Store
 
     init(store: Store) {
@@ -22,17 +25,40 @@ class StartPaperPhraseViewController: UIViewController {
 
     override func viewDidLoad() {
         view.backgroundColor = .white
+        setupExplanation()
         addSubviews()
         addConstraints()
         addButtonActions()
     }
 
+    private func setupExplanation() {
+        let attributedString = NSMutableAttributedString(string: explanationString,
+                                                         attributes: [NSFontAttributeName: UIFont.customBody(size: 16.0)])
+        let link = NSAttributedString(string: linkString,
+                                      attributes: [NSForegroundColorAttributeName: UIColor.brand])
+        attributedString.append(link)
+        explanation.attributedText = attributedString
+    }
+
     private func addSubviews() {
+        view.addSubview(illustration)
+        view.addSubview(explanation)
         view.addSubview(paperKey)
         view.addSubview(skip)
     }
 
     private func addConstraints() {
+        illustration.constrain([
+                illustration.constraint(.width, constant: 96.0),
+                illustration.constraint(.height, constant: 88.0),
+                illustration.constraint(.centerX, toView: view, constant: nil),
+                NSLayoutConstraint(item: illustration, attribute: .top, relatedBy: .equal, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: Constants.Padding.quad)
+            ])
+        explanation.constrain([
+                explanation.constraint(toBottom: illustration, constant: Constants.Padding.triple),
+                explanation.constraint(.leading, toView: view, constant: Constants.Padding.double),
+                explanation.constraint(.trailing, toView: view, constant: -Constants.Padding.double)
+            ])
         skip.constrain([
                 skip.constraint(.leading, toView: view, constant: Constants.Padding.double),
                 skip.constraint(.bottom, toView: view, constant: -Constants.Padding.triple),
