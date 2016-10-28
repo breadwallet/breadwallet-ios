@@ -18,34 +18,49 @@ class AlertCoordinator: Subscriber {
         view.layer.cornerRadius = 6.0
         return view
     }()
+    private let label: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.customBold(size: 14.0)
+        label.textColor = .white
+        label.textAlignment = .center
+        return label
+    }()
     private let alertHeight: CGFloat = 260.0
 
     init(store: Store, window: UIWindow) {
         self.store = store
         self.window = window
 
+        setupAlertView()
         addSubscriptions()
     }
 
-    func addSubscriptions() {
+    private func setupAlertView() {
+        simpleAlertView.addSubview(label)
+        label.constrainTopCorners(sidePadding: Constants.Padding.double, topPadding: Constants.Padding.quad)
+    }
+
+    private func addSubscriptions() {
         store.subscribe(self, subscription: Subscription(
             selector: { _,_ in true },
             callback: { state in
                 if case .save(_) = state.pinCreationStep {
-                    self.presentAlert() {
+                    self.presentAlert("Pin Set") {
                         self.store.perform(action: PaperPhrase.Start())
                     }
                 }
 
                 if case .confirmed(_) = state.paperPhraseStep {
-                    self.presentAlert() {
+                    self.presentAlert("Paper Key Set") {
                         self.store.perform(action: HideStartFlow())
                     }
                 }
         }))
     }
 
-    func presentAlert(completion: @escaping ()->Void) {
+    private func presentAlert(_ text: String, completion: @escaping ()->Void) {
+
+        label.text = text
 
         //TODO - This is a total hack to grab the window that keyboard is in
         //After pin creation, the alert view needs to be presented over the keyboard
