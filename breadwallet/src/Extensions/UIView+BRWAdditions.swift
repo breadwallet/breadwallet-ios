@@ -60,6 +60,15 @@ extension UIView {
             ])
     }
 
+    func constrainTopCorners(sidePadding: CGFloat, topPadding: CGFloat) {
+        guard let view = superview else { assert(false, "Superview cannot be nil when adding contraints") }
+        constrain([
+                constraint(.leading, toView: view, constant: sidePadding),
+                constraint(.top, toView: view, constant: topPadding),
+                constraint(.trailing, toView: view, constant: -sidePadding)
+            ])
+    }
+
     func constrainBottomCorners(sidePadding: CGFloat, bottomPadding: CGFloat) {
         guard let view = superview else { assert(false, "Superview cannot be nil when adding contraints") }
         constrain([
