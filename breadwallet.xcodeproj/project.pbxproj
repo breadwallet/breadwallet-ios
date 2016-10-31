@@ -144,8 +144,6 @@
 		759DA0BB1DAC2A4F008CC49B /* ecc-256.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD7B81DAA16810075898E /* ecc-256.c */; };
 		759DA0BE1DAC36A3008CC49B /* libBRCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 755CD9D11DAA197C0075898E /* libBRCore.a */; };
 		75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7931DA5934300A983D8 /* AppDelegate.swift */; };
-		75A2A7961DA5934300A983D8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7951DA5934300A983D8 /* ViewController.swift */; };
-		75A2A7991DA5934300A983D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7971DA5934300A983D8 /* Main.storyboard */; };
 		75A2A79B1DA5934300A983D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A79A1DA5934300A983D8 /* Assets.xcassets */; };
 		75A2A79E1DA5934300A983D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */; };
 		75A2A7A91DA5934300A983D8 /* breadwalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7A81DA5934300A983D8 /* breadwalletTests.swift */; };
@@ -173,6 +171,36 @@
 		75C735AA1DAA1B9C00251ECF /* libunbound.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD4121DAA0E3E0075898E /* libunbound.c */; };
 		75C735BC1DAA1D8B00251ECF /* libunbound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 755CD9C41DAA18420075898E /* libunbound.a */; };
 		75FEFD1C1DAED56E00203D3A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 75FEFD1B1DAED56E00203D3A /* libsqlite3.tbd */; };
+		CE0CD1591DBFBCF5004023DA /* AlertCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CD1581DBFBCF5004023DA /* AlertCoordinator.swift */; };
+		CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F11DBAF71500C8397A /* ApplicationController.swift */; };
+		CE20C8F41DBAF73E00C8397A /* SendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F31DBAF73E00C8397A /* SendViewController.swift */; };
+		CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F51DBAF77D00C8397A /* UIViewController+BRWAdditions.swift */; };
+		CE20C8F81DBB047700C8397A /* ReceiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F71DBB047700C8397A /* ReceiveViewController.swift */; };
+		CE20C8FA1DBB04C900C8397A /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F91DBB04C900C8397A /* MenuViewController.swift */; };
+		CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */; };
+		CE20C8FE1DBB133A00C8397A /* SimpleRedux.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8FD1DBB133A00C8397A /* SimpleRedux.swift */; };
+		CE20C9011DBBFFF800C8397A /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9001DBBFFF800C8397A /* Actions.swift */; };
+		CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9061DBC587200C8397A /* StartViewController.swift */; };
+		CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */; };
+		CE20C90C1DBC59E600C8397A /* StartFlowPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C90B1DBC59E600C8397A /* StartFlowPresenter.swift */; };
+		CE20C90E1DBE52B000C8397A /* UIView+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C90D1DBE52B000C8397A /* UIView+BRWAdditions.swift */; };
+		CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9101DBE5B6F00C8397A /* Circle.swift */; };
+		CE20C9131DBE67CA00C8397A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9121DBE67CA00C8397A /* Constants.swift */; };
+		CE20C9171DBE6F2A00C8397A /* UIButton+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9161DBE6F2A00C8397A /* UIButton+BRWAdditions.swift */; };
+		CE20C9191DBE7B8200C8397A /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9181DBE7B8200C8397A /* State.swift */; };
+		CEAA9E8F1DC074410066731D /* StartPaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */; };
+		CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */; };
+		CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */; };
+		CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */; };
+		CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E961DC18E1F0066731D /* PhraseView.swift */; };
+		CEAA9E991DC262800066731D /* ConfirmPaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E981DC262800066731D /* ConfirmPaperPhraseViewController.swift */; };
+		CEAA9E9B1DC2B9320066731D /* ConfirmPhrase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E9A1DC2B9320066731D /* ConfirmPhrase.swift */; };
+		CEAA9E9E1DC2F90C0066731D /* CircularPro-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9E9D1DC2F90C0066731D /* CircularPro-Bold.otf */; };
+		CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */; };
+		CEAA9EA31DC2FC700066731D /* CircularPro-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA11DC2FC700066731D /* CircularPro-Book.otf */; };
+		CEAA9EA41DC2FC700066731D /* CircularPro-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */; };
+		CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */; };
+		CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA71DC3342E0066731D /* PinView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -945,8 +973,6 @@
 		759DA0A01DAB838D008CC49B /* view.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
 		75A2A7901DA5934300A983D8 /* breadwallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = breadwallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75A2A7931DA5934300A983D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		75A2A7951DA5934300A983D8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		75A2A7981DA5934300A983D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		75A2A79A1DA5934300A983D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		75A2A79D1DA5934300A983D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		75A2A79F1DA5934300A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -982,87 +1008,70 @@
 		75A2A81C1DA5938500A983D8 /* NotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		75A2A81E1DA5938500A983D8 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		75A2A8201DA5938500A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		75A2A8271DA59B2A00A983D8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A8281DA59B2A00A983D8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A8291DA59B2A00A983D8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A82A1DA59B2A00A983D8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A82B1DA59B2A00A983D8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A82C1DA59B2F00A983D8 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A82D1DA59B2F00A983D8 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A82E1DA59B2F00A983D8 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A82F1DA59B2F00A983D8 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A8301DA59B2F00A983D8 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A8311DA59B3600A983D8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		75A2A8321DA59B3600A983D8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		75A2A8331DA59B3600A983D8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Interface.strings"; sourceTree = "<group>"; };
 		75A2A8341DA59B3600A983D8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/MainInterface.strings"; sourceTree = "<group>"; };
 		75A2A8351DA59B3600A983D8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/MainInterface.strings"; sourceTree = "<group>"; };
-		75A2A8361DA59B3C00A983D8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A8371DA59B3C00A983D8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A8381DA59B3C00A983D8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A8391DA59B3C00A983D8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A83A1DA59B3C00A983D8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A83B1DA59B4500A983D8 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A83C1DA59B4500A983D8 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A83D1DA59B4500A983D8 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A83E1DA59B4500A983D8 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A83F1DA59B4500A983D8 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A8401DA59B4B00A983D8 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A8411DA59B4B00A983D8 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A8421DA59B4B00A983D8 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A8431DA59B4B00A983D8 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A8441DA59B4B00A983D8 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A8451DA59B5100A983D8 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A8461DA59B5100A983D8 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A8471DA59B5100A983D8 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A8481DA59B5100A983D8 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A8491DA59B5100A983D8 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A84A1DA59B5700A983D8 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A84B1DA59B5700A983D8 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A84C1DA59B5700A983D8 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A84D1DA59B5700A983D8 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A84E1DA59B5700A983D8 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A84F1DA59B6300A983D8 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Main.strings"; sourceTree = "<group>"; };
 		75A2A8501DA59B6300A983D8 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		75A2A8511DA59B6300A983D8 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Interface.strings"; sourceTree = "<group>"; };
 		75A2A8521DA59B6300A983D8 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/MainInterface.strings"; sourceTree = "<group>"; };
 		75A2A8531DA59B6300A983D8 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/MainInterface.strings"; sourceTree = "<group>"; };
-		75A2A8541DA59B6900A983D8 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A8551DA59B6900A983D8 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A8561DA59B6A00A983D8 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A8571DA59B6A00A983D8 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A8581DA59B6A00A983D8 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A8591DA59BBF00A983D8 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A85A1DA59BBF00A983D8 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A85B1DA59BBF00A983D8 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A85C1DA59BBF00A983D8 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A85D1DA59BBF00A983D8 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A85E1DA59BF500A983D8 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A85F1DA59BF500A983D8 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A8601DA59BF500A983D8 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A8611DA59BF500A983D8 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A8621DA59BF500A983D8 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A8631DA59BFB00A983D8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A8641DA59BFB00A983D8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A8651DA59BFB00A983D8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A8661DA59BFB00A983D8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A8671DA59BFB00A983D8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A8681DA59C0900A983D8 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A8691DA59C0900A983D8 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A86A1DA59C0900A983D8 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A86B1DA59C0900A983D8 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A86C1DA59C0900A983D8 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A86D1DA59C1500A983D8 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A86E1DA59C1500A983D8 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A86F1DA59C1500A983D8 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A8701DA59C1500A983D8 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A8711DA59C1500A983D8 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A8721DA59C8500A983D8 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A8731DA59C8500A983D8 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A8741DA59C8500A983D8 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A8751DA59C8500A983D8 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A8761DA59C8500A983D8 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/MainInterface.strings; sourceTree = "<group>"; };
-		75A2A8771DA59C8B00A983D8 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
 		75A2A8781DA59C8B00A983D8 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		75A2A8791DA59C8B00A983D8 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Interface.strings; sourceTree = "<group>"; };
 		75A2A87A1DA59C8B00A983D8 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/MainInterface.strings; sourceTree = "<group>"; };
@@ -1105,6 +1114,36 @@
 		75DC783C1DAA05B500932D9A /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
 		75FEFD1B1DAED56E00203D3A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		75FEFD201DAEE7A400203D3A /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		CE0CD1581DBFBCF5004023DA /* AlertCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlertCoordinator.swift; path = src/AlertCoordinator.swift; sourceTree = "<group>"; };
+		CE20C8F11DBAF71500C8397A /* ApplicationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationController.swift; path = src/ApplicationController.swift; sourceTree = "<group>"; };
+		CE20C8F31DBAF73E00C8397A /* SendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SendViewController.swift; path = src/ViewControllers/SendViewController.swift; sourceTree = "<group>"; };
+		CE20C8F51DBAF77D00C8397A /* UIViewController+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewController+BRWAdditions.swift"; path = "src/Extensions/UIViewController+BRWAdditions.swift"; sourceTree = "<group>"; };
+		CE20C8F71DBB047700C8397A /* ReceiveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReceiveViewController.swift; path = src/ViewControllers/ReceiveViewController.swift; sourceTree = "<group>"; };
+		CE20C8F91DBB04C900C8397A /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuViewController.swift; path = src/ViewControllers/MenuViewController.swift; sourceTree = "<group>"; };
+		CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIColor+BRWAdditions.swift"; path = "src/Extensions/UIColor+BRWAdditions.swift"; sourceTree = "<group>"; };
+		CE20C8FD1DBB133A00C8397A /* SimpleRedux.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleRedux.swift; path = src/SimpleRedux.swift; sourceTree = "<group>"; };
+		CE20C9001DBBFFF800C8397A /* Actions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Actions.swift; path = src/SimpleRedux/Actions.swift; sourceTree = "<group>"; };
+		CE20C9061DBC587200C8397A /* StartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartViewController.swift; path = src/ViewControllers/StartViewController.swift; sourceTree = "<group>"; };
+		CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinCreationViewController.swift; path = src/ViewControllers/PinCreationViewController.swift; sourceTree = "<group>"; };
+		CE20C90B1DBC59E600C8397A /* StartFlowPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartFlowPresenter.swift; path = src/FlowControllers/StartFlowPresenter.swift; sourceTree = "<group>"; };
+		CE20C90D1DBE52B000C8397A /* UIView+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+BRWAdditions.swift"; path = "src/Extensions/UIView+BRWAdditions.swift"; sourceTree = "<group>"; };
+		CE20C9101DBE5B6F00C8397A /* Circle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Circle.swift; path = src/Views/Circle.swift; sourceTree = "<group>"; };
+		CE20C9121DBE67CA00C8397A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = src/Constants.swift; sourceTree = "<group>"; };
+		CE20C9161DBE6F2A00C8397A /* UIButton+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIButton+BRWAdditions.swift"; path = "src/Extensions/UIButton+BRWAdditions.swift"; sourceTree = "<group>"; };
+		CE20C9181DBE7B8200C8397A /* State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = State.swift; path = src/SimpleRedux/State.swift; sourceTree = "<group>"; };
+		CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartPaperPhraseViewController.swift; path = src/ViewControllers/StartPaperPhraseViewController.swift; sourceTree = "<group>"; };
+		CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewPropertyAnimator+BRWAdditions.swift"; path = "src/Extensions/UIViewPropertyAnimator+BRWAdditions.swift"; sourceTree = "<group>"; };
+		CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WritePaperPhraseViewController.swift; path = src/ViewControllers/WritePaperPhraseViewController.swift; sourceTree = "<group>"; };
+		CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UILabel+BRWAdditions.swift"; path = "src/Extensions/UILabel+BRWAdditions.swift"; sourceTree = "<group>"; };
+		CEAA9E961DC18E1F0066731D /* PhraseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhraseView.swift; path = src/Views/PhraseView.swift; sourceTree = "<group>"; };
+		CEAA9E981DC262800066731D /* ConfirmPaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConfirmPaperPhraseViewController.swift; path = src/ViewControllers/ConfirmPaperPhraseViewController.swift; sourceTree = "<group>"; };
+		CEAA9E9A1DC2B9320066731D /* ConfirmPhrase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConfirmPhrase.swift; path = src/Views/ConfirmPhrase.swift; sourceTree = "<group>"; };
+		CEAA9E9D1DC2F90C0066731D /* CircularPro-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularPro-Bold.otf"; path = "Fonts/CircularPro-Bold.otf"; sourceTree = "<group>"; };
+		CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+BRWAdditions.swift"; path = "src/Extensions/UIFont+BRWAdditions.swift"; sourceTree = "<group>"; };
+		CEAA9EA11DC2FC700066731D /* CircularPro-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularPro-Book.otf"; path = "Fonts/CircularPro-Book.otf"; sourceTree = "<group>"; };
+		CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularPro-Medium.otf"; path = "Fonts/CircularPro-Medium.otf"; sourceTree = "<group>"; };
+		CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartNavigationDelegate.swift; path = src/FlowControllers/StartNavigationDelegate.swift; sourceTree = "<group>"; };
+		CEAA9EA71DC3342E0066731D /* PinView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinView.swift; path = src/Views/PinView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2015,8 +2054,15 @@
 			children = (
 				75A2A87C1DA59E4E00A983D8 /* breadwallet.entitlements */,
 				75A2A7931DA5934300A983D8 /* AppDelegate.swift */,
-				75A2A7951DA5934300A983D8 /* ViewController.swift */,
-				75A2A7971DA5934300A983D8 /* Main.storyboard */,
+				CE20C8F11DBAF71500C8397A /* ApplicationController.swift */,
+				CE20C9121DBE67CA00C8397A /* Constants.swift */,
+				CE0CD1581DBFBCF5004023DA /* AlertCoordinator.swift */,
+				CE20C90A1DBC59C500C8397A /* FlowControllers */,
+				CE20C8EF1DBAF6D300C8397A /* ViewControllers */,
+				CE20C90F1DBE5B5100C8397A /* Views */,
+				CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */,
+				CE20C8F01DBAF6E100C8397A /* Extensions */,
+				CEAA9E9C1DC2F8270066731D /* Fonts */,
 				75A2A79A1DA5934300A983D8 /* Assets.xcassets */,
 				75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */,
 				75A2A79F1DA5934300A983D8 /* Info.plist */,
@@ -2176,6 +2222,75 @@
 			);
 			name = sqlite3;
 			path = Modules/sqlite3;
+			sourceTree = "<group>";
+		};
+		CE20C8EF1DBAF6D300C8397A /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				CE20C8F31DBAF73E00C8397A /* SendViewController.swift */,
+				CE20C8F71DBB047700C8397A /* ReceiveViewController.swift */,
+				CE20C8F91DBB04C900C8397A /* MenuViewController.swift */,
+				CE20C9061DBC587200C8397A /* StartViewController.swift */,
+				CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */,
+				CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */,
+				CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */,
+				CEAA9E981DC262800066731D /* ConfirmPaperPhraseViewController.swift */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		CE20C8F01DBAF6E100C8397A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				CE20C8F51DBAF77D00C8397A /* UIViewController+BRWAdditions.swift */,
+				CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */,
+				CE20C90D1DBE52B000C8397A /* UIView+BRWAdditions.swift */,
+				CE20C9161DBE6F2A00C8397A /* UIButton+BRWAdditions.swift */,
+				CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */,
+				CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */,
+				CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */ = {
+			isa = PBXGroup;
+			children = (
+				CE20C8FD1DBB133A00C8397A /* SimpleRedux.swift */,
+				CE20C9181DBE7B8200C8397A /* State.swift */,
+				CE20C9001DBBFFF800C8397A /* Actions.swift */,
+			);
+			name = SimpleRedux;
+			sourceTree = "<group>";
+		};
+		CE20C90A1DBC59C500C8397A /* FlowControllers */ = {
+			isa = PBXGroup;
+			children = (
+				CE20C90B1DBC59E600C8397A /* StartFlowPresenter.swift */,
+				CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */,
+			);
+			name = FlowControllers;
+			sourceTree = "<group>";
+		};
+		CE20C90F1DBE5B5100C8397A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CE20C9101DBE5B6F00C8397A /* Circle.swift */,
+				CEAA9E961DC18E1F0066731D /* PhraseView.swift */,
+				CEAA9E9A1DC2B9320066731D /* ConfirmPhrase.swift */,
+				CEAA9EA71DC3342E0066731D /* PinView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		CEAA9E9C1DC2F8270066731D /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				CEAA9EA11DC2FC700066731D /* CircularPro-Book.otf */,
+				CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */,
+				CEAA9E9D1DC2F90C0066731D /* CircularPro-Bold.otf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2511,8 +2626,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				75A2A79E1DA5934300A983D8 /* LaunchScreen.storyboard in Resources */,
+				CEAA9EA31DC2FC700066731D /* CircularPro-Book.otf in Resources */,
+				CEAA9EA41DC2FC700066731D /* CircularPro-Medium.otf in Resources */,
+				CEAA9E9E1DC2F90C0066731D /* CircularPro-Bold.otf in Resources */,
 				75A2A79B1DA5934300A983D8 /* Assets.xcassets in Resources */,
-				75A2A7991DA5934300A983D8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2679,8 +2796,34 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75A2A7961DA5934300A983D8 /* ViewController.swift in Sources */,
+				CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */,
+				CE20C8FA1DBB04C900C8397A /* MenuViewController.swift in Sources */,
+				CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */,
+				CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */,
+				CE20C90E1DBE52B000C8397A /* UIView+BRWAdditions.swift in Sources */,
+				CE20C8F81DBB047700C8397A /* ReceiveViewController.swift in Sources */,
+				CEAA9E8F1DC074410066731D /* StartPaperPhraseViewController.swift in Sources */,
+				CE20C9171DBE6F2A00C8397A /* UIButton+BRWAdditions.swift in Sources */,
+				CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */,
+				CE20C9131DBE67CA00C8397A /* Constants.swift in Sources */,
+				CE0CD1591DBFBCF5004023DA /* AlertCoordinator.swift in Sources */,
+				CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */,
+				CEAA9E9B1DC2B9320066731D /* ConfirmPhrase.swift in Sources */,
 				75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */,
+				CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */,
+				CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */,
+				CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */,
+				CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */,
+				CE20C8F41DBAF73E00C8397A /* SendViewController.swift in Sources */,
+				CEAA9E991DC262800066731D /* ConfirmPaperPhraseViewController.swift in Sources */,
+				CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */,
+				CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */,
+				CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */,
+				CE20C9011DBBFFF800C8397A /* Actions.swift in Sources */,
+				CE20C9191DBE7B8200C8397A /* State.swift in Sources */,
+				CE20C8FE1DBB133A00C8397A /* SimpleRedux.swift in Sources */,
+				CE20C90C1DBC59E600C8397A /* StartFlowPresenter.swift in Sources */,
+				CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2861,31 +3004,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		75A2A7971DA5934300A983D8 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				75A2A7981DA5934300A983D8 /* Base */,
-				75A2A8271DA59B2A00A983D8 /* fr */,
-				75A2A82C1DA59B2F00A983D8 /* de */,
-				75A2A8311DA59B3600A983D8 /* zh-Hans */,
-				75A2A8361DA59B3C00A983D8 /* ja */,
-				75A2A83B1DA59B4500A983D8 /* es */,
-				75A2A8401DA59B4B00A983D8 /* it */,
-				75A2A8451DA59B5100A983D8 /* nl */,
-				75A2A84A1DA59B5700A983D8 /* ko */,
-				75A2A84F1DA59B6300A983D8 /* pt-BR */,
-				75A2A8541DA59B6900A983D8 /* da */,
-				75A2A8591DA59BBF00A983D8 /* nb */,
-				75A2A85E1DA59BF500A983D8 /* sv */,
-				75A2A8631DA59BFB00A983D8 /* ru */,
-				75A2A8681DA59C0900A983D8 /* pl */,
-				75A2A86D1DA59C1500A983D8 /* tr */,
-				75A2A8721DA59C8500A983D8 /* hu */,
-				75A2A8771DA59C8B00A983D8 /* el */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
