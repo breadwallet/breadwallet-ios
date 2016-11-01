@@ -104,6 +104,7 @@
 		754869181DAB7F8000732D70 /* strlcpy.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD3A71DAA0E3E0075898E /* strlcpy.c */; };
 		754869191DAB7F9D00732D70 /* reallocarray.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD3A31DAA0E3E0075898E /* reallocarray.c */; };
 		7548691A1DAB7FD600732D70 /* configparser.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD67E1DAA0E400075898E /* configparser.c */; };
+		75519F341DC7D20500EDF66C /* WalletManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75519F331DC7D20500EDF66C /* WalletManager.swift */; };
 		755CD9DA1DAA1A270075898E /* BRAddress.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77AE1DAA05B500932D9A /* BRAddress.c */; };
 		755CD9DB1DAA1A270075898E /* BRBase58.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77B11DAA05B500932D9A /* BRBase58.c */; };
 		755CD9DC1DAA1A270075898E /* BRBIP32Sequence.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77B31DAA05B500932D9A /* BRBIP32Sequence.c */; };
@@ -363,6 +364,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		75519F331DC7D20500EDF66C /* WalletManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletManager.swift; path = src/WalletManager.swift; sourceTree = "<group>"; };
 		755CD3181DAA099D0075898E /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		755CD32A1DAA0A110075898E /* secp256k1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1.h; sourceTree = "<group>"; };
 		755CD32B1DAA0A110075898E /* secp256k1_ecdh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1_ecdh.h; sourceTree = "<group>"; };
@@ -2056,6 +2058,7 @@
 				75A2A7931DA5934300A983D8 /* AppDelegate.swift */,
 				CE20C8F11DBAF71500C8397A /* ApplicationController.swift */,
 				CE20C9121DBE67CA00C8397A /* Constants.swift */,
+				75519F331DC7D20500EDF66C /* WalletManager.swift */,
 				CE0CD1581DBFBCF5004023DA /* AlertCoordinator.swift */,
 				CE20C90A1DBC59C500C8397A /* FlowControllers */,
 				CE20C8EF1DBAF6D300C8397A /* ViewControllers */,
@@ -2824,6 +2827,7 @@
 				CE20C8FE1DBB133A00C8397A /* SimpleRedux.swift in Sources */,
 				CE20C90C1DBC59E600C8397A /* StartFlowPresenter.swift in Sources */,
 				CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */,
+				75519F341DC7D20500EDF66C /* WalletManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
