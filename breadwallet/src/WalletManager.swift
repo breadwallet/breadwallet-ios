@@ -91,9 +91,7 @@ class WalletManager : NSObject {
         super.init()
         
         // open sqlite database
-        if sqlite3_open(dbPath, &db) != SQLITE_OK {
-            print("error opening:", dbPath)
-        }
+        if sqlite3_open(dbPath, &db) != SQLITE_OK { print("error opening:", dbPath) }
 
         // setup tables and indexes
         setupDb()
@@ -579,11 +577,10 @@ class WalletManager : NSObject {
         for p in peers {
             pk = pk + 1
             if r == SQLITE_OK { r = sqlite3_bind_int(sql, 1, pk) }
-            if r == SQLITE_OK { r = sqlite3_bind_int(sql, 2, peerEnt) }
-            if r == SQLITE_OK { r = sqlite3_bind_int(sql, 3, Int32(bitPattern: p.address.u32.3)) }
-            if r == SQLITE_OK { r = sqlite3_bind_int(sql, 4, Int32(p.port)) }
-            if r == SQLITE_OK { r = sqlite3_bind_int64(sql, 5, Int64(bitPattern: p.services)) }
-            if r == SQLITE_OK { r = sqlite3_bind_int64(sql, 6, Int64(bitPattern: p.timestamp)) }
+            if r == SQLITE_OK { r = sqlite3_bind_int(sql, 2, Int32(bitPattern: p.address.u32.3)) }
+            if r == SQLITE_OK { r = sqlite3_bind_int(sql, 3, Int32(p.port)) }
+            if r == SQLITE_OK { r = sqlite3_bind_int64(sql, 4, Int64(bitPattern: p.services)) }
+            if r == SQLITE_OK { r = sqlite3_bind_int64(sql, 5, Int64(bitPattern: p.timestamp)) }
             if r == SQLITE_OK { r = sqlite3_step(sql) }
             if r == SQLITE_DONE { r = sqlite3_reset(sql) }
         }
@@ -617,9 +614,6 @@ class WalletManager : NSObject {
         BRPeerManagerDisconnect(peerManager)
         BRPeerManagerFree(peerManager)
         BRWalletFree(wallet)
-        
-        if sqlite3_close(db) != SQLITE_OK {
-            print("error closing database")
-        }
+        if sqlite3_close(db) != SQLITE_OK { print("error closing database") }
     }
 }
