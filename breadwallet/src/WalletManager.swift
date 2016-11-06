@@ -31,6 +31,10 @@ import CSQLite3
 internal let SQLITE_STATIC = unsafeBitCast(0, to: sqlite3_destructor_type.self)
 internal let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
 
+enum WalletManagerError: Error {
+    case sqliteError(errorCode: Int32)
+}
+
 extension NSNotification.Name {
     public static let WalletBalanceChangedNotification = NSNotification.Name("WalletBalanceChanged")
     public static let WalletTxStatusUpdateNotification = NSNotification.Name("WalletTxStatusUpdate")
@@ -40,30 +44,42 @@ extension NSNotification.Name {
     public static let WalletSyncFailedNotification = NSNotification.Name("WalletSyncFailed")
 }
 
-extension BRAddress {
-    func str() -> String {
+extension BRAddress: CustomStringConvertible {
+    public var description: String {
         return String(cString: UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self))
     }
 }
 
 extension BRTxInput {
-    func addressStr() -> String {
+    public var address: String {
         return String(cString: UnsafeRawPointer([self.address]).assumingMemoryBound(to: CChar.self))
+    }
+
+    public var script: [UInt8] {
+        return [UInt8](UnsafeBufferPointer(start: self.script, count: self.scriptLen))
+    }
+
+    public var signature: [UInt8] {
+        return [UInt8](UnsafeBufferPointer(start: self.signature, count: self.sigLen))
     }
 }
 
 extension BRTxOutput {
-    func addressStr() -> String {
+    public var address: String {
         return String(cString: UnsafeRawPointer([self.address]).assumingMemoryBound(to: CChar.self))
-    }    
+    }
+    
+    public var script: [UInt8] {
+        return [UInt8](UnsafeBufferPointer(start: self.script, count: self.scriptLen))
+    }
 }
 
 extension BRTransaction {
-    func inputArray() -> [BRTxInput] {
+    public var inputs: [BRTxInput] {
         return [BRTxInput](UnsafeBufferPointer(start: self.inputs, count: self.inCount))
     }
 
-    func outputArray() -> [BRTxOutput] {
+    public var outputs: [BRTxOutput] {
         return [BRTxOutput](UnsafeBufferPointer(start: self.outputs, count: self.outCount))
     }
 }
@@ -84,15 +100,26 @@ class WalletManager : NSObject {
         let dbURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
                                                 create: false).appendingPathComponent("BreadWallet.sqlite")
         
-        self.init(masterPubKey: masterPubKey, earliestKeyTime: earliestKeyTime, dbPath: dbURL.path)
+        try self.init(masterPubKey: masterPubKey, earliestKeyTime: earliestKeyTime, dbPath: dbURL.path)
     }
     
-    init (masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String) {
+    init (masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String) throws {
         super.init()
         
         // open sqlite database
         if sqlite3_open(dbPath, &db) != SQLITE_OK {
-            print("error opening:", dbPath)
+            print(String(cString: sqlite3_errmsg(db)))
+
+            #if DEBUG
+                throw WalletManagerError.sqliteError(errorCode: sqlite3_errcode(db))
+            #else
+                try FileManager.default.removeItem(atPath: dbPath)
+                
+                if sqlite3_open(dbPath, &db) != SQLITE_OK {
+                    print(String(cString: sqlite3_errmsg(db)))
+                    throw WalletManagerError.sqliteError(errorCode: sqlite3_errcode(db))
+                }
+            #endif
         }
 
         // setup tables and indexes
@@ -201,8 +228,6 @@ class WalletManager : NSObject {
     
     // create tables and indexes (these are inherited from CoreData)
     private func setupDb() {
-        var sql: OpaquePointer? = nil
-        
         // tx table
         sqlite3_exec(db, "create table if not exists ZBRTXMETADATAENTITY (" +
             "Z_PK integer primary key," +
@@ -215,7 +240,7 @@ class WalletManager : NSObject {
             "on ZBRTXMETADATAENTITY (ZTXHASH)", nil, nil, nil)
         sqlite3_exec(db, "create index if not exists ZBRTXMETADATAENTITY_ZTYPE_INDEX " +
             "on ZBRTXMETADATAENTITY (ZTYPE)", nil, nil, nil)
-
+        
         if sqlite3_errcode(db) != SQLITE_OK {
             print(String(cString: sqlite3_errmsg(db)))
         }
@@ -242,7 +267,7 @@ class WalletManager : NSObject {
             "on ZBRMERKLEBLOCKENTITY (ZHEIGHT)", nil, nil, nil)
         sqlite3_exec(db, "create index if not exists ZBRMERKLEBLOCKENTITY_ZPREVBLOCK_INDEX " +
             "on ZBRMERKLEBLOCKENTITY (ZPREVBLOCK)", nil, nil, nil)
-
+        
         if sqlite3_errcode(db) != SQLITE_OK {
             print(String(cString: sqlite3_errmsg(db)))
         }
@@ -265,11 +290,11 @@ class WalletManager : NSObject {
                      nil, nil, nil)
         sqlite3_exec(db, "create index if not exists ZBRPEERENTITY_ZTIMESTAMP_INDEX on ZBRPEERENTITY (ZTIMESTAMP)",
                      nil, nil, nil)
-
+        
         if sqlite3_errcode(db) != SQLITE_OK {
             print(String(cString: sqlite3_errmsg(db)))
         }
-
+        
         // primary keys
         sqlite3_exec(db, "create table if not exists Z_PRIMARYKEY (" +
             "Z_ENT INTEGER PRIMARY KEY," +
@@ -285,18 +310,18 @@ class WalletManager : NSObject {
         sqlite3_exec(db, "insert into Z_PRIMARYKEY (Z_ENT, Z_NAME, Z_SUPER, Z_MAX) " +
             "select 3, 'BRPeerEntity', 0, 0 except" +
             "select 3, Z_NAME, 0, 0 from Z_PRIMARYKEY where Z_NAME = 'BRPeerEntity'", nil, nil, nil)
+
+        var sql: OpaquePointer? = nil
+
         sqlite3_prepare_v2(db, "select Z_ENT, Z_NAME from Z_PRIMARYKEY", -1, &sql, nil)
+        defer { sqlite3_finalize(sql) }
         
-        if sql != nil {
-            while sqlite3_step(sql) == SQLITE_ROW {
-                let name = String(cString: sqlite3_column_text(sql, 1))
-                
-                if name == "BRTxMetadataEntity" { txEnt = sqlite3_column_int(sql, 0) }
-                else if name == "BRTxMerkleBlockEntity" { blockEnt = sqlite3_column_int(sql, 0) }
-                else if name == "BRPeerEntity" { peerEnt = sqlite3_column_int(sql, 0) }
-            }
-        
-            sqlite3_finalize(sql)
+        while sqlite3_step(sql) == SQLITE_ROW {
+            let name = String(cString: sqlite3_column_text(sql, 1))
+            
+            if name == "BRTxMetadataEntity" { txEnt = sqlite3_column_int(sql, 0) }
+            else if name == "BRTxMerkleBlockEntity" { blockEnt = sqlite3_column_int(sql, 0) }
+            else if name == "BRPeerEntity" { peerEnt = sqlite3_column_int(sql, 0) }
         }
         
         if sqlite3_errcode(db) != SQLITE_OK {
@@ -305,116 +330,116 @@ class WalletManager : NSObject {
     }
     
     private func loadTransactions() -> [UnsafeMutablePointer<BRTransaction>?] {
-        var sql: OpaquePointer? = nil
         var transactions = [UnsafeMutablePointer<BRTransaction>?]()
-
-        sqlite3_prepare_v2(db, "select ZBLOB from ZBRTXMETADATAENTITY where ZTYPE = 1", -1, &sql, nil)
+        var sql: OpaquePointer? = nil
         
-        if sql != nil {
-            defer {
-                sqlite3_finalize(sql)
+        sqlite3_prepare_v2(db, "select ZBLOB from ZBRTXMETADATAENTITY where ZTYPE = 1", -1, &sql, nil)
+        defer { sqlite3_finalize(sql) }
+        
+        while sqlite3_step(sql) == SQLITE_ROW {
+            let len = Int(sqlite3_column_bytes(sql, 0))
+            let buf = sqlite3_column_blob(sql, 0).assumingMemoryBound(to: UInt8.self)
+            guard len >= MemoryLayout<UInt32>.size*2,
+                let tx = BRTransactionParse(buf, len - MemoryLayout<UInt32>.size*2) else {
+                return transactions
             }
-            
-            while sqlite3_step(sql) == SQLITE_ROW {
-                let len = Int(sqlite3_column_bytes(sql, 0))
-                guard let buf = sqlite3_column_blob(sql, 0),
-                    let tx = BRTransactionParse(buf.assumingMemoryBound(to: UInt8.self),
-                                                len - MemoryLayout<UInt32>.size*2) else {
-                    return []
-                }
                 
-                tx.pointee.blockHeight = buf.load(fromByteOffset: len - MemoryLayout<UInt32>.size*2,
-                                                  as: UInt32.self).littleEndian
-                tx.pointee.timestamp = buf.load(fromByteOffset: len - MemoryLayout<UInt32>.size,
-                                                as: UInt32.self).littleEndian
-                transactions.append(tx)
-            }
+            tx.pointee.blockHeight = UnsafeRawPointer(buf).load(fromByteOffset: len - MemoryLayout<UInt32>.size*2,
+                                                                as: UInt32.self).littleEndian
+            tx.pointee.timestamp = UnsafeRawPointer(buf).load(fromByteOffset: len - MemoryLayout<UInt32>.size,
+                                                              as: UInt32.self).littleEndian
+            transactions.append(tx)
         }
         
         if sqlite3_errcode(db) != SQLITE_OK {
             print(String(cString: sqlite3_errmsg(db)))
         }
-
+        
         return transactions
     }
     
     private func addTransaction(tx: UnsafeMutablePointer<BRTransaction>) {
-        var sql: OpaquePointer? = nil
         var buf = [UInt8](repeating: 0, count: BRTransactionSerialize(tx, nil, 0))
         let extra = [tx.pointee.blockHeight.littleEndian, tx.pointee.timestamp.littleEndian]
-        var pk: Int32 = -1
         
         BRTransactionSerialize(tx, &buf, buf.count)
         buf.append(contentsOf: UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
                                                    count: MemoryLayout<UInt32>.size*2))
-        
         sqlite3_exec(db, "begin exclusive", nil, nil, nil)
-        sqlite3_prepare_v2(db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(txEnt)", -1, &sql, nil)
 
-        if sql != nil && sqlite3_step(sql) == SQLITE_ROW {
-            pk = sqlite3_column_int(sql, 0)
-            sqlite3_finalize(sql)
-            sql = nil
-            sqlite3_prepare_v2(db, "insert into ZBRTXMETADATAENTITY (Z_PK, Z_ENT, Z_OPT, ZTYPE, ZBLOB, ZTXHASH) " +
-                "values (\(pk + 1), \(txEnt), 1, 1, ?, ?)", -1, &sql, nil)
-            
-            if sql != nil {
-                sqlite3_bind_blob(sql, 2, buf, Int32(buf.count), SQLITE_TRANSIENT)
-                sqlite3_bind_blob(sql, 3, [tx.pointee.txHash], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
-                sqlite3_step(sql)
-                sqlite3_exec(db, "update or fail Z_PRIMARYKEY set Z_MAX = \(pk + 1) " +
-                    "where Z_ENT = \(txEnt) and Z_MAX = \(pk)", nil, nil, nil)
-                sqlite3_exec(db, "commit", nil, nil, nil)
-            }
+        var sql: OpaquePointer? = nil
+        
+        sqlite3_prepare_v2(db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(txEnt)", -1, &sql, nil)
+        defer { sqlite3_finalize(sql) }
+        
+        guard sqlite3_step(sql) == SQLITE_ROW else {
+            print(String(cString: sqlite3_errmsg(db)))
+            sqlite3_exec(db, "rollback", nil, nil, nil)
+            return
         }
 
-        if sql != nil {
-            sqlite3_finalize(sql)
+        let pk = sqlite3_column_int(sql, 0)
+        var sql2: OpaquePointer? = nil
+        
+        sqlite3_prepare_v2(db, "insert or rollback into ZBRTXMETADATAENTITY " +
+            "(Z_PK, Z_ENT, Z_OPT, ZTYPE, ZBLOB, ZTXHASH) " +
+            "values (\(pk + 1), \(txEnt), 1, 1, ?, ?)", -1, &sql2, nil)
+        defer { sqlite3_finalize(sql2) }
+        sqlite3_bind_blob(sql2, 2, buf, Int32(buf.count), SQLITE_TRANSIENT)
+        sqlite3_bind_blob(sql2, 3, [tx.pointee.txHash], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
+
+        guard sqlite3_step(sql2) == SQLITE_OK else {
+            print(String(cString: sqlite3_errmsg(db)))
+            return
         }
         
-        if sqlite3_errcode(db) != SQLITE_OK {
+        sqlite3_exec(db, "update or rollback Z_PRIMARYKEY set Z_MAX = \(pk + 1) " +
+            "where Z_ENT = \(txEnt) and Z_MAX = \(pk)", nil, nil, nil)
+        
+        guard sqlite3_errcode(db) == SQLITE_OK else {
             print(String(cString: sqlite3_errmsg(db)))
+            return
         }
+        
+        sqlite3_exec(db, "commit", nil, nil, nil)
     }
     
     private func updateTransactions(txHashes: [UInt256], blockHeight: UInt32, timestamp: UInt32) {
-        var sql: OpaquePointer? = nil, sql2: OpaquePointer? = nil
+        guard txHashes.count > 0 else {
+            return
+        }
+
         let extra = [blockHeight.littleEndian, timestamp.littleEndian]
         let extraBuf = UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
                                            count: MemoryLayout<UInt32>.size*2)
+        var sql: OpaquePointer? = nil, sql2: OpaquePointer? = nil
         
         sqlite3_prepare_v2(db, "select ZTXHASH, ZBLOB from ZBRTXMETADATAENTITY where ZTYPE = 1 and " +
             "ZTXHASH in (" + String(repeating: "?, ", count: txHashes.count - 1) + "?)", -1, &sql, nil)
-
-        if sql != nil {
-            for i in 0..<txHashes.count {
-                sqlite3_bind_blob(sql2, i + 1, UnsafePointer(txHashes).advanced(by: i),
-                                  Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
-            }
-
-            sqlite3_prepare_v2(db, "update or fail ZBRTXMETADATAENTITY set ZBLOB = ? where ZTXHASH = ?", -1, &sql2, nil)
-            
-            if sql2 != nil {
-                while sqlite3_step(sql) == SQLITE_ROW {
-                    let hash = sqlite3_column_blob(sql, 0)
-                    let buf = sqlite3_column_blob(sql, 1).assumingMemoryBound(to: UInt8.self)
-                    var blob = [UInt8](UnsafeBufferPointer(start: buf, count: Int(sqlite3_column_bytes(sql, 1))))
-                    
-                    if blob.count > extraBuf.count {
-                        blob.replaceSubrange(blob.count - extraBuf.count..<blob.count, with: extraBuf)
-                        sqlite3_bind_blob(sql2, 1, blob, Int32(blob.count), SQLITE_TRANSIENT)
-                        sqlite3_bind_blob(sql2, 2, hash, Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
-                        sqlite3_step(sql2)
-                        sqlite3_reset(sql2)
-                    }
-                }
-                
-                sqlite3_finalize(sql2)
-            }
-            
-            sqlite3_finalize(sql)
+        defer { sqlite3_finalize(sql) }
+        
+        for i in 0..<txHashes.count {
+            sqlite3_bind_blob(sql, i + 1, UnsafePointer(txHashes).advanced(by: i),
+                              Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
         }
-
+        
+        sqlite3_prepare_v2(db, "update ZBRTXMETADATAENTITY set ZBLOB = ? where ZTXHASH = ?", -1, &sql2, nil)
+        defer { sqlite3_finalize(sql2) }
+        
+        while sqlite3_step(sql) == SQLITE_ROW {
+            let hash = sqlite3_column_blob(sql, 0)
+            let buf = sqlite3_column_blob(sql, 1).assumingMemoryBound(to: UInt8.self)
+            var blob = [UInt8](UnsafeBufferPointer(start: buf, count: Int(sqlite3_column_bytes(sql, 1))))
+                    
+            if blob.count > extraBuf.count {
+                blob.replaceSubrange(blob.count - extraBuf.count..<blob.count, with: extraBuf)
+                sqlite3_bind_blob(sql2, 1, blob, Int32(blob.count), SQLITE_TRANSIENT)
+                sqlite3_bind_blob(sql2, 2, hash, Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
+                sqlite3_step(sql2)
+                sqlite3_reset(sql2)
+            }
+        }
+        
         if sqlite3_errcode(db) != SQLITE_OK {
             print(String(cString: sqlite3_errmsg(db)))
         }
@@ -424,55 +449,47 @@ class WalletManager : NSObject {
         var sql: OpaquePointer? = nil
         
         sqlite3_prepare_v2(db, "delete from ZBRTXMETADATAENTITY where ZTYPE = 1 and ZTXHASH = ?", -1, &sql, nil)
+        defer { sqlite3_finalize(sql) }
+        sqlite3_bind_blob(sql, 1, [txHash], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
 
-        if sql != nil {
-            sqlite3_bind_blob(sql, 1, [txHash], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
-            sqlite3_step(sql)
-            sqlite3_finalize(sql)
-        }
-        
-        if sqlite3_errcode(db) != SQLITE_OK {
+        guard sqlite3_step(sql) == SQLITE_OK else {
             print(String(cString: sqlite3_errmsg(db)))
+            return
         }
     }
 
     private func loadBlocks() -> [UnsafeMutablePointer<BRMerkleBlock>?] {
-        var sql: OpaquePointer? = nil
         var blocks = [UnsafeMutablePointer<BRMerkleBlock>?]()
+        var sql: OpaquePointer? = nil
         
         sqlite3_prepare_v2(db, "select ZHEIGHT, ZNONCE, ZTARGET, ZTOTALTRANSACTIONS, ZVERSION, ZTIMESTAMP, " +
             "ZBLOCKHASH, ZFLAGS, ZHASHES, ZMERKLEROOT, ZPREVBLOCK from ZBRMERKLEBLOCKENTITY", -1, &sql, nil)
-
-        if sql != nil {
-            defer {
-                sqlite3_finalize(sql)
-            }
+        defer { sqlite3_finalize(sql) }
         
-            while sqlite3_step(sql) == SQLITE_ROW {
-                guard let b = BRMerkleBlockNew() else {
-                    return []
-                }
-                
-                b.pointee.height = UInt32(bitPattern: sqlite3_column_int(sql, 0))
-                b.pointee.nonce = UInt32(bitPattern: sqlite3_column_int(sql, 1))
-                b.pointee.target = UInt32(bitPattern: sqlite3_column_int(sql, 2))
-                b.pointee.totalTx = UInt32(bitPattern: sqlite3_column_int(sql, 3))
-                b.pointee.version = UInt32(bitPattern: sqlite3_column_int(sql, 4))
-                b.pointee.timestamp = UInt32(bitPattern: sqlite3_column_int(sql, 5))
-                b.pointee.blockHash = sqlite3_column_blob(sql, 6).assumingMemoryBound(to: UInt256.self).pointee
-                
-                let flags = sqlite3_column_blob(sql, 7).assumingMemoryBound(to: UInt8.self)
-                let flagsLen = Int(sqlite3_column_bytes(sql, 7))
-                let hashes = sqlite3_column_blob(sql, 8).assumingMemoryBound(to: UInt256.self)
-                let hashesCount = Int(sqlite3_column_bytes(sql, 8))/MemoryLayout<UInt256>.size
-                
-                BRMerkleBlockSetTxHashes(b, hashes, hashesCount, flags, flagsLen)
-                b.pointee.merkleRoot = sqlite3_column_blob(sql, 9).assumingMemoryBound(to: UInt256.self).pointee
-                b.pointee.prevBlock = sqlite3_column_blob(sql, 10).assumingMemoryBound(to: UInt256.self).pointee
-                blocks.append(b)
+        while sqlite3_step(sql) == SQLITE_ROW {
+            guard let b = BRMerkleBlockNew() else {
+                return blocks
             }
+            
+            b.pointee.height = UInt32(bitPattern: sqlite3_column_int(sql, 0))
+            b.pointee.nonce = UInt32(bitPattern: sqlite3_column_int(sql, 1))
+            b.pointee.target = UInt32(bitPattern: sqlite3_column_int(sql, 2))
+            b.pointee.totalTx = UInt32(bitPattern: sqlite3_column_int(sql, 3))
+            b.pointee.version = UInt32(bitPattern: sqlite3_column_int(sql, 4))
+            b.pointee.timestamp = UInt32(bitPattern: sqlite3_column_int(sql, 5))
+            b.pointee.blockHash = sqlite3_column_blob(sql, 6).assumingMemoryBound(to: UInt256.self).pointee
+            
+            let flags = sqlite3_column_blob(sql, 7).assumingMemoryBound(to: UInt8.self)
+            let flagsLen = Int(sqlite3_column_bytes(sql, 7))
+            let hashes = sqlite3_column_blob(sql, 8).assumingMemoryBound(to: UInt256.self)
+            let hashesCount = Int(sqlite3_column_bytes(sql, 8))/MemoryLayout<UInt256>.size
+            
+            BRMerkleBlockSetTxHashes(b, hashes, hashesCount, flags, flagsLen)
+            b.pointee.merkleRoot = sqlite3_column_blob(sql, 9).assumingMemoryBound(to: UInt256.self).pointee
+            b.pointee.prevBlock = sqlite3_column_blob(sql, 10).assumingMemoryBound(to: UInt256.self).pointee
+            blocks.append(b)
         }
-        
+    
         if sqlite3_errcode(db) != SQLITE_OK {
             print(String(cString: sqlite3_errmsg(db)))
         }
@@ -481,95 +498,90 @@ class WalletManager : NSObject {
     }
     
     private func saveBlocks(blocks: [UnsafeMutablePointer<BRMerkleBlock>?]) {
-        var sql: OpaquePointer? = nil
-        var pk: Int32 = -1
-        
-        sqlite3_exec(db, "begin exclusive", nil, nil, nil)
+        var pk: Int32 = 0
 
+        sqlite3_exec(db, "begin exclusive", nil, nil, nil)
+        
         if blocks.count > 1 {
             sqlite3_exec(db, "delete from ZBRMERKLEBLOCKENTITY", nil, nil, nil)
-            pk = 0
         }
         else {
-            sqlite3_prepare_v2(db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(blockEnt)", -1, &sql, nil)
-
-            if sql != nil {
-                if sqlite3_step(sql) == SQLITE_ROW {
-                    pk = sqlite3_column_int(sql, 0)
-                }
-                
-                sqlite3_finalize(sql)
-                sql = nil
-            }
-        }
-
-        if pk >= 0 {
-            sqlite3_prepare_v2(db, "insert into ZBRMERKLEBLOCKENTITY (Z_PK, Z_ENT, Z_OPT, ZHEIGHT, ZNONCE, " +
-                "ZTARGET, ZTOTALTRANSACTIONS, ZVERSION, ZTIMESTAMP, ZBLOCKHASH, ZFLAGS, ZHASHES, ZMERKLEROOT, " +
-                "ZPREVBLOCK) values (?, \(blockEnt), 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", -1, &sql, nil)
-
-            if sql != nil {
-                defer {
-                    sqlite3_finalize(sql)
-                }
-                
-                for b in blocks {
-                    guard let b = b else {
-                        sqlite3_exec(db, "rollback", nil, nil, nil)
-                        return
-                    }
-                    
-                    pk = pk + 1
-                    sqlite3_bind_int(sql, 1, pk)
-                    sqlite3_bind_int(sql, 2, Int32(bitPattern: b.pointee.height))
-                    sqlite3_bind_int(sql, 3, Int32(bitPattern: b.pointee.nonce))
-                    sqlite3_bind_int(sql, 4, Int32(bitPattern: b.pointee.target))
-                    sqlite3_bind_int(sql, 5, Int32(bitPattern: b.pointee.totalTx))
-                    sqlite3_bind_int(sql, 6, Int32(bitPattern: b.pointee.version))
-                    sqlite3_bind_int(sql, 7, Int32(bitPattern: b.pointee.timestamp))
-                    sqlite3_bind_blob(sql, 8, [b.pointee.blockHash], Int32(MemoryLayout<UInt256>.size),
-                                      SQLITE_TRANSIENT)
-                    sqlite3_bind_blob(sql, 9, [b.pointee.flags], Int32(b.pointee.flagsLen), SQLITE_TRANSIENT)
-                    sqlite3_bind_blob(sql, 10, [b.pointee.hashes],
-                                      Int32(MemoryLayout<UInt256>.size*b.pointee.hashesCount), SQLITE_TRANSIENT)
-                    sqlite3_bind_blob(sql, 11, [b.pointee.merkleRoot], Int32(MemoryLayout<UInt256>.size),
-                                      SQLITE_TRANSIENT)
-                    sqlite3_bind_blob(sql, 12, [b.pointee.prevBlock], Int32(MemoryLayout<UInt256>.size),
-                                      SQLITE_TRANSIENT)
-                    sqlite3_step(sql)
-                    sqlite3_reset(sql)
-                }
+            var sql: OpaquePointer? = nil
         
-                sqlite3_exec(db, "update or fail Z_PRIMARYKEY set Z_MAX = \(pk) where Z_ENT = \(blockEnt)",
-                    nil, nil, nil)
-                sqlite3_exec(db, "commit", nil, nil, nil)
+            sqlite3_prepare_v2(db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(blockEnt)", -1, &sql, nil)
+            defer { sqlite3_finalize(sql) }
+
+            guard sqlite3_step(sql) == SQLITE_ROW else {
+                print(String(cString: sqlite3_errmsg(db)))
+                sqlite3_exec(db, "rollback", nil, nil, nil)
+                return
             }
+
+            pk = sqlite3_column_int(sql, 0)
         }
 
-        if sqlite3_errcode(db) != SQLITE_OK {
-            print(String(cString: sqlite3_errmsg(db)))
+        var sql2: OpaquePointer? = nil
+
+        sqlite3_prepare_v2(db, "insert or rollback into ZBRMERKLEBLOCKENTITY (Z_PK, Z_ENT, Z_OPT, ZHEIGHT, ZNONCE, " +
+            "ZTARGET, ZTOTALTRANSACTIONS, ZVERSION, ZTIMESTAMP, ZBLOCKHASH, ZFLAGS, ZHASHES, ZMERKLEROOT, " +
+            "ZPREVBLOCK) values (?, \(blockEnt), 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", -1, &sql2, nil)
+        defer { sqlite3_finalize(sql2) }
+        
+        for b in blocks {
+            guard let b = b else {
+                sqlite3_exec(db, "rollback", nil, nil, nil)
+                return
+            }
+            
+            pk = pk + 1
+            sqlite3_bind_int(sql2, 1, pk)
+            sqlite3_bind_int(sql2, 2, Int32(bitPattern: b.pointee.height))
+            sqlite3_bind_int(sql2, 3, Int32(bitPattern: b.pointee.nonce))
+            sqlite3_bind_int(sql2, 4, Int32(bitPattern: b.pointee.target))
+            sqlite3_bind_int(sql2, 5, Int32(bitPattern: b.pointee.totalTx))
+            sqlite3_bind_int(sql2, 6, Int32(bitPattern: b.pointee.version))
+            sqlite3_bind_int(sql2, 7, Int32(bitPattern: b.pointee.timestamp))
+            sqlite3_bind_blob(sql2, 8, [b.pointee.blockHash], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
+            sqlite3_bind_blob(sql2, 9, [b.pointee.flags], Int32(b.pointee.flagsLen), SQLITE_TRANSIENT)
+            sqlite3_bind_blob(sql2, 10, [b.pointee.hashes], Int32(MemoryLayout<UInt256>.size*b.pointee.hashesCount),
+                              SQLITE_TRANSIENT)
+            sqlite3_bind_blob(sql2, 11, [b.pointee.merkleRoot], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
+            sqlite3_bind_blob(sql2, 12, [b.pointee.prevBlock], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
+            
+            guard sqlite3_step(sql2) == SQLITE_OK else {
+                print(String(cString: sqlite3_errmsg(db)))
+                return
+            }
+            
+            sqlite3_reset(sql2)
         }
+        
+        sqlite3_exec(db, "update or rollback Z_PRIMARYKEY set Z_MAX = \(pk) where Z_ENT = \(blockEnt)", nil, nil, nil)
+
+        guard sqlite3_errcode(db) == SQLITE_OK else {
+            print(String(cString: sqlite3_errmsg(db)))
+            return
+        }
+
+        sqlite3_exec(db, "commit", nil, nil, nil)
     }
     
     private func loadPeers() -> [BRPeer] {
-        var sql: OpaquePointer? = nil
         var peers = [BRPeer]()
-
+        var sql: OpaquePointer? = nil
+        
         sqlite3_prepare_v2(db, "select ZADDRESS, ZPORT, ZSERVICES, ZTIMESTAMP from ZBRPEERENTITY", -1, &sql, nil)
+        defer { sqlite3_finalize(sql) }
         
-        if sql != nil {
-            while sqlite3_step(sql) == SQLITE_ROW {
-                var p = BRPeer()
+        while sqlite3_step(sql) == SQLITE_ROW {
+            var p = BRPeer()
                 
-                p.address = UInt128(u32: (0, 0, UInt32(0xffff).bigEndian,
-                                          UInt32(bitPattern: sqlite3_column_int(sql, 0)).bigEndian))
-                p.port = UInt16(truncatingBitPattern: sqlite3_column_int(sql, 1))
-                p.services = UInt64(bitPattern: sqlite3_column_int64(sql, 2))
-                p.timestamp = UInt64(bitPattern: sqlite3_column_int64(sql, 3))
-                peers.append(p)
-            }
-        
-            sqlite3_finalize(sql)
+            p.address = UInt128(u32: (0, 0, UInt32(0xffff).bigEndian,
+                                      UInt32(bitPattern: sqlite3_column_int(sql, 0)).bigEndian))
+            p.port = UInt16(truncatingBitPattern: sqlite3_column_int(sql, 1))
+            p.services = UInt64(bitPattern: sqlite3_column_int64(sql, 2))
+            p.timestamp = UInt64(bitPattern: sqlite3_column_int64(sql, 3))
+            peers.append(p)
         }
         
         if sqlite3_errcode(db) != SQLITE_OK {
@@ -580,54 +592,59 @@ class WalletManager : NSObject {
     }
     
     private func savePeers(peers: [BRPeer]) {
-        var sql: OpaquePointer? = nil
-        var pk: Int32 = -1
+        var pk: Int32 = 0
         
         sqlite3_exec(db, "begin exclusive", nil, nil, nil)
 
         if peers.count > 1 {
             sqlite3_exec(db, "delete from ZBRPEERENTITY", nil, nil, nil)
-            pk = 0
         }
         else {
-            sqlite3_prepare_v2(db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(peerEnt)", -1, &sql, nil)
-
-            if sql != nil {
-                if sqlite3_step(sql) == SQLITE_ROW {
-                    pk = sqlite3_column_int(sql, 0)
-                }
+            var sql: OpaquePointer? = nil
             
-                sqlite3_finalize(sql)
-                sql = nil
+            sqlite3_prepare_v2(db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(peerEnt)", -1, &sql, nil)
+            defer { sqlite3_finalize(sql) }
+            
+            guard sqlite3_step(sql) == SQLITE_ROW else {
+                print(String(cString: sqlite3_errmsg(db)))
+                sqlite3_exec(db, "rollback", nil, nil, nil)
+                return
             }
+
+            pk = sqlite3_column_int(sql, 0)
         }
         
-        if pk >= 0 {
-            sqlite3_prepare_v2(db, "insert into ZBRPEERENTITY (Z_PK, Z_ENT, Z_OPT, ZADDRESS, ZMISBEHAVIN, ZPORT," +
-                "ZSERVICES, ZTIMESTAMP) values (?, \(peerEnt), 1, ?, 0, ?, ?, ?)", -1, &sql, nil)
-
-            if sql != nil {
-                for p in peers {
-                    pk = pk + 1
-                    sqlite3_bind_int(sql, 1, pk)
-                    sqlite3_bind_int(sql, 2, Int32(bitPattern: p.address.u32.3))
-                    sqlite3_bind_int(sql, 3, Int32(p.port))
-                    sqlite3_bind_int64(sql, 4, Int64(bitPattern: p.services))
-                    sqlite3_bind_int64(sql, 5, Int64(bitPattern: p.timestamp))
-                    sqlite3_step(sql)
-                    sqlite3_reset(sql)
-                }
+        var sql2: OpaquePointer? = nil
         
-                sqlite3_finalize(sql)
-                sqlite3_exec(db, "update or fail Z_PRIMARYKEY set Z_MAX = \(pk) where Z_ENT = \(peerEnt)",
-                    nil, nil, nil)
-                sqlite3_exec(db, "commit", nil, nil, nil)
-            }
-        }
+        sqlite3_prepare_v2(db, "insert or rollback into ZBRPEERENTITY " +
+            "(Z_PK, Z_ENT, Z_OPT, ZADDRESS, ZMISBEHAVIN, ZPORT, ZSERVICES, ZTIMESTAMP) " +
+            "values (?, \(peerEnt), 1, ?, 0, ?, ?, ?)", -1, &sql2, nil)
+        defer { sqlite3_finalize(sql2) }
 
-        if sqlite3_errcode(db) != SQLITE_OK {
+        for p in peers {
+            pk = pk + 1
+            sqlite3_bind_int(sql2, 1, pk)
+            sqlite3_bind_int(sql2, 2, Int32(bitPattern: p.address.u32.3))
+            sqlite3_bind_int(sql2, 3, Int32(p.port))
+            sqlite3_bind_int64(sql2, 4, Int64(bitPattern: p.services))
+            sqlite3_bind_int64(sql2, 5, Int64(bitPattern: p.timestamp))
+
+            guard sqlite3_step(sql2) == SQLITE_OK else {
+                print(String(cString: sqlite3_errmsg(db)))
+                return
+            }
+
+            sqlite3_reset(sql2)
+        }
+        
+        sqlite3_exec(db, "update or rollback Z_PRIMARYKEY set Z_MAX = \(pk) where Z_ENT = \(peerEnt)", nil, nil, nil)
+        
+        guard sqlite3_errcode(db) == SQLITE_OK else {
             print(String(cString: sqlite3_errmsg(db)))
+            return
         }
+
+        sqlite3_exec(db, "commit", nil, nil, nil)
     }
     
     private func isNetworkReachable() -> Bool {
@@ -652,6 +669,6 @@ class WalletManager : NSObject {
         BRPeerManagerDisconnect(peerManager)
         BRPeerManagerFree(peerManager)
         BRWalletFree(wallet)
-        if sqlite3_close(db) != SQLITE_OK { print("error closing database") }
+        sqlite3_close(db)
     }
 }
