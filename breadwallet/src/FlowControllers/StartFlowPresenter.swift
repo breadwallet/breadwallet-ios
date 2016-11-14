@@ -65,8 +65,8 @@ class StartFlowPresenter: Subscriber {
     }
 
     private func presentStartFlow() {
-        let startViewController = StartViewController(store: store)
-        navigationController = UINavigationController(rootViewController: startViewController)
+        let welcomeViewController = WelcomeViewController(store: store)
+        navigationController = UINavigationController(rootViewController: welcomeViewController)
         navigationController?.delegate = navigationControllerDelegate
         if let startFlow = navigationController {
             startFlow.setNavigationBarHidden(true, animated: false)
