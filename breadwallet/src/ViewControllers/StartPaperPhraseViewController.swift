@@ -10,10 +10,10 @@ import UIKit
 
 class StartPaperPhraseViewController: UIViewController {
 
-    private let paperKey =      UIButton.makeSolidButton(title: "Write Down Paper Key")
-    private let skip =          UIButton.makeOutlineButton(title: "Skip")
+    private let paperKey =      UIButton.primary(title: "Write Down Paper Key")
+    private let skip =          UIButton.secondary(title: "Skip")
     private let illustration =  UIImageView(image: #imageLiteral(resourceName: "PaperKey"))
-    private let explanation =   UILabel.makeWrappingLabel(font: UIFont.customBody(size: 16.0))
+    private let explanation =   UILabel.wrapping(font: UIFont.customBody(size: 16.0))
     private let explanationString = "Protect your wallet against theft and ensure you can recover your wallet after replacing your phone or updating it’s software. "
     private let linkString = "LEARN MORE"
     private let store: Store

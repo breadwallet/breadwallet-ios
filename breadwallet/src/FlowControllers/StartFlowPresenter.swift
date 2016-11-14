@@ -108,7 +108,7 @@ class StartFlowPresenter: Subscriber {
         let writeViewController = WritePaperPhraseViewController(store: store)
         writeViewController.title = "Paper Key"
 
-        let button = UIButton.makeCloseButton()
+        let button = UIButton.close()
         button.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         writeViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
         navigationController?.pushViewController(writeViewController, animated: true)

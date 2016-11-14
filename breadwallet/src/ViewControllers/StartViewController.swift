@@ -12,8 +12,8 @@ class StartViewController: UIViewController {
 
     private let circle =    Circle(color: .brand)
     private let brand =     UILabel()
-    private let create =    UIButton.makeSolidButton(title: "Create New Wallet")
-    private let recover =   UIButton.makeOutlineButton(title: "Recover Wallet")
+    private let create =    UIButton.primary(title: "Create New Wallet")
+    private let recover =   UIButton.secondary(title: "Recover Wallet")
 
     private let store: Store
 

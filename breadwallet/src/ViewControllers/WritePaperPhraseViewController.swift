@@ -12,14 +12,14 @@ class WritePaperPhraseViewController: UIViewController {
 
     private let store: Store
     private let words = ["belong", "mountains", "liverish", "resin", "camion", "negus", "turn", "mandarin", "stumpy", "acerb", "pinworm", "hopeful"]
-    private let label = UILabel.makeWrappingLabel(font: UIFont.customBody(size: 16.0))
-    private let stepLabel = UILabel.makeWrappingLabel(font: UIFont.customMedium(size: 13.0))
+    private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
+    private let stepLabel = UILabel.wrapping(font: UIFont.customMedium(size: 13.0))
 
     private lazy var phraseViews: [PhraseView] = {
         return self.words.map { PhraseView(phrase: $0) }
     }()
-    private let proceed = UIButton.makeOutlineButton(title: "Next") //This is awkwardly named because nextResponder is now named next is swift 3 :(
-    private let previous = UIButton.makeOutlineButton(title: "Previous")
+    private let proceed = UIButton.secondary(title: "Next") //This is awkwardly named because nextResponder is now named next is swift 3 :(
+    private let previous = UIButton.secondary(title: "Previous")
     private var proceedWidth: NSLayoutConstraint?
     private var previousWidth: NSLayoutConstraint?
 

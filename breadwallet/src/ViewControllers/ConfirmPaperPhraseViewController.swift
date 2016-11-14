@@ -10,10 +10,10 @@ import UIKit
 
 class ConfirmPaperPhraseViewController: UIViewController {
 
-    private let label =                 UILabel.makeWrappingLabel(font: UIFont.customBody(size: 16.0))
+    private let label =                 UILabel.wrapping(font: UIFont.customBody(size: 16.0))
     private let confirmFirstPhrase =    ConfirmPhrase(text: "Word 3")
     private let confirmSecondPhrase =   ConfirmPhrase(text: "Word 8")
-    private let submit =                UIButton.makeSolidButton(title: "Submit")
+    private let submit =                UIButton.primary(title: "Submit")
 
     private let store: Store
 
