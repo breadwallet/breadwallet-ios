@@ -189,6 +189,7 @@
 		CE20C9131DBE67CA00C8397A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9121DBE67CA00C8397A /* Constants.swift */; };
 		CE20C9171DBE6F2A00C8397A /* UIButton+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9161DBE6F2A00C8397A /* UIButton+BRWAdditions.swift */; };
 		CE20C9191DBE7B8200C8397A /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9181DBE7B8200C8397A /* State.swift */; };
+		CEA929711DDA5C21007335AF /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA929701DDA5C21007335AF /* WelcomeViewController.swift */; };
 		CEAA9E8F1DC074410066731D /* StartPaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */; };
 		CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */; };
 		CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */; };
@@ -1133,6 +1134,7 @@
 		CE20C9121DBE67CA00C8397A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = src/Constants.swift; sourceTree = "<group>"; };
 		CE20C9161DBE6F2A00C8397A /* UIButton+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIButton+BRWAdditions.swift"; path = "src/Extensions/UIButton+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CE20C9181DBE7B8200C8397A /* State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = State.swift; path = src/SimpleRedux/State.swift; sourceTree = "<group>"; };
+		CEA929701DDA5C21007335AF /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WelcomeViewController.swift; path = src/ViewControllers/WelcomeViewController.swift; sourceTree = "<group>"; };
 		CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartPaperPhraseViewController.swift; path = src/ViewControllers/StartPaperPhraseViewController.swift; sourceTree = "<group>"; };
 		CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewPropertyAnimator+BRWAdditions.swift"; path = "src/Extensions/UIViewPropertyAnimator+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WritePaperPhraseViewController.swift; path = src/ViewControllers/WritePaperPhraseViewController.swift; sourceTree = "<group>"; };
@@ -2238,6 +2240,7 @@
 				CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */,
 				CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */,
 				CEAA9E981DC262800066731D /* ConfirmPaperPhraseViewController.swift */,
+				CEA929701DDA5C21007335AF /* WelcomeViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -2820,6 +2823,7 @@
 				CE20C8F41DBAF73E00C8397A /* SendViewController.swift in Sources */,
 				CEAA9E991DC262800066731D /* ConfirmPaperPhraseViewController.swift in Sources */,
 				CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */,
+				CEA929711DDA5C21007335AF /* WelcomeViewController.swift in Sources */,
 				CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */,
 				CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */,
 				CE20C9011DBBFFF800C8397A /* Actions.swift in Sources */,
