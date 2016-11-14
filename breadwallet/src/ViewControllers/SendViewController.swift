@@ -10,7 +10,7 @@ import UIKit
 
 class SendViewController: UIViewController, Subscriber {
 
-    let button = UIButton.makeSolidButton(title: "Present Start Flow")
+    let button = UIButton.primary(title: "Present Start Flow")
 
     let store: Store
     init(store: Store, tabBarItem: UITabBarItem) {

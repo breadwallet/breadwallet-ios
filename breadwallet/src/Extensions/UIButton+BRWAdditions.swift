@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIButton {
-    static func makeSolidButton(title: String) -> UIButton {
+    static func primary(title: String) -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.backgroundColor = .brand
@@ -19,7 +19,7 @@ extension UIButton {
         return button
     }
 
-    static func makeOutlineButton(title: String) -> UIButton {
+    static func secondary(title: String) -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.backgroundColor = .offWhite
@@ -31,7 +31,7 @@ extension UIButton {
         return button
     }
 
-    static func makeCloseButton() -> UIButton {
+    static func close() -> UIButton {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         button.setImage(#imageLiteral(resourceName: "Close"), for: .normal)

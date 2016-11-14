@@ -10,7 +10,7 @@ import UIKit
 
 extension UILabel {
 
-    static func makeWrappingLabel(font: UIFont) -> UILabel {
+    static func wrapping(font: UIFont) -> UILabel {
         let label = UILabel()
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
