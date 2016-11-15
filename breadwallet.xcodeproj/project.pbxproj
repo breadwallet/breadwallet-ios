@@ -203,6 +203,7 @@
 		CEAA9EA41DC2FC700066731D /* CircularPro-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */; };
 		CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */; };
 		CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA71DC3342E0066731D /* PinView.swift */; };
+		CEBF32EE1DDBC30000348FC6 /* ShadowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF32ED1DDBC30000348FC6 /* ShadowButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1148,6 +1149,7 @@
 		CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularPro-Medium.otf"; path = "Fonts/CircularPro-Medium.otf"; sourceTree = "<group>"; };
 		CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartNavigationDelegate.swift; path = src/FlowControllers/StartNavigationDelegate.swift; sourceTree = "<group>"; };
 		CEAA9EA71DC3342E0066731D /* PinView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinView.swift; path = src/Views/PinView.swift; sourceTree = "<group>"; };
+		CEBF32ED1DDBC30000348FC6 /* ShadowButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShadowButton.swift; path = src/Views/ShadowButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2285,6 +2287,7 @@
 				CEAA9E961DC18E1F0066731D /* PhraseView.swift */,
 				CEAA9E9A1DC2B9320066731D /* ConfirmPhrase.swift */,
 				CEAA9EA71DC3342E0066731D /* PinView.swift */,
+				CEBF32ED1DDBC30000348FC6 /* ShadowButton.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2814,6 +2817,7 @@
 				CE20C9131DBE67CA00C8397A /* Constants.swift in Sources */,
 				CE0CD1591DBFBCF5004023DA /* AlertCoordinator.swift in Sources */,
 				CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */,
+				CEBF32EE1DDBC30000348FC6 /* ShadowButton.swift in Sources */,
 				CEAA9E9B1DC2B9320066731D /* ConfirmPhrase.swift in Sources */,
 				75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */,
 				CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */,
