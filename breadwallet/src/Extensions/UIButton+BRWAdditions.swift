@@ -16,6 +16,7 @@ extension UIButton {
         button.layer.cornerRadius = 5.0
         button.tintColor = .white
         button.titleLabel?.font = UIFont.customMedium(size: 16.0)
+        button.accessibilityLabel = title
         return button
     }
 
@@ -28,6 +29,7 @@ extension UIButton {
         button.layer.cornerRadius = 5.0
         button.tintColor = .black
         button.titleLabel?.font = UIFont.customMedium(size: 16.0)
+        button.accessibilityLabel = title
         return button
     }
 
@@ -36,6 +38,7 @@ extension UIButton {
         button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         button.setImage(#imageLiteral(resourceName: "Close"), for: .normal)
         button.tintColor = .black
+        button.accessibilityLabel = NSLocalizedString("Close", comment: "Close modal button accessibility label")
         return button
     }
 }
