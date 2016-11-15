@@ -66,6 +66,11 @@ class StartFlowPresenter: Subscriber {
 
     private func presentStartFlow() {
         let welcomeViewController = WelcomeViewController(store: store)
+        welcomeViewController.newUserTappedCallback = { [weak self] in
+            guard let myself = self else { return }
+            let startViewController = StartViewController(store: myself.store)
+            myself.navigationController?.pushViewController(startViewController, animated: true)
+        }
         navigationController = UINavigationController(rootViewController: welcomeViewController)
         navigationController?.delegate = navigationControllerDelegate
         if let startFlow = navigationController {

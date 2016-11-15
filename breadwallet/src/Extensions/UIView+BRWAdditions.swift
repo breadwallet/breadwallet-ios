@@ -33,6 +33,7 @@ extension UIView {
         return NSLayoutConstraint(item: self, attribute: attribute, relatedBy: .equal, toItem: toView, attribute: attribute, multiplier: 1.0, constant: constant ?? 0.0)
     }
 
+    //TODO - restrict this to width and height attributes
     func constraint(_ attribute: NSLayoutAttribute, constant: CGFloat) -> NSLayoutConstraint {
         guard superview != nil else { assert(false, "Superview cannot be nil when adding contraints") }
         translatesAutoresizingMaskIntoConstraints = false
