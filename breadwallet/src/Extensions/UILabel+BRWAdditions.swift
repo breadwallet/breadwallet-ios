@@ -17,5 +17,4 @@ extension UILabel {
         label.font = font
         return label
     }
-
 }
