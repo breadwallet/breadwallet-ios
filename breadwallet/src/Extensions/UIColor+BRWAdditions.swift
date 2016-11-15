@@ -9,6 +9,11 @@
 import UIKit
 
 extension UIColor {
+
+    static var primaryButton: UIColor {
+        return UIColor(red: 76.0/255.0, green: 152.0/255.0, blue: 252.0/255.0, alpha: 1.0)
+    }
+
     static var brand: UIColor {
         return UIColor(red: 0.0, green: 197.0/255.0, blue: 167.0/255.0, alpha: 1.0)
     }

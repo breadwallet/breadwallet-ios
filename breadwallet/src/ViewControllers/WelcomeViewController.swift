@@ -15,7 +15,7 @@ class WelcomeViewController: UIViewController {
     private let header =    UILabel()
     private let subheader = UILabel()
     private let body =      UILabel.wrapping(font: UIFont.customBody(size: 16.0))
-    private let newUser =   UIButton.primary(title: NSLocalizedString("New User", comment: "New user button title"))
+    private let newUser =   ShadowButton(title: NSLocalizedString("New User", comment: "New user button title"))
     private let existing =  UIButton.secondary(title: NSLocalizedString("Existing User", comment: "Existing user button title"))
 
     var newUserTappedCallback: (() -> Void)?
