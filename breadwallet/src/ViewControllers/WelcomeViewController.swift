@@ -15,8 +15,8 @@ class WelcomeViewController: UIViewController {
     private let header =    UILabel()
     private let subheader = UILabel()
     private let body =      UILabel.wrapping(font: UIFont.customBody(size: 16.0))
-    private let newUser =   UIButton.primary(title: "New User")
-    private let existing =  UIButton.secondary(title: "Existing User")
+    private let newUser =   UIButton.primary(title: NSLocalizedString("New User", comment: "New user button title"))
+    private let existing =  UIButton.secondary(title: NSLocalizedString("Existing User", comment: "Existing user button title"))
 
     var newUserTappedCallback: (() -> Void)?
     var existingUserTappedCallback: (() -> Void)?
@@ -38,13 +38,13 @@ class WelcomeViewController: UIViewController {
         icon.text = "👋"
         icon.font = UIFont.customBold(size: 50.0)
 
-        header.text = "Oh heeeey!"
+        header.text = NSLocalizedString("Oh heeey!", comment: "Welcome screen header")
         header.font = UIFont.customBold(size: 26.0)
 
-        subheader.text = "Welcome to the Bread redesign."
+        subheader.text = NSLocalizedString("Welcome to the Bread redesign.", comment: "Welcome screen subheader")
         subheader.font = UIFont.customBold(size: 16.0)
 
-        body.text = "The purpose of this prototype is to examen our colors, shadows, and selection states. Let’s GO!"
+        body.text = NSLocalizedString("The purpose of this prototype is to examen our colors, shadows, and selection states. Let’s GO!", comment: "Welcome screen body")
     }
 
     private func addSubviews () {
