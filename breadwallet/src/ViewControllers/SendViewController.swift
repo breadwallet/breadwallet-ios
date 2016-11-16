@@ -10,9 +10,9 @@ import UIKit
 
 class SendViewController: UIViewController, Subscriber {
 
-    let button = UIButton.primary(title: "Present Start Flow")
-
+    private let button = ShadowButton(title: "Present Start Flow", type: .primary)
     let store: Store
+    
     init(store: Store, tabBarItem: UITabBarItem) {
         self.store = store
         super.init(nibName: nil, bundle: nil)

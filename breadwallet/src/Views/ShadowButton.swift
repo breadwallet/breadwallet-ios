@@ -43,6 +43,7 @@ class ShadowButton: UIControl {
         self.title = title
         self.type = type
         super.init(frame: CGRect.zero)
+        accessibilityLabel = title
         setupViews()
     }
 
@@ -59,8 +60,6 @@ class ShadowButton: UIControl {
             NSLayoutConstraint(item: shadowView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0.5, constant: 1.0)
             ])
         shadowView.layer.cornerRadius = 4.0
-        shadowView.layer.shadowColor = UIColor.black.cgColor
-        shadowView.layer.shadowOpacity = 0.3
         shadowView.layer.shadowOffset = CGSize(width: 0, height: 4)
         shadowView.backgroundColor = .white
         shadowView.isUserInteractionEnabled = false
@@ -87,11 +86,15 @@ class ShadowButton: UIControl {
             case .primary:
                 container.backgroundColor = .primaryButton
                 label.textColor = .primaryText
+                shadowView.layer.shadowColor = UIColor.black.cgColor
+                shadowView.layer.shadowOpacity = 0.3
             case .secondary:
                 container.backgroundColor = .secondaryButton
                 label.textColor = .secondaryText
                 container.layer.borderColor = UIColor.secondaryBorder.cgColor
                 container.layer.borderWidth = 1.0
+                shadowView.layer.shadowColor = UIColor.secondaryShadow.cgColor
+                shadowView.layer.shadowOpacity = 1.0
         }
     }
     required init?(coder aDecoder: NSCoder) {
