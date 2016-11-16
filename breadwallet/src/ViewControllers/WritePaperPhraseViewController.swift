@@ -18,8 +18,9 @@ class WritePaperPhraseViewController: UIViewController {
     private lazy var phraseViews: [PhraseView] = {
         return self.words.map { PhraseView(phrase: $0) }
     }()
-    private let proceed = UIButton.secondary(title: "Next") //This is awkwardly named because nextResponder is now named next is swift 3 :(
-    private let previous = UIButton.secondary(title: "Previous")
+    //This is awkwardly named because nextResponder is now named next is swift 3 :(,
+    private let proceed = ShadowButton(title: NSLocalizedString("Next", comment: "button label"), type: .secondary)
+    private let previous = ShadowButton(title: NSLocalizedString("Previous", comment: "button label"), type: .secondary)
     private var proceedWidth: NSLayoutConstraint?
     private var previousWidth: NSLayoutConstraint?
 
