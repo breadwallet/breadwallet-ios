@@ -10,6 +10,7 @@ import UIKit
 
 extension UIColor {
 
+    // MARK: Buttons
     static var primaryButton: UIColor {
         return UIColor(red: 76.0/255.0, green: 152.0/255.0, blue: 252.0/255.0, alpha: 1.0)
     }
@@ -32,6 +33,15 @@ extension UIColor {
 
     static var secondaryShadow: UIColor {
         return UIColor(red: 213.0/255.0, green: 218.0/255.0, blue: 224.0/255.0, alpha: 1.0)
+    }
+
+    // MARK: Gradient
+    static var gradientStart: UIColor {
+        return UIColor(red: 247.0/255.0, green: 164.0/255.0, blue: 69.0/255.0, alpha: 1.0)
+    }
+
+    static var gradientEnd: UIColor {
+        return UIColor(red: 252.0/255.0, green: 83.0/255.0, blue: 148.0/255.0, alpha: 1.0)
     }
 
     static var brand: UIColor {

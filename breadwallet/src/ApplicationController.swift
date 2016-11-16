@@ -14,10 +14,6 @@ class ApplicationController {
     //by the UIApplicationDelegate Protocol
     let window =                    UIWindow()
     private let store =             Store()
-    private let sendTabBarItem =    UITabBarItem(title: "SEND", image: #imageLiteral(resourceName: "SendTabIcon"), selectedImage: nil)
-    private let receiveTabBarItem = UITabBarItem(title: "RECEIVE", image: #imageLiteral(resourceName: "ReceiveTabIcon"), selectedImage: nil)
-    private let menuTabBarItem =    UITabBarItem(title: "MENU", image: #imageLiteral(resourceName: "MenuTabIcon"), selectedImage: nil)
-
     private var startFlowController: StartFlowPresenter?
     private var alertCoordinator: AlertCoordinator?
 
@@ -26,7 +22,7 @@ class ApplicationController {
         setupRootViewController()
         setupAlertCoordinator()
         window.makeKeyAndVisible()
-        store.perform(action: ShowStartFlow())
+        //store.perform(action: ShowStartFlow())
     }
 
     private func setupAppearance() {
@@ -37,14 +33,9 @@ class ApplicationController {
     }
 
     private func setupRootViewController() {
-        let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [
-            SendViewController(store: store, tabBarItem: sendTabBarItem),
-            ReceiveViewController(tabBarItem: receiveTabBarItem),
-            MenuViewController(tabBarItem: menuTabBarItem)
-        ]
-        window.rootViewController = tabBarController
-        startFlowController = StartFlowPresenter(store: store, rootViewController: tabBarController)
+        let accountViewController = AccountViewController(store: store)
+        window.rootViewController = accountViewController
+        startFlowController = StartFlowPresenter(store: store, rootViewController: accountViewController)
     }
 
     private func setupAlertCoordinator() {
