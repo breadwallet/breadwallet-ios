@@ -44,9 +44,10 @@ class ShadowView: UIView {
 class TransactionTableViewCell: UITableViewCell {
 
     private let transaction =   UILabel()
-    private let status =        UILabel()
-    private let comment =       UILabel()
-    private let timestamp =     UILabel()
+    private let status =        UILabel(font: UIFont.customBody(size: 13.0))
+    private let comment =       UILabel.wrapping(font: UIFont.customBody(size: 13.0))
+    private let timestamp =     UILabel(font: UIFont.customMedium(size: 13.0))
+
     private let card: ShadowView = {
         let view = ShadowView()
         view.backgroundColor = .white
@@ -85,8 +86,8 @@ class TransactionTableViewCell: UITableViewCell {
 
         transaction.constrain([
                 transaction.constraint(.leading, toView: card, constant: Constants.Padding.double),
-                transaction.constraint(.top, toView: card, constant: 19.0)//,
-                //NSLayoutConstraint(item: card, attribute: .trailing, relatedBy: .equal, toItem: timestamp, attribute: .leading, multiplier: 1.0, constant: Constants.Padding.single)
+                transaction.constraint(.top, toView: card, constant: 19.0),
+                NSLayoutConstraint(item: transaction, attribute: .trailing, relatedBy: .lessThanOrEqual, toItem: timestamp, attribute: .leading, multiplier: 1.0, constant: -Constants.Padding.single)
             ])
 
         timestamp.constrain([
@@ -101,9 +102,14 @@ class TransactionTableViewCell: UITableViewCell {
         comment.constrain([
                 comment.constraint(.leading, toView: card, constant: Constants.Padding.double),
                 comment.constraint(toBottom: status, constant: Constants.Padding.single),
-                comment.constraint(.trailing, toView: card, constant: -Constants.Padding.double),
+                NSLayoutConstraint(item: comment, attribute: .trailing, relatedBy: .lessThanOrEqual, toItem: timestamp, attribute: .leading, multiplier: 1.0, constant: -Constants.Padding.single),
                 comment.constraint(.bottom, toView: card, constant: -Constants.Padding.double)
             ])
+
+        comment.textColor = .secondaryText
+        status.textColor = .secondaryText
+        timestamp.textColor = .grayTextTint
+
     }
 
     func setStyle(_ style: TransactionCellStyle) {
@@ -120,7 +126,7 @@ class TransactionTableViewCell: UITableViewCell {
     }
 
     func setTransaction(_ transaction: Transaction) {
-        self.transaction.text = transaction.descriptionString
+        self.transaction.attributedText = transaction.descriptionString
         status.text = transaction.status
         comment.text = transaction.comment
         timestamp.text = transaction.timestampString

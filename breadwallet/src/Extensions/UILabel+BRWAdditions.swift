@@ -9,12 +9,16 @@
 import UIKit
 
 extension UILabel {
-
     static func wrapping(font: UIFont) -> UILabel {
         let label = UILabel()
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         label.font = font
         return label
+    }
+
+    convenience init(font: UIFont) {
+        self.init()
+        self.font = font
     }
 }
