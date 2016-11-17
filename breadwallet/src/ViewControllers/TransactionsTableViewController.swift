@@ -15,7 +15,9 @@ class TransactionsTableViewController: UITableViewController {
         let array = (0...20).map { _ in
             return Transaction.random
         }
-        return array
+        return array.sorted {
+            $0.timestamp < $1.timestamp
+        }
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
