@@ -23,14 +23,10 @@ class AccountViewController: UIViewController {
     }
 
     override func viewDidLoad() {
-        view.addSubview(transactions.view)
+        addTransactionsView()
+
         view.addSubview(headerView)
         view.addSubview(footerView)
-
-        transactions.view.constrain(toSuperviewEdges: nil)
-        transactions.tableView.contentInset = UIEdgeInsets(top: headerHeight + Constants.Padding.double, left: 0, bottom: footerHeight + Constants.Padding.double, right: 0)
-        transactions.tableView.scrollIndicatorInsets = UIEdgeInsets(top: headerHeight, left: 0, bottom: footerHeight, right: 0)
-
         headerView.constrainTopCorners(sidePadding: 0, topPadding: 0)
         headerView.constrain([
                 headerView.constraint(.height, constant: headerHeight)
@@ -41,7 +37,16 @@ class AccountViewController: UIViewController {
                 footerView.constraint(.height, constant: footerHeight)
             ])
     }
-    
+
+    func addTransactionsView() {
+        addChildViewController(transactions)
+        view.addSubview(transactions.view)
+        transactions.view.constrain(toSuperviewEdges: nil)
+        transactions.tableView.contentInset = UIEdgeInsets(top: headerHeight + Constants.Padding.double, left: 0, bottom: footerHeight + Constants.Padding.double, right: 0)
+        transactions.tableView.scrollIndicatorInsets = UIEdgeInsets(top: headerHeight, left: 0, bottom: footerHeight, right: 0)
+        transactions.didMove(toParentViewController: self)
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
