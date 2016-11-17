@@ -205,6 +205,7 @@
 		CEBF32F21DDCE10D00348FC6 /* AccountHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF32F11DDCE10D00348FC6 /* AccountHeaderView.swift */; };
 		CEBF32F41DDCE12900348FC6 /* AccountFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF32F31DDCE12900348FC6 /* AccountFooterView.swift */; };
 		CEBF32F61DDCEAF900348FC6 /* TransactionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF32F51DDCEAF900348FC6 /* TransactionsTableViewController.swift */; };
+		CEBF32F91DDD193500348FC6 /* TransactionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF32F81DDD193500348FC6 /* TransactionTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1152,6 +1153,7 @@
 		CEBF32F11DDCE10D00348FC6 /* AccountHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccountHeaderView.swift; path = src/Views/AccountHeaderView.swift; sourceTree = "<group>"; };
 		CEBF32F31DDCE12900348FC6 /* AccountFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccountFooterView.swift; path = src/Views/AccountFooterView.swift; sourceTree = "<group>"; };
 		CEBF32F51DDCEAF900348FC6 /* TransactionsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransactionsTableViewController.swift; path = src/ViewControllers/TransactionsTableViewController.swift; sourceTree = "<group>"; };
+		CEBF32F81DDD193500348FC6 /* TransactionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransactionTableViewCell.swift; path = src/Views/TransactionCells/TransactionTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2284,6 +2286,7 @@
 		CE20C90F1DBE5B5100C8397A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CEBF32F71DDD191300348FC6 /* TransactionCells */,
 				CE20C9101DBE5B6F00C8397A /* Circle.swift */,
 				CEAA9E961DC18E1F0066731D /* PhraseView.swift */,
 				CEAA9E9A1DC2B9320066731D /* ConfirmPhrase.swift */,
@@ -2303,6 +2306,14 @@
 				CEAA9E9D1DC2F90C0066731D /* CircularPro-Bold.otf */,
 			);
 			name = Fonts;
+			sourceTree = "<group>";
+		};
+		CEBF32F71DDD191300348FC6 /* TransactionCells */ = {
+			isa = PBXGroup;
+			children = (
+				CEBF32F81DDD193500348FC6 /* TransactionTableViewCell.swift */,
+			);
+			name = TransactionCells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2809,6 +2820,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */,
+				CEBF32F91DDD193500348FC6 /* TransactionTableViewCell.swift in Sources */,
 				CEBF32F01DDCD30600348FC6 /* AccountViewController.swift in Sources */,
 				CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */,
 				CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */,

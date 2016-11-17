@@ -10,10 +10,14 @@ import UIKit
 
 class TransactionsTableViewController: UITableViewController {
 
+    private let transactionCellIdentifier = "transactionCellIdentifier"
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
+        tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: transactionCellIdentifier)
+        tableView.separatorStyle = .none
+        
     }
 
     // MARK: - Table view data source
@@ -26,8 +30,25 @@ class TransactionsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-        cell.textLabel?.text = "Transaction: \(indexPath.row)"
+        let numRows = tableView.numberOfRows(inSection: indexPath.section)
+
+        var style: TransactionCellStyle = .middle
+        if numRows == 1 {
+            style = .single
+        }
+        if numRows > 1 {
+            if indexPath.row == 0 {
+                style = .first
+            }
+            if indexPath.row == numRows - 1 {
+                style = .last
+            }
+        }
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
+        if let transactionCell = cell as? TransactionTableViewCell {
+            transactionCell.setSytle(style)
+        }
         return cell
     }
 }
