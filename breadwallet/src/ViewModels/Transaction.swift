@@ -6,24 +6,56 @@
 //  Copyright © 2016 breadwallet LLC. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 let comments = ["Gift Cards", "🍜", "Dinner and drinks", "", "All the mods 😵🙌", "This is a multiline comment used for testing if the cell will resize with longer comments like this"]
 
-enum TransactionDirection {
-    case sent
-    case received
+enum TransactionDirection: String {
+    case sent = "Sent"
+    case received = "Received"
+
+    var preposition: String {
+        switch self {
+            case .sent:
+                return "to"
+            case .received:
+                return "from"
+        }
+    }
 }
 
 struct Transaction {
 
-    var descriptionString: String {
-        switch direction {
-            case .sent:
-                return "Sent \(amount) to account"
-            case .received:
-                return "Received \(amount) from account"
-        }
+    var descriptionString: NSAttributedString {
+        let fontSize: CGFloat = 14.0
+
+        let regularAttributes: [String: Any] = [
+            NSFontAttributeName: UIFont.customBody(size: fontSize),
+            NSForegroundColorAttributeName: UIColor.secondaryText
+        ]
+
+        let boldAttributes: [String: Any] = [
+            NSFontAttributeName: UIFont.customBold(size: fontSize),
+            NSForegroundColorAttributeName: UIColor.secondaryText
+        ]
+
+        let prefix = NSMutableAttributedString(string: "\(direction.rawValue) ")
+        prefix.addAttributes(regularAttributes, range: NSRange(location: 0, length: prefix.length))
+
+        let amountString = NSMutableAttributedString(string: "$\(amount) ")
+        amountString.addAttributes(boldAttributes, range: NSRange(location: 0, length: amountString.length))
+
+        let preposition = NSMutableAttributedString(string: "\(direction.preposition) ")
+        preposition.addAttributes(regularAttributes, range: NSRange(location: 0, length: preposition.length))
+
+        let suffix = NSMutableAttributedString(string: "account")
+        suffix.addAttributes(boldAttributes, range: NSRange(location: 0, length: suffix.length))
+
+        prefix.append(amountString)
+        prefix.append(preposition)
+        prefix.append(suffix)
+
+        return prefix
     }
 
     var timestampString: String {
