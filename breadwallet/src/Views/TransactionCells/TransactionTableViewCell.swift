@@ -77,9 +77,36 @@ class TransactionTableViewCell: UITableViewCell {
         innerShadow.constrain([
                 innerShadow.constraint(.height, constant: 1.0)
             ])
+
+        card.addSubview(transaction)
+        card.addSubview(status)
+        card.addSubview(comment)
+        card.addSubview(timestamp)
+
+        transaction.constrain([
+                transaction.constraint(.leading, toView: card, constant: Constants.Padding.double),
+                transaction.constraint(.top, toView: card, constant: 19.0)//,
+                //NSLayoutConstraint(item: card, attribute: .trailing, relatedBy: .equal, toItem: timestamp, attribute: .leading, multiplier: 1.0, constant: Constants.Padding.single)
+            ])
+
+        timestamp.constrain([
+                timestamp.constraint(.trailing, toView: card, constant: -Constants.Padding.double),
+                timestamp.constraint(.top, toView: card, constant: 19.0)
+            ])
+        status.constrain([
+                status.constraint(.leading, toView: card, constant: Constants.Padding.double),
+                status.constraint(toBottom: transaction, constant: Constants.Padding.single),
+                status.constraint(.trailing, toView: card, constant: -Constants.Padding.double)
+            ])
+        comment.constrain([
+                comment.constraint(.leading, toView: card, constant: Constants.Padding.double),
+                comment.constraint(toBottom: status, constant: Constants.Padding.single),
+                comment.constraint(.trailing, toView: card, constant: -Constants.Padding.double),
+                comment.constraint(.bottom, toView: card, constant: -Constants.Padding.double)
+            ])
     }
 
-    func setSytle(_ style: TransactionCellStyle) {
+    func setStyle(_ style: TransactionCellStyle) {
         card.style = style
         card.setNeedsLayout()
     }
@@ -90,6 +117,13 @@ class TransactionTableViewCell: UITableViewCell {
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         card.backgroundColor = highlighted ? .secondaryShadow : .white
+    }
+
+    func setTransaction(_ transaction: Transaction) {
+        self.transaction.text = transaction.transaction
+        status.text = transaction.status
+        comment.text = transaction.comment
+        timestamp.text = transaction.timestamp
     }
 
     required init?(coder aDecoder: NSCoder) {

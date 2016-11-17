@@ -11,13 +11,19 @@ import UIKit
 class TransactionsTableViewController: UITableViewController {
 
     private let transactionCellIdentifier = "transactionCellIdentifier"
-
+    private let transactions: [Transaction] = {
+        let array = (0...20).map { _ in
+            return Transaction.random
+        }
+        return array
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: transactionCellIdentifier)
         tableView.separatorStyle = .none
-        
+        tableView.estimatedRowHeight = 100.0
+        tableView.rowHeight = UITableViewAutomaticDimension
     }
 
     // MARK: - Table view data source
@@ -26,7 +32,7 @@ class TransactionsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+        return transactions.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -47,7 +53,8 @@ class TransactionsTableViewController: UITableViewController {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
         if let transactionCell = cell as? TransactionTableViewCell {
-            transactionCell.setSytle(style)
+            transactionCell.setStyle(style)
+            transactionCell.setTransaction(transactions[indexPath.row])
         }
         return cell
     }
