@@ -15,54 +15,17 @@ enum TransactionCellStyle {
     case single
 }
 
-class ShadowView: UIView {
-
-    var style: TransactionCellStyle = .middle
-    private let shadowSize: CGFloat = 8.0
-    override func layoutSubviews() {
-        var shadowRect = bounds.insetBy(dx: 0, dy: -shadowSize)
-        var maskRect = bounds.insetBy(dx: -shadowSize, dy: 0)
-
-        if style == .first {
-            maskRect.origin.y -= shadowSize
-            maskRect.size.height += shadowSize
-            shadowRect.origin.y += shadowSize
-        }
-
-        if style == .last {
-            maskRect.size.height += shadowSize
-            shadowRect.size.height -= shadowSize
-        }
-
-        let maskLayer = CAShapeLayer()
-        maskLayer.path = UIBezierPath(rect: maskRect).cgPath
-        layer.mask = maskLayer
-        layer.shadowPath = UIBezierPath(rect: shadowRect).cgPath
-    }
-}
-
 class TransactionTableViewCell: UITableViewCell {
 
     private let transaction =   UILabel()
     private let status =        UILabel(font: UIFont.customBody(size: 13.0))
     private let comment =       UILabel.wrapping(font: UIFont.customBody(size: 13.0))
     private let timestamp =     UILabel(font: UIFont.customMedium(size: 13.0))
+    private let container =     RoundedContainer()
+    private let shadowView =    MaskedShadow()
+    private let innerShadow =   UIView()
 
-    private let card: ShadowView = {
-        let view = ShadowView()
-        view.backgroundColor = .white
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowRadius = 4.0
-        view.layer.shadowOffset = CGSize(width: 0, height: 0)
-
-        return view
-    }()
-    private let innerShadow: UIView = {
-        let view = UIView()
-        view.backgroundColor = .secondaryShadow
-        return view
-    }()
+    private let topPadding: CGFloat = 19.0
     private var style: TransactionCellStyle = .first
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -71,58 +34,77 @@ class TransactionTableViewCell: UITableViewCell {
     }
 
     private func setupViews() {
-        contentView.addSubview(card)
-        card.constrain(toSuperviewEdges: UIEdgeInsets(top: 0, left: Constants.Padding.double, bottom: 0, right: -Constants.Padding.double))
-        card.addSubview(innerShadow)
+        addSubviews()
+        addConstraints()
+        setupStyle()
+    }
+
+    private func addSubviews() {
+        contentView.addSubview(shadowView)
+        contentView.addSubview(container)
+        container.addSubview(innerShadow)
+        container.addSubview(transaction)
+        container.addSubview(status)
+        container.addSubview(comment)
+        container.addSubview(timestamp)
+    }
+
+    private func addConstraints() {
+        shadowView.constrain(toSuperviewEdges: UIEdgeInsets(top: 0, left: Constants.Padding.double, bottom: 0, right: -Constants.Padding.double))
+        container.constrain(toSuperviewEdges: UIEdgeInsets(top: 0, left: Constants.Padding.double, bottom: 0, right: -Constants.Padding.double))
         innerShadow.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         innerShadow.constrain([
                 innerShadow.constraint(.height, constant: 1.0)
             ])
-
-        card.addSubview(transaction)
-        card.addSubview(status)
-        card.addSubview(comment)
-        card.addSubview(timestamp)
-
         transaction.constrain([
-                transaction.constraint(.leading, toView: card, constant: Constants.Padding.double),
-                transaction.constraint(.top, toView: card, constant: 19.0),
+                transaction.constraint(.leading, toView: container, constant: Constants.Padding.double),
+                transaction.constraint(.top, toView: container, constant: topPadding),
                 NSLayoutConstraint(item: transaction, attribute: .trailing, relatedBy: .lessThanOrEqual, toItem: timestamp, attribute: .leading, multiplier: 1.0, constant: -Constants.Padding.single)
             ])
-
         timestamp.constrain([
-                timestamp.constraint(.trailing, toView: card, constant: -Constants.Padding.double),
-                timestamp.constraint(.top, toView: card, constant: 19.0)
+                timestamp.constraint(.trailing, toView: container, constant: -Constants.Padding.double),
+                timestamp.constraint(.top, toView: container, constant: topPadding)
             ])
         status.constrain([
-                status.constraint(.leading, toView: card, constant: Constants.Padding.double),
+                status.constraint(.leading, toView: container, constant: Constants.Padding.double),
                 status.constraint(toBottom: transaction, constant: Constants.Padding.single),
-                status.constraint(.trailing, toView: card, constant: -Constants.Padding.double)
+                status.constraint(.trailing, toView: container, constant: -Constants.Padding.double)
             ])
         comment.constrain([
-                comment.constraint(.leading, toView: card, constant: Constants.Padding.double),
+                comment.constraint(.leading, toView: container, constant: Constants.Padding.double),
                 comment.constraint(toBottom: status, constant: Constants.Padding.single),
                 NSLayoutConstraint(item: comment, attribute: .trailing, relatedBy: .lessThanOrEqual, toItem: timestamp, attribute: .leading, multiplier: 1.0, constant: -Constants.Padding.single),
-                comment.constraint(.bottom, toView: card, constant: -Constants.Padding.double)
+                comment.constraint(.bottom, toView: container, constant: -Constants.Padding.double)
             ])
+    }
 
+    private func setupStyle() {
         comment.textColor = .secondaryText
         status.textColor = .secondaryText
         timestamp.textColor = .grayTextTint
 
+        shadowView.backgroundColor = .clear
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowOpacity = 0.5
+        shadowView.layer.shadowRadius = 4.0
+        shadowView.layer.shadowOffset = CGSize(width: 0, height: 0)
+
+        innerShadow.backgroundColor = .secondaryShadow
     }
 
     func setStyle(_ style: TransactionCellStyle) {
-        card.style = style
-        card.setNeedsLayout()
+        container.style = style
+        shadowView.style = style
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
-
+        //intentional noop for now
+        //The default selected state doesn't play nicely
+        //with this custom cell
     }
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        card.backgroundColor = highlighted ? .secondaryShadow : .white
+        container.backgroundColor = highlighted ? .secondaryShadow : .white
     }
 
     func setTransaction(_ transaction: Transaction) {
