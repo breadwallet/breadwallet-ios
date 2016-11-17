@@ -120,10 +120,10 @@ class TransactionTableViewCell: UITableViewCell {
     }
 
     func setTransaction(_ transaction: Transaction) {
-        self.transaction.text = transaction.transaction
+        self.transaction.text = transaction.descriptionString
         status.text = transaction.status
         comment.text = transaction.comment
-        timestamp.text = transaction.timestamp
+        timestamp.text = transaction.timestampString
     }
 
     required init?(coder aDecoder: NSCoder) {
