@@ -95,6 +95,11 @@ class TransactionTableViewCell: UITableViewCell {
     func setStyle(_ style: TransactionCellStyle) {
         container.style = style
         shadowView.style = style
+        if style == .last || style == .single {
+            innerShadow.isHidden = true
+        } else {
+            innerShadow.isHidden = false
+        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
