@@ -37,7 +37,7 @@ class AlertCoordinator: Subscriber {
 
     private func setupAlertView() {
         simpleAlertView.addSubview(label)
-        label.constrainTopCorners(sidePadding: Constants.Padding.double, topPadding: Constants.Padding.quad)
+        label.constrainTopCorners(sidePadding: C.padding[2], topPadding: C.padding[4])
     }
 
     private func addSubscriptions() {

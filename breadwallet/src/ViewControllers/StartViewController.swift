@@ -51,19 +51,19 @@ class StartViewController: UIViewController {
             ])
         brand.constrain([
                 brand.constraint(.centerX, toView: circle, constant: nil),
-                brand.constraint(toBottom: circle, constant: Constants.Padding.single)
+                brand.constraint(toBottom: circle, constant: C.padding[1])
             ])
         recover.constrain([
-                recover.constraint(.leading, toView: view, constant: Constants.Padding.double),
-                recover.constraint(.bottom, toView: view, constant: -Constants.Padding.triple),
-                recover.constraint(.trailing, toView: view, constant: -Constants.Padding.double),
-                recover.constraint(.height, constant: Constants.Sizes.buttonHeight)
+                recover.constraint(.leading, toView: view, constant: C.padding[2]),
+                recover.constraint(.bottom, toView: view, constant: -C.padding[3]),
+                recover.constraint(.trailing, toView: view, constant: -C.padding[2]),
+                recover.constraint(.height, constant: C.Sizes.buttonHeight)
             ])
         create.constrain([
-                create.constraint(toTop: recover, constant: -Constants.Padding.double),
+                create.constraint(toTop: recover, constant: -C.padding[2]),
                 create.constraint(.centerX, toView: recover, constant: nil),
                 create.constraint(.width, toView: recover, constant: nil),
-                create.constraint(.height, constant: Constants.Sizes.buttonHeight)
+                create.constraint(.height, constant: C.Sizes.buttonHeight)
             ])
     }
 

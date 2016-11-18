@@ -58,31 +58,31 @@ class WelcomeViewController: UIViewController {
 
     private func addConstraints() {
         icon.constrain([
-                icon.constraint(.leading, toView: view, constant: Constants.Padding.double),
-                icon.constraint(.top, toView: view, constant: Constants.Padding.quad*2)
+                icon.constraint(.leading, toView: view, constant: C.padding[2]),
+                icon.constraint(.top, toView: view, constant: C.padding[4]*2)
             ])
         header.constrain([
-                header.constraint(toBottom: icon, constant: Constants.Padding.single),
+                header.constraint(toBottom: icon, constant: C.padding[1]),
                 header.constraint(.leading, toView: icon, constant: nil)
             ])
         subheader.constrain([
-                subheader.constraint(toBottom: header, constant: Constants.Padding.double),
+                subheader.constraint(toBottom: header, constant: C.padding[2]),
                 subheader.constraint(.leading, toView: header, constant: nil)
             ])
         body.constrain([
-                body.constraint(toBottom: subheader, constant: Constants.Padding.double),
+                body.constraint(toBottom: subheader, constant: C.padding[2]),
                 body.constraint(.leading, toView: subheader, constant: nil),
-                body.constraint(.trailing, toView: view, constant: -Constants.Padding.double)
+                body.constraint(.trailing, toView: view, constant: -C.padding[2])
             ])
-        existing.constrainBottomCorners(sidePadding: Constants.Padding.double, bottomPadding: Constants.Padding.double)
+        existing.constrainBottomCorners(sidePadding: C.padding[2], bottomPadding: C.padding[2])
         existing.constrain([
-                existing.constraint(.height, constant: Constants.Sizes.buttonHeight)
+                existing.constraint(.height, constant: C.Sizes.buttonHeight)
             ])
         newUser.constrain([
                 newUser.constraint(.leading, toView: existing, constant: nil),
                 newUser.constraint(.trailing, toView: existing, constant: nil),
-                newUser.constraint(.height, constant: Constants.Sizes.buttonHeight),
-                newUser.constraint(toTop: existing, constant: -Constants.Padding.double)
+                newUser.constraint(.height, constant: C.Sizes.buttonHeight),
+                newUser.constraint(toTop: existing, constant: -C.padding[2])
             ])
     }
 
