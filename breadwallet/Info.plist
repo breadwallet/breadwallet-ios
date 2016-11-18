@@ -96,5 +96,9 @@
 		<string>CircularPro-Book.otf</string>
 		<string>CircularPro-Medium.otf</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
 </dict>
 </plist>
