@@ -19,10 +19,9 @@ class AccountFooterView: UIView {
     }
 
     func setupSubViews(){
-        let blurEffect = UIBlurEffect(style: .extraLight)
-        let effectView = UIVisualEffectView(effect: blurEffect)
-        addSubview(effectView)
-        effectView.constrain(toSuperviewEdges: nil)
+        let backgroundView = UITabBar()
+        addSubview(backgroundView)
+        backgroundView.constrain(toSuperviewEdges: nil)
 
         let send = UIButton(type: .system)
         send.setImage(#imageLiteral(resourceName: "SendButtonIcon"), for: .normal)
