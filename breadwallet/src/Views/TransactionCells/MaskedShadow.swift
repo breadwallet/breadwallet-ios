@@ -18,6 +18,12 @@ class MaskedShadow: UIView {
     private let shadowSize: CGFloat = 8.0
 
     override func layoutSubviews() {
+
+        guard style != .single else {
+            layer.shadowPath = UIBezierPath(rect: bounds).cgPath
+            return
+        }
+
         var shadowRect = bounds.insetBy(dx: 0, dy: -shadowSize)
         var maskRect = bounds.insetBy(dx: -shadowSize, dy: 0)
 
