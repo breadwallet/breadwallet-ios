@@ -93,26 +93,26 @@ class PinCreationViewController: UIViewController, Subscriber {
 
     private func addConstraints() {
         instruction.constrain([
-                NSLayoutConstraint(item: instruction, attribute: .top, relatedBy: .equal, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: Constants.Padding.triple),
-                instruction.constraint(.leading, toView: view, constant: Constants.Padding.double)
+                NSLayoutConstraint(item: instruction, attribute: .top, relatedBy: .equal, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: C.padding[3]),
+                instruction.constraint(.leading, toView: view, constant: C.padding[2])
             ])
         caption.constrain([
-                caption.constraint(toBottom: instruction, constant: Constants.Padding.double),
+                caption.constraint(toBottom: instruction, constant: C.padding[2]),
                 caption.constraint(.leading, toView: instruction, constant: nil)
             ])
         pinView.constrain([
-                pinView.constraint(toBottom: caption, constant: Constants.Padding.triple),
+                pinView.constraint(toBottom: caption, constant: C.padding[3]),
                 pinView.constraint(.centerX, toView: view, constant: nil),
                 pinView.constraint(.height, constant: PinView.defaultPinSize),
-                pinView.constraint(.width, constant: PinView.defaultPinSize*6 + Constants.Padding.single*6)
+                pinView.constraint(.width, constant: PinView.defaultPinSize*6 + C.padding[1]*6)
             ])
     }
 
     private func addBodyConstraints(keyboardHeight: CGFloat) {
         body.constrain([
-                NSLayoutConstraint(item: body, attribute: .bottom, relatedBy: .equal, toItem: bottomLayoutGuide, attribute: .top, multiplier: 1.0, constant: -Constants.Padding.single - keyboardHeight),
-                body.constraint(.leading, toView: view, constant: Constants.Padding.double),
-                body.constraint(.trailing, toView: view, constant: -Constants.Padding.double)
+                NSLayoutConstraint(item: body, attribute: .bottom, relatedBy: .equal, toItem: bottomLayoutGuide, attribute: .top, multiplier: 1.0, constant: -C.padding[1] - keyboardHeight),
+                body.constraint(.leading, toView: view, constant: C.padding[2]),
+                body.constraint(.trailing, toView: view, constant: -C.padding[2])
             ])
     }
 

@@ -52,24 +52,24 @@ class StartPaperPhraseViewController: UIViewController {
                 illustration.constraint(.width, constant: 96.0),
                 illustration.constraint(.height, constant: 88.0),
                 illustration.constraint(.centerX, toView: view, constant: nil),
-                NSLayoutConstraint(item: illustration, attribute: .top, relatedBy: .equal, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: Constants.Padding.quad)
+                NSLayoutConstraint(item: illustration, attribute: .top, relatedBy: .equal, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: C.padding[4])
             ])
         explanation.constrain([
-                explanation.constraint(toBottom: illustration, constant: Constants.Padding.triple),
-                explanation.constraint(.leading, toView: view, constant: Constants.Padding.double),
-                explanation.constraint(.trailing, toView: view, constant: -Constants.Padding.double)
+                explanation.constraint(toBottom: illustration, constant: C.padding[3]),
+                explanation.constraint(.leading, toView: view, constant: C.padding[2]),
+                explanation.constraint(.trailing, toView: view, constant: -C.padding[2])
             ])
         skip.constrain([
-                skip.constraint(.leading, toView: view, constant: Constants.Padding.double),
-                skip.constraint(.bottom, toView: view, constant: -Constants.Padding.triple),
-                skip.constraint(.trailing, toView: view, constant: -Constants.Padding.double),
-                skip.constraint(.height, constant: Constants.Sizes.buttonHeight)
+                skip.constraint(.leading, toView: view, constant: C.padding[2]),
+                skip.constraint(.bottom, toView: view, constant: -C.padding[3]),
+                skip.constraint(.trailing, toView: view, constant: -C.padding[2]),
+                skip.constraint(.height, constant: C.Sizes.buttonHeight)
             ])
         paperKey.constrain([
-                paperKey.constraint(toTop: skip, constant: -Constants.Padding.double),
+                paperKey.constraint(toTop: skip, constant: -C.padding[2]),
                 paperKey.constraint(.centerX, toView: skip, constant: nil),
                 paperKey.constraint(.width, toView: skip, constant: nil),
-                paperKey.constraint(.height, constant: Constants.Sizes.buttonHeight)
+                paperKey.constraint(.height, constant: C.Sizes.buttonHeight)
             ])
     }
 

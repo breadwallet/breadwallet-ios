@@ -42,7 +42,7 @@ class AccountViewController: UIViewController {
         addChildViewController(transactions)
         view.addSubview(transactions.view)
         transactions.view.constrain(toSuperviewEdges: nil)
-        transactions.tableView.contentInset = UIEdgeInsets(top: headerHeight + Constants.Padding.double, left: 0, bottom: footerHeight + Constants.Padding.double, right: 0)
+        transactions.tableView.contentInset = UIEdgeInsets(top: headerHeight + C.padding[2], left: 0, bottom: footerHeight + C.padding[2], right: 0)
         transactions.tableView.scrollIndicatorInsets = UIEdgeInsets(top: headerHeight, left: 0, bottom: footerHeight, right: 0)
         transactions.didMove(toParentViewController: self)
     }

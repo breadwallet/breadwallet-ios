@@ -62,7 +62,7 @@ class WritePaperPhraseViewController: UIViewController {
     }
 
     private func addConstraints() {
-        label.constrainTopCorners(sidePadding: Constants.Padding.triple, topPadding: Constants.Padding.quad, topLayoutGuide: topLayoutGuide)
+        label.constrainTopCorners(sidePadding: C.padding[3], topPadding: C.padding[4], topLayoutGuide: topLayoutGuide)
 
         phraseViews.enumerated().forEach { index, phraseView in
             //The first phrase should initially be on the screen
@@ -78,24 +78,24 @@ class WritePaperPhraseViewController: UIViewController {
         }
 
         stepLabel.constrain([
-                NSLayoutConstraint(item: stepLabel, attribute: .top, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: PhraseView.defaultSize.height/2.0 + Constants.Padding.single),
+                NSLayoutConstraint(item: stepLabel, attribute: .top, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: PhraseView.defaultSize.height/2.0 + C.padding[1]),
                 stepLabel.constraint(.centerX, toView: view, constant: 0.0),
                 stepLabel.constraint(.width, constant: 200.0) //The transitions are smoother if this view is forced to be wider than it needs to be
             ])
 
-        proceedWidth = proceed.constraint(.width, toView: view, constant: -Constants.Padding.double*2)
+        proceedWidth = proceed.constraint(.width, toView: view, constant: -C.padding[2]*2)
         proceed.constrain([
-                proceed.constraint(.trailing, toView: view, constant: -Constants.Padding.double),
-                proceed.constraint(.height, constant: Constants.Sizes.buttonHeight),
-                proceed.constraint(.bottom, toView: view, constant: -Constants.Padding.quad),
+                proceed.constraint(.trailing, toView: view, constant: -C.padding[2]),
+                proceed.constraint(.height, constant: C.Sizes.buttonHeight),
+                proceed.constraint(.bottom, toView: view, constant: -C.padding[4]),
                 proceedWidth!
             ])
 
         previousWidth = previous.constraint(.width, toView: view, constant: -view.bounds.width)
         previous.constrain([
-                previous.constraint(.leading, toView: view, constant: Constants.Padding.double),
-                previous.constraint(.height, constant: Constants.Sizes.buttonHeight),
-                previous.constraint(.bottom, toView: view, constant: -Constants.Padding.quad),
+                previous.constraint(.leading, toView: view, constant: C.padding[2]),
+                previous.constraint(.height, constant: C.Sizes.buttonHeight),
+                previous.constraint(.bottom, toView: view, constant: -C.padding[4]),
                 previousWidth!
             ])
     }
@@ -142,15 +142,15 @@ class WritePaperPhraseViewController: UIViewController {
 
     private func showBothButtons() {
         UIView.animate(withDuration: 0.4) {
-            self.proceedWidth?.constant = -self.view.bounds.width/2.0 - Constants.Padding.double - Constants.Padding.half
-            self.previousWidth?.constant = -self.view.bounds.width/2.0 - Constants.Padding.double - Constants.Padding.half
+            self.proceedWidth?.constant = -self.view.bounds.width/2.0 - C.padding[2] - C.padding[1]/2.0
+            self.previousWidth?.constant = -self.view.bounds.width/2.0 - C.padding[2] - C.padding[1]/2.0
             self.view.layoutIfNeeded()
         }
     }
 
     private func showOneButton() {
         UIView.animate(withDuration: 0.4) {
-            self.proceedWidth?.constant = -Constants.Padding.double*2
+            self.proceedWidth?.constant = -C.padding[2]*2
             self.previousWidth?.constant = -self.view.bounds.width
             self.view.layoutIfNeeded()
         }

@@ -45,7 +45,7 @@ class ConfirmPaperPhraseViewController: UIViewController {
     }
 
     private func addConstraints() {
-        label.constrainTopCorners(sidePadding: Constants.Padding.single, topPadding: Constants.Padding.double, topLayoutGuide: topLayoutGuide)
+        label.constrainTopCorners(sidePadding: C.padding[1], topPadding: C.padding[2], topLayoutGuide: topLayoutGuide)
         confirmFirstPhrase.constrain([
                 confirmFirstPhrase.constraint(toBottom: label, constant: 0.0),
                 confirmFirstPhrase.constraint(.width, toView: view, constant: 0.0),
@@ -64,10 +64,10 @@ class ConfirmPaperPhraseViewController: UIViewController {
 
     private func addSubmitButtonConstraints(keyboardHeight: CGFloat) {
         submit.constrain([
-                NSLayoutConstraint(item: submit, attribute: .bottom, relatedBy: .equal, toItem: bottomLayoutGuide, attribute: .top, multiplier: 1.0, constant: -Constants.Padding.single - keyboardHeight),
-                submit.constraint(.leading, toView: view, constant: Constants.Padding.double),
-                submit.constraint(.trailing, toView: view, constant: -Constants.Padding.double),
-                submit.constraint(.height, constant: Constants.Sizes.buttonHeight)
+                NSLayoutConstraint(item: submit, attribute: .bottom, relatedBy: .equal, toItem: bottomLayoutGuide, attribute: .top, multiplier: 1.0, constant: -C.padding[1] - keyboardHeight),
+                submit.constraint(.leading, toView: view, constant: C.padding[2]),
+                submit.constraint(.trailing, toView: view, constant: -C.padding[2]),
+                submit.constraint(.height, constant: C.Sizes.buttonHeight)
             ])
     }
 

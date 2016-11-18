@@ -50,31 +50,31 @@ class TransactionTableViewCell: UITableViewCell {
     }
 
     private func addConstraints() {
-        shadowView.constrain(toSuperviewEdges: UIEdgeInsets(top: 0, left: Constants.Padding.double, bottom: 0, right: -Constants.Padding.double))
-        container.constrain(toSuperviewEdges: UIEdgeInsets(top: 0, left: Constants.Padding.double, bottom: 0, right: -Constants.Padding.double))
+        shadowView.constrain(toSuperviewEdges: UIEdgeInsets(top: 0, left: C.padding[2], bottom: 0, right: -C.padding[2]))
+        container.constrain(toSuperviewEdges: UIEdgeInsets(top: 0, left: C.padding[2], bottom: 0, right: -C.padding[2]))
         innerShadow.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         innerShadow.constrain([
                 innerShadow.constraint(.height, constant: 1.0)
             ])
         transaction.constrain([
-                transaction.constraint(.leading, toView: container, constant: Constants.Padding.double),
+                transaction.constraint(.leading, toView: container, constant: C.padding[2]),
                 transaction.constraint(.top, toView: container, constant: topPadding),
-                NSLayoutConstraint(item: transaction, attribute: .trailing, relatedBy: .lessThanOrEqual, toItem: timestamp, attribute: .leading, multiplier: 1.0, constant: -Constants.Padding.single)
+                NSLayoutConstraint(item: transaction, attribute: .trailing, relatedBy: .lessThanOrEqual, toItem: timestamp, attribute: .leading, multiplier: 1.0, constant: -C.padding[1])
             ])
         timestamp.constrain([
-                timestamp.constraint(.trailing, toView: container, constant: -Constants.Padding.double),
+                timestamp.constraint(.trailing, toView: container, constant: -C.padding[2]),
                 timestamp.constraint(.top, toView: container, constant: topPadding)
             ])
         status.constrain([
-                status.constraint(.leading, toView: container, constant: Constants.Padding.double),
-                status.constraint(toBottom: transaction, constant: Constants.Padding.single),
-                status.constraint(.trailing, toView: container, constant: -Constants.Padding.double)
+                status.constraint(.leading, toView: container, constant: C.padding[2]),
+                status.constraint(toBottom: transaction, constant: C.padding[1]),
+                status.constraint(.trailing, toView: container, constant: -C.padding[2])
             ])
         comment.constrain([
-                comment.constraint(.leading, toView: container, constant: Constants.Padding.double),
-                comment.constraint(toBottom: status, constant: Constants.Padding.single),
-                NSLayoutConstraint(item: comment, attribute: .trailing, relatedBy: .lessThanOrEqual, toItem: timestamp, attribute: .leading, multiplier: 1.0, constant: -Constants.Padding.single),
-                comment.constraint(.bottom, toView: container, constant: -Constants.Padding.double)
+                comment.constraint(.leading, toView: container, constant: C.padding[2]),
+                comment.constraint(toBottom: status, constant: C.padding[1]),
+                NSLayoutConstraint(item: comment, attribute: .trailing, relatedBy: .lessThanOrEqual, toItem: timestamp, attribute: .leading, multiplier: 1.0, constant: -C.padding[1]),
+                comment.constraint(.bottom, toView: container, constant: -C.padding[2])
             ])
     }
 
