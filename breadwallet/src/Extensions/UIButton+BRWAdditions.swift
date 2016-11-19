@@ -9,6 +9,24 @@
 import UIKit
 
 extension UIButton {
+    static func vertical(title: String, image: UIImage) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(title, for: .normal)
+        button.setImage(image, for: .normal)
+
+        if let imageSize = button.imageView?.image?.size,
+            let font = button.titleLabel?.font {
+            let spacing: CGFloat = C.padding[1]/2.0
+            let titleSize = NSString(string: title).size(attributes: [NSFontAttributeName : font])
+
+            //These edge insets place the image vertically above the title label
+            button.titleEdgeInsets = UIEdgeInsetsMake(0.0, -imageSize.width, -(imageSize.height + spacing), 0.0)
+            button.imageEdgeInsets = UIEdgeInsetsMake(-(titleSize.height + spacing), 0.0, 0.0, -titleSize.width)
+        }
+
+        return button
+    }
+
     static func close() -> UIButton {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
