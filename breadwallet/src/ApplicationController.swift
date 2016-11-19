@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ApplicationController {
+class ApplicationController: Trackable {
 
     //Ideally the window would be private, but is unfortunately required
     //by the UIApplicationDelegate Protocol
