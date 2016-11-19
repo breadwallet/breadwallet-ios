@@ -19,16 +19,19 @@ class AccountFooterView: UIView {
     }
 
     func setupSubViews(){
+
         let backgroundView = UITabBar()
         addSubview(backgroundView)
         backgroundView.constrain(toSuperviewEdges: nil)
 
-        let send = UIButton(type: .system)
-        send.setImage(#imageLiteral(resourceName: "SendButtonIcon"), for: .normal)
-        let receive = UIButton(type: .system)
-        receive.setImage(#imageLiteral(resourceName: "ReceiveButtonIcon"), for: .normal)
-        let menu = UIButton(type: .system)
-        menu.setImage(#imageLiteral(resourceName: "MenuButtonIcon"), for: .normal)
+        let send = UIButton.vertical(title: "SEND", image: #imageLiteral(resourceName: "SendButtonIcon"))
+        send.tintColor = .grayTextTint
+
+        let receive = UIButton.vertical(title: "RECEIVE", image: #imageLiteral(resourceName: "ReceiveButtonIcon"))
+        receive.tintColor = .grayTextTint
+
+        let menu = UIButton.vertical(title: "MENU", image: #imageLiteral(resourceName: "MenuButtonIcon"))
+        menu.tintColor = .grayTextTint
 
         addSubview(send)
         addSubview(receive)
