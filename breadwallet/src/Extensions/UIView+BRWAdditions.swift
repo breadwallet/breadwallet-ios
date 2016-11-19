@@ -52,6 +52,12 @@ extension UIView {
         return NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: toTop, attribute: .top , multiplier: 1.0, constant: constant)
     }
 
+    func constraint(toTrailing: UIView, constant: CGFloat) -> NSLayoutConstraint {
+        guard superview != nil else { assert(false, "Superview cannot be nil when adding contraints") }
+        translatesAutoresizingMaskIntoConstraints = false
+        return NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: toTrailing, attribute: .trailing , multiplier: 1.0, constant: constant)
+    }
+
     func constrainTopCorners(sidePadding: CGFloat, topPadding: CGFloat, topLayoutGuide: UILayoutSupport) {
         guard let view = superview else { assert(false, "Superview cannot be nil when adding contraints") }
         constrain([
