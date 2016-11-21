@@ -86,7 +86,7 @@ class AccountHeaderView: UIView {
         let gradient = CGGradient(colorsSpace: colorSpace, colors: colors, locations: locations)
 
         let context = UIGraphicsGetCurrentContext()
-        context?.drawLinearGradient(gradient!, start: CGPoint(x: 0.0, y: 0.0), end: CGPoint(x: rect.width, y: 0.0), options: CGGradientDrawingOptions(rawValue: 0))
+        context?.drawLinearGradient(gradient!, start: CGPoint(x: 0.0, y: 0.0), end: CGPoint(x: rect.width, y: 0.0), options: [])
     }
 
     required init?(coder aDecoder: NSCoder) {
