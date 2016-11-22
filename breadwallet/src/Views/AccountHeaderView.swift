@@ -15,6 +15,7 @@ class AccountHeaderView: UIView {
     private let primaryBalance = UILabel()
     private let secondaryBalance = UILabel()
     private let info = UILabel()
+    private let search = UIButton(type: .system)
 
     init() {
         super.init(frame: CGRect())
@@ -47,6 +48,9 @@ class AccountHeaderView: UIView {
         info.text = "Bitcoin price +3.4% today"
         info.textColor = .secondaryText
         info.font = UIFont.customBody(size: 13.0)
+
+        search.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
+        search.tintColor = .white
     }
 
     private func addSubviews() {
@@ -55,6 +59,7 @@ class AccountHeaderView: UIView {
         addSubview(primaryBalance)
         addSubview(secondaryBalance)
         addSubview(info)
+        addSubview(search)
     }
 
     private func addConstraints() {
@@ -77,6 +82,12 @@ class AccountHeaderView: UIView {
         info.constrain([
                 info.constraint(.leading, toView: self, constant: C.padding[2]),
                 info.constraint(toBottom: secondaryBalance, constant: C.padding[1]/2.0)
+            ])
+        search.constrain([
+                search.constraint(.trailing, toView: self, constant: -C.padding[2]),
+                search.constraint(.bottom, toView: primaryBalance, constant: 0.0),
+                search.constraint(.width, constant: 24.0),
+                search.constraint(.height, constant: 24.0)
             ])
     }
 
