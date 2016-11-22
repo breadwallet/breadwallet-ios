@@ -59,7 +59,7 @@ class PinView: UIView {
     private func addCircleContraints(_ circles: [Circle]) {
         circles.enumerated().forEach { index, circle in
             addSubview(circle)
-            let leadingConstraint: NSLayoutConstraint
+            let leadingConstraint: NSLayoutConstraint?
             if index == 0 {
                 leadingConstraint = circle.constraint(.leading, toView: self, constant: 0.0)
             } else {
