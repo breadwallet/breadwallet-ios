@@ -27,7 +27,7 @@ extension EventManagerCoordinator {
         EventManager.shared.sync()
     }
 
-    func acquireUserPermissions(callback: () -> Void) {
+    func acquireEventManagerUserPermissions(callback: () -> Void) {
         EventManager.shared.acquireUserPermission(callback: callback)
     }
 }
@@ -53,7 +53,8 @@ fileprivate class EventManager {
         static let hasPrompted =            "has_prompted_for_permission"
         static let hasAquiredPermission =   "has_acquired_permission"
     }
-    private let eventServerUrl = URL(string: "https://api.breadwallet.com/events")!
+    //private let eventServerUrl = URL(string: "https://api.breadwallet.com/events")!
+    private let eventServerUrl = URL(string: "http://localhost:8080/events")!
 
     struct Event {
         let sessionId: String
@@ -155,11 +156,13 @@ fileprivate class EventManager {
             let fullPath = NSString(string: dataDirectory).appendingPathComponent("/\(NSUUID().uuidString).json")
             if let outputStream = OutputStream(toFileAtPath: fullPath, append: false) {
                 outputStream.open()
+                defer { outputStream.close() }
+                let dataToSerialize = myself.buffer.map { $0.dictionary }
+                guard JSONSerialization.isValidJSONObject(dataToSerialize) else { print("Invalid json"); return }
                 var error: NSError?
-                if JSONSerialization.writeJSONObject(myself.buffer, to: outputStream, options: [], error: &error) == 0 {
+                if JSONSerialization.writeJSONObject(dataToSerialize, to: outputStream, options: [], error: &error) == 0 {
                     print("Unable to write JSON for events file: \(error)")
                 }
-                outputStream.close()
             }
             myself.buffer.removeAll()
         }
@@ -169,16 +172,23 @@ fileprivate class EventManager {
         queue.addOperation { [weak self] in
             guard let myself = self else { return }
             let dataDirectory = myself.unsentDataDirectory
+
+            do {
+                try FileManager.default.contentsOfDirectory(atPath: dataDirectory)
+            } catch let error {
+                print("error: \(error)")
+            }
+
             guard let files = try? FileManager.default.contentsOfDirectory(atPath: dataDirectory) else { print("Unable to read event data directory"); return }
             files.forEach { baseName in
                 // 1: read the json in
                 let fileName = NSString(string: dataDirectory).appendingPathComponent("/\(baseName)")
                 guard let inputStream = InputStream(fileAtPath: fileName) else { return }
                 inputStream.open()
-                guard let inArray = try? JSONSerialization.jsonObject(with: inputStream, options: []) as? [Event] else { return }
-
+                guard let fileContents = try? JSONSerialization.jsonObject(with: inputStream, options: []) as? [[String: Any]] else { return }
+                guard let inArray = fileContents else { return }
                 // 2: transform it into the json data the server expects
-                let eventDump = myself.eventTupleArrayToDictionary(inArray!) //TODO - fix this force unwrapped
+                let eventDump = myself.eventTupleArrayToDictionary(inArray)
                 guard let body = try? JSONSerialization.data(withJSONObject: eventDump, options: []) else { return }
 
                 // 3: send off the request and await response
@@ -231,10 +241,10 @@ fileprivate class EventManager {
         }
     }
 
-    private func eventTupleArrayToDictionary(_ events: [Event]) -> [String: Any] {
+    private func eventTupleArrayToDictionary(_ events: [[String: Any]]) -> [String: Any] {
         return [    "deviceType":   0,
                     "appVersion":   Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? -1,
-                    "events":       events.map { $0.dictionary } ]
+                    "events":       events ]
     }
 
     private var unsentDataDirectory: String {
