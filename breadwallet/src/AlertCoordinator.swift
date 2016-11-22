@@ -81,12 +81,12 @@ class AlertCoordinator: Subscriber {
         if #available(iOS 10.0, *) {
 
             let presentAnimator = UIViewPropertyAnimator.springAnimation {
-                topConstraint.constant = size.height - self.alertHeight
+                topConstraint?.constant = size.height - self.alertHeight
                 keyboardWindow.layoutIfNeeded()
             }
 
             let dismissAnimator = UIViewPropertyAnimator.springAnimation {
-                topConstraint.constant = size.height
+                topConstraint?.constant = size.height
                 keyboardWindow.layoutIfNeeded()
             }
 
