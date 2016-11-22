@@ -25,6 +25,7 @@ class AccountHeaderView: UIView {
         setData()
         addSubviews()
         addConstraints()
+        addShadow()
     }
 
     private func setData() {
@@ -77,6 +78,13 @@ class AccountHeaderView: UIView {
                 info.constraint(.leading, toView: self, constant: C.padding[2]),
                 info.constraint(toBottom: secondaryBalance, constant: C.padding[1]/2.0)
             ])
+    }
+
+    private func addShadow() {
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        layer.shadowOpacity = 0.15
+        layer.shadowRadius = 8.0
     }
 
     override func draw(_ rect: CGRect) {
