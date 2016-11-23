@@ -12,7 +12,7 @@ class StartFlowPresenter: Subscriber {
 
     private let store: Store
     private let rootViewController: UIViewController
-    private var navigationController: UINavigationController?
+    private var navigationController: ModalNavigationController?
     private let navigationControllerDelegate: StartNavigationDelegate
 
     init(store: Store, rootViewController: UIViewController) {
@@ -71,7 +71,7 @@ class StartFlowPresenter: Subscriber {
             let startViewController = StartViewController(store: myself.store)
             myself.navigationController?.pushViewController(startViewController, animated: true)
         }
-        navigationController = UINavigationController(rootViewController: welcomeViewController)
+        navigationController = ModalNavigationController(rootViewController: welcomeViewController)
         navigationController?.delegate = navigationControllerDelegate
         if let startFlow = navigationController {
             startFlow.setNavigationBarHidden(true, animated: false)

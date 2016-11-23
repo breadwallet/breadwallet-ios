@@ -214,6 +214,7 @@
 		CEF3E82F1DE534C5007C0A9E /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E82E1DE534C5007C0A9E /* GradientView.swift */; };
 		CEF3E8321DE55540007C0A9E /* CheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8311DE55540007C0A9E /* CheckView.swift */; };
 		CEF3E8341DE57166007C0A9E /* AnimatableIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8331DE57166007C0A9E /* AnimatableIcon.swift */; };
+		CEF3E8361DE60222007C0A9E /* ModalNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8351DE60222007C0A9E /* ModalNavigationController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1170,6 +1171,7 @@
 		CEF3E82E1DE534C5007C0A9E /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GradientView.swift; path = src/Views/GradientView.swift; sourceTree = "<group>"; };
 		CEF3E8311DE55540007C0A9E /* CheckView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CheckView.swift; path = src/Views/AnimatedIcons/CheckView.swift; sourceTree = "<group>"; };
 		CEF3E8331DE57166007C0A9E /* AnimatableIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnimatableIcon.swift; path = src/Views/AnimatedIcons/AnimatableIcon.swift; sourceTree = "<group>"; };
+		CEF3E8351DE60222007C0A9E /* ModalNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalNavigationController.swift; path = src/ViewControllers/ModalNavigationController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2263,6 +2265,7 @@
 				CEAA9E981DC262800066731D /* ConfirmPaperPhraseViewController.swift */,
 				CEA929701DDA5C21007335AF /* WelcomeViewController.swift */,
 				CEBF32F51DDCEAF900348FC6 /* TransactionsTableViewController.swift */,
+				CEF3E8351DE60222007C0A9E /* ModalNavigationController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -2888,6 +2891,7 @@
 				CEAA9E991DC262800066731D /* ConfirmPaperPhraseViewController.swift in Sources */,
 				CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */,
 				CEA929711DDA5C21007335AF /* WelcomeViewController.swift in Sources */,
+				CEF3E8361DE60222007C0A9E /* ModalNavigationController.swift in Sources */,
 				CEBF33041DDE17A600348FC6 /* Transaction.swift in Sources */,
 				CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */,
 				CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */,
