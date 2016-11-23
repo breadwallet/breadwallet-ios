@@ -210,6 +210,10 @@
 		CEBF32F91DDD193500348FC6 /* TransactionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF32F81DDD193500348FC6 /* TransactionTableViewCell.swift */; };
 		CEBF33041DDE17A600348FC6 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF33031DDE17A600348FC6 /* Transaction.swift */; };
 		CEF3E82B1DE51612007C0A9E /* GradientCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */; };
+		CEF3E82D1DE528BF007C0A9E /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E82C1DE528BF007C0A9E /* AlertView.swift */; };
+		CEF3E82F1DE534C5007C0A9E /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E82E1DE534C5007C0A9E /* GradientView.swift */; };
+		CEF3E8321DE55540007C0A9E /* CheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8311DE55540007C0A9E /* CheckView.swift */; };
+		CEF3E8341DE57166007C0A9E /* AnimatableIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8331DE57166007C0A9E /* AnimatableIcon.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1162,6 +1166,10 @@
 		CEBF32F81DDD193500348FC6 /* TransactionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransactionTableViewCell.swift; path = src/Views/TransactionCells/TransactionTableViewCell.swift; sourceTree = "<group>"; };
 		CEBF33031DDE17A600348FC6 /* Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Transaction.swift; path = src/ViewModels/Transaction.swift; sourceTree = "<group>"; };
 		CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GradientCircle.swift; path = src/Views/GradientCircle.swift; sourceTree = "<group>"; };
+		CEF3E82C1DE528BF007C0A9E /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlertView.swift; path = src/Views/AlertView.swift; sourceTree = "<group>"; };
+		CEF3E82E1DE534C5007C0A9E /* GradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GradientView.swift; path = src/Views/GradientView.swift; sourceTree = "<group>"; };
+		CEF3E8311DE55540007C0A9E /* CheckView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CheckView.swift; path = src/Views/AnimatedIcons/CheckView.swift; sourceTree = "<group>"; };
+		CEF3E8331DE57166007C0A9E /* AnimatableIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnimatableIcon.swift; path = src/Views/AnimatedIcons/AnimatableIcon.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2304,6 +2312,9 @@
 				CEBF32ED1DDBC30000348FC6 /* ShadowButton.swift */,
 				CEBF32F11DDCE10D00348FC6 /* AccountHeaderView.swift */,
 				CEBF32F31DDCE12900348FC6 /* AccountFooterView.swift */,
+				CEF3E82C1DE528BF007C0A9E /* AlertView.swift */,
+				CEF3E82E1DE534C5007C0A9E /* GradientView.swift */,
+				CEF3E8301DE554F1007C0A9E /* AnimatedIcons */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2334,6 +2345,15 @@
 				CEBF33031DDE17A600348FC6 /* Transaction.swift */,
 			);
 			name = ViewModels;
+			sourceTree = "<group>";
+		};
+		CEF3E8301DE554F1007C0A9E /* AnimatedIcons */ = {
+			isa = PBXGroup;
+			children = (
+				CEF3E8311DE55540007C0A9E /* CheckView.swift */,
+				CEF3E8331DE57166007C0A9E /* AnimatableIcon.swift */,
+			);
+			name = AnimatedIcons;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2840,6 +2860,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */,
+				CEF3E82D1DE528BF007C0A9E /* AlertView.swift in Sources */,
 				CEBF32F91DDD193500348FC6 /* TransactionTableViewCell.swift in Sources */,
 				CEF3E82B1DE51612007C0A9E /* GradientCircle.swift in Sources */,
 				CEBF32F01DDCD30600348FC6 /* AccountViewController.swift in Sources */,
@@ -2857,10 +2878,13 @@
 				CEAA9E9B1DC2B9320066731D /* ConfirmPhrase.swift in Sources */,
 				75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */,
 				CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */,
+				CEF3E8341DE57166007C0A9E /* AnimatableIcon.swift in Sources */,
+				CEF3E8321DE55540007C0A9E /* CheckView.swift in Sources */,
 				CE3754AF1DDE6E2E0045B0CB /* RoundedContainer.swift in Sources */,
 				CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */,
 				CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */,
 				CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */,
+				CEF3E82F1DE534C5007C0A9E /* GradientView.swift in Sources */,
 				CEAA9E991DC262800066731D /* ConfirmPaperPhraseViewController.swift in Sources */,
 				CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */,
 				CEA929711DDA5C21007335AF /* WelcomeViewController.swift in Sources */,

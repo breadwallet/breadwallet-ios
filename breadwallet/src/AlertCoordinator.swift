@@ -12,32 +12,12 @@ class AlertCoordinator: Subscriber {
 
     private let store: Store
     private let window: UIWindow
-    private let simpleAlertView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .brand
-        view.layer.cornerRadius = 6.0
-        return view
-    }()
-    private let label: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.customBold(size: 14.0)
-        label.textColor = .white
-        label.textAlignment = .center
-        return label
-    }()
     private let alertHeight: CGFloat = 260.0
 
     init(store: Store, window: UIWindow) {
         self.store = store
         self.window = window
-
-        setupAlertView()
         addSubscriptions()
-    }
-
-    private func setupAlertView() {
-        simpleAlertView.addSubview(label)
-        label.constrainTopCorners(sidePadding: C.padding[2], topPadding: C.padding[4])
     }
 
     private func addSubscriptions() {
@@ -45,61 +25,67 @@ class AlertCoordinator: Subscriber {
             selector: { _,_ in true },
             callback: { state in
                 if case .save(_) = state.pinCreationStep {
-                    self.presentAlert("Pin Set") {
+                    self.presentAlert(.pinSet) {
                         self.store.perform(action: PaperPhrase.Start())
                     }
                 }
 
                 if case .confirmed(_) = state.paperPhraseStep {
-                    self.presentAlert("Paper Key Set") {
+                    self.presentAlert(.paperKeySet) {
                         self.store.perform(action: HideStartFlow())
                     }
                 }
         }))
     }
 
-    private func presentAlert(_ text: String, completion: @escaping ()->Void) {
+    private func presentAlert(_ type: AlertType, completion: @escaping ()->Void) {
 
-        label.text = text
+        let alertView = AlertView(type: type)
+        let size = activeWindow.bounds.size
+        activeWindow.addSubview(alertView)
 
-        //TODO - This is a total hack to grab the window that keyboard is in
-        //After pin creation, the alert view needs to be presented over the keyboard
-        let windowsCount = UIApplication.shared.windows.count
-        let keyboardWindow = UIApplication.shared.windows[windowsCount - 1]
-        let size = keyboardWindow.bounds.size
-
-        keyboardWindow.addSubview(simpleAlertView)
-
-        let topConstraint = simpleAlertView.constraint(.top, toView: keyboardWindow, constant: size.height)
-        simpleAlertView.constrain([
-                simpleAlertView.constraint(.width, constant: size.width),
-                simpleAlertView.constraint(.height, constant: alertHeight + 25.0),
-                simpleAlertView.constraint(.leading, toView: keyboardWindow, constant: nil),
+        let topConstraint = alertView.constraint(.top, toView: activeWindow, constant: size.height)
+        alertView.constrain([
+                alertView.constraint(.width, constant: size.width),
+                alertView.constraint(.height, constant: alertHeight + 25.0),
+                alertView.constraint(.leading, toView: activeWindow, constant: nil),
                 topConstraint
             ])
-        keyboardWindow.layoutIfNeeded()
+        activeWindow.layoutIfNeeded()
         if #available(iOS 10.0, *) {
 
             let presentAnimator = UIViewPropertyAnimator.springAnimation {
                 topConstraint?.constant = size.height - self.alertHeight
-                keyboardWindow.layoutIfNeeded()
+                self.activeWindow.layoutIfNeeded()
             }
 
             let dismissAnimator = UIViewPropertyAnimator.springAnimation {
                 topConstraint?.constant = size.height
-                keyboardWindow.layoutIfNeeded()
+                self.activeWindow.layoutIfNeeded()
             }
 
             presentAnimator.addCompletion { _ in
+                alertView.animate()
                 dismissAnimator.startAnimation(afterDelay: 2.0)
             }
 
             dismissAnimator.addCompletion { _ in
                 completion()
+                alertView.removeFromSuperview()
             }
 
             presentAnimator.startAnimation()
         }
+    }
+
+    //TODO - This is a total hack to grab the window that keyboard is in
+    //After pin creation, the alert view needs to be presented over the keyboard
+    private var activeWindow: UIWindow {
+        let windowsCount = UIApplication.shared.windows.count
+        if let keyboardWindow = UIApplication.shared.windows.last, windowsCount > 1 {
+            return keyboardWindow
+        }
+        return window
     }
 
 }
