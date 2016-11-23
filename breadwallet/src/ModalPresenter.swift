@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AlertCoordinator: Subscriber {
+class ModalPresenter: Subscriber {
 
     private let store: Store
     private let window: UIWindow

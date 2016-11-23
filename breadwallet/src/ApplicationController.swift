@@ -15,12 +15,12 @@ class ApplicationController {
     let window =                    UIWindow()
     private let store =             Store()
     private var startFlowController: StartFlowPresenter?
-    private var alertCoordinator: AlertCoordinator?
+    private var modalPresenter: ModalPresenter?
 
     func launch(options: [UIApplicationLaunchOptionsKey: Any]?) {
         setupAppearance()
         setupRootViewController()
-        setupAlertCoordinator()
+        setupPresenters()
         window.makeKeyAndVisible()
         //store.perform(action: ShowStartFlow())
     }
@@ -38,7 +38,7 @@ class ApplicationController {
         startFlowController = StartFlowPresenter(store: store, rootViewController: accountViewController)
     }
 
-    private func setupAlertCoordinator() {
-        alertCoordinator = AlertCoordinator(store: store, window: window)
+    private func setupPresenters() {
+        modalPresenter = ModalPresenter(store: store, window: window)
     }
 }
