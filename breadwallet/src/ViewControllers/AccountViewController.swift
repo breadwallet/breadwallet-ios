@@ -17,6 +17,16 @@ class AccountViewController: UIViewController {
     private let headerHeight: CGFloat = 136.0
     private let footerHeight: CGFloat = 56.0
 
+    var sendCallback: (() -> Void)? {
+        didSet { footerView.sendCallback = sendCallback }
+    }
+    var receiveCallback: (() -> Void)? {
+        didSet { footerView.receiveCallback = receiveCallback }
+    }
+    var menuCallback: (() -> Void)? {
+        didSet { footerView.menuCallback = menuCallback }
+    }
+
     init(store: Store) {
         self.store = store
         super.init(nibName: nil, bundle: nil)
@@ -36,10 +46,6 @@ class AccountViewController: UIViewController {
         footerView.constrain([
                 footerView.constraint(.height, constant: footerHeight)
             ])
-
-        footerView.menuCallback = { [weak self] in
-            self?.store.perform(action: ShowStartFlow())
-        }
     }
 
     private func addTransactionsView() {
