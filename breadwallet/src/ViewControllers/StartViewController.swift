@@ -10,7 +10,7 @@ import UIKit
 
 class StartViewController: UIViewController {
 
-    private let circle =    GradientCircle(startColor: .gradientStart, endColor: .gradientEnd)
+    private let circle =    GradientCircle()
     private let brand =     UILabel()
     private let create =    ShadowButton(title: NSLocalizedString("Create New Wallet", comment: "button label"), type: .primary)
     private let recover =   ShadowButton(title: NSLocalizedString("Recover Wallet", comment: "button label"), type: .secondary)

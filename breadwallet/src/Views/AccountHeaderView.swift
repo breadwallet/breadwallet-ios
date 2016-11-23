@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AccountHeaderView: UIView {
+class AccountHeaderView: UIView, GradientDrawable {
 
     private let name = UILabel(font: UIFont.boldSystemFont(ofSize: 17.0))
     private let manage = UIButton(type: .system)
@@ -99,12 +99,7 @@ class AccountHeaderView: UIView {
     }
 
     override func draw(_ rect: CGRect) {
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
-        let colors = [UIColor.gradientStart.cgColor, UIColor.gradientEnd.cgColor] as CFArray
-        let locations: [CGFloat] = [0.0, 1.0]
-        guard let gradient = CGGradient(colorsSpace: colorSpace, colors: colors, locations: locations) else { return }
-        guard let context = UIGraphicsGetCurrentContext() else { return }
-        context.drawLinearGradient(gradient, start: .zero, end: CGPoint(x: rect.width, y: 0.0), options: [])
+        drawGradient(rect)
     }
 
     required init?(coder aDecoder: NSCoder) {
