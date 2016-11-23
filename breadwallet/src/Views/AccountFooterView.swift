@@ -9,13 +9,18 @@
 import UIKit
 
 class AccountFooterView: UIView {
+
+    var sendCallback: (() -> Void)?
+    var receiveCallback: (() -> Void)?
+    var menuCallback: (() -> Void)?
+
     override init (frame : CGRect) {
         super.init(frame : frame)
         setupSubViews()
     }
 
     convenience init () {
-        self.init(frame:CGRect.zero)
+        self.init(frame: .zero)
     }
 
     func setupSubViews(){
@@ -26,12 +31,15 @@ class AccountFooterView: UIView {
 
         let send = UIButton.vertical(title: "SEND", image: #imageLiteral(resourceName: "SendButtonIcon"))
         send.tintColor = .grayTextTint
+        send.addTarget(self, action: #selector(AccountFooterView.send), for: .touchUpInside)
 
         let receive = UIButton.vertical(title: "RECEIVE", image: #imageLiteral(resourceName: "ReceiveButtonIcon"))
         receive.tintColor = .grayTextTint
+        receive.addTarget(self, action: #selector(AccountFooterView.receive), for: .touchUpInside)
 
         let menu = UIButton.vertical(title: "MENU", image: #imageLiteral(resourceName: "MenuButtonIcon"))
         menu.tintColor = .grayTextTint
+        menu.addTarget(self, action: #selector(AccountFooterView.menu), for: .touchUpInside)
 
         addSubview(send)
         addSubview(receive)
@@ -56,6 +64,10 @@ class AccountFooterView: UIView {
                 NSLayoutConstraint(item: menu, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/3.0, constant: 1.0)
             ])
     }
+
+    @objc private func send() { sendCallback?() }
+    @objc private func receive() { receiveCallback?() }
+    @objc private func menu() { menuCallback?() }
 
     required init(coder aDecoder: NSCoder) {
         fatalError("This class does not support NSCoding")
