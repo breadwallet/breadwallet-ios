@@ -35,6 +35,9 @@ class ApplicationController {
     private func setupRootViewController() {
         let accountViewController = AccountViewController(store: store)
         window.rootViewController = accountViewController
+        accountViewController.sendCallback = { self.store.perform(action: RootModalActions.Send()) }
+        accountViewController.receiveCallback = { self.store.perform(action: RootModalActions.Receive()) }
+        accountViewController.menuCallback = { self.store.perform(action: RootModalActions.Menu()) }
         startFlowController = StartFlowPresenter(store: store, rootViewController: accountViewController)
     }
 

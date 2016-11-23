@@ -18,6 +18,7 @@ class ModalPresenter: Subscriber {
         self.store = store
         self.window = window
         addSubscriptions()
+        addModalSubscriptions()
     }
 
     private func addSubscriptions() {
@@ -36,6 +37,16 @@ class ModalPresenter: Subscriber {
                     }
                 }
         })
+    }
+
+    private func addModalSubscriptions() {
+        store.subscribe(self,
+                        selector: { $0.rootModal != $1.rootModal},
+                        callback: { self.presentModal($0.rootModal) })
+    }
+
+    private func presentModal(_ type: RootModal) {
+        print("present modal: \(type)")
     }
 
     private func presentAlert(_ type: AlertType, completion: @escaping ()->Void) {
