@@ -117,40 +117,40 @@ class PinCreationViewController: UIViewController, Subscriber {
     }
 
     private func addStoreSubscriptions() {
-        store.subscribe(self, subscription: Subscription(
-            selector: {
-                //It's possible to get repeat confirmFail state updates, so
-                //we need to subscribe to all of them, even if the state doesn't change
-                if case .confirmFail(_) = $0.pinCreationStep {
-                    return true
-                } else {
-                    return $0.pinCreationStep != $1.pinCreationStep
-                }
-            },
-            callback: { state in
-                switch state.pinCreationStep {
-                    case .start:
-                        self.instruction.text = "Set PIN"
-                    case .confirm:
-                        self.instruction.text = "Re-Enter PIN"
-                        self.hiddenPin.text = ""
-                        //If this delay isn't here, the last pin filling in is never seen
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-                            self?.pinView.fill(0)
-                        }
-                    case .save:
-                        self.instruction.text = "Re-Enter PIN"
-                    case .confirmFail:
-                        self.instruction.text = "Wrong pin, please try again"
-                        self.hiddenPin.text = ""
-                        self.pinView.shake()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + PinView.shakeDuration) { [weak self] in
-                            self?.pinView.fill(0)
-                        }
-                    case .none:
-                        print("noop")
-                }
-        }))
+        store.subscribe(self,
+                        selector: {
+                            //It's possible to get repeat confirmFail state updates, so
+                            //we need to subscribe to all of them, even if the state doesn't change
+                            if case .confirmFail(_) = $0.pinCreationStep {
+                                return true
+                            } else {
+                                return $0.pinCreationStep != $1.pinCreationStep
+                            }
+                        },
+                        callback: { state in
+                            switch state.pinCreationStep {
+                                case .start:
+                                    self.instruction.text = "Set PIN"
+                                case .confirm:
+                                    self.instruction.text = "Re-Enter PIN"
+                                    self.hiddenPin.text = ""
+                                    //If this delay isn't here, the last pin filling in is never seen
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                                        self?.pinView.fill(0)
+                                    }
+                                case .save:
+                                    self.instruction.text = "Re-Enter PIN"
+                                case .confirmFail:
+                                    self.instruction.text = "Wrong pin, please try again"
+                                    self.hiddenPin.text = ""
+                                    self.pinView.shake()
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + PinView.shakeDuration) { [weak self] in
+                                        self?.pinView.fill(0)
+                                    }
+                                case .none:
+                                    print("noop")
+                            }
+                        })
     }
 
 
