@@ -22,7 +22,7 @@ class ApplicationController {
         setupRootViewController()
         setupAlertCoordinator()
         window.makeKeyAndVisible()
-        //store.perform(action: ShowStartFlow())
+        store.perform(action: ShowStartFlow())
     }
 
     private func setupAppearance() {

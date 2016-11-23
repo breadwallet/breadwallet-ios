@@ -21,10 +21,10 @@ class Circle: UIView {
     }
 
     override func draw(_ rect: CGRect) {
-        guard let ctx = UIGraphicsGetCurrentContext() else { return }
-        ctx.addEllipse(in: rect)
-        ctx.setFillColor(color.cgColor)
-        ctx.fillPath()
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        context.addEllipse(in: rect)
+        context.setFillColor(color.cgColor)
+        context.fillPath()
     }
 
     required init?(coder aDecoder: NSCoder) {

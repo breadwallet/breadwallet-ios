@@ -102,10 +102,9 @@ class AccountHeaderView: UIView {
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let colors = [UIColor.gradientStart.cgColor, UIColor.gradientEnd.cgColor] as CFArray
         let locations: [CGFloat] = [0.0, 1.0]
-        let gradient = CGGradient(colorsSpace: colorSpace, colors: colors, locations: locations)
-
-        let context = UIGraphicsGetCurrentContext()
-        context?.drawLinearGradient(gradient!, start: CGPoint(x: 0.0, y: 0.0), end: CGPoint(x: rect.width, y: 0.0), options: CGGradientDrawingOptions(rawValue: 0))
+        guard let gradient = CGGradient(colorsSpace: colorSpace, colors: colors, locations: locations) else { return }
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        context.drawLinearGradient(gradient, start: .zero, end: CGPoint(x: rect.width, y: 0.0), options: [])
     }
 
     required init?(coder aDecoder: NSCoder) {

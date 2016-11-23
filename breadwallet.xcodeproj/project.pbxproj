@@ -209,6 +209,7 @@
 		CEBF32F61DDCEAF900348FC6 /* TransactionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF32F51DDCEAF900348FC6 /* TransactionsTableViewController.swift */; };
 		CEBF32F91DDD193500348FC6 /* TransactionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF32F81DDD193500348FC6 /* TransactionTableViewCell.swift */; };
 		CEBF33041DDE17A600348FC6 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF33031DDE17A600348FC6 /* Transaction.swift */; };
+		CEF3E82B1DE51612007C0A9E /* GradientCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1160,6 +1161,7 @@
 		CEBF32F51DDCEAF900348FC6 /* TransactionsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransactionsTableViewController.swift; path = src/ViewControllers/TransactionsTableViewController.swift; sourceTree = "<group>"; };
 		CEBF32F81DDD193500348FC6 /* TransactionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransactionTableViewCell.swift; path = src/Views/TransactionCells/TransactionTableViewCell.swift; sourceTree = "<group>"; };
 		CEBF33031DDE17A600348FC6 /* Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Transaction.swift; path = src/ViewModels/Transaction.swift; sourceTree = "<group>"; };
+		CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GradientCircle.swift; path = src/Views/GradientCircle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2295,6 +2297,7 @@
 			children = (
 				CEBF32F71DDD191300348FC6 /* TransactionCells */,
 				CE20C9101DBE5B6F00C8397A /* Circle.swift */,
+				CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */,
 				CEAA9E961DC18E1F0066731D /* PhraseView.swift */,
 				CEAA9E9A1DC2B9320066731D /* ConfirmPhrase.swift */,
 				CEAA9EA71DC3342E0066731D /* PinView.swift */,
@@ -2838,6 +2841,7 @@
 			files = (
 				CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */,
 				CEBF32F91DDD193500348FC6 /* TransactionTableViewCell.swift in Sources */,
+				CEF3E82B1DE51612007C0A9E /* GradientCircle.swift in Sources */,
 				CEBF32F01DDCD30600348FC6 /* AccountViewController.swift in Sources */,
 				CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */,
 				CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */,
