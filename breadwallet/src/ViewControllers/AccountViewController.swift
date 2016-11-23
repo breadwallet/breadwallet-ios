@@ -36,6 +36,10 @@ class AccountViewController: UIViewController {
         footerView.constrain([
                 footerView.constraint(.height, constant: footerHeight)
             ])
+
+        footerView.menuCallback = { [weak self] in
+            self?.store.perform(action: ShowStartFlow())
+        }
     }
 
     func addTransactionsView() {
