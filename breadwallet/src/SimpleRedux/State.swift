@@ -12,13 +12,15 @@ struct State {
     let isStartFlowVisible: Bool
     let pinCreationStep: PinCreationStep
     let paperPhraseStep: PaperPhraseStep
+    let rootModal: RootModal
 }
 
 extension State {
     static var initial: State {
         return State(   isStartFlowVisible: false,
                         pinCreationStep:    .none,
-                        paperPhraseStep:    .none)
+                        paperPhraseStep:    .none,
+                        rootModal:          .none)
     }
 }
 
@@ -38,6 +40,12 @@ enum PaperPhraseStep {
     case confirmed
 }
 
+enum RootModal {
+    case none
+    case send
+    case receive
+    case menu
+}
 
 extension PinCreationStep: Equatable {}
 

@@ -8,7 +8,7 @@
 
 import Foundation
 
-//MARK: Start Flow
+//MARK: - Start Flow
 struct ShowStartFlow: Action {
     let reduce: Reducer = {
         return $0.clone(isStartFlowVisible: true)
@@ -19,11 +19,12 @@ struct HideStartFlow: Action {
     let reduce: Reducer = { _ in 
         return State(isStartFlowVisible:    false,
                      pinCreationStep:       .none,
-                     paperPhraseStep:       .none)
+                     paperPhraseStep:       .none,
+                     rootModal:             .none)
     }
 }
 
-//MARK: Pin Creation
+//MARK: - Pin Creation
 struct PinCreation {
 
     struct PinEntryComplete: Action {
@@ -66,13 +67,14 @@ fileprivate func stateForNewPin(newPin: String, previousPin: String, state: Stat
     }
 }
 
-//MARK: Paper Phrase
+//MARK: - Paper Phrase
 struct PaperPhrase {
     struct Start: Action {
         let reduce: Reducer = {
             return State(isStartFlowVisible:    $0.isStartFlowVisible,
                          pinCreationStep:       .none,
-                         paperPhraseStep:       .start)
+                         paperPhraseStep:       .start,
+                         rootModal:             .none)
         }
     }
 
@@ -80,7 +82,8 @@ struct PaperPhrase {
         let reduce: Reducer = {
             return State(isStartFlowVisible:    $0.isStartFlowVisible,
                          pinCreationStep:       .none,
-                         paperPhraseStep:       .write)
+                         paperPhraseStep:       .write,
+                         rootModal:             .none)
         }
     }
 
@@ -88,7 +91,8 @@ struct PaperPhrase {
         let reduce: Reducer = {
             return State(isStartFlowVisible:    $0.isStartFlowVisible,
                          pinCreationStep:       .none,
-                         paperPhraseStep:       .confirm)
+                         paperPhraseStep:       .confirm,
+                         rootModal:             .none)
         }
     }
 
@@ -96,23 +100,46 @@ struct PaperPhrase {
         let reduce: Reducer = {
             return State(isStartFlowVisible:    $0.isStartFlowVisible,
                          pinCreationStep:       .none,
-                         paperPhraseStep:       .confirmed)
+                         paperPhraseStep:       .confirmed,
+                         rootModal:             .none)
         }
     }
 }
 
-//MARK: State Creation Helpers
-extension State {
+//MARK: - Root Modals
+struct RootModalActions {
+    struct Send: Action {
+        let reduce: Reducer = { $0.rootModal(.send) }
+    }
 
+    struct Receive: Action {
+        let reduce: Reducer = { $0.rootModal(.receive) }
+    }
+
+    struct Menu: Action {
+        let reduce: Reducer = { $0.rootModal(.menu) }
+    }
+}
+
+//MARK: - State Creation Helpers
+extension State {
     func clone(isStartFlowVisible: Bool) -> State {
         return State(isStartFlowVisible:    isStartFlowVisible,
                      pinCreationStep:       self.pinCreationStep,
-                     paperPhraseStep:       self.paperPhraseStep)
+                     paperPhraseStep:       self.paperPhraseStep,
+                     rootModal:             self.rootModal)
     }
-
     func clone(pinCreationStep: PinCreationStep) -> State {
         return State(isStartFlowVisible:    self.isStartFlowVisible,
                      pinCreationStep:       pinCreationStep,
-                     paperPhraseStep:       self.paperPhraseStep)
+                     paperPhraseStep:       self.paperPhraseStep,
+                     rootModal:             self.rootModal)
+    }
+
+    func rootModal(_ type: RootModal) -> State {
+        return State(isStartFlowVisible:    false,
+                     pinCreationStep:       .none,
+                     paperPhraseStep:       .none,
+                     rootModal:             type)
     }
 }
