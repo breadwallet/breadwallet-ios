@@ -21,7 +21,7 @@ class ModalPresenter: Subscriber {
     }
 
     private func addSubscriptions() {
-        store.subscribe(self, subscription: Subscription(
+        store.subscribe(self,
             selector: { _,_ in true },
             callback: { state in
                 if case .save(_) = state.pinCreationStep {
@@ -35,7 +35,7 @@ class ModalPresenter: Subscriber {
                         self.store.perform(action: HideStartFlow())
                     }
                 }
-        }))
+        })
     }
 
     private func presentAlert(_ type: AlertType, completion: @escaping ()->Void) {

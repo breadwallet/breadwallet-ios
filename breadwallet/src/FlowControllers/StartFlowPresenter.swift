@@ -25,7 +25,7 @@ class StartFlowPresenter: Subscriber {
     }
 
     private func addStartSubscription() {
-        store.subscribe(self, subscription: Subscription(
+        store.subscribe(self,
             selector: { $0.isStartFlowVisible != $1.isStartFlowVisible },
             callback: {
                 if $0.isStartFlowVisible {
@@ -33,35 +33,35 @@ class StartFlowPresenter: Subscriber {
                 } else {
                     self.dismissStartFlow()
                 }
-            }))
+            })
     }
 
     private func addPinCreationSubscription() {
-        store.subscribe(self, subscription: Subscription(
+        store.subscribe(self,
             selector: { $0.pinCreationStep != $1.pinCreationStep },
             callback: {
                 if case .start = $0.pinCreationStep {
                     self.pushPinCreationViewController()
                 }
-        }))
+        })
     }
 
     private func addPaperPhraseCreationSubscription() {
-        store.subscribe(self, subscription: Subscription(
-            selector: { $0.paperPhraseStep != $1.paperPhraseStep },
-            callback: {
-                if case .start = $0.paperPhraseStep {
-                    self.pushStartPaperPhraseCreationViewController()
-                }
+        store.subscribe(self,
+                        selector: { $0.paperPhraseStep != $1.paperPhraseStep },
+                        callback: {
+                            if case .start = $0.paperPhraseStep {
+                                self.pushStartPaperPhraseCreationViewController()
+                            }
 
-                if case .write = $0.paperPhraseStep {
-                    self.pushWritePaperPhraseViewController()
-                }
+                            if case .write = $0.paperPhraseStep {
+                                self.pushWritePaperPhraseViewController()
+                            }
 
-                if case .confirm = $0.paperPhraseStep {
-                    self.pushConfirmPaperPhraseViewController()
-                }
-        }))
+                            if case .confirm = $0.paperPhraseStep {
+                                self.pushConfirmPaperPhraseViewController()
+                            }
+                        })
     }
 
     private func presentStartFlow() {
