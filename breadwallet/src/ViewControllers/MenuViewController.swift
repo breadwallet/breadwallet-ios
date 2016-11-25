@@ -39,8 +39,15 @@ class MenuViewController: UIViewController {
         close.addTarget(self, action: #selector(MenuViewController.closeTapped), for: .touchUpInside)
     }
 
+    //Even though the status bar is hidden for this view,
+    //it still needs to be set to light as it will temporarily
+    //transition to black when this view gets presented
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
 
     @objc private func closeTapped() {
