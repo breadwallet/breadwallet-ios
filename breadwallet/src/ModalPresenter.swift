@@ -119,7 +119,7 @@ class ModalPresenterDelegate: NSObject, UIViewControllerTransitioningDelegate {
     }
 }
 
-let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
 
 class ModalTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
@@ -136,7 +136,6 @@ class ModalTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         } else {
             animateDismissal(transitionContext: transitionContext)
         }
-
     }
 
     func animatePresentation(transitionContext: UIViewControllerContextTransitioning) {
@@ -154,7 +153,7 @@ class ModalTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
 
         UIView.animate(withDuration: duration, animations: {
-            blurView.alpha = 1.0
+            blurView.alpha = 0.9
             toView.frame = self.visibleFrame(fromFrame: fromView.frame)
         }, completion: {
             transitionContext.completeTransition($0)
