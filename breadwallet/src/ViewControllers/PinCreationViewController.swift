@@ -10,17 +10,9 @@ import UIKit
 
 class PinCreationViewController: UIViewController, Subscriber {
 
-    private let instruction: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.customBold(size: 16.0)
-        return label
-    }()
-
-    private let caption: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.customBody(size: 14.0)
-        return label
-    }()
+    private let instruction =   UILabel(font: .customBold(size: 16.0))
+    private let caption =       UILabel(font: .customBold(size: 14.0))
+    private let body =          UILabel.wrapping(font: .customBody(size: 13.0))
 
     //This hidden Textfield is used under the hood for pin entry
     //PinView is what actually gets displayed on the screen
@@ -32,14 +24,6 @@ class PinCreationViewController: UIViewController, Subscriber {
         return textField
     }()
 
-    private let body: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        label.font = UIFont.customBody(size: 13.0)
-        label.textColor = .grayText
-        return label
-    }()
     private let pinView: PinView
     fileprivate let maxPinLength = 6
     private let store: Store
@@ -72,8 +56,9 @@ class PinCreationViewController: UIViewController, Subscriber {
     }
 
     private func setData() {
-        caption.text = "Your PIN will be used to login to Bread."
-        body.text = "Write down your PIN and store it in a place you can access even if your phone is broken or lost."
+        caption.text = NSLocalizedString("Your PIN will be used to unlock your  Bread and send money.", comment: "Set Pin screen caption")
+        body.text = NSLocalizedString("Write down your PIN and store it in a place you can access even if your phone is broken or lost.", comment: "Set Pin screen body")
+        body.textColor = .grayText
     }
 
     private func addSubviews() {
