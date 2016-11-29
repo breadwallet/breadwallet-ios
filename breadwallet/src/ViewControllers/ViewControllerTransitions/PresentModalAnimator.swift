@@ -34,11 +34,11 @@ class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning, Mod
         toView.frame = hiddenFrame(fromFrame: fromView.frame)
         container.addSubview(toView)
 
-        UIView.animate(withDuration: duration, animations: {
+        UIView.springAnimation(duration, animations: {
             blurView.alpha = 0.9
             toView.frame = self.visibleFrame(fromFrame: fromView.frame)
-        }, completion: {
-            transitionContext.completeTransition($0)
+        }, completion: {_ in
+            transitionContext.completeTransition(true)
             container.insertSubview(fromView, at: 0)
             self.completion()
         })
