@@ -8,10 +8,14 @@
 
 import UIKit
 
+private let setPinText = NSLocalizedString("Set PIN", comment: "Set pin instruction")
+private let confirmPinText = NSLocalizedString("Re-Enter PIN", comment: "Confirm pin instruction")
+private let wrongPinText = NSLocalizedString("Wrong PIN , please try again", comment: "Wrong pin entered instruction")
+
 class PinCreationViewController: UIViewController, Subscriber {
 
-    private let instruction =   UILabel(font: .customBold(size: 16.0))
-    private let caption =       UILabel(font: .customBold(size: 14.0))
+    private let instruction =   UILabel.wrapping(font: .customBold(size: 26.0))
+    private let caption =       UILabel.wrapping(font: .customBody(size: 14.0))
     private let body =          UILabel.wrapping(font: .customBody(size: 13.0))
 
     //This hidden Textfield is used under the hood for pin entry
@@ -58,7 +62,10 @@ class PinCreationViewController: UIViewController, Subscriber {
     private func setData() {
         caption.text = NSLocalizedString("Your PIN will be used to unlock your  Bread and send money.", comment: "Set Pin screen caption")
         body.text = NSLocalizedString("Write down your PIN and store it in a place you can access even if your phone is broken or lost.", comment: "Set Pin screen body")
-        body.textColor = .grayText
+
+        instruction.textColor = .darkText
+        caption.textColor = .darkText
+        body.textColor = .secondaryGrayText
     }
 
     private func addSubviews() {
@@ -79,11 +86,13 @@ class PinCreationViewController: UIViewController, Subscriber {
     private func addConstraints() {
         instruction.constrain([
                 NSLayoutConstraint(item: instruction, attribute: .top, relatedBy: .equal, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: C.padding[3]),
-                instruction.constraint(.leading, toView: view, constant: C.padding[2])
+                instruction.constraint(.leading, toView: view, constant: C.padding[2]),
+                instruction.constraint(.trailing, toView: view, constant: -C.padding[2])
             ])
         caption.constrain([
                 caption.constraint(toBottom: instruction, constant: C.padding[2]),
-                caption.constraint(.leading, toView: instruction, constant: nil)
+                caption.constraint(.leading, toView: instruction, constant: nil),
+                caption.constraint(.trailing, toView: view, constant: -C.padding[2])
             ])
         pinView.constrain([
                 pinView.constraint(toBottom: caption, constant: C.padding[3]),
@@ -115,18 +124,18 @@ class PinCreationViewController: UIViewController, Subscriber {
                         callback: { state in
                             switch state.pinCreationStep {
                                 case .start:
-                                    self.instruction.text = "Set PIN"
+                                    self.instruction.text = setPinText
                                 case .confirm:
-                                    self.instruction.text = "Re-Enter PIN"
+                                    self.instruction.text = confirmPinText
                                     self.hiddenPin.text = ""
                                     //If this delay isn't here, the last pin filling in is never seen
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
                                         self?.pinView.fill(0)
                                     }
                                 case .save:
-                                    self.instruction.text = "Re-Enter PIN"
+                                    self.instruction.text = confirmPinText
                                 case .confirmFail:
-                                    self.instruction.text = "Wrong pin, please try again"
+                                    self.instruction.text = wrongPinText
                                     self.hiddenPin.text = ""
                                     self.pinView.shake()
                                     DispatchQueue.main.asyncAfter(deadline: .now() + PinView.shakeDuration) { [weak self] in

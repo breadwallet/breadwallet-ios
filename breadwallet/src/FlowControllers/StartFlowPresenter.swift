@@ -87,14 +87,15 @@ class StartFlowPresenter: Subscriber {
 
     private func pushPinCreationViewController() {
         let pinCreationViewController = PinCreationViewController(store: store)
-        pinCreationViewController.title = "Create New Wallet"
 
         //Access the view as we want to trigger viewDidLoad before it gets pushed.
         //This makes the keyboard slide in from the right.
         let _ = pinCreationViewController.view
         navigationController?.setNavigationBarHidden(false, animated: false)
         setBackArrow()
+        navigationController?.setClearNavbar()
         navigationController?.pushViewController(pinCreationViewController, animated: true)
+
     }
 
     private func pushStartPaperPhraseCreationViewController() {

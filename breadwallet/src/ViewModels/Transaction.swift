@@ -31,12 +31,12 @@ struct Transaction {
 
         let regularAttributes: [String: Any] = [
             NSFontAttributeName: UIFont.customBody(size: fontSize),
-            NSForegroundColorAttributeName: UIColor.secondaryText
+            NSForegroundColorAttributeName: UIColor.darkText
         ]
 
         let boldAttributes: [String: Any] = [
             NSFontAttributeName: UIFont.customBold(size: fontSize),
-            NSForegroundColorAttributeName: UIColor.secondaryText
+            NSForegroundColorAttributeName: UIColor.darkText
         ]
 
         let prefix = NSMutableAttributedString(string: "\(direction.rawValue) ")

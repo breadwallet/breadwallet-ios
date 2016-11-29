@@ -42,11 +42,11 @@ class AccountHeaderView: UIView, GradientDrawable {
         primaryBalance.font = UIFont.customBody(size: 26.0)
 
         secondaryBalance.text = "= $514.98"
-        secondaryBalance.textColor = .secondaryText
+        secondaryBalance.textColor = .darkText
         secondaryBalance.font = UIFont.customBody(size: 13.0)
 
         info.text = "Bitcoin price +3.4% today"
-        info.textColor = .secondaryText
+        info.textColor = .darkText
         info.font = UIFont.customBody(size: 13.0)
 
         search.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)

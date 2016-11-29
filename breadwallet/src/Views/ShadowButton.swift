@@ -90,7 +90,7 @@ class ShadowButton: UIControl {
                 shadowView.layer.shadowOpacity = 0.3
             case .secondary:
                 container.backgroundColor = .secondaryButton
-                label.textColor = .secondaryText
+                label.textColor = .darkText
                 container.layer.borderColor = UIColor.secondaryBorder.cgColor
                 container.layer.borderWidth = 1.0
                 shadowView.layer.shadowColor = UIColor.secondaryShadow.cgColor
