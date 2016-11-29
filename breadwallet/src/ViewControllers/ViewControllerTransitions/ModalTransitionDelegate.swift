@@ -14,6 +14,10 @@ class ModalTransitionDelegate: NSObject {
     fileprivate let interactiveTransition = UIPercentDrivenInteractiveTransition()
     fileprivate var presentedViewController: UIViewController?
     fileprivate var gestureRecognizer: UIPanGestureRecognizer?
+    private var yVelocity: CGFloat = 0.0
+    private var progress: CGFloat = 0.0
+    private let velocityThreshold: CGFloat = 50.0
+    private let progressThreshold: CGFloat = 0.5
 
     @objc func didUpdate(gr: UIPanGestureRecognizer) {
         switch gr.state {
@@ -21,19 +25,35 @@ class ModalTransitionDelegate: NSObject {
                 isInteractive = true
                 presentedViewController?.dismiss(animated: true, completion: {})
             case .changed:
-                let yOffset = gr.translation(in: presentedViewController!.view).y
-                let progress = yOffset/presentedViewController!.view.bounds.height
+                guard let vc = presentedViewController else { break }
+                let yOffset = gr.translation(in: vc.view).y
+                let progress = yOffset/vc.view.bounds.height
+                yVelocity = gr.velocity(in: vc.view).y
+                self.progress = progress
                 interactiveTransition.update(progress)
             case .cancelled:
                 reset()
                 interactiveTransition.cancel()
             case .ended:
-                reset()
-                interactiveTransition.finish()
+                if transitionShouldFinish {
+                    reset()
+                    interactiveTransition.finish()
+                } else {
+                    isInteractive = false
+                    interactiveTransition.cancel()
+                }
             case .failed:
                 break
             case .possible:
                 break
+        }
+    }
+
+    private var transitionShouldFinish: Bool {
+        if progress > progressThreshold || yVelocity > velocityThreshold {
+            return true
+        } else {
+            return false
         }
     }
 
