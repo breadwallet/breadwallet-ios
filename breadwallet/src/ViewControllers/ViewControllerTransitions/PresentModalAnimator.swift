@@ -23,8 +23,7 @@ class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning, Mod
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard transitionContext.isAnimated else { return }
         let duration = transitionDuration(using: transitionContext)
-        guard let fromView = transitionContext.view(forKey: .from) else { assert(false, "Empty from view"); return }
-        guard let toView = transitionContext.view(forKey: .to) else { assert(false, "Empty to view"); return }
+        guard let (fromView, toView) = transitionContext.views else { return }
         let container = transitionContext.containerView
 
         blurView.frame = fromView.frame
