@@ -79,8 +79,8 @@ class TransactionTableViewCell: UITableViewCell {
     }
 
     private func setupStyle() {
-        comment.textColor = .secondaryText
-        status.textColor = .secondaryText
+        comment.textColor = .darkText
+        status.textColor = .darkText
         timestamp.textColor = .grayTextTint
 
         shadowView.backgroundColor = .clear
