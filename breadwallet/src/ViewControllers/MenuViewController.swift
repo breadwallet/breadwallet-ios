@@ -11,12 +11,6 @@ import UIKit
 class MenuViewController: UIViewController {
 
     let close = UIButton.close()
-    var didDismiss: (() -> Void)?
-
-
-    deinit {
-        print("making sure deinit called")
-    }
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -51,8 +45,6 @@ class MenuViewController: UIViewController {
     }
 
     @objc private func closeTapped() {
-        dismiss(animated: true, completion: {
-            self.didDismiss?()
-        })
+        dismiss(animated: true, completion: {})
     }
 }

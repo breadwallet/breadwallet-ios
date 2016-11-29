@@ -120,7 +120,7 @@ struct RootModalActions {
         let reduce: Reducer = { $0.rootModal(.menu) }
     }
 
-    struct Dismiss: Action {
+    struct Reset: Action {
         let reduce: Reducer = { $0.rootModal(.none) }
     }
 }

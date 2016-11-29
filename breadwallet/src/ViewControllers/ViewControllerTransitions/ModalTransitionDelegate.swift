@@ -1,5 +1,5 @@
 //
-//  ModalPresenterDelegate.swift
+//  ModalTransitionDelegate.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-11-25.
@@ -8,13 +8,13 @@
 
 import UIKit
 
-class ModalPresenterDelegate: NSObject {
+class ModalTransitionDelegate: NSObject {
 
-    var isInteractive: Bool = false
-    let percentDrivenInteractiveTransition = UIPercentDrivenInteractiveTransition()
-
-    var presentedViewController: UIViewController?
-    var didDismiss: (() -> Void)?
+    fileprivate var isInteractive: Bool = false
+    fileprivate let interactiveTransition = UIPercentDrivenInteractiveTransition()
+    fileprivate var presentedViewController: UIViewController?
+    fileprivate let gestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(ModalTransitionDelegate.didUpdate(gr:)))
+    fileprivate let window = UIApplication.shared.keyWindow
 
     @objc func didUpdate(gr: UIPanGestureRecognizer) {
         switch gr.state {
@@ -24,27 +24,31 @@ class ModalPresenterDelegate: NSObject {
             case .changed:
                 let yOffset = gr.translation(in: presentedViewController!.view).y
                 let progress = yOffset/presentedViewController!.view.bounds.height
-                percentDrivenInteractiveTransition.update(progress)
+                interactiveTransition.update(progress)
             case .cancelled:
-                percentDrivenInteractiveTransition.cancel()
+                reset()
+                interactiveTransition.cancel()
             case .ended:
-                percentDrivenInteractiveTransition.finish()
-                isInteractive = false
-                didDismiss?()
+                reset()
+                interactiveTransition.finish()
             case .failed:
-                percentDrivenInteractiveTransition.cancel()
+                break
             case .possible:
                 break
         }
     }
+
+    private func reset() {
+        isInteractive = false
+        window?.removeGestureRecognizer(gestureRecognizer)
+    }
 }
 
-extension ModalPresenterDelegate: UIViewControllerTransitioningDelegate {
+extension ModalTransitionDelegate: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         presentedViewController = presenting
         return PresentModalAnimator(callback: {
-            let gr = UIPanGestureRecognizer(target: self, action: #selector(ModalPresenterDelegate.didUpdate(gr:)))
-            UIApplication.shared.keyWindow?.addGestureRecognizer(gr)
+            self.window?.addGestureRecognizer(self.gestureRecognizer)
         })
     }
 
@@ -53,6 +57,6 @@ extension ModalPresenterDelegate: UIViewControllerTransitioningDelegate {
     }
 
     func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        return isInteractive ? percentDrivenInteractiveTransition : nil
+        return isInteractive ? interactiveTransition : nil
     }
 }
