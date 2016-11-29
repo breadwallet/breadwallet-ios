@@ -18,4 +18,12 @@ extension UIViewPropertyAnimator {
         return animator
     }
 
+    static func springAnimation(_ duration: TimeInterval, animations: @escaping () -> Void, completion: @escaping (UIViewAnimatingPosition) -> Void) {
+        let springParameters = UISpringTimingParameters(dampingRatio: 0.7)
+        let animator = UIViewPropertyAnimator(duration: duration, timingParameters: springParameters)
+        animator.addAnimations(animations)
+        animator.addCompletion(completion)
+        animator.startAnimation()
+    }
+
 }
