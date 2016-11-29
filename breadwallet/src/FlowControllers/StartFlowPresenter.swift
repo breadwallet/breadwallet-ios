@@ -105,11 +105,17 @@ class StartFlowPresenter: Subscriber {
 
         let closeButton = UIButton.close()
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        closeButton.tintColor = .white
         paperPhraseViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
 
         let faqButton = UIButton.faq()
         faqButton.addTarget(self, action: #selector(faqButtonTapped), for: .touchUpInside)
+        faqButton.tintColor = .white
         paperPhraseViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: faqButton)
+
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSForegroundColorAttributeName: UIColor.white
+        ]
         navigationController?.pushViewController(paperPhraseViewController, animated: true)
     }
 
