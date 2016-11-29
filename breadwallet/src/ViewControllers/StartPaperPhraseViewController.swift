@@ -11,12 +11,16 @@ import UIKit
 class StartPaperPhraseViewController: UIViewController {
 
     private let paperKey =      ShadowButton(title: NSLocalizedString("Write Down Paper Key", comment: "button label"), type: .primary)
-    private let skip =          ShadowButton(title: NSLocalizedString("Skip", comment: "button label"), type: .secondary)
     private let illustration =  UIImageView(image: #imageLiteral(resourceName: "PaperKey"))
+    private let pencil =        UIImageView(image: #imageLiteral(resourceName: "Pencil"))
     private let explanation =   UILabel.wrapping(font: UIFont.customBody(size: 16.0))
-    private let explanationString = "Protect your wallet against theft and ensure you can recover your wallet after replacing your phone or updating it’s software. "
-    private let linkString = "LEARN MORE"
+    private let explanationString = NSLocalizedString("Protect your wallet against theft and ensure you can recover your wallet after replacing your phone or updating its software. ", comment: "Paper key explanation text.")
     private let store: Store
+    private let header: UIView = {
+        let view = UIView()
+        view.backgroundColor = .brand
+        return view
+    }()
 
     init(store: Store) {
         self.store = store
@@ -25,61 +29,50 @@ class StartPaperPhraseViewController: UIViewController {
 
     override func viewDidLoad() {
         view.backgroundColor = .white
-        setupExplanation()
+        explanation.text = explanationString
         addSubviews()
         addConstraints()
         addButtonActions()
     }
 
-    private func setupExplanation() {
-        let attributedString = NSMutableAttributedString(string: explanationString,
-                                                         attributes: [NSFontAttributeName: UIFont.customBody(size: 16.0)])
-        let link = NSAttributedString(string: linkString,
-                                      attributes: [NSForegroundColorAttributeName: UIColor.brand])
-        attributedString.append(link)
-        explanation.attributedText = attributedString
-    }
-
     private func addSubviews() {
-        view.addSubview(illustration)
+        view.addSubview(header)
+        header.addSubview(illustration)
+        illustration.addSubview(pencil)
         view.addSubview(explanation)
         view.addSubview(paperKey)
-        view.addSubview(skip)
     }
 
     private func addConstraints() {
+        header.constrainTopCorners(sidePadding: 0, topPadding: 0)
+        header.constrain([
+                header.constraint(.height, constant: 220.0)
+            ])
         illustration.constrain([
-                illustration.constraint(.width, constant: 96.0),
-                illustration.constraint(.height, constant: 88.0),
-                illustration.constraint(.centerX, toView: view, constant: nil),
-                NSLayoutConstraint(item: illustration, attribute: .top, relatedBy: .equal, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: C.padding[4])
+                illustration.constraint(.width, constant: 64.0),
+                illustration.constraint(.height, constant: 84.0),
+                illustration.constraint(.centerX, toView: header, constant: nil),
+                illustration.constraint(.bottom, toView: header, constant: -C.padding[4])
+            ])
+        pencil.constrain([
+                pencil.constraint(.width, constant: 32.0),
+                pencil.constraint(.height, constant: 32.0),
+                pencil.constraint(.leading, toView: illustration, constant: 44.0),
+                pencil.constraint(.top, toView: illustration, constant: -4.0)
             ])
         explanation.constrain([
-                explanation.constraint(toBottom: illustration, constant: C.padding[3]),
+                explanation.constraint(toBottom: header, constant: C.padding[3]),
                 explanation.constraint(.leading, toView: view, constant: C.padding[2]),
                 explanation.constraint(.trailing, toView: view, constant: -C.padding[2])
             ])
-        skip.constrain([
-                skip.constraint(.leading, toView: view, constant: C.padding[2]),
-                skip.constraint(.bottom, toView: view, constant: -C.padding[3]),
-                skip.constraint(.trailing, toView: view, constant: -C.padding[2]),
-                skip.constraint(.height, constant: C.Sizes.buttonHeight)
-            ])
+        paperKey.constrainBottomCorners(sidePadding: C.padding[2], bottomPadding: (C.padding[2] + C.Sizes.buttonHeight))
         paperKey.constrain([
-                paperKey.constraint(toTop: skip, constant: -C.padding[2]),
-                paperKey.constraint(.centerX, toView: skip, constant: nil),
-                paperKey.constraint(.width, toView: skip, constant: nil),
                 paperKey.constraint(.height, constant: C.Sizes.buttonHeight)
             ])
     }
 
     private func addButtonActions() {
-        skip.addTarget(self, action: #selector(skipPressed), for: .touchUpInside)
         paperKey.addTarget(self, action: #selector(writePaperKeyPressed), for: .touchUpInside)
-    }
-
-    @objc private func skipPressed() {
-        store.perform(action: HideStartFlow())
     }
 
     @objc private func writePaperKeyPressed() {
