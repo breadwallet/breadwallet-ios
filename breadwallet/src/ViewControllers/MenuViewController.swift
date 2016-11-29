@@ -14,23 +14,24 @@ class MenuViewController: UIViewController {
 
     override func viewDidLoad() {
         view.backgroundColor = .white
-
-        view.layer.cornerRadius = 6.0
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.15
-        view.layer.shadowRadius = 4.0
-        view.layer.shadowOffset = .zero
-
         view.addSubview(close)
-
         close.constrain([
                 close.constraint(.leading, toView: view, constant: C.padding[2]),
                 close.constraint(.top, toView: view, constant: C.padding[2]),
                 close.constraint(.width, constant: 44.0),
                 close.constraint(.height, constant: 44.0)
             ])
-
         close.addTarget(self, action: #selector(MenuViewController.closeTapped), for: .touchUpInside)
+        addTopCorners()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.15
+        view.layer.shadowRadius = 4.0
+        view.layer.shadowOffset = .zero
     }
 
     //Even though the status bar is hidden for this view,
@@ -42,6 +43,13 @@ class MenuViewController: UIViewController {
 
     override var prefersStatusBarHidden: Bool {
         return true
+    }
+
+    private func addTopCorners() {
+        let path = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 6.0, height: 6.0)).cgPath
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = path
+        view.layer.mask = maskLayer
     }
 
     @objc private func closeTapped() {
