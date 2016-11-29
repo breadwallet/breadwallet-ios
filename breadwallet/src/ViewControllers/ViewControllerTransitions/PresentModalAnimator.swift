@@ -1,34 +1,27 @@
 //
-//  ModalTransitionAnimator.swift
+//  PresentModalAnimator.swift
 //  breadwallet
 //
-//  Created by Adrian Corscadden on 2016-11-25.
+//  Created by Adrian Corscadden on 2016-11-28.
 //  Copyright © 2016 breadwallet LLC. All rights reserved.
 //
 
 import UIKit
 
-//TODO - figure out who should own this
-let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-
-class ModalTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
-
+class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     private let modalHeight: CGFloat = 368.0
+    private let callback: () -> Void
+
+    init(callback: @escaping () -> Void) {
+        self.callback = callback
+    }
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.4
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let toViewController = transitionContext.viewController(forKey: .to) else { assert(false, "Empty to VC"); return }
-        if toViewController.isBeingPresented {
-            animatePresentation(transitionContext: transitionContext)
-        } else {
-            animateDismissal(transitionContext: transitionContext)
-        }
-    }
-
-    func animatePresentation(transitionContext: UIViewControllerContextTransitioning) {
+        guard transitionContext.isAnimated else { return }
         let duration = transitionDuration(using: transitionContext)
         guard let fromView = transitionContext.view(forKey: .from) else { assert(false, "Empty from view"); return }
         guard let toView = transitionContext.view(forKey: .to) else { assert(false, "Empty to view"); return }
@@ -47,19 +40,7 @@ class ModalTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         }, completion: {
             transitionContext.completeTransition($0)
             container.insertSubview(fromView, at: 0)
-        })
-    }
-
-    func animateDismissal(transitionContext: UIViewControllerContextTransitioning) {
-        let duration = transitionDuration(using: transitionContext)
-        guard let fromView = transitionContext.view(forKey: .from) else { assert(false, "Empty from view"); return }
-        guard let toView = transitionContext.view(forKey: .to) else { assert(false, "Empty to view"); return }
-
-        UIView.animate(withDuration: duration, animations: {
-            blurView.alpha = 0.0
-            fromView.frame = self.hiddenFrame(fromFrame: toView.frame)
-        }, completion: {
-            transitionContext.completeTransition($0)
+            self.callback()
         })
     }
 

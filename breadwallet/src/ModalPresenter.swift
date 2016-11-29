@@ -52,6 +52,9 @@ class ModalPresenter: Subscriber {
             menu.didDismiss = {
                 self.store.perform(action: RootModalActions.Dismiss())
             }
+            modalPresenterDelegate.didDismiss = {
+                self.store.perform(action: RootModalActions.Dismiss())
+            }
             menu.transitioningDelegate = modalPresenterDelegate
             window.rootViewController?.present(menu, animated: true, completion: {})
         }
