@@ -31,15 +31,25 @@ class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning, Mod
         blurView.alpha = 0.0
         container.addSubview(blurView)
 
+        //This mask view is placed below the bottom of the modal being presented.
+        //It needs to be there to cover up the gap left below the modal during the 
+        //spring animation. It looks weird if it isn't there.
+        let fromFrame = fromView.bounds
+        let maskView = UIView(frame: CGRect(x: 0, y: fromFrame.height, width: fromFrame.width, height: 40.0))
+        maskView.backgroundColor = .white
+        container.addSubview(maskView)
+
         toView.frame = hiddenFrame(fromFrame: fromView.frame)
         container.addSubview(toView)
 
         UIView.springAnimation(duration, animations: {
+            maskView.frame = CGRect(x: 0, y: fromFrame.height - 30.0, width: fromFrame.width, height: 40.0)
             blurView.alpha = 0.9
             toView.frame = self.visibleFrame(fromFrame: fromView.frame)
         }, completion: {_ in
             transitionContext.completeTransition(true)
             container.insertSubview(fromView, at: 0)
+            maskView.removeFromSuperview()
             self.completion()
         })
     }
