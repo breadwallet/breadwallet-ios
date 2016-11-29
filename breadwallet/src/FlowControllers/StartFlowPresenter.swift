@@ -102,6 +102,14 @@ class StartFlowPresenter: Subscriber {
         let paperPhraseViewController = StartPaperPhraseViewController(store: store)
         paperPhraseViewController.title = "Paper Key"
         paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
+
+        let closeButton = UIButton.close()
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        paperPhraseViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
+
+        let faqButton = UIButton.faq()
+        faqButton.addTarget(self, action: #selector(faqButtonTapped), for: .touchUpInside)
+        paperPhraseViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: faqButton)
         navigationController?.pushViewController(paperPhraseViewController, animated: true)
     }
 
@@ -135,5 +143,9 @@ class StartFlowPresenter: Subscriber {
 
     @objc private func closeButtonTapped() {
         store.perform(action: HideStartFlow())
+    }
+
+    @objc private func faqButtonTapped() {
+        print("Faq button tapped")
     }
 }
