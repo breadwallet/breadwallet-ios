@@ -13,7 +13,7 @@ class ModalPresenter: Subscriber {
     private let store: Store
     private let window: UIWindow
     private let alertHeight: CGFloat = 260.0
-    private let modalPresenterDelegate = ModalPresenterDelegate()
+    private let modalTransitionDelegate = ModalTransitionDelegate()
 
     init(store: Store, window: UIWindow) {
         self.store = store
@@ -49,14 +49,10 @@ class ModalPresenter: Subscriber {
     private func presentModal(_ type: RootModal) {
         if type == .menu {
             let menu = MenuViewController()
-            menu.didDismiss = {
-                self.store.perform(action: RootModalActions.Dismiss())
-            }
-            modalPresenterDelegate.didDismiss = {
-                self.store.perform(action: RootModalActions.Dismiss())
-            }
-            menu.transitioningDelegate = modalPresenterDelegate
-            window.rootViewController?.present(menu, animated: true, completion: {})
+            menu.transitioningDelegate = modalTransitionDelegate
+            window.rootViewController?.present(menu, animated: true, completion: {
+                self.store.perform(action: RootModalActions.Reset())
+            })
         }
     }
 
