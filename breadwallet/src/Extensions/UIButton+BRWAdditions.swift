@@ -31,8 +31,17 @@ extension UIButton {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         button.setImage(#imageLiteral(resourceName: "Close"), for: .normal)
-        button.tintColor = .black
+        button.tintColor = .darkText
         button.accessibilityLabel = NSLocalizedString("Close", comment: "Close modal button accessibility label")
+        return button
+    }
+
+    static func faq() -> UIButton {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        button.setImage(#imageLiteral(resourceName: "Faq"), for: .normal)
+        button.tintColor = .darkText
+        button.accessibilityLabel = NSLocalizedString("Faq", comment: "Frequently asked questions button accessibility label")
         return button
     }
 }
