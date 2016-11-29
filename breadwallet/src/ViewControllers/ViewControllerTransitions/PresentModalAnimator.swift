@@ -8,12 +8,12 @@
 
 import UIKit
 
-class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
-    private let modalHeight: CGFloat = 368.0
-    private let callback: () -> Void
+class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning, ModalAnimating {
+    
+    private let completion: () -> Void
 
-    init(callback: @escaping () -> Void) {
-        self.callback = callback
+    init(completion: @escaping () -> Void) {
+        self.completion = completion
     }
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -40,21 +40,7 @@ class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         }, completion: {
             transitionContext.completeTransition($0)
             container.insertSubview(fromView, at: 0)
-            self.callback()
+            self.completion()
         })
-    }
-
-    func visibleFrame(fromFrame: CGRect) -> CGRect {
-        var newFrame = fromFrame
-        newFrame.origin.y = fromFrame.maxY - modalHeight
-        newFrame.size.height = modalHeight
-        return newFrame
-    }
-
-    func hiddenFrame(fromFrame: CGRect) -> CGRect {
-        var newFrame = fromFrame
-        newFrame.origin.y = fromFrame.size.height
-        newFrame.size.height = modalHeight
-        return newFrame
     }
 }

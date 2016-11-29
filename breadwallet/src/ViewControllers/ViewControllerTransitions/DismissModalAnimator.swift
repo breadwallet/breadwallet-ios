@@ -11,9 +11,7 @@ import UIKit
 //TODO - figure out who should own this
 let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
 
-class DismissModalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
-
-    private let modalHeight: CGFloat = 368.0
+class DismissModalAnimator: NSObject, UIViewControllerAnimatedTransitioning, ModalAnimating {
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.4
@@ -31,19 +29,5 @@ class DismissModalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         }, completion: { _ in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         })
-    }
-
-    func visibleFrame(fromFrame: CGRect) -> CGRect {
-        var newFrame = fromFrame
-        newFrame.origin.y = fromFrame.maxY - modalHeight
-        newFrame.size.height = modalHeight
-        return newFrame
-    }
-
-    func hiddenFrame(fromFrame: CGRect) -> CGRect {
-        var newFrame = fromFrame
-        newFrame.origin.y = fromFrame.size.height
-        newFrame.size.height = modalHeight
-        return newFrame
     }
 }

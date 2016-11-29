@@ -13,8 +13,7 @@ class ModalTransitionDelegate: NSObject {
     fileprivate var isInteractive: Bool = false
     fileprivate let interactiveTransition = UIPercentDrivenInteractiveTransition()
     fileprivate var presentedViewController: UIViewController?
-    fileprivate let gestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(ModalTransitionDelegate.didUpdate(gr:)))
-    fileprivate let window = UIApplication.shared.keyWindow
+    fileprivate var gestureRecognizer: UIPanGestureRecognizer?
 
     @objc func didUpdate(gr: UIPanGestureRecognizer) {
         switch gr.state {
@@ -40,15 +39,19 @@ class ModalTransitionDelegate: NSObject {
 
     private func reset() {
         isInteractive = false
-        window?.removeGestureRecognizer(gestureRecognizer)
+        if let gr = gestureRecognizer {
+            UIApplication.shared.keyWindow?.removeGestureRecognizer(gr)
+        }
     }
 }
 
 extension ModalTransitionDelegate: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         presentedViewController = presenting
-        return PresentModalAnimator(callback: {
-            self.window?.addGestureRecognizer(self.gestureRecognizer)
+        return PresentModalAnimator(completion: {
+            let gr = UIPanGestureRecognizer(target: self, action: #selector(ModalTransitionDelegate.didUpdate(gr:)))
+            UIApplication.shared.keyWindow?.addGestureRecognizer(gr)
+            self.gestureRecognizer = gr
         })
     }
 
