@@ -8,12 +8,6 @@
 
 import UIKit
 
-class HeaderView: UIView, GradientDrawable {
-    override func draw(_ rect: CGRect) {
-        drawRadialGradient(rect)
-    }
-}
-
 class StartPaperPhraseViewController: UIViewController {
 
     private let paperKey =      ShadowButton(title: NSLocalizedString("Write Down Paper Key", comment: "button label"), type: .primary)
@@ -22,7 +16,7 @@ class StartPaperPhraseViewController: UIViewController {
     private let explanation =   UILabel.wrapping(font: UIFont.customBody(size: 16.0))
     private let explanationString = NSLocalizedString("Protect your wallet against theft and ensure you can recover your wallet after replacing your phone or updating its software. ", comment: "Paper key explanation text.")
     private let store: Store
-    private let header = HeaderView()
+    private let header = RadialGradientView(offset: 64.0)
 
     init(store: Store) {
         self.store = store

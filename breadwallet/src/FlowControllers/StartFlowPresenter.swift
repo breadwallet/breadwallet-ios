@@ -114,7 +114,8 @@ class StartFlowPresenter: Subscriber {
         paperPhraseViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: faqButton)
 
         navigationController?.navigationBar.titleTextAttributes = [
-            NSForegroundColorAttributeName: UIColor.white
+            NSForegroundColorAttributeName: UIColor.white,
+            NSFontAttributeName: UIFont.customBold(size: 17.0)
         ]
         navigationController?.pushViewController(paperPhraseViewController, animated: true)
     }
@@ -130,6 +131,7 @@ class StartFlowPresenter: Subscriber {
 
         let button = UIButton.close()
         button.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        button.tintColor = .white
         writeViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
         navigationController?.pushViewController(writeViewController, animated: true)
     }
@@ -137,6 +139,7 @@ class StartFlowPresenter: Subscriber {
     private func pushConfirmPaperPhraseViewController() {
         let confirmViewController = ConfirmPaperPhraseViewController(store: store)
         confirmViewController.title = "Paper Key"
+        navigationController?.navigationBar.tintColor = .white
         navigationController?.pushViewController(confirmViewController, animated: true)
     }
 

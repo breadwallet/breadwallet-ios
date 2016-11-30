@@ -14,7 +14,7 @@ class WritePaperPhraseViewController: UIViewController {
     private let words = ["belong", "mountains", "liverish", "resin", "camion", "negus", "turn", "mandarin", "stumpy", "acerb", "pinworm", "hopeful"]
     private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
     private let stepLabel = UILabel.wrapping(font: UIFont.customMedium(size: 13.0))
-
+    private let header = RadialGradientView(offset: 0.0)
     private lazy var phraseViews: [PhraseView] = {
         return self.words.map { PhraseView(phrase: $0) }
     }()
@@ -40,9 +40,11 @@ class WritePaperPhraseViewController: UIViewController {
 
     override func viewDidLoad() {
         view.backgroundColor = .white
-
+        header.backgroundColor = .brand
+        
         label.text = "Write down each word on a piece of paper and store it in a safe place."
         label.textAlignment = .center
+        label.textColor = .white
 
         stepLabel.text = "1 of \(words.count)"
         stepLabel.textAlignment = .center
@@ -54,7 +56,8 @@ class WritePaperPhraseViewController: UIViewController {
     }
 
     private func addSubviews() {
-        view.addSubview(label)
+        view.addSubview(header)
+        header.addSubview(label)
         view.addSubview(stepLabel)
         view.addSubview(proceed)
         view.addSubview(previous)
@@ -62,7 +65,12 @@ class WritePaperPhraseViewController: UIViewController {
     }
 
     private func addConstraints() {
-        label.constrainTopCorners(sidePadding: C.padding[3], topPadding: C.padding[4], topLayoutGuide: topLayoutGuide)
+
+        header.constrainTopCorners(sidePadding: 0, topPadding: 0)
+        header.constrain([
+            header.constraint(.height, constant: 152.0)
+            ])
+        label.constrainBottomCorners(sidePadding: C.padding[3], bottomPadding: C.padding[2])
 
         phraseViews.enumerated().forEach { index, phraseView in
             //The first phrase should initially be on the screen
@@ -87,7 +95,7 @@ class WritePaperPhraseViewController: UIViewController {
         proceed.constrain([
                 proceed.constraint(.trailing, toView: view, constant: -C.padding[2]),
                 proceed.constraint(.height, constant: C.Sizes.buttonHeight),
-                proceed.constraint(.bottom, toView: view, constant: -C.padding[4]),
+                proceed.constraint(.bottom, toView: view, constant: -(C.padding[4] + C.Sizes.buttonHeight)),
                 proceedWidth!
             ])
 
@@ -95,7 +103,7 @@ class WritePaperPhraseViewController: UIViewController {
         previous.constrain([
                 previous.constraint(.leading, toView: view, constant: C.padding[2]),
                 previous.constraint(.height, constant: C.Sizes.buttonHeight),
-                previous.constraint(.bottom, toView: view, constant: -C.padding[4]),
+                previous.constraint(.bottom, toView: view, constant: -(C.padding[4] + C.Sizes.buttonHeight)    ),
                 previousWidth!
             ])
     }

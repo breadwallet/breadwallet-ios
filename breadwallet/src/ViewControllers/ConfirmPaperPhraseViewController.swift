@@ -14,7 +14,7 @@ class ConfirmPaperPhraseViewController: UIViewController {
     private let confirmFirstPhrase =    ConfirmPhrase(text: "Word 3")
     private let confirmSecondPhrase =   ConfirmPhrase(text: "Word 8")
     private let submit =                ShadowButton(title: NSLocalizedString("Submit", comment: "button label"), type: .primary)
-
+    private let header =                RadialGradientView(offset: 0.0)
     private let store: Store
 
     init(store: Store) {
@@ -29,7 +29,10 @@ class ConfirmPaperPhraseViewController: UIViewController {
 
     override func viewDidLoad() {
         view.backgroundColor = .white
+        header.backgroundColor = .brand
         label.text = "Prove you wrote down your paper key by answering the following questions."
+        label.textColor = .white
+        
         addSubviews()
         addConstraints()
         addButtonActions()
@@ -38,16 +41,21 @@ class ConfirmPaperPhraseViewController: UIViewController {
     }
 
     private func addSubviews() {
-        view.addSubview(label)
+        view.addSubview(header)
+        header.addSubview(label)
         view.addSubview(confirmFirstPhrase)
         view.addSubview(confirmSecondPhrase)
         view.addSubview(submit)
     }
 
     private func addConstraints() {
-        label.constrainTopCorners(sidePadding: C.padding[1], topPadding: C.padding[2], topLayoutGuide: topLayoutGuide)
+        header.constrainTopCorners(sidePadding: 0, topPadding: 0)
+        header.constrain([
+                header.constraint(.height, constant: 152.0)
+            ])
+        label.constrainBottomCorners(sidePadding: C.padding[1], bottomPadding: C.padding[2])
         confirmFirstPhrase.constrain([
-                confirmFirstPhrase.constraint(toBottom: label, constant: 0.0),
+                confirmFirstPhrase.constraint(toBottom: header, constant: 0.0),
                 confirmFirstPhrase.constraint(.width, toView: view, constant: 0.0),
                 confirmFirstPhrase.constraint(.centerX, toView: view, constant: 0.0)
             ])
