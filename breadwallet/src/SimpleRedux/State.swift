@@ -6,7 +6,7 @@
 //  Copyright © 2016 breadwallet LLC. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct State {
     let isStartFlowVisible: Bool
@@ -45,6 +45,19 @@ enum RootModal {
     case send
     case receive
     case menu
+
+    var viewController: UIViewController? {
+        switch self {
+            case .none:
+                return nil
+            case .send:
+                return SendViewController()
+            case .receive:
+                return ReceiveViewController()
+            case .menu:
+                return MenuViewController()
+        }
+    }
 }
 
 extension PinCreationStep: Equatable {}

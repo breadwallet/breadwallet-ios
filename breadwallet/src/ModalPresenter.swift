@@ -47,13 +47,11 @@ class ModalPresenter: Subscriber {
     }
 
     private func presentModal(_ type: RootModal) {
-        if type == .menu {
-            let menu = MenuViewController()
-            menu.transitioningDelegate = modalTransitionDelegate
-            window.rootViewController?.present(menu, animated: true, completion: {
-                self.store.perform(action: RootModalActions.Reset())
-            })
-        }
+        guard let vc = type.viewController else { return }
+        vc.transitioningDelegate = modalTransitionDelegate
+        window.rootViewController?.present(vc, animated: true, completion: {
+            self.store.perform(action: RootModalActions.Reset())
+        })
     }
 
     private func presentAlert(_ type: AlertType, completion: @escaping ()->Void) {
