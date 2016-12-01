@@ -1,15 +1,14 @@
 //
-//  MenuViewController.swift
+//  File.swift
 //  breadwallet
 //
-//  Created by Adrian Corscadden on 2016-11-24.
+//  Created by Adrian Corscadden on 2016-11-30.
 //  Copyright © 2016 breadwallet LLC. All rights reserved.
 //
 
 import UIKit
 
-class MenuViewController: UIViewController {
-
+class ModalViewController: UIViewController {
     let close = UIButton.close()
 
     override func viewDidLoad() {
@@ -21,7 +20,7 @@ class MenuViewController: UIViewController {
                 close.constraint(.width, constant: 44.0),
                 close.constraint(.height, constant: 44.0)
             ])
-        close.addTarget(self, action: #selector(MenuViewController.closeTapped), for: .touchUpInside)
+        close.addTarget(self, action: #selector(ModalViewController.closeTapped), for: .touchUpInside)
         addTopCorners()
     }
 
