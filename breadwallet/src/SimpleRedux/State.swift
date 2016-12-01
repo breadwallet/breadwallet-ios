@@ -51,11 +51,11 @@ enum RootModal {
             case .none:
                 return nil
             case .send:
-                return SendViewController()
+                return ModalViewController(childViewController: SendViewController())
             case .receive:
-                return ReceiveViewController()
+                return ModalViewController(childViewController: ReceiveViewController())
             case .menu:
-                return MenuViewController()
+                return ModalViewController(childViewController: MenuViewController())
         }
     }
 }

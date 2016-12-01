@@ -8,6 +8,6 @@
 
 import UIKit
 
-class ReceiveViewController: ModalViewController {
+class ReceiveViewController: UIViewController {
 
 }
