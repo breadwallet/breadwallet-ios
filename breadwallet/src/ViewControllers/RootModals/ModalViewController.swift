@@ -9,7 +9,14 @@
 import UIKit
 
 class ModalViewController: UIViewController {
-    let close = UIButton.close()
+
+    private let close = UIButton.close()
+    private let childViewController: UIViewController
+
+    init(childViewController: UIViewController) {
+        self.childViewController = childViewController
+        super.init(nibName: nil, bundle: nil)
+    }
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -22,6 +29,7 @@ class ModalViewController: UIViewController {
             ])
         close.addTarget(self, action: #selector(ModalViewController.closeTapped), for: .touchUpInside)
         addTopCorners()
+        addChildViewController()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -44,6 +52,20 @@ class ModalViewController: UIViewController {
         return true
     }
 
+    private func addChildViewController() {
+        if let childView = childViewController.view {
+            addChildViewController(childViewController)
+            view.addSubview(childView)
+            childView.constrain([
+                    childView.constraint(.top, toView: view, constant: 44.0),
+                    childView.constraint(.leading, toView: view, constant: 0.0),
+                    childView.constraint(.trailing, toView: view, constant: 0.0),
+                    childView.constraint(.bottom, toView: view, constant: 0.0)
+                ])
+            childViewController.didMove(toParentViewController: self)
+        }
+    }
+
     private func addTopCorners() {
         let path = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 6.0, height: 6.0)).cgPath
         let maskLayer = CAShapeLayer()
@@ -53,5 +75,9 @@ class ModalViewController: UIViewController {
 
     @objc private func closeTapped() {
         dismiss(animated: true, completion: {})
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

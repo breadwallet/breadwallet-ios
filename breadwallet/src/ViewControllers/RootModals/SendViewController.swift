@@ -8,6 +8,6 @@
 
 import UIKit
 
-class SendViewController: ModalViewController {
+class SendViewController: UIViewController {
 
 }
