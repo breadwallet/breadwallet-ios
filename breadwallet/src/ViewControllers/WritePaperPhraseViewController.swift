@@ -55,6 +55,10 @@ class WritePaperPhraseViewController: UIViewController {
         addButtonTargets()
     }
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     private func addSubviews() {
         view.addSubview(header)
         header.addSubview(label)

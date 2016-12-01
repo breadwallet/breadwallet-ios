@@ -40,6 +40,10 @@ class ConfirmPaperPhraseViewController: UIViewController {
         confirmFirstPhrase.textField.becomeFirstResponder()
     }
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
     private func addSubviews() {
         view.addSubview(header)
         header.addSubview(label)

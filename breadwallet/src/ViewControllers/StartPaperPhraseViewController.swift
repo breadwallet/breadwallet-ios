@@ -68,6 +68,10 @@ class StartPaperPhraseViewController: UIViewController {
             ])
     }
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
     private func addButtonActions() {
         paperKey.addTarget(self, action: #selector(writePaperKeyPressed), for: .touchUpInside)
     }

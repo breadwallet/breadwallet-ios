@@ -10,6 +10,7 @@ import UIKit
 
 class ModalNavigationController: UINavigationController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .default
+        guard let vc = topViewController else { return .default }
+        return vc.preferredStatusBarStyle
     }
 }
