@@ -11,7 +11,7 @@ import UIKit
 //TODO - figure out who should own this
 let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
 
-class DismissModalAnimator: NSObject, UIViewControllerAnimatedTransitioning, ModalAnimating {
+class DismissModalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.4
@@ -20,11 +20,11 @@ class DismissModalAnimator: NSObject, UIViewControllerAnimatedTransitioning, Mod
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard transitionContext.isAnimated else { return }
         let duration = transitionDuration(using: transitionContext)
-        guard let (fromView, toView) = transitionContext.views else { return }
+        guard let (fromView, _) = transitionContext.views else { return }
 
         UIView.animate(withDuration: duration, animations: {
             blurView.alpha = 0.0
-            fromView.frame = self.hiddenFrame(fromFrame: toView.frame)
+            fromView.frame = fromView.frame.offsetBy(dx: 0, dy: fromView.frame.height)
         }, completion: { _ in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         })
