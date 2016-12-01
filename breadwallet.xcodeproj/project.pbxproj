@@ -191,7 +191,6 @@
 		CE6D0F971DE8B73A00BD4BCF /* ModalTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0F961DE8B73A00BD4BCF /* ModalTransitionDelegate.swift */; };
 		CE6D0F991DE8B75900BD4BCF /* DismissModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */; };
 		CE92F9F01DED0C790046B516 /* PresentModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */; };
-		CE92F9F21DED442F0046B516 /* ModalAnimating.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9F11DED442F0046B516 /* ModalAnimating.swift */; };
 		CE92F9F41DED59E80046B516 /* UIView+AnimationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9F31DED59E80046B516 /* UIView+AnimationAdditions.swift */; };
 		CE92F9F61DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9F51DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift */; };
 		CEA929711DDA5C21007335AF /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA929701DDA5C21007335AF /* WelcomeViewController.swift */; };
@@ -1164,7 +1163,6 @@
 		CE6D0F961DE8B73A00BD4BCF /* ModalTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalTransitionDelegate.swift; path = src/ViewControllers/ViewControllerTransitions/ModalTransitionDelegate.swift; sourceTree = "<group>"; };
 		CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DismissModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/DismissModalAnimator.swift; sourceTree = "<group>"; };
 		CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PresentModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/PresentModalAnimator.swift; sourceTree = "<group>"; };
-		CE92F9F11DED442F0046B516 /* ModalAnimating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalAnimating.swift; path = src/ViewControllers/ViewControllerTransitions/ModalAnimating.swift; sourceTree = "<group>"; };
 		CE92F9F31DED59E80046B516 /* UIView+AnimationAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+AnimationAdditions.swift"; path = "src/Extensions/UIView+AnimationAdditions.swift"; sourceTree = "<group>"; };
 		CE92F9F51DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewControllerContextTransitioning+BRAdditions.swift"; path = "src/Extensions/UIViewControllerContextTransitioning+BRAdditions.swift"; sourceTree = "<group>"; };
 		CEA929701DDA5C21007335AF /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WelcomeViewController.swift; path = src/ViewControllers/WelcomeViewController.swift; sourceTree = "<group>"; };
@@ -2366,7 +2364,6 @@
 			isa = PBXGroup;
 			children = (
 				CE6D0F961DE8B73A00BD4BCF /* ModalTransitionDelegate.swift */,
-				CE92F9F11DED442F0046B516 /* ModalAnimating.swift */,
 				CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */,
 				CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */,
 			);
@@ -2986,7 +2983,6 @@
 				CE20C9191DBE7B8200C8397A /* State.swift in Sources */,
 				CE20C8FE1DBB133A00C8397A /* SimpleRedux.swift in Sources */,
 				CE20C90C1DBC59E600C8397A /* StartFlowPresenter.swift in Sources */,
-				CE92F9F21DED442F0046B516 /* ModalAnimating.swift in Sources */,
 				CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */,
 				75519F341DC7D20500EDF66C /* WalletManager.swift in Sources */,
 				CEBF32F41DDCE12900348FC6 /* AccountFooterView.swift in Sources */,

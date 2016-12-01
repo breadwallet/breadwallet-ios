@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning, ModalAnimating {
+class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
     private let completion: () -> Void
 
@@ -38,13 +38,14 @@ class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning, Mod
         maskView.backgroundColor = .white
         container.addSubview(maskView)
 
-        toView.frame = hiddenFrame(fromFrame: fromView.frame)
+        let finalToViewFrame = toView.frame
+        toView.frame = toView.frame.offsetBy(dx: 0, dy: toView.frame.height)
         container.addSubview(toView)
 
         UIView.springAnimation(duration, animations: {
             maskView.frame = CGRect(x: 0, y: fromFrame.height - 30.0, width: fromFrame.width, height: 40.0)
             blurView.alpha = 0.9
-            toView.frame = self.visibleFrame(fromFrame: fromView.frame)
+            toView.frame = finalToViewFrame
         }, completion: {_ in
             transitionContext.completeTransition(true)
             container.insertSubview(fromView, at: 0)
