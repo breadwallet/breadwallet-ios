@@ -25,8 +25,8 @@ class SendViewController: UIViewController {
     private let amount = SendCell(label: amountLabel)
     private let descriptionCell = SendCell(label: descriptionLabel)
     private let button = ShadowButton(title: sendLabel, type: .primary)
-    private let paste = ShadowButton(title: pasteLabel, type: .secondary)
-    private let scan = ShadowButton(title: scanLabel, type: .secondary)
+    private let paste = ShadowButton(title: pasteLabel, type: .tertiary)
+    private let scan = ShadowButton(title: scanLabel, type: .tertiary)
 
     override func viewDidLoad() {
         view.addSubview(to)
