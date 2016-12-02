@@ -28,7 +28,6 @@ class ShadowButton: UIControl {
     private let container = UIView()
     private let shadowView = UIView()
     private let label = UILabel()
-    private let shadowSidePadding: CGFloat = 32.0
     private let shadowYOffset: CGFloat = 4.0
 
     override var isHighlighted: Bool {
@@ -55,9 +54,11 @@ class ShadowButton: UIControl {
 
     private func addShadowView() {
         addSubview(shadowView)
-        shadowView.constrainBottomCorners(sidePadding: shadowSidePadding, bottomPadding: 0.0)
         shadowView.constrain([
-            NSLayoutConstraint(item: shadowView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0.5, constant: 1.0)
+                NSLayoutConstraint(item: shadowView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0.5, constant: 0.0),
+                shadowView.constraint(.bottom, toView: self),
+                shadowView.constraint(.centerX, toView: self),
+                NSLayoutConstraint(item: shadowView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.8, constant: 0.0),
             ])
         shadowView.layer.cornerRadius = 4.0
         shadowView.layer.shadowOffset = CGSize(width: 0, height: 4)
