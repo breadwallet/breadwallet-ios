@@ -10,11 +10,12 @@ import UIKit
 
 class MenuViewController: UIViewController {
 
-    fileprivate let buttonHeight: CGFloat = 78.0
+    fileprivate let buttonHeight: CGFloat = 72.0
     fileprivate let buttons: [MenuButton] = {
         let types: [MenuButtonType] = [.profile, .security, .support, .settings, .lock]
         return types.map { MenuButton(type: $0) }
     }()
+    fileprivate let bottomPadding: CGFloat = 32.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +39,6 @@ class MenuViewController: UIViewController {
                 ])
             previousButton = button
         }
-
     }
 }
 
@@ -48,10 +48,10 @@ extension MenuViewController: ModalDisplayable {
     }
 
     var modalSize: CGSize {
-        return CGSize(width: view.bounds.width, height: CGFloat(buttons.count) * buttonHeight)
+        return CGSize(width: view.bounds.width, height: CGFloat(buttons.count) * buttonHeight + bottomPadding)
     }
     
     var isFaqHidden: Bool {
-        return false
+        return true
     }
 }

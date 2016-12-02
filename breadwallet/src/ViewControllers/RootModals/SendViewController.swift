@@ -22,6 +22,6 @@ extension SendViewController: ModalDisplayable {
     }
 
     var isFaqHidden: Bool {
-        return true
+        return false
     }
 }
