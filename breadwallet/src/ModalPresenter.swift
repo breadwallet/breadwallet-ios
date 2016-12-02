@@ -49,6 +49,7 @@ class ModalPresenter: Subscriber {
     private func presentModal(_ type: RootModal) {
         guard let vc = type.viewController else { return }
         vc.transitioningDelegate = modalTransitionDelegate
+        vc.modalPresentationStyle = .overFullScreen
         window.rootViewController?.present(vc, animated: true, completion: {
             self.store.perform(action: RootModalActions.Reset())
         })

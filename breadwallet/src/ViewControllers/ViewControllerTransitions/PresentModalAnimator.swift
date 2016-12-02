@@ -23,17 +23,17 @@ class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard transitionContext.isAnimated else { return }
         let duration = transitionDuration(using: transitionContext)
-        guard let (fromView, toView) = transitionContext.views else { return }
+        guard let toView = transitionContext.view(forKey: .to) else { assert(false, "Missing to view"); return }
         let container = transitionContext.containerView
 
-        blurView.frame = fromView.frame
+        blurView.frame = container.frame
         blurView.alpha = 0.0
         container.addSubview(blurView)
 
         //This mask view is placed below the bottom of the modal being presented.
         //It needs to be there to cover up the gap left below the modal during the 
         //spring animation. It looks weird if it isn't there.
-        let fromFrame = fromView.bounds
+        let fromFrame = container.frame
         let maskView = UIView(frame: CGRect(x: 0, y: fromFrame.height, width: fromFrame.width, height: 40.0))
         maskView.backgroundColor = .white
         container.addSubview(maskView)
@@ -48,7 +48,7 @@ class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             toView.frame = finalToViewFrame
         }, completion: {_ in
             transitionContext.completeTransition(true)
-            container.insertSubview(fromView, at: 0)
+            //container.insertSubview(fromView, at: 0)
             maskView.removeFromSuperview()
             self.completion()
         })
