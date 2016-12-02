@@ -10,8 +10,8 @@ import UIKit
 
 class MenuViewController: UIViewController {
 
-    private let buttonHeight: CGFloat = 78.0
-    private let buttons: [MenuButton] = {
+    fileprivate let buttonHeight: CGFloat = 78.0
+    fileprivate let buttons: [MenuButton] = {
         let types: [MenuButtonType] = [.profile, .security, .support, .settings, .lock]
         return types.map { MenuButton(type: $0) }
     }()
@@ -38,5 +38,16 @@ class MenuViewController: UIViewController {
                 ])
             previousButton = button
         }
+
+    }
+}
+
+extension MenuViewController: ModalDisplayable {
+    var modalTitle: String {
+        return NSLocalizedString("Menu", comment: "Menu modal title")
+    }
+
+    var modalSize: CGSize {
+        return CGSize(width: view.bounds.width, height: CGFloat(buttons.count) * buttonHeight)
     }
 }

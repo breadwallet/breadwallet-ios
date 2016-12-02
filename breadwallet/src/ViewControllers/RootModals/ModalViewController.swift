@@ -12,9 +12,12 @@ class ModalViewController: UIViewController {
 
     private let close = UIButton.close()
     private let childViewController: UIViewController
+    private let modalInfo: ModalDisplayable
+    private let headerHeight: CGFloat = 44.0
 
-    init(childViewController: UIViewController) {
+    init<T: UIViewController>(childViewController: T) where T: ModalDisplayable {
         self.childViewController = childViewController
+        self.modalInfo = childViewController
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -22,14 +25,18 @@ class ModalViewController: UIViewController {
         view.backgroundColor = .white
         view.addSubview(close)
         close.constrain([
-                close.constraint(.leading, toView: view, constant: C.padding[2]),
-                close.constraint(.top, toView: view, constant: C.padding[2]),
-                close.constraint(.width, constant: 44.0),
-                close.constraint(.height, constant: 44.0)
+                close.constraint(.leading, toView: view, constant: 0.0),
+                close.constraint(.top, toView: view, constant: 0.0),
+                close.constraint(.width, constant: headerHeight),
+                close.constraint(.height, constant: headerHeight)
             ])
         close.addTarget(self, action: #selector(ModalViewController.closeTapped), for: .touchUpInside)
         addTopCorners()
         addChildViewController()
+
+        let totalHeight = headerHeight + modalInfo.modalSize.height
+        view.frame = CGRect(x: 0, y: view.frame.height - totalHeight, width: view.frame.width, height: totalHeight)
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -57,7 +64,7 @@ class ModalViewController: UIViewController {
             addChildViewController(childViewController)
             view.addSubview(childView)
             childView.constrain([
-                    childView.constraint(.top, toView: view, constant: 44.0),
+                    childView.constraint(.top, toView: view, constant: headerHeight),
                     childView.constraint(.leading, toView: view, constant: 0.0),
                     childView.constraint(.trailing, toView: view, constant: 0.0),
                     childView.constraint(.bottom, toView: view, constant: 0.0)
