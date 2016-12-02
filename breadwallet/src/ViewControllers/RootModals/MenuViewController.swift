@@ -50,4 +50,8 @@ extension MenuViewController: ModalDisplayable {
     var modalSize: CGSize {
         return CGSize(width: view.bounds.width, height: CGFloat(buttons.count) * buttonHeight)
     }
+    
+    var isFaqHidden: Bool {
+        return false
+    }
 }

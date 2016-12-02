@@ -10,27 +10,30 @@ import UIKit
 
 class ModalViewController: UIViewController {
 
-    private let close = UIButton.close()
-    private let childViewController: UIViewController
-    private let modalInfo: ModalDisplayable
-    private let headerHeight: CGFloat = 44.0
-
     init<T: UIViewController>(childViewController: T) where T: ModalDisplayable {
         self.childViewController = childViewController
         self.modalInfo = childViewController
+        self.header = ModalHeaderView(title: modalInfo.modalTitle, isFaqHidden: modalInfo.isFaqHidden)
+
         super.init(nibName: nil, bundle: nil)
     }
+    
+    private let childViewController: UIViewController
+    private let modalInfo: ModalDisplayable
+    private let headerHeight: CGFloat = 48.0
+    private let header: ModalHeaderView
 
     override func viewDidLoad() {
         view.backgroundColor = .white
-        view.addSubview(close)
-        close.constrain([
-                close.constraint(.leading, toView: view, constant: 0.0),
-                close.constraint(.top, toView: view, constant: 0.0),
-                close.constraint(.width, constant: headerHeight),
-                close.constraint(.height, constant: headerHeight)
+        view.addSubview(header)
+        header.constrainTopCorners(sidePadding: 0, topPadding: 0)
+        header.constrain([
+                header.constraint(.height, constant: headerHeight)
             ])
-        close.addTarget(self, action: #selector(ModalViewController.closeTapped), for: .touchUpInside)
+        header.faqCallback = {
+            self.dismiss(animated: true, completion: {})
+        }
+        
         addTopCorners()
         addChildViewController()
 
@@ -78,10 +81,6 @@ class ModalViewController: UIViewController {
         let maskLayer = CAShapeLayer()
         maskLayer.path = path
         view.layer.mask = maskLayer
-    }
-
-    @objc private func closeTapped() {
-        dismiss(animated: true, completion: {})
     }
 
     required init?(coder aDecoder: NSCoder) {
