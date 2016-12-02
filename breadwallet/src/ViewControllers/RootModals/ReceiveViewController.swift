@@ -18,6 +18,10 @@ extension ReceiveViewController: ModalDisplayable {
     }
 
     var modalSize: CGSize {
-        return CGSize(width: 375.0, height: 400.0)
+        return CGSize(width: view.frame.width, height: 400.0)
+    }
+
+    var isFaqHidden: Bool {
+        return false
     }
 }
