@@ -20,7 +20,7 @@ class ModalViewController: UIViewController {
     
     private let childViewController: UIViewController
     private let modalInfo: ModalDisplayable
-    private let headerHeight: CGFloat = 48.0
+    private let headerHeight: CGFloat = 49.0
     private let header: ModalHeaderView
 
     override func viewDidLoad() {

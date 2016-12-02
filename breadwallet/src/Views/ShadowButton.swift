@@ -15,6 +15,14 @@ enum ButtonType {
 
 class ShadowButton: UIControl {
 
+    init(title: String, type: ButtonType) {
+        self.title = title
+        self.type = type
+        super.init(frame: CGRect.zero)
+        accessibilityLabel = title
+        setupViews()
+    }
+
     private let title: String
     private let type: ButtonType
     private let container = UIView()
@@ -37,14 +45,6 @@ class ShadowButton: UIControl {
                 })
             }
         }
-    }
-
-    init(title: String, type: ButtonType) {
-        self.title = title
-        self.type = type
-        super.init(frame: CGRect.zero)
-        accessibilityLabel = title
-        setupViews()
     }
 
     private func setupViews() {
