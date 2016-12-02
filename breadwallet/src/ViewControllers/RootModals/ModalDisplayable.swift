@@ -6,8 +6,9 @@
 //  Copyright © 2016 breadwallet LLC. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 protocol ModalDisplayable {
-    var title: String { get }
+    var modalTitle: String { get }
+    var modalSize: CGSize { get }
 }
