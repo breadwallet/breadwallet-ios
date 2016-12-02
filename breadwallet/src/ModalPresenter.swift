@@ -50,6 +50,7 @@ class ModalPresenter: Subscriber {
         guard let vc = type.viewController else { return }
         vc.transitioningDelegate = modalTransitionDelegate
         vc.modalPresentationStyle = .overFullScreen
+        vc.modalPresentationCapturesStatusBarAppearance = true
         window.rootViewController?.present(vc, animated: true, completion: {
             self.store.perform(action: RootModalActions.Reset())
         })
