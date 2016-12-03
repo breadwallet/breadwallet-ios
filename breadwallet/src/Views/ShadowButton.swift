@@ -24,12 +24,22 @@ class ShadowButton: UIControl {
         setupViews()
     }
 
+    init(title: String, type: ButtonType, image: UIImage) {
+        self.title = title
+        self.type = type
+        self.image = image
+        super.init(frame: CGRect.zero)
+        accessibilityLabel = title
+        setupViews()
+    }
+
     private let title: String
     private let type: ButtonType
     private let container = UIView()
     private let shadowView = UIView()
     private let label = UILabel()
     private let shadowYOffset: CGFloat = 4.0
+    private var image: UIImage?
 
     override var isHighlighted: Bool {
         didSet {
@@ -74,13 +84,43 @@ class ShadowButton: UIControl {
         container.isUserInteractionEnabled = false
         container.constrain(toSuperviewEdges: nil)
 
-        container.addSubview(label)
-        label.constrain(toSuperviewEdges: nil)
         label.text = title
         label.textColor = .white
         label.textAlignment = .center
         label.isUserInteractionEnabled = false
         label.font = UIFont.customMedium(size: 16.0)
+
+        configureContentType()
+
+    }
+
+    private func configureContentType() {
+        if let icon = image {
+            setupImageOption(icon: icon)
+        } else {
+            setupLabelOnly()
+        }
+    }
+
+    private func setupImageOption(icon: UIImage) {
+        let content = UIView()
+        let imageView = UIImageView(image: icon)
+        container.addSubview(content)
+        content.addSubview(label)
+        content.addSubview(imageView)
+        content.constrainToCenter()
+
+        imageView.constrainLeadingCorners()
+        label.constrainTrailingCorners()
+
+        imageView.constrain([
+                imageView.constraint(toLeading: label, constant: -C.padding[1])
+            ])
+    }
+
+    private func setupLabelOnly() {
+        container.addSubview(label)
+        label.constrainToCenter()
     }
 
     private func setColors() {
