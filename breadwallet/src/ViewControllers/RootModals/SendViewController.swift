@@ -25,7 +25,7 @@ class SendViewController: UIViewController {
     private let to = SendCell(label: toLabel)
     private let amount = SendCell(label: amountLabel)
     private let descriptionCell = SendCell(label: descriptionLabel)
-    private let button = ShadowButton(title: sendLabel, type: .primary)
+    private let send = ShadowButton(title: sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
     private let paste = ShadowButton(title: pasteLabel, type: .tertiary)
     private let scan = ShadowButton(title: scanLabel, type: .tertiary)
     private let currency = ShadowButton(title: currencyLabel, type: .tertiary)
@@ -34,7 +34,7 @@ class SendViewController: UIViewController {
         view.addSubview(to)
         view.addSubview(amount)
         view.addSubview(descriptionCell)
-        view.addSubview(button)
+        view.addSubview(send)
         to.addSubview(paste)
         to.addSubview(scan)
         amount.addSubview(currency)
@@ -42,11 +42,11 @@ class SendViewController: UIViewController {
         to.constrainTopCorners(height: cellHeight)
         amount.pinToBottom(to: to, height: cellHeight)
         descriptionCell.pinToBottom(to: amount, height: cellHeight)
-        button.constrain([
-                button.constraint(.leading, toView: view, constant: C.padding[2]),
-                button.constraint(.trailing, toView: view, constant: -C.padding[2]),
-                button.constraint(toBottom: descriptionCell, constant: verticalButtonPadding),
-                button.constraint(.height, constant: C.Sizes.buttonHeight)
+        send.constrain([
+                send.constraint(.leading, toView: view, constant: C.padding[2]),
+                send.constraint(.trailing, toView: view, constant: -C.padding[2]),
+                send.constraint(toBottom: descriptionCell, constant: verticalButtonPadding),
+                send.constraint(.height, constant: C.Sizes.buttonHeight)
             ])
         scan.constrain([
                 scan.constraint(.centerY, toView: to),

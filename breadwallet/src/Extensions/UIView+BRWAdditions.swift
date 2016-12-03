@@ -126,11 +126,29 @@ extension UIView {
             ])
     }
 
+    func constrainLeadingCorners() {
+        guard let view = superview else { assert(false, "Superview cannot be nil when adding contraints"); return }
+        constrain([
+                constraint(.top, toView: view),
+                constraint(.leading, toView: view),
+                constraint(.bottom, toView: view),
+            ])
+    }
+
+    func constrainTrailingCorners() {
+        guard let view = superview else { assert(false, "Superview cannot be nil when adding contraints"); return }
+        constrain([
+                constraint(.top, toView: view),
+                constraint(.trailing, toView: view),
+                constraint(.bottom, toView: view)
+            ])
+    }
+
     func constrainToCenter() {
         guard let view = superview else { assert(false, "Superview cannot be nil when adding contraints"); return }
         constrain([
-            constraint(.centerX, toView: view, constant: 0.0),
-            constraint(.centerY, toView: view, constant: 0.0)
+            constraint(.centerX, toView: view),
+            constraint(.centerY, toView: view)
         ])
     }
 }
