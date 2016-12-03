@@ -14,11 +14,12 @@ private let descriptionLabel = NSLocalizedString("What's this for?", comment: "D
 private let sendLabel = NSLocalizedString("Send", comment: "Send button label")
 private let pasteLabel = NSLocalizedString("Paste", comment: "Paste button label")
 private let scanLabel = NSLocalizedString("Scan", comment: "Scan button label")
+private let currencyLabel = NSLocalizedString("USD \u{25BC}", comment: "Currency Button label")
 
 class SendViewController: UIViewController {
 
     fileprivate let cellHeight: CGFloat = 72.0
-    fileprivate let verticalButtonPadding: CGFloat = 64.0
+    fileprivate let verticalButtonPadding: CGFloat = 32.0
     private let buttonSize = CGSize(width: 52.0, height: 32.0)
 
     private let to = SendCell(label: toLabel)
@@ -27,6 +28,7 @@ class SendViewController: UIViewController {
     private let button = ShadowButton(title: sendLabel, type: .primary)
     private let paste = ShadowButton(title: pasteLabel, type: .tertiary)
     private let scan = ShadowButton(title: scanLabel, type: .tertiary)
+    private let currency = ShadowButton(title: currencyLabel, type: .tertiary)
 
     override func viewDidLoad() {
         view.addSubview(to)
@@ -35,6 +37,7 @@ class SendViewController: UIViewController {
         view.addSubview(button)
         to.addSubview(paste)
         to.addSubview(scan)
+        amount.addSubview(currency)
 
         to.constrainTopCorners(height: cellHeight)
         amount.pinToBottom(to: to, height: cellHeight)
@@ -56,6 +59,12 @@ class SendViewController: UIViewController {
                 paste.constraint(toLeading: scan, constant: -C.padding[1]),
                 paste.constraint(.height, constant: buttonSize.height),
                 paste.constraint(.width, constant: buttonSize.width)
+            ])
+        currency.constrain([
+                currency.constraint(.centerY, toView: amount),
+                currency.constraint(.trailing, toView: amount, constant: -C.padding[2]),
+                currency.constraint(.height, constant: buttonSize.height),
+                currency.constraint(.width, constant: 64.0)
             ])
     }
 
