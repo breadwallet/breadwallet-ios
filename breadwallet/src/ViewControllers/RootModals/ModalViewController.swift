@@ -30,7 +30,7 @@ class ModalViewController: UIViewController {
         header.constrain([
                 header.constraint(.height, constant: headerHeight)
             ])
-        header.faqCallback = {
+        header.closeCallback = {
             self.dismiss(animated: true, completion: {})
         }
         

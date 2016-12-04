@@ -71,4 +71,8 @@ extension UIColor {
     static var secondaryGrayText: UIColor {
         return UIColor(red: 101.0/255.0, green: 105.0/255.0, blue: 110.0/255.0, alpha: 1.0)
     }
+
+    static var grayBackgroundTint: UIColor {
+        return UIColor(red: 250.0/255.0, green: 251.0/255.0, blue: 252.0/255.0, alpha: 1.0)
+    }
 }
