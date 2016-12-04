@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AccountViewController: UIViewController {
+class AccountViewController: UIViewController, Trackable {
 
     private let store: Store
     private let headerView = AccountHeaderView()
@@ -46,6 +46,11 @@ class AccountViewController: UIViewController {
         footerView.constrain([
                 footerView.constraint(.height, constant: footerHeight)
             ])
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        saveEvent("accout:did_appear")
     }
 
     private func addTransactionsView() {

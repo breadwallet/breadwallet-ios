@@ -194,6 +194,7 @@
 		CE92F9F01DED0C790046B516 /* PresentModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */; };
 		CE92F9F41DED59E80046B516 /* UIView+AnimationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9F31DED59E80046B516 /* UIView+AnimationAdditions.swift */; };
 		CE92F9F61DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9F51DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift */; };
+		CE3754B21DE0E31F0045B0CB /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3754B11DE0E31F0045B0CB /* EventManager.swift */; };
 		CEA929711DDA5C21007335AF /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA929701DDA5C21007335AF /* WelcomeViewController.swift */; };
 		CEAA9E8F1DC074410066731D /* StartPaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */; };
 		CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */; };
@@ -232,6 +233,8 @@
 		CEF3E8321DE55540007C0A9E /* CheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8311DE55540007C0A9E /* CheckView.swift */; };
 		CEF3E8341DE57166007C0A9E /* AnimatableIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8331DE57166007C0A9E /* AnimatableIcon.swift */; };
 		CEF3E8361DE60222007C0A9E /* ModalNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8351DE60222007C0A9E /* ModalNavigationController.swift */; };
+		CEF3E8251DE2C9B2007C0A9E /* Trackable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8241DE2C9B2007C0A9E /* Trackable.swift */; };
+		CEF3E8271DE2C9C5007C0A9E /* EventManagerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8261DE2C9C5007C0A9E /* EventManagerCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1168,6 +1171,7 @@
 		CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PresentModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/PresentModalAnimator.swift; sourceTree = "<group>"; };
 		CE92F9F31DED59E80046B516 /* UIView+AnimationAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+AnimationAdditions.swift"; path = "src/Extensions/UIView+AnimationAdditions.swift"; sourceTree = "<group>"; };
 		CE92F9F51DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewControllerContextTransitioning+BRAdditions.swift"; path = "src/Extensions/UIViewControllerContextTransitioning+BRAdditions.swift"; sourceTree = "<group>"; };
+		CE3754B11DE0E31F0045B0CB /* EventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventManager.swift; path = src/EventManager/EventManager.swift; sourceTree = "<group>"; };
 		CEA929701DDA5C21007335AF /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WelcomeViewController.swift; path = src/ViewControllers/WelcomeViewController.swift; sourceTree = "<group>"; };
 		CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartPaperPhraseViewController.swift; path = src/ViewControllers/StartPaperPhraseViewController.swift; sourceTree = "<group>"; };
 		CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewPropertyAnimator+BRWAdditions.swift"; path = "src/Extensions/UIViewPropertyAnimator+BRWAdditions.swift"; sourceTree = "<group>"; };
@@ -1206,6 +1210,8 @@
 		CEF3E8311DE55540007C0A9E /* CheckView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CheckView.swift; path = src/Views/AnimatedIcons/CheckView.swift; sourceTree = "<group>"; };
 		CEF3E8331DE57166007C0A9E /* AnimatableIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnimatableIcon.swift; path = src/Views/AnimatedIcons/AnimatableIcon.swift; sourceTree = "<group>"; };
 		CEF3E8351DE60222007C0A9E /* ModalNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalNavigationController.swift; path = src/ViewControllers/ModalNavigationController.swift; sourceTree = "<group>"; };
+		CEF3E8241DE2C9B2007C0A9E /* Trackable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Trackable.swift; path = src/EventManager/Trackable.swift; sourceTree = "<group>"; };
+		CEF3E8261DE2C9C5007C0A9E /* EventManagerCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventManagerCoordinator.swift; path = src/EventManager/EventManagerCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2124,6 +2130,7 @@
 				CE20C90F1DBE5B5100C8397A /* Views */,
 				CEC6AA471DEFCFCD00EE5AFD /* Controls */,
 				CEBF33021DDE177F00348FC6 /* ViewModels */,
+				CE3754B01DE0E2FC0045B0CB /* EventManager */,
 				CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */,
 				CE20C8F01DBAF6E100C8397A /* Extensions */,
 				CEAA9E9C1DC2F8270066731D /* Fonts */,
@@ -2374,6 +2381,16 @@
 				CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */,
 			);
 			name = ViewControllerTransitions;
+			sourceTree = "<group>";
+		};
+		CE3754B01DE0E2FC0045B0CB /* EventManager */ = {
+			isa = PBXGroup;
+			children = (
+				CE3754B11DE0E31F0045B0CB /* EventManager.swift */,
+				CEF3E8241DE2C9B2007C0A9E /* Trackable.swift */,
+				CEF3E8261DE2C9C5007C0A9E /* EventManagerCoordinator.swift */,
+			);
+			name = EventManager;
 			sourceTree = "<group>";
 		};
 		CEAA9E9C1DC2F8270066731D /* Fonts */ = {
@@ -2945,6 +2962,7 @@
 				CEF3E82B1DE51612007C0A9E /* GradientCircle.swift in Sources */,
 				CEBF32F01DDCD30600348FC6 /* AccountViewController.swift in Sources */,
 				CEE1F5631DF13E5A00D733AD /* ModalHeaderView.swift in Sources */,
+				CEF3E8251DE2C9B2007C0A9E /* Trackable.swift in Sources */,
 				CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */,
 				CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */,
 				CE92F9F61DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift in Sources */,
@@ -2964,6 +2982,7 @@
 				CE92F9F01DED0C790046B516 /* PresentModalAnimator.swift in Sources */,
 				CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */,
 				CEBF32EE1DDBC30000348FC6 /* ShadowButton.swift in Sources */,
+				CEF3E8271DE2C9C5007C0A9E /* EventManagerCoordinator.swift in Sources */,
 				CEAA9E9B1DC2B9320066731D /* ConfirmPhrase.swift in Sources */,
 				75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */,
 				CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */,
@@ -2996,6 +3015,7 @@
 				CEBF32F41DDCE12900348FC6 /* AccountFooterView.swift in Sources */,
 				CE3754AD1DDE6E080045B0CB /* MaskedShadow.swift in Sources */,
 				CE6D0F971DE8B73A00BD4BCF /* ModalTransitionDelegate.swift in Sources */,
+				CE3754B21DE0E31F0045B0CB /* EventManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
