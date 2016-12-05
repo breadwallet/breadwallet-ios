@@ -44,6 +44,8 @@ extension NSNotification.Name {
     public static let WalletSyncFailedNotification = NSNotification.Name("WalletSyncFailed")
 }
 
+typealias BRTxRef = UnsafeMutablePointer<BRTransaction>
+
 extension BRAddress: CustomStringConvertible {
     public var description: String {
         return String(cString: UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self))
@@ -84,27 +86,145 @@ extension BRTransaction {
     }
 }
 
+public class BRWallet {
+    @available(*, unavailable) init() {}
+    
+    public var ptr: OpaquePointer {
+       return OpaquePointer(Unmanaged.passUnretained(self).toOpaque())
+    }
+    
+    func transactions() -> [BRTxRef] {
+        return []
+    }
+}
+
+public class BRPeerManager {
+    @available(*, unavailable) init() {}
+
+    public var ptr: OpaquePointer {
+        return OpaquePointer(Unmanaged.passUnretained(self).toOpaque())
+    }
+}
+
 // A WalletManger instance manages a single wallet, and that wallet's individual connection to the bitcoin network.
 // After instantiating a WalletManager object, call BRPeerManagerConnect(myWalletManager.peerManager) to begin syncing.
 
 class WalletManager : NSObject {
-    private var db: OpaquePointer? = nil
+    internal var didInitWallet = false
+    internal let dbPath: String
+    internal var db: OpaquePointer? = nil
     private var txEnt: Int32 = 0
     private var blockEnt: Int32 = 0
     private var peerEnt: Int32 = 0
-
-    var peerManager: OpaquePointer? = nil
-    var wallet: OpaquePointer? = nil
     
-    convenience init (masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval) throws {
-        let dbURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
-                                                create: false).appendingPathComponent("BreadWallet.sqlite")
+    var masterPubKey = BRMasterPubKey()
+    var earliestKeyTime: TimeInterval = 0
+    
+    lazy var wallet: BRWallet? = {
+        var transactions = self.loadTransactions()
+        guard let wallet = BRWalletNew(&transactions, transactions.count, self.masterPubKey) else {
+            // stored transactions don't match masterPubKey
+            #if !DEBUG
+                do { try FileManager.default.removeItem(atPath: self.dbPath) } catch { }
+            #endif
+            abort()
+        }
         
-        try self.init(masterPubKey: masterPubKey, earliestKeyTime: earliestKeyTime, dbPath: dbURL.path)
-    }
+        BRWalletSetCallbacks(wallet, Unmanaged.passUnretained(self).toOpaque(),
+        { (info, balance) in // balanceChanged
+            DispatchQueue.main.async() {
+                NotificationCenter.default.post(name: .WalletBalanceChangedNotification, object: nil,
+                                                userInfo: ["balance": balance])
+            }
+        },
+        { (info, tx) in // txAdded
+            guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee, let tx = tx else { return }
+            
+            wm.addTransaction(tx: tx)
+        },
+        { (info, txHashes, txCount, blockHeight, timestamp) in // txUpdated
+            guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else { return }
+            
+            wm.updateTransactions(txHashes: [UInt256](UnsafeBufferPointer(start: txHashes, count: txCount)),
+                                  blockHeight: blockHeight, timestamp: timestamp)
+        },
+        { (info, txHash, notifyUser, recommendRescan) in // txDeleted
+            guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else { return }
+            
+            wm.deleteTransaction(txHash: txHash)
+            
+            if notifyUser != 0 {
+                DispatchQueue.main.async() {
+                    NotificationCenter.default.post(name: .WalletTxRejectedNotification, object: nil,
+                                                    userInfo: ["txHash": txHash,
+                                                               "recommendRescan": (recommendRescan != 0)])
+                }
+            }
+        })
+
+        self.didInitWallet = true
+        return Unmanaged<BRWallet>.fromOpaque(UnsafeRawPointer(wallet)).takeUnretainedValue()
+    }()
+
+    lazy var peerManager: BRPeerManager? = {
+        guard let wallet = self.wallet else { return nil }
+        var blocks = self.loadBlocks()
+        var peers = self.loadPeers()
+        guard let peerManager = BRPeerManagerNew(wallet.ptr, UInt32(self.earliestKeyTime + NSTimeIntervalSince1970),
+                                                 &blocks, blocks.count, &peers, peers.count) else { return nil }
+        
+        BRPeerManagerSetCallbacks(peerManager, Unmanaged.passUnretained(self).toOpaque(),
+        { (info) in // syncStarted
+            DispatchQueue.main.async() {
+                NotificationCenter.default.post(name: .WalletSyncStartedNotification, object: nil)
+            }
+        },
+        { (info) in // syncSucceeded
+            DispatchQueue.main.async() {
+                NotificationCenter.default.post(name: .WalletSyncSucceededNotification, object: nil)
+            }
+        },
+        { (info, error) in // syncFailed
+            DispatchQueue.main.async() {
+                NotificationCenter.default.post(name: .WalletSyncFailedNotification, object: nil,
+                                                userInfo: ["errorCode": error,
+                                                           "errorDescription": String(cString: strerror(error))])
+            }
+        },
+        { (info) in // txStatusUpdate
+            DispatchQueue.main.async() {
+                NotificationCenter.default.post(name: .WalletTxStatusUpdateNotification, object: nil)
+            }
+        },
+        { (info, blocks, blocksCount) in // saveBlocks
+            guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else { return }
+            
+            wm.saveBlocks(blocks: [UnsafeMutablePointer<BRMerkleBlock>?](UnsafeBufferPointer(start: blocks,
+                                                                                             count: blocksCount)))
+        },
+        { (info, peers, peersCount) in // savePeers
+            guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else { return }
+            
+            wm.savePeers(peers: [BRPeer](UnsafeBufferPointer(start: peers, count: peersCount)))
+        },
+        { (info) -> Int32 in // networkIsReachable
+            guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else { return 0 }
+            
+            return wm.isNetworkReachable() ? 1 : 0
+        },
+        nil) // threadCleanup
+
+        return Unmanaged<BRPeerManager>.fromOpaque(UnsafeRawPointer(peerManager)).takeUnretainedValue()
+    }()
     
-    init (masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String) throws {
-        super.init()
+    init (masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
+        let dbPath = try dbPath ??
+            FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
+                                    create: false).appendingPathComponent("BreadWallet.sqlite").path
+        
+        self.masterPubKey = masterPubKey
+        self.earliestKeyTime = earliestKeyTime
+        self.dbPath = dbPath
         
         // open sqlite database
         if sqlite3_open(dbPath, &db) != SQLITE_OK {
@@ -121,113 +241,9 @@ class WalletManager : NSObject {
                 }
             #endif
         }
-
-        // setup tables and indexes
-        setupDb()
         
-        // instantiate wallet
-        var transactions = loadTransactions()
-        wallet = BRWalletNew(&transactions, transactions.count, masterPubKey)
+        // create tables and indexes (these are inherited from CoreData)
 
-        // instantiate peerManager
-        var blocks = loadBlocks()
-        var peers = loadPeers()
-        peerManager = BRPeerManagerNew(wallet, UInt32(earliestKeyTime + NSTimeIntervalSince1970), &blocks, blocks.count,
-                                       &peers, peers.count);
-
-        // setup wallet and peerManager callbacks
-        let info = Unmanaged.passUnretained(self).toOpaque()
-
-        BRWalletSetCallbacks(wallet, info,
-            { (info, balance) in // balanceChanged
-                DispatchQueue.main.async() {
-                    NotificationCenter.default.post(name: .WalletBalanceChangedNotification, object: nil,
-                                                    userInfo: ["balance": balance])
-                }
-            },
-            { (info, tx) in // txAdded
-                guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee, let tx = tx else {
-                    return
-                }
-                
-                wm.addTransaction(tx: tx)
-            },
-            { (info, txHashes, txCount, blockHeight, timestamp) in // txUpdated
-                guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else {
-                    return
-                }
-
-                wm.updateTransactions(txHashes: [UInt256](UnsafeBufferPointer(start: txHashes, count: txCount)),
-                                      blockHeight: blockHeight, timestamp: timestamp)
-            },
-            { (info, txHash, notifyUser, recommendRescan) in // txDeleted
-                guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else {
-                    return
-                }
-
-                wm.deleteTransaction(txHash: txHash)
-
-                if notifyUser != 0 {
-                    DispatchQueue.main.async() {
-                        NotificationCenter.default.post(name: .WalletTxRejectedNotification, object: nil,
-                                                        userInfo: ["txHash": txHash,
-                                                                   "recommendRescan": (recommendRescan != 0)])
-                    }
-                }
-            }
-        )
-
-        BRPeerManagerSetCallbacks(peerManager, info,
-            { (info) in // syncStarted
-                DispatchQueue.main.async() {
-                    NotificationCenter.default.post(name: .WalletSyncStartedNotification, object: nil)
-                }
-            },
-            { (info) in // syncSucceeded
-                DispatchQueue.main.async() {
-                    NotificationCenter.default.post(name: .WalletSyncSucceededNotification, object: nil)
-                }
-            },
-            { (info, error) in // syncFailed
-                DispatchQueue.main.async() {
-                    NotificationCenter.default.post(name: .WalletSyncFailedNotification, object: nil,
-                                                    userInfo: ["errorCode": error,
-                                                               "errorDescription": String(cString: strerror(error))])
-                }
-            },
-            { (info) in // txStatusUpdate
-                DispatchQueue.main.async() {
-                    NotificationCenter.default.post(name: .WalletTxStatusUpdateNotification, object: nil)
-                }
-            },
-            { (info, blocks, blocksCount) in // saveBlocks
-                guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else {
-                    return
-                }
-
-                wm.saveBlocks(blocks: [UnsafeMutablePointer<BRMerkleBlock>?](UnsafeBufferPointer(start: blocks,
-                                                                                                 count: blocksCount)))
-            },
-            { (info, peers, peersCount) in // savePeers
-                guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else {
-                    return
-                }
-
-                wm.savePeers(peers: [BRPeer](UnsafeBufferPointer(start: peers, count: peersCount)))
-            },
-            { (info) -> Int32 in // networkIsReachable
-                guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else {
-                    return 0
-                }
-                
-                return wm.isNetworkReachable() ? 1 : 0
-            },
-            nil // threadCleanup
-        )
-    }
-    
-    // create tables and indexes (these are inherited from CoreData)
-    private func setupDb() {
         // tx table
         sqlite3_exec(db, "create table if not exists ZBRTXMETADATAENTITY (" +
             "Z_PK integer primary key," +
@@ -405,9 +421,7 @@ class WalletManager : NSObject {
     }
     
     private func updateTransactions(txHashes: [UInt256], blockHeight: UInt32, timestamp: UInt32) {
-        guard txHashes.count > 0 else {
-            return
-        }
+        guard txHashes.count > 0 else { return }
 
         let extra = [blockHeight.littleEndian, timestamp.littleEndian]
         let extraBuf = UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
@@ -419,8 +433,8 @@ class WalletManager : NSObject {
         defer { sqlite3_finalize(sql) }
         
         for i in 0..<txHashes.count {
-            sqlite3_bind_blob(sql, i + 1, UnsafePointer(txHashes).advanced(by: i),
-                              Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
+            sqlite3_bind_blob(sql, i + 1, UnsafePointer(txHashes) + i, Int32(MemoryLayout<UInt256>.size),
+                              SQLITE_TRANSIENT)
         }
         
         sqlite3_prepare_v2(db, "update ZBRTXMETADATAENTITY set ZBLOB = ? where ZTXHASH = ?", -1, &sql2, nil)
@@ -467,9 +481,7 @@ class WalletManager : NSObject {
         defer { sqlite3_finalize(sql) }
         
         while sqlite3_step(sql) == SQLITE_ROW {
-            guard let b = BRMerkleBlockNew() else {
-                return blocks
-            }
+            guard let b = BRMerkleBlockNew() else { return blocks }
             
             b.pointee.height = UInt32(bitPattern: sqlite3_column_int(sql, 0))
             b.pointee.nonce = UInt32(bitPattern: sqlite3_column_int(sql, 1))
@@ -654,21 +666,24 @@ class WalletManager : NSObject {
         zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
         zeroAddress.sa_family = sa_family_t(AF_INET)
         
-        guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zeroAddress) else {
-            return false
-        }
+        guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zeroAddress) else { return false }
         
         if !SCNetworkReachabilityGetFlags(reachability, &flags) {
             return false
         }
         
         return flags.contains(.reachable) && !flags.contains(.connectionRequired)
+        
+        // TODO: XXX call BRPeerManagerConnect() whenever network reachability status changes
     }
     
     deinit {
-        BRPeerManagerDisconnect(peerManager)
-        BRPeerManagerFree(peerManager)
-        BRWalletFree(wallet)
-        sqlite3_close(db)
+        if didInitWallet {
+            if peerManager != nil { BRPeerManagerDisconnect(peerManager?.ptr) }
+            if peerManager != nil { BRPeerManagerFree(peerManager?.ptr) }
+            if wallet != nil { BRWalletFree(wallet?.ptr) }
+        }
+        
+        if db != nil { sqlite3_close(db) }
     }
 }
