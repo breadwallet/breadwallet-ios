@@ -187,6 +187,7 @@
 		CE20C9131DBE67CA00C8397A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9121DBE67CA00C8397A /* Constants.swift */; };
 		CE20C9171DBE6F2A00C8397A /* UIButton+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9161DBE6F2A00C8397A /* UIButton+BRWAdditions.swift */; };
 		CE20C9191DBE7B8200C8397A /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9181DBE7B8200C8397A /* State.swift */; };
+		CE25BF8D1DF3B8A500BC67B6 /* InViewAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25BF8C1DF3B8A500BC67B6 /* InViewAlert.swift */; };
 		CE3209621DF1508A00844DA1 /* SendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3209611DF1508A00844DA1 /* SendCell.swift */; };
 		CE3754AD1DDE6E080045B0CB /* MaskedShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3754AC1DDE6E080045B0CB /* MaskedShadow.swift */; };
 		CE3754AF1DDE6E2E0045B0CB /* RoundedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3754AE1DDE6E2E0045B0CB /* RoundedContainer.swift */; };
@@ -1165,6 +1166,7 @@
 		CE20C9121DBE67CA00C8397A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = src/Constants.swift; sourceTree = "<group>"; };
 		CE20C9161DBE6F2A00C8397A /* UIButton+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIButton+BRWAdditions.swift"; path = "src/Extensions/UIButton+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CE20C9181DBE7B8200C8397A /* State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = State.swift; path = src/SimpleRedux/State.swift; sourceTree = "<group>"; };
+		CE25BF8C1DF3B8A500BC67B6 /* InViewAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InViewAlert.swift; path = src/Views/InViewAlert.swift; sourceTree = "<group>"; };
 		CE3209611DF1508A00844DA1 /* SendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SendCell.swift; path = src/Views/SendCell.swift; sourceTree = "<group>"; };
 		CE3754AC1DDE6E080045B0CB /* MaskedShadow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MaskedShadow.swift; path = src/Views/TransactionCells/MaskedShadow.swift; sourceTree = "<group>"; };
 		CE3754AE1DDE6E2E0045B0CB /* RoundedContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoundedContainer.swift; path = src/Views/TransactionCells/RoundedContainer.swift; sourceTree = "<group>"; };
@@ -2131,7 +2133,6 @@
 				CE20C90A1DBC59C500C8397A /* FlowControllers */,
 				CE20C8EF1DBAF6D300C8397A /* ViewControllers */,
 				CE20C90F1DBE5B5100C8397A /* Views */,
-				CEC6AA471DEFCFCD00EE5AFD /* Controls */,
 				CEBF33021DDE177F00348FC6 /* ViewModels */,
 				CE3754B01DE0E2FC0045B0CB /* EventManager */,
 				CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */,
@@ -2359,6 +2360,7 @@
 			children = (
 				CEBF32F71DDD191300348FC6 /* TransactionCells */,
 				CEF3E8301DE554F1007C0A9E /* AnimatedIcons */,
+				CEC6AA471DEFCFCD00EE5AFD /* Controls */,
 				CE20C9101DBE5B6F00C8397A /* Circle.swift */,
 				CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */,
 				CEAA9E961DC18E1F0066731D /* PhraseView.swift */,
@@ -2372,6 +2374,7 @@
 				CEC6AA3C1DEE687000EE5AFD /* RadialGradientView.swift */,
 				CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */,
 				CE3209611DF1508A00844DA1 /* SendCell.swift */,
+				CE25BF8C1DF3B8A500BC67B6 /* InViewAlert.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2970,6 +2973,7 @@
 				CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */,
 				CE92F9F61DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift in Sources */,
 				CEBF32F61DDCEAF900348FC6 /* TransactionsTableViewController.swift in Sources */,
+				CE25BF8D1DF3B8A500BC67B6 /* InViewAlert.swift in Sources */,
 				CEC6AA391DEE10BA00EE5AFD /* UINavigationController+BRAdditions.swift in Sources */,
 				CE3209621DF1508A00844DA1 /* SendCell.swift in Sources */,
 				CE20C90E1DBE52B000C8397A /* UIView+BRWAdditions.swift in Sources */,
