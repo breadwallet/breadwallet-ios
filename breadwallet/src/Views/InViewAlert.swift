@@ -38,10 +38,6 @@ class InViewAlert: UIView {
         heightConstraint?.constant = expanded ? collapsedHeight : InViewAlert.height
     }
 
-    var heightDifference: CGFloat {
-        return InViewAlert.height - collapsedHeight
-    }
-
     private let type: InViewAlertType
     private let arrowHeight: CGFloat = 10.0
     private let arrowWidth: CGFloat = 16.0

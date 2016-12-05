@@ -121,7 +121,7 @@ class ShadowButton: UIControl {
 
     private func setupLabelOnly() {
         container.addSubview(label)
-        label.constrainToCenter()
+        label.constrain(toSuperviewEdges: nil)
     }
 
     private func setColors() {
