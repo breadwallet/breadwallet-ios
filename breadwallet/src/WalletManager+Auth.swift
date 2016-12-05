@@ -226,15 +226,35 @@ extension WalletManager {
         catch { return false }
     }
 
+    func pinAttemptsRemaining() -> Int {
+        do {
+            let failCount : Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
+        
+            return Int(8 - failCount)
+        }
+        catch { return -1 }
+    }
+    
+    func walletDisabledUntil() -> TimeInterval {
+        do {
+            let failCount : Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
+            guard failCount >= 3 else { return 0 }
+            let failTime : Int64 = try keychainItem(key: keychainKey.pinFailTime) ?? 0
+            
+            return Double(failTime) + pow(6, Double(failCount - 3))*60
+        }
+        catch { return 0 }
+    }
+    
     func authenticate(pin: String) -> Bool {
         do {
-            let secureTime = Int64(Date.timeIntervalSinceReferenceDate) // TODO: XXX use secure time from https request
+            let secureTime = Date.timeIntervalSinceReferenceDate // TODO: XXX use secure time from https request
             var failCount : Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
 
             if failCount >= 3 {
                 let failTime : Int64 = try keychainItem(key: keychainKey.pinFailTime) ?? 0
 
-                if Decimal(secureTime) < Decimal(failTime) + pow(6, failCount - 3)*60 { // locked out
+                if secureTime < Double(failTime) + pow(6, Double(failCount - 3))*60 { // locked out
                     return false
                 }
             }
