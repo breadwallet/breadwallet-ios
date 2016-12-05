@@ -46,50 +46,50 @@ extension NSNotification.Name {
 
 typealias BRTxRef = UnsafeMutablePointer<BRTransaction>
 
-extension BRAddress: CustomStringConvertible {
-    public var description: String {
+extension BRAddress : CustomStringConvertible {
+    public var description : String {
         return String(cString: UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self))
     }
 }
 
 extension BRTxInput {
-    public var address: String {
+    public var address : String {
         return String(cString: UnsafeRawPointer([self.address]).assumingMemoryBound(to: CChar.self))
     }
 
-    public var script: [UInt8] {
+    public var script : [UInt8] {
         return [UInt8](UnsafeBufferPointer(start: self.script, count: self.scriptLen))
     }
 
-    public var signature: [UInt8] {
+    public var signature : [UInt8] {
         return [UInt8](UnsafeBufferPointer(start: self.signature, count: self.sigLen))
     }
 }
 
 extension BRTxOutput {
-    public var address: String {
+    public var address : String {
         return String(cString: UnsafeRawPointer([self.address]).assumingMemoryBound(to: CChar.self))
     }
     
-    public var script: [UInt8] {
+    public var script : [UInt8] {
         return [UInt8](UnsafeBufferPointer(start: self.script, count: self.scriptLen))
     }
 }
 
 extension BRTransaction {
-    public var inputs: [BRTxInput] {
+    public var inputs : [BRTxInput] {
         return [BRTxInput](UnsafeBufferPointer(start: self.inputs, count: self.inCount))
     }
 
-    public var outputs: [BRTxOutput] {
+    public var outputs : [BRTxOutput] {
         return [BRTxOutput](UnsafeBufferPointer(start: self.outputs, count: self.outCount))
     }
 }
 
-public class BRWallet {
+class BRWallet {
     @available(*, unavailable) init() {}
     
-    public var ptr: OpaquePointer {
+    public var ptr : OpaquePointer {
        return OpaquePointer(Unmanaged.passUnretained(self).toOpaque())
     }
     
@@ -98,10 +98,10 @@ public class BRWallet {
     }
 }
 
-public class BRPeerManager {
+class BRPeerManager {
     @available(*, unavailable) init() {}
 
-    public var ptr: OpaquePointer {
+    public var ptr : OpaquePointer {
         return OpaquePointer(Unmanaged.passUnretained(self).toOpaque())
     }
 }
@@ -110,17 +110,19 @@ public class BRPeerManager {
 // After instantiating a WalletManager object, call BRPeerManagerConnect(myWalletManager.peerManager) to begin syncing.
 
 class WalletManager : NSObject {
+    typealias BRBlockRef = UnsafeMutablePointer<BRMerkleBlock>
+    
     internal var didInitWallet = false
-    internal let dbPath: String
-    internal var db: OpaquePointer? = nil
-    private var txEnt: Int32 = 0
-    private var blockEnt: Int32 = 0
-    private var peerEnt: Int32 = 0
+    internal let dbPath : String
+    internal var db : OpaquePointer? = nil
+    private var txEnt : Int32 = 0
+    private var blockEnt : Int32 = 0
+    private var peerEnt : Int32 = 0
     
     var masterPubKey = BRMasterPubKey()
-    var earliestKeyTime: TimeInterval = 0
+    var earliestKeyTime : TimeInterval = 0
     
-    lazy var wallet: BRWallet? = {
+    lazy var wallet : BRWallet? = {
         var transactions = self.loadTransactions()
         guard let wallet = BRWalletNew(&transactions, transactions.count, self.masterPubKey) else {
             // stored transactions don't match masterPubKey
@@ -140,7 +142,7 @@ class WalletManager : NSObject {
         { (info, tx) in // txAdded
             guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee, let tx = tx else { return }
             
-            wm.addTransaction(tx: tx)
+            wm.addTransaction(tx)
         },
         { (info, txHashes, txCount, blockHeight, timestamp) in // txUpdated
             guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else { return }
@@ -151,7 +153,7 @@ class WalletManager : NSObject {
         { (info, txHash, notifyUser, recommendRescan) in // txDeleted
             guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else { return }
             
-            wm.deleteTransaction(txHash: txHash)
+            wm.deleteTransaction(txHash)
             
             if notifyUser != 0 {
                 DispatchQueue.main.async() {
@@ -166,7 +168,7 @@ class WalletManager : NSObject {
         return Unmanaged<BRWallet>.fromOpaque(UnsafeRawPointer(wallet)).takeUnretainedValue()
     }()
 
-    lazy var peerManager: BRPeerManager? = {
+    lazy var peerManager : BRPeerManager? = {
         guard let wallet = self.wallet else { return nil }
         var blocks = self.loadBlocks()
         var peers = self.loadPeers()
@@ -199,13 +201,12 @@ class WalletManager : NSObject {
         { (info, blocks, blocksCount) in // saveBlocks
             guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else { return }
             
-            wm.saveBlocks(blocks: [UnsafeMutablePointer<BRMerkleBlock>?](UnsafeBufferPointer(start: blocks,
-                                                                                             count: blocksCount)))
+            wm.saveBlocks([BRBlockRef?](UnsafeBufferPointer(start: blocks, count: blocksCount)))
         },
         { (info, peers, peersCount) in // savePeers
             guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else { return }
             
-            wm.savePeers(peers: [BRPeer](UnsafeBufferPointer(start: peers, count: peersCount)))
+            wm.savePeers([BRPeer](UnsafeBufferPointer(start: peers, count: peersCount)))
         },
         { (info) -> Int32 in // networkIsReachable
             guard let wm = info?.assumingMemoryBound(to: WalletManager.self).pointee else { return 0 }
@@ -217,7 +218,7 @@ class WalletManager : NSObject {
         return Unmanaged<BRPeerManager>.fromOpaque(UnsafeRawPointer(peerManager)).takeUnretainedValue()
     }()
     
-    init (masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
+    init(masterPubKey : BRMasterPubKey, earliestKeyTime : TimeInterval, dbPath : String? = nil) throws {
         let dbPath = try dbPath ??
             FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
                                     create: false).appendingPathComponent("BreadWallet.sqlite").path
@@ -327,7 +328,7 @@ class WalletManager : NSObject {
             "select 3, 'BRPeerEntity', 0, 0 except" +
             "select 3, Z_NAME, 0, 0 from Z_PRIMARYKEY where Z_NAME = 'BRPeerEntity'", nil, nil, nil)
 
-        var sql: OpaquePointer? = nil
+        var sql : OpaquePointer? = nil
 
         sqlite3_prepare_v2(db, "select Z_ENT, Z_NAME from Z_PRIMARYKEY", -1, &sql, nil)
         defer { sqlite3_finalize(sql) }
@@ -345,9 +346,9 @@ class WalletManager : NSObject {
         }
     }
     
-    private func loadTransactions() -> [UnsafeMutablePointer<BRTransaction>?] {
-        var transactions = [UnsafeMutablePointer<BRTransaction>?]()
-        var sql: OpaquePointer? = nil
+    private func loadTransactions() -> [BRTxRef?] {
+        var transactions = [BRTxRef?]()
+        var sql : OpaquePointer? = nil
         
         sqlite3_prepare_v2(db, "select ZBLOB from ZBRTXMETADATAENTITY where ZTYPE = 1", -1, &sql, nil)
         defer { sqlite3_finalize(sql) }
@@ -374,7 +375,7 @@ class WalletManager : NSObject {
         return transactions
     }
     
-    private func addTransaction(tx: UnsafeMutablePointer<BRTransaction>) {
+    private func addTransaction(_ tx : BRTxRef) {
         var buf = [UInt8](repeating: 0, count: BRTransactionSerialize(tx, nil, 0))
         let extra = [tx.pointee.blockHeight.littleEndian, tx.pointee.timestamp.littleEndian]
         
@@ -383,7 +384,7 @@ class WalletManager : NSObject {
                                                    count: MemoryLayout<UInt32>.size*2))
         sqlite3_exec(db, "begin exclusive", nil, nil, nil)
 
-        var sql: OpaquePointer? = nil
+        var sql : OpaquePointer? = nil
         
         sqlite3_prepare_v2(db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(txEnt)", -1, &sql, nil)
         defer { sqlite3_finalize(sql) }
@@ -395,7 +396,7 @@ class WalletManager : NSObject {
         }
 
         let pk = sqlite3_column_int(sql, 0)
-        var sql2: OpaquePointer? = nil
+        var sql2 : OpaquePointer? = nil
         
         sqlite3_prepare_v2(db, "insert or rollback into ZBRTXMETADATAENTITY " +
             "(Z_PK, Z_ENT, Z_OPT, ZTYPE, ZBLOB, ZTXHASH) " +
@@ -420,13 +421,13 @@ class WalletManager : NSObject {
         sqlite3_exec(db, "commit", nil, nil, nil)
     }
     
-    private func updateTransactions(txHashes: [UInt256], blockHeight: UInt32, timestamp: UInt32) {
+    private func updateTransactions(txHashes : [UInt256], blockHeight : UInt32, timestamp : UInt32) {
         guard txHashes.count > 0 else { return }
 
         let extra = [blockHeight.littleEndian, timestamp.littleEndian]
         let extraBuf = UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
                                            count: MemoryLayout<UInt32>.size*2)
-        var sql: OpaquePointer? = nil, sql2: OpaquePointer? = nil
+        var sql : OpaquePointer? = nil, sql2 : OpaquePointer? = nil
         
         sqlite3_prepare_v2(db, "select ZTXHASH, ZBLOB from ZBRTXMETADATAENTITY where ZTYPE = 1 and " +
             "ZTXHASH in (" + String(repeating: "?, ", count: txHashes.count - 1) + "?)", -1, &sql, nil)
@@ -459,8 +460,8 @@ class WalletManager : NSObject {
         }
     }
     
-    private func deleteTransaction(txHash: UInt256) {
-        var sql: OpaquePointer? = nil
+    private func deleteTransaction(_ txHash : UInt256) {
+        var sql : OpaquePointer? = nil
         
         sqlite3_prepare_v2(db, "delete from ZBRTXMETADATAENTITY where ZTYPE = 1 and ZTXHASH = ?", -1, &sql, nil)
         defer { sqlite3_finalize(sql) }
@@ -472,9 +473,9 @@ class WalletManager : NSObject {
         }
     }
 
-    private func loadBlocks() -> [UnsafeMutablePointer<BRMerkleBlock>?] {
-        var blocks = [UnsafeMutablePointer<BRMerkleBlock>?]()
-        var sql: OpaquePointer? = nil
+    private func loadBlocks() -> [BRBlockRef?] {
+        var blocks = [BRBlockRef?]()
+        var sql : OpaquePointer? = nil
         
         sqlite3_prepare_v2(db, "select ZHEIGHT, ZNONCE, ZTARGET, ZTOTALTRANSACTIONS, ZVERSION, ZTIMESTAMP, " +
             "ZBLOCKHASH, ZFLAGS, ZHASHES, ZMERKLEROOT, ZPREVBLOCK from ZBRMERKLEBLOCKENTITY", -1, &sql, nil)
@@ -509,8 +510,8 @@ class WalletManager : NSObject {
         return blocks
     }
     
-    private func saveBlocks(blocks: [UnsafeMutablePointer<BRMerkleBlock>?]) {
-        var pk: Int32 = 0
+    private func saveBlocks(_ blocks : [BRBlockRef?]) {
+        var pk : Int32 = 0
 
         sqlite3_exec(db, "begin exclusive", nil, nil, nil)
         
@@ -518,7 +519,7 @@ class WalletManager : NSObject {
             sqlite3_exec(db, "delete from ZBRMERKLEBLOCKENTITY", nil, nil, nil)
         }
         else {
-            var sql: OpaquePointer? = nil
+            var sql : OpaquePointer? = nil
         
             sqlite3_prepare_v2(db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(blockEnt)", -1, &sql, nil)
             defer { sqlite3_finalize(sql) }
@@ -532,7 +533,7 @@ class WalletManager : NSObject {
             pk = sqlite3_column_int(sql, 0)
         }
 
-        var sql2: OpaquePointer? = nil
+        var sql2 : OpaquePointer? = nil
 
         sqlite3_prepare_v2(db, "insert or rollback into ZBRMERKLEBLOCKENTITY (Z_PK, Z_ENT, Z_OPT, ZHEIGHT, ZNONCE, " +
             "ZTARGET, ZTOTALTRANSACTIONS, ZVERSION, ZTIMESTAMP, ZBLOCKHASH, ZFLAGS, ZHASHES, ZMERKLEROOT, " +
@@ -580,7 +581,7 @@ class WalletManager : NSObject {
     
     private func loadPeers() -> [BRPeer] {
         var peers = [BRPeer]()
-        var sql: OpaquePointer? = nil
+        var sql : OpaquePointer? = nil
         
         sqlite3_prepare_v2(db, "select ZADDRESS, ZPORT, ZSERVICES, ZTIMESTAMP from ZBRPEERENTITY", -1, &sql, nil)
         defer { sqlite3_finalize(sql) }
@@ -603,8 +604,8 @@ class WalletManager : NSObject {
         return peers
     }
     
-    private func savePeers(peers: [BRPeer]) {
-        var pk: Int32 = 0
+    private func savePeers(_ peers : [BRPeer]) {
+        var pk : Int32 = 0
         
         sqlite3_exec(db, "begin exclusive", nil, nil, nil)
 
@@ -612,7 +613,7 @@ class WalletManager : NSObject {
             sqlite3_exec(db, "delete from ZBRPEERENTITY", nil, nil, nil)
         }
         else {
-            var sql: OpaquePointer? = nil
+            var sql : OpaquePointer? = nil
             
             sqlite3_prepare_v2(db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(peerEnt)", -1, &sql, nil)
             defer { sqlite3_finalize(sql) }
@@ -626,7 +627,7 @@ class WalletManager : NSObject {
             pk = sqlite3_column_int(sql, 0)
         }
         
-        var sql2: OpaquePointer? = nil
+        var sql2 : OpaquePointer? = nil
         
         sqlite3_prepare_v2(db, "insert or rollback into ZBRPEERENTITY " +
             "(Z_PK, Z_ENT, Z_OPT, ZADDRESS, ZMISBEHAVIN, ZPORT, ZSERVICES, ZTIMESTAMP) " +
@@ -660,7 +661,7 @@ class WalletManager : NSObject {
     }
     
     private func isNetworkReachable() -> Bool {
-        var flags: SCNetworkReachabilityFlags = []
+        var flags : SCNetworkReachabilityFlags = []
         var zeroAddress = sockaddr()
         
         zeroAddress.sa_len = UInt8(MemoryLayout<sockaddr>.size)
