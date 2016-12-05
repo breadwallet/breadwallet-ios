@@ -12,15 +12,13 @@ class ReceiveViewController: UIViewController {
 
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 16.0))
+    private let addressPopout = InViewAlert(type: .primary)
     private let share = ShadowButton(title: NSLocalizedString("Share", comment: "Share button label"), type: .tertiary, image: #imageLiteral(resourceName: "Share"))
     private let sharePopout = InViewAlert(type: .secondary)
     private let border = UIView()
     private let request = ShadowButton(title: NSLocalizedString("Request an Amount", comment: "Request button label"), type: .secondary)
     private let qrSize: CGFloat = 186.0
     private let shareHeight: CGFloat = 32.0
-    private var sharePopoutHeightConstraint: NSLayoutConstraint?
-    private var expanded = false
-    private var popoutHeight: CGFloat = 80.0
 
     override func viewDidLoad() {
         addSubviews()
@@ -32,6 +30,7 @@ class ReceiveViewController: UIViewController {
     private func addSubviews() {
         view.addSubview(qrCode)
         view.addSubview(address)
+        view.addSubview(addressPopout)
         view.addSubview(share)
         view.addSubview(sharePopout)
         view.addSubview(border)
@@ -49,19 +48,26 @@ class ReceiveViewController: UIViewController {
                 address.constraint(toBottom: qrCode, constant: C.padding[1]),
                 address.constraint(.centerX, toView: view)
             ])
+        addressPopout.heightConstraint = addressPopout.constraint(.height, constant: 0.0)
+        addressPopout.constrain([
+                addressPopout.constraint(toBottom: address, constant: C.padding[1]),
+                addressPopout.constraint(.centerX, toView: view),
+                addressPopout.constraint(.width, toView: view),
+                addressPopout.heightConstraint
+            ])
         share.constrain([
-                share.constraint(toBottom: address, constant: C.padding[2]),
+                share.constraint(toBottom: addressPopout, constant: C.padding[2]),
                 share.constraint(.centerX, toView: view),
                 share.constraint(.width, constant: qrSize),
                 share.constraint(.height, constant: shareHeight)
             ])
-        let popoutHeightConstraint = sharePopout.constraint(.height, constant: 0.0)
-        sharePopoutHeightConstraint = popoutHeightConstraint
+        sharePopout.heightConstraint = sharePopout.constraint(.height, constant: C.padding[2])
+        sharePopout.collapsedHeight = C.padding[2]
         sharePopout.constrain([
                 sharePopout.constraint(toBottom: share, constant: C.padding[1]),
                 sharePopout.constraint(.centerX, toView: view),
                 sharePopout.constraint(.width, toView: view),
-                popoutHeightConstraint
+                sharePopout.heightConstraint
             ])
         border.constrain([
                 border.constraint(.width, toView: view),
@@ -85,33 +91,46 @@ class ReceiveViewController: UIViewController {
     }
 
     private func addActions() {
+        let gr = UITapGestureRecognizer(target: self, action: #selector(ReceiveViewController.addressTapped))
+        address.addGestureRecognizer(gr)
+        address.isUserInteractionEnabled = true
+
         share.addTarget(self, action: #selector(ReceiveViewController.shareTapped), for: .touchUpInside)
     }
 
     @objc private func shareTapped() {
+        toggle(alertView: sharePopout)
+        if addressPopout.expanded {
+            toggle(alertView: addressPopout)
+        }
+    }
 
+    @objc private func addressTapped() {
+        toggle(alertView: addressPopout)
+        if sharePopout.expanded {
+            toggle(alertView: sharePopout)
+        }
+    }
+
+    private func toggle(alertView: InViewAlert) {
         var newFrame = parent!.view.frame
-        if expanded {
-            newFrame.origin.y = newFrame.origin.y + popoutHeight
-            newFrame.size.height = newFrame.size.height - popoutHeight
+        if alertView.expanded {
+            newFrame.origin.y = newFrame.origin.y + alertView.heightDifference
+            newFrame.size.height = newFrame.size.height - alertView.heightDifference
         } else {
-            newFrame.origin.y = newFrame.origin.y - popoutHeight
-            newFrame.size.height = newFrame.size.height + popoutHeight
+            newFrame.origin.y = newFrame.origin.y - alertView.heightDifference
+            newFrame.size.height = newFrame.size.height + alertView.heightDifference
         }
 
-        UIView.springAnimation(0.2,
+        UIView.springAnimation(0.3,
                                animations: {
-                                    self.parent?.view.frame = newFrame
-                                    if self.expanded {
-                                        self.sharePopoutHeightConstraint?.constant = 0.0
-                                    } else {
-                                        self.sharePopoutHeightConstraint?.constant = self.popoutHeight
-                                    }
-                                    self.parent?.view.layoutIfNeeded()
-                                },
+                                self.parent?.view.frame = newFrame
+                                alertView.toggle()
+                                self.parent?.view.layoutIfNeeded()
+        },
                                completion: {_ in
-                                    self.expanded = !self.expanded
-                                })
+                                alertView.expanded = !alertView.expanded
+        })
     }
 
 }
