@@ -15,12 +15,23 @@ enum InViewAlertType {
 
 class InViewAlert: UIView {
 
-    //32*20
+    var heightConstraint: NSLayoutConstraint?
+    var expanded = false
+    var collapsedHeight: CGFloat = 0.0
+    static let height: CGFloat = 80.0
 
     init(type: InViewAlertType) {
         self.type = type
-        super.init(frame: CGRect(x: 0, y: 0, width: 375.0, height: 80.0))
+        super.init(frame: .zero)
         setupSubViews()
+    }
+
+    func toggle() {
+        heightConstraint?.constant = expanded ? collapsedHeight : InViewAlert.height
+    }
+
+    var heightDifference: CGFloat {
+        return InViewAlert.height - collapsedHeight
     }
 
     private let type: InViewAlertType
@@ -33,6 +44,11 @@ class InViewAlert: UIView {
     }
 
     override func draw(_ rect: CGRect) {
+        //When collapsed, this view is used as padding.
+        //This is why we don't want it drawn when it's small.
+        if collapsedHeight > 0.0 {
+            guard rect.height > collapsedHeight else { return }
+        }
         let background = UIBezierPath(rect: rect.offsetBy(dx: 0, dy: arrowHeight))
         fillColor.setFill()
         background.fill()
