@@ -18,13 +18,15 @@ class ReceiveViewController: UIViewController {
     private let border = UIView()
     private let request = ShadowButton(title: NSLocalizedString("Request an Amount", comment: "Request button label"), type: .secondary)
     private let qrSize: CGFloat = 186.0
-    private let shareHeight: CGFloat = 32.0
+    private let smallButtonHeight: CGFloat = 32.0
 
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
         setStyle()
         addActions()
+        setupCopiedMessage()
+        setupShareButtons()
     }
 
     private func addSubviews() {
@@ -59,7 +61,7 @@ class ReceiveViewController: UIViewController {
                 share.constraint(toBottom: addressPopout, constant: C.padding[2]),
                 share.constraint(.centerX, toView: view),
                 share.constraint(.width, constant: qrSize),
-                share.constraint(.height, constant: shareHeight)
+                share.constraint(.height, constant: smallButtonHeight)
             ])
         sharePopout.heightConstraint = sharePopout.constraint(.height, constant: C.padding[2])
         sharePopout.collapsedHeight = C.padding[2]
@@ -96,6 +98,36 @@ class ReceiveViewController: UIViewController {
         address.isUserInteractionEnabled = true
 
         share.addTarget(self, action: #selector(ReceiveViewController.shareTapped), for: .touchUpInside)
+    }
+
+    private func setupCopiedMessage() {
+        let copiedMessage = UILabel(font: .customMedium(size: 14.0))
+        copiedMessage.textColor = .white
+        copiedMessage.text = NSLocalizedString("Copied to Clipboard.", comment: "Address copied message.")
+        copiedMessage.textAlignment = .center
+        addressPopout.contentView = copiedMessage
+    }
+
+    private func setupShareButtons() {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        let email = ShadowButton(title: NSLocalizedString("Email", comment: "Share via email button label"), type: .tertiary)
+        let text = ShadowButton(title: NSLocalizedString("Text Message", comment: "Share via text message label"), type: .tertiary)
+        container.addSubview(email)
+        container.addSubview(text)
+        email.constrain([
+                email.constraint(.leading, toView: container, constant: C.padding[2]),
+                email.constraint(.height, constant: smallButtonHeight),
+                NSLayoutConstraint(item: email, attribute: .trailing, relatedBy: .equal, toItem: container, attribute: .centerX, multiplier: 1.0, constant: -C.padding[1]),
+                email.constraint(.centerY, toView: container)
+            ])
+        text.constrain([
+                text.constraint(.trailing, toView: container, constant: -C.padding[2]),
+                text.constraint(.height, constant: smallButtonHeight),
+                NSLayoutConstraint(item: text, attribute: .leading, relatedBy: .equal, toItem: container, attribute: .centerX, multiplier: 1.0, constant: C.padding[1]),
+                text.constraint(.centerY, toView: container)
+            ])
+        sharePopout.contentView = container
     }
 
     @objc private func shareTapped() {

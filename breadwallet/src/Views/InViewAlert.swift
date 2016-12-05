@@ -18,6 +18,14 @@ class InViewAlert: UIView {
     var heightConstraint: NSLayoutConstraint?
     var expanded = false
     var collapsedHeight: CGFloat = 0.0
+    var contentView: UIView? {
+        didSet {
+            guard let view = contentView else { return }
+            addSubview(view)
+            view.constrain(toSuperviewEdges: UIEdgeInsetsMake(arrowHeight, 0, 0, 0))
+        }
+    }
+    
     static let height: CGFloat = 80.0
 
     init(type: InViewAlertType) {
