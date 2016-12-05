@@ -29,7 +29,7 @@ import LocalAuthentication
 import BRCore
 import CSQLite3
 
-private func secureAllocate(allocSize: CFIndex, hint: CFOptionFlags, info: UnsafeMutableRawPointer?)
+private func secureAllocate(allocSize : CFIndex, hint : CFOptionFlags, info : UnsafeMutableRawPointer?)
     -> UnsafeMutableRawPointer?
 {
     guard let ptr = malloc(MemoryLayout<CFIndex>.stride + allocSize) else { return nil }
@@ -39,7 +39,7 @@ private func secureAllocate(allocSize: CFIndex, hint: CFOptionFlags, info: Unsaf
     return ptr + MemoryLayout<CFIndex>.stride
 }
 
-private func secureDeallocate(ptr: UnsafeMutableRawPointer?, info: UnsafeMutableRawPointer?)
+private func secureDeallocate(ptr : UnsafeMutableRawPointer?, info : UnsafeMutableRawPointer?)
 {
     guard let ptr = ptr?.advanced(by: -MemoryLayout<CFIndex>.stride) else { return }
     
@@ -47,8 +47,8 @@ private func secureDeallocate(ptr: UnsafeMutableRawPointer?, info: UnsafeMutable
     free(ptr)
 }
 
-private func secureReallocate(ptr: UnsafeMutableRawPointer?, newsize: CFIndex, hint: CFOptionFlags,
-                              info: UnsafeMutableRawPointer?) -> UnsafeMutableRawPointer?
+private func secureReallocate(ptr : UnsafeMutableRawPointer?, newsize : CFIndex, hint : CFOptionFlags,
+                              info : UnsafeMutableRawPointer?) -> UnsafeMutableRawPointer?
 {
     // there's no way to tell ahead of time if the original memory will be deallocted even if the new size is smaller
     // than the old size, so just cleanse and deallocate every time
@@ -65,7 +65,7 @@ private func secureReallocate(ptr: UnsafeMutableRawPointer?, newsize: CFIndex, h
 }
 
 // since iOS does not page memory to disk, all we need to do is cleanse allocated memory prior to deallocation
-public let secureAllocator: CFAllocator = {
+public let secureAllocator : CFAllocator = {
     var context = CFAllocatorContext()
 
     context.version = 0;
@@ -79,12 +79,12 @@ public let secureAllocator: CFAllocator = {
 private let WalletSecAttrService = "org.voisine.breadwallet"
 private let SeedEntropyLength = (128/8)
 
-private func keychainItem<T>(key: String) throws -> T? {
+private func keychainItem<T>(key : String) throws -> T? {
     let query = [kSecClass as String : kSecClassGenericPassword as String,
                  kSecAttrService as String : WalletSecAttrService,
                  kSecAttrAccount as String : key,
                  kSecReturnData as String : true as Any]
-    var result: CFTypeRef? = nil
+    var result : CFTypeRef? = nil
     let status = SecItemCopyMatching(query as CFDictionary, &result);
     
     guard status == noErr || status == errSecItemNotFound else {
@@ -108,14 +108,14 @@ private func keychainItem<T>(key: String) throws -> T? {
     }
 }
 
-private func setKeychainItem<T>(key: String, item: T?, authenticated: Bool = false) throws {
+private func setKeychainItem<T>(key : String, item : T?, authenticated : Bool = false) throws {
     let accessible = (authenticated) ? kSecAttrAccessibleWhenUnlockedThisDeviceOnly as String
                                      : kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly as String
     let query = [kSecClass as String : kSecClassGenericPassword as String,
                  kSecAttrService as String : WalletSecAttrService,
                  kSecAttrAccount as String : key]
     var status = noErr
-    var data: Data? = nil
+    var data : Data? = nil
     if let item = item {
         switch T.self {
         case is Data.Type:
@@ -160,13 +160,13 @@ private func setKeychainItem<T>(key: String, item: T?, authenticated: Bool = fal
 extension WalletManager {
     static private var failedPins = [String]()
     
-    convenience init(dbPath: String? = nil) throws {
+    convenience init(dbPath : String? = nil) throws {
         if !UIApplication.shared.isProtectedDataAvailable {
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(errSecNotAvailable))
         }
         
         if try keychainItem(key: keychainKey.seed) as Data? != nil { // upgrade from old keychain scheme
-            let seedPhrase: String? = try keychainItem(key: keychainKey.mnemonic)
+            let seedPhrase : String? = try keychainItem(key: keychainKey.mnemonic)
             var seed = UInt512()
             var mpk = BRMasterPubKey()
             
@@ -180,14 +180,14 @@ extension WalletManager {
             try setKeychainItem(key: keychainKey.seed, item: nil as Data?)
         }
 
-        guard let mpk: Data = try keychainItem(key: keychainKey.masterPubKey),
+        guard let mpk : Data = try keychainItem(key: keychainKey.masterPubKey),
               mpk.count >= MemoryLayout<BRMasterPubKey>.stride else {
             try self.init(masterPubKey: BRMasterPubKey(), earliestKeyTime: 0, dbPath: dbPath)
             return
         }
         
         var earliestKeyTime = Double(BIP39_CREATION_TIME) - NSTimeIntervalSince1970
-        if let creationTime: Data = try keychainItem(key: keychainKey.creationTime),
+        if let creationTime : Data = try keychainItem(key: keychainKey.creationTime),
             creationTime.count == MemoryLayout<TimeInterval>.stride {
                 earliestKeyTime = creationTime.withUnsafeBytes({ $0.pointee })
         }
@@ -197,7 +197,7 @@ extension WalletManager {
     }
     
     // true if keychain is available and we know that no wallet exists on it
-    func noWallet() -> Bool {
+    var noWallet : Bool {
         if didInitWallet { return false }
 
         do {
@@ -215,18 +215,18 @@ extension WalletManager {
         return context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
     }
     
-    func canUseTouchID(forTx: inout BRTransaction) -> Bool {
+    func canUseTouchID(forTx : BRTxRef) -> Bool {
         guard canUseTouchID() else { return false }
         
         do {
             let spendLimit : Int64 = try keychainItem(key: keychainKey.spendLimit) ?? 0
             
-            return BRWalletAmountSentByTx(wallet?.ptr, &forTx) + BRWalletTotalSent(wallet?.ptr) <= UInt64(spendLimit)
+            return BRWalletAmountSentByTx(wallet?.ptr, forTx) + BRWalletTotalSent(wallet?.ptr) <= UInt64(spendLimit)
         }
         catch { return false }
     }
 
-    func pinAttemptsRemaining() -> Int {
+    var pinAttemptsRemaining : Int {
         do {
             let failCount : Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
         
@@ -235,7 +235,7 @@ extension WalletManager {
         catch { return -1 }
     }
     
-    func walletDisabledUntil() -> TimeInterval {
+    var walletDisabledUntil : TimeInterval {
         do {
             let failCount : Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
             guard failCount >= 3 else { return 0 }
@@ -246,7 +246,7 @@ extension WalletManager {
         catch { return 0 }
     }
     
-    func authenticate(pin: String) -> Bool {
+    func authenticate(pin : String) -> Bool {
         do {
             let secureTime = Date.timeIntervalSinceReferenceDate // TODO: XXX use secure time from https request
             var failCount : Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
@@ -297,35 +297,33 @@ extension WalletManager {
         catch { return false }
     }
     
-    func authenticate(touchIDPrompt: String, completion: @escaping (Bool) -> ()) {
+    func authenticate(touchIDPrompt : String, completion : @escaping (Bool) -> ()) {
         LAContext().evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: touchIDPrompt,
                                    reply: { success, _ in DispatchQueue.main.async { completion(success) } })
     }
     
-    func signTransaction(tx: inout BRTransaction, pin: String) -> Bool {
+    func signTransaction(_ tx : BRTxRef, pin : String) -> Bool {
         guard authenticate(pin: pin) else { return false }
-        return signTx(tx: &tx)
+        return signTx(tx)
     }
     
-    func signTransaction(tx: inout BRTransaction, touchIDPrompt: String, completion: @escaping (Bool) -> ()) {
+    func signTransaction(_ tx : BRTxRef, touchIDPrompt : String, completion : @escaping (Bool) -> ()) {
         do {
             let spendLimit : Int64 = try keychainItem(key: keychainKey.spendLimit) ?? 0
-            guard BRWalletAmountSentByTx(wallet?.ptr, &tx) + BRWalletTotalSent(wallet?.ptr) <= UInt64(spendLimit) else {
+            guard BRWalletAmountSentByTx(wallet?.ptr, tx) + BRWalletTotalSent(wallet?.ptr) <= UInt64(spendLimit) else {
                 return completion(false)
             }
         }
         catch { return completion(false) }
-        
-        let txRef = UnsafeMutablePointer(&tx)
             
-        authenticate(touchIDPrompt: touchIDPrompt) { success in
+        authenticate(touchIDPrompt : touchIDPrompt) { success in
             guard success else { return completion(false) }
             
-            completion(self.signTx(tx: &txRef.pointee))
+            completion(self.signTx(tx))
         }
     }
     
-    func seedPhrase(pin: String) -> String? {
+    func seedPhrase(pin : String) -> String? {
         guard authenticate(pin: pin) else { return nil }
         
         do {
@@ -334,8 +332,8 @@ extension WalletManager {
         catch { return nil }
     }
 
-    func setSeedPhrase(phrase: String) -> Bool {
-        guard noWallet() else { return false }
+    func setSeedPhrase(_ phrase : String) -> Bool {
+        guard noWallet else { return false }
         
         do {
             var mpk = BRMasterPubKey()
@@ -352,8 +350,8 @@ extension WalletManager {
         catch { return false }
     }
     
-    func setRandomSeed() -> String? {
-        guard noWallet() else { return nil }
+    func setRandomSeedPhrase() -> String? {
+        guard noWallet else { return nil }
         guard let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist") else { return nil }
         guard let wordList = NSArray(contentsOfFile: path) as? [String], wordList.count == 2048 else { return nil }
         var words: [UnsafePointer<CChar>?] = wordList.map({ $0.withCString({ $0 }) })
@@ -368,23 +366,27 @@ extension WalletManager {
 
         return autoreleasepool { // wrapping in an autorelease pool ensures sensitive memory is wiped and released immediately
             var entropy = CFDataCreateMutable(secureAllocator, SeedEntropyLength) as Data
-            var phrase = CFStringCreateMutable(secureAllocator, 0) as String
-            var phraseLen = 0
             
             entropy.count = SeedEntropyLength
             guard SecRandomCopyBytes(kSecRandomDefault, entropy.count, entropy.withUnsafeMutableBytes({ $0 })) == 0
                 else { return nil }
-            phraseLen = BRBIP39Encode(nil, 0, &words, entropy.withUnsafeBytes({ $0 }), entropy.count)
-            phrase.append(String(repeating:"\0", count:phraseLen))
-            BRBIP39Encode(UnsafeMutablePointer(mutating: phrase), phrase.lengthOfBytes(using: .utf8), &words,
-                          entropy.withUnsafeBytes({ $0 }), entropy.count)
-            guard setSeedPhrase(phrase: phrase) else { return nil }
 
+            let phraseLen = BRBIP39Encode(nil, 0, &words, entropy.withUnsafeBytes({ $0 }), entropy.count)
+            var phraseData = CFDataCreateMutable(secureAllocator, phraseLen) as Data
+            
+            phraseData.count = phraseLen
+            BRBIP39Encode(phraseData.withUnsafeMutableBytes({ $0 }), phraseData.count, &words,
+                          entropy.withUnsafeBytes({ $0 }), entropy.count)
+
+            let phrase = CFStringCreateFromExternalRepresentation(secureAllocator, phraseData as CFData,
+                                                                  CFStringBuiltInEncodings.UTF8.rawValue) as String
+
+            guard setSeedPhrase(phrase) else { return nil }
             return phrase
         }
     }
     
-    func setPin(newPin: String, pin: String) -> Bool {
+    func changePin(newPin : String, pin : String) -> Bool {
         guard authenticate(pin: pin) else { return false }
 
         do {
@@ -394,7 +396,7 @@ extension WalletManager {
         catch { return false }
     }
     
-    func wipeWallet(pin: String = "forceWipe") -> Bool {
+    func wipeWallet(pin : String = "forceWipe") -> Bool {
         guard pin == "forceWipe" || authenticate(pin: pin) else { return false }
                 
         do {
@@ -410,7 +412,7 @@ extension WalletManager {
             db = nil
             try FileManager.default.removeItem(atPath: dbPath)
             
-            try setKeychainItem(key: keychainKey.authPrivKey, item: nil as Data?)
+            try setKeychainItem(key: keychainKey.apiAuthKey, item: nil as Data?)
             try setKeychainItem(key: keychainKey.spendLimit, item: nil as Int64?)
             try setKeychainItem(key: keychainKey.creationTime, item: nil as Data?)
             try setKeychainItem(key: keychainKey.pinFailTime, item: nil as Int64?)
@@ -425,6 +427,50 @@ extension WalletManager {
         return true
     }
     
+    var apiAuthKey : String? {
+        return autoreleasepool {
+            do {
+                if let apiKey : String? = try keychainItem(key: keychainKey.apiAuthKey) { return apiKey }
+                var key = BRKey()
+                var seed = UInt512()
+                defer { seed = UInt512() }
+                guard let phrase : String = try keychainItem(key: keychainKey.mnemonic) else { return nil }
+                
+                BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
+                BRBIP32APIAuthKey(&key, &seed, MemoryLayout<UInt512>.size)
+                
+                let pkLen = BRKeyPrivKey(&key, nil, 0)
+                var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
+
+                pkData.count = pkLen
+                BRKeyPrivKey(&key, pkData.withUnsafeMutableBytes({ $0 }), pkLen)
+                    
+                let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
+                                                                       CFStringBuiltInEncodings.UTF8.rawValue) as String
+
+                try setKeychainItem(key: keychainKey.apiAuthKey, item: privKey)
+                return privKey
+            }
+            catch { return nil }
+        }
+    }
+
+    var userAccount: Dictionary<AnyHashable, Any>? {
+        get {
+            do {
+                return try keychainItem(key: keychainKey.userAccount)
+            }
+            catch { return nil }
+        }
+
+        set (value) {
+            do {
+                try setKeychainItem(key: keychainKey.userAccount, item: value)
+            }
+            catch { }
+        }
+    }
+    
     private struct keychainKey {
         public static let mnemonic = "mnemonic"
         public static let creationTime = "creationtime"
@@ -432,8 +478,8 @@ extension WalletManager {
         public static let spendLimit = "spendlimit"
         public static let pin = "pin"
         public static let pinFailCount = "pinfailcount"
-        public static let pinFailTime = "pinfailheight" // value is for historical reasons
-        public static let authPrivKey = "authprivkey"
+        public static let pinFailTime = "pinfailheight"
+        public static let apiAuthKey = "authprivkey"
         public static let userAccount = "https://api.breadwallet.com"
         public static let seed = "seed" // deprecated
     }
@@ -443,18 +489,18 @@ extension WalletManager {
         public static let pinUnlockTime = "PIN_UNLOCK_TIME"
     }
     
-    private func signTx(tx: inout BRTransaction) -> Bool {
+    private func signTx(_ tx : BRTxRef) -> Bool {
         return autoreleasepool {
             var seed = UInt512()
             defer { seed = UInt512() }
             
             do {
-                guard let phrase: String = try keychainItem(key: keychainKey.mnemonic) else { return false }
+                guard let phrase : String = try keychainItem(key: keychainKey.mnemonic) else { return false }
                 BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
             }
             catch { return false }
             
-            return BRWalletSignTransaction(wallet?.ptr, &tx, &seed, MemoryLayout<UInt512>.size) != 0
+            return BRWalletSignTransaction(wallet?.ptr, tx, &seed, MemoryLayout<UInt512>.size) != 0
         }
     }
 }
