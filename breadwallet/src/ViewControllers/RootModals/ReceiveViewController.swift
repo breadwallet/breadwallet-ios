@@ -19,6 +19,7 @@ class ReceiveViewController: UIViewController {
     private let request = ShadowButton(title: NSLocalizedString("Request an Amount", comment: "Request button label"), type: .secondary)
     private let qrSize: CGFloat = 186.0
     private let smallButtonHeight: CGFloat = 32.0
+    private let buttonPadding: CGFloat = 16.0
 
     override func viewDidLoad() {
         addSubviews()
@@ -63,10 +64,9 @@ class ReceiveViewController: UIViewController {
                 share.constraint(.width, constant: qrSize),
                 share.constraint(.height, constant: smallButtonHeight)
             ])
-        sharePopout.heightConstraint = sharePopout.constraint(.height, constant: C.padding[2])
-        sharePopout.collapsedHeight = C.padding[2]
+        sharePopout.heightConstraint = sharePopout.constraint(.height, constant: 0.0)
         sharePopout.constrain([
-                sharePopout.constraint(toBottom: share, constant: C.padding[1]),
+                sharePopout.constraint(toBottom: share, constant: C.padding[2]),
                 sharePopout.constraint(.centerX, toView: view),
                 sharePopout.constraint(.width, toView: view),
                 sharePopout.heightConstraint
@@ -117,15 +117,15 @@ class ReceiveViewController: UIViewController {
         container.addSubview(text)
         email.constrain([
                 email.constraint(.leading, toView: container, constant: C.padding[2]),
-                email.constraint(.height, constant: smallButtonHeight),
-                NSLayoutConstraint(item: email, attribute: .trailing, relatedBy: .equal, toItem: container, attribute: .centerX, multiplier: 1.0, constant: -C.padding[1]),
-                email.constraint(.centerY, toView: container)
+                email.constraint(.top, toView: container, constant: buttonPadding),
+                email.constraint(.bottom, toView: container, constant: -buttonPadding),
+                NSLayoutConstraint(item: email, attribute: .trailing, relatedBy: .equal, toItem: container, attribute: .centerX, multiplier: 1.0, constant: -C.padding[1])
             ])
         text.constrain([
                 text.constraint(.trailing, toView: container, constant: -C.padding[2]),
-                text.constraint(.height, constant: smallButtonHeight),
-                NSLayoutConstraint(item: text, attribute: .leading, relatedBy: .equal, toItem: container, attribute: .centerX, multiplier: 1.0, constant: C.padding[1]),
-                text.constraint(.centerY, toView: container)
+                text.constraint(.top, toView: container, constant: buttonPadding),
+                text.constraint(.bottom, toView: container, constant: -buttonPadding),
+                NSLayoutConstraint(item: text, attribute: .leading, relatedBy: .equal, toItem: container, attribute: .centerX, multiplier: 1.0, constant: C.padding[1])
             ])
         sharePopout.contentView = container
     }
@@ -145,24 +145,29 @@ class ReceiveViewController: UIViewController {
     }
 
     private func toggle(alertView: InViewAlert) {
+        share.isEnabled = false
+        address.isUserInteractionEnabled = false
         var newFrame = parent!.view.frame
         if alertView.expanded {
-            newFrame.origin.y = newFrame.origin.y + alertView.heightDifference
-            newFrame.size.height = newFrame.size.height - alertView.heightDifference
+            newFrame.origin.y = newFrame.origin.y + InViewAlert.height
+            newFrame.size.height = newFrame.size.height - InViewAlert.height
+            alertView.contentView?.isHidden = true
         } else {
-            newFrame.origin.y = newFrame.origin.y - alertView.heightDifference
-            newFrame.size.height = newFrame.size.height + alertView.heightDifference
+            newFrame.origin.y = newFrame.origin.y - InViewAlert.height
+            newFrame.size.height = newFrame.size.height + InViewAlert.height
         }
-
         UIView.springAnimation(0.3,
                                animations: {
-                                self.parent?.view.frame = newFrame
-                                alertView.toggle()
-                                self.parent?.view.layoutIfNeeded()
-        },
+                                    self.parent?.view.frame = newFrame
+                                    alertView.toggle()
+                                    self.parent?.view.layoutIfNeeded()
+                                },
                                completion: {_ in
-                                alertView.expanded = !alertView.expanded
-        })
+                                    alertView.expanded = !alertView.expanded
+                                    self.share.isEnabled = true
+                                    self.address.isUserInteractionEnabled = true
+                                    alertView.contentView?.isHidden = false
+                                })
     }
 
 }
