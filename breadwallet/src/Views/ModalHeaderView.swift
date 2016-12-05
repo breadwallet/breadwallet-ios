@@ -54,7 +54,7 @@ class ModalHeaderView: UIView {
         border.backgroundColor = .secondaryShadow
 
         close.addTarget(self, action: #selector(ModalHeaderView.closeTapped), for: .touchUpInside)
-        close.addTarget(self, action: #selector(ModalHeaderView.faqTapped), for: .touchUpInside)
+        faq.addTarget(self, action: #selector(ModalHeaderView.faqTapped), for: .touchUpInside)
     }
 
     @objc private func closeTapped() {

@@ -105,6 +105,7 @@ class ShadowButton: UIControl {
     private func setupImageOption(icon: UIImage) {
         let content = UIView()
         let imageView = UIImageView(image: icon)
+        imageView.contentMode = .scaleAspectFit
         container.addSubview(content)
         content.addSubview(label)
         content.addSubview(imageView)
@@ -120,7 +121,7 @@ class ShadowButton: UIControl {
 
     private func setupLabelOnly() {
         container.addSubview(label)
-        label.constrainToCenter()
+        label.constrain(toSuperviewEdges: nil)
     }
 
     private func setColors() {
