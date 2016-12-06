@@ -29,14 +29,12 @@ import LocalAuthentication
 import BRCore
 import CSQLite3
 
-
 /// WalletAuthenticator is a protocol whose implementors are able to interact with wallet authentication
 public protocol WalletAuthenticator {
     var noWallet: Bool { get }
     var apiAuthKey: String? { get }
     var userAccount: Dictionary<AnyHashable, Any>? { get set }
 }
-
 
 private func secureAllocate(allocSize: CFIndex, hint: CFOptionFlags, info: UnsafeMutableRawPointer?)
     -> UnsafeMutableRawPointer?
@@ -216,12 +214,14 @@ extension WalletManager: WalletAuthenticator {
         return true
     }
     
+    // true if touch ID is enabled
     func canUseTouchID() -> Bool {
         let context = LAContext()
 
         return context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
     }
     
+    // true if the given transaction can be signed with touch ID authentication
     func canUseTouchID(forTx: BRTxRef) -> Bool {
         guard canUseTouchID() else { return false }
         
@@ -233,6 +233,7 @@ extension WalletManager: WalletAuthenticator {
         catch { return false }
     }
 
+    // number if unique failed pin attempts remaining before wallet is wiped
     var pinAttemptsRemaining: Int {
         do {
             let failCount: Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
@@ -242,6 +243,7 @@ extension WalletManager: WalletAuthenticator {
         catch { return -1 }
     }
     
+    // after 3 or more failed pin attempts, authentication is disabled until this time (interval since reference date)
     var walletDisabledUntil: TimeInterval {
         do {
             let failCount: Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
@@ -253,6 +255,7 @@ extension WalletManager: WalletAuthenticator {
         catch { return 0 }
     }
     
+    // true if pin is correct
     func authenticate(pin: String) -> Bool {
         do {
             let secureTime = Date.timeIntervalSinceReferenceDate // TODO: XXX use secure time from https request
@@ -304,16 +307,19 @@ extension WalletManager: WalletAuthenticator {
         catch { return false }
     }
     
+    // show touch ID dialog and call completion block with success or failure
     func authenticate(touchIDPrompt: String, completion: @escaping (Bool) -> ()) {
         LAContext().evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: touchIDPrompt,
                                    reply: { success, _ in DispatchQueue.main.async { completion(success) } })
     }
     
+    // sign the given transaction using pin authentication
     func signTransaction(_ tx: BRTxRef, pin: String) -> Bool {
         guard authenticate(pin: pin) else { return false }
         return signTx(tx)
     }
     
+    // sign the given transaction using touch ID authentication
     func signTransaction(_ tx: BRTxRef, touchIDPrompt: String, completion: @escaping (Bool) -> ()) {
         do {
             let spendLimit: Int64 = try keychainItem(key: keychainKey.spendLimit) ?? 0
@@ -330,6 +336,7 @@ extension WalletManager: WalletAuthenticator {
         }
     }
     
+    // the 12 word wallet recovery phrase
     func seedPhrase(pin: String) -> String? {
         guard authenticate(pin: pin) else { return nil }
         
@@ -339,6 +346,8 @@ extension WalletManager: WalletAuthenticator {
         catch { return nil }
     }
 
+    // recover an existing wallet using 12 word wallet recovery phrase
+    // will fail if a wallet already exists on the keychain
     func setSeedPhrase(_ phrase: String) -> Bool {
         guard noWallet else { return false }
         
@@ -355,6 +364,8 @@ extension WalletManager: WalletAuthenticator {
         catch { return false }
     }
     
+    // create a new wallet and return the 12 word wallet recovery phrase
+    // will fail if a wallet already exists on the keychain
     func setRandomSeedPhrase() -> String? {
         guard noWallet else { return nil }
         guard let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist") else { return nil }
@@ -392,6 +403,7 @@ extension WalletManager: WalletAuthenticator {
         }
     }
     
+    // change wallet authentication pin
     func changePin(newPin: String, pin: String) -> Bool {
         guard authenticate(pin: pin) else { return false }
 
@@ -402,6 +414,7 @@ extension WalletManager: WalletAuthenticator {
         catch { return false }
     }
     
+    // change wallet authentication pin using the wallet recovery phrase
     func forceSetPin(newPin: String, seedPhrase: String) -> Bool {
         var seed = UInt512()
         BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
@@ -417,6 +430,7 @@ extension WalletManager: WalletAuthenticator {
         catch { return false }
     }
     
+    // wipe the existing wallet from the keychain
     func wipeWallet(pin: String = "forceWipe") -> Bool {
         guard pin == "forceWipe" || authenticate(pin: pin) else { return false }
                 
@@ -448,6 +462,7 @@ extension WalletManager: WalletAuthenticator {
         return true
     }
     
+    // key used for authenticated API calls
     var apiAuthKey: String? {
         return autoreleasepool {
             do {
@@ -471,6 +486,7 @@ extension WalletManager: WalletAuthenticator {
         }
     }
 
+    // sensitive user information stored on the keychain
     var userAccount: Dictionary<AnyHashable, Any>? {
         get {
             do {
