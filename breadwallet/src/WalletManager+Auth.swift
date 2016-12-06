@@ -29,6 +29,15 @@ import LocalAuthentication
 import BRCore
 import CSQLite3
 
+
+/// WalletAuthenticator is a protocol whose implementors are able to interact with wallet authentication
+public protocol WalletAuthenticator {
+    var noWallet: Bool { get }
+    var apiAuthKey: String? { get }
+    var userAccount: Dictionary<AnyHashable, Any>? { get set }
+}
+
+
 private func secureAllocate(allocSize : CFIndex, hint : CFOptionFlags, info : UnsafeMutableRawPointer?)
     -> UnsafeMutableRawPointer?
 {
@@ -157,7 +166,7 @@ private func setKeychainItem<T>(key : String, item : T?, authenticated : Bool = 
     guard status == noErr else { throw NSError(domain: NSOSStatusErrorDomain, code: Int(status)) }
 }
 
-extension WalletManager {
+extension WalletManager: WalletAuthenticator {
     static private var failedPins = [String]()
     
     convenience init(dbPath : String? = nil) throws {

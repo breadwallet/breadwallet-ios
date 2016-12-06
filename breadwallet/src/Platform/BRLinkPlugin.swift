@@ -24,6 +24,7 @@
 //  THE SOFTWARE.
 
 import Foundation
+import UIKit
 
 @objc class BRLinkPlugin: NSObject, BRHTTPRouterPlugin {
     func hook(_ router: BRHTTPRouter) {
