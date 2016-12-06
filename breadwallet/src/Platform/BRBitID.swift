@@ -25,6 +25,8 @@
 
 import Foundation
 import Security
+import BRCore
+
 
 @objc open class BRBitID : NSObject {
     static let SCHEME = "bitid"

@@ -7,9 +7,11 @@
 //
 
 import Foundation
+import UIKit
+
 
 @available(iOS 8.0, *)
-@objc open class BRCameraPlugin: NSObject, BRHTTPRouterPlugin, UIImagePickerControllerDelegate,
+open class BRCameraPlugin: NSObject, BRHTTPRouterPlugin, UIImagePickerControllerDelegate,
                                    UINavigationControllerDelegate, CameraOverlayDelegate {
     
     let controller: UIViewController
@@ -177,7 +179,7 @@ import Foundation
         guard let dat = UIImageJPEGRepresentation(image, 0.5) else {
             throw ImageError.errorConvertingImage
         }
-        let name = (NSData(uInt256: (dat as NSData).sha256()) as NSData).base58String()
+        let name = dat.sha256.base58 //(NSData(uInt256: (dat as NSData).sha256()) as NSData).base58String()
         
         let fm = FileManager.default
         let docsUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!

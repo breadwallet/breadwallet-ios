@@ -24,6 +24,7 @@
 //  THE SOFTWARE.
 
 import Foundation
+import libbz2
 
 
 enum BRBSPatchError: Error {

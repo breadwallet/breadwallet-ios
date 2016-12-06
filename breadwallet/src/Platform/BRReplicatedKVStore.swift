@@ -25,6 +25,9 @@
 
 
 import Foundation
+import CSQLite3
+import BRCore
+
 
 public enum BRReplicatedKVStoreError: Error {
     case sqLiteError

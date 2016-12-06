@@ -24,12 +24,16 @@
 //  THE SOFTWARE.
 
 import Foundation
+import BRCore
 
 
-@objc class BRWalletPlugin: NSObject, BRHTTPRouterPlugin, BRWebSocketClient {
+class BRWalletPlugin: NSObject, BRHTTPRouterPlugin, BRWebSocketClient {
     var sockets = [String: BRWebSocket]()
+    var walletManager: WalletManager
  
-    let manager = BRWalletManager.sharedInstance()!
+    init(walletManager wm: WalletManager) {
+        walletManager = wm
+    }
     
     func announce(_ json: [String: Any]) {
         if let jsonData = try? JSONSerialization.data(withJSONObject: json, options: []),
@@ -46,32 +50,30 @@ import Foundation
         router.websocket("/_wallet/_socket", client: self)
         
         let noteCenter = NotificationCenter.default
-        noteCenter.addObserver(forName: NSNotification.Name.BRPeerManagerSyncStarted,
+        noteCenter.addObserver(forName: NSNotification.Name.WalletSyncStartedNotification,
                                object: nil, queue: nil) { (note) in
             self.announce(["type": "sync_started"])
         }
-        noteCenter.addObserver(forName: NSNotification.Name.BRPeerManagerSyncFailed,
+        noteCenter.addObserver(forName: NSNotification.Name.WalletSyncFailedNotification,
                                object: nil, queue: nil) { (note) in
             self.announce(["type": "sync_failed"])
         }
-        noteCenter.addObserver(forName: NSNotification.Name.BRPeerManagerSyncFinished,
+        noteCenter.addObserver(forName: NSNotification.Name.WalletSyncSucceededNotification,
                                object: nil, queue: nil) { (note) in
             self.announce(["type": "sync_finished"])
         }
-        noteCenter.addObserver(forName: NSNotification.Name.BRPeerManagerTxStatus,
+        noteCenter.addObserver(forName: NSNotification.Name.WalletTxStatusUpdateNotification,
                                object: nil, queue: nil) { (note) in
             self.announce(["type": "tx_status"])
         }
-        noteCenter.addObserver(forName: NSNotification.Name.BRWalletManagerSeedChanged,
+        noteCenter.addObserver(forName: NSNotification.Name.WalletTxRejectedNotification,
                                object: nil, queue: nil) { (note) in
-            if let wallet = self.manager.wallet {
-                self.announce(["type": "seed_changed", "balance": Int(wallet.balance)])
-            }
+            self.announce(["type": "tx_status"])
         }
-        noteCenter.addObserver(forName: NSNotification.Name.BRWalletBalanceChanged,
+        noteCenter.addObserver(forName: NSNotification.Name.WalletBalanceChangedNotification,
                                object: nil, queue: nil) { (note) in
-            if let wallet = self.manager.wallet {
-                self.announce(["type": "balance_changed", "balance": Int(wallet.balance)])
+            if let wallet = self.walletManager.wallet {
+                self.announce(["type": "balance_changed", "balance": Int(BRWalletBalance(wallet.ptr))])
             }
         }
  
@@ -115,50 +117,51 @@ import Foundation
         //          "signature": "oibwaeofbawoefb" // base64-encoded signature
         //      }
         router.post("/_wallet/sign_bitid") { (request, match) -> BRHTTPResponse in
-            guard let cts = request.headers["content-type"] , cts.count == 1 && cts[0] == "application/json" else {
-                return BRHTTPResponse(request: request, code: 400)
-            }
-            guard let data = request.body(),
-                      let j = try? JSONSerialization.jsonObject(with: data, options: []),
-                      let json = j as? [String: String],
-                      let stringToSign = json["string_to_sign"],
-                      let bitidUrlString = json["bitid_url"],
-                      let bitidUrl = URL(string: bitidUrlString),
-                      let bii = json["bitid_index"],
-                      let bitidIndex = Int(bii) else {
-                return BRHTTPResponse(request: request, code: 400)
-            }
+            // FIXME: fix bitid
+//            guard let cts = request.headers["content-type"] , cts.count == 1 && cts[0] == "application/json" else {
+//                return BRHTTPResponse(request: request, code: 400)
+//            }
+//            guard let data = request.body(),
+//                      let j = try? JSONSerialization.jsonObject(with: data, options: []),
+//                      let json = j as? [String: String],
+//                      let stringToSign = json["string_to_sign"],
+//                      let bitidUrlString = json["bitid_url"],
+//                      let bitidUrl = URL(string: bitidUrlString),
+//                      let bii = json["bitid_index"],
+//                      let bitidIndex = Int(bii) else {
+//                return BRHTTPResponse(request: request, code: 400)
+//            }
             let asyncResp = BRHTTPResponse(async: request)
-            var maybeSeed: Data?
-            DispatchQueue.main.sync {
-                CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
-                    maybeSeed = self.manager.seed(withPrompt: (bitidUrl.host ?? bitidUrl.description), forAmount: 0)
-                    guard let seed = maybeSeed else {
-                        request.queue.async {
-                            asyncResp.provide(401)
-                        }
-                        return
-                    }
-                    let seq = BRBIP32Sequence()
-                    let biuri = bitidUrl.host ?? bitidUrl.absoluteString
-                    guard let kd = seq.bitIdPrivateKey(UInt32(bitidIndex), forURI: biuri, fromSeed: seed),
-                        let key = BRKey(privateKey: kd) else {
-                            request.queue.async {
-                                asyncResp.provide(500)
-                            }
-                            return
-                    }
-                    let sig = BRBitID.signMessage(stringToSign, usingKey: key)
-                    let ret: [String: Any] = [
-                        "signature": sig,
-                        "address": key.address ?? ""
-                    ]
-                    request.queue.async {
-                        asyncResp.provide(200, json: ret)
-                    }
-
-                }
-            }
+//            var maybeSeed: Data?
+//            DispatchQueue.main.sync {
+//                CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
+//                    maybeSeed = self.manager.seed(withPrompt: (bitidUrl.host ?? bitidUrl.description), forAmount: 0)
+//                    guard let seed = maybeSeed else {
+//                        request.queue.async {
+//                            asyncResp.provide(401)
+//                        }
+//                        return
+//                    }
+//                    let seq = BRBIP32Sequence()
+//                    let biuri = bitidUrl.host ?? bitidUrl.absoluteString
+//                    guard let kd = seq.bitIdPrivateKey(UInt32(bitidIndex), forURI: biuri, fromSeed: seed),
+//                        let key = BRKey(privateKey: kd) else {
+//                            request.queue.async {
+//                                asyncResp.provide(500)
+//                            }
+//                            return
+//                    }
+//                    let sig = BRBitID.signMessage(stringToSign, usingKey: key)
+//                    let ret: [String: Any] = [
+//                        "signature": sig,
+//                        "address": key.address ?? ""
+//                    ]
+//                    request.queue.async {
+//                        asyncResp.provide(200, json: ret)
+//                    }
+//
+//                }
+//            }
             return asyncResp
         }
     }
@@ -167,16 +170,19 @@ import Foundation
     
     func walletInfo() -> [String: Any] {
         var d = [String: Any]()
-        d["no_wallet"] = manager.noWallet
-        d["watch_only"] = manager.watchOnly
-        d["receive_address"] = manager.wallet?.receiveAddress
+        d["no_wallet"] = walletManager.noWallet
+        if let wallet = walletManager.wallet {
+            var addr = BRWalletReceiveAddress(wallet.ptr)
+            d["receive_address"] = withUnsafePointer(to: &addr) { String.fromCString($0) }
+        }
         return d
     }
     
     func currencyFormat(_ amount: Int64) -> [String: Any] {
-        var d = [String: Any]()
-        d["local_currency_amount"] = manager.localCurrencyString(forAmount: Int64(amount))
-        d["currency_amount"] = manager.string(forAmount: amount)
+        // FIXME: when currency formatting is added back in
+        let d = [String: Any]()
+//        d["local_currency_amount"] = manager.localCurrencyString(forAmount: Int64(amount))
+//        d["currency_amount"] = manager.string(forAmount: amount)
         return d
     }
     

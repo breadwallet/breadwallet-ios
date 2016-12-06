@@ -36,11 +36,13 @@ import WebKit
     var server = BRHTTPServer()
     var debugEndpoint: String?
     var mountPoint: String
+    var walletManager: WalletManager
     
-    init(bundleName name: String, mountPoint mp: String = "/") {
+    init(bundleName name: String, mountPoint mp: String = "/", walletManager wm: WalletManager) {
         wkProcessPool = WKProcessPool()
         bundleName = name
         mountPoint = mp
+        walletManager = wm
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -104,7 +106,7 @@ import WebKit
     
     fileprivate func setupIntegrations() {
         // proxy api for signing and verification
-        let apiProxy = BRAPIProxy(mountAt: "/_api", client: BRAPIClient.sharedClient)
+        let apiProxy = BRAPIProxy(mountAt: "/_api", client: walletManager.apiClient)
         server.prependMiddleware(middleware: apiProxy)
         
         // http router for native functionality
@@ -126,13 +128,13 @@ import WebKit
         router.plugin(BRCameraPlugin(fromViewController: self))
         
         // wallet plugin provides access to the wallet
-        router.plugin(BRWalletPlugin())
+        router.plugin(BRWalletPlugin(walletManager: walletManager))
         
         // link plugin which allows opening links to other apps
         router.plugin(BRLinkPlugin())
         
         // kvstore plugin provides access to the shared replicated kv store
-        router.plugin(BRKVStorePlugin(client: BRAPIClient.sharedClient))
+        router.plugin(BRKVStorePlugin(client: walletManager.apiClient))
         
         // GET /_close closes the browser modal
         router.get("/_close") { (request, match) -> BRHTTPResponse in
