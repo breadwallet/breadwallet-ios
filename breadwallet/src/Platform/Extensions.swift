@@ -24,24 +24,32 @@
 //  THE SOFTWARE.
 
 import Foundation
+import BRCore
+import libbz2
 
 
 public extension String {
     func md5() -> String {
-        let data = (self as NSString).data(using: String.Encoding.utf8.rawValue)!
-        let result = NSMutableData(length: Int(128/8))!
-        let resultBytes = result.mutableBytes
-        MD5(resultBytes, (data as NSData).bytes, data.count)
-        
-//        let a = UnsafeBufferPointer<CUnsignedChar>(start: resultBytes, count: result.length)
-        let a = resultBytes.assumingMemoryBound(to: CUnsignedChar.self)
-        let hash = NSMutableString()
-        
-        for i in 0..<result.length {
-            hash.appendFormat("%02x", a[i])
+        guard let data = self.data(using: .utf8) else {
+            #if DEBUG
+                fatalError("couldnt encode string as utf8 data")
+            #else
+                print("couldnt encode as utf8 data")
+                return
+            #endif
         }
         
-        return hash as String
+        var result = Data(capacity: 128/8)
+        return result.withUnsafeMutableBytes { (resultBytes: UnsafeMutablePointer<CUnsignedChar>) -> String in
+            data.withUnsafeBytes { (dataBytes) -> Void in
+                BRMD5(resultBytes, dataBytes, data.count)
+            }
+            var hash = String()
+            for i in 0..<result.count {
+                hash = hash.appendingFormat("%02x", resultBytes[i])
+            }
+            return hash
+        }
     }
     
     func parseQueryString() -> [String: [String]] {
@@ -183,6 +191,60 @@ public extension Data {
             return nil
         }
         self.init(bytes: decompressed)
+    }
+
+//    init(uInt256: UInt256) {
+//        
+//    }
+    
+    var base58: String {
+        return self.withUnsafeBytes { (selfBytes: UnsafePointer<UInt8>) -> String in
+            let len = BRBase58Encode(nil, 0, selfBytes, self.count)
+            var data = Data(capacity: len)
+            _ = data.withUnsafeMutableBytes {
+                BRBase58Encode($0, len, selfBytes, self.count)
+            }
+            guard let ret = String(data: data, encoding: .utf8) else {
+                #if DEBUG
+                fatalError("Unable to encode base58 string")
+                #else
+                print("unable to encode base58 string")
+                return ""
+                #endif
+            }
+            return ret
+        }
+    }
+
+    var sha256: Data {
+        var data = Data(capacity: 32)
+        data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) in
+            self.withUnsafeBytes({ (selfBytes: UnsafePointer<UInt8>) in
+                BRSHA256(bytes, selfBytes, self.count)
+            })
+        }
+        return data
+    }
+
+    var sha256_2: Data {
+        return self.sha256.sha256
+    }
+    
+    var uInt256: UInt256 {
+        return self.withUnsafeBytes { (ptr: UnsafePointer<UInt256>) -> UInt256 in
+            return ptr.pointee
+        }
+    }
+    
+    public func compactSign(key: BRKey) -> Data {
+        return self.withUnsafeBytes({ (selfBytes: UnsafePointer<UInt8>) -> Data in
+            var data = Data(capacity: 65)
+            var k = key
+            return data.withUnsafeMutableBytes({ (bytes: UnsafeMutablePointer<UInt8>) -> Data in
+                BRKeyCompactSign(&k, bytes, 65, self.uInt256)
+                return data
+            })
+        })
     }
 }
 

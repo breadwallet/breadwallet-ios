@@ -25,6 +25,7 @@
 
 
 import Foundation
+import BRCore
 
 let BRAPIClientErrorDomain = "BRApiClientErrorDomain"
 
@@ -83,12 +84,12 @@ func getHeaderValue(_ k: String, d: [String: String]?) -> String? {
     return nil
 }
 
-func getAuthKey() -> BRKey? {
-    if let manager = BRWalletManager.sharedInstance(), let authKey = manager.authPrivateKey {
-        return BRKey(privateKey: authKey)
-    }
-    return nil
-}
+//func getAuthKey() -> BRKey? {
+//    if let manager = BRWalletManager.sharedInstance(), let authKey = manager.authPrivateKey {
+//        return BRKey(privateKey: authKey)
+//    }
+//    return nil
+//}
 
 func getDeviceId() -> String {
     let ud = UserDefaults.standard
@@ -136,8 +137,7 @@ func buildRequestSigningString(_ r: URLRequest) -> String {
         switch meth {
         case "POST", "PUT", "PATCH":
             if let d = r.httpBody , d.count > 0 {
-                let sha = (d as NSData).sha256()
-                parts[1] = (NSData(uInt256: sha) as NSData).base58String()
+                parts[1] = d.sha256.base58
             }
         default: break
         }
@@ -146,9 +146,12 @@ func buildRequestSigningString(_ r: URLRequest) -> String {
 }
 
 
+private func compactSign(key: BRKey, data: Data) -> Data {
+    
+}
+
 @objc open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BRAPIAdaptor {
-    // BRAPIClient is intended to be used as a singleton so this is the instance you should use
-    static let sharedClient = BRAPIClient()
+    var authenticator: WalletAuthenticator
     
     // whether or not to emit log messages from this instance of the client
     var logEnabled = true
@@ -187,6 +190,10 @@ func buildRequestSigningString(_ r: URLRequest) -> String {
         return "\(proto)://\(host)"
     }
     
+    init(authenticator: WalletAuthenticator) {
+        self.authenticator = authenticator
+    }
+    
     // prints whatever you give it if logEnabled is true
     func log(_ s: String) {
         if !logEnabled {
@@ -197,6 +204,16 @@ func buildRequestSigningString(_ r: URLRequest) -> String {
     
     var deviceId: String {
         return getDeviceId()
+    }
+    
+    var authKey: BRKey? {
+        guard authenticator.noWallet else { return nil }
+        guard let keyStr = authenticator.apiAuthKey else { return nil }
+        return keyStr.utf8CString.withUnsafeBufferPointer {
+            var key = BRKey()
+            BRKeySetPrivKey(&key, $0.baseAddress)
+            return key
+        }
     }
     
     // MARK: Networking functions
@@ -223,13 +240,12 @@ func buildRequestSigningString(_ r: URLRequest) -> String {
             // add Date header if necessary
             mutableRequest.setValue(Date().RFC1123String(), forHTTPHeaderField: "Date")
         }
-        if let manager = BRWalletManager.sharedInstance(),
-            let tokenData = manager.userAccount,
-            let token = tokenData["token"],
-            let authKey = getAuthKey(),
-            let signingData = buildRequestSigningString(mutableRequest).data(using: String.Encoding.utf8),
-            let sig = authKey.compactSign((signingData as NSData).sha256_2()) {
-            let hval = "bread \(token):\((sig as NSData).base58String())"
+        if let tokenData = authenticator.userAccount,
+            let token = tokenData["token"] as? String,
+            let authKey = authKey,
+            let signingData = buildRequestSigningString(mutableRequest).data(using: .utf8),
+            let sig = signingData.sha256_2.compactSign(key: authKey) {
+            let hval = "bread \(token):\(sig.base58String())"
             mutableRequest.setValue(hval, forHTTPHeaderField: "Authorization")
         }
         return mutableRequest as URLRequest
@@ -305,7 +321,7 @@ func buildRequestSigningString(_ r: URLRequest) -> String {
             }
             return
         }
-        guard let authKey = getAuthKey(), let authPubKey = authKey.publicKey else {
+        guard let authKey = authKey, let authPubKey = authKey.publicKey else {
             return handler(NSError(domain: BRAPIClientErrorDomain, code: 500, userInfo: [
                 NSLocalizedDescriptionKey: NSLocalizedString("Wallet not ready", comment: "")]))
         }
@@ -448,7 +464,7 @@ func buildRequestSigningString(_ r: URLRequest) -> String {
         var authenticated = false
         var furl = "/anybody/features"
         // only use authentication if the user has previously used authenticated services
-        if let wm = BRWalletManager.sharedInstance(), let _ = wm.userAccount {
+        if let _ = authenticator.userAccount["token"]? {
             authenticated = true
             furl = "/me/features"
         }
@@ -644,7 +660,7 @@ func buildRequestSigningString(_ r: URLRequest) -> String {
             if let k = _kvStore {
                 return k
             }
-            if let key = getAuthKey() {
+            if let key = authKey {
                 _kvStore = try? BRReplicatedKVStore(encryptionKey: key, remoteAdaptor: KVStoreAdaptor(client: self))
                 return _kvStore
             }
@@ -726,7 +742,7 @@ func buildRequestSigningString(_ r: URLRequest) -> String {
             guard let curBundleContents = try? Data(contentsOf: URL(fileURLWithPath: bundlePath)) else {
                 return handler(NSLocalizedString("error reading current bundle", comment: "")) }
             
-            let curBundleSha = (NSData(uInt256: (curBundleContents as NSData).sha256()) as Data).hexString
+            let curBundleSha = curBundleContents.sha256.hexString
             
             dataTaskWithRequest(URLRequest(url: url("/assets/bundles/\(bundleName)/versions")))
                 { (data, resp, err) -> Void in

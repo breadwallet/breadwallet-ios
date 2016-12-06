@@ -24,6 +24,7 @@
 //  THE SOFTWARE.
 
 import Foundation
+import BRCore
 
 // MARK: - Txn Metadata
 
@@ -92,7 +93,8 @@ import Foundation
         super.init(key: transaction.txHash.txKey, version: 0, lastModified: Date(), deleted: false, data: Data())
         self.blockHeight = Int(transaction.blockHeight)
         self.created = Date()
-        self.size = Int(transaction.size)
+        var txn = transaction
+        self.size = BRTransactionSize(&txn)
         self.exchangeRate = exchangeRate
         self.exchangeRateCurrency = exchangeRateCurrency
         self.feeRate = feeRate
@@ -123,7 +125,7 @@ extension UInt256 {
         get {
             var u = self
             return withUnsafePointer(to: &u) { p in
-                let bd = (Data(bytes: p, count: MemoryLayout.size(ofValue: p)) as NSData).sha256()
+                let bd = Data(bytes: p, count: MemoryLayout.size(ofValue: p)).sha256
                 return "txn-\(bd.hexString)"
             }
         }
