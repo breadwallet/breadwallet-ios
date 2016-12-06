@@ -192,10 +192,6 @@ public extension Data {
         }
         self.init(bytes: decompressed)
     }
-
-//    init(uInt256: UInt256) {
-//        
-//    }
     
     var base58: String {
         return self.withUnsafeBytes { (selfBytes: UnsafePointer<UInt8>) -> String in
@@ -216,6 +212,16 @@ public extension Data {
         }
     }
 
+    var sha1: Data {
+        var data = Data(capacity: 20)
+        data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) in
+            self.withUnsafeBytes({ (selfBytes: UnsafePointer<UInt8>) in
+                BRSHA1(bytes, selfBytes, self.count)
+            })
+        }
+        return data
+    }
+    
     var sha256: Data {
         var data = Data(capacity: 32)
         data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) in
@@ -236,6 +242,33 @@ public extension Data {
         }
     }
     
+    public func uInt8(atOffset offset: UInt) -> UInt8 {
+        let offt = Int(offset)
+        let size = MemoryLayout<UInt8>.size
+        if self.count < offt + size { return 0 }
+        return self.subdata(in: offt..<(offt+size)).withUnsafeBytes { (ptr: UnsafePointer<UInt8>) -> UInt8 in
+            return ptr.pointee
+        }
+    }
+    
+    public func uInt32(atOffset offset: UInt) -> UInt32 {
+        let offt = Int(offset)
+        let size = MemoryLayout<UInt32>.size
+        if self.count < offt + size { return 0 }
+        return self.subdata(in: offt..<(offt+size)).withUnsafeBytes { (ptr: UnsafePointer<UInt32>) -> UInt32 in
+            return CFSwapInt32LittleToHost(ptr.pointee)
+        }
+    }
+    
+    public func uInt64(atOffset offset: UInt) -> UInt64 {
+        let offt = Int(offset)
+        let size = MemoryLayout<UInt64>.size
+        if self.count < offt + size { return 0 }
+        return self.subdata(in: offt..<(offt+size)).withUnsafeBytes { (ptr: UnsafePointer<UInt64>) -> UInt64 in
+            return CFSwapInt64LittleToHost(ptr.pointee)
+        }
+    }
+    
     public func compactSign(key: BRKey) -> Data {
         return self.withUnsafeBytes({ (selfBytes: UnsafePointer<UInt8>) -> Data in
             var data = Data(capacity: 65)
@@ -245,6 +278,45 @@ public extension Data {
                 return data
             })
         })
+    }
+
+    fileprivate func genNonce() -> [UInt8] {
+        var tv = timeval()
+        gettimeofday(&tv, nil)
+        var t = UInt64(tv.tv_usec) * 1_000_000 + UInt64(tv.tv_usec)
+        let p = [UInt8](repeating: 0, count: 4)
+        return Data(bytes: &t, count: MemoryLayout<UInt64>.size).withUnsafeBytes { (dat: UnsafePointer<UInt8>) -> [UInt8] in
+            let buf = UnsafeBufferPointer(start: dat, count: MemoryLayout<UInt64>.size)
+            return p + Array(buf)
+        }
+    }
+    
+    public func chacha20Poly1305AEADEncrypt(key: BRKey) -> Data {
+        let data = [UInt8](self)
+        let inData = UnsafePointer<UInt8>(data)
+        let nonce = genNonce()
+        var null =  CChar(0)
+        var sk = key.secret
+        return withUnsafePointer(to: &sk) {
+            let outSize = BRChacha20Poly1305AEADEncrypt(nil, 0, $0, nonce, inData, data.count, &null, 0)
+            var outData = [UInt8](repeating: 0, count: outSize)
+            BRChacha20Poly1305AEADEncrypt(&outData, outSize, $0, nonce, inData, data.count, &null, 0)
+            return Data(nonce + outData)
+        }
+    }
+    
+    public func chacha20Poly1305AEADDecrypt(key: BRKey) -> Data {
+        let data = [UInt8](self)
+        let nonce = Array(data[data.startIndex...data.startIndex.advanced(by: 12)])
+        let inData = Array(data[data.startIndex.advanced(by: 12)...(data.endIndex-1)])
+        var null =  CChar(0)
+        var sk = key.secret
+        return withUnsafePointer(to: &sk) {
+            let outSize = BRChacha20Poly1305AEADDecrypt(nil, 0, $0, nonce, inData, inData.count, &null, 0)
+            var outData = [UInt8](repeating: 0, count: outSize)
+            BRChacha20Poly1305AEADDecrypt(&outData, outSize, $0, nonce, inData, inData.count, &null, 0)
+            return Data(outData)
+        }
     }
 }
 
@@ -332,5 +404,19 @@ public extension Date {
     
     func RFC1123String() -> String? {
         return Date.RFC1123DateFormatter().string(from: self)
+    }
+}
+
+public extension BRKey {
+    public var publicKey: Data {
+        var k = self
+        return withUnsafeMutablePointer(to: &k) { pk in
+            let len = BRKeyPubKey(pk, nil, 0)
+            var data = Data(capacity: len)
+            return data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) -> Data in
+                BRKeyPubKey(pk, bytes, len)
+                return data
+            }
+        }
     }
 }

@@ -28,47 +28,51 @@ import Security
 import BRCore
 
 
-@objc open class BRBitID : NSObject {
+open class BRBitID : NSObject {
     static let SCHEME = "bitid"
     static let PARAM_NONCE = "x"
     static let PARAM_UNSECURE = "u"
     static let USER_DEFAULTS_NONCE_KEY = "brbitid_nonces"
     static let DEFAULT_INDEX: UInt32 = 42
     
-    class open func isBitIDURL(_ url: URL!) -> Bool {
+    class func isBitIDURL(_ url: URL!) -> Bool {
         return url.scheme == SCHEME
     }
     
-    open static let BITCOIN_SIGNED_MESSAGE_HEADER = "Bitcoin Signed Message:\n".data(using: String.Encoding.utf8)!
+    static let BITCOIN_SIGNED_MESSAGE_HEADER = "Bitcoin Signed Message:\n".data(using: String.Encoding.utf8)!
     
-    open class func formatMessageForBitcoinSigning(_ message: String) -> Data {
-        let data = NSMutableData()
-        data.append(UInt8(BITCOIN_SIGNED_MESSAGE_HEADER.count))
-        data.append(BITCOIN_SIGNED_MESSAGE_HEADER)
-        let msgBytes = message.data(using: String.Encoding.utf8)!
-        data.appendVarInt(UInt64(msgBytes.count))
-        data.append(msgBytes)
-        return data as Data
+    class func formatMessageForBitcoinSigning(_ message: String) -> Data {
+        // FIXME: write these append methods
+//        let data = NSMutableData()
+//        data.append(UInt8(BITCOIN_SIGNED_MESSAGE_HEADER.count))
+//        data.append(BITCOIN_SIGNED_MESSAGE_HEADER)
+//        let msgBytes = message.data(using: String.Encoding.utf8)!
+//        data.appendVarInt(UInt64(msgBytes.count))
+//        data.append(msgBytes)
+//        return data as Data
+        return Data()
     }
     
     // sign a message with a key and return a base64 representation
-    open class func signMessage(_ message: String, usingKey key: BRKey) -> String {
+    class func signMessage(_ message: String, usingKey key: BRKey) -> String {
         let signingData = formatMessageForBitcoinSigning(message)
-        let signature = key.compactSign((signingData as NSData).sha256_2())!
+        let signature = signingData.sha256_2.compactSign(key: key)
         return String(bytes: signature.base64EncodedData(options: []), encoding: String.Encoding.utf8) ?? ""
     }
     
-    open let url: URL
+    let url: URL
+    let walletManager: WalletManager
     
     open var siteName: String {
         return "\(url.host!)\(url.path)"
     }
     
-    public init(url: URL!) {
-        self.url = url
+    init(url u: URL, walletManager wm: WalletManager) {
+        walletManager = wm
+        url = u
     }
     
-    open func newNonce() -> String {
+    func newNonce() -> String {
         let defs = UserDefaults.standard
         let nonceKey = "\(url.host!)/\(url.path)"
         var allNonces = [String: [String]]()
@@ -97,8 +101,8 @@ import BRCore
         return nonce
     }
     
-    open func runCallback(_ completionHandler: @escaping (Data?, URLResponse?, NSError?) -> Void) {
-        guard let manager = BRWalletManager.sharedInstance() else {
+    func runCallback(_ completionHandler: @escaping (Data?, URLResponse?, NSError?) -> Void) {
+        guard walletManager.noWallet else {
             DispatchQueue.main.async {
                 completionHandler(nil, nil, NSError(domain: "", code: -1001, userInfo:
                     [NSLocalizedDescriptionKey: NSLocalizedString("No wallet", comment: "")]))
@@ -106,57 +110,58 @@ import BRCore
             return
         }
         autoreleasepool {
-            guard let seed = manager.seed(withPrompt: "", forAmount: 0) else {
-                DispatchQueue.main.async {
-                    completionHandler(nil, nil, NSError(domain: "", code: -1001, userInfo:
-                        [NSLocalizedDescriptionKey: NSLocalizedString("Could not unlock", comment: "")]))
-                }
-                return
-            }
-            let seq = BRBIP32Sequence()
-            var scheme = "https"
-            var nonce: String
-            guard let query = url.query?.parseQueryString() else {
-                DispatchQueue.main.async {
-                    completionHandler(nil, nil, NSError(domain: "", code: -1001, userInfo:
-                        [NSLocalizedDescriptionKey: NSLocalizedString("Malformed URI", comment: "")]))
-                }
-                return
-            }
-            if let u = query[BRBitID.PARAM_UNSECURE] , u.count == 1 && u[0] == "1" {
-                scheme = "http"
-            }
-            if let x = query[BRBitID.PARAM_NONCE] , x.count == 1 {
-                nonce = x[0] // service is providing a nonce
-            } else {
-                nonce = newNonce() // we are generating our own nonce
-            }
-            let uri = "\(scheme)://\(url.host!)\(url.path)"
-            
-            // build a payload consisting of the signature, address and signed uri
-            let priv = BRKey(privateKey: seq.bitIdPrivateKey(BRBitID.DEFAULT_INDEX, forURI: uri, fromSeed: seed)!)!
-            let uriWithNonce = "bitid://\(url.host!)\(url.path)?x=\(nonce)"
-            let signature = BRBitID.signMessage(uriWithNonce, usingKey: priv)
-            let payload: [String: String] = [
-                "address": priv.address!,
-                "signature": signature,
-                "uri": uriWithNonce
-            ]
-            let json = try! JSONSerialization.data(withJSONObject: payload, options: [])
-            
-            // send off said payload
-            var req = URLRequest(url: URL(string: "\(uri)?x=\(nonce)")!)
-            req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            req.httpMethod = "POST"
-            req.httpBody = json
-            let session = URLSession.shared
-            session.dataTask(with: req, completionHandler: { (dat: Data?, resp: URLResponse?, err: Error?) in
-                var rerr: NSError?
-                if err != nil {
-                    rerr = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "\(err)"])
-                }
-                completionHandler(dat, resp, rerr)
-            }).resume()
+            // FIXME: make this work
+//            guard let seed = manager.seed(withPrompt: "", forAmount: 0) else {
+//                DispatchQueue.main.async {
+//                    completionHandler(nil, nil, NSError(domain: "", code: -1001, userInfo:
+//                        [NSLocalizedDescriptionKey: NSLocalizedString("Could not unlock", comment: "")]))
+//                }
+//                return
+//            }
+//            let seq = BRBIP32Sequence()
+//            var scheme = "https"
+//            var nonce: String
+//            guard let query = url.query?.parseQueryString() else {
+//                DispatchQueue.main.async {
+//                    completionHandler(nil, nil, NSError(domain: "", code: -1001, userInfo:
+//                        [NSLocalizedDescriptionKey: NSLocalizedString("Malformed URI", comment: "")]))
+//                }
+//                return
+//            }
+//            if let u = query[BRBitID.PARAM_UNSECURE] , u.count == 1 && u[0] == "1" {
+//                scheme = "http"
+//            }
+//            if let x = query[BRBitID.PARAM_NONCE] , x.count == 1 {
+//                nonce = x[0] // service is providing a nonce
+//            } else {
+//                nonce = newNonce() // we are generating our own nonce
+//            }
+//            let uri = "\(scheme)://\(url.host!)\(url.path)"
+//            
+//            // build a payload consisting of the signature, address and signed uri
+//            let priv = BRKey(privateKey: seq.bitIdPrivateKey(BRBitID.DEFAULT_INDEX, forURI: uri, fromSeed: seed)!)!
+//            let uriWithNonce = "bitid://\(url.host!)\(url.path)?x=\(nonce)"
+//            let signature = BRBitID.signMessage(uriWithNonce, usingKey: priv)
+//            let payload: [String: String] = [
+//                "address": priv.address!,
+//                "signature": signature,
+//                "uri": uriWithNonce
+//            ]
+//            let json = try! JSONSerialization.data(withJSONObject: payload, options: [])
+//            
+//            // send off said payload
+//            var req = URLRequest(url: URL(string: "\(uri)?x=\(nonce)")!)
+//            req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//            req.httpMethod = "POST"
+//            req.httpBody = json
+//            let session = URLSession.shared
+//            session.dataTask(with: req, completionHandler: { (dat: Data?, resp: URLResponse?, err: Error?) in
+//                var rerr: NSError?
+//                if err != nil {
+//                    rerr = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "\(err)"])
+//                }
+//                completionHandler(dat, resp, rerr)
+//            }).resume()
         }
     }
 }

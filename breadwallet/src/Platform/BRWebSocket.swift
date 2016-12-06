@@ -298,7 +298,7 @@ class BRWebSocketImpl: BRWebSocket {
                     do {
                         let acceptStr = "\(key!)\(GID)"
                         if let acceptStrBytes = acceptStr.data(using: .utf8) {
-                            let acceptEncodedStr = NSData(uInt160: (acceptStrBytes as NSData).sha1()).base64EncodedString(options: [])
+                            let acceptEncodedStr = acceptStrBytes.sha1.base64EncodedData()
                             try response.writeUTF8("HTTP/1.1 101 Switching Protocols\r\n")
                             try response.writeUTF8("Upgrade: WebSocket\r\n")
                             try response.writeUTF8("Connection: Upgrade\r\n")
