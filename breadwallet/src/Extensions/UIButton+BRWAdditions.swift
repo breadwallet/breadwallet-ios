@@ -31,7 +31,9 @@ extension UIButton {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         button.setImage(#imageLiteral(resourceName: "Close"), for: .normal)
+        button.imageEdgeInsets = UIEdgeInsetsMake(16.0, 16.0, 16.0, 16.0)
         button.tintColor = .darkText
+        //button.backgroundColor = .lightGray
         button.accessibilityLabel = NSLocalizedString("Close", comment: "Close modal button accessibility label")
         return button
     }
@@ -40,6 +42,7 @@ extension UIButton {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         button.setImage(#imageLiteral(resourceName: "Faq"), for: .normal)
+        button.imageEdgeInsets = UIEdgeInsetsMake(16.0, 16.0, 16.0, 16.0)
         button.tintColor = .darkText
         button.accessibilityLabel = NSLocalizedString("Faq", comment: "Frequently asked questions button accessibility label")
         return button
