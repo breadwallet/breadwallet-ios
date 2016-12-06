@@ -86,6 +86,12 @@ extension BRTransaction {
     }
 }
 
+extension BRMasterPubKey : Equatable {
+    public static func ==(_ lhs: BRMasterPubKey, _ rhs: BRMasterPubKey) -> Bool {
+        return lhs.fingerPrint == rhs.fingerPrint && lhs.chainCode.u64 == rhs.chainCode.u64 && lhs.pubKey.0 == rhs.pubKey.0
+    }
+}
+
 class BRWallet {
     @available(*, unavailable) init() {}
     

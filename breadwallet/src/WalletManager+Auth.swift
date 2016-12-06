@@ -168,11 +168,9 @@ extension WalletManager {
         if try keychainItem(key: keychainKey.seed) as Data? != nil { // upgrade from old keychain scheme
             let seedPhrase : String? = try keychainItem(key: keychainKey.mnemonic)
             var seed = UInt512()
-            var mpk = BRMasterPubKey()
-            
             print("upgrading to authenticated keychain scheme")
             BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
-            mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
+            let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
             seed = UInt512() // clear seed
             try setKeychainItem(key: keychainKey.mnemonic, item: seedPhrase, authenticated: true)
             try setKeychainItem(key: keychainKey.masterPubKey,
@@ -336,12 +334,10 @@ extension WalletManager {
         guard noWallet else { return false }
         
         do {
-            var mpk = BRMasterPubKey()
             var seed = UInt512()
-
             try setKeychainItem(key: keychainKey.mnemonic, item: phrase, authenticated: true)
             BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
-            mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
+            let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
             seed = UInt512() // clear seed
             try setKeychainItem(key: keychainKey.masterPubKey,
                                 item: Data(buffer: UnsafeBufferPointer(start: [mpk], count: 1)))
@@ -364,7 +360,8 @@ extension WalletManager {
         }
         catch { return nil }
 
-        return autoreleasepool { // wrapping in an autorelease pool ensures sensitive memory is wiped and released immediately
+        // wrapping in an autorelease pool ensures sensitive memory is wiped and released immediately
+        return autoreleasepool {
             var entropy = CFDataCreateMutable(secureAllocator, SeedEntropyLength) as Data
             
             entropy.count = SeedEntropyLength
@@ -377,7 +374,7 @@ extension WalletManager {
             phraseData.count = phraseLen
             BRBIP39Encode(phraseData.withUnsafeMutableBytes({ $0 }), phraseData.count, &words,
                           entropy.withUnsafeBytes({ $0 }), entropy.count)
-
+            
             let phrase = CFStringCreateFromExternalRepresentation(secureAllocator, phraseData as CFData,
                                                                   CFStringBuiltInEncodings.UTF8.rawValue) as String
 
@@ -390,7 +387,22 @@ extension WalletManager {
         guard authenticate(pin: pin) else { return false }
 
         do {
-            try setKeychainItem(key: keychainKey.pin, item: newPin, authenticated: true)
+            try setKeychainItem(key: keychainKey.pin, item: newPin)
+            return true
+        }
+        catch { return false }
+    }
+    
+    func forceSetPin(newPin : String, seedPhrase : String) -> Bool {
+        var seed = UInt512()
+        BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
+        let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
+        seed = UInt512() // clear seed
+        let mpkData = Data(buffer: UnsafeBufferPointer(start: [mpk], count: 1))
+        
+        do {
+            guard try mpkData == keychainItem(key: keychainKey.masterPubKey) else { return false }
+            try setKeychainItem(key: keychainKey.pin, item: newPin)
             return true
         }
         catch { return false }
@@ -420,7 +432,7 @@ extension WalletManager {
             try setKeychainItem(key: keychainKey.pin, item: nil as String?)
             try setKeychainItem(key: keychainKey.masterPubKey, item: nil as Data?)
             try setKeychainItem(key: keychainKey.seed, item: nil as Data?)
-            try setKeychainItem(key: keychainKey.mnemonic, item: nil as String?)
+            try setKeychainItem(key: keychainKey.mnemonic, item: nil as String?, authenticated: true)
         }
         catch { return false }
         
@@ -433,21 +445,16 @@ extension WalletManager {
                 if let apiKey : String? = try keychainItem(key: keychainKey.apiAuthKey) { return apiKey }
                 var key = BRKey()
                 var seed = UInt512()
-                defer { seed = UInt512() }
                 guard let phrase : String = try keychainItem(key: keychainKey.mnemonic) else { return nil }
-                
                 BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
                 BRBIP32APIAuthKey(&key, &seed, MemoryLayout<UInt512>.size)
-                
+                seed = UInt512() // clear seed
                 let pkLen = BRKeyPrivKey(&key, nil, 0)
                 var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
-
                 pkData.count = pkLen
                 BRKeyPrivKey(&key, pkData.withUnsafeMutableBytes({ $0 }), pkLen)
-                    
                 let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
                                                                        CFStringBuiltInEncodings.UTF8.rawValue) as String
-
                 try setKeychainItem(key: keychainKey.apiAuthKey, item: privKey)
                 return privKey
             }
