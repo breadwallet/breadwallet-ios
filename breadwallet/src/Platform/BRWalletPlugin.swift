@@ -171,10 +171,11 @@ class BRWalletPlugin: NSObject, BRHTTPRouterPlugin, BRWebSocketClient {
     func walletInfo() -> [String: Any] {
         var d = [String: Any]()
         d["no_wallet"] = walletManager.noWallet
-        if let wallet = walletManager.wallet {
-            var addr = BRWalletReceiveAddress(wallet.ptr)
-            d["receive_address"] = withUnsafePointer(to: &addr) { String.fromCString($0) }
-        }
+        // FIXME: convert BRAddress to String
+//        if let wallet = walletManager.wallet {
+//            var addr = BRWalletReceiveAddress(wallet.ptr)
+//            d["receive_address"] = String.fromCString(addr)
+//        }
         return d
     }
     
