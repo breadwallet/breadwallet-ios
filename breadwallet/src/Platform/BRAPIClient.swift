@@ -146,11 +146,7 @@ func buildRequestSigningString(_ r: URLRequest) -> String {
 }
 
 
-private func compactSign(key: BRKey, data: Data) -> Data {
-    
-}
-
-@objc open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BRAPIAdaptor {
+open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BRAPIAdaptor {
     var authenticator: WalletAuthenticator
     
     // whether or not to emit log messages from this instance of the client
@@ -243,9 +239,9 @@ private func compactSign(key: BRKey, data: Data) -> Data {
         if let tokenData = authenticator.userAccount,
             let token = tokenData["token"] as? String,
             let authKey = authKey,
-            let signingData = buildRequestSigningString(mutableRequest).data(using: .utf8),
-            let sig = signingData.sha256_2.compactSign(key: authKey) {
-            let hval = "bread \(token):\(sig.base58String())"
+            let signingData = buildRequestSigningString(mutableRequest).data(using: .utf8) {
+            let sig = signingData.sha256_2.compactSign(key: authKey)
+            let hval = "bread \(token):\(sig.base58)"
             mutableRequest.setValue(hval, forHTTPHeaderField: "Authorization")
         }
         return mutableRequest as URLRequest
@@ -321,10 +317,11 @@ private func compactSign(key: BRKey, data: Data) -> Data {
             }
             return
         }
-        guard let authKey = authKey, let authPubKey = authKey.publicKey else {
+        guard let authKey = authKey else {
             return handler(NSError(domain: BRAPIClientErrorDomain, code: 500, userInfo: [
                 NSLocalizedDescriptionKey: NSLocalizedString("Wallet not ready", comment: "")]))
         }
+        let authPubKey = authKey.publicKey
         isFetchingAuth = true
         log("auth: entering group")
         authFetchGroup.enter()
@@ -333,7 +330,7 @@ private func compactSign(key: BRKey, data: Data) -> Data {
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.setValue("application/json", forHTTPHeaderField: "Accept")
         let reqJson = [
-            "pubKey": (authPubKey as NSData).base58String(),
+            "pubKey": authPubKey.base58,
             "deviceID": getDeviceId()
         ]
         do {
@@ -364,13 +361,14 @@ private func compactSign(key: BRKey, data: Data) -> Data {
                     do {
                         let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
                         self.log("POST /token json response: \(json)")
-                        if let topObj = json as? NSDictionary,
-                            let tok = topObj["token"] as? NSString,
-                            let uid = topObj["userID"] as? NSString,
-                            let walletManager = BRWalletManager.sharedInstance() {
+                        if let topObj = json as? [String: Any],
+                            let tok = topObj["token"] as? String,
+                            let uid = topObj["userID"] as? String {
                             // success! store it in the keychain
-                            let kcData = ["token": tok, "userID": uid]
-                            walletManager.userAccount = kcData
+                            var kcData = self.authenticator.userAccount ?? [AnyHashable: Any]()
+                            kcData["token"] = tok
+                            kcData["userID"] = uid
+                            self.authenticator.userAccount = kcData
                         }
                     } catch let e {
                         self.log("JSON Deserialization error \(e)")
@@ -464,7 +462,7 @@ private func compactSign(key: BRKey, data: Data) -> Data {
         var authenticated = false
         var furl = "/anybody/features"
         // only use authentication if the user has previously used authenticated services
-        if let _ = authenticator.userAccount["token"]? {
+        if let _ = authenticator.userAccount?["token"] {
             authenticated = true
             furl = "/me/features"
         }
@@ -598,10 +596,10 @@ private func compactSign(key: BRKey, data: Data) -> Data {
                 // data is encoded as:
                 // LE32(num) + (num * (LEU8(keyLeng) + (keyLen * LEU32(char)) + LEU64(ver) + LEU64(msTs) + LEU8(del)))
                 var i = UInt(MemoryLayout<UInt32>.size)
-                let c = (dat as NSData).uInt32(atOffset: 0)
+                let c = dat.uInt32(atOffset: 0)
                 var items = [(String, UInt64, Date, BRRemoteKVStoreError?)]()
                 for _ in 0..<c {
-                    let keyLen = UInt((dat as NSData).uInt32(atOffset: i))
+                    let keyLen = UInt(dat.uInt32(atOffset: i))
                     i += UInt(MemoryLayout<UInt32>.size)
                     let range: Range<Int> = Int(i)..<Int(i + keyLen)
                     guard let key = NSString(data: dat.subdata(in: range),
@@ -610,11 +608,11 @@ private func compactSign(key: BRKey, data: Data) -> Data {
                         return completionFunc([], .unknown)
                     }
                     i += keyLen
-                    let ver = (dat as NSData).uInt64(atOffset: i)
+                    let ver = dat.uInt64(atOffset: i)
                     i += UInt(MemoryLayout<UInt64>.size)
-                    let date = Date.withMsTimestamp((dat as NSData).uInt64(atOffset: i))
+                    let date = Date.withMsTimestamp(dat.uInt64(atOffset: i))
                     i += UInt(MemoryLayout<UInt64>.size)
-                    let deleted = (dat as NSData).uInt8(atOffset: i) > 0
+                    let deleted = dat.uInt8(atOffset: i) > 0
                     i += UInt(MemoryLayout<UInt8>.size)
                     items.append((key, ver, date, deleted ? .tombstone : nil))
                     self.client.log("keys: \(key) \(ver) \(date) \(deleted)")

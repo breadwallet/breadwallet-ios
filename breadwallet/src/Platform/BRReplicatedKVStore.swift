@@ -741,30 +741,12 @@ open class BRReplicatedKVStore: NSObject {
     
     // encrypt some data using self.key
     fileprivate func encrypt(_ data: [UInt8]) throws -> [UInt8] {
-        guard let sk = key.secretKey else {
-            throw BRReplicatedKVStoreError.unknown
-        }
-        let inData = UnsafePointer<UInt8>(data)
-        let nonce = genNonce()
-        var null =  CChar(0)
-        let outSize = chacha20Poly1305AEADEncrypt(nil, 0, sk, nonce, inData, data.count, &null, 0)
-        var outData = [UInt8](repeating: 0, count: outSize)
-        chacha20Poly1305AEADEncrypt(&outData, outSize, sk, nonce, inData, data.count, &null, 0)
-        return nonce + outData
+        return [UInt8](Data(data).chacha20Poly1305AEADEncrypt(key: key))
     }
     
     // decrypt some data using self.key
     fileprivate func decrypt(_ data: [UInt8]) throws -> [UInt8] {
-        guard let sk = key.secretKey else {
-            throw BRReplicatedKVStoreError.unknown
-        }
-        let nonce = Array(data[data.startIndex...data.startIndex.advanced(by: 12)])
-        let inData = Array(data[data.startIndex.advanced(by: 12)...(data.endIndex-1)])
-        var null =  CChar(0)
-        let outSize = chacha20Poly1305AEADDecrypt(nil, 0, sk, nonce, inData, inData.count, &null, 0)
-        var outData = [UInt8](repeating: 0, count: outSize)
-        chacha20Poly1305AEADDecrypt(&outData, outSize, sk, nonce, inData, inData.count, &null, 0)
-        return outData
+        return [UInt8](Data(data).chacha20Poly1305AEADDecrypt(key: key))
     }
     
     // generate a nonce using microseconds-since-epoch
@@ -773,7 +755,6 @@ open class BRReplicatedKVStore: NSObject {
         gettimeofday(&tv, nil)
         var t = UInt64(tv.tv_usec) * 1_000_000 + UInt64(tv.tv_usec)
         let p = [UInt8](repeating: 0, count: 4)
-//        let dat = Data(bytes: &t, count: MemoryLayout<UInt64>.size).bytes.bindMemory(to: UInt8.self, capacity: Data(bytes: &t, count: MemoryLayout<UInt64>.size).count)
         return Data(bytes: &t, count: MemoryLayout<UInt64>.size).withUnsafeBytes { (dat: UnsafePointer<UInt8>) -> [UInt8] in
             let buf = UnsafeBufferPointer(start: dat, count: MemoryLayout<UInt64>.size)
             return p + Array(buf)

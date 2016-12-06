@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		223DB2151DF654940076A151 /* WalletManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75519F331DC7D20500EDF66C /* WalletManager.swift */; };
+		223DB2191DF691260076A151 /* BRSocketHelpers.c in Sources */ = {isa = PBXBuildFile; fileRef = 223DB2171DF691260076A151 /* BRSocketHelpers.c */; };
 		22A9A9461DF61945000F0016 /* BRAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A9321DF61945000F0016 /* BRAPIClient.swift */; };
 		22A9A9471DF61945000F0016 /* BRAPIProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A9331DF61945000F0016 /* BRAPIProxy.swift */; };
 		22A9A9481DF61945000F0016 /* BRBitID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A9341DF61945000F0016 /* BRBitID.swift */; };
@@ -447,6 +448,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		223DB2161DF691250076A151 /* breadwallet-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "breadwallet-Bridging-Header.h"; sourceTree = "<group>"; };
+		223DB2171DF691260076A151 /* BRSocketHelpers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = BRSocketHelpers.c; path = src/Platform/BRSocketHelpers.c; sourceTree = "<group>"; };
+		223DB2181DF691260076A151 /* BRSocketHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BRSocketHelpers.h; path = src/Platform/BRSocketHelpers.h; sourceTree = "<group>"; };
 		22A9A9321DF61945000F0016 /* BRAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRAPIClient.swift; path = src/Platform/BRAPIClient.swift; sourceTree = "<group>"; };
 		22A9A9331DF61945000F0016 /* BRAPIProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRAPIProxy.swift; path = src/Platform/BRAPIProxy.swift; sourceTree = "<group>"; };
 		22A9A9341DF61945000F0016 /* BRBitID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRBitID.swift; path = src/Platform/BRBitID.swift; sourceTree = "<group>"; };
@@ -1409,7 +1413,10 @@
 				22A9A9411DF61945000F0016 /* BRTar.swift */,
 				22A9A9371DF61945000F0016 /* BRCoding.swift */,
 				22A9A9451DF61945000F0016 /* Extensions.swift */,
+				223DB2171DF691260076A151 /* BRSocketHelpers.c */,
+				223DB2181DF691260076A151 /* BRSocketHelpers.h */,
 				22A9A9441DF61945000F0016 /* BRWebViewController.swift */,
+				223DB2161DF691250076A151 /* breadwallet-Bridging-Header.h */,
 			);
 			name = Platform;
 			sourceTree = "<group>";
@@ -2897,6 +2904,7 @@
 					};
 					75A2A78F1DA5934300A983D8 = {
 						CreatedOnToolsVersion = 8.0;
+						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -3174,6 +3182,7 @@
 				22A9A94A1DF61945000F0016 /* BRCameraPlugin.swift in Sources */,
 				CEC6AA3B1DEE4EB000EE5AFD /* CGRect+Additions.swift in Sources */,
 				CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */,
+				223DB2191DF691260076A151 /* BRSocketHelpers.c in Sources */,
 				CEF3E82D1DE528BF007C0A9E /* AlertView.swift in Sources */,
 				CEBF32F91DDD193500348FC6 /* TransactionTableViewCell.swift in Sources */,
 				CEF3E82B1DE51612007C0A9E /* GradientCircle.swift in Sources */,
@@ -3841,6 +3850,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/**";
@@ -3848,6 +3858,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "breadwallet/breadwallet-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -3856,6 +3869,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/**";
@@ -3863,6 +3877,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "breadwallet/breadwallet-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
