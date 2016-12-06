@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		223DB2151DF654940076A151 /* WalletManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75519F331DC7D20500EDF66C /* WalletManager.swift */; };
 		223DB2191DF691260076A151 /* BRSocketHelpers.c in Sources */ = {isa = PBXBuildFile; fileRef = 223DB2171DF691260076A151 /* BRSocketHelpers.c */; };
+		223DB21B1DF69F0F0076A151 /* libbz2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A9A9961DF63426000F0016 /* libbz2.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		22A9A9461DF61945000F0016 /* BRAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A9321DF61945000F0016 /* BRAPIClient.swift */; };
 		22A9A9471DF61945000F0016 /* BRAPIProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A9331DF61945000F0016 /* BRAPIProxy.swift */; };
 		22A9A9481DF61945000F0016 /* BRBitID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A9341DF61945000F0016 /* BRBitID.swift */; };
@@ -35,7 +36,6 @@
 		22A9A9641DF61FE7000F0016 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A9A9631DF61FE7000F0016 /* Security.framework */; };
 		22A9A9661DF61FEE000F0016 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A9A9651DF61FEE000F0016 /* WebKit.framework */; };
 		22A9A96A1DF6218B000F0016 /* WalletManager+Plat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A9691DF6218B000F0016 /* WalletManager+Plat.swift */; };
-		22A9A99D1DF63426000F0016 /* libbz2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A9A9961DF63426000F0016 /* libbz2.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		22A9A99E1DF63426000F0016 /* libbz2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22A9A9961DF63426000F0016 /* libbz2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		22A9A9A31DF63497000F0016 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A9A9671DF61FF8000F0016 /* libbz2.tbd */; };
 		7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */; };
@@ -1335,7 +1335,7 @@
 				22A9A9621DF61FE0000F0016 /* SystemConfiguration.framework in Frameworks */,
 				22A9A9601DF61FD8000F0016 /* CoreLocation.framework in Frameworks */,
 				22A9A95E1DF61FD0000F0016 /* PushKit.framework in Frameworks */,
-				22A9A99D1DF63426000F0016 /* libbz2.framework in Frameworks */,
+				223DB21B1DF69F0F0076A151 /* libbz2.framework in Frameworks */,
 				75FEFD1C1DAED56E00203D3A /* libsqlite3.tbd in Frameworks */,
 				759DA0BE1DAC36A3008CC49B /* libBRCore.a in Frameworks */,
 				754868E11DAB5AAE00732D70 /* libnettle.a in Frameworks */,
