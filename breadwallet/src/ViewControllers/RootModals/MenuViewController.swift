@@ -12,7 +12,7 @@ class MenuViewController: UIViewController {
 
     fileprivate let buttonHeight: CGFloat = 72.0
     fileprivate let buttons: [MenuButton] = {
-        let types: [MenuButtonType] = [.profile, .security, .support, .settings, .lock]
+        let types: [MenuButtonType] = [.security, .support, .settings, .lock]
         return types.map { MenuButton(type: $0) }
     }()
     fileprivate let bottomPadding: CGFloat = 32.0
