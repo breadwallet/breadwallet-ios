@@ -8,18 +8,23 @@
 
 import UIKit
 
+private let qrSize: CGFloat = 186.0
+private let smallButtonHeight: CGFloat = 32.0
+private let buttonPadding: CGFloat = 20.0
+private let smallSharePadding: CGFloat = 12.0
+private let largeSharePadding: CGFloat = 20.0
+private let animationDuration: TimeInterval = 0.3
+
 class ReceiveViewController: UIViewController {
 
     private let qrCode = UIImageView()
-    private let address = UILabel(font: .customBody(size: 16.0))
+    private let address = UILabel(font: .customBody(size: 14.0))
     private let addressPopout = InViewAlert(type: .primary)
     private let share = ShadowButton(title: NSLocalizedString("Share", comment: "Share button label"), type: .tertiary, image: #imageLiteral(resourceName: "Share"))
     private let sharePopout = InViewAlert(type: .secondary)
     private let border = UIView()
     private let request = ShadowButton(title: NSLocalizedString("Request an Amount", comment: "Request button label"), type: .secondary)
-    private let qrSize: CGFloat = 186.0
-    private let smallButtonHeight: CGFloat = 32.0
-    private let buttonPadding: CGFloat = 16.0
+    private var topSharePopoutConstraint: NSLayoutConstraint?
 
     override func viewDidLoad() {
         addSubviews()
@@ -44,7 +49,7 @@ class ReceiveViewController: UIViewController {
         qrCode.constrain([
                 qrCode.constraint(.width, constant: qrSize),
                 qrCode.constraint(.height, constant: qrSize),
-                qrCode.constraint(.top, toView: view, constant: C.padding[2]),
+                qrCode.constraint(.top, toView: view, constant: C.padding[4]),
                 qrCode.constraint(.centerX, toView: view)
             ])
         address.constrain([
@@ -53,7 +58,7 @@ class ReceiveViewController: UIViewController {
             ])
         addressPopout.heightConstraint = addressPopout.constraint(.height, constant: 0.0)
         addressPopout.constrain([
-                addressPopout.constraint(toBottom: address, constant: C.padding[1]),
+                addressPopout.constraint(toBottom: address, constant: 0.0),
                 addressPopout.constraint(.centerX, toView: view),
                 addressPopout.constraint(.width, toView: view),
                 addressPopout.heightConstraint
@@ -65,8 +70,9 @@ class ReceiveViewController: UIViewController {
                 share.constraint(.height, constant: smallButtonHeight)
             ])
         sharePopout.heightConstraint = sharePopout.constraint(.height, constant: 0.0)
+        topSharePopoutConstraint = sharePopout.constraint(toBottom: share, constant: largeSharePadding)
         sharePopout.constrain([
-                sharePopout.constraint(toBottom: share, constant: C.padding[2]),
+                topSharePopoutConstraint,
                 sharePopout.constraint(.centerX, toView: view),
                 sharePopout.constraint(.width, toView: view),
                 sharePopout.heightConstraint
@@ -131,43 +137,50 @@ class ReceiveViewController: UIViewController {
     }
 
     @objc private func shareTapped() {
-        toggle(alertView: sharePopout)
-        if addressPopout.expanded {
-            toggle(alertView: addressPopout)
+        toggle(alertView: sharePopout, shouldAdjustPadding: true)
+        if addressPopout.isExpanded {
+            toggle(alertView: addressPopout, shouldAdjustPadding: false)
         }
     }
 
     @objc private func addressTapped() {
-        toggle(alertView: addressPopout)
-        if sharePopout.expanded {
-            toggle(alertView: sharePopout)
+        toggle(alertView: addressPopout, shouldAdjustPadding: false)
+        if sharePopout.isExpanded {
+            toggle(alertView: sharePopout, shouldAdjustPadding: true)
         }
     }
 
-    private func toggle(alertView: InViewAlert) {
+    private func toggle(alertView: InViewAlert, shouldAdjustPadding: Bool) {
         share.isEnabled = false
         address.isUserInteractionEnabled = false
-        var newFrame = parent!.view.frame
-        if alertView.expanded {
-            newFrame.origin.y = newFrame.origin.y + InViewAlert.height
-            newFrame.size.height = newFrame.size.height - InViewAlert.height
-            alertView.contentView?.isHidden = true
-        } else {
-            newFrame.origin.y = newFrame.origin.y - InViewAlert.height
-            newFrame.size.height = newFrame.size.height + InViewAlert.height
+
+        var deltaY = alertView.isExpanded ? -alertView.height : alertView.height
+        if shouldAdjustPadding {
+            if deltaY > 0 {
+                deltaY -= (largeSharePadding - smallSharePadding)
+            } else {
+                deltaY += (largeSharePadding - smallSharePadding)
+            }
         }
-        UIView.springAnimation(0.3,
-                               animations: {
-                                    self.parent?.view.frame = newFrame
-                                    alertView.toggle()
-                                    self.parent?.view.layoutIfNeeded()
-                                },
-                               completion: {_ in
-                                    alertView.expanded = !alertView.expanded
-                                    self.share.isEnabled = true
-                                    self.address.isUserInteractionEnabled = true
-                                    alertView.contentView?.isHidden = false
-                                })
+
+        if alertView.isExpanded {
+            alertView.contentView?.isHidden = true
+        }
+
+        UIView.spring(animationDuration, animations: {
+            if shouldAdjustPadding {
+                let newPadding = self.sharePopout.isExpanded ? largeSharePadding : smallSharePadding
+                self.topSharePopoutConstraint?.constant = newPadding
+            }
+            self.parent?.view.frame = (self.parent?.view.frame.expandVertically(deltaY))!
+            alertView.toggle()
+            self.parent?.view.layoutIfNeeded()
+        }, completion: { _ in
+            alertView.isExpanded = !alertView.isExpanded
+            self.share.isEnabled = true
+            self.address.isUserInteractionEnabled = true
+            alertView.contentView?.isHidden = false
+        })
     }
 
 }
@@ -178,7 +191,7 @@ extension ReceiveViewController: ModalDisplayable {
     }
 
     var modalSize: CGSize {
-        return CGSize(width: view.frame.width, height: 400.0)
+        return CGSize(width: view.frame.width, height: 410.0)
     }
 
     var isFaqHidden: Bool {
