@@ -13,6 +13,7 @@ struct State {
     let pinCreationStep: PinCreationStep
     let paperPhraseStep: PaperPhraseStep
     let rootModal: RootModal
+    let pasteboard: String?
 }
 
 extension State {
@@ -20,7 +21,8 @@ extension State {
         return State(   isStartFlowVisible: false,
                         pinCreationStep:    .none,
                         paperPhraseStep:    .none,
-                        rootModal:          .none)
+                        rootModal:          .none,
+                        pasteboard:         UIPasteboard.general.string)
     }
 }
 
@@ -46,14 +48,14 @@ enum RootModal {
     case receive
     case menu
 
-    var viewController: UIViewController? {
+    func viewController(store: Store) -> UIViewController? {
         switch self {
             case .none:
                 return nil
             case .send:
-                return ModalViewController(childViewController: SendViewController())
+                return ModalViewController(childViewController: SendViewController(store: store))
             case .receive:
-                return ModalViewController(childViewController: ReceiveViewController())
+                return ModalViewController(childViewController: ReceiveViewController(store: store))
             case .menu:
                 return ModalViewController(childViewController: MenuViewController())
         }

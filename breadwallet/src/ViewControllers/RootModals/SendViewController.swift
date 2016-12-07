@@ -16,8 +16,14 @@ private let pasteLabel = NSLocalizedString("Paste", comment: "Paste button label
 private let scanLabel = NSLocalizedString("Scan", comment: "Scan button label")
 private let currencyLabel = NSLocalizedString("USD \u{25BC}", comment: "Currency Button label")
 
-class SendViewController: UIViewController {
+class SendViewController: UIViewController, Subscriber {
 
+    init(store: Store) {
+        self.store = store
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    private let store: Store
     fileprivate let cellHeight: CGFloat = 72.0
     fileprivate let verticalButtonPadding: CGFloat = 32.0
     private let buttonSize = CGSize(width: 52.0, height: 32.0)
@@ -35,8 +41,8 @@ class SendViewController: UIViewController {
         view.addSubview(amount)
         view.addSubview(descriptionCell)
         view.addSubview(send)
-        to.addSubview(paste)
-        to.addSubview(scan)
+        to.accessoryView.addSubview(paste)
+        to.accessoryView.addSubview(scan)
         amount.addSubview(currency)
 
         to.constrainTopCorners(height: cellHeight)
@@ -49,16 +55,17 @@ class SendViewController: UIViewController {
                 send.constraint(.height, constant: C.Sizes.buttonHeight)
             ])
         scan.constrain([
-                scan.constraint(.centerY, toView: to),
-                scan.constraint(.trailing, toView: to, constant: -C.padding[2]),
+                scan.constraint(.centerY, toView: to.accessoryView),
+                scan.constraint(.trailing, toView: to.accessoryView, constant: -C.padding[2]),
                 scan.constraint(.height, constant: buttonSize.height),
                 scan.constraint(.width, constant: buttonSize.width)
             ])
         paste.constrain([
-                paste.constraint(.centerY, toView: to),
+                paste.constraint(.centerY, toView: to.accessoryView),
                 paste.constraint(toLeading: scan, constant: -C.padding[1]),
                 paste.constraint(.height, constant: buttonSize.height),
-                paste.constraint(.width, constant: buttonSize.width)
+                paste.constraint(.width, constant: buttonSize.width),
+                paste.constraint(.leading, toView: to.accessoryView) //This constraint is needed because it gives the accessory view an intrinsic horizontal size
             ])
         currency.constrain([
                 currency.constraint(.centerY, toView: amount),
@@ -66,8 +73,28 @@ class SendViewController: UIViewController {
                 currency.constraint(.height, constant: buttonSize.height),
                 currency.constraint(.width, constant: 64.0)
             ])
+        addButtonActions()
     }
 
+    private func addButtonActions() {
+        paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
+        scan.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
+    }
+
+    @objc private func pasteTapped() {
+        store.subscribe(self, selector: {$0.pasteboard != $1.pasteboard}, callback: {
+            self.to.content = $0.pasteboard
+            self.store.unsubscribe(self)
+        })
+    }
+
+    @objc private func scanTapped() {
+
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 extension SendViewController: ModalDisplayable {
