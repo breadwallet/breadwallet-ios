@@ -47,7 +47,7 @@ class ModalPresenter: Subscriber {
     }
 
     private func presentModal(_ type: RootModal) {
-        guard let vc = type.viewController else { return }
+        guard let vc = type.viewController(store: store) else { return }
         vc.transitioningDelegate = modalTransitionDelegate
         vc.modalPresentationStyle = .overFullScreen
         vc.modalPresentationCapturesStatusBarAppearance = true

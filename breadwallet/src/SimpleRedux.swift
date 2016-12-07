@@ -6,7 +6,7 @@
 //  Copyright © 2016 breadwallet LLC. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 typealias Reducer = (State) -> State
 typealias Selector = (_ oldState: State, _ newState: State) -> Bool
@@ -32,16 +32,10 @@ struct Subscription{
 }
 
 class Store {
-    private var state = State.initial {
-        didSet {
-            subscriptions
-                .flatMap { $0.value } //Retreive all subscriptions
-                .filter { $0.selector(oldValue, state) }
-                .forEach { $0.callback(state) }
-        }
-    }
 
-    private var subscriptions = [Int: [Subscription]]()
+    init() {
+        addPasteboardSubscriptions()
+    }
 
     func perform(action: Action) {
         state = action.reduce(state)
@@ -64,4 +58,24 @@ class Store {
         subscriptions.removeValue(forKey: subscriber.hashValue)
     }
 
+    private var state = State.initial {
+        didSet {
+            subscriptions
+                .flatMap { $0.value } //Retreive all subscriptions (subscriptions is a dictionary)
+                .filter { $0.selector(oldValue, state) }
+                .forEach { $0.callback(state) }
+        }
+    }
+
+    private var subscriptions = [Int: [Subscription]]()
+
+    private func addPasteboardSubscriptions() {
+        NotificationCenter.default.addObserver(forName: .UIPasteboardChanged, object: nil, queue: nil, using: { note in
+            self.perform(action: Pasteboard.refresh())
+        })
+
+        NotificationCenter.default.addObserver(forName: .UIApplicationDidBecomeActive, object: nil, queue: OperationQueue(), using: { note in
+            self.perform(action: Pasteboard.refresh())
+        })
+    }
 }

@@ -6,7 +6,7 @@
 //  Copyright © 2016 breadwallet LLC. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 //MARK: - Start Flow
 struct ShowStartFlow: Action {
@@ -20,7 +20,8 @@ struct HideStartFlow: Action {
         return State(isStartFlowVisible:    false,
                      pinCreationStep:       .none,
                      paperPhraseStep:       .none,
-                     rootModal:             .none)
+                     rootModal:             .none,
+                     pasteboard:            UIPasteboard.general.string)
     }
 }
 
@@ -74,7 +75,8 @@ struct PaperPhrase {
             return State(isStartFlowVisible:    $0.isStartFlowVisible,
                          pinCreationStep:       .none,
                          paperPhraseStep:       .start,
-                         rootModal:             .none)
+                         rootModal:             .none,
+                         pasteboard:            UIPasteboard.general.string)
         }
     }
 
@@ -83,7 +85,8 @@ struct PaperPhrase {
             return State(isStartFlowVisible:    $0.isStartFlowVisible,
                          pinCreationStep:       .none,
                          paperPhraseStep:       .write,
-                         rootModal:             .none)
+                         rootModal:             .none,
+                         pasteboard:            UIPasteboard.general.string)
         }
     }
 
@@ -92,7 +95,8 @@ struct PaperPhrase {
             return State(isStartFlowVisible:    $0.isStartFlowVisible,
                          pinCreationStep:       .none,
                          paperPhraseStep:       .confirm,
-                         rootModal:             .none)
+                         rootModal:             .none,
+                         pasteboard:            UIPasteboard.general.string)
         }
     }
 
@@ -101,7 +105,8 @@ struct PaperPhrase {
             return State(isStartFlowVisible:    $0.isStartFlowVisible,
                          pinCreationStep:       .none,
                          paperPhraseStep:       .confirmed,
-                         rootModal:             .none)
+                         rootModal:             .none,
+                         pasteboard:            UIPasteboard.general.string)
         }
     }
 }
@@ -125,25 +130,42 @@ struct RootModalActions {
     }
 }
 
+//MARK: - Pasteboard
+struct Pasteboard {
+    struct refresh: Action {
+        let reduce: Reducer = { $0.clone(pasteboard: UIPasteboard.general.string) }
+    }
+}
+
 //MARK: - State Creation Helpers
 extension State {
     func clone(isStartFlowVisible: Bool) -> State {
         return State(isStartFlowVisible:    isStartFlowVisible,
                      pinCreationStep:       self.pinCreationStep,
                      paperPhraseStep:       self.paperPhraseStep,
-                     rootModal:             self.rootModal)
+                     rootModal:             self.rootModal,
+                     pasteboard:            self.pasteboard)
     }
     func clone(pinCreationStep: PinCreationStep) -> State {
         return State(isStartFlowVisible:    self.isStartFlowVisible,
                      pinCreationStep:       pinCreationStep,
                      paperPhraseStep:       self.paperPhraseStep,
-                     rootModal:             self.rootModal)
+                     rootModal:             self.rootModal,
+                     pasteboard:            self.pasteboard)
     }
 
     func rootModal(_ type: RootModal) -> State {
         return State(isStartFlowVisible:    false,
                      pinCreationStep:       .none,
                      paperPhraseStep:       .none,
-                     rootModal:             type)
+                     rootModal:             type,
+                     pasteboard:            self.pasteboard)
+    }
+    func clone(pasteboard: String?) -> State {
+        return State(isStartFlowVisible:    self.isStartFlowVisible,
+                     pinCreationStep:       pinCreationStep,
+                     paperPhraseStep:       self.paperPhraseStep,
+                     rootModal:             self.rootModal,
+                     pasteboard:            pasteboard)
     }
 }
