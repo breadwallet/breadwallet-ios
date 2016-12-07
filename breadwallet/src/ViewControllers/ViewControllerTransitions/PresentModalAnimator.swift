@@ -42,11 +42,11 @@ class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         toView.frame = toView.frame.offsetBy(dx: 0, dy: toView.frame.height)
         container.addSubview(toView)
 
-        UIView.springAnimation(duration, animations: {
+        UIView.spring(duration, animations: {
             maskView.frame = CGRect(x: 0, y: fromFrame.height - 30.0, width: fromFrame.width, height: 40.0)
             blurView.alpha = 0.9
             toView.frame = finalToViewFrame
-        }, completion: {_ in
+        }, completion: { _ in
             transitionContext.completeTransition(true)
             //container.insertSubview(fromView, at: 0)
             maskView.removeFromSuperview()

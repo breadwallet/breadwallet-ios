@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIView {
-    static func springAnimation(_ duration: TimeInterval, animations: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
+    static func spring(_ duration: TimeInterval, animations: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
         if #available(iOS 10.0, *) {
             UIViewPropertyAnimator.springAnimation(duration, animations: animations, completion: {_ in completion(true) })
         } else {
