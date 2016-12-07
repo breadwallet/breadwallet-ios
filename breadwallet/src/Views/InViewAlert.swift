@@ -16,8 +16,7 @@ enum InViewAlertType {
 class InViewAlert: UIView {
 
     var heightConstraint: NSLayoutConstraint?
-    var expanded = false
-    var collapsedHeight: CGFloat = 0.0
+    var isExpanded = false
     var contentView: UIView? {
         didSet {
             guard let view = contentView else { return }
@@ -26,7 +25,14 @@ class InViewAlert: UIView {
         }
     }
     
-    static let height: CGFloat = 80.0
+    var height: CGFloat {
+        switch type {
+        case .primary:
+            return 72.0
+        case .secondary:
+            return 81.0
+        }
+    }
 
     init(type: InViewAlertType) {
         self.type = type
@@ -35,11 +41,11 @@ class InViewAlert: UIView {
     }
 
     func toggle() {
-        heightConstraint?.constant = expanded ? collapsedHeight : InViewAlert.height
+        heightConstraint?.constant = isExpanded ? 0.0 : height
     }
 
     private let type: InViewAlertType
-    private let arrowHeight: CGFloat = 10.0
+    private let arrowHeight: CGFloat = 8.0
     private let arrowWidth: CGFloat = 16.0
 
     private func setupSubViews(){
@@ -48,11 +54,6 @@ class InViewAlert: UIView {
     }
 
     override func draw(_ rect: CGRect) {
-        //When collapsed, this view is used as padding.
-        //This is why we don't want it drawn when it's small.
-        if collapsedHeight > 0.0 {
-            guard rect.height > collapsedHeight else { return }
-        }
         let background = UIBezierPath(rect: rect.offsetBy(dx: 0, dy: arrowHeight))
         fillColor.setFill()
         background.fill()
@@ -86,10 +87,10 @@ class InViewAlert: UIView {
 
     private var fillColor: UIColor {
         switch type {
-            case .primary:
-                return .primaryButton
-            case .secondary:
-                return .grayBackgroundTint
+        case .primary:
+            return .primaryButton
+        case .secondary:
+            return .grayBackgroundTint
         }
     }
 
