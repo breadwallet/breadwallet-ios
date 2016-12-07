@@ -17,6 +17,11 @@ private let animationDuration: TimeInterval = 0.3
 
 class ReceiveViewController: UIViewController {
 
+    init(store: Store) {
+        self.store = store
+        super.init(nibName: nil, bundle: nil)
+    }
+
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 14.0))
     private let addressPopout = InViewAlert(type: .primary)
@@ -25,7 +30,7 @@ class ReceiveViewController: UIViewController {
     private let border = UIView()
     private let request = ShadowButton(title: NSLocalizedString("Request an Amount", comment: "Request button label"), type: .secondary)
     private var topSharePopoutConstraint: NSLayoutConstraint?
-
+    private let store: Store
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
@@ -144,6 +149,8 @@ class ReceiveViewController: UIViewController {
     }
 
     @objc private func addressTapped() {
+        guard let text = address.text else { return }
+        UIPasteboard.general.string = text
         toggle(alertView: addressPopout, shouldAdjustPadding: false)
         if sharePopout.isExpanded {
             toggle(alertView: sharePopout, shouldAdjustPadding: true)
@@ -182,7 +189,10 @@ class ReceiveViewController: UIViewController {
             alertView.contentView?.isHidden = false
         })
     }
-
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 extension ReceiveViewController: ModalDisplayable {
