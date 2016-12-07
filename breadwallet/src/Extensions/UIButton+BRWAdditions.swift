@@ -13,7 +13,7 @@ extension UIButton {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.setImage(image, for: .normal)
-
+        button.titleLabel?.font = UIFont.customMedium(size: 11.0)
         if let imageSize = button.imageView?.image?.size,
             let font = button.titleLabel?.font {
             let spacing: CGFloat = C.padding[1]/2.0
@@ -23,7 +23,6 @@ extension UIButton {
             button.titleEdgeInsets = UIEdgeInsetsMake(0.0, -imageSize.width, -(imageSize.height + spacing), 0.0)
             button.imageEdgeInsets = UIEdgeInsetsMake(-(titleSize.height + spacing), 0.0, 0.0, -titleSize.width)
         }
-
         return button
     }
 
@@ -33,7 +32,6 @@ extension UIButton {
         button.setImage(#imageLiteral(resourceName: "Close"), for: .normal)
         button.imageEdgeInsets = UIEdgeInsetsMake(16.0, 16.0, 16.0, 16.0)
         button.tintColor = .darkText
-        //button.backgroundColor = .lightGray
         button.accessibilityLabel = NSLocalizedString("Close", comment: "Close modal button accessibility label")
         return button
     }
