@@ -26,18 +26,18 @@
 import Foundation
 
 
-@objc public protocol BRWebSocket {
+public protocol BRWebSocket {
     var id: String { get }
     var request: BRHTTPRequest { get }
     var match: BRHTTPRouteMatch { get }
     func send(_ text: String)
 }
 
-@objc public protocol BRWebSocketClient {
-    @objc optional func socketDidConnect(_ socket: BRWebSocket)
-    @objc optional func socket(_ socket: BRWebSocket, didReceiveData data: Data)
-    @objc optional func socket(_ socket: BRWebSocket, didReceiveText text: String)
-    @objc optional func socketDidDisconnect(_ socket: BRWebSocket)
+public protocol BRWebSocketClient {
+    func socketDidConnect(_ socket: BRWebSocket)
+    func socket(_ socket: BRWebSocket, didReceiveData data: Data)
+    func socket(_ socket: BRWebSocket, didReceiveText text: String)
+    func socketDidDisconnect(_ socket: BRWebSocket)
 }
 
 let GID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
@@ -107,7 +107,7 @@ class BRWebSocketServer {
         log("adding socket \(socket.fd)")
         pthread_mutex_lock(mutex)
         sockets[socket.fd] = socket
-        socket.client.socketDidConnect?(socket)
+        socket.client.socketDidConnect(socket)
         pthread_cond_broadcast(waiter)
         pthread_mutex_unlock(mutex)
         log("done adding socket \(socket.fd)")
@@ -187,7 +187,7 @@ class BRWebSocketServer {
                             if opcode == .close {
                                 log("KILLING fd=\(writeSock.fd)")
                                 writeSock.response.kill()
-                                writeSock.client.socketDidDisconnect?(writeSock)
+                                writeSock.client.socketDidDisconnect(writeSock)
                                 sockets.removeValue(forKey: writeSock.fd)
                                 continue // go to the next select client
                             }
@@ -195,7 +195,7 @@ class BRWebSocketServer {
                     } catch {
                         // close...
                         writeSock.response.kill()
-                        writeSock.client.socketDidDisconnect?(writeSock)
+                        writeSock.client.socketDidDisconnect(writeSock)
                         sockets.removeValue(forKey: writeSock.fd)
                     }
                 }
@@ -205,7 +205,7 @@ class BRWebSocketServer {
             for i in 0..<resp.error_fd_len {
                 if let errSock = sockets[resp.error_fds[Int(i)]] {
                     errSock.response.kill()
-                    errSock.client.socketDidDisconnect?(errSock)
+                    errSock.client.socketDidDisconnect(errSock)
                     sockets.removeValue(forKey: errSock.fd)
                 }
             }
@@ -242,14 +242,14 @@ class BRWebSocketServer {
 }
 
 class BRWebSocketImpl: BRWebSocket {
-    @objc var request: BRHTTPRequest
+    var request: BRHTTPRequest
     var response: BRHTTPResponse
-    @objc var match: BRHTTPRouteMatch
+    var match: BRHTTPRouteMatch
     var client: BRWebSocketClient
     var fd: Int32
     var key: String!
     var version: String!
-    @objc var id: String = UUID().uuidString
+    var id: String = UUID().uuidString
     
     var state = SocketState.headerb1
     var fin: UInt8 = 0
@@ -578,13 +578,13 @@ class BRWebSocketImpl: BRWebSocket {
                 }
                 if self.fragType == .text {
                     if let str = String(bytes: data, encoding: String.Encoding.utf8) {
-                        self.client.socket?(self, didReceiveText: str)
+                        self.client.socket(self, didReceiveText: str)
                     } else {
                         log("error decoding utf8 data")
                     }
                 } else {
                     let bin = Data(bytes: UnsafePointer<UInt8>(UnsafePointer(data)), count: data.count)
-                    self.client.socket?(self, didReceiveData: bin)
+                    self.client.socket(self, didReceiveData: bin)
                 }
                 fragType = .binary
                 fragStart = false
@@ -600,7 +600,7 @@ class BRWebSocketImpl: BRWebSocket {
                 }
                 if opcode == .text {
                     if let str = String(bytes: data, encoding: String.Encoding.utf8) {
-                        self.client.socket?(self, didReceiveText: str)
+                        self.client.socket(self, didReceiveText: str)
                     } else {
                         log("error decoding uft8 data")
                     }

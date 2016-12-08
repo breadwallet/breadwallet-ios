@@ -39,7 +39,7 @@ public extension String {
             #endif
         }
         
-        var result = Data(capacity: 128/8)
+        var result = Data(count: 128/8)
         return result.withUnsafeMutableBytes { (resultBytes: UnsafeMutablePointer<CUnsignedChar>) -> String in
             data.withUnsafeBytes { (dataBytes) -> Void in
                 BRMD5(resultBytes, dataBytes, data.count)
@@ -49,6 +49,15 @@ public extension String {
                 hash = hash.appendingFormat("%02x", resultBytes[i])
             }
             return hash
+        }
+    }
+    
+    func base58DecodedData() -> Data {
+        let len = BRBase58Decode(nil, 0, self)
+        var data = Data(count: len)
+        return data.withUnsafeMutableBytes { (ptr: UnsafeMutablePointer<CUnsignedChar>) in
+            BRBase58Decode(ptr, len, self)
+            return data
         }
     }
     
@@ -196,24 +205,16 @@ public extension Data {
     var base58: String {
         return self.withUnsafeBytes { (selfBytes: UnsafePointer<UInt8>) -> String in
             let len = BRBase58Encode(nil, 0, selfBytes, self.count)
-            var data = Data(capacity: len)
-            _ = data.withUnsafeMutableBytes {
-                BRBase58Encode($0, len, selfBytes, self.count)
+            var data = Data(count: len)
+            return data.withUnsafeMutableBytes { (b: UnsafeMutablePointer<Int8>) in
+                BRBase58Encode(b, len, selfBytes, self.count)
+                return String(cString: b)
             }
-            guard let ret = String(data: data, encoding: .utf8) else {
-                #if DEBUG
-                fatalError("Unable to encode base58 string")
-                #else
-                print("unable to encode base58 string")
-                return ""
-                #endif
-            }
-            return ret
         }
     }
 
     var sha1: Data {
-        var data = Data(capacity: 20)
+        var data = Data(count: 20)
         data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) in
             self.withUnsafeBytes({ (selfBytes: UnsafePointer<UInt8>) in
                 BRSHA1(bytes, selfBytes, self.count)
@@ -223,7 +224,7 @@ public extension Data {
     }
     
     var sha256: Data {
-        var data = Data(capacity: 32)
+        var data = Data(count: 32)
         data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) in
             self.withUnsafeBytes({ (selfBytes: UnsafePointer<UInt8>) in
                 BRSHA256(bytes, selfBytes, self.count)
@@ -271,7 +272,7 @@ public extension Data {
     
     public func compactSign(key: BRKey) -> Data {
         return self.withUnsafeBytes({ (selfBytes: UnsafePointer<UInt8>) -> Data in
-            var data = Data(capacity: 65)
+            var data = Data(count: 65)
             var k = key
             return data.withUnsafeMutableBytes({ (bytes: UnsafeMutablePointer<UInt8>) -> Data in
                 BRKeyCompactSign(&k, bytes, 65, self.uInt256)
@@ -410,13 +411,9 @@ public extension Date {
 public extension BRKey {
     public var publicKey: Data {
         var k = self
-        return withUnsafeMutablePointer(to: &k) { pk in
-            let len = BRKeyPubKey(pk, nil, 0)
-            var data = Data(capacity: len)
-            return data.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) -> Data in
-                BRKeyPubKey(pk, bytes, len)
-                return data
-            }
-        }
+        let len = BRKeyPubKey(&k, nil, 0)
+        var data = Data(count: len)
+        BRKeyPubKey(&k, data.withUnsafeMutableBytes({ (d: UnsafeMutablePointer<UInt8>) -> UnsafeMutablePointer<UInt8> in d }), len)
+        return data
     }
 }
