@@ -35,11 +35,11 @@ enum BRHTTPServerError: Error {
     case invalidRangeHeader
 }
 
-@objc public protocol BRHTTPMiddleware {
+public protocol BRHTTPMiddleware {
     func handle(_ request: BRHTTPRequest, next: @escaping (BRHTTPMiddlewareResponse) -> Void)
 }
 
-@objc open class BRHTTPMiddlewareResponse: NSObject {
+open class BRHTTPMiddlewareResponse {
     var request: BRHTTPRequest
     var response: BRHTTPResponse?
     
@@ -225,12 +225,10 @@ enum BRHTTPServerError: Error {
                 var v: Int32 = 1
                 setsockopt(cli_fd, SOL_SOCKET, SO_NOSIGPIPE, &v, socklen_t(MemoryLayout<Int32>.size))
                 self.addClient(cli_fd)
-                // print("startup: \(cli_fd)")
                 self.Q.async { () -> Void in
                     while let req = try? BRHTTPRequestImpl(readFromFd: cli_fd, queue: self.Q) {
                         self.dispatch(middleware: self.middleware, req: req) { resp in
                             _ = Darwin.shutdown(cli_fd, SHUT_RDWR)
-                            // print("shutdown: \(cli_fd)")
                             close(cli_fd)
                             self.rmClient(cli_fd)
                         }
@@ -238,7 +236,6 @@ enum BRHTTPServerError: Error {
                     }
                 }
             }
-//            self.shutdownServer()
         }
     }
     
@@ -246,7 +243,6 @@ enum BRHTTPServerError: Error {
         var newMw = mw
         if let curMw = newMw.popLast() {
             curMw.handle(req, next: { (mwResp) -> Void in
-                // print("[BRHTTPServer] trying \(req.path) \(curMw)")
                 if let httpResp = mwResp.response {
                     httpResp.done {
                         do {
@@ -279,7 +275,7 @@ enum BRHTTPServerError: Error {
     }
 }
 
-@objc public protocol BRHTTPRequest {
+public protocol BRHTTPRequest {
     var fd: Int32 { get }
     var queue: DispatchQueue { get }
     var method: String { get }
@@ -293,10 +289,10 @@ enum BRHTTPServerError: Error {
     var contentType: String { get }
     var contentLength: Int { get }
     var start: Date { get }
-    @objc optional func json() -> AnyObject?
+    func json() -> AnyObject?
 }
 
-@objc open class BRHTTPRequestImpl: NSObject, BRHTTPRequest {
+open class BRHTTPRequestImpl: BRHTTPRequest {
     open var fd: Int32
     open var queue: DispatchQueue
     open var method = "GET"
@@ -331,7 +327,6 @@ enum BRHTTPServerError: Error {
     public required init(readFromFd: Int32, queue: DispatchQueue) throws {
         fd = readFromFd
         self.queue = queue
-        super.init()
         let status = try readLine()
         let statusParts = status.components(separatedBy: " ")
         if statusParts.count < 3 {
@@ -462,7 +457,7 @@ enum BRHTTPServerError: Error {
     }
 }
 
-@objc open class BRHTTPResponse: NSObject {
+open class BRHTTPResponse {
     var request: BRHTTPRequest
     var statusCode: Int?
     var statusReason: String?
@@ -545,7 +540,6 @@ enum BRHTTPServerError: Error {
         self.headers = headers
         self.body = body
         self.isDone = true
-        super.init()
     }
     
     init(async request: BRHTTPRequest) {

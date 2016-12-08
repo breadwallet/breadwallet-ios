@@ -80,7 +80,7 @@ class BRHTTPServerTests: XCTestCase {
     }
 }
 
-@objc class BRTestHTTPRequest: NSObject, BRHTTPRequest {
+class BRTestHTTPRequest: BRHTTPRequest {
     var fd: Int32 = 0
     var method: String = "GET"
     var path: String = "/"
@@ -100,6 +100,10 @@ class BRHTTPServerTests: XCTestCase {
     }
     
     func body() -> Data? {
+        return nil
+    }
+    
+    func json() -> AnyObject? {
         return nil
     }
 }

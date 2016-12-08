@@ -44,6 +44,7 @@
 		22C431301DF89DC00017CAEA /* BRReplicatedKVStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4312F1DF89DC00017CAEA /* BRReplicatedKVStoreTests.swift */; };
 		22C431321DF89DDC0017CAEA /* NSDataExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431311DF89DDB0017CAEA /* NSDataExtensionTests.swift */; };
 		22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431331DF89DFE0017CAEA /* BRCoderTests.swift */; };
+		22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */; };
 		7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */; };
 		750377401DF63BD6005EB8AE /* BIP39Words.plist in Resources */ = {isa = PBXBuildFile; fileRef = 750377421DF63BD6005EB8AE /* BIP39Words.plist */; };
 		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
@@ -495,6 +496,7 @@
 		22C4312F1DF89DC00017CAEA /* BRReplicatedKVStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRReplicatedKVStoreTests.swift; sourceTree = "<group>"; };
 		22C431311DF89DDB0017CAEA /* NSDataExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDataExtensionTests.swift; sourceTree = "<group>"; };
 		22C431331DF89DFE0017CAEA /* BRCoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRCoderTests.swift; sourceTree = "<group>"; };
+		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WalletManager+Auth.swift"; path = "src/WalletManager+Auth.swift"; sourceTree = "<group>"; };
 		750377411DF63BD6005EB8AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/BIP39Words.plist; sourceTree = "<group>"; };
 		75519F331DC7D20500EDF66C /* WalletManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletManager.swift; path = src/WalletManager.swift; sourceTree = "<group>"; };
@@ -2328,6 +2330,7 @@
 				22C4312F1DF89DC00017CAEA /* BRReplicatedKVStoreTests.swift */,
 				22C431311DF89DDB0017CAEA /* NSDataExtensionTests.swift */,
 				22C431331DF89DFE0017CAEA /* BRCoderTests.swift */,
+				22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */,
 			);
 			path = breadwalletTests;
 			sourceTree = "<group>";
@@ -3290,6 +3293,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				22C4312E1DF89D970017CAEA /* BRHTTPServerTests.swift in Sources */,
+				22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */,
 				75A2A7A91DA5934300A983D8 /* breadwalletTests.swift in Sources */,
 				22C431321DF89DDC0017CAEA /* NSDataExtensionTests.swift in Sources */,
 				22C431301DF89DC00017CAEA /* BRReplicatedKVStoreTests.swift in Sources */,

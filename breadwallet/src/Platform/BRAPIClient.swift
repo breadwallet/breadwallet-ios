@@ -84,13 +84,6 @@ func getHeaderValue(_ k: String, d: [String: String]?) -> String? {
     return nil
 }
 
-//func getAuthKey() -> BRKey? {
-//    if let manager = BRWalletManager.sharedInstance(), let authKey = manager.authPrivateKey {
-//        return BRKey(privateKey: authKey)
-//    }
-//    return nil
-//}
-
 func getDeviceId() -> String {
     let ud = UserDefaults.standard
     if let s = ud.string(forKey: "BR_DEVICE_ID") {
@@ -167,10 +160,10 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
     fileprivate var authFetchGroup: DispatchGroup = DispatchGroup()
     
     // storage for the session constructor below
-    fileprivate var _session: Foundation.URLSession? = nil
+    fileprivate var _session: URLSession? = nil
     
     // the NSURLSession on which all NSURLSessionTasks are executed
-    fileprivate var session: Foundation.URLSession {
+    fileprivate var session: URLSession {
         if _session == nil {
             let config = URLSessionConfiguration.default
             _session = Foundation.URLSession(configuration: config, delegate: self, delegateQueue: queue)
@@ -203,13 +196,16 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
     }
     
     var authKey: BRKey? {
-        guard authenticator.noWallet else { return nil }
+        if authenticator.noWallet { return nil }
         guard let keyStr = authenticator.apiAuthKey else { return nil }
-        return keyStr.utf8CString.withUnsafeBufferPointer {
-            var key = BRKey()
-            BRKeySetPrivKey(&key, $0.baseAddress)
-            return key
+        var key = BRKey()
+        key.compressed = 1 
+        if BRKeySetPrivKey(&key, keyStr) == 0 {
+            #if DEBUG
+                fatalError("Unable to decode private key")
+            #endif
         }
+        return key
     }
     
     // MARK: Networking functions
@@ -244,7 +240,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
             let hval = "bread \(token):\(sig.base58)"
             mutableRequest.setValue(hval, forHTTPHeaderField: "Authorization")
         }
-        return mutableRequest as URLRequest
+        return mutableRequest
     }
     
     open func dataTaskWithRequest(_ request: URLRequest, authenticated: Bool = false,
@@ -254,7 +250,8 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
         if let meth = request.httpMethod, let u = request.url {
             logLine = "\(meth) \(u) auth=\(authenticated) retry=\(retryCount)"
         }
-        let origRequest = (request as NSURLRequest).mutableCopy() as! URLRequest
+        
+        // copy the request and authenticate it. retain the original request for retries
         var actualRequest = request
         if authenticated {
             actualRequest = signRequest(request)
@@ -266,8 +263,8 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
                 if let httpResp = resp as? HTTPURLResponse {
                     var errStr = ""
                     if httpResp.statusCode >= 400 {
-                        if let data = data, let s = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
-                            errStr = s as String
+                        if let data = data, let s = String(data: data, encoding: .utf8) {
+                            errStr = s
                         }
                     }
                     
@@ -280,7 +277,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
                                 self.log("\(logLine) error retrieving token: \(err) - will retry")
                                 DispatchQueue.main.asyncAfter(deadline: DispatchTime(uptimeNanoseconds: 1)) {
                                     self.dataTaskWithRequest(
-                                        origRequest, authenticated: authenticated,
+                                        request, authenticated: authenticated,
                                         retryCount: retryCount + 1, handler: handler
                                     ).resume()
                                 }
@@ -290,7 +287,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
                             } else if retryCount < 1 { // no error, so attempt the request again
                                 self.log("\(logLine) retrieved token, so retrying the original request")
                                 self.dataTaskWithRequest(
-                                    origRequest, authenticated: authenticated,
+                                    request, authenticated: authenticated,
                                     retryCount: retryCount + 1, handler: handler).resume()
                             } else {
                                 self.log("\(logLine) retried token multiple times, will not retry again")
@@ -348,7 +345,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
                 if let httpResp = resp as? HTTPURLResponse {
                     // unsuccessful response from the server
                     if httpResp.statusCode != 200 {
-                        if let data = data, let s = String(data: data, encoding: String.Encoding.utf8) {
+                        if let data = data, let s = String(data: data, encoding: .utf8) {
                             self.log("Token error: \(s)")
                         }
                         self.isFetchingAuth = false
@@ -443,12 +440,11 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
             req.httpBody = dat
         } catch (let e) {
             log("JSON Serialization error \(e)")
-            return //handler(NSError(domain: BRAPIClientErrorDomain, code: 500, userInfo: [
-                //NSLocalizedDescriptionKey: NSLocalizedString("JSON Serialization Error", comment: "")]))
+            return
         }
         dataTaskWithRequest(req as URLRequest, authenticated: true, retryCount: 0) { (dat, resp, er) in
-            let dat2 = NSString(data: (dat != nil ? dat! : Data()), encoding: String.Encoding.utf8.rawValue)
-            self.log("token resp: \(resp) data: \(dat2)")
+            let dat2 = String(data: dat ?? Data(), encoding: .utf8)
+            self.log("save push token resp: \(resp) data: \(dat2)")
         }.resume()
     }
     
@@ -522,8 +518,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
             }.resume()
         }
         
-        func put(_ key: String, value: [UInt8], version: UInt64,
-                 completionFunc: @escaping (UInt64, Date, BRRemoteKVStoreError?) -> ()) {
+        func put(_ key: String, value: [UInt8], version: UInt64, completionFunc: @escaping (UInt64, Date, BRRemoteKVStoreError?) -> ()) {
             var req = URLRequest(url: client.url("/kv/1/\(key)"))
             req.httpMethod = "PUT"
             req.addValue("\(version)", forHTTPHeaderField: "If-None-Match")
@@ -543,8 +538,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
             }.resume()
         }
         
-        func del(_ key: String, version: UInt64,
-                 completionFunc: @escaping (UInt64, Date, BRRemoteKVStoreError?) -> ()) {
+        func del(_ key: String, version: UInt64, completionFunc: @escaping (UInt64, Date, BRRemoteKVStoreError?) -> ()) {
             var req = URLRequest(url: client.url("/kv/1/\(key)"))
             req.httpMethod = "DELETE"
             req.addValue("\(version)", forHTTPHeaderField: "If-None-Match")
@@ -560,8 +554,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
             }.resume()
         }
         
-        func get(_ key: String, version: UInt64,
-                 completionFunc: @escaping (UInt64, Date, [UInt8], BRRemoteKVStoreError?) -> ()) {
+        func get(_ key: String, version: UInt64, completionFunc: @escaping (UInt64, Date, [UInt8], BRRemoteKVStoreError?) -> ()) {
             var req = URLRequest(url: client.url("/kv/1/\(key)"))
             req.httpMethod = "GET"
             req.addValue("\(version)", forHTTPHeaderField: "If-None-Match")
@@ -580,8 +573,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
             }.resume()
         }
         
-        func keys(_ completionFunc:
-                  @escaping ([(String, UInt64, Date, BRRemoteKVStoreError?)], BRRemoteKVStoreError?) -> ()) {
+        func keys(_ completionFunc: @escaping ([(String, UInt64, Date, BRRemoteKVStoreError?)], BRRemoteKVStoreError?) -> ()) {
             var req = URLRequest(url: client.url("/kv/_all_keys"))
             req.httpMethod = "GET"
             client.dataTaskWithRequest(req as URLRequest, authenticated: true, retryCount: 0) { (dat, resp, err) in
@@ -695,7 +687,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
         let bundlePath = bundleUrl.path
         let bundleExtractedUrl = bundleDirUrl.appendingPathComponent("\(bundleName)-extracted")
         let bundleExtractedPath = bundleExtractedUrl.path
-        print("[BRAPIClient] bundleUrl \(bundlePath)")
+        log("bundleUrl \(bundlePath)")
         
         // determines if the bundle exists, but also creates the bundles/extracted directory if it doesn't exist
         func exists() throws -> Bool {
@@ -718,7 +710,8 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
         }
         
         guard var bundleExists = try? exists() else {
-            return handler(NSLocalizedString("error determining if bundle exists", comment: "")) }
+            return handler("error determining if bundle exists")
+        }
         
         // attempt to use the tar file that was bundled with the binary
         if !bundleExists {
@@ -738,7 +731,8 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
             log("bundle \(bundleName) exists, fetching diff for most recent version")
             
             guard let curBundleContents = try? Data(contentsOf: URL(fileURLWithPath: bundlePath)) else {
-                return handler(NSLocalizedString("error reading current bundle", comment: "")) }
+                return handler("error reading current bundle")
+            }
             
             let curBundleSha = curBundleContents.sha256.hexString
             
@@ -756,12 +750,11 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
                                     try extract()
                                     return handler(nil)
                                 } catch let e {
-                                    return handler(NSLocalizedString("error extracting bundle: " + "\(e)", comment: ""))
+                                    return handler("error extracting bundle: \(e)")
                                 }
                             } else { // don't have the most recent version, download diff
                                 self.log("Fetching most recent version of bundle \(bundleName)")
-                                let req = URLRequest(url:
-                                    self.url("/assets/bundles/\(bundleName)/diff/\(curBundleSha)"))
+                                let req = URLRequest(url: self.url("/assets/bundles/\(bundleName)/diff/\(curBundleSha)"))
                                 self.dataTaskWithRequest(req, handler: { (diffDat, diffResp, diffErr) -> Void in
                                     if let diffDat = diffDat , diffErr == nil {
                                         let diffPath = bundleDirUrl.appendingPathComponent("\(bundleName).diff").path
@@ -787,15 +780,14 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
                                             _ = try? fm.removeItem(atPath: diffPath)
                                             _ = try? fm.removeItem(atPath: oldBundlePath)
                                             _ = try? fm.removeItem(atPath: bundlePath)
-                                            return handler(
-                                                NSLocalizedString("error downloading diff: " + "\(e)", comment: ""))
+                                            return handler("error downloading diff: \(e)")
                                         }
                                     }
                                 }).resume()
                             }
                         }
                     else {
-                        return handler(NSLocalizedString("error determining versions", comment: ""))
+                        return handler("error determining versions")
                     }
                 }.resume()
         } else {
@@ -804,7 +796,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
             let req = URLRequest(url: url("/assets/bundles/\(bundleName)/download"))
             dataTaskWithRequest(req) { (data, response, err) -> Void in
                 if err != nil || response?.statusCode != 200 {
-                    return handler(NSLocalizedString("error fetching bundle: ", comment: "") + "\(err)")
+                    return handler("error fetching bundle: \(err)")
                 }
                 if let data = data {
                     do {
@@ -812,7 +804,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
                         try extract()
                         return handler(nil)
                     } catch let e {
-                        return handler(NSLocalizedString("error writing bundle file: ", comment: "") + "\(e)")
+                        return handler("error writing bundle file: \(e)")
                     }
                 }
             }.resume()
