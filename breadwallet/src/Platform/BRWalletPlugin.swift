@@ -213,4 +213,8 @@ class BRWalletPlugin: NSObject, BRHTTPRouterPlugin, BRWebSocketClient {
         print("WALLET RECV \(text)")
         socket.send(text)
     }
+    
+    public func socket(_ socket: BRWebSocket, didReceiveData data: Data) {
+        // nothing to do here
+    }
 }

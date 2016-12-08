@@ -97,7 +97,7 @@ class BRGeoLocationDelegate: NSObject, CLLocationManagerDelegate {
 }
 
 @available(iOS 8.0, *)
-@objc open class BRGeoLocationPlugin: NSObject, BRHTTPRouterPlugin, CLLocationManagerDelegate, BRWebSocketClient {
+open class BRGeoLocationPlugin: NSObject, BRHTTPRouterPlugin, CLLocationManagerDelegate, BRWebSocketClient {
     lazy var manager = CLLocationManager()
     var outstanding = [BRGeoLocationDelegate]()
     var sockets = [String: BRWebSocket]()
@@ -155,7 +155,7 @@ class BRGeoLocationDelegate: NSObject, CLLocationManagerDelegate {
         // geo availability to the app when the app is foregrounded, and "always" will request
         // full time geo availability to the app
         router.post("/_permissions/geo") { (request, match) -> BRHTTPResponse in
-            if let j = request.json?(), let dict = j as? NSDictionary, let style = dict["style"] as? String {
+            if let j = request.json(), let dict = j as? NSDictionary, let style = dict["style"] as? String {
                 switch style {
                 case "inuse": self.manager.requestWhenInUseAuthorization()
                 case "always": self.manager.requestAlwaysAuthorization()
@@ -307,5 +307,9 @@ class BRGeoLocationDelegate: NSObject, CLLocationManagerDelegate {
         print("LOCATION SOCKET RECV \(text)")
         // this is unused here but just in case just echo received text back
         socket.send(text)
+    }
+    
+    public func socket(_ socket: BRWebSocket, didReceiveData data: Data) {
+        // nothing to do here
     }
 }
