@@ -97,10 +97,11 @@ class ReceiveViewController: UIViewController {
     }
 
     private func setStyle() {
-        qrCode.image = #imageLiteral(resourceName: "TempQRCode")
         address.text = "9T2K3qb24sD45214439v1Ve7swF43Y2134"
         address.textColor = .grayTextTint
         border.backgroundColor = .secondaryBorder
+        qrCode.image = UIImage.qrCode(data: address.text!.data(using: .utf8)!, color: CIColor(color: .black))?
+                            .resize(CGSize(width: qrSize, height: qrSize))!
     }
 
     private func addActions() {
