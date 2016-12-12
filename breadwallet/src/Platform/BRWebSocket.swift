@@ -24,7 +24,7 @@
 //  THE SOFTWARE.
 
 import Foundation
-
+import BRSocketHelpers
 
 public protocol BRWebSocket {
     var id: String { get }

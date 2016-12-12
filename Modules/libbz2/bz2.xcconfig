@@ -1,9 +1,0 @@
-//
-//  bz2.xcconfig
-//  breadwallet
-//
-//  Created by Samuel Sutch on 12/5/16.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
-//
-MODULEMAP_FILE[sdk=iphoneos*] = $(SRCROOT)/Modules/libbz2/iphone.modulemap
-MODULEMAP_FILE[sdk=iphonesimulator*] = $(SRCROOT)/Modules/libbz2/iphonesim.modulemap

@@ -1,0 +1,4 @@
+module BRSocketHelpers [system] [extern_c] {
+    header "BRSocketHelpers.h"
+    export *
+}
