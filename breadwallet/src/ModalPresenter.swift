@@ -70,30 +70,20 @@ class ModalPresenter: Subscriber {
                 topConstraint
             ])
         activeWindow.layoutIfNeeded()
-        if #available(iOS 10.0, *) {
 
-            let presentAnimator = UIViewPropertyAnimator.springAnimation {
-                topConstraint?.constant = size.height - self.alertHeight
-                self.activeWindow.layoutIfNeeded()
-            }
-
-            let dismissAnimator = UIViewPropertyAnimator.springAnimation {
+        UIView.spring(0.6, animations: {
+            topConstraint?.constant = size.height - self.alertHeight
+            self.activeWindow.layoutIfNeeded()
+        }, completion: { _ in
+            alertView.animate()
+            UIView.spring(0.6, delay: 2.0, animations: {
                 topConstraint?.constant = size.height
                 self.activeWindow.layoutIfNeeded()
-            }
-
-            presentAnimator.addCompletion { _ in
-                alertView.animate()
-                dismissAnimator.startAnimation(afterDelay: 2.0)
-            }
-
-            dismissAnimator.addCompletion { _ in
+            }, completion: { _ in
                 completion()
                 alertView.removeFromSuperview()
-            }
-
-            presentAnimator.startAnimation()
-        }
+            })
+        })
     }
 
     //TODO - This is a total hack to grab the window that keyboard is in
