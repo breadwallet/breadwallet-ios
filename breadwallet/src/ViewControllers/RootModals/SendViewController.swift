@@ -98,7 +98,8 @@ class SendViewController: UIViewController, Subscriber {
     }
 
     @objc private func scanTapped() {
-
+        let vc = ScanViewController()
+        present(vc, animated: true, completion: {})
     }
 
     private func invalidAddressAlert() {
