@@ -33,6 +33,7 @@ class ShadowButton: UIControl {
         setupViews()
     }
 
+    var isToggleable = false
     private let title: String
     private let type: ButtonType
     private let container = UIView()
@@ -60,6 +61,7 @@ class ShadowButton: UIControl {
 
     override var isSelected: Bool {
         didSet {
+            guard isToggleable else { return }
             if type == .tertiary {
                 if isSelected {
                     container.layer.borderColor = UIColor.primaryButton.cgColor
