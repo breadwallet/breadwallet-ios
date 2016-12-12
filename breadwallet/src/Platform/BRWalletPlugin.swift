@@ -73,7 +73,7 @@ class BRWalletPlugin: NSObject, BRHTTPRouterPlugin, BRWebSocketClient {
         noteCenter.addObserver(forName: NSNotification.Name.WalletBalanceChangedNotification,
                                object: nil, queue: nil) { (note) in
             if let wallet = self.walletManager.wallet {
-                self.announce(["type": "balance_changed", "balance": Int(BRWalletBalance(wallet.ptr))])
+                self.announce(["type": "balance_changed", "balance": Int(wallet.balance)])
             }
         }
  

@@ -27,7 +27,7 @@ import Foundation
 import UIKit
 import LocalAuthentication
 import BRCore
-import CSQLite3
+import sqlite3
 
 /// WalletAuthenticator is a protocol whose implementors are able to interact with wallet authentication
 public protocol WalletAuthenticator {
@@ -40,7 +40,6 @@ private func secureAllocate(allocSize: CFIndex, hint: CFOptionFlags, info: Unsaf
     -> UnsafeMutableRawPointer?
 {
     guard let ptr = malloc(MemoryLayout<CFIndex>.stride + allocSize) else { return nil }
-
     // keep track of the size of the allocation so it can be cleansed before deallocation
     ptr.assumingMemoryBound(to: CFIndex.self).pointee = MemoryLayout<CFIndex>.stride + allocSize
     return ptr + MemoryLayout<CFIndex>.stride
@@ -49,7 +48,6 @@ private func secureAllocate(allocSize: CFIndex, hint: CFOptionFlags, info: Unsaf
 private func secureDeallocate(ptr: UnsafeMutableRawPointer?, info: UnsafeMutableRawPointer?)
 {
     guard let ptr = ptr?.advanced(by: -MemoryLayout<CFIndex>.stride) else { return }
-    
     memset(ptr, 0, ptr.assumingMemoryBound(to: CFIndex.self).pointee) // cleanse allocated memory
     free(ptr)
 }
@@ -62,11 +60,7 @@ private func secureReallocate(ptr: UnsafeMutableRawPointer?, newsize: CFIndex, h
     guard let ptr = ptr else { return nil }
     let newptr = secureAllocate(allocSize: newsize, hint: hint, info: info)
     let size = (ptr - MemoryLayout<CFIndex>.stride).assumingMemoryBound(to: CFIndex.self).pointee
-    
-    if (newptr != nil) {
-        memcpy(newptr, ptr, (size < newsize) ? size : newsize)
-    }
-    
+    if (newptr != nil) { memcpy(newptr, ptr, (size < newsize) ? size : newsize) }
     secureDeallocate(ptr: ptr, info: info)
     return newptr
 }
@@ -74,7 +68,6 @@ private func secureReallocate(ptr: UnsafeMutableRawPointer?, newsize: CFIndex, h
 // since iOS does not page memory to disk, all we need to do is cleanse allocated memory prior to deallocation
 public let secureAllocator: CFAllocator = {
     var context = CFAllocatorContext()
-
     context.version = 0;
     CFAllocatorGetContext(kCFAllocatorDefault, &context)
     context.allocate = secureAllocate
@@ -93,7 +86,6 @@ private func keychainItem<T>(key: String) throws -> T? {
                  kSecReturnData as String : true as Any]
     var result: CFTypeRef? = nil
     let status = SecItemCopyMatching(query as CFDictionary, &result);
-    
     guard status == noErr || status == errSecItemNotFound else {
         throw NSError(domain: NSOSStatusErrorDomain, code: Int(status))
     }
@@ -148,7 +140,6 @@ private func setKeychainItem<T>(key: String, item: T?, authenticated: Bool = fal
     else if SecItemCopyMatching(query as CFDictionary, nil) != errSecItemNotFound { // update existing item
         let update = [kSecAttrAccessible as String : accessible,
                       kSecValueData as String : data as Any]
-        
         status = SecItemUpdate(query as CFDictionary, update as CFDictionary)
     }
     else { // add new item
@@ -157,7 +148,6 @@ private func setKeychainItem<T>(key: String, item: T?, authenticated: Bool = fal
                     kSecAttrAccount as String : key,
                     kSecAttrAccessible as String : accessible,
                     kSecValueData as String : data as Any]
-        
         status = SecItemAdd(item as CFDictionary, nil)
     }
     
@@ -208,17 +198,14 @@ extension WalletManager: WalletAuthenticator {
         do {
             if try keychainItem(key: keychainKey.masterPubKey) as Data? != nil { return false }
             if try keychainItem(key: keychainKey.seed) as Data? != nil { return false } // check for old keychain scheme
+            return true
         }
         catch { return false }
-        
-        return true
     }
     
     // true if touch ID is enabled
     func canUseTouchID() -> Bool {
-        let context = LAContext()
-
-        return context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
+        return LAContext().canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
     }
     
     // true if the given transaction can be signed with touch ID authentication
@@ -227,8 +214,7 @@ extension WalletManager: WalletAuthenticator {
         
         do {
             let spendLimit: Int64 = try keychainItem(key: keychainKey.spendLimit) ?? 0
-            
-            return BRWalletAmountSentByTx(wallet?.ptr, forTx) + BRWalletTotalSent(wallet?.ptr) <= UInt64(spendLimit)
+            return BRWalletAmountSentByTx(wallet?.cPtr, forTx) + BRWalletTotalSent(wallet?.cPtr) <= UInt64(spendLimit)
         }
         catch { return false }
     }
@@ -237,7 +223,6 @@ extension WalletManager: WalletAuthenticator {
     var pinAttemptsRemaining: Int {
         do {
             let failCount: Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
-        
             return Int(8 - failCount)
         }
         catch { return -1 }
@@ -249,7 +234,6 @@ extension WalletManager: WalletAuthenticator {
             let failCount: Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
             guard failCount >= 3 else { return 0 }
             let failTime: Int64 = try keychainItem(key: keychainKey.pinFailTime) ?? 0
-            
             return Double(failTime) + pow(6, Double(failCount - 3))*60
         }
         catch { return 0 }
@@ -284,7 +268,7 @@ extension WalletManager: WalletAuthenticator {
                 
                 if limit > 0 {
                     try setKeychainItem(key: keychainKey.spendLimit,
-                                        item: Int64(BRWalletTotalSent(wallet?.ptr)) + limit)
+                                        item: Int64(BRWalletTotalSent(wallet?.cPtr)) + limit)
                 }
                 
                 return true
@@ -323,7 +307,7 @@ extension WalletManager: WalletAuthenticator {
     func signTransaction(_ tx: BRTxRef, touchIDPrompt: String, completion: @escaping (Bool) -> ()) {
         do {
             let spendLimit: Int64 = try keychainItem(key: keychainKey.spendLimit) ?? 0
-            guard BRWalletAmountSentByTx(wallet?.ptr, tx) + BRWalletTotalSent(wallet?.ptr) <= UInt64(spendLimit) else {
+            guard BRWalletAmountSentByTx(wallet?.cPtr, tx) + BRWalletTotalSent(wallet?.cPtr) <= UInt64(spendLimit) else {
                 return completion(false)
             }
         }
@@ -383,21 +367,16 @@ extension WalletManager: WalletAuthenticator {
         // wrapping in an autorelease pool ensures sensitive memory is wiped and released immediately
         return autoreleasepool {
             var entropy = CFDataCreateMutable(secureAllocator, SeedEntropyLength) as Data
-            
             entropy.count = SeedEntropyLength
             guard SecRandomCopyBytes(kSecRandomDefault, entropy.count, entropy.withUnsafeMutableBytes({ $0 })) == 0
                 else { return nil }
-
             let phraseLen = BRBIP39Encode(nil, 0, &words, entropy.withUnsafeBytes({ $0 }), entropy.count)
             var phraseData = CFDataCreateMutable(secureAllocator, phraseLen) as Data
-            
             phraseData.count = phraseLen
             BRBIP39Encode(phraseData.withUnsafeMutableBytes({ $0 }), phraseData.count, &words,
                           entropy.withUnsafeBytes({ $0 }), entropy.count)
-            
             let phrase = CFStringCreateFromExternalRepresentation(secureAllocator, phraseData as CFData,
                                                                   CFStringBuiltInEncodings.UTF8.rawValue) as String
-
             guard setSeedPhrase(phrase) else { return nil }
             return phrase
         }
@@ -416,13 +395,12 @@ extension WalletManager: WalletAuthenticator {
     
     // change wallet authentication pin using the wallet recovery phrase
     func forceSetPin(newPin: String, seedPhrase: String) -> Bool {
-        var seed = UInt512()
-        BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
-        let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
-        seed = UInt512() // clear seed
-        let mpkData = Data(buffer: UnsafeBufferPointer(start: [mpk], count: 1))
-        
         do {
+            var seed = UInt512()
+            BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
+            let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
+            seed = UInt512() // clear seed
+            let mpkData = Data(buffer: UnsafeBufferPointer(start: [mpk], count: 1))
             guard try mpkData == keychainItem(key: keychainKey.masterPubKey) else { return false }
             try setKeychainItem(key: keychainKey.pin, item: newPin)
             return true
@@ -435,18 +413,11 @@ extension WalletManager: WalletAuthenticator {
         guard pin == "forceWipe" || authenticate(pin: pin) else { return false }
                 
         do {
-            if didInitWallet {
-                if peerManager != nil { BRPeerManagerDisconnect(peerManager?.ptr) }
-                if peerManager != nil { BRPeerManagerFree(peerManager?.ptr) }
-                peerManager = nil
-                if wallet != nil { BRWalletFree(wallet?.ptr) }
-                wallet = nil
-            }
-
+            peerManager = nil
+            wallet = nil
             if db != nil { sqlite3_close(db) }
             db = nil
             try FileManager.default.removeItem(atPath: dbPath)
-            
             try setKeychainItem(key: keychainKey.apiAuthKey, item: nil as Data?)
             try setKeychainItem(key: keychainKey.spendLimit, item: nil as Int64?)
             try setKeychainItem(key: keychainKey.creationTime, item: nil as Data?)
@@ -456,10 +427,9 @@ extension WalletManager: WalletAuthenticator {
             try setKeychainItem(key: keychainKey.masterPubKey, item: nil as Data?)
             try setKeychainItem(key: keychainKey.seed, item: nil as Data?)
             try setKeychainItem(key: keychainKey.mnemonic, item: nil as String?, authenticated: true)
+            return true
         }
         catch { return false }
-        
-        return true
     }
     
     // key used for authenticated API calls
@@ -523,16 +493,14 @@ extension WalletManager: WalletAuthenticator {
     
     private func signTx(_ tx: BRTxRef) -> Bool {
         return autoreleasepool {
-            var seed = UInt512()
-            defer { seed = UInt512() }
-            
             do {
+                var seed = UInt512()
+                defer { seed = UInt512() }
                 guard let phrase: String = try keychainItem(key: keychainKey.mnemonic) else { return false }
                 BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
+                return BRWalletSignTransaction(wallet?.cPtr, tx, &seed, MemoryLayout<UInt512>.size) != 0
             }
             catch { return false }
-            
-            return BRWalletSignTransaction(wallet?.ptr, tx, &seed, MemoryLayout<UInt512>.size) != 0
         }
     }
 }

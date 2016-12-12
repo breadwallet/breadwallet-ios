@@ -1,5 +1,4 @@
-module CSQLite3 [system] [extern_c] {
-    textual header "stdarg.h"
+module sqlite3 [system] [extern_c] {
     header "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/sqlite3.h"
     link "sqlite3"
     export *

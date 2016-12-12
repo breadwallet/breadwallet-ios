@@ -25,7 +25,7 @@
 
 
 import Foundation
-import CSQLite3
+import sqlite3
 import BRCore
 
 
