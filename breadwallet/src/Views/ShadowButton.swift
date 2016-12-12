@@ -40,6 +40,7 @@ class ShadowButton: UIControl {
     private let label = UILabel()
     private let shadowYOffset: CGFloat = 4.0
     private var image: UIImage?
+    private var imageView: UIImageView?
 
     override var isHighlighted: Bool {
         didSet {
@@ -57,10 +58,25 @@ class ShadowButton: UIControl {
         }
     }
 
+    override var isSelected: Bool {
+        didSet {
+            if type == .tertiary {
+                if isSelected {
+                    container.layer.borderColor = UIColor.primaryButton.cgColor
+                    imageView?.tintColor = .primaryButton
+                    label.textColor = .primaryButton
+                } else {
+                    setColors()
+                }
+            }
+        }
+    }
+
     private func setupViews() {
         addShadowView()
         addContent()
         setColors()
+        addTarget(self, action: #selector(ShadowButton.touchUpInside), for: .touchUpInside)
     }
 
     private func addShadowView() {
@@ -104,19 +120,20 @@ class ShadowButton: UIControl {
 
     private func setupImageOption(icon: UIImage) {
         let content = UIView()
-        let imageView = UIImageView(image: icon)
-        imageView.contentMode = .scaleAspectFit
+        let iconImageView = UIImageView(image: icon.withRenderingMode(.alwaysTemplate))
+        iconImageView.contentMode = .scaleAspectFit
         container.addSubview(content)
         content.addSubview(label)
-        content.addSubview(imageView)
+        content.addSubview(iconImageView)
         content.constrainToCenter()
 
-        imageView.constrainLeadingCorners()
+        iconImageView.constrainLeadingCorners()
         label.constrainTrailingCorners()
 
-        imageView.constrain([
-                imageView.constraint(toLeading: label, constant: -C.padding[1])
+        iconImageView.constrain([
+                iconImageView.constraint(toLeading: label, constant: -C.padding[1])
             ])
+        imageView = iconImageView
     }
 
     private func setupLabelOnly() {
@@ -131,6 +148,7 @@ class ShadowButton: UIControl {
                 label.textColor = .primaryText
                 shadowView.layer.shadowColor = UIColor.black.cgColor
                 shadowView.layer.shadowOpacity = 0.3
+                imageView?.tintColor = .white
             case .secondary:
                 container.backgroundColor = .secondaryButton
                 label.textColor = .darkText
@@ -138,6 +156,7 @@ class ShadowButton: UIControl {
                 container.layer.borderWidth = 1.0
                 shadowView.layer.shadowColor = UIColor.secondaryShadow.cgColor
                 shadowView.layer.shadowOpacity = 1.0
+                imageView?.tintColor = .darkText
             case .tertiary:
                 container.backgroundColor = .secondaryButton
                 label.textColor = .grayTextTint
@@ -145,8 +164,14 @@ class ShadowButton: UIControl {
                 container.layer.borderWidth = 1.0
                 shadowView.layer.shadowColor = UIColor.secondaryShadow.cgColor
                 shadowView.layer.shadowOpacity = 1.0
+                imageView?.tintColor = .grayTextTint
         }
     }
+
+    @objc private func touchUpInside() {
+        isSelected = !isSelected
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
