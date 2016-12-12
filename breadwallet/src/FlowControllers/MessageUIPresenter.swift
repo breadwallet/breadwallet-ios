@@ -38,16 +38,12 @@ class MessageUIPresenter: NSObject {
         textView.messageComposeDelegate = self
         present(textView)
     }
-
-    private lazy var defaultTintColor: UIColor = {
-        return UIView().tintColor //grabs the default iOS tintColor
-    }()
     fileprivate var originalTitleTextAttributes: [String: Any]?
     fileprivate var originalFrame: CGRect?
 
     private func present(_ viewController: UIViewController) {
         originalFrame = presenter?.view.frame
-        viewController.view.tintColor = defaultTintColor
+        viewController.view.tintColor = C.defaultTintColor
         presenter?.present(viewController, animated: true, completion: {})
     }
 
