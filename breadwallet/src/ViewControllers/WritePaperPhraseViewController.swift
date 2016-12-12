@@ -142,14 +142,12 @@ class WritePaperPhraseViewController: UIViewController {
         } else {
             currentPhraseIndex -= 1
         }
-        if #available(iOS 10.0, *) {
-            let animator = UIViewPropertyAnimator.springAnimation {
-                viewToHide.xConstraint?.constant = isNext ? -self.phraseOffscreenOffset : self.phraseOffscreenOffset
-                viewToShow.xConstraint?.constant = 0
-                self.view.layoutIfNeeded()
-            }
-            animator.startAnimation()
-        }
+
+        UIView.spring(0.6, animations: {
+            viewToHide.xConstraint?.constant = isNext ? -self.phraseOffscreenOffset : self.phraseOffscreenOffset
+            viewToShow.xConstraint?.constant = 0
+            self.view.layoutIfNeeded()
+        }, completion: { _ in })
     }
 
     private func showBothButtons() {
