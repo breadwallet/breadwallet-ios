@@ -16,6 +16,9 @@ private let pasteLabel = NSLocalizedString("Paste", comment: "Paste button label
 private let scanLabel = NSLocalizedString("Scan", comment: "Scan button label")
 private let currencyLabel = NSLocalizedString("USD \u{25BC}", comment: "Currency Button label")
 
+private let invalidAddressTitle = NSLocalizedString("Invalid Address", comment: "Invalid address alert title")
+private let invalidAddressMessage = NSLocalizedString("Your clipboard does not have a valid bitcoin address.", comment: "Invalid address alert message")
+
 class SendViewController: UIViewController, Subscriber {
 
     init(store: Store) {
@@ -78,18 +81,30 @@ class SendViewController: UIViewController, Subscriber {
 
     private func addButtonActions() {
         paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
-        scan.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
+        scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
     }
 
     @objc private func pasteTapped() {
         store.subscribe(self, selector: {$0.pasteboard != $1.pasteboard}, callback: {
-            self.to.content = $0.pasteboard
+            if let address = $0.pasteboard {
+                if address.isValidAddress {
+                    self.to.content = address
+                } else {
+                    self.invalidAddressAlert()
+                }
+            }
             self.store.unsubscribe(self)
         })
     }
 
     @objc private func scanTapped() {
 
+    }
+
+    private func invalidAddressAlert() {
+        let alertController = UIAlertController(title: invalidAddressTitle, message: invalidAddressMessage, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
