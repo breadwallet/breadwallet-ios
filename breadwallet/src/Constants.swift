@@ -25,4 +25,8 @@ struct C {
     struct Sizes {
         static let buttonHeight: CGFloat = 48.0
     }
+
+    static var defaultTintColor: UIColor = {
+        return UIView().tintColor
+    }()
 }

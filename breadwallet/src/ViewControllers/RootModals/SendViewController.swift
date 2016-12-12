@@ -104,6 +104,7 @@ class SendViewController: UIViewController, Subscriber {
     private func invalidAddressAlert() {
         let alertController = UIAlertController(title: invalidAddressTitle, message: invalidAddressMessage, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        alertController.view.tintColor = C.defaultTintColor
         present(alertController, animated: true, completion: nil)
     }
 
