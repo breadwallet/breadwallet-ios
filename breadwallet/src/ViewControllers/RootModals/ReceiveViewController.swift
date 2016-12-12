@@ -31,6 +31,8 @@ class ReceiveViewController: UIViewController {
     private let request = ShadowButton(title: NSLocalizedString("Request an Amount", comment: "Request button label"), type: .secondary)
     private var topSharePopoutConstraint: NSLayoutConstraint?
     private let store: Store
+    private let messagePresenter = MessageUIPresenter()
+
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
@@ -140,6 +142,8 @@ class ReceiveViewController: UIViewController {
                 NSLayoutConstraint(item: text, attribute: .leading, relatedBy: .equal, toItem: container, attribute: .centerX, multiplier: 1.0, constant: C.padding[1])
             ])
         sharePopout.contentView = container
+        email.addTarget(self, action: #selector(ReceiveViewController.emailTapped), for: .touchUpInside)
+        text.addTarget(self, action: #selector(ReceiveViewController.textTapped), for: .touchUpInside)
     }
 
     @objc private func shareTapped() {
@@ -156,6 +160,16 @@ class ReceiveViewController: UIViewController {
         if sharePopout.isExpanded {
             toggle(alertView: sharePopout, shouldAdjustPadding: true)
         }
+    }
+
+    @objc private func emailTapped() {
+        messagePresenter.presenter = parent
+        messagePresenter.presentMailCompose(address: address.text!, image: qrCode.image!)
+    }
+
+    @objc private func textTapped() {
+        messagePresenter.presenter = parent
+        messagePresenter.presentMessageCompose(address: address.text!, image: qrCode.image!)
     }
 
     private func toggle(alertView: InViewAlert, shouldAdjustPadding: Bool) {
