@@ -19,8 +19,8 @@ class ScanViewController : UIViewController {
     fileprivate let guide = CameraGuideView()
     fileprivate let session = AVCaptureSession()
     private let toolbar = UIView()
-    private let close = UIButton.close()
-    private let flash = UIButton.smallIcon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: NSLocalizedString("Camera Flash", comment: "Scan bitcoin address camera flash toggle"))
+    private let close = UIButton.close
+    private let flash = UIButton.smallIcon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
 
     override func viewDidLoad() {
         view.backgroundColor = .black
@@ -87,7 +87,7 @@ class ScanViewController : UIViewController {
         }
 
         DispatchQueue(label: "qrscanner").async {
-            session.startRunning()
+            self.session.startRunning()
         }
     }
 
