@@ -8,20 +8,6 @@
 
 import UIKit
 
-private let toLabel = NSLocalizedString("To", comment: "Send money to label")
-private let amountLabel = NSLocalizedString("Amount", comment: "Send money amount label")
-private let descriptionLabel = NSLocalizedString("What's this for?", comment: "Description for sending money label")
-private let sendLabel = NSLocalizedString("Send", comment: "Send button label")
-private let pasteLabel = NSLocalizedString("Paste", comment: "Paste button label")
-private let scanLabel = NSLocalizedString("Scan", comment: "Scan button label")
-private let currencyLabel = NSLocalizedString("USD \u{25BC}", comment: "Currency Button label")
-
-private let invalidAddressTitle = NSLocalizedString("Invalid Address", comment: "Invalid address alert title")
-private let invalidAddressMessage = NSLocalizedString("Your clipboard does not have a valid bitcoin address.", comment: "Invalid address alert message")
-
-private let cameraUnavailableTitle = NSLocalizedString("Bread is not allowed to access the camera", comment: "Camera not allowed alert title")
-private let cameraUnavailableMessage = NSLocalizedString("Allow camera access in Settings->Privacy->Camera->Bread", comment: "Camera not allowed message")
-
 class SendViewController: UIViewController, Subscriber {
 
     init(store: Store) {
@@ -34,13 +20,13 @@ class SendViewController: UIViewController, Subscriber {
     fileprivate let verticalButtonPadding: CGFloat = 32.0
     private let buttonSize = CGSize(width: 52.0, height: 32.0)
 
-    private let to = SendCell(label: toLabel)
-    private let amount = SendCell(label: amountLabel)
-    private let descriptionCell = SendCell(label: descriptionLabel)
-    private let send = ShadowButton(title: sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
-    private let paste = ShadowButton(title: pasteLabel, type: .tertiary)
-    private let scan = ShadowButton(title: scanLabel, type: .tertiary)
-    private let currency = ShadowButton(title: currencyLabel, type: .tertiary)
+    private let to = SendCell(label: S.Send.toLabel)
+    private let amount = SendCell(label: S.Send.amountLabel)
+    private let descriptionCell = SendCell(label: S.Send.descriptionLabel)
+    private let send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
+    private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
+    private let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
+    private let currency = ShadowButton(title: S.Send.currencyLabel, type: .tertiary)
 
     override func viewDidLoad() {
         view.addSubview(to)
@@ -103,8 +89,8 @@ class SendViewController: UIViewController, Subscriber {
     @objc private func scanTapped() {
         guard ScanViewController.isCameraAllowed else {
             //TODO - add link to settings here
-            let alertController = UIAlertController(title: cameraUnavailableTitle, message: cameraUnavailableMessage, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+            let alertController = UIAlertController(title: S.Send.cameraUnavailableTitle, message: S.Send.cameraUnavailableMessage, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
             alertController.view.tintColor = C.defaultTintColor
             present(alertController, animated: true, completion: nil)
             return
@@ -118,8 +104,8 @@ class SendViewController: UIViewController, Subscriber {
     }
 
     private func invalidAddressAlert() {
-        let alertController = UIAlertController(title: invalidAddressTitle, message: invalidAddressMessage, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        let alertController = UIAlertController(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
         alertController.view.tintColor = C.defaultTintColor
         present(alertController, animated: true, completion: nil)
     }
