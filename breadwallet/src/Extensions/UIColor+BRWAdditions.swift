@@ -31,6 +31,10 @@ extension UIColor {
         return UIColor(red: 35.0/255.0, green: 37.0/255.0, blue: 38.0/255.0, alpha: 1.0)
     }
 
+    static var darkLine: UIColor {
+        return UIColor(red: 36.0/255.0, green: 35.0/255.0, blue: 38.0/255.0, alpha: 1.0)
+    }
+
     static var secondaryShadow: UIColor {
         return UIColor(red: 213.0/255.0, green: 218.0/255.0, blue: 224.0/255.0, alpha: 1.0)
     }
