@@ -103,12 +103,12 @@ class StartFlowPresenter: Subscriber {
         paperPhraseViewController.title = "Paper Key"
         paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
 
-        let closeButton = UIButton.close()
+        let closeButton = UIButton.close
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         closeButton.tintColor = .white
         paperPhraseViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
 
-        let faqButton = UIButton.faq()
+        let faqButton = UIButton.faq
         faqButton.addTarget(self, action: #selector(faqButtonTapped), for: .touchUpInside)
         faqButton.tintColor = .white
         paperPhraseViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: faqButton)
@@ -129,7 +129,7 @@ class StartFlowPresenter: Subscriber {
         let writeViewController = WritePaperPhraseViewController(store: store)
         writeViewController.title = "Paper Key"
 
-        let button = UIButton.close()
+        let button = UIButton.close
         button.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         button.tintColor = .white
         writeViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)

@@ -16,7 +16,7 @@ class Circle: UIView {
 
     init(color: UIColor) {
         self.color = color
-        super.init(frame: CGRect())
+        super.init(frame: .zero)
         backgroundColor = .clear
     }
 
