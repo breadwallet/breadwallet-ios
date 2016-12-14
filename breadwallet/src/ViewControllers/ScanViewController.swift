@@ -17,21 +17,23 @@ class ScanViewController : UIViewController {
 
     var completion: ((String) -> Void)?
     fileprivate let guide = CameraGuideView()
+    fileprivate let session = AVCaptureSession()
+    private let toolbar = UIView()
+    private let close = UIButton.close()
+    private let flash = UIButton.smallIcon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: NSLocalizedString("Camera Flash", comment: "Scan bitcoin address camera flash toggle"))
 
     override func viewDidLoad() {
-        view.backgroundColor = .white
+        view.backgroundColor = .black
+        toolbar.backgroundColor = .secondaryButton
 
-        let toolbar = UIView()
-        toolbar.backgroundColor = .white
         view.addSubview(toolbar)
+        toolbar.addSubview(close)
+        toolbar.addSubview(flash)
+        view.addSubview(guide)
+
         toolbar.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         toolbar.constrain([
             toolbar.constraint(.height, constant: 48.0) ])
-
-        let close = UIButton.close
-        let flash = UIButton.smallIcon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: NSLocalizedString("Camera Flash", comment: "Scan bitcoin address camera flash toggle"))
-        toolbar.addSubview(close)
-        toolbar.addSubview(flash)
 
         close.constrain([
             close.constraint(.leading, toView: toolbar),
@@ -45,23 +47,26 @@ class ScanViewController : UIViewController {
             flash.constraint(.bottom, toView: toolbar, constant: -2.0),
             flash.constraint(.width, constant: 44.0) ])
 
-        close.addTarget(self, action: #selector(ScanViewController.closeTapped), for: .touchUpInside)
-
-        view.addSubview(guide)
         guide.constrain([
             guide.constraint(.leading, toView: view, constant: C.padding[6]),
             guide.constraint(.trailing, toView: view, constant: -C.padding[6]),
             guide.constraint(.centerY, toView: view),
             NSLayoutConstraint(item: guide, attribute: .width, relatedBy: .equal, toItem: guide, attribute: .height, multiplier: 1.0, constant: 0.0) ])
-    }
+        guide.transform = CGAffineTransform(scaleX: 0.0, y: 0.0)
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        close.addTarget(self, action: #selector(ScanViewController.closeTapped), for: .touchUpInside)
+
         addCameraPreview()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        UIView.spring(0.8, animations: {
+            self.guide.transform = .identity
+        }, completion: { _ in })
+    }
+
     private func addCameraPreview() {
-        let session = AVCaptureSession()
         let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
         guard let input = try? AVCaptureDeviceInput(device: device) else { return }
         session.addInput(input)
