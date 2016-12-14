@@ -19,6 +19,9 @@ private let currencyLabel = NSLocalizedString("USD \u{25BC}", comment: "Currency
 private let invalidAddressTitle = NSLocalizedString("Invalid Address", comment: "Invalid address alert title")
 private let invalidAddressMessage = NSLocalizedString("Your clipboard does not have a valid bitcoin address.", comment: "Invalid address alert message")
 
+private let cameraUnavailableTitle = NSLocalizedString("Bread is not allowed to access the camera", comment: "Camera not allowed alert title")
+private let cameraUnavailableMessage = NSLocalizedString("Allow camera access in Settings->Privacy->Camera->Bread", comment: "Camera not allowed message")
+
 class SendViewController: UIViewController, Subscriber {
 
     init(store: Store) {
@@ -98,7 +101,19 @@ class SendViewController: UIViewController, Subscriber {
     }
 
     @objc private func scanTapped() {
+        guard ScanViewController.isCameraAllowed else {
+            //TODO - add link to settings here
+            let alertController = UIAlertController(title: cameraUnavailableTitle, message: cameraUnavailableMessage, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+            alertController.view.tintColor = C.defaultTintColor
+            present(alertController, animated: true, completion: nil)
+            return
+        }
         let vc = ScanViewController()
+        vc.completion = { address in
+            self.to.content = address
+            vc.dismiss(animated: true, completion: nil)
+        }
         present(vc, animated: true, completion: {})
     }
 
