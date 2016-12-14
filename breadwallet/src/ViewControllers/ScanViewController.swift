@@ -15,12 +15,20 @@ class ScanViewController : UIViewController {
         return AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != .denied
     }
 
-    var completion: ((String) -> Void)?
+    let completion: (String) -> Void
+    let isValidURI: (String) -> Bool
+
     fileprivate let guide = CameraGuideView()
     fileprivate let session = AVCaptureSession()
     private let toolbar = UIView()
     private let close = UIButton.close
     private let flash = UIButton.smallIcon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
+
+    init(completion: @escaping (String) -> Void, isValidURI: @escaping (String) -> Bool) {
+        self.completion = completion
+        self.isValidURI = isValidURI
+        super.init(nibName: nil, bundle: nil)
+    }
 
     override func viewDidLoad() {
         view.backgroundColor = .black
@@ -98,14 +106,30 @@ class ScanViewController : UIViewController {
     @objc private func closeTapped() {
         dismiss(animated: true, completion: nil)
     }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
         if let data = metadataObjects as? [AVMetadataMachineReadableCodeObject] {
-            data.forEach {
-                if $0.stringValue.hasPrefix("bitcoin:") {
-                    completion?($0.stringValue)
+            if data.count == 0 {
+                guide.state = .normal
+            } else {
+                data.forEach {
+                    guard let uri = $0.stringValue else { return }
+                    if isValidURI(uri) {
+                        guide.state = .positive
+                        //Add a small delay so the green guide will be seen
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                            self.completion(uri)
+                            self.dismiss(animated: true, completion: {})
+                        })
+                    } else {
+                        guide.state = .negative
+                    }
                 }
             }
         }

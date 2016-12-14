@@ -27,7 +27,11 @@ enum CameraGuideState {
 
 class CameraGuideView : UIView {
 
-    private var state: CameraGuideState = .normal
+    var state: CameraGuideState = .normal {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
 
     init() {
         super.init(frame: .zero)
