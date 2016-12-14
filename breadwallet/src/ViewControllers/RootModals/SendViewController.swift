@@ -95,11 +95,11 @@ class SendViewController: UIViewController, Subscriber {
             present(alertController, animated: true, completion: nil)
             return
         }
-        let vc = ScanViewController()
-        vc.completion = { address in
+        let vc = ScanViewController(completion: { address in
             self.to.content = address
-            vc.dismiss(animated: true, completion: nil)
-        }
+        }, isValidURI: { address in
+            return address.hasPrefix("bitcoin:")
+        })
         present(vc, animated: true, completion: {})
     }
 
