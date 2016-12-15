@@ -10,17 +10,18 @@ import UIKit
 
 class ModalPresenter: Subscriber {
 
-    private let store: Store
-    private let window: UIWindow
-    private let alertHeight: CGFloat = 260.0
-    private let modalTransitionDelegate = ModalTransitionDelegate()
-
     init(store: Store, window: UIWindow) {
         self.store = store
         self.window = window
         addSubscriptions()
         addModalSubscriptions()
     }
+
+    private let store: Store
+    private let window: UIWindow
+    private let alertHeight: CGFloat = 260.0
+    private let modalTransitionDelegate = ModalTransitionDelegate()
+    private let messagePresenter = MessageUIPresenter()
 
     private func addSubscriptions() {
         store.subscribe(self,
@@ -96,7 +97,17 @@ class ModalPresenter: Subscriber {
             sendVC.presentScan = presentScan(parent: root)
             return root
         case .receive:
-            return ModalViewController(childViewController: ReceiveViewController(store: store))
+            let receiveVC = ReceiveViewController(store: store)
+            let root = ModalViewController(childViewController: receiveVC)
+            receiveVC.presentEmail = { address, image in
+                self.messagePresenter.presenter = root
+                self.messagePresenter.presentMailCompose(address: address, image: image)
+            }
+            receiveVC.presentText = { address, image in
+                self.messagePresenter.presenter = root
+                self.messagePresenter.presentMessageCompose(address: address, image: image)
+            }
+            return root
         case .menu:
             return ModalViewController(childViewController: MenuViewController())
         }

@@ -15,12 +15,17 @@ private let smallSharePadding: CGFloat = 12.0
 private let largeSharePadding: CGFloat = 20.0
 private let animationDuration: TimeInterval = 0.3
 
+typealias PresentShare = (String, UIImage) -> Void
+
 class ReceiveViewController: UIViewController {
 
     init(store: Store) {
         self.store = store
         super.init(nibName: nil, bundle: nil)
     }
+
+    var presentEmail: PresentShare?
+    var presentText: PresentShare?
 
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 14.0))
@@ -31,7 +36,6 @@ class ReceiveViewController: UIViewController {
     private let request = ShadowButton(title: NSLocalizedString("Request an Amount", comment: "Request button label"), type: .secondary)
     private var topSharePopoutConstraint: NSLayoutConstraint?
     private let store: Store
-    private let messagePresenter = MessageUIPresenter()
 
     override func viewDidLoad() {
         addSubviews()
@@ -164,13 +168,11 @@ class ReceiveViewController: UIViewController {
     }
 
     @objc private func emailTapped() {
-        messagePresenter.presenter = parent
-        messagePresenter.presentMailCompose(address: address.text!, image: qrCode.image!)
+        presentEmail?(address.text!, qrCode.image!)
     }
 
     @objc private func textTapped() {
-        messagePresenter.presenter = parent
-        messagePresenter.presentMessageCompose(address: address.text!, image: qrCode.image!)
+        presentText?(address.text!, qrCode.image!)
     }
 
     private func toggle(alertView: InViewAlert, shouldAdjustPadding: Bool) {
