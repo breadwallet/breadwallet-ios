@@ -38,11 +38,11 @@ class MessageUIPresenter: NSObject {
         textView.messageComposeDelegate = self
         present(textView)
     }
+
     fileprivate var originalTitleTextAttributes: [String: Any]?
-    fileprivate var originalFrame: CGRect?
 
     private func present(_ viewController: UIViewController) {
-        originalFrame = presenter?.view.frame
+        presenter?.view.isFrameChangeBlocked = true
         viewController.view.tintColor = C.defaultTintColor
         presenter?.present(viewController, animated: true, completion: {})
     }
@@ -50,13 +50,7 @@ class MessageUIPresenter: NSObject {
     fileprivate func dismiss(_ viewController: UIViewController) {
         UINavigationBar.appearance().titleTextAttributes = originalTitleTextAttributes
         viewController.dismiss(animated: true, completion: {
-            if let frame = self.originalFrame {
-                UIView.animate(withDuration: 0.2, animations: {
-                    //TODO - Find a fix for this. Ideally, the presenter's frame
-                    //shouldn't be changed when there's a modal on top of it
-                    self.presenter?.view.frame = frame
-                })
-            }
+            self.presenter?.view.isFrameChangeBlocked = false
         })
     }
 }
