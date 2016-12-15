@@ -9,13 +9,15 @@
 import UIKit
 import AVFoundation
 
+typealias ScanCompletion = (String?) -> Void
+
 class ScanViewController : UIViewController {
 
     static var isCameraAllowed: Bool {
         return AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != .denied
     }
 
-    let completion: (String?) -> Void
+    let completion: ScanCompletion
     let isValidURI: (String) -> Bool
 
     fileprivate let guide = CameraGuideView()
@@ -24,7 +26,7 @@ class ScanViewController : UIViewController {
     private let close = UIButton.close
     private let flash = UIButton.smallIcon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
 
-    init(completion: @escaping (String?) -> Void, isValidURI: @escaping (String) -> Bool) {
+    init(completion: @escaping ScanCompletion, isValidURI: @escaping (String) -> Bool) {
         self.completion = completion
         self.isValidURI = isValidURI
         super.init(nibName: nil, bundle: nil)
