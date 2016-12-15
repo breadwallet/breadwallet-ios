@@ -97,9 +97,11 @@ class SendViewController: UIViewController, Subscriber {
         }
         let vc = ScanViewController(completion: { address in
             self.to.content = address
+            self.parent?.view.isFrameChangeBlocked = false
         }, isValidURI: { address in
             return address.hasPrefix("bitcoin:")
         })
+        parent?.view.isFrameChangeBlocked = true
         present(vc, animated: true, completion: {})
     }
 

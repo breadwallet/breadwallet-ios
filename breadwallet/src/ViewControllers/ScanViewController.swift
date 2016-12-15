@@ -15,7 +15,7 @@ class ScanViewController : UIViewController {
         return AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != .denied
     }
 
-    let completion: (String) -> Void
+    let completion: (String?) -> Void
     let isValidURI: (String) -> Bool
 
     fileprivate let guide = CameraGuideView()
@@ -24,7 +24,7 @@ class ScanViewController : UIViewController {
     private let close = UIButton.close
     private let flash = UIButton.smallIcon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
 
-    init(completion: @escaping (String) -> Void, isValidURI: @escaping (String) -> Bool) {
+    init(completion: @escaping (String?) -> Void, isValidURI: @escaping (String) -> Bool) {
         self.completion = completion
         self.isValidURI = isValidURI
         super.init(nibName: nil, bundle: nil)
@@ -104,7 +104,9 @@ class ScanViewController : UIViewController {
     }
 
     @objc private func closeTapped() {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: {
+            self.completion(nil)
+        })
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -124,8 +126,9 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
                         guide.state = .positive
                         //Add a small delay so the green guide will be seen
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-                            self.completion(uri)
-                            self.dismiss(animated: true, completion: {})
+                            self.dismiss(animated: true, completion: {
+                                self.completion(uri)
+                            })
                         })
                     } else {
                         guide.state = .negative
