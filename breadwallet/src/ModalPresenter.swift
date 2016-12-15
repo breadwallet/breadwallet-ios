@@ -47,7 +47,7 @@ class ModalPresenter: Subscriber {
     }
 
     private func presentModal(_ type: RootModal) {
-        guard let vc = type.viewController(store: store) else { return }
+        guard let vc = rootModalViewController(type) else { return }
         vc.transitioningDelegate = modalTransitionDelegate
         vc.modalPresentationStyle = .overFullScreen
         vc.modalPresentationCapturesStatusBarAppearance = true
@@ -84,6 +84,43 @@ class ModalPresenter: Subscriber {
                 alertView.removeFromSuperview()
             })
         })
+    }
+
+    private func rootModalViewController(_ type: RootModal) -> UIViewController? {
+        switch type {
+        case .none:
+            return nil
+        case .send:
+            let sendVC = SendViewController(store: store)
+            let root = ModalViewController(childViewController: sendVC)
+            sendVC.presentScan = presentScan(parent: root)
+            return root
+        case .receive:
+            return ModalViewController(childViewController: ReceiveViewController(store: store))
+        case .menu:
+            return ModalViewController(childViewController: MenuViewController())
+        }
+    }
+
+    private func presentScan(parent: UIViewController) -> PresentScan {
+        return { scanCompletion in
+            guard ScanViewController.isCameraAllowed else {
+                //TODO - add link to settings here
+                let alertController = UIAlertController(title: S.Send.cameraUnavailableTitle, message: S.Send.cameraUnavailableMessage, preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
+                alertController.view.tintColor = C.defaultTintColor
+                parent.present(alertController, animated: true, completion: nil)
+                return
+            }
+            let vc = ScanViewController(completion: { address in
+                scanCompletion(address)
+                parent.view.isFrameChangeBlocked = false
+            }, isValidURI: { address in
+                return address.hasPrefix("bitcoin:")
+            })
+            parent.view.isFrameChangeBlocked = true
+            parent.present(vc, animated: true, completion: {})
+        }
     }
 
     //TODO - This is a total hack to grab the window that keyboard is in

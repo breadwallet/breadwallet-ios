@@ -8,12 +8,16 @@
 
 import UIKit
 
+typealias PresentScan = ((@escaping ScanCompletion) -> Void)
+
 class SendViewController: UIViewController, Subscriber {
 
     init(store: Store) {
         self.store = store
         super.init(nibName: nil, bundle: nil)
     }
+
+    var presentScan: PresentScan?
 
     private let store: Store
     fileprivate let cellHeight: CGFloat = 72.0
@@ -87,22 +91,9 @@ class SendViewController: UIViewController, Subscriber {
     }
 
     @objc private func scanTapped() {
-        guard ScanViewController.isCameraAllowed else {
-            //TODO - add link to settings here
-            let alertController = UIAlertController(title: S.Send.cameraUnavailableTitle, message: S.Send.cameraUnavailableMessage, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
-            alertController.view.tintColor = C.defaultTintColor
-            present(alertController, animated: true, completion: nil)
-            return
-        }
-        let vc = ScanViewController(completion: { address in
+        presentScan? { address in
             self.to.content = address
-            self.parent?.view.isFrameChangeBlocked = false
-        }, isValidURI: { address in
-            return address.hasPrefix("bitcoin:")
-        })
-        parent?.view.isFrameChangeBlocked = true
-        present(vc, animated: true, completion: {})
+        }
     }
 
     private func invalidAddressAlert() {

@@ -47,19 +47,6 @@ enum RootModal {
     case send
     case receive
     case menu
-
-    func viewController(store: Store) -> UIViewController? {
-        switch self {
-            case .none:
-                return nil
-            case .send:
-                return ModalViewController(childViewController: SendViewController(store: store))
-            case .receive:
-                return ModalViewController(childViewController: ReceiveViewController(store: store))
-            case .menu:
-                return ModalViewController(childViewController: MenuViewController())
-        }
-    }
 }
 
 extension PinCreationStep: Equatable {}

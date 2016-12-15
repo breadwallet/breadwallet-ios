@@ -18,7 +18,7 @@ class ModalViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    private let childViewController: UIViewController
+    private var childViewController: UIViewController
     private let modalInfo: ModalDisplayable
     private let headerHeight: CGFloat = 49.0
     private let header: ModalHeaderView
