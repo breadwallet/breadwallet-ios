@@ -8,16 +8,11 @@
 
 import UIKit
 
-enum PinPadAction {
-    case add(char: String)
-    case delete
-}
-
 private let cellIdentifier = "CellIdentifier"
 
 class PinPadViewController : UICollectionViewController {
 
-    var didPressKey: ((PinPadAction) -> Void)?
+    var ouputDidUpdate: ((String) -> Void)?
 
     init() {
         let layout = UICollectionViewFlowLayout()
@@ -30,11 +25,18 @@ class PinPadViewController : UICollectionViewController {
     }
 
     private let items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "del"]
+    private var currentOutput = ""
 
     override func viewDidLoad() {
         collectionView?.register(PinPadCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView?.delegate = self
         collectionView?.dataSource = self
+        collectionView?.backgroundColor = .white
+
+        //Even though this view will never scroll, this stops a gesture recognizer
+        //from listening for scroll events
+        //This prevents a delay in cells highlighting right when they are tapped
+        collectionView?.isScrollEnabled = false
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -51,10 +53,13 @@ class PinPadViewController : UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = items[indexPath.row]
         if item == "del" {
-            didPressKey?(.delete)
+            if currentOutput.characters.count > 0 {
+                currentOutput.remove(at: currentOutput.index(before: currentOutput.endIndex))
+            }
         } else {
-            didPressKey?(.add(char: item))
+            currentOutput = currentOutput + item
         }
+        ouputDidUpdate?(currentOutput)
     }
 
     required init?(coder aDecoder: NSCoder) {
