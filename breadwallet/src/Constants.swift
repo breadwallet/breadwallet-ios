@@ -29,4 +29,5 @@ struct C {
     static var defaultTintColor: UIColor = {
         return UIView().tintColor
     }()
+    static let animationDuration: TimeInterval = 0.3
 }
