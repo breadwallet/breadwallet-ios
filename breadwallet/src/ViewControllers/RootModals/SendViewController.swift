@@ -32,6 +32,7 @@ class SendViewController: UIViewController, Subscriber {
     private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
     private let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
     private let currency = ShadowButton(title: S.Send.currencyLabel, type: .tertiary)
+    private var pinPadHeightConstraint: NSLayoutConstraint?
 
     override func viewDidLoad() {
         view.addSubview(to)
@@ -46,11 +47,12 @@ class SendViewController: UIViewController, Subscriber {
         to.constrainTopCorners(height: cellHeight)
         amount.pinToBottom(to: to, height: cellHeight)
 
+        pinPadHeightConstraint = pinPad.view.constraint(.height, constant: 0.0)
         pinPad.view.constrain([
             pinPad.view.constraint(toBottom: amount, constant: 0.0),
             pinPad.view.constraint(.leading, toView: view),
             pinPad.view.constraint(.trailing, toView: view),
-            pinPad.view.constraint(.height, constant: 48.0*4) ])
+            pinPadHeightConstraint ])
 
         descriptionCell.pinToBottom(to: pinPad.view, height: cellHeight)
         send.constrain([
@@ -84,6 +86,8 @@ class SendViewController: UIViewController, Subscriber {
         pinPad.ouputDidUpdate = { output in
             self.amount.content = output
         }
+        let tapAmount = UITapGestureRecognizer(target: self, action: #selector(SendViewController.amountTapped))
+        amount.addGestureRecognizer(tapAmount)
     }
 
     @objc private func pasteTapped() {
@@ -105,6 +109,23 @@ class SendViewController: UIViewController, Subscriber {
         }
     }
 
+    @objc private func amountTapped() {
+        UIView.spring(C.animationDuration, animations: {
+            if self.pinPadHeightConstraint?.constant == 0.0 {
+                self.pinPadHeightConstraint?.constant = PinPadViewController.height
+                if let newFrame = self.parent?.view.frame.expandVertically(PinPadViewController.height) {
+                    self.parent?.view.frame = newFrame
+                }
+            } else {
+                self.pinPadHeightConstraint?.constant = 0.0
+                if let newFrame = self.parent?.view.frame.expandVertically(-PinPadViewController.height) {
+                    self.parent?.view.frame = newFrame
+                }
+            }
+            self.parent?.view.layoutIfNeeded()
+        }, completion: {_ in })
+    }
+
     private func invalidAddressAlert() {
         let alertController = UIAlertController(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
@@ -123,7 +144,7 @@ extension SendViewController: ModalDisplayable {
     }
 
     var modalSize: CGSize {
-        return CGSize(width: view.frame.width, height: cellHeight*3 + verticalButtonPadding*2 + C.Sizes.buttonHeight + 48.0*4)
+        return CGSize(width: view.frame.width, height: cellHeight*3 + verticalButtonPadding*2 + C.Sizes.buttonHeight)
     }
 
     var isFaqHidden: Bool {

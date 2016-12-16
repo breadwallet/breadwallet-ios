@@ -13,7 +13,8 @@ private let cellIdentifier = "CellIdentifier"
 class PinPadViewController : UICollectionViewController {
 
     var ouputDidUpdate: ((String) -> Void)?
-
+    static let height: CGFloat = 48.0*4.0
+    
     init() {
         let layout = UICollectionViewFlowLayout()
         let screenWidth = UIScreen.main.bounds.width
