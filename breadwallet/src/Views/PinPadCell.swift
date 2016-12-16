@@ -12,7 +12,13 @@ class PinPadCell : UICollectionViewCell {
 
     var text: String? {
         didSet {
-            label.text = text
+            if text == deleteKeyIdentifier {
+                imageView.image = #imageLiteral(resourceName: "Delete")
+                label.text = ""
+            } else {
+                imageView.image = nil
+                label.text = text
+            }
         }
     }
 
@@ -28,12 +34,16 @@ class PinPadCell : UICollectionViewCell {
     }
 
     private let label = UILabel(font: .customBody(size: 26.0))
+    private let imageView = UIImageView()
 
     private func setup() {
         setColors()
         label.textAlignment = .center
         addSubview(label)
+        addSubview(imageView)
         label.constrain(toSuperviewEdges: nil)
+        imageView.constrain(toSuperviewEdges: nil)
+        imageView.contentMode = .center
         layer.cornerRadius = 4.0
         layer.masksToBounds = true
     }
