@@ -81,20 +81,8 @@ class SendViewController: UIViewController, Subscriber {
     private func addButtonActions() {
         paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
-        pinPad.didPressKey = { action in
-            switch action {
-            case .delete:
-                if let content = self.amount.content {
-                    let newString = content.substring(to: content.index(before: content.endIndex))
-                    self.amount.content = newString
-                }
-            case .add(let char):
-                if let content = self.amount.content {
-                    self.amount.content = content + char
-                } else {
-                    self.amount.content = char
-                }
-            }
+        pinPad.ouputDidUpdate = { output in
+            self.amount.content = output
         }
     }
 

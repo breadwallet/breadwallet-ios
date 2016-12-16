@@ -18,11 +18,7 @@ class PinPadCell : UICollectionViewCell {
 
     override var isHighlighted: Bool {
         didSet {
-            if isHighlighted {
-                label.backgroundColor = .lightGray
-            } else {
-                label.backgroundColor = .white
-            }
+            setColors()
         }
     }
 
@@ -34,11 +30,22 @@ class PinPadCell : UICollectionViewCell {
     private let label = UILabel(font: .customBody(size: 26.0))
 
     private func setup() {
-        label.textColor = .grayTextTint
+        setColors()
         label.textAlignment = .center
-        label.backgroundColor = .white
         addSubview(label)
         label.constrain(toSuperviewEdges: nil)
+        layer.cornerRadius = 4.0
+        layer.masksToBounds = true
+    }
+
+    func setColors() {
+        if isHighlighted {
+            label.backgroundColor = .secondaryShadow
+            label.textColor = .darkText
+        } else {
+            label.backgroundColor = .white
+            label.textColor = .grayTextTint
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
