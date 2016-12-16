@@ -13,7 +13,6 @@ private let smallButtonHeight: CGFloat = 32.0
 private let buttonPadding: CGFloat = 20.0
 private let smallSharePadding: CGFloat = 12.0
 private let largeSharePadding: CGFloat = 20.0
-private let animationDuration: TimeInterval = 0.3
 
 typealias PresentShare = (String, UIImage) -> Void
 
@@ -192,12 +191,14 @@ class ReceiveViewController: UIViewController {
             alertView.contentView?.isHidden = true
         }
 
-        UIView.spring(animationDuration, animations: {
+        UIView.spring(C.animationDuration, animations: {
             if shouldAdjustPadding {
                 let newPadding = self.sharePopout.isExpanded ? largeSharePadding : smallSharePadding
                 self.topSharePopoutConstraint?.constant = newPadding
             }
-            self.parent?.view.frame = (self.parent?.view.frame.expandVertically(deltaY))!
+            if let newFrame = self.parent?.view.frame.expandVertically(deltaY) {
+                self.parent?.view.frame = newFrame
+            }
             alertView.toggle()
             self.parent?.view.layoutIfNeeded()
         }, completion: { _ in
