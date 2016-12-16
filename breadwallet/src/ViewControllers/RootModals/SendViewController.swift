@@ -24,10 +24,10 @@ class SendViewController: UIViewController, Subscriber {
     fileprivate let verticalButtonPadding: CGFloat = 32.0
     private let buttonSize = CGSize(width: 52.0, height: 32.0)
 
-    private let to = SendCell(label: S.Send.toLabel)
-    private let amount = SendCell(placeholder: S.Send.amountLabel)
+    private let to = LabelSendCell(label: S.Send.toLabel)
+    private let amount = TextFieldSendCell(placeholder: S.Send.amountLabel)
     private let pinPad = PinPadViewController()
-    private let descriptionCell = SendCell(label: S.Send.descriptionLabel)
+    private let descriptionCell = LabelSendCell(label: S.Send.descriptionLabel)
     private let send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
     private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
     private let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)

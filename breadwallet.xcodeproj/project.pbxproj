@@ -231,7 +231,6 @@
 		CE25BF8D1DF3B8A500BC67B6 /* InViewAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25BF8C1DF3B8A500BC67B6 /* InViewAlert.swift */; };
 		CE25BF911DF9ADE700BC67B6 /* UIImage+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25BF901DF9ADE700BC67B6 /* UIImage+Utils.swift */; };
 		CE25BF931DFDA7A600BC67B6 /* MessageUIPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25BF921DFDA7A500BC67B6 /* MessageUIPresenter.swift */; };
-		CE3209621DF1508A00844DA1 /* SendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3209611DF1508A00844DA1 /* SendCell.swift */; };
 		CE3754AD1DDE6E080045B0CB /* MaskedShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3754AC1DDE6E080045B0CB /* MaskedShadow.swift */; };
 		CE3754AF1DDE6E2E0045B0CB /* RoundedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3754AE1DDE6E2E0045B0CB /* RoundedContainer.swift */; };
 		CE3754B21DE0E31F0045B0CB /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3754B11DE0E31F0045B0CB /* EventManager.swift */; };
@@ -279,6 +278,9 @@
 		CECCE5A51E02408300D99448 /* UIView+FrameChangeBlocking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5A41E02408300D99448 /* UIView+FrameChangeBlocking.swift */; };
 		CECCE5A91E0378FB00D99448 /* PinPadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5A81E0378FB00D99448 /* PinPadViewController.swift */; };
 		CECCE5AB1E038C9900D99448 /* PinPadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5AA1E038C9900D99448 /* PinPadCell.swift */; };
+		CECCE5AE1E04AD6300D99448 /* LabelSendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5AD1E04AD6300D99448 /* LabelSendCell.swift */; };
+		CECCE5B01E04AD7600D99448 /* TextFieldSendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5AF1E04AD7600D99448 /* TextFieldSendCell.swift */; };
+		CECCE5B21E04B00D00D99448 /* SendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5B11E04B00D00D99448 /* SendCell.swift */; };
 		CEE1F5631DF13E5A00D733AD /* ModalHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */; };
 		CEF3E8251DE2C9B2007C0A9E /* Trackable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8241DE2C9B2007C0A9E /* Trackable.swift */; };
 		CEF3E8271DE2C9C5007C0A9E /* EventManagerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8261DE2C9C5007C0A9E /* EventManagerCoordinator.swift */; };
@@ -1292,7 +1294,6 @@
 		CE25BF8C1DF3B8A500BC67B6 /* InViewAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InViewAlert.swift; path = src/Views/InViewAlert.swift; sourceTree = "<group>"; };
 		CE25BF901DF9ADE700BC67B6 /* UIImage+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIImage+Utils.swift"; path = "src/Extensions/UIImage+Utils.swift"; sourceTree = "<group>"; };
 		CE25BF921DFDA7A500BC67B6 /* MessageUIPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageUIPresenter.swift; path = src/FlowControllers/MessageUIPresenter.swift; sourceTree = "<group>"; };
-		CE3209611DF1508A00844DA1 /* SendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SendCell.swift; path = src/Views/SendCell.swift; sourceTree = "<group>"; };
 		CE3754AC1DDE6E080045B0CB /* MaskedShadow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MaskedShadow.swift; path = src/Views/TransactionCells/MaskedShadow.swift; sourceTree = "<group>"; };
 		CE3754AE1DDE6E2E0045B0CB /* RoundedContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoundedContainer.swift; path = src/Views/TransactionCells/RoundedContainer.swift; sourceTree = "<group>"; };
 		CE3754B11DE0E31F0045B0CB /* EventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventManager.swift; path = src/EventManager/EventManager.swift; sourceTree = "<group>"; };
@@ -1340,6 +1341,9 @@
 		CECCE5A41E02408300D99448 /* UIView+FrameChangeBlocking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+FrameChangeBlocking.swift"; path = "src/Extensions/UIView+FrameChangeBlocking.swift"; sourceTree = "<group>"; };
 		CECCE5A81E0378FB00D99448 /* PinPadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinPadViewController.swift; path = src/ViewControllers/PinPadViewController.swift; sourceTree = "<group>"; };
 		CECCE5AA1E038C9900D99448 /* PinPadCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinPadCell.swift; path = src/Views/PinPadCell.swift; sourceTree = "<group>"; };
+		CECCE5AD1E04AD6300D99448 /* LabelSendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LabelSendCell.swift; path = src/Views/SendViewCells/LabelSendCell.swift; sourceTree = "<group>"; };
+		CECCE5AF1E04AD7600D99448 /* TextFieldSendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextFieldSendCell.swift; path = src/Views/SendViewCells/TextFieldSendCell.swift; sourceTree = "<group>"; };
+		CECCE5B11E04B00D00D99448 /* SendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SendCell.swift; path = src/Views/SendViewCells/SendCell.swift; sourceTree = "<group>"; };
 		CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalHeaderView.swift; path = src/Views/ModalHeaderView.swift; sourceTree = "<group>"; };
 		CEF3E8241DE2C9B2007C0A9E /* Trackable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Trackable.swift; path = src/EventManager/Trackable.swift; sourceTree = "<group>"; };
 		CEF3E8261DE2C9C5007C0A9E /* EventManagerCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventManagerCoordinator.swift; path = src/EventManager/EventManagerCoordinator.swift; sourceTree = "<group>"; };
@@ -2599,6 +2603,7 @@
 		CE20C90F1DBE5B5100C8397A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CECCE5AC1E04AD4100D99448 /* SendViewCells */,
 				CEBF32F71DDD191300348FC6 /* TransactionCells */,
 				CEF3E8301DE554F1007C0A9E /* AnimatedIcons */,
 				CEC6AA471DEFCFCD00EE5AFD /* Controls */,
@@ -2614,7 +2619,6 @@
 				CEF3E82E1DE534C5007C0A9E /* GradientView.swift */,
 				CEC6AA3C1DEE687000EE5AFD /* RadialGradientView.swift */,
 				CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */,
-				CE3209611DF1508A00844DA1 /* SendCell.swift */,
 				CE25BF8C1DF3B8A500BC67B6 /* InViewAlert.swift */,
 				CEA362671E00EE320061FC0E /* CameraGuideView.swift */,
 				CECCE5AA1E038C9900D99448 /* PinPadCell.swift */,
@@ -2689,6 +2693,16 @@
 				CEC6AA4A1DEFD24C00EE5AFD /* MenuButtonType.swift */,
 			);
 			name = Controls;
+			sourceTree = "<group>";
+		};
+		CECCE5AC1E04AD4100D99448 /* SendViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				CECCE5B11E04B00D00D99448 /* SendCell.swift */,
+				CECCE5AD1E04AD6300D99448 /* LabelSendCell.swift */,
+				CECCE5AF1E04AD7600D99448 /* TextFieldSendCell.swift */,
+			);
+			name = SendViewCells;
 			sourceTree = "<group>";
 		};
 		CEF3E8301DE554F1007C0A9E /* AnimatedIcons */ = {
@@ -3322,7 +3336,7 @@
 				22A9A9511DF61945000F0016 /* BRKVStoreObjects.swift in Sources */,
 				CEC6AA391DEE10BA00EE5AFD /* UINavigationController+BRAdditions.swift in Sources */,
 				CECCE5AB1E038C9900D99448 /* PinPadCell.swift in Sources */,
-				CE3209621DF1508A00844DA1 /* SendCell.swift in Sources */,
+				CECCE5B01E04AD7600D99448 /* TextFieldSendCell.swift in Sources */,
 				CE20C90E1DBE52B000C8397A /* UIView+BRWAdditions.swift in Sources */,
 				CEC6AA401DEFC87300EE5AFD /* SendViewController.swift in Sources */,
 				CEAA9E8F1DC074410066731D /* StartPaperPhraseViewController.swift in Sources */,
@@ -3336,6 +3350,7 @@
 				CE92F9F01DED0C790046B516 /* PresentModalAnimator.swift in Sources */,
 				CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */,
 				CEBF32EE1DDBC30000348FC6 /* ShadowButton.swift in Sources */,
+				CECCE5AE1E04AD6300D99448 /* LabelSendCell.swift in Sources */,
 				22A9A9521DF61945000F0016 /* BRKVStorePlugin.swift in Sources */,
 				7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */,
 				22A9A9581DF61945000F0016 /* BRWebViewController.swift in Sources */,
@@ -3375,6 +3390,7 @@
 				CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */,
 				CEC6AA491DEFD00100EE5AFD /* MenuButton.swift in Sources */,
 				CEBF32F21DDCE10D00348FC6 /* AccountHeaderView.swift in Sources */,
+				CECCE5B21E04B00D00D99448 /* SendCell.swift in Sources */,
 				22A9A9471DF61945000F0016 /* BRAPIProxy.swift in Sources */,
 				CE20C9011DBBFFF800C8397A /* Actions.swift in Sources */,
 				CE20C9191DBE7B8200C8397A /* State.swift in Sources */,
