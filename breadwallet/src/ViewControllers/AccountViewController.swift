@@ -54,12 +54,11 @@ class AccountViewController: UIViewController, Trackable {
     }
 
     private func addTransactionsView() {
-        addChildViewController(transactions)
-        view.addSubview(transactions.view)
-        transactions.view.constrain(toSuperviewEdges: nil)
-        transactions.tableView.contentInset = UIEdgeInsets(top: headerHeight + C.padding[2], left: 0, bottom: footerHeight + C.padding[2], right: 0)
-        transactions.tableView.scrollIndicatorInsets = UIEdgeInsets(top: headerHeight, left: 0, bottom: footerHeight, right: 0)
-        transactions.didMove(toParentViewController: self)
+        addChildViewController(transactions, layout: {
+            transactions.view.constrain(toSuperviewEdges: nil)
+            transactions.tableView.contentInset = UIEdgeInsets(top: headerHeight + C.padding[2], left: 0, bottom: footerHeight + C.padding[2], right: 0)
+            transactions.tableView.scrollIndicatorInsets = UIEdgeInsets(top: headerHeight, left: 0, bottom: footerHeight, right: 0)
+        })
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

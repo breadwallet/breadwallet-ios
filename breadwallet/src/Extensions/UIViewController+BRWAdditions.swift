@@ -9,8 +9,10 @@
 import UIKit
 
 extension UIViewController {
-    convenience init(tabBarItem: UITabBarItem) {
-        self.init(nibName: nil, bundle: nil)
-        self.tabBarItem = tabBarItem
+    func addChildViewController(_ viewController: UIViewController, layout: () -> Void) {
+        addChildViewController(viewController)
+        view.addSubview(viewController.view)
+        layout()
+        viewController.didMove(toParentViewController: self)
     }
 }

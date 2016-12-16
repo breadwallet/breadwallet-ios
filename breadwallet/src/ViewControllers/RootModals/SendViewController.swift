@@ -48,11 +48,14 @@ class SendViewController: UIViewController, Subscriber {
         amount.pinToBottom(to: to, height: cellHeight)
 
         pinPadHeightConstraint = pinPad.view.constraint(.height, constant: 0.0)
-        pinPad.view.constrain([
-            pinPad.view.constraint(toBottom: amount, constant: 0.0),
-            pinPad.view.constraint(.leading, toView: view),
-            pinPad.view.constraint(.trailing, toView: view),
-            pinPadHeightConstraint ])
+
+        addChildViewController(pinPad, layout: {
+            pinPad.view.constrain([
+                pinPad.view.constraint(toBottom: amount, constant: 0.0),
+                pinPad.view.constraint(.leading, toView: view),
+                pinPad.view.constraint(.trailing, toView: view),
+                pinPadHeightConstraint ])
+        })
 
         descriptionCell.pinToBottom(to: pinPad.view, height: cellHeight)
         send.constrain([
