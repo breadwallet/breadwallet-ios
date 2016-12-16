@@ -35,7 +35,14 @@ class ModalViewController: UIViewController {
         }
         
         addTopCorners()
-        addChildViewController()
+
+        addChildViewController(childViewController, layout: {
+            childViewController.view?.constrain([
+                childViewController.view?.constraint(.top, toView: view, constant: headerHeight),
+                childViewController.view?.constraint(.leading, toView: view, constant: 0.0),
+                childViewController.view?.constraint(.trailing, toView: view, constant: 0.0),
+                childViewController.view?.constraint(.bottom, toView: view, constant: 0.0) ])
+        })
 
         let totalHeight = headerHeight + modalInfo.modalSize.height
         view.frame = CGRect(x: 0, y: view.frame.height - totalHeight, width: view.frame.width, height: totalHeight)
@@ -60,20 +67,6 @@ class ModalViewController: UIViewController {
 
     override var prefersStatusBarHidden: Bool {
         return true
-    }
-
-    private func addChildViewController() {
-        if let childView = childViewController.view {
-            addChildViewController(childViewController)
-            view.addSubview(childView)
-            childView.constrain([
-                    childView.constraint(.top, toView: view, constant: headerHeight),
-                    childView.constraint(.leading, toView: view, constant: 0.0),
-                    childView.constraint(.trailing, toView: view, constant: 0.0),
-                    childView.constraint(.bottom, toView: view, constant: 0.0)
-                ])
-            childViewController.didMove(toParentViewController: self)
-        }
     }
 
     private func addTopCorners() {
