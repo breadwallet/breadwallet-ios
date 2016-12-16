@@ -25,7 +25,7 @@ class SendViewController: UIViewController, Subscriber {
     private let buttonSize = CGSize(width: 52.0, height: 32.0)
 
     private let to = SendCell(label: S.Send.toLabel)
-    private let amount = SendCell(label: S.Send.amountLabel)
+    private let amount = SendCell(placeholder: S.Send.amountLabel)
     private let pinPad = PinPadViewController()
     private let descriptionCell = SendCell(label: S.Send.descriptionLabel)
     private let send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
@@ -86,8 +86,9 @@ class SendViewController: UIViewController, Subscriber {
         pinPad.ouputDidUpdate = { output in
             self.amount.content = output
         }
-        let tapAmount = UITapGestureRecognizer(target: self, action: #selector(SendViewController.amountTapped))
-        amount.addGestureRecognizer(tapAmount)
+        amount.textFieldDidBeginEditing = {
+            self.amountTapped()
+        }
     }
 
     @objc private func pasteTapped() {
