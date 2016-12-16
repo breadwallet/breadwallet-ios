@@ -26,6 +26,7 @@ class SendViewController: UIViewController, Subscriber {
 
     private let to = SendCell(label: S.Send.toLabel)
     private let amount = SendCell(label: S.Send.amountLabel)
+    private let pinPad = PinPadViewController()
     private let descriptionCell = SendCell(label: S.Send.descriptionLabel)
     private let send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
     private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
@@ -35,46 +36,66 @@ class SendViewController: UIViewController, Subscriber {
     override func viewDidLoad() {
         view.addSubview(to)
         view.addSubview(amount)
+        view.addSubview(pinPad.view)
         view.addSubview(descriptionCell)
         view.addSubview(send)
+
         to.accessoryView.addSubview(paste)
         to.accessoryView.addSubview(scan)
         amount.addSubview(currency)
-
         to.constrainTopCorners(height: cellHeight)
         amount.pinToBottom(to: to, height: cellHeight)
-        descriptionCell.pinToBottom(to: amount, height: cellHeight)
+
+        pinPad.view.constrain([
+            pinPad.view.constraint(toBottom: amount, constant: 0.0),
+            pinPad.view.constraint(.leading, toView: view),
+            pinPad.view.constraint(.trailing, toView: view),
+            pinPad.view.constraint(.height, constant: 48.0*4) ])
+
+        descriptionCell.pinToBottom(to: pinPad.view, height: cellHeight)
         send.constrain([
-                send.constraint(.leading, toView: view, constant: C.padding[2]),
-                send.constraint(.trailing, toView: view, constant: -C.padding[2]),
-                send.constraint(toBottom: descriptionCell, constant: verticalButtonPadding),
-                send.constraint(.height, constant: C.Sizes.buttonHeight)
-            ])
+            send.constraint(.leading, toView: view, constant: C.padding[2]),
+            send.constraint(.trailing, toView: view, constant: -C.padding[2]),
+            send.constraint(toBottom: descriptionCell, constant: verticalButtonPadding),
+            send.constraint(.height, constant: C.Sizes.buttonHeight) ])
         scan.constrain([
-                scan.constraint(.centerY, toView: to.accessoryView),
-                scan.constraint(.trailing, toView: to.accessoryView, constant: -C.padding[2]),
-                scan.constraint(.height, constant: buttonSize.height),
-                scan.constraint(.width, constant: buttonSize.width)
-            ])
+            scan.constraint(.centerY, toView: to.accessoryView),
+            scan.constraint(.trailing, toView: to.accessoryView, constant: -C.padding[2]),
+            scan.constraint(.height, constant: buttonSize.height),
+            scan.constraint(.width, constant: buttonSize.width) ])
         paste.constrain([
-                paste.constraint(.centerY, toView: to.accessoryView),
-                paste.constraint(toLeading: scan, constant: -C.padding[1]),
-                paste.constraint(.height, constant: buttonSize.height),
-                paste.constraint(.width, constant: buttonSize.width),
-                paste.constraint(.leading, toView: to.accessoryView) //This constraint is needed because it gives the accessory view an intrinsic horizontal size
-            ])
+            paste.constraint(.centerY, toView: to.accessoryView),
+            paste.constraint(toLeading: scan, constant: -C.padding[1]),
+            paste.constraint(.height, constant: buttonSize.height),
+            paste.constraint(.width, constant: buttonSize.width),
+            paste.constraint(.leading, toView: to.accessoryView) ]) //This constraint is needed because it gives the accessory view an intrinsic horizontal size
         currency.constrain([
-                currency.constraint(.centerY, toView: amount),
-                currency.constraint(.trailing, toView: amount, constant: -C.padding[2]),
-                currency.constraint(.height, constant: buttonSize.height),
-                currency.constraint(.width, constant: 64.0)
-            ])
+            currency.constraint(.centerY, toView: amount),
+            currency.constraint(.trailing, toView: amount, constant: -C.padding[2]),
+            currency.constraint(.height, constant: buttonSize.height),
+            currency.constraint(.width, constant: 64.0) ])
+        
         addButtonActions()
     }
 
     private func addButtonActions() {
         paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
+        pinPad.didPressKey = { action in
+            switch action {
+            case .delete:
+                if let content = self.amount.content {
+                    let newString = content.substring(to: content.index(before: content.endIndex))
+                    self.amount.content = newString
+                }
+            case .add(let char):
+                if let content = self.amount.content {
+                    self.amount.content = content + char
+                } else {
+                    self.amount.content = char
+                }
+            }
+        }
     }
 
     @objc private func pasteTapped() {
@@ -114,7 +135,7 @@ extension SendViewController: ModalDisplayable {
     }
 
     var modalSize: CGSize {
-        return CGSize(width: view.frame.width, height: cellHeight*3 + verticalButtonPadding*2 + C.Sizes.buttonHeight)
+        return CGSize(width: view.frame.width, height: cellHeight*3 + verticalButtonPadding*2 + C.Sizes.buttonHeight + 48.0*4)
     }
 
     var isFaqHidden: Bool {
