@@ -39,6 +39,7 @@ class PinPadViewController : UICollectionViewController {
         collectionView?.isScrollEnabled = false
     }
 
+    //MARK: - UICollectionViewDataSource
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
     }
@@ -50,16 +51,40 @@ class PinPadViewController : UICollectionViewController {
         return pinPadCell
     }
 
+    //MARK: - UICollectionViewDelegate
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = items[indexPath.row]
         if item == "del" {
             if currentOutput.characters.count > 0 {
-                currentOutput.remove(at: currentOutput.index(before: currentOutput.endIndex))
+                if currentOutput == "0." {
+                    currentOutput = ""
+                } else {
+                    currentOutput.remove(at: currentOutput.index(before: currentOutput.endIndex))
+                }
             }
         } else {
-            currentOutput = currentOutput + item
+            if shouldAppendChar(char: item) {
+                currentOutput = currentOutput + item
+            }
         }
         ouputDidUpdate?(currentOutput)
+    }
+
+    func shouldAppendChar(char: String) -> Bool {
+        let numberFormatter = NumberFormatter()
+        let decimalLocation = currentOutput.range(of: numberFormatter.currencyDecimalSeparator)?.lowerBound
+        if char == numberFormatter.currencyDecimalSeparator {
+            if decimalLocation == nil {
+                //Prepend a 0 if the first character is a decimal point
+                if currentOutput.characters.count == 0 {
+                    currentOutput = "0"
+                }
+                return true
+            } else {
+                return false
+            }
+        }
+        return true
     }
 
     required init?(coder aDecoder: NSCoder) {
