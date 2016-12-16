@@ -14,7 +14,7 @@ class MessageUIPresenter: NSObject {
     weak var presenter: UIViewController?
 
     func presentMailCompose(address: String, image: UIImage) {
-        guard MFMailComposeViewController.canSendMail() else { return }
+        guard MFMailComposeViewController.canSendMail() else { showEmailUnavailableAlert(); return }
         originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
         UINavigationBar.appearance().titleTextAttributes = nil
         let emailView = MFMailComposeViewController()
@@ -27,7 +27,7 @@ class MessageUIPresenter: NSObject {
     }
 
     func presentMessageCompose(address: String, image: UIImage) {
-        guard MFMessageComposeViewController.canSendText() else { return }
+        guard MFMessageComposeViewController.canSendText() else { showMessageUnavailableAlert(); return }
         originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
         UINavigationBar.appearance().titleTextAttributes = nil
         let textView = MFMessageComposeViewController()
@@ -52,6 +52,20 @@ class MessageUIPresenter: NSObject {
         viewController.dismiss(animated: true, completion: {
             self.presenter?.view.isFrameChangeBlocked = false
         })
+    }
+
+    private func showEmailUnavailableAlert() {
+        let alert = UIAlertController(title: S.ErrorMessages.emailUnavailableTitle, message: S.ErrorMessages.emailUnavailableMessage, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
+        alert.view.tintColor = C.defaultTintColor
+        presenter?.present(alert, animated: true, completion: nil)
+    }
+
+    private func showMessageUnavailableAlert() {
+        let alert = UIAlertController(title: S.ErrorMessages.messagingUnavailableTitle, message: S.ErrorMessages.messagingUnavailableMessage, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
+        alert.view.tintColor = C.defaultTintColor
+        presenter?.present(alert, animated: true, completion: nil)
     }
 }
 
