@@ -65,7 +65,8 @@ class SendCell : UIView {
         textField.constrain([
             textField.constraint(.leading, toView: self, constant: C.padding[2]),
             textField.constraint(.top, toView: self),
-            textField.constraint(.bottom, toView: self) ])
+            textField.constraint(.bottom, toView: self),
+            textField.constraint(toLeading: accessoryView, constant: 0.0) ])
         contentLabel.constrain([
             contentLabel.constraint(.leading, toView: label),
             contentLabel.constraint(toBottom: label, constant: 0.0),
@@ -74,6 +75,7 @@ class SendCell : UIView {
             accessoryView.constraint(.top, toView: self),
             accessoryView.constraint(.trailing, toView: self),
             accessoryView.constraint(.bottom, toView: self) ])
+
         border.constrainBottomCorners(height: 1.0)
 
         border.backgroundColor = .secondaryShadow

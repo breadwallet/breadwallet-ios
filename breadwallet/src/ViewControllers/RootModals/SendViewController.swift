@@ -78,7 +78,8 @@ class SendViewController: UIViewController, Subscriber {
             currency.constraint(.centerY, toView: amount),
             currency.constraint(.trailing, toView: amount, constant: -C.padding[2]),
             currency.constraint(.height, constant: buttonSize.height),
-            currency.constraint(.width, constant: 64.0) ])
+            currency.constraint(.width, constant: 64.0),
+            currency.constraint(.leading, toView: amount.accessoryView, constant: C.padding[2]) ]) //This constraint is needed because it gives the accessory view an intrinsic horizontal size
         
         addButtonActions()
     }
