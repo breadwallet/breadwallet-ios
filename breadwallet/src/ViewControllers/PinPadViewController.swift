@@ -8,6 +8,7 @@
 
 import UIKit
 
+let deleteKeyIdentifier = "del"
 private let cellIdentifier = "CellIdentifier"
 
 class PinPadViewController : UICollectionViewController {
@@ -25,7 +26,7 @@ class PinPadViewController : UICollectionViewController {
         super.init(collectionViewLayout: layout)
     }
 
-    private let items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "del"]
+    private let items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", deleteKeyIdentifier]
     private var currentOutput = ""
 
     override func viewDidLoad() {
