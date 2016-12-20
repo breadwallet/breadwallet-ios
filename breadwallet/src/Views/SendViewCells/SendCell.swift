@@ -17,7 +17,7 @@ class SendCell : UIView {
 
     let accessoryView = UIView()
 
-    private let border = UIView()
+    let border = UIView()
 
     private func setupViews() {
         addSubview(accessoryView)
