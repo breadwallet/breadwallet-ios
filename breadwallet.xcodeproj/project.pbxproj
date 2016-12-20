@@ -282,6 +282,7 @@
 		CECCE5B01E04AD7600D99448 /* TextFieldSendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5AF1E04AD7600D99448 /* TextFieldSendCell.swift */; };
 		CECCE5B21E04B00D00D99448 /* SendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5B11E04B00D00D99448 /* SendCell.swift */; };
 		CEE1F5631DF13E5A00D733AD /* ModalHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */; };
+		CEE7F1D01E07653B00283981 /* CurrencySlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */; };
 		CEF3E8251DE2C9B2007C0A9E /* Trackable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8241DE2C9B2007C0A9E /* Trackable.swift */; };
 		CEF3E8271DE2C9C5007C0A9E /* EventManagerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8261DE2C9C5007C0A9E /* EventManagerCoordinator.swift */; };
 		CEF3E82B1DE51612007C0A9E /* GradientCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */; };
@@ -1345,6 +1346,7 @@
 		CECCE5AF1E04AD7600D99448 /* TextFieldSendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextFieldSendCell.swift; path = src/Views/SendViewCells/TextFieldSendCell.swift; sourceTree = "<group>"; };
 		CECCE5B11E04B00D00D99448 /* SendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SendCell.swift; path = src/Views/SendViewCells/SendCell.swift; sourceTree = "<group>"; };
 		CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalHeaderView.swift; path = src/Views/ModalHeaderView.swift; sourceTree = "<group>"; };
+		CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CurrencySlider.swift; path = src/Views/CurrencySlider.swift; sourceTree = "<group>"; };
 		CEF3E8241DE2C9B2007C0A9E /* Trackable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Trackable.swift; path = src/EventManager/Trackable.swift; sourceTree = "<group>"; };
 		CEF3E8261DE2C9C5007C0A9E /* EventManagerCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventManagerCoordinator.swift; path = src/EventManager/EventManagerCoordinator.swift; sourceTree = "<group>"; };
 		CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GradientCircle.swift; path = src/Views/GradientCircle.swift; sourceTree = "<group>"; };
@@ -2622,6 +2624,7 @@
 				CE25BF8C1DF3B8A500BC67B6 /* InViewAlert.swift */,
 				CEA362671E00EE320061FC0E /* CameraGuideView.swift */,
 				CECCE5AA1E038C9900D99448 /* PinPadCell.swift */,
+				CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -3389,6 +3392,7 @@
 				CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */,
 				CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */,
 				CEC6AA491DEFD00100EE5AFD /* MenuButton.swift in Sources */,
+				CEE7F1D01E07653B00283981 /* CurrencySlider.swift in Sources */,
 				CEBF32F21DDCE10D00348FC6 /* AccountHeaderView.swift in Sources */,
 				CECCE5B21E04B00D00D99448 /* SendCell.swift in Sources */,
 				22A9A9471DF61945000F0016 /* BRAPIProxy.swift in Sources */,

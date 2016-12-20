@@ -10,6 +10,11 @@ import UIKit
 
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
+private let currencyHeight: CGFloat = 80.0
+private let cellHeight: CGFloat = 72.0
+private let verticalButtonPadding: CGFloat = 32.0
+private let buttonSize = CGSize(width: 52.0, height: 32.0)
+
 class SendViewController: UIViewController, Subscriber {
 
     init(store: Store) {
@@ -20,23 +25,28 @@ class SendViewController: UIViewController, Subscriber {
     var presentScan: PresentScan?
 
     private let store: Store
-    fileprivate let cellHeight: CGFloat = 72.0
-    fileprivate let verticalButtonPadding: CGFloat = 32.0
-    private let buttonSize = CGSize(width: 52.0, height: 32.0)
-
     private let to = LabelSendCell(label: S.Send.toLabel)
     private let amount = TextFieldSendCell(placeholder: S.Send.amountLabel)
+    private let currencySwitcher = InViewAlert(type: .secondary)
     private let pinPad = PinPadViewController()
     private let descriptionCell = LabelSendCell(label: S.Send.descriptionLabel)
     private let send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
     private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
     private let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
     private let currency = ShadowButton(title: S.Send.currencyLabel, type: .tertiary)
+    private let currencyBorder: UIView = {
+        let view = UIView()
+        view.backgroundColor = .secondaryShadow
+        return view
+    }()
+    private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
 
     override func viewDidLoad() {
         view.addSubview(to)
         view.addSubview(amount)
+        view.addSubview(currencySwitcher)
+        view.addSubview(currencyBorder)
         view.addSubview(pinPad.view)
         view.addSubview(descriptionCell)
         view.addSubview(send)
@@ -44,14 +54,28 @@ class SendViewController: UIViewController, Subscriber {
         to.accessoryView.addSubview(paste)
         to.accessoryView.addSubview(scan)
         amount.addSubview(currency)
+        currency.isToggleable = true
         to.constrainTopCorners(height: cellHeight)
         amount.pinToBottom(to: to, height: cellHeight)
 
-        pinPadHeightConstraint = pinPad.view.constraint(.height, constant: 0.0)
+        currencySwitcherHeightConstraint = currencySwitcher.constraint(.height, constant: 0.0)
+        currencySwitcher.constrain([
+            currencySwitcher.constraint(toBottom: amount, constant: 0.0),
+            currencySwitcher.constraint(.leading, toView: view),
+            currencySwitcher.constraint(.trailing, toView: view),
+            currencySwitcherHeightConstraint ])
 
+        amount.border.isHidden = true //Hide the default border because it needs to stay below the currency switcher when it gets expanded
+        currencyBorder.constrain([
+            currencyBorder.constraint(.height, constant: 1.0),
+            currencyBorder.constraint(.leading, toView: view),
+            currencyBorder.constraint(.trailing, toView: view),
+            currencyBorder.constraint(toBottom: currencySwitcher, constant: 0.0) ])
+
+        pinPadHeightConstraint = pinPad.view.constraint(.height, constant: 0.0)
         addChildViewController(pinPad, layout: {
             pinPad.view.constrain([
-                pinPad.view.constraint(toBottom: amount, constant: 0.0),
+                pinPad.view.constraint(toBottom: currencyBorder, constant: 0.0),
                 pinPad.view.constraint(.leading, toView: view),
                 pinPad.view.constraint(.trailing, toView: view),
                 pinPadHeightConstraint ])
@@ -82,11 +106,14 @@ class SendViewController: UIViewController, Subscriber {
             currency.constraint(.leading, toView: amount.accessoryView, constant: C.padding[2]) ]) //This constraint is needed because it gives the accessory view an intrinsic horizontal size
         
         addButtonActions()
+
+        currencySwitcher.contentView = CurrencySlider()
     }
 
     private func addButtonActions() {
         paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
+        currency.addTarget(self, action: #selector(SendViewController.currencySwitchTapped), for: .touchUpInside)
         pinPad.ouputDidUpdate = { output in
             self.amount.content = output
         }
@@ -124,6 +151,23 @@ class SendViewController: UIViewController, Subscriber {
             } else {
                 self.pinPadHeightConstraint?.constant = 0.0
                 if let newFrame = self.parent?.view.frame.expandVertically(-PinPadViewController.height) {
+                    self.parent?.view.frame = newFrame
+                }
+            }
+            self.parent?.view.layoutIfNeeded()
+        }, completion: {_ in })
+    }
+
+    @objc private func currencySwitchTapped() {
+        UIView.spring(C.animationDuration, animations: {
+            if self.currencySwitcherHeightConstraint?.constant == 0.0 {
+                self.currencySwitcherHeightConstraint?.constant = currencyHeight
+                if let newFrame = self.parent?.view.frame.expandVertically(currencyHeight) {
+                    self.parent?.view.frame = newFrame
+                }
+            } else {
+                self.currencySwitcherHeightConstraint?.constant = 0.0
+                if let newFrame = self.parent?.view.frame.expandVertically(-currencyHeight) {
                     self.parent?.view.frame = newFrame
                 }
             }
