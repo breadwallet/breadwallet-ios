@@ -46,31 +46,31 @@ class ModalTransitionDelegate: NSObject, Subscriber {
 
     @objc func didUpdate(gr: UIPanGestureRecognizer) {
         switch gr.state {
-            case .began:
-                isInteractive = true
-                presentedViewController?.dismiss(animated: true, completion: {})
-            case .changed:
-                guard let vc = presentedViewController else { break }
-                let yOffset = gr.translation(in: vc.view).y
-                let progress = yOffset/vc.view.bounds.height
-                yVelocity = gr.velocity(in: vc.view).y
-                self.progress = progress
-                interactiveTransition.update(progress)
-            case .cancelled:
+        case .began:
+            isInteractive = true
+            presentedViewController?.dismiss(animated: true, completion: {})
+        case .changed:
+            guard let vc = presentedViewController else { break }
+            let yOffset = gr.translation(in: vc.view).y
+            let progress = yOffset/vc.view.bounds.height
+            yVelocity = gr.velocity(in: vc.view).y
+            self.progress = progress
+            interactiveTransition.update(progress)
+        case .cancelled:
+            reset()
+            interactiveTransition.cancel()
+        case .ended:
+            if transitionShouldFinish {
                 reset()
+                interactiveTransition.finish()
+            } else {
+                isInteractive = false
                 interactiveTransition.cancel()
-            case .ended:
-                if transitionShouldFinish {
-                    reset()
-                    interactiveTransition.finish()
-                } else {
-                    isInteractive = false
-                    interactiveTransition.cancel()
-                }
-            case .failed:
-                break
-            case .possible:
-                break
+            }
+        case .failed:
+            break
+        case .possible:
+            break
         }
     }
 

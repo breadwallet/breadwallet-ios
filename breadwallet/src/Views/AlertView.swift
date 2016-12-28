@@ -96,20 +96,16 @@ class AlertView: UIView, GradientDrawable {
             separator.constraint(.height, constant: 1.0),
             separator.constraint(.width, toView: self, constant: 0.0),
             separator.constraint(.top, toView: self, constant: separatorYOffset),
-            separator.constraint(.leading, toView: self, constant: nil)
-            ])
+            separator.constraint(.leading, toView: self, constant: nil) ])
         icon.constrain([
-                icon.constraint(.centerX, toView: self, constant: nil),
-                icon.constraint(.centerY, toView: self, constant: nil),
-                icon.constraint(.width, constant: iconSize),
-                icon.constraint(.height, constant: iconSize)
-            ])
-
+            icon.constraint(.centerX, toView: self, constant: nil),
+            icon.constraint(.centerY, toView: self, constant: nil),
+            icon.constraint(.width, constant: iconSize),
+            icon.constraint(.height, constant: iconSize) ])
         subheader.constrain([
-                subheader.constraint(.leading, toView: self, constant: C.padding[2]),
-                subheader.constraint(.trailing, toView: self, constant: -C.padding[2]),
-                subheader.constraint(toBottom: icon, constant: C.padding[3])
-            ])
+            subheader.constraint(.leading, toView: self, constant: C.padding[2]),
+            subheader.constraint(.trailing, toView: self, constant: -C.padding[2]),
+            subheader.constraint(toBottom: icon, constant: C.padding[3]) ])
     }
 
     override func draw(_ rect: CGRect) {

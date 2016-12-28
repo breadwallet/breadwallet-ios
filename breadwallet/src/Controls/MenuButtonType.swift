@@ -17,31 +17,31 @@ enum MenuButtonType {
 
     var title: String {
         switch self {
-            case .profile:
-                return NSLocalizedString("My Profile", comment: "Menu button title")
-            case .security:
-                return NSLocalizedString("Security Center", comment: "Menu button title")
-            case .support:
-                return NSLocalizedString("Support", comment: "Menu button title")
-            case .settings:
-                return NSLocalizedString("Settings", comment: "Menu button title")
-            case .lock:
-                return NSLocalizedString("Lock Wallet", comment: "Menu button title")
+        case .profile:
+            return NSLocalizedString("My Profile", comment: "Menu button title")
+        case .security:
+            return NSLocalizedString("Security Center", comment: "Menu button title")
+        case .support:
+            return NSLocalizedString("Support", comment: "Menu button title")
+        case .settings:
+            return NSLocalizedString("Settings", comment: "Menu button title")
+        case .lock:
+            return NSLocalizedString("Lock Wallet", comment: "Menu button title")
         }
     }
 
     var image: UIImage {
         switch self {
-            case .profile:
-                return #imageLiteral(resourceName: "Profile")
-            case .security:
-                return #imageLiteral(resourceName: "Shield")
-            case .support:
-                return #imageLiteral(resourceName: "FaqFill")
-            case .settings:
-                return #imageLiteral(resourceName: "Settings")
-            case .lock:
-                return #imageLiteral(resourceName: "Lock")
+        case .profile:
+            return #imageLiteral(resourceName: "Profile")
+        case .security:
+            return #imageLiteral(resourceName: "Shield")
+        case .support:
+            return #imageLiteral(resourceName: "FaqFill")
+        case .settings:
+            return #imageLiteral(resourceName: "Settings")
+        case .lock:
+            return #imageLiteral(resourceName: "Lock")
         }
     }
 }
