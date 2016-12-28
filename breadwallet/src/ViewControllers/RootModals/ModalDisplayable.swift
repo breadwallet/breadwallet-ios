@@ -13,3 +13,7 @@ protocol ModalDisplayable {
     var modalSize: CGSize { get }
     var isFaqHidden: Bool { get }
 }
+
+protocol ModalPresentable {
+    var parentView: UIView? { get set }
+}

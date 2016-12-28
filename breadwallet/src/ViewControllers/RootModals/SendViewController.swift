@@ -15,7 +15,7 @@ private let cellHeight: CGFloat = 72.0
 private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
 
-class SendViewController: UIViewController, Subscriber {
+class SendViewController: UIViewController, Subscriber, ModalPresentable {
 
     init(store: Store) {
         self.store = store
@@ -38,6 +38,7 @@ class SendViewController: UIViewController, Subscriber {
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
     private var currencyOverlay = CurrencyOverlay()
+    var parentView: UIView?
 
     override func viewDidLoad() {
         view.addSubview(to)
@@ -140,78 +141,75 @@ class SendViewController: UIViewController, Subscriber {
     }
 
     @objc private func amountTapped() {
+        guard let parentView = parentView else { return }
         UIView.spring(C.animationDuration, animations: {
             if self.pinPadHeightConstraint?.constant == 0.0 {
                 self.pinPadHeightConstraint?.constant = PinPadViewController.height
-                if let newFrame = self.parent?.view.frame.expandVertically(PinPadViewController.height) {
-                    self.parent?.view.frame = newFrame
-                }
+                parentView.frame = parentView.frame.expandVertically(PinPadViewController.height)
             } else {
                 self.pinPadHeightConstraint?.constant = 0.0
-                if let newFrame = self.parent?.view.frame.expandVertically(-PinPadViewController.height) {
-                    self.parent?.view.frame = newFrame
-                }
+                parentView.frame = parentView.frame.expandVertically(-PinPadViewController.height)
             }
             self.parent?.view.layoutIfNeeded()
         }, completion: {_ in })
     }
 
     @objc private func currencySwitchTapped() {
-        guard let parentView = parent?.view.superview else { return }
-        var didPresent = false
-        if self.currencySwitcherHeightConstraint?.constant == 0.0 {
+        guard let parentView = parentView else { return }
+        func isCurrencySwitcherCollapsed() -> Bool {
+            return self.currencySwitcherHeightConstraint?.constant == 0.0
+        }
 
+        var isPresenting = false
+        if isCurrencySwitcherCollapsed() {
             store.perform(action: ModalDismissal.block())
-
-            amount.addSubview(currencyOverlay.middle)
-            parentView.addSubview(currencyOverlay.bottom)
-            parentView.insertSubview(currencyOverlay.top, belowSubview: parent!.view)
-
-            currencyOverlay.top.constrain(toSuperviewEdges: nil)
-            currencyOverlay.middle.constrain([
-                currencyOverlay.middle.constraint(.leading, toView: parentView),
-                currencyOverlay.middle.constraint(.trailing, toView: parentView),
-                currencyOverlay.middle.constraint(.bottom, toView: amount, constant: InViewAlert.arrowSize.height),
-                currencyOverlay.middle.constraint(toBottom: to, constant: -1000.0) ])
-            currencyOverlay.bottom.constrain([
-                currencyOverlay.bottom.constraint(.leading, toView: parentView),
-                currencyOverlay.bottom.constraint(.bottom, toView: parentView),
-                currencyOverlay.bottom.constraint(.trailing, toView: parentView),
-                currencyOverlay.bottom.constraint(toBottom: currencyBorder, constant: 0.0)])
-
-            currencyOverlay.alpha = 0.0
-            didPresent = true
-            self.amount.bringSubview(toFront: self.currency)
-
+            addCurrencyOverlay()
+            isPresenting = true
         } else {
             UIView.animate(withDuration: 0.1, animations: {
                 self.currencyOverlay.alpha = 0.0
             }, completion: { _ in
-                if !didPresent {
-                    self.currencyOverlay.removeFromSuperview()
-                }
+                self.currencyOverlay.removeFromSuperview()
             })
             store.perform(action: ModalDismissal.unBlock())
         }
 
         amount.layoutIfNeeded()
         UIView.spring(C.animationDuration, animations: {
-            if self.currencySwitcherHeightConstraint?.constant == 0.0 {
+            if isCurrencySwitcherCollapsed() {
                 self.currencySwitcherHeightConstraint?.constant = currencyHeight
-                if let newFrame = self.parent?.view.frame.expandVertically(currencyHeight) {
-                    self.parent?.view.frame = newFrame
-                }
+                parentView.frame = parentView.frame.expandVertically(currencyHeight)
             } else {
                 self.currencySwitcherHeightConstraint?.constant = 0.0
-                if let newFrame = self.parent?.view.frame.expandVertically(-currencyHeight) {
-                    self.parent?.view.frame = newFrame
-                }
+                parentView.frame = parentView.frame.expandVertically(-currencyHeight)
             }
-            self.parent?.view.layoutIfNeeded()
-            if didPresent {
+            if isPresenting {
                 self.currencyOverlay.alpha = 1.0
             }
+            parentView.layoutIfNeeded()
         }, completion: {_ in })
+    }
+
+    private func addCurrencyOverlay() {
+        guard let parentView = parentView else { return }
+        guard let parentSuperView = parentView.superview else { return }
+
+        amount.addSubview(currencyOverlay.middle)
+        parentSuperView.addSubview(currencyOverlay.bottom)
+        parentSuperView.insertSubview(currencyOverlay.top, belowSubview: parentView)
+        currencyOverlay.top.constrain(toSuperviewEdges: nil)
+        currencyOverlay.middle.constrain([
+            currencyOverlay.middle.constraint(.leading, toView: parentSuperView),
+            currencyOverlay.middle.constraint(.trailing, toView: parentSuperView),
+            currencyOverlay.middle.constraint(.bottom, toView: amount, constant: InViewAlert.arrowSize.height),
+            currencyOverlay.middle.constraint(toBottom: to, constant: -1000.0) ])
+        currencyOverlay.bottom.constrain([
+            currencyOverlay.bottom.constraint(.leading, toView: parentSuperView),
+            currencyOverlay.bottom.constraint(.bottom, toView: parentSuperView),
+            currencyOverlay.bottom.constraint(.trailing, toView: parentSuperView),
+            currencyOverlay.bottom.constraint(toBottom: currencyBorder, constant: 0.0)])
+        currencyOverlay.alpha = 0.0
+        self.amount.bringSubview(toFront: self.currency)
     }
 
     private func invalidAddressAlert() {
