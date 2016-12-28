@@ -44,6 +44,10 @@ class ModalViewController: UIViewController {
                 childViewController.view?.constraint(.bottom, toView: view, constant: 0.0) ])
         })
 
+        if var modalPresentable = childViewController as? ModalPresentable {
+            modalPresentable.parentView = view
+        }
+
         let totalHeight = headerHeight + modalInfo.modalSize.height
         view.frame = CGRect(x: 0, y: view.frame.height - totalHeight, width: view.frame.width, height: totalHeight)
 
