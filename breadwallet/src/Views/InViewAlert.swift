@@ -13,6 +13,9 @@ enum InViewAlertType {
     case secondary
 }
 
+private let arrowHeight: CGFloat = 8.0
+private let arrowWidth: CGFloat = 16.0
+
 class InViewAlert: UIView {
 
     var heightConstraint: NSLayoutConstraint?
@@ -24,7 +27,10 @@ class InViewAlert: UIView {
             view.constrain(toSuperviewEdges: UIEdgeInsetsMake(arrowHeight, 0, 0, 0))
         }
     }
-    
+    static var arrowSize: CGSize {
+        return CGSize(width: arrowWidth, height: arrowHeight)
+    }
+
     var height: CGFloat {
         switch type {
         case .primary:
@@ -45,8 +51,6 @@ class InViewAlert: UIView {
     }
 
     private let type: InViewAlertType
-    private let arrowHeight: CGFloat = 8.0
-    private let arrowWidth: CGFloat = 16.0
 
     private func setupSubViews(){
         contentMode = .redraw

@@ -14,6 +14,7 @@ struct State {
     let paperPhraseStep: PaperPhraseStep
     let rootModal: RootModal
     let pasteboard: String?
+    let isModalDismissalBlocked: Bool
 }
 
 extension State {
@@ -22,7 +23,8 @@ extension State {
                         pinCreationStep:    .none,
                         paperPhraseStep:    .none,
                         rootModal:          .none,
-                        pasteboard:         UIPasteboard.general.string)
+                        pasteboard:         UIPasteboard.general.string,
+                        isModalDismissalBlocked: false)
     }
 }
 
