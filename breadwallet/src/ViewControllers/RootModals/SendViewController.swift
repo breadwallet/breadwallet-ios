@@ -14,6 +14,7 @@ private let currencyHeight: CGFloat = 80.0
 private let cellHeight: CGFloat = 72.0
 private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
+private let currencyButtonWidth: CGFloat = 64.0
 
 class SendViewController: UIViewController, Subscriber, ModalPresentable {
 
@@ -63,6 +64,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable {
             currencySwitcher.constraint(.leading, toView: view),
             currencySwitcher.constraint(.trailing, toView: view),
             currencySwitcherHeightConstraint ])
+        currencySwitcher.arrowXLocation = view.bounds.width - currencyButtonWidth/2.0 - C.padding[2]
 
         amount.border.isHidden = true //Hide the default border because it needs to stay below the currency switcher when it gets expanded
         currencyBorder.constrain([

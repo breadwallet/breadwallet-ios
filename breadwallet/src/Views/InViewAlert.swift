@@ -27,6 +27,7 @@ class InViewAlert: UIView {
             view.constrain(toSuperviewEdges: UIEdgeInsetsMake(arrowHeight, 0, 0, 0))
         }
     }
+    var arrowXLocation: CGFloat?
     static var arrowSize: CGSize {
         return CGSize(width: arrowWidth, height: arrowHeight)
     }
@@ -63,11 +64,12 @@ class InViewAlert: UIView {
         background.fill()
 
         let context = UIGraphicsGetCurrentContext()
+        let center = arrowXLocation != nil ? arrowXLocation! : rect.width/2.0
 
         let triangle = CGMutablePath()
-        triangle.move(to: CGPoint(x: rect.width/2.0 - arrowWidth/2.0 + 0.5, y: arrowHeight + 0.5))
-        triangle.addLine(to: CGPoint(x: rect.width/2.0 + 0.5, y: 0.5))
-        triangle.addLine(to: CGPoint(x: rect.width/2.0 + arrowWidth/2.0 + 0.5, y: arrowHeight + 0.5))
+        triangle.move(to: CGPoint(x: center - arrowWidth/2.0 + 0.5, y: arrowHeight + 0.5))
+        triangle.addLine(to: CGPoint(x: center + 0.5, y: 0.5))
+        triangle.addLine(to: CGPoint(x: center + arrowWidth/2.0 + 0.5, y: arrowHeight + 0.5))
         triangle.closeSubpath()
         context?.setLineJoin(.miter)
         context?.setFillColor(fillColor.cgColor)
@@ -78,9 +80,9 @@ class InViewAlert: UIView {
         if type == .secondary {
             let topBorder = CGMutablePath()
             topBorder.move(to: CGPoint(x: 0, y: arrowHeight))
-            topBorder.addLine(to: CGPoint(x: rect.width/2.0 - arrowWidth/2.0 + 0.5, y: arrowHeight + 0.5))
-            topBorder.addLine(to: CGPoint(x: rect.width/2.0 + 0.5, y: 0.5))
-            topBorder.addLine(to: CGPoint(x: rect.width/2.0 + arrowWidth/2.0 + 0.5, y: arrowHeight + 0.5))
+            topBorder.addLine(to: CGPoint(x: center - arrowWidth/2.0 + 0.5, y: arrowHeight + 0.5))
+            topBorder.addLine(to: CGPoint(x: center + 0.5, y: 0.5))
+            topBorder.addLine(to: CGPoint(x: center + arrowWidth/2.0 + 0.5, y: arrowHeight + 0.5))
             topBorder.addLine(to: CGPoint(x: rect.width + 0.5, y: arrowHeight + 0.5))
             context?.setLineWidth(1.0)
             context?.setStrokeColor(UIColor.secondaryShadow.cgColor)
