@@ -8,6 +8,21 @@
 
 import UIKit
 
+enum Dimension {
+    case width
+    case height
+
+    var layoutAttribute: NSLayoutAttribute {
+        switch self {
+        case .width:
+            return .width
+        case .height:
+            return .height
+        }
+    }
+
+}
+
 extension UIView {
 
     func constrain(toSuperviewEdges: UIEdgeInsets?) {
@@ -39,11 +54,10 @@ extension UIView {
         return NSLayoutConstraint(item: self, attribute: attribute, relatedBy: .equal, toItem: toView, attribute: attribute, multiplier: 1.0, constant: 0.0)
     }
 
-    //TODO - restrict this to width and height attributes
-    func constraint(_ attribute: NSLayoutAttribute, constant: CGFloat) -> NSLayoutConstraint? {
+    func constraint(_ dimension: Dimension, constant: CGFloat) -> NSLayoutConstraint? {
         guard superview != nil else { assert(false, "Superview cannot be nil when adding contraints"); return nil }
         translatesAutoresizingMaskIntoConstraints = false
-        return NSLayoutConstraint(item: self, attribute: attribute, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: constant)
+        return NSLayoutConstraint(item: self, attribute: dimension.layoutAttribute, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: constant)
     }
 
     func constraint(toBottom: UIView, constant: CGFloat) -> NSLayoutConstraint? {
