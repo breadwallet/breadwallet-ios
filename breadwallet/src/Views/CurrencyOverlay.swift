@@ -12,6 +12,7 @@ struct CurrencyOverlay {
     let top = UIView(color: UIColor(white: 0.0, alpha: 0.3))
     let middle = UIView(color: UIColor(white: 0.0, alpha: 0.3))
     let bottom = UIView(color: UIColor(white: 0.0, alpha: 0.3))
+    let blocker = UIView()
 
     var alpha: CGFloat = 0.0 {
         didSet {
@@ -28,6 +29,6 @@ struct CurrencyOverlay {
     }
 
     private lazy var views: [UIView] = {
-        return [self.top, self.middle, self.bottom]
+        return [self.top, self.middle, self.bottom, self.blocker]
     }()
 }
