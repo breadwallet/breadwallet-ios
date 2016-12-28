@@ -204,6 +204,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable {
         amount.addSubview(currencyOverlay.middle)
         parentSuperView.addSubview(currencyOverlay.bottom)
         parentSuperView.insertSubview(currencyOverlay.top, belowSubview: parentView)
+        parentView.addSubview(currencyOverlay.blocker)
         currencyOverlay.top.constrain(toSuperviewEdges: nil)
         currencyOverlay.middle.constrain([
             currencyOverlay.middle.constraint(.leading, toView: parentSuperView),
@@ -215,6 +216,11 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable {
             currencyOverlay.bottom.constraint(.bottom, toView: parentSuperView),
             currencyOverlay.bottom.constraint(.trailing, toView: parentSuperView),
             currencyOverlay.bottom.constraint(toBottom: currencyBorder, constant: 0.0)])
+        currencyOverlay.blocker.constrain([
+            currencyOverlay.blocker.constraint(.leading, toView: parentView),
+            currencyOverlay.blocker.constraint(.top, toView: parentView),
+            currencyOverlay.blocker.constraint(.trailing, toView: parentView),
+            currencyOverlay.blocker.constraint(toTop: amount, constant: 0.0) ])
         currencyOverlay.alpha = 0.0
         self.amount.bringSubview(toFront: self.currency)
     }
