@@ -35,14 +35,14 @@ struct PinCreation {
         init(newPin: String) {
             reduce = {
                 switch $0.pinCreationStep {
-                    case .start:
-                        return $0.clone(pinCreationStep: .confirm(pin: newPin))
-                    case .confirm(let previousPin):
-                        return stateForNewPin(newPin: newPin, previousPin: previousPin, state: $0)
-                    case .confirmFail(let previousPin):
-                        return stateForNewPin(newPin: newPin, previousPin: previousPin, state: $0)
-                    default:
-                        assert(false, "Warning - invalid state")
+                case .start:
+                    return $0.clone(pinCreationStep: .confirm(pin: newPin))
+                case .confirm(let previousPin):
+                    return stateForNewPin(newPin: newPin, previousPin: previousPin, state: $0)
+                case .confirmFail(let previousPin):
+                    return stateForNewPin(newPin: newPin, previousPin: previousPin, state: $0)
+                default:
+                    assert(false, "Warning - invalid state")
                 }
             }
         }

@@ -16,10 +16,10 @@ enum TransactionDirection: String {
 
     var preposition: String {
         switch self {
-            case .sent:
-                return "to"
-            case .received:
-                return "from"
+        case .sent:
+            return "to"
+        case .received:
+            return "from"
         }
     }
 }
