@@ -40,6 +40,7 @@ class ShadowButton: UIControl {
     private let shadowView = UIView()
     private let label = UILabel()
     private let shadowYOffset: CGFloat = 4.0
+    private let cornerRadius: CGFloat = 4.0
     private var image: UIImage?
     private var imageView: UIImageView?
 
@@ -98,7 +99,7 @@ class ShadowButton: UIControl {
     private func addContent() {
         addSubview(container)
         container.backgroundColor = .primaryButton
-        container.layer.cornerRadius = 4.0
+        container.layer.cornerRadius = cornerRadius
         container.isUserInteractionEnabled = false
         container.constrain(toSuperviewEdges: nil)
 

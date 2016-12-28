@@ -17,11 +17,12 @@ struct ShowStartFlow: Action {
 
 struct HideStartFlow: Action {
     let reduce: Reducer = { _ in 
-        return State(isStartFlowVisible:    false,
-                     pinCreationStep:       .none,
-                     paperPhraseStep:       .none,
-                     rootModal:             .none,
-                     pasteboard:            UIPasteboard.general.string)
+        return State(isStartFlowVisible:        false,
+                     pinCreationStep:           .none,
+                     paperPhraseStep:           .none,
+                     rootModal:                 .none,
+                     pasteboard:                UIPasteboard.general.string,
+                     isModalDismissalBlocked:   false)
     }
 }
 
@@ -76,7 +77,8 @@ struct PaperPhrase {
                          pinCreationStep:       .none,
                          paperPhraseStep:       .start,
                          rootModal:             .none,
-                         pasteboard:            UIPasteboard.general.string)
+                         pasteboard:            UIPasteboard.general.string,
+                         isModalDismissalBlocked: $0.isModalDismissalBlocked)
         }
     }
 
@@ -86,7 +88,8 @@ struct PaperPhrase {
                          pinCreationStep:       .none,
                          paperPhraseStep:       .write,
                          rootModal:             .none,
-                         pasteboard:            UIPasteboard.general.string)
+                         pasteboard:            UIPasteboard.general.string,
+                         isModalDismissalBlocked: $0.isModalDismissalBlocked)
         }
     }
 
@@ -96,7 +99,8 @@ struct PaperPhrase {
                          pinCreationStep:       .none,
                          paperPhraseStep:       .confirm,
                          rootModal:             .none,
-                         pasteboard:            UIPasteboard.general.string)
+                         pasteboard:            UIPasteboard.general.string,
+                         isModalDismissalBlocked: $0.isModalDismissalBlocked)
         }
     }
 
@@ -106,7 +110,8 @@ struct PaperPhrase {
                          pinCreationStep:       .none,
                          paperPhraseStep:       .confirmed,
                          rootModal:             .none,
-                         pasteboard:            UIPasteboard.general.string)
+                         pasteboard:            UIPasteboard.general.string,
+                         isModalDismissalBlocked: $0.isModalDismissalBlocked)
         }
     }
 }
@@ -137,6 +142,17 @@ struct Pasteboard {
     }
 }
 
+//MARK: - Modal Dismissal Blocking
+enum ModalDismissal {
+    struct block: Action {
+        let reduce: Reducer = { $0.clone(isModalDismissalBlocked: true) }
+    }
+
+    struct unBlock: Action {
+        let reduce: Reducer = { $0.clone(isModalDismissalBlocked: false) }
+    }
+}
+
 //MARK: - State Creation Helpers
 extension State {
     func clone(isStartFlowVisible: Bool) -> State {
@@ -144,14 +160,16 @@ extension State {
                      pinCreationStep:       self.pinCreationStep,
                      paperPhraseStep:       self.paperPhraseStep,
                      rootModal:             self.rootModal,
-                     pasteboard:            self.pasteboard)
+                     pasteboard:            self.pasteboard,
+                     isModalDismissalBlocked: self.isModalDismissalBlocked)
     }
     func clone(pinCreationStep: PinCreationStep) -> State {
         return State(isStartFlowVisible:    self.isStartFlowVisible,
                      pinCreationStep:       pinCreationStep,
                      paperPhraseStep:       self.paperPhraseStep,
                      rootModal:             self.rootModal,
-                     pasteboard:            self.pasteboard)
+                     pasteboard:            self.pasteboard,
+                     isModalDismissalBlocked: self.isModalDismissalBlocked)
     }
 
     func rootModal(_ type: RootModal) -> State {
@@ -159,13 +177,23 @@ extension State {
                      pinCreationStep:       .none,
                      paperPhraseStep:       .none,
                      rootModal:             type,
-                     pasteboard:            self.pasteboard)
+                     pasteboard:            self.pasteboard,
+                     isModalDismissalBlocked: self.isModalDismissalBlocked)
     }
     func clone(pasteboard: String?) -> State {
         return State(isStartFlowVisible:    self.isStartFlowVisible,
                      pinCreationStep:       pinCreationStep,
                      paperPhraseStep:       self.paperPhraseStep,
                      rootModal:             self.rootModal,
-                     pasteboard:            pasteboard)
+                     pasteboard:            pasteboard,
+                     isModalDismissalBlocked: self.isModalDismissalBlocked)
+    }
+    func clone(isModalDismissalBlocked: Bool) -> State {
+        return State(isStartFlowVisible:    self.isStartFlowVisible,
+                     pinCreationStep:       pinCreationStep,
+                     paperPhraseStep:       self.paperPhraseStep,
+                     rootModal:             self.rootModal,
+                     pasteboard:            self.pasteboard,
+                     isModalDismissalBlocked: isModalDismissalBlocked)
     }
 }
