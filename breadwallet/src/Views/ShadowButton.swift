@@ -34,7 +34,11 @@ class ShadowButton: UIControl {
     }
 
     var isToggleable = false
-    private let title: String
+    var title: String {
+        didSet {
+            label.text = title
+        }
+    }
     private let type: ButtonType
     private let container = UIView()
     private let shadowView = UIView()

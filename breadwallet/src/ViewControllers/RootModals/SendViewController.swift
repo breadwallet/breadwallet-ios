@@ -108,7 +108,12 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable {
         
         addButtonActions()
 
-        currencySwitcher.contentView = CurrencySlider()
+        let currencySlider = CurrencySlider()
+        currencySlider.didSelectCurrency = { currency in
+            //TODO add real currency logic here
+            self.currency.title = "\(currency.substring(to: currency.index(currency.startIndex, offsetBy: 3))) \u{25BC}"
+        }
+        currencySwitcher.contentView = currencySlider
     }
 
     private func addButtonActions() {

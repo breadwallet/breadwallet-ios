@@ -17,7 +17,10 @@ class CurrencySlider : UIView {
         setupViews()
     }
 
+    var didSelectCurrency: ((String) -> Void)?
+
     private let currencies = ["USD ($)", "BTC (b)", "EUR (€)", "GBP (£)", "AUD ($)"]
+    private var buttons = [ShadowButton]()
 
     private func setupViews() {
         let scrollView = UIScrollView()
@@ -27,7 +30,12 @@ class CurrencySlider : UIView {
         var previous: ShadowButton?
         currencies.forEach {
             let button = ShadowButton(title: $0, type: .tertiary)
+            button.addTarget(self, action: #selector(CurrencySlider.tapped(sender:)), for: .touchUpInside)
             button.isToggleable = true
+            buttons.append(button)
+            if $0 == "USD ($)" {
+                button.isSelected = true
+            }
             scrollView.addSubview(button)
 
             let leadingConstraint: NSLayoutConstraint
@@ -50,6 +58,21 @@ class CurrencySlider : UIView {
 
             previous = button
         }
+    }
+
+    @objc private func tapped(sender: ShadowButton) {
+        //Disable unselecting a selected button
+        //because we have to have at least one currency selected
+        if !sender.isSelected {
+            sender.isSelected = true
+            return
+        }
+        buttons.forEach {
+            if sender != $0 {
+                $0.isSelected = false
+            }
+        }
+        didSelectCurrency?(sender.title)
     }
 
     required init?(coder aDecoder: NSCoder) {
