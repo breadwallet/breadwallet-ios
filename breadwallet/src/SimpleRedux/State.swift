@@ -55,17 +55,17 @@ extension PinCreationStep: Equatable {}
 
 func ==(lhs: PinCreationStep, rhs: PinCreationStep) -> Bool {
     switch (lhs, rhs) {
-        case (.none, .none):
-            return true
-        case (.start, .start):
-            return true
-        case (.confirm(let leftPin), .confirm(let rightPin)):
-            return leftPin == rightPin
-        case (.save(let leftPin), .save(let rightPin)):
-            return leftPin == rightPin
-        case (.confirmFail(let leftPin), .confirmFail(let rightPin)):
-            return leftPin == rightPin
-        default:
-            return false
+    case (.none, .none):
+        return true
+    case (.start, .start):
+        return true
+    case (.confirm(let leftPin), .confirm(let rightPin)):
+        return leftPin == rightPin
+    case (.save(let leftPin), .save(let rightPin)):
+        return leftPin == rightPin
+    case (.confirmFail(let leftPin), .confirmFail(let rightPin)):
+        return leftPin == rightPin
+    default:
+        return false
     }
 }

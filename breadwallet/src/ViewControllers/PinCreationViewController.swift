@@ -123,26 +123,26 @@ class PinCreationViewController: UIViewController, Subscriber {
                         },
                         callback: { state in
                             switch state.pinCreationStep {
-                                case .start:
-                                    self.instruction.text = setPinText
-                                case .confirm:
-                                    self.instruction.text = confirmPinText
-                                    self.hiddenPin.text = ""
-                                    //If this delay isn't here, the last pin filling in is never seen
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-                                        self?.pinView.fill(0)
-                                    }
-                                case .save:
-                                    self.instruction.text = confirmPinText
-                                case .confirmFail:
-                                    self.instruction.text = wrongPinText
-                                    self.hiddenPin.text = ""
-                                    self.pinView.shake()
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + PinView.shakeDuration) { [weak self] in
-                                        self?.pinView.fill(0)
-                                    }
-                                case .none:
-                                    print("noop")
+                            case .start:
+                                self.instruction.text = setPinText
+                            case .confirm:
+                                self.instruction.text = confirmPinText
+                                self.hiddenPin.text = ""
+                                //If this delay isn't here, the last pin filling in is never seen
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                                    self?.pinView.fill(0)
+                                }
+                            case .save:
+                                self.instruction.text = confirmPinText
+                            case .confirmFail:
+                                self.instruction.text = wrongPinText
+                                self.hiddenPin.text = ""
+                                self.pinView.shake()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + PinView.shakeDuration) { [weak self] in
+                                    self?.pinView.fill(0)
+                                }
+                            case .none:
+                                print("noop")
                             }
                         })
     }
