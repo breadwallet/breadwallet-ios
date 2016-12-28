@@ -13,6 +13,7 @@ class ModalPresenter: Subscriber {
     init(store: Store, window: UIWindow) {
         self.store = store
         self.window = window
+        self.modalTransitionDelegate = ModalTransitionDelegate(store: store)
         addSubscriptions()
         addModalSubscriptions()
     }
@@ -20,7 +21,7 @@ class ModalPresenter: Subscriber {
     private let store: Store
     private let window: UIWindow
     private let alertHeight: CGFloat = 260.0
-    private let modalTransitionDelegate = ModalTransitionDelegate()
+    private let modalTransitionDelegate: ModalTransitionDelegate
     private let messagePresenter = MessageUIPresenter()
 
     private func addSubscriptions() {

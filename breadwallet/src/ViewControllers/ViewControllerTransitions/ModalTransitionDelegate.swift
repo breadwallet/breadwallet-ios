@@ -8,12 +8,16 @@
 
 import UIKit
 
-class ModalTransitionDelegate: NSObject {
+class ModalTransitionDelegate: NSObject, Subscriber {
 
     fileprivate var isInteractive: Bool = false
     fileprivate let interactiveTransition = UIPercentDrivenInteractiveTransition()
     fileprivate var presentedViewController: UIViewController?
-    fileprivate var panGestureRecognizer: UIPanGestureRecognizer?
+    fileprivate var panGestureRecognizer: UIPanGestureRecognizer? {
+        didSet {
+            panGestureRecognizer?.delegate = self
+        }
+    }
     fileprivate var tapGestureRecognizer: UITapGestureRecognizer? {
         didSet {
             tapGestureRecognizer?.delegate = self
@@ -24,6 +28,21 @@ class ModalTransitionDelegate: NSObject {
     private var progress: CGFloat = 0.0
     private let velocityThreshold: CGFloat = 50.0
     private let progressThreshold: CGFloat = 0.5
+    fileprivate var isModalDismissalBlocked = false
+    private let store: Store
+
+    init(store: Store) {
+        self.store = store
+        super.init()
+        addSubscriptions()
+    }
+
+    private func addSubscriptions() {
+        store.subscribe(self, selector: { $0.isModalDismissalBlocked != $1.isModalDismissalBlocked
+        }, callback: {
+            self.isModalDismissalBlocked = $0.isModalDismissalBlocked
+        })
+    }
 
     @objc func didUpdate(gr: UIPanGestureRecognizer) {
         switch gr.state {
@@ -105,11 +124,16 @@ extension ModalTransitionDelegate: UIViewControllerTransitioningDelegate {
 
 extension ModalTransitionDelegate: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        let location = gestureRecognizer.location(in: presentedViewController?.view)
-        if location.y < 0 {
-            return true
+        guard !isModalDismissalBlocked else { return false }
+        if gestureRecognizer == tapGestureRecognizer {
+            let location = gestureRecognizer.location(in: presentedViewController?.view)
+            if location.y < 0 {
+                return true
+            } else {
+                return false
+            }
         } else {
-            return false
+            return true
         }
     }
 }
