@@ -37,6 +37,17 @@ class ModalTransitionDelegate: NSObject, Subscriber {
         addSubscriptions()
     }
 
+    func reset() {
+        isInteractive = false
+        if let panGr = panGestureRecognizer {
+            UIApplication.shared.keyWindow?.removeGestureRecognizer(panGr)
+        }
+
+        if let tapGr = tapGestureRecognizer {
+            UIApplication.shared.keyWindow?.removeGestureRecognizer(tapGr)
+        }
+    }
+
     private func addSubscriptions() {
         store.subscribe(self, selector: { $0.isModalDismissalBlocked != $1.isModalDismissalBlocked
         }, callback: {
@@ -84,17 +95,6 @@ class ModalTransitionDelegate: NSObject, Subscriber {
             return true
         } else {
             return false
-        }
-    }
-
-    private func reset() {
-        isInteractive = false
-        if let panGr = panGestureRecognizer {
-            UIApplication.shared.keyWindow?.removeGestureRecognizer(panGr)
-        }
-
-        if let tapGr = tapGestureRecognizer {
-            UIApplication.shared.keyWindow?.removeGestureRecognizer(tapGr)
         }
     }
 }
