@@ -51,13 +51,7 @@ class BRGeoLocationDelegate: NSObject, CLLocationManagerDelegate {
         one = true
         DispatchQueue.main.sync { () -> Void in
             self.manager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
-            if #available(iOS 9.0, *) {
-                self.manager?.requestLocation()
-            } else {
-                // Fallback on earlier versions
-                self.manager?.startUpdatingLocation()
-                self.shouldCancelUpdatingAfterReceivingLocation = true
-            }
+            self.manager?.requestLocation()
         }
     }
     

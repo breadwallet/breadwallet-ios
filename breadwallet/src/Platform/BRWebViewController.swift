@@ -58,11 +58,9 @@ import WebKit
         let config = WKWebViewConfiguration()
         config.processPool = wkProcessPool
         config.allowsInlineMediaPlayback = false
-        if #available(iOS 9.0, *) {
-            config.allowsAirPlayForMediaPlayback = false
-            config.requiresUserActionForMediaPlayback = true
-            config.allowsPictureInPictureMediaPlayback = false
-        }
+        config.allowsAirPlayForMediaPlayback = false
+        config.requiresUserActionForMediaPlayback = true
+        config.allowsPictureInPictureMediaPlayback = false
 
         let indexUrl = URL(string: "http://127.0.0.1:\(server.port)\(mountPoint)")!
         let request = URLRequest(url: indexUrl)
