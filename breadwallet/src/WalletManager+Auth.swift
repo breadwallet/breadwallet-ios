@@ -214,7 +214,8 @@ extension WalletManager: WalletAuthenticator {
         
         do {
             let spendLimit: Int64 = try keychainItem(key: keychainKey.spendLimit) ?? 0
-            return BRWalletAmountSentByTx(wallet?.cPtr, forTx) + BRWalletTotalSent(wallet?.cPtr) <= UInt64(spendLimit)
+            guard let wallet = wallet else { return false }
+            return wallet.amountSentByTx(forTx) + wallet.totalSent <= UInt64(spendLimit)
         }
         catch { return false }
     }
@@ -266,9 +267,9 @@ extension WalletManager: WalletAuthenticator {
                 try setKeychainItem(key: keychainKey.pinFailTime, item: Int64(0))
                 try setKeychainItem(key: keychainKey.pinFailCount, item: Int64(0))
                 
-                if limit > 0 {
+                if let wallet = wallet, limit > 0 {
                     try setKeychainItem(key: keychainKey.spendLimit,
-                                        item: Int64(BRWalletTotalSent(wallet?.cPtr)) + limit)
+                                        item: Int64(wallet.totalSent) + limit)
                 }
                 
                 return true
@@ -307,7 +308,7 @@ extension WalletManager: WalletAuthenticator {
     func signTransaction(_ tx: BRTxRef, touchIDPrompt: String, completion: @escaping (Bool) -> ()) {
         do {
             let spendLimit: Int64 = try keychainItem(key: keychainKey.spendLimit) ?? 0
-            guard BRWalletAmountSentByTx(wallet?.cPtr, tx) + BRWalletTotalSent(wallet?.cPtr) <= UInt64(spendLimit) else {
+            guard let wallet = wallet, wallet.amountSentByTx(tx) + wallet.totalSent <= UInt64(spendLimit) else {
                 return completion(false)
             }
         }
@@ -353,8 +354,8 @@ extension WalletManager: WalletAuthenticator {
     func setRandomSeedPhrase() -> String? {
         guard noWallet else { return nil }
         guard let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist") else { return nil }
-        guard let wordList = NSArray(contentsOfFile: path) as? [String], wordList.count == 2048 else { return nil }
-        var words: [UnsafePointer<CChar>?] = wordList.map({ $0.withCString({ $0 }) })
+        guard let wordList = NSArray(contentsOfFile: path) as? [NSString], wordList.count == 2048 else { return nil }
+        var words: [UnsafePointer<CChar>?] = wordList.map({ $0.utf8String })
         let time = Date.timeIntervalSinceReferenceDate
 
         // we store the wallet creation time on the keychain because keychain data persists even when app is deleted
@@ -496,9 +497,10 @@ extension WalletManager: WalletAuthenticator {
             do {
                 var seed = UInt512()
                 defer { seed = UInt512() }
+                guard let wallet = wallet else { return false }
                 guard let phrase: String = try keychainItem(key: keychainKey.mnemonic) else { return false }
                 BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
-                return BRWalletSignTransaction(wallet?.cPtr, tx, &seed, MemoryLayout<UInt512>.size) != 0
+                return wallet.signTransaction(tx, seed: &seed)
             }
             catch { return false }
         }

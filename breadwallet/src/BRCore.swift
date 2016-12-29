@@ -139,6 +139,11 @@ class BRWallet {
         return BRWalletBalance(cPtr)
     }
     
+    // total amount spent from the wallet (exluding change)
+    var totalSent: UInt64 {
+        return BRWalletTotalSent(cPtr)
+    }
+    
     // fee-per-kb of transaction size to use when creating a transaction
     var feePerKb: UInt64 {
         get { return BRWalletFeePerKb(cPtr) }
@@ -153,6 +158,13 @@ class BRWallet {
     // returns an unsigned transaction that satisifes the given transaction outputs
     func createTxForOutputs(_ outputs: [BRTxOutput]) -> BRTxRef {
         return BRWalletCreateTxForOutputs(cPtr, outputs, outputs.count)
+    }
+    
+    // signs any inputs in tx that can be signed using private keys from the wallet
+    // seed is the master private key (wallet seed) corresponding to the master public key given when wallet was created
+    // returns true if all inputs were signed, or false if there was an error or not all inputs were able to be signed
+    func signTransaction(_ tx: BRTxRef, seed: inout UInt512) -> Bool {
+        return BRWalletSignTransaction(cPtr, tx, &seed.u8.0, MemoryLayout<UInt512>.stride) != 0
     }
     
     // true if no previous wallet transaction spends any of the given transaction's inputs, and no inputs are invalid
@@ -321,15 +333,15 @@ class BRPeerManager {
     
     // publishes tx to bitcoin network
     func publishTx(_ tx: BRTxRef, completion: @escaping (BRPeerManagerError?) -> ()) {
-        BRPeerManagerPublishTx(cPtr, tx, Unmanaged.passRetained(publishCompletion(completion)).toOpaque())
+        BRPeerManagerPublishTx(cPtr, tx, Unmanaged.passRetained(CompletionWrapper(completion)).toOpaque())
         { (info, error) in
             guard let info = info else { return }
             guard error == 0 else {
                 let err = BRPeerManagerError.posixError(errorCode: error, description: String(cString: strerror(error)))
-                return Unmanaged<publishCompletion>.fromOpaque(info).takeRetainedValue().completion(err)
+                return Unmanaged<CompletionWrapper>.fromOpaque(info).takeRetainedValue().completion(err)
             }
             
-            Unmanaged<publishCompletion>.fromOpaque(info).takeRetainedValue().completion(nil)
+            Unmanaged<CompletionWrapper>.fromOpaque(info).takeRetainedValue().completion(nil)
         }
     }
     
@@ -343,7 +355,7 @@ class BRPeerManager {
         BRPeerManagerFree(cPtr)
     }
     
-    private class publishCompletion {
+    private class CompletionWrapper {
         let completion: (BRPeerManagerError?) -> ()
         
         init(_ completion: @escaping (BRPeerManagerError?) -> ()) {
