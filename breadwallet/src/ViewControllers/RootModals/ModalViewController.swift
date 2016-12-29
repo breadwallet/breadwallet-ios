@@ -31,6 +31,9 @@ class ModalViewController: UIViewController {
                 header.constraint(.height, constant: headerHeight)
             ])
         header.closeCallback = {
+            if let delegate = self.transitioningDelegate as? ModalTransitionDelegate {
+                delegate.reset()
+            }
             self.dismiss(animated: true, completion: {})
         }
         
