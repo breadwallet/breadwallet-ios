@@ -535,7 +535,6 @@
 		755CD32A1DAA0A110075898E /* secp256k1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1.h; sourceTree = "<group>"; };
 		755CD32B1DAA0A110075898E /* secp256k1_ecdh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1_ecdh.h; sourceTree = "<group>"; };
 		755CD32C1DAA0A110075898E /* secp256k1_recovery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1_recovery.h; sourceTree = "<group>"; };
-		755CD32D1DAA0A110075898E /* secp256k1_schnorr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1_schnorr.h; sourceTree = "<group>"; };
 		755CD33A1DAA0A110075898E /* basic-config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "basic-config.h"; sourceTree = "<group>"; };
 		755CD3431DAA0A110075898E /* ecdsa_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ecdsa_impl.h; sourceTree = "<group>"; };
 		755CD3441DAA0A110075898E /* eckey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = eckey.h; sourceTree = "<group>"; };
@@ -558,9 +557,6 @@
 		755CD3581DAA0A110075898E /* hash_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hash_impl.h; sourceTree = "<group>"; };
 		755CD3661DAA0A110075898E /* main_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main_impl.h; sourceTree = "<group>"; };
 		755CD36A1DAA0A110075898E /* main_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main_impl.h; sourceTree = "<group>"; };
-		755CD36E1DAA0A110075898E /* main_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main_impl.h; sourceTree = "<group>"; };
-		755CD3701DAA0A110075898E /* schnorr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = schnorr.h; sourceTree = "<group>"; };
-		755CD3711DAA0A110075898E /* schnorr_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = schnorr_impl.h; sourceTree = "<group>"; };
 		755CD3731DAA0A110075898E /* num.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = num.h; sourceTree = "<group>"; };
 		755CD3741DAA0A110075898E /* num_gmp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = num_gmp.h; sourceTree = "<group>"; };
 		755CD3751DAA0A110075898E /* num_gmp_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = num_gmp_impl.h; sourceTree = "<group>"; };
@@ -1536,7 +1532,6 @@
 				755CD32A1DAA0A110075898E /* secp256k1.h */,
 				755CD32B1DAA0A110075898E /* secp256k1_ecdh.h */,
 				755CD32C1DAA0A110075898E /* secp256k1_recovery.h */,
-				755CD32D1DAA0A110075898E /* secp256k1_schnorr.h */,
 			);
 			path = include;
 			sourceTree = "<group>";
@@ -1586,7 +1581,6 @@
 			children = (
 				755CD3651DAA0A110075898E /* ecdh */,
 				755CD3691DAA0A110075898E /* recovery */,
-				755CD36D1DAA0A110075898E /* schnorr */,
 			);
 			path = modules;
 			sourceTree = "<group>";
@@ -1605,16 +1599,6 @@
 				755CD36A1DAA0A110075898E /* main_impl.h */,
 			);
 			path = recovery;
-			sourceTree = "<group>";
-		};
-		755CD36D1DAA0A110075898E /* schnorr */ = {
-			isa = PBXGroup;
-			children = (
-				755CD36E1DAA0A110075898E /* main_impl.h */,
-				755CD3701DAA0A110075898E /* schnorr.h */,
-				755CD3711DAA0A110075898E /* schnorr_impl.h */,
-			);
-			path = schnorr;
 			sourceTree = "<group>";
 		};
 		755CD3831DAA0E3E0075898E /* unbound */ = {
