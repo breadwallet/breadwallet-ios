@@ -21,16 +21,22 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable {
     init(store: Store) {
         self.store = store
         super.init(nibName: nil, bundle: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     var presentScan: PresentScan?
 
     private let store: Store
     private let to = LabelSendCell(label: S.Send.toLabel)
-    private let amount = TextFieldSendCell(placeholder: S.Send.amountLabel)
+    private let amount = TextFieldSendCell(placeholder: S.Send.amountLabel, isKeyboardHidden: true)
     private let currencySwitcher = InViewAlert(type: .secondary)
     private let pinPad = PinPadViewController()
-    private let descriptionCell = LabelSendCell(label: S.Send.descriptionLabel)
+    private let descriptionCell = TextFieldSendCell(placeholder: S.Send.descriptionLabel, isKeyboardHidden: false)
     private let send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
     private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
     private let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
@@ -81,8 +87,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable {
                 pinPad.view.constraint(.trailing, toView: view),
                 pinPadHeightConstraint ])
         })
-
         descriptionCell.pinToBottom(to: pinPad.view, height: cellHeight)
+        descriptionCell.accessoryView.constrain([
+                descriptionCell.accessoryView.constraint(.width, constant: 0.0) ])
         send.constrain([
             send.constraint(.leading, toView: view, constant: C.padding[2]),
             send.constraint(.trailing, toView: view, constant: -C.padding[2]),
@@ -126,6 +133,10 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable {
         amount.textFieldDidBeginEditing = {
             self.amountTapped()
         }
+        descriptionCell.textFieldDidBeginEditing = { }
+        descriptionCell.textFieldDidReturn = { textField in
+            textField.resignFirstResponder()
+        }
     }
 
     @objc private func pasteTapped() {
@@ -142,6 +153,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable {
     }
 
     @objc private func scanTapped() {
+        descriptionCell.textField.resignFirstResponder()
         presentScan? { address in
             self.to.content = address
         }
@@ -149,6 +161,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable {
 
     @objc private func amountTapped() {
         guard let parentView = parentView else { return }
+        descriptionCell.textField.resignFirstResponder()
         UIView.spring(C.animationDuration, animations: {
             if self.pinPadHeightConstraint?.constant == 0.0 {
                 self.pinPadHeightConstraint?.constant = PinPadViewController.height
@@ -230,6 +243,23 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable {
         alertController.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
         alertController.view.tintColor = C.defaultTintColor
         present(alertController, animated: true, completion: nil)
+    }
+
+    //MARK: - Keyboard Notifications
+    @objc private func keyboardWillShow(notification: Notification) {
+        copyKeyboardChangeAnimation(notification: notification)
+    }
+
+    @objc private func keyboardWillHide(notification: Notification) {
+        copyKeyboardChangeAnimation(notification: notification)
+    }
+
+    private func copyKeyboardChangeAnimation(notification: Notification) {
+        guard let info = KeyboardNotificationInfo(notification.userInfo) else { return }
+        UIView.animate(withDuration: info.animationDuration, delay: 0, options: info.animationOptions, animations: {
+            guard let parentView = self.parentView else { return }
+            parentView.frame = parentView.frame.offsetBy(dx: 0, dy: info.deltaY)
+        }, completion: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
