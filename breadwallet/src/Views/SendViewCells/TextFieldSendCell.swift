@@ -10,7 +10,7 @@ import UIKit
 
 class TextFieldSendCell : SendCell {
 
-    init(placeholder: String) {
+    init(placeholder: String, isKeyboardHidden: Bool) {
         super.init()
         let attributes: [String: Any] = [
             NSForegroundColorAttributeName: UIColor.grayTextTint,
@@ -20,12 +20,18 @@ class TextFieldSendCell : SendCell {
         textField.tintColor = C.defaultTintColor
         textField.delegate = self
         textField.textColor = .darkText
-        textField.inputView = UIView()
+        if isKeyboardHidden {
+            textField.inputView = UIView()
+        } else {
+            textField.returnKeyType = .done
+        }
         setupViews()
     }
 
 
     var textFieldDidBeginEditing: (() -> Void)?
+    var textFieldDidReturn: ((UITextField) -> Void)?
+
     var content: String? {
         didSet {
             textField.text = content
@@ -36,7 +42,7 @@ class TextFieldSendCell : SendCell {
 
     private let placeholderFont = UIFont.customBody(size: 16.0)
     private let textFieldFont = UIFont.customBody(size: 26.0)
-    private let textField = UITextField()
+    let textField = UITextField()
     private func setupViews() {
         addSubview(textField)
         textField.constrain([
@@ -54,5 +60,10 @@ class TextFieldSendCell : SendCell {
 extension TextFieldSendCell : UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textFieldDidBeginEditing?()
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textFieldDidReturn?(textField)
+        return true
     }
 }
