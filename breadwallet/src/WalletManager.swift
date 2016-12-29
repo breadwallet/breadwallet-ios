@@ -79,12 +79,11 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }()
     
     init(masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
-        let dbPath = try dbPath ??
-            FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
-                                    create: false).appendingPathComponent("BreadWallet.sqlite").path
         self.masterPubKey = masterPubKey
         self.earliestKeyTime = earliestKeyTime
-        self.dbPath = dbPath
+        self.dbPath = try dbPath ??
+            FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
+                                    create: false).appendingPathComponent("BreadWallet.sqlite").path
         
         // open sqlite database
         if sqlite3_open(dbPath, &db) != SQLITE_OK {
@@ -203,7 +202,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     func txAdded(_ tx: BRTxRef) {
         var buf = [UInt8](repeating: 0, count: BRTransactionSerialize(tx, nil, 0))
         let extra = [tx.pointee.blockHeight.littleEndian, tx.pointee.timestamp.littleEndian]
-        BRTransactionSerialize(tx, &buf, buf.count)
+        guard BRTransactionSerialize(tx, &buf, buf.count) == buf.count else { return }
         buf.append(contentsOf: UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
                                                    count: MemoryLayout<UInt32>.size*2))
         sqlite3_exec(db, "begin exclusive", nil, nil, nil)
@@ -330,10 +329,10 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         var pk: Int32 = 0
         sqlite3_exec(db, "begin exclusive", nil, nil, nil)
         
-        if blocks.count > 1 {
+        if blocks.count > 1 { // delete existing blocks and replace
             sqlite3_exec(db, "delete from ZBRMERKLEBLOCKENTITY", nil, nil, nil)
         }
-        else {
+        else { // add a single block to existing blocks
             var sql: OpaquePointer? = nil
             sqlite3_prepare_v2(db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(blockEnt)", -1, &sql, nil)
             defer { sqlite3_finalize(sql) }
@@ -344,7 +343,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                 return
             }
 
-            pk = sqlite3_column_int(sql, 0)
+            pk = sqlite3_column_int(sql, 0) // get last primary key
         }
 
         var sql2: OpaquePointer? = nil
@@ -396,10 +395,10 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         var pk: Int32 = 0
         sqlite3_exec(db, "begin exclusive", nil, nil, nil)
 
-        if peers.count > 1 {
+        if peers.count > 1 { // delete existing peers and replace
             sqlite3_exec(db, "delete from ZBRPEERENTITY", nil, nil, nil)
         }
-        else {
+        else { // add a single peer to existing peers
             var sql: OpaquePointer? = nil
             sqlite3_prepare_v2(db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(peerEnt)", -1, &sql, nil)
             defer { sqlite3_finalize(sql) }
@@ -410,7 +409,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                 return
             }
 
-            pk = sqlite3_column_int(sql, 0)
+            pk = sqlite3_column_int(sql, 0) // get last primary key
         }
         
         var sql2: OpaquePointer? = nil
