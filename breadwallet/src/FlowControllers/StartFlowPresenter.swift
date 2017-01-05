@@ -14,9 +14,11 @@ class StartFlowPresenter: Subscriber {
     private let rootViewController: UIViewController
     private var navigationController: ModalNavigationController?
     private let navigationControllerDelegate: StartNavigationDelegate
+    private let walletManager: WalletManager
 
-    init(store: Store, rootViewController: UIViewController) {
+    init(store: Store, walletManager: WalletManager, rootViewController: UIViewController) {
         self.store = store
+        self.walletManager = walletManager
         self.rootViewController = rootViewController
         self.navigationControllerDelegate = StartNavigationDelegate(store: store)
         addStartSubscription()
@@ -55,7 +57,9 @@ class StartFlowPresenter: Subscriber {
                             }
 
                             if case .write = $0.paperPhraseStep {
-                                self.pushWritePaperPhraseViewController()
+                                if case .saveSuccess(let pin) = $0.pinCreationStep {
+                                    self.pushWritePaperPhraseViewController(pin: pin)
+                                }
                             }
 
                             if case .confirm = $0.paperPhraseStep {
@@ -120,13 +124,13 @@ class StartFlowPresenter: Subscriber {
         navigationController?.pushViewController(paperPhraseViewController, animated: true)
     }
 
-    private func pushWritePaperPhraseViewController() {
+    private func pushWritePaperPhraseViewController(pin: String) {
         //TODO - This is a pretty back hack. It's due to a limitation in the architecture, where the write state
         //will get triggered when the back button is pressed on the phrase confirm screen
         let writeViewInStack = (navigationController?.viewControllers.filter { $0 is WritePaperPhraseViewController}.count)! > 0
         guard !writeViewInStack else { return }
 
-        let writeViewController = WritePaperPhraseViewController(store: store)
+        let writeViewController = WritePaperPhraseViewController(store: store, walletManager: walletManager, pin: pin)
         writeViewController.title = "Paper Key"
 
         let button = UIButton.close

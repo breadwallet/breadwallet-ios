@@ -11,12 +11,15 @@ import UIKit
 class WritePaperPhraseViewController: UIViewController {
 
     private let store: Store
-    private let words = ["belong", "mountains", "liverish", "resin", "camion", "negus", "turn", "mandarin", "stumpy", "acerb", "pinworm", "hopeful"]
+    private let walletManager: WalletManager
+    private let pin: String
     private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
     private let stepLabel = UILabel.wrapping(font: UIFont.customMedium(size: 13.0))
     private let header = RadialGradientView(offset: 0.0)
     private lazy var phraseViews: [PhraseView] = {
-        return self.words.map { PhraseView(phrase: $0) }
+        guard let phraseString = self.walletManager.seedPhrase(pin: self.pin) else { return [] }
+        let words = phraseString.components(separatedBy: " ")
+        return words.map { PhraseView(phrase: $0) }
     }()
     //This is awkwardly named because nextResponder is now named next is swift 3 :(,
     private let proceed = ShadowButton(title: NSLocalizedString("Next", comment: "button label"), type: .secondary)
@@ -29,12 +32,14 @@ class WritePaperPhraseViewController: UIViewController {
     }
     private var currentPhraseIndex = 0 {
         didSet {
-            stepLabel.text = "\(currentPhraseIndex + 1) of \(words.count)"
+            stepLabel.text = "\(currentPhraseIndex + 1) of \(phraseViews.count)"
         }
     }
 
-    init(store: Store) {
+    init(store: Store, walletManager: WalletManager, pin: String) {
         self.store = store
+        self.walletManager = walletManager
+        self.pin = pin
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -46,7 +51,7 @@ class WritePaperPhraseViewController: UIViewController {
         label.textAlignment = .center
         label.textColor = .white
 
-        stepLabel.text = "1 of \(words.count)"
+        stepLabel.text = "1 of \(phraseViews.count)"
         stepLabel.textAlignment = .center
         stepLabel.textColor = UIColor(white: 170.0/255.0, alpha: 1.0)
 
