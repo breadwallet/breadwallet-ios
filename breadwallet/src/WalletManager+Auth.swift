@@ -220,7 +220,7 @@ extension WalletManager: WalletAuthenticator {
         catch { return false }
     }
 
-    // number if unique failed pin attempts remaining before wallet is wiped
+    // number of unique failed pin attempts remaining before wallet is wiped
     var pinAttemptsRemaining: Int {
         do {
             let failCount: Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
@@ -369,13 +369,14 @@ extension WalletManager: WalletAuthenticator {
         return autoreleasepool {
             var entropy = CFDataCreateMutable(secureAllocator, SeedEntropyLength) as Data
             entropy.count = SeedEntropyLength
-            guard SecRandomCopyBytes(kSecRandomDefault, entropy.count, entropy.withUnsafeMutableBytes({ $0 })) == 0
+            guard entropy.withUnsafeMutableBytes({ SecRandomCopyBytes(kSecRandomDefault, entropy.count, $0) }) == 0
                 else { return nil }
-            let phraseLen = BRBIP39Encode(nil, 0, &words, entropy.withUnsafeBytes({ $0 }), entropy.count)
+            let phraseLen = entropy.withUnsafeBytes({ BRBIP39Encode(nil, 0, &words, $0, entropy.count) })
             var phraseData = CFDataCreateMutable(secureAllocator, phraseLen) as Data
             phraseData.count = phraseLen
-            BRBIP39Encode(phraseData.withUnsafeMutableBytes({ $0 }), phraseData.count, &words,
-                          entropy.withUnsafeBytes({ $0 }), entropy.count)
+            guard phraseData.withUnsafeMutableBytes({ bytes -> Int in
+                entropy.withUnsafeBytes({ BRBIP39Encode(bytes, phraseData.count, &words, $0, entropy.count) })
+            }) == phraseData.count else { return nil }
             let phrase = CFStringCreateFromExternalRepresentation(secureAllocator, phraseData as CFData,
                                                                   CFStringBuiltInEncodings.UTF8.rawValue) as String
             guard setSeedPhrase(phrase) else { return nil }
@@ -447,7 +448,7 @@ extension WalletManager: WalletAuthenticator {
                 let pkLen = BRKeyPrivKey(&key, nil, 0)
                 var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
                 pkData.count = pkLen
-                BRKeyPrivKey(&key, pkData.withUnsafeMutableBytes({ $0 }), pkLen)
+                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0, pkLen) }) == pkLen else { return nil }
                 let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
                                                                        CFStringBuiltInEncodings.UTF8.rawValue) as String
                 try setKeychainItem(key: keychainKey.apiAuthKey, item: privKey)
