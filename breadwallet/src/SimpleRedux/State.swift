@@ -34,6 +34,7 @@ enum PinCreationStep {
     case confirm(pin: String)
     case confirmFail(pin: String)
     case save(pin: String)
+    case saveSuccess(pin: String)
 }
 
 enum PaperPhraseStep {
@@ -64,6 +65,8 @@ func ==(lhs: PinCreationStep, rhs: PinCreationStep) -> Bool {
     case (.save(let leftPin), .save(let rightPin)):
         return leftPin == rightPin
     case (.confirmFail(let leftPin), .confirmFail(let rightPin)):
+        return leftPin == rightPin
+    case (.saveSuccess(let leftPin), .saveSuccess(let rightPin)):
         return leftPin == rightPin
     default:
         return false

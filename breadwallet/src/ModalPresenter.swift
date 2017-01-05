@@ -15,7 +15,6 @@ class ModalPresenter: Subscriber {
         self.window = window
         self.modalTransitionDelegate = ModalTransitionDelegate(store: store)
         addSubscriptions()
-        addModalSubscriptions()
     }
 
     private let store: Store
@@ -26,26 +25,31 @@ class ModalPresenter: Subscriber {
 
     private func addSubscriptions() {
         store.subscribe(self,
-            selector: { _,_ in true },
-            callback: { state in
-                if case .save(_) = state.pinCreationStep {
-                    self.presentAlert(.pinSet) {
-                        self.store.perform(action: PaperPhrase.Start())
-                    }
-                }
-
-                if case .confirmed(_) = state.paperPhraseStep {
-                    self.presentAlert(.paperKeySet) {
-                        self.store.perform(action: HideStartFlow())
-                    }
-                }
-        })
-    }
-
-    private func addModalSubscriptions() {
+                        selector: { $0.pinCreationStep != $1.pinCreationStep },
+                        callback: { self.handlePinCreationStateChange($0) })
+        store.subscribe(self,
+                        selector: { $0.paperPhraseStep != $1.paperPhraseStep },
+                        callback: { self.handlePaperPhraseStateChange($0) })
         store.subscribe(self,
                         selector: { $0.rootModal != $1.rootModal},
                         callback: { self.presentModal($0.rootModal) })
+    }
+
+    private func handlePinCreationStateChange(_ state: State) {
+        if case .saveSuccess = state.pinCreationStep {
+            self.presentAlert(.pinSet) {
+                self.store.perform(action: PaperPhrase.Start())
+            }
+        }
+    }
+
+    private func handlePaperPhraseStateChange(_ state: State) {
+        if case .confirmed = state.paperPhraseStep {
+            self.presentAlert(.paperKeySet) {
+                self.store.perform(action: HideStartFlow())
+            }
+        }
+
     }
 
     private func presentModal(_ type: RootModal) {

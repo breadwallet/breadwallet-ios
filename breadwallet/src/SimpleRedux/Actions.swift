@@ -29,7 +29,7 @@ struct HideStartFlow: Action {
 //MARK: - Pin Creation
 struct PinCreation {
 
-    struct PinEntryComplete: Action {
+    struct PinEntryComplete : Action {
         let reduce: Reducer
 
         init(newPin: String) {
@@ -48,15 +48,26 @@ struct PinCreation {
         }
     }
 
-    struct Reset: Action {
+    struct Reset : Action {
         let reduce: Reducer = {
             return $0.clone(pinCreationStep: .none)
         }
     }
 
-    struct Start: Action {
+    struct Start : Action {
         let reduce: Reducer = {
             return $0.clone(pinCreationStep: .start)
+        }
+    }
+
+    struct SaveSuccess : Action {
+        let reduce: Reducer = {
+            switch $0.pinCreationStep {
+            case .save(let pin):
+                return $0.clone(pinCreationStep: .saveSuccess(pin: pin))
+            default:
+                assert(false, "Warning - invalid state")
+            }
         }
     }
 }
@@ -73,45 +84,25 @@ fileprivate func stateForNewPin(newPin: String, previousPin: String, state: Stat
 struct PaperPhrase {
     struct Start: Action {
         let reduce: Reducer = {
-            return State(isStartFlowVisible:    $0.isStartFlowVisible,
-                         pinCreationStep:       .none,
-                         paperPhraseStep:       .start,
-                         rootModal:             .none,
-                         pasteboard:            UIPasteboard.general.string,
-                         isModalDismissalBlocked: $0.isModalDismissalBlocked)
+            return $0.clone(paperPhraseStep: .start)
         }
     }
 
     struct Write: Action {
         let reduce: Reducer = {
-            return State(isStartFlowVisible:    $0.isStartFlowVisible,
-                         pinCreationStep:       .none,
-                         paperPhraseStep:       .write,
-                         rootModal:             .none,
-                         pasteboard:            UIPasteboard.general.string,
-                         isModalDismissalBlocked: $0.isModalDismissalBlocked)
+            return $0.clone(paperPhraseStep: .write)
         }
     }
 
     struct Confirm: Action {
         let reduce: Reducer = {
-            return State(isStartFlowVisible:    $0.isStartFlowVisible,
-                         pinCreationStep:       .none,
-                         paperPhraseStep:       .confirm,
-                         rootModal:             .none,
-                         pasteboard:            UIPasteboard.general.string,
-                         isModalDismissalBlocked: $0.isModalDismissalBlocked)
+            return $0.clone(paperPhraseStep: .confirm)
         }
     }
 
     struct Confirmed: Action {
         let reduce: Reducer = {
-            return State(isStartFlowVisible:    $0.isStartFlowVisible,
-                         pinCreationStep:       .none,
-                         paperPhraseStep:       .confirmed,
-                         rootModal:             .none,
-                         pasteboard:            UIPasteboard.general.string,
-                         isModalDismissalBlocked: $0.isModalDismissalBlocked)
+            return $0.clone(paperPhraseStep: .confirmed)
         }
     }
 }
@@ -195,5 +186,13 @@ extension State {
                      rootModal:             self.rootModal,
                      pasteboard:            self.pasteboard,
                      isModalDismissalBlocked: isModalDismissalBlocked)
+    }
+    func clone(paperPhraseStep: PaperPhraseStep) -> State {
+        return State(isStartFlowVisible:    self.isStartFlowVisible,
+                     pinCreationStep:       self.pinCreationStep,
+                     paperPhraseStep:       paperPhraseStep,
+                     rootModal:             self.rootModal,
+                     pasteboard:            self.pasteboard,
+                     isModalDismissalBlocked: self.isModalDismissalBlocked)
     }
 }
