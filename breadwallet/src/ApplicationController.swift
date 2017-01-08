@@ -19,6 +19,7 @@ class ApplicationController: EventManagerCoordinator {
 
     private let walletManager = try! WalletManager(dbPath: nil)
     private var walletCreator: WalletCreator?
+    private var walletCoordinator: WalletCoordinator?
 
     func launch(options: [UIApplicationLaunchOptionsKey: Any]?) {
         setupAppearance()
@@ -30,7 +31,12 @@ class ApplicationController: EventManagerCoordinator {
         if walletManager.noWallet {
             walletCreator = WalletCreator(walletManager: walletManager, store: store)
             store.perform(action: ShowStartFlow())
+        } else {
+            DispatchQueue(label: "com.breadwallet.BRCore").async {
+                self.walletManager.peerManager?.connect()
+            }
         }
+        walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
     }
 
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

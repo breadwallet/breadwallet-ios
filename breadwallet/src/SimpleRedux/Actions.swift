@@ -16,13 +16,14 @@ struct ShowStartFlow: Action {
 }
 
 struct HideStartFlow: Action {
-    let reduce: Reducer = { _ in 
+    let reduce: Reducer = { state in
         return State(isStartFlowVisible:        false,
                      pinCreationStep:           .none,
                      paperPhraseStep:           .none,
                      rootModal:                 .none,
                      pasteboard:                UIPasteboard.general.string,
-                     isModalDismissalBlocked:   false)
+                     isModalDismissalBlocked:   false,
+                     walletState: state.walletState )
     }
 }
 
@@ -105,7 +106,7 @@ struct PaperPhrase {
             return $0.clone(paperPhraseStep: .confirmed)
         }
     }
-}
+} 
 
 //MARK: - Root Modals
 struct RootModalActions {
@@ -144,6 +145,16 @@ enum ModalDismissal {
     }
 }
 
+//MARK: - Wallet State
+enum WalletStateAction {
+    struct setProgress: Action {
+        let reduce: Reducer
+        init(progress: Double) {
+            reduce = { $0.clone(walletSyncProgress: progress) }
+        }
+    }
+}
+
 //MARK: - State Creation Helpers
 extension State {
     func clone(isStartFlowVisible: Bool) -> State {
@@ -152,7 +163,8 @@ extension State {
                      paperPhraseStep:       self.paperPhraseStep,
                      rootModal:             self.rootModal,
                      pasteboard:            self.pasteboard,
-                     isModalDismissalBlocked: self.isModalDismissalBlocked)
+                     isModalDismissalBlocked: self.isModalDismissalBlocked,
+                     walletState: self.walletState)
     }
     func clone(pinCreationStep: PinCreationStep) -> State {
         return State(isStartFlowVisible:    self.isStartFlowVisible,
@@ -160,7 +172,8 @@ extension State {
                      paperPhraseStep:       self.paperPhraseStep,
                      rootModal:             self.rootModal,
                      pasteboard:            self.pasteboard,
-                     isModalDismissalBlocked: self.isModalDismissalBlocked)
+                     isModalDismissalBlocked: self.isModalDismissalBlocked,
+                     walletState: self.walletState)
     }
 
     func rootModal(_ type: RootModal) -> State {
@@ -169,7 +182,8 @@ extension State {
                      paperPhraseStep:       .none,
                      rootModal:             type,
                      pasteboard:            self.pasteboard,
-                     isModalDismissalBlocked: self.isModalDismissalBlocked)
+                     isModalDismissalBlocked: self.isModalDismissalBlocked,
+                     walletState: self.walletState)
     }
     func clone(pasteboard: String?) -> State {
         return State(isStartFlowVisible:    self.isStartFlowVisible,
@@ -177,7 +191,8 @@ extension State {
                      paperPhraseStep:       self.paperPhraseStep,
                      rootModal:             self.rootModal,
                      pasteboard:            pasteboard,
-                     isModalDismissalBlocked: self.isModalDismissalBlocked)
+                     isModalDismissalBlocked: self.isModalDismissalBlocked,
+                     walletState: self.walletState)
     }
     func clone(isModalDismissalBlocked: Bool) -> State {
         return State(isStartFlowVisible:    self.isStartFlowVisible,
@@ -185,7 +200,8 @@ extension State {
                      paperPhraseStep:       self.paperPhraseStep,
                      rootModal:             self.rootModal,
                      pasteboard:            self.pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked)
+                     isModalDismissalBlocked: isModalDismissalBlocked,
+                     walletState: self.walletState)
     }
     func clone(paperPhraseStep: PaperPhraseStep) -> State {
         return State(isStartFlowVisible:    self.isStartFlowVisible,
@@ -193,6 +209,16 @@ extension State {
                      paperPhraseStep:       paperPhraseStep,
                      rootModal:             self.rootModal,
                      pasteboard:            self.pasteboard,
-                     isModalDismissalBlocked: self.isModalDismissalBlocked)
+                     isModalDismissalBlocked: self.isModalDismissalBlocked,
+                     walletState: self.walletState)
+    }
+    func clone(walletSyncProgress: Double) -> State {
+        return State(isStartFlowVisible:    self.isStartFlowVisible,
+                     pinCreationStep:       self.pinCreationStep,
+                     paperPhraseStep:       paperPhraseStep,
+                     rootModal:             self.rootModal,
+                     pasteboard:            self.pasteboard,
+                     isModalDismissalBlocked: self.isModalDismissalBlocked,
+                     walletState: WalletState(isConnected: self.walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: self.walletState.isSyncing))
     }
 }
