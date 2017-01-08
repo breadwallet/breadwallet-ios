@@ -8,11 +8,12 @@
 
 import UIKit
 
-class AccountViewController: UIViewController, Trackable {
+class AccountViewController: UIViewController, Trackable, Subscriber {
 
     private let store: Store
     private let headerView = AccountHeaderView()
     private let footerView = AccountFooterView()
+    private let notificationView = SyncProgressView()
     private let transactions = TransactionsTableViewController()
     private let headerHeight: CGFloat = 136.0
     private let footerHeight: CGFloat = 56.0
@@ -37,15 +38,26 @@ class AccountViewController: UIViewController, Trackable {
 
         view.addSubview(headerView)
         view.addSubview(footerView)
+        view.addSubview(notificationView)
         headerView.constrainTopCorners(sidePadding: 0, topPadding: 0)
         headerView.constrain([
-                headerView.constraint(.height, constant: headerHeight)
-            ])
+            headerView.constraint(.height, constant: headerHeight) ])
 
         footerView.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         footerView.constrain([
-                footerView.constraint(.height, constant: footerHeight)
-            ])
+            footerView.constraint(.height, constant: footerHeight) ])
+
+        notificationView.constrain([
+            notificationView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+            notificationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            notificationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            notificationView.heightAnchor.constraint(equalToConstant: 48.0) ])
+
+
+        store.subscribe(self, selector: {$0.walletState != $1.walletState },
+                        callback: { state in
+                            self.notificationView.label.text = "progress \(state.walletState.syncProgress)"
+        })
     }
 
     override func viewDidAppear(_ animated: Bool) {
