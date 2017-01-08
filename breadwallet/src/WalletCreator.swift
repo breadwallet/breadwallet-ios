@@ -31,6 +31,9 @@ class WalletCreator : Subscriber {
                     //TODO move SaveSuccess() here once setting the pin works
                     print("Set Pin Success")
                 }
+                DispatchQueue(label: "com.breadwallet.BRCore").async {
+                    self.walletManager.peerManager?.connect()
+                }
             }
             store.perform(action: PinCreation.SaveSuccess())
         }
