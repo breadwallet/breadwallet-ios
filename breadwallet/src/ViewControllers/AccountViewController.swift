@@ -56,7 +56,7 @@ class AccountViewController: UIViewController, Trackable, Subscriber {
 
         store.subscribe(self, selector: {$0.walletState != $1.walletState },
                         callback: { state in
-                            self.notificationView.label.text = "progress \(state.walletState.syncProgress)"
+                            self.notificationView.progress = state.walletState.syncProgress
         })
     }
 
