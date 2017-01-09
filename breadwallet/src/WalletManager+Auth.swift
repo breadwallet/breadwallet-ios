@@ -29,129 +29,14 @@ import LocalAuthentication
 import BRCore
 import sqlite3
 
+private let WalletSecAttrService = "org.voisine.breadwallet"
+private let SeedEntropyLength = (128/8)
+
 /// WalletAuthenticator is a protocol whose implementors are able to interact with wallet authentication
 public protocol WalletAuthenticator {
     var noWallet: Bool { get }
     var apiAuthKey: String? { get }
     var userAccount: Dictionary<AnyHashable, Any>? { get set }
-}
-
-private func secureAllocate(allocSize: CFIndex, hint: CFOptionFlags, info: UnsafeMutableRawPointer?)
-    -> UnsafeMutableRawPointer?
-{
-    guard let ptr = malloc(MemoryLayout<CFIndex>.stride + allocSize) else { return nil }
-    // keep track of the size of the allocation so it can be cleansed before deallocation
-    ptr.assumingMemoryBound(to: CFIndex.self).pointee = MemoryLayout<CFIndex>.stride + allocSize
-    return ptr + MemoryLayout<CFIndex>.stride
-}
-
-private func secureDeallocate(ptr: UnsafeMutableRawPointer?, info: UnsafeMutableRawPointer?)
-{
-    guard let ptr = ptr?.advanced(by: -MemoryLayout<CFIndex>.stride) else { return }
-    memset(ptr, 0, ptr.assumingMemoryBound(to: CFIndex.self).pointee) // cleanse allocated memory
-    free(ptr)
-}
-
-private func secureReallocate(ptr: UnsafeMutableRawPointer?, newsize: CFIndex, hint: CFOptionFlags,
-                              info: UnsafeMutableRawPointer?) -> UnsafeMutableRawPointer?
-{
-    // there's no way to tell ahead of time if the original memory will be deallocted even if the new size is smaller
-    // than the old size, so just cleanse and deallocate every time
-    guard let ptr = ptr else { return nil }
-    let newptr = secureAllocate(allocSize: newsize, hint: hint, info: info)
-    let size = (ptr - MemoryLayout<CFIndex>.stride).assumingMemoryBound(to: CFIndex.self).pointee
-    if (newptr != nil) { memcpy(newptr, ptr, (size < newsize) ? size : newsize) }
-    secureDeallocate(ptr: ptr, info: info)
-    return newptr
-}
-
-// since iOS does not page memory to disk, all we need to do is cleanse allocated memory prior to deallocation
-public let secureAllocator: CFAllocator = {
-    var context = CFAllocatorContext()
-    context.version = 0;
-    CFAllocatorGetContext(kCFAllocatorDefault, &context)
-    context.allocate = secureAllocate
-    context.reallocate = secureReallocate;
-    context.deallocate = secureDeallocate;
-    return CFAllocatorCreate(kCFAllocatorDefault, &context).takeRetainedValue()
-}()
-
-private let WalletSecAttrService = "org.voisine.breadwallet"
-private let SeedEntropyLength = (128/8)
-
-private func keychainItem<T>(key: String) throws -> T? {
-    let query = [kSecClass as String : kSecClassGenericPassword as String,
-                 kSecAttrService as String : WalletSecAttrService,
-                 kSecAttrAccount as String : key,
-                 kSecReturnData as String : true as Any]
-    var result: CFTypeRef? = nil
-    let status = SecItemCopyMatching(query as CFDictionary, &result);
-    guard status == noErr || status == errSecItemNotFound else {
-        throw NSError(domain: NSOSStatusErrorDomain, code: Int(status))
-    }
-    guard let data = result as? Data else { return nil }
-
-    switch T.self {
-    case is Data.Type:
-        return data as? T
-    case is String.Type:
-        return CFStringCreateFromExternalRepresentation(secureAllocator, data as CFData,
-                                                        CFStringBuiltInEncodings.UTF8.rawValue) as? T
-    case is Int64.Type:
-        guard data.count == MemoryLayout<T>.stride else { return nil }
-        return data.withUnsafeBytes({ $0.pointee })
-    case is Dictionary<AnyHashable, Any>.Type:
-        return NSKeyedUnarchiver.unarchiveObject(with: data) as? T
-    default:
-        throw NSError(domain: NSOSStatusErrorDomain, code: Int(errSecParam))
-    }
-}
-
-private func setKeychainItem<T>(key: String, item: T?, authenticated: Bool = false) throws {
-    let accessible = (authenticated) ? kSecAttrAccessibleWhenUnlockedThisDeviceOnly as String
-                                     : kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly as String
-    let query = [kSecClass as String : kSecClassGenericPassword as String,
-                 kSecAttrService as String : WalletSecAttrService,
-                 kSecAttrAccount as String : key]
-    var status = noErr
-    var data: Data? = nil
-    if let item = item {
-        switch T.self {
-        case is Data.Type:
-            data = item as? Data
-        case is String.Type:
-            data = CFStringCreateExternalRepresentation(secureAllocator, item as! CFString,
-                                                        CFStringBuiltInEncodings.UTF8.rawValue, 0) as Data
-        case is Int64.Type:
-            data = CFDataCreateMutable(secureAllocator, MemoryLayout<T>.stride) as Data
-            data?.append(UnsafeBufferPointer(start: [item], count: 1))
-        case is Dictionary<AnyHashable, Any>.Type:
-            data = NSKeyedArchiver.archivedData(withRootObject: item)
-        default:
-            throw NSError(domain: NSOSStatusErrorDomain, code: Int(errSecParam))
-        }
-    }
-    
-    if data == nil { // delete item
-        if SecItemCopyMatching(query as CFDictionary, nil) != errSecItemNotFound {
-            status = SecItemDelete(query as CFDictionary)
-        }
-    }
-    else if SecItemCopyMatching(query as CFDictionary, nil) != errSecItemNotFound { // update existing item
-        let update = [kSecAttrAccessible as String : accessible,
-                      kSecValueData as String : data as Any]
-        status = SecItemUpdate(query as CFDictionary, update as CFDictionary)
-    }
-    else { // add new item
-        let item = [kSecClass as String : kSecClassGenericPassword as String,
-                    kSecAttrService as String : WalletSecAttrService,
-                    kSecAttrAccount as String : key,
-                    kSecAttrAccessible as String : accessible,
-                    kSecValueData as String : data as Any]
-        status = SecItemAdd(item as CFDictionary, nil)
-    }
-    
-    guard status == noErr else { throw NSError(domain: NSOSStatusErrorDomain, code: Int(status)) }
 }
 
 extension WalletManager: WalletAuthenticator {
@@ -184,7 +69,7 @@ extension WalletManager: WalletAuthenticator {
         var earliestKeyTime = Double(BIP39_CREATION_TIME) - NSTimeIntervalSince1970
         if let creationTime: Data = try keychainItem(key: keychainKey.creationTime),
             creationTime.count == MemoryLayout<TimeInterval>.stride {
-                earliestKeyTime = creationTime.withUnsafeBytes({ $0.pointee })
+            creationTime.withUnsafeBytes({ earliestKeyTime = $0.pointee })
         }
         
         try self.init(masterPubKey: mpk.withUnsafeBytes({ $0.pointee }), earliestKeyTime: earliestKeyTime,
@@ -402,8 +287,9 @@ extension WalletManager: WalletAuthenticator {
             BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
             let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
             seed = UInt512() // clear seed
-            let mpkData = Data(buffer: UnsafeBufferPointer(start: [mpk], count: 1))
-            guard try mpkData == keychainItem(key: keychainKey.masterPubKey) else { return false }
+            guard let mpkData: Data = try keychainItem(key: keychainKey.masterPubKey),
+                mpkData.count >= MemoryLayout<BRMasterPubKey>.stride,
+                mpkData.withUnsafeBytes({ $0.pointee == mpk }) else { return false }
             try setKeychainItem(key: keychainKey.pin, item: newPin)
             return true
         }
@@ -506,5 +392,80 @@ extension WalletManager: WalletAuthenticator {
             catch { return false }
         }
     }
+}
+
+private func keychainItem<T>(key: String) throws -> T? {
+    let query = [kSecClass as String : kSecClassGenericPassword as String,
+                 kSecAttrService as String : WalletSecAttrService,
+                 kSecAttrAccount as String : key,
+                 kSecReturnData as String : true as Any]
+    var result: CFTypeRef? = nil
+    let status = SecItemCopyMatching(query as CFDictionary, &result);
+    guard status == noErr || status == errSecItemNotFound else {
+        throw NSError(domain: NSOSStatusErrorDomain, code: Int(status))
+    }
+    guard let data = result as? Data else { return nil }
+    
+    switch T.self {
+    case is Data.Type:
+        return data as? T
+    case is String.Type:
+        return CFStringCreateFromExternalRepresentation(secureAllocator, data as CFData,
+                                                        CFStringBuiltInEncodings.UTF8.rawValue) as? T
+    case is Int64.Type:
+        guard data.count == MemoryLayout<T>.stride else { return nil }
+        return data.withUnsafeBytes({ $0.pointee })
+    case is Dictionary<AnyHashable, Any>.Type:
+        return NSKeyedUnarchiver.unarchiveObject(with: data) as? T
+    default:
+        throw NSError(domain: NSOSStatusErrorDomain, code: Int(errSecParam))
+    }
+}
+
+private func setKeychainItem<T>(key: String, item: T?, authenticated: Bool = false) throws {
+    let accessible = (authenticated) ? kSecAttrAccessibleWhenUnlockedThisDeviceOnly as String
+                                     : kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly as String
+    let query = [kSecClass as String : kSecClassGenericPassword as String,
+                 kSecAttrService as String : WalletSecAttrService,
+                 kSecAttrAccount as String : key]
+    var status = noErr
+    var data: Data? = nil
+    if let item = item {
+        switch T.self {
+        case is Data.Type:
+            data = item as? Data
+        case is String.Type:
+            data = CFStringCreateExternalRepresentation(secureAllocator, item as! CFString,
+                                                        CFStringBuiltInEncodings.UTF8.rawValue, 0) as Data
+        case is Int64.Type:
+            data = CFDataCreateMutable(secureAllocator, MemoryLayout<T>.stride) as Data
+            data?.append(UnsafeBufferPointer(start: [item], count: 1))
+        case is Dictionary<AnyHashable, Any>.Type:
+            data = NSKeyedArchiver.archivedData(withRootObject: item)
+        default:
+            throw NSError(domain: NSOSStatusErrorDomain, code: Int(errSecParam))
+        }
+    }
+    
+    if data == nil { // delete item
+        if SecItemCopyMatching(query as CFDictionary, nil) != errSecItemNotFound {
+            status = SecItemDelete(query as CFDictionary)
+        }
+    }
+    else if SecItemCopyMatching(query as CFDictionary, nil) != errSecItemNotFound { // update existing item
+        let update = [kSecAttrAccessible as String : accessible,
+                      kSecValueData as String : data as Any]
+        status = SecItemUpdate(query as CFDictionary, update as CFDictionary)
+    }
+    else { // add new item
+        let item = [kSecClass as String : kSecClassGenericPassword as String,
+                    kSecAttrService as String : WalletSecAttrService,
+                    kSecAttrAccount as String : key,
+                    kSecAttrAccessible as String : accessible,
+                    kSecValueData as String : data as Any]
+        status = SecItemAdd(item as CFDictionary, nil)
+    }
+    
+    guard status == noErr else { throw NSError(domain: NSOSStatusErrorDomain, code: Int(status)) }
 }
 
