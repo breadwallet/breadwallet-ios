@@ -36,8 +36,26 @@ class WalletCoordinator {
 
     @objc private func updateProgress() {
         if let progress = walletManager.peerManager?.syncProgress(fromStartHeight: lastBlockHeight) {
-            store.perform(action: WalletStateAction.setProgress(progress: progress))
+            store.perform(action: WalletChange.setProgress(progress: progress))
         }
+    }
+
+    private func onSyncStart() {
+        progressTimer = Timer.scheduledTimer(timeInterval: progressUpdateInterval, target: self, selector: #selector(WalletCoordinator.updateProgress), userInfo: nil, repeats: true)
+        store.perform(action: WalletChange.setIsSyncing(true))
+    }
+
+    private func onSyncSucceed() {
+        if let height = walletManager.peerManager?.lastBlockHeight {
+            self.lastBlockHeight = height
+        }
+        progressTimer?.invalidate()
+        progressTimer = nil
+        store.perform(action: WalletChange.setIsSyncing(false))
+    }
+
+    private func onSyncFail() {
+        store.perform(action: WalletChange.setIsSyncing(false))
     }
 
     private func addWalletObservers() {
@@ -54,20 +72,15 @@ class WalletCoordinator {
         })
 
         NotificationCenter.default.addObserver(forName: .WalletSyncStartedNotification, object: nil, queue: nil, using: {note in
-            self.progressTimer = Timer.scheduledTimer(timeInterval: progressUpdateInterval, target: self, selector: #selector(WalletCoordinator.updateProgress), userInfo: nil, repeats: true)
+            self.onSyncStart()
         })
 
         NotificationCenter.default.addObserver(forName: .WalletSyncSucceededNotification, object: nil, queue: nil, using: {note in
-            if let height = self.walletManager.peerManager?.lastBlockHeight {
-                self.lastBlockHeight = height
-            }
-            self.progressTimer?.invalidate()
-            self.progressTimer = nil
+            self.onSyncSucceed()
         })
 
         NotificationCenter.default.addObserver(forName: .WalletSyncFailedNotification, object: nil, queue: nil, using: {note in
-            print("WalletSyncFailedNotification")
+            self.onSyncFail()
         })
     }
-
 }
