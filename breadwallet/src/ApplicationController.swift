@@ -32,7 +32,7 @@ class ApplicationController: EventManagerCoordinator {
             walletCreator = WalletCreator(walletManager: walletManager, store: store)
             store.perform(action: ShowStartFlow())
         } else {
-            DispatchQueue(label: "com.breadwallet.BRCore").async {
+            DispatchQueue.global(qos: .background).async {
                 self.walletManager.peerManager?.connect()
             }
         }
