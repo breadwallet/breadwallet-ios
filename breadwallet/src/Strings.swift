@@ -34,6 +34,10 @@ enum S {
         static let cameraUnavailableMessage = NSLocalizedString("Allow camera access in Settings->Privacy->Camera->Bread", comment: "Camera not allowed message")
     }
 
+    enum Account {
+        static let loadingMessage = NSLocalizedString("Loading Wallet", comment: "Loading Wallet Message")
+    }
+
     enum ErrorMessages {
         static let emailUnavailableTitle = NSLocalizedString("Email unavailable", comment: "Email unavailable alert title")
         static let emailUnavailableMessage = NSLocalizedString("This device isn't configured to send email with the iOS mail app.", comment: "Email unavailable alert title")
