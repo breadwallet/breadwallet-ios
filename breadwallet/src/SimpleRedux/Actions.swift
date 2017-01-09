@@ -146,11 +146,17 @@ enum ModalDismissal {
 }
 
 //MARK: - Wallet State
-enum WalletStateAction {
+enum WalletChange {
     struct setProgress: Action {
         let reduce: Reducer
         init(progress: Double) {
             reduce = { $0.clone(walletSyncProgress: progress) }
+        }
+    }
+    struct setIsSyncing: Action {
+        let reduce: Reducer
+        init(_ isSyncing: Bool) {
+            reduce = { $0.clone(walletIsSyncing: isSyncing) }
         }
     }
 }
@@ -215,10 +221,19 @@ extension State {
     func clone(walletSyncProgress: Double) -> State {
         return State(isStartFlowVisible:    self.isStartFlowVisible,
                      pinCreationStep:       self.pinCreationStep,
-                     paperPhraseStep:       paperPhraseStep,
+                     paperPhraseStep:       self.paperPhraseStep,
                      rootModal:             self.rootModal,
                      pasteboard:            self.pasteboard,
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
                      walletState: WalletState(isConnected: self.walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: self.walletState.isSyncing))
+    }
+    func clone(walletIsSyncing: Bool) -> State {
+        return State(isStartFlowVisible:    isStartFlowVisible,
+                     pinCreationStep:       pinCreationStep,
+                     paperPhraseStep:       paperPhraseStep,
+                     rootModal:             rootModal,
+                     pasteboard:            pasteboard,
+                     isModalDismissalBlocked: isModalDismissalBlocked,
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing))
     }
 }
