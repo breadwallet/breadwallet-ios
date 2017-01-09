@@ -15,16 +15,18 @@ struct State {
     let rootModal: RootModal
     let pasteboard: String?
     let isModalDismissalBlocked: Bool
+    let walletState: WalletState
 }
 
 extension State {
     static var initial: State {
         return State(   isStartFlowVisible: false,
-                        pinCreationStep:    .none,
-                        paperPhraseStep:    .none,
-                        rootModal:          .none,
-                        pasteboard:         UIPasteboard.general.string,
-                        isModalDismissalBlocked: false)
+                        pinCreationStep: .none,
+                        paperPhraseStep: .none,
+                        rootModal: .none,
+                        pasteboard: UIPasteboard.general.string,
+                        isModalDismissalBlocked: false,
+                        walletState: WalletState.initial)
     }
 }
 
@@ -34,6 +36,7 @@ enum PinCreationStep {
     case confirm(pin: String)
     case confirmFail(pin: String)
     case save(pin: String)
+    case saveSuccess(pin: String)
 }
 
 enum PaperPhraseStep {
@@ -51,6 +54,16 @@ enum RootModal {
     case menu
 }
 
+struct WalletState {
+    let isConnected: Bool
+    let syncProgress: Double
+    let isSyncing: Bool
+
+    static var initial: WalletState {
+        return WalletState(isConnected: false, syncProgress: 0.0, isSyncing: false)
+    }
+}
+
 extension PinCreationStep: Equatable {}
 
 func ==(lhs: PinCreationStep, rhs: PinCreationStep) -> Bool {
@@ -65,7 +78,15 @@ func ==(lhs: PinCreationStep, rhs: PinCreationStep) -> Bool {
         return leftPin == rightPin
     case (.confirmFail(let leftPin), .confirmFail(let rightPin)):
         return leftPin == rightPin
+    case (.saveSuccess(let leftPin), .saveSuccess(let rightPin)):
+        return leftPin == rightPin
     default:
         return false
     }
+}
+
+extension WalletState: Equatable {}
+
+func ==(lhs: WalletState, rhs: WalletState) -> Bool {
+    return lhs.isConnected == rhs.isConnected && lhs.syncProgress == rhs.syncProgress && lhs.isSyncing == rhs.isSyncing
 }
