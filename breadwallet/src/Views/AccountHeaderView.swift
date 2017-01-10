@@ -10,6 +10,13 @@ import UIKit
 
 class AccountHeaderView: UIView, GradientDrawable {
 
+    var balance: UInt64? {
+        didSet {
+            guard let balance = balance else { return }
+            primaryBalance.text = "b\(balance)"
+        }
+    }
+
     private let name = UILabel(font: UIFont.boldSystemFont(ofSize: 17.0))
     private let manage = UIButton(type: .system)
     private let primaryBalance = UILabel()
