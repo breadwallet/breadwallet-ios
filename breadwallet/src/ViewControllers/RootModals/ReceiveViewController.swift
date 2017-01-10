@@ -104,7 +104,7 @@ class ReceiveViewController: UIViewController {
     }
 
     private func setStyle() {
-        address.text = "1T2K3qb24sD45214439v1Ve7swF43Y2134"
+        address.text = wallet.receiveAddress
         address.textColor = .grayTextTint
         border.backgroundColor = .secondaryBorder
         qrCode.image = UIImage.qrCode(data: address.text!.data(using: .utf8)!, color: CIColor(color: .black))?
