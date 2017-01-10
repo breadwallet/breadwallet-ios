@@ -39,6 +39,12 @@ class ApplicationController: EventManagerCoordinator {
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
     }
 
+    func willEnterForeground() {
+        DispatchQueue.global(qos: .background).async {
+            self.walletManager.peerManager?.connect()
+        }
+    }
+
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         syncEventManager()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
