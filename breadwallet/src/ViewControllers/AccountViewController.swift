@@ -63,6 +63,11 @@ class AccountViewController: UIViewController, Trackable, Subscriber {
                                 self.hideSyncingView()
                             }
         })
+
+        store.subscribe(self, selector: {$0.walletState.balance != $1.walletState.balance },
+                        callback: { state in
+                            self.headerView.balance = state.walletState.balance
+        })
     }
 
     override func viewDidAppear(_ animated: Bool) {

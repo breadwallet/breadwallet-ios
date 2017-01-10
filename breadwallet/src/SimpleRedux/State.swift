@@ -58,9 +58,10 @@ struct WalletState {
     let isConnected: Bool
     let syncProgress: Double
     let isSyncing: Bool
+    let balance: UInt64
 
     static var initial: WalletState {
-        return WalletState(isConnected: false, syncProgress: 0.0, isSyncing: false)
+        return WalletState(isConnected: false, syncProgress: 0.0, isSyncing: false, balance: 0)
     }
 }
 
@@ -88,5 +89,5 @@ func ==(lhs: PinCreationStep, rhs: PinCreationStep) -> Bool {
 extension WalletState: Equatable {}
 
 func ==(lhs: WalletState, rhs: WalletState) -> Bool {
-    return lhs.isConnected == rhs.isConnected && lhs.syncProgress == rhs.syncProgress && lhs.isSyncing == rhs.isSyncing
+    return lhs.isConnected == rhs.isConnected && lhs.syncProgress == rhs.syncProgress && lhs.isSyncing == rhs.isSyncing && lhs.balance == rhs.balance
 }

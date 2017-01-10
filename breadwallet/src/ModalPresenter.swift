@@ -10,15 +10,17 @@ import UIKit
 
 class ModalPresenter: Subscriber {
 
-    init(store: Store, window: UIWindow) {
+    init(store: Store, window: UIWindow, wallet: BRWallet) {
         self.store = store
         self.window = window
+        self.wallet = wallet
         self.modalTransitionDelegate = ModalTransitionDelegate(store: store)
         addSubscriptions()
     }
 
     private let store: Store
     private let window: UIWindow
+    private let wallet: BRWallet
     private let alertHeight: CGFloat = 260.0
     private let modalTransitionDelegate: ModalTransitionDelegate
     private let messagePresenter = MessageUIPresenter()
@@ -102,7 +104,7 @@ class ModalPresenter: Subscriber {
             sendVC.presentScan = presentScan(parent: root)
             return root
         case .receive:
-            let receiveVC = ReceiveViewController(store: store)
+            let receiveVC = ReceiveViewController(store: store, wallet: wallet)
             let root = ModalViewController(childViewController: receiveVC)
             receiveVC.presentEmail = { address, image in
                 self.messagePresenter.presenter = root

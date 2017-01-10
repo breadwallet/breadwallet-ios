@@ -18,8 +18,9 @@ typealias PresentShare = (String, UIImage) -> Void
 
 class ReceiveViewController: UIViewController {
 
-    init(store: Store) {
+    init(store: Store, wallet: BRWallet) {
         self.store = store
+        self.wallet = wallet
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -35,6 +36,7 @@ class ReceiveViewController: UIViewController {
     private let request = ShadowButton(title: NSLocalizedString("Request an Amount", comment: "Request button label"), type: .secondary)
     private var topSharePopoutConstraint: NSLayoutConstraint?
     private let store: Store
+    private let wallet: BRWallet
 
     override func viewDidLoad() {
         addSubviews()

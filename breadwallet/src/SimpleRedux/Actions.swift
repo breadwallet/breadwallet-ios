@@ -159,6 +159,12 @@ enum WalletChange {
             reduce = { $0.clone(walletIsSyncing: isSyncing) }
         }
     }
+    struct setBalance: Action {
+        let reduce: Reducer
+        init(_ balance: UInt64) {
+            reduce = { $0.clone(balance: balance) }
+        }
+    }
 }
 
 //MARK: - State Creation Helpers
@@ -225,7 +231,7 @@ extension State {
                      rootModal:             self.rootModal,
                      pasteboard:            self.pasteboard,
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
-                     walletState: WalletState(isConnected: self.walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: self.walletState.isSyncing))
+                     walletState: WalletState(isConnected: self.walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: self.walletState.isSyncing, balance: walletState.balance))
     }
     func clone(walletIsSyncing: Bool) -> State {
         return State(isStartFlowVisible:    isStartFlowVisible,
@@ -234,6 +240,15 @@ extension State {
                      rootModal:             rootModal,
                      pasteboard:            pasteboard,
                      isModalDismissalBlocked: isModalDismissalBlocked,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing))
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance))
+    }
+    func clone(balance: UInt64) -> State {
+        return State(isStartFlowVisible:    isStartFlowVisible,
+                     pinCreationStep:       pinCreationStep,
+                     paperPhraseStep:       paperPhraseStep,
+                     rootModal:             rootModal,
+                     pasteboard:            pasteboard,
+                     isModalDismissalBlocked: isModalDismissalBlocked,
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance))
     }
 }
