@@ -17,9 +17,14 @@ class ApplicationController: EventManagerCoordinator {
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
 
-    private let walletManager = try! WalletManager(dbPath: nil)
-    private var walletCreator: WalletCreator?
-    private var walletCoordinator: WalletCoordinator?
+    private let walletManager: WalletManager = try! WalletManager(dbPath: nil)
+    private let walletCreator: WalletCreator
+    private let walletCoordinator: WalletCoordinator
+
+    init() {
+        walletCreator = WalletCreator(walletManager: walletManager, store: store)
+        walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
+    }
 
     func launch(options: [UIApplicationLaunchOptionsKey: Any]?) {
         setupAppearance()
@@ -29,14 +34,12 @@ class ApplicationController: EventManagerCoordinator {
         startEventManager()
 
         if walletManager.noWallet {
-            walletCreator = WalletCreator(walletManager: walletManager, store: store)
             store.perform(action: ShowStartFlow())
         } else {
             DispatchQueue.global(qos: .background).async {
                 self.walletManager.peerManager?.connect()
             }
         }
-        walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
     }
 
     func willEnterForeground() {
@@ -69,6 +72,8 @@ class ApplicationController: EventManagerCoordinator {
     }
 
     private func setupPresenters() {
-        modalPresenter = ModalPresenter(store: store, window: window)
+        if let wallet = walletManager.wallet {
+            modalPresenter = ModalPresenter(store: store, window: window, wallet: wallet)
+        }
     }
 }

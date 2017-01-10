@@ -38,6 +38,9 @@ class WalletCoordinator {
         if let progress = walletManager.peerManager?.syncProgress(fromStartHeight: lastBlockHeight) {
             store.perform(action: WalletChange.setProgress(progress: progress))
         }
+
+        guard let balance = walletManager.wallet?.balance else { return }
+        store.perform(action: WalletChange.setBalance(balance))
     }
 
     private func onSyncStart() {
@@ -60,7 +63,8 @@ class WalletCoordinator {
 
     private func addWalletObservers() {
         NotificationCenter.default.addObserver(forName: .WalletBalanceChangedNotification, object: nil, queue: nil, using: { note in
-            print("WalletBalanceChangedNotification")
+            guard let balance = self.walletManager.wallet?.balance else { return }
+            self.store.perform(action: WalletChange.setBalance(balance))
         })
 
         NotificationCenter.default.addObserver(forName: .WalletTxStatusUpdateNotification, object: nil, queue: nil, using: {note in
