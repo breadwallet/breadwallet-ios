@@ -1,5 +1,5 @@
 //
-//  AlertCoordinator.swift
+//  ModalPresenter.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-10-25.
@@ -10,17 +10,16 @@ import UIKit
 
 class ModalPresenter: Subscriber {
 
-    init(store: Store, window: UIWindow, wallet: BRWallet) {
+    var wallet: BRWallet?
+    init(store: Store, window: UIWindow) {
         self.store = store
         self.window = window
-        self.wallet = wallet
         self.modalTransitionDelegate = ModalTransitionDelegate(store: store)
         addSubscriptions()
     }
 
     private let store: Store
     private let window: UIWindow
-    private let wallet: BRWallet
     private let alertHeight: CGFloat = 260.0
     private let modalTransitionDelegate: ModalTransitionDelegate
     private let messagePresenter = MessageUIPresenter()
@@ -65,7 +64,6 @@ class ModalPresenter: Subscriber {
     }
 
     private func presentAlert(_ type: AlertType, completion: @escaping ()->Void) {
-
         let alertView = AlertView(type: type)
         let size = activeWindow.bounds.size
         activeWindow.addSubview(alertView)
@@ -104,6 +102,7 @@ class ModalPresenter: Subscriber {
             sendVC.presentScan = presentScan(parent: root)
             return root
         case .receive:
+            guard let wallet = wallet else { return nil }
             let receiveVC = ReceiveViewController(store: store, wallet: wallet)
             let root = ModalViewController(childViewController: receiveVC)
             receiveVC.presentEmail = { address, image in
