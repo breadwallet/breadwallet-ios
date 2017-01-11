@@ -72,6 +72,14 @@ class StartFlowPresenter: Subscriber {
 
     private func presentStartFlow() {
         let startViewController = StartViewController(store: store)
+
+        startViewController.recoverCallback = { phrase in
+            let _ = self.walletManager.setSeedPhrase(phrase)
+            DispatchQueue.global(qos: .background).async {
+                self.walletManager.peerManager?.connect()
+            }
+        }
+
         navigationController = ModalNavigationController(rootViewController: startViewController)
         navigationController?.delegate = navigationControllerDelegate
         if let startFlow = navigationController {
