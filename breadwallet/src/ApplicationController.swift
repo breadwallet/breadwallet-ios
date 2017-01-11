@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ApplicationController: EventManagerCoordinator {
+class ApplicationController : EventManagerCoordinator, Subscriber {
 
     //Ideally the window would be private, but is unfortunately required
     //by the UIApplicationDelegate Protocol
@@ -34,8 +34,10 @@ class ApplicationController: EventManagerCoordinator {
         startEventManager()
 
         if walletManager.noWallet {
+            addWalletCreationListener()
             store.perform(action: ShowStartFlow())
         } else {
+            modalPresenter?.wallet = walletManager.wallet
             DispatchQueue.global(qos: .background).async {
                 self.walletManager.peerManager?.connect()
             }
@@ -72,8 +74,16 @@ class ApplicationController: EventManagerCoordinator {
     }
 
     private func setupPresenters() {
-        if let wallet = walletManager.wallet {
-            modalPresenter = ModalPresenter(store: store, window: window, wallet: wallet)
-        }
+        modalPresenter = ModalPresenter(store: store, window: window)
+    }
+
+    private func addWalletCreationListener() {
+        store.subscribe(self,
+                        selector: { $0.pinCreationStep != $1.pinCreationStep},
+                        callback: {
+                            if case .saveSuccess = $0.pinCreationStep {
+                                self.modalPresenter?.wallet = self.walletManager.wallet
+                            }
+        })
     }
 }
