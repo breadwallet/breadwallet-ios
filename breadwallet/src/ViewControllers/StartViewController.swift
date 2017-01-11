@@ -8,19 +8,20 @@
 
 import UIKit
 
-class StartViewController: UIViewController {
+class StartViewController : UIViewController {
 
-    private let circle =    GradientCircle()
-    private let brand =     UILabel()
-    private let create =    ShadowButton(title: NSLocalizedString("Create New Wallet", comment: "button label"), type: .primary)
-    private let recover =   ShadowButton(title: NSLocalizedString("Recover Wallet", comment: "button label"), type: .secondary)
-
-    private let store: Store
+    var recoverCallback: ((String) -> Void)? //TODO - delete me eventually
 
     init(store: Store) {
         self.store = store
         super.init(nibName: nil, bundle: nil)
     }
+
+    private let circle = GradientCircle()
+    private let brand = UILabel()
+    private let create = ShadowButton(title: NSLocalizedString("Create New Wallet", comment: "button label"), type: .primary)
+    private let recover = ShadowButton(title: NSLocalizedString("Recover Wallet", comment: "button label"), type: .secondary)
+    private let store: Store
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -73,7 +74,14 @@ class StartViewController: UIViewController {
     }
 
     @objc private func recoverWallet() {
-        //TODO - implement recover wallet flow
+        //TODO - This is just a temporary recovery implementation
+        let alert = UIAlertController(title: "Recover", message: "Enter recovery phrase", preferredStyle: .alert)
+        alert.addTextField { (textField) in}
+        alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { action in
+            guard let phrase = alert.textFields?[0].text else { return }
+            self.recoverCallback?(phrase)
+        }))
+        parent?.present(alert, animated: true, completion: nil)
     }
 
     @objc private func createWallet() {
