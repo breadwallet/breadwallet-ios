@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ConfirmPaperPhraseViewController: UIViewController {
+class ConfirmPaperPhraseViewController : UIViewController {
 
     private let label =                 UILabel.wrapping(font: UIFont.customBody(size: 16.0))
     private let confirmFirstPhrase =    ConfirmPhrase(text: "Word 3")
@@ -55,19 +55,16 @@ class ConfirmPaperPhraseViewController: UIViewController {
     private func addConstraints() {
         header.constrainTopCorners(sidePadding: 0, topPadding: 0)
         header.constrain([
-                header.constraint(.height, constant: 152.0)
-            ])
+            header.constraint(.height, constant: 152.0) ])
         label.constrainBottomCorners(sidePadding: C.padding[1], bottomPadding: C.padding[2])
         confirmFirstPhrase.constrain([
-                confirmFirstPhrase.constraint(toBottom: header, constant: 0.0),
-                confirmFirstPhrase.constraint(.width, toView: view, constant: 0.0),
-                confirmFirstPhrase.constraint(.centerX, toView: view, constant: 0.0)
-            ])
+            confirmFirstPhrase.constraint(toBottom: header, constant: 0.0),
+            confirmFirstPhrase.constraint(.width, toView: view, constant: 0.0),
+            confirmFirstPhrase.constraint(.centerX, toView: view, constant: 0.0) ])
         confirmSecondPhrase.constrain([
-                confirmSecondPhrase.constraint(toBottom: confirmFirstPhrase, constant: 0.0),
-                confirmSecondPhrase.constraint(.width, toView: view, constant: 0.0),
-                confirmSecondPhrase.constraint(.centerX, toView: view, constant: 0.0)
-            ])
+            confirmSecondPhrase.constraint(toBottom: confirmFirstPhrase, constant: 0.0),
+            confirmSecondPhrase.constraint(.width, toView: view, constant: 0.0),
+            confirmSecondPhrase.constraint(.centerX, toView: view, constant: 0.0) ])
     }
 
     private func addButtonActions() {
@@ -76,15 +73,13 @@ class ConfirmPaperPhraseViewController: UIViewController {
 
     private func addSubmitButtonConstraints(keyboardHeight: CGFloat) {
         submit.constrain([
-                NSLayoutConstraint(item: submit, attribute: .bottom, relatedBy: .equal, toItem: bottomLayoutGuide, attribute: .top, multiplier: 1.0, constant: -C.padding[1] - keyboardHeight),
-                submit.constraint(.leading, toView: view, constant: C.padding[2]),
-                submit.constraint(.trailing, toView: view, constant: -C.padding[2]),
-                submit.constraint(.height, constant: C.Sizes.buttonHeight)
-            ])
+            NSLayoutConstraint(item: submit, attribute: .bottom, relatedBy: .equal, toItem: bottomLayoutGuide, attribute: .top, multiplier: 1.0, constant: -C.padding[1] - keyboardHeight),
+            submit.constraint(.leading, toView: view, constant: C.padding[2]),
+            submit.constraint(.trailing, toView: view, constant: -C.padding[2]),
+            submit.constraint(.height, constant: C.Sizes.buttonHeight) ])
     }
 
     @objc private func checkTextFields() {
-
         //TODO - These strings should be received from the store and more feedback for incorrect strings should be added
         if confirmFirstPhrase.textField.text == "liverish" && confirmSecondPhrase.textField.text == "mandarin" {
             store.perform(action: PaperPhrase.Confirmed())
@@ -93,9 +88,8 @@ class ConfirmPaperPhraseViewController: UIViewController {
 
     @objc private func keyboardWillShow(notification: Notification) {
         guard let userInfo = notification.userInfo else { return }
-        if let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue {
-            self.addSubmitButtonConstraints(keyboardHeight: frameValue.cgRectValue.height)
-        }
+        guard let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
+        self.addSubmitButtonConstraints(keyboardHeight: frameValue.cgRectValue.height)
     }
 
     required init?(coder aDecoder: NSCoder) {
