@@ -26,16 +26,14 @@ class WalletCreator : Subscriber {
 
     private func setPinForState(_ state: State) {
         if case .save(let pin) = state.pinCreationStep {
-            if let phrase = self.walletManager.setRandomSeedPhrase() {
+            //TODO handle setting pin failure here
+            guard let phrase = self.walletManager.setRandomSeedPhrase() else { return }
                 if walletManager.forceSetPin(newPin: pin, seedPhrase: phrase) {
-                    //TODO move SaveSuccess() here once setting the pin works
-                    print("Set Pin Success")
+                    DispatchQueue.global(qos: .background).async {
+                        self.walletManager.peerManager?.connect()
+                    }
+                    store.perform(action: PinCreation.SaveSuccess())
                 }
-                DispatchQueue.global(qos: .background).async {
-                    self.walletManager.peerManager?.connect()
-                }
-            }
-            store.perform(action: PinCreation.SaveSuccess())
         }
     }
 }

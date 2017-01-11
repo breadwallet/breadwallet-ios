@@ -10,18 +10,37 @@ import UIKit
 
 class ConfirmPaperPhraseViewController : UIViewController {
 
-    private let label =                 UILabel.wrapping(font: UIFont.customBody(size: 16.0))
-    private let confirmFirstPhrase =    ConfirmPhrase(text: "Word 3")
-    private let confirmSecondPhrase =   ConfirmPhrase(text: "Word 8")
-    private let submit =                ShadowButton(title: NSLocalizedString("Submit", comment: "button label"), type: .primary)
-    private let header =                RadialGradientView(offset: 0.0)
-    private let store: Store
-
-    init(store: Store) {
+    init(store: Store, walletManager: WalletManager, pin: String) {
         self.store = store
+        self.pin = pin
+        self.walletManager = walletManager
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
     }
+    private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
+    lazy private var confirmFirstPhrase: ConfirmPhrase = { ConfirmPhrase(text: "Word \(self.indices.0 + 1)") }()
+    lazy private var confirmSecondPhrase: ConfirmPhrase = { ConfirmPhrase(text: "Word \(self.indices.1 + 1)") }()
+    private let submit = ShadowButton(title: NSLocalizedString("Submit", comment: "button label"), type: .primary)
+    private let header = RadialGradientView(offset: 0.0)
+    private let store: Store
+    private let pin: String
+    private let walletManager: WalletManager
+
+    //Select 2 random indices from 1 to 10. The second number must
+    //be at least one number away from the first.
+    private let indices: (Int, Int) = {
+        func random() -> Int { return Int(arc4random_uniform(10) + 1) }
+        let first = random()
+        var second = random()
+        while !(abs(Int32(second) - Int32(first)) > 1) {
+            second = random()
+        }
+        return (first, second)
+    }()
+    lazy private var words: [String] = {
+        guard let phraseString = self.walletManager.seedPhrase(pin: self.pin) else { return [] }
+        return phraseString.components(separatedBy: " ")
+    }()
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -81,7 +100,7 @@ class ConfirmPaperPhraseViewController : UIViewController {
 
     @objc private func checkTextFields() {
         //TODO - These strings should be received from the store and more feedback for incorrect strings should be added
-        if confirmFirstPhrase.textField.text == "liverish" && confirmSecondPhrase.textField.text == "mandarin" {
+        if confirmFirstPhrase.textField.text == words[indices.0] && confirmSecondPhrase.textField.text == words[indices.1] {
             store.perform(action: PaperPhrase.Confirmed())
         }
     }

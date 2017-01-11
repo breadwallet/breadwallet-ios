@@ -63,7 +63,9 @@ class StartFlowPresenter: Subscriber {
                             }
 
                             if case .confirm = $0.paperPhraseStep {
-                                self.pushConfirmPaperPhraseViewController()
+                                if case .saveSuccess(let pin) = $0.pinCreationStep {
+                                    self.pushConfirmPaperPhraseViewController(pin: pin)
+                                }
                             }
                         })
     }
@@ -135,8 +137,8 @@ class StartFlowPresenter: Subscriber {
         navigationController?.pushViewController(writeViewController, animated: true)
     }
 
-    private func pushConfirmPaperPhraseViewController() {
-        let confirmViewController = ConfirmPaperPhraseViewController(store: store)
+    private func pushConfirmPaperPhraseViewController(pin: String) {
+        let confirmViewController = ConfirmPaperPhraseViewController(store: store, walletManager: walletManager, pin: pin)
         confirmViewController.title = "Paper Key"
         navigationController?.navigationBar.tintColor = .white
         navigationController?.pushViewController(confirmViewController, animated: true)
