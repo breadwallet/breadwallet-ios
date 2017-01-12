@@ -169,14 +169,15 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             "Z_SUPER INTEGER," +
             "Z_MAX INTEGER)", nil, nil, nil)
         sqlite3_exec(db, "insert into Z_PRIMARYKEY (Z_ENT, Z_NAME, Z_SUPER, Z_MAX) " +
-            "select 6, 'BRTxMetadataEntity', 0, 0 except" +
+            "select 6, 'BRTxMetadataEntity', 0, 0 except " +
             "select 6, Z_NAME, 0, 0 from Z_PRIMARYKEY where Z_NAME = 'BRTxMetadataEntity'", nil, nil, nil)
         sqlite3_exec(db, "insert into Z_PRIMARYKEY (Z_ENT, Z_NAME, Z_SUPER, Z_MAX) " +
-            "select 2, 'BRMerkleBlockEntity', 0, 0 except" +
+            "select 2, 'BRMerkleBlockEntity', 0, 0 except " +
             "select 2, Z_NAME, 0, 0 from Z_PRIMARYKEY where Z_NAME = 'BRMerkleBlockEntity'", nil, nil, nil)
         sqlite3_exec(db, "insert into Z_PRIMARYKEY (Z_ENT, Z_NAME, Z_SUPER, Z_MAX) " +
-            "select 3, 'BRPeerEntity', 0, 0 except" +
+            "select 3, 'BRPeerEntity', 0, 0 except " +
             "select 3, Z_NAME, 0, 0 from Z_PRIMARYKEY where Z_NAME = 'BRPeerEntity'", nil, nil, nil)
+        if sqlite3_errcode(db) != SQLITE_OK { print(String(cString: sqlite3_errmsg(db))) }
 
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "select Z_ENT, Z_NAME from Z_PRIMARYKEY", -1, &sql, nil)
@@ -185,11 +186,11 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         while sqlite3_step(sql) == SQLITE_ROW {
             let name = String(cString: sqlite3_column_text(sql, 1))
             if name == "BRTxMetadataEntity" { txEnt = sqlite3_column_int(sql, 0) }
-            else if name == "BRTxMerkleBlockEntity" { blockEnt = sqlite3_column_int(sql, 0) }
+            else if name == "BRMerkleBlockEntity" { blockEnt = sqlite3_column_int(sql, 0) }
             else if name == "BRPeerEntity" { peerEnt = sqlite3_column_int(sql, 0) }
         }
         
-        if sqlite3_errcode(db) != SQLITE_OK { print(String(cString: sqlite3_errmsg(db))) }
+        if sqlite3_errcode(db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(db))) }
     }
     
     func balanceChanged(_ balance: UInt64) {
@@ -474,7 +475,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             transactions.append(tx)
         }
         
-        if sqlite3_errcode(db) != SQLITE_OK { print(String(cString: sqlite3_errmsg(db))) }
+        if sqlite3_errcode(db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(db))) }
         return transactions
     }
     
@@ -504,7 +505,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             blocks.append(b)
         }
         
-        if sqlite3_errcode(db) != SQLITE_OK { print(String(cString: sqlite3_errmsg(db))) }
+        if sqlite3_errcode(db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(db))) }
         return blocks
     }
     
@@ -524,7 +525,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             peers.append(p)
         }
         
-        if sqlite3_errcode(db) != SQLITE_OK { print(String(cString: sqlite3_errmsg(db))) }
+        if sqlite3_errcode(db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(db))) }
         return peers
     }
 
