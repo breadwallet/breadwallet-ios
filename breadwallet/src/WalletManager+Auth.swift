@@ -281,15 +281,20 @@ extension WalletManager: WalletAuthenticator {
     }
     
     // change wallet authentication pin using the wallet recovery phrase
-    func forceSetPin(newPin: String, seedPhrase: String) -> Bool {
+    // recovery phrase is optional if no pin is currently set
+    func forceSetPin(newPin: String, seedPhrase: String? = nil) -> Bool {
         do {
-            var seed = UInt512()
-            BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
-            let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
-            seed = UInt512() // clear seed
-            guard let mpkData: Data = try keychainItem(key: keychainKey.masterPubKey),
-                mpkData.count >= MemoryLayout<BRMasterPubKey>.stride,
-                mpkData.withUnsafeBytes({ $0.pointee == mpk }) else { return false }
+            if seedPhrase != nil {
+                var seed = UInt512()
+                BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
+                let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
+                seed = UInt512() // clear seed
+                guard let mpkData: Data = try keychainItem(key: keychainKey.masterPubKey),
+                    mpkData.count >= MemoryLayout<BRMasterPubKey>.stride,
+                    mpkData.withUnsafeBytes({ $0.pointee == mpk }) else { return false }
+            }
+            else if try keychainItem(key: keychainKey.pin) != nil { return false }
+            
             try setKeychainItem(key: keychainKey.pin, item: newPin)
             return true
         }
