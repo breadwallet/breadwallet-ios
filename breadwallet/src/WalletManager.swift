@@ -227,7 +227,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         sqlite3_bind_blob(sql2, 2, buf, Int32(buf.count), SQLITE_TRANSIENT)
         sqlite3_bind_blob(sql2, 3, [tx.pointee.txHash], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
 
-        guard sqlite3_step(sql2) == SQLITE_OK else {
+        guard sqlite3_step(sql2) == SQLITE_DONE else {
             print(String(cString: sqlite3_errmsg(db)))
             return
         }
@@ -275,7 +275,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             }
         }
         
-        if sqlite3_errcode(db) != SQLITE_OK { print(String(cString: sqlite3_errmsg(db))) }
+        if sqlite3_errcode(db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(db))) }
     }
     
     func txDeleted(_ txHash: UInt256, notifyUser: Bool, recommendRescan: Bool) {
@@ -284,7 +284,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         defer { sqlite3_finalize(sql) }
         sqlite3_bind_blob(sql, 1, [txHash], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
 
-        guard sqlite3_step(sql) == SQLITE_OK else {
+        guard sqlite3_step(sql) == SQLITE_DONE else {
             print(String(cString: sqlite3_errmsg(db)))
             return
         }
@@ -374,7 +374,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             sqlite3_bind_blob(sql2, 11, [b.pointee.merkleRoot], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
             sqlite3_bind_blob(sql2, 12, [b.pointee.prevBlock], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
             
-            guard sqlite3_step(sql2) == SQLITE_OK else {
+            guard sqlite3_step(sql2) == SQLITE_DONE else {
                 print(String(cString: sqlite3_errmsg(db)))
                 return
             }
@@ -427,7 +427,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             sqlite3_bind_int64(sql2, 4, Int64(bitPattern: p.services))
             sqlite3_bind_int64(sql2, 5, Int64(bitPattern: p.timestamp))
 
-            guard sqlite3_step(sql2) == SQLITE_OK else {
+            guard sqlite3_step(sql2) == SQLITE_DONE else {
                 print(String(cString: sqlite3_errmsg(db)))
                 return
             }
