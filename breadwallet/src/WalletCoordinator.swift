@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit //TODO - this shouldn't need uikit
 
 private let lastBlockHeightKey = "LastBlockHeightKey"
 private let progressUpdateInterval: TimeInterval = 0.5
@@ -57,8 +58,12 @@ class WalletCoordinator {
         store.perform(action: WalletChange.setIsSyncing(false))
     }
 
-    private func onSyncFail() {
+    private func onSyncFail(notification: Notification) {
         store.perform(action: WalletChange.setIsSyncing(false))
+        //TODO - handle this error properly
+        let alert = UIAlertController(title: "Error", message: "Syncing Error: \(notification.userInfo!["errorCode"]), \(notification.userInfo!["errorDescription"])", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
     }
 
     private func addWalletObservers() {
@@ -68,7 +73,12 @@ class WalletCoordinator {
         })
 
         NotificationCenter.default.addObserver(forName: .WalletTxStatusUpdateNotification, object: nil, queue: nil, using: {note in
-            print("WalletTxStatusUpdateNotification")
+            if let transactions = self.walletManager.wallet?.transactionViewModels {
+                if transactions.count > 0 {
+                    self.store.perform(action: WalletChange.setTransactions(transactions))
+                }
+            }
+            print("WalletTxStatusUpdateNotification: \(note)")
         })
 
         NotificationCenter.default.addObserver(forName: .WalletTxRejectedNotification, object: nil, queue: nil, using: {note in
@@ -84,7 +94,7 @@ class WalletCoordinator {
         })
 
         NotificationCenter.default.addObserver(forName: .WalletSyncFailedNotification, object: nil, queue: nil, using: {note in
-            self.onSyncFail()
+            self.onSyncFail(notification: note)
         })
     }
 }

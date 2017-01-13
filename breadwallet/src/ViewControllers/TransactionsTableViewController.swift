@@ -8,17 +8,17 @@
 
 import UIKit
 
-class TransactionsTableViewController: UITableViewController {
+class TransactionsTableViewController : UITableViewController, Subscriber {
 
+    init(store: Store) {
+        self.store = store
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    private let store: Store
     private let transactionCellIdentifier = "transactionCellIdentifier"
-    private let transactions: [Transaction] = {
-        let array = (0...20).map { _ in
-            return Transaction.random
-        }
-        return array.sorted {
-            $0.timestamp < $1.timestamp
-        }
-    }()
+    private var transactions: [Transaction] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -26,6 +26,15 @@ class TransactionsTableViewController: UITableViewController {
         tableView.separatorStyle = .none
         tableView.estimatedRowHeight = 100.0
         tableView.rowHeight = UITableViewAutomaticDimension
+
+        //TODO - this should detect transaction changes
+        store.subscribe(self, selector: {$0.walletState.transactions.count != $1.walletState.transactions.count },
+                        callback: { state in
+                            self.transactions = state.walletState.transactions
+                            self.tableView.reloadData()
+        })
+
+        tableView.reloadData()
     }
 
     // MARK: - Table view data source
@@ -59,5 +68,9 @@ class TransactionsTableViewController: UITableViewController {
             transactionCell.setTransaction(transactions[indexPath.row])
         }
         return cell
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
