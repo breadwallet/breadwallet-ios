@@ -15,7 +15,7 @@ enum TransactionCellStyle {
     case single
 }
 
-class TransactionTableViewCell: UITableViewCell {
+class TransactionTableViewCell : UITableViewCell {
 
     private let transaction =   UILabel()
     private let status =        UILabel(font: UIFont.customBody(size: 13.0))

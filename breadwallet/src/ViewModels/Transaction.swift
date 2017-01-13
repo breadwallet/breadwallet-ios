@@ -26,6 +26,18 @@ enum TransactionDirection: String {
 
 struct Transaction {
 
+    init(amountSent: UInt64, amountReceived: UInt64, timestamp: UInt32) {
+        if amountSent > 0 && amountSent == amountReceived {
+            self.direction = .sent
+        } else {
+            self.direction = .received
+        }
+        self.status = "Complete"
+        self.comment = comments[Int(arc4random_uniform(UInt32(comments.count)))]
+        self.amount = self.direction == .sent ? amountSent : amountReceived
+        self.timestamp = timestamp
+    }
+
     var descriptionString: NSAttributedString {
         let fontSize: CGFloat = 14.0
 
@@ -67,18 +79,8 @@ struct Transaction {
     }
 
     let direction: TransactionDirection
-    let amount: UInt
+    let amount: UInt64
     let status: String
     let comment: String
-    let timestamp: UInt
-}
-
-extension Transaction {
-    static var random: Transaction {
-        return Transaction(direction: arc4random_uniform(2) == 0 ? .sent : .received,
-                           amount: UInt(arc4random_uniform(100)),
-                           status: arc4random_uniform(2) == 0 ? "Waiting" : "Complete",
-                           comment: comments[Int(arc4random_uniform(UInt32(comments.count)))],
-                           timestamp: UInt(arc4random_uniform(3000)))
-    }
+    let timestamp: UInt32
 }
