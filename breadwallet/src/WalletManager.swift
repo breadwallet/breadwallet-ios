@@ -59,6 +59,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     var earliestKeyTime: TimeInterval = 0
     
     lazy var wallet: BRWallet? = {
+        guard self.masterPubKey != BRMasterPubKey() else { return nil }
         guard let wallet = BRWallet(transactions: self.loadTransactions(), masterPubKey: self.masterPubKey,
                                     listener: self) else {
             // stored transactions don't match masterPubKey
