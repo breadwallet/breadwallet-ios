@@ -165,6 +165,12 @@ enum WalletChange {
             reduce = { $0.clone(balance: balance) }
         }
     }
+    struct setTransactions: Action {
+        let reduce: Reducer
+        init(_ transactions: [Transaction]) {
+            reduce = { $0.clone(transactions: transactions) }
+        }
+    }
 }
 
 //MARK: - State Creation Helpers
@@ -231,7 +237,7 @@ extension State {
                      rootModal:             self.rootModal,
                      pasteboard:            self.pasteboard,
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
-                     walletState: WalletState(isConnected: self.walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: self.walletState.isSyncing, balance: walletState.balance))
+                     walletState: WalletState(isConnected: self.walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: self.walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions))
     }
     func clone(walletIsSyncing: Bool) -> State {
         return State(isStartFlowVisible:    isStartFlowVisible,
@@ -240,7 +246,7 @@ extension State {
                      rootModal:             rootModal,
                      pasteboard:            pasteboard,
                      isModalDismissalBlocked: isModalDismissalBlocked,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance))
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions))
     }
     func clone(balance: UInt64) -> State {
         return State(isStartFlowVisible:    isStartFlowVisible,
@@ -249,6 +255,15 @@ extension State {
                      rootModal:             rootModal,
                      pasteboard:            pasteboard,
                      isModalDismissalBlocked: isModalDismissalBlocked,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance))
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions))
+    }
+    func clone(transactions: [Transaction]) -> State {
+        return State(isStartFlowVisible:    isStartFlowVisible,
+                     pinCreationStep:       pinCreationStep,
+                     paperPhraseStep:       paperPhraseStep,
+                     rootModal:             rootModal,
+                     pasteboard:            pasteboard,
+                     isModalDismissalBlocked: isModalDismissalBlocked,
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions))
     }
 }
