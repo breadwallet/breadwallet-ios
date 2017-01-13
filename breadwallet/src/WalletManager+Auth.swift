@@ -225,10 +225,10 @@ extension WalletManager: WalletAuthenticator {
             var seed = UInt512()
             try setKeychainItem(key: keychainKey.mnemonic, item: phrase, authenticated: true)
             BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
-            let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
+            masterPubKey = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
             seed = UInt512() // clear seed
             try setKeychainItem(key: keychainKey.masterPubKey,
-                                item: Data(buffer: UnsafeBufferPointer(start: [mpk], count: 1)))
+                                item: Data(buffer: UnsafeBufferPointer(start: [masterPubKey], count: 1)))
             return true
         }
         catch { return false }
@@ -247,6 +247,7 @@ extension WalletManager: WalletAuthenticator {
         do {
             try setKeychainItem(key: keychainKey.creationTime,
                                 item: Data(buffer: UnsafeBufferPointer(start: [time], count: 1)))
+            self.earliestKeyTime = time
         }
         catch { return nil }
 
@@ -310,6 +311,8 @@ extension WalletManager: WalletAuthenticator {
             wallet = nil
             if db != nil { sqlite3_close(db) }
             db = nil
+            masterPubKey = BRMasterPubKey()
+            earliestKeyTime = 0
             try FileManager.default.removeItem(atPath: dbPath)
             try setKeychainItem(key: keychainKey.apiAuthKey, item: nil as Data?)
             try setKeychainItem(key: keychainKey.spendLimit, item: nil as Int64?)
