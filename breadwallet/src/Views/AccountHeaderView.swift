@@ -13,7 +13,9 @@ class AccountHeaderView: UIView, GradientDrawable {
     var balance: UInt64? {
         didSet {
             guard let balance = balance else { return }
-            primaryBalance.text = "b\(balance)"
+            let amount = Amount(amount: balance)
+            primaryBalance.text = amount.bits
+            secondaryBalance.text = "= \(amount.localCurrency)"
         }
     }
 
@@ -44,15 +46,12 @@ class AccountHeaderView: UIView, GradientDrawable {
         manage.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17.0)
         manage.tintColor = .white
 
-        primaryBalance.text = "b0.0844"
         primaryBalance.textColor = .white
         primaryBalance.font = UIFont.customBody(size: 26.0)
 
-        secondaryBalance.text = "= $514.98"
         secondaryBalance.textColor = .darkText
         secondaryBalance.font = UIFont.customBody(size: 13.0)
 
-        info.text = "Bitcoin price +3.4% today"
         info.textColor = .darkText
         info.font = UIFont.customBody(size: 13.0)
 

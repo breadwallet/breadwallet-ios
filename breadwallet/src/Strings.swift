@@ -10,6 +10,11 @@ import Foundation
 
 enum S {
 
+    enum Symbols {
+        static let bits = "ƀ"
+        static let narrowSpace = "\u{2009}"
+    }
+
     enum Button {
         static let ok = NSLocalizedString("OK", comment: "OK button label")
     }
