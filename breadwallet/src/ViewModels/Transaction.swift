@@ -114,3 +114,9 @@ private func makeStatus(isValid: Bool, isPending: Bool, isVerified: Bool, confir
         return "Complete"
     }
 }
+
+extension Transaction : Equatable {}
+
+func ==(lhs: Transaction, rhs: Transaction) -> Bool {
+    return lhs.direction == rhs.direction && lhs.amount.bits == rhs.amount.bits && lhs.amount.localCurrency == rhs.amount.localCurrency && lhs.comment == rhs.comment && lhs.timestamp == rhs.timestamp
+}

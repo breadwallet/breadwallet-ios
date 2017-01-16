@@ -27,8 +27,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
         tableView.estimatedRowHeight = 100.0
         tableView.rowHeight = UITableViewAutomaticDimension
 
-        //TODO - this should detect transaction changes
-        store.subscribe(self, selector: {$0.walletState.transactions.count != $1.walletState.transactions.count },
+        store.subscribe(self, selector: {$0.walletState.transactions != $1.walletState.transactions },
                         callback: { state in
                             self.transactions = state.walletState.transactions
                             self.tableView.reloadData()
