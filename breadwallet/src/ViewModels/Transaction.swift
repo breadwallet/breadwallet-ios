@@ -32,13 +32,18 @@ struct Transaction {
         } else {
             self.direction = .received
         }
-        self.status = "Complete"
         self.comment = comments[Int(arc4random_uniform(UInt32(comments.count)))]
         self.amount = self.direction == .sent ? Amount(amount:amountSent) : Amount(amount:amountReceived)
         self.timestamp = Int(timestamp)
-
-        //confirms = ($0.pointee.blockHeight > blockHeight) ? 0 : (blockHeight - $0.pointee.blockHeight) + 1
+        let confirms = transactionBlockHeight > blockHeight ? 0 : Int((blockHeight - transactionBlockHeight) + 1)
+        self.status = makeStatus(isValid: transactionIsValid, isPending: transactionIsPending, isVerified: transactionIsVerified, confirms: confirms)
     }
+
+    let direction: TransactionDirection
+    let amount: Amount
+    let status: String
+    let comment: String
+    let timestamp: Int
 
     var descriptionString: NSAttributedString {
         let fontSize: CGFloat = 14.0
@@ -88,10 +93,24 @@ struct Transaction {
             return "\(difference/secondsInDay) d"
         }
     }
+}
 
-    let direction: TransactionDirection
-    let amount: Amount
-    let status: String
-    let comment: String
-    let timestamp: Int
+private func makeStatus(isValid: Bool, isPending: Bool, isVerified: Bool, confirms: Int) -> String {
+    if confirms == 0 && !isValid {
+        return "INVALID"
+    } else if confirms == 0 && isPending {
+        return "Pending"
+    } else if confirms == 0 && !isVerified {
+        return "Unverified"
+    } else if confirms < 6 {
+        if confirms == 0 {
+            return "0 confirmations"
+        } else if confirms == 1 {
+            return "1 confirmation"
+        } else {
+            return "\(confirms) confirmations"
+        }
+    } else {
+        return "Complete"
+    }
 }
