@@ -66,7 +66,7 @@ struct WalletState {
     }
 }
 
-extension PinCreationStep: Equatable {}
+extension PinCreationStep : Equatable {}
 
 func ==(lhs: PinCreationStep, rhs: PinCreationStep) -> Bool {
     switch (lhs, rhs) {
@@ -87,8 +87,8 @@ func ==(lhs: PinCreationStep, rhs: PinCreationStep) -> Bool {
     }
 }
 
-extension WalletState: Equatable {}
+extension WalletState : Equatable {}
 
 func ==(lhs: WalletState, rhs: WalletState) -> Bool {
-    return lhs.isConnected == rhs.isConnected && lhs.syncProgress == rhs.syncProgress && lhs.isSyncing == rhs.isSyncing && lhs.balance == rhs.balance //TODO = add equatable: && lhs.transactions == rhs.transactions
+    return lhs.isConnected == rhs.isConnected && lhs.syncProgress == rhs.syncProgress && lhs.isSyncing == rhs.isSyncing && lhs.balance == rhs.balance && lhs.transactions == rhs.transactions
 }
