@@ -34,7 +34,7 @@ struct Transaction {
         }
         self.status = "Complete"
         self.comment = comments[Int(arc4random_uniform(UInt32(comments.count)))]
-        self.amount = self.direction == .sent ? amountSent : amountReceived
+        self.amount = self.direction == .sent ? Amount(amount:amountSent) : Amount(amount:amountReceived)
         self.timestamp = Int(timestamp)
 
         //confirms = ($0.pointee.blockHeight > blockHeight) ? 0 : (blockHeight - $0.pointee.blockHeight) + 1
@@ -56,7 +56,7 @@ struct Transaction {
         let prefix = NSMutableAttributedString(string: "\(direction.rawValue) ")
         prefix.addAttributes(regularAttributes, range: NSRange(location: 0, length: prefix.length))
 
-        let amountString = NSMutableAttributedString(string: "$\(amount) ")
+        let amountString = NSMutableAttributedString(string: "\(amount.bits) ")
         amountString.addAttributes(boldAttributes, range: NSRange(location: 0, length: amountString.length))
 
         let preposition = NSMutableAttributedString(string: "\(direction.preposition) ")
@@ -90,7 +90,7 @@ struct Transaction {
     }
 
     let direction: TransactionDirection
-    let amount: UInt64
+    let amount: Amount
     let status: String
     let comment: String
     let timestamp: Int
