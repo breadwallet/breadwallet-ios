@@ -10,9 +10,17 @@ import Foundation
 import BRCore
 
 extension BRWallet {
-    var transactionViewModels: [Transaction] {
+    func makeTransactionViewModels(blockHeight: UInt32) -> [Transaction] {
         return transactions.flatMap { $0 }.map {
-            return Transaction(amountSent: amountSentByTx($0), amountReceived: amountReceivedFromTx($0), timestamp: $0.pointee.timestamp)
+            return Transaction(amountSent: amountSentByTx($0),
+                               amountReceived: amountReceivedFromTx($0),
+                               timestamp: $0.pointee.timestamp,
+                               transactionIsValid: transactionIsValid($0),
+                               transactionIsPending: transactionIsPending($0),
+                               transactionIsVerified: transactionIsVerified($0),
+                               blockHeight: blockHeight,
+                               transactionBlockHeight: $0.pointee.blockHeight)
+            
         }
     }
 }

@@ -26,7 +26,7 @@ enum TransactionDirection: String {
 
 struct Transaction {
 
-    init(amountSent: UInt64, amountReceived: UInt64, timestamp: UInt32) {
+    init(amountSent: UInt64, amountReceived: UInt64, timestamp: UInt32, transactionIsValid: Bool, transactionIsPending: Bool, transactionIsVerified: Bool, blockHeight: UInt32, transactionBlockHeight: UInt32) {
         if amountSent > 0 && amountSent == amountReceived {
             self.direction = .sent
         } else {
@@ -35,7 +35,9 @@ struct Transaction {
         self.status = "Complete"
         self.comment = comments[Int(arc4random_uniform(UInt32(comments.count)))]
         self.amount = self.direction == .sent ? amountSent : amountReceived
-        self.timestamp = timestamp
+        self.timestamp = Int(timestamp)
+
+        //confirms = ($0.pointee.blockHeight > blockHeight) ? 0 : (blockHeight - $0.pointee.blockHeight) + 1
     }
 
     var descriptionString: NSAttributedString {
@@ -71,10 +73,19 @@ struct Transaction {
     }
 
     var timestampString: String {
-        if timestamp < 60 {
-            return "\(timestamp) m"
+        guard timestamp > 0 else { return "just now" }
+        let difference = Int(Date().timeIntervalSince1970) - timestamp
+        let secondsInMinute = 60
+        let secondsInHour = 3600
+        let secondsInDay = 86400
+        if (difference < secondsInMinute) {
+            return "\(difference) s"
+        } else if difference < secondsInHour {
+            return "\(difference/secondsInMinute) m"
+        } else if difference < secondsInDay {
+            return "\(difference/secondsInHour) h"
         } else {
-            return "\(timestamp/60) h"
+            return "\(difference/secondsInDay) d"
         }
     }
 
@@ -82,5 +93,5 @@ struct Transaction {
     let amount: UInt64
     let status: String
     let comment: String
-    let timestamp: UInt32
+    let timestamp: Int
 }

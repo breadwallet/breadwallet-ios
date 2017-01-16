@@ -73,10 +73,10 @@ class WalletCoordinator {
         })
 
         NotificationCenter.default.addObserver(forName: .WalletTxStatusUpdateNotification, object: nil, queue: nil, using: {note in
-            if let transactions = self.walletManager.wallet?.transactionViewModels {
-                if transactions.count > 0 {
-                    self.store.perform(action: WalletChange.setTransactions(transactions))
-                }
+            guard let blockHeight = self.walletManager.peerManager?.lastBlockHeight else { return }
+            guard let transactions = self.walletManager.wallet?.makeTransactionViewModels(blockHeight: blockHeight) else { return }
+            if transactions.count > 0 {
+                self.store.perform(action: WalletChange.setTransactions(transactions))
             }
             print("WalletTxStatusUpdateNotification: \(note)")
         })
