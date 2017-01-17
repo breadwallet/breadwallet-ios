@@ -8,8 +8,6 @@
 
 import UIKit
 
-let comments = ["Gift Cards", "🍜", "Dinner and drinks", "", "All the mods 😵🙌", "This is a multiline comment used for testing if the cell will resize with longer comments like this"]
-
 enum TransactionDirection: String {
     case sent = "Sent"
     case received = "Received"
@@ -32,11 +30,11 @@ struct Transaction {
         } else {
             self.direction = .received
         }
-        self.comment = comments[Int(arc4random_uniform(UInt32(comments.count)))]
         self.amount = self.direction == .sent ? Amount(amount:amountSent) : Amount(amount:amountReceived)
         self.timestamp = Int(timestamp)
         let confirms = transactionBlockHeight > blockHeight ? 0 : Int((blockHeight - transactionBlockHeight) + 1)
         self.status = makeStatus(isValid: transactionIsValid, isPending: transactionIsPending, isVerified: transactionIsVerified, confirms: confirms)
+        self.comment = ""
     }
 
     let direction: TransactionDirection
