@@ -25,12 +25,14 @@ enum TransactionDirection: String {
 struct Transaction {
 
     init(amountSent: UInt64, amountReceived: UInt64, timestamp: UInt32, transactionIsValid: Bool, transactionIsPending: Bool, transactionIsVerified: Bool, blockHeight: UInt32, transactionBlockHeight: UInt32) {
-        if amountSent > 0 && amountSent == amountReceived {
+
+        if amountSent > 0 {
             self.direction = .sent
+            self.amount = Amount(amount:amountSent-amountReceived)
         } else {
             self.direction = .received
+            self.amount = Amount(amount:amountReceived)
         }
-        self.amount = self.direction == .sent ? Amount(amount:amountSent) : Amount(amount:amountReceived)
         self.timestamp = Int(timestamp)
         let confirms = transactionBlockHeight > blockHeight ? 0 : Int((blockHeight - transactionBlockHeight) + 1)
         self.status = makeStatus(isValid: transactionIsValid, isPending: transactionIsPending, isVerified: transactionIsVerified, confirms: confirms)
