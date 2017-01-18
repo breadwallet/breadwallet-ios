@@ -11,6 +11,8 @@ import UIKit
 enum AlertType {
     case pinSet
     case paperKeySet
+    case sendSuccess
+    case sendFailure
 
     var header: String {
         switch self {
@@ -18,6 +20,10 @@ enum AlertType {
             return NSLocalizedString("PIN Set", comment: "Alert Header label")
         case .paperKeySet:
             return NSLocalizedString("Paper Key Set", comment: "Alert Header Label")
+        case .sendSuccess:
+            return NSLocalizedString("Send Confirmation", comment: "Send success alert header label")
+        case .sendFailure:
+            return NSLocalizedString("Send failed", comment: "Send failure alert header label")
         }
     }
 
@@ -27,6 +33,10 @@ enum AlertType {
             return NSLocalizedString("Use your PIN to login and send money.", comment: "Alert Subheader label")
         case .paperKeySet:
             return NSLocalizedString("Awesome!", comment: "Alert Subheader label")
+        case .sendSuccess:
+            return NSLocalizedString("Money Sent!", comment: "Send success alert subheader label")
+        case .sendFailure:
+            return NSLocalizedString("Send Failed", comment: "Send failure alert subheader label")
         }
     }
 
@@ -35,7 +45,7 @@ enum AlertType {
     }
 }
 
-class AlertView: UIView, GradientDrawable {
+class AlertView : UIView, GradientDrawable {
 
     private let type: AlertType
     private let header = UILabel()

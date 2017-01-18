@@ -16,10 +16,11 @@ private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
 private let currencyButtonWidth: CGFloat = 64.0
 
-class SendViewController: UIViewController, Subscriber, ModalPresentable {
+class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
-    init(store: Store) {
+    init(store: Store, sender: Sender) {
         self.store = store
+        self.sender = sender
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -30,8 +31,12 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable {
     }
 
     var presentScan: PresentScan?
+    var presentVerifyPin: ((@escaping VerifyPinCallback)->Void)?
+    var onPublishSuccess: (()->Void)?
+    var onPublishFailure: (()->Void)?
 
     private let store: Store
+    private let sender: Sender
     private let to = LabelSendCell(label: S.Send.toLabel)
     private let amount = TextFieldSendCell(placeholder: S.Send.amountLabel, isKeyboardHidden: true)
     private let currencySwitcher = InViewAlert(type: .secondary)
@@ -137,6 +142,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable {
         descriptionCell.textFieldDidReturn = { textField in
             textField.resignFirstResponder()
         }
+        send.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
     }
 
     @objc private func pasteTapped() {
@@ -208,6 +214,32 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable {
             }
             parentView.layoutIfNeeded()
         }, completion: {_ in })
+    }
+
+    @objc private func sendTapped() {
+        guard let address = to.content else { return /*TODO - no address error*/ }
+        guard let amount = amount.content else { return /*TODO - bad amount*/ }
+        guard let numericAmount = UInt64(amount) else { return /*TODO - bad amount*/ }
+
+        sender.send(amount: numericAmount,
+                    to: address,
+                    verifyPin: { pinValidationCallback in
+                        presentVerifyPin? { pin, vc in
+                            if pinValidationCallback(pin) {
+                                vc.dismiss(animated: true, completion: {
+                                    self.parent?.view.isFrameChangeBlocked = false
+                                })
+                            }
+                        }
+                    }, completion: { result in
+                        switch result {
+                        case .success:
+                            self.dismiss(animated: true, completion: nil)
+                            self.onPublishSuccess?()
+                        case .failure(_): //TODO -add error messages here
+                            self.onPublishFailure?()
+                        }
+                    })
     }
 
     private func addCurrencyOverlay() {
