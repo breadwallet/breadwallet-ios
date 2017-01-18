@@ -16,6 +16,7 @@ struct State {
     let pasteboard: String?
     let isModalDismissalBlocked: Bool
     let walletState: WalletState
+    let currency: Currency
 }
 
 extension State {
@@ -26,7 +27,8 @@ extension State {
                         rootModal: .none,
                         pasteboard: UIPasteboard.general.string,
                         isModalDismissalBlocked: false,
-                        walletState: WalletState.initial)
+                        walletState: WalletState.initial,
+                        currency: .bitcoin)
     }
 }
 
@@ -64,6 +66,11 @@ struct WalletState {
     static var initial: WalletState {
         return WalletState(isConnected: false, syncProgress: 0.0, isSyncing: false, balance: 0, transactions: [])
     }
+}
+
+enum Currency {
+    case bitcoin
+    case local
 }
 
 extension PinCreationStep : Equatable {}

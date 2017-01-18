@@ -17,13 +17,14 @@ struct ShowStartFlow: Action {
 
 struct HideStartFlow: Action {
     let reduce: Reducer = { state in
-        return State(isStartFlowVisible:        false,
-                     pinCreationStep:           .none,
-                     paperPhraseStep:           .none,
-                     rootModal:                 .none,
-                     pasteboard:                UIPasteboard.general.string,
-                     isModalDismissalBlocked:   false,
-                     walletState: state.walletState )
+        return State(isStartFlowVisible: false,
+                     pinCreationStep: .none,
+                     paperPhraseStep: .none,
+                     rootModal: .none,
+                     pasteboard: UIPasteboard.general.string,
+                     isModalDismissalBlocked: false,
+                     walletState: state.walletState,
+                     currency: state.currency)
     }
 }
 
@@ -176,94 +177,114 @@ enum WalletChange {
 //MARK: - State Creation Helpers
 extension State {
     func clone(isStartFlowVisible: Bool) -> State {
-        return State(isStartFlowVisible:    isStartFlowVisible,
-                     pinCreationStep:       self.pinCreationStep,
-                     paperPhraseStep:       self.paperPhraseStep,
-                     rootModal:             self.rootModal,
-                     pasteboard:            self.pasteboard,
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     pinCreationStep: self.pinCreationStep,
+                     paperPhraseStep: self.paperPhraseStep,
+                     rootModal: self.rootModal,
+                     pasteboard: self.pasteboard,
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
-                     walletState: self.walletState)
+                     walletState: self.walletState,
+                     currency: currency)
     }
     func clone(pinCreationStep: PinCreationStep) -> State {
-        return State(isStartFlowVisible:    self.isStartFlowVisible,
-                     pinCreationStep:       pinCreationStep,
-                     paperPhraseStep:       self.paperPhraseStep,
-                     rootModal:             self.rootModal,
-                     pasteboard:            self.pasteboard,
+        return State(isStartFlowVisible: self.isStartFlowVisible,
+                     pinCreationStep: pinCreationStep,
+                     paperPhraseStep: self.paperPhraseStep,
+                     rootModal: self.rootModal,
+                     pasteboard: self.pasteboard,
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
-                     walletState: self.walletState)
+                     walletState: self.walletState,
+                     currency: currency)
     }
 
     func rootModal(_ type: RootModal) -> State {
-        return State(isStartFlowVisible:    false,
-                     pinCreationStep:       .none,
-                     paperPhraseStep:       .none,
-                     rootModal:             type,
-                     pasteboard:            self.pasteboard,
+        return State(isStartFlowVisible: false,
+                     pinCreationStep: .none,
+                     paperPhraseStep: .none,
+                     rootModal: type,
+                     pasteboard: self.pasteboard,
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
-                     walletState: self.walletState)
+                     walletState: self.walletState,
+                     currency: currency)
     }
     func clone(pasteboard: String?) -> State {
-        return State(isStartFlowVisible:    self.isStartFlowVisible,
-                     pinCreationStep:       pinCreationStep,
-                     paperPhraseStep:       self.paperPhraseStep,
-                     rootModal:             self.rootModal,
-                     pasteboard:            pasteboard,
+        return State(isStartFlowVisible: self.isStartFlowVisible,
+                     pinCreationStep: pinCreationStep,
+                     paperPhraseStep: self.paperPhraseStep,
+                     rootModal: self.rootModal,
+                     pasteboard: pasteboard,
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
-                     walletState: self.walletState)
+                     walletState: self.walletState,
+                     currency: currency)
     }
     func clone(isModalDismissalBlocked: Bool) -> State {
-        return State(isStartFlowVisible:    self.isStartFlowVisible,
-                     pinCreationStep:       pinCreationStep,
-                     paperPhraseStep:       self.paperPhraseStep,
-                     rootModal:             self.rootModal,
-                     pasteboard:            self.pasteboard,
+        return State(isStartFlowVisible: self.isStartFlowVisible,
+                     pinCreationStep: pinCreationStep,
+                     paperPhraseStep: self.paperPhraseStep,
+                     rootModal: self.rootModal,
+                     pasteboard: self.pasteboard,
                      isModalDismissalBlocked: isModalDismissalBlocked,
-                     walletState: self.walletState)
+                     walletState: self.walletState,
+                     currency: currency)
     }
     func clone(paperPhraseStep: PaperPhraseStep) -> State {
-        return State(isStartFlowVisible:    self.isStartFlowVisible,
-                     pinCreationStep:       self.pinCreationStep,
-                     paperPhraseStep:       paperPhraseStep,
-                     rootModal:             self.rootModal,
-                     pasteboard:            self.pasteboard,
+        return State(isStartFlowVisible: self.isStartFlowVisible,
+                     pinCreationStep: self.pinCreationStep,
+                     paperPhraseStep: paperPhraseStep,
+                     rootModal: self.rootModal,
+                     pasteboard: self.pasteboard,
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
-                     walletState: self.walletState)
+                     walletState: self.walletState,
+                     currency: currency)
     }
     func clone(walletSyncProgress: Double) -> State {
-        return State(isStartFlowVisible:    self.isStartFlowVisible,
-                     pinCreationStep:       self.pinCreationStep,
-                     paperPhraseStep:       self.paperPhraseStep,
-                     rootModal:             self.rootModal,
-                     pasteboard:            self.pasteboard,
+        return State(isStartFlowVisible: self.isStartFlowVisible,
+                     pinCreationStep: self.pinCreationStep,
+                     paperPhraseStep: self.paperPhraseStep,
+                     rootModal: self.rootModal,
+                     pasteboard: self.pasteboard,
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
-                     walletState: WalletState(isConnected: self.walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: self.walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions))
+                     walletState: WalletState(isConnected: self.walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: self.walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions),
+                     currency: currency)
     }
     func clone(walletIsSyncing: Bool) -> State {
-        return State(isStartFlowVisible:    isStartFlowVisible,
-                     pinCreationStep:       pinCreationStep,
-                     paperPhraseStep:       paperPhraseStep,
-                     rootModal:             rootModal,
-                     pasteboard:            pasteboard,
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     pinCreationStep: pinCreationStep,
+                     paperPhraseStep: paperPhraseStep,
+                     rootModal: rootModal,
+                     pasteboard: pasteboard,
                      isModalDismissalBlocked: isModalDismissalBlocked,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions))
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions),
+                     currency: currency)
     }
     func clone(balance: UInt64) -> State {
-        return State(isStartFlowVisible:    isStartFlowVisible,
-                     pinCreationStep:       pinCreationStep,
-                     paperPhraseStep:       paperPhraseStep,
-                     rootModal:             rootModal,
-                     pasteboard:            pasteboard,
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     pinCreationStep: pinCreationStep,
+                     paperPhraseStep: paperPhraseStep,
+                     rootModal: rootModal,
+                     pasteboard: pasteboard,
                      isModalDismissalBlocked: isModalDismissalBlocked,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions))
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions),
+                     currency: currency)
     }
     func clone(transactions: [Transaction]) -> State {
-        return State(isStartFlowVisible:    isStartFlowVisible,
-                     pinCreationStep:       pinCreationStep,
-                     paperPhraseStep:       paperPhraseStep,
-                     rootModal:             rootModal,
-                     pasteboard:            pasteboard,
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     pinCreationStep: pinCreationStep,
+                     paperPhraseStep: paperPhraseStep,
+                     rootModal: rootModal,
+                     pasteboard: pasteboard,
                      isModalDismissalBlocked: isModalDismissalBlocked,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions))
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions),
+                     currency: currency)
+    }
+    func clone(currency: Currency) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     pinCreationStep: pinCreationStep,
+                     paperPhraseStep: paperPhraseStep,
+                     rootModal: rootModal,
+                     pasteboard: pasteboard,
+                     isModalDismissalBlocked: isModalDismissalBlocked,
+                     walletState: walletState,
+                     currency: currency)
     }
 }
