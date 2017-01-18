@@ -243,6 +243,8 @@
 		CE6D0E5C1E14BFA700137DF1 /* KeyboardNotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0E5B1E14BFA600137DF1 /* KeyboardNotificationInfo.swift */; };
 		CE6D0F971DE8B73A00BD4BCF /* ModalTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0F961DE8B73A00BD4BCF /* ModalTransitionDelegate.swift */; };
 		CE6D0F991DE8B75900BD4BCF /* DismissModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */; };
+		CE8CD8DD1E2D9EF200785E02 /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8DC1E2D9EF200785E02 /* Sender.swift */; };
+		CE8CD8DF1E2E825100785E02 /* VerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8DE1E2E825000785E02 /* VerifyPinViewController.swift */; };
 		CE9057181DFF0FA8006BA848 /* String+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9057171DFF0FA8006BA848 /* String+Additions.swift */; };
 		CE90571A1DFF18B2006BA848 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9057191DFF18B2006BA848 /* ScanViewController.swift */; };
 		CE92F9F01DED0C790046B516 /* PresentModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */; };
@@ -1311,6 +1313,8 @@
 		CE6D0E5B1E14BFA600137DF1 /* KeyboardNotificationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeyboardNotificationInfo.swift; path = src/Models/KeyboardNotificationInfo.swift; sourceTree = "<group>"; };
 		CE6D0F961DE8B73A00BD4BCF /* ModalTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalTransitionDelegate.swift; path = src/ViewControllers/ViewControllerTransitions/ModalTransitionDelegate.swift; sourceTree = "<group>"; };
 		CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DismissModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/DismissModalAnimator.swift; sourceTree = "<group>"; };
+		CE8CD8DC1E2D9EF200785E02 /* Sender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sender.swift; path = src/Sender.swift; sourceTree = "<group>"; };
+		CE8CD8DE1E2E825000785E02 /* VerifyPinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VerifyPinViewController.swift; path = src/ViewControllers/VerifyPinViewController.swift; sourceTree = "<group>"; };
 		CE9057171DFF0FA8006BA848 /* String+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Additions.swift"; path = "src/Extensions/String+Additions.swift"; sourceTree = "<group>"; };
 		CE9057191DFF18B2006BA848 /* ScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScanViewController.swift; path = src/ViewControllers/ScanViewController.swift; sourceTree = "<group>"; };
 		CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PresentModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/PresentModalAnimator.swift; sourceTree = "<group>"; };
@@ -2355,6 +2359,7 @@
 				CECF8D681E17108600B707AE /* WalletCreator.swift */,
 				CE4B6C191E219CA600CF935B /* WalletCoordinator.swift */,
 				CEF8A4A41E2869D200048B20 /* Wallet+ViewModels.swift */,
+				CE8CD8DC1E2D9EF200785E02 /* Sender.swift */,
 				CE20C90A1DBC59C500C8397A /* FlowControllers */,
 				CE20C8EF1DBAF6D300C8397A /* ViewControllers */,
 				CE20C90F1DBE5B5100C8397A /* Views */,
@@ -2558,6 +2563,7 @@
 				CEF3E8351DE60222007C0A9E /* ModalNavigationController.swift */,
 				CE9057191DFF18B2006BA848 /* ScanViewController.swift */,
 				CECCE5A81E0378FB00D99448 /* PinPadViewController.swift */,
+				CE8CD8DE1E2E825000785E02 /* VerifyPinViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -3392,10 +3398,12 @@
 				CEC6AA421DEFC88F00EE5AFD /* ReceiveViewController.swift in Sources */,
 				CE3754AF1DDE6E2E0045B0CB /* RoundedContainer.swift in Sources */,
 				CEC6AA461DEFCE9200EE5AFD /* MenuViewController.swift in Sources */,
+				CE8CD8DF1E2E825100785E02 /* VerifyPinViewController.swift in Sources */,
 				CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */,
 				CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */,
 				223DB2151DF654940076A151 /* WalletManager.swift in Sources */,
 				22A9A94E1DF61945000F0016 /* BRHTTPIndexMiddleware.swift in Sources */,
+				CE8CD8DD1E2D9EF200785E02 /* Sender.swift in Sources */,
 				22A9A9551DF61945000F0016 /* BRTar.swift in Sources */,
 				CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */,
 				CEF3E82F1DE534C5007C0A9E /* GradientView.swift in Sources */,

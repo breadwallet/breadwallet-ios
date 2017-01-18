@@ -37,7 +37,9 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             addWalletCreationListener()
             store.perform(action: ShowStartFlow())
         } else {
+            modalPresenter?.peerManager = walletManager.peerManager
             modalPresenter?.wallet = walletManager.wallet
+            modalPresenter?.walletManager = walletManager
             DispatchQueue.global(qos: .background).async {
                 self.walletManager.peerManager?.connect()
             }
@@ -82,6 +84,8 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                         selector: { $0.pinCreationStep != $1.pinCreationStep},
                         callback: {
                             if case .saveSuccess = $0.pinCreationStep {
+                                self.modalPresenter?.walletManager = self.walletManager
+                                self.modalPresenter?.peerManager = self.walletManager.peerManager
                                 self.modalPresenter?.wallet = self.walletManager.wallet
                             }
         })

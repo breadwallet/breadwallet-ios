@@ -191,7 +191,7 @@ class BRWallet {
     }
     
     // returns an unsigned transaction that sends the specified amount from the wallet to the given address
-    func createTransaction(forAmount: UInt64, toAddress: String) -> BRTxRef {
+    func createTransaction(forAmount: UInt64, toAddress: String) -> BRTxRef? {
         return BRWalletCreateTransaction(cPtr, forAmount, toAddress)
     }
     

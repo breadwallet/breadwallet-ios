@@ -11,6 +11,8 @@ import UIKit
 class ModalPresenter: Subscriber {
 
     var wallet: BRWallet?
+    var peerManager: BRPeerManager?
+    var walletManager: WalletManager?
     init(store: Store, window: UIWindow) {
         self.store = store
         self.window = window
@@ -50,7 +52,6 @@ class ModalPresenter: Subscriber {
                 self.store.perform(action: HideStartFlow())
             }
         }
-
     }
 
     private func presentModal(_ type: RootModal) {
@@ -97,9 +98,21 @@ class ModalPresenter: Subscriber {
         case .none:
             return nil
         case .send:
-            let sendVC = SendViewController(store: store)
+            guard let walletManager = walletManager else { return nil }
+            let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager))
             let root = ModalViewController(childViewController: sendVC)
             sendVC.presentScan = presentScan(parent: root)
+            sendVC.presentVerifyPin = { callback in
+                let vc = VerifyPinViewController(callback: callback)
+                root.view.isFrameChangeBlocked = true
+                root.present(vc, animated: true, completion: nil)
+            }
+            sendVC.onPublishFailure = {
+                self.presentAlert(.sendSuccess, completion: {})
+            }
+            sendVC.onPublishFailure = {
+                self.presentAlert(.sendFailure, completion: {})
+            }
             return root
         case .receive:
             guard let wallet = wallet else { return nil }
