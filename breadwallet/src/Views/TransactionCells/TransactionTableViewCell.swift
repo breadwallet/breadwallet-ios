@@ -17,21 +17,40 @@ enum TransactionCellStyle {
 
 class TransactionTableViewCell : UITableViewCell {
 
-    private let transaction =   UILabel()
-    private let status =        UILabel(font: UIFont.customBody(size: 13.0))
-    private let comment =       UILabel.wrapping(font: UIFont.customBody(size: 13.0))
-    private let timestamp =     UILabel(font: UIFont.customMedium(size: 13.0))
-    private let container =     RoundedContainer()
-    private let shadowView =    MaskedShadow()
-    private let innerShadow =   UIView()
-
-    private let topPadding: CGFloat = 19.0
-    private var style: TransactionCellStyle = .first
-
+    //MARK: - Public
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
+
+    func setStyle(_ style: TransactionCellStyle) {
+        container.style = style
+        shadowView.style = style
+        if style == .last || style == .single {
+            innerShadow.isHidden = true
+        } else {
+            innerShadow.isHidden = false
+        }
+    }
+
+    func setTransaction(_ transaction: Transaction) {
+        self.transaction.attributedText = transaction.descriptionString
+        status.text = transaction.status
+        comment.text = transaction.comment
+        timestamp.text = transaction.timestampString
+    }
+
+    //MARK: - Private
+    private let transaction = UILabel()
+    private let status = UILabel(font: UIFont.customBody(size: 13.0))
+    private let comment = UILabel.wrapping(font: UIFont.customBody(size: 13.0))
+    private let timestamp = UILabel(font: UIFont.customMedium(size: 13.0))
+    private let container = RoundedContainer()
+    private let shadowView = MaskedShadow()
+    private let innerShadow = UIView()
+
+    private let topPadding: CGFloat = 19.0
+    private var style: TransactionCellStyle = .first
 
     private func setupViews() {
         addSubviews()
@@ -54,28 +73,23 @@ class TransactionTableViewCell : UITableViewCell {
         container.constrain(toSuperviewEdges: UIEdgeInsets(top: 0, left: C.padding[2], bottom: 0, right: -C.padding[2]))
         innerShadow.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         innerShadow.constrain([
-                innerShadow.constraint(.height, constant: 1.0)
-            ])
+            innerShadow.constraint(.height, constant: 1.0) ])
         transaction.constrain([
-                transaction.constraint(.leading, toView: container, constant: C.padding[2]),
-                transaction.constraint(.top, toView: container, constant: topPadding),
-                NSLayoutConstraint(item: transaction, attribute: .trailing, relatedBy: .lessThanOrEqual, toItem: timestamp, attribute: .leading, multiplier: 1.0, constant: -C.padding[1])
-            ])
+            transaction.constraint(.leading, toView: container, constant: C.padding[2]),
+            transaction.constraint(.top, toView: container, constant: topPadding),
+            transaction.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1]) ])
         timestamp.constrain([
-                timestamp.constraint(.trailing, toView: container, constant: -C.padding[2]),
-                timestamp.constraint(.top, toView: container, constant: topPadding)
-            ])
+            timestamp.constraint(.trailing, toView: container, constant: -C.padding[2]),
+            timestamp.constraint(.top, toView: container, constant: topPadding) ])
         status.constrain([
-                status.constraint(.leading, toView: container, constant: C.padding[2]),
-                status.constraint(toBottom: transaction, constant: C.padding[1]),
-                status.constraint(.trailing, toView: container, constant: -C.padding[2])
-            ])
+            status.constraint(.leading, toView: container, constant: C.padding[2]),
+            status.constraint(toBottom: transaction, constant: C.padding[1]),
+            status.constraint(.trailing, toView: container, constant: -C.padding[2]) ])
         comment.constrain([
-                comment.constraint(.leading, toView: container, constant: C.padding[2]),
-                comment.constraint(toBottom: status, constant: C.padding[1]),
-                NSLayoutConstraint(item: comment, attribute: .trailing, relatedBy: .lessThanOrEqual, toItem: timestamp, attribute: .leading, multiplier: 1.0, constant: -C.padding[1]),
-                comment.constraint(.bottom, toView: container, constant: -C.padding[2])
-            ])
+            comment.constraint(.leading, toView: container, constant: C.padding[2]),
+            comment.constraint(toBottom: status, constant: C.padding[1]),
+            comment.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1]),
+            comment.constraint(.bottom, toView: container, constant: -C.padding[2]) ])
     }
 
     private func setupStyle() {
@@ -92,16 +106,6 @@ class TransactionTableViewCell : UITableViewCell {
         innerShadow.backgroundColor = .secondaryShadow
     }
 
-    func setStyle(_ style: TransactionCellStyle) {
-        container.style = style
-        shadowView.style = style
-        if style == .last || style == .single {
-            innerShadow.isHidden = true
-        } else {
-            innerShadow.isHidden = false
-        }
-    }
-
     override func setSelected(_ selected: Bool, animated: Bool) {
         //intentional noop for now
         //The default selected state doesn't play nicely
@@ -110,13 +114,6 @@ class TransactionTableViewCell : UITableViewCell {
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         container.backgroundColor = highlighted ? .secondaryShadow : .white
-    }
-
-    func setTransaction(_ transaction: Transaction) {
-        self.transaction.attributedText = transaction.descriptionString
-        status.text = transaction.status
-        comment.text = transaction.comment
-        timestamp.text = transaction.timestampString
     }
 
     required init?(coder aDecoder: NSCoder) {
