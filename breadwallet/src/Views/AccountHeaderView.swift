@@ -76,31 +76,27 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     private func addConstraints() {
         name.constrain([
-                name.constraint(.leading, toView: self, constant: C.padding[2]),
-                name.constraint(.top, toView: self, constant: 30.0)
-            ])
-        manage.constrain([
+            name.constraint(.leading, toView: self, constant: C.padding[2]),
+            name.constraint(.top, toView: self, constant: 30.0) ])
+        if let manageTitleLabel = manage.titleLabel {
+            manage.constrain([
                 manage.constraint(.trailing, toView: self, constant: -C.padding[2]),
-                NSLayoutConstraint(item: manage.titleLabel!, attribute: .firstBaseline, relatedBy: .equal, toItem: name, attribute: .firstBaseline, multiplier: 1.0, constant: 0.0)
-            ])
+                manageTitleLabel.firstBaselineAnchor.constraint(equalTo: name.firstBaselineAnchor) ])
+        }
         primaryBalance.constrain([
-                primaryBalance.constraint(.leading, toView: self, constant: C.padding[2]),
-                primaryBalance.constraint(toBottom: name, constant: C.padding[2])
-            ])
+            primaryBalance.constraint(.leading, toView: self, constant: C.padding[2]),
+            primaryBalance.constraint(toBottom: name, constant: C.padding[2]) ])
         secondaryBalance.constrain([
-                secondaryBalance.constraint(toTrailing: primaryBalance, constant: C.padding[1]/2.0),
-                secondaryBalance.constraint(.firstBaseline, toView: primaryBalance, constant: 0.0)
-            ])
+            secondaryBalance.constraint(toTrailing: primaryBalance, constant: C.padding[1]/2.0),
+            secondaryBalance.constraint(.firstBaseline, toView: primaryBalance, constant: 0.0) ])
         info.constrain([
-                info.constraint(.leading, toView: self, constant: C.padding[2]),
-                info.constraint(toBottom: secondaryBalance, constant: C.padding[1]/2.0)
-            ])
+            info.constraint(.leading, toView: self, constant: C.padding[2]),
+            info.constraint(toBottom: secondaryBalance, constant: C.padding[1]/2.0) ])
         search.constrain([
-                search.constraint(.trailing, toView: self, constant: -C.padding[2]),
-                search.constraint(.bottom, toView: primaryBalance, constant: 0.0),
-                search.constraint(.width, constant: 24.0),
-                search.constraint(.height, constant: 24.0)
-            ])
+            search.constraint(.trailing, toView: self, constant: -C.padding[2]),
+            search.constraint(.bottom, toView: primaryBalance, constant: 0.0),
+            search.constraint(.width, constant: 24.0),
+            search.constraint(.height, constant: 24.0) ])
         currencyTapView.constrain([
             currencyTapView.leadingAnchor.constraint(equalTo: primaryBalance.leadingAnchor, constant: -C.padding[1]),
             currencyTapView.trailingAnchor.constraint(equalTo: secondaryBalance.trailingAnchor, constant: C.padding[1]),
