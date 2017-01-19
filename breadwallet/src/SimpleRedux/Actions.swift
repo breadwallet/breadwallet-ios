@@ -174,6 +174,19 @@ enum WalletChange {
     }
 }
 
+//MARK: - Currency
+enum CurrencyChange {
+    struct toggle: Action {
+        let reduce: Reducer = {
+            if $0.currency == .bitcoin {
+                return $0.clone(currency: .local)
+            } else {
+                return $0.clone(currency: .bitcoin)
+            }
+        }
+    }
+}
+
 //MARK: - State Creation Helpers
 extension State {
     func clone(isStartFlowVisible: Bool) -> State {
