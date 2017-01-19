@@ -65,6 +65,9 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
         if let transactionCell = cell as? TransactionTableViewCell {
             transactionCell.setStyle(style)
             transactionCell.setTransaction(transactions[indexPath.row])
+            if transactionCell.store == nil {
+                transactionCell.store = store
+            }
         }
         return cell
     }

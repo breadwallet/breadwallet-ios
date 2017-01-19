@@ -45,7 +45,7 @@ struct Transaction {
     let comment: String
     let timestamp: Int
 
-    var descriptionString: NSAttributedString {
+    func descriptionString(currency: Currency) -> NSAttributedString {
         let fontSize: CGFloat = 14.0
 
         let regularAttributes: [String: Any] = [
@@ -61,8 +61,9 @@ struct Transaction {
         let prefix = NSMutableAttributedString(string: "\(direction.rawValue) ")
         prefix.addAttributes(regularAttributes, range: NSRange(location: 0, length: prefix.length))
 
-        let amountString = NSMutableAttributedString(string: "\(amount.bits) ")
-        amountString.addAttributes(boldAttributes, range: NSRange(location: 0, length: amountString.length))
+        let amountString = currency == .bitcoin ? amount.bits : amount.localCurrency
+        let amountAttributedString = NSMutableAttributedString(string: amountString)
+        amountAttributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: amountAttributedString.length))
 
         let preposition = NSMutableAttributedString(string: "\(direction.preposition) ")
         preposition.addAttributes(regularAttributes, range: NSRange(location: 0, length: preposition.length))
@@ -70,7 +71,7 @@ struct Transaction {
         let suffix = NSMutableAttributedString(string: "account")
         suffix.addAttributes(boldAttributes, range: NSRange(location: 0, length: suffix.length))
 
-        prefix.append(amountString)
+        prefix.append(amountAttributedString)
         prefix.append(preposition)
         prefix.append(suffix)
 
