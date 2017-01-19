@@ -117,9 +117,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private func addSubscriptions() {
         store.subscribe(self,
                         selector: { $0.currency != $1.currency },
-                        callback: { state in
-                            self.currency = state.currency
-        })
+                        callback: { self.currency = $0.currency })
     }
 
     private func setBalances() {

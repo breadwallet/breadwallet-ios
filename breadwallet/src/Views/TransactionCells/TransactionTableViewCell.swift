@@ -15,9 +15,17 @@ enum TransactionCellStyle {
     case single
 }
 
-class TransactionTableViewCell : UITableViewCell {
+class TransactionTableViewCell : UITableViewCell, Subscriber {
 
     //MARK: - Public
+    var store: Store? {
+        didSet {
+            store?.subscribe(self,
+                             selector: { $0.currency != $1.currency },
+                             callback: { self.currency = $0.currency })
+        }
+    }
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -34,23 +42,35 @@ class TransactionTableViewCell : UITableViewCell {
     }
 
     func setTransaction(_ transaction: Transaction) {
-        self.transaction.attributedText = transaction.descriptionString
+        self.transaction = transaction
+        self.transactionLabel.attributedText = transaction.descriptionString(currency: currency)
         status.text = transaction.status
         comment.text = transaction.comment
         timestamp.text = transaction.timestampString
     }
 
     //MARK: - Private
-    private let transaction = UILabel()
+    private let transactionLabel = UILabel()
     private let status = UILabel(font: UIFont.customBody(size: 13.0))
     private let comment = UILabel.wrapping(font: UIFont.customBody(size: 13.0))
     private let timestamp = UILabel(font: UIFont.customMedium(size: 13.0))
     private let container = RoundedContainer()
     private let shadowView = MaskedShadow()
     private let innerShadow = UIView()
-
     private let topPadding: CGFloat = 19.0
     private var style: TransactionCellStyle = .first
+    private var transaction: Transaction?
+
+    private var currency: Currency = .bitcoin {
+        didSet {
+            guard let transaction = transaction else { return }
+            self.transactionLabel.attributedText = transaction.descriptionString(currency: currency)
+        }
+    }
+
+    deinit {
+        store?.unsubscribe(self)
+    }
 
     private func setupViews() {
         addSubviews()
@@ -62,7 +82,7 @@ class TransactionTableViewCell : UITableViewCell {
         contentView.addSubview(shadowView)
         contentView.addSubview(container)
         container.addSubview(innerShadow)
-        container.addSubview(transaction)
+        container.addSubview(transactionLabel)
         container.addSubview(status)
         container.addSubview(comment)
         container.addSubview(timestamp)
@@ -74,16 +94,16 @@ class TransactionTableViewCell : UITableViewCell {
         innerShadow.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         innerShadow.constrain([
             innerShadow.constraint(.height, constant: 1.0) ])
-        transaction.constrain([
-            transaction.constraint(.leading, toView: container, constant: C.padding[2]),
-            transaction.constraint(.top, toView: container, constant: topPadding),
-            transaction.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1]) ])
+        transactionLabel.constrain([
+            transactionLabel.constraint(.leading, toView: container, constant: C.padding[2]),
+            transactionLabel.constraint(.top, toView: container, constant: topPadding),
+            transactionLabel.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1]) ])
         timestamp.constrain([
             timestamp.constraint(.trailing, toView: container, constant: -C.padding[2]),
             timestamp.constraint(.top, toView: container, constant: topPadding) ])
         status.constrain([
             status.constraint(.leading, toView: container, constant: C.padding[2]),
-            status.constraint(toBottom: transaction, constant: C.padding[1]),
+            status.constraint(toBottom: transactionLabel, constant: C.padding[1]),
             status.constraint(.trailing, toView: container, constant: -C.padding[2]) ])
         comment.constrain([
             comment.constraint(.leading, toView: container, constant: C.padding[2]),
