@@ -10,7 +10,7 @@ import UIKit
 
 class StartViewController : UIViewController {
 
-    var recoverCallback: ((String) -> Void)? //TODO - delete me eventually
+    var recoverCallback: ((String) -> Bool)? //TODO - delete me eventually
 
     init(store: Store) {
         self.store = store
@@ -79,8 +79,19 @@ class StartViewController : UIViewController {
         alert.addTextField { (textField) in}
         alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { action in
             guard let phrase = alert.textFields?[0].text else { return }
-            self.recoverCallback?(phrase)
+            guard let result = self.recoverCallback?(phrase) else { return }
+            if !result {
+                self.recoverWalletError()
+            }
         }))
+        alert.view.tintColor = C.defaultTintColor
+        parent?.present(alert, animated: true, completion: nil)
+    }
+
+    @objc private func recoverWalletError() {
+        let alert = UIAlertController(title: "Error", message: "Failed to recover wallet", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        alert.view.tintColor = C.defaultTintColor
         parent?.present(alert, animated: true, completion: nil)
     }
 

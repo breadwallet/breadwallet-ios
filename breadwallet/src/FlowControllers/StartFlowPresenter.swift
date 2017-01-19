@@ -72,11 +72,20 @@ class StartFlowPresenter: Subscriber {
 
     private func presentStartFlow() {
         let startViewController = StartViewController(store: store)
-
         startViewController.recoverCallback = { phrase in
-            let _ = self.walletManager.setSeedPhrase(phrase)
-            DispatchQueue.global(qos: .background).async {
-                self.walletManager.peerManager?.connect()
+            //TODO - add more validation here
+            let components = phrase.components(separatedBy: " ")
+            if components.count != 12 {
+                return false
+            }
+            if self.walletManager.setSeedPhrase(phrase) {
+                self.store.perform(action: HideStartFlow())
+                DispatchQueue.global(qos: .background).async {
+                    self.walletManager.peerManager?.connect()
+                }
+                return true
+            } else {
+                return false
             }
         }
 

@@ -20,7 +20,6 @@ extension BRWallet {
                                transactionIsVerified: transactionIsVerified($0),
                                blockHeight: blockHeight,
                                transactionBlockHeight: $0.pointee.blockHeight)
-            
         }
     }
 }
