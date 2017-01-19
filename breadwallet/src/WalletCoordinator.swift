@@ -66,19 +66,23 @@ class WalletCoordinator {
         UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
     }
 
+    private func updateTransactions() {
+        guard let blockHeight = self.walletManager.peerManager?.lastBlockHeight else { return }
+        guard let transactions = self.walletManager.wallet?.makeTransactionViewModels(blockHeight: blockHeight) else { return }
+        if transactions.count > 0 {
+            self.store.perform(action: WalletChange.setTransactions(transactions))
+        }
+    }
+
     private func addWalletObservers() {
         NotificationCenter.default.addObserver(forName: .WalletBalanceChangedNotification, object: nil, queue: nil, using: { note in
             guard let balance = self.walletManager.wallet?.balance else { return }
             self.store.perform(action: WalletChange.setBalance(balance))
+            self.updateTransactions()
         })
 
         NotificationCenter.default.addObserver(forName: .WalletTxStatusUpdateNotification, object: nil, queue: nil, using: {note in
-            guard let blockHeight = self.walletManager.peerManager?.lastBlockHeight else { return }
-            guard let transactions = self.walletManager.wallet?.makeTransactionViewModels(blockHeight: blockHeight) else { return }
-            if transactions.count > 0 {
-                self.store.perform(action: WalletChange.setTransactions(transactions))
-            }
-            print("WalletTxStatusUpdateNotification: \(note)")
+            self.updateTransactions()
         })
 
         NotificationCenter.default.addObserver(forName: .WalletTxRejectedNotification, object: nil, queue: nil, using: {note in
