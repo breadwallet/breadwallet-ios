@@ -11,10 +11,10 @@ import BRCore
 
 private let notificationViewHeight: CGFloat = 48.0
 
-class AccountViewController: UIViewController, Trackable, Subscriber {
+class AccountViewController : UIViewController, Trackable, Subscriber {
 
     private let store: Store
-    private let headerView = AccountHeaderView()
+    private let headerView: AccountHeaderView
     private let footerView = AccountFooterView()
     private let notificationView = SyncProgressView()
     private let transactions: TransactionsTableViewController
@@ -35,6 +35,7 @@ class AccountViewController: UIViewController, Trackable, Subscriber {
     init(store: Store) {
         self.store = store
         self.transactions = TransactionsTableViewController(store: store)
+        self.headerView = AccountHeaderView(store: store)
         super.init(nibName: nil, bundle: nil)
     }
 

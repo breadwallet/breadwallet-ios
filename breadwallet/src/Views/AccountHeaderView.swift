@@ -8,34 +8,39 @@
 
 import UIKit
 
-class AccountHeaderView: UIView, GradientDrawable {
+class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
-    var balance: UInt64? {
-        didSet {
-            guard let balance = balance else { return }
-            let amount = Amount(amount: balance)
-            primaryBalance.text = amount.bits
-            secondaryBalance.text = "= \(amount.localCurrency)"
-        }
+    //MARK: - Public
+    var balance: UInt64 = 0 {
+        didSet { setBalances() }
     }
 
+    var currency: Currency = .bitcoin {
+        didSet { setBalances() }
+    }
+
+    init(store: Store) {
+        self.store = store
+        super.init(frame: CGRect())
+        setup()
+    }
+
+    //MARK: - Private
     private let name = UILabel(font: UIFont.boldSystemFont(ofSize: 17.0))
     private let manage = UIButton(type: .system)
     private let primaryBalance = UILabel()
     private let secondaryBalance = UILabel()
     private let info = UILabel()
     private let search = UIButton(type: .system)
-
-    init() {
-        super.init(frame: CGRect())
-        setupSubviews()
-    }
-
-    private func setupSubviews() {
+    private let currencyTapView = UIView()
+    private let store: Store
+    
+    private func setup() {
         setData()
         addSubviews()
         addConstraints()
         addShadow()
+        addSubscriptions()
     }
 
     private func setData() {
@@ -66,6 +71,7 @@ class AccountHeaderView: UIView, GradientDrawable {
         addSubview(secondaryBalance)
         addSubview(info)
         addSubview(search)
+        addSubview(currencyTapView)
     }
 
     private func addConstraints() {
@@ -95,6 +101,14 @@ class AccountHeaderView: UIView, GradientDrawable {
                 search.constraint(.width, constant: 24.0),
                 search.constraint(.height, constant: 24.0)
             ])
+        currencyTapView.constrain([
+            currencyTapView.leadingAnchor.constraint(equalTo: primaryBalance.leadingAnchor, constant: -C.padding[1]),
+            currencyTapView.trailingAnchor.constraint(equalTo: secondaryBalance.trailingAnchor, constant: C.padding[1]),
+            currencyTapView.topAnchor.constraint(equalTo: primaryBalance.topAnchor),
+            currencyTapView.bottomAnchor.constraint(equalTo: primaryBalance.bottomAnchor) ])
+
+        let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
+        currencyTapView.addGestureRecognizer(gr)
     }
 
     private func addShadow() {
@@ -104,8 +118,26 @@ class AccountHeaderView: UIView, GradientDrawable {
         layer.shadowRadius = 8.0
     }
 
+    private func addSubscriptions() {
+        store.subscribe(self,
+                        selector: { $0.currency != $1.currency },
+                        callback: { state in
+                            self.currency = state.currency
+        })
+    }
+
+    private func setBalances() {
+        let amount = Amount(amount: balance)
+        primaryBalance.text = currency == .bitcoin ? amount.bits : amount.localCurrency
+        secondaryBalance.text = currency == .bitcoin ? "= \(amount.localCurrency)" : "= \(amount.bits)"
+    }
+
     override func draw(_ rect: CGRect) {
         drawGradient(rect)
+    }
+
+    @objc private func currencySwitchTapped() {
+        self.store.perform(action: CurrencyChange.toggle())
     }
 
     required init?(coder aDecoder: NSCoder) {
