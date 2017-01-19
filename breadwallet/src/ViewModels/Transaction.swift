@@ -65,7 +65,7 @@ struct Transaction {
         let amountAttributedString = NSMutableAttributedString(string: amountString)
         amountAttributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: amountAttributedString.length))
 
-        let preposition = NSMutableAttributedString(string: "\(direction.preposition) ")
+        let preposition = NSMutableAttributedString(string: " \(direction.preposition) ")
         preposition.addAttributes(regularAttributes, range: NSRange(location: 0, length: preposition.length))
 
         let suffix = NSMutableAttributedString(string: "account")
