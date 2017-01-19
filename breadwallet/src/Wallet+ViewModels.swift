@@ -19,7 +19,8 @@ extension BRWallet {
                                transactionIsPending: transactionIsPending($0),
                                transactionIsVerified: transactionIsVerified($0),
                                blockHeight: blockHeight,
-                               transactionBlockHeight: $0.pointee.blockHeight)
+                               transactionBlockHeight: $0.pointee.blockHeight,
+                               fee: feeForTx($0) ?? 0)
         }
     }
 }
