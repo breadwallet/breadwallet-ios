@@ -8,7 +8,7 @@
 
 import UIKit
 
-//MARK: - Start Flow
+//MARK: - Startup Modals
 struct ShowStartFlow: Action {
     let reduce: Reducer = {
         return $0.clone(isStartFlowVisible: true)
@@ -18,6 +18,7 @@ struct ShowStartFlow: Action {
 struct HideStartFlow: Action {
     let reduce: Reducer = { state in
         return State(isStartFlowVisible: false,
+                     isLoginRequired: state.isLoginRequired,
                      pinCreationStep: .none,
                      paperPhraseStep: .none,
                      rootModal: .none,
@@ -25,6 +26,12 @@ struct HideStartFlow: Action {
                      isModalDismissalBlocked: false,
                      walletState: state.walletState,
                      currency: state.currency)
+    }
+}
+
+struct RequireLogin: Action {
+    let reduce: Reducer = {
+        return $0.clone(isLoginRequired: true)
     }
 }
 
@@ -191,6 +198,7 @@ enum CurrencyChange {
 extension State {
     func clone(isStartFlowVisible: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
                      pinCreationStep: self.pinCreationStep,
                      paperPhraseStep: self.paperPhraseStep,
                      rootModal: self.rootModal,
@@ -201,6 +209,7 @@ extension State {
     }
     func clone(pinCreationStep: PinCreationStep) -> State {
         return State(isStartFlowVisible: self.isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
                      pinCreationStep: pinCreationStep,
                      paperPhraseStep: self.paperPhraseStep,
                      rootModal: self.rootModal,
@@ -212,6 +221,7 @@ extension State {
 
     func rootModal(_ type: RootModal) -> State {
         return State(isStartFlowVisible: false,
+                     isLoginRequired: isLoginRequired,
                      pinCreationStep: .none,
                      paperPhraseStep: .none,
                      rootModal: type,
@@ -222,6 +232,7 @@ extension State {
     }
     func clone(pasteboard: String?) -> State {
         return State(isStartFlowVisible: self.isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
                      pinCreationStep: pinCreationStep,
                      paperPhraseStep: self.paperPhraseStep,
                      rootModal: self.rootModal,
@@ -232,6 +243,7 @@ extension State {
     }
     func clone(isModalDismissalBlocked: Bool) -> State {
         return State(isStartFlowVisible: self.isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
                      pinCreationStep: pinCreationStep,
                      paperPhraseStep: self.paperPhraseStep,
                      rootModal: self.rootModal,
@@ -242,6 +254,7 @@ extension State {
     }
     func clone(paperPhraseStep: PaperPhraseStep) -> State {
         return State(isStartFlowVisible: self.isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
                      pinCreationStep: self.pinCreationStep,
                      paperPhraseStep: paperPhraseStep,
                      rootModal: self.rootModal,
@@ -252,6 +265,7 @@ extension State {
     }
     func clone(walletSyncProgress: Double) -> State {
         return State(isStartFlowVisible: self.isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
                      pinCreationStep: self.pinCreationStep,
                      paperPhraseStep: self.paperPhraseStep,
                      rootModal: self.rootModal,
@@ -262,6 +276,7 @@ extension State {
     }
     func clone(walletIsSyncing: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
                      pinCreationStep: pinCreationStep,
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
@@ -272,6 +287,7 @@ extension State {
     }
     func clone(balance: UInt64) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
                      pinCreationStep: pinCreationStep,
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
@@ -282,6 +298,7 @@ extension State {
     }
     func clone(transactions: [Transaction]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
                      pinCreationStep: pinCreationStep,
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
@@ -292,6 +309,18 @@ extension State {
     }
     func clone(currency: Currency) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
+                     pinCreationStep: pinCreationStep,
+                     paperPhraseStep: paperPhraseStep,
+                     rootModal: rootModal,
+                     pasteboard: pasteboard,
+                     isModalDismissalBlocked: isModalDismissalBlocked,
+                     walletState: walletState,
+                     currency: currency)
+    }
+    func clone(isLoginRequired: Bool) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
                      pinCreationStep: pinCreationStep,
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
