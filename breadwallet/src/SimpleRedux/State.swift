@@ -10,6 +10,7 @@ import UIKit
 
 struct State {
     let isStartFlowVisible: Bool
+    let isLoginRequired: Bool
     let pinCreationStep: PinCreationStep
     let paperPhraseStep: PaperPhraseStep
     let rootModal: RootModal
@@ -22,6 +23,7 @@ struct State {
 extension State {
     static var initial: State {
         return State(   isStartFlowVisible: false,
+                        isLoginRequired: false,
                         pinCreationStep: .none,
                         paperPhraseStep: .none,
                         rootModal: .none,

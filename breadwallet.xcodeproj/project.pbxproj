@@ -245,6 +245,9 @@
 		CE6D0F991DE8B75900BD4BCF /* DismissModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */; };
 		CE8CD8DD1E2D9EF200785E02 /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8DC1E2D9EF200785E02 /* Sender.swift */; };
 		CE8CD8DF1E2E825100785E02 /* VerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8DE1E2E825000785E02 /* VerifyPinViewController.swift */; };
+		CE8CD8E11E31976800785E02 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8E01E31976800785E02 /* LoginViewController.swift */; };
+		CE8CD8E31E31978100785E02 /* LoginBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8E21E31978100785E02 /* LoginBackgroundView.swift */; };
+		CE8CD8E51E32636B00785E02 /* LoginPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8E41E32636B00785E02 /* LoginPresenter.swift */; };
 		CE9057181DFF0FA8006BA848 /* String+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9057171DFF0FA8006BA848 /* String+Additions.swift */; };
 		CE90571A1DFF18B2006BA848 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9057191DFF18B2006BA848 /* ScanViewController.swift */; };
 		CE92F9F01DED0C790046B516 /* PresentModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */; };
@@ -1315,6 +1318,9 @@
 		CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DismissModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/DismissModalAnimator.swift; sourceTree = "<group>"; };
 		CE8CD8DC1E2D9EF200785E02 /* Sender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sender.swift; path = src/Sender.swift; sourceTree = "<group>"; };
 		CE8CD8DE1E2E825000785E02 /* VerifyPinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VerifyPinViewController.swift; path = src/ViewControllers/VerifyPinViewController.swift; sourceTree = "<group>"; };
+		CE8CD8E01E31976800785E02 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = src/ViewControllers/LoginViewController.swift; sourceTree = "<group>"; };
+		CE8CD8E21E31978100785E02 /* LoginBackgroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginBackgroundView.swift; path = src/Views/LoginBackgroundView.swift; sourceTree = "<group>"; };
+		CE8CD8E41E32636B00785E02 /* LoginPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginPresenter.swift; path = src/FlowControllers/LoginPresenter.swift; sourceTree = "<group>"; };
 		CE9057171DFF0FA8006BA848 /* String+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Additions.swift"; path = "src/Extensions/String+Additions.swift"; sourceTree = "<group>"; };
 		CE9057191DFF18B2006BA848 /* ScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScanViewController.swift; path = src/ViewControllers/ScanViewController.swift; sourceTree = "<group>"; };
 		CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PresentModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/PresentModalAnimator.swift; sourceTree = "<group>"; };
@@ -2564,6 +2570,7 @@
 				CE9057191DFF18B2006BA848 /* ScanViewController.swift */,
 				CECCE5A81E0378FB00D99448 /* PinPadViewController.swift */,
 				CE8CD8DE1E2E825000785E02 /* VerifyPinViewController.swift */,
+				CE8CD8E01E31976800785E02 /* LoginViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -2609,6 +2616,7 @@
 				CE25BF921DFDA7A500BC67B6 /* MessageUIPresenter.swift */,
 				CE20C90B1DBC59E600C8397A /* StartFlowPresenter.swift */,
 				CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */,
+				CE8CD8E41E32636B00785E02 /* LoginPresenter.swift */,
 			);
 			name = FlowControllers;
 			sourceTree = "<group>";
@@ -2638,6 +2646,7 @@
 				CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */,
 				CE6D0E581E13596E00137DF1 /* CurrencyOverlay.swift */,
 				CE4B6C1B1E21A96D00CF935B /* SyncProgressView.swift */,
+				CE8CD8E21E31978100785E02 /* LoginBackgroundView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -3361,6 +3370,7 @@
 				CEBF32F61DDCEAF900348FC6 /* TransactionsTableViewController.swift in Sources */,
 				CE25BF8D1DF3B8A500BC67B6 /* InViewAlert.swift in Sources */,
 				22A9A9511DF61945000F0016 /* BRKVStoreObjects.swift in Sources */,
+				CE8CD8E11E31976800785E02 /* LoginViewController.swift in Sources */,
 				CEC6AA391DEE10BA00EE5AFD /* UINavigationController+BRAdditions.swift in Sources */,
 				CECCE5AB1E038C9900D99448 /* PinPadCell.swift in Sources */,
 				CECCE5B01E04AD7600D99448 /* TextFieldSendCell.swift in Sources */,
@@ -3385,6 +3395,7 @@
 				7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */,
 				22A9A9581DF61945000F0016 /* BRWebViewController.swift in Sources */,
 				CE27F9591E2C8EA300F7F7F2 /* Amount.swift in Sources */,
+				CE8CD8E51E32636B00785E02 /* LoginPresenter.swift in Sources */,
 				22A9A9461DF61945000F0016 /* BRAPIClient.swift in Sources */,
 				CEF3E8271DE2C9C5007C0A9E /* EventManagerCoordinator.swift in Sources */,
 				CEAA9E9B1DC2B9320066731D /* ConfirmPhrase.swift in Sources */,
@@ -3408,6 +3419,7 @@
 				CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */,
 				CEF3E82F1DE534C5007C0A9E /* GradientView.swift in Sources */,
 				CE6D0F991DE8B75900BD4BCF /* DismissModalAnimator.swift in Sources */,
+				CE8CD8E31E31978100785E02 /* LoginBackgroundView.swift in Sources */,
 				CEAA9E991DC262800066731D /* ConfirmPaperPhraseViewController.swift in Sources */,
 				22A9A9591DF61945000F0016 /* Extensions.swift in Sources */,
 				22A9A94C1DF61945000F0016 /* BRGeoLocationPlugin.swift in Sources */,

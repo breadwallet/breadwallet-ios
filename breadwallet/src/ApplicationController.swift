@@ -37,6 +37,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             addWalletCreationListener()
             store.perform(action: ShowStartFlow())
         } else {
+            store.perform(action: RequireLogin())
             modalPresenter?.peerManager = walletManager.peerManager
             modalPresenter?.wallet = walletManager.wallet
             modalPresenter?.walletManager = walletManager
