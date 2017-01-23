@@ -16,7 +16,9 @@ class PinPadViewController : UICollectionViewController {
     var isAppendingDisabled = false
     var ouputDidUpdate: ((String) -> Void)?
     static let height: CGFloat = 48.0*4.0
-    
+    func clear() {
+        currentOutput = ""
+    }
     init() {
         let layout = UICollectionViewFlowLayout()
         let screenWidth = UIScreen.main.bounds.width

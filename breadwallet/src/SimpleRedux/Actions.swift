@@ -9,13 +9,13 @@
 import UIKit
 
 //MARK: - Startup Modals
-struct ShowStartFlow: Action {
+struct ShowStartFlow : Action {
     let reduce: Reducer = {
         return $0.clone(isStartFlowVisible: true)
     }
 }
 
-struct HideStartFlow: Action {
+struct HideStartFlow : Action {
     let reduce: Reducer = { state in
         return State(isStartFlowVisible: false,
                      isLoginRequired: state.isLoginRequired,
@@ -29,9 +29,15 @@ struct HideStartFlow: Action {
     }
 }
 
-struct RequireLogin: Action {
+struct RequireLogin : Action {
     let reduce: Reducer = {
         return $0.clone(isLoginRequired: true)
+    }
+}
+
+struct LoginSuccess : Action {
+    let reduce: Reducer = {
+        return $0.clone(isLoginRequired: false)
     }
 }
 

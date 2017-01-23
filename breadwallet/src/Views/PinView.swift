@@ -13,7 +13,7 @@ class PinView : UIView {
     //MARK: - Public
     let defaultPinSize: CGFloat = 24.0
     let shakeDuration: CFTimeInterval = 0.6
-    let defaultWidth: CGFloat = 42.0*5
+    let defaultWidth: CGFloat = 24.0*6
 
     init() {
         super.init(frame: CGRect())
