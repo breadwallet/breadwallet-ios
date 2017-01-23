@@ -8,6 +8,9 @@
 
 import UIKit
 
+private let timeSinceLastExitKey = "TimeSinceLastExit"
+private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
+
 class ApplicationController : EventManagerCoordinator, Subscriber {
 
     //Ideally the window would be private, but is unfortunately required
@@ -27,6 +30,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     }
 
     func launch(options: [UIApplicationLaunchOptionsKey: Any]?) {
+        setupDefaults()
         setupAppearance()
         setupRootViewController()
         setupPresenters()
@@ -37,7 +41,9 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             addWalletCreationListener()
             store.perform(action: ShowStartFlow())
         } else {
-            store.perform(action: RequireLogin())
+            if shouldRequireLogin() {
+                store.perform(action: RequireLogin())
+            }
             modalPresenter?.peerManager = walletManager.peerManager
             modalPresenter?.wallet = walletManager.wallet
             modalPresenter?.walletManager = walletManager
@@ -48,16 +54,41 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     }
 
     func willEnterForeground() {
+        guard !walletManager.noWallet else { return }
+        if shouldRequireLogin() {
+            store.perform(action: RequireLogin())
+        }
         DispatchQueue.global(qos: .background).async {
-            self.walletManager.peerManager?.connect()
+            self.walletManager.peerManager?.connect() //TODO - guard for noWallet?
         }
     }
+
+    func didEnterBackground() {
+        //Save the backgrounding time if the user is logged in
+        if !store.state.isLoginRequired {
+            UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
+        }
+    }
+
 
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         syncEventManager()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
             completionHandler(.newData)
         })
+    }
+
+    private func shouldRequireLogin() -> Bool {
+        let then = UserDefaults.standard.double(forKey: timeSinceLastExitKey)
+        let timeout = UserDefaults.standard.double(forKey: shouldRequireLoginTimeoutKey)
+        let now = Date().timeIntervalSince1970
+        return now - then > timeout
+    }
+
+    private func setupDefaults() {
+        if UserDefaults.standard.object(forKey: shouldRequireLoginTimeoutKey) == nil {
+            UserDefaults.standard.set(60.0*3.0, forKey: shouldRequireLoginTimeoutKey) //Default 3 min timeout
+        }
     }
 
     private func setupAppearance() {
