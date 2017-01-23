@@ -8,14 +8,9 @@
 
 import UIKit
 
-class StartFlowPresenter: Subscriber {
+class StartFlowPresenter : Subscriber {
 
-    private let store: Store
-    private let rootViewController: UIViewController
-    private var navigationController: ModalNavigationController?
-    private let navigationControllerDelegate: StartNavigationDelegate
-    private let walletManager: WalletManager
-
+    //MARK: - Public
     init(store: Store, walletManager: WalletManager, rootViewController: UIViewController) {
         self.store = store
         self.walletManager = walletManager
@@ -23,6 +18,14 @@ class StartFlowPresenter: Subscriber {
         self.navigationControllerDelegate = StartNavigationDelegate(store: store)
         addSubscriptions()
     }
+
+    //MARK: - Private
+    private let store: Store
+    private let rootViewController: UIViewController
+    private var navigationController: ModalNavigationController?
+    private let navigationControllerDelegate: StartNavigationDelegate
+    private let walletManager: WalletManager
+    private var loginViewController: UIViewController?
 
     private func addSubscriptions() {
         store.subscribe(self,
@@ -176,7 +179,9 @@ class StartFlowPresenter: Subscriber {
     }
 
     private func presentLoginFlow() {
-
+        let loginView = LoginViewController(store: store)
+        loginViewController = loginView
+        rootViewController.present(loginView, animated: false, completion: nil)
     }
 
     @objc private func closeButtonTapped() {

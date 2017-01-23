@@ -13,6 +13,7 @@ private let cellIdentifier = "CellIdentifier"
 
 class PinPadViewController : UICollectionViewController {
 
+    var isAppendingDisabled = false
     var ouputDidUpdate: ((String) -> Void)?
     static let height: CGFloat = 48.0*4.0
     
@@ -65,7 +66,7 @@ class PinPadViewController : UICollectionViewController {
                 }
             }
         } else {
-            if shouldAppendChar(char: item) {
+            if shouldAppendChar(char: item) && !isAppendingDisabled {
                 currentOutput = currentOutput + item
             }
         }
