@@ -12,11 +12,11 @@ private let setPinText = NSLocalizedString("Set PIN", comment: "Set pin instruct
 private let confirmPinText = NSLocalizedString("Re-Enter PIN", comment: "Confirm pin instruction")
 private let wrongPinText = NSLocalizedString("Wrong PIN , please try again", comment: "Wrong pin entered instruction")
 
-class PinCreationViewController: UIViewController, Subscriber {
+class PinCreationViewController : UIViewController, Subscriber {
 
-    private let instruction =   UILabel.wrapping(font: .customBold(size: 26.0))
-    private let caption =       UILabel.wrapping(font: .customBody(size: 14.0))
-    private let body =          UILabel.wrapping(font: .customBody(size: 13.0))
+    private let instruction = UILabel.wrapping(font: .customBold(size: 26.0))
+    private let caption = UILabel.wrapping(font: .customBody(size: 14.0))
+    private let body = UILabel.wrapping(font: .customBody(size: 13.0))
 
     //This hidden Textfield is used under the hood for pin entry
     //PinView is what actually gets displayed on the screen
@@ -96,8 +96,8 @@ class PinCreationViewController: UIViewController, Subscriber {
         pinView.constrain([
                 pinView.constraint(toBottom: caption, constant: C.padding[3]),
                 pinView.constraint(.centerX, toView: view, constant: nil),
-                pinView.constraint(.height, constant: PinView.defaultPinSize),
-                pinView.constraint(.width, constant: PinView.defaultPinSize*6 + C.padding[1]*6)
+                pinView.constraint(.height, constant: pinView.defaultPinSize),
+                pinView.constraint(.width, constant: pinView.defaultPinSize*6 + C.padding[1]*6)
             ])
     }
 
@@ -142,7 +142,7 @@ class PinCreationViewController: UIViewController, Subscriber {
             instruction.text = wrongPinText
             hiddenPin.text = ""
             pinView.shake()
-            DispatchQueue.main.asyncAfter(deadline: .now() + PinView.shakeDuration) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
                 self?.pinView.fill(0)
             }
         case .saveSuccess:
@@ -165,7 +165,7 @@ class PinCreationViewController: UIViewController, Subscriber {
     }
 }
 
-extension PinCreationViewController: UITextFieldDelegate {
+extension PinCreationViewController : UITextFieldDelegate {
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let oldLength = textField.text?.lengthOfBytes(using: .utf8) else { return true }

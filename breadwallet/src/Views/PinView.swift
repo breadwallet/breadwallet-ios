@@ -10,11 +10,10 @@ import UIKit
 
 class PinView : UIView {
 
-    private let unFilled = (0...5).map { _ in Circle(color: .borderGray) }
-    private let filled = (0...5).map { _ in Circle(color: .black) }
-
-    static let defaultPinSize: CGFloat = 24.0
-    static let shakeDuration: CFTimeInterval = 0.6
+    //MARK: - Public
+    let defaultPinSize: CGFloat = 24.0
+    let shakeDuration: CFTimeInterval = 0.6
+    let defaultWidth: CGFloat = 42.0*5
 
     init() {
         super.init(frame: CGRect())
@@ -40,9 +39,13 @@ class PinView : UIView {
         }
         let shakeGroup: CAAnimationGroup = CAAnimationGroup()
         shakeGroup.animations = [translation, rotation]
-        shakeGroup.duration = PinView.shakeDuration
+        shakeGroup.duration = shakeDuration
         self.layer.add(shakeGroup, forKey: "shakeIt")
     }
+
+    //MARK: - Private
+    private let unFilled = (0...5).map { _ in Circle(color: .borderGray) }
+    private let filled = (0...5).map { _ in Circle(color: .black) }
 
     private func toRadian(value: Int) -> CGFloat {
         return CGFloat(Double(value) / 180.0 * M_PI)
@@ -64,8 +67,8 @@ class PinView : UIView {
                 leadingConstraint = NSLayoutConstraint(item: circle, attribute: .leading, relatedBy: .equal, toItem: circles[index - 1], attribute: .trailing, multiplier: 1.0, constant: 8.0)
             }
             circle.constrain([
-                    circle.constraint(.width, constant: PinView.defaultPinSize),
-                    circle.constraint(.height, constant: PinView.defaultPinSize),
+                    circle.constraint(.width, constant: defaultPinSize),
+                    circle.constraint(.height, constant: defaultPinSize),
                     circle.constraint(.centerY, toView: self, constant: nil),
                     leadingConstraint
                 ])
