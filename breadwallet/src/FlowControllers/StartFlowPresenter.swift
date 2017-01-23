@@ -21,53 +21,60 @@ class StartFlowPresenter: Subscriber {
         self.walletManager = walletManager
         self.rootViewController = rootViewController
         self.navigationControllerDelegate = StartNavigationDelegate(store: store)
-        addStartSubscription()
-        addPinCreationSubscription()
-        addPaperPhraseCreationSubscription()
+        addSubscriptions()
     }
 
-    private func addStartSubscription() {
+    private func addSubscriptions() {
         store.subscribe(self,
-            selector: { $0.isStartFlowVisible != $1.isStartFlowVisible },
-            callback: {
-                if $0.isStartFlowVisible {
-                    self.presentStartFlow()
-                } else {
-                    self.dismissStartFlow()
-                }
-            })
-    }
-
-    private func addPinCreationSubscription() {
+                        selector: { $0.isStartFlowVisible != $1.isStartFlowVisible },
+                        callback: { self.handleStartFlowChange(state: $0) })
         store.subscribe(self,
-            selector: { $0.pinCreationStep != $1.pinCreationStep },
-            callback: {
-                if case .start = $0.pinCreationStep {
-                    self.pushPinCreationViewController()
-                }
-        })
-    }
-
-    private func addPaperPhraseCreationSubscription() {
+                        selector: { $0.pinCreationStep != $1.pinCreationStep },
+                        callback: { self.handlePinCreationStepChange(state: $0) })
         store.subscribe(self,
                         selector: { $0.paperPhraseStep != $1.paperPhraseStep },
-                        callback: {
-                            if case .start = $0.paperPhraseStep {
-                                self.pushStartPaperPhraseCreationViewController()
-                            }
+                        callback: { self.handlePaperPhraseCreationChange(state: $0) })
+        store.subscribe(self,
+                        selector: { $0.isLoginRequired != $1.isLoginRequired },
+                        callback: { self.handleLoginRequiredChange(state: $0) })
+    }
 
-                            if case .write = $0.paperPhraseStep {
-                                if case .saveSuccess(let pin) = $0.pinCreationStep {
-                                    self.pushWritePaperPhraseViewController(pin: pin)
-                                }
-                            }
+    private func handleStartFlowChange(state: State) {
+        if state.isStartFlowVisible {
+            presentStartFlow()
+        } else {
+            dismissStartFlow()
+        }
+    }
 
-                            if case .confirm = $0.paperPhraseStep {
-                                if case .saveSuccess(let pin) = $0.pinCreationStep {
-                                    self.pushConfirmPaperPhraseViewController(pin: pin)
-                                }
-                            }
-                        })
+    private func handlePinCreationStepChange(state: State) {
+        if case .start = state.pinCreationStep {
+            pushPinCreationViewController()
+        }
+    }
+
+    private func handlePaperPhraseCreationChange(state: State) {
+        if case .start = state.paperPhraseStep {
+            pushStartPaperPhraseCreationViewController()
+        }
+
+        if case .write = state.paperPhraseStep {
+            if case .saveSuccess(let pin) = state.pinCreationStep {
+                pushWritePaperPhraseViewController(pin: pin)
+            }
+        }
+
+        if case .confirm = state.paperPhraseStep {
+            if case .saveSuccess(let pin) = state.pinCreationStep {
+                pushConfirmPaperPhraseViewController(pin: pin)
+            }
+        }
+    }
+
+    private func handleLoginRequiredChange(state: State) {
+        if state.isLoginRequired {
+            presentLoginFlow()
+        }
     }
 
     private func presentStartFlow() {
@@ -166,6 +173,10 @@ class StartFlowPresenter: Subscriber {
         let renderedImage = image.withRenderingMode(.alwaysOriginal)
         navigationController?.navigationBar.backIndicatorImage = renderedImage
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = renderedImage
+    }
+
+    private func presentLoginFlow() {
+
     }
 
     @objc private func closeButtonTapped() {
