@@ -58,7 +58,7 @@ class Store {
         subscriptions.removeValue(forKey: subscriber.hashValue)
     }
 
-    private var state = State.initial {
+    private(set) var state = State.initial {
         didSet {
             subscriptions
                 .flatMap { $0.value } //Retreive all subscriptions (subscriptions is a dictionary)

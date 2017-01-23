@@ -42,6 +42,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         applicationController.willEnterForeground()
     }
 
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        applicationController.didEnterBackground()
+    }
+
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         applicationController.performFetch(completionHandler)
     }
