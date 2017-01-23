@@ -77,6 +77,8 @@ class StartFlowPresenter : Subscriber {
     private func handleLoginRequiredChange(state: State) {
         if state.isLoginRequired {
             presentLoginFlow()
+        } else {
+            dismissLoginFlow()
         }
     }
 
@@ -179,9 +181,15 @@ class StartFlowPresenter : Subscriber {
     }
 
     private func presentLoginFlow() {
-        let loginView = LoginViewController(store: store)
+        let loginView = LoginViewController(store: store, walletManager: walletManager)
         loginViewController = loginView
         rootViewController.present(loginView, animated: false, completion: nil)
+    }
+
+    private func dismissLoginFlow() {
+        loginViewController?.dismiss(animated: true, completion: {
+            self.loginViewController = nil
+        })
     }
 
     @objc private func closeButtonTapped() {

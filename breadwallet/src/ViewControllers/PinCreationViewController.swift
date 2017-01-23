@@ -97,7 +97,7 @@ class PinCreationViewController : UIViewController, Subscriber {
                 pinView.constraint(toBottom: caption, constant: C.padding[3]),
                 pinView.constraint(.centerX, toView: view, constant: nil),
                 pinView.constraint(.height, constant: pinView.defaultPinSize),
-                pinView.constraint(.width, constant: pinView.defaultPinSize*6 + C.padding[1]*6)
+                pinView.constraint(.width, constant: pinView.defaultWidth + C.padding[1]*6)
             ])
     }
 
