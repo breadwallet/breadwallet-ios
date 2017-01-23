@@ -8,17 +8,15 @@
 
 import UIKit
 
-class PinView: UIView {
+class PinView : UIView {
 
-    private let store: Store
     private let unFilled = (0...5).map { _ in Circle(color: .borderGray) }
     private let filled = (0...5).map { _ in Circle(color: .black) }
 
     static let defaultPinSize: CGFloat = 24.0
     static let shakeDuration: CFTimeInterval = 0.6
 
-    init(store: Store) {
-        self.store = store
+    init() {
         super.init(frame: CGRect())
         setupSubviews()
     }

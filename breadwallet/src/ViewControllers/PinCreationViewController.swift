@@ -28,13 +28,12 @@ class PinCreationViewController: UIViewController, Subscriber {
         return textField
     }()
 
-    private let pinView: PinView
+    private let pinView = PinView()
     fileprivate let maxPinLength = 6
     private let store: Store
 
     init(store: Store) {
         self.store = store
-        self.pinView = PinView(store: store)
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
     }
