@@ -8,35 +8,48 @@
 
 import UIKit
 
+enum PinPadStyle {
+    case white
+    case clear
+}
+
 let deleteKeyIdentifier = "del"
-private let cellIdentifier = "CellIdentifier"
 
 class PinPadViewController : UICollectionViewController {
-
+    
     var isAppendingDisabled = false
     var ouputDidUpdate: ((String) -> Void)?
     static let height: CGFloat = 48.0*4.0
     func clear() {
         currentOutput = ""
     }
-    init() {
+    init(style: PinPadStyle) {
+        self.style = style
         let layout = UICollectionViewFlowLayout()
         let screenWidth = UIScreen.main.bounds.width
-        layout.itemSize = CGSize(width: screenWidth/3.0, height: 48.0)
-        layout.minimumLineSpacing = 0.0
-        layout.minimumInteritemSpacing = 0.0
+        layout.itemSize = CGSize(width: screenWidth/3.0 - 2.0/3.0, height: 48.0 - 1.0)
+        layout.minimumLineSpacing = 1.0
+        layout.minimumInteritemSpacing = 1.0
         layout.sectionInset = .zero
         super.init(collectionViewLayout: layout)
     }
 
+    private let cellIdentifier = "CellIdentifier"
+    private let style: PinPadStyle
     private let items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", deleteKeyIdentifier]
     private var currentOutput = ""
 
     override func viewDidLoad() {
-        collectionView?.register(PinPadCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        switch style {
+        case .white:
+            collectionView?.backgroundColor = .white
+            collectionView?.register(WhitePinPadCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        case .clear:
+            collectionView?.backgroundColor = .clear
+            collectionView?.register(ClearPinPadCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        }
         collectionView?.delegate = self
         collectionView?.dataSource = self
-        collectionView?.backgroundColor = .white
 
         //Even though this view will never scroll, this stops a gesture recognizer
         //from listening for scroll events

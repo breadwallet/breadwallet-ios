@@ -22,7 +22,7 @@ class LoginViewController : UIViewController {
     private let walletManager: WalletManager
     private let backgroundView = LoginBackgroundView()
     private let textField = UITextField()
-    private let pinPad = PinPadViewController()
+    private let pinPad = PinPadViewController(style: .clear)
     private let pinView = PinView()
 
     override func viewDidLoad() {
@@ -32,7 +32,7 @@ class LoginViewController : UIViewController {
         addChildViewController(pinPad, layout: {
             pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
             pinPad.view.constrain([
-                pinPad.view.heightAnchor.constraint(equalToConstant: 216.0) ])
+                pinPad.view.heightAnchor.constraint(equalToConstant: PinPadViewController.height) ])
         })
 
         backgroundView.addSubview(pinView)
