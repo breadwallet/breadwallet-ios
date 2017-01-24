@@ -49,4 +49,9 @@ enum S {
         static let messagingUnavailableTitle = NSLocalizedString("Messaging unavailable", comment: "Messaging unavailable alert title")
         static let messagingUnavailableMessage = NSLocalizedString("This device isn't configured to send messages.", comment: "Messaging unavailable alert title")
     }
+
+    enum LoginScreen {
+        static let myAddress = NSLocalizedString("My Address", comment: "My Address button title")
+        static let scan = NSLocalizedString("Scan", comment: "Scan button title")
+    }
 }
