@@ -31,6 +31,17 @@ class LoginViewController : UIViewController {
         control.setTitleTextAttributes([NSFontAttributeName: UIFont.customMedium(size: 13.0)], for: .normal)
         return control
     }()
+    private let touchId: UIButton = {
+        let button = UIButton(type: .system)
+        button.tintColor = .white
+        button.setImage(#imageLiteral(resourceName: "TouchId"), for: .normal)
+        button.layer.borderColor = UIColor.white.cgColor
+        button.layer.borderWidth = 1.0
+        button.layer.cornerRadius = 22.0
+        button.layer.masksToBounds = true
+        button.accessibilityLabel = S.LoginScreen.touchIdText
+        return button
+    }()
     override func viewDidLoad() {
         view.addSubview(backgroundView)
         backgroundView.constrain(toSuperviewEdges: nil)
@@ -53,6 +64,14 @@ class LoginViewController : UIViewController {
         topControl.constrainTopCorners(sidePadding: C.padding[2], topPadding: C.padding[2], topLayoutGuide: topLayoutGuide)
         topControl.constrain([
             topControl.heightAnchor.constraint(equalToConstant: 32.0) ])
+
+        view.addSubview(touchId)
+        touchId.addTarget(self, action: #selector(touchIdTapped), for: .touchUpInside)
+        touchId.constrain([
+            touchId.widthAnchor.constraint(equalToConstant: 44.0),
+            touchId.heightAnchor.constraint(equalToConstant: 44.0),
+            touchId.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+            touchId.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[2]) ])
 
         pinPad.ouputDidUpdate = { pin in
             let length = pin.lengthOfBytes(using: .utf8)
@@ -90,6 +109,10 @@ class LoginViewController : UIViewController {
     }
 
     private func scanTapped() {
+
+    }
+
+    @objc func touchIdTapped() {
 
     }
 
