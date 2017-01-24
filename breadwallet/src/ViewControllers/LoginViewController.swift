@@ -23,7 +23,7 @@ class LoginViewController : UIViewController {
     private let backgroundView = LoginBackgroundView()
     private let textField = UITextField()
     private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad)
-    private let pinView = PinView()
+    private let pinView = PinView(style: .white)
 
     override func viewDidLoad() {
         view.addSubview(backgroundView)
