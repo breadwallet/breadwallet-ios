@@ -8,6 +8,9 @@
 
 import UIKit
 
+private let touchIdSize: CGFloat = 32.0
+private let topControlHeight: CGFloat = 32.0
+
 class LoginViewController : UIViewController {
 
     //MARK: - Public
@@ -37,7 +40,7 @@ class LoginViewController : UIViewController {
         button.setImage(#imageLiteral(resourceName: "TouchId"), for: .normal)
         button.layer.borderColor = UIColor.white.cgColor
         button.layer.borderWidth = 1.0
-        button.layer.cornerRadius = 22.0
+        button.layer.cornerRadius = touchIdSize/2.0
         button.layer.masksToBounds = true
         button.accessibilityLabel = S.LoginScreen.touchIdText
         return button
@@ -63,13 +66,13 @@ class LoginViewController : UIViewController {
         topControl.addTarget(self, action: #selector(topControlChanged(control:)), for: .valueChanged)
         topControl.constrainTopCorners(sidePadding: C.padding[2], topPadding: C.padding[2], topLayoutGuide: topLayoutGuide)
         topControl.constrain([
-            topControl.heightAnchor.constraint(equalToConstant: 32.0) ])
+            topControl.heightAnchor.constraint(equalToConstant: topControlHeight) ])
 
         view.addSubview(touchId)
         touchId.addTarget(self, action: #selector(touchIdTapped), for: .touchUpInside)
         touchId.constrain([
-            touchId.widthAnchor.constraint(equalToConstant: 44.0),
-            touchId.heightAnchor.constraint(equalToConstant: 44.0),
+            touchId.widthAnchor.constraint(equalToConstant: touchIdSize),
+            touchId.heightAnchor.constraint(equalToConstant: touchIdSize),
             touchId.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             touchId.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[2]) ])
 
