@@ -15,8 +15,14 @@ class ClearPinPadCell : PinPadCell {
             label.backgroundColor = .secondaryShadow
             label.textColor = .darkText
         } else {
-            label.backgroundColor = UIColor(white: 1.0, alpha: 0.3)
-            label.textColor = .white
+            if text == "" || text == deleteKeyIdentifier {
+                label.backgroundColor = .clear
+                imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
+                imageView.tintColor = .white
+            } else {
+                label.backgroundColor = UIColor(white: 1.0, alpha: 0.3)
+                label.textColor = .white
+            }
         }
     }
 }
