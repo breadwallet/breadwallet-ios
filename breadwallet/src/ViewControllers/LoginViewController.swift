@@ -68,14 +68,23 @@ class LoginViewController : UIViewController {
         topControl.constrain([
             topControl.heightAnchor.constraint(equalToConstant: topControlHeight) ])
 
-        view.addSubview(touchId)
-        touchId.addTarget(self, action: #selector(touchIdTapped), for: .touchUpInside)
-        touchId.constrain([
-            touchId.widthAnchor.constraint(equalToConstant: touchIdSize),
-            touchId.heightAnchor.constraint(equalToConstant: touchIdSize),
-            touchId.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            touchId.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[2]) ])
+        addTouchIdButton()
+        addPinPadCallback()
+    }
 
+    private func addTouchIdButton() {
+        if walletManager.canUseTouchID() {
+            view.addSubview(touchId)
+            touchId.addTarget(self, action: #selector(touchIdTapped), for: .touchUpInside)
+            touchId.constrain([
+                touchId.widthAnchor.constraint(equalToConstant: touchIdSize),
+                touchId.heightAnchor.constraint(equalToConstant: touchIdSize),
+                touchId.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+                touchId.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[2]) ])
+        }
+    }
+
+    private func addPinPadCallback() {
         pinPad.ouputDidUpdate = { pin in
             let length = pin.lengthOfBytes(using: .utf8)
             self.pinView.fill(length)
@@ -116,7 +125,11 @@ class LoginViewController : UIViewController {
     }
 
     @objc func touchIdTapped() {
-
+        walletManager.authenticate(touchIDPrompt: S.LoginScreen.touchIdPrompt, completion: { success in
+            if success {
+                self.store.perform(action: LoginSuccess())
+            }
+        })
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
