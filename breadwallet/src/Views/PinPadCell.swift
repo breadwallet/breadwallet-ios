@@ -19,11 +19,13 @@ class PinPadCell : UICollectionViewCell {
                 imageView.image = nil
                 label.text = text
             }
+            setColors()
         }
     }
 
     override var isHighlighted: Bool {
         didSet {
+            guard text != "" else { return } //We don't want the blank cell to highlight
             setColors()
         }
     }
@@ -34,7 +36,7 @@ class PinPadCell : UICollectionViewCell {
     }
 
     internal let label = UILabel(font: .customBody(size: 26.0))
-    private let imageView = UIImageView()
+    internal let imageView = UIImageView()
 
     private func setup() {
         setColors()

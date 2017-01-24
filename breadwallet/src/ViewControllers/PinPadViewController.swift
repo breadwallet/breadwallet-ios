@@ -13,6 +13,11 @@ enum PinPadStyle {
     case clear
 }
 
+enum KeyboardType {
+    case decimalPad
+    case pinPad
+}
+
 let deleteKeyIdentifier = "del"
 
 class PinPadViewController : UICollectionViewController {
@@ -23,20 +28,30 @@ class PinPadViewController : UICollectionViewController {
     func clear() {
         currentOutput = ""
     }
-    init(style: PinPadStyle) {
+    init(style: PinPadStyle, keyboardType: KeyboardType) {
         self.style = style
+        self.keyboardType = keyboardType
         let layout = UICollectionViewFlowLayout()
         let screenWidth = UIScreen.main.bounds.width
         layout.itemSize = CGSize(width: screenWidth/3.0 - 2.0/3.0, height: 48.0 - 1.0)
         layout.minimumLineSpacing = 1.0
         layout.minimumInteritemSpacing = 1.0
         layout.sectionInset = .zero
+
+        switch keyboardType {
+        case .decimalPad:
+            items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", deleteKeyIdentifier]
+        case .pinPad:
+            items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", deleteKeyIdentifier]
+        }
+
         super.init(collectionViewLayout: layout)
     }
 
     private let cellIdentifier = "CellIdentifier"
     private let style: PinPadStyle
-    private let items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", deleteKeyIdentifier]
+    private let keyboardType: KeyboardType
+    private let items: [String]
     private var currentOutput = ""
 
     override func viewDidLoad() {

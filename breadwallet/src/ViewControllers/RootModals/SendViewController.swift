@@ -40,7 +40,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private let to = LabelSendCell(label: S.Send.toLabel)
     private let amount = TextFieldSendCell(placeholder: S.Send.amountLabel, isKeyboardHidden: true)
     private let currencySwitcher = InViewAlert(type: .secondary)
-    private let pinPad = PinPadViewController(style: .white)
+    private let pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad)
     private let descriptionCell = TextFieldSendCell(placeholder: S.Send.descriptionLabel, isKeyboardHidden: false)
     private let send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
     private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
