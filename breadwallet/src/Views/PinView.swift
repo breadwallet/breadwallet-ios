@@ -8,6 +8,11 @@
 
 import UIKit
 
+enum PinViewStyle {
+    case gray
+    case white
+}
+
 class PinView : UIView {
 
     //MARK: - Public
@@ -15,7 +20,16 @@ class PinView : UIView {
     let shakeDuration: CFTimeInterval = 0.6
     let defaultWidth: CGFloat = 24.0*6
 
-    init() {
+    init(style: PinViewStyle) {
+        self.style = style
+
+        switch style {
+        case .gray:
+            unFilled = (0...5).map { _ in Circle(color: .borderGray) }
+        case .white:
+            unFilled = (0...5).map { _ in Circle(color: .white) }
+        }
+
         super.init(frame: CGRect())
         setupSubviews()
     }
@@ -44,8 +58,9 @@ class PinView : UIView {
     }
 
     //MARK: - Private
-    private let unFilled = (0...5).map { _ in Circle(color: .borderGray) }
+    private let unFilled: [Circle]
     private let filled = (0...5).map { _ in Circle(color: .black) }
+    private let style: PinViewStyle
 
     private func toRadian(value: Int) -> CGFloat {
         return CGFloat(Double(value) / 180.0 * M_PI)
@@ -67,11 +82,10 @@ class PinView : UIView {
                 leadingConstraint = NSLayoutConstraint(item: circle, attribute: .leading, relatedBy: .equal, toItem: circles[index - 1], attribute: .trailing, multiplier: 1.0, constant: 8.0)
             }
             circle.constrain([
-                    circle.constraint(.width, constant: defaultPinSize),
-                    circle.constraint(.height, constant: defaultPinSize),
-                    circle.constraint(.centerY, toView: self, constant: nil),
-                    leadingConstraint
-                ])
+                circle.constraint(.width, constant: defaultPinSize),
+                circle.constraint(.height, constant: defaultPinSize),
+                circle.constraint(.centerY, toView: self, constant: nil),
+                leadingConstraint ])
         }
     }
 

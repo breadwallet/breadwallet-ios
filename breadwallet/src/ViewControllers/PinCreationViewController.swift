@@ -28,7 +28,7 @@ class PinCreationViewController : UIViewController, Subscriber {
         return textField
     }()
 
-    private let pinView = PinView()
+    private let pinView = PinView(style: .gray)
     fileprivate let maxPinLength = 6
     private let store: Store
 
