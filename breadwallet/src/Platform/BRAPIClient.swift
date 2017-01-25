@@ -31,7 +31,7 @@ let BRAPIClientErrorDomain = "BRApiClientErrorDomain"
 
 // these flags map to api feature flag name values
 // eg "buy-bitcoin-with-cash" is a persistent name in the /me/features list
-@objc public enum BRFeatureFlags: Int, CustomStringConvertible {
+@objc public enum BRFeatureFlags : Int, CustomStringConvertible {
     case buyBitcoin
     case earlyAccess
     
@@ -139,7 +139,7 @@ func buildRequestSigningString(_ r: URLRequest) -> String {
 }
 
 
-open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BRAPIAdaptor {
+open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, BRAPIAdaptor {
     var authenticator: WalletAuthenticator
     
     // whether or not to emit log messages from this instance of the client
@@ -157,20 +157,11 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
     fileprivate var isFetchingAuth = false
     
     // used when requests are waiting for authentication to be fetched
-    fileprivate var authFetchGroup: DispatchGroup = DispatchGroup()
-    
-    // storage for the session constructor below
-    fileprivate var _session: URLSession? = nil
-    
+    fileprivate var authFetchGroup = DispatchGroup()
+
     // the NSURLSession on which all NSURLSessionTasks are executed
-    fileprivate var session: URLSession {
-        if _session == nil {
-            let config = URLSessionConfiguration.default
-            _session = Foundation.URLSession(configuration: config, delegate: self, delegateQueue: queue)
-        }
-        return _session!
-    }
-    
+    lazy fileprivate var session: URLSession = URLSession(configuration: .default, delegate: self, delegateQueue: self.queue)
+
     // the queue on which the NSURLSession operates
     fileprivate var queue = OperationQueue()
     
