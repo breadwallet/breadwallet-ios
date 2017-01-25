@@ -52,7 +52,7 @@ class LoginViewController : UIViewController {
         addChildViewController(pinPad, layout: {
             pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
             pinPad.view.constrain([
-                pinPad.view.heightAnchor.constraint(equalToConstant: PinPadViewController.height) ])
+                pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height) ])
         })
 
         backgroundView.addSubview(pinView)

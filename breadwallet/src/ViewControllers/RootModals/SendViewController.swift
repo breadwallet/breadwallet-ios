@@ -170,11 +170,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         descriptionCell.textField.resignFirstResponder()
         UIView.spring(C.animationDuration, animations: {
             if self.pinPadHeightConstraint?.constant == 0.0 {
-                self.pinPadHeightConstraint?.constant = PinPadViewController.height
-                parentView.frame = parentView.frame.expandVertically(PinPadViewController.height)
+                self.pinPadHeightConstraint?.constant = self.pinPad.height
+                parentView.frame = parentView.frame.expandVertically(self.pinPad.height)
             } else {
                 self.pinPadHeightConstraint?.constant = 0.0
-                parentView.frame = parentView.frame.expandVertically(-PinPadViewController.height)
+                parentView.frame = parentView.frame.expandVertically(-self.pinPad.height)
             }
             self.parent?.view.layoutIfNeeded()
         }, completion: {_ in })
