@@ -24,7 +24,16 @@ class PinPadViewController : UICollectionViewController {
     
     var isAppendingDisabled = false
     var ouputDidUpdate: ((String) -> Void)?
-    static let height: CGFloat = 48.0*4.0
+
+    var height: CGFloat {
+        switch keyboardType {
+        case .decimalPad:
+            return 48.0*4.0
+        case .pinPad:
+            return 54.0*4.0
+        }
+    }
+
     func clear() {
         currentOutput = ""
     }
@@ -33,7 +42,7 @@ class PinPadViewController : UICollectionViewController {
         self.keyboardType = keyboardType
         let layout = UICollectionViewFlowLayout()
         let screenWidth = UIScreen.main.bounds.width
-        layout.itemSize = CGSize(width: screenWidth/3.0 - 2.0/3.0, height: 48.0 - 1.0)
+
         layout.minimumLineSpacing = 1.0
         layout.minimumInteritemSpacing = 1.0
         layout.sectionInset = .zero
@@ -41,8 +50,10 @@ class PinPadViewController : UICollectionViewController {
         switch keyboardType {
         case .decimalPad:
             items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", deleteKeyIdentifier]
+            layout.itemSize = CGSize(width: screenWidth/3.0 - 2.0/3.0, height: 48.0 - 1.0)
         case .pinPad:
             items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", deleteKeyIdentifier]
+            layout.itemSize = CGSize(width: screenWidth/3.0 - 2.0/3.0, height: 54.0 - 0.5)
         }
 
         super.init(collectionViewLayout: layout)
