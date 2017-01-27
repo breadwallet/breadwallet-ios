@@ -18,6 +18,7 @@ struct State {
     let isModalDismissalBlocked: Bool
     let walletState: WalletState
     let currency: Currency
+    let currentRate: Rate?
 }
 
 extension State {
@@ -30,7 +31,8 @@ extension State {
                         pasteboard: UIPasteboard.general.string,
                         isModalDismissalBlocked: false,
                         walletState: WalletState.initial,
-                        currency: .bitcoin)
+                        currency: .bitcoin,
+                        currentRate: nil)
     }
 }
 

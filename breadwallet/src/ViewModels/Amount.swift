@@ -10,17 +10,20 @@ import Foundation
 
 struct Amount {
 
+    //MARK: - Public
     let amount: UInt64 //amount in satoshis
+    let rate: Double
     var bits: String {
         guard let string = format.string(from: amount/100 as NSNumber) else { return "" }
         return string
     }
 
     var localCurrency: String {
-        guard let string = localFormat.string(from: Double(amount)/100000000.0*830.0 as NSNumber) else { return "" }
+        guard let string = localFormat.string(from: Double(amount)/100000000.0*rate as NSNumber) else { return "" }
         return string
     }
 
+    //MARK: - Private
     private let format: NumberFormatter = {
         let format = NumberFormatter()
         format.isLenient = true

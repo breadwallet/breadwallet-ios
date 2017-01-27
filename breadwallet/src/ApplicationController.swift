@@ -23,6 +23,8 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private let walletManager: WalletManager = try! WalletManager(dbPath: nil)
     private let walletCreator: WalletCreator
     private let walletCoordinator: WalletCoordinator
+    lazy private var apiClient: BRAPIClient = BRAPIClient(authenticator: self.walletManager)
+    private var exchangeManager: ExchangeManager?
 
     init() {
         walletCreator = WalletCreator(walletManager: walletManager, store: store)
@@ -51,6 +53,8 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                 self.walletManager.peerManager?.connect()
             }
         }
+        exchangeManager = ExchangeManager(store: store, apiClient: apiClient)
+        exchangeManager?.refresh()
     }
 
     func willEnterForeground() {
@@ -61,6 +65,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         DispatchQueue.global(qos: .background).async {
             self.walletManager.peerManager?.connect() //TODO - guard for noWallet?
         }
+        exchangeManager?.refresh()
     }
 
     func didEnterBackground() {
