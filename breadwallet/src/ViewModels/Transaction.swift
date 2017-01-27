@@ -26,12 +26,14 @@ struct Transaction {
 
     init(amountSent: UInt64, amountReceived: UInt64, timestamp: UInt32, transactionIsValid: Bool, transactionIsPending: Bool, transactionIsVerified: Bool, blockHeight: UInt32, transactionBlockHeight: UInt32, fee: UInt64) {
 
+
+        //TODO - use real rates here
         if amountSent > 0 {
             self.direction = .sent
-            self.amount = Amount(amount: amountSent - amountReceived - fee)
+            self.amount = Amount(amount: amountSent - amountReceived - fee, rate: 920.0)
         } else {
             self.direction = .received
-            self.amount = Amount(amount:amountReceived - fee)
+            self.amount = Amount(amount:amountReceived - fee, rate: 920.0)
         }
         self.timestamp = Int(timestamp)
         let confirms = transactionBlockHeight > blockHeight ? 0 : Int((blockHeight - transactionBlockHeight) + 1)
