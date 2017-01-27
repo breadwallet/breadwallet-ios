@@ -413,6 +413,19 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
         }
         task.resume()
     }
+
+    func exchangeRates(_ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
+        let request = URLRequest(url: url("/rates"))
+        let task = dataTaskWithRequest(request) { (data, response, error) in
+            guard error == nil else { return handler([], error!.localizedDescription) }
+            guard let data = data else { return handler([], "/rates returned no data") }
+            guard let parsedData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) else { return handler([], "/rates bad data format") }
+            guard let dict = parsedData as? [String: Any] else { return handler([], "/rates didn't return a dictionary") }
+            guard let array = dict["body"] as? [Any] else { return handler([], "/rates didn't return an array for body key") }
+            handler(array.flatMap { Rate(data: $0) }, nil)
+        }
+        task.resume()
+    }
     
     // MARK: push notifications
     

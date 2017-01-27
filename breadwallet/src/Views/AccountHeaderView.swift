@@ -34,7 +34,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private let search = UIButton(type: .system)
     private let currencyTapView = UIView()
     private let store: Store
-    
+
+    private var exchangeRate: Rate? {
+        didSet { setBalances() }
+    }
+
     private func setup() {
         setData()
         addSubviews()
@@ -118,10 +122,14 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         store.subscribe(self,
                         selector: { $0.currency != $1.currency },
                         callback: { self.currency = $0.currency })
+        store.subscribe(self,
+                        selector: { $0.currentRate != $1.currentRate},
+                        callback: { self.exchangeRate = $0.currentRate })
     }
 
     private func setBalances() {
-        let amount = Amount(amount: balance)
+        guard let rate = exchangeRate else { return }
+        let amount = Amount(amount: balance, rate: rate.rate)
         primaryBalance.text = currency == .bitcoin ? amount.bits : amount.localCurrency
         secondaryBalance.text = currency == .bitcoin ? "= \(amount.localCurrency)" : "= \(amount.bits)"
     }
