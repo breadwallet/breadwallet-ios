@@ -88,15 +88,14 @@ class LoginViewController : UIViewController {
     }
 
     private func addTouchIdButton() {
-        if walletManager.canUseTouchID() {
-            view.addSubview(touchId)
-            touchId.addTarget(self, action: #selector(touchIdTapped), for: .touchUpInside)
-            touchId.constrain([
-                touchId.widthAnchor.constraint(equalToConstant: touchIdSize),
-                touchId.heightAnchor.constraint(equalToConstant: touchIdSize),
-                touchId.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-                touchId.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[2]) ])
-        }
+        guard walletManager.canUseTouchID() else { return }
+        view.addSubview(touchId)
+        touchId.addTarget(self, action: #selector(touchIdTapped), for: .touchUpInside)
+        touchId.constrain([
+            touchId.widthAnchor.constraint(equalToConstant: touchIdSize),
+            touchId.heightAnchor.constraint(equalToConstant: touchIdSize),
+            touchId.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+            touchId.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[2]) ])
     }
 
     private func addPinPadCallback() {
@@ -111,15 +110,15 @@ class LoginViewController : UIViewController {
     }
 
     private func authenticate(pin: String) {
-        let isAuthenticated = self.walletManager.authenticate(pin: pin)
-        if isAuthenticated {
-            store.perform(action: LoginSuccess())
-        } else {
-            self.pinView.shake()
-            self.pinPad.clear()
-            DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
-                self?.pinView.fill(0)
-            }
+        guard walletManager.authenticate(pin: pin) else { return authenticationFailed() }
+        store.perform(action: LoginSuccess())
+    }
+
+    private func authenticationFailed() {
+        pinView.shake()
+        pinPad.clear()
+        DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
+            self?.pinView.fill(0)
         }
     }
 
