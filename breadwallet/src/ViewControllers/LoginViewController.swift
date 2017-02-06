@@ -45,6 +45,9 @@ class LoginViewController : UIViewController {
         button.accessibilityLabel = S.LoginScreen.touchIdText
         return button
     }()
+    private let header = UILabel(font: .systemFont(ofSize: 40.0))
+    private let subheader = UILabel(font: .customBody(size: 16.0))
+
     override func viewDidLoad() {
         view.addSubview(backgroundView)
         backgroundView.constrain(toSuperviewEdges: nil)
@@ -67,6 +70,18 @@ class LoginViewController : UIViewController {
         topControl.constrainTopCorners(sidePadding: C.padding[2], topPadding: C.padding[2], topLayoutGuide: topLayoutGuide)
         topControl.constrain([
             topControl.heightAnchor.constraint(equalToConstant: topControlHeight) ])
+
+        view.addSubview(header)
+        view.addSubview(subheader)
+        subheader.constrain([
+            subheader.bottomAnchor.constraint(equalTo: pinView.topAnchor, constant: -C.padding[2]),
+            subheader.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
+        header.constrain([
+            header.bottomAnchor.constraint(equalTo: subheader.topAnchor, constant: -C.padding[4]),
+            header.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
+        subheader.text = S.LoginScreen.subheader
+        header.text = S.LoginScreen.header
+        header.textColor = .white
 
         addTouchIdButton()
         addPinPadCallback()
