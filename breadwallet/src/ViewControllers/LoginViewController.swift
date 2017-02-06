@@ -49,30 +49,36 @@ class LoginViewController : UIViewController {
     private let subheader = UILabel(font: .customBody(size: 16.0))
 
     override func viewDidLoad() {
-        view.addSubview(backgroundView)
-        backgroundView.constrain(toSuperviewEdges: nil)
+        addSubviews()
+        addConstraints()
+        addTouchIdButton()
+        addPinPadCallback()
+    }
 
+    private func addSubviews() {
+        view.addSubview(backgroundView)
+        backgroundView.addSubview(pinView)
+        view.addSubview(topControl)
+        view.addSubview(header)
+        view.addSubview(subheader)
+    }
+
+    private func addConstraints() {
+        backgroundView.constrain(toSuperviewEdges: nil)
         addChildViewController(pinPad, layout: {
             pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
             pinPad.view.constrain([
                 pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height) ])
         })
-
-        backgroundView.addSubview(pinView)
         pinView.constrain([
             pinView.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
             pinView.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.defaultWidth + C.padding[1]*6),
             pinView.heightAnchor.constraint(equalToConstant: pinView.defaultPinSize) ])
-
-        view.addSubview(topControl)
         topControl.addTarget(self, action: #selector(topControlChanged(control:)), for: .valueChanged)
         topControl.constrainTopCorners(sidePadding: C.padding[2], topPadding: C.padding[2], topLayoutGuide: topLayoutGuide)
         topControl.constrain([
             topControl.heightAnchor.constraint(equalToConstant: topControlHeight) ])
-
-        view.addSubview(header)
-        view.addSubview(subheader)
         subheader.constrain([
             subheader.bottomAnchor.constraint(equalTo: pinView.topAnchor, constant: -C.padding[2]),
             subheader.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
@@ -82,9 +88,6 @@ class LoginViewController : UIViewController {
         subheader.text = S.LoginScreen.subheader
         header.text = S.LoginScreen.header
         header.textColor = .white
-
-        addTouchIdButton()
-        addPinPadCallback()
     }
 
     private func addTouchIdButton() {
