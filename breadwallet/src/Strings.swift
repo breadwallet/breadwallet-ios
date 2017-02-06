@@ -55,5 +55,7 @@ enum S {
         static let scan = NSLocalizedString("Scan", comment: "Scan button title")
         static let touchIdText = NSLocalizedString("Login With TouchID", comment: "Login with TouchID accessibility label")
         static let touchIdPrompt = NSLocalizedString("Unlock your Breadwallet", comment: "TouchID prompt text")
+        static let header = NSLocalizedString("bread", comment: "Login Screen header")
+        static let subheader = NSLocalizedString("Enter Pin", comment: "Login Screen sub-header")
     }
 }
