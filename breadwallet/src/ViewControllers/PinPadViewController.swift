@@ -35,6 +35,7 @@ class PinPadViewController : UICollectionViewController {
     }
 
     func clear() {
+        isAppendingDisabled = false
         currentOutput = ""
     }
     init(style: PinPadStyle, keyboardType: KeyboardType) {
