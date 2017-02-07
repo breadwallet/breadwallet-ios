@@ -57,5 +57,6 @@ enum S {
         static let touchIdPrompt = NSLocalizedString("Unlock your Breadwallet", comment: "TouchID prompt text")
         static let header = NSLocalizedString("bread", comment: "Login Screen header")
         static let subheader = NSLocalizedString("Enter Pin", comment: "Login Screen sub-header")
+        static let unlocked = NSLocalizedString("Wallet Unlocked", comment: "Wallet unlocked message")
     }
 }
