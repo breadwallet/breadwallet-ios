@@ -48,12 +48,15 @@ class LoginViewController : UIViewController {
     }()
     private let header = UILabel(font: .systemFont(ofSize: 40.0))
     private let subheader = UILabel(font: .customBody(size: 16.0))
+    private var pinPadPottom: NSLayoutConstraint?
+    private var topControlTop: NSLayoutConstraint?
 
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
         addTouchIdButton()
         addPinPadCallback()
+        topControl.addTarget(self, action: #selector(topControlChanged(control:)), for: .valueChanged)
     }
 
     private func addSubviews() {
@@ -68,8 +71,11 @@ class LoginViewController : UIViewController {
     private func addConstraints() {
         backgroundView.constrain(toSuperviewEdges: nil)
         addChildViewController(pinPad, layout: {
-            pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
+            pinPadPottom = pinPad.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
             pinPad.view.constrain([
+                pinPad.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                pinPad.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                pinPadPottom,
                 pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height) ])
         })
         pinViewContainer.constrain(toSuperviewEdges: nil)
@@ -78,9 +84,11 @@ class LoginViewController : UIViewController {
             pinView.centerYAnchor.constraint(equalTo: pinViewContainer.centerYAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.defaultWidth + C.padding[1]*6),
             pinView.heightAnchor.constraint(equalToConstant: pinView.defaultPinSize) ])
-        topControl.addTarget(self, action: #selector(topControlChanged(control:)), for: .valueChanged)
-        topControl.constrainTopCorners(sidePadding: C.padding[2], topPadding: C.padding[2], topLayoutGuide: topLayoutGuide)
+        topControlTop = topControl.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2])
         topControl.constrain([
+            topControlTop,
+            topControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
+            topControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             topControl.heightAnchor.constraint(equalToConstant: topControlHeight) ])
         subheader.constrain([
             subheader.bottomAnchor.constraint(equalTo: pinView.topAnchor, constant: -C.padding[2]),
@@ -117,7 +125,29 @@ class LoginViewController : UIViewController {
 
     private func authenticate(pin: String) {
         guard walletManager.authenticate(pin: pin) else { return authenticationFailed() }
-        store.perform(action: LoginSuccess())
+        authenticationSucceded()
+    }
+
+    private func authenticationSucceded() {
+        let lock = UIImageView(image: #imageLiteral(resourceName: "unlock"))
+        lock.alpha = 0.0
+        view.addSubview(lock)
+        lock.constrain([
+            lock.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: C.padding[1]),
+            lock.centerXAnchor.constraint(equalTo: subheader.centerXAnchor) ])
+        subheader.textColor = .white
+        subheader.text = S.LoginScreen.unlocked
+        view.layoutIfNeeded()
+
+        UIView.spring(0.6, animations: {
+            self.pinPadPottom?.constant = self.pinPad.height
+            self.topControlTop?.constant = -100.0
+            lock.alpha = 1.0
+            self.pinView.alpha = 0.0
+            self.view.layoutIfNeeded()
+        }) { completion in
+            self.store.perform(action: LoginSuccess())
+        }
     }
 
     private func authenticationFailed() {
