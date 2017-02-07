@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ModalPresenter: Subscriber {
+class ModalPresenter : Subscriber {
 
     var wallet: BRWallet?
     var peerManager: BRPeerManager?

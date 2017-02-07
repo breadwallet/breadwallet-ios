@@ -1,17 +1,14 @@
 //
-//  DismissModalAnimator.swift
+//  DismissLoginAnimator.swift
 //  breadwallet
 //
-//  Created by Adrian Corscadden on 2016-11-25.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Created by Adrian Corscadden on 2017-02-07.
+//  Copyright © 2017 breadwallet LLC. All rights reserved.
 //
 
 import UIKit
 
-//TODO - figure out who should own this
-let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-
-class DismissModalAnimator : NSObject, UIViewControllerAnimatedTransitioning {
+class DismissLoginAnimator : NSObject, UIViewControllerAnimatedTransitioning {
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.4
@@ -21,12 +18,10 @@ class DismissModalAnimator : NSObject, UIViewControllerAnimatedTransitioning {
         guard transitionContext.isAnimated else { return }
         let duration = transitionDuration(using: transitionContext)
         guard let fromView = transitionContext.view(forKey: .from) else { assert(false, "Missing from view"); return }
-
         UIView.animate(withDuration: duration, animations: {
-            blurView.alpha = 0.0
-            fromView.frame = fromView.frame.offsetBy(dx: 0, dy: fromView.frame.height)
-        }, completion: { _ in
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-        })
+            fromView.alpha = 0.0
+        }) { _ in
+            transitionContext.completeTransition(true)
+        }
     }
 }
