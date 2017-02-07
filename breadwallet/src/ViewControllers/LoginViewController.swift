@@ -26,6 +26,7 @@ class LoginViewController : UIViewController {
     private let backgroundView = LoginBackgroundView()
     private let textField = UITextField()
     private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad)
+    private let pinViewContainer = UIView()
     private let pinView = PinView(style: .white)
     private let topControl: UISegmentedControl = {
         let control = UISegmentedControl(items: [S.LoginScreen.myAddress, S.LoginScreen.scan])
@@ -57,7 +58,8 @@ class LoginViewController : UIViewController {
 
     private func addSubviews() {
         view.addSubview(backgroundView)
-        backgroundView.addSubview(pinView)
+        view.addSubview(pinViewContainer)
+        pinViewContainer.addSubview(pinView)
         view.addSubview(topControl)
         view.addSubview(header)
         view.addSubview(subheader)
@@ -70,9 +72,10 @@ class LoginViewController : UIViewController {
             pinPad.view.constrain([
                 pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height) ])
         })
+        pinViewContainer.constrain(toSuperviewEdges: nil)
         pinView.constrain([
-            pinView.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor),
-            pinView.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor),
+            pinView.centerXAnchor.constraint(equalTo: pinViewContainer.centerXAnchor),
+            pinView.centerYAnchor.constraint(equalTo: pinViewContainer.centerYAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.defaultWidth + C.padding[1]*6),
             pinView.heightAnchor.constraint(equalToConstant: pinView.defaultPinSize) ])
         topControl.addTarget(self, action: #selector(topControlChanged(control:)), for: .valueChanged)
