@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CheckView: UIView, AnimatableIcon {
+class CheckView : UIView, AnimatableIcon {
 
     public func animate() {
         let check = UIBezierPath()
@@ -39,23 +39,23 @@ class CheckView: UIView, AnimatableIcon {
 
     override func draw(_ rect: CGRect) {
 
-        let checkocircle = UIBezierPath()
-        checkocircle.move(to: CGPoint(x: 47.76, y: -0))
-        checkocircle.addCurve(to: CGPoint(x: 0, y: 47.76), controlPoint1: CGPoint(x: 21.38, y: -0), controlPoint2: CGPoint(x: 0, y: 21.38))
-        checkocircle.addCurve(to: CGPoint(x: 47.76, y: 95.52), controlPoint1: CGPoint(x: 0, y: 74.13), controlPoint2: CGPoint(x: 21.38, y: 95.52))
-        checkocircle.addCurve(to: CGPoint(x: 95.52, y: 47.76), controlPoint1: CGPoint(x: 74.14, y: 95.52), controlPoint2: CGPoint(x: 95.52, y: 74.13))
-        checkocircle.addCurve(to: CGPoint(x: 47.76, y: -0), controlPoint1: CGPoint(x: 95.52, y: 21.38), controlPoint2: CGPoint(x: 74.14, y: -0))
-        checkocircle.addLine(to: CGPoint(x: 47.76, y: -0))
-        checkocircle.close()
-        checkocircle.move(to: CGPoint(x: 47.99, y: 85.97))
-        checkocircle.addCurve(to: CGPoint(x: 9.79, y: 47.76), controlPoint1: CGPoint(x: 26.89, y: 85.97), controlPoint2: CGPoint(x: 9.79, y: 68.86))
-        checkocircle.addCurve(to: CGPoint(x: 47.99, y: 9.55), controlPoint1: CGPoint(x: 9.79, y: 26.66), controlPoint2: CGPoint(x: 26.89, y: 9.55))
-        checkocircle.addCurve(to: CGPoint(x: 86.2, y: 47.76), controlPoint1: CGPoint(x: 69.1, y: 9.55), controlPoint2: CGPoint(x: 86.2, y: 26.66))
-        checkocircle.addCurve(to: CGPoint(x: 47.99, y: 85.97), controlPoint1: CGPoint(x: 86.2, y: 68.86), controlPoint2: CGPoint(x: 69.1, y: 85.97))
-        checkocircle.close()
+        let checkcircle = UIBezierPath()
+        checkcircle.move(to: CGPoint(x: 47.76, y: -0))
+        checkcircle.addCurve(to: CGPoint(x: 0, y: 47.76), controlPoint1: CGPoint(x: 21.38, y: -0), controlPoint2: CGPoint(x: 0, y: 21.38))
+        checkcircle.addCurve(to: CGPoint(x: 47.76, y: 95.52), controlPoint1: CGPoint(x: 0, y: 74.13), controlPoint2: CGPoint(x: 21.38, y: 95.52))
+        checkcircle.addCurve(to: CGPoint(x: 95.52, y: 47.76), controlPoint1: CGPoint(x: 74.14, y: 95.52), controlPoint2: CGPoint(x: 95.52, y: 74.13))
+        checkcircle.addCurve(to: CGPoint(x: 47.76, y: -0), controlPoint1: CGPoint(x: 95.52, y: 21.38), controlPoint2: CGPoint(x: 74.14, y: -0))
+        checkcircle.addLine(to: CGPoint(x: 47.76, y: -0))
+        checkcircle.close()
+        checkcircle.move(to: CGPoint(x: 47.99, y: 85.97))
+        checkcircle.addCurve(to: CGPoint(x: 9.79, y: 47.76), controlPoint1: CGPoint(x: 26.89, y: 85.97), controlPoint2: CGPoint(x: 9.79, y: 68.86))
+        checkcircle.addCurve(to: CGPoint(x: 47.99, y: 9.55), controlPoint1: CGPoint(x: 9.79, y: 26.66), controlPoint2: CGPoint(x: 26.89, y: 9.55))
+        checkcircle.addCurve(to: CGPoint(x: 86.2, y: 47.76), controlPoint1: CGPoint(x: 69.1, y: 9.55), controlPoint2: CGPoint(x: 86.2, y: 26.66))
+        checkcircle.addCurve(to: CGPoint(x: 47.99, y: 85.97), controlPoint1: CGPoint(x: 86.2, y: 68.86), controlPoint2: CGPoint(x: 69.1, y: 85.97))
+        checkcircle.close()
 
         UIColor.white.setFill()
-        checkocircle.fill()
+        checkcircle.fill()
 
         //This is the non-animated check left here for now as a reference
 //        let check = UIBezierPath()
