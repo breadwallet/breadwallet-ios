@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ModalTransitionDelegate: NSObject, Subscriber {
+class ModalTransitionDelegate : NSObject, Subscriber {
 
     fileprivate var isInteractive: Bool = false
     fileprivate let interactiveTransition = UIPercentDrivenInteractiveTransition()
@@ -99,7 +99,7 @@ class ModalTransitionDelegate: NSObject, Subscriber {
     }
 }
 
-extension ModalTransitionDelegate: UIViewControllerTransitioningDelegate {
+extension ModalTransitionDelegate : UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         presentedViewController = presented
         return PresentModalAnimator(completion: {
@@ -122,7 +122,7 @@ extension ModalTransitionDelegate: UIViewControllerTransitioningDelegate {
     }
 }
 
-extension ModalTransitionDelegate: UIGestureRecognizerDelegate {
+extension ModalTransitionDelegate : UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard !isModalDismissalBlocked else { return false }
         if gestureRecognizer == tapGestureRecognizer {

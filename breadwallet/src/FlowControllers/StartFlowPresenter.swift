@@ -26,7 +26,8 @@ class StartFlowPresenter : Subscriber {
     private let navigationControllerDelegate: StartNavigationDelegate
     private let walletManager: WalletManager
     private var loginViewController: UIViewController?
-
+    private let loginTransitionDelegate = LoginTransitionDelegate()
+    
     private func addSubscriptions() {
         store.subscribe(self,
                         selector: { $0.isStartFlowVisible != $1.isStartFlowVisible },
@@ -182,6 +183,8 @@ class StartFlowPresenter : Subscriber {
 
     private func presentLoginFlow() {
         let loginView = LoginViewController(store: store, walletManager: walletManager)
+        loginView.transitioningDelegate = loginTransitionDelegate
+        loginView.modalPresentationStyle = .overFullScreen
         loginViewController = loginView
         rootViewController.present(loginView, animated: false, completion: nil)
     }
