@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PresentModalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+class PresentModalAnimator : NSObject, UIViewControllerAnimatedTransitioning {
     
     private let completion: () -> Void
 
