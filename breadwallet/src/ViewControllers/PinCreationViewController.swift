@@ -28,7 +28,7 @@ class PinCreationViewController : UIViewController, Subscriber {
         return textField
     }()
 
-    private let pinView = PinView(style: .gray)
+    private let pinView = PinView(style: .create)
     fileprivate let maxPinLength = 6
     private let store: Store
 
@@ -84,29 +84,25 @@ class PinCreationViewController : UIViewController, Subscriber {
 
     private func addConstraints() {
         instruction.constrain([
-                NSLayoutConstraint(item: instruction, attribute: .top, relatedBy: .equal, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: C.padding[3]),
-                instruction.constraint(.leading, toView: view, constant: C.padding[2]),
-                instruction.constraint(.trailing, toView: view, constant: -C.padding[2])
-            ])
+            NSLayoutConstraint(item: instruction, attribute: .top, relatedBy: .equal, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: C.padding[3]),
+            instruction.constraint(.leading, toView: view, constant: C.padding[2]),
+            instruction.constraint(.trailing, toView: view, constant: -C.padding[2]) ])
         caption.constrain([
-                caption.constraint(toBottom: instruction, constant: C.padding[2]),
-                caption.constraint(.leading, toView: instruction, constant: nil),
-                caption.constraint(.trailing, toView: view, constant: -C.padding[2])
-            ])
+            caption.constraint(toBottom: instruction, constant: C.padding[2]),
+            caption.constraint(.leading, toView: instruction, constant: nil),
+            caption.constraint(.trailing, toView: view, constant: -C.padding[2]) ])
         pinView.constrain([
-                pinView.constraint(toBottom: caption, constant: C.padding[3]),
-                pinView.constraint(.centerX, toView: view, constant: nil),
-                pinView.constraint(.height, constant: pinView.defaultPinSize),
-                pinView.constraint(.width, constant: pinView.defaultWidth + C.padding[1]*6)
-            ])
+            pinView.constraint(toBottom: caption, constant: C.padding[3]),
+            pinView.constraint(.centerX, toView: view, constant: nil),
+            pinView.constraint(.height, constant: pinView.itemSize),
+            pinView.constraint(.width, constant: pinView.width) ])
     }
 
     private func addBodyConstraints(keyboardHeight: CGFloat) {
         body.constrain([
-                NSLayoutConstraint(item: body, attribute: .bottom, relatedBy: .equal, toItem: bottomLayoutGuide, attribute: .top, multiplier: 1.0, constant: -C.padding[1] - keyboardHeight),
-                body.constraint(.leading, toView: view, constant: C.padding[2]),
-                body.constraint(.trailing, toView: view, constant: -C.padding[2])
-            ])
+            NSLayoutConstraint(item: body, attribute: .bottom, relatedBy: .equal, toItem: bottomLayoutGuide, attribute: .top, multiplier: 1.0, constant: -C.padding[1] - keyboardHeight),
+            body.constraint(.leading, toView: view, constant: C.padding[2]),
+            body.constraint(.trailing, toView: view, constant: -C.padding[2]) ])
     }
 
     private func addStoreSubscriptions() {
