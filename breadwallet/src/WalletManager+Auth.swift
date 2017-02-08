@@ -39,7 +39,7 @@ public protocol WalletAuthenticator {
     var userAccount: Dictionary<AnyHashable, Any>? { get set }
 }
 
-extension WalletManager: WalletAuthenticator {
+extension WalletManager : WalletAuthenticator {
     static private var failedPins = [String]()
     
     convenience init(dbPath: String? = nil) throws {
@@ -87,15 +87,23 @@ extension WalletManager: WalletAuthenticator {
         }
         catch { return false }
     }
-    
+
+    //Login with pin should be required if the pin hasn't been used within a week
+    var pinLoginRequired: Bool {
+        let pinUnlockTime = UserDefaults.standard.double(forKey: defaultsKey.pinUnlockTime)
+        let now = Date.timeIntervalSinceReferenceDate
+        let secondsInWeek = 60.0*60.0*24.0*7.0
+        return now - pinUnlockTime > secondsInWeek
+    }
+
     // true if touch ID is enabled
-    func canUseTouchID() -> Bool {
+    var canUseTouchID: Bool {
         return LAContext().canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
     }
     
     // true if the given transaction can be signed with touch ID authentication
     func canUseTouchID(forTx: BRTxRef) -> Bool {
-        guard canUseTouchID() else { return false }
+        guard canUseTouchID else { return false }
         
         do {
             let spendLimit: Int64 = try keychainItem(key: keychainKey.spendLimit) ?? 0
