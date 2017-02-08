@@ -12,8 +12,8 @@ class ClearPinPadCell : PinPadCell {
 
     override func setColors() {
         if isHighlighted {
-            label.backgroundColor = .secondaryShadow
-            label.textColor = .darkText
+            label.backgroundColor = UIColor(white: 0.0, alpha: 0.3)
+            label.textColor = .white
         } else {
             if text == "" || text == deleteKeyIdentifier {
                 label.backgroundColor = .clear
