@@ -9,24 +9,33 @@
 import UIKit
 
 enum PinViewStyle {
-    case gray
-    case white
+    case create
+    case login
 }
 
 class PinView : UIView {
 
     //MARK: - Public
-    let defaultPinSize: CGFloat = 24.0
+    var itemSize: CGFloat {
+        switch style {
+        case .create:
+            return 24.0
+        case .login:
+            return 16.0
+        }
+    }
+    var width: CGFloat {
+        return (itemSize + C.padding[1]) * 6.0
+    }
     let shakeDuration: CFTimeInterval = 0.6
-    let defaultWidth: CGFloat = 24.0*6
 
     init(style: PinViewStyle) {
         self.style = style
 
         switch style {
-        case .gray:
+        case .create:
             unFilled = (0...5).map { _ in Circle(color: .borderGray) }
-        case .white:
+        case .login:
             unFilled = (0...5).map { _ in Circle(color: .white) }
         }
 
@@ -82,8 +91,8 @@ class PinView : UIView {
                 leadingConstraint = NSLayoutConstraint(item: circle, attribute: .leading, relatedBy: .equal, toItem: circles[index - 1], attribute: .trailing, multiplier: 1.0, constant: 8.0)
             }
             circle.constrain([
-                circle.constraint(.width, constant: defaultPinSize),
-                circle.constraint(.height, constant: defaultPinSize),
+                circle.constraint(.width, constant: itemSize),
+                circle.constraint(.height, constant: itemSize),
                 circle.constraint(.centerY, toView: self, constant: nil),
                 leadingConstraint ])
         }

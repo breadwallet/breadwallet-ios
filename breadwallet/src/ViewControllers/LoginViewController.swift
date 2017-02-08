@@ -27,7 +27,7 @@ class LoginViewController : UIViewController {
     private let textField = UITextField()
     private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad)
     private let pinViewContainer = UIView()
-    private let pinView = PinView(style: .white)
+    private let pinView = PinView(style: .login)
     private let topControl: UISegmentedControl = {
         let control = UISegmentedControl(items: [S.LoginScreen.myAddress, S.LoginScreen.scan])
         control.tintColor = .white
@@ -71,7 +71,7 @@ class LoginViewController : UIViewController {
     private func addConstraints() {
         backgroundView.constrain(toSuperviewEdges: nil)
         addChildViewController(pinPad, layout: {
-            pinPadPottom = pinPad.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            pinPadPottom = pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             pinPad.view.constrain([
                 pinPad.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 pinPad.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -80,21 +80,21 @@ class LoginViewController : UIViewController {
         })
         pinViewContainer.constrain(toSuperviewEdges: nil)
         pinView.constrain([
+            pinView.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -95.0),
             pinView.centerXAnchor.constraint(equalTo: pinViewContainer.centerXAnchor),
-            pinView.centerYAnchor.constraint(equalTo: pinViewContainer.centerYAnchor),
-            pinView.widthAnchor.constraint(equalToConstant: pinView.defaultWidth + C.padding[1]*6),
-            pinView.heightAnchor.constraint(equalToConstant: pinView.defaultPinSize) ])
-        topControlTop = topControl.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2])
+            pinView.widthAnchor.constraint(equalToConstant: pinView.width),
+            pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
+        topControlTop = topControl.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[1])
         topControl.constrain([
             topControlTop,
             topControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             topControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             topControl.heightAnchor.constraint(equalToConstant: topControlHeight) ])
         subheader.constrain([
-            subheader.bottomAnchor.constraint(equalTo: pinView.topAnchor, constant: -C.padding[2]),
+            subheader.bottomAnchor.constraint(equalTo: pinView.topAnchor, constant: -C.padding[1]),
             subheader.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
         header.constrain([
-            header.bottomAnchor.constraint(equalTo: subheader.topAnchor, constant: -C.padding[4]),
+            header.topAnchor.constraint(equalTo: topControl.bottomAnchor, constant: C.padding[6]),
             header.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
         subheader.text = S.LoginScreen.subheader
         header.text = S.LoginScreen.header
@@ -129,20 +129,32 @@ class LoginViewController : UIViewController {
     }
 
     private func authenticationSucceded() {
+
+        let label = UILabel(font: subheader.font)
+        label.textColor = .white
+        label.text = S.LoginScreen.unlocked
+        label.alpha = 0.0
         let lock = UIImageView(image: #imageLiteral(resourceName: "unlock"))
         lock.alpha = 0.0
+
+        view.addSubview(label)
         view.addSubview(lock)
+
+        label.constrain([
+            label.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: -C.padding[1]),
+            label.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
         lock.constrain([
-            lock.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: C.padding[1]),
-            lock.centerXAnchor.constraint(equalTo: subheader.centerXAnchor) ])
-        subheader.textColor = .white
-        subheader.text = S.LoginScreen.unlocked
+            lock.topAnchor.constraint(equalTo: label.bottomAnchor, constant: C.padding[1]),
+            lock.centerXAnchor.constraint(equalTo: label.centerXAnchor) ])
         view.layoutIfNeeded()
 
         UIView.spring(0.6, animations: {
             self.pinPadPottom?.constant = self.pinPad.height
             self.topControlTop?.constant = -100.0
             lock.alpha = 1.0
+            label.alpha = 1.0
+            self.header.alpha = 0.0
+            self.subheader.alpha = 0.0
             self.pinView.alpha = 0.0
             self.view.layoutIfNeeded()
         }) { completion in
