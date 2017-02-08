@@ -45,27 +45,23 @@ class StartViewController : UIViewController {
 
     private func addConstraints() {
         circle.constrain([
-                circle.constraint(.centerX, toView: view, constant: nil),
-                circle.constraint(.top, toView: view, constant: 120.0),
-                circle.constraint(.width, constant: Circle.defaultSize),
-                circle.constraint(.height, constant: Circle.defaultSize)
-            ])
+            circle.constraint(.centerX, toView: view, constant: nil),
+            circle.constraint(.top, toView: view, constant: 120.0),
+            circle.constraint(.width, constant: Circle.defaultSize),
+            circle.constraint(.height, constant: Circle.defaultSize) ])
         brand.constrain([
-                brand.constraint(.centerX, toView: circle, constant: nil),
-                brand.constraint(toBottom: circle, constant: C.padding[1])
-            ])
+            brand.constraint(.centerX, toView: circle, constant: nil),
+            brand.constraint(toBottom: circle, constant: C.padding[1]) ])
         recover.constrain([
-                recover.constraint(.leading, toView: view, constant: C.padding[2]),
-                recover.constraint(.bottom, toView: view, constant: -C.padding[3]),
-                recover.constraint(.trailing, toView: view, constant: -C.padding[2]),
-                recover.constraint(.height, constant: C.Sizes.buttonHeight)
-            ])
+            recover.constraint(.leading, toView: view, constant: C.padding[2]),
+            recover.constraint(.bottom, toView: view, constant: -C.padding[3]),
+            recover.constraint(.trailing, toView: view, constant: -C.padding[2]),
+            recover.constraint(.height, constant: C.Sizes.buttonHeight) ])
         create.constrain([
-                create.constraint(toTop: recover, constant: -C.padding[2]),
-                create.constraint(.centerX, toView: recover, constant: nil),
-                create.constraint(.width, toView: recover, constant: nil),
-                create.constraint(.height, constant: C.Sizes.buttonHeight)
-            ])
+            create.constraint(toTop: recover, constant: -C.padding[2]),
+            create.constraint(.centerX, toView: recover, constant: nil),
+            create.constraint(.width, toView: recover, constant: nil),
+            create.constraint(.height, constant: C.Sizes.buttonHeight) ])
     }
 
     private func addButtonActions() {
