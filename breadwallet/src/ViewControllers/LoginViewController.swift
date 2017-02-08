@@ -59,6 +59,12 @@ class LoginViewController : UIViewController {
         topControl.addTarget(self, action: #selector(topControlChanged(control:)), for: .valueChanged)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        guard walletManager.canUseTouchID() else { return }
+        touchIdTapped()
+    }
+
     private func addSubviews() {
         view.addSubview(backgroundView)
         view.addSubview(pinViewContainer)
@@ -129,7 +135,6 @@ class LoginViewController : UIViewController {
     }
 
     private func authenticationSucceded() {
-
         let label = UILabel(font: subheader.font)
         label.textColor = .white
         label.text = S.LoginScreen.unlocked
