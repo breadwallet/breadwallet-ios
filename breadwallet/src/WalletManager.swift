@@ -57,7 +57,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
-    
+
     lazy var wallet: BRWallet? = {
         guard self.masterPubKey != BRMasterPubKey() else { return nil }
         guard let wallet = BRWallet(transactions: self.loadTransactions(), masterPubKey: self.masterPubKey,
@@ -87,16 +87,16 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                                     create: false).appendingPathComponent("BreadWallet.sqlite").path
         
         // open sqlite database
-        if sqlite3_open(dbPath, &db) != SQLITE_OK {
+        if sqlite3_open(self.dbPath, &db) != SQLITE_OK {
             print(String(cString: sqlite3_errmsg(db)))
 
             #if DEBUG
                 throw WalletManagerError.sqliteError(errorCode: sqlite3_errcode(db),
                                                      description: String(cString: sqlite3_errmsg(db)))
             #else
-                try FileManager.default.removeItem(atPath: dbPath)
+                try FileManager.default.removeItem(atPath: self.dbPath)
                 
-                if sqlite3_open(dbPath, &db) != SQLITE_OK {
+                if sqlite3_open(self.dbPath, &db) != SQLITE_OK {
                     throw WalletManagerError.sqliteError(errorCode: sqlite3_errcode(db),
                                                          description: String(cString: sqlite3_errmsg(db)))
                 }
