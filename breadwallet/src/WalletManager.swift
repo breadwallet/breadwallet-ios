@@ -469,10 +469,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             let buf = sqlite3_column_blob(sql, 0).assumingMemoryBound(to: UInt8.self)
             guard len >= MemoryLayout<UInt32>.size*2,
                 let tx = BRTransactionParse(buf, len - MemoryLayout<UInt32>.size*2) else { return transactions }
-            tx.pointee.blockHeight = UnsafeRawPointer(buf).load(fromByteOffset: len - MemoryLayout<UInt32>.size*2,
-                                                                as: UInt32.self).littleEndian
-            tx.pointee.timestamp = UnsafeRawPointer(buf).load(fromByteOffset: len - MemoryLayout<UInt32>.size,
-                                                              as: UInt32.self).littleEndian
+            tx.pointee.blockHeight = UnsafeRawPointer(buf).advanced(by: len - MemoryLayout<UInt32>.size*2).assumingMemoryBound(to: UInt32.self).pointee
+            tx.pointee.timestamp = UnsafeRawPointer(buf).advanced(by: len - MemoryLayout<UInt32>.size).assumingMemoryBound(to: UInt32.self).pointee
             transactions.append(tx)
         }
         
