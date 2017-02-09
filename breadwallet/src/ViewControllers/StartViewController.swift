@@ -10,7 +10,7 @@ import UIKit
 
 class StartViewController : UIViewController {
 
-    var recoverCallback: ((String) -> Bool)? //TODO - delete me eventually
+    var recoverCallback: ((String, UIViewController) -> Bool)? //TODO - delete me eventually
 
     init(store: Store) {
         self.store = store
@@ -75,7 +75,7 @@ class StartViewController : UIViewController {
         alert.addTextField { (textField) in}
         alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { action in
             guard let phrase = alert.textFields?[0].text else { return }
-            guard let result = self.recoverCallback?(phrase) else { return }
+            guard let result = self.recoverCallback?(phrase, self) else { return }
             if !result {
                 self.recoverWalletError()
             }
