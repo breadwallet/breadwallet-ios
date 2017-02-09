@@ -225,8 +225,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             "(Z_PK, Z_ENT, Z_OPT, ZTYPE, ZBLOB, ZTXHASH) " +
             "values (\(pk + 1), \(txEnt), 1, 1, ?, ?)", -1, &sql2, nil)
         defer { sqlite3_finalize(sql2) }
-        sqlite3_bind_blob(sql2, 2, buf, Int32(buf.count), SQLITE_TRANSIENT)
-        sqlite3_bind_blob(sql2, 3, [tx.pointee.txHash], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
+        sqlite3_bind_blob(sql2, 1, buf, Int32(buf.count), SQLITE_TRANSIENT)
+        sqlite3_bind_blob(sql2, 2, [tx.pointee.txHash], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
 
         guard sqlite3_step(sql2) == SQLITE_DONE else {
             print(String(cString: sqlite3_errmsg(db)))
