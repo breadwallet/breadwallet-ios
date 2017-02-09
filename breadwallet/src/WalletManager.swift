@@ -44,6 +44,11 @@ extension NSNotification.Name {
     public static let WalletSyncFailedNotification = NSNotification.Name("WalletSyncFailed")
 }
 
+private func SafeSqlite3ColumnBlob<T>(statement: OpaquePointer, iCol: Int32) -> UnsafePointer<T>? {
+    guard let result = sqlite3_column_blob(statement, iCol) else { return nil }
+    return result.assumingMemoryBound(to: T.self)
+}
+
 // A WalletManger instance manages a single wallet, and that wallet's individual connection to the bitcoin network.
 // After instantiating a WalletManager object, call myWalletManager.peerManager.connect() to begin syncing.
 
@@ -494,9 +499,10 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             b.pointee.version = UInt32(bitPattern: sqlite3_column_int(sql, 4))
             b.pointee.timestamp = UInt32(bitPattern: sqlite3_column_int(sql, 5))
             b.pointee.blockHash = sqlite3_column_blob(sql, 6).assumingMemoryBound(to: UInt256.self).pointee
-            let flags = sqlite3_column_blob(sql, 7).assumingMemoryBound(to: UInt8.self)
+
+            let flags: UnsafePointer<UInt8>? = SafeSqlite3ColumnBlob(statement: sql!, iCol: 7)
             let flagsLen = Int(sqlite3_column_bytes(sql, 7))
-            let hashes = sqlite3_column_blob(sql, 8).assumingMemoryBound(to: UInt256.self)
+            let hashes: UnsafePointer<UInt256>? = SafeSqlite3ColumnBlob(statement: sql!, iCol: 8)
             let hashesCount = Int(sqlite3_column_bytes(sql, 8))/MemoryLayout<UInt256>.size
             BRMerkleBlockSetTxHashes(b, hashes, hashesCount, flags, flagsLen)
             b.pointee.merkleRoot = sqlite3_column_blob(sql, 9).assumingMemoryBound(to: UInt256.self).pointee
