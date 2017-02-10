@@ -46,7 +46,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         self.transactionLabel.attributedText = transaction.descriptionString(currency: currency)
         status.text = transaction.status
         comment.text = transaction.comment
-        timestamp.text = transaction.timestampString
+        timestamp.text = transaction.timeSince
     }
 
     //MARK: - Private
