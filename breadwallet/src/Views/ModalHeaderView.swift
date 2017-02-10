@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ModalHeaderView: UIView {
+class ModalHeaderView : UIView {
 
     var closeCallback: (() -> Void)?
     var faqCallback: (() -> Void)?
@@ -32,24 +32,20 @@ class ModalHeaderView: UIView {
         addSubview(faq)
         addSubview(border)
         close.constrain([
-                close.constraint(.leading, toView: self, constant: 0.0),
-                close.constraint(.centerY, toView: self, constant: 0.0),
-                close.constraint(.height, constant: buttonSize),
-                close.constraint(.width, constant: buttonSize)
-            ])
+            close.constraint(.leading, toView: self, constant: 0.0),
+            close.constraint(.centerY, toView: self, constant: 0.0),
+            close.constraint(.height, constant: buttonSize),
+            close.constraint(.width, constant: buttonSize) ])
         title.constrain([
-                title.constraint(.centerX, toView: self, constant: 0.0),
-                title.constraint(.centerY, toView: self, constant: 0.0)
-            ])
+            title.constraint(.centerX, toView: self, constant: 0.0),
+            title.constraint(.centerY, toView: self, constant: 0.0) ])
         faq.constrain([
-                faq.constraint(.trailing, toView: self, constant: 0.0),
-                faq.constraint(.centerY, toView: self, constant: 0.0),
-                faq.constraint(.height, constant: buttonSize),
-                faq.constraint(.width, constant: buttonSize)
-            ])
+            faq.constraint(.trailing, toView: self, constant: 0.0),
+            faq.constraint(.centerY, toView: self, constant: 0.0),
+            faq.constraint(.height, constant: buttonSize),
+            faq.constraint(.width, constant: buttonSize) ])
         border.constrain([
-                border.constraint(.height, constant: 1.0)
-            ])
+            border.constraint(.height, constant: 1.0) ])
         border.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         border.backgroundColor = .secondaryShadow
 

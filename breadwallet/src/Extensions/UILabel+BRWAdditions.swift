@@ -21,4 +21,10 @@ extension UILabel {
         self.init()
         self.font = font
     }
+
+    convenience init(font: UIFont, color: UIColor) {
+        self.init()
+        self.font = font
+        self.textColor = color
+    }
 }
