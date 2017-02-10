@@ -13,15 +13,7 @@ private let notificationViewHeight: CGFloat = 48.0
 
 class AccountViewController : UIViewController, Trackable, Subscriber {
 
-    private let store: Store
-    private let headerView: AccountHeaderView
-    private let footerView = AccountFooterView()
-    private let notificationView = SyncProgressView()
-    private let transactions: TransactionsTableViewController
-    private let headerHeight: CGFloat = 136.0
-    private let footerHeight: CGFloat = 56.0
-    private var notificationViewTop: NSLayoutConstraint?
-
+    //MARK: - Public
     var sendCallback: (() -> Void)? {
         didSet { footerView.sendCallback = sendCallback }
     }
@@ -32,12 +24,22 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         didSet { footerView.menuCallback = menuCallback }
     }
 
-    init(store: Store) {
+    init(store: Store, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
         self.store = store
-        self.transactions = TransactionsTableViewController(store: store)
+        self.transactions = TransactionsTableViewController(store: store, didSelectTransaction: didSelectTransaction)
         self.headerView = AccountHeaderView(store: store)
         super.init(nibName: nil, bundle: nil)
     }
+
+    //MARK: - Private
+    private let store: Store
+    private let headerView: AccountHeaderView
+    private let footerView = AccountFooterView()
+    private let notificationView = SyncProgressView()
+    private let transactions: TransactionsTableViewController
+    private let headerHeight: CGFloat = 136.0
+    private let footerHeight: CGFloat = 56.0
+    private var notificationViewTop: NSLayoutConstraint?
 
     override func viewDidLoad() {
         addTransactionsView()
