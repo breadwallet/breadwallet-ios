@@ -10,11 +10,16 @@ import UIKit
 
 class TransactionsTableViewController : UITableViewController, Subscriber {
 
-    init(store: Store) {
+    //MARK: - Public
+    init(store: Store, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
         self.store = store
+        self.didSelectTransaction = didSelectTransaction
         super.init(nibName: nil, bundle: nil)
     }
 
+    let didSelectTransaction: ([Transaction], Int) -> Void
+
+    //MARK: - Private
     private let store: Store
     private let transactionCellIdentifier = "transactionCellIdentifier"
     private var transactions: [Transaction] = []
@@ -70,6 +75,10 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
             }
         }
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        didSelectTransaction(transactions, indexPath.row)
     }
 
     required init?(coder aDecoder: NSCoder) {
