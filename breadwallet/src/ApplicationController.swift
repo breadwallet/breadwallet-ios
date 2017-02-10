@@ -104,7 +104,14 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     }
 
     private func setupRootViewController() {
-        let accountViewController = AccountViewController(store: store)
+
+        let didSelectTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
+            let transactionDetails = TransactionDetailsViewController(store: self.store, transactions: transactions, selectedIndex: selectedIndex)
+            transactionDetails.modalPresentationStyle = .overFullScreen
+            self.window.rootViewController?.present(transactionDetails, animated: true, completion: nil)
+        }
+
+        let accountViewController = AccountViewController(store: store, didSelectTransaction: didSelectTransaction)
         window.rootViewController = accountViewController
         accountViewController.sendCallback = { self.store.perform(action: RootModalActions.Send()) }
         accountViewController.receiveCallback = { self.store.perform(action: RootModalActions.Receive()) }
