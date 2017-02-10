@@ -16,9 +16,8 @@ class TransactionDetailsViewController : UICollectionViewController {
         self.transactions = transactions
         self.selectedIndex = selectedIndex
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.width - C.padding[4], height: UIScreen.main.bounds.height - C.padding[4])
-        layout.minimumInteritemSpacing = C.padding[2]
-        layout.sectionInset = UIEdgeInsetsMake(C.padding[2], C.padding[2], C.padding[2], C.padding[2])
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - C.padding[1])
+        layout.sectionInset = UIEdgeInsetsMake(C.padding[1], 0, 0, 0)
         layout.scrollDirection = .horizontal
         super.init(collectionViewLayout: layout)
     }
@@ -45,12 +44,16 @@ class TransactionDetailsViewController : UICollectionViewController {
 //MARK: - UICollectionViewDataSource
 extension TransactionDetailsViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return transactions.count + 5
+        return transactions.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        item.backgroundColor = .red
+        item.backgroundColor = .clear
+        let view = TransactionDetailView()
+        view.transaction = transactions[indexPath.row]
+        item.addSubview(view)
+        view.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[2], C.padding[2], 0.0, -C.padding[2]))
         return item
     }
 }

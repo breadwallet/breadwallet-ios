@@ -80,7 +80,7 @@ struct Transaction {
         return prefix
     }
 
-    var timestampString: String {
+    var timeSince: String {
         guard timestamp > 0 else { return "just now" }
         let difference = Int(Date().timeIntervalSince1970) - timestamp
         let secondsInMinute = 60
@@ -96,6 +96,17 @@ struct Transaction {
             return "\(difference/secondsInDay) d"
         }
     }
+
+    var longTimestamp: String {
+        let date = Date(timeIntervalSince1970: Double(timestamp))
+        return longDateFormatter.string(from: date)
+    }
+
+    private let longDateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateFormat = "MMMM d, yyy 'at' h:mm a"
+        return df
+    }()
 }
 
 private func makeStatus(isValid: Bool, isPending: Bool, isVerified: Bool, confirms: Int) -> String {

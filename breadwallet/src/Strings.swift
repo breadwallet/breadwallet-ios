@@ -59,4 +59,8 @@ enum S {
         static let subheader = NSLocalizedString("Enter Pin", comment: "Login Screen sub-header")
         static let unlocked = NSLocalizedString("Wallet Unlocked", comment: "Wallet unlocked message")
     }
+
+    enum TransactionDetails {
+        static let title = NSLocalizedString("Transaction Details", comment: "Transaction Details Title")
+    }
 }
