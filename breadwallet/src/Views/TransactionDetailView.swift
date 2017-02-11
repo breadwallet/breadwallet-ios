@@ -135,6 +135,13 @@ class TransactionDetailView : UIView {
         fullAddress.lineBreakMode = .byCharWrapping
     }
 
+    override func layoutSubviews() {
+        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 6.0, height: 6.0)).cgPath
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = path
+        layer.mask = maskLayer
+    }
+
     private let header = ModalHeaderView(title: S.TransactionDetails.title, isFaqHidden: false)
     private let timestamp = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let amount = UILabel(font: .customBold(size: 26.0), color: .darkText)
