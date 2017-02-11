@@ -19,6 +19,7 @@ class TransactionDetailsViewController : UICollectionViewController {
         layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - C.padding[1])
         layout.sectionInset = UIEdgeInsetsMake(C.padding[1], 0, 0, 0)
         layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0.0
         super.init(collectionViewLayout: layout)
     }
 
