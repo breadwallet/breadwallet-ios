@@ -52,6 +52,9 @@ extension TransactionDetailsViewController {
         item.backgroundColor = .clear
         let view = TransactionDetailView()
         view.transaction = transactions[indexPath.row]
+        view.closeCallback = { [weak self] in
+            self?.dismiss(animated: true, completion: nil)
+        }
         item.addSubview(view)
         view.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[2], C.padding[2], 0.0, -C.padding[2]))
         return item

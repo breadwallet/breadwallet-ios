@@ -30,6 +30,12 @@ class TransactionDetailView : UIView {
         }
     }
 
+    var closeCallback: (() -> Void)? {
+        didSet {
+            header.closeCallback = closeCallback
+        }
+    }
+
     //MARK: - Private
     private func setup() {
         backgroundColor = .white
