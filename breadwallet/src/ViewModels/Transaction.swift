@@ -39,11 +39,13 @@ struct Transaction {
         let confirms = transactionBlockHeight > blockHeight ? 0 : Int((blockHeight - transactionBlockHeight) + 1)
         self.status = makeStatus(isValid: transactionIsValid, isPending: transactionIsPending, isVerified: transactionIsVerified, confirms: confirms)
         self.comment = ""
+        self.longStatus = confirms > 6 ? "Complete" : "Waiting to be confirmed. Some merchants require confirmation to complete a transaction. Estimated time: 1-2 hours."
     }
 
     let direction: TransactionDirection
     let amount: Amount
     let status: String
+    let longStatus: String
     let comment: String
     let timestamp: Int
 

@@ -62,5 +62,8 @@ enum S {
 
     enum TransactionDetails {
         static let title = NSLocalizedString("Transaction Details", comment: "Transaction Details Title")
+        static let statusHeader = NSLocalizedString("Status", comment: "Status section header")
+        static let commentsHeader = NSLocalizedString("Comments", comment: "Comment section header")
+        static let amountHeader = NSLocalizedString("Amount", comment: "Amount section header")
     }
 }
