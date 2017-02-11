@@ -61,7 +61,9 @@ class WalletCoordinator {
     private func onSyncFail(notification: Notification) {
         store.perform(action: WalletChange.setIsSyncing(false))
         //TODO - handle this error properly
-        let alert = UIAlertController(title: "Error", message: "Syncing Error: \(notification.userInfo!["errorCode"]), \(notification.userInfo!["errorDescription"])", preferredStyle: .alert)
+        guard let code = notification.userInfo?["errorCode"] else { return }
+        guard let message = notification.userInfo?["errorDescription"] else { return }
+        let alert = UIAlertController(title: "Error", message: "Syncing Error: \(code), \(message)", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
     }
