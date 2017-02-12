@@ -25,10 +25,12 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private let walletCoordinator: WalletCoordinator
     lazy private var apiClient: BRAPIClient = BRAPIClient(authenticator: self.walletManager)
     private var exchangeManager: ExchangeManager?
+    private let transitionDelegate: ModalTransitionDelegate
 
     init() {
         walletCreator = WalletCreator(walletManager: walletManager, store: store)
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
+        transitionDelegate = ModalTransitionDelegate(store: store, type: .transactionDetail)
     }
 
     func launch(options: [UIApplicationLaunchOptionsKey: Any]?) {
@@ -108,6 +110,8 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         let didSelectTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
             let transactionDetails = TransactionDetailsViewController(store: self.store, transactions: transactions, selectedIndex: selectedIndex)
             transactionDetails.modalPresentationStyle = .overFullScreen
+            transactionDetails.transitioningDelegate = self.transitionDelegate
+            transactionDetails.modalPresentationCapturesStatusBarAppearance = true
             self.window.rootViewController?.present(transactionDetails, animated: true, completion: nil)
         }
 
