@@ -8,14 +8,21 @@
 
 import UIKit
 
-class PresentModalAnimator : NSObject, UIViewControllerAnimatedTransitioning {
-    
-    private let completion: () -> Void
+class PresentModalAnimator : NSObject {
 
-    init(completion: @escaping () -> Void) {
+    //MARK: - Public
+    init(shouldCoverBottomGap: Bool, completion: @escaping () -> Void) {
         self.completion = completion
+        self.shouldCoverBottomGap = shouldCoverBottomGap
     }
 
+    //MARK: - Private
+    fileprivate let completion: () -> Void
+    fileprivate let shouldCoverBottomGap: Bool
+
+}
+
+extension PresentModalAnimator : UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.4
     }
@@ -31,25 +38,27 @@ class PresentModalAnimator : NSObject, UIViewControllerAnimatedTransitioning {
         container.addSubview(blurView)
 
         //This mask view is placed below the bottom of the modal being presented.
-        //It needs to be there to cover up the gap left below the modal during the 
+        //It needs to be there to cover up the gap left below the modal during the
         //spring animation. It looks weird if it isn't there.
         let fromFrame = container.frame
-        let maskView = UIView(frame: CGRect(x: 0, y: fromFrame.height, width: fromFrame.width, height: 40.0))
-        maskView.backgroundColor = .white
-        container.addSubview(maskView)
+        var maskView: UIView?
+        if shouldCoverBottomGap {
+            maskView = UIView(frame: CGRect(x: 0, y: fromFrame.height, width: fromFrame.width, height: 40.0))
+            maskView?.backgroundColor = .white
+            container.addSubview(maskView!)
+        }
 
         let finalToViewFrame = toView.frame
         toView.frame = toView.frame.offsetBy(dx: 0, dy: toView.frame.height)
         container.addSubview(toView)
 
         UIView.spring(duration, animations: {
-            maskView.frame = CGRect(x: 0, y: fromFrame.height - 30.0, width: fromFrame.width, height: 40.0)
+            maskView?.frame = CGRect(x: 0, y: fromFrame.height - 30.0, width: fromFrame.width, height: 40.0)
             blurView.alpha = 0.9
             toView.frame = finalToViewFrame
         }, completion: { _ in
             transitionContext.completeTransition(true)
-            //container.insertSubview(fromView, at: 0)
-            maskView.removeFromSuperview()
+            maskView?.removeFromSuperview()
             self.completion()
         })
     }
