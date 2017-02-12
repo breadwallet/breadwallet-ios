@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ModalViewController: UIViewController {
+class ModalViewController : UIViewController {
 
     init<T: UIViewController>(childViewController: T) where T: ModalDisplayable {
         self.childViewController = childViewController
