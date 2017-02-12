@@ -54,6 +54,9 @@ extension TransactionDetailsViewController {
         let view = TransactionDetailView()
         view.transaction = transactions[indexPath.row]
         view.closeCallback = { [weak self] in
+            if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
+                delegate.reset()
+            }
             self?.dismiss(animated: true, completion: nil)
         }
         item.addSubview(view)
