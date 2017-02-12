@@ -35,7 +35,7 @@ class ModalTransitionDelegate : NSObject, Subscriber {
     }
 
     //MARK: - Private
-    private let type: ModalType
+    fileprivate let type: ModalType
     fileprivate var isInteractive: Bool = false
     fileprivate let interactiveTransition = UIPercentDrivenInteractiveTransition()
     fileprivate var presentedViewController: UIViewController?
@@ -111,7 +111,7 @@ class ModalTransitionDelegate : NSObject, Subscriber {
 extension ModalTransitionDelegate : UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         presentedViewController = presented
-        return PresentModalAnimator(completion: {
+        return PresentModalAnimator(shouldCoverBottomGap: type == .regular, completion: {
             let panGr = UIPanGestureRecognizer(target: self, action: #selector(ModalTransitionDelegate.didUpdate(gr:)))
             UIApplication.shared.keyWindow?.addGestureRecognizer(panGr)
             self.panGestureRecognizer = panGr

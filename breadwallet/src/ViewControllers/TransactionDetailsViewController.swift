@@ -37,6 +37,10 @@ class TransactionDetailsViewController : UICollectionViewController {
         collectionView?.isPagingEnabled = true
     }
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
