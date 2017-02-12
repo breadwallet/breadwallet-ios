@@ -8,8 +8,34 @@
 
 import UIKit
 
+enum ModalType {
+    case regular
+    case transactionDetail
+}
+
 class ModalTransitionDelegate : NSObject, Subscriber {
 
+    //MARK: - Public
+    init(store: Store, type: ModalType) {
+        self.store = store
+        self.type = type
+        super.init()
+        addSubscriptions()
+    }
+
+    func reset() {
+        isInteractive = false
+        if let panGr = panGestureRecognizer {
+            UIApplication.shared.keyWindow?.removeGestureRecognizer(panGr)
+        }
+
+        if let tapGr = tapGestureRecognizer {
+            UIApplication.shared.keyWindow?.removeGestureRecognizer(tapGr)
+        }
+    }
+
+    //MARK: - Private
+    private let type: ModalType
     fileprivate var isInteractive: Bool = false
     fileprivate let interactiveTransition = UIPercentDrivenInteractiveTransition()
     fileprivate var presentedViewController: UIViewController?
@@ -31,23 +57,6 @@ class ModalTransitionDelegate : NSObject, Subscriber {
     fileprivate var isModalDismissalBlocked = false
     private let store: Store
 
-    init(store: Store) {
-        self.store = store
-        super.init()
-        addSubscriptions()
-    }
-
-    func reset() {
-        isInteractive = false
-        if let panGr = panGestureRecognizer {
-            UIApplication.shared.keyWindow?.removeGestureRecognizer(panGr)
-        }
-
-        if let tapGr = tapGestureRecognizer {
-            UIApplication.shared.keyWindow?.removeGestureRecognizer(tapGr)
-        }
-    }
-
     private func addSubscriptions() {
         store.subscribe(self, selector: { $0.isModalDismissalBlocked != $1.isModalDismissalBlocked
         }, callback: {
@@ -55,7 +64,7 @@ class ModalTransitionDelegate : NSObject, Subscriber {
         })
     }
 
-    @objc func didUpdate(gr: UIPanGestureRecognizer) {
+    @objc fileprivate func didUpdate(gr: UIPanGestureRecognizer) {
         switch gr.state {
         case .began:
             isInteractive = true
@@ -85,7 +94,7 @@ class ModalTransitionDelegate : NSObject, Subscriber {
         }
     }
 
-    @objc func didTap(gr: UITapGestureRecognizer) {
+    @objc fileprivate func didTap(gr: UITapGestureRecognizer) {
         reset()
         presentedViewController?.dismiss(animated: true, completion: {})
     }
