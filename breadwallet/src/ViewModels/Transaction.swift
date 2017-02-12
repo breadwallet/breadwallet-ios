@@ -49,6 +49,10 @@ struct Transaction {
     let comment: String
     let timestamp: Int
 
+    func amountDescription(currency: Currency) -> String {
+        return currency == .bitcoin ? amount.bits : amount.localCurrency
+    }
+
     func descriptionString(currency: Currency) -> NSAttributedString {
         let fontSize: CGFloat = 14.0
 

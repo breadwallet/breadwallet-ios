@@ -11,7 +11,8 @@ import UIKit
 class TransactionDetailView : UIView {
 
     //MARK: - Public
-    init() {
+    init(currency: Currency) {
+        self.currency = currency
         super.init(frame: .zero)
         setup()
     }
@@ -20,7 +21,7 @@ class TransactionDetailView : UIView {
         didSet {
             guard let transaction = transaction else { return }
             timestamp.text = transaction.longTimestamp
-            amount.text = "\(transaction.direction.rawValue) \(transaction.amount.bits)"
+            amount.text = "\(transaction.direction.rawValue) \(transaction.amountDescription(currency: currency))"
             address.text = "\(transaction.direction.preposition) an address"
             status.text = transaction.longStatus
             comments.text = "Comments will go here"
@@ -37,6 +38,7 @@ class TransactionDetailView : UIView {
     }
 
     //MARK: - Private
+    private let currency: Currency
     private func setup() {
         backgroundColor = .white
         addSubview(header)
