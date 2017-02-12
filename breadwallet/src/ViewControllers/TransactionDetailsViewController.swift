@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TransactionDetailsViewController : UICollectionViewController {
+class TransactionDetailsViewController : UICollectionViewController, Subscriber {
 
     //MARK: - Public
     init(store: Store, transactions: [Transaction], selectedIndex: Int) {
@@ -28,6 +28,11 @@ class TransactionDetailsViewController : UICollectionViewController {
     fileprivate let transactions: [Transaction]
     fileprivate let selectedIndex: Int
     fileprivate let cellIdentifier = "CellIdentifier"
+    fileprivate var currency: Currency = .bitcoin
+
+    deinit {
+        store.unsubscribe(self)
+    }
 
     override func viewDidLoad() {
         collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
@@ -35,6 +40,7 @@ class TransactionDetailsViewController : UICollectionViewController {
         collectionView?.dataSource = self
         collectionView?.backgroundColor = .clear
         collectionView?.isPagingEnabled = true
+        store.subscribe(self, selector: { $0.currency != $1.currency }, callback: { self.currency = $0.currency })
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -55,7 +61,9 @@ extension TransactionDetailsViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
         item.backgroundColor = .clear
-        let view = TransactionDetailView()
+
+        //TODO - make these recycle properly
+        let view = TransactionDetailView(currency: currency)
         view.transaction = transactions[indexPath.row]
         view.closeCallback = { [weak self] in
             if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
