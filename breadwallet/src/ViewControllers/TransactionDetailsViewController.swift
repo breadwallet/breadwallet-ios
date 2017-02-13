@@ -25,7 +25,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
 
     //MARK: - Private
     fileprivate let store: Store
-    fileprivate let transactions: [Transaction]
+    fileprivate var transactions: [Transaction]
     fileprivate let selectedIndex: Int
     fileprivate let cellIdentifier = "CellIdentifier"
     fileprivate var currency: Currency = .bitcoin
@@ -42,6 +42,10 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         collectionView?.isPagingEnabled = true
         collectionView?.alwaysBounceHorizontal = true
         store.subscribe(self, selector: { $0.currency != $1.currency }, callback: { self.currency = $0.currency })
+        store.subscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions }, callback: {
+            self.transactions = $0.walletState.transactions
+            self.collectionView?.reloadData()
+        })
     }
 
     override func viewWillAppear(_ animated: Bool) {
