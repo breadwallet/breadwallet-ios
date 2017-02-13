@@ -42,7 +42,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         collectionView?.isPagingEnabled = true
         collectionView?.alwaysBounceHorizontal = true
         store.subscribe(self, selector: { $0.currency != $1.currency }, callback: { self.currency = $0.currency })
-        store.subscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions }, callback: {
+        store.lazySubscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions }, callback: {
             self.transactions = $0.walletState.transactions
             self.collectionView?.reloadData()
         })
