@@ -40,7 +40,17 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         collectionView?.dataSource = self
         collectionView?.backgroundColor = .clear
         collectionView?.isPagingEnabled = true
+        collectionView?.alwaysBounceHorizontal = true
         store.subscribe(self, selector: { $0.currency != $1.currency }, callback: { self.currency = $0.currency })
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        collectionView?.scrollToItem(at: IndexPath(item: selectedIndex, section: 0), at: .centeredHorizontally, animated: false)
+    }
+
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
