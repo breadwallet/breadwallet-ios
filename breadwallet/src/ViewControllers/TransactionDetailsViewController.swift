@@ -16,10 +16,10 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         self.transactions = transactions
         self.selectedIndex = selectedIndex
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - C.padding[1])
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width-C.padding[4], height: UIScreen.main.bounds.height - C.padding[1])
         layout.sectionInset = UIEdgeInsetsMake(C.padding[1], 0, 0, 0)
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 0.0
+        layout.minimumLineSpacing = C.padding[1]
         super.init(collectionViewLayout: layout)
     }
 
@@ -29,6 +29,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
     fileprivate let selectedIndex: Int
     fileprivate let cellIdentifier = "CellIdentifier"
     fileprivate var currency: Currency = .bitcoin
+    fileprivate let secretScrollView = UIScrollView()
 
     deinit {
         store.unsubscribe(self)
@@ -39,13 +40,29 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         collectionView?.delegate = self
         collectionView?.dataSource = self
         collectionView?.backgroundColor = .clear
-        collectionView?.isPagingEnabled = true
         collectionView?.alwaysBounceHorizontal = true
+        collectionView?.contentInset = UIEdgeInsetsMake(C.padding[2], C.padding[2], C.padding[2], C.padding[2])
+        setupScrolling()
         store.subscribe(self, selector: { $0.currency != $1.currency }, callback: { self.currency = $0.currency })
         store.lazySubscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions }, callback: {
             self.transactions = $0.walletState.transactions
             self.collectionView?.reloadData()
         })
+    }
+
+    private func setupScrolling() {
+        view.addSubview(secretScrollView)
+        secretScrollView.isPagingEnabled = true
+        secretScrollView.frame = CGRect(x: C.padding[2] - 4.0, y: C.padding[1], width: UIScreen.main.bounds.width - C.padding[3], height: UIScreen.main.bounds.height - C.padding[1])
+        secretScrollView.showsHorizontalScrollIndicator = false
+        secretScrollView.delegate = self
+        secretScrollView.isUserInteractionEnabled = true
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        guard let contentSize = collectionView?.contentSize else { return }
+        secretScrollView.contentSize = contentSize
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -59,6 +76,15 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let collectionView = collectionView else { return }
+        guard scrollView == secretScrollView else { return }
+        var contentOffset = scrollView.contentOffset
+        contentOffset.x = contentOffset.x - collectionView.contentInset.left
+        contentOffset.y = contentOffset.y - collectionView.contentInset.top
+        collectionView.contentOffset = contentOffset
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -86,12 +112,7 @@ extension TransactionDetailsViewController {
             self?.dismiss(animated: true, completion: nil)
         }
         item.addSubview(view)
-        view.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[2], C.padding[2], 0.0, -C.padding[2]))
+        view.constrain(toSuperviewEdges: nil)
         return item
     }
-}
-
-//MARK: - UICollectionViewDelegate
-extension TransactionDetailsViewController {
-
 }
