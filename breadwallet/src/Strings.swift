@@ -66,4 +66,8 @@ enum S {
         static let commentsHeader = NSLocalizedString("Comments", comment: "Comment section header")
         static let amountHeader = NSLocalizedString("Amount", comment: "Amount section header")
     }
+
+    enum SecurityCenter {
+        static let title = NSLocalizedString("Security Center", comment: "Security Center Title")
+    }
 }

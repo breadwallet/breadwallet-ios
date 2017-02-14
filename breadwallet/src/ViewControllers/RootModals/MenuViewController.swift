@@ -8,8 +8,15 @@
 
 import UIKit
 
-class MenuViewController: UIViewController {
+class MenuViewController : UIViewController {
 
+    //MARK: - Public
+    var didTapSecurity: (() -> Void)?
+    var didTapSupport: (() -> Void)?
+    var didTapSettings: (() -> Void)?
+    var didTapLock: (() -> Void)?
+
+    //MARK: - Private
     fileprivate let buttonHeight: CGFloat = 72.0
     fileprivate let buttons: [MenuButton] = {
         let types: [MenuButtonType] = [.security, .support, .settings, .lock]
@@ -19,25 +26,38 @@ class MenuViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        buttons.forEach { view.addSubview($0) }
 
         var previousButton: UIView?
         buttons.forEach { button in
-
+            button.addTarget(self, action: #selector(MenuViewController.didTapButton(button:)), for: .touchUpInside)
+            view.addSubview(button)
             var topConstraint: NSLayoutConstraint?
             if let viewAbove = previousButton {
                 topConstraint = button.constraint(toBottom: viewAbove, constant: 0.0)
             } else {
                 topConstraint = button.constraint(.top, toView: view, constant: 0.0)
             }
-
             button.constrain([
-                    topConstraint,
-                    button.constraint(.leading, toView: view, constant: 0.0),
-                    button.constraint(.trailing, toView: view, constant: 0.0),
-                    button.constraint(.height, constant: buttonHeight)
-                ])
+                topConstraint,
+                button.constraint(.leading, toView: view, constant: 0.0),
+                button.constraint(.trailing, toView: view, constant: 0.0),
+                button.constraint(.height, constant: buttonHeight) ])
             previousButton = button
+        }
+
+
+    }
+
+    @objc private func didTapButton(button: MenuButton) {
+        switch button.type {
+        case .security:
+            didTapSecurity?()
+        case .support:
+            didTapSupport?()
+        case .settings:
+            didTapSettings?()
+        case .lock:
+            didTapLock?()
         }
     }
 }
