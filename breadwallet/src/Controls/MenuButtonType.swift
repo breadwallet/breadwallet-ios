@@ -9,7 +9,6 @@
 import UIKit
 
 enum MenuButtonType {
-    case profile
     case security
     case support
     case settings
@@ -17,8 +16,6 @@ enum MenuButtonType {
 
     var title: String {
         switch self {
-        case .profile:
-            return NSLocalizedString("My Profile", comment: "Menu button title")
         case .security:
             return NSLocalizedString("Security Center", comment: "Menu button title")
         case .support:
@@ -32,8 +29,6 @@ enum MenuButtonType {
 
     var image: UIImage {
         switch self {
-        case .profile:
-            return #imageLiteral(resourceName: "Profile")
         case .security:
             return #imageLiteral(resourceName: "Shield")
         case .support:

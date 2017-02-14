@@ -107,7 +107,7 @@ class ModalPresenter : Subscriber {
                 root.view.isFrameChangeBlocked = true
                 root.present(vc, animated: true, completion: nil)
             }
-            sendVC.onPublishFailure = {
+            sendVC.onPublishSuccess = {
                 self.presentAlert(.sendSuccess, completion: {})
             }
             sendVC.onPublishFailure = {
@@ -128,7 +128,18 @@ class ModalPresenter : Subscriber {
             }
             return root
         case .menu:
-            return ModalViewController(childViewController: MenuViewController())
+            let menu = MenuViewController()
+            let root = ModalViewController(childViewController: menu)
+            menu.didTapSecurity = {
+                self.modalTransitionDelegate.reset()
+                root.dismiss(animated: true, completion: {
+                    let securityCenter = SecurityCenterViewController()
+                    let nc = UINavigationController(rootViewController: securityCenter)
+                    nc.isNavigationBarHidden = true
+                    self.window.rootViewController?.present(nc, animated: true, completion: nil)
+                })
+            }
+            return root
         }
     }
 
