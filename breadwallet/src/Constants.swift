@@ -24,6 +24,7 @@ struct C {
 
     struct Sizes {
         static let buttonHeight: CGFloat = 48.0
+        static let headerHeight: CGFloat = 48.0
     }
 
     static var defaultTintColor: UIColor = {
