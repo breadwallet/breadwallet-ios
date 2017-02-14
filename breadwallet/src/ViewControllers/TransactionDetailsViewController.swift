@@ -52,10 +52,16 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
     private func setupScrolling() {
         view.addSubview(secretScrollView)
         secretScrollView.isPagingEnabled = true
-        secretScrollView.frame = CGRect(x: C.padding[2] - 4.0, y: C.padding[1], width: UIScreen.main.bounds.width - C.padding[3], height: UIScreen.main.bounds.height - C.padding[1])
+
+        //This scrollview needs to be off screen so that it doesn't block touches meant for the transaction details
+        //card. We are just using this scrollview for its gesture recognizer, so that we can se a preview of the next card
+        //and also have paging enabled for the scrollview.
+        secretScrollView.frame = CGRect(x: C.padding[2] - 4.0, y: -1000, width: UIScreen.main.bounds.width - C.padding[3], height: UIScreen.main.bounds.height - C.padding[1])
         secretScrollView.showsHorizontalScrollIndicator = false
         secretScrollView.delegate = self
         secretScrollView.alwaysBounceHorizontal = true
+        collectionView?.addGestureRecognizer(secretScrollView.panGestureRecognizer)
+        collectionView?.panGestureRecognizer.isEnabled = false
     }
 
     override func viewDidAppear(_ animated: Bool) {
