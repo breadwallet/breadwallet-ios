@@ -40,7 +40,6 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         collectionView?.delegate = self
         collectionView?.dataSource = self
         collectionView?.backgroundColor = .clear
-        collectionView?.alwaysBounceHorizontal = true
         collectionView?.contentInset = UIEdgeInsetsMake(C.padding[2], C.padding[2], C.padding[2], C.padding[2])
         setupScrolling()
         store.subscribe(self, selector: { $0.currency != $1.currency }, callback: { self.currency = $0.currency })
@@ -56,7 +55,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         secretScrollView.frame = CGRect(x: C.padding[2] - 4.0, y: C.padding[1], width: UIScreen.main.bounds.width - C.padding[3], height: UIScreen.main.bounds.height - C.padding[1])
         secretScrollView.showsHorizontalScrollIndicator = false
         secretScrollView.delegate = self
-        secretScrollView.isUserInteractionEnabled = true
+        secretScrollView.alwaysBounceHorizontal = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
