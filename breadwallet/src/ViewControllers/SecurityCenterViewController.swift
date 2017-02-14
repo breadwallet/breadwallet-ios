@@ -36,5 +36,5 @@ class SecurityCenterViewController : UIViewController {
     }
 
     private let headerBackground = SecurityCenterHeader()
-    private let header = ModalHeaderView(title: S.SecurityCenter.title, isFaqHidden: false)
+    private let header = ModalHeaderView(title: S.SecurityCenter.title, isFaqHidden: false, style: .light)
 }
