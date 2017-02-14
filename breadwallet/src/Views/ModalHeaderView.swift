@@ -8,23 +8,32 @@
 
 import UIKit
 
+enum ModalHeaderViewStyle {
+    case light
+    case dark
+}
+
 class ModalHeaderView : UIView {
 
+    //MARK - Public
     var closeCallback: (() -> Void)?
     var faqCallback: (() -> Void)?
 
-    init(title: String, isFaqHidden: Bool) {
+    init(title: String, isFaqHidden: Bool, style: ModalHeaderViewStyle) {
         self.title.text = title
+        self.style = style
         faq.isHidden = isFaqHidden
         super.init(frame: .zero)
         setupSubviews()
     }
 
+    //MARK - Private
     private let title = UILabel(font: .customBold(size: 17.0))
     private let close = UIButton.close
     private let faq = UIButton.faq
     private let border = UIView()
     private let buttonSize: CGFloat = 44.0
+    private let style: ModalHeaderViewStyle
 
     private func setupSubviews() {
         addSubview(title)
@@ -47,10 +56,22 @@ class ModalHeaderView : UIView {
         border.constrain([
             border.constraint(.height, constant: 1.0) ])
         border.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
-        border.backgroundColor = .secondaryShadow
 
         close.addTarget(self, action: #selector(ModalHeaderView.closeTapped), for: .touchUpInside)
         faq.addTarget(self, action: #selector(ModalHeaderView.faqTapped), for: .touchUpInside)
+
+        setColors()
+    }
+
+    private func setColors() {
+        switch style {
+        case .light:
+            title.textColor = .white
+            close.tintColor = .white
+            faq.tintColor = .white
+        case .dark:
+            border.backgroundColor = .secondaryShadow
+        }
     }
 
     @objc private func closeTapped() {
