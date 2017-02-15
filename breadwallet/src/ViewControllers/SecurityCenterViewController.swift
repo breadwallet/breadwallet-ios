@@ -18,6 +18,10 @@ private let headerHeight: CGFloat = 222.0
 
 class SecurityCenterViewController : UIViewController {
 
+    var didTapPin: (() -> Void)?
+    var didTapTouchId: (() -> Void)?
+    var didTapPaperKey: (() -> Void)?
+
     override func viewDidLoad() {
         setupSubviewProperties()
         addSubviews()
@@ -34,10 +38,18 @@ class SecurityCenterViewController : UIViewController {
             self.dismiss(animated: true, completion: nil)
         }
         scrollView.alwaysBounceVertical = true
+        scrollView.panGestureRecognizer.delaysTouchesBegan = false
         scrollView.delegate = self
         info.text = S.SecurityCenter.info
         info.numberOfLines = 0
         info.lineBreakMode = .byWordWrapping
+
+        pinCell.isCheckHighlighted = true
+        paperKeyCell.isCheckHighlighted = true
+
+        pinCell.addTarget(self, action: #selector(SecurityCenterViewController.pinTapped), for: .touchUpInside)
+        touchIdCell.addTarget(self, action: #selector(SecurityCenterViewController.touchIdTapped), for: .touchUpInside)
+        paperKeyCell.addTarget(self, action: #selector(SecurityCenterViewController.paperKeyTapped), for: .touchUpInside)
     }
 
     private func addSubviews() {
@@ -49,9 +61,6 @@ class SecurityCenterViewController : UIViewController {
         scrollView.addSubview(touchIdCell)
         scrollView.addSubview(paperKeyCell)
         scrollView.addSubview(info)
-
-        pinCell.isCheckHighlighted = true
-        paperKeyCell.isCheckHighlighted = true
     }
 
     private func addConstraints() {
@@ -97,6 +106,18 @@ class SecurityCenterViewController : UIViewController {
             paperKeyCell.topAnchor.constraint(equalTo: touchIdCell.bottomAnchor),
             paperKeyCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             paperKeyCell.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -C.padding[2]) ])
+    }
+
+    @objc private func pinTapped() {
+        didTapPin?()
+    }
+
+    @objc private func touchIdTapped() {
+        didTapTouchId?()
+    }
+
+    @objc private func paperKeyTapped() {
+        didTapPaperKey?()
     }
 
     fileprivate var headerBackgroundHeight: NSLayoutConstraint?
