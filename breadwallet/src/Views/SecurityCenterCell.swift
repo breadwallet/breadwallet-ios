@@ -13,9 +13,9 @@ private let buttonSize: CGFloat = 16.0
 class SecurityCenterCell : UIView {
 
     //MARK: - Public
-    var isEnabled: Bool = false {
+    var isCheckHighlighted: Bool = false {
         didSet {
-            check.tintColor = isEnabled ? .primaryButton : .grayTextTint
+            check.tintColor = isCheckHighlighted ? .primaryButton : .grayTextTint
         }
     }
 
@@ -55,12 +55,13 @@ class SecurityCenterCell : UIView {
         descriptionLabel.numberOfLines = 0
         descriptionLabel.lineBreakMode = .byWordWrapping
         check.setImage(#imageLiteral(resourceName: "CircleCheck"), for: .normal)
+        isCheckHighlighted = false
     }
 
     private let title = UILabel(font: .customBold(size: 13.0))
     private let descriptionLabel = UILabel(font: .customBody(size: 13.0))
     private let separator = UIView(color: .secondaryShadow)
-    private let check = UIButton(type: .custom)
+    private let check = UIButton(type: .system)
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
