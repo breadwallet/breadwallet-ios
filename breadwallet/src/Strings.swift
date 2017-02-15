@@ -69,5 +69,13 @@ enum S {
 
     enum SecurityCenter {
         static let title = NSLocalizedString("Security Center", comment: "Security Center Title")
+        enum Cells {
+            static let pinTitle = NSLocalizedString("6-Digit PIN", comment: "Pin cell title")
+            static let pinDescription = NSLocalizedString("Unlocks your Bread, authorizes send money.", comment: "Pin cell description")
+            static let touchIdTitle = NSLocalizedString("Touch ID", comment: "Touch ID cell title")
+            static let touchIdDescription = NSLocalizedString("Unlocks your Bread, authorizes send money to set limit.", comment: "Touch ID cell description")
+            static let paperKeyTitle = NSLocalizedString("Paper Key", comment: "Paper Key cell title")
+            static let paperKeyDescription = NSLocalizedString("Restores your Bread on new devices and after software updates.", comment: "Paper Key cell description")
+        }
     }
 }
