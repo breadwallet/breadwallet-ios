@@ -63,6 +63,35 @@ class SecurityCenterViewController : UIViewController {
         info.text = "Breadwallet provides security features for protecting your money. Click each feature below to learn more."
         info.numberOfLines = 0
         info.lineBreakMode = .byWordWrapping
+
+        let separator = UIView(color: .secondaryShadow)
+        scrollView.addSubview(separator)
+        separator.constrain([
+            separator.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: C.padding[2]),
+            separator.topAnchor.constraint(equalTo: info.bottomAnchor, constant: C.padding[2]),
+            separator.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -C.padding[2]),
+            separator.heightAnchor.constraint(equalToConstant: 1.0) ])
+
+        let pinCell = SecurityCenterCell(title: S.SecurityCenter.Cells.pinTitle, descriptionText: S.SecurityCenter.Cells.pinDescription)
+        pinCell.isEnabled = true
+        let touchIdCell = SecurityCenterCell(title: S.SecurityCenter.Cells.touchIdTitle, descriptionText: S.SecurityCenter.Cells.touchIdDescription)
+        let paperKeyCell = SecurityCenterCell(title: S.SecurityCenter.Cells.paperKeyTitle, descriptionText: S.SecurityCenter.Cells.paperKeyDescription)
+        scrollView.addSubview(pinCell)
+        scrollView.addSubview(touchIdCell)
+        scrollView.addSubview(paperKeyCell)
+        pinCell.constrain([
+            pinCell.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            pinCell.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: C.padding[2]),
+            pinCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor) ])
+        touchIdCell.constrain([
+            touchIdCell.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            touchIdCell.topAnchor.constraint(equalTo: pinCell.bottomAnchor),
+            touchIdCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor) ])
+        paperKeyCell.constrain([
+            paperKeyCell.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            paperKeyCell.topAnchor.constraint(equalTo: touchIdCell.bottomAnchor),
+            paperKeyCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            paperKeyCell.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -C.padding[2]) ])
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

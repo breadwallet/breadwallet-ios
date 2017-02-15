@@ -1,0 +1,68 @@
+//
+//  SecurityCenterCell.swift
+//  breadwallet
+//
+//  Created by Adrian Corscadden on 2017-02-15.
+//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//
+
+import UIKit
+
+private let buttonSize: CGFloat = 16.0
+
+class SecurityCenterCell : UIView {
+
+    //MARK: - Public
+    var isEnabled: Bool = false {
+        didSet {
+            check.tintColor = isEnabled ? .primaryButton : .grayTextTint
+        }
+    }
+
+    init(title: String, descriptionText: String) {
+        super.init(frame: .zero)
+        self.title.text = title
+        descriptionLabel.text = descriptionText
+        setup()
+    }
+
+    //MARK: - Private
+    private func setup() {
+        addSubview(title)
+        addSubview(descriptionLabel)
+        addSubview(separator)
+        addSubview(check)
+        check.constrain([
+            check.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
+            check.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[2]),
+            check.widthAnchor.constraint(equalToConstant: buttonSize),
+            check.heightAnchor.constraint(equalToConstant: buttonSize) ])
+        title.constrain([
+            title.leadingAnchor.constraint(equalTo: check.trailingAnchor, constant: C.padding[1]),
+            title.topAnchor.constraint(equalTo: check.topAnchor),
+            title.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]) ])
+        descriptionLabel.constrain([
+            descriptionLabel.leadingAnchor.constraint(equalTo: title.leadingAnchor),
+            descriptionLabel.topAnchor.constraint(equalTo: title.bottomAnchor),
+            descriptionLabel.trailingAnchor.constraint(equalTo: title.trailingAnchor) ])
+        separator.constrain([
+            separator.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: C.padding[3]),
+            separator.leadingAnchor.constraint(equalTo: check.leadingAnchor),
+            separator.trailingAnchor.constraint(equalTo: title.trailingAnchor),
+            separator.heightAnchor.constraint(equalToConstant: 1.0),
+            separator.bottomAnchor.constraint(equalTo: bottomAnchor) ])
+
+        descriptionLabel.numberOfLines = 0
+        descriptionLabel.lineBreakMode = .byWordWrapping
+        check.setImage(#imageLiteral(resourceName: "CircleCheck"), for: .normal)
+    }
+
+    private let title = UILabel(font: .customBold(size: 13.0))
+    private let descriptionLabel = UILabel(font: .customBody(size: 13.0))
+    private let separator = UIView(color: .secondaryShadow)
+    private let check = UIButton(type: .custom)
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
