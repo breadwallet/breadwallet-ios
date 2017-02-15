@@ -49,6 +49,9 @@ class SecurityCenterViewController : UIViewController {
         scrollView.addSubview(touchIdCell)
         scrollView.addSubview(paperKeyCell)
         scrollView.addSubview(info)
+
+        pinCell.isCheckHighlighted = true
+        paperKeyCell.isCheckHighlighted = true
     }
 
     private func addConstraints() {
