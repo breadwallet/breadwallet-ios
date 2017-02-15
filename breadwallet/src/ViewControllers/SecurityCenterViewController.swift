@@ -95,7 +95,7 @@ class SecurityCenterViewController : UIViewController {
             separator.heightAnchor.constraint(equalToConstant: 1.0) ])
         pinCell.constrain([
             pinCell.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            pinCell.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: C.padding[2]),
+            pinCell.topAnchor.constraint(equalTo: separator.bottomAnchor),
             pinCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor) ])
         touchIdCell.constrain([
             touchIdCell.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
