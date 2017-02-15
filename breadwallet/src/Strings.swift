@@ -69,6 +69,7 @@ enum S {
 
     enum SecurityCenter {
         static let title = NSLocalizedString("Security Center", comment: "Security Center Title")
+        static let info = NSLocalizedString("Breadwallet provides security features for protecting your money. Click each feature below to learn more.", comment: "Security Center Info")
         enum Cells {
             static let pinTitle = NSLocalizedString("6-Digit PIN", comment: "Pin cell title")
             static let pinDescription = NSLocalizedString("Unlocks your Bread, authorizes send money.", comment: "Pin cell description")
