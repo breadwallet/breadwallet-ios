@@ -10,7 +10,7 @@ import UIKit
 
 private let buttonSize: CGFloat = 16.0
 
-class SecurityCenterCell : UIView {
+class SecurityCenterCell : UIControl {
 
     //MARK: - Public
     var isCheckHighlighted: Bool = false {
@@ -56,6 +56,16 @@ class SecurityCenterCell : UIView {
         descriptionLabel.lineBreakMode = .byWordWrapping
         check.setImage(#imageLiteral(resourceName: "CircleCheck"), for: .normal)
         isCheckHighlighted = false
+    }
+
+    override var isHighlighted: Bool {
+        didSet {
+            if isHighlighted {
+                backgroundColor = .secondaryButton
+            } else {
+                backgroundColor = .white
+            }
+        }
     }
 
     private let title = UILabel(font: .customBold(size: 13.0))

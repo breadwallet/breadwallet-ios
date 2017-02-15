@@ -134,6 +134,15 @@ class ModalPresenter : Subscriber {
                 self.modalTransitionDelegate.reset()
                 root.dismiss(animated: true, completion: {
                     let securityCenter = SecurityCenterViewController()
+                    securityCenter.didTapPin = {
+                        print("pin")
+                    }
+                    securityCenter.didTapTouchId = {
+                        print("touchid")
+                    }
+                    securityCenter.didTapPaperKey = {
+                        print("paperkey")
+                    }
                     let nc = UINavigationController(rootViewController: securityCenter)
                     nc.isNavigationBarHidden = true
                     self.window.rootViewController?.present(nc, animated: true, completion: nil)
