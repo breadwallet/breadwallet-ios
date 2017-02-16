@@ -252,6 +252,7 @@
 		CE6D0F971DE8B73A00BD4BCF /* ModalTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0F961DE8B73A00BD4BCF /* ModalTransitionDelegate.swift */; };
 		CE6D0F991DE8B75900BD4BCF /* DismissModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */; };
 		CE74F58D1E3BA85600ED5FA9 /* ExchangeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE74F58C1E3BA85600ED5FA9 /* ExchangeManager.swift */; };
+		CE760ED91E55FA6100EFAC2B /* UpdatePinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE760ED81E55FA6100EFAC2B /* UpdatePinViewController.swift */; };
 		CE8CD8DD1E2D9EF200785E02 /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8DC1E2D9EF200785E02 /* Sender.swift */; };
 		CE8CD8DF1E2E825100785E02 /* VerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8DE1E2E825000785E02 /* VerifyPinViewController.swift */; };
 		CE8CD8E11E31976800785E02 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8E01E31976800785E02 /* LoginViewController.swift */; };
@@ -1336,6 +1337,7 @@
 		CE6D0F961DE8B73A00BD4BCF /* ModalTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalTransitionDelegate.swift; path = src/ViewControllers/ViewControllerTransitions/ModalTransitionDelegate.swift; sourceTree = "<group>"; };
 		CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DismissModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/DismissModalAnimator.swift; sourceTree = "<group>"; };
 		CE74F58C1E3BA85600ED5FA9 /* ExchangeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExchangeManager.swift; path = src/Wallet/ExchangeManager.swift; sourceTree = "<group>"; };
+		CE760ED81E55FA6100EFAC2B /* UpdatePinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UpdatePinViewController.swift; path = "src/ViewControllers/Security Center/UpdatePinViewController.swift"; sourceTree = "<group>"; };
 		CE8CD8DC1E2D9EF200785E02 /* Sender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sender.swift; path = src/Sender.swift; sourceTree = "<group>"; };
 		CE8CD8DE1E2E825000785E02 /* VerifyPinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VerifyPinViewController.swift; path = src/ViewControllers/VerifyPinViewController.swift; sourceTree = "<group>"; };
 		CE8CD8E01E31976800785E02 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = src/ViewControllers/LoginViewController.swift; sourceTree = "<group>"; };
@@ -2384,9 +2386,9 @@
 				7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */,
 				22A9A9691DF6218B000F0016 /* WalletManager+Plat.swift */,
 				CEA3626B1E01B7890061FC0E /* Strings.swift */,
+				CEF8A4A41E2869D200048B20 /* Wallet+ViewModels.swift */,
 				CECF8D681E17108600B707AE /* WalletCreator.swift */,
 				CE4B6C191E219CA600CF935B /* WalletCoordinator.swift */,
-				CEF8A4A41E2869D200048B20 /* Wallet+ViewModels.swift */,
 				CE8CD8DC1E2D9EF200785E02 /* Sender.swift */,
 				CE74F58C1E3BA85600ED5FA9 /* ExchangeManager.swift */,
 				CE20C90A1DBC59C500C8397A /* FlowControllers */,
@@ -2582,6 +2584,7 @@
 			children = (
 				CEC6AA3E1DEFC85700EE5AFD /* RootModals */,
 				CE6D0F951DE8B6B600BD4BCF /* ViewControllerTransitions */,
+				CE760ED71E55F9E000EFAC2B /* Security Center */,
 				CEBF32EF1DDCD30600348FC6 /* AccountViewController.swift */,
 				CE20C9061DBC587200C8397A /* StartViewController.swift */,
 				CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */,
@@ -2595,7 +2598,6 @@
 				CE8CD8DE1E2E825000785E02 /* VerifyPinViewController.swift */,
 				CE8CD8E01E31976800785E02 /* LoginViewController.swift */,
 				CE14E4081E4D506000AEA83A /* TransactionDetailsViewController.swift */,
-				CE14E4121E53C26400AEA83A /* SecurityCenterViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -2710,6 +2712,15 @@
 				CE5F21DA1E4A93A500C47B8E /* LoginTransitionDelegate.swift */,
 			);
 			name = ViewControllerTransitions;
+			sourceTree = "<group>";
+		};
+		CE760ED71E55F9E000EFAC2B /* Security Center */ = {
+			isa = PBXGroup;
+			children = (
+				CE14E4121E53C26400AEA83A /* SecurityCenterViewController.swift */,
+				CE760ED81E55FA6100EFAC2B /* UpdatePinViewController.swift */,
+			);
+			name = "Security Center";
 			sourceTree = "<group>";
 		};
 		CEAA9E9C1DC2F8270066731D /* Fonts */ = {
@@ -3497,6 +3508,7 @@
 				CECCE5A51E02408300D99448 /* UIView+FrameChangeBlocking.swift in Sources */,
 				22A9A94F1DF61945000F0016 /* BRHTTPRouter.swift in Sources */,
 				CECF8D691E17108600B707AE /* WalletCreator.swift in Sources */,
+				CE760ED91E55FA6100EFAC2B /* UpdatePinViewController.swift in Sources */,
 				22A9A9481DF61945000F0016 /* BRBitID.swift in Sources */,
 				CEBF32F41DDCE12900348FC6 /* AccountFooterView.swift in Sources */,
 				CE9057181DFF0FA8006BA848 /* String+Additions.swift in Sources */,
