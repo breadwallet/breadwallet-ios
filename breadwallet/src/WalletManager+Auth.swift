@@ -176,7 +176,7 @@ extension WalletManager : WalletAuthenticator {
                 }
                 
                 if try secureTime > keychainItem(key: keychainKey.pinFailTime) ?? 0 {
-                    try setKeychainItem(key: keychainKey.pinFailTime, item: secureTime)
+                    try setKeychainItem(key: keychainKey.pinFailTime, item: Int64(secureTime))
                 }
             }
             
