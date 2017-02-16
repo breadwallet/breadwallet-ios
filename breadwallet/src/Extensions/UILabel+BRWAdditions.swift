@@ -36,4 +36,15 @@ extension UILabel {
         self.font = font
         self.textColor = color
     }
+
+    func pushNewText(_ newText: String) {
+        let animation:CATransition = CATransition()
+        animation.timingFunction = CAMediaTimingFunction(name:
+            kCAMediaTimingFunctionEaseInEaseOut)
+        animation.type = kCATransitionPush
+        animation.subtype = kCATransitionFromTop
+        animation.duration = C.animationDuration
+        layer.add(animation, forKey: kCATransitionPush)
+        text = newText
+    }
 }
