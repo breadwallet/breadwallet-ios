@@ -25,6 +25,27 @@ class UpdatePinViewController : UIViewController {
     private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad)
     private let store: Store
     private let walletManager: WalletManager
+    private var step: Step = .current {
+        didSet {
+            switch step {
+            case .current:
+                instruction.text = S.UpdatePin.enterCurrent
+            case .new:
+                instruction.text = S.UpdatePin.enterNew
+                caption.text = S.UpdatePin.caption
+            case .confirmNew:
+                instruction.text = S.UpdatePin.reEnterNew
+            }
+        }
+    }
+    private var currentPin: String?
+    private var newPin: String?
+
+    private enum Step {
+        case current
+        case new
+        case confirmNew
+    }
 
     override func viewDidLoad() {
         addSubviews()
@@ -70,7 +91,71 @@ class UpdatePinViewController : UIViewController {
 
         header.text = S.UpdatePin.title
         instruction.text = S.UpdatePin.enterCurrent
-        caption.text = S.UpdatePin.caption
+
+        pinPad.ouputDidUpdate = { text in
+            switch self.step {
+            case .current:
+                self.didUpdateForCurrent(pin: text)
+            case .new :
+                self.didUpdateForNew(pin: text)
+            case .confirmNew:
+                self.didUpdateForConfirmNew(pin: text)
+            }
+        }
+    }
+
+    private func didUpdateForCurrent(pin: String) {
+        pinView.fill(pin.utf8.count)
+        if pin.utf8.count == 6 {
+            if walletManager.authenticate(pin: pin) {
+                pinPad.clear()
+                step = .new
+                currentPin = pin
+                DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
+                    self?.pinView.fill(0)
+                }
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
+                    self?.pinView.fill(0)
+                }
+                pinView.shake()
+                pinPad.clear()
+            }
+        }
+    }
+
+    private func didUpdateForNew(pin: String) {
+        pinView.fill(pin.utf8.count)
+        if pin.utf8.count == 6 {
+            pinPad.clear()
+            step = .confirmNew
+            newPin = pin
+            DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
+                self?.pinView.fill(0)
+            }
+        }
+    }
+
+    private func didUpdateForConfirmNew(pin: String) {
+        guard let currentPin = currentPin else { return }
+        guard let newPin = newPin else { return }
+        pinView.fill(pin.utf8.count)
+        if pin.utf8.count == 6 {
+            if pin == newPin {
+                let result = walletManager.forceSetPin(newPin: pin, seedPhrase: walletManager.seedPhrase(pin: currentPin))
+                let message = result ? "Success" : "Failed"
+                let alert = UIAlertController(title: "Set pin", message: message, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .destructive, handler: nil))
+                present(alert, animated: true, completion: nil)
+
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
+                    self?.pinView.fill(0)
+                }
+                pinView.shake()
+                pinPad.clear()
+            }
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
