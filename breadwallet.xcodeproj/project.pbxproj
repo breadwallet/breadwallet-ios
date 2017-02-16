@@ -2397,7 +2397,6 @@
 				CEBF33021DDE177F00348FC6 /* ViewModels */,
 				CE6D0E5A1E14BF8400137DF1 /* Models */,
 				CE3754B01DE0E2FC0045B0CB /* EventManager */,
-				CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */,
 				CE20C8F01DBAF6E100C8397A /* Extensions */,
 				22A9A9311DF61930000F0016 /* Platform */,
 				CEAA9E9C1DC2F8270066731D /* Fonts */,
@@ -2696,6 +2695,7 @@
 		CE6D0E5A1E14BF8400137DF1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */,
 				CE6D0E5B1E14BFA600137DF1 /* KeyboardNotificationInfo.swift */,
 				CEE65DEF1E39056F0002994D /* Rate.swift */,
 			);
