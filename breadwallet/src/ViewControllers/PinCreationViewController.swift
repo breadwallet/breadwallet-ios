@@ -162,7 +162,6 @@ class PinCreationViewController : UIViewController, Subscriber {
 }
 
 extension PinCreationViewController : UITextFieldDelegate {
-
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let oldLength = textField.text?.lengthOfBytes(using: .utf8) else { return true }
         let replacementLength = string.lengthOfBytes(using: .utf8)
@@ -170,5 +169,4 @@ extension PinCreationViewController : UITextFieldDelegate {
         let newLength = oldLength - rangeLength + replacementLength
         return newLength <= maxPinLength
     }
-
 }

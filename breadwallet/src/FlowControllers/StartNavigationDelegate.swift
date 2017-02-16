@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StartNavigationDelegate: NSObject, UINavigationControllerDelegate {
+class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
 
     let store: Store
     var previous: UIViewController?
