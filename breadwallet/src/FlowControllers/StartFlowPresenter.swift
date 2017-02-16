@@ -142,7 +142,7 @@ class StartFlowPresenter : Subscriber {
         //This makes the keyboard slide in from the right.
         let _ = pinCreationViewController.view
         navigationController?.setNavigationBarHidden(false, animated: false)
-        setBackArrow()
+        navigationController?.setBackArrow()
         navigationController?.setClearNavbar()
         navigationController?.pushViewController(pinCreationViewController, animated: true)
 
@@ -191,13 +191,6 @@ class StartFlowPresenter : Subscriber {
         confirmViewController.title = "Paper Key"
         navigationController?.navigationBar.tintColor = .white
         navigationController?.pushViewController(confirmViewController, animated: true)
-    }
-
-    private func setBackArrow() {
-        let image = #imageLiteral(resourceName: "Back")
-        let renderedImage = image.withRenderingMode(.alwaysOriginal)
-        navigationController?.navigationBar.backIndicatorImage = renderedImage
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = renderedImage
     }
 
     private func presentLoginFlow() {

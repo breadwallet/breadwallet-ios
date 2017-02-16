@@ -79,4 +79,12 @@ enum S {
             static let paperKeyDescription = NSLocalizedString("Restores your Bread on new devices and after software updates.", comment: "Paper Key cell description")
         }
     }
+
+    enum UpdatePin {
+        static let title = NSLocalizedString("Update PIN", comment: "Update Pin title")
+        static let enterCurrent = NSLocalizedString("Enter your current PIN.", comment: "Enter current pin instruction")
+        static let enterNew = NSLocalizedString("Enter your new PIN.", comment: "Enter new pin instruction")
+        static let reEnterNew = NSLocalizedString("Re-Enter your new PIN", comment: "Re-Enter new pin instruction")
+        static let caption = NSLocalizedString("Write down your PIN and store it in a place you can access even if your phone is broken or lost.", comment: "Update pin caption text")
+    }
 }

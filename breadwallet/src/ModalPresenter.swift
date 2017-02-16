@@ -25,6 +25,7 @@ class ModalPresenter : Subscriber {
     private let alertHeight: CGFloat = 260.0
     private let modalTransitionDelegate: ModalTransitionDelegate
     private let messagePresenter = MessageUIPresenter()
+    private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
 
     private func addSubscriptions() {
         store.subscribe(self,
@@ -133,19 +134,7 @@ class ModalPresenter : Subscriber {
             menu.didTapSecurity = {
                 self.modalTransitionDelegate.reset()
                 root.dismiss(animated: true, completion: {
-                    let securityCenter = SecurityCenterViewController()
-                    securityCenter.didTapPin = {
-                        print("pin")
-                    }
-                    securityCenter.didTapTouchId = {
-                        print("touchid")
-                    }
-                    securityCenter.didTapPaperKey = {
-                        print("paperkey")
-                    }
-                    let nc = UINavigationController(rootViewController: securityCenter)
-                    nc.isNavigationBarHidden = true
-                    self.window.rootViewController?.present(nc, animated: true, completion: nil)
+                    self.presentSecurityCenter()
                 })
             }
             return root
@@ -173,6 +162,27 @@ class ModalPresenter : Subscriber {
         }
     }
 
+    private func presentSecurityCenter() {
+        let securityCenter = SecurityCenterViewController()
+        let nc = UINavigationController(rootViewController: securityCenter)
+        nc.setDefaultStyle()
+        nc.isNavigationBarHidden = true
+        nc.delegate = securityCenterNavigationDelegate
+        securityCenter.didTapPin = {
+            guard let walletManager = self.walletManager else { return }
+            let updatePin = UpdatePinViewController(store: self.store, walletManager: walletManager)
+            nc.pushViewController(updatePin, animated: true)
+        }
+        securityCenter.didTapTouchId = {
+            print("touchid")
+        }
+        securityCenter.didTapPaperKey = {
+            print("paperkey")
+        }
+
+        window.rootViewController?.present(nc, animated: true, completion: nil)
+    }
+
     //TODO - This is a total hack to grab the window that keyboard is in
     //After pin creation, the alert view needs to be presented over the keyboard
     private var activeWindow: UIWindow {
@@ -181,5 +191,15 @@ class ModalPresenter : Subscriber {
             return keyboardWindow
         }
         return window
+    }
+}
+
+class SecurityCenterNavigationDelegate : NSObject, UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if viewController is SecurityCenterViewController {
+            navigationController.isNavigationBarHidden = true
+        } else {
+            navigationController.isNavigationBarHidden = false
+        }
     }
 }
