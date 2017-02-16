@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UpdatePinViewController : UIViewController {
+class UpdatePinViewController : UIViewController, Subscriber {
 
     //MARK: - Public
     init(store: Store, walletManager: WalletManager) {
@@ -153,11 +153,18 @@ class UpdatePinViewController : UIViewController {
     private func didSetNewPin() {
         guard let currentPin = currentPin else { return }
         guard let newPin = newPin else { return }
-        let result = walletManager.forceSetPin(newPin: newPin, seedPhrase: walletManager.seedPhrase(pin: currentPin))
-        let message = result ? "Success" : "Failed"
-        let alert = UIAlertController(title: "Set pin", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .destructive, handler: nil))
-        present(alert, animated: true, completion: nil)
+        if walletManager.forceSetPin(newPin: newPin, seedPhrase: walletManager.seedPhrase(pin: currentPin)) {
+            store.perform(action: Alert.show(.pinSet))
+            store.lazySubscribe(self,
+                            selector: { $0.alert != $1.alert && $1.alert == nil },
+                            callback: { _ in
+                self.parent?.dismiss(animated: true, completion: {
+                    self.store.unsubscribe(self)
+                })
+            })
+        } else {
+            //TODO - handle set pin failure
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
