@@ -24,7 +24,6 @@ class LoginViewController : UIViewController {
     private let store: Store
     private let walletManager: WalletManager
     private let backgroundView = LoginBackgroundView()
-    private let textField = UITextField()
     private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad)
     private let pinViewContainer = UIView()
     private let pinView = PinView(style: .login)
