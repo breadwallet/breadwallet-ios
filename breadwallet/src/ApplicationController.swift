@@ -77,7 +77,6 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         }
     }
 
-
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         syncEventManager()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
