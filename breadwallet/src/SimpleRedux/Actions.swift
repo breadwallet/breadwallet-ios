@@ -26,7 +26,8 @@ struct HideStartFlow : Action {
                      isModalDismissalBlocked: false,
                      walletState: state.walletState,
                      currency: state.currency,
-                     currentRate: state.currentRate)
+                     currentRate: state.currentRate,
+                     alert: state.alert)
     }
 }
 
@@ -223,7 +224,8 @@ extension State {
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
                      walletState: self.walletState,
                      currency: currency,
-                     currentRate: currentRate)
+                     currentRate: currentRate,
+                     alert: alert)
     }
     func clone(pinCreationStep: PinCreationStep) -> State {
         return State(isStartFlowVisible: self.isStartFlowVisible,
@@ -235,7 +237,8 @@ extension State {
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
                      walletState: self.walletState,
                      currency: currency,
-                     currentRate: currentRate)
+                     currentRate: currentRate,
+                     alert: alert)
     }
 
     func rootModal(_ type: RootModal) -> State {
@@ -248,7 +251,8 @@ extension State {
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
                      walletState: self.walletState,
                      currency: currency,
-                     currentRate: currentRate)
+                     currentRate: currentRate,
+                     alert: alert)
     }
     func clone(pasteboard: String?) -> State {
         return State(isStartFlowVisible: self.isStartFlowVisible,
@@ -260,7 +264,8 @@ extension State {
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
                      walletState: self.walletState,
                      currency: currency,
-                     currentRate: currentRate)
+                     currentRate: currentRate,
+                     alert: alert)
     }
     func clone(isModalDismissalBlocked: Bool) -> State {
         return State(isStartFlowVisible: self.isStartFlowVisible,
@@ -272,7 +277,8 @@ extension State {
                      isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: self.walletState,
                      currency: currency,
-                     currentRate: currentRate)
+                     currentRate: currentRate,
+                     alert: alert)
     }
     func clone(paperPhraseStep: PaperPhraseStep) -> State {
         return State(isStartFlowVisible: self.isStartFlowVisible,
@@ -284,7 +290,8 @@ extension State {
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
                      walletState: self.walletState,
                      currency: currency,
-                     currentRate: currentRate)
+                     currentRate: currentRate,
+                     alert: alert)
     }
     func clone(walletSyncProgress: Double) -> State {
         return State(isStartFlowVisible: self.isStartFlowVisible,
@@ -296,7 +303,8 @@ extension State {
                      isModalDismissalBlocked: self.isModalDismissalBlocked,
                      walletState: WalletState(isConnected: self.walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: self.walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions),
                      currency: currency,
-                     currentRate: currentRate)
+                     currentRate: currentRate,
+                     alert: alert)
     }
     func clone(walletIsSyncing: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -308,7 +316,8 @@ extension State {
                      isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions),
                      currency: currency,
-                     currentRate: currentRate)
+                     currentRate: currentRate,
+                     alert: alert)
     }
     func clone(balance: UInt64) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -320,7 +329,8 @@ extension State {
                      isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions),
                      currency: currency,
-                     currentRate: currentRate)
+                     currentRate: currentRate,
+                     alert: alert)
     }
     func clone(transactions: [Transaction]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -332,7 +342,8 @@ extension State {
                      isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions),
                      currency: currency,
-                     currentRate: currentRate)
+                     currentRate: currentRate,
+                     alert: alert)
     }
     func clone(currency: Currency) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -344,7 +355,8 @@ extension State {
                      isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: walletState,
                      currency: currency,
-                     currentRate: currentRate)
+                     currentRate: currentRate,
+                     alert: alert)
     }
     func clone(isLoginRequired: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -356,7 +368,8 @@ extension State {
                      isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: walletState,
                      currency: currency,
-                     currentRate: currentRate)
+                     currentRate: currentRate,
+                     alert: alert)
     }
     func clone(currentRate: Rate) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -368,6 +381,7 @@ extension State {
                      isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: walletState,
                      currency: currency,
-                     currentRate: currentRate)
+                     currentRate: currentRate,
+                     alert: alert)
     }
 }

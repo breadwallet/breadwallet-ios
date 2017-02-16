@@ -19,6 +19,7 @@ struct State {
     let walletState: WalletState
     let currency: Currency
     let currentRate: Rate?
+    let alert: AlertType?
 }
 
 extension State {
@@ -32,7 +33,8 @@ extension State {
                         isModalDismissalBlocked: false,
                         walletState: WalletState.initial,
                         currency: .bitcoin,
-                        currentRate: nil)
+                        currentRate: nil,
+                        alert: nil)
     }
 }
 
