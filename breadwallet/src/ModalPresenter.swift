@@ -37,6 +37,9 @@ class ModalPresenter : Subscriber {
         store.subscribe(self,
                         selector: { $0.rootModal != $1.rootModal},
                         callback: { self.presentModal($0.rootModal) })
+        store.subscribe(self,
+                        selector: { $0.alert != $1.alert && $1.alert != nil },
+                        callback: { self.handleAlertChange($0.alert) })
     }
 
     private func handlePinCreationStateChange(_ state: State) {
@@ -62,6 +65,13 @@ class ModalPresenter : Subscriber {
         vc.modalPresentationCapturesStatusBarAppearance = true
         window.rootViewController?.present(vc, animated: true, completion: {
             self.store.perform(action: RootModalActions.Reset())
+        })
+    }
+
+    private func handleAlertChange(_ type: AlertType?) {
+        guard let type = type else { return }
+        presentAlert(type, completion: {
+            self.store.perform(action: Alert.hide())
         })
     }
 
