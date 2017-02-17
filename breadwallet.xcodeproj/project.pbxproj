@@ -305,6 +305,7 @@
 		CECCE5B21E04B00D00D99448 /* SendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5B11E04B00D00D99448 /* SendCell.swift */; };
 		CECF8D691E17108600B707AE /* WalletCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECF8D681E17108600B707AE /* WalletCreator.swift */; };
 		CED82D4E1E575A5500507A9B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED82D4D1E575A5500507A9B /* main.swift */; };
+		CEDD8F101E575DD4007A4123 /* WalletAuthenticationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */; };
 		CEE1F5631DF13E5A00D733AD /* ModalHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */; };
 		CEE65DF01E39056F0002994D /* Rate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE65DEF1E39056F0002994D /* Rate.swift */; };
 		CEE7F1D01E07653B00283981 /* CurrencySlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */; };
@@ -1391,6 +1392,7 @@
 		CECCE5B11E04B00D00D99448 /* SendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SendCell.swift; path = src/Views/SendViewCells/SendCell.swift; sourceTree = "<group>"; };
 		CECF8D681E17108600B707AE /* WalletCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletCreator.swift; path = src/WalletCreator.swift; sourceTree = "<group>"; };
 		CED82D4D1E575A5500507A9B /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = src/main.swift; sourceTree = "<group>"; };
+		CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletAuthenticationTests.swift; sourceTree = "<group>"; };
 		CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalHeaderView.swift; path = src/Views/ModalHeaderView.swift; sourceTree = "<group>"; };
 		CEE65DEF1E39056F0002994D /* Rate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Rate.swift; path = src/Models/Rate.swift; sourceTree = "<group>"; };
 		CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CurrencySlider.swift; path = src/Views/CurrencySlider.swift; sourceTree = "<group>"; };
@@ -2423,6 +2425,7 @@
 				22C431311DF89DDB0017CAEA /* NSDataExtensionTests.swift */,
 				22C431331DF89DFE0017CAEA /* BRCoderTests.swift */,
 				22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */,
+				CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */,
 			);
 			path = breadwalletTests;
 			sourceTree = "<group>";
@@ -3529,6 +3532,7 @@
 				22C4312E1DF89D970017CAEA /* BRHTTPServerTests.swift in Sources */,
 				22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */,
 				75A2A7A91DA5934300A983D8 /* breadwalletTests.swift in Sources */,
+				CEDD8F101E575DD4007A4123 /* WalletAuthenticationTests.swift in Sources */,
 				22C431321DF89DDC0017CAEA /* NSDataExtensionTests.swift in Sources */,
 				22C431301DF89DC00017CAEA /* BRReplicatedKVStoreTests.swift in Sources */,
 				22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */,
