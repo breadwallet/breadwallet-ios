@@ -26,6 +26,19 @@ class WalletAuthenticationTests : XCTestCase {
         XCTAssert(walletManager.authenticate(pin: pin), "Authentication should succeed.")
     }
 
+    func testWalletDisabledUntil() {
+        XCTAssert(walletManager.forceSetPin(newPin: pin), "Setting PIN should succeed")
+
+        //Perform 2 wrong pin attempts
+        XCTAssertFalse(walletManager.authenticate(pin: "654321"), "Authentication with wrong PIN should fail.")
+        XCTAssertFalse(walletManager.authenticate(pin: "839405"), "Authentication with wrong PIN should fail.")
+        XCTAssert(walletManager.walletDisabledUntil == 0, "Wallet should not be disabled after 2 wrong pin attempts")
+
+        //Perform another wrong attempt that should disable the wallet
+        XCTAssertFalse(walletManager.authenticate(pin: "127345"), "Authentication with wrong PIN should fail.")
+        XCTAssert(walletManager.walletDisabledUntil > Date.timeIntervalSinceReferenceDate, "Wallet should be disabled until some time in the future.")
+    }
+
     private func clearKeychain() {
         let classes = [kSecClassGenericPassword as String,
                        kSecClassInternetPassword as String,
