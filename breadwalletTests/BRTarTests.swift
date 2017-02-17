@@ -50,9 +50,4 @@ class BRTarTests: XCTestCase {
         }
     }
     
-    //    func testPerformanceExample() {
-    //        self.measureBlock {
-    //        }
-    //    }
-    
 }
