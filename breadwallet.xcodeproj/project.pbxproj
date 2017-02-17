@@ -190,7 +190,6 @@
 		75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7931DA5934300A983D8 /* AppDelegate.swift */; };
 		75A2A79B1DA5934300A983D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A79A1DA5934300A983D8 /* Assets.xcassets */; };
 		75A2A79E1DA5934300A983D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */; };
-		75A2A7A91DA5934300A983D8 /* breadwalletTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7A81DA5934300A983D8 /* breadwalletTests.swift */; };
 		75A2A7B41DA5934300A983D8 /* breadwalletUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7B31DA5934300A983D8 /* breadwalletUITests.swift */; };
 		75A2A7B91DA5934300A983D8 /* breadwallet WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 75A2A7B81DA5934300A983D8 /* breadwallet WatchKit App.app */; };
 		75A2A7BF1DA5934300A983D8 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7BD1DA5934300A983D8 /* Interface.storyboard */; };
@@ -1165,7 +1164,6 @@
 		75A2A79D1DA5934300A983D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		75A2A79F1DA5934300A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		75A2A7A41DA5934300A983D8 /* breadwalletTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = breadwalletTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		75A2A7A81DA5934300A983D8 /* breadwalletTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = breadwalletTests.swift; sourceTree = "<group>"; };
 		75A2A7AA1DA5934300A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		75A2A7AF1DA5934300A983D8 /* breadwalletUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = breadwalletUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		75A2A7B31DA5934300A983D8 /* breadwalletUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = breadwalletUITests.swift; sourceTree = "<group>"; };
@@ -2416,7 +2414,6 @@
 		75A2A7A71DA5934300A983D8 /* breadwalletTests */ = {
 			isa = PBXGroup;
 			children = (
-				75A2A7A81DA5934300A983D8 /* breadwalletTests.swift */,
 				75A2A7AA1DA5934300A983D8 /* Info.plist */,
 				22C431291DF89D0A0017CAEA /* BRTarTests.swift */,
 				22C4312B1DF89D700017CAEA /* BRBSPatchTests.swift */,
@@ -3531,7 +3528,6 @@
 			files = (
 				22C4312E1DF89D970017CAEA /* BRHTTPServerTests.swift in Sources */,
 				22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */,
-				75A2A7A91DA5934300A983D8 /* breadwalletTests.swift in Sources */,
 				CEDD8F101E575DD4007A4123 /* WalletAuthenticationTests.swift in Sources */,
 				22C431321DF89DDC0017CAEA /* NSDataExtensionTests.swift in Sources */,
 				22C431301DF89DC00017CAEA /* BRReplicatedKVStoreTests.swift in Sources */,
