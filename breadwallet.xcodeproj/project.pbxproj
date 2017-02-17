@@ -304,6 +304,7 @@
 		CECCE5B01E04AD7600D99448 /* TextFieldSendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5AF1E04AD7600D99448 /* TextFieldSendCell.swift */; };
 		CECCE5B21E04B00D00D99448 /* SendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5B11E04B00D00D99448 /* SendCell.swift */; };
 		CECF8D691E17108600B707AE /* WalletCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECF8D681E17108600B707AE /* WalletCreator.swift */; };
+		CED82D4E1E575A5500507A9B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED82D4D1E575A5500507A9B /* main.swift */; };
 		CEE1F5631DF13E5A00D733AD /* ModalHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */; };
 		CEE65DF01E39056F0002994D /* Rate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE65DEF1E39056F0002994D /* Rate.swift */; };
 		CEE7F1D01E07653B00283981 /* CurrencySlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */; };
@@ -1389,6 +1390,7 @@
 		CECCE5AF1E04AD7600D99448 /* TextFieldSendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextFieldSendCell.swift; path = src/Views/SendViewCells/TextFieldSendCell.swift; sourceTree = "<group>"; };
 		CECCE5B11E04B00D00D99448 /* SendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SendCell.swift; path = src/Views/SendViewCells/SendCell.swift; sourceTree = "<group>"; };
 		CECF8D681E17108600B707AE /* WalletCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletCreator.swift; path = src/WalletCreator.swift; sourceTree = "<group>"; };
+		CED82D4D1E575A5500507A9B /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = src/main.swift; sourceTree = "<group>"; };
 		CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalHeaderView.swift; path = src/Views/ModalHeaderView.swift; sourceTree = "<group>"; };
 		CEE65DEF1E39056F0002994D /* Rate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Rate.swift; path = src/Models/Rate.swift; sourceTree = "<group>"; };
 		CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CurrencySlider.swift; path = src/Views/CurrencySlider.swift; sourceTree = "<group>"; };
@@ -2391,6 +2393,7 @@
 				CE4B6C191E219CA600CF935B /* WalletCoordinator.swift */,
 				CE8CD8DC1E2D9EF200785E02 /* Sender.swift */,
 				CE74F58C1E3BA85600ED5FA9 /* ExchangeManager.swift */,
+				CED82D4D1E575A5500507A9B /* main.swift */,
 				CE20C90A1DBC59C500C8397A /* FlowControllers */,
 				CE20C8EF1DBAF6D300C8397A /* ViewControllers */,
 				CE20C90F1DBE5B5100C8397A /* Views */,
@@ -3444,6 +3447,7 @@
 				22A9A9581DF61945000F0016 /* BRWebViewController.swift in Sources */,
 				CE27F9591E2C8EA300F7F7F2 /* Amount.swift in Sources */,
 				CE8CD8E51E32636B00785E02 /* LoginPresenter.swift in Sources */,
+				CED82D4E1E575A5500507A9B /* main.swift in Sources */,
 				22A9A9461DF61945000F0016 /* BRAPIClient.swift in Sources */,
 				CEF3E8271DE2C9C5007C0A9E /* EventManagerCoordinator.swift in Sources */,
 				CEAA9E9B1DC2B9320066731D /* ConfirmPhrase.swift in Sources */,
