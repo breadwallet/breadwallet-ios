@@ -49,6 +49,7 @@ class LoginViewController : UIViewController {
     private let subheader = UILabel(font: .customBody(size: 16.0))
     private var pinPadPottom: NSLayoutConstraint?
     private var topControlTop: NSLayoutConstraint?
+    private var unlockTimer: Timer?
 
     override func viewDidLoad() {
         addSubviews()
@@ -60,8 +61,15 @@ class LoginViewController : UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        guard walletManager.canUseTouchID && !walletManager.pinLoginRequired else { return }
-        touchIdTapped()
+        if walletManager.canUseTouchID && !walletManager.pinLoginRequired {
+            touchIdTapped()
+        }
+        lockIfNeeded()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        unlockTimer?.invalidate()
     }
 
     private func addSubviews() {
@@ -171,6 +179,7 @@ class LoginViewController : UIViewController {
         pinPad.clear()
         DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
             self?.pinView.fill(0)
+            self?.lockIfNeeded()
         }
     }
 
@@ -196,6 +205,32 @@ class LoginViewController : UIViewController {
                 self.store.perform(action: LoginSuccess())
             }
         })
+    }
+
+    private func lockIfNeeded() {
+        let disabledUntil = walletManager.walletDisabledUntil
+        if disabledUntil > Date.timeIntervalSinceReferenceDate {
+            let disabledUntilDate = Date(timeIntervalSinceReferenceDate: disabledUntil)
+            let df = DateFormatter()
+            df.dateFormat = "h:mm a 'on' MMM d, yyy"
+            subheader.text = "Disabled until: \(df.string(from: disabledUntilDate))"
+            pinPad.view.isUserInteractionEnabled = false
+
+            let unlockInterval = disabledUntil - Date.timeIntervalSinceReferenceDate
+            unlockTimer?.invalidate()
+            unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)
+        } else if disabledUntil > 0 {
+            assert(false, "This is bad...disabledUntil not right")
+        } else {
+            subheader.text = S.LoginScreen.subheader
+            pinPad.view.isUserInteractionEnabled = true
+        }
+    }
+
+    @objc private func unlock() {
+        subheader.pushNewText(S.LoginScreen.subheader)
+        pinPad.view.isUserInteractionEnabled = true
+        unlockTimer = nil
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
