@@ -138,6 +138,14 @@ struct RootModalActions {
         let reduce: Reducer = { $0.rootModal(.menu) }
     }
 
+    struct LoginAddress: Action {
+        let reduce: Reducer = { $0.rootModal(.loginAddress) }
+    }
+
+    struct LoginScan: Action {
+        let reduce: Reducer = { $0.rootModal(.loginScan) }
+    }
+
     struct Reset: Action {
         let reduce: Reducer = { $0.rootModal(.none) }
     }
