@@ -130,7 +130,10 @@ extension WalletManager : WalletAuthenticator {
             let failTime: Int64 = try keychainItem(key: keychainKey.pinFailTime) ?? 0
             return Double(failTime) + pow(6, Double(failCount - 3))*60
         }
-        catch { return 0 }
+        catch let error {
+            assert(false, "Error: \(error)")
+            return 0
+        }
     }
     
     // true if pin is correct
@@ -174,15 +177,18 @@ extension WalletManager : WalletAuthenticator {
                     if !wipeWallet() { return false }
                     return false
                 }
-                
-                if try secureTime > keychainItem(key: keychainKey.pinFailTime) ?? 0 {
+                let pinFailTime: Int64 = try keychainItem(key: keychainKey.pinFailTime) ?? 0
+                if secureTime > Double(pinFailTime) {
                     try setKeychainItem(key: keychainKey.pinFailTime, item: Int64(secureTime))
                 }
             }
             
             return false
         }
-        catch { return false }
+        catch let error {
+            assert(false, "Error: \(error)")
+            return false
+        }
     }
     
     // show touch ID dialog and call completion block with success or failure
