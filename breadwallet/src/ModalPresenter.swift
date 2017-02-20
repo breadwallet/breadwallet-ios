@@ -63,7 +63,7 @@ class ModalPresenter : Subscriber {
         vc.transitioningDelegate = modalTransitionDelegate
         vc.modalPresentationStyle = .overFullScreen
         vc.modalPresentationCapturesStatusBarAppearance = true
-        window.rootViewController?.present(vc, animated: true, completion: {
+        presentingViewController?.present(vc, animated: true, completion: {
             self.store.perform(action: RootModalActions.Reset())
         })
     }
@@ -126,18 +126,7 @@ class ModalPresenter : Subscriber {
             }
             return root
         case .receive:
-            guard let wallet = wallet else { return nil }
-            let receiveVC = ReceiveViewController(store: store, wallet: wallet)
-            let root = ModalViewController(childViewController: receiveVC)
-            receiveVC.presentEmail = { address, image in
-                self.messagePresenter.presenter = root
-                self.messagePresenter.presentMailCompose(address: address, image: image)
-            }
-            receiveVC.presentText = { address, image in
-                self.messagePresenter.presenter = root
-                self.messagePresenter.presentMessageCompose(address: address, image: image)
-            }
-            return root
+            return receiveView(isRequestAmountVisible: true)
         case .menu:
             let menu = MenuViewController()
             let root = ModalViewController(childViewController: menu)
@@ -148,7 +137,26 @@ class ModalPresenter : Subscriber {
                 })
             }
             return root
+        case .loginScan:
+            return nil
+        case .loginAddress:
+            return receiveView(isRequestAmountVisible: false)
         }
+    }
+
+    private func receiveView(isRequestAmountVisible: Bool) -> UIViewController? {
+        guard let wallet = wallet else { return nil }
+        let receiveVC = ReceiveViewController(store: store, wallet: wallet, isRequestAmountVisible: isRequestAmountVisible)
+        let root = ModalViewController(childViewController: receiveVC)
+        receiveVC.presentEmail = { address, image in
+            self.messagePresenter.presenter = root
+            self.messagePresenter.presentMailCompose(address: address, image: image)
+        }
+        receiveVC.presentText = { address, image in
+            self.messagePresenter.presenter = root
+            self.messagePresenter.presentMessageCompose(address: address, image: image)
+        }
+        return root
     }
 
     private func presentScan(parent: UIViewController) -> PresentScan {
@@ -201,6 +209,16 @@ class ModalPresenter : Subscriber {
             return keyboardWindow
         }
         return window
+    }
+
+    private var presentingViewController: UIViewController? {
+        if window.rootViewController?.presentedViewController != nil {
+            return window.rootViewController?.presentedViewController
+        } else if window.rootViewController != nil {
+            return window.rootViewController
+        } else {
+            return nil
+        }
     }
 }
 

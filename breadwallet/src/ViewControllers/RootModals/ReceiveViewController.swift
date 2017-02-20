@@ -18,9 +18,10 @@ typealias PresentShare = (String, UIImage) -> Void
 
 class ReceiveViewController: UIViewController {
 
-    init(store: Store, wallet: BRWallet) {
+    init(store: Store, wallet: BRWallet, isRequestAmountVisible: Bool) {
         self.store = store
         self.wallet = wallet
+        self.isRequestAmountVisible = isRequestAmountVisible
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -37,6 +38,7 @@ class ReceiveViewController: UIViewController {
     private var topSharePopoutConstraint: NSLayoutConstraint?
     private let store: Store
     private let wallet: BRWallet
+    fileprivate let isRequestAmountVisible: Bool
 
     override func viewDidLoad() {
         addSubviews()
@@ -110,6 +112,10 @@ class ReceiveViewController: UIViewController {
         qrCode.image = UIImage.qrCode(data: address.text!.data(using: .utf8)!, color: CIColor(color: .black))?
                             .resize(CGSize(width: qrSize, height: qrSize))!
         share.isToggleable = true
+        if !isRequestAmountVisible {
+            border.isHidden = true
+            request.isHidden = true
+        }
     }
 
     private func addActions() {
@@ -222,7 +228,8 @@ extension ReceiveViewController: ModalDisplayable {
     }
 
     var modalSize: CGSize {
-        return CGSize(width: view.frame.width, height: 410.0)
+        let height: CGFloat = isRequestAmountVisible ? 410.0 : 410 - (C.padding[4] + C.Sizes.buttonHeight )
+        return CGSize(width: view.frame.width, height: height)
     }
 
     var isFaqHidden: Bool {
