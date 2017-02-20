@@ -21,6 +21,11 @@ class WalletAuthenticationTests : XCTestCase {
         guard walletManager.setRandomSeedPhrase() != nil else { XCTFail("Phrase should not be nil"); return }
     }
 
+    override func tearDown() {
+        super.tearDown()
+        clearKeychain()
+    }
+
     func testAuthentication() {
         XCTAssert(walletManager.forceSetPin(newPin: pin), "Setting PIN should succeed")
         XCTAssert(walletManager.authenticate(pin: pin), "Authentication should succeed.")
