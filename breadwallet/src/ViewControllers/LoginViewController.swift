@@ -219,8 +219,6 @@ class LoginViewController : UIViewController {
             let unlockInterval = disabledUntil - Date.timeIntervalSinceReferenceDate
             unlockTimer?.invalidate()
             unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)
-        } else if disabledUntil > 0 {
-            assert(false, "This is bad...disabledUntil not right")
         } else {
             subheader.text = S.LoginScreen.subheader
             pinPad.view.isUserInteractionEnabled = true
