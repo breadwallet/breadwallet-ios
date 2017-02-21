@@ -58,11 +58,12 @@ class ModalPresenter : Subscriber {
         }
     }
 
-    private func presentModal(_ type: RootModal) {
+    private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
         guard let vc = rootModalViewController(type) else { return }
         vc.transitioningDelegate = modalTransitionDelegate
         vc.modalPresentationStyle = .overFullScreen
         vc.modalPresentationCapturesStatusBarAppearance = true
+        configuration?(vc)
         presentingViewController?.present(vc, animated: true, completion: {
             self.store.perform(action: RootModalActions.Reset())
         })
@@ -82,11 +83,10 @@ class ModalPresenter : Subscriber {
 
         let topConstraint = alertView.constraint(.top, toView: activeWindow, constant: size.height)
         alertView.constrain([
-                alertView.constraint(.width, constant: size.width),
-                alertView.constraint(.height, constant: alertHeight + 25.0),
-                alertView.constraint(.leading, toView: activeWindow, constant: nil),
-                topConstraint
-            ])
+            alertView.constraint(.width, constant: size.width),
+            alertView.constraint(.height, constant: alertHeight + 25.0),
+            alertView.constraint(.leading, toView: activeWindow, constant: nil),
+            topConstraint ])
         activeWindow.layoutIfNeeded()
 
         UIView.spring(0.6, animations: {
@@ -138,7 +138,16 @@ class ModalPresenter : Subscriber {
             }
             return root
         case .loginScan:
-            return nil
+            guard ScanViewController.isCameraAllowed else { return nil }
+            return ScanViewController(completion: { address in
+                self.presentModal(.send, configuration: { modal in
+                    guard let modal = modal as? ModalViewController else { return }
+                    guard let child = modal.childViewController as? SendViewController else { return }
+                    child.initialAddress = address
+                })
+            }, isValidURI: { address in
+                return address.hasPrefix("bitcoin:")
+            })
         case .loginAddress:
             return receiveView(isRequestAmountVisible: false)
         }
