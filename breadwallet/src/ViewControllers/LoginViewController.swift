@@ -185,18 +185,10 @@ class LoginViewController : UIViewController {
 
     @objc private func topControlChanged(control: UISegmentedControl) {
         if control.selectedSegmentIndex == 0 {
-            addressTapped()
+            store.perform(action: RootModalActions.LoginAddress())
         } else if control.selectedSegmentIndex == 1 {
-            scanTapped()
+            store.perform(action: RootModalActions.LoginScan())
         }
-    }
-
-    private func addressTapped() {
-        store.perform(action: RootModalActions.LoginAddress())
-    }
-
-    private func scanTapped() {
-        store.perform(action: RootModalActions.LoginScan())
     }
 
     @objc func touchIdTapped() {
