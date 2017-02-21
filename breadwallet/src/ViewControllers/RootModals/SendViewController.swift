@@ -18,22 +18,27 @@ private let currencyButtonWidth: CGFloat = 64.0
 
 class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
-    init(store: Store, sender: Sender) {
+    //MARK - Public
+    var presentScan: PresentScan?
+    var presentVerifyPin: ((@escaping VerifyPinCallback)->Void)?
+    var onPublishSuccess: (()->Void)?
+    var onPublishFailure: (()->Void)?
+    var parentView: UIView? //ModalPresentable
+    var initialAddress: String?
+
+    init(store: Store, sender: Sender, initialAddress: String? = nil) {
         self.store = store
         self.sender = sender
+        self.initialAddress = initialAddress
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
     }
 
+    //MARK - Private
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-
-    var presentScan: PresentScan?
-    var presentVerifyPin: ((@escaping VerifyPinCallback)->Void)?
-    var onPublishSuccess: (()->Void)?
-    var onPublishFailure: (()->Void)?
 
     private let store: Store
     private let sender: Sender
@@ -50,7 +55,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
     private var currencyOverlay = CurrencyOverlay()
-    var parentView: UIView?
 
     override func viewDidLoad() {
         view.addSubview(to)
@@ -128,6 +132,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         currencySwitcher.contentView = currencySlider
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if initialAddress != nil {
+            to.content = initialAddress
+            amount.textField.becomeFirstResponder()
+        }
+    }
+
     private func addButtonActions() {
         paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
@@ -137,8 +149,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         }
         amount.textFieldDidBeginEditing = {
             self.amountTapped()
+            self.store.perform(action: ModalDismissal.block())
         }
-        descriptionCell.textFieldDidBeginEditing = { }
+        amount.textFieldDidReturn = { _ in
+            self.store.perform(action: ModalDismissal.unBlock())
+        }
+        descriptionCell.textFieldDidBeginEditing = {
+
+        }
         descriptionCell.textFieldDidReturn = { textField in
             textField.resignFirstResponder()
         }
@@ -299,7 +317,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 }
 
-extension SendViewController: ModalDisplayable {
+extension SendViewController : ModalDisplayable {
     var modalTitle: String {
         return NSLocalizedString("Send Money", comment: "Send modal title")
     }
