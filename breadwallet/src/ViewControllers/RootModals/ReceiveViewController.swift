@@ -19,7 +19,6 @@ typealias PresentShare = (String, UIImage) -> Void
 class ReceiveViewController: UIViewController {
 
     //MARK - Public
-    
     var presentEmail: PresentShare?
     var presentText: PresentShare?
 
