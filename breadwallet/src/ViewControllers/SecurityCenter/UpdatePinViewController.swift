@@ -90,14 +90,15 @@ class UpdatePinViewController : UIViewController, Subscriber {
         header.text = S.UpdatePin.title
         instruction.text = S.UpdatePin.enterCurrent
 
-        pinPad.ouputDidUpdate = { text in
-            switch self.step {
+        pinPad.ouputDidUpdate = { [weak self] text in
+            guard let step = self?.step else { return }
+            switch step {
             case .current:
-                self.didUpdateForCurrent(pin: text)
+                self?.didUpdateForCurrent(pin: text)
             case .new :
-                self.didUpdateForNew(pin: text)
+                self?.didUpdateForNew(pin: text)
             case .confirmNew:
-                self.didUpdateForConfirmNew(pin: text)
+                self?.didUpdateForConfirmNew(pin: text)
             }
         }
     }

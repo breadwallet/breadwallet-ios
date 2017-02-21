@@ -126,12 +126,12 @@ class LoginViewController : UIViewController {
     }
 
     private func addPinPadCallback() {
-        pinPad.ouputDidUpdate = { pin in
+        pinPad.ouputDidUpdate = { [weak self] pin in
             let length = pin.lengthOfBytes(using: .utf8)
-            self.pinView.fill(length)
-            self.pinPad.isAppendingDisabled = length < 6 ? false : true
+            self?.pinView.fill(length)
+            self?.pinPad.isAppendingDisabled = length < 6 ? false : true
             if length == 6 {
-                self.authenticate(pin: pin)
+                self?.authenticate(pin: pin)
             }
         }
     }

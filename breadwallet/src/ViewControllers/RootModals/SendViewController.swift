@@ -144,15 +144,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
         currency.addTarget(self, action: #selector(SendViewController.currencySwitchTapped), for: .touchUpInside)
-        pinPad.ouputDidUpdate = { output in
-            self.amount.content = output
+        pinPad.ouputDidUpdate = { [weak self] output in
+            self?.amount.content = output
         }
-        amount.textFieldDidBeginEditing = {
-            self.amountTapped()
-            self.store.perform(action: ModalDismissal.block())
+        amount.textFieldDidBeginEditing = { [weak self] in
+            self?.amountTapped()
+            self?.store.perform(action: ModalDismissal.block())
         }
-        amount.textFieldDidReturn = { _ in
-            self.store.perform(action: ModalDismissal.unBlock())
+        amount.textFieldDidReturn = { [weak self] _ in
+            self?.store.perform(action: ModalDismissal.unBlock())
         }
         descriptionCell.textFieldDidBeginEditing = {
 
