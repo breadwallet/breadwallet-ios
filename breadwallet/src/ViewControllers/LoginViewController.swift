@@ -50,6 +50,7 @@ class LoginViewController : UIViewController {
     private var pinPadPottom: NSLayoutConstraint?
     private var topControlTop: NSLayoutConstraint?
     private var unlockTimer: Timer?
+    private let pinPadBackground = GradientView()
 
     override func viewDidLoad() {
         addSubviews()
@@ -79,6 +80,7 @@ class LoginViewController : UIViewController {
         view.addSubview(topControl)
         view.addSubview(header)
         view.addSubview(subheader)
+        view.addSubview(pinPadBackground)
     }
 
     private func addConstraints() {
@@ -109,6 +111,12 @@ class LoginViewController : UIViewController {
         header.constrain([
             header.topAnchor.constraint(equalTo: topControl.bottomAnchor, constant: C.padding[6]),
             header.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
+        pinPadBackground.constrain([
+            pinPadBackground.leadingAnchor.constraint(equalTo: pinPad.view.leadingAnchor),
+            pinPadBackground.trailingAnchor.constraint(equalTo: pinPad.view.trailingAnchor),
+            pinPadBackground.topAnchor.constraint(equalTo: pinPad.view.topAnchor),
+            pinPadBackground.bottomAnchor.constraint(equalTo: pinPad.view.bottomAnchor) ])
+
         subheader.text = S.LoginScreen.subheader
         header.text = S.LoginScreen.header
         header.textColor = .white

@@ -22,3 +22,9 @@ extension GradientDrawable {
         context.drawLinearGradient(gradient, start: .zero, end: CGPoint(x: rect.width, y: 0.0), options: [])
     }
 }
+
+class GradientView : UIView, GradientDrawable {
+    override func draw(_ rect: CGRect) {
+        drawGradient(rect)
+    }
+}
