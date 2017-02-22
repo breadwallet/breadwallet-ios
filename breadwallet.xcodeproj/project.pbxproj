@@ -278,6 +278,7 @@
 		CEAA9EA41DC2FC700066731D /* CircularPro-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */; };
 		CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */; };
 		CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA71DC3342E0066731D /* PinView.swift */; };
+		CEAFC8611E5D5B0500E4FD06 /* SegmentedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */; };
 		CEBF32EE1DDBC30000348FC6 /* ShadowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF32ED1DDBC30000348FC6 /* ShadowButton.swift */; };
 		CEBF32F01DDCD30600348FC6 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF32EF1DDCD30600348FC6 /* AccountViewController.swift */; };
 		CEBF32F21DDCE10D00348FC6 /* AccountHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF32F11DDCE10D00348FC6 /* AccountHeaderView.swift */; };
@@ -1364,6 +1365,7 @@
 		CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularPro-Medium.otf"; path = "Fonts/CircularPro-Medium.otf"; sourceTree = "<group>"; };
 		CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartNavigationDelegate.swift; path = src/FlowControllers/StartNavigationDelegate.swift; sourceTree = "<group>"; };
 		CEAA9EA71DC3342E0066731D /* PinView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinView.swift; path = src/Views/PinView.swift; sourceTree = "<group>"; };
+		CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SegmentedButton.swift; path = src/Controls/SegmentedButton.swift; sourceTree = "<group>"; };
 		CEBF32ED1DDBC30000348FC6 /* ShadowButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShadowButton.swift; path = src/Views/ShadowButton.swift; sourceTree = "<group>"; };
 		CEBF32EF1DDCD30600348FC6 /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccountViewController.swift; path = src/ViewControllers/AccountViewController.swift; sourceTree = "<group>"; };
 		CEBF32F11DDCE10D00348FC6 /* AccountHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccountHeaderView.swift; path = src/Views/AccountHeaderView.swift; sourceTree = "<group>"; };
@@ -2681,6 +2683,7 @@
 				CECB9DB51E4985CE0081A172 /* LoginBackgroundView.swift */,
 				CE14E40A1E4D881500AEA83A /* TransactionDetailView.swift */,
 				CE6B6B491E54C0CA00B31405 /* SecurityCenterCell.swift */,
+				CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -3443,6 +3446,7 @@
 				CEBF32EE1DDBC30000348FC6 /* ShadowButton.swift in Sources */,
 				CECCE5AE1E04AD6300D99448 /* LabelSendCell.swift in Sources */,
 				22A9A9521DF61945000F0016 /* BRKVStorePlugin.swift in Sources */,
+				CEAFC8611E5D5B0500E4FD06 /* SegmentedButton.swift in Sources */,
 				7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */,
 				22A9A9581DF61945000F0016 /* BRWebViewController.swift in Sources */,
 				CE27F9591E2C8EA300F7F7F2 /* Amount.swift in Sources */,
