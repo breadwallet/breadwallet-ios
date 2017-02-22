@@ -63,6 +63,7 @@ class LoginViewController : UIViewController {
             separator.widthAnchor.constraint(equalToConstant: 1.0) ])
         return view
     }()
+    private var hasAttemptedToShowTouchId = false
 
     override func viewDidLoad() {
         addSubviews()
@@ -73,7 +74,8 @@ class LoginViewController : UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if walletManager.canUseTouchID && !walletManager.pinLoginRequired {
+        if walletManager.canUseTouchID && !walletManager.pinLoginRequired && !hasAttemptedToShowTouchId {
+            hasAttemptedToShowTouchId = true
             touchIdTapped()
         }
         lockIfNeeded()
