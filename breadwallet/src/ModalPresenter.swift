@@ -59,6 +59,7 @@ class ModalPresenter : Subscriber {
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
+        guard type != .loginScan else { return presentLoginScan() }
         guard let vc = rootModalViewController(type) else { return }
         vc.transitioningDelegate = modalTransitionDelegate
         vc.modalPresentationStyle = .overFullScreen
@@ -138,18 +139,7 @@ class ModalPresenter : Subscriber {
             }
             return root
         case .loginScan:
-            guard ScanViewController.isCameraAllowed else { return nil }
-            return ScanViewController(completion: { address in
-                if address != nil {
-                    self.presentModal(.send, configuration: { modal in
-                        guard let modal = modal as? ModalViewController else { return }
-                        guard let child = modal.childViewController as? SendViewController else { return }
-                        child.initialAddress = address
-                    })
-                }
-            }, isValidURI: { address in
-                return address.hasPrefix("bitcoin:")
-            })
+            return nil //The scan view needs a custom presentation
         case .loginAddress:
             return receiveView(isRequestAmountVisible: false)
         }
@@ -168,6 +158,21 @@ class ModalPresenter : Subscriber {
             self.messagePresenter.presentMessageCompose(address: address, image: image)
         }
         return root
+    }
+
+    private func presentLoginScan() {
+        guard let parent = presentingViewController else { return }
+        let present = presentScan(parent: parent)
+        store.perform(action: RootModalActions.Reset())
+        present({ address in
+            if address != nil {
+                self.presentModal(.send, configuration: { modal in
+                    guard let modal = modal as? ModalViewController else { return }
+                    guard let child = modal.childViewController as? SendViewController else { return }
+                    child.initialAddress = address
+                })
+            }
+        })
     }
 
     private func presentScan(parent: UIViewController) -> PresentScan {
