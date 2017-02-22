@@ -27,13 +27,9 @@ class LoginViewController : UIViewController {
     private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad)
     private let pinViewContainer = UIView()
     private let pinView = PinView(style: .login)
-    private let topControl: UISegmentedControl = {
-        let control = UISegmentedControl(items: [S.LoginScreen.myAddress, S.LoginScreen.scan])
-        control.tintColor = .white
-        control.isMomentary = true
-        control.setTitleTextAttributes([NSFontAttributeName: UIFont.customMedium(size: 13.0)], for: .normal)
-        return control
-    }()
+    private let addressButton = SegmentedButton(title: S.LoginScreen.myAddress, type: .left)
+    private let scanButton = SegmentedButton(title: S.LoginScreen.scan, type: .right)
+
     private let touchId: UIButton = {
         let button = UIButton(type: .system)
         button.tintColor = .white
@@ -51,13 +47,28 @@ class LoginViewController : UIViewController {
     private var topControlTop: NSLayoutConstraint?
     private var unlockTimer: Timer?
     private let pinPadBackground = GradientView()
+    private let topControlContainer: UIView = {
+        let view = UIView()
+        view.layer.borderColor = UIColor.white.cgColor
+        view.layer.borderWidth = 1.0
+        view.layer.cornerRadius = 5.0
+        view.layer.masksToBounds = true
+        let separator = UIView()
+        view.addSubview(separator)
+        separator.backgroundColor = .white
+        separator.constrain([
+            separator.topAnchor.constraint(equalTo: view.topAnchor),
+            separator.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            separator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            separator.widthAnchor.constraint(equalToConstant: 1.0) ])
+        return view
+    }()
 
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
         addTouchIdButton()
         addPinPadCallback()
-        topControl.addTarget(self, action: #selector(topControlChanged(control:)), for: .valueChanged)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -77,7 +88,9 @@ class LoginViewController : UIViewController {
         view.addSubview(backgroundView)
         view.addSubview(pinViewContainer)
         pinViewContainer.addSubview(pinView)
-        view.addSubview(topControl)
+        view.addSubview(topControlContainer)
+        topControlContainer.addSubview(addressButton)
+        topControlContainer.addSubview(scanButton)
         view.addSubview(header)
         view.addSubview(subheader)
         view.addSubview(pinPadBackground)
@@ -99,17 +112,27 @@ class LoginViewController : UIViewController {
             pinView.centerXAnchor.constraint(equalTo: pinViewContainer.centerXAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.width),
             pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
-        topControlTop = topControl.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[1])
-        topControl.constrain([
+        topControlTop = topControlContainer.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[1])
+        topControlContainer.constrain([
             topControlTop,
-            topControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            topControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            topControl.heightAnchor.constraint(equalToConstant: topControlHeight) ])
+            topControlContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
+            topControlContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+            topControlContainer.heightAnchor.constraint(equalToConstant: topControlHeight) ])
+        addressButton.constrain([
+            addressButton.leadingAnchor.constraint(equalTo: topControlContainer.leadingAnchor),
+            addressButton.topAnchor.constraint(equalTo: topControlContainer.topAnchor),
+            addressButton.trailingAnchor.constraint(equalTo: topControlContainer.centerXAnchor),
+            addressButton.bottomAnchor.constraint(equalTo: topControlContainer.bottomAnchor) ])
+        scanButton.constrain([
+            scanButton.leadingAnchor.constraint(equalTo: topControlContainer.centerXAnchor),
+            scanButton.topAnchor.constraint(equalTo: topControlContainer.topAnchor),
+            scanButton.trailingAnchor.constraint(equalTo: topControlContainer.trailingAnchor),
+            scanButton.bottomAnchor.constraint(equalTo: topControlContainer.bottomAnchor) ])
         subheader.constrain([
             subheader.bottomAnchor.constraint(equalTo: pinView.topAnchor, constant: -C.padding[1]),
             subheader.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
         header.constrain([
-            header.topAnchor.constraint(equalTo: topControl.bottomAnchor, constant: C.padding[6]),
+            header.topAnchor.constraint(equalTo: topControlContainer.bottomAnchor, constant: C.padding[6]),
             header.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
         pinPadBackground.constrain([
             pinPadBackground.leadingAnchor.constraint(equalTo: pinPad.view.leadingAnchor),
@@ -120,6 +143,9 @@ class LoginViewController : UIViewController {
         subheader.text = S.LoginScreen.subheader
         header.text = S.LoginScreen.header
         header.textColor = .white
+
+        addressButton.addTarget(self, action: #selector(addressTapped), for: .touchUpInside)
+        scanButton.addTarget(self, action: #selector(scanTapped), for: .touchUpInside)
     }
 
     private func addTouchIdButton() {
@@ -191,20 +217,20 @@ class LoginViewController : UIViewController {
         }
     }
 
-    @objc private func topControlChanged(control: UISegmentedControl) {
-        if control.selectedSegmentIndex == 0 {
-            store.perform(action: RootModalActions.LoginAddress())
-        } else if control.selectedSegmentIndex == 1 {
-            store.perform(action: RootModalActions.LoginScan())
-        }
-    }
-
     @objc func touchIdTapped() {
         walletManager.authenticate(touchIDPrompt: S.LoginScreen.touchIdPrompt, completion: { success in
             if success {
                 self.store.perform(action: LoginSuccess())
             }
         })
+    }
+
+    @objc func addressTapped() {
+        store.perform(action: RootModalActions.LoginAddress())
+    }
+
+    @objc func scanTapped() {
+        store.perform(action: RootModalActions.LoginScan())
     }
 
     private func lockIfNeeded() {
