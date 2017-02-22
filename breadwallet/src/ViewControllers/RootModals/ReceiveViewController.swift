@@ -104,7 +104,8 @@ class ReceiveViewController: UIViewController {
         address.text = wallet.receiveAddress
         address.textColor = .grayTextTint
         border.backgroundColor = .secondaryBorder
-        qrCode.image = UIImage.qrCode(data: address.text!.data(using: .utf8)!, color: CIColor(color: .black))?
+        //TODO - use payment request object here
+        qrCode.image = UIImage.qrCode(data: "bitcoin:\(address.text!)".data(using: .utf8)!, color: CIColor(color: .black))?
                             .resize(CGSize(width: qrSize, height: qrSize))!
         share.isToggleable = true
         if !isRequestAmountVisible {
