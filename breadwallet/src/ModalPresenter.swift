@@ -140,11 +140,13 @@ class ModalPresenter : Subscriber {
         case .loginScan:
             guard ScanViewController.isCameraAllowed else { return nil }
             return ScanViewController(completion: { address in
-                self.presentModal(.send, configuration: { modal in
-                    guard let modal = modal as? ModalViewController else { return }
-                    guard let child = modal.childViewController as? SendViewController else { return }
-                    child.initialAddress = address
-                })
+                if address != nil {
+                    self.presentModal(.send, configuration: { modal in
+                        guard let modal = modal as? ModalViewController else { return }
+                        guard let child = modal.childViewController as? SendViewController else { return }
+                        child.initialAddress = address
+                    })
+                }
             }, isValidURI: { address in
                 return address.hasPrefix("bitcoin:")
             })
