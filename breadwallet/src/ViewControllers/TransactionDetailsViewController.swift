@@ -29,7 +29,14 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
     fileprivate let selectedIndex: Int
     fileprivate let cellIdentifier = "CellIdentifier"
     fileprivate var currency: Currency = .bitcoin
+
+    //The secretScrollView is to help with the limitation where if isPagingEnabled
+    //is true, the page size has to be the bounds.width of the collectionview.
+    //We want a portion of the next transaction to be visible, so we can use
+    //a hidden scrollview with isPagingEnbabled=true, which forwards its scroll events
+    //to the collectionview
     fileprivate let secretScrollView = UIScrollView()
+    private var hasShownInitialIndex = false
 
     deinit {
         store.unsubscribe(self)
@@ -58,7 +65,6 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         //and also have paging enabled for the scrollview.
         secretScrollView.frame = CGRect(x: C.padding[2] - 4.0, y: -1000, width: UIScreen.main.bounds.width - C.padding[3], height: UIScreen.main.bounds.height - C.padding[1])
         secretScrollView.showsHorizontalScrollIndicator = false
-        secretScrollView.delegate = self
         secretScrollView.alwaysBounceHorizontal = true
         collectionView?.addGestureRecognizer(secretScrollView.panGestureRecognizer)
         collectionView?.panGestureRecognizer.isEnabled = false
@@ -66,13 +72,28 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        guard let contentSize = collectionView?.contentSize else { return }
-        secretScrollView.contentSize = contentSize
+        if !hasShownInitialIndex {
+            guard let contentSize = collectionView?.contentSize else { return }
+            guard let collectionView = collectionView else { return }
+            secretScrollView.contentSize = contentSize
+            var contentOffset = collectionView.contentOffset
+            contentOffset.x = contentOffset.x + collectionView.contentInset.left
+            contentOffset.y = contentOffset.y + collectionView.contentInset.top
+            secretScrollView.contentOffset = contentOffset
+
+            //The scrollview's delegate has to be set late here so we can set the initial position
+            //without causing any side effects.
+            secretScrollView.delegate = self
+
+            hasShownInitialIndex = true
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        collectionView?.scrollToItem(at: IndexPath(item: selectedIndex, section: 0), at: .centeredHorizontally, animated: false)
+        if !hasShownInitialIndex {
+            collectionView?.scrollToItem(at: IndexPath(item: selectedIndex, section: 0), at: .centeredHorizontally, animated: false)
+        }
     }
 
     override var prefersStatusBarHidden: Bool {
