@@ -67,16 +67,10 @@ class StartViewController : UIViewController {
     }
 
     private func addButtonActions() {
-        create.addTarget(self, action: #selector(createWallet), for: .touchUpInside)
-        recover.addTarget(self, action: #selector(recoverWallet), for: .touchUpInside)
-    }
-
-    @objc private func recoverWallet() {
-        didTapRecover()
-    }
-
-    @objc private func createWallet() {
-        store.perform(action: PinCreation.Start())
+        recover.tap = didTapRecover
+        create.tap = { [weak self] in
+            self?.store.perform(action: PinCreation.Start())
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
