@@ -84,42 +84,18 @@ class StartFlowPresenter : Subscriber {
     }
 
     private func presentStartFlow() {
-        let startViewController = StartViewController(store: store)
-        startViewController.recoverCallback = { phrase, presentingViewController in
-            //TODO - add more validation here
-            let components = phrase.components(separatedBy: " ")
-            if components.count != 12 {
-                return false
+        let startViewController = StartViewController(store: store, didTapRecover: {
+
+            let recoverIntro = RecoverWalletIntroViewController() {
+                let recoverWalletViewController = RecoverWalletViewController(store: self.store, walletManager: self.walletManager)
+                self.navigationController?.pushViewController(recoverWalletViewController, animated: true)
             }
-            if self.walletManager.setSeedPhrase(phrase) {
-                let alert = UIAlertController(title: "Set Pin", message: "Enter New Pin", preferredStyle: .alert)
-                let saveAction = UIAlertAction(title: "Save", style: .default, handler: { _ in
-                    guard let pin = alert.textFields?[0].text else { return }
-                    let setPinResult = self.walletManager.forceSetPin(newPin: pin, seedPhrase: phrase)
-                    print("Set Pin Result: \(setPinResult)")
-                    self.store.perform(action: HideStartFlow())
-                    DispatchQueue.global(qos: .background).async {
-                        self.walletManager.peerManager?.connect()
-                    }
-                })
-                saveAction.isEnabled = false
-                alert.addAction(saveAction)
-                alert.addTextField(configurationHandler: { textField in
-                    textField.keyboardType = .numberPad
-                    NotificationCenter.default.addObserver(forName: .UITextFieldTextDidChange, object: textField, queue: OperationQueue.main, using: { note in
-                        guard let pin = textField.text else { return }
-                        if pin.utf8.count == 6 {
-                            saveAction.isEnabled = true
-                        }
-                    })
-                })
-                alert.view.tintColor = C.defaultTintColor
-                presentingViewController.present(alert, animated: true, completion: nil)
-                return true
-            } else {
-                return false
-            }
-        }
+
+            self.navigationController?.setNavigationBarHidden(false, animated: false)
+            self.navigationController?.setBackArrow()
+            self.navigationController?.setClearNavbar()
+            self.navigationController?.pushViewController(recoverIntro, animated: true)
+        })
 
         navigationController = ModalNavigationController(rootViewController: startViewController)
         navigationController?.delegate = navigationControllerDelegate
@@ -145,7 +121,6 @@ class StartFlowPresenter : Subscriber {
         navigationController?.setBackArrow()
         navigationController?.setClearNavbar()
         navigationController?.pushViewController(pinCreationViewController, animated: true)
-
     }
 
     private func pushStartPaperPhraseCreationViewController() {
