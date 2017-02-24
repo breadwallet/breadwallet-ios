@@ -60,8 +60,7 @@ extension WalletManager : WalletAuthenticator {
             try setKeychainItem(key: keychainKey.seed, item: nil as Data?)
         }
 
-        guard let mpk: Data = try keychainItem(key: keychainKey.masterPubKey),
-              mpk.count >= MemoryLayout<BRMasterPubKey>.stride else {
+        guard var mpk: Data = try keychainItem(key: keychainKey.masterPubKey), mpk.count >= 69 else {
             try self.init(masterPubKey: BRMasterPubKey(), earliestKeyTime: 0, dbPath: dbPath)
             return
         }
@@ -72,6 +71,7 @@ extension WalletManager : WalletAuthenticator {
             creationTime.withUnsafeBytes({ earliestKeyTime = $0.pointee })
         }
         
+        if mpk.count < MemoryLayout<BRMasterPubKey>.stride { mpk.count = MemoryLayout<BRMasterPubKey>.stride }
         try self.init(masterPubKey: mpk.withUnsafeBytes({ $0.pointee }), earliestKeyTime: earliestKeyTime,
                       dbPath: dbPath)
     }
@@ -304,9 +304,9 @@ extension WalletManager : WalletAuthenticator {
                 BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
                 let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
                 seed = UInt512() // clear seed
-                guard let mpkData: Data = try keychainItem(key: keychainKey.masterPubKey),
-                    mpkData.count >= MemoryLayout<BRMasterPubKey>.stride,
-                    mpkData.withUnsafeBytes({ $0.pointee == mpk }) else { return false }
+                guard var mpkData: Data = try keychainItem(key: keychainKey.masterPubKey) else { return false }
+                mpkData.count = MemoryLayout<BRMasterPubKey>.stride
+                guard mpkData.withUnsafeBytes({ $0.pointee == mpk }) else { return false }
             }
             else if try keychainItem(key: keychainKey.pin) != nil { return false }
             
