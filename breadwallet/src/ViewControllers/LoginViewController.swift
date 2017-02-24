@@ -114,7 +114,7 @@ class LoginViewController : UIViewController {
             pinView.centerXAnchor.constraint(equalTo: pinViewContainer.centerXAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.width),
             pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
-        topControlTop = topControlContainer.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[1])
+        topControlTop = topControlContainer.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[1] + 20.0)
         topControlContainer.constrain([
             topControlTop,
             topControlContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
