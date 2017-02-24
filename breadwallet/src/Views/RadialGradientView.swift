@@ -10,12 +10,15 @@ import UIKit
 
 class RadialGradientView : UIView {
 
-    private let offset: CGFloat
-
-    init(offset: CGFloat) {
+    //MARK: - Public
+    init(backgroundColor: UIColor, offset: CGFloat = 0.0) {
         self.offset = offset
         super.init(frame: .zero)
+        self.backgroundColor = backgroundColor
     }
+
+    //MARK: - Private
+    private let offset: CGFloat
 
     override func draw(_ rect: CGRect) {
         let colorSpace = CGColorSpaceCreateDeviceRGB()

@@ -21,7 +21,7 @@ class ConfirmPaperPhraseViewController : UIViewController {
     lazy private var confirmFirstPhrase: ConfirmPhrase = { ConfirmPhrase(text: "Word \(self.indices.0 + 1)") }()
     lazy private var confirmSecondPhrase: ConfirmPhrase = { ConfirmPhrase(text: "Word \(self.indices.1 + 1)") }()
     private let submit = ShadowButton(title: NSLocalizedString("Submit", comment: "button label"), type: .primary)
-    private let header = RadialGradientView(offset: 0.0)
+    private let header = RadialGradientView(backgroundColor: .brand)
     private let store: Store
     private let pin: String
     private let walletManager: WalletManager
@@ -48,7 +48,6 @@ class ConfirmPaperPhraseViewController : UIViewController {
 
     override func viewDidLoad() {
         view.backgroundColor = .white
-        header.backgroundColor = .brand
         label.text = "Prove you wrote down your paper key by answering the following questions."
         label.textColor = .white
         

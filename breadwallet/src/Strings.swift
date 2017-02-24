@@ -87,4 +87,9 @@ enum S {
         static let reEnterNew = NSLocalizedString("Re-Enter your new PIN", comment: "Re-Enter new pin instruction")
         static let caption = NSLocalizedString("Write down your PIN and store it in a place you can access even if your phone is broken or lost.", comment: "Update pin caption text")
     }
+
+    enum RecoverWallet {
+        static let next = NSLocalizedString("Next", comment: "Next button label")
+        static let intro = NSLocalizedString("Recover your Breadwallet with your recovery phrase.", comment: "Recover wallet intro")
+    }
 }

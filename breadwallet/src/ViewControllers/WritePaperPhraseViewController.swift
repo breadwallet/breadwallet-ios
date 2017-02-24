@@ -15,7 +15,7 @@ class WritePaperPhraseViewController: UIViewController {
     private let pin: String
     private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
     private let stepLabel = UILabel.wrapping(font: UIFont.customMedium(size: 13.0))
-    private let header = RadialGradientView(offset: 0.0)
+    private let header = RadialGradientView(backgroundColor: .brand)
     private lazy var phraseViews: [PhraseView] = {
         guard let phraseString = self.walletManager.seedPhrase(pin: self.pin) else { return [] }
         let words = phraseString.components(separatedBy: " ")
@@ -45,7 +45,6 @@ class WritePaperPhraseViewController: UIViewController {
 
     override func viewDidLoad() {
         view.backgroundColor = .white
-        header.backgroundColor = .brand
         
         label.text = "Write down each word on a piece of paper and store it in a safe place."
         label.textAlignment = .center

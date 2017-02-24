@@ -16,7 +16,7 @@ class StartPaperPhraseViewController: UIViewController {
     private let explanation =   UILabel.wrapping(font: UIFont.customBody(size: 16.0))
     private let explanationString = NSLocalizedString("Protect your wallet against theft and ensure you can recover your wallet after replacing your phone or updating its software. ", comment: "Paper key explanation text.")
     private let store: Store
-    private let header = RadialGradientView(offset: 64.0)
+    private let header = RadialGradientView(backgroundColor: .brand, offset: 64.0)
 
     init(store: Store) {
         self.store = store
@@ -25,7 +25,6 @@ class StartPaperPhraseViewController: UIViewController {
 
     override func viewDidLoad() {
         view.backgroundColor = .white
-        header.backgroundColor = .brand
         explanation.text = explanationString
         addSubviews()
         addConstraints()
