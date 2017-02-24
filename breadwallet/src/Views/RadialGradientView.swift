@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RadialGradientView: UIView {
+class RadialGradientView : UIView {
 
     private let offset: CGFloat
 
