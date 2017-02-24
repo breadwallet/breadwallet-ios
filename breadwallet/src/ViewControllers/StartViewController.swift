@@ -10,18 +10,20 @@ import UIKit
 
 class StartViewController : UIViewController {
 
-    var recoverCallback: ((String, UIViewController) -> Bool)? //TODO - delete me eventually
-
-    init(store: Store) {
+    //MARK: - Public
+    init(store: Store, didTapRecover: @escaping () -> Void) {
         self.store = store
+        self.didTapRecover = didTapRecover
         super.init(nibName: nil, bundle: nil)
     }
 
+    //MARK: - Private
     private let circle = GradientCircle()
     private let brand = UILabel()
     private let create = ShadowButton(title: NSLocalizedString("Create New Wallet", comment: "button label"), type: .primary)
     private let recover = ShadowButton(title: NSLocalizedString("Recover Wallet", comment: "button label"), type: .secondary)
     private let store: Store
+    private let didTapRecover: () -> Void
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -70,25 +72,7 @@ class StartViewController : UIViewController {
     }
 
     @objc private func recoverWallet() {
-        //TODO - This is just a temporary recovery implementation
-        let alert = UIAlertController(title: "Recover", message: "Enter recovery phrase", preferredStyle: .alert)
-        alert.addTextField { (textField) in}
-        alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { action in
-            guard let phrase = alert.textFields?[0].text else { return }
-            guard let result = self.recoverCallback?(phrase, self) else { return }
-            if !result {
-                self.recoverWalletError()
-            }
-        }))
-        alert.view.tintColor = C.defaultTintColor
-        parent?.present(alert, animated: true, completion: nil)
-    }
-
-    @objc private func recoverWalletError() {
-        let alert = UIAlertController(title: "Error", message: "Failed to recover wallet", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        alert.view.tintColor = C.defaultTintColor
-        parent?.present(alert, animated: true, completion: nil)
+        didTapRecover()
     }
 
     @objc private func createWallet() {
