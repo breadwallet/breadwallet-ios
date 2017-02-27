@@ -20,8 +20,29 @@ class RecoverWalletViewController : UIViewController {
     //MARK: - Private
     private let store: Store
     private let walletManager: WalletManager
+    private let enterPhrase = EnterPhraseCollectionViewController()
 
     override func viewDidLoad() {
+        addSubviews()
+        addConstraints()
+        setData()
+    }
+
+    private func addSubviews() {
+        addChildViewController(enterPhrase, layout: {
+            enterPhrase.view.constrain([
+                enterPhrase.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
+                enterPhrase.view.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
+                enterPhrase.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+                enterPhrase.view.heightAnchor.constraint(equalToConstant: 273.0) ])
+        })
+    }
+
+    private func addConstraints() {
+
+    }
+
+    private func setData() {
         view.backgroundColor = .white
     }
 
