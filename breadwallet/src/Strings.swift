@@ -91,5 +91,8 @@ enum S {
     enum RecoverWallet {
         static let next = NSLocalizedString("Next", comment: "Next button label")
         static let intro = NSLocalizedString("Recover your Breadwallet with your recovery phrase.", comment: "Recover wallet intro")
+        static let leftArrow = NSLocalizedString("Left Arrow", comment: "Previous button label")
+        static let rightArrow = NSLocalizedString("Right Arrow", comment: "Next button label")
+        static let done = NSLocalizedString("Done", comment: "Done buttohn text")
     }
 }
