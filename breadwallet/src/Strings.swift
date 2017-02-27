@@ -94,5 +94,6 @@ enum S {
         static let leftArrow = NSLocalizedString("Left Arrow", comment: "Previous button label")
         static let rightArrow = NSLocalizedString("Right Arrow", comment: "Next button label")
         static let done = NSLocalizedString("Done", comment: "Done buttohn text")
+        static let instruction = NSLocalizedString("Enter Recovery Phrase", comment: "Enter recovery phrase instruction")
     }
 }
