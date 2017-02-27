@@ -60,9 +60,9 @@ class EnterPhraseCell : UICollectionViewCell {
             textField.topAnchor.constraint(equalTo: contentView.topAnchor),
             textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor) ])
         separator.constrain([
-            separator.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
+            separator.leadingAnchor.constraint(equalTo: textField.leadingAnchor, constant: C.padding[1]),
             separator.topAnchor.constraint(equalTo: textField.bottomAnchor),
-            separator.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
+            separator.trailingAnchor.constraint(equalTo: textField.trailingAnchor, constant: -C.padding[1]),
             separator.heightAnchor.constraint(equalToConstant: 1.0) ])
         label.constrain([
             label.leadingAnchor.constraint(equalTo: separator.leadingAnchor),
@@ -77,18 +77,22 @@ class EnterPhraseCell : UICollectionViewCell {
         textField.autocorrectionType = .no
         textField.textAlignment = .center
         textField.autocapitalizationType = .none
+        textField.tintColor = C.defaultTintColor
         previousField.tintColor = .secondaryGrayText
         nextField.tintColor = .secondaryGrayText
         done.setTitle(S.RecoverWallet.done, for: .normal)
     }
 
     private var accessoryView: UIView {
-        let view = UIView()
+        let view = UIView(color: .secondaryButton)
+        view.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
+        let separator = UIView(color: .secondaryShadow)
+        view.addSubview(separator)
         view.addSubview(previousField)
         view.addSubview(nextField)
         view.addSubview(done)
-        view.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
 
+        separator.constrainTopCorners(height: 1.0)
         previousField.constrain([
             previousField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             previousField.topAnchor.constraint(equalTo: view.topAnchor),

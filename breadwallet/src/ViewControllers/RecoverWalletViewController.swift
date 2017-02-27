@@ -22,6 +22,7 @@ class RecoverWalletViewController : UIViewController {
     private let walletManager: WalletManager
     private let enterPhrase = EnterPhraseCollectionViewController()
     private let errorLabel = UILabel(font: .customBody(size: 16.0), color: .cameraGuideNegative)
+    private let instruction = UILabel(font: .customBold(size: 14.0), color: .darkText)
 
     override func viewDidLoad() {
         addSubviews()
@@ -38,22 +39,27 @@ class RecoverWalletViewController : UIViewController {
                 enterPhrase.view.heightAnchor.constraint(equalToConstant: 273.0) ])
         })
         view.addSubview(errorLabel)
+        view.addSubview(instruction)
     }
 
     private func addConstraints() {
         errorLabel.constrain([
             errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             errorLabel.topAnchor.constraint(equalTo: enterPhrase.view.bottomAnchor, constant: C.padding[1]) ])
+        instruction.constrain([
+            instruction.bottomAnchor.constraint(equalTo: enterPhrase.view.topAnchor, constant: -C.padding[1]),
+            instruction.leadingAnchor.constraint(equalTo: enterPhrase.view.leadingAnchor) ])
     }
 
     private func setData() {
-        view.backgroundColor = .white
+        view.backgroundColor = .secondaryButton
         errorLabel.text = "Invalid Phrase"
         errorLabel.isHidden = true
         errorLabel.textAlignment = .center
         enterPhrase.didFinishPhraseEntry = { [weak self] phrase in
             self?.validatePhrase(phrase)
         }
+        instruction.text = S.RecoverWallet.instruction
     }
 
     private func validatePhrase(_ phrase: String) {
