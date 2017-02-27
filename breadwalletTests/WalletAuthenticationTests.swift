@@ -56,15 +56,4 @@ class WalletAuthenticationTests : XCTestCase {
         let disabledUntil = walletManager.walletDisabledUntil
         XCTAssert(disabledUntil > Date.timeIntervalSinceReferenceDate, "Wallet should be disabled until some time in the future. DisabledUntil: \(disabledUntil)")
     }
-
-    private func clearKeychain() {
-        let classes = [kSecClassGenericPassword as String,
-                       kSecClassInternetPassword as String,
-                       kSecClassCertificate as String,
-                       kSecClassKey as String,
-                       kSecClassIdentity as String]
-        classes.forEach { className in
-            SecItemDelete([kSecClass as String: className]  as CFDictionary)
-        }
-    }
 }

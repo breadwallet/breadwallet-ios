@@ -251,6 +251,9 @@
 		CE6D0F991DE8B75900BD4BCF /* DismissModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */; };
 		CE6DCC251E6001E50044257B /* UIControl+Callback.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DCC241E6001E50044257B /* UIControl+Callback.swift */; };
 		CE6DCC271E6108D50044257B /* EnterPhraseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DCC261E6108D50044257B /* EnterPhraseCell.swift */; };
+		CE6DCC291E63D0280044257B /* PhraseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DCC281E63D0280044257B /* PhraseTests.swift */; };
+		CE6DCC2B1E63D6290044257B /* WalletCreationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DCC2A1E63D6290044257B /* WalletCreationTests.swift */; };
+		CE6DCC2D1E63D6B10044257B /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DCC2C1E63D6B10044257B /* TestHelpers.swift */; };
 		CE74F58D1E3BA85600ED5FA9 /* ExchangeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE74F58C1E3BA85600ED5FA9 /* ExchangeManager.swift */; };
 		CE760EDC1E561DF900EFAC2B /* SecurityCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE760EDA1E561DF900EFAC2B /* SecurityCenterViewController.swift */; };
 		CE760EDD1E561DF900EFAC2B /* UpdatePinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE760EDB1E561DF900EFAC2B /* UpdatePinViewController.swift */; };
@@ -1342,6 +1345,9 @@
 		CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DismissModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/DismissModalAnimator.swift; sourceTree = "<group>"; };
 		CE6DCC241E6001E50044257B /* UIControl+Callback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIControl+Callback.swift"; path = "src/Extensions/UIControl+Callback.swift"; sourceTree = "<group>"; };
 		CE6DCC261E6108D50044257B /* EnterPhraseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterPhraseCell.swift; path = src/Views/EnterPhraseCell.swift; sourceTree = "<group>"; };
+		CE6DCC281E63D0280044257B /* PhraseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhraseTests.swift; sourceTree = "<group>"; };
+		CE6DCC2A1E63D6290044257B /* WalletCreationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletCreationTests.swift; sourceTree = "<group>"; };
+		CE6DCC2C1E63D6B10044257B /* TestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
 		CE74F58C1E3BA85600ED5FA9 /* ExchangeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExchangeManager.swift; path = src/Wallet/ExchangeManager.swift; sourceTree = "<group>"; };
 		CE760EDA1E561DF900EFAC2B /* SecurityCenterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SecurityCenterViewController.swift; path = src/ViewControllers/SecurityCenter/SecurityCenterViewController.swift; sourceTree = "<group>"; };
 		CE760EDB1E561DF900EFAC2B /* UpdatePinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UpdatePinViewController.swift; path = src/ViewControllers/SecurityCenter/UpdatePinViewController.swift; sourceTree = "<group>"; };
@@ -2433,6 +2439,9 @@
 				22C431331DF89DFE0017CAEA /* BRCoderTests.swift */,
 				22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */,
 				CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */,
+				CE6DCC281E63D0280044257B /* PhraseTests.swift */,
+				CE6DCC2A1E63D6290044257B /* WalletCreationTests.swift */,
+				CE6DCC2C1E63D6B10044257B /* TestHelpers.swift */,
 			);
 			path = breadwalletTests;
 			sourceTree = "<group>";
@@ -3555,9 +3564,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				22C4312E1DF89D970017CAEA /* BRHTTPServerTests.swift in Sources */,
+				CE6DCC2B1E63D6290044257B /* WalletCreationTests.swift in Sources */,
 				22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */,
 				CEDD8F101E575DD4007A4123 /* WalletAuthenticationTests.swift in Sources */,
 				22C431321DF89DDC0017CAEA /* NSDataExtensionTests.swift in Sources */,
+				CE6DCC291E63D0280044257B /* PhraseTests.swift in Sources */,
+				CE6DCC2D1E63D6B10044257B /* TestHelpers.swift in Sources */,
 				22C431301DF89DC00017CAEA /* BRReplicatedKVStoreTests.swift in Sources */,
 				22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */,
 				22C4312A1DF89D0A0017CAEA /* BRTarTests.swift in Sources */,
