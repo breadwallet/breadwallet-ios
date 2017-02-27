@@ -83,7 +83,13 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         return BRPeerManager(wallet: wallet, earliestKeyTime: self.earliestKeyTime,
                              blocks: self.loadBlocks(), peers: self.loadPeers(), listener: self)
     }()
-    
+
+    var wordList: [UnsafePointer<CChar>?]? {
+        guard let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist") else { return nil }
+        guard let wordList = NSArray(contentsOfFile: path) as? [NSString], wordList.count == 2048 else { return nil }
+        return wordList.map({ $0.utf8String })
+    }
+
     init(masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
         self.masterPubKey = masterPubKey
         self.earliestKeyTime = earliestKeyTime
@@ -532,6 +538,11 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         
         if sqlite3_errcode(db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(db))) }
         return peers
+    }
+
+    func isPhraseValid(_ phrase: String) -> Bool {
+        guard var words = wordList else { return false }
+        return BRBIP39PhraseIsValid(&words, phrase) != 0
     }
 
     deinit {
