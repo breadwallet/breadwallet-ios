@@ -21,6 +21,7 @@ class RecoverWalletViewController : UIViewController {
     private let store: Store
     private let walletManager: WalletManager
     private let enterPhrase = EnterPhraseCollectionViewController()
+    private let errorLabel = UILabel(font: .customBody(size: 16.0), color: .cameraGuideNegative)
 
     override func viewDidLoad() {
         addSubviews()
@@ -36,25 +37,36 @@ class RecoverWalletViewController : UIViewController {
                 enterPhrase.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
                 enterPhrase.view.heightAnchor.constraint(equalToConstant: 273.0) ])
         })
+        view.addSubview(errorLabel)
     }
 
     private func addConstraints() {
-
+        errorLabel.constrain([
+            errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            errorLabel.topAnchor.constraint(equalTo: enterPhrase.view.bottomAnchor, constant: C.padding[1]) ])
     }
 
     private func setData() {
         view.backgroundColor = .white
+        errorLabel.text = "Invalid Phrase"
+        errorLabel.isHidden = true
+        errorLabel.textAlignment = .center
+        enterPhrase.didFinishPhraseEntry = { [weak self] phrase in
+            self?.validatePhrase(phrase)
+        }
     }
 
-    private func didSelectPhrase(phrase: String) {
-        let components = phrase.components(separatedBy: " ")
-        if components.count != 12 {
+    private func validatePhrase(_ phrase: String) {
+        guard walletManager.isPhraseValid(phrase) else {
+            errorLabel.isHidden = false
             return
         }
-        if self.walletManager.setSeedPhrase(phrase) {
-            //set pin let setPinResult = self.walletManager.forceSetPin(newPin: pin, seedPhrase: phrase)
-            //peerManager.connect()
-        }
+        errorLabel.isHidden = true
+
+//        if self.walletManager.setSeedPhrase(phrase) {
+//            //set pin let setPinResult = self.walletManager.forceSetPin(newPin: pin, seedPhrase: phrase)
+//            //peerManager.connect()
+//        }
     }
 
     required init?(coder aDecoder: NSCoder) {

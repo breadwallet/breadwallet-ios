@@ -10,6 +10,9 @@ import UIKit
 
 class EnterPhraseCollectionViewController : UICollectionViewController {
 
+    //MARK: - Public
+    var didFinishPhraseEntry: ((String) -> Void)?
+
     init() {
         let layout = UICollectionViewFlowLayout()
         let screenWidth = UIScreen.main.bounds.width
@@ -20,7 +23,14 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         super.init(collectionViewLayout: layout)
     }
 
+    //MARK: - Private
     private let cellIdentifier = "CellIdentifier"
+    private var phrase: String {
+        return (0...11).map { index in
+            guard let phraseCell = collectionView?.cellForItem(at: IndexPath(item: index, section: 0)) as? EnterPhraseCell else { return ""}
+            return phraseCell.textField.text ?? ""
+            }.joined(separator: " ")
+    }
 
     override func viewDidLoad() {
         collectionView?.backgroundColor = .white
@@ -49,6 +59,10 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         }
         enterPhraseCell.didTapPrevious = { [weak self] in
             self?.becomeFirstResponder(atIndex: indexPath.row - 1)
+        }
+        enterPhraseCell.didTapDone = { [weak self] in
+            guard let phrase = self?.phrase else { return }
+            self?.didFinishPhraseEntry?(phrase)
         }
         return item
     }
