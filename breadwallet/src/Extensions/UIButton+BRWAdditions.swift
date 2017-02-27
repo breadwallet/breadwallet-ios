@@ -43,4 +43,12 @@ extension UIButton {
         button.accessibilityLabel = accessibilityLabel
         return button
     }
+
+    static func icon(image: UIImage, accessibilityLabel: String) -> UIButton {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        button.setImage(image, for: .normal)
+        button.accessibilityLabel = accessibilityLabel
+        return button
+    }
 }
