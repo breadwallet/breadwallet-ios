@@ -76,6 +76,7 @@ class EnterPhraseCell : UICollectionViewCell {
         textField.inputAccessoryView = accessoryView
         textField.autocorrectionType = .no
         textField.textAlignment = .center
+        textField.autocapitalizationType = .none
         previousField.tintColor = .secondaryGrayText
         nextField.tintColor = .secondaryGrayText
         done.setTitle(S.RecoverWallet.done, for: .normal)
