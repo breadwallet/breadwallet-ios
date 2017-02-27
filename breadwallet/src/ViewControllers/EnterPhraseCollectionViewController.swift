@@ -16,7 +16,7 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
     init() {
         let layout = UICollectionViewFlowLayout()
         let screenWidth = UIScreen.main.bounds.width
-        layout.itemSize = CGSize(width: (screenWidth - C.padding[4])/3.0, height: 30.0)
+        layout.itemSize = CGSize(width: (screenWidth - C.padding[4])/3.0, height: 50.0)
         layout.minimumLineSpacing = 0.0
         layout.minimumInteritemSpacing = 0.0
         layout.sectionInset = .zero
@@ -37,6 +37,9 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         collectionView?.register(EnterPhraseCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView?.delegate = self
         collectionView?.dataSource = self
+        collectionView?.layer.borderColor = UIColor.secondaryBorder.cgColor
+        collectionView?.layer.borderWidth = 1.0
+        collectionView?.layer.cornerRadius = 8.0
     }
 
     override func viewDidAppear(_ animated: Bool) {
