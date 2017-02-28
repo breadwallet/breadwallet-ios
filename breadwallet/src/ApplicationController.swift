@@ -48,8 +48,6 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             if shouldRequireLogin() {
                 store.perform(action: RequireLogin())
             }
-            modalPresenter?.peerManager = walletManager.peerManager
-            modalPresenter?.wallet = walletManager.wallet
             modalPresenter?.walletManager = walletManager
             DispatchQueue.global(qos: .background).async {
                 self.walletManager.peerManager?.connect()
@@ -128,12 +126,11 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
 
     private func addWalletCreationListener() {
         store.subscribe(self,
-                        selector: { $0.pinCreationStep != $1.pinCreationStep},
+                        selector: { $0.alert != $1.alert},
                         callback: {
-                            if case .saveSuccess = $0.pinCreationStep {
+                            guard let alert = $0.alert else { return }
+                            if case .pinSet = alert {
                                 self.modalPresenter?.walletManager = self.walletManager
-                                self.modalPresenter?.peerManager = self.walletManager.peerManager
-                                self.modalPresenter?.wallet = self.walletManager.wallet
                             }
         })
     }

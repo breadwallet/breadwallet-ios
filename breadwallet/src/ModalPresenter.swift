@@ -10,8 +10,7 @@ import UIKit
 
 class ModalPresenter : Subscriber {
 
-    var wallet: BRWallet?
-    var peerManager: BRPeerManager?
+    //MARK: - Public
     var walletManager: WalletManager?
     init(store: Store, window: UIWindow) {
         self.store = store
@@ -20,6 +19,7 @@ class ModalPresenter : Subscriber {
         addSubscriptions()
     }
 
+    //MARK: - Private
     private let store: Store
     private let window: UIWindow
     private let alertHeight: CGFloat = 260.0
@@ -146,7 +146,7 @@ class ModalPresenter : Subscriber {
     }
 
     private func receiveView(isRequestAmountVisible: Bool) -> UIViewController? {
-        guard let wallet = wallet else { return nil }
+        guard let wallet = walletManager?.wallet else { return nil }
         let receiveVC = ReceiveViewController(store: store, wallet: wallet, isRequestAmountVisible: isRequestAmountVisible)
         let root = ModalViewController(childViewController: receiveVC)
         receiveVC.presentEmail = { address, image in
