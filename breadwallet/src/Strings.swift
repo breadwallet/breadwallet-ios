@@ -81,7 +81,10 @@ enum S {
     }
 
     enum UpdatePin {
-        static let title = NSLocalizedString("Update PIN", comment: "Update Pin title")
+        static let updateTitle = NSLocalizedString("Update PIN", comment: "Update Pin title")
+        static let createTitle = NSLocalizedString("Set PIN", comment: "Update Pin title")
+        static let createTitleConfirm = NSLocalizedString("Re-Enter PIN", comment: "Update Pin title")
+        static let createInstruction = NSLocalizedString("Your PIN will be used to unlock your Bread and send money.", comment: "Pin creation info.")
         static let enterCurrent = NSLocalizedString("Enter your current PIN.", comment: "Enter current pin instruction")
         static let enterNew = NSLocalizedString("Enter your new PIN.", comment: "Enter new pin instruction")
         static let reEnterNew = NSLocalizedString("Re-Enter your new PIN", comment: "Re-Enter new pin instruction")
