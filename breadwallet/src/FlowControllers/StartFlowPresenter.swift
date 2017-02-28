@@ -96,9 +96,9 @@ class StartFlowPresenter : Subscriber {
         let startViewController = StartViewController(store: store, didTapRecover: { [weak self] in
             guard let myself = self else { return }
             let recoverIntro = RecoverWalletIntroViewController(didTapNext: myself.pushRecoverWalletView)
-            myself.navigationController?.setNavigationBarHidden(false, animated: false)
             myself.navigationController?.setTintableBackArrow()
             myself.navigationController?.setClearNavbar()
+            myself.navigationController?.setNavigationBarHidden(false, animated: false)
             myself.navigationController?.pushViewController(recoverIntro, animated: true)
         })
 
