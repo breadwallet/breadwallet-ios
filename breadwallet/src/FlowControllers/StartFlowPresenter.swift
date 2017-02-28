@@ -97,7 +97,7 @@ class StartFlowPresenter : Subscriber {
             guard let myself = self else { return }
             let recoverIntro = RecoverWalletIntroViewController(didTapNext: myself.pushRecoverWalletView)
             myself.navigationController?.setNavigationBarHidden(false, animated: false)
-            myself.navigationController?.setBackArrow()
+            myself.navigationController?.setTintableBackArrow()
             myself.navigationController?.setClearNavbar()
             myself.navigationController?.pushViewController(recoverIntro, animated: true)
         })
@@ -145,7 +145,7 @@ class StartFlowPresenter : Subscriber {
         //This makes the keyboard slide in from the right.
         let _ = pinCreationViewController.view
         navigationController?.setNavigationBarHidden(false, animated: false)
-        navigationController?.setBackArrow()
+        navigationController?.setBlackBackArrow()
         navigationController?.setClearNavbar()
         navigationController?.pushViewController(pinCreationViewController, animated: true)
     }
