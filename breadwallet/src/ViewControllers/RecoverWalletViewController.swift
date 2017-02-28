@@ -16,13 +16,14 @@ class RecoverWalletViewController : UIViewController {
     init(store: Store, walletManager: WalletManager) {
         self.store = store
         self.walletManager = walletManager
+        self.enterPhrase = EnterPhraseCollectionViewController(walletManager: walletManager)
         super.init(nibName: nil, bundle: nil)
     }
 
     //MARK: - Private
     private let store: Store
     private let walletManager: WalletManager
-    private let enterPhrase = EnterPhraseCollectionViewController()
+    private let enterPhrase: EnterPhraseCollectionViewController
     private let errorLabel = UILabel(font: .customBody(size: 16.0), color: .cameraGuideNegative)
     private let instruction = UILabel(font: .customBold(size: 14.0), color: .darkText)
 

@@ -42,13 +42,16 @@ class EnterPhraseCell : UICollectionViewCell {
         }
     }
 
+    var isWordValid: ((String) -> Bool)?
+
     //MARK: - Private
     let textField = UITextField()
     private let label = UILabel(font: .customBody(size: 13.0), color: .secondaryShadow)
-    private let separator = UIView(color: .secondaryShadow)
     private let nextField = UIButton.icon(image: #imageLiteral(resourceName: "RightArrow"), accessibilityLabel: S.RecoverWallet.rightArrow)
     private let previousField = UIButton.icon(image: #imageLiteral(resourceName: "LeftArrow"), accessibilityLabel: S.RecoverWallet.leftArrow)
     private let done = UIButton(type: .system)
+    fileprivate let separator = UIView(color: .secondaryShadow)
+    fileprivate var hasDisplayedInvalidState = false
 
     private func setup() {
         contentView.addSubview(textField)
@@ -72,12 +75,15 @@ class EnterPhraseCell : UICollectionViewCell {
     }
 
     private func setData() {
-        label.textAlignment = .center
         textField.inputAccessoryView = accessoryView
         textField.autocorrectionType = .no
         textField.textAlignment = .center
         textField.autocapitalizationType = .none
         textField.tintColor = C.defaultTintColor
+        textField.delegate = self
+        textField.addTarget(self, action: #selector(EnterPhraseCell.textChanged(textField:)), for: .editingChanged)
+
+        label.textAlignment = .center
         previousField.tintColor = .secondaryGrayText
         nextField.tintColor = .secondaryGrayText
         done.setTitle(S.RecoverWallet.done, for: .normal)
@@ -86,13 +92,13 @@ class EnterPhraseCell : UICollectionViewCell {
     private var accessoryView: UIView {
         let view = UIView(color: .secondaryButton)
         view.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
-        let separator = UIView(color: .secondaryShadow)
-        view.addSubview(separator)
+        let topBorder = UIView(color: .secondaryShadow)
+        view.addSubview(topBorder)
         view.addSubview(previousField)
         view.addSubview(nextField)
         view.addSubview(done)
 
-        separator.constrainTopCorners(height: 1.0)
+        topBorder.constrainTopCorners(height: 1.0)
         previousField.constrain([
             previousField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             previousField.topAnchor.constraint(equalTo: view.topAnchor),
@@ -116,5 +122,30 @@ class EnterPhraseCell : UICollectionViewCell {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension EnterPhraseCell : UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        setColors(textField: textField)
+    }
+
+    @objc func textChanged(textField: UITextField) {
+        if hasDisplayedInvalidState {
+            setColors(textField: textField)
+        }
+    }
+
+    private func setColors(textField: UITextField) {
+        guard let isWordValid = isWordValid else { return }
+        guard let word = textField.text else { return }
+        if isWordValid(word) {
+            textField.textColor = .darkText
+            separator.backgroundColor = .secondaryShadow
+        } else {
+            textField.textColor = .cameraGuideNegative
+            separator.backgroundColor = .cameraGuideNegative
+            hasDisplayedInvalidState = true
+        }
     }
 }
