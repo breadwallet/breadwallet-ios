@@ -73,6 +73,13 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
             guard let myself = self else { return false }
             return myself.walletManager.isWordValid(word)
         }
+
+        if indexPath.item == 0 {
+            enterPhraseCell.disablePreviousButton()
+        } else if indexPath.item == 11 {
+            enterPhraseCell.disableNextButton()
+        }
+
         return item
     }
 
