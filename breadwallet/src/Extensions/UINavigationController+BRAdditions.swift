@@ -12,7 +12,7 @@ extension UINavigationController {
 
     func setDefaultStyle() {
         setClearNavbar()
-        setBackArrow()
+        setBlackBackArrow()
     }
 
     func setClearNavbar() {
@@ -21,10 +21,15 @@ extension UINavigationController {
         navigationBar.isTranslucent = true
     }
 
-    func setBackArrow() {
+    func setBlackBackArrow() {
         let image = #imageLiteral(resourceName: "Back")
         let renderedImage = image.withRenderingMode(.alwaysOriginal)
         navigationBar.backIndicatorImage = renderedImage
         navigationBar.backIndicatorTransitionMaskImage = renderedImage
+    }
+
+    func setTintableBackArrow() {
+        navigationBar.backIndicatorImage = #imageLiteral(resourceName: "Back")
+        navigationBar.backIndicatorTransitionMaskImage = #imageLiteral(resourceName: "Back")
     }
 }

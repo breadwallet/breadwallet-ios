@@ -30,4 +30,23 @@ class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
 
         previous = viewController
     }
+
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+
+        if viewController is RecoverWalletIntroViewController {
+            navigationController.navigationBar.tintColor = .white
+            navigationController.navigationBar.titleTextAttributes = [
+                NSForegroundColorAttributeName: UIColor.white,
+                NSFontAttributeName: UIFont.customBold(size: 17.0)
+            ]
+        }
+
+        if viewController is RecoverWalletViewController {
+            navigationController.navigationBar.tintColor = .darkText
+            navigationController.navigationBar.titleTextAttributes = [
+                NSForegroundColorAttributeName: UIColor.darkText,
+                NSFontAttributeName: UIFont.customBold(size: 17.0)
+            ]
+        }
+    }
 }
