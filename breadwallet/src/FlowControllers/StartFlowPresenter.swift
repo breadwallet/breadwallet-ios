@@ -27,7 +27,16 @@ class StartFlowPresenter : Subscriber {
     private let walletManager: WalletManager
     private var loginViewController: UIViewController?
     private let loginTransitionDelegate = LoginTransitionDelegate()
-    
+
+    private var closeButton: UIButton {
+        let button = UIButton.close
+        button.tintColor = .white
+        button.tap = {
+            self.store.perform(action: HideStartFlow())
+        }
+        return button
+    }
+
     private func addSubscriptions() {
         store.subscribe(self,
                         selector: { $0.isStartFlowVisible != $1.isStartFlowVisible },
@@ -101,6 +110,15 @@ class StartFlowPresenter : Subscriber {
         }
     }
 
+    private var pushRecoverWalletView: () -> Void {
+        return { [weak self] in
+            guard let myself = self else { return }
+            let recoverWalletViewController = RecoverWalletViewController(store: myself.store, walletManager: myself.walletManager)
+            recoverWalletViewController.didSetSeedPhrase = myself.pushPinCreationView
+            myself.navigationController?.pushViewController(recoverWalletViewController, animated: true)
+        }
+    }
+
     private var pushPinCreationView: (String) -> Void {
         return { [weak self] phrase in
             guard let myself = self else { return }
@@ -111,15 +129,6 @@ class StartFlowPresenter : Subscriber {
                 }
             }
             myself.navigationController?.pushViewController(pinCreationView, animated: true)
-        }
-    }
-
-    private var pushRecoverWalletView: () -> Void {
-        return { [weak self] in
-            guard let myself = self else { return }
-            let recoverWalletViewController = RecoverWalletViewController(store: myself.store, walletManager: myself.walletManager)
-            recoverWalletViewController.didSetSeedPhrase = myself.pushPinCreationView
-            myself.navigationController?.pushViewController(recoverWalletViewController, animated: true)
         }
     }
 
@@ -145,15 +154,13 @@ class StartFlowPresenter : Subscriber {
         let paperPhraseViewController = StartPaperPhraseViewController(store: store)
         paperPhraseViewController.title = "Paper Key"
         paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
-
-        let closeButton = UIButton.close
-        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
-        closeButton.tintColor = .white
         paperPhraseViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
 
         let faqButton = UIButton.faq
-        faqButton.addTarget(self, action: #selector(faqButtonTapped), for: .touchUpInside)
         faqButton.tintColor = .white
+        faqButton.tap = {
+            print("Faq button tapped")
+        }
         paperPhraseViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: faqButton)
 
         navigationController?.navigationBar.titleTextAttributes = [
@@ -171,11 +178,7 @@ class StartFlowPresenter : Subscriber {
 
         let writeViewController = WritePaperPhraseViewController(store: store, walletManager: walletManager, pin: pin)
         writeViewController.title = "Paper Key"
-
-        let button = UIButton.close
-        button.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
-        button.tintColor = .white
-        writeViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
+        writeViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
         navigationController?.pushViewController(writeViewController, animated: true)
     }
 
@@ -198,13 +201,5 @@ class StartFlowPresenter : Subscriber {
         loginViewController?.dismiss(animated: true, completion: {
             self.loginViewController = nil
         })
-    }
-
-    @objc private func closeButtonTapped() {
-        store.perform(action: HideStartFlow())
-    }
-
-    @objc private func faqButtonTapped() {
-        print("Faq button tapped")
     }
 }
