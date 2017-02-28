@@ -11,9 +11,12 @@ import UIKit
 class UpdatePinViewController : UIViewController, Subscriber {
 
     //MARK: - Public
-    init(store: Store, walletManager: WalletManager) {
+    var setPinSuccess: (() -> Void)?
+
+    init(store: Store, walletManager: WalletManager, phrase: String? = nil) {
         self.store = store
         self.walletManager = walletManager
+        self.phrase = phrase
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -29,17 +32,27 @@ class UpdatePinViewController : UIViewController, Subscriber {
         didSet {
             switch step {
             case .current:
-                instruction.text = S.UpdatePin.enterCurrent
+                instruction.text = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterCurrent
             case .new:
-                instruction.pushNewText(S.UpdatePin.enterNew)
+                if !isCreatingPin {
+                    instruction.pushNewText(S.UpdatePin.enterNew)
+                }
                 caption.text = S.UpdatePin.caption
             case .confirmNew:
-                instruction.pushNewText(S.UpdatePin.reEnterNew)
+                if isCreatingPin {
+                    header.text = S.UpdatePin.createTitleConfirm
+                } else {
+                    instruction.pushNewText(S.UpdatePin.reEnterNew)
+                }
             }
         }
     }
     private var currentPin: String?
     private var newPin: String?
+    private var phrase: String?
+    private var isCreatingPin: Bool {
+        return phrase != nil
+    }
 
     private enum Step {
         case current
@@ -87,8 +100,8 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private func setData() {
         view.backgroundColor = .white
 
-        header.text = S.UpdatePin.title
-        instruction.text = S.UpdatePin.enterCurrent
+        header.text = isCreatingPin ? S.UpdatePin.createTitle : S.UpdatePin.updateTitle
+        instruction.text = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterCurrent
 
         pinPad.ouputDidUpdate = { [weak self] text in
             guard let step = self?.step else { return }
@@ -100,6 +113,10 @@ class UpdatePinViewController : UIViewController, Subscriber {
             case .confirmNew:
                 self?.didUpdateForConfirmNew(pin: text)
             }
+        }
+
+        if phrase != nil {
+            step = .new
         }
     }
 
@@ -152,9 +169,19 @@ class UpdatePinViewController : UIViewController, Subscriber {
     }
 
     private func didSetNewPin() {
-        guard let currentPin = currentPin else { return }
+        var seedPhrase: String?
+        if phrase != nil {
+            seedPhrase = phrase
+        } else {
+            guard let currentPin = currentPin else { return }
+            seedPhrase = walletManager.seedPhrase(pin: currentPin)
+        }
+
         guard let newPin = newPin else { return }
-        if walletManager.forceSetPin(newPin: newPin, seedPhrase: walletManager.seedPhrase(pin: currentPin)) {
+        guard seedPhrase != nil else { return }
+
+        if walletManager.forceSetPin(newPin: newPin, seedPhrase: seedPhrase) {
+            setPinSuccess?()
             store.perform(action: Alert.show(.pinSet))
             store.lazySubscribe(self,
                             selector: { $0.alert != $1.alert && $1.alert == nil },

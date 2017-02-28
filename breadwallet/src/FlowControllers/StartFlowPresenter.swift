@@ -84,17 +84,13 @@ class StartFlowPresenter : Subscriber {
     }
 
     private func presentStartFlow() {
-        let startViewController = StartViewController(store: store, didTapRecover: {
-
-            let recoverIntro = RecoverWalletIntroViewController() {
-                let recoverWalletViewController = RecoverWalletViewController(store: self.store, walletManager: self.walletManager)
-                self.navigationController?.pushViewController(recoverWalletViewController, animated: true)
-            }
-
-            self.navigationController?.setNavigationBarHidden(false, animated: false)
-            self.navigationController?.setBackArrow()
-            self.navigationController?.setClearNavbar()
-            self.navigationController?.pushViewController(recoverIntro, animated: true)
+        let startViewController = StartViewController(store: store, didTapRecover: { [weak self] in
+            guard let myself = self else { return }
+            let recoverIntro = RecoverWalletIntroViewController(didTapNext: myself.pushRecoverWalletView)
+            myself.navigationController?.setNavigationBarHidden(false, animated: false)
+            myself.navigationController?.setBackArrow()
+            myself.navigationController?.setClearNavbar()
+            myself.navigationController?.pushViewController(recoverIntro, animated: true)
         })
 
         navigationController = ModalNavigationController(rootViewController: startViewController)
@@ -102,6 +98,26 @@ class StartFlowPresenter : Subscriber {
         if let startFlow = navigationController {
             startFlow.setNavigationBarHidden(true, animated: false)
             rootViewController.present(startFlow, animated: false, completion: nil)
+        }
+    }
+
+    private var pushPinCreationView: (String) -> Void {
+        return { [weak self] phrase in
+            guard let myself = self else { return }
+            let pinCreationView = UpdatePinViewController(store: myself.store, walletManager: myself.walletManager, phrase: phrase)
+            pinCreationView.setPinSuccess = { [weak self] in
+                self?.walletManager.peerManager?.connect()
+            }
+            myself.navigationController?.pushViewController(pinCreationView, animated: true)
+        }
+    }
+
+    private var pushRecoverWalletView: () -> Void {
+        return { [weak self] in
+            guard let myself = self else { return }
+            let recoverWalletViewController = RecoverWalletViewController(store: myself.store, walletManager: myself.walletManager)
+            recoverWalletViewController.didSetSeedPhrase = myself.pushPinCreationView
+            myself.navigationController?.pushViewController(recoverWalletViewController, animated: true)
         }
     }
 
