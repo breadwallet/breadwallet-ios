@@ -71,8 +71,8 @@ class RecoverWalletViewController : UIViewController {
         }
         errorLabel.isHidden = true
 
-        if self.walletManager.setSeedPhrase(testPhrase) {
-            didSetSeedPhrase?(testPhrase)
+        if self.walletManager.setSeedPhrase(phrase) {
+            didSetSeedPhrase?(phrase)
         } else {
             //TODO - handle failure
         }
