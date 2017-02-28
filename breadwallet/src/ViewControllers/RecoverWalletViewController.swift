@@ -11,6 +11,8 @@ import UIKit
 class RecoverWalletViewController : UIViewController {
 
     //MARK: - Public
+    var didSetSeedPhrase: ((String) -> Void)?
+
     init(store: Store, walletManager: WalletManager) {
         self.store = store
         self.walletManager = walletManager
@@ -69,10 +71,11 @@ class RecoverWalletViewController : UIViewController {
         }
         errorLabel.isHidden = true
 
-//        if self.walletManager.setSeedPhrase(phrase) {
-//            //set pin let setPinResult = self.walletManager.forceSetPin(newPin: pin, seedPhrase: phrase)
-//            //peerManager.connect()
-//        }
+        if self.walletManager.setSeedPhrase(testPhrase) {
+            didSetSeedPhrase?(testPhrase)
+        } else {
+            //TODO - handle failure
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
