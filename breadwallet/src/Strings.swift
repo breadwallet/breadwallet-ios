@@ -98,5 +98,8 @@ enum S {
         static let rightArrow = NSLocalizedString("Right Arrow", comment: "Next button label")
         static let done = NSLocalizedString("Done", comment: "Done buttohn text")
         static let instruction = NSLocalizedString("Enter Recovery Phrase", comment: "Enter recovery phrase instruction")
+        static let header = NSLocalizedString("Recover Wallet", comment: "Recover wallet header")
+        static let subheader = NSLocalizedString("Enter the recovery phrase associated with the wallet you want to recover.", comment: "Recover wallet sub-header")
+        static let invalid = NSLocalizedString("The phrase you entered is invalid. Please double-check each word and try again.", comment: "Invalid phrase message")
     }
 }
