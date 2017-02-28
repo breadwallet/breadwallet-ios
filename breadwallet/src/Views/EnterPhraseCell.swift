@@ -44,6 +44,16 @@ class EnterPhraseCell : UICollectionViewCell {
 
     var isWordValid: ((String) -> Bool)?
 
+    func disablePreviousButton() {
+        previousField.tintColor = .secondaryShadow
+        previousField.isEnabled = false
+    }
+
+    func disableNextButton() {
+        nextField.tintColor = .secondaryShadow
+        nextField.isEnabled = false
+    }
+
     //MARK: - Private
     let textField = UITextField()
     private let label = UILabel(font: .customBody(size: 13.0), color: .secondaryShadow)
