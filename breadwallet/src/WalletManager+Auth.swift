@@ -252,7 +252,7 @@ extension WalletManager : WalletAuthenticator {
     // will fail if a wallet already exists on the keychain
     func setRandomSeedPhrase() -> String? {
         guard noWallet else { return nil }
-        guard var words = wordList else { return nil }
+        guard var words = rawWordList else { return nil }
         let time = Date.timeIntervalSinceReferenceDate
 
         // we store the wallet creation time on the keychain because keychain data persists even when app is deleted

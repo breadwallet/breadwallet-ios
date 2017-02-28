@@ -84,9 +84,13 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                              blocks: self.loadBlocks(), peers: self.loadPeers(), listener: self)
     }()
 
-    var wordList: [UnsafePointer<CChar>?]? {
+    var wordList: [NSString]? {
         guard let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist") else { return nil }
-        guard let wordList = NSArray(contentsOfFile: path) as? [NSString], wordList.count == 2048 else { return nil }
+        return NSArray(contentsOfFile: path) as? [NSString]
+    }
+
+    var rawWordList: [UnsafePointer<CChar>?]? {
+        guard let wordList = wordList, wordList.count == 2048 else { return nil }
         return wordList.map({ $0.utf8String })
     }
 
@@ -541,8 +545,13 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
 
     func isPhraseValid(_ phrase: String) -> Bool {
-        guard var words = wordList else { return false }
+        guard var words = rawWordList else { return false }
         return BRBIP39PhraseIsValid(&words, phrase) != 0
+    }
+
+    func isWordValid(_ word: String) -> Bool {
+        guard let words = wordList else { return false }
+        return words.contains(word as NSString)
     }
 
     deinit {
