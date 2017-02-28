@@ -13,7 +13,8 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
     //MARK: - Public
     var didFinishPhraseEntry: ((String) -> Void)?
 
-    init() {
+    init(walletManager: WalletManager) {
+        self.walletManager = walletManager
         let layout = UICollectionViewFlowLayout()
         let screenWidth = UIScreen.main.bounds.width
         layout.itemSize = CGSize(width: (screenWidth - C.padding[4])/3.0, height: 50.0)
@@ -25,10 +26,11 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
 
     //MARK: - Private
     private let cellIdentifier = "CellIdentifier"
+    private let walletManager: WalletManager
     private var phrase: String {
         return (0...11).map { index in
-            guard let phraseCell = collectionView?.cellForItem(at: IndexPath(item: index, section: 0)) as? EnterPhraseCell else { return ""}
-            return phraseCell.textField.text ?? ""
+                guard let phraseCell = collectionView?.cellForItem(at: IndexPath(item: index, section: 0)) as? EnterPhraseCell else { return ""}
+                return phraseCell.textField.text ?? ""
             }.joined(separator: " ")
     }
 
@@ -66,6 +68,10 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         enterPhraseCell.didTapDone = { [weak self] in
             guard let phrase = self?.phrase else { return }
             self?.didFinishPhraseEntry?(phrase)
+        }
+        enterPhraseCell.isWordValid = { [weak self] word in
+            guard let myself = self else { return false }
+            return myself.walletManager.isWordValid(word)
         }
         return item
     }
