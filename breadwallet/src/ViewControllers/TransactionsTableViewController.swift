@@ -23,6 +23,16 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
     private let store: Store
     private let transactionCellIdentifier = "transactionCellIdentifier"
     private var transactions: [Transaction] = []
+    private var currency: Currency = .bitcoin {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+    private var rate: Rate? {
+        didSet {
+            tableView.reloadData()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,11 +42,18 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
         tableView.estimatedRowHeight = 100.0
         tableView.rowHeight = UITableViewAutomaticDimension
 
-        store.subscribe(self, selector: {$0.walletState.transactions != $1.walletState.transactions },
+        store.subscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions },
                         callback: { state in
                             self.transactions = state.walletState.transactions
                             self.tableView.reloadData()
         })
+
+        store.subscribe(self,
+                        selector: { $0.currency != $1.currency },
+                        callback: { self.currency = $0.currency })
+        store.subscribe(self,
+                        selector: { $0.currentRate != $1.currentRate},
+                        callback: { self.rate = $0.currentRate })
 
         tableView.reloadData()
     }
@@ -67,12 +84,9 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
         }
 
         let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
-        if let transactionCell = cell as? TransactionTableViewCell {
+        if let transactionCell = cell as? TransactionTableViewCell, let rate = rate {
             transactionCell.setStyle(style)
-            transactionCell.setTransaction(transactions[indexPath.row])
-            if transactionCell.store == nil {
-                transactionCell.store = store
-            }
+            transactionCell.setTransaction(transactions[indexPath.row], currency: currency, rate: rate)
         }
         return cell
     }
