@@ -8,16 +8,22 @@
 
 import UIKit
 
+private let itemHeight: CGFloat = 50.0
+
 class EnterPhraseCollectionViewController : UICollectionViewController {
 
     //MARK: - Public
     var didFinishPhraseEntry: ((String) -> Void)?
 
+    var height: CGFloat {
+        return itemHeight * 4.0
+    }
+
     init(walletManager: WalletManager) {
         self.walletManager = walletManager
         let layout = UICollectionViewFlowLayout()
         let screenWidth = UIScreen.main.bounds.width
-        layout.itemSize = CGSize(width: (screenWidth - C.padding[4])/3.0, height: 50.0)
+        layout.itemSize = CGSize(width: (screenWidth - C.padding[4])/3.0, height: itemHeight)
         layout.minimumLineSpacing = 0.0
         layout.minimumInteritemSpacing = 0.0
         layout.sectionInset = .zero
@@ -35,6 +41,9 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
     }
 
     override func viewDidLoad() {
+
+        collectionView = NonScrollingCollectionView(frame: view.bounds, collectionViewLayout: collectionViewLayout)
+
         collectionView?.backgroundColor = .white
         collectionView?.register(EnterPhraseCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView?.delegate = self
@@ -42,6 +51,7 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         collectionView?.layer.borderColor = UIColor.secondaryBorder.cgColor
         collectionView?.layer.borderWidth = 1.0
         collectionView?.layer.cornerRadius = 8.0
+        collectionView?.isScrollEnabled = false
     }
 
     override func viewDidAppear(_ animated: Bool) {

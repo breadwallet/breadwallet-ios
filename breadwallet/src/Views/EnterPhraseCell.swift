@@ -73,7 +73,7 @@ class EnterPhraseCell : UICollectionViewCell {
 
         textField.constrain([
             textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            textField.topAnchor.constraint(equalTo: contentView.topAnchor),
+            textField.topAnchor.constraint(equalTo: contentView.topAnchor, constant: C.padding[1]),
             textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor) ])
         separator.constrain([
             separator.leadingAnchor.constraint(equalTo: textField.leadingAnchor, constant: C.padding[1]),
@@ -104,7 +104,7 @@ class EnterPhraseCell : UICollectionViewCell {
 
     private var accessoryView: UIView {
         let view = UIView(color: .secondaryButton)
-        view.frame = CGRect(x: 0, y: 0, width: 375, height: 44)
+        view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 44)
         let topBorder = UIView(color: .secondaryShadow)
         view.addSubview(topBorder)
         view.addSubview(previousField)
@@ -152,7 +152,7 @@ extension EnterPhraseCell : UITextFieldDelegate {
     private func setColors(textField: UITextField) {
         guard let isWordValid = isWordValid else { return }
         guard let word = textField.text else { return }
-        if isWordValid(word) {
+        if isWordValid(word) || word == "" {
             textField.textColor = .darkText
             separator.backgroundColor = .secondaryShadow
         } else {
