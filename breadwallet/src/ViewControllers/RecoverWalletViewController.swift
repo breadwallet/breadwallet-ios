@@ -82,7 +82,7 @@ class RecoverWalletViewController : UIViewController {
             enterPhrase.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             enterPhrase.view.topAnchor.constraint(equalTo: instruction.bottomAnchor, constant: C.padding[1]),
             enterPhrase.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            enterPhrase.view.heightAnchor.constraint(equalToConstant: 273.0) ])
+            enterPhrase.view.heightAnchor.constraint(equalToConstant: enterPhrase.height) ])
         errorLabel.constrain([
             errorLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
             errorLabel.topAnchor.constraint(equalTo: enterPhrase.view.bottomAnchor, constant: C.padding[1]),
@@ -130,14 +130,18 @@ class RecoverWalletViewController : UIViewController {
         guard let userInfo = notification.userInfo else { return }
         guard let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
         guard let scrollViewHeight = scrollViewHeight else { return }
-        scrollViewHeight.constant = scrollViewHeight.constant - frameValue.cgRectValue.height
+        if scrollViewHeight.constant >= 0.0 {
+            scrollViewHeight.constant = scrollViewHeight.constant - frameValue.cgRectValue.height
+        }
     }
 
     @objc private func keyboardWillHide(notification: Notification) {
         guard let userInfo = notification.userInfo else { return }
         guard let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
         guard let scrollViewHeight = scrollViewHeight else { return }
-        scrollViewHeight.constant = scrollViewHeight.constant + frameValue.cgRectValue.height
+        if scrollViewHeight.constant < 0.0 {
+            scrollViewHeight.constant = scrollViewHeight.constant + frameValue.cgRectValue.height
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
