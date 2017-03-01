@@ -33,7 +33,6 @@ class RecoverWalletViewController : UIViewController {
     private let faq = UIButton.faq
     private let scrollView = UIScrollView()
     private let container = UIView()
-    private var scrollViewHeight: NSLayoutConstraint?
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -60,11 +59,7 @@ class RecoverWalletViewController : UIViewController {
     }
 
     private func addConstraints() {
-        scrollViewHeight = scrollView.heightAnchor.constraint(equalTo: view.heightAnchor)
-        scrollView.constrain([
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollViewHeight ])
+        scrollView.constrain(toSuperviewEdges: nil)
         container.constrain(toSuperviewEdges: nil)
         container.constrain([
             container.widthAnchor.constraint(equalTo: view.widthAnchor) ])
@@ -129,19 +124,19 @@ class RecoverWalletViewController : UIViewController {
     @objc private func keyboardWillShow(notification: Notification) {
         guard let userInfo = notification.userInfo else { return }
         guard let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
-        guard let scrollViewHeight = scrollViewHeight else { return }
-        if scrollViewHeight.constant >= 0.0 {
-            scrollViewHeight.constant = scrollViewHeight.constant - frameValue.cgRectValue.height
+        var contentInset = scrollView.contentInset
+        if contentInset.bottom == 0.0 {
+            contentInset.bottom = frameValue.cgRectValue.height + 44.0
         }
+        scrollView.contentInset = contentInset
     }
 
     @objc private func keyboardWillHide(notification: Notification) {
-        guard let userInfo = notification.userInfo else { return }
-        guard let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
-        guard let scrollViewHeight = scrollViewHeight else { return }
-        if scrollViewHeight.constant < 0.0 {
-            scrollViewHeight.constant = scrollViewHeight.constant + frameValue.cgRectValue.height
+        var contentInset = scrollView.contentInset
+        if contentInset.bottom > 0.0 {
+            contentInset.bottom = 0.0
         }
+        scrollView.contentInset = contentInset
     }
 
     required init?(coder aDecoder: NSCoder) {
