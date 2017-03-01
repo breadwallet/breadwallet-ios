@@ -18,6 +18,8 @@ class RecoverWalletViewController : UIViewController {
         self.walletManager = walletManager
         self.enterPhrase = EnterPhraseCollectionViewController(walletManager: walletManager)
         super.init(nibName: nil, bundle: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
     }
 
     //MARK: - Private
@@ -29,6 +31,13 @@ class RecoverWalletViewController : UIViewController {
     private let header = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let subheader = UILabel(font: .customBody(size: 16.0), color: .darkText)
     private let faq = UIButton.faq
+    private let scrollView = UIScrollView()
+    private let container = UIView()
+    private var scrollViewHeight: NSLayoutConstraint?
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
     override func viewDidLoad() {
         addSubviews()
@@ -37,24 +46,31 @@ class RecoverWalletViewController : UIViewController {
     }
 
     private func addSubviews() {
-        view.addSubview(header)
-        view.addSubview(subheader)
-        view.addSubview(errorLabel)
-        view.addSubview(instruction)
-        view.addSubview(faq)
-        addChildViewController(enterPhrase, layout: {
-            enterPhrase.view.constrain([
-                enterPhrase.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-                enterPhrase.view.topAnchor.constraint(equalTo: instruction.bottomAnchor, constant: C.padding[1]),
-                enterPhrase.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-                enterPhrase.view.heightAnchor.constraint(equalToConstant: 273.0) ])
-        })
+        view.addSubview(scrollView)
+        scrollView.addSubview(container)
+        container.addSubview(header)
+        container.addSubview(subheader)
+        container.addSubview(errorLabel)
+        container.addSubview(instruction)
+        container.addSubview(faq)
+        
+        addChildViewController(enterPhrase)
+        container.addSubview(enterPhrase.view)
+        enterPhrase.didMove(toParentViewController: self)
     }
 
     private func addConstraints() {
+        scrollViewHeight = scrollView.heightAnchor.constraint(equalTo: view.heightAnchor)
+        scrollView.constrain([
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollViewHeight ])
+        container.constrain(toSuperviewEdges: nil)
+        container.constrain([
+            container.widthAnchor.constraint(equalTo: view.widthAnchor) ])
         header.constrain([
             header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            header.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[1]) ])
+            header.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[1]) ])
         subheader.constrain([
             subheader.leadingAnchor.constraint(equalTo: header.leadingAnchor),
             subheader.topAnchor.constraint(equalTo: header.bottomAnchor),
@@ -62,9 +78,16 @@ class RecoverWalletViewController : UIViewController {
         instruction.constrain([
             instruction.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: C.padding[3]),
             instruction.leadingAnchor.constraint(equalTo: subheader.leadingAnchor) ])
+        enterPhrase.view.constrain([
+            enterPhrase.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
+            enterPhrase.view.topAnchor.constraint(equalTo: instruction.bottomAnchor, constant: C.padding[1]),
+            enterPhrase.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+            enterPhrase.view.heightAnchor.constraint(equalToConstant: 273.0) ])
         errorLabel.constrain([
-            errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            errorLabel.topAnchor.constraint(equalTo: enterPhrase.view.bottomAnchor, constant: C.padding[1]) ])
+            errorLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
+            errorLabel.topAnchor.constraint(equalTo: enterPhrase.view.bottomAnchor, constant: C.padding[1]),
+            errorLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[2]),
+            errorLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -C.padding[2] )])
         faq.constrain([
             faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             faq.centerYAnchor.constraint(equalTo: header.centerYAnchor),
@@ -77,6 +100,8 @@ class RecoverWalletViewController : UIViewController {
         errorLabel.text = S.RecoverWallet.invalid
         errorLabel.isHidden = true
         errorLabel.textAlignment = .center
+        errorLabel.numberOfLines = 0
+        errorLabel.lineBreakMode = .byWordWrapping
         enterPhrase.didFinishPhraseEntry = { [weak self] phrase in
             self?.validatePhrase(phrase)
         }
@@ -99,6 +124,20 @@ class RecoverWalletViewController : UIViewController {
         } else {
             //TODO - handle failure
         }
+    }
+
+    @objc private func keyboardWillShow(notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+        guard let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
+        guard let scrollViewHeight = scrollViewHeight else { return }
+        scrollViewHeight.constant = scrollViewHeight.constant - frameValue.cgRectValue.height
+    }
+
+    @objc private func keyboardWillHide(notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+        guard let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
+        guard let scrollViewHeight = scrollViewHeight else { return }
+        scrollViewHeight.constant = scrollViewHeight.constant + frameValue.cgRectValue.height
     }
 
     required init?(coder aDecoder: NSCoder) {
