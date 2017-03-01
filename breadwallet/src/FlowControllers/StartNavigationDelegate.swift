@@ -39,6 +39,7 @@ class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
                 NSForegroundColorAttributeName: UIColor.white,
                 NSFontAttributeName: UIFont.customBold(size: 17.0)
             ]
+            navigationController.setClearNavbar()
         }
 
         if viewController is RecoverWalletViewController {
@@ -47,6 +48,7 @@ class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
                 NSForegroundColorAttributeName: UIColor.darkText,
                 NSFontAttributeName: UIFont.customBold(size: 17.0)
             ]
+            navigationController.setNormalNavbar()
         }
     }
 }

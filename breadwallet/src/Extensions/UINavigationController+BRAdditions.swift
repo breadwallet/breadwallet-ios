@@ -21,6 +21,11 @@ extension UINavigationController {
         navigationBar.isTranslucent = true
     }
 
+    func setNormalNavbar() {
+        navigationBar.setBackgroundImage(nil, for: .default)
+        navigationBar.shadowImage = nil
+    }
+
     func setBlackBackArrow() {
         let image = #imageLiteral(resourceName: "Back")
         let renderedImage = image.withRenderingMode(.alwaysOriginal)
