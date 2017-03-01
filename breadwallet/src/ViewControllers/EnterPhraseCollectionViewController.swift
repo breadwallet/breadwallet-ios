@@ -14,7 +14,6 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
 
     //MARK: - Public
     var didFinishPhraseEntry: ((String) -> Void)?
-
     var height: CGFloat {
         return itemHeight * 4.0
     }
@@ -89,7 +88,6 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         } else if indexPath.item == 11 {
             enterPhraseCell.disableNextButton()
         }
-
         return item
     }
 
