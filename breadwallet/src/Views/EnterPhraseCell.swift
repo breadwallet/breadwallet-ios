@@ -38,7 +38,10 @@ class EnterPhraseCell : UICollectionViewCell {
 
     var didTapDone: (() -> Void)? {
         didSet {
-            done.tap = didTapDone
+            done.tap = {
+                self.textField.resignFirstResponder()
+                self.didTapDone?()
+            }
         }
     }
 
