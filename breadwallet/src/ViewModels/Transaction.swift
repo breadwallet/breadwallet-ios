@@ -24,36 +24,53 @@ enum TransactionDirection: String {
 
 struct Transaction {
 
-    init(amountSent: UInt64, amountReceived: UInt64, timestamp: UInt32, transactionIsValid: Bool, transactionIsPending: Bool, transactionIsVerified: Bool, blockHeight: UInt32, transactionBlockHeight: UInt32, fee: UInt64) {
+    init(_ tx: BRTxRef, wallet: BRWallet, blockHeight: UInt32) {
+        self.tx = tx
+        self.wallet = wallet
 
+        let fee = wallet.feeForTx(tx) ?? 0
+        let amountReceived = wallet.amountReceivedFromTx(tx)
 
         //TODO - use real rates here
-        if amountSent > 0 {
+        if wallet.amountSentByTx(tx) > 0 {
             self.direction = .sent
-            self.amount = Amount(amount: amountSent - amountReceived - fee, rate: 920.0)
+            self.satoshis = wallet.amountSentByTx(tx) - amountReceived - fee
         } else {
             self.direction = .received
-            self.amount = Amount(amount:amountReceived - fee, rate: 920.0)
+            self.satoshis = amountReceived - fee
         }
-        self.timestamp = Int(timestamp)
+        self.timestamp = Int(tx.pointee.timestamp)
+
+        let transactionBlockHeight = tx.pointee.blockHeight
+        let transactionIsValid = wallet.transactionIsValid(tx)
+        let transactionIsVerified = wallet.transactionIsVerified(tx)
+        let transactionIsPending = wallet.transactionIsPending(tx)
+
         let confirms = transactionBlockHeight > blockHeight ? 0 : Int((blockHeight - transactionBlockHeight) + 1)
         self.status = makeStatus(isValid: transactionIsValid, isPending: transactionIsPending, isVerified: transactionIsVerified, confirms: confirms)
         self.comment = ""
         self.longStatus = confirms > 6 ? "Complete" : "Waiting to be confirmed. Some merchants require confirmation to complete a transaction. Estimated time: 1-2 hours."
     }
 
+    let tx: BRTxRef
+    let wallet: BRWallet
+
+
     let direction: TransactionDirection
-    let amount: Amount
+    let satoshis: UInt64
     let status: String
     let longStatus: String
     let comment: String
     let timestamp: Int
 
-    func amountDescription(currency: Currency) -> String {
+    func amountDescription(currency: Currency, rate: Rate) -> String {
+        let amount = Amount(amount: satoshis, rate: rate.rate)
         return currency == .bitcoin ? amount.bits : amount.localCurrency
     }
 
-    func descriptionString(currency: Currency) -> NSAttributedString {
+    func descriptionString(currency: Currency, rate: Rate) -> NSAttributedString {
+
+        let amount = Amount(amount: satoshis, rate: rate.rate)
         let fontSize: CGFloat = 14.0
 
         let regularAttributes: [String: Any] = [
@@ -138,5 +155,5 @@ private func makeStatus(isValid: Bool, isPending: Bool, isVerified: Bool, confir
 extension Transaction : Equatable {}
 
 func ==(lhs: Transaction, rhs: Transaction) -> Bool {
-    return lhs.direction == rhs.direction && lhs.amount.bits == rhs.amount.bits && lhs.amount.localCurrency == rhs.amount.localCurrency && lhs.comment == rhs.comment && lhs.timestamp == rhs.timestamp
+    return lhs.direction == rhs.direction && lhs.satoshis == rhs.satoshis && lhs.comment == rhs.comment && lhs.timestamp == rhs.timestamp
 }

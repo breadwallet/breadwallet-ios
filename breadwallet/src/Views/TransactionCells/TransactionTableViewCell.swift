@@ -18,14 +18,6 @@ enum TransactionCellStyle {
 class TransactionTableViewCell : UITableViewCell, Subscriber {
 
     //MARK: - Public
-    var store: Store? {
-        didSet {
-            store?.subscribe(self,
-                             selector: { $0.currency != $1.currency },
-                             callback: { self.currency = $0.currency })
-        }
-    }
-
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -41,9 +33,9 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         }
     }
 
-    func setTransaction(_ transaction: Transaction) {
+    func setTransaction(_ transaction: Transaction, currency: Currency, rate: Rate) {
         self.transaction = transaction
-        self.transactionLabel.attributedText = transaction.descriptionString(currency: currency)
+        self.transactionLabel.attributedText = transaction.descriptionString(currency: currency, rate: rate)
         status.text = transaction.status
         comment.text = transaction.comment
         timestamp.text = transaction.timeSince
@@ -60,17 +52,6 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     private let topPadding: CGFloat = 19.0
     private var style: TransactionCellStyle = .first
     private var transaction: Transaction?
-
-    private var currency: Currency = .bitcoin {
-        didSet {
-            guard let transaction = transaction else { return }
-            self.transactionLabel.attributedText = transaction.descriptionString(currency: currency)
-        }
-    }
-
-    deinit {
-        store?.unsubscribe(self)
-    }
 
     private func setupViews() {
         addSubviews()
