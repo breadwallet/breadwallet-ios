@@ -29,6 +29,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
     fileprivate let selectedIndex: Int
     fileprivate let cellIdentifier = "CellIdentifier"
     fileprivate var currency: Currency = .bitcoin
+    fileprivate var rate: Rate?
 
     //The secretScrollView is to help with the limitation where if isPagingEnabled
     //is true, the page size has to be the bounds.width of the collectionview.
@@ -50,6 +51,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         collectionView?.contentInset = UIEdgeInsetsMake(C.padding[2], C.padding[2], C.padding[2], C.padding[2])
         setupScrolling()
         store.subscribe(self, selector: { $0.currency != $1.currency }, callback: { self.currency = $0.currency })
+        store.subscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: { self.rate = $0.currentRate })
         store.lazySubscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions }, callback: {
             self.transactions = $0.walletState.transactions
             self.collectionView?.reloadData()
@@ -127,9 +129,9 @@ extension TransactionDetailsViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
         item.backgroundColor = .clear
-
+        guard let rate = rate else { return item }
         //TODO - make these recycle properly
-        let view = TransactionDetailView(currency: currency)
+        let view = TransactionDetailView(currency: currency, rate: rate)
         view.transaction = transactions[indexPath.row]
         view.closeCallback = { [weak self] in
             if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {

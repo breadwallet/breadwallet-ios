@@ -28,7 +28,7 @@ struct Transaction {
         self.tx = tx
         self.wallet = wallet
 
-        let fee = wallet.feeForTx(tx) ?? 0
+        self.fee = wallet.feeForTx(tx) ?? 0
         let amountReceived = wallet.amountReceivedFromTx(tx)
 
         //TODO - use real rates here
@@ -50,6 +50,8 @@ struct Transaction {
         self.status = makeStatus(isValid: transactionIsValid, isPending: transactionIsPending, isVerified: transactionIsVerified, confirms: confirms)
         self.comment = ""
         self.longStatus = confirms > 6 ? "Complete" : "Waiting to be confirmed. Some merchants require confirmation to complete a transaction. Estimated time: 1-2 hours."
+
+        self.balanceAfter = wallet.balanceAfterTx(tx)
     }
 
     let tx: BRTxRef
@@ -62,6 +64,8 @@ struct Transaction {
     let longStatus: String
     let comment: String
     let timestamp: Int
+    let balanceAfter: UInt64 //TODO - make me lazy
+    let fee: UInt64
 
     func amountDescription(currency: Currency, rate: Rate) -> String {
         let amount = Amount(amount: satoshis, rate: rate.rate)
@@ -101,6 +105,25 @@ struct Transaction {
         prefix.append(suffix)
 
         return prefix
+    }
+
+    func amountDetails(currency: Currency, rate: Rate) -> String {
+        let amount = Amount(amount: satoshis, rate: rate.rate)
+        let amountString = currency == .bitcoin ? amount.bits : amount.localCurrency
+
+        let endingAmount = Amount(amount: balanceAfter, rate: rate.rate)
+        let endingAmountString = currency == .bitcoin ? endingAmount.bits : endingAmount.localCurrency
+
+        var startingBalance: UInt64 = 0
+        switch direction {
+        case .received:
+            startingBalance = balanceAfter - satoshis - fee
+        case .sent:
+            startingBalance = balanceAfter + satoshis + fee
+        }
+        let startingAmount = Amount(amount: startingBalance, rate: rate.rate)
+        let startingAmountString = currency == .bitcoin ? startingAmount.bits : startingAmount.localCurrency
+        return "\(amountString)\n\nStarting balance: \(startingAmountString)\nEnding balance: \(endingAmountString)"
     }
 
     var timeSince: String {
