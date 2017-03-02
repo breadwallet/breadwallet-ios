@@ -77,6 +77,21 @@ class Transaction {
     private let wallet: BRWallet
     fileprivate let satoshis: UInt64
 
+    lazy var toAddress: String? = {
+        switch self.direction {
+        case .sent:
+            guard let output = self.tx.pointee.swiftOutputs.filter({ output in
+                !self.wallet.containsAddress(output.swiftAddress)
+            }).first else { return nil }
+            return output.swiftAddress
+        case .received:
+            guard let output = self.tx.pointee.swiftOutputs.filter({ output in
+                self.wallet.containsAddress(output.swiftAddress)
+            }).first else { return nil }
+            return output.swiftAddress
+        }
+    }()
+
     private lazy var balanceAfter: UInt64 = {
         return self.wallet.balanceAfterTx(self.tx)
     }()
