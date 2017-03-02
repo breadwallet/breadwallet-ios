@@ -25,6 +25,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private let walletCoordinator: WalletCoordinator
     lazy private var apiClient: BRAPIClient = BRAPIClient(authenticator: self.walletManager)
     private var exchangeManager: ExchangeManager?
+    private var feeUpdater: FeeUpdater?
     private let transitionDelegate: ModalTransitionDelegate
 
     init() {
@@ -55,6 +56,8 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         }
         exchangeManager = ExchangeManager(store: store, apiClient: apiClient)
         exchangeManager?.refresh()
+        feeUpdater = FeeUpdater(walletManager: walletManager, apiClient: apiClient)
+        feeUpdater?.refresh()
     }
 
     func willEnterForeground() {
@@ -66,6 +69,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             self.walletManager.peerManager?.connect() //TODO - guard for noWallet?
         }
         exchangeManager?.refresh()
+        feeUpdater?.refresh()
     }
 
     func didEnterBackground() {
@@ -131,6 +135,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                             guard let alert = $0.alert else { return }
                             if case .pinSet = alert {
                                 self.modalPresenter?.walletManager = self.walletManager
+                                self.feeUpdater?.refresh()
                             }
         })
     }
