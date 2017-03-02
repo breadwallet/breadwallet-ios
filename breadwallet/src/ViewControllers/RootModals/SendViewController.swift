@@ -243,6 +243,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                     to: address,
                     verifyPin: { pinValidationCallback in
                         presentVerifyPin? { pin, vc in
+                            guard pin.utf8.count == 6 else { return }
                             if pinValidationCallback(pin) {
                                 vc.dismiss(animated: true, completion: {
                                     self.parent?.view.isFrameChangeBlocked = false
