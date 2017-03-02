@@ -7,34 +7,23 @@
 //
 
 import UIKit
+import BRCore
 
-enum TransactionDirection: String {
-    case sent = "Sent"
-    case received = "Received"
+//Ideally this would be a struct, but it needs to be a class to allow
+//for lazy variables
+class Transaction {
 
-    var preposition: String {
-        switch self {
-        case .sent:
-            return "to"
-        case .received:
-            return "from"
-        }
-    }
-}
-
-struct Transaction {
-
+    //MARK: - Public
     init(_ tx: BRTxRef, wallet: BRWallet, blockHeight: UInt32) {
         self.tx = tx
         self.wallet = wallet
 
         self.fee = wallet.feeForTx(tx) ?? 0
         let amountReceived = wallet.amountReceivedFromTx(tx)
-
-        //TODO - use real rates here
-        if wallet.amountSentByTx(tx) > 0 {
+        let amountSent = wallet.amountSentByTx(tx)
+        if amountSent > 0 {
             self.direction = .sent
-            self.satoshis = wallet.amountSentByTx(tx) - amountReceived - fee
+            self.satoshis = amountSent - amountReceived - fee
         } else {
             self.direction = .received
             self.satoshis = amountReceived - fee
@@ -48,24 +37,9 @@ struct Transaction {
 
         let confirms = transactionBlockHeight > blockHeight ? 0 : Int((blockHeight - transactionBlockHeight) + 1)
         self.status = makeStatus(isValid: transactionIsValid, isPending: transactionIsPending, isVerified: transactionIsVerified, confirms: confirms)
-        self.comment = ""
         self.longStatus = confirms > 6 ? "Complete" : "Waiting to be confirmed. Some merchants require confirmation to complete a transaction. Estimated time: 1-2 hours."
-
-        self.balanceAfter = wallet.balanceAfterTx(tx)
+        self.hash = tx.pointee.txHash
     }
-
-    let tx: BRTxRef
-    let wallet: BRWallet
-
-
-    let direction: TransactionDirection
-    let satoshis: UInt64
-    let status: String
-    let longStatus: String
-    let comment: String
-    let timestamp: Int
-    let balanceAfter: UInt64 //TODO - make me lazy
-    let fee: UInt64
 
     func amountDescription(currency: Currency, rate: Rate) -> String {
         let amount = Amount(amount: satoshis, rate: rate.rate)
@@ -73,59 +47,48 @@ struct Transaction {
     }
 
     func descriptionString(currency: Currency, rate: Rate) -> NSAttributedString {
-
         let amount = Amount(amount: satoshis, rate: rate.rate)
-        let fontSize: CGFloat = 14.0
-
-        let regularAttributes: [String: Any] = [
-            NSFontAttributeName: UIFont.customBody(size: fontSize),
-            NSForegroundColorAttributeName: UIColor.darkText
-        ]
-
-        let boldAttributes: [String: Any] = [
-            NSFontAttributeName: UIFont.customBold(size: fontSize),
-            NSForegroundColorAttributeName: UIColor.darkText
-        ]
-
-        let prefix = NSMutableAttributedString(string: "\(direction.rawValue) ")
-        prefix.addAttributes(regularAttributes, range: NSRange(location: 0, length: prefix.length))
-
-        let amountString = currency == .bitcoin ? amount.bits : amount.localCurrency
-        let amountAttributedString = NSMutableAttributedString(string: amountString)
-        amountAttributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: amountAttributedString.length))
-
-        let preposition = NSMutableAttributedString(string: " \(direction.preposition) ")
-        preposition.addAttributes(regularAttributes, range: NSRange(location: 0, length: preposition.length))
-
-        let suffix = NSMutableAttributedString(string: "account")
-        suffix.addAttributes(boldAttributes, range: NSRange(location: 0, length: suffix.length))
-
+        let prefix = NSMutableAttributedString(string: "\(direction.rawValue) ", attributes: UIFont.regularAttributes)
+        let amountAttributedString = NSMutableAttributedString(string: amount.string(forCurrency: currency), attributes: UIFont.boldAttributes)
+        let preposition = NSMutableAttributedString(string: " \(direction.preposition) ", attributes: UIFont.regularAttributes)
+        let suffix = NSMutableAttributedString(string: "account", attributes: UIFont.boldAttributes)
         prefix.append(amountAttributedString)
         prefix.append(preposition)
         prefix.append(suffix)
-
         return prefix
     }
 
     func amountDetails(currency: Currency, rate: Rate) -> String {
-        let amount = Amount(amount: satoshis, rate: rate.rate)
-        let amountString = currency == .bitcoin ? amount.bits : amount.localCurrency
-
-        let endingAmount = Amount(amount: balanceAfter, rate: rate.rate)
-        let endingAmountString = currency == .bitcoin ? endingAmount.bits : endingAmount.localCurrency
-
-        var startingBalance: UInt64 = 0
-        switch direction {
-        case .received:
-            startingBalance = balanceAfter - satoshis - fee
-        case .sent:
-            startingBalance = balanceAfter + satoshis + fee
-        }
-        let startingAmount = Amount(amount: startingBalance, rate: rate.rate)
-        let startingAmountString = currency == .bitcoin ? startingAmount.bits : startingAmount.localCurrency
-        let prefix = direction == .sent ? "-" : ""
-        return "\(prefix)\(amountString)\n\nStarting balance: \(startingAmountString)\nEnding balance: \(endingAmountString)"
+        let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate.rate).string(forCurrency: currency))"
+        let startingString = "Starting balance: \(Amount(amount: startingBalance, rate: rate.rate).string(forCurrency: currency))"
+        let endingString = "Ending balance: \(Amount(amount: balanceAfter, rate: rate.rate).string(forCurrency: currency))"
+        return "\(amountString)\n\n\(startingString)\n\(endingString)"
     }
+
+    let direction: TransactionDirection
+    let status: String
+    let longStatus: String
+    let timestamp: Int
+    let fee: UInt64
+    let hash: UInt256
+
+    //MARK: - Private
+    private let tx: BRTxRef
+    private let wallet: BRWallet
+    fileprivate let satoshis: UInt64
+
+    private lazy var balanceAfter: UInt64 = {
+        return self.wallet.balanceAfterTx(self.tx)
+    }()
+
+    private lazy var startingBalance: UInt64 = {
+        switch self.direction {
+        case .received:
+            return self.balanceAfter - self.satoshis - self.fee
+        case .sent:
+            return self.balanceAfter + self.satoshis + self.fee
+        }
+    }()
 
     var timeSince: String {
         guard timestamp > 0 else { return "just now" }
@@ -179,5 +142,5 @@ private func makeStatus(isValid: Bool, isPending: Bool, isVerified: Bool, confir
 extension Transaction : Equatable {}
 
 func ==(lhs: Transaction, rhs: Transaction) -> Bool {
-    return lhs.direction == rhs.direction && lhs.satoshis == rhs.satoshis && lhs.comment == rhs.comment && lhs.timestamp == rhs.timestamp
+    return lhs.hash == rhs.hash && lhs.status == rhs.status
 }

@@ -25,4 +25,18 @@ extension UIFont {
         guard let font = UIFont(name: "CircularPro-Medium", size: size) else { return UIFont.preferredFont(forTextStyle: .body) }
         return font
     }
+
+    static var regularAttributes: [String: Any] {
+        return [
+            NSFontAttributeName: UIFont.customBody(size: 14.0),
+            NSForegroundColorAttributeName: UIColor.darkText
+        ]
+    }
+
+    static var boldAttributes: [String: Any] {
+        return [
+            NSFontAttributeName: UIFont.customBold(size: 14.0),
+            NSForegroundColorAttributeName: UIColor.darkText
+        ]
+    }
 }
