@@ -133,11 +133,9 @@ class TransactionDetailView : UIView {
         commentsHeader.text = S.TransactionDetails.commentsHeader
         amountHeader.text = S.TransactionDetails.amountHeader
 
-        amountDetails.numberOfLines = 0
-        amountDetails.lineBreakMode = .byWordWrapping
-
         fullAddress.numberOfLines = 0
         fullAddress.lineBreakMode = .byCharWrapping
+
     }
 
     override func layoutSubviews() {
@@ -149,11 +147,11 @@ class TransactionDetailView : UIView {
 
     private let header = ModalHeaderView(title: S.TransactionDetails.title, isFaqHidden: false, style: .dark)
     private let timestamp = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let amount = UILabel(font: .customBold(size: 26.0), color: .darkText)
+    private let amount = UILabel.wrapping(font: .customBold(size: 26.0), color: .darkText)
     private let address = UILabel(font: .customBold(size: 14.0), color: .darkText)
     private let separators = (0...4).map { _ in UIView(color: .secondaryShadow) }
     private let statusHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let status = UILabel(font: .customBody(size: 13.0), color: .darkText)
+    private let status = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
     private let commentsHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let comments = UILabel(font: .customBody(size: 13.0), color: .darkText)
     private let amountHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
