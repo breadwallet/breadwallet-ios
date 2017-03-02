@@ -189,7 +189,7 @@ class ModalPresenter : Subscriber {
                 scanCompletion(address)
                 parent.view.isFrameChangeBlocked = false
             }, isValidURI: { address in
-                return address.hasPrefix("bitcoin:")
+                return address.hasPrefix("1") || address.hasPrefix("3")
             })
             parent.view.isFrameChangeBlocked = true
             parent.present(vc, animated: true, completion: {})
