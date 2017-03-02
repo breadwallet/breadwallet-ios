@@ -76,36 +76,40 @@ extension BRAddress : CustomStringConvertible {
 }
 
 extension BRTxInput {
-    var address: String {
+    var swiftAddress: String {
         return String(cString: UnsafeRawPointer([self.address]).assumingMemoryBound(to: CChar.self))
     }
     
-    var script: [UInt8] {
+    var swiftScript: [UInt8] {
         return [UInt8](UnsafeBufferPointer(start: self.script, count: self.scriptLen))
     }
     
-    var signature: [UInt8] {
+    var swiftSignature: [UInt8] {
         return [UInt8](UnsafeBufferPointer(start: self.signature, count: self.sigLen))
     }
 }
 
 extension BRTxOutput {
-    var address: String {
+    var swiftAddress: String {
         return String(cString: UnsafeRawPointer([self.address]).assumingMemoryBound(to: CChar.self))
     }
     
-    var script: [UInt8] {
+    var swiftScript: [UInt8] {
         return [UInt8](UnsafeBufferPointer(start: self.script, count: self.scriptLen))
     }
 }
 
 extension BRTransaction {
-    var inputs: [BRTxInput] {
+    var swiftInputs: [BRTxInput] {
         return [BRTxInput](UnsafeBufferPointer(start: self.inputs, count: self.inCount))
     }
     
-    var outputs: [BRTxOutput] {
+    var swiftOutputs: [BRTxOutput] {
         return [BRTxOutput](UnsafeBufferPointer(start: self.outputs, count: self.outCount))
+    }
+
+    var swiftHash: String {
+        return String(cString: UnsafeRawPointer([self.txHash]).assumingMemoryBound(to: CChar.self))
     }
 }
 

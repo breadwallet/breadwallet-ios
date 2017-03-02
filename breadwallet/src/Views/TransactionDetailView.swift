@@ -27,8 +27,8 @@ class TransactionDetailView : UIView {
             status.text = transaction.longStatus
             comments.text = "Comments will go here"
             amountDetails.text = transaction.amountDetails(currency: currency, rate: rate)
-            addressHeader.text = transaction.direction.preposition.capitalized
-            fullAddress.text = "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX"
+            addressHeader.text = "To" //Should this be from sometimes?
+            fullAddress.text = transaction.toAddress ?? ""
         }
     }
 
