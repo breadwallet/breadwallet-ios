@@ -44,7 +44,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
     }
 
     override func viewDidLoad() {
-        collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        collectionView?.register(TransactionDetailCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView?.delegate = self
         collectionView?.dataSource = self
         collectionView?.backgroundColor = .clear
@@ -128,19 +128,15 @@ extension TransactionDetailsViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        item.backgroundColor = .clear
+        guard let transactionDetailCell = item as? TransactionDetailCollectionViewCell else { return item }
         guard let rate = rate else { return item }
-        //TODO - make these recycle properly
-        let view = TransactionDetailView(currency: currency, rate: rate)
-        view.transaction = transactions[indexPath.row]
-        view.closeCallback = { [weak self] in
+        transactionDetailCell.set(transaction: transactions[indexPath.row], currency: currency, rate: rate)
+        transactionDetailCell.closeCallback = { [weak self] in
             if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
                 delegate.reset()
             }
             self?.dismiss(animated: true, completion: nil)
         }
-        item.addSubview(view)
-        view.constrain(toSuperviewEdges: nil)
-        return item
+        return transactionDetailCell
     }
 }

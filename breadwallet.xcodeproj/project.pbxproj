@@ -216,7 +216,7 @@
 		CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */; };
 		CE124CF81E67A8E500DFA146 /* TransactionDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CF71E67A8E500DFA146 /* TransactionDirection.swift */; };
 		CE14E4091E4D506000AEA83A /* TransactionDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE14E4081E4D506000AEA83A /* TransactionDetailsViewController.swift */; };
-		CE14E40B1E4D881500AEA83A /* TransactionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE14E40A1E4D881500AEA83A /* TransactionDetailView.swift */; };
+		CE14E40B1E4D881500AEA83A /* TransactionDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE14E40A1E4D881500AEA83A /* TransactionDetailCollectionViewCell.swift */; };
 		CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F11DBAF71500C8397A /* ApplicationController.swift */; };
 		CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F51DBAF77D00C8397A /* UIViewController+BRWAdditions.swift */; };
 		CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */; };
@@ -1312,7 +1312,7 @@
 		CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalPresenter.swift; path = src/ModalPresenter.swift; sourceTree = "<group>"; };
 		CE124CF71E67A8E500DFA146 /* TransactionDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransactionDirection.swift; path = src/ViewModels/TransactionDirection.swift; sourceTree = "<group>"; };
 		CE14E4081E4D506000AEA83A /* TransactionDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransactionDetailsViewController.swift; path = src/ViewControllers/TransactionDetailsViewController.swift; sourceTree = "<group>"; };
-		CE14E40A1E4D881500AEA83A /* TransactionDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransactionDetailView.swift; path = src/Views/TransactionDetailView.swift; sourceTree = "<group>"; };
+		CE14E40A1E4D881500AEA83A /* TransactionDetailCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransactionDetailCollectionViewCell.swift; path = src/Views/TransactionDetailCollectionViewCell.swift; sourceTree = "<group>"; };
 		CE20C8F11DBAF71500C8397A /* ApplicationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationController.swift; path = src/ApplicationController.swift; sourceTree = "<group>"; };
 		CE20C8F51DBAF77D00C8397A /* UIViewController+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewController+BRWAdditions.swift"; path = "src/Extensions/UIViewController+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIColor+BRWAdditions.swift"; path = "src/Extensions/UIColor+BRWAdditions.swift"; sourceTree = "<group>"; };
@@ -2703,7 +2703,7 @@
 				CE4B6C1B1E21A96D00CF935B /* SyncProgressView.swift */,
 				CE8CD8E21E31978100785E02 /* LoginBackgroundTriangle.swift */,
 				CECB9DB51E4985CE0081A172 /* LoginBackgroundView.swift */,
-				CE14E40A1E4D881500AEA83A /* TransactionDetailView.swift */,
+				CE14E40A1E4D881500AEA83A /* TransactionDetailCollectionViewCell.swift */,
 				CE6B6B491E54C0CA00B31405 /* SecurityCenterCell.swift */,
 				CE6DCC261E6108D50044257B /* EnterPhraseCell.swift */,
 				CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */,
@@ -3435,7 +3435,7 @@
 				754AE0BC1DFE8A46007FD001 /* BRCore.swift in Sources */,
 				22A9A94A1DF61945000F0016 /* BRCameraPlugin.swift in Sources */,
 				CEC6AA3B1DEE4EB000EE5AFD /* CGRect+Additions.swift in Sources */,
-				CE14E40B1E4D881500AEA83A /* TransactionDetailView.swift in Sources */,
+				CE14E40B1E4D881500AEA83A /* TransactionDetailCollectionViewCell.swift in Sources */,
 				CE90571A1DFF18B2006BA848 /* ScanViewController.swift in Sources */,
 				CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */,
 				CE74F58D1E3BA85600ED5FA9 /* ExchangeManager.swift in Sources */,
