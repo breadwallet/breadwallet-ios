@@ -1,5 +1,5 @@
 //
-//  TransactionDetailView.swift
+//  TransactionDetailCollectionViewCell.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-02-09.
@@ -8,28 +8,23 @@
 
 import UIKit
 
-class TransactionDetailView : UIView {
+class TransactionDetailCollectionViewCell : UICollectionViewCell {
 
     //MARK: - Public
-    init(currency: Currency, rate: Rate) {
-        self.currency = currency
-        self.rate = rate
-        super.init(frame: .zero)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setup()
     }
 
-    var transaction: Transaction? {
-        didSet {
-            guard let transaction = transaction else { return }
-            timestamp.text = transaction.longTimestamp
-            amount.text = "\(transaction.direction.rawValue) \(transaction.amountDescription(currency: currency, rate: rate))"
-            address.text = "\(transaction.direction.preposition) an address"
-            status.text = transaction.longStatus
-            comments.text = "Comments will go here"
-            amountDetails.text = transaction.amountDetails(currency: currency, rate: rate)
-            addressHeader.text = "To" //Should this be from sometimes?
-            fullAddress.text = transaction.toAddress ?? ""
-        }
+    func set(transaction: Transaction, currency: Currency, rate: Rate) {
+        timestamp.text = transaction.longTimestamp
+        amount.text = "\(transaction.direction.rawValue) \(transaction.amountDescription(currency: currency, rate: rate))"
+        address.text = "\(transaction.direction.preposition) an address"
+        status.text = transaction.longStatus
+        comments.text = "Comments will go here"
+        amountDetails.text = transaction.amountDetails(currency: currency, rate: rate)
+        addressHeader.text = "To" //Should this be from sometimes?
+        fullAddress.text = transaction.toAddress ?? ""
     }
 
     var closeCallback: (() -> Void)? {
@@ -39,30 +34,27 @@ class TransactionDetailView : UIView {
     }
 
     //MARK: - Private
-    private let currency: Currency
-    private let rate: Rate
-
     private func setup() {
         backgroundColor = .white
-        addSubview(header)
-        addSubview(timestamp)
-        addSubview(amount)
-        addSubview(address)
-        separators.forEach { addSubview($0) }
-        addSubview(statusHeader)
-        addSubview(status)
-        addSubview(commentsHeader)
-        addSubview(comments)
-        addSubview(amountHeader)
-        addSubview(amountDetails)
-        addSubview(addressHeader)
-        addSubview(fullAddress)
+        contentView.addSubview(header)
+        contentView.addSubview(timestamp)
+        contentView.addSubview(amount)
+        contentView.addSubview(address)
+        separators.forEach { self.contentView.addSubview($0) }
+        contentView.addSubview(statusHeader)
+        contentView.addSubview(status)
+        contentView.addSubview(commentsHeader)
+        contentView.addSubview(comments)
+        contentView.addSubview(amountHeader)
+        contentView.addSubview(amountDetails)
+        contentView.addSubview(addressHeader)
+        contentView.addSubview(fullAddress)
 
         header.constrainTopCorners(height: 48.0)
         timestamp.constrain([
-            timestamp.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
+            timestamp.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[2]),
             timestamp.topAnchor.constraint(equalTo: header.bottomAnchor, constant: C.padding[3]),
-            timestamp.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]) ])
+            timestamp.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -C.padding[2]) ])
         amount.constrain([
             amount.leadingAnchor.constraint(equalTo: timestamp.leadingAnchor),
             amount.trailingAnchor.constraint(equalTo: timestamp.trailingAnchor),
@@ -147,7 +139,7 @@ class TransactionDetailView : UIView {
 
     private let header = ModalHeaderView(title: S.TransactionDetails.title, isFaqHidden: false, style: .dark)
     private let timestamp = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let amount = UILabel.wrapping(font: .customBold(size: 26.0), color: .darkText)
+    private let amount = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let address = UILabel(font: .customBold(size: 14.0), color: .darkText)
     private let separators = (0...4).map { _ in UIView(color: .secondaryShadow) }
     private let statusHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
@@ -155,7 +147,7 @@ class TransactionDetailView : UIView {
     private let commentsHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let comments = UILabel(font: .customBody(size: 13.0), color: .darkText)
     private let amountHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let amountDetails = UILabel(font: .customBody(size: 13.0), color: .darkText)
+    private let amountDetails = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
     private let addressHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let fullAddress = UILabel(font: .customBody(size: 13.0), color: .darkText)
 
