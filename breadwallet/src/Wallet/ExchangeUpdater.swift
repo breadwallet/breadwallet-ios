@@ -1,5 +1,5 @@
 //
-//  CurrencyManager.swift
+//  ExchangeUpdater.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-01-27.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ExchangeManager {
+class ExchangeUpdater {
 
     //MARK: - Public
     init(store: Store, apiClient: BRAPIClient) {

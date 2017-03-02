@@ -24,7 +24,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private let walletCreator: WalletCreator
     private let walletCoordinator: WalletCoordinator
     lazy private var apiClient: BRAPIClient = BRAPIClient(authenticator: self.walletManager)
-    private var exchangeManager: ExchangeManager?
+    private var exchangeManager: ExchangeUpdater?
     private var feeUpdater: FeeUpdater?
     private let transitionDelegate: ModalTransitionDelegate
 
@@ -54,7 +54,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                 self.walletManager.peerManager?.connect()
             }
         }
-        exchangeManager = ExchangeManager(store: store, apiClient: apiClient)
+        exchangeManager = ExchangeUpdater(store: store, apiClient: apiClient)
         exchangeManager?.refresh()
         feeUpdater = FeeUpdater(walletManager: walletManager, apiClient: apiClient)
         feeUpdater?.refresh()
