@@ -23,6 +23,15 @@ struct Amount {
         return string
     }
 
+    func string(forCurrency: Currency) -> String {
+        switch forCurrency {
+        case .bitcoin:
+            return bits
+        case .local:
+            return localCurrency
+        }
+    }
+
     //MARK: - Private
     private let format: NumberFormatter = {
         let format = NumberFormatter()
