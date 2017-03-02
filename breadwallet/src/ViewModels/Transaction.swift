@@ -123,7 +123,8 @@ struct Transaction {
         }
         let startingAmount = Amount(amount: startingBalance, rate: rate.rate)
         let startingAmountString = currency == .bitcoin ? startingAmount.bits : startingAmount.localCurrency
-        return "\(amountString)\n\nStarting balance: \(startingAmountString)\nEnding balance: \(endingAmountString)"
+        let prefix = direction == .sent ? "-" : ""
+        return "\(prefix)\(amountString)\n\nStarting balance: \(startingAmountString)\nEnding balance: \(endingAmountString)"
     }
 
     var timeSince: String {
