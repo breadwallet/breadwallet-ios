@@ -26,7 +26,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
 
     init(store: Store, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
         self.store = store
-        self.transactions = TransactionsTableViewController(store: store, didSelectTransaction: didSelectTransaction)
+        self.transactionsTableView = TransactionsTableViewController(store: store, didSelectTransaction: didSelectTransaction)
         self.headerView = AccountHeaderView(store: store)
         super.init(nibName: nil, bundle: nil)
     }
@@ -36,7 +36,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     private let headerView: AccountHeaderView
     private let footerView = AccountFooterView()
     private let notificationView = SyncProgressView()
-    private let transactions: TransactionsTableViewController
+    private let transactionsTableView: TransactionsTableViewController
     private let headerHeight: CGFloat = 136.0
     private let footerHeight: CGFloat = 56.0
     private var notificationViewTop: NSLayoutConstraint?
@@ -57,15 +57,15 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
 
         store.subscribe(self, selector: {$0.walletState != $1.walletState },
                         callback: { state in
-                            self.notificationView.progress = state.walletState.syncProgress
+                            self.transactionsTableView.syncingView.progress = CGFloat(state.walletState.syncProgress)
         })
 
         store.subscribe(self, selector: {$0.walletState.isSyncing != $1.walletState.isSyncing },
                         callback: { state in
                             if state.walletState.isSyncing {
-                                self.showSyncingView()
+                                self.transactionsTableView.isSyncingViewVisible = true
                             } else {
-                                self.hideSyncingView()
+                                self.transactionsTableView.isSyncingViewVisible = false
                             }
         })
 
@@ -80,7 +80,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         saveEvent("accout:did_appear")
     }
 
-    private func showSyncingView() {
+    private func showLoadingView() {
         view.addSubview(notificationView)
         view.bringSubview(toFront: headerView)
         notificationViewTop = notificationView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -notificationViewHeight)
@@ -93,7 +93,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         view.layoutIfNeeded()
 
         UIView.animate(withDuration: C.animationDuration, animations: { 
-            self.transactions.tableView.verticallyOffsetContent(notificationViewHeight)
+            self.transactionsTableView.tableView.verticallyOffsetContent(notificationViewHeight)
             self.notificationViewTop?.constant = 0.0
             self.view.layoutIfNeeded()
         }) { completed in
@@ -102,10 +102,10 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         }
     }
 
-    private func hideSyncingView() {
+    private func hideLoadingView() {
         if notificationView.superview != nil {
             UIView.animate(withDuration: C.animationDuration, animations: {
-                self.transactions.tableView.verticallyOffsetContent(-notificationViewHeight)
+                self.transactionsTableView.tableView.verticallyOffsetContent(-notificationViewHeight)
                 self.notificationViewTop?.constant = -notificationViewHeight
                 self.view.layoutIfNeeded()
             }) { completed in
@@ -115,10 +115,10 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     }
 
     private func addTransactionsView() {
-        addChildViewController(transactions, layout: {
-            transactions.view.constrain(toSuperviewEdges: nil)
-            transactions.tableView.contentInset = UIEdgeInsets(top: headerHeight + C.padding[2], left: 0, bottom: footerHeight + C.padding[2], right: 0)
-            transactions.tableView.scrollIndicatorInsets = UIEdgeInsets(top: headerHeight, left: 0, bottom: footerHeight, right: 0)
+        addChildViewController(transactionsTableView, layout: {
+            transactionsTableView.view.constrain(toSuperviewEdges: nil)
+            transactionsTableView.tableView.contentInset = UIEdgeInsets(top: headerHeight + C.padding[2], left: 0, bottom: footerHeight + C.padding[2], right: 0)
+            transactionsTableView.tableView.scrollIndicatorInsets = UIEdgeInsets(top: headerHeight, left: 0, bottom: footerHeight, right: 0)
         })
     }
 
