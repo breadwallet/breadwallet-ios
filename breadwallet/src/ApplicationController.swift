@@ -58,6 +58,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                 DispatchQueue.global(qos: .background).async {
                     self.walletManager.peerManager?.connect()
                 }
+                feeUpdater?.updateWalletFees()
             }
             exchangeUpdater?.refresh()
             feeUpdater?.refresh()
@@ -148,6 +149,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                             guard let alert = $0.alert else { return }
                             if case .pinSet = alert {
                                 self.modalPresenter?.walletManager = self.walletManager
+                                self.feeUpdater?.updateWalletFees()
                                 self.feeUpdater?.refresh()
                             }
         })

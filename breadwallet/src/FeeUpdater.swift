@@ -16,12 +16,26 @@ class FeeUpdater {
         self.apiClient = apiClient
     }
 
+    func updateWalletFees() {
+        guard feePerKb < self.maxFeePerKB && feePerKb > self.minFeePerKB else { return assert(false, "New fee wasn't between min and max!") }
+        self.walletManager.wallet?.feePerKb = feePerKb
+    }
+
     func refresh(completion: (() -> Void)? = nil) {
-        apiClient.feePerKb { fee, error in
+        apiClient.feePerKb { newFee, error in
             guard error == nil else { print("feePerKb error: \(error)"); completion?(); return }
-            UserDefaults.standard.set(fee, forKey: self.feeKey)
-            self.walletManager.wallet?.feePerKb = fee
+            self.feePerKb = newFee
+            self.updateWalletFees()
             completion?()
+        }
+    }
+
+    var feePerKb: UInt64 {
+        get {
+            return UInt64(UserDefaults.standard.double(forKey: feeKey))
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: feeKey)
         }
     }
 
@@ -29,4 +43,10 @@ class FeeUpdater {
     private let walletManager: WalletManager
     private let apiClient: BRAPIClient
     private let feeKey = "FEE_PER_KB"
+    private let txFeePerKb: UInt64 = 1000
+    private let defaultFeePerKB: UInt64 = (5000*1000 + 99)/100 // bitcoind 0.11 min relay fee on 100bytes
+    private lazy var minFeePerKB: UInt64 = {
+        return ((self.txFeePerKb*1000 + 190)/191) // minimum relay fee on a 191byte tx
+    }()
+    private let maxFeePerKB: UInt64 = ((100100*1000 + 190)/191) // slightly higher than a 1000bit fee on a 191byte tx
 }
