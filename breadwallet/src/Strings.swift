@@ -30,8 +30,7 @@ enum S {
         static let sendLabel = NSLocalizedString("Send", comment: "Send button label")
         static let pasteLabel = NSLocalizedString("Paste", comment: "Paste button label")
         static let scanLabel = NSLocalizedString("Scan", comment: "Scan button label")
-        static let currencyLabel = NSLocalizedString("USD \u{25BC}", comment: "Currency Button label")
-
+        static let defaultCurrencyLabel = NSLocalizedString("BTC (\(S.Symbols.bits))", comment: "Currency Button label")
         static let invalidAddressTitle = NSLocalizedString("Invalid Address", comment: "Invalid address alert title")
         static let invalidAddressMessage = NSLocalizedString("Your clipboard does not have a valid bitcoin address.", comment: "Invalid address alert message")
 

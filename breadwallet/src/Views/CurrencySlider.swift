@@ -19,7 +19,7 @@ class CurrencySlider : UIView {
 
     var didSelectCurrency: ((String) -> Void)?
 
-    private let currencies = ["USD ($)", "BTC (b)", "EUR (€)", "GBP (£)", "AUD ($)"]
+    private let currencies = ["BTC (\(S.Symbols.bits))", "USD ($)", "EUR (€)", "GBP (£)", "AUD ($)"]
     private var buttons = [ShadowButton]()
 
     private func setupViews() {
@@ -33,7 +33,7 @@ class CurrencySlider : UIView {
             button.addTarget(self, action: #selector(CurrencySlider.tapped(sender:)), for: .touchUpInside)
             button.isToggleable = true
             buttons.append(button)
-            if $0 == "USD ($)" {
+            if $0 == "BTC (\(S.Symbols.bits))" {
                 button.isSelected = true
             }
             scrollView.addSubview(button)
