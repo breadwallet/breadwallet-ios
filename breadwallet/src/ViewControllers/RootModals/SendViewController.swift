@@ -50,7 +50,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private let send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
     private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
     private let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
-    private let currency = ShadowButton(title: S.Send.currencyLabel, type: .tertiary)
+    private let currency = ShadowButton(title: S.Send.defaultCurrencyLabel, type: .tertiary)
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
