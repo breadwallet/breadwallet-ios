@@ -35,7 +35,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     private let store: Store
     private let headerView: AccountHeaderView
     private let footerView = AccountFooterView()
-    private let notificationView = SyncProgressView()
+    private let notificationView = LoadingProgressView()
     private let transactionsTableView: TransactionsTableViewController
     private let headerHeight: CGFloat = 136.0
     private let footerHeight: CGFloat = 56.0
