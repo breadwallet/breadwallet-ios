@@ -17,7 +17,10 @@ class FeeUpdater {
     }
 
     func updateWalletFees() {
-        guard feePerKb < self.maxFeePerKB && feePerKb > self.minFeePerKB else { return }
+        guard feePerKb < maxFeePerKB && feePerKb > minFeePerKB else {
+            self.walletManager.wallet?.feePerKb = defaultFeePerKB
+            return
+        }
         self.walletManager.wallet?.feePerKb = feePerKb
     }
 
