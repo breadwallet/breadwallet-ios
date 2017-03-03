@@ -41,12 +41,13 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         timestamp.text = transaction.timeSince
     }
 
+    let container = RoundedContainer()
+
     //MARK: - Private
     private let transactionLabel = UILabel()
     private let status = UILabel(font: UIFont.customBody(size: 13.0))
     private let comment = UILabel.wrapping(font: UIFont.customBody(size: 13.0))
     private let timestamp = UILabel(font: UIFont.customMedium(size: 13.0))
-    private let container = RoundedContainer()
     private let shadowView = MaskedShadow()
     private let innerShadow = UIView()
     private let topPadding: CGFloat = 19.0

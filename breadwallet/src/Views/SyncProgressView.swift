@@ -68,10 +68,10 @@ class SyncProgressView : UIView, GradientDrawable {
     }
 
     override func layoutSubviews() {
-        addTopCorners()
+        addBottomCorners()
     }
 
-    private func addTopCorners() {
+    private func addBottomCorners() {
         let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: [.bottomLeft, .bottomRight], cornerRadii: CGSize(width: 6.0, height: 6.0)).cgPath
         let maskLayer = CAShapeLayer()
         maskLayer.path = path
