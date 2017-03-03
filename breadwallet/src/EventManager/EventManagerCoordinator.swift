@@ -10,6 +10,6 @@ import Foundation
 
 protocol EventManagerCoordinator {
     func startEventManager()
-    func syncEventManager()
+    func syncEventManager(completion: @escaping () -> Void)
     func acquireEventManagerUserPermissions(callback: () -> Void)
 }
