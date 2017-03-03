@@ -243,7 +243,7 @@
 		CE48F0A91E3716C70034600E /* ClearPinPadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48F0A81E3716C70034600E /* ClearPinPadCell.swift */; };
 		CE48F0AB1E3716EB0034600E /* WhitePinPadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48F0AA1E3716EB0034600E /* WhitePinPadCell.swift */; };
 		CE4B6C1A1E219CA600CF935B /* WalletCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4B6C191E219CA600CF935B /* WalletCoordinator.swift */; };
-		CE4B6C1C1E21A96D00CF935B /* SyncProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4B6C1B1E21A96D00CF935B /* SyncProgressView.swift */; };
+		CE4B6C1C1E21A96D00CF935B /* LoadingProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4B6C1B1E21A96D00CF935B /* LoadingProgressView.swift */; };
 		CE4B6C201E233C2C00CF935B /* UITableView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4B6C1F1E233C2C00CF935B /* UITableView+Additions.swift */; };
 		CE5F21D91E4A922700C47B8E /* DismissLoginAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5F21D81E4A922700C47B8E /* DismissLoginAnimator.swift */; };
 		CE5F21DB1E4A93A500C47B8E /* LoginTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5F21DA1E4A93A500C47B8E /* LoginTransitionDelegate.swift */; };
@@ -1342,7 +1342,7 @@
 		CE48F0A81E3716C70034600E /* ClearPinPadCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ClearPinPadCell.swift; path = src/Views/ClearPinPadCell.swift; sourceTree = "<group>"; };
 		CE48F0AA1E3716EB0034600E /* WhitePinPadCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WhitePinPadCell.swift; path = src/Views/WhitePinPadCell.swift; sourceTree = "<group>"; };
 		CE4B6C191E219CA600CF935B /* WalletCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletCoordinator.swift; path = src/WalletCoordinator.swift; sourceTree = "<group>"; };
-		CE4B6C1B1E21A96D00CF935B /* SyncProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SyncProgressView.swift; path = src/Views/SyncProgressView.swift; sourceTree = "<group>"; };
+		CE4B6C1B1E21A96D00CF935B /* LoadingProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoadingProgressView.swift; path = src/Views/LoadingProgressView.swift; sourceTree = "<group>"; };
 		CE4B6C1F1E233C2C00CF935B /* UITableView+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UITableView+Additions.swift"; path = "src/Extensions/UITableView+Additions.swift"; sourceTree = "<group>"; };
 		CE5F21D81E4A922700C47B8E /* DismissLoginAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DismissLoginAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/DismissLoginAnimator.swift; sourceTree = "<group>"; };
 		CE5F21DA1E4A93A500C47B8E /* LoginTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginTransitionDelegate.swift; path = src/ViewControllers/ViewControllerTransitions/LoginTransitionDelegate.swift; sourceTree = "<group>"; };
@@ -2708,7 +2708,7 @@
 				CE48F0AA1E3716EB0034600E /* WhitePinPadCell.swift */,
 				CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */,
 				CE6D0E581E13596E00137DF1 /* CurrencyOverlay.swift */,
-				CE4B6C1B1E21A96D00CF935B /* SyncProgressView.swift */,
+				CE4B6C1B1E21A96D00CF935B /* LoadingProgressView.swift */,
 				CE8CD8E21E31978100785E02 /* LoginBackgroundTriangle.swift */,
 				CECB9DB51E4985CE0081A172 /* LoginBackgroundView.swift */,
 				CE14E40A1E4D881500AEA83A /* TransactionDetailCollectionViewCell.swift */,
@@ -3488,7 +3488,7 @@
 				CEC6AA3D1DEE687000EE5AFD /* RadialGradientView.swift in Sources */,
 				CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */,
 				CEC6AA441DEFCDE900EE5AFD /* ModalViewController.swift in Sources */,
-				CE4B6C1C1E21A96D00CF935B /* SyncProgressView.swift in Sources */,
+				CE4B6C1C1E21A96D00CF935B /* LoadingProgressView.swift in Sources */,
 				CE92F9F01DED0C790046B516 /* PresentModalAnimator.swift in Sources */,
 				CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */,
 				CEBF32EE1DDBC30000348FC6 /* ShadowButton.swift in Sources */,
