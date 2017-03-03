@@ -1,5 +1,5 @@
 //
-//  SyncProgressView.swift
+//  LoadingProgressView.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-01-07.
@@ -11,7 +11,7 @@ import UIKit
 private let progressHeight: CGFloat = 4.0
 private let progressWidth: CGFloat = 150.0
 
-class SyncProgressView : UIView, GradientDrawable {
+class LoadingProgressView : UIView, GradientDrawable {
 
     var progress: Double = 0.0 {
         didSet {
