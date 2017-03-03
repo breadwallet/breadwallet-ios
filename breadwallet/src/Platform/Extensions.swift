@@ -31,12 +31,8 @@ import libbz2
 public extension String {
     func md5() -> String {
         guard let data = self.data(using: .utf8) else {
-            #if DEBUG
-                fatalError("couldnt encode string as utf8 data")
-            #else
-                print("couldnt encode as utf8 data")
-                return
-            #endif
+            assert(false, "couldnt encode string as utf8 data")
+            return ""
         }
         
         var result = Data(count: 128/8)

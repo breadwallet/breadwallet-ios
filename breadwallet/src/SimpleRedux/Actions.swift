@@ -60,6 +60,7 @@ struct PinCreation {
                     return stateForNewPin(newPin: newPin, previousPin: previousPin, state: $0)
                 default:
                     assert(false, "Warning - invalid state")
+                    return $0
                 }
             }
         }
@@ -84,6 +85,7 @@ struct PinCreation {
                 return $0.clone(pinCreationStep: .saveSuccess(pin: pin))
             default:
                 assert(false, "Warning - invalid state")
+                return $0
             }
         }
     }
