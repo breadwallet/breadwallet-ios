@@ -19,8 +19,10 @@ class Sender {
         self.walletManager = walletManager
     }
 
+    //Amount in bits
     func send(amount: UInt64, to: String, verifyPin: (@escaping(String) -> Bool) -> Void, completion:@escaping (PublishResult) -> Void) {
-        transaction = walletManager.wallet?.createTransaction(forAmount: amount, toAddress: to)
+        let satoshis = amount * 100
+        transaction = walletManager.wallet?.createTransaction(forAmount: satoshis, toAddress: to)
         guard let tx = transaction else { return }
         verifyPin({ pin in
             if self.walletManager.signTransaction(tx, pin: pin) {
