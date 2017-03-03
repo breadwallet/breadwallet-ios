@@ -24,7 +24,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private let walletCreator: WalletCreator
     private let walletCoordinator: WalletCoordinator
     lazy private var apiClient: BRAPIClient = BRAPIClient(authenticator: self.walletManager)
-    private var exchangeManager: ExchangeUpdater?
+    private var exchangeUpdater: ExchangeUpdater?
     private var feeUpdater: FeeUpdater?
     private let transitionDelegate: ModalTransitionDelegate
 
@@ -42,22 +42,26 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         window.makeKeyAndVisible()
         startEventManager()
 
-        if walletManager.noWallet {
-            addWalletCreationListener()
-            store.perform(action: ShowStartFlow())
-        } else {
-            if shouldRequireLogin() {
-                store.perform(action: RequireLogin())
-            }
-            modalPresenter?.walletManager = walletManager
-            DispatchQueue.global(qos: .background).async {
-                self.walletManager.peerManager?.connect()
-            }
-        }
-        exchangeManager = ExchangeUpdater(store: store, apiClient: apiClient)
-        exchangeManager?.refresh()
+        exchangeUpdater = ExchangeUpdater(store: store, apiClient: apiClient)
         feeUpdater = FeeUpdater(walletManager: walletManager, apiClient: apiClient)
-        feeUpdater?.refresh()
+
+        if UIApplication.shared.applicationState != .background {
+
+            if walletManager.noWallet {
+                addWalletCreationListener()
+                store.perform(action: ShowStartFlow())
+            } else {
+                if shouldRequireLogin() {
+                    store.perform(action: RequireLogin())
+                }
+                modalPresenter?.walletManager = walletManager
+                DispatchQueue.global(qos: .background).async {
+                    self.walletManager.peerManager?.connect()
+                }
+            }
+            exchangeUpdater?.refresh()
+            feeUpdater?.refresh()
+        }
     }
 
     func willEnterForeground() {
@@ -66,9 +70,9 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             store.perform(action: RequireLogin())
         }
         DispatchQueue.global(qos: .background).async {
-            self.walletManager.peerManager?.connect() //TODO - guard for noWallet?
+            self.walletManager.peerManager?.connect()
         }
-        exchangeManager?.refresh()
+        exchangeUpdater?.refresh()
         feeUpdater?.refresh()
     }
 
@@ -80,9 +84,18 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     }
 
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        syncEventManager()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-            completionHandler(.newData)
+        Async.parallel(callbacks: [
+                { completion in
+                    self.exchangeUpdater?.refresh(completion: completion)
+                },
+                { completion in
+                    self.feeUpdater?.refresh(completion: completion)
+                },
+                { completion in
+                    self.syncEventManager(completion: completion)
+                },
+            ], completion: {
+                completionHandler(.newData) //TODO - add a timeout for this
         })
     }
 

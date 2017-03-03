@@ -16,14 +16,17 @@ class FeeUpdater {
         self.apiClient = apiClient
     }
 
-    func refresh() {
+    func refresh(completion: (() -> Void)? = nil) {
         apiClient.feePerKb { fee, error in
-            guard error == nil else { return print("feePerKb error: \(error)") }
+            guard error == nil else { print("feePerKb error: \(error)"); completion?(); return }
+            UserDefaults.standard.set(fee, forKey: self.feeKey)
             self.walletManager.wallet?.feePerKb = fee
+            completion?()
         }
     }
 
     //MARK: - Private
-    let walletManager: WalletManager
-    let apiClient: BRAPIClient
+    private let walletManager: WalletManager
+    private let apiClient: BRAPIClient
+    private let feeKey = "FEE_PER_KB"
 }

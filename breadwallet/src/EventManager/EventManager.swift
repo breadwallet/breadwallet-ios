@@ -23,8 +23,8 @@ extension EventManagerCoordinator {
         EventManager.shared.up()
     }
 
-    func syncEventManager() {
-        EventManager.shared.sync()
+    func syncEventManager(completion: @escaping () -> Void) {
+        EventManager.shared.sync(completion: completion)
     }
 
     func acquireEventManagerUserPermissions(callback: () -> Void) {
@@ -127,9 +127,9 @@ fileprivate class EventManager {
 
     }
 
-    func sync() {
+    func sync(completion: @escaping () -> Void) {
         guard shouldRecordData else { removeData(); return }
-        sendToServer()
+        sendToServer(completion: completion)
     }
 
     private func pushEvent(eventName: String, attributes: [String: String]) {
@@ -168,7 +168,7 @@ fileprivate class EventManager {
         }
     }
 
-    private func sendToServer() {
+    private func sendToServer(completion: (() -> Void)? = nil) {
         queue.addOperation { [weak self] in
             guard let myself = self else { return }
             let dataDirectory = myself.unsentDataDirectory
@@ -218,6 +218,7 @@ fileprivate class EventManager {
                             print("Unable to remove evnets file at path \(fileName) \(error)")
                         }
                     }
+                    completion?()
                 })
 
                 uploadTask.resume()
