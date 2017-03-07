@@ -52,7 +52,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1000</string>
+	<string>1001</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -64,10 +64,10 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Used to scan barcodes</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Used to scan barcodes</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Used to determine where you are - never recorded or shared with anyone</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to scan barcodes</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>CircularPro-Bold.otf</string>
