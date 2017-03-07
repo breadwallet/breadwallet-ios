@@ -204,7 +204,6 @@
 		75A2A7F61DA5935F00A983D8 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7F51DA5935F00A983D8 /* MessagesViewController.swift */; };
 		75A2A7F91DA5935F00A983D8 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7F71DA5935F00A983D8 /* MainInterface.storyboard */; };
 		75A2A7FB1DA5935F00A983D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7FA1DA5935F00A983D8 /* Assets.xcassets */; };
-		75A2A7FF1DA5935F00A983D8 /* MessagesExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 75A2A7F01DA5935F00A983D8 /* MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		75A2A80A1DA5936F00A983D8 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75A2A8091DA5936F00A983D8 /* NotificationCenter.framework */; };
 		75A2A80D1DA5936F00A983D8 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A80C1DA5936F00A983D8 /* TodayViewController.swift */; };
 		75A2A8101DA5936F00A983D8 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A80E1DA5936F00A983D8 /* MainInterface.storyboard */; };
@@ -410,13 +409,6 @@
 			remoteGlobalIDString = 75A2A7C61DA5934300A983D8;
 			remoteInfo = "breadwallet WatchKit Extension";
 		};
-		75A2A7FD1DA5935F00A983D8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 75A2A7EF1DA5935F00A983D8;
-			remoteInfo = MessagesExtension;
-		};
 		75A2A8121DA5936F00A983D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
@@ -501,7 +493,6 @@
 			files = (
 				75A2A8141DA5936F00A983D8 /* TodayExtension.appex in Embed App Extensions */,
 				75A2A8231DA5938500A983D8 /* NotificationServiceExtension.appex in Embed App Extensions */,
-				75A2A7FF1DA5935F00A983D8 /* MessagesExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2969,7 +2960,6 @@
 				759DA0BD1DAC369C008CC49B /* PBXTargetDependency */,
 				75C735A91DAA1B8700251ECF /* PBXTargetDependency */,
 				75A2A7BB1DA5934300A983D8 /* PBXTargetDependency */,
-				75A2A7FE1DA5935F00A983D8 /* PBXTargetDependency */,
 				75A2A8131DA5936F00A983D8 /* PBXTargetDependency */,
 				75A2A8221DA5938500A983D8 /* PBXTargetDependency */,
 				22A9A99C1DF63426000F0016 /* PBXTargetDependency */,
@@ -3752,11 +3742,6 @@
 			isa = PBXTargetDependency;
 			target = 75A2A7C61DA5934300A983D8 /* breadwallet WatchKit Extension */;
 			targetProxy = 75A2A7C91DA5934300A983D8 /* PBXContainerItemProxy */;
-		};
-		75A2A7FE1DA5935F00A983D8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 75A2A7EF1DA5935F00A983D8 /* MessagesExtension */;
-			targetProxy = 75A2A7FD1DA5935F00A983D8 /* PBXContainerItemProxy */;
 		};
 		75A2A8131DA5936F00A983D8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
