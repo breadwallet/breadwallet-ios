@@ -97,6 +97,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
             let cell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath)
             if let transactionCell = cell as? TransactionTableViewCell {
                 transactionCell.setStyle(.single)
+                transactionCell.selectionStyle = .none
                 transactionCell.container.subviews.forEach {
                     $0.removeFromSuperview()
                 }
@@ -149,6 +150,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if isSyncingViewVisible && indexPath.section == 0 { return }
         didSelectTransaction(transactions, indexPath.row)
     }
 

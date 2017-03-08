@@ -115,6 +115,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     }
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        guard selectionStyle != .none else { container.backgroundColor = .white; return }
         container.backgroundColor = highlighted ? .secondaryShadow : .white
     }
 
