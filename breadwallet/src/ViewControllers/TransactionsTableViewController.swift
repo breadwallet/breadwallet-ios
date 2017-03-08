@@ -45,14 +45,15 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
     private var transactions: [Transaction] = []
     private var currency: Currency = .bitcoin {
         didSet {
-            tableView.reloadData()
+            reload()
         }
     }
     private var rate: Rate? {
         didSet {
-            tableView.reloadData()
+            reload()
         }
     }
+    private let emptyMessage = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +67,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
         store.subscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions },
                         callback: { state in
                             self.transactions = state.walletState.transactions
-                            self.tableView.reloadData()
+                            self.reload()
         })
 
         store.subscribe(self,
@@ -76,7 +77,9 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
                         selector: { $0.currentRate != $1.currentRate},
                         callback: { self.rate = $0.currentRate })
 
-        tableView.reloadData()
+        emptyMessage.textAlignment = .center
+        emptyMessage.text = S.TransactionDetails.emptyMessage
+        reload()
     }
 
     // MARK: - Table view data source
@@ -152,6 +155,18 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isSyncingViewVisible && indexPath.section == 0 { return }
         didSelectTransaction(transactions, indexPath.row)
+    }
+
+    private func reload() {
+        tableView.reloadData()
+        if transactions.count == 0 && emptyMessage.superview == nil {
+            tableView.addSubview(emptyMessage)
+            emptyMessage.constrain([
+                emptyMessage.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
+                emptyMessage.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -accountHeaderHeight) ])
+        } else {
+            emptyMessage.removeFromSuperview()
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {

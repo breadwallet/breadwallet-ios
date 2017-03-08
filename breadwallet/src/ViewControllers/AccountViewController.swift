@@ -9,6 +9,7 @@
 import UIKit
 import BRCore
 
+let accountHeaderHeight: CGFloat = 136.0
 private let notificationViewHeight: CGFloat = 48.0
 
 class AccountViewController : UIViewController, Trackable, Subscriber {
@@ -37,7 +38,6 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     private let footerView = AccountFooterView()
     private let notificationView = LoadingProgressView()
     private let transactionsTableView: TransactionsTableViewController
-    private let headerHeight: CGFloat = 136.0
     private let footerHeight: CGFloat = 56.0
     private var notificationViewTop: NSLayoutConstraint?
 
@@ -49,7 +49,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
 
         headerView.constrainTopCorners(sidePadding: 0, topPadding: 0)
         headerView.constrain([
-            headerView.constraint(.height, constant: headerHeight) ])
+            headerView.constraint(.height, constant: accountHeaderHeight) ])
 
         footerView.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         footerView.constrain([
@@ -117,8 +117,8 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     private func addTransactionsView() {
         addChildViewController(transactionsTableView, layout: {
             transactionsTableView.view.constrain(toSuperviewEdges: nil)
-            transactionsTableView.tableView.contentInset = UIEdgeInsets(top: headerHeight + C.padding[2], left: 0, bottom: footerHeight + C.padding[2], right: 0)
-            transactionsTableView.tableView.scrollIndicatorInsets = UIEdgeInsets(top: headerHeight, left: 0, bottom: footerHeight, right: 0)
+            transactionsTableView.tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight + C.padding[2], left: 0, bottom: footerHeight + C.padding[2], right: 0)
+            transactionsTableView.tableView.scrollIndicatorInsets = UIEdgeInsets(top: accountHeaderHeight, left: 0, bottom: footerHeight, right: 0)
         })
     }
 
