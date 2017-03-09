@@ -55,9 +55,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                     store.perform(action: RequireLogin())
                 }
                 modalPresenter?.walletManager = walletManager
-                DispatchQueue.global(qos: .background).async {
-                    self.walletManager.peerManager?.connect()
-                }
+                walletManager.peerManager?.connect()
                 feeUpdater?.updateWalletFees()
             }
             exchangeUpdater?.refresh()
@@ -70,9 +68,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         if shouldRequireLogin() {
             store.perform(action: RequireLogin())
         }
-        DispatchQueue.global(qos: .background).async {
-            self.walletManager.peerManager?.connect()
-        }
+        walletManager.peerManager?.connect()
         exchangeUpdater?.refresh()
         feeUpdater?.refresh()
     }
