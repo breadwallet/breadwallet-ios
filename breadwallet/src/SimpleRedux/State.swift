@@ -70,9 +70,10 @@ struct WalletState {
     let isSyncing: Bool
     let balance: UInt64
     let transactions: [Transaction]
+    let lastBlockTimestamp: UInt32
 
     static var initial: WalletState {
-        return WalletState(isConnected: false, syncProgress: 0.0, isSyncing: false, balance: 0, transactions: [])
+        return WalletState(isConnected: false, syncProgress: 0.0, isSyncing: false, balance: 0, transactions: [], lastBlockTimestamp: 0)
     }
 }
 
