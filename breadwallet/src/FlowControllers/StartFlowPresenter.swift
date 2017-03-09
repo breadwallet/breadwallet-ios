@@ -37,6 +37,12 @@ class StartFlowPresenter : Subscriber {
         return button
     }
 
+    private var negativePadding: UIBarButtonItem {
+        let padding = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        padding.width = -16.0
+        return padding
+    }
+
     private func addSubscriptions() {
         store.subscribe(self,
                         selector: { $0.isStartFlowVisible != $1.isStartFlowVisible },
@@ -152,14 +158,14 @@ class StartFlowPresenter : Subscriber {
         let paperPhraseViewController = StartPaperPhraseViewController(store: store)
         paperPhraseViewController.title = "Paper Key"
         paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
-        paperPhraseViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
+        paperPhraseViewController.navigationItem.leftBarButtonItems = [negativePadding, UIBarButtonItem(customView: closeButton)]
 
         let faqButton = UIButton.faq
         faqButton.tintColor = .white
         faqButton.tap = {
             print("Faq button tapped")
         }
-        paperPhraseViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: faqButton)
+        paperPhraseViewController.navigationItem.rightBarButtonItems = [negativePadding, UIBarButtonItem(customView: faqButton)]
 
         navigationController?.navigationBar.titleTextAttributes = [
             NSForegroundColorAttributeName: UIColor.white,
@@ -176,7 +182,7 @@ class StartFlowPresenter : Subscriber {
 
         let writeViewController = WritePaperPhraseViewController(store: store, walletManager: walletManager, pin: pin)
         writeViewController.title = "Paper Key"
-        writeViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
+        writeViewController.navigationItem.leftBarButtonItems = [negativePadding, UIBarButtonItem(customView: closeButton)]
         navigationController?.pushViewController(writeViewController, animated: true)
     }
 
