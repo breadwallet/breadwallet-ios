@@ -37,7 +37,7 @@ class WalletCoordinator {
 
     @objc private func updateProgress() {
         if let progress = walletManager.peerManager?.syncProgress(fromStartHeight: lastBlockHeight) {
-            store.perform(action: WalletChange.setProgress(progress: progress))
+            store.perform(action: WalletChange.setProgress(progress: progress, timestamp: walletManager.lastBlockTimestamp))
         }
 
         guard let balance = walletManager.wallet?.balance else { return }

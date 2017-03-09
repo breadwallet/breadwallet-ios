@@ -55,9 +55,10 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         footerView.constrain([
             footerView.constraint(.height, constant: footerHeight) ])
 
-        store.subscribe(self, selector: {$0.walletState != $1.walletState },
+        store.subscribe(self, selector: {$0.walletState.syncProgress != $1.walletState.syncProgress },
                         callback: { state in
                             self.transactionsTableView.syncingView.progress = CGFloat(state.walletState.syncProgress)
+                            self.transactionsTableView.syncingView.timestamp = state.walletState.lastBlockTimestamp
         })
 
         store.subscribe(self, selector: {$0.walletState.isSyncing != $1.walletState.isSyncing },

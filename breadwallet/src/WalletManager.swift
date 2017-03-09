@@ -496,6 +496,18 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         if sqlite3_errcode(db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(db))) }
         return transactions
     }
+
+    var lastBlockTimestamp: UInt32 {
+        var sql: OpaquePointer? = nil
+        sqlite3_prepare_v2(db, "select MAX(ZTIMESTAMP) from ZBRMERKLEBLOCKENTITY", -1, &sql, nil)
+        defer { sqlite3_finalize(sql) }
+
+        var timestamp: UInt32 = 0
+        while sqlite3_step(sql) == SQLITE_ROW {
+            timestamp = UInt32(bitPattern: sqlite3_column_int(sql, 0))
+        }
+        return timestamp
+    }
     
     private func loadBlocks() -> [BRBlockRef?] {
         var blocks = [BRBlockRef?]()
