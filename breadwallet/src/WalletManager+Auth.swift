@@ -320,7 +320,6 @@ extension WalletManager : WalletAuthenticator {
                 
         do {
             peerManager = nil
-            wallet = nil
             if db != nil { sqlite3_close(db) }
             db = nil
             masterPubKey = BRMasterPubKey()
