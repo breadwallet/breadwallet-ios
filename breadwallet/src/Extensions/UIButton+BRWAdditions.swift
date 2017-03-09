@@ -27,27 +27,19 @@ extension UIButton {
     }
 
     static var close: UIButton {
-        return UIButton.smallIcon(image: #imageLiteral(resourceName: "Close"), accessibilityLabel: NSLocalizedString("Close", comment: "Close modal button accessibility label"))
+        return UIButton.icon(image: #imageLiteral(resourceName: "Close"), accessibilityLabel: NSLocalizedString("Close", comment: "Close modal button accessibility label"))
     }
 
     static var faq: UIButton {
-        return UIButton.smallIcon(image: #imageLiteral(resourceName: "Faq"), accessibilityLabel: NSLocalizedString("Faq", comment: "Frequently asked questions button accessibility label"))
-    }
-
-    static func smallIcon(image: UIImage, accessibilityLabel: String) -> UIButton {
-        let button = UIButton(type: .system)
-        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-        button.setImage(image, for: .normal)
-        button.imageEdgeInsets = UIEdgeInsetsMake(16.0, 16.0, 16.0, 16.0)
-        button.tintColor = .darkText
-        button.accessibilityLabel = accessibilityLabel
-        return button
+        return UIButton.icon(image: #imageLiteral(resourceName: "Faq"), accessibilityLabel: NSLocalizedString("Faq", comment: "Frequently asked questions button accessibility label"))
     }
 
     static func icon(image: UIImage, accessibilityLabel: String) -> UIButton {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         button.setImage(image, for: .normal)
+        button.imageEdgeInsets = UIEdgeInsetsMake(12.0, 12.0, 12.0, 12.0)
+        button.tintColor = .darkText
         button.accessibilityLabel = accessibilityLabel
         return button
     }

@@ -24,7 +24,7 @@ class ScanViewController : UIViewController {
     fileprivate let session = AVCaptureSession()
     private let toolbar = UIView()
     private let close = UIButton.close
-    private let flash = UIButton.smallIcon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
+    private let flash = UIButton.icon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
 
     init(completion: @escaping ScanCompletion, isValidURI: @escaping (String) -> Bool) {
         self.completion = completion
