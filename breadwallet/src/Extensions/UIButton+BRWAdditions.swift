@@ -38,7 +38,13 @@ extension UIButton {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         button.setImage(image, for: .normal)
-        button.imageEdgeInsets = UIEdgeInsetsMake(12.0, 12.0, 12.0, 12.0)
+
+        if image == #imageLiteral(resourceName: "Close") {
+            button.imageEdgeInsets = UIEdgeInsetsMake(14.0, 14.0, 14.0, 14.0)
+        } else {
+            button.imageEdgeInsets = UIEdgeInsetsMake(12.0, 12.0, 12.0, 12.0)
+        }
+
         button.tintColor = .darkText
         button.accessibilityLabel = accessibilityLabel
         return button
