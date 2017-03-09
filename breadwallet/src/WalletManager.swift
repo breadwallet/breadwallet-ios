@@ -63,12 +63,11 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
 
-    lazy var wallet: BRWallet? = {
+    var wallet: BRWallet? {
         guard self.masterPubKey != BRMasterPubKey() else { return nil }
-        guard let wallet = BRWallet(transactions: self.loadTransactions(), masterPubKey: self.masterPubKey,
-                                    listener: self) else {
+        guard let wallet = lazyWallet else {
             // stored transactions don't match masterPubKey
-            #if !DEBUG
+            #if !Debug
                 do { try FileManager.default.removeItem(atPath: self.dbPath) } catch { }
             #endif
             abort()
@@ -76,12 +75,17 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         
         self.didInitWallet = true
         return wallet
-    }()
+    }
 
     lazy var peerManager: BRPeerManager? = {
         guard let wallet = self.wallet else { return nil }
         return BRPeerManager(wallet: wallet, earliestKeyTime: self.earliestKeyTime,
                              blocks: self.loadBlocks(), peers: self.loadPeers(), listener: self)
+    }()
+
+    private lazy var lazyWallet: BRWallet? = {
+        return BRWallet(transactions: self.loadTransactions(), masterPubKey: self.masterPubKey,
+                        listener: self)
     }()
 
     var wordList: [NSString]? {
