@@ -175,8 +175,8 @@ enum ModalDismissal {
 enum WalletChange {
     struct setProgress: Action {
         let reduce: Reducer
-        init(progress: Double) {
-            reduce = { $0.clone(walletSyncProgress: progress) }
+        init(progress: Double, timestamp: UInt32) {
+            reduce = { $0.clone(walletSyncProgress: progress, timestamp: timestamp) }
         }
     }
     struct setIsSyncing: Action {
@@ -316,7 +316,7 @@ extension State {
                      currentRate: currentRate,
                      alert: alert)
     }
-    func clone(walletSyncProgress: Double) -> State {
+    func clone(walletSyncProgress: Double, timestamp: UInt32) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      pinCreationStep: pinCreationStep,
@@ -324,7 +324,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      isModalDismissalBlocked: isModalDismissalBlocked,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: timestamp),
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert)
@@ -337,7 +337,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      isModalDismissalBlocked: isModalDismissalBlocked,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp),
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert)
@@ -350,7 +350,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      isModalDismissalBlocked: isModalDismissalBlocked,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp),
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert)
@@ -363,7 +363,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      isModalDismissalBlocked: isModalDismissalBlocked,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions, lastBlockTimestamp: walletState.lastBlockTimestamp),
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert)

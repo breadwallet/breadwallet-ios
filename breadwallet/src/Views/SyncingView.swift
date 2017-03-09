@@ -17,12 +17,18 @@ class SyncingView : UIView {
         setup()
     }
 
-    var progress: CGFloat = 0.01 {
+    var progress: CGFloat = 0.0 {
         didSet {
             progressForegroundWidth?.isActive = false
             progressForegroundWidth = progressForeground.widthAnchor.constraint(equalTo: progressBackground.widthAnchor, multiplier: progress)
             progressForegroundWidth?.isActive = true
             progressForeground.setNeedsDisplay()
+        }
+    }
+
+    var timestamp: UInt32 = 0 {
+        didSet {
+            date.text = dateFormatter.string(from: Date(timeIntervalSince1970: Double(timestamp)))
         }
     }
 
@@ -42,6 +48,12 @@ class SyncingView : UIView {
         view.layer.cornerRadius = progressHeight/2.0
         view.layer.masksToBounds = true
         return view
+    }()
+
+    private let dateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateFormat = "MMM. d, yyyy"
+        return df
     }()
 
     private var progressForegroundWidth: NSLayoutConstraint?
@@ -78,7 +90,7 @@ class SyncingView : UIView {
 
     private func setData() {
         header.text = "Syncing"
-        date.text = "March 3, 2017"
+        date.text = ""
     }
 
     required init?(coder aDecoder: NSCoder) {
