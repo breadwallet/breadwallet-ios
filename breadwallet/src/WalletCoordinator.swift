@@ -22,7 +22,6 @@ class WalletCoordinator {
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
         self.store = store
-
         addWalletObservers()
     }
 
@@ -37,9 +36,13 @@ class WalletCoordinator {
 
     @objc private func updateProgress() {
         if let progress = walletManager.peerManager?.syncProgress(fromStartHeight: lastBlockHeight) {
-            store.perform(action: WalletChange.setProgress(progress: progress, timestamp: walletManager.lastBlockTimestamp))
+            DispatchQueue(label: C.walletQueue).async {
+                let timestamp = self.walletManager.lastBlockTimestamp
+                DispatchQueue.main.async {
+                    self.store.perform(action: WalletChange.setProgress(progress: progress, timestamp: timestamp))
+                }
+            }
         }
-
         guard let balance = walletManager.wallet?.balance else { return }
         store.perform(action: WalletChange.setBalance(balance))
     }
