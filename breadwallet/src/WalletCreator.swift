@@ -29,7 +29,9 @@ class WalletCreator : Subscriber {
             //TODO handle setting pin failure here
             guard let phrase = self.walletManager.setRandomSeedPhrase() else { return }
                 if walletManager.forceSetPin(newPin: pin, seedPhrase: phrase) {
-                    walletManager.peerManager?.connect()
+                    DispatchQueue(label: C.walletQueue).async {
+                        self.walletManager.peerManager?.connect()
+                    }
                     store.perform(action: PinCreation.SaveSuccess())
                 }
         }
