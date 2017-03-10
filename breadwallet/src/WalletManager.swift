@@ -450,7 +450,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         for p in peers {
             pk = pk + 1
             sqlite3_bind_int(sql2, 1, pk)
-            sqlite3_bind_int(sql2, 2, Int32(bitPattern: p.address.u32.3))
+            sqlite3_bind_int(sql2, 2, Int32(bitPattern: p.address.u32.3.bigEndian))
             sqlite3_bind_int(sql2, 3, Int32(p.port))
             sqlite3_bind_int64(sql2, 4, Int64(bitPattern: p.services))
             sqlite3_bind_int64(sql2, 5, Int64(bitPattern: p.timestamp))
