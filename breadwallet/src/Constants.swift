@@ -19,18 +19,16 @@ struct Padding {
 }
 
 struct C {
-
     static let padding = Padding()
-
     struct Sizes {
         static let buttonHeight: CGFloat = 48.0
         static let headerHeight: CGFloat = 48.0
         static let largeHeaderHeight: CGFloat = 220.0
     }
-
     static var defaultTintColor: UIColor = {
         return UIView().tintColor
     }()
     static let animationDuration: TimeInterval = 0.3
     static let maxMoney: UInt64 = 21000000*100000000
+    static let walletQueue = "com.breadwallet.walletqueue"
 }

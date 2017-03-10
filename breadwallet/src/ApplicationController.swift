@@ -20,18 +20,22 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
 
-    private let walletManager: WalletManager = try! WalletManager(dbPath: nil)
-    private let walletCreator: WalletCreator
-    private let walletCoordinator: WalletCoordinator
-    lazy private var apiClient: BRAPIClient = BRAPIClient(authenticator: self.walletManager)
+    private var walletManager: WalletManager?
+    private var walletCreator: WalletCreator?
+    private var walletCoordinator: WalletCoordinator?
+    private var apiClient: BRAPIClient?
     private var exchangeUpdater: ExchangeUpdater?
     private var feeUpdater: FeeUpdater?
     private let transitionDelegate: ModalTransitionDelegate
 
     init() {
-        walletCreator = WalletCreator(walletManager: walletManager, store: store)
-        walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
         transitionDelegate = ModalTransitionDelegate(store: store, type: .transactionDetail)
+        DispatchQueue(label: C.walletQueue).async {
+            self.walletManager = try! WalletManager(dbPath: nil)
+            DispatchQueue.main.async {
+                self.didInitWallet()
+            }
+        }
     }
 
     func launch(options: [UIApplicationLaunchOptionsKey: Any]?) {
@@ -41,34 +45,17 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         setupPresenters()
         window.makeKeyAndVisible()
         startEventManager()
-
-        exchangeUpdater = ExchangeUpdater(store: store, apiClient: apiClient)
-        feeUpdater = FeeUpdater(walletManager: walletManager, apiClient: apiClient)
-
-        if UIApplication.shared.applicationState != .background {
-
-            if walletManager.noWallet {
-                addWalletCreationListener()
-                store.perform(action: ShowStartFlow())
-            } else {
-                if shouldRequireLogin() {
-                    store.perform(action: RequireLogin())
-                }
-                modalPresenter?.walletManager = walletManager
-                walletManager.peerManager?.connect()
-                feeUpdater?.updateWalletFees()
-            }
-            exchangeUpdater?.refresh()
-            feeUpdater?.refresh()
-        }
     }
 
     func willEnterForeground() {
+        guard let walletManager = walletManager else { return }
         guard !walletManager.noWallet else { return }
         if shouldRequireLogin() {
             store.perform(action: RequireLogin())
         }
-        walletManager.peerManager?.connect()
+        DispatchQueue(label: C.walletQueue).async {
+            walletManager.peerManager?.connect()
+        }
         exchangeUpdater?.refresh()
         feeUpdater?.refresh()
     }
@@ -96,6 +83,34 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         })
     }
 
+    private func didInitWallet() {
+        guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
+        walletCreator = WalletCreator(walletManager: walletManager, store: store)
+        walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
+        apiClient = BRAPIClient(authenticator: walletManager)
+        exchangeUpdater = ExchangeUpdater(store: store, apiClient: apiClient!)
+        feeUpdater = FeeUpdater(walletManager: walletManager, apiClient: apiClient!)
+        startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: window.rootViewController!)
+
+        if UIApplication.shared.applicationState != .background {
+            if walletManager.noWallet {
+                addWalletCreationListener()
+                store.perform(action: ShowStartFlow())
+            } else {
+                if shouldRequireLogin() {
+                    store.perform(action: RequireLogin())
+                }
+                modalPresenter?.walletManager = walletManager
+                DispatchQueue(label: C.walletQueue).async {
+                    walletManager.peerManager?.connect()
+                }
+                feeUpdater?.updateWalletFees()
+            }
+            exchangeUpdater?.refresh()
+            feeUpdater?.refresh()
+        }
+    }
+
     private func shouldRequireLogin() -> Bool {
         let then = UserDefaults.standard.double(forKey: timeSinceLastExitKey)
         let timeout = UserDefaults.standard.double(forKey: shouldRequireLoginTimeoutKey)
@@ -117,7 +132,6 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     }
 
     private func setupRootViewController() {
-
         let didSelectTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
             let transactionDetails = TransactionDetailsViewController(store: self.store, transactions: transactions, selectedIndex: selectedIndex)
             transactionDetails.modalPresentationStyle = .overFullScreen
@@ -125,13 +139,11 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             transactionDetails.modalPresentationCapturesStatusBarAppearance = true
             self.window.rootViewController?.present(transactionDetails, animated: true, completion: nil)
         }
-
         let accountViewController = AccountViewController(store: store, didSelectTransaction: didSelectTransaction)
-        window.rootViewController = accountViewController
         accountViewController.sendCallback = { self.store.perform(action: RootModalActions.Send()) }
         accountViewController.receiveCallback = { self.store.perform(action: RootModalActions.Receive()) }
         accountViewController.menuCallback = { self.store.perform(action: RootModalActions.Menu()) }
-        startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: accountViewController)
+        window.rootViewController = accountViewController
     }
 
     private func setupPresenters() {
