@@ -14,6 +14,8 @@ extension BRWallet {
         return transactions.flatMap{ $0 }.sorted {
                 if $0.pointee.timestamp == 0 {
                     return true
+                } else if $1.pointee.timestamp == 0 {
+                    return false
                 } else {
                     return $0.pointee.timestamp > $1.pointee.timestamp
                 }
