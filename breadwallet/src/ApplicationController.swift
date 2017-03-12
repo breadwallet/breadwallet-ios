@@ -140,9 +140,9 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             self.window.rootViewController?.present(transactionDetails, animated: true, completion: nil)
         }
         let accountViewController = AccountViewController(store: store, didSelectTransaction: didSelectTransaction)
-        accountViewController.sendCallback = { self.store.perform(action: RootModalActions.Send()) }
-        accountViewController.receiveCallback = { self.store.perform(action: RootModalActions.Receive()) }
-        accountViewController.menuCallback = { self.store.perform(action: RootModalActions.Menu()) }
+        accountViewController.sendCallback = { self.store.perform(action: RootModalActions.Present(modal: .send)) }
+        accountViewController.receiveCallback = { self.store.perform(action: RootModalActions.Present(modal: .receive)) }
+        accountViewController.menuCallback = { self.store.perform(action: RootModalActions.Present(modal: .menu)) }
         window.rootViewController = accountViewController
     }
 

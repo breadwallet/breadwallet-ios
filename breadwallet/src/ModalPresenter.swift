@@ -66,7 +66,7 @@ class ModalPresenter : Subscriber {
         vc.modalPresentationCapturesStatusBarAppearance = true
         configuration?(vc)
         presentingViewController?.present(vc, animated: true, completion: {
-            self.store.perform(action: RootModalActions.Reset())
+            self.store.perform(action: RootModalActions.Present(modal: .none))
         })
     }
 
@@ -142,6 +142,8 @@ class ModalPresenter : Subscriber {
             return nil //The scan view needs a custom presentation
         case .loginAddress:
             return receiveView(isRequestAmountVisible: false)
+        case .manageWallet:
+            return ModalViewController(childViewController: ManageWalletViewController())
         }
     }
 
@@ -163,7 +165,7 @@ class ModalPresenter : Subscriber {
     private func presentLoginScan() {
         guard let parent = presentingViewController else { return }
         let present = presentScan(parent: parent)
-        store.perform(action: RootModalActions.Reset())
+        store.perform(action: RootModalActions.Present(modal: .none))
         present({ address in
             if address != nil {
                 self.presentModal(.send, configuration: { modal in

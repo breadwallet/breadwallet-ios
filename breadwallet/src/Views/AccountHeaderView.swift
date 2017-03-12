@@ -54,7 +54,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         manage.setTitle("MANAGE", for: .normal)
         manage.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17.0)
         manage.tintColor = .white
-
+        manage.tap = {
+            self.store.perform(action: RootModalActions.Present(modal: .manageWallet))
+        }
         primaryBalance.textColor = .white
         primaryBalance.font = UIFont.customBody(size: 26.0)
 

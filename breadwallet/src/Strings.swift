@@ -102,4 +102,10 @@ enum S {
         static let subheader = NSLocalizedString("Enter the recovery phrase associated with the wallet you want to recover.", comment: "Recover wallet sub-header")
         static let invalid = NSLocalizedString("The phrase you entered is invalid. Please double-check each word and try again.", comment: "Invalid phrase message")
     }
+
+    enum ManageWallet {
+        static let title = NSLocalizedString("Manage Wallet", comment: "Manage wallet modal title[")
+        static let textFieldLabel = NSLocalizedString("Wallet Name", comment: "Change Wallet name textfield label")
+        static let description = NSLocalizedString("Your wallet name only appears in your account transaction history and cannot be seen by anyone you pay or receive money from.\n\nYou created your wallet on", comment: "Manage wallet description text")
+    }
 }

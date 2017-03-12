@@ -128,28 +128,11 @@ struct PaperPhrase {
 
 //MARK: - Root Modals
 struct RootModalActions {
-    struct Send: Action {
-        let reduce: Reducer = { $0.rootModal(.send) }
-    }
-
-    struct Receive: Action {
-        let reduce: Reducer = { $0.rootModal(.receive) }
-    }
-
-    struct Menu: Action {
-        let reduce: Reducer = { $0.rootModal(.menu) }
-    }
-
-    struct LoginAddress: Action {
-        let reduce: Reducer = { $0.rootModal(.loginAddress) }
-    }
-
-    struct LoginScan: Action {
-        let reduce: Reducer = { $0.rootModal(.loginScan) }
-    }
-
-    struct Reset: Action {
-        let reduce: Reducer = { $0.rootModal(.none) }
+    struct Present: Action {
+        let reduce: Reducer
+        init(modal: RootModal) {
+            reduce = { $0.rootModal(modal) }
+        }
     }
 }
 
