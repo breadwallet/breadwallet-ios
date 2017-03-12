@@ -228,11 +228,11 @@ class LoginViewController : UIViewController {
     }
 
     @objc func addressTapped() {
-        store.perform(action: RootModalActions.LoginAddress())
+        store.perform(action: RootModalActions.Present(modal: .loginAddress))
     }
 
     @objc func scanTapped() {
-        store.perform(action: RootModalActions.LoginScan())
+        store.perform(action: RootModalActions.Present(modal: .loginScan))
     }
 
     private func lockIfNeeded() {
