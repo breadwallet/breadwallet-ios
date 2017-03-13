@@ -343,7 +343,11 @@ extension WalletManager : WalletAuthenticator {
     var apiAuthKey: String? {
         return autoreleasepool {
             do {
-                if let apiKey: String? = try keychainItem(key: keychainKey.apiAuthKey) { return apiKey }
+                if let apiKey: String? = try? keychainItem(key: keychainKey.apiAuthKey) {
+                    if apiKey != nil {
+                        return apiKey
+                    }
+                }
                 var key = BRKey()
                 var seed = UInt512()
                 guard let phrase: String = try keychainItem(key: keychainKey.mnemonic) else { return nil }
@@ -359,7 +363,10 @@ extension WalletManager : WalletAuthenticator {
                 try setKeychainItem(key: keychainKey.apiAuthKey, item: privKey)
                 return privKey
             }
-            catch { return nil }
+            catch let error {
+                print("apiAuthKey error: \(error)")
+                return nil
+            }
         }
     }
 

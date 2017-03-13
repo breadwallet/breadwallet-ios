@@ -143,7 +143,7 @@ class ModalPresenter : Subscriber {
         case .loginAddress:
             return receiveView(isRequestAmountVisible: false)
         case .manageWallet:
-            return ModalViewController(childViewController: ManageWalletViewController())
+            return ModalViewController(childViewController: ManageWalletViewController(store: store))
         }
     }
 

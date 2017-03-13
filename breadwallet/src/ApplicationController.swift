@@ -27,6 +27,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private var exchangeUpdater: ExchangeUpdater?
     private var feeUpdater: FeeUpdater?
     private let transitionDelegate: ModalTransitionDelegate
+    private var kvStoreCoordinator: KVStoreCoordinator?
 
     init() {
         transitionDelegate = ModalTransitionDelegate(store: store, type: .transactionDetail)
@@ -97,6 +98,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                 addWalletCreationListener()
                 store.perform(action: ShowStartFlow())
             } else {
+                initKVStoreCoordinator()
                 if shouldRequireLogin() {
                     store.perform(action: RequireLogin())
                 }
@@ -159,7 +161,16 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                                 self.modalPresenter?.walletManager = self.walletManager
                                 self.feeUpdater?.updateWalletFees()
                                 self.feeUpdater?.refresh()
+                                self.initKVStoreCoordinator()
                             }
         })
+    }
+
+    private func initKVStoreCoordinator() {
+        guard let kvStore = apiClient?.kv else { return }
+        guard kvStoreCoordinator == nil else { return }
+        kvStoreCoordinator = KVStoreCoordinator(store: store, kvStore: kvStore)
+        kvStoreCoordinator?.retreiveStoredWalletName()
+        kvStoreCoordinator?.listenForWalletChanges()
     }
 }
