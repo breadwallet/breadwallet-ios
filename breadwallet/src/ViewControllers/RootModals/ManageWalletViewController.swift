@@ -8,17 +8,36 @@
 
 import UIKit
 
-class ManageWalletViewController : UIViewController {
+class ManageWalletViewController : UIViewController, ModalPresentable, Subscriber {
 
+    var parentView: UIView? //ModalPresentable
     private let textFieldLabel = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let textField = UITextField()
     private let separator = UIView(color: .secondaryShadow)
     fileprivate let body = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
+    private let store: Store
+
+    init(store: Store) {
+        self.store = store
+        super.init(nibName: nil, bundle: nil)
+    }
 
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
         setData()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        saveWalletName()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+        store.unsubscribe(self)
     }
 
     private func addSubviews() {
@@ -52,9 +71,51 @@ class ManageWalletViewController : UIViewController {
         view.backgroundColor = .white
         textField.textColor = .darkText
         textField.font = .customBody(size: 14.0)
+        textField.returnKeyType = .done
         textFieldLabel.text = S.ManageWallet.textFieldLabel
-        textField.text = "My Bread"
-        body.text = "\(S.ManageWallet.description) February 21, 2014"
+        textField.delegate = self
+        store.subscribe(self, selector: { $0.walletState.name != $1.walletState.name }, callback: {
+            self.textField.text = $0.walletState.name
+            self.store.unsubscribe(self)
+        })
+        body.text = "\(S.ManageWallet.description) February 21, 2014" //TODO - use real creation date
+    }
+
+    //MARK: - Keyboard Notifications
+    @objc private func keyboardWillShow(notification: Notification) {
+        copyKeyboardChangeAnimation(notification: notification)
+    }
+
+    @objc private func keyboardWillHide(notification: Notification) {
+        copyKeyboardChangeAnimation(notification: notification)
+    }
+
+    private func copyKeyboardChangeAnimation(notification: Notification) {
+        guard let info = KeyboardNotificationInfo(notification.userInfo) else { return }
+        UIView.animate(withDuration: info.animationDuration, delay: 0, options: info.animationOptions, animations: {
+            guard let parentView = self.parentView else { return }
+            parentView.frame = parentView.frame.offsetBy(dx: 0, dy: info.deltaY)
+        }, completion: nil)
+    }
+
+    func saveWalletName() {
+        guard let name = textField.text else { return }
+        store.perform(action: WalletChange.setWalletName(name))
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension ManageWalletViewController : UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        saveWalletName()
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
 

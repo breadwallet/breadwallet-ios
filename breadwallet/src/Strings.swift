@@ -108,4 +108,8 @@ enum S {
         static let textFieldLabel = NSLocalizedString("Wallet Name", comment: "Change Wallet name textfield label")
         static let description = NSLocalizedString("Your wallet name only appears in your account transaction history and cannot be seen by anyone you pay or receive money from.\n\nYou created your wallet on", comment: "Manage wallet description text")
     }
+
+    enum AccountHeader {
+        static let defaultWalletName = NSLocalizedString("My Bread", comment: "Default wallet name")
+    }
 }
