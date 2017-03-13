@@ -48,7 +48,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     private func setData() {
-        name.text = "My Bread"
+        store.subscribe(self, selector: { $0.walletState.name != $1.walletState.name }, callback: {
+            self.name.text = $0.walletState.name
+        })
         name.textColor = .white
 
         manage.setTitle("MANAGE", for: .normal)
