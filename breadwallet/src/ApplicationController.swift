@@ -59,12 +59,18 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         }
         exchangeUpdater?.refresh()
         feeUpdater?.refresh()
+        if let kvStore = apiClient?.kv {
+            kvStore.sync { print("KV finished syncing. err: \($0)") }
+        }
     }
 
     func didEnterBackground() {
         //Save the backgrounding time if the user is logged in
         if !store.state.isLoginRequired {
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
+        }
+        if let kvStore = apiClient?.kv {
+            kvStore.sync { print("KV finished syncing. err: \($0)") }
         }
     }
 
@@ -110,6 +116,9 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             }
             exchangeUpdater?.refresh()
             feeUpdater?.refresh()
+            if let kvStore = apiClient?.kv {
+                kvStore.sync { print("KV finished syncing. err: \($0)") }
+            }
         }
     }
 
