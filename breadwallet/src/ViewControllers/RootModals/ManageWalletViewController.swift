@@ -16,6 +16,7 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
     private let separator = UIView(color: .secondaryShadow)
     fileprivate let body = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
     private let store: Store
+    fileprivate let maxWalletNameLength = 20
 
     init(store: Store) {
         self.store = store
@@ -99,7 +100,10 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
     }
 
     func saveWalletName() {
-        guard let name = textField.text else { return }
+        guard var name = textField.text else { return }
+        if name.utf8.count > maxWalletNameLength {
+            name = name.substring(to: name.index(name.startIndex, offsetBy: maxWalletNameLength))
+        }
         store.perform(action: WalletChange.setWalletName(name))
     }
 
@@ -116,6 +120,15 @@ extension ManageWalletViewController : UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text else { return true }
+        if text.utf8.count + string.utf8.count > maxWalletNameLength {
+            return false
+        } else {
+            return true
+        }
     }
 }
 
