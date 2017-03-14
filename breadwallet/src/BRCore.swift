@@ -69,7 +69,7 @@ public let secureAllocator: CFAllocator = {
     return CFAllocatorCreate(kCFAllocatorDefault, &context).takeRetainedValue()
 }()
 
-extension BRAddress : CustomStringConvertible {
+extension BRAddress: CustomStringConvertible {
     public var description: String {
         return String(cString: UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self))
     }
@@ -106,10 +106,6 @@ extension BRTransaction {
     
     var swiftOutputs: [BRTxOutput] {
         return [BRTxOutput](UnsafeBufferPointer(start: self.outputs, count: self.outCount))
-    }
-
-    var swiftHash: String {
-        return String(cString: UnsafeRawPointer([self.txHash]).assumingMemoryBound(to: CChar.self))
     }
 }
 
@@ -408,13 +404,14 @@ class BRPeerManager {
     }
 }
 
-extension BRMasterPubKey: Equatable {
-    static public func == (l: BRMasterPubKey, r: BRMasterPubKey) -> Bool {
-        return l.fingerPrint == r.fingerPrint && l.chainCode == r.chainCode && l.pubKey == r.pubKey
-    }
-    
-    static public func != (l: BRMasterPubKey, r: BRMasterPubKey) -> Bool {
-        return l.fingerPrint != r.fingerPrint || l.chainCode != r.chainCode || l.pubKey != r.pubKey
+extension UInt256 : CustomStringConvertible {
+    public var description: String {
+        return String(format:"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x" +
+                             "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+                      self.u8.0, self.u8.1, self.u8.2, self.u8.3, self.u8.4, self.u8.5, self.u8.6, self.u8.7,
+                      self.u8.8, self.u8.9, self.u8.10, self.u8.11, self.u8.12, self.u8.13, self.u8.14, self.u8.15,
+                      self.u8.16, self.u8.17, self.u8.18, self.u8.19, self.u8.20, self.u8.21, self.u8.22, self.u8.23,
+                      self.u8.24, self.u8.25, self.u8.26, self.u8.27, self.u8.28, self.u8.29, self.u8.30, self.u8.31)
     }
 }
 
@@ -455,6 +452,16 @@ extension UInt512: Equatable {
     
     static public func != (l: UInt512, r: UInt512) -> Bool {
         return l.u64 != r.u64
+    }
+}
+
+extension BRMasterPubKey: Equatable {
+    static public func == (l: BRMasterPubKey, r: BRMasterPubKey) -> Bool {
+        return l.fingerPrint == r.fingerPrint && l.chainCode == r.chainCode && l.pubKey == r.pubKey
+    }
+    
+    static public func != (l: BRMasterPubKey, r: BRMasterPubKey) -> Bool {
+        return l.fingerPrint != r.fingerPrint || l.chainCode != r.chainCode || l.pubKey != r.pubKey
     }
 }
 
