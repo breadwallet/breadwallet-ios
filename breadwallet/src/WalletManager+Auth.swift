@@ -65,7 +65,7 @@ extension WalletManager : WalletAuthenticator {
             return
         }
         
-        var earliestKeyTime = Double(BIP39_CREATION_TIME) - NSTimeIntervalSince1970
+        var earliestKeyTime = TimeInterval(BIP39_CREATION_TIME) - NSTimeIntervalSince1970
         if let creationTime: Data = try keychainItem(key: keychainKey.creationTime),
             creationTime.count == MemoryLayout<TimeInterval>.stride {
             creationTime.withUnsafeBytes({ earliestKeyTime = $0.pointee })
