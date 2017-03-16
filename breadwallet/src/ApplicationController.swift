@@ -144,7 +144,8 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
 
     private func setupRootViewController() {
         let didSelectTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
-            let transactionDetails = TransactionDetailsViewController(store: self.store, transactions: transactions, selectedIndex: selectedIndex)
+            guard let kvStore = self.apiClient?.kv else { return }
+            let transactionDetails = TransactionDetailsViewController(store: self.store, transactions: transactions, selectedIndex: selectedIndex, kvStore: kvStore)
             transactionDetails.modalPresentationStyle = .overFullScreen
             transactionDetails.transitioningDelegate = self.transitionDelegate
             transactionDetails.modalPresentationCapturesStatusBarAppearance = true
@@ -178,6 +179,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private func initKVStoreCoordinator() {
         guard let kvStore = apiClient?.kv else { return }
         guard kvStoreCoordinator == nil else { return }
+        walletCoordinator?.kvStore = kvStore
         kvStoreCoordinator = KVStoreCoordinator(store: store, kvStore: kvStore)
         kvStoreCoordinator?.retreiveStoredWalletName()
         kvStoreCoordinator?.listenForWalletChanges()

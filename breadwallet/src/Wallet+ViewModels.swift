@@ -10,7 +10,7 @@ import Foundation
 import BRCore
 
 extension BRWallet {
-    func makeTransactionViewModels(blockHeight: UInt32) -> [Transaction] {
+    func makeTransactionViewModels(blockHeight: UInt32, kvStore: BRReplicatedKVStore?) -> [Transaction] {
         return transactions.flatMap{ $0 }.sorted {
                 if $0.pointee.timestamp == 0 {
                     return true
@@ -20,7 +20,7 @@ extension BRWallet {
                     return $0.pointee.timestamp > $1.pointee.timestamp
                 }
             }.map {
-                return Transaction($0, wallet: self, blockHeight: blockHeight)
+                return Transaction($0, wallet: self, blockHeight: blockHeight, kvStore: kvStore)
             }
     }
 }

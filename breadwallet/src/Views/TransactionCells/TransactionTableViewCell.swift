@@ -37,7 +37,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         self.transaction = transaction
         self.transactionLabel.attributedText = transaction.descriptionString(currency: currency, rate: rate)
         status.text = transaction.status
-        comment.text = "Comment will go here"
+        comment.text = transaction.comment
         timestamp.text = transaction.timeSince
     }
 
