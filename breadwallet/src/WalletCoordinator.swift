@@ -14,6 +14,8 @@ private let progressUpdateInterval: TimeInterval = 0.5
 
 class WalletCoordinator {
 
+    var kvStore: BRReplicatedKVStore?
+
     private let walletManager: WalletManager
     private let store: Store
     private var progressTimer: Timer?
@@ -73,7 +75,7 @@ class WalletCoordinator {
 
     private func updateTransactions() {
         guard let blockHeight = self.walletManager.peerManager?.lastBlockHeight else { return }
-        guard let transactions = self.walletManager.wallet?.makeTransactionViewModels(blockHeight: blockHeight) else { return }
+        guard let transactions = self.walletManager.wallet?.makeTransactionViewModels(blockHeight: blockHeight, kvStore: kvStore) else { return }
         if transactions.count > 0 {
             self.store.perform(action: WalletChange.setTransactions(transactions))
         }
