@@ -21,10 +21,12 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         amount.text = "\(transaction.direction.rawValue) \(transaction.amountDescription(currency: currency, rate: rate))"
         address.text = "\(transaction.direction.preposition) an address"
         status.text = transaction.longStatus
-        comments.text = "Comments will go here"
+        comment.text = transaction.comment
         amountDetails.text = transaction.amountDetails(currency: currency, rate: rate)
         addressHeader.text = "To" //Should this be from sometimes?
         fullAddress.text = transaction.toAddress ?? ""
+        self.transaction = transaction
+        self.rate = rate
     }
 
     var closeCallback: (() -> Void)? {
@@ -32,6 +34,10 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
             header.closeCallback = closeCallback
         }
     }
+
+    var kvStore: BRReplicatedKVStore?
+    var transaction: Transaction?
+    var rate: Rate?
 
     //MARK: - Private
     private func setup() {
@@ -44,7 +50,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         contentView.addSubview(statusHeader)
         contentView.addSubview(status)
         contentView.addSubview(commentsHeader)
-        contentView.addSubview(comments)
+        contentView.addSubview(comment)
         contentView.addSubview(amountHeader)
         contentView.addSubview(amountDetails)
         contentView.addSubview(addressHeader)
@@ -85,14 +91,15 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
             commentsHeader.topAnchor.constraint(equalTo: separators[1].bottomAnchor, constant: C.padding[2]),
             commentsHeader.leadingAnchor.constraint(equalTo: separators[1].leadingAnchor),
             commentsHeader.trailingAnchor.constraint(equalTo: separators[1].trailingAnchor) ])
-        comments.constrain([
-            comments.topAnchor.constraint(equalTo: commentsHeader.bottomAnchor),
-            comments.leadingAnchor.constraint(equalTo: commentsHeader.leadingAnchor),
-            comments.trailingAnchor.constraint(equalTo: commentsHeader.trailingAnchor) ])
+        comment.constrain([
+            comment.topAnchor.constraint(equalTo: commentsHeader.bottomAnchor),
+            comment.leadingAnchor.constraint(equalTo: commentsHeader.leadingAnchor),
+            comment.trailingAnchor.constraint(equalTo: commentsHeader.trailingAnchor),
+            comment.heightAnchor.constraint(greaterThanOrEqualToConstant: 44.0) ])
         separators[2].constrain([
-            separators[2].topAnchor.constraint(equalTo: comments.bottomAnchor, constant: C.padding[2]),
-            separators[2].leadingAnchor.constraint(equalTo: comments.leadingAnchor),
-            separators[2].trailingAnchor.constraint(equalTo: comments.trailingAnchor),
+            separators[2].topAnchor.constraint(equalTo: comment.bottomAnchor, constant: C.padding[2]),
+            separators[2].leadingAnchor.constraint(equalTo: comment.leadingAnchor),
+            separators[2].trailingAnchor.constraint(equalTo: comment.trailingAnchor),
             separators[2].heightAnchor.constraint(equalToConstant: 1.0) ])
         amountHeader.constrain([
             amountHeader.topAnchor.constraint(equalTo: separators[2].bottomAnchor, constant: C.padding[2]),
@@ -128,6 +135,11 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         fullAddress.numberOfLines = 0
         fullAddress.lineBreakMode = .byCharWrapping
 
+        comment.font = .customBody(size: 13.0)
+        comment.textColor = .darkText
+        comment.contentVerticalAlignment = .top
+        comment.returnKeyType = .done
+        comment.delegate = self
     }
 
     override func layoutSubviews() {
@@ -135,6 +147,29 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         let maskLayer = CAShapeLayer()
         maskLayer.path = path
         layer.mask = maskLayer
+    }
+
+    fileprivate func saveComment(comment: String) {
+        guard let kvStore = self.kvStore else { return }
+        if let metaData = transaction?.metaData {
+            metaData.comment = comment
+            do {
+                let _ = try kvStore.set(metaData)
+            } catch let error {
+                print("could not update metadata: \(error)")
+            }
+        } else {
+            guard let rate = self.rate else { return }
+            guard let transaction = self.transaction else { return }
+            let newMetaData = BRTxMetadataObject(transaction: transaction.rawTransaction, exchangeRate: rate.rate, exchangeRateCurrency: rate.code, feeRate: 0.0, deviceId: getDeviceId())
+            newMetaData.comment = comment
+            do {
+                let _ = try kvStore.set(newMetaData)
+            } catch let error {
+                print("could not update metadata: \(error)")
+            }
+        }
+        NotificationCenter.default.post(name: .WalletTxStatusUpdateNotification, object: nil)
     }
 
     private let header = ModalHeaderView(title: S.TransactionDetails.title, isFaqHidden: false, style: .dark)
@@ -145,7 +180,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     private let statusHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let status = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
     private let commentsHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let comments = UILabel(font: .customBody(size: 13.0), color: .darkText)
+    private let comment = UITextField()
     private let amountHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let amountDetails = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
     private let addressHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
@@ -154,4 +189,18 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+extension TransactionDetailCollectionViewCell : UITextFieldDelegate {
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        guard let text = textField.text else { return }
+        saveComment(comment: text)
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+
 }

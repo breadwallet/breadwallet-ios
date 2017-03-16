@@ -32,7 +32,7 @@ import BRCore
 
 
 @objc open class BRTxMetadataObject: BRKVStoreObject, BRCoding {
-    var classVersion: Int = 1
+    var classVersion: Int = 2
     
     var blockHeight: Int = 0
     var exchangeRate: Double = 0
@@ -41,7 +41,8 @@ import BRCore
     var size: Int = 0
     var created: Date = Date.zeroValue()
     var deviceId: String = ""
-    
+    var comment = ""
+
     required public init?(coder decoder: BRCoder) {
         classVersion = decoder.decode("classVersion")
         if classVersion == Int.zeroValue() {
@@ -55,6 +56,7 @@ import BRCore
         size = decoder.decode("s")
         deviceId = decoder.decode("dId")
         created = decoder.decode("c")
+        comment = decoder.decode("comment")
         super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
     }
     
@@ -67,6 +69,7 @@ import BRCore
         coder.encode(size, key: "s")
         coder.encode(created, key: "c")
         coder.encode(deviceId, key: "dId")
+        coder.encode(comment, key: "comment")
     }
     
     /// Find metadata object based on the txHash
@@ -75,15 +78,32 @@ import BRCore
         var date: Date
         var del: Bool
         var bytes: [UInt8]
+
+        var shortKeyError: Any?
+        var longKeyError: Any?
         print("find \(txHash.txKey)")
+
         do {
             (ver, date, del, bytes) = try store.get(txHash.txKey)
+            let bytesDat = Data(bytes: &bytes, count: bytes.count)
+            super.init(key: txHash.txKey, version: ver, lastModified: date, deleted: del, data: bytesDat)
+            return
         } catch let e {
-            print("Unable to initialize BRTxMetadataObject: \(e)")
-            return nil
+            longKeyError = e
         }
-        let bytesDat = Data(bytes: &bytes, count: bytes.count)
-        super.init(key: txHash.txKey, version: ver, lastModified: date, deleted: del, data: bytesDat)
+
+        let shortKey = txHash.txKey.substring(to: txHash.txKey.index(txHash.txKey.startIndex, offsetBy: 20))
+        do {
+            (ver, date, del, bytes) = try store.get(shortKey)
+            let bytesDat = Data(bytes: &bytes, count: bytes.count)
+            super.init(key: txHash.txKey, version: ver, lastModified: date, deleted: del, data: bytesDat)
+            return
+        } catch let e {
+            shortKeyError = e
+        }
+
+        print("Unable to initialize BRTxMetadataObject: \(shortKeyError) : \(longKeyError)")
+        return nil
     }
     
     /// Create new transaction metadata
@@ -117,6 +137,7 @@ import BRCore
         size =                  s.size
         created =               s.created
         deviceId =              s.deviceId
+        comment =               s.comment
     }
 }
 

@@ -11,10 +11,11 @@ import UIKit
 class TransactionDetailsViewController : UICollectionViewController, Subscriber {
 
     //MARK: - Public
-    init(store: Store, transactions: [Transaction], selectedIndex: Int) {
+    init(store: Store, transactions: [Transaction], selectedIndex: Int, kvStore: BRReplicatedKVStore) {
         self.store = store
         self.transactions = transactions
         self.selectedIndex = selectedIndex
+        self.kvStore = kvStore
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: UIScreen.main.bounds.width-C.padding[4], height: UIScreen.main.bounds.height - C.padding[1])
         layout.sectionInset = UIEdgeInsetsMake(C.padding[1], 0, 0, 0)
@@ -27,6 +28,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
     fileprivate let store: Store
     fileprivate var transactions: [Transaction]
     fileprivate let selectedIndex: Int
+    fileprivate let kvStore: BRReplicatedKVStore
     fileprivate let cellIdentifier = "CellIdentifier"
     fileprivate var currency: Currency = .bitcoin
     fileprivate var rate: Rate?
@@ -137,6 +139,7 @@ extension TransactionDetailsViewController {
             }
             self?.dismiss(animated: true, completion: nil)
         }
+        transactionDetailCell.kvStore = kvStore
         return transactionDetailCell
     }
 }
