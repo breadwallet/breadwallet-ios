@@ -516,7 +516,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         while sqlite3_step(sql) == SQLITE_ROW {
             timestamp = UInt32(bitPattern: sqlite3_column_int(sql, 0))
         }
-        return timestamp
+        return max(timestamp, 1231006505) //Defaults to genesis block timestamp
     }
     
     private func loadBlocks() -> [BRBlockRef?] {
