@@ -43,6 +43,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     private let blurView = {
         return UIVisualEffectView(effect: UIBlurEffect(style: .light))
     }()
+    private var isLoginRequired = false
 
     override func viewDidLoad() {
         addTransactionsView()
@@ -77,6 +78,9 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
                         callback: { state in
                             self.headerView.balance = state.walletState.balance
         })
+
+        store.subscribe(self, selector: { $0.isLoginRequired != $1.isLoginRequired }, callback: { self.isLoginRequired = $0.isLoginRequired })
+
         addAppLifecycleNotificationEvents()
     }
 
@@ -136,9 +140,11 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
             })
         }
         NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { note in
-            self.blurView.alpha = 1.0
-            self.view.addSubview(self.blurView)
-            self.blurView.constrain(toSuperviewEdges: nil)
+            if !self.isLoginRequired {
+                self.blurView.alpha = 1.0
+                self.view.addSubview(self.blurView)
+                self.blurView.constrain(toSuperviewEdges: nil)
+            }
         }
     }
 
