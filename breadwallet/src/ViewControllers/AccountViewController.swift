@@ -40,6 +40,9 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     private let transactionsTableView: TransactionsTableViewController
     private let footerHeight: CGFloat = 56.0
     private var notificationViewTop: NSLayoutConstraint?
+    private let blurView = {
+        return UIVisualEffectView(effect: UIBlurEffect(style: .light))
+    }()
 
     override func viewDidLoad() {
         addTransactionsView()
@@ -74,6 +77,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
                         callback: { state in
                             self.headerView.balance = state.walletState.balance
         })
+        addAppLifecycleNotificationEvents()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -121,6 +125,21 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
             transactionsTableView.tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight + C.padding[2], left: 0, bottom: footerHeight + C.padding[2], right: 0)
             transactionsTableView.tableView.scrollIndicatorInsets = UIEdgeInsets(top: accountHeaderHeight, left: 0, bottom: footerHeight, right: 0)
         })
+    }
+
+    private func addAppLifecycleNotificationEvents() {
+        NotificationCenter.default.addObserver(forName: .UIApplicationDidBecomeActive, object: nil, queue: nil) { note in
+            UIView.animate(withDuration: 0.1, animations: {
+                self.blurView.alpha = 0.0
+            }, completion: { _ in
+                self.blurView.removeFromSuperview()
+            })
+        }
+        NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { note in
+            self.blurView.alpha = 1.0
+            self.view.addSubview(self.blurView)
+            self.blurView.constrain(toSuperviewEdges: nil)
+        }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
