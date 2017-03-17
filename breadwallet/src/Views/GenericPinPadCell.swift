@@ -12,7 +12,6 @@ class GenericPinPadCell : UICollectionViewCell {
 
     var text: String? {
         didSet {
-            setAppearance()
             if text == deleteKeyIdentifier {
                 imageView.image = #imageLiteral(resourceName: "Delete")
                 topLabel.text = ""
@@ -22,6 +21,7 @@ class GenericPinPadCell : UICollectionViewCell {
                 topLabel.text = text
                 centerLabel.text = text
             }
+            setAppearance()
             setSublabel()
         }
     }
