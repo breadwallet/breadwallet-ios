@@ -70,10 +70,20 @@ class PinPadViewController : UICollectionViewController {
         switch style {
         case .white:
             collectionView?.backgroundColor = .white
-            collectionView?.register(WhitePinPadCell.self, forCellWithReuseIdentifier: cellIdentifier)
+            switch keyboardType {
+            case .decimalPad:
+                collectionView?.register(WhiteDecimalPad.self, forCellWithReuseIdentifier: cellIdentifier)
+            case .pinPad:
+                collectionView?.register(WhiteNumberPad.self, forCellWithReuseIdentifier: cellIdentifier)
+            }
         case .clear:
             collectionView?.backgroundColor = .clear
-            collectionView?.register(ClearPinPadCell.self, forCellWithReuseIdentifier: cellIdentifier)
+
+            if keyboardType == .pinPad {
+                collectionView?.register(ClearNumberPad.self, forCellWithReuseIdentifier: cellIdentifier)
+            } else {
+                assert(false, "Invalid cell")
+            }
         }
         collectionView?.delegate = self
         collectionView?.dataSource = self
@@ -91,7 +101,7 @@ class PinPadViewController : UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        guard let pinPadCell = item as? PinPadCell else { return item }
+        guard let pinPadCell = item as? GenericPinPadCell else { return item }
         pinPadCell.text = items[indexPath.item]
         return pinPadCell
     }
