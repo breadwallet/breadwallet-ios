@@ -164,10 +164,9 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
 
     private func addWalletCreationListener() {
         store.subscribe(self,
-                        selector: { $0.alert != $1.alert},
+                        selector: { $0.pinCreationStep != $1.pinCreationStep },
                         callback: {
-                            guard let alert = $0.alert else { return }
-                            if case .pinSet = alert {
+                            if case .saveSuccess = $0.pinCreationStep {
                                 self.modalPresenter?.walletManager = self.walletManager
                                 self.feeUpdater?.updateWalletFees()
                                 self.feeUpdater?.refresh()

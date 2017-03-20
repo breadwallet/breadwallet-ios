@@ -213,13 +213,13 @@ enum ExchangeRates {
 
 //MARK: - Alerts
 enum Alert {
-    struct show : Action {
+    struct Show : Action {
         let reduce: Reducer
         init(_ type: AlertType) {
             reduce = { $0.clone(alert: type) }
         }
     }
-    struct hide : Action {
+    struct Hide : Action {
         let reduce: Reducer = { $0.clone(alert: nil) }
     }
 }

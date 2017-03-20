@@ -73,7 +73,7 @@ class ModalPresenter : Subscriber {
     private func handleAlertChange(_ type: AlertType?) {
         guard let type = type else { return }
         presentAlert(type, completion: {
-            self.store.perform(action: Alert.hide())
+            self.store.perform(action: Alert.Hide())
         })
     }
 
