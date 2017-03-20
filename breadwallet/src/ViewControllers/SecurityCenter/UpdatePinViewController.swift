@@ -182,7 +182,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
 
         if walletManager.forceSetPin(newPin: newPin, seedPhrase: seedPhrase) {
             setPinSuccess?()
-            store.perform(action: Alert.show(.pinSet))
+            store.perform(action: Alert.Show(.pinSet))
             store.lazySubscribe(self,
                             selector: { $0.alert != $1.alert && $1.alert == nil },
                             callback: { _ in
