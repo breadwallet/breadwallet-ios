@@ -31,8 +31,10 @@ class WalletCreator : Subscriber {
                 if walletManager.forceSetPin(newPin: pin, seedPhrase: phrase) {
                     DispatchQueue(label: C.walletQueue).async {
                         self.walletManager.peerManager?.connect()
+                        DispatchQueue.main.async {
+                            self.store.perform(action: PinCreation.SaveSuccess())
+                        }
                     }
-                    store.perform(action: PinCreation.SaveSuccess())
                 }
         }
     }
