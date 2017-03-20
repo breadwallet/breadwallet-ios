@@ -64,7 +64,11 @@ class ScanViewController : UIViewController {
             NSLayoutConstraint(item: guide, attribute: .width, relatedBy: .equal, toItem: guide, attribute: .height, multiplier: 1.0, constant: 0.0) ])
         guide.transform = CGAffineTransform(scaleX: 0.0, y: 0.0)
 
-        close.addTarget(self, action: #selector(ScanViewController.closeTapped), for: .touchUpInside)
+        close.tap = {
+            self.dismiss(animated: true, completion: {
+                self.completion(nil)
+            })
+        }
 
         addCameraPreview()
     }
@@ -77,7 +81,7 @@ class ScanViewController : UIViewController {
     }
 
     private func addCameraPreview() {
-        let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+        guard let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) else { return }
         guard let input = try? AVCaptureDeviceInput(device: device) else { return }
         session.addInput(input)
         guard let previewLayer = AVCaptureVideoPreviewLayer(session: session) else { assert(false); return }
@@ -99,16 +103,22 @@ class ScanViewController : UIViewController {
         DispatchQueue(label: "qrscanner").async {
             self.session.startRunning()
         }
+
+        if device.hasTorch {
+            flash.tap = {
+                do {
+                    try device.lockForConfiguration()
+                    device.torchMode = device.torchMode == .on ? .off : .on
+                    device.unlockForConfiguration()
+                } catch let error {
+                    print("Camera Torch error: \(error)")
+                }
+            }
+        }
     }
 
     override var prefersStatusBarHidden: Bool {
         return true
-    }
-
-    @objc private func closeTapped() {
-        dismiss(animated: true, completion: {
-            self.completion(nil)
-        })
     }
 
     required init?(coder aDecoder: NSCoder) {
