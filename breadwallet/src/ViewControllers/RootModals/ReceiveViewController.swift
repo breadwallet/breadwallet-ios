@@ -161,7 +161,7 @@ class ReceiveViewController: UIViewController {
     @objc private func addressTapped() {
         guard let text = address.text else { return }
         UIPasteboard.general.string = text
-        toggle(alertView: addressPopout, shouldAdjustPadding: false)
+        toggle(alertView: addressPopout, shouldAdjustPadding: false, shouldShrinkAfter: true)
         if sharePopout.isExpanded {
             toggle(alertView: sharePopout, shouldAdjustPadding: true)
         }
@@ -175,7 +175,7 @@ class ReceiveViewController: UIViewController {
         presentText?(address.text!, qrCode.image!)
     }
 
-    private func toggle(alertView: InViewAlert, shouldAdjustPadding: Bool) {
+    private func toggle(alertView: InViewAlert, shouldAdjustPadding: Bool, shouldShrinkAfter: Bool = false) {
         share.isEnabled = false
         address.isUserInteractionEnabled = false
 
@@ -207,6 +207,13 @@ class ReceiveViewController: UIViewController {
             self.share.isEnabled = true
             self.address.isUserInteractionEnabled = true
             alertView.contentView?.isHidden = false
+            if shouldShrinkAfter {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                    if alertView.isExpanded {
+                        self.toggle(alertView: alertView, shouldAdjustPadding: shouldAdjustPadding)
+                    }
+                })
+            }
         })
     }
     
