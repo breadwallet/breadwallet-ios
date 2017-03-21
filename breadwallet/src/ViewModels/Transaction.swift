@@ -20,6 +20,7 @@ class Transaction {
         self.kvStore = kvStore
         
         self.fee = wallet.feeForTx(tx) ?? 0
+
         let amountReceived = wallet.amountReceivedFromTx(tx)
         let amountSent = wallet.amountSentByTx(tx)
         if amountSent > 0 {
@@ -27,7 +28,7 @@ class Transaction {
             self.satoshis = amountSent - amountReceived - fee
         } else {
             self.direction = .received
-            self.satoshis = amountReceived - fee
+            self.satoshis = amountReceived
         }
         self.timestamp = Int(tx.pointee.timestamp)
 
