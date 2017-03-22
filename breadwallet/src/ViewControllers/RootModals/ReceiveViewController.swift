@@ -16,7 +16,7 @@ private let largeSharePadding: CGFloat = 20.0
 
 typealias PresentShare = (String, UIImage) -> Void
 
-class ReceiveViewController: UIViewController {
+class ReceiveViewController : UIViewController {
 
     //MARK - Public
     var presentEmail: PresentShare?
@@ -97,10 +97,12 @@ class ReceiveViewController: UIViewController {
             request.constraint(toBottom: border, constant: C.padding[3]),
             request.constraint(.leading, toView: view, constant: C.padding[2]),
             request.constraint(.trailing, toView: view, constant: -C.padding[2]),
-            request.constraint(.height, constant: C.Sizes.buttonHeight) ])
+            request.constraint(.height, constant: C.Sizes.buttonHeight),
+            request.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
     }
 
     private func setStyle() {
+        view.backgroundColor = .white
         address.text = wallet.receiveAddress
         address.textColor = .grayTextTint
         border.backgroundColor = .secondaryBorder
@@ -197,9 +199,6 @@ class ReceiveViewController: UIViewController {
                 let newPadding = self.sharePopout.isExpanded ? largeSharePadding : smallSharePadding
                 self.topSharePopoutConstraint?.constant = newPadding
             }
-            if let newFrame = self.parent?.view.frame.expandVertically(deltaY) {
-                self.parent?.view.frame = newFrame
-            }
             alertView.toggle()
             self.parent?.view.layoutIfNeeded()
         }, completion: { _ in
@@ -222,14 +221,9 @@ class ReceiveViewController: UIViewController {
     }
 }
 
-extension ReceiveViewController: ModalDisplayable {
+extension ReceiveViewController : ModalDisplayable {
     var modalTitle: String {
         return NSLocalizedString("Receive", comment: "Receive modal title")
-    }
-
-    var modalSize: CGSize {
-        let height: CGFloat = isRequestAmountVisible ? 410.0 : 410 - (C.padding[4] + C.Sizes.buttonHeight )
-        return CGSize(width: view.frame.width, height: height)
     }
 
     var isFaqHidden: Bool {

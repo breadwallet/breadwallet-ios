@@ -65,7 +65,8 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
         body.constrain([
             body.leadingAnchor.constraint(equalTo: separator.leadingAnchor),
             body.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: C.padding[2]),
-            body.trailingAnchor.constraint(equalTo: separator.trailingAnchor) ])
+            body.trailingAnchor.constraint(equalTo: separator.trailingAnchor),
+            body.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
     }
 
     private func setData() {
@@ -135,11 +136,6 @@ extension ManageWalletViewController : UITextFieldDelegate {
 extension ManageWalletViewController : ModalDisplayable {
     var modalTitle: String {
         return S.ManageWallet.title
-    }
-
-    var modalSize: CGSize {
-        view.layoutIfNeeded()
-        return CGSize(width: view.frame.width, height: body.frame.maxY + C.padding[4])
     }
 
     var isFaqHidden: Bool {
