@@ -10,7 +10,6 @@ import UIKit
 
 protocol ModalDisplayable {
     var modalTitle: String { get }
-    var modalSize: CGSize { get }
     var isFaqHidden: Bool { get }
 }
 

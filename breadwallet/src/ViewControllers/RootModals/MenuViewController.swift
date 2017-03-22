@@ -25,7 +25,6 @@ class MenuViewController : UIViewController {
     fileprivate let bottomPadding: CGFloat = 32.0
 
     override func viewDidLoad() {
-        super.viewDidLoad()
 
         var previousButton: UIView?
         buttons.forEach { button in
@@ -45,7 +44,10 @@ class MenuViewController : UIViewController {
             previousButton = button
         }
 
+        previousButton?.constrain([
+            previousButton?.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
 
+        view.backgroundColor = .white
     }
 
     @objc private func didTapButton(button: MenuButton) {
@@ -62,13 +64,9 @@ class MenuViewController : UIViewController {
     }
 }
 
-extension MenuViewController: ModalDisplayable {
+extension MenuViewController : ModalDisplayable {
     var modalTitle: String {
         return NSLocalizedString("Menu", comment: "Menu modal title")
-    }
-
-    var modalSize: CGSize {
-        return CGSize(width: view.bounds.width, height: CGFloat(buttons.count) * buttonHeight + bottomPadding)
     }
     
     var isFaqHidden: Bool {

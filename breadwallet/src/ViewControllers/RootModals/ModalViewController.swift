@@ -27,12 +27,9 @@ class ModalViewController : UIViewController {
     private let header: ModalHeaderView
 
     override func viewDidLoad() {
-        view.backgroundColor = .white
+        view.backgroundColor = .clear
         view.addSubview(header)
-        header.constrainTopCorners(sidePadding: 0, topPadding: 0)
-        header.constrain([
-                header.constraint(.height, constant: headerHeight)
-            ])
+
         header.closeCallback = {
             if let delegate = self.transitioningDelegate as? ModalTransitionDelegate {
                 delegate.reset()
@@ -44,18 +41,20 @@ class ModalViewController : UIViewController {
 
         addChildViewController(childViewController, layout: {
             childViewController.view?.constrain([
-                childViewController.view?.constraint(.top, toView: view, constant: headerHeight),
                 childViewController.view?.constraint(.leading, toView: view, constant: 0.0),
                 childViewController.view?.constraint(.trailing, toView: view, constant: 0.0),
                 childViewController.view?.constraint(.bottom, toView: view, constant: 0.0) ])
         })
 
+        header.constrain([
+            header.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            header.bottomAnchor.constraint(equalTo: childViewController.view.topAnchor),
+            header.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            header.heightAnchor.constraint(equalToConstant: headerHeight)])
+
         if var modalPresentable = childViewController as? ModalPresentable {
             modalPresentable.parentView = view
         }
-
-        let totalHeight = headerHeight + modalInfo.modalSize.height
-        view.frame = CGRect(x: 0, y: view.frame.height - totalHeight, width: view.frame.width, height: totalHeight)
 
     }
 
@@ -83,7 +82,7 @@ class ModalViewController : UIViewController {
         let path = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 6.0, height: 6.0)).cgPath
         let maskLayer = CAShapeLayer()
         maskLayer.path = path
-        view.layer.mask = maskLayer
+        header.layer.mask = maskLayer
     }
 
     required init?(coder aDecoder: NSCoder) {

@@ -16,8 +16,12 @@ enum ModalHeaderViewStyle {
 class ModalHeaderView : UIView {
 
     //MARK - Public
-    var closeCallback: (() -> Void)?
-    var faqCallback: (() -> Void)?
+    var closeCallback: (() -> Void)? {
+        didSet { close.tap = closeCallback }
+    }
+    var faqCallback: (() -> Void)? {
+        didSet { faq.tap = faqCallback }
+    }
 
     init(title: String, isFaqHidden: Bool, style: ModalHeaderViewStyle) {
         self.title.text = title
@@ -57,8 +61,7 @@ class ModalHeaderView : UIView {
             border.constraint(.height, constant: 1.0) ])
         border.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
 
-        close.addTarget(self, action: #selector(ModalHeaderView.closeTapped), for: .touchUpInside)
-        faq.addTarget(self, action: #selector(ModalHeaderView.faqTapped), for: .touchUpInside)
+        backgroundColor = .white
 
         setColors()
     }
@@ -72,14 +75,6 @@ class ModalHeaderView : UIView {
         case .dark:
             border.backgroundColor = .secondaryShadow
         }
-    }
-
-    @objc private func closeTapped() {
-        closeCallback?()
-    }
-
-    @objc private func faqTapped() {
-        faqCallback?()
     }
 
     required init?(coder aDecoder: NSCoder) {
