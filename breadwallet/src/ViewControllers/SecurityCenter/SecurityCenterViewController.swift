@@ -18,9 +18,15 @@ private let headerHeight: CGFloat = 222.0
 
 class SecurityCenterViewController : UIViewController {
 
-    var didTapPin: (() -> Void)?
-    var didTapTouchId: (() -> Void)?
-    var didTapPaperKey: (() -> Void)?
+    var didTapPin: (() -> Void)? {
+        didSet { pinCell.tap = didTapPin }
+    }
+    var didTapTouchId: (() -> Void)? {
+        didSet { touchIdCell.tap = didTapTouchId }
+    }
+    var didTapPaperKey: (() -> Void)? {
+        didSet { paperKeyCell.tap = didTapPaperKey }
+    }
 
     override func viewDidLoad() {
         setupSubviewProperties()
@@ -46,10 +52,7 @@ class SecurityCenterViewController : UIViewController {
 
         pinCell.isCheckHighlighted = true
         paperKeyCell.isCheckHighlighted = true
-
-        pinCell.addTarget(self, action: #selector(SecurityCenterViewController.pinTapped), for: .touchUpInside)
-        touchIdCell.addTarget(self, action: #selector(SecurityCenterViewController.touchIdTapped), for: .touchUpInside)
-        paperKeyCell.addTarget(self, action: #selector(SecurityCenterViewController.paperKeyTapped), for: .touchUpInside)
+        header.backgroundColor = .clear
     }
 
     private func addSubviews() {
@@ -106,18 +109,6 @@ class SecurityCenterViewController : UIViewController {
             paperKeyCell.topAnchor.constraint(equalTo: touchIdCell.bottomAnchor),
             paperKeyCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             paperKeyCell.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -C.padding[2]) ])
-    }
-
-    @objc private func pinTapped() {
-        didTapPin?()
-    }
-
-    @objc private func touchIdTapped() {
-        didTapTouchId?()
-    }
-
-    @objc private func paperKeyTapped() {
-        didTapPaperKey?()
     }
 
     fileprivate var headerBackgroundHeight: NSLayoutConstraint?

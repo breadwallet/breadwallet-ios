@@ -57,6 +57,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private var currencyOverlay = CurrencyOverlay()
 
     override func viewDidLoad() {
+        view.backgroundColor = .white
         view.addSubview(to)
         view.addSubview(amount)
         view.addSubview(currencySwitcher)
@@ -103,7 +104,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             send.constraint(.leading, toView: view, constant: C.padding[2]),
             send.constraint(.trailing, toView: view, constant: -C.padding[2]),
             send.constraint(toBottom: descriptionCell, constant: verticalButtonPadding),
-            send.constraint(.height, constant: C.Sizes.buttonHeight) ])
+            send.constraint(.height, constant: C.Sizes.buttonHeight),
+            send.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
         scan.constrain([
             scan.constraint(.centerY, toView: to.accessoryView),
             scan.constraint(.trailing, toView: to.accessoryView, constant: -C.padding[2]),
@@ -184,22 +186,18 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     @objc private func amountTapped() {
-        guard let parentView = parentView else { return }
         descriptionCell.textField.resignFirstResponder()
         UIView.spring(C.animationDuration, animations: {
             if self.pinPadHeightConstraint?.constant == 0.0 {
                 self.pinPadHeightConstraint?.constant = self.pinPad.height
-                parentView.frame = parentView.frame.expandVertically(self.pinPad.height)
             } else {
                 self.pinPadHeightConstraint?.constant = 0.0
-                parentView.frame = parentView.frame.expandVertically(-self.pinPad.height)
             }
             self.parent?.view.layoutIfNeeded()
         }, completion: {_ in })
     }
 
     @objc private func currencySwitchTapped() {
-        guard let parentView = parentView else { return }
         func isCurrencySwitcherCollapsed() -> Bool {
             return self.currencySwitcherHeightConstraint?.constant == 0.0
         }
@@ -222,15 +220,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         UIView.spring(C.animationDuration, animations: {
             if isCurrencySwitcherCollapsed() {
                 self.currencySwitcherHeightConstraint?.constant = currencyHeight
-                parentView.frame = parentView.frame.expandVertically(currencyHeight)
             } else {
                 self.currencySwitcherHeightConstraint?.constant = 0.0
-                parentView.frame = parentView.frame.expandVertically(-currencyHeight)
             }
             if isPresenting {
                 self.currencyOverlay.alpha = 1.0
             }
-            parentView.layoutIfNeeded()
+            self.view.superview?.layoutIfNeeded()
         }, completion: {_ in })
     }
 
@@ -322,10 +318,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 extension SendViewController : ModalDisplayable {
     var modalTitle: String {
         return NSLocalizedString("Send Money", comment: "Send modal title")
-    }
-
-    var modalSize: CGSize {
-        return CGSize(width: view.frame.width, height: cellHeight*3 + verticalButtonPadding*2 + C.Sizes.buttonHeight)
     }
 
     var isFaqHidden: Bool {
