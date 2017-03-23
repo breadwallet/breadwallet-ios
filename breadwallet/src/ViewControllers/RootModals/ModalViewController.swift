@@ -55,7 +55,6 @@ class ModalViewController : UIViewController {
         if var modalPresentable = childViewController as? ModalPresentable {
             modalPresentable.parentView = view
         }
-
     }
 
     override func viewDidAppear(_ animated: Bool) {

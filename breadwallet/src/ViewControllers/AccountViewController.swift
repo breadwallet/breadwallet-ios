@@ -40,9 +40,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     private let transactionsTableView: TransactionsTableViewController
     private let footerHeight: CGFloat = 56.0
     private var notificationViewTop: NSLayoutConstraint?
-    private let blurView = {
-        return UIVisualEffectView(effect: UIBlurEffect(style: .light))
-    }()
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var isLoginRequired = false
 
     override func viewDidLoad() {
