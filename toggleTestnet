@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+require 'xcodeproj'
+project_path = './breadwallet.xcodeproj'
+project = Xcodeproj::Project.open(project_path)
+
+def settings(project, name)
+  target = project.native_targets.detect do |target|
+    target.name == name
+  end
+  settings = target.build_settings('Debug')
+end  
+
+def toggleSwiftFlags(project)
+  settings = settings(project, 'breadwallet')
+  swift_flags = settings['OTHER_SWIFT_FLAGS']
+  testnet_flag = ' -DTestnet'
+  if swift_flags.include? testnet_flag
+    settings['OTHER_SWIFT_FLAGS'] = swift_flags.gsub(testnet_flag, '')
+    puts "Removed Testnet from Swift Flags"
+  else
+    swift_flags << testnet_flag
+    puts "Added Testnet to Swift Flags"
+  end
+end
+
+def toggleBRCoreSettings(project)
+  settings = settings(project, 'BRCore')
+  preprocessor_macros = settings['GCC_PREPROCESSOR_DEFINITIONS']
+  testnet_flag = 'BITCOIN_TESTNET=1'
+  if preprocessor_macros.include? testnet_flag
+    preprocessor_macros.delete_if { |x| x == testnet_flag }
+    puts "Removed BITCOIN_TESTNET from BRCore"
+  else
+    preprocessor_macros.concat([testnet_flag])
+    puts "Added BITCOIN_TESTNET to BRCore"
+  end
+end
+
+toggleSwiftFlags(project)
+toggleBRCoreSettings(project)
+
+project.save
