@@ -11,7 +11,6 @@ import UIKit
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
 private let currencyHeight: CGFloat = 80.0
-private let cellHeight: CGFloat = 72.0
 private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
 private let currencyButtonWidth: CGFloat = 64.0
@@ -55,6 +54,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
     private var currencyOverlay = CurrencyOverlay()
+    private var balance: UInt64 = 0
+    private var rate: Rate?
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -70,8 +71,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         to.accessoryView.addSubview(scan)
         amount.addSubview(currency)
         currency.isToggleable = true
-        to.constrainTopCorners(height: cellHeight)
-        amount.pinToBottom(to: to, height: cellHeight)
+        to.constrainTopCorners(height: SendCell.defaultHeight)
+
+        amount.constrain([
+            amount.widthAnchor.constraint(equalTo: to.widthAnchor),
+            amount.topAnchor.constraint(equalTo: to.bottomAnchor),
+            amount.leadingAnchor.constraint(equalTo: to.leadingAnchor) ])
+
+        //amount.pinToBottom(to: to, height: SendCell.defaultHeight)
         amount.clipsToBounds = false
 
         currencySwitcherHeightConstraint = currencySwitcher.constraint(.height, constant: 0.0)
@@ -97,7 +104,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                 pinPad.view.constraint(.trailing, toView: view),
                 pinPadHeightConstraint ])
         })
-        descriptionCell.pinToBottom(to: pinPad.view, height: cellHeight)
+        descriptionCell.pinToBottom(to: pinPad.view, height: SendCell.defaultHeight)
         descriptionCell.accessoryView.constrain([
                 descriptionCell.accessoryView.constraint(.width, constant: 0.0) ])
         send.constrain([
@@ -118,7 +125,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             paste.constraint(.width, constant: buttonSize.width),
             paste.constraint(.leading, toView: to.accessoryView) ]) //This constraint is needed because it gives the accessory view an intrinsic horizontal size
         currency.constrain([
-            currency.constraint(.centerY, toView: amount),
+            currency.constraint(.centerY, toView: amount.accessoryView),
             currency.constraint(.trailing, toView: amount, constant: -C.padding[2]),
             currency.constraint(.height, constant: buttonSize.height),
             currency.constraint(.width, constant: 64.0),
@@ -132,6 +139,18 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             self.currency.title = "\(currency.substring(to: currency.index(currency.startIndex, offsetBy: 3))) \u{25BC}"
         }
         currencySwitcher.contentView = currencySlider
+
+        store.subscribe(self, selector: { $0.walletState.balance != $1.walletState.balance },
+                        callback: {
+                            self.balance = $0.walletState.balance
+        })
+
+        store.subscribe(self, selector: { $0.currentRate != $1.currentRate },
+                        callback: {
+                            self.rate = $0.currentRate
+        })
+
+        to.content = "mztqMM6JTZVrRubrU2K4xtiCjM96gzfYGz"
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -150,14 +169,31 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             self?.amount.content = output
         }
         amount.textFieldDidBeginEditing = { [weak self] in
+            guard let myself = self else { return }
             self?.amountTapped()
             self?.store.perform(action: ModalDismissal.block())
+
+            guard let rate = myself.rate else { return }
+            let amount = Amount(amount: myself.balance, rate: rate.rate)
+            myself.amount.setLabel(text: "Current Balance: \(amount.bits)", color: .grayTextTint)
+
         }
         amount.textFieldDidReturn = { [weak self] _ in
             self?.store.perform(action: ModalDismissal.unBlock())
         }
-        descriptionCell.textFieldDidBeginEditing = {
-
+        amount.textFieldDidChange = { text in
+            guard let rate = self.rate else { return }
+            let amount = Amount(amount: self.balance, rate: rate.rate)
+            var data: (String, UIColor) = ("Current balance: \(amount.bits)", .grayTextTint)
+            if let value = Int(text) {
+                if value * 100 > Int(self.balance) {
+                    data = ("Insufficient Funds. Max balance: \(amount.bits)", .red)
+                    self.send.isEnabled = false
+                } else {
+                    self.send.isEnabled = true
+                }
+            }
+            self.amount.setLabel(text: data.0, color: data.1)
         }
         descriptionCell.textFieldDidReturn = { textField in
             textField.resignFirstResponder()
@@ -239,7 +275,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                     to: address,
                     verifyPin: { pinValidationCallback in
                         presentVerifyPin? { pin, vc in
-                            guard pin.utf8.count == 6 else { return }
                             if pinValidationCallback(pin) {
                                 vc.dismiss(animated: true, completion: {
                                     self.parent?.view.isFrameChangeBlocked = false
@@ -249,9 +284,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                     }, completion: { result in
                         switch result {
                         case .success:
-                            self.dismiss(animated: true, completion: nil)
-                            self.onPublishSuccess?()
-                        case .failure(_): //TODO -add error messages here
+                            self.dismiss(animated: true, completion: {
+                                self.onPublishSuccess?()
+                            })
+                        case .creationError(let message):
+                            print("creation error: \(message)")
+                        case .publishFailure(_): //TODO -add error messages here
                             self.onPublishFailure?()
                         }
                     })
@@ -319,7 +357,7 @@ extension SendViewController : ModalDisplayable {
     var modalTitle: String {
         return NSLocalizedString("Send Money", comment: "Send modal title")
     }
-
+    
     var isFaqHidden: Bool {
         return false
     }

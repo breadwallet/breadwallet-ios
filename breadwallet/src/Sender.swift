@@ -8,9 +8,10 @@
 
 import Foundation
 
-enum PublishResult {
+enum SendResult {
     case success
-    case failure(BRPeerManagerError)
+    case creationError(String)
+    case publishFailure(BRPeerManagerError)
 }
 
 class Sender {
@@ -20,17 +21,24 @@ class Sender {
     }
 
     //Amount in bits
-    func send(amount: UInt64, to: String, verifyPin: (@escaping(String) -> Bool) -> Void, completion:@escaping (PublishResult) -> Void) {
+    func send(amount: UInt64, to: String, verifyPin: (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
         let satoshis = amount * 100
+
+        if let maxOutput = walletManager.wallet?.maxOutputAmount, satoshis > maxOutput {
+            return completion(.creationError("Insufficient funds"))
+        }
+
         transaction = walletManager.wallet?.createTransaction(forAmount: satoshis, toAddress: to)
         guard let tx = transaction else { return }
         verifyPin({ pin in
             if self.walletManager.signTransaction(tx, pin: pin) {
                 self.walletManager.peerManager?.publishTx(tx, completion: { success, error in
-                    if let error = error {
-                        completion(.failure(error))
-                    } else {
-                        completion(.success)
+                    DispatchQueue.main.async {
+                        if let error = error {
+                            completion(.publishFailure(error))
+                        } else {
+                            completion(.success)
+                        }
                     }
                 })
                 return true

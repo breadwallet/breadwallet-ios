@@ -31,25 +31,48 @@ class TextFieldSendCell : SendCell {
 
     var textFieldDidBeginEditing: (() -> Void)?
     var textFieldDidReturn: ((UITextField) -> Void)?
-
+    var textFieldDidChange: ((String) -> Void)?
     var content: String? {
         didSet {
             textField.text = content
+            textField.sendActions(for: .editingChanged)
             guard let count = content?.characters.count else { return }
             textField.font = count > 0 ? textFieldFont : placeholderFont
         }
     }
 
+    func setLabel(text: String, color: UIColor) {
+        label.text = text
+        label.textColor = color
+    }
+
     private let placeholderFont = UIFont.customBody(size: 16.0)
     private let textFieldFont = UIFont.customBody(size: 26.0)
     let textField = UITextField()
+    fileprivate let label = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
+
     private func setupViews() {
         addSubview(textField)
+        addSubview(label)
         textField.constrain([
             textField.constraint(.leading, toView: self, constant: C.padding[2]),
-            textField.constraint(.top, toView: self),
-            textField.constraint(.bottom, toView: self),
+            textField.centerYAnchor.constraint(equalTo: accessoryView.centerYAnchor),
+            textField.heightAnchor.constraint(greaterThanOrEqualToConstant: 30.0),
             textField.constraint(toLeading: accessoryView, constant: 0.0) ])
+        label.constrain([
+            label.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
+            label.topAnchor.constraint(equalTo: accessoryView.bottomAnchor),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1]) ])
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+
+        textField.addTarget(self, action: #selector(TextFieldSendCell.editingChanged(textField:)), for: .editingChanged)
+    }
+
+    @objc private func editingChanged(textField: UITextField) {
+        guard let text = textField.text else { return }
+        textFieldDidChange?(text)
     }
 
     required init?(coder aDecoder: NSCoder) {
