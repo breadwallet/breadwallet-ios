@@ -79,25 +79,26 @@ class ModalPresenter : Subscriber {
 
     private func presentAlert(_ type: AlertType, completion: @escaping ()->Void) {
         let alertView = AlertView(type: type)
-        let size = activeWindow.bounds.size
-        activeWindow.addSubview(alertView)
+        let window = type == .sendSuccess ? UIApplication.shared.keyWindow! : activeWindow
+        let size = window.bounds.size
+        window.addSubview(alertView)
 
-        let topConstraint = alertView.constraint(.top, toView: activeWindow, constant: size.height)
+        let topConstraint = alertView.constraint(.top, toView: window, constant: size.height)
         alertView.constrain([
             alertView.constraint(.width, constant: size.width),
             alertView.constraint(.height, constant: alertHeight + 25.0),
-            alertView.constraint(.leading, toView: activeWindow, constant: nil),
+            alertView.constraint(.leading, toView: window, constant: nil),
             topConstraint ])
-        activeWindow.layoutIfNeeded()
+        window.layoutIfNeeded()
 
         UIView.spring(0.6, animations: {
             topConstraint?.constant = size.height - self.alertHeight
-            self.activeWindow.layoutIfNeeded()
+            window.layoutIfNeeded()
         }, completion: { _ in
             alertView.animate()
             UIView.spring(0.6, delay: 2.0, animations: {
                 topConstraint?.constant = size.height
-                self.activeWindow.layoutIfNeeded()
+                window.layoutIfNeeded()
             }, completion: { _ in
                 completion()
                 alertView.removeFromSuperview()
@@ -116,6 +117,7 @@ class ModalPresenter : Subscriber {
             sendVC.presentScan = presentScan(parent: root)
             sendVC.presentVerifyPin = { callback in
                 let vc = VerifyPinViewController(callback: callback)
+                vc.modalPresentationStyle = .overFullScreen
                 root.view.isFrameChangeBlocked = true
                 root.present(vc, animated: true, completion: nil)
             }
@@ -221,6 +223,7 @@ class ModalPresenter : Subscriber {
 
     //TODO - This is a total hack to grab the window that keyboard is in
     //After pin creation, the alert view needs to be presented over the keyboard
+    //TODO - Phase this out once all pin creation view use custom pinpad
     private var activeWindow: UIWindow {
         let windowsCount = UIApplication.shared.windows.count
         if let keyboardWindow = UIApplication.shared.windows.last, windowsCount > 1 {

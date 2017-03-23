@@ -10,6 +10,8 @@ import UIKit
 
 class SendCell : UIView {
 
+    static let defaultHeight: CGFloat = 72.0
+
     init() {
         super.init(frame: .zero)
         setupViews()
@@ -25,7 +27,7 @@ class SendCell : UIView {
         accessoryView.constrain([
             accessoryView.constraint(.top, toView: self),
             accessoryView.constraint(.trailing, toView: self),
-            accessoryView.constraint(.bottom, toView: self) ])
+            accessoryView.heightAnchor.constraint(equalToConstant: SendCell.defaultHeight) ])
 
         border.constrainBottomCorners(height: 1.0)
         border.backgroundColor = .secondaryShadow

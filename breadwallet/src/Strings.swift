@@ -112,4 +112,9 @@ enum S {
     enum AccountHeader {
         static let defaultWalletName = NSLocalizedString("My Bread", comment: "Default wallet name")
     }
+
+    enum VerifyPin {
+        static let title = NSLocalizedString("PIN Required", comment: "Verify Pin view title")
+        static let body = NSLocalizedString("Please enter your PIN to authorize this transaction.", comment: "Verify pin view body")
+    }
 }
