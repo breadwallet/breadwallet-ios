@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -21,35 +21,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3nM-TE-tds">
-                                <rect key="frame" x="0.0" y="611" width="375" height="56"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="56" id="flD-G0-vXh"/>
-                                </constraints>
-                                <items/>
-                            </toolbar>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="HeaderGradient" translatesAutoresizingMaskIntoConstraints="NO" id="jUk-zo-wxl">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="136"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="136" id="zJK-tf-a1x"/>
-                                </constraints>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="jUk-zo-wxl" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" id="1XD-La-M2f"/>
-                            <constraint firstItem="3nM-TE-tds" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="2ka-j7-c3f"/>
                             <constraint firstItem="jUk-zo-wxl" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="Hgz-we-2c1"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="jUk-zo-wxl" secondAttribute="bottom" id="KFa-Tr-fv3"/>
                             <constraint firstItem="jUk-zo-wxl" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Rw0-rk-cVE"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="3nM-TE-tds" secondAttribute="bottom" id="eE9-bo-RlA"/>
-                            <constraint firstItem="3nM-TE-tds" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" id="wkx-y3-9p5"/>
                         </constraints>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-166" y="288"/>
+            <point key="canvasLocation" x="-167.19999999999999" y="287.40629685157421"/>
         </scene>
     </scenes>
     <resources>

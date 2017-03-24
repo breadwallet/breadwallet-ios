@@ -15,4 +15,10 @@ extension UIViewController {
         layout()
         viewController.didMove(toParentViewController: self)
     }
+
+    func remove() {
+        willMove(toParentViewController: nil)
+        view.removeFromSuperview()
+        removeFromParentViewController()
+    }
 }
