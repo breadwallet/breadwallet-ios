@@ -28,13 +28,15 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     var walletManager: WalletManager? {
         didSet {
             guard let walletManager = walletManager else { return }
-            loginView.walletManager = walletManager
-            loginView.transitioningDelegate = loginTransitionDelegate
-            loginView.modalPresentationStyle = .overFullScreen
-            loginView.isPresentedFromAccount = true
-            present(loginView, animated: false, completion: {
-                self.tempLoginView.remove()
-            })
+            if !walletManager.noWallet {
+                loginView.walletManager = walletManager
+                loginView.transitioningDelegate = loginTransitionDelegate
+                loginView.modalPresentationStyle = .overFullScreen
+                loginView.isPresentedFromAccount = true
+                present(loginView, animated: false, completion: {
+                    self.tempLoginView.remove()
+                })
+            }
         }
     }
 
@@ -98,10 +100,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         store.subscribe(self, selector: { $0.isLoginRequired != $1.isLoginRequired }, callback: { self.isLoginRequired = $0.isLoginRequired })
 
         addAppLifecycleNotificationEvents()
-
-        addChildViewController(tempLoginView, layout: {
-            tempLoginView.view.constrain(toSuperviewEdges: nil)
-        })
+        addTemporaryStartupViews()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -128,6 +127,23 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         }) { completed in
             //This view needs to be brought to the front so that it's above the headerview shadow. It looks weird if it's below.
             self.view.bringSubview(toFront: self.notificationView)
+        }
+    }
+
+    private func addTemporaryStartupViews() {
+        if WalletManager.hasWallet {
+            addChildViewController(tempLoginView, layout: {
+                tempLoginView.view.constrain(toSuperviewEdges: nil)
+            })
+        } else {
+            let startView = StartViewController(store: store, didTapRecover: {})
+            addChildViewController(startView, layout: {
+                startView.view.constrain(toSuperviewEdges: nil)
+                startView.view.isUserInteractionEnabled = false
+            })
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                startView.remove()
+            })
         }
     }
 
