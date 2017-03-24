@@ -149,8 +149,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                         callback: {
                             self.rate = $0.currentRate
         })
-
-        to.content = "mztqMM6JTZVrRubrU2K4xtiCjM96gzfYGz"
     }
 
     override func viewDidAppear(_ animated: Bool) {
