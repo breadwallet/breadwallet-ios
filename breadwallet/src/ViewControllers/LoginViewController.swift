@@ -14,7 +14,9 @@ private let topControlHeight: CGFloat = 32.0
 class LoginViewController : UIViewController {
 
     //MARK: - Public
-    init(store: Store, walletManager: WalletManager) {
+    var walletManager: WalletManager?
+    var isPresentedFromAccount = false
+    init(store: Store, walletManager: WalletManager? = nil) {
         self.store = store
         self.walletManager = walletManager
         super.init(nibName: nil, bundle: nil)
@@ -22,7 +24,6 @@ class LoginViewController : UIViewController {
 
     //MARK: - Private
     private let store: Store
-    private let walletManager: WalletManager
     private let backgroundView = LoginBackgroundView()
     private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad)
     private let pinViewContainer = UIView()
@@ -74,6 +75,7 @@ class LoginViewController : UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        guard let walletManager = self.walletManager else { return }
         if walletManager.canUseTouchID && !walletManager.pinLoginRequired && !hasAttemptedToShowTouchId {
             hasAttemptedToShowTouchId = true
             touchIdTapped()
@@ -151,6 +153,7 @@ class LoginViewController : UIViewController {
     }
 
     private func addTouchIdButton() {
+        guard let walletManager = walletManager else { return }
         guard walletManager.canUseTouchID && !walletManager.pinLoginRequired else { return }
         view.addSubview(touchId)
         touchId.addTarget(self, action: #selector(touchIdTapped), for: .touchUpInside)
@@ -173,6 +176,7 @@ class LoginViewController : UIViewController {
     }
 
     private func authenticate(pin: String) {
+        guard let walletManager = walletManager else { return }
         guard walletManager.authenticate(pin: pin) else { return authenticationFailed() }
         authenticationSucceded()
     }
@@ -206,7 +210,11 @@ class LoginViewController : UIViewController {
             self.pinView.alpha = 0.0
             self.view.layoutIfNeeded()
         }) { completion in
-            self.store.perform(action: LoginSuccess())
+            if self.isPresentedFromAccount {
+                self.dismiss(animated: true, completion: nil)
+            } else {
+                self.store.perform(action: LoginSuccess())
+            }
         }
     }
 
@@ -220,9 +228,9 @@ class LoginViewController : UIViewController {
     }
 
     @objc func touchIdTapped() {
-        walletManager.authenticate(touchIDPrompt: S.LoginScreen.touchIdPrompt, completion: { success in
+        walletManager?.authenticate(touchIDPrompt: S.LoginScreen.touchIdPrompt, completion: { success in
             if success {
-                self.store.perform(action: LoginSuccess())
+                self.authenticationSucceded()
             }
         })
     }
@@ -236,20 +244,21 @@ class LoginViewController : UIViewController {
     }
 
     private func lockIfNeeded() {
-        let disabledUntil = walletManager.walletDisabledUntil
-        if disabledUntil > Date.timeIntervalSinceReferenceDate {
-            let disabledUntilDate = Date(timeIntervalSinceReferenceDate: disabledUntil)
-            let df = DateFormatter()
-            df.dateFormat = "h:mm a 'on' MMM d, yyy"
-            subheader.text = "Disabled until: \(df.string(from: disabledUntilDate))"
-            pinPad.view.isUserInteractionEnabled = false
+        if let disabledUntil = walletManager?.walletDisabledUntil {
+            if disabledUntil > Date.timeIntervalSinceReferenceDate {
+                let disabledUntilDate = Date(timeIntervalSinceReferenceDate: disabledUntil)
+                let df = DateFormatter()
+                df.dateFormat = "h:mm a 'on' MMM d, yyy"
+                subheader.text = "Disabled until: \(df.string(from: disabledUntilDate))"
+                pinPad.view.isUserInteractionEnabled = false
 
-            let unlockInterval = disabledUntil - Date.timeIntervalSinceReferenceDate
-            unlockTimer?.invalidate()
-            unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)
-        } else {
-            subheader.text = S.LoginScreen.subheader
-            pinPad.view.isUserInteractionEnabled = true
+                let unlockInterval = disabledUntil - Date.timeIntervalSinceReferenceDate
+                unlockTimer?.invalidate()
+                unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)
+            } else {
+                subheader.text = S.LoginScreen.subheader
+                pinPad.view.isUserInteractionEnabled = true
+            }
         }
     }
 

@@ -28,6 +28,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private var feeUpdater: FeeUpdater?
     private let transitionDelegate: ModalTransitionDelegate
     private var kvStoreCoordinator: KVStoreCoordinator?
+    private var accountViewController: AccountViewController?
 
     init() {
         transitionDelegate = ModalTransitionDelegate(store: store, type: .transactionDetail)
@@ -98,6 +99,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         exchangeUpdater = ExchangeUpdater(store: store, apiClient: apiClient!)
         feeUpdater = FeeUpdater(walletManager: walletManager, apiClient: apiClient!)
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: window.rootViewController!)
+        accountViewController?.walletManager = walletManager
 
         if UIApplication.shared.applicationState != .background {
             if walletManager.noWallet {
@@ -105,9 +107,6 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                 store.perform(action: ShowStartFlow())
             } else {
                 initKVStoreCoordinator()
-                if shouldRequireLogin() {
-                    store.perform(action: RequireLogin())
-                }
                 modalPresenter?.walletManager = walletManager
                 DispatchQueue(label: C.walletQueue).async {
                     walletManager.peerManager?.connect()
@@ -151,10 +150,10 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             transactionDetails.modalPresentationCapturesStatusBarAppearance = true
             self.window.rootViewController?.present(transactionDetails, animated: true, completion: nil)
         }
-        let accountViewController = AccountViewController(store: store, didSelectTransaction: didSelectTransaction)
-        accountViewController.sendCallback = { self.store.perform(action: RootModalActions.Present(modal: .send)) }
-        accountViewController.receiveCallback = { self.store.perform(action: RootModalActions.Present(modal: .receive)) }
-        accountViewController.menuCallback = { self.store.perform(action: RootModalActions.Present(modal: .menu)) }
+        accountViewController = AccountViewController(store: store, didSelectTransaction: didSelectTransaction)
+        accountViewController?.sendCallback = { self.store.perform(action: RootModalActions.Present(modal: .send)) }
+        accountViewController?.receiveCallback = { self.store.perform(action: RootModalActions.Present(modal: .receive)) }
+        accountViewController?.menuCallback = { self.store.perform(action: RootModalActions.Present(modal: .menu)) }
         window.rootViewController = accountViewController
     }
 
