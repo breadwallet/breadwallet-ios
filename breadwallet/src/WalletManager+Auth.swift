@@ -88,6 +88,15 @@ extension WalletManager : WalletAuthenticator {
         catch { return false }
     }
 
+    static var hasWallet: Bool {
+        do {
+            if try keychainItem(key: keychainKey.masterPubKey) as Data? != nil { return true }
+            if try keychainItem(key: keychainKey.seed) as Data? != nil { return true } // check for old keychain scheme
+            return false
+        }
+        catch { return false }
+    }
+
     //Login with pin should be required if the pin hasn't been used within a week
     var pinLoginRequired: Bool {
         let pinUnlockTime = UserDefaults.standard.double(forKey: defaultsKey.pinUnlockTime)

@@ -25,10 +25,25 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         didSet { footerView.menuCallback = menuCallback }
     }
 
+    var walletManager: WalletManager? {
+        didSet {
+            guard let walletManager = walletManager else { return }
+            loginView.walletManager = walletManager
+            loginView.transitioningDelegate = loginTransitionDelegate
+            loginView.modalPresentationStyle = .overFullScreen
+            loginView.isPresentedFromAccount = true
+            present(loginView, animated: false, completion: {
+                self.tempLoginView.remove()
+            })
+        }
+    }
+
     init(store: Store, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
         self.store = store
         self.transactionsTableView = TransactionsTableViewController(store: store, didSelectTransaction: didSelectTransaction)
         self.headerView = AccountHeaderView(store: store)
+        self.loginView = LoginViewController(store: store)
+        self.tempLoginView = LoginViewController(store: store)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -42,6 +57,9 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     private var notificationViewTop: NSLayoutConstraint?
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var isLoginRequired = false
+    private let loginView: LoginViewController
+    private let tempLoginView: LoginViewController
+    private let loginTransitionDelegate = LoginTransitionDelegate()
 
     override func viewDidLoad() {
         addTransactionsView()
@@ -80,6 +98,10 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         store.subscribe(self, selector: { $0.isLoginRequired != $1.isLoginRequired }, callback: { self.isLoginRequired = $0.isLoginRequired })
 
         addAppLifecycleNotificationEvents()
+
+        addChildViewController(tempLoginView, layout: {
+            tempLoginView.view.constrain(toSuperviewEdges: nil)
+        })
     }
 
     override func viewDidAppear(_ animated: Bool) {
