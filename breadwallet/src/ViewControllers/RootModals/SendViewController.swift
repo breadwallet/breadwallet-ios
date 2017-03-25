@@ -169,15 +169,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         amount.textFieldDidBeginEditing = { [weak self] in
             guard let myself = self else { return }
             self?.amountTapped()
-            self?.store.perform(action: ModalDismissal.block())
 
             guard let rate = myself.rate else { return }
             let amount = Amount(amount: myself.balance, rate: rate.rate)
             myself.amount.setLabel(text: "Current Balance: \(amount.bits)", color: .grayTextTint)
 
-        }
-        amount.textFieldDidReturn = { [weak self] _ in
-            self?.store.perform(action: ModalDismissal.unBlock())
         }
         amount.textFieldDidChange = { text in
             guard let rate = self.rate else { return }
@@ -238,7 +234,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
         var isPresenting = false
         if isCurrencySwitcherCollapsed() {
-            store.perform(action: ModalDismissal.block())
             addCurrencyOverlay()
             isPresenting = true
         } else {
@@ -247,7 +242,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             }, completion: { _ in
                 self.currencyOverlay.removeFromSuperview()
             })
-            store.perform(action: ModalDismissal.unBlock())
         }
 
         amount.layoutIfNeeded()
