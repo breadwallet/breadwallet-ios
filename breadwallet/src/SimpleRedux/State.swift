@@ -15,7 +15,6 @@ struct State {
     let paperPhraseStep: PaperPhraseStep
     let rootModal: RootModal
     let pasteboard: String?
-    let isModalDismissalBlocked: Bool
     let walletState: WalletState
     let currency: Currency
     let currentRate: Rate?
@@ -30,7 +29,6 @@ extension State {
                         paperPhraseStep: .none,
                         rootModal: .none,
                         pasteboard: UIPasteboard.general.string,
-                        isModalDismissalBlocked: false,
                         walletState: WalletState.initial,
                         currency: .bitcoin,
                         currentRate: nil,

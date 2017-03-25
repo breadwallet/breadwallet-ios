@@ -26,12 +26,11 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private var apiClient: BRAPIClient?
     private var exchangeUpdater: ExchangeUpdater?
     private var feeUpdater: FeeUpdater?
-    private let transitionDelegate: ModalTransitionDelegate
+    private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
     private var kvStoreCoordinator: KVStoreCoordinator?
     private var accountViewController: AccountViewController?
 
     init() {
-        transitionDelegate = ModalTransitionDelegate(store: store, type: .transactionDetail)
         DispatchQueue(label: C.walletQueue).async {
             self.walletManager = try! WalletManager(dbPath: nil)
             DispatchQueue.main.async {

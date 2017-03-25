@@ -23,7 +23,6 @@ struct HideStartFlow : Action {
                      paperPhraseStep: .none,
                      rootModal: .none,
                      pasteboard: UIPasteboard.general.string,
-                     isModalDismissalBlocked: false,
                      walletState: state.walletState,
                      currency: state.currency,
                      currentRate: state.currentRate,
@@ -143,17 +142,6 @@ struct Pasteboard {
     }
 }
 
-//MARK: - Modal Dismissal Blocking
-enum ModalDismissal {
-    struct block: Action {
-        let reduce: Reducer = { $0.clone(isModalDismissalBlocked: true) }
-    }
-
-    struct unBlock: Action {
-        let reduce: Reducer = { $0.clone(isModalDismissalBlocked: false) }
-    }
-}
-
 //MARK: - Wallet State
 enum WalletChange {
     struct setProgress: Action {
@@ -233,7 +221,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
@@ -246,7 +233,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
@@ -260,7 +246,6 @@ extension State {
                      paperPhraseStep: .none,
                      rootModal: type,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
@@ -273,7 +258,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
@@ -286,7 +270,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
@@ -299,7 +282,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
@@ -312,7 +294,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: timestamp, name: walletState.name),
                      currency: currency,
                      currentRate: currentRate,
@@ -325,7 +306,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name),
                      currency: currency,
                      currentRate: currentRate,
@@ -338,7 +318,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name),
                      currency: currency,
                      currentRate: currentRate,
@@ -351,7 +330,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name),
                      currency: currency,
                      currentRate: currentRate,
@@ -364,7 +342,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletName),
                      currency: currency,
                      currentRate: currentRate,
@@ -377,7 +354,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
@@ -390,7 +366,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
@@ -403,7 +378,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
@@ -416,7 +390,6 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     isModalDismissalBlocked: isModalDismissalBlocked,
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,

@@ -15,7 +15,7 @@ class ModalPresenter : Subscriber {
     init(store: Store, window: UIWindow) {
         self.store = store
         self.window = window
-        self.modalTransitionDelegate = ModalTransitionDelegate(store: store, type: .regular)
+        self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular)
         addSubscriptions()
     }
 
