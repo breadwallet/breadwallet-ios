@@ -24,7 +24,8 @@ class ModalViewController : UIViewController {
     //MARK: - Private
     private let modalInfo: ModalDisplayable
     private let headerHeight: CGFloat = 49.0
-    private let header: ModalHeaderView
+    fileprivate let header: ModalHeaderView
+    private let tapGestureRecognizer = UITapGestureRecognizer()
 
     override func viewDidLoad() {
         view.backgroundColor = .clear
@@ -55,6 +56,10 @@ class ModalViewController : UIViewController {
         if var modalPresentable = childViewController as? ModalPresentable {
             modalPresentable.parentView = view
         }
+
+        tapGestureRecognizer.delegate = self
+        tapGestureRecognizer.addTarget(self, action: #selector(didTap))
+        view.addGestureRecognizer(tapGestureRecognizer)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -77,6 +82,12 @@ class ModalViewController : UIViewController {
         return true
     }
 
+    @objc private func didTap() {
+        guard let modalTransitionDelegate = transitioningDelegate as? ModalTransitionDelegate else { return }
+        modalTransitionDelegate.reset()
+        dismiss(animated: true, completion: nil)
+    }
+
     private func addTopCorners() {
         let path = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 6.0, height: 6.0)).cgPath
         let maskLayer = CAShapeLayer()
@@ -86,5 +97,16 @@ class ModalViewController : UIViewController {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension ModalViewController : UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        let location = gestureRecognizer.location(in: view)
+        if location.y < header.frame.minY {
+            return true
+        } else {
+            return false
+        }
     }
 }

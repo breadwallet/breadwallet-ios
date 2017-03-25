@@ -28,10 +28,6 @@ class ModalTransitionDelegate : NSObject, Subscriber {
         if let panGr = panGestureRecognizer {
             UIApplication.shared.keyWindow?.removeGestureRecognizer(panGr)
         }
-
-        if let tapGr = tapGestureRecognizer {
-            UIApplication.shared.keyWindow?.removeGestureRecognizer(tapGr)
-        }
     }
 
     //MARK: - Private
@@ -39,16 +35,7 @@ class ModalTransitionDelegate : NSObject, Subscriber {
     fileprivate var isInteractive: Bool = false
     fileprivate let interactiveTransition = UIPercentDrivenInteractiveTransition()
     fileprivate var presentedViewController: UIViewController?
-    fileprivate var panGestureRecognizer: UIPanGestureRecognizer? {
-        didSet {
-            panGestureRecognizer?.delegate = self
-        }
-    }
-    fileprivate var tapGestureRecognizer: UITapGestureRecognizer? {
-        didSet {
-            tapGestureRecognizer?.delegate = self
-        }
-    }
+    fileprivate var panGestureRecognizer: UIPanGestureRecognizer?
 
     private var yVelocity: CGFloat = 0.0
     private var progress: CGFloat = 0.0
@@ -94,11 +81,6 @@ class ModalTransitionDelegate : NSObject, Subscriber {
         }
     }
 
-    @objc fileprivate func didTap(gr: UITapGestureRecognizer) {
-        reset()
-        presentedViewController?.dismiss(animated: true, completion: {})
-    }
-
     private var transitionShouldFinish: Bool {
         if progress > progressThreshold || yVelocity > velocityThreshold {
             return true
@@ -115,10 +97,6 @@ extension ModalTransitionDelegate : UIViewControllerTransitioningDelegate {
             let panGr = UIPanGestureRecognizer(target: self, action: #selector(ModalTransitionDelegate.didUpdate(gr:)))
             UIApplication.shared.keyWindow?.addGestureRecognizer(panGr)
             self.panGestureRecognizer = panGr
-
-            let tapGR = UITapGestureRecognizer(target: self, action: #selector(ModalTransitionDelegate.didTap(gr:)))
-            UIApplication.shared.keyWindow?.addGestureRecognizer(tapGR)
-            self.tapGestureRecognizer = tapGR
         })
     }
 
@@ -128,21 +106,5 @@ extension ModalTransitionDelegate : UIViewControllerTransitioningDelegate {
 
     func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         return isInteractive ? interactiveTransition : nil
-    }
-}
-
-extension ModalTransitionDelegate : UIGestureRecognizerDelegate {
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard !isModalDismissalBlocked else { return false }
-        if gestureRecognizer == tapGestureRecognizer {
-            let location = gestureRecognizer.location(in: presentedViewController?.view)
-            if location.y < 0 {
-                return true
-            } else {
-                return false
-            }
-        } else {
-            return true
-        }
     }
 }
