@@ -16,11 +16,9 @@ enum ModalType {
 class ModalTransitionDelegate : NSObject, Subscriber {
 
     //MARK: - Public
-    init(store: Store, type: ModalType) {
-        self.store = store
+    init(type: ModalType) {
         self.type = type
         super.init()
-        addSubscriptions()
     }
 
     func reset() {
@@ -42,14 +40,6 @@ class ModalTransitionDelegate : NSObject, Subscriber {
     private let velocityThreshold: CGFloat = 50.0
     private let progressThreshold: CGFloat = 0.5
     fileprivate var isModalDismissalBlocked = false
-    private let store: Store
-
-    private func addSubscriptions() {
-        store.subscribe(self, selector: { $0.isModalDismissalBlocked != $1.isModalDismissalBlocked
-        }, callback: {
-            self.isModalDismissalBlocked = $0.isModalDismissalBlocked
-        })
-    }
 
     @objc fileprivate func didUpdate(gr: UIPanGestureRecognizer) {
         switch gr.state {
