@@ -168,12 +168,12 @@ class ModalPresenter : Subscriber {
         guard let parent = presentingViewController else { return }
         let present = presentScan(parent: parent)
         store.perform(action: RootModalActions.Present(modal: .none))
-        present({ address in
-            if address != nil {
+        present({ paymentRequest in
+            if paymentRequest != nil {
                 self.presentModal(.send, configuration: { modal in
                     guard let modal = modal as? ModalViewController else { return }
                     guard let child = modal.childViewController as? SendViewController else { return }
-                    child.initialAddress = address
+                    child.initialAddress = paymentRequest?.toAddress
                 })
             }
         })

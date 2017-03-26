@@ -210,8 +210,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
     @objc private func scanTapped() {
         descriptionCell.textField.resignFirstResponder()
-        presentScan? { address in
-            self.to.content = address
+        presentScan? { paymentRequest in
+            self.to.content = paymentRequest?.toAddress
         }
     }
 
