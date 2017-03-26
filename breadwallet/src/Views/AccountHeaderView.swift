@@ -53,7 +53,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         })
         name.textColor = .white
 
-        manage.setTitle("MANAGE", for: .normal)
+        manage.setTitle(S.AccountHeader.manageButtonName, for: .normal)
         manage.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17.0)
         manage.tintColor = .white
         manage.tap = {
@@ -70,6 +70,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
         search.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
         search.tintColor = .white
+
+        if isTestnet {
+            name.textColor = .red
+        }
     }
 
     private func addSubviews() {
