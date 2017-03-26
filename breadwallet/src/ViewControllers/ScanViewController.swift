@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-typealias ScanCompletion = (String?) -> Void
+typealias ScanCompletion = (PaymentRequest?) -> Void
 
 class ScanViewController : UIViewController {
 
@@ -25,6 +25,7 @@ class ScanViewController : UIViewController {
     private let toolbar = UIView()
     private let close = UIButton.close
     private let flash = UIButton.icon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
+    fileprivate var currentUri = ""
 
     init(completion: @escaping ScanCompletion, isValidURI: @escaping (String) -> Bool) {
         self.completion = completion
@@ -134,16 +135,20 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
             } else {
                 data.forEach {
                     guard let uri = $0.stringValue else { return }
-                    if isValidURI(uri) {
-                        guide.state = .positive
-                        //Add a small delay so the green guide will be seen
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-                            self.dismiss(animated: true, completion: {
-                                self.completion(uri)
+                    if self.currentUri != uri {
+                        self.currentUri = uri
+                        if let paymentRequest = PaymentRequest(string: uri) {
+                            guide.state = .positive
+                            //Add a small delay so the green guide will be seen
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                                self.dismiss(animated: true, completion: {
+                                    print("completion")
+                                    self.completion(paymentRequest)
+                                })
                             })
-                        })
-                    } else {
-                        guide.state = .negative
+                        } else {
+                            guide.state = .negative
+                        }
                     }
                 }
             }
