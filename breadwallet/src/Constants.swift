@@ -10,6 +10,14 @@ import UIKit
 
 let π: CGFloat = CGFloat(M_PI)
 
+var isTestnet: Bool {
+    #if Testnet
+        return true
+    #else
+        return false
+    #endif
+}
+
 struct Padding {
     subscript(multiplier: Int) -> CGFloat {
         get {
