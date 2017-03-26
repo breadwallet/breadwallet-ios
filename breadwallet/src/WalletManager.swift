@@ -84,7 +84,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }()
 
     private lazy var lazyWallet: BRWallet? = {
-        assert(!Thread.isMainThread, "This shouldn't be called on main")
         return BRWallet(transactions: self.loadTransactions(), masterPubKey: self.masterPubKey,
                         listener: self)
     }()
@@ -100,7 +99,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
 
     init(masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
-        assert(!Thread.isMainThread, "This shouldn't be called on main")
         self.masterPubKey = masterPubKey
         self.earliestKeyTime = earliestKeyTime
         self.dbPath = try dbPath ??
@@ -224,7 +222,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     func txAdded(_ tx: BRTxRef) {
-        assert(!Thread.isMainThread, "This shouldn't be called on main")
         var buf = [UInt8](repeating: 0, count: BRTransactionSerialize(tx, nil, 0))
         let extra = [tx.pointee.blockHeight.littleEndian, tx.pointee.timestamp.littleEndian]
         guard BRTransactionSerialize(tx, &buf, buf.count) == buf.count else { return }
@@ -268,7 +265,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     func txUpdated(_ txHashes: [UInt256], blockHeight: UInt32, timestamp: UInt32) {
-        assert(!Thread.isMainThread, "This shouldn't be called on main")
         guard txHashes.count > 0 else { return }
         let extra = [blockHeight.littleEndian, timestamp.littleEndian]
         let extraBuf = UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
@@ -304,7 +300,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     func txDeleted(_ txHash: UInt256, notifyUser: Bool, recommendRescan: Bool) {
-        assert(!Thread.isMainThread, "This shouldn't be called on main")
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "delete from ZBRTXMETADATAENTITY where ZTYPE = 1 and ZTXHASH = ?", -1, &sql, nil)
         defer { sqlite3_finalize(sql) }
@@ -353,7 +348,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     func saveBlocks(_ blocks: [BRBlockRef?]) {
-        assert(!Thread.isMainThread, "This shouldn't be called on main")
         var pk: Int32 = 0
         sqlite3_exec(db, "begin exclusive", nil, nil, nil)
         
@@ -420,7 +414,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     func savePeers(_ peers: [BRPeer]) {
-        assert(!Thread.isMainThread, "This shouldn't be called on main")
         var pk: Int32 = 0
         sqlite3_exec(db, "begin exclusive", nil, nil, nil)
 
@@ -486,7 +479,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     private func loadTransactions() -> [BRTxRef] {
-        assert(!Thread.isMainThread, "This shouldn't be called on main")
         var transactions = [BRTxRef]()
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "select ZBLOB from ZBRTXMETADATAENTITY where ZTYPE = 1", -1, &sql, nil)
@@ -507,7 +499,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
 
     var lastBlockTimestamp: UInt32 {
-        assert(!Thread.isMainThread, "This shouldn't be called on main")
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "select MAX(ZTIMESTAMP) from ZBRMERKLEBLOCKENTITY", -1, &sql, nil)
         defer { sqlite3_finalize(sql) }
@@ -520,7 +511,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     private func loadBlocks() -> [BRBlockRef?] {
-        assert(!Thread.isMainThread, "This shouldn't be called on main")
         var blocks = [BRBlockRef?]()
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "select ZHEIGHT, ZNONCE, ZTARGET, ZTOTALTRANSACTIONS, ZVERSION, ZTIMESTAMP, " +
@@ -552,7 +542,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     private func loadPeers() -> [BRPeer] {
-        assert(!Thread.isMainThread, "This shouldn't be called on main")
         var peers = [BRPeer]()
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "select ZADDRESS, ZPORT, ZSERVICES, ZTIMESTAMP from ZBRPEERENTITY", -1, &sql, nil)
