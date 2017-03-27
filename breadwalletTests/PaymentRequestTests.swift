@@ -44,4 +44,10 @@ class PaymentRequestTests : XCTestCase {
         let request = PaymentRequest(string: uri)
         XCTAssertTrue(request?.message == "Payment=true")
     }
+
+    func testMessageWithSpace() {
+        let uri = "bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu?amount=1.2&message=Payment message test&label=Satoshi"
+        let request = PaymentRequest(string: uri)
+        XCTAssertTrue(request?.message == "Payment message test")
+    }
 }
