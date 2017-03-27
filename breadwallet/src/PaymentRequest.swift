@@ -11,8 +11,7 @@ import Foundation
 struct PaymentRequest {
 
     init?(string: String) {
-        if var url = NSURL(string: string) {
-
+        if var url = NSURL(string: string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")) {
             if let scheme = url.scheme, let resourceSpecifier = url.resourceSpecifier, url.host == nil {
                 url = NSURL(string: "\(scheme)://\(resourceSpecifier)")!
 
