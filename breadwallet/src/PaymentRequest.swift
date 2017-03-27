@@ -7,6 +7,12 @@
 //
 
 import Foundation
+import BRCore
+
+enum PaymentRequestType {
+    case local
+    case remote
+}
 
 struct PaymentRequest {
 
@@ -17,7 +23,7 @@ struct PaymentRequest {
 
                 if url.scheme == "bitcoin", let host = url.host {
                     toAddress = host
-
+                    type = .local
                     guard let components = url.query?.components(separatedBy: "&") else { return }
                     for component in components {
                         let pair = component.components(separatedBy: "=")
@@ -37,17 +43,53 @@ struct PaymentRequest {
                             print("Key not found: \(key)")
                         }
                     }
+
                     return
                 }
+            } else if url.scheme == "http" || url.scheme == "https" {
+                type = .remote
+                remoteRequest = url
+                return
             }
         }
 
         if string.utf8.count > 0 {
             toAddress = string
+            type = .local
             return
         }
 
         return nil
+    }
+
+    init?(data: Data) {
+        data.withUnsafeBytes({ (bytes: UnsafePointer<UInt8>) -> Void in
+            let _ = BRPaymentProtocolRequestParse(bytes, data.count)
+            //TODO - we now have a BRPaymentProtocolRequest struct to play with here
+        })
+        type = .local
+    }
+
+    func fetchRemoteRequest(completion: @escaping (PaymentRequest?) -> Void) {
+        let request = NSMutableURLRequest(url: remoteRequest as! URL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0)
+        request.setValue("application/bitcoin-paymentrequest", forHTTPHeaderField: "Accept")
+
+
+        URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
+            guard error == nil else { return completion(nil) }
+            guard let data = data else { return completion(nil) }
+            guard let response = response else { return completion(nil) }
+
+            if response.mimeType?.lowercased() == "application/bitcoin-paymentrequest" {
+                completion(PaymentRequest(data: data))
+            } else if response.mimeType?.lowercased() == "text/uri-list" {
+                for line in (String(data: data, encoding: .utf8)?.components(separatedBy: "\n"))! {
+                    if line.hasPrefix("#") { continue }
+                    completion(PaymentRequest(string: line))
+                    break
+                }
+            }
+        }.resume()
     }
 
     private func amount(forValue: String) -> UInt64? {
@@ -62,8 +104,10 @@ struct PaymentRequest {
         }
     }
 
-    let toAddress: String
+    var toAddress: String?
+    let type: PaymentRequestType
     var amount: UInt64?
     var label: String?
     var message: String?
+    var remoteRequest: NSURL?
 }
