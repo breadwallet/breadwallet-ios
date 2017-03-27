@@ -50,4 +50,20 @@ class PaymentRequestTests : XCTestCase {
         let request = PaymentRequest(string: uri)
         XCTAssertTrue(request?.message == "Payment message test")
     }
+
+    func testPaymentProtocol() {
+        let uri = "https://www.syndicoin.co/signednoroot.paymentrequest"
+        let request = PaymentRequest(string: uri)
+        XCTAssertTrue(request?.type == .remote)
+
+        let promise = expectation(description: "Fetch Request")
+        request?.fetchRemoteRequest(completion: { newRequest in
+            XCTAssertNotNil(newRequest)
+            promise.fulfill()
+        })
+
+        waitForExpectations(timeout: 5.0) { error in
+            XCTAssertNil(error)
+        }
+    }
 }
