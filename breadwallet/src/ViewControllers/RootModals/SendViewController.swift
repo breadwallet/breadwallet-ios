@@ -211,7 +211,16 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     @objc private func scanTapped() {
         descriptionCell.textField.resignFirstResponder()
         presentScan? { paymentRequest in
-            self.to.content = paymentRequest?.toAddress
+            guard let request = paymentRequest else { return }
+            switch request.type {
+            case .local:
+                self.to.content = request.toAddress
+                if let amount = request.amount {
+                    self.amount.content = String(amount/100)
+                }
+            case .remote:
+                print("remote request")
+            }
         }
     }
 
