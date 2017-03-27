@@ -19,25 +19,28 @@ struct PaymentRequest {
                 if url.scheme == "bitcoin", let host = url.host {
                     toAddress = host
 
-                    url.query?.components(separatedBy: "&").forEach {
-                        let pair = $0.components(separatedBy: "=")
-                        if pair.count == 2 {
-                            let key = pair[0]
-                            if let value = pair[1].replacingOccurrences(of: "+", with: " ").replacingPercentEscapes(using: .utf8) {
-                                if key == "amount" {
-                                    amount = amount(forValue: value)
-                                }
-                            }
+                    guard let components = url.query?.components(separatedBy: "&") else { return }
+                    for component in components {
+                        let pair = component.components(separatedBy: "=")
+                        if pair.count < 2 { continue }
+                        let key = pair[0]
+                        var value = component.substring(from: component.index(key.endIndex, offsetBy: 2))
+                        value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
+
+                        switch key {
+                        case "amount":
+                            amount = amount(forValue: value)
+                        case "label":
+                            label = value
+                        case "message":
+                            message = value
+                        default:
+                            print("Key not found: \(key)")
                         }
                     }
-
-
                     return
                 }
-
             }
-
-
         }
 
         if string.utf8.count > 0 {
@@ -62,4 +65,6 @@ struct PaymentRequest {
 
     let toAddress: String
     var amount: UInt64?
+    var label: String?
+    var message: String?
 }
