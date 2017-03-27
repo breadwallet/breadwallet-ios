@@ -118,4 +118,11 @@ enum S {
         static let title = NSLocalizedString("PIN Required", comment: "Verify Pin view title")
         static let body = NSLocalizedString("Please enter your PIN to authorize this transaction.", comment: "Verify pin view body")
     }
+
+    enum TouchIdSettings {
+        static let title = NSLocalizedString("Touch ID", comment: "Touch ID settings view title")
+        static let label = NSLocalizedString("Login to your Bread wallet and send money using just your finger print to a set limit.", comment: "Touch Id screen label")
+        static let switchLabel = NSLocalizedString("Enable Touch ID for Bread", comment: "Touch id switch label.")
+        static let spendingLimitLabel = NSLocalizedString("Spending Limit: 1btc = $678.93 USD \n You can customize your Touch ID Spending Limit from the Touch ID Spending Limit Screen", comment: "Touch ID spending limit label")
+    }
 }
