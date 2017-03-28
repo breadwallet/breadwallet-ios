@@ -202,7 +202,7 @@ class ModalPresenter : Subscriber {
 
     private func presentSecurityCenter() {
         let securityCenter = SecurityCenterViewController()
-        let nc = UINavigationController(rootViewController: securityCenter)
+        let nc = ModalNavigationController(rootViewController: securityCenter)
         nc.setDefaultStyle()
         nc.isNavigationBarHidden = true
         nc.delegate = securityCenterNavigationDelegate
@@ -213,7 +213,7 @@ class ModalPresenter : Subscriber {
         }
         securityCenter.didTapTouchId = {
             guard let walletManager = self.walletManager else { return }
-            let touchIdSettings = TouchIdSettingsViewController(walletManager: walletManager)
+            let touchIdSettings = TouchIdSettingsViewController(walletManager: walletManager, store: self.store)
             nc.pushViewController(touchIdSettings, animated: true)
         }
         securityCenter.didTapPaperKey = {
@@ -251,6 +251,12 @@ class SecurityCenterNavigationDelegate : NSObject, UINavigationControllerDelegat
             navigationController.isNavigationBarHidden = true
         } else {
             navigationController.isNavigationBarHidden = false
+        }
+
+        if viewController is TouchIdSettingsViewController {
+            navigationController.setWhiteStyle()
+        } else {
+            navigationController.setDefaultStyle()
         }
     }
 }
