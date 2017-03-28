@@ -122,6 +122,24 @@ extension WalletManager : WalletAuthenticator {
         catch { return false }
     }
 
+    var spendingLimit: UInt64 {
+        get {
+            guard UserDefaults.standard.object(forKey: defaultsKey.spendLimitAmount) != nil else {
+                return 0
+            }
+            return UInt64(UserDefaults.standard.double(forKey: defaultsKey.spendLimitAmount))
+        }
+        set {
+            guard let wallet = self.wallet else { assert(false, "No wallet!"); return }
+            do {
+                try setKeychainItem(key: keychainKey.spendLimit, item: Int64(wallet.totalSent + spendingLimit))
+                UserDefaults.standard.set(newValue, forKey: defaultsKey.spendLimitAmount)
+            } catch let error {
+                print("Set spending limit error: \(error)")
+            }
+        }
+    }
+
     // number of unique failed pin attempts remaining before wallet is wiped
     var pinAttemptsRemaining: Int {
         do {
