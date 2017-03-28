@@ -25,7 +25,7 @@ extension UIView {
         }
     }
 
-    open override static func initialize() {
+    static func swizzleSetFrame() {
         guard self == UIView.self else { return }
 
         //This is now a way to do the equivalent of dispatch_once in swift 3
