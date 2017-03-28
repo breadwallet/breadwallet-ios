@@ -8,7 +8,7 @@
 
 import UIKit
 
-let π: CGFloat = CGFloat(M_PI)
+let π: CGFloat = .pi
 
 var isTestnet: Bool {
     #if Testnet

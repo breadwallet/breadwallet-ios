@@ -57,10 +57,10 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         DispatchQueue(label: C.walletQueue).async {
             walletManager.peerManager?.connect()
         }
-        exchangeUpdater?.refresh()
+        exchangeUpdater?.refresh(completion: {})
         feeUpdater?.refresh()
         if let kvStore = apiClient?.kv {
-            kvStore.sync { print("KV finished syncing. err: \($0)") }
+            kvStore.sync { print("KV finished syncing. err: \(String(describing: $0))") }
         }
     }
 
@@ -70,7 +70,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
         }
         if let kvStore = apiClient?.kv {
-            kvStore.sync { print("KV finished syncing. err: \($0)") }
+            kvStore.sync { print("KV finished syncing. err: \(String(describing: $0))") }
         }
     }
 
@@ -112,10 +112,10 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                 }
                 feeUpdater?.updateWalletFees()
             }
-            exchangeUpdater?.refresh()
+            exchangeUpdater?.refresh(completion: {})
             feeUpdater?.refresh()
             if let kvStore = apiClient?.kv {
-                kvStore.sync { print("KV finished syncing. err: \($0)") }
+                kvStore.sync { print("KV finished syncing. err: \(String(describing: $0))") }
             }
         }
     }

@@ -23,7 +23,7 @@ extension UIImage {
         qrFilter?.setValue(data, forKey: "inputMessage")
         qrFilter?.setValue("L", forKey: "inputCorrectionLevel")
 
-        if Double(color.alpha) > DBL_EPSILON {
+        if Double(color.alpha) > .ulpOfOne {
             invertFilter?.setValue(qrFilter?.outputImage, forKey: inputImageKey)
             maskFilter?.setValue(invertFilter?.outputImage, forKey: inputImageKey)
             invertFilter?.setValue(maskFilter?.outputImage, forKey: inputImageKey)
