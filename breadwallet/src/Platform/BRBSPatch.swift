@@ -178,7 +178,7 @@ class BRBSPatch {
             // add old data to diff string
             if crtl[0] > 0 {
                 for i in 0...(Int(crtl[0]) - 1) {
-                    if (oldPos + i >= 0) && (oldPos + i < oldSize) {
+                    if (oldPos + off_t(i) >= 0) && (oldPos + off_t(i) < oldSize) {
                         let np = Int(newPos) + i, op = Int(oldPos) + i
                         new[np] = new[np] &+ old[op]
                     }
