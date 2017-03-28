@@ -8,7 +8,15 @@
 
 import UIKit
 
+class MyTextView : UITextView {
+    override var canBecomeFirstResponder: Bool {
+        return false
+    }
+}
+
 class TouchIdSettingsViewController : UIViewController {
+
+    var presentSpendingLimit: (() -> Void)?
 
     private let header = RadialGradientView(backgroundColor: .darkPurple)
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "TouchId-Large"))
@@ -16,7 +24,7 @@ class TouchIdSettingsViewController : UIViewController {
     private let switchLabel = UILabel(font: .customBold(size: 14.0), color: .darkText)
     private let toggle = UISwitch()
     private let separator = UIView(color: .secondaryShadow)
-    private let textView = UITextView()
+    private let textView = MyTextView()
 
     override func viewDidLoad() {
         addSubviews()
@@ -67,8 +75,34 @@ class TouchIdSettingsViewController : UIViewController {
         title = S.TouchIdSettings.title
         label.text = S.TouchIdSettings.label
         switchLabel.text = S.TouchIdSettings.switchLabel
-        textView.text = S.TouchIdSettings.spendingLimitLabel
-        textView.isSelectable = false
+        textView.isEditable = false
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0.0
+        textView.delegate = self
+        textView.attributedText = textViewText
+        textView.tintColor = .primaryButton
     }
 
+    private var textViewText: NSAttributedString {
+        let string = "Spending Limit: 1btc = $678.93 USD \n\nYou can customize your Touch ID Spending Limit from the "
+        let link = "Touch ID Spending Limit Screen"
+        let attributedString = NSMutableAttributedString(string: string, attributes: [
+                NSFontAttributeName: UIFont.customBody(size: 13.0),
+                NSForegroundColorAttributeName: UIColor.darkText
+            ])
+        let attributedLink = NSMutableAttributedString(string: link, attributes: [
+                NSFontAttributeName: UIFont.customMedium(size: 13.0),
+                NSLinkAttributeName: NSURL(string:"http://spending-limit")!
+            ])
+        attributedString.append(attributedLink)
+        return attributedString
+    }
+
+}
+
+extension TouchIdSettingsViewController : UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        presentSpendingLimit?()
+        return false
+    }
 }
