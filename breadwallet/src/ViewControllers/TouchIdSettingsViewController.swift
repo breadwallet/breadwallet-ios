@@ -25,6 +25,12 @@ class TouchIdSettingsViewController : UIViewController {
     private let toggle = UISwitch()
     private let separator = UIView(color: .secondaryShadow)
     private let textView = MyTextView()
+    private let walletManager: WalletManager
+
+    init(walletManager: WalletManager) {
+        self.walletManager = walletManager
+        super.init(nibName: nil, bundle: nil)
+    }
 
     override func viewDidLoad() {
         addSubviews()
@@ -81,6 +87,10 @@ class TouchIdSettingsViewController : UIViewController {
         textView.delegate = self
         textView.attributedText = textViewText
         textView.tintColor = .primaryButton
+        toggle.isOn = walletManager.spendingLimit > 0
+        toggle.valueChanged = {
+            print("isOn: \(self.toggle.isOn)")
+        }
     }
 
     private var textViewText: NSAttributedString {
@@ -98,6 +108,9 @@ class TouchIdSettingsViewController : UIViewController {
         return attributedString
     }
 
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 extension TouchIdSettingsViewController : UITextViewDelegate {
