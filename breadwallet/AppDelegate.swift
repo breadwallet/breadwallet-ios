@@ -33,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let applicationController = ApplicationController()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        UIView.swizzleSetFrame()
         applicationController.launch(options: launchOptions)
         return true
     }
