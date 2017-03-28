@@ -104,12 +104,15 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         toggleBackground.clipsToBounds = true
         toggleBackground.layer.cornerRadius = 16.0
         toggleBackground.constrain(toSuperviewEdges: nil)
-        toggleBackground.alpha = 0.0
+        toggleBackground.alpha = walletManager.spendingLimit > 0 ? 1.0 : 0.0
         toggle.valueChanged = { [weak self] in
             guard let myself = self else { return }
             UIView.animate(withDuration: 0.1, animations: {
                 toggleBackground.alpha = myself.toggle.isOn ? 1.0 : 0.0
             })
+
+            myself.walletManager.spendingLimit = myself.toggle.isOn ? C.satoshis : 0
+            myself.textView.attributedText = myself.textViewText
         }
     }
 

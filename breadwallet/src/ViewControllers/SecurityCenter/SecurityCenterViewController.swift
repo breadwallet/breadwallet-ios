@@ -28,6 +28,11 @@ class SecurityCenterViewController : UIViewController {
         didSet { paperKeyCell.tap = didTapPaperKey }
     }
 
+    init(walletManager: WalletManager) {
+        self.walletManager = walletManager
+        super.init(nibName: nil, bundle: nil)
+    }
+
     fileprivate var headerBackgroundHeight: NSLayoutConstraint?
     private let headerBackground = SecurityCenterHeader()
     private let header = ModalHeaderView(title: S.SecurityCenter.title, isFaqHidden: false, style: .light)
@@ -38,11 +43,17 @@ class SecurityCenterViewController : UIViewController {
     private let touchIdCell = SecurityCenterCell(title: S.SecurityCenter.Cells.touchIdTitle, descriptionText: S.SecurityCenter.Cells.touchIdDescription)
     private let paperKeyCell = SecurityCenterCell(title: S.SecurityCenter.Cells.paperKeyTitle, descriptionText: S.SecurityCenter.Cells.paperKeyDescription)
     private let separator = UIView(color: .secondaryShadow)
-    
+    private let walletManager: WalletManager
+
     override func viewDidLoad() {
         setupSubviewProperties()
         addSubviews()
         addConstraints()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        touchIdCell.isCheckHighlighted = walletManager.spendingLimit > 0
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -120,6 +131,10 @@ class SecurityCenterViewController : UIViewController {
             paperKeyCell.topAnchor.constraint(equalTo: touchIdCell.bottomAnchor),
             paperKeyCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             paperKeyCell.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -C.padding[2]) ])
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
