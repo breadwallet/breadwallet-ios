@@ -15,6 +15,15 @@ extension UINavigationController {
         setBlackBackArrow()
     }
 
+    func setWhiteStyle() {
+        navigationBar.tintColor = .white
+        navigationBar.titleTextAttributes = [
+            NSForegroundColorAttributeName: UIColor.white,
+            NSFontAttributeName: UIFont.customBold(size: 17.0)
+        ]
+        setTintableBackArrow()
+    }
+
     func setClearNavbar() {
         navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationBar.shadowImage = UIImage()

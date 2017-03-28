@@ -28,6 +28,17 @@ class SecurityCenterViewController : UIViewController {
         didSet { paperKeyCell.tap = didTapPaperKey }
     }
 
+    fileprivate var headerBackgroundHeight: NSLayoutConstraint?
+    private let headerBackground = SecurityCenterHeader()
+    private let header = ModalHeaderView(title: S.SecurityCenter.title, isFaqHidden: false, style: .light)
+    private let shield = UIImageView(image: #imageLiteral(resourceName: "shield"))
+    private let scrollView = UIScrollView()
+    private let info = UILabel(font: .customBody(size: 16.0))
+    private let pinCell = SecurityCenterCell(title: S.SecurityCenter.Cells.pinTitle, descriptionText: S.SecurityCenter.Cells.pinDescription)
+    private let touchIdCell = SecurityCenterCell(title: S.SecurityCenter.Cells.touchIdTitle, descriptionText: S.SecurityCenter.Cells.touchIdDescription)
+    private let paperKeyCell = SecurityCenterCell(title: S.SecurityCenter.Cells.paperKeyTitle, descriptionText: S.SecurityCenter.Cells.paperKeyDescription)
+    private let separator = UIView(color: .secondaryShadow)
+    
     override func viewDidLoad() {
         setupSubviewProperties()
         addSubviews()
@@ -110,17 +121,6 @@ class SecurityCenterViewController : UIViewController {
             paperKeyCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             paperKeyCell.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -C.padding[2]) ])
     }
-
-    fileprivate var headerBackgroundHeight: NSLayoutConstraint?
-    private let headerBackground = SecurityCenterHeader()
-    private let header = ModalHeaderView(title: S.SecurityCenter.title, isFaqHidden: false, style: .light)
-    private let shield = UIImageView(image: #imageLiteral(resourceName: "shield"))
-    private let scrollView = UIScrollView()
-    private let info = UILabel(font: .customBody(size: 16.0))
-    private let pinCell = SecurityCenterCell(title: S.SecurityCenter.Cells.pinTitle, descriptionText: S.SecurityCenter.Cells.pinDescription)
-    private let touchIdCell = SecurityCenterCell(title: S.SecurityCenter.Cells.touchIdTitle, descriptionText: S.SecurityCenter.Cells.touchIdDescription)
-    private let paperKeyCell = SecurityCenterCell(title: S.SecurityCenter.Cells.paperKeyTitle, descriptionText: S.SecurityCenter.Cells.paperKeyDescription)
-    private let separator = UIView(color: .secondaryShadow)
 }
 
 extension SecurityCenterViewController : UIScrollViewDelegate {
