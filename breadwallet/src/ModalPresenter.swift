@@ -212,7 +212,8 @@ class ModalPresenter : Subscriber {
             nc.pushViewController(updatePin, animated: true)
         }
         securityCenter.didTapTouchId = {
-            let touchIdSettings = TouchIdSettingsViewController()
+            guard let walletManager = self.walletManager else { return }
+            let touchIdSettings = TouchIdSettingsViewController(walletManager: walletManager)
             nc.pushViewController(touchIdSettings, animated: true)
         }
         securityCenter.didTapPaperKey = {
