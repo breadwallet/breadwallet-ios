@@ -161,7 +161,7 @@ fileprivate class EventManager {
                 guard JSONSerialization.isValidJSONObject(dataToSerialize) else { print("Invalid json"); return }
                 var error: NSError?
                 if JSONSerialization.writeJSONObject(dataToSerialize, to: outputStream, options: [], error: &error) == 0 {
-                    print("Unable to write JSON for events file: \(error)")
+                    print("Unable to write JSON for events file: \(String(describing: error))")
                 }
             }
             myself.buffer.removeAll()
@@ -201,11 +201,11 @@ fileprivate class EventManager {
                     if let httpResponse = response as? HTTPURLResponse {
                         if httpResponse.statusCode != 201 {
                             if let responseData = data {
-                                print("Error uploading event data to server: STATUS=\(httpResponse.statusCode), connErr=\(error), data=\(String(data: responseData, encoding: .utf8))")
+                                print("Error uploading event data to server: STATUS=\(httpResponse.statusCode), connErr=\(String(describing: error)), data=\(String(describing: String(data: responseData, encoding: .utf8)))")
                             }
                         } else {
                             if let responseData = data {
-                                print("Successfully sent event data to server \(fileName) => \(httpResponse.statusCode) data=\(String(data: responseData, encoding: .utf8))")
+                                print("Successfully sent event data to server \(fileName) => \(httpResponse.statusCode) data=\(String(describing: String(data: responseData, encoding: .utf8)))")
                             }
                         }
                     }

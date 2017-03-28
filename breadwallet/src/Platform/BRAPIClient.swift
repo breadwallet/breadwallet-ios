@@ -265,7 +265,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
                         self.log("\(logLine) got authentication challenge from API - will attempt to get token")
                         self.getToken { err in
                             if err != nil && retryCount < 1 { // retry once
-                                self.log("\(logLine) error retrieving token: \(err) - will retry")
+                                self.log("\(logLine) error retrieving token: \(String(describing: err)) - will retry")
                                 DispatchQueue.main.asyncAfter(deadline: DispatchTime(uptimeNanoseconds: 1)) {
                                     self.dataTaskWithRequest(
                                         request, authenticated: authenticated,
@@ -273,7 +273,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
                                     ).resume()
                                 }
                             } else if err != nil && retryCount > 0 { // fail if we already retried
-                                self.log("\(logLine) error retrieving token: \(err) - will no longer retry")
+                                self.log("\(logLine) error retrieving token: \(String(describing: err)) - will no longer retry")
                                 handler(nil, nil, err)
                             } else if retryCount < 1 { // no error, so attempt the request again
                                 self.log("\(logLine) retrieved token, so retrying the original request")
@@ -289,7 +289,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
                         handler(data, httpResp, err as NSError?)
                     }
                 } else {
-                    self.log("\(logLine) encountered connection error \(err)")
+                    self.log("\(logLine) encountered connection error \(String(describing: err))")
                     handler(data, nil, err as NSError?)
                 }
             }
@@ -406,7 +406,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
                     errStr = "invalid json"
                 }
             } else {
-                self.log("fee-per-kb network error: \(err)")
+                self.log("fee-per-kb network error: \(String(describing: err))")
                 errStr = "bad network connection"
             }
             handler(feePerKb, errStr)
@@ -448,7 +448,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
         }
         dataTaskWithRequest(req as URLRequest, authenticated: true, retryCount: 0) { (dat, resp, er) in
             let dat2 = String(data: dat ?? Data(), encoding: .utf8)
-            self.log("save push token resp: \(resp) data: \(dat2)")
+            self.log("save push token resp: \(String(describing: resp)) data: \(String(describing: dat2))")
         }.resume()
     }
     
@@ -488,7 +488,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
                     }
                 }
             } else {
-                self.log("error fetching features: \(err)")
+                self.log("error fetching features: \(String(describing: err))")
             }
         }.resume()
     }
@@ -800,7 +800,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
             let req = URLRequest(url: url("/assets/bundles/\(bundleName)/download"))
             dataTaskWithRequest(req) { (data, response, err) -> Void in
                 if err != nil || response?.statusCode != 200 {
-                    return handler("error fetching bundle: \(err)")
+                    return handler("error fetching bundle: \(String(describing: err))")
                 }
                 if let data = data {
                     do {

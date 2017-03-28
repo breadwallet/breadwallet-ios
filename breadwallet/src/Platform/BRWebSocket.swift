@@ -159,7 +159,7 @@ class BRWebSocketServer {
             
             if resp.error > 0 {
                 let errstr = strerror(resp.error)
-                log("error doing a select \(errstr) - removing all clients")
+                log("error doing a select \(String(describing: errstr)) - removing all clients")
                 sockets.removeAll()
                 continue
             }

@@ -71,7 +71,7 @@ struct PaymentRequest {
     }
 
     func fetchRemoteRequest(completion: @escaping (PaymentRequest?) -> Void) {
-        let request = NSMutableURLRequest(url: remoteRequest as! URL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0)
+        let request = NSMutableURLRequest(url: remoteRequest! as URL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0)
         request.setValue("application/bitcoin-paymentrequest", forHTTPHeaderField: "Accept")
 
 
