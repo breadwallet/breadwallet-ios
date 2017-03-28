@@ -47,26 +47,26 @@ extension WalletManager : WalletAuthenticator {
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(errSecNotAvailable))
         }
         
-        if try keychainItem(key: keychainKey.seed) as Data? != nil { // upgrade from old keychain scheme
-            let seedPhrase: String? = try keychainItem(key: keychainKey.mnemonic)
+        if try keychainItem(key: KeychainKey.seed) as Data? != nil { // upgrade from old keychain scheme
+            let seedPhrase: String? = try keychainItem(key: KeychainKey.mnemonic)
             var seed = UInt512()
             print("upgrading to authenticated keychain scheme")
             BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
             let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
             seed = UInt512() // clear seed
-            try setKeychainItem(key: keychainKey.mnemonic, item: seedPhrase, authenticated: true)
-            try setKeychainItem(key: keychainKey.masterPubKey,
+            try setKeychainItem(key: KeychainKey.mnemonic, item: seedPhrase, authenticated: true)
+            try setKeychainItem(key: KeychainKey.masterPubKey,
                                 item: Data(buffer: UnsafeBufferPointer(start: [mpk], count: 1)))
-            try setKeychainItem(key: keychainKey.seed, item: nil as Data?)
+            try setKeychainItem(key: KeychainKey.seed, item: nil as Data?)
         }
 
-        guard var mpk: Data = try keychainItem(key: keychainKey.masterPubKey), mpk.count >= 69 else {
+        guard var mpk: Data = try keychainItem(key: KeychainKey.masterPubKey), mpk.count >= 69 else {
             try self.init(masterPubKey: BRMasterPubKey(), earliestKeyTime: 0, dbPath: dbPath)
             return
         }
         
         var earliestKeyTime = TimeInterval(BIP39_CREATION_TIME) - NSTimeIntervalSince1970
-        if let creationTime: Data = try keychainItem(key: keychainKey.creationTime),
+        if let creationTime: Data = try keychainItem(key: KeychainKey.creationTime),
             creationTime.count == MemoryLayout<TimeInterval>.stride {
             creationTime.withUnsafeBytes({ earliestKeyTime = $0.pointee })
         }
@@ -81,8 +81,8 @@ extension WalletManager : WalletAuthenticator {
         if didInitWallet { return false }
 
         do {
-            if try keychainItem(key: keychainKey.masterPubKey) as Data? != nil { return false }
-            if try keychainItem(key: keychainKey.seed) as Data? != nil { return false } // check for old keychain scheme
+            if try keychainItem(key: KeychainKey.masterPubKey) as Data? != nil { return false }
+            if try keychainItem(key: KeychainKey.seed) as Data? != nil { return false } // check for old keychain scheme
             return true
         }
         catch { return false }
@@ -90,8 +90,8 @@ extension WalletManager : WalletAuthenticator {
 
     static var hasWallet: Bool {
         do {
-            if try keychainItem(key: keychainKey.masterPubKey) as Data? != nil { return true }
-            if try keychainItem(key: keychainKey.seed) as Data? != nil { return true } // check for old keychain scheme
+            if try keychainItem(key: KeychainKey.masterPubKey) as Data? != nil { return true }
+            if try keychainItem(key: KeychainKey.seed) as Data? != nil { return true } // check for old keychain scheme
             return false
         }
         catch { return false }
@@ -99,7 +99,7 @@ extension WalletManager : WalletAuthenticator {
 
     //Login with pin should be required if the pin hasn't been used within a week
     var pinLoginRequired: Bool {
-        let pinUnlockTime = UserDefaults.standard.double(forKey: defaultsKey.pinUnlockTime)
+        let pinUnlockTime = UserDefaults.standard.double(forKey: DefaultsKey.pinUnlockTime)
         let now = Date.timeIntervalSinceReferenceDate
         let secondsInWeek = 60.0*60.0*24.0*7.0
         return now - pinUnlockTime > secondsInWeek
@@ -115,7 +115,7 @@ extension WalletManager : WalletAuthenticator {
         guard canUseTouchID else { return false }
         
         do {
-            let spendLimit: Int64 = try keychainItem(key: keychainKey.spendLimit) ?? 0
+            let spendLimit: Int64 = try keychainItem(key: KeychainKey.spendLimit) ?? 0
             guard let wallet = wallet else { return false }
             return wallet.amountSentByTx(forTx) + wallet.totalSent <= UInt64(spendLimit)
         }
@@ -124,16 +124,16 @@ extension WalletManager : WalletAuthenticator {
 
     var spendingLimit: UInt64 {
         get {
-            guard UserDefaults.standard.object(forKey: defaultsKey.spendLimitAmount) != nil else {
+            guard UserDefaults.standard.object(forKey: DefaultsKey.spendLimitAmount) != nil else {
                 return 0
             }
-            return UInt64(UserDefaults.standard.double(forKey: defaultsKey.spendLimitAmount))
+            return UInt64(UserDefaults.standard.double(forKey: DefaultsKey.spendLimitAmount))
         }
         set {
             guard let wallet = self.wallet else { assert(false, "No wallet!"); return }
             do {
-                try setKeychainItem(key: keychainKey.spendLimit, item: Int64(wallet.totalSent + spendingLimit))
-                UserDefaults.standard.set(newValue, forKey: defaultsKey.spendLimitAmount)
+                try setKeychainItem(key: KeychainKey.spendLimit, item: Int64(wallet.totalSent + spendingLimit))
+                UserDefaults.standard.set(newValue, forKey: DefaultsKey.spendLimitAmount)
             } catch let error {
                 print("Set spending limit error: \(error)")
             }
@@ -143,7 +143,7 @@ extension WalletManager : WalletAuthenticator {
     // number of unique failed pin attempts remaining before wallet is wiped
     var pinAttemptsRemaining: Int {
         do {
-            let failCount: Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
+            let failCount: Int64 = try keychainItem(key: KeychainKey.pinFailCount) ?? 0
             return Int(8 - failCount)
         }
         catch { return -1 }
@@ -152,9 +152,9 @@ extension WalletManager : WalletAuthenticator {
     // after 3 or more failed pin attempts, authentication is disabled until this time (interval since reference date)
     var walletDisabledUntil: TimeInterval {
         do {
-            let failCount: Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
+            let failCount: Int64 = try keychainItem(key: KeychainKey.pinFailCount) ?? 0
             guard failCount >= 3 else { return 0 }
-            let failTime: Int64 = try keychainItem(key: keychainKey.pinFailTime) ?? 0
+            let failTime: Int64 = try keychainItem(key: KeychainKey.pinFailTime) ?? 0
             return Double(failTime) + pow(6, Double(failCount - 3))*60
         }
         catch let error {
@@ -167,10 +167,10 @@ extension WalletManager : WalletAuthenticator {
     func authenticate(pin: String) -> Bool {
         do {
             let secureTime = Date.timeIntervalSinceReferenceDate // TODO: XXX use secure time from https request
-            var failCount: Int64 = try keychainItem(key: keychainKey.pinFailCount) ?? 0
+            var failCount: Int64 = try keychainItem(key: KeychainKey.pinFailCount) ?? 0
 
             if failCount >= 3 {
-                let failTime: Int64 = try keychainItem(key: keychainKey.pinFailTime) ?? 0
+                let failTime: Int64 = try keychainItem(key: KeychainKey.pinFailTime) ?? 0
 
                 if secureTime < Double(failTime) + pow(6, Double(failCount - 3))*60 { // locked out
                     return false
@@ -179,19 +179,19 @@ extension WalletManager : WalletAuthenticator {
             
             if !WalletManager.failedPins.contains(pin) { // count unique attempts before checking success
                 failCount += 1
-                try setKeychainItem(key: keychainKey.pinFailCount, item: failCount)
+                try setKeychainItem(key: KeychainKey.pinFailCount, item: failCount)
             }
             
-            if try pin == keychainItem(key: keychainKey.pin) { // successful pin attempt
-                let limit = Int64(UserDefaults.standard.double(forKey: defaultsKey.spendLimitAmount))
+            if try pin == keychainItem(key: KeychainKey.pin) { // successful pin attempt
+                let limit = Int64(UserDefaults.standard.double(forKey: DefaultsKey.spendLimitAmount))
                 
                 WalletManager.failedPins.removeAll()
-                UserDefaults.standard.set(Date.timeIntervalSinceReferenceDate, forKey: defaultsKey.pinUnlockTime)
-                try setKeychainItem(key: keychainKey.pinFailTime, item: Int64(0))
-                try setKeychainItem(key: keychainKey.pinFailCount, item: Int64(0))
+                UserDefaults.standard.set(Date.timeIntervalSinceReferenceDate, forKey: DefaultsKey.pinUnlockTime)
+                try setKeychainItem(key: KeychainKey.pinFailTime, item: Int64(0))
+                try setKeychainItem(key: KeychainKey.pinFailCount, item: Int64(0))
                 
                 if let wallet = wallet, limit > 0 {
-                    try setKeychainItem(key: keychainKey.spendLimit,
+                    try setKeychainItem(key: KeychainKey.spendLimit,
                                         item: Int64(wallet.totalSent) + limit)
                 }
                 
@@ -204,9 +204,9 @@ extension WalletManager : WalletAuthenticator {
                     if !wipeWallet() { return false }
                     return false
                 }
-                let pinFailTime: Int64 = try keychainItem(key: keychainKey.pinFailTime) ?? 0
+                let pinFailTime: Int64 = try keychainItem(key: KeychainKey.pinFailTime) ?? 0
                 if secureTime > Double(pinFailTime) {
-                    try setKeychainItem(key: keychainKey.pinFailTime, item: Int64(secureTime))
+                    try setKeychainItem(key: KeychainKey.pinFailTime, item: Int64(secureTime))
                 }
             }
             
@@ -233,7 +233,7 @@ extension WalletManager : WalletAuthenticator {
     // sign the given transaction using touch ID authentication
     func signTransaction(_ tx: BRTxRef, touchIDPrompt: String, completion: @escaping (Bool) -> ()) {
         do {
-            let spendLimit: Int64 = try keychainItem(key: keychainKey.spendLimit) ?? 0
+            let spendLimit: Int64 = try keychainItem(key: KeychainKey.spendLimit) ?? 0
             guard let wallet = wallet, wallet.amountSentByTx(tx) + wallet.totalSent <= UInt64(spendLimit) else {
                 return completion(false)
             }
@@ -252,7 +252,7 @@ extension WalletManager : WalletAuthenticator {
         guard authenticate(pin: pin) else { return nil }
         
         do {
-            return try keychainItem(key: keychainKey.mnemonic)
+            return try keychainItem(key: KeychainKey.mnemonic)
         }
         catch { return nil }
     }
@@ -264,11 +264,11 @@ extension WalletManager : WalletAuthenticator {
         
         do {
             var seed = UInt512()
-            try setKeychainItem(key: keychainKey.mnemonic, item: phrase, authenticated: true)
+            try setKeychainItem(key: KeychainKey.mnemonic, item: phrase, authenticated: true)
             BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
             masterPubKey = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
             seed = UInt512() // clear seed
-            try setKeychainItem(key: keychainKey.masterPubKey,
+            try setKeychainItem(key: KeychainKey.masterPubKey,
                                 item: Data(buffer: UnsafeBufferPointer(start: [masterPubKey], count: 1)))
             return true
         }
@@ -284,7 +284,7 @@ extension WalletManager : WalletAuthenticator {
 
         // we store the wallet creation time on the keychain because keychain data persists even when app is deleted
         do {
-            try setKeychainItem(key: keychainKey.creationTime,
+            try setKeychainItem(key: KeychainKey.creationTime,
                                 item: Data(buffer: UnsafeBufferPointer(start: [time], count: 1)))
             self.earliestKeyTime = time
         }
@@ -314,7 +314,7 @@ extension WalletManager : WalletAuthenticator {
         guard authenticate(pin: pin) else { return false }
 
         do {
-            try setKeychainItem(key: keychainKey.pin, item: newPin)
+            try setKeychainItem(key: KeychainKey.pin, item: newPin)
             return true
         }
         catch { return false }
@@ -329,13 +329,13 @@ extension WalletManager : WalletAuthenticator {
                 BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
                 let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
                 seed = UInt512() // clear seed
-                guard var mpkData: Data = try keychainItem(key: keychainKey.masterPubKey) else { return false }
+                guard var mpkData: Data = try keychainItem(key: KeychainKey.masterPubKey) else { return false }
                 mpkData.count = MemoryLayout<BRMasterPubKey>.stride
                 guard mpkData.withUnsafeBytes({ $0.pointee == mpk }) else { return false }
             }
-            else if try keychainItem(key: keychainKey.pin) != nil { return false }
+            else if try keychainItem(key: KeychainKey.pin) != nil { return false }
             
-            try setKeychainItem(key: keychainKey.pin, item: newPin)
+            try setKeychainItem(key: KeychainKey.pin, item: newPin)
             return true
         }
         catch { return false }
@@ -352,15 +352,15 @@ extension WalletManager : WalletAuthenticator {
             masterPubKey = BRMasterPubKey()
             earliestKeyTime = 0
             try FileManager.default.removeItem(atPath: dbPath)
-            try setKeychainItem(key: keychainKey.apiAuthKey, item: nil as Data?)
-            try setKeychainItem(key: keychainKey.spendLimit, item: nil as Int64?)
-            try setKeychainItem(key: keychainKey.creationTime, item: nil as Data?)
-            try setKeychainItem(key: keychainKey.pinFailTime, item: nil as Int64?)
-            try setKeychainItem(key: keychainKey.pinFailCount, item: nil as Int64?)
-            try setKeychainItem(key: keychainKey.pin, item: nil as String?)
-            try setKeychainItem(key: keychainKey.masterPubKey, item: nil as Data?)
-            try setKeychainItem(key: keychainKey.seed, item: nil as Data?)
-            try setKeychainItem(key: keychainKey.mnemonic, item: nil as String?, authenticated: true)
+            try setKeychainItem(key: KeychainKey.apiAuthKey, item: nil as Data?)
+            try setKeychainItem(key: KeychainKey.spendLimit, item: nil as Int64?)
+            try setKeychainItem(key: KeychainKey.creationTime, item: nil as Data?)
+            try setKeychainItem(key: KeychainKey.pinFailTime, item: nil as Int64?)
+            try setKeychainItem(key: KeychainKey.pinFailCount, item: nil as Int64?)
+            try setKeychainItem(key: KeychainKey.pin, item: nil as String?)
+            try setKeychainItem(key: KeychainKey.masterPubKey, item: nil as Data?)
+            try setKeychainItem(key: KeychainKey.seed, item: nil as Data?)
+            try setKeychainItem(key: KeychainKey.mnemonic, item: nil as String?, authenticated: true)
             return true
         }
         catch { return false }
@@ -370,14 +370,14 @@ extension WalletManager : WalletAuthenticator {
     var apiAuthKey: String? {
         return autoreleasepool {
             do {
-                if let apiKey: String? = try? keychainItem(key: keychainKey.apiAuthKey) {
+                if let apiKey: String? = try? keychainItem(key: KeychainKey.apiAuthKey) {
                     if apiKey != nil {
                         return apiKey
                     }
                 }
                 var key = BRKey()
                 var seed = UInt512()
-                guard let phrase: String = try keychainItem(key: keychainKey.mnemonic) else { return nil }
+                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
                 BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
                 BRBIP32APIAuthKey(&key, &seed, MemoryLayout<UInt512>.size)
                 seed = UInt512() // clear seed
@@ -387,7 +387,7 @@ extension WalletManager : WalletAuthenticator {
                 guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0, pkLen) }) == pkLen else { return nil }
                 let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
                                                                        CFStringBuiltInEncodings.UTF8.rawValue) as String
-                try setKeychainItem(key: keychainKey.apiAuthKey, item: privKey)
+                try setKeychainItem(key: KeychainKey.apiAuthKey, item: privKey)
                 return privKey
             }
             catch let error {
@@ -401,20 +401,20 @@ extension WalletManager : WalletAuthenticator {
     var userAccount: Dictionary<AnyHashable, Any>? {
         get {
             do {
-                return try keychainItem(key: keychainKey.userAccount)
+                return try keychainItem(key: KeychainKey.userAccount)
             }
             catch { return nil }
         }
 
         set (value) {
             do {
-                try setKeychainItem(key: keychainKey.userAccount, item: value)
+                try setKeychainItem(key: KeychainKey.userAccount, item: value)
             }
             catch { }
         }
     }
     
-    private struct keychainKey {
+    private struct KeychainKey {
         public static let mnemonic = "mnemonic"
         public static let creationTime = "creationtime"
         public static let masterPubKey = "masterpubkey"
@@ -427,7 +427,7 @@ extension WalletManager : WalletAuthenticator {
         public static let seed = "seed" // deprecated
     }
     
-    private struct defaultsKey {
+    private struct DefaultsKey {
         public static let spendLimitAmount = "SPEND_LIMIT_AMOUNT"
         public static let pinUnlockTime = "PIN_UNLOCK_TIME"
     }
@@ -438,7 +438,7 @@ extension WalletManager : WalletAuthenticator {
                 var seed = UInt512()
                 defer { seed = UInt512() }
                 guard let wallet = wallet else { return false }
-                guard let phrase: String = try keychainItem(key: keychainKey.mnemonic) else { return false }
+                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return false }
                 BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
                 return wallet.signTransaction(tx, seed: &seed)
             }
