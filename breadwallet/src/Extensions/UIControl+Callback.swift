@@ -50,7 +50,7 @@ extension UIControl {
         }
         set {
             guard let newValue = newValue else { return }
-            addTarget(self, action: #selector(valueDidChange), for: .touchUpInside)
+            addTarget(self, action: #selector(valueDidChange), for: .valueChanged)
             objc_setAssociatedObject(self, &AssociatedKeys.valueChangedCallback, CallbackWrapper(newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }

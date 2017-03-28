@@ -88,8 +88,22 @@ class TouchIdSettingsViewController : UIViewController {
         textView.attributedText = textViewText
         textView.tintColor = .primaryButton
         toggle.isOn = walletManager.spendingLimit > 0
-        toggle.valueChanged = {
-            print("isOn: \(self.toggle.isOn)")
+        addGradientToToggle()
+    }
+
+    private func addGradientToToggle() {
+        toggle.onTintColor = .clear
+        let toggleBackground = GradientView()
+        toggle.insertSubview(toggleBackground, at: 0)
+        toggleBackground.clipsToBounds = true
+        toggleBackground.layer.cornerRadius = 16.0
+        toggleBackground.constrain(toSuperviewEdges: nil)
+        toggleBackground.alpha = 0.0
+        toggle.valueChanged = { [weak self] in
+            guard let myself = self else { return }
+            UIView.animate(withDuration: 0.1, animations: {
+                toggleBackground.alpha = myself.toggle.isOn ? 1.0 : 0.0
+            })
         }
     }
 
