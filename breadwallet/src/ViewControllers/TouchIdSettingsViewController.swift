@@ -14,9 +14,15 @@ class MyTextView : UITextView {
     }
 }
 
-class TouchIdSettingsViewController : UIViewController {
+class TouchIdSettingsViewController : UIViewController, Subscriber {
 
     var presentSpendingLimit: (() -> Void)?
+
+    init(walletManager: WalletManager, store: Store) {
+        self.walletManager = walletManager
+        self.store = store
+        super.init(nibName: nil, bundle: nil)
+    }
 
     private let header = RadialGradientView(backgroundColor: .darkPurple)
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "TouchId-Large"))
@@ -26,13 +32,13 @@ class TouchIdSettingsViewController : UIViewController {
     private let separator = UIView(color: .secondaryShadow)
     private let textView = MyTextView()
     private let walletManager: WalletManager
-
-    init(walletManager: WalletManager) {
-        self.walletManager = walletManager
-        super.init(nibName: nil, bundle: nil)
-    }
+    private let store: Store
+    private var rate: Rate?
 
     override func viewDidLoad() {
+        store.subscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: {
+            self.rate = $0.currentRate
+        })
         addSubviews()
         addConstraints()
         setData()
@@ -108,7 +114,9 @@ class TouchIdSettingsViewController : UIViewController {
     }
 
     private var textViewText: NSAttributedString {
-        let string = "Spending Limit: 1btc = $678.93 USD \n\nYou can customize your Touch ID Spending Limit from the "
+        guard let rate = rate else { return NSAttributedString(string: "") }
+        let amount = Amount(amount: walletManager.spendingLimit, rate: rate.rate)
+        let string = "Spending Limit: \(amount.bits) = \(amount.localCurrency) \(rate.code) \n\nYou can customize your Touch ID Spending Limit from the "
         let link = "Touch ID Spending Limit Screen"
         let attributedString = NSMutableAttributedString(string: string, attributes: [
                 NSFontAttributeName: UIFont.customBody(size: 13.0),
@@ -120,6 +128,10 @@ class TouchIdSettingsViewController : UIViewController {
             ])
         attributedString.append(attributedLink)
         return attributedString
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 
     required init?(coder aDecoder: NSCoder) {
