@@ -50,7 +50,7 @@ import Foundation
             }
         default: break
         }
-        print("[BRHTTPStorePlugin]: unexpected error: \(err)")
+        print("[BRHTTPStorePlugin]: unexpected error: \(String(describing: err))")
         return BRHTTPResponse(request: request, code: 500)
     }
     

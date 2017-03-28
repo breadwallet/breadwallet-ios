@@ -102,7 +102,7 @@ import BRCore
             shortKeyError = e
         }
 
-        print("Unable to initialize BRTxMetadataObject: \(shortKeyError) : \(longKeyError)")
+        print("Unable to initialize BRTxMetadataObject: \(String(describing: shortKeyError)) : \(String(describing: longKeyError))")
         return nil
     }
     

@@ -72,7 +72,7 @@ class PinView : UIView {
     private let style: PinViewStyle
 
     private func toRadian(value: Int) -> CGFloat {
-        return CGFloat(Double(value) / 180.0 * M_PI)
+        return CGFloat(Double(value) / 180.0 * .pi)
     }
 
     private func setupSubviews() {

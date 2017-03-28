@@ -689,7 +689,7 @@ open class BRReplicatedKVStore: NSObject {
                 }
             }
         default:
-            log("Error fetching remote version for key \(key), error: \(remoteErr)")
+            log("Error fetching remote version for key \(key), error: \(String(describing: remoteErr))")
             completionHandler(.replicationError)
         }
     }
@@ -726,7 +726,7 @@ open class BRReplicatedKVStore: NSObject {
             && (e != SQLITE_NULL && e != r) {
             let es = NSString(cString: sqlite3_errstr(e), encoding: String.Encoding.utf8.rawValue)
             let em = NSString(cString: sqlite3_errmsg(db), encoding: String.Encoding.utf8.rawValue)
-            log("\(s): errcode=\(e) errstr=\(es) errmsg=\(em)")
+            log("\(s): errcode=\(e) errstr=\(String(describing: es)) errmsg=\(String(describing: em))")
             throw BRReplicatedKVStoreError.sqLiteError
         }
     }

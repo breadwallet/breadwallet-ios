@@ -106,7 +106,7 @@ import Foundation
                             headers: hdrs, body: body)
                         return next(BRHTTPMiddlewareResponse(request: request, response: resp))
                     } else {
-                        print("[BRAPIProxy] error getting response from backend: \(nsError)")
+                        print("[BRAPIProxy] error getting response from backend: \(String(describing: nsError))")
                         return next(BRHTTPMiddlewareResponse(request: request, response: nil))
                     }
             }).resume()

@@ -16,12 +16,12 @@ class ExchangeUpdater {
         self.apiClient = apiClient
     }
 
-    func refresh(completion: (() -> Void)? = nil) {
+    func refresh(completion: @escaping () -> Void) {
         apiClient.exchangeRates { rates, error in
-            guard let currencyCode = Locale.current.currencyCode else { completion?(); return }
-            guard let currentRate = rates.first( where: { $0.code == currencyCode }) else { completion?(); return }
+            guard let currencyCode = Locale.current.currencyCode else { completion(); return }
+            guard let currentRate = rates.first( where: { $0.code == currencyCode }) else { completion(); return }
             self.store.perform(action: ExchangeRates.setRate(currentRate))
-            completion?()
+            completion()
         }
     }
 

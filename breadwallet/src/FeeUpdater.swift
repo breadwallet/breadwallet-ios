@@ -24,12 +24,12 @@ class FeeUpdater {
         self.walletManager.wallet?.feePerKb = feePerKb
     }
 
-    func refresh(completion: (() -> Void)? = nil) {
+    func refresh(completion: @escaping () -> Void) {
         apiClient.feePerKb { newFee, error in
-            guard error == nil else { print("feePerKb error: \(error)"); completion?(); return }
+            guard error == nil else { print("feePerKb error: \(String(describing: error))"); completion(); return }
             self.feePerKb = newFee
             self.updateWalletFees()
-            completion?()
+            completion()
         }
 
         if timer == nil {
@@ -37,8 +37,12 @@ class FeeUpdater {
         }
     }
 
+    func refresh() {
+        refresh(completion: {})
+    }
+
     @objc func intervalRefresh() {
-        refresh(completion: nil)
+        refresh(completion: {})
     }
 
     var feePerKb: UInt64 {
