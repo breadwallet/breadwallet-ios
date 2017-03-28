@@ -275,7 +275,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         defer { sqlite3_finalize(sql) }
         
         for i in 0..<txHashes.count {
-            sqlite3_bind_blob(sql, i + 1, UnsafePointer(txHashes) + i, Int32(MemoryLayout<UInt256>.size),
+            sqlite3_bind_blob(sql, Int32(i + 1), UnsafePointer(txHashes) + i, Int32(MemoryLayout<UInt256>.size),
                               SQLITE_TRANSIENT)
         }
         
