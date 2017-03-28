@@ -63,7 +63,7 @@ class BRHTTPServerTests: XCTestCase {
         let url = URL(string: "http://localhost:\(server.port)/bundle.tar")!
         let req = URLRequest(url: url)
         URLSession.shared.dataTask(with: req, completionHandler: { (data, resp, error) -> Void in
-            NSLog("error: \(error)")
+            NSLog("error: \(String(describing: error))")
             let httpResp = resp as! HTTPURLResponse
             NSLog("status: \(httpResp.statusCode)")
             NSLog("headers: \(httpResp.allHeaderFields)")
@@ -74,7 +74,7 @@ class BRHTTPServerTests: XCTestCase {
         
         waitForExpectations(timeout: 5.0) { (err) -> Void in
             if err != nil {
-                NSLog("timeout error \(err)")
+                NSLog("timeout error \(String(describing: err))")
             }
         }
     }

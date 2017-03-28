@@ -32,7 +32,7 @@ class ConfirmPaperPhraseViewController : UIViewController {
         func random() -> Int { return Int(arc4random_uniform(10) + 1) }
         let first = random()
         var second = random()
-        while !(abs(Int32(second) - Int32(first)) > 1) {
+        while !(abs(Int32(second - first)) > 1) {
             second = random()
         }
         return (first, second)

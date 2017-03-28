@@ -599,7 +599,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
                     i += UInt(MemoryLayout<UInt32>.size)
                     let range: Range<Int> = Int(i)..<Int(i + keyLen)
                     guard let key = NSString(data: dat.subdata(in: range),
-                                             encoding: String.Encoding.utf8.rawValue) as? String else {
+                                             encoding: String.Encoding.utf8.rawValue) as String? else {
                         self.client.log("Well crap. Failed to decode a string.")
                         return completionFunc([], .unknown)
                     }
