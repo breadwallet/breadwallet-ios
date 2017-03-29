@@ -215,6 +215,10 @@ class ModalPresenter : Subscriber {
         securityCenter.didTapTouchId = {
             guard let walletManager = self.walletManager else { return }
             let touchIdSettings = TouchIdSettingsViewController(walletManager: walletManager, store: self.store)
+            touchIdSettings.presentSpendingLimit = {
+                let spendingLimit = TouchIdSpendingLimitViewController()
+                nc.pushViewController(spendingLimit, animated: true)
+            }
             nc.pushViewController(touchIdSettings, animated: true)
         }
         securityCenter.didTapPaperKey = {
