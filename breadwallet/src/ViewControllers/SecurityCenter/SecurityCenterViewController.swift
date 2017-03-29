@@ -73,6 +73,7 @@ class SecurityCenterViewController : UIViewController {
         info.lineBreakMode = .byWordWrapping
 
         pinCell.isCheckHighlighted = true
+        touchIdCell.isCheckHighlighted = walletManager.spendingLimit > 0
         paperKeyCell.isCheckHighlighted = true
         header.backgroundColor = .clear
     }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MyTextView : UITextView {
+class UnEditableTextView : UITextView {
     override var canBecomeFirstResponder: Bool {
         return false
     }
@@ -30,7 +30,7 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
     private let switchLabel = UILabel(font: .customBold(size: 14.0), color: .darkText)
     private let toggle = UISwitch()
     private let separator = UIView(color: .secondaryShadow)
-    private let textView = MyTextView()
+    private let textView = UnEditableTextView()
     private let walletManager: WalletManager
     private let store: Store
     private var rate: Rate?

@@ -125,4 +125,9 @@ enum S {
         static let switchLabel = NSLocalizedString("Enable Touch ID for Bread", comment: "Touch id switch label.")
         static let spendingLimitLabel = NSLocalizedString("Spending Limit: 1btc = $678.93 USD \n You can customize your Touch ID Spending Limit from the Touch ID Spending Limit Screen", comment: "Touch ID spending limit label")
     }
+
+    enum TouchIdSpendingLimit {
+        static let title = NSLocalizedString("Touch ID Limit", comment: "Touch Id spending limit screen title")
+        static let body = NSLocalizedString("You will be asked to enter you 6-Digit PIN for any send transaction over your Spending Limit, and every 48 hours since the last time you entered your 6-Digit PIN.", comment: "Touch ID spending limit screen body")
+    }
 }
