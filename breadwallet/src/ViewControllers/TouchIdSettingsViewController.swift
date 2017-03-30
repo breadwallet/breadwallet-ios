@@ -34,6 +34,7 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
     private let walletManager: WalletManager
     private let store: Store
     private var rate: Rate?
+    fileprivate var didTapSpendingLimit = false
 
     override func viewDidLoad() {
         store.subscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: {
@@ -42,6 +43,11 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         addSubviews()
         addConstraints()
         setData()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        didTapSpendingLimit = false
     }
 
     private func addSubviews() {
@@ -144,6 +150,8 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
 
 extension TouchIdSettingsViewController : UITextViewDelegate {
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        guard !didTapSpendingLimit else { return false }
+        didTapSpendingLimit = true
         presentSpendingLimit?()
         return false
     }
