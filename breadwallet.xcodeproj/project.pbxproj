@@ -330,6 +330,7 @@
 		CEF3D2D71E8AB9980070178E /* SpendingLimitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3D2D61E8AB9980070178E /* SpendingLimitTests.swift */; };
 		CEF3D2D91E8B3C380070178E /* TouchIdSpendingLimitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3D2D81E8B3C380070178E /* TouchIdSpendingLimitViewController.swift */; };
 		CEF3D2DB1E8B55C80070178E /* UISlider+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3D2DA1E8B55C80070178E /* UISlider+Gradient.swift */; };
+		CEF3D2DD1E8CBA790070178E /* LAContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3D2DC1E8CBA790070178E /* LAContext+Extensions.swift */; };
 		CEF3E8251DE2C9B2007C0A9E /* Trackable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8241DE2C9B2007C0A9E /* Trackable.swift */; };
 		CEF3E8271DE2C9C5007C0A9E /* EventManagerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8261DE2C9C5007C0A9E /* EventManagerCoordinator.swift */; };
 		CEF3E82B1DE51612007C0A9E /* GradientCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */; };
@@ -1431,6 +1432,7 @@
 		CEF3D2D61E8AB9980070178E /* SpendingLimitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpendingLimitTests.swift; sourceTree = "<group>"; };
 		CEF3D2D81E8B3C380070178E /* TouchIdSpendingLimitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TouchIdSpendingLimitViewController.swift; path = src/ViewControllers/TouchIdSpendingLimitViewController.swift; sourceTree = "<group>"; };
 		CEF3D2DA1E8B55C80070178E /* UISlider+Gradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UISlider+Gradient.swift"; path = "src/Extensions/UISlider+Gradient.swift"; sourceTree = "<group>"; };
+		CEF3D2DC1E8CBA790070178E /* LAContext+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "LAContext+Extensions.swift"; path = "src/Extensions/LAContext+Extensions.swift"; sourceTree = "<group>"; };
 		CEF3E8241DE2C9B2007C0A9E /* Trackable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Trackable.swift; path = src/EventManager/Trackable.swift; sourceTree = "<group>"; };
 		CEF3E8261DE2C9C5007C0A9E /* EventManagerCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventManagerCoordinator.swift; path = src/EventManager/EventManagerCoordinator.swift; sourceTree = "<group>"; };
 		CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GradientCircle.swift; path = src/Views/GradientCircle.swift; sourceTree = "<group>"; };
@@ -2677,6 +2679,7 @@
 				CE6DCC241E6001E50044257B /* UIControl+Callback.swift */,
 				CE124CFD1E68F57700DFA146 /* Async.swift */,
 				CEF3D2DA1E8B55C80070178E /* UISlider+Gradient.swift */,
+				CEF3D2DC1E8CBA790070178E /* LAContext+Extensions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -3528,6 +3531,7 @@
 				CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */,
 				CEBF32EE1DDBC30000348FC6 /* ShadowButton.swift in Sources */,
 				CEB909F71E5FE654001804DC /* EnterPhraseCollectionViewController.swift in Sources */,
+				CEF3D2DD1E8CBA790070178E /* LAContext+Extensions.swift in Sources */,
 				CECCE5AE1E04AD6300D99448 /* LabelSendCell.swift in Sources */,
 				22A9A9521DF61945000F0016 /* BRKVStorePlugin.swift in Sources */,
 				CEAFC8611E5D5B0500E4FD06 /* SegmentedButton.swift in Sources */,

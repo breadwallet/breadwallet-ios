@@ -104,28 +104,10 @@ extension WalletManager : WalletAuthenticator {
         let secondsInWeek = 60.0*60.0*24.0*7.0
         return now - pinUnlockTime > secondsInWeek
     }
-
-    // true if touch ID is enabled
-    var canUseTouchID: Bool {
-        return LAContext().canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
-    }
-
-    var isTouchIDAvailable: Bool {
-        var error: NSError? = nil
-        if LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            return true
-        } else {
-            if error?.code == LAError.touchIDNotAvailable.rawValue {
-                return false
-            } else {
-                return true
-            }
-        }
-    }
     
     // true if the given transaction can be signed with touch ID authentication
     func canUseTouchID(forTx: BRTxRef) -> Bool {
-        guard canUseTouchID else { return false }
+        guard LAContext.canUseTouchID else { return false }
         
         do {
             let spendLimit: Int64 = try keychainItem(key: KeychainKey.spendLimit) ?? 0

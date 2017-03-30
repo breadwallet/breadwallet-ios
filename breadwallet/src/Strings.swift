@@ -124,6 +124,8 @@ enum S {
         static let label = NSLocalizedString("Login to your Bread wallet and send money using just your finger print to a set limit.", comment: "Touch Id screen label")
         static let switchLabel = NSLocalizedString("Enable Touch ID for Bread", comment: "Touch id switch label.")
         static let spendingLimitLabel = NSLocalizedString("Spending Limit: 1btc = $678.93 USD \n You can customize your Touch ID Spending Limit from the Touch ID Spending Limit Screen", comment: "Touch ID spending limit label")
+        static let unavailableAlertTitle = NSLocalizedString("Touch ID Not Setup", comment: "Touch ID unavailable alert title")
+        static let unavailableAlertMessage = NSLocalizedString("You have not setup Touch ID on this device. Go to Settings->Touch ID & Passcode to set it up now.", comment: "Touch ID unavailable alert message")
     }
 
     enum TouchIdSpendingLimit {

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 private let touchIdSize: CGFloat = 32.0
 private let topControlHeight: CGFloat = 32.0
@@ -76,7 +77,7 @@ class LoginViewController : UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard let walletManager = self.walletManager else { return }
-        if walletManager.canUseTouchID && !walletManager.pinLoginRequired && !hasAttemptedToShowTouchId {
+        if LAContext.canUseTouchID && !walletManager.pinLoginRequired && !hasAttemptedToShowTouchId {
             hasAttemptedToShowTouchId = true
             touchIdTapped()
         }
@@ -154,7 +155,7 @@ class LoginViewController : UIViewController {
 
     private func addTouchIdButton() {
         guard let walletManager = walletManager else { return }
-        guard walletManager.canUseTouchID && !walletManager.pinLoginRequired else { return }
+        guard LAContext.canUseTouchID && !walletManager.pinLoginRequired else { return }
         view.addSubview(touchId)
         touchId.addTarget(self, action: #selector(touchIdTapped), for: .touchUpInside)
         touchId.constrain([
