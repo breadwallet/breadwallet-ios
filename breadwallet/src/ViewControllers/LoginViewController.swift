@@ -76,8 +76,7 @@ class LoginViewController : UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        guard let walletManager = self.walletManager else { return }
-        if LAContext.canUseTouchID && !walletManager.pinLoginRequired && !hasAttemptedToShowTouchId {
+        if shouldUseTouchId && !hasAttemptedToShowTouchId {
             hasAttemptedToShowTouchId = true
             touchIdTapped()
         }
@@ -154,8 +153,7 @@ class LoginViewController : UIViewController {
     }
 
     private func addTouchIdButton() {
-        guard let walletManager = walletManager else { return }
-        guard LAContext.canUseTouchID && !walletManager.pinLoginRequired else { return }
+        guard shouldUseTouchId else { return }
         view.addSubview(touchId)
         touchId.addTarget(self, action: #selector(touchIdTapped), for: .touchUpInside)
         touchId.constrain([
@@ -226,6 +224,11 @@ class LoginViewController : UIViewController {
             self?.pinView.fill(0)
             self?.lockIfNeeded()
         }
+    }
+
+    private var shouldUseTouchId: Bool {
+        guard let walletManager = self.walletManager else { return false }
+        return LAContext.canUseTouchID && !walletManager.pinLoginRequired && walletManager.spendingLimit > 0
     }
 
     @objc func touchIdTapped() {
