@@ -211,9 +211,8 @@ class LoginViewController : UIViewController {
         }) { completion in
             if self.isPresentedFromAccount {
                 self.dismiss(animated: true, completion: nil)
-            } else {
-                self.store.perform(action: LoginSuccess())
             }
+            self.store.perform(action: LoginSuccess())
         }
     }
 
