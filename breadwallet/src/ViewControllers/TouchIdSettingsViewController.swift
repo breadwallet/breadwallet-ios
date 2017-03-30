@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class UnEditableTextView : UITextView {
     override var canBecomeFirstResponder: Bool {
@@ -113,12 +114,19 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         toggleBackground.alpha = walletManager.spendingLimit > 0 ? 1.0 : 0.0
         toggle.valueChanged = { [weak self] in
             guard let myself = self else { return }
-            UIView.animate(withDuration: 0.1, animations: {
-                toggleBackground.alpha = myself.toggle.isOn ? 1.0 : 0.0
-            })
-
-            myself.walletManager.spendingLimit = myself.toggle.isOn ? C.satoshis : 0
-            myself.textView.attributedText = myself.textViewText
+            if LAContext.canUseTouchID {
+                UIView.animate(withDuration: 0.1, animations: {
+                    toggleBackground.alpha = myself.toggle.isOn ? 1.0 : 0.0
+                })
+                myself.walletManager.spendingLimit = myself.toggle.isOn ? C.satoshis : 0
+                myself.textView.attributedText = myself.textViewText
+            } else {
+                let alert = UIAlertController(title: S.TouchIdSettings.unavailableAlertTitle, message: S.TouchIdSettings.unavailableAlertMessage, preferredStyle: .alert)
+                alert.view.tintColor = C.defaultTintColor
+                alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
+                myself.present(alert, animated: true, completion: nil)
+                myself.toggle.isOn = false
+            }
         }
     }
 
