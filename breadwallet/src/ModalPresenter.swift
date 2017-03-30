@@ -216,7 +216,7 @@ class ModalPresenter : Subscriber {
             guard let walletManager = self.walletManager else { return }
             let touchIdSettings = TouchIdSettingsViewController(walletManager: walletManager, store: self.store)
             touchIdSettings.presentSpendingLimit = {
-                let spendingLimit = TouchIdSpendingLimitViewController()
+                let spendingLimit = TouchIdSpendingLimitViewController(walletManager: walletManager, store: self.store)
                 nc.pushViewController(spendingLimit, animated: true)
             }
             nc.pushViewController(touchIdSettings, animated: true)
