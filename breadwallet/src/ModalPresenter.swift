@@ -131,15 +131,7 @@ class ModalPresenter : Subscriber {
         case .receive:
             return receiveView(isRequestAmountVisible: true)
         case .menu:
-            let menu = MenuViewController()
-            let root = ModalViewController(childViewController: menu)
-            menu.didTapSecurity = {
-                self.modalTransitionDelegate.reset()
-                root.dismiss(animated: true, completion: {
-                    self.presentSecurityCenter()
-                })
-            }
-            return root
+            return menuViewController()
         case .loginScan:
             return nil //The scan view needs a custom presentation
         case .loginAddress:
@@ -160,6 +152,23 @@ class ModalPresenter : Subscriber {
         receiveVC.presentText = { address, image in
             self.messagePresenter.presenter = root
             self.messagePresenter.presentMessageCompose(address: address, image: image)
+        }
+        return root
+    }
+
+    private func menuViewController() -> UIViewController? {
+        let menu = MenuViewController()
+        let root = ModalViewController(childViewController: menu)
+        menu.didTapSecurity = { [weak self] in
+            self?.modalTransitionDelegate.reset()
+            root.dismiss(animated: true) {
+                self?.presentSecurityCenter()
+            }
+        }
+        menu.didTapLock = { [weak self] in
+            menu.dismiss(animated: true) {
+                self?.store.perform(action: RequireLogin())
+            }
         }
         return root
     }
