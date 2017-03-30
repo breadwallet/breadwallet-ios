@@ -102,6 +102,18 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         textView.tintColor = .primaryButton
         toggle.isOn = walletManager.spendingLimit > 0
         addGradientToToggle()
+        addFaqButton()
+    }
+
+    private func addFaqButton() {
+        let negativePadding = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        negativePadding.width = -16.0
+        let faqButton = UIButton.faq
+        faqButton.tintColor = .white
+        navigationItem.rightBarButtonItems = [negativePadding, UIBarButtonItem(customView: faqButton)]
+        faqButton.tap = {
+            print("Faq button tapped")
+        }
     }
 
     private func addGradientToToggle() {

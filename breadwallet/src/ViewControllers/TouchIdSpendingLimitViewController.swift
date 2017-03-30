@@ -50,7 +50,9 @@ class TouchIdSpendingLimitViewController : UIViewController, Subscriber {
             titleLabel.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2]) ])
         faq.constrain([
             faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            faq.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor) ])
+            faq.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            faq.heightAnchor.constraint(equalToConstant: 44.0),
+            faq.widthAnchor.constraint(equalToConstant: 44.0)])
         amount.constrain([
             amount.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             amount.topAnchor.constraint(equalTo: titleLabel.bottomAnchor) ])
