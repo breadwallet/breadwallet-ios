@@ -132,6 +132,10 @@ class SecurityCenterViewController : UIViewController {
             paperKeyCell.topAnchor.constraint(equalTo: touchIdCell.bottomAnchor),
             paperKeyCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             paperKeyCell.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -C.padding[2]) ])
+
+        if !walletManager.isTouchIDAvailable {
+            touchIdCell.constrain([touchIdCell.heightAnchor.constraint(equalToConstant: 0.0)])
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
