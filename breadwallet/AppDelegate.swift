@@ -24,6 +24,7 @@
 //  THE SOFTWARE.
 
 import UIKit
+import LocalAuthentication
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

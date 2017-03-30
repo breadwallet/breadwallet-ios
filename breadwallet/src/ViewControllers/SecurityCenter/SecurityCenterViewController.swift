@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class SecurityCenterHeader : UIView, GradientDrawable {
     override func draw(_ rect: CGRect) {
@@ -133,7 +134,7 @@ class SecurityCenterViewController : UIViewController {
             paperKeyCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             paperKeyCell.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -C.padding[2]) ])
 
-        if !walletManager.isTouchIDAvailable {
+        if !LAContext.isTouchIdAvailable {
             touchIdCell.constrain([touchIdCell.heightAnchor.constraint(equalToConstant: 0.0)])
         }
     }
