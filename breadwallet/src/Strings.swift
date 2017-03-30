@@ -17,6 +17,8 @@ enum S {
 
     enum Button {
         static let ok = NSLocalizedString("OK", comment: "OK button label")
+        static let cancel = NSLocalizedString("Cancel", comment: "Cancel button label")
+        static let settings = NSLocalizedString("Settings", comment: "Settings button label")
     }
 
     enum Scanner {
@@ -35,7 +37,7 @@ enum S {
         static let invalidAddressMessage = NSLocalizedString("Your clipboard does not have a valid bitcoin address.", comment: "Invalid address alert message")
 
         static let cameraUnavailableTitle = NSLocalizedString("Bread is not allowed to access the camera", comment: "Camera not allowed alert title")
-        static let cameraUnavailableMessage = NSLocalizedString("Allow camera access in Settings->Privacy->Camera->Bread", comment: "Camera not allowed message")
+        static let cameraUnavailableMessage = NSLocalizedString("Go to Settings to Allow camera access.", comment: "Camera not allowed message")
     }
 
     enum Account {
