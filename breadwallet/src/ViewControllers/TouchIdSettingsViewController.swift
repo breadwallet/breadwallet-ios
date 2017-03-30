@@ -121,10 +121,7 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
                 myself.walletManager.spendingLimit = myself.toggle.isOn ? C.satoshis : 0
                 myself.textView.attributedText = myself.textViewText
             } else {
-                let alert = UIAlertController(title: S.TouchIdSettings.unavailableAlertTitle, message: S.TouchIdSettings.unavailableAlertMessage, preferredStyle: .alert)
-                alert.view.tintColor = C.defaultTintColor
-                alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
-                myself.present(alert, animated: true, completion: nil)
+                myself.presentCantUseTouchIdAlert()
                 myself.toggle.isOn = false
             }
         }
@@ -147,6 +144,13 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         return attributedString
     }
 
+    fileprivate func presentCantUseTouchIdAlert() {
+        let alert = UIAlertController(title: S.TouchIdSettings.unavailableAlertTitle, message: S.TouchIdSettings.unavailableAlertMessage, preferredStyle: .alert)
+        alert.view.tintColor = C.defaultTintColor
+        alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -158,9 +162,13 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
 
 extension TouchIdSettingsViewController : UITextViewDelegate {
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
-        guard !didTapSpendingLimit else { return false }
-        didTapSpendingLimit = true
-        presentSpendingLimit?()
+        if LAContext.canUseTouchID {
+            guard !didTapSpendingLimit else { return false }
+            didTapSpendingLimit = true
+            presentSpendingLimit?()
+        } else {
+            presentCantUseTouchIdAlert()
+        }
         return false
     }
 }
