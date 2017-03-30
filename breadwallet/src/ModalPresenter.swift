@@ -251,7 +251,25 @@ class ModalPresenter : Subscriber {
 }
 
 class SecurityCenterNavigationDelegate : NSObject, UINavigationControllerDelegate {
+
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+
+        guard let coordinator = navigationController.topViewController?.transitionCoordinator else { return }
+
+        if coordinator.isInteractive {
+            coordinator.notifyWhenInteractionEnds { context in
+                //We only want to style the view controller if the
+                //pop animation wasn't cancelled
+                if !context.isCancelled {
+                    self.setStyle(navigationController: navigationController, viewController: viewController)
+                }
+            }
+        } else {
+            setStyle(navigationController: navigationController, viewController: viewController)
+        }
+    }
+
+    func setStyle(navigationController: UINavigationController, viewController: UIViewController) {
         if viewController is SecurityCenterViewController {
             navigationController.isNavigationBarHidden = true
         } else {
