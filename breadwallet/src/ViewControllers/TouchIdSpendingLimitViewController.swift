@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TouchIdSpendingLimitViewController : UIViewController {
+class TouchIdSpendingLimitViewController : UIViewController, Subscriber {
 
     private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let faq = UIButton.faq
@@ -18,6 +18,15 @@ class TouchIdSpendingLimitViewController : UIViewController {
     private let slider = UISlider()
     private let body = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
     private var currencySwitcherHeight: NSLayoutConstraint?
+    private let walletManager: WalletManager
+    private let store: Store
+    private var rate: Rate?
+
+    init(walletManager: WalletManager, store: Store) {
+        self.walletManager = walletManager
+        self.store = store
+        super.init(nibName: nil, bundle: nil)
+    }
 
     override func viewDidLoad() {
         addSubviews()
@@ -70,13 +79,31 @@ class TouchIdSpendingLimitViewController : UIViewController {
     }
 
     private func setData() {
+        store.subscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: {
+            self.rate = $0.currentRate
+        })
         view.backgroundColor = .white
         titleLabel.text = S.TouchIdSpendingLimit.title
-        amount.text = "$300"
         body.text = S.TouchIdSpendingLimit.body
-        slider.minimumValue = 0.0
-        slider.maximumValue = 300.0
-        slider.value = 200.0
+
+        if let rate = self.rate, let wallet = walletManager.wallet {
+            let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate.rate)
+            amount.text = spendingLimit.bits
+            slider.minimumValue = 0.0
+            slider.maximumValue = Float(max(wallet.balance*3, C.satoshis*2))
+            slider.value = Float(walletManager.spendingLimit)
+        }
+
+        slider.valueChanged = {
+            if let rate = self.rate {
+                let spendingLimit = Amount(amount: UInt64(self.slider.value), rate: rate.rate)
+                self.amount.text = spendingLimit.bits
+            }
+            self.walletManager.spendingLimit = UInt64(self.slider.value)
+        }
     }
 
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
