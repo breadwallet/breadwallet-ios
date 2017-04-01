@@ -24,9 +24,17 @@
 //  THE SOFTWARE.
 
 import Foundation
-import UIKit
+import SafariServices
 
-@objc class BRLinkPlugin: NSObject, BRHTTPRouterPlugin {
+class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate {
+    var controller: UIViewController
+    var hasBrowser = false
+    
+    init(fromViewController: UIViewController) {
+        self.controller = fromViewController
+        super.init()
+    }
+    
     func hook(_ router: BRHTTPRouter) {
         // opens any url that UIApplication.openURL can open
         // arg: "url" - the url to open
@@ -40,6 +48,7 @@ import UIKit
             }
             return BRHTTPResponse(request: request, code: 400)
         }
+        
         // opens the maps app for directions
         // arg: "address" - the destination address
         // arg: "from_point" - the origination point as a comma separated pair of floats - latitude,longitude
@@ -58,5 +67,30 @@ import UIKit
             UIApplication.shared.openURL(url)
             return BRHTTPResponse(request: request, code: 204)
         }
+        
+        // opens the in-app browser for the provided URL
+        router.get("/_browser") { (request, _) -> BRHTTPResponse in
+            if self.hasBrowser {
+                return BRHTTPResponse(request: request, code: 409)
+            }
+            guard let toURL = request.query["url"], toURL.count == 1 else {
+                return BRHTTPResponse(request: request, code: 400)
+            }
+            guard let escapedToURL = toURL[0].removingPercentEncoding, let url = URL(string: escapedToURL) else {
+                return BRHTTPResponse(request: request, code: 400)
+            }
+            
+            let safari = SFSafariViewController(url: url)
+            safari.delegate = self
+            self.hasBrowser = true
+            DispatchQueue.main.async {
+                self.controller.present(safari, animated: true, completion: nil)
+            }
+            return BRHTTPResponse(request: request, code: 204)
+        }
+    }
+    
+    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        hasBrowser = false
     }
 }

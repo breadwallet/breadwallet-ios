@@ -138,7 +138,7 @@ import WebKit
         router.plugin(BRWalletPlugin(walletManager: walletManager))
         
         // link plugin which allows opening links to other apps
-        router.plugin(BRLinkPlugin())
+        router.plugin(BRLinkPlugin(fromViewController: self))
         
         // kvstore plugin provides access to the shared replicated kv store
         router.plugin(BRKVStorePlugin(client: walletManager.apiClient))
