@@ -29,9 +29,7 @@ import BRCore
 // MARK: - Txn Metadata
 
 // Txn metadata stores additional information about a given transaction
-
-
-@objc open class BRTxMetadataObject: BRKVStoreObject, BRCoding {
+open class BRTxMetadataObject: BRKVStoreObject, BRCoding {
     var classVersion: Int = 2
     
     var blockHeight: Int = 0
@@ -46,7 +44,7 @@ import BRCore
     required public init?(coder decoder: BRCoder) {
         classVersion = decoder.decode("classVersion")
         if classVersion == Int.zeroValue() {
-            print("Unable to unarchive _TXMetadata: no version")
+            print("[BRTxMetadataObject] Unable to unarchive _TXMetadata: no version")
             return nil
         }
         blockHeight = decoder.decode("bh")
@@ -81,7 +79,7 @@ import BRCore
 
         var shortKeyError: Any?
         var longKeyError: Any?
-        print("find \(txHash.txKey)")
+        print("[BRTxMetadataObject] find \(txHash.txKey)")
 
         do {
             (ver, date, del, bytes) = try store.get(txHash.txKey)
@@ -102,14 +100,14 @@ import BRCore
             shortKeyError = e
         }
 
-        print("Unable to initialize BRTxMetadataObject: \(String(describing: shortKeyError)) : \(String(describing: longKeyError))")
+        print("[BRTxMetadataObject] Unable to initialize BRTxMetadataObject: \(String(describing: shortKeyError)) : \(String(describing: longKeyError))")
         return nil
     }
     
     /// Create new transaction metadata
     public init(transaction: BRTransaction, exchangeRate: Double, exchangeRateCurrency: String, feeRate: Double,
                 deviceId: String) {
-        print("new \(transaction.txHash.txKey)")
+        print("[BRTxMetadataObject] new \(transaction.txHash.txKey)")
         super.init(key: transaction.txHash.txKey, version: 0, lastModified: Date(), deleted: false, data: Data())
         self.blockHeight = Int(transaction.blockHeight)
         self.created = Date()
@@ -127,21 +125,21 @@ import BRCore
     
     override func dataWasSet(_ value: Data) {
         guard let s: BRTxMetadataObject = BRKeyedUnarchiver.unarchiveObjectWithData(value) else {
-            print("unable to deserialise tx metadata")
+            print("[BRTxMetadataObject] unable to deserialise tx metadata")
             return
         }
-        blockHeight =           s.blockHeight
-        exchangeRate =          s.exchangeRate
-        exchangeRateCurrency =  s.exchangeRateCurrency
-        feeRate =               s.feeRate
-        size =                  s.size
-        created =               s.created
-        deviceId =              s.deviceId
-        comment =               s.comment
+        blockHeight = s.blockHeight
+        exchangeRate = s.exchangeRate
+        exchangeRateCurrency = s.exchangeRateCurrency
+        feeRate = s.feeRate
+        size = s.size
+        created = s.created
+        deviceId = s.deviceId
+        comment = s.comment
     }
 }
 
-extension UInt256 {
+fileprivate extension UInt256 {
     var txKey: String {
         get {
             var u = self
@@ -149,15 +147,6 @@ extension UInt256 {
                 let bd = Data(bytes: p, count: MemoryLayout.size(ofValue: p)).sha256
                 return "txn-\(bd.hexString)"
             }
-        }
-    }
-    
-    var hexString: String {
-        get {
-            var u = self
-            return withUnsafePointer(to: &u, { p in
-                return Data(bytes: p, count: MemoryLayout.size(ofValue: p)).hexString
-            })
         }
     }
 }

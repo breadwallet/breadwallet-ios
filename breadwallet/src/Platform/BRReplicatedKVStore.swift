@@ -801,13 +801,13 @@ open class BRReplicatedKVStore: NSObject {
 }
 
 extension BRReplicatedKVStore {
-    @objc public func get(_ key: String) throws -> BRKVStoreObject {
+    public func get(_ key: String) throws -> BRKVStoreObject {
         let (v, d, r, b) = try get(key)
         return BRKVStoreObject(key: key, version: v, lastModified: d, deleted: r,
                                data: Data(bytes: UnsafePointer<UInt8>(b), count: b.count))
     }
     
-    @objc public func set(_ object: BRKVStoreObject) throws -> BRKVStoreObject {
+    public func set(_ object: BRKVStoreObject) throws -> BRKVStoreObject {
         let dat = object.data
         var bytes = [UInt8](repeating: 0, count: dat.count)
         (dat as NSData).getBytes(&bytes, length: dat.count)
@@ -815,17 +815,9 @@ extension BRReplicatedKVStore {
         return object
     }
     
-    @objc public func del(_ object: BRKVStoreObject) throws -> BRKVStoreObject {
+    public func del(_ object: BRKVStoreObject) throws -> BRKVStoreObject {
         (object.version, object.lastModified) = try del(object.key, localVer: object.version)
         object.deleted = true
         return object
-    }
-    
-    @objc public func sync(_ completionFunc: @escaping (NSError?) -> ()) {
-        syncAllKeys { (e) in
-            completionFunc(
-                NSError(domain: "KV_STORE", code: -1001, userInfo: [NSLocalizedDescriptionKey: e.debugDescription])
-            )
-        }
     }
 }
