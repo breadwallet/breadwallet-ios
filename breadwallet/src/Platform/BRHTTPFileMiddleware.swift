@@ -26,12 +26,11 @@
 import Foundation
 
 
-@objc open class BRHTTPFileMiddleware: NSObject, BRHTTPMiddleware {
-    var baseURL: URL!
+open class BRHTTPFileMiddleware: BRHTTPMiddleware {
+    var baseURL: URL
     var debugURL: URL?
     
     init(baseURL: URL, debugURL: URL? = nil) {
-        super.init()
         self.baseURL = baseURL
         self.debugURL = debugURL
     }
@@ -86,8 +85,6 @@ import Foundation
                 if let dat = dat, let resp = resp as? HTTPURLResponse {
                     body = dat
                     contentTypeHint = resp.allHeaderFields["Content-Type"] as? String
-                } else {
-                    
                 }
             }).resume()
             _ = grp.wait(timeout: DispatchTime.now() + Double(Int64(30) * Int64(NSEC_PER_SEC)) / Double(NSEC_PER_SEC))
@@ -97,7 +94,7 @@ import Foundation
             }
         }
         
-        headers["Content-Type"] = [contentTypeHint ?? detectContentType(URL: fileURL)]
+        headers["Content-Type"] = [contentTypeHint ?? fileURL.contentType]
         
         do {
             let privReq = request as! BRHTTPRequestImpl
@@ -115,7 +112,7 @@ import Foundation
                 let subDat = body.subdata(in: start..<(start + range.length))
                 let headers = [
                     "Content-Range": ["bytes \(start)-\(end)/\(body.count)"],
-                    "Content-Type": [detectContentType(URL: fileURL)]
+                    "Content-Type": [fileURL.contentType]
                 ]
                 var ary = [UInt8](repeating: 0, count: subDat.count)
                 (subDat as NSData).getBytes(&ary, length: subDat.count)
@@ -140,9 +137,11 @@ import Foundation
             body: ary)
         return next(BRHTTPMiddlewareResponse(request: request, response: r))
     }
-    
-    fileprivate func detectContentType(URL url: URL) -> String {
-        let ext = url.pathExtension
+}
+
+fileprivate extension URL {
+    var contentType: String {
+        let ext = self.pathExtension
         switch ext {
         case "ttf":
             return "application/font-truetype"
