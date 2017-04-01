@@ -27,7 +27,7 @@ import Foundation
 import BRCore
 
 
-class BRWalletPlugin: NSObject, BRHTTPRouterPlugin, BRWebSocketClient {
+class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient {
     var sockets = [String: BRWebSocket]()
     var walletManager: WalletManager
  
