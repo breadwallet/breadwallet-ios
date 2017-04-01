@@ -25,7 +25,7 @@
 
 import Foundation
 
-/// Provides access to the KV Store to the HTML5 platform
+/// Provides KV Store access to the HTML5 platform
 @objc class BRKVStorePlugin: NSObject, BRHTTPRouterPlugin {
     let client: BRAPIClient
     
@@ -58,14 +58,24 @@ import Foundation
         return "plat-\(s)"
     }
     
+    func decorateResponse(version: UInt64, date: Date, response: BRHTTPResponse) -> BRHTTPResponse {
+        let headers = [
+            "Cache-Control": ["max-age=0, must-revalidate"],
+            "ETag": ["\(version)"],
+            "Last-Modified": [date.RFC1123String() ?? ""]
+        ]
+        return BRHTTPResponse(request: response.request, statusCode: response.statusCode,
+                              statusReason: response.statusReason, headers: headers, body: response.body)
+    }
+    
     func hook(_ router: BRHTTPRouter) {
         // GET /_kv/(key)
         //
-        // Retrieve a value from a key. If it exists, the most recent version will be returned as JSON. The ETag header 
+        // Retrieve a value from a key. If it exists, the most recent version will be returned as JSON. The ETag header
         // will be set with the most recent version ID. The Last-Modified header will be set with the most recent
         // version's date
         //
-        // If the key was removed the caller will receive a 410 Gone response, with the most recent ETag and 
+        // If the key was removed the caller will receive a 410 Gone response, with the most recent ETag and
         // Last-Modified header set appropriately.
         //
         // If you are retrieving a key that was replaced after having deleted it, you may have to instruct your client
@@ -79,14 +89,17 @@ import Foundation
                 print("[BRKVStorePlugin] kv store is not yet set up on  client")
                 return BRHTTPResponse(request: request, code: 500)
             }
-            var ver: UInt64
-            var date: Date
+            var ver: UInt64 = 0
+            var date: Date = Date()
             var del: Bool
             var bytes: [UInt8]
             var json: Any
             var uncompressedBytes: [UInt8]
             do {
                 (ver, date, del, bytes) = try kv.get(self.getKey(key[0]))
+                if del {
+                    return self.decorateResponse(version: ver, date: date, response: BRHTTPResponse(request: request, code: 404))
+                }
                 let data = Data(bzCompressedData: Data(bytes: &bytes, count: bytes.count)) ?? Data()
                 json = try JSONSerialization.jsonObject(with: data, options: []) // ensure valid json
                 let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
@@ -94,13 +107,19 @@ import Foundation
                 (jsonData as NSData).getBytes(&uncompressedBytes, length: jsonData.count)
             } catch let e {
                 if let resp = self.transformErrorToResponse(request, err: e) {
-                    return resp
+                    if resp.statusCode == 500 {
+                        // the data is most probably corrupted.. just delete it and return a 404
+                        let (newVer, newDate) = (try? kv.del(self.getKey(key[0]), localVer: ver)) ?? (0, Date())
+                        return self.decorateResponse(version: newVer, date: newDate, response: BRHTTPResponse(request: request, code: 404))
+                    }
+                    return self.decorateResponse(version: ver, date: date, response: resp)
                 }
                 return BRHTTPResponse(request: request, code: 500) // no idea what happened...
             }
             if del {
                 let headers: [String: [String]] = [
                     "ETag": ["\(ver)"],
+                    "Cache-Control": ["max-age=0, must-revalidate"],
                     "Last-Modified": [date.RFC1123String() ?? ""]
                 ]
                 return BRHTTPResponse(
@@ -109,6 +128,7 @@ import Foundation
             }
             let headers: [String: [String]] = [
                 "ETag": ["\(ver)"],
+                "Cache-Control": ["max-age=0, must-revalidate"],
                 "Last-Modified": [date.RFC1123String() ?? ""],
                 "Content-Type": ["application/json"]
             ]
@@ -151,18 +171,19 @@ import Foundation
             }
             var bodyBytes = [UInt8](repeating: 0, count: compressedBody.count)
             (compressedBody as NSData).getBytes(&bodyBytes, length: compressedBody.count)
-            var ver: UInt64
-            var date: Date
+            var ver: UInt64 = 0
+            var date: Date = Date()
             do {
                 (ver, date) = try kv.set(self.getKey(key[0]), value: bodyBytes, localVer: UInt64(Int(vs[0])!))
             } catch let e {
                 if let resp = self.transformErrorToResponse(request, err: e) {
-                    return resp
+                    return self.decorateResponse(version: ver, date: date, response: resp)
                 }
                 return BRHTTPResponse(request: request, code: 500) // no idea what happened...
             }
             let headers: [String: [String]] = [
                 "ETag": ["\(ver)"],
+                "Cache-Control": ["max-age=0, must-revalidate"],
                 "Last-Modified": [date.RFC1123String() ?? ""]
             ]
             return BRHTTPResponse(
@@ -190,18 +211,19 @@ import Foundation
                 print("[BRKVStorePlugin] missing If-None-Match header")
                 return BRHTTPResponse(request: request, code: 400)
             }
-            var ver: UInt64
-            var date: Date
+            var ver: UInt64 = 0
+            var date: Date = Date()
             do {
                 (ver, date) = try kv.del(self.getKey(key[0]), localVer: UInt64(Int(vs[0])!))
             } catch let e {
                 if let resp = self.transformErrorToResponse(request, err: e) {
-                    return resp
+                    return self.decorateResponse(version: ver, date: date, response: resp)
                 }
                 return BRHTTPResponse(request: request, code: 500) // no idea what happened...
             }
             let headers: [String: [String]] = [
                 "ETag": ["\(ver)"],
+                "Cache-Control": ["max-age=0, must-revalidate"],
                 "Last-Modified": [date.RFC1123String() ?? ""]
             ]
             return BRHTTPResponse(
