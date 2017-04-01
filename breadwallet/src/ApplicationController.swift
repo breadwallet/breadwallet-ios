@@ -46,6 +46,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         setupPresenters()
         window.makeKeyAndVisible()
         startEventManager()
+        updateAssetBundles()
     }
 
     func willEnterForeground() {
@@ -117,6 +118,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             if let kvStore = apiClient?.kv {
                 kvStore.sync { print("KV finished syncing. err: \(String(describing: $0))") }
             }
+            updateAssetBundles()
         }
     }
 
@@ -171,6 +173,14 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                                 self.initKVStoreCoordinator()
                             }
         })
+    }
+    
+    private func updateAssetBundles() {
+        apiClient?.updateBundles { errors in
+            for (n, e) in errors {
+                print("Bundle \(n) ran update. err: \(String(describing: e))")
+            }
+        }
     }
 
     private func initKVStoreCoordinator() {

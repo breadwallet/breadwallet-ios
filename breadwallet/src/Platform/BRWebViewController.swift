@@ -111,13 +111,22 @@ import WebKit
         let router = BRHTTPRouter()
         server.prependMiddleware(middleware: router)
         
-        // basic file server for static assets
-        let fileMw = BRHTTPFileMiddleware(baseURL: BRAPIClient.bundleURL(bundleName))
-        server.prependMiddleware(middleware: fileMw)
-        
-        // middleware to always return index.html for any unknown GET request (facilitates window.history style SPAs)
-        let indexMw = BRHTTPIndexMiddleware(baseURL: fileMw.baseURL)
-        server.prependMiddleware(middleware: indexMw)
+        if let archive = AssetArchive(name: bundleName, apiClient: walletManager.apiClient) {
+            // basic file server for static assets
+            let fileMw = BRHTTPFileMiddleware(baseURL: archive.extractedUrl)
+            server.prependMiddleware(middleware: fileMw)
+            
+            // middleware to always return index.html for any unknown GET request (facilitates window.history style SPAs)
+            let indexMw = BRHTTPIndexMiddleware(baseURL: fileMw.baseURL)
+            server.prependMiddleware(middleware: indexMw)
+            
+            // enable debug if it is turned on
+            if let debugUrl = debugEndpoint {
+                let url = URL(string: debugUrl)
+                fileMw.debugURL = url
+                indexMw.debugURL = url
+            }
+        }
         
         // geo plugin provides access to onboard geo location functionality
         router.plugin(BRGeoLocationPlugin())
@@ -143,13 +152,6 @@ import WebKit
         }
         
         router.printDebug()
-        
-        // enable debug if it is turned on
-        if let debugUrl = debugEndpoint {
-            let url = URL(string: debugUrl)
-            fileMw.debugURL = url
-            indexMw.debugURL = url
-        }
     }
     
     open func preload() {
