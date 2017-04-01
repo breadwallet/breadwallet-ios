@@ -442,7 +442,16 @@ extension UInt256: Equatable {
     
     static public func != (l: UInt256, r: UInt256) -> Bool {
         return l.u64 != r.u64
-    }    
+    }
+    
+    var hexString: String {
+        get {
+            var u = self
+            return withUnsafePointer(to: &u, { p in
+                return Data(bytes: p, count: MemoryLayout.size(ofValue: p)).hexString
+            })
+        }
+    }
 }
 
 extension UInt512: Equatable {
