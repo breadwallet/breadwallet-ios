@@ -31,7 +31,7 @@ import Foundation
 //
 // Clients should set the "X-Should-Verify" to enable response verification and can set
 // "X-Should-Authenticate" to sign requests with the users private authentication key
-@objc open class BRAPIProxy: NSObject, BRHTTPMiddleware {
+open class BRAPIProxy: BRHTTPMiddleware {
     var mountPoint: String
     var apiInstance: BRAPIClient
     var shouldVerifyHeader: String = "x-should-verify"
@@ -56,7 +56,6 @@ import Foundation
             mountPoint = mountPoint.substring(to: mountPoint.characters.index(mountPoint.endIndex, offsetBy: -1))
         }
         apiInstance = client
-        super.init()
     }
     
     open func handle(_ request: BRHTTPRequest, next: @escaping (BRHTTPMiddlewareResponse) -> Void) {
