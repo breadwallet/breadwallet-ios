@@ -43,6 +43,11 @@ let BRAPIClientErrorDomain = "BRApiClientErrorDomain"
     }
 }
 
+public enum BRAPIClientError: Error {
+    case malformedDataError
+    case unknownError
+}
+
 public typealias URLSessionTaskHandler = (Data?, HTTPURLResponse?, NSError?) -> Void
 public typealias URLSessionChallengeHandler = (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
 
@@ -664,155 +669,6 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
     
     // MARK: Assets API
     
-    open class func bundleURL(_ bundleName: String) -> URL {
-        let fm = FileManager.default
-        let docsUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let bundleDirUrl = docsUrl.appendingPathComponent("bundles", isDirectory: true)
-        let bundleUrl = bundleDirUrl.appendingPathComponent("\(bundleName)-extracted", isDirectory: true)
-        return bundleUrl
-    }
-    
-    open func updateBundle(_ bundleName: String, handler: @escaping (_ error: String?) -> Void) {
-        // 1. check if we already have a bundle given the name
-        // 2. if we already have it:
-        //    2a. get the sha256 of the on-disk bundle
-        //    2b. request the versions of the bundle from server
-        //    2c. request the diff between what we have and the newest one, if ours is not already the newest
-        //    2d. apply the diff and extract to the bundle folder
-        // 3. otherwise:
-        //    3a. download and extract the bundle
-        
-        // set up the environment
-        let fm = FileManager.default
-        let docsUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let bundleDirUrl = docsUrl.appendingPathComponent("bundles", isDirectory: true)
-        let bundleUrl = bundleDirUrl.appendingPathComponent("\(bundleName).tar")
-        let bundleDirPath = bundleDirUrl.path
-        let bundlePath = bundleUrl.path
-        let bundleExtractedUrl = bundleDirUrl.appendingPathComponent("\(bundleName)-extracted")
-        let bundleExtractedPath = bundleExtractedUrl.path
-        log("bundleUrl \(bundlePath)")
-        
-        // determines if the bundle exists, but also creates the bundles/extracted directory if it doesn't exist
-        func exists() throws -> Bool {
-            var attrs = try? fm.attributesOfItem(atPath: bundleDirPath)
-            if attrs == nil {
-                try fm.createDirectory(atPath: bundleDirPath, withIntermediateDirectories: true, attributes: nil)
-                attrs = try fm.attributesOfItem(atPath: bundleDirPath)
-            }
-            var attrsExt = try? fm.attributesOfFileSystem(forPath: bundleExtractedPath)
-            if attrsExt == nil {
-                try fm.createDirectory(atPath: bundleExtractedPath, withIntermediateDirectories: true, attributes: nil)
-                attrsExt = try fm.attributesOfItem(atPath: bundleExtractedPath)
-            }
-            return fm.fileExists(atPath: bundlePath)
-        }
-        
-        // extracts the bundle
-        func extract() throws {
-            try BRTar.createFilesAndDirectoriesAtPath(bundleExtractedPath, withTarPath: bundlePath)
-        }
-        
-        guard var bundleExists = try? exists() else {
-            return handler("error determining if bundle exists")
-        }
-        
-        // attempt to use the tar file that was bundled with the binary
-        if !bundleExists {
-            if let bundledBundleUrl = Bundle.main.url(forResource: bundleName, withExtension: "tar") {
-                do {
-                    try fm.copyItem(at: bundledBundleUrl, to: bundleUrl)
-                    bundleExists = true
-                    log("used bundled bundle for \(bundleName)")
-                } catch let e {
-                    log("unable to copy bundled bundle `\(bundleName)` \(bundledBundleUrl) -> \(bundleUrl): \(e)")
-                }
-            }
-        }
-        
-        if bundleExists {
-            // bundle exists, download and apply the diff, then remove diff file
-            log("bundle \(bundleName) exists, fetching diff for most recent version")
-            
-            guard let curBundleContents = try? Data(contentsOf: URL(fileURLWithPath: bundlePath)) else {
-                return handler("error reading current bundle")
-            }
-            
-            let curBundleSha = curBundleContents.sha256.hexString
-            
-            dataTaskWithRequest(URLRequest(url: url("/assets/bundles/\(bundleName)/versions")))
-                { (data, resp, err) -> Void in
-                    if let data = data,
-                        let parsed = try? JSONSerialization.jsonObject(with: data, options: .allowFragments),
-                        let top = parsed as? NSDictionary,
-                        let versions = top["versions"] as? [String]
-                        , err == nil {
-                            if versions.index(of: curBundleSha) == (versions.count - 1) {
-                                // have the most recent version
-                                self.log("already at most recent version of bundle \(bundleName)")
-                                do {
-                                    try extract()
-                                    return handler(nil)
-                                } catch let e {
-                                    return handler("error extracting bundle: \(e)")
-                                }
-                            } else { // don't have the most recent version, download diff
-                                self.log("Fetching most recent version of bundle \(bundleName)")
-                                let req = URLRequest(url: self.url("/assets/bundles/\(bundleName)/diff/\(curBundleSha)"))
-                                self.dataTaskWithRequest(req, handler: { (diffDat, diffResp, diffErr) -> Void in
-                                    if let diffDat = diffDat , diffErr == nil {
-                                        let diffPath = bundleDirUrl.appendingPathComponent("\(bundleName).diff").path
-                                        let oldBundlePath = bundleDirUrl.appendingPathComponent("\(bundleName).old").path
-                                        do {
-                                            if fm.fileExists(atPath: diffPath) {
-                                                try fm.removeItem(atPath: diffPath)
-                                            }
-                                            if fm.fileExists(atPath: oldBundlePath) {
-                                                try fm.removeItem(atPath: oldBundlePath)
-                                            }
-                                            try diffDat.write(to: URL(fileURLWithPath: diffPath), options: .atomic)
-                                            try fm.moveItem(atPath: bundlePath, toPath: oldBundlePath)
-                                            _ = try BRBSPatch.patch(
-                                                oldBundlePath, newFilePath: bundlePath, patchFilePath: diffPath)
-                                            try fm.removeItem(atPath: diffPath)
-                                            try fm.removeItem(atPath: oldBundlePath)
-                                            try extract()
-                                            return handler(nil)
-                                        } catch let e {
-                                            // something failed, clean up whatever we can, next attempt 
-                                            // will download fresh
-                                            _ = try? fm.removeItem(atPath: diffPath)
-                                            _ = try? fm.removeItem(atPath: oldBundlePath)
-                                            _ = try? fm.removeItem(atPath: bundlePath)
-                                            return handler("error downloading diff: \(e)")
-                                        }
-                                    }
-                                }).resume()
-                            }
-                        }
-                    else {
-                        return handler("error determining versions")
-                    }
-                }.resume()
-        } else {
-            // bundle doesn't exist. download a fresh copy
-            log("bundle \(bundleName) doesn't exist, downloading new copy")
-            let req = URLRequest(url: url("/assets/bundles/\(bundleName)/download"))
-            dataTaskWithRequest(req) { (data, response, err) -> Void in
-                if err != nil || response?.statusCode != 200 {
-                    return handler("error fetching bundle: \(String(describing: err))")
-                }
-                if let data = data {
-                    do {
-                        try data.write(to: URL(fileURLWithPath: bundlePath), options: .atomic)
-                        try extract()
-                        return handler(nil)
-                    } catch let e {
-                        return handler("error writing bundle file: \(e)")
-                    }
-                }
-            }.resume()
-        }
-    }
+
 }
 
