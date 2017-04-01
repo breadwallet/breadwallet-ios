@@ -30,28 +30,23 @@ public typealias BRHTTPRouteMatch = [String: [String]]
 
 public typealias BRHTTPRoute = (_ request: BRHTTPRequest, _ match: BRHTTPRouteMatch) throws -> BRHTTPResponse
 
-@objc public protocol BRHTTPRouterPlugin {
+public protocol BRHTTPRouterPlugin {
     func hook(_ router: BRHTTPRouter)
 }
 
-@objc open class BRHTTPRoutePair: NSObject {
-    open var method: String = "GET"
-    open var path: String = "/"
-    open var regex: NSRegularExpression!
-    var captureGroups: [Int: String]!
+open class BRHTTPRoutePair {
+    var method: String = "GET"
+    var path: String = "/"
+    var regex: NSRegularExpression
+    var captureGroups: [Int: String]
     
-    override open var hashValue: Int {
+    open var hashValue: Int {
         return method.hashValue ^ path.hashValue
     }
     
     init(method m: String, path p: String) {
         method = m.uppercased()
         path = p
-        super.init()
-        parse()
-    }
-    
-    fileprivate func parse() {
         if !path.hasPrefix("/") {
             path = "/" + path
         }
@@ -85,7 +80,10 @@ public typealias BRHTTPRoute = (_ request: BRHTTPRequest, _ match: BRHTTPRouteMa
         
         let re = "^" + reParts.joined(separator: "/") + "$"
         //print("\n\nroute: \n\n method: \(method)\n path: \(path)\n regex: \(re)\n captures: \(captureGroups)\n\n")
-        regex = try! NSRegularExpression(pattern: re, options: [])
+        guard let reg = try? NSRegularExpression(pattern: re, options: []) else {
+            fatalError("unable to parse regex pattern: \(re)")
+        }
+        regex = reg
     }
     
     open func match(_ request: BRHTTPRequest) -> BRHTTPRouteMatch? {
@@ -107,7 +105,6 @@ public typealias BRHTTPRoute = (_ request: BRHTTPRequest, _ match: BRHTTPRouteMa
                     } else {
                         match[key]?.append(captured)
                     }
-                    //print("capture range: '\(key)' = '\(captured)'\n\n")
                 }
                 return match
         }
@@ -115,7 +112,7 @@ public typealias BRHTTPRoute = (_ request: BRHTTPRequest, _ match: BRHTTPRouteMa
     }
 }
 
-@objc open class BRHTTPRouter: NSObject, BRHTTPMiddleware {
+open class BRHTTPRouter: BRHTTPMiddleware {
     var routes = [(BRHTTPRoutePair, BRHTTPRoute)]()
     var plugins = [BRHTTPRouterPlugin]()
     fileprivate var wsServer = BRWebSocketServer()
