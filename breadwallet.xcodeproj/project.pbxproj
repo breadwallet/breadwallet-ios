@@ -1561,7 +1561,6 @@
 				22A9A9431DF61945000F0016 /* BRWebSocket.swift */,
 				22A9A9401DF61945000F0016 /* BRReplicatedKVStore.swift */,
 				22A9A93D1DF61945000F0016 /* BRKVStoreObjects.swift */,
-				22A9A93E1DF61945000F0016 /* BRKVStorePlugin.swift */,
 				22A9A9341DF61945000F0016 /* BRBitID.swift */,
 				22A9A9351DF61945000F0016 /* BRBSPatch.swift */,
 				22A9A9411DF61945000F0016 /* BRTar.swift */,
@@ -1583,6 +1582,7 @@
 				22A9A9381DF61945000F0016 /* BRGeoLocationPlugin.swift */,
 				22A9A9421DF61945000F0016 /* BRWalletPlugin.swift */,
 				22A9A93F1DF61945000F0016 /* BRLinkPlugin.swift */,
+				22A9A93E1DF61945000F0016 /* BRKVStorePlugin.swift */,
 			);
 			name = Plugins;
 			sourceTree = "<group>";
