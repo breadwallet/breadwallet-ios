@@ -25,7 +25,7 @@
 		22A9A94E1DF61945000F0016 /* BRHTTPIndexMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A93A1DF61945000F0016 /* BRHTTPIndexMiddleware.swift */; };
 		22A9A94F1DF61945000F0016 /* BRHTTPRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A93B1DF61945000F0016 /* BRHTTPRouter.swift */; };
 		22A9A9501DF61945000F0016 /* BRHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A93C1DF61945000F0016 /* BRHTTPServer.swift */; };
-		22A9A9511DF61945000F0016 /* BRKVStoreObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A93D1DF61945000F0016 /* BRKVStoreObjects.swift */; };
+		22A9A9511DF61945000F0016 /* BRTxMetadataObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A93D1DF61945000F0016 /* BRTxMetadataObject.swift */; };
 		22A9A9521DF61945000F0016 /* BRKVStorePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A93E1DF61945000F0016 /* BRKVStorePlugin.swift */; };
 		22A9A9531DF61945000F0016 /* BRLinkPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A93F1DF61945000F0016 /* BRLinkPlugin.swift */; };
 		22A9A9541DF61945000F0016 /* BRReplicatedKVStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A9401DF61945000F0016 /* BRReplicatedKVStore.swift */; };
@@ -541,7 +541,7 @@
 		22A9A93A1DF61945000F0016 /* BRHTTPIndexMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRHTTPIndexMiddleware.swift; path = src/Platform/BRHTTPIndexMiddleware.swift; sourceTree = "<group>"; };
 		22A9A93B1DF61945000F0016 /* BRHTTPRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRHTTPRouter.swift; path = src/Platform/BRHTTPRouter.swift; sourceTree = "<group>"; };
 		22A9A93C1DF61945000F0016 /* BRHTTPServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRHTTPServer.swift; path = src/Platform/BRHTTPServer.swift; sourceTree = "<group>"; };
-		22A9A93D1DF61945000F0016 /* BRKVStoreObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRKVStoreObjects.swift; path = src/Platform/BRKVStoreObjects.swift; sourceTree = "<group>"; };
+		22A9A93D1DF61945000F0016 /* BRTxMetadataObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRTxMetadataObject.swift; path = src/Platform/BRTxMetadataObject.swift; sourceTree = "<group>"; };
 		22A9A93E1DF61945000F0016 /* BRKVStorePlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRKVStorePlugin.swift; path = src/Platform/BRKVStorePlugin.swift; sourceTree = "<group>"; };
 		22A9A93F1DF61945000F0016 /* BRLinkPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRLinkPlugin.swift; path = src/Platform/BRLinkPlugin.swift; sourceTree = "<group>"; };
 		22A9A9401DF61945000F0016 /* BRReplicatedKVStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRReplicatedKVStore.swift; path = src/Platform/BRReplicatedKVStore.swift; sourceTree = "<group>"; };
@@ -1565,7 +1565,6 @@
 				22A9A93C1DF61945000F0016 /* BRHTTPServer.swift */,
 				22A9A9431DF61945000F0016 /* BRWebSocket.swift */,
 				22A9A9401DF61945000F0016 /* BRReplicatedKVStore.swift */,
-				22A9A93D1DF61945000F0016 /* BRKVStoreObjects.swift */,
 				22A9A9341DF61945000F0016 /* BRBitID.swift */,
 				22A9A9351DF61945000F0016 /* BRBSPatch.swift */,
 				22A9A9411DF61945000F0016 /* BRTar.swift */,
@@ -1575,6 +1574,7 @@
 				223DB2181DF691260076A151 /* BRSocketHelpers.h */,
 				22A9A9441DF61945000F0016 /* BRWebViewController.swift */,
 				CE45C1FA1E74F89C002C3847 /* WalletInfo.swift */,
+				22A9A93D1DF61945000F0016 /* BRTxMetadataObject.swift */,
 				754AE0BD1DFE8E5A007FD001 /* module.modulemap */,
 			);
 			name = Platform;
@@ -3517,7 +3517,7 @@
 				CEBF32F61DDCEAF900348FC6 /* TransactionsTableViewController.swift in Sources */,
 				CE124CFC1E68932C00DFA146 /* FeeUpdater.swift in Sources */,
 				CE25BF8D1DF3B8A500BC67B6 /* InViewAlert.swift in Sources */,
-				22A9A9511DF61945000F0016 /* BRKVStoreObjects.swift in Sources */,
+				22A9A9511DF61945000F0016 /* BRTxMetadataObject.swift in Sources */,
 				CE8CD8E11E31976800785E02 /* LoginViewController.swift in Sources */,
 				CEC6AA391DEE10BA00EE5AFD /* UINavigationController+BRAdditions.swift in Sources */,
 				CECCE5AB1E038C9900D99448 /* GenericPinPadCell.swift in Sources */,

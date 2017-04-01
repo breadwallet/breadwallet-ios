@@ -27,16 +27,10 @@ import Foundation
 import CoreLocation
 
 
-@available(iOS 8.0, *)
 class BRGeoLocationDelegate: NSObject, CLLocationManagerDelegate {
     var manager: CLLocationManager? = nil
     var response: BRHTTPResponse
     var remove: (() -> Void)? = nil
-    var one = false
-    var nResponses = 0
-    // on versions ios < 9.0 we don't have the energy-efficient/convenient requestLocation() method
-    // so after fetching a good location we should terminate location updates
-    var shouldCancelUpdatingAfterReceivingLocation = false
     
     init(response: BRHTTPResponse) {
         self.response = response
@@ -48,7 +42,6 @@ class BRGeoLocationDelegate: NSObject, CLLocationManagerDelegate {
     }
     
     func getOne() {
-        one = true
         DispatchQueue.main.sync { () -> Void in
             self.manager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
             self.manager?.requestLocation()
@@ -56,18 +49,12 @@ class BRGeoLocationDelegate: NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if one && nResponses > 0 { return }
         var j = [String: Any]()
-        let l = locations.last!
-        if (shouldCancelUpdatingAfterReceivingLocation
-            && !(l.horizontalAccuracy <= kCLLocationAccuracyHundredMeters
-                 && l.verticalAccuracy <= kCLLocationAccuracyHundredMeters)) {
-            // return if location is not the requested accuracy of 100m
+        guard let l = locations.last else {
+            j["error"] = "unknown error"
+            self.response.provide(500, json: j)
+            self.remove?()
             return
-        }
-        nResponses += 1
-        if (shouldCancelUpdatingAfterReceivingLocation) {
-            self.manager?.stopUpdatingLocation()
         }
         j["timestamp"] = l.timestamp.description as AnyObject?
         j["coordinate"] = ["latitude": l.coordinate.latitude, "longitude": l.coordinate.longitude]
@@ -90,7 +77,6 @@ class BRGeoLocationDelegate: NSObject, CLLocationManagerDelegate {
     }
 }
 
-@available(iOS 8.0, *)
 open class BRGeoLocationPlugin: NSObject, BRHTTPRouterPlugin, CLLocationManagerDelegate, BRWebSocketClient {
     lazy var manager = CLLocationManager()
     var outstanding = [BRGeoLocationDelegate]()
@@ -229,7 +215,11 @@ open class BRGeoLocationPlugin: NSObject, BRHTTPRouterPlugin, CLLocationManagerD
     // location manager for continuous websocket clients
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         var j = [String: Any]()
-        let l = locations.last!
+        guard let l = locations.last else {
+            j["error"] = "unknown error"
+            sendToAllSockets(data: j)
+            return
+        }
         j["timestamp"] = l.timestamp.description as AnyObject?
         j["coordinate"] = ["latitude": l.coordinate.latitude, "longitude": l.coordinate.longitude]
         j["altitude"] = l.altitude as AnyObject?
@@ -298,12 +288,10 @@ open class BRGeoLocationPlugin: NSObject, BRHTTPRouterPlugin, CLLocationManagerD
     }
     
     public func socket(_ socket: BRWebSocket, didReceiveText text: String) {
-        print("LOCATION SOCKET RECV \(text)")
-        // this is unused here but just in case just echo received text back
-        socket.send(text)
+        print("LOCATION SOCKET RECV TEXT \(text)")
     }
     
     public func socket(_ socket: BRWebSocket, didReceiveData data: Data) {
-        // nothing to do here
+        print("LOCATION SOCKET RECV DATA \(data.hexString)")
     }
 }
