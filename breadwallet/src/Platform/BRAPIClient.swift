@@ -666,9 +666,5 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
             return nil
         }
     }
-    
-    // MARK: Assets API
-    
-
 }
 
