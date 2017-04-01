@@ -61,7 +61,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         exchangeUpdater?.refresh(completion: {})
         feeUpdater?.refresh()
         if let kvStore = apiClient?.kv {
-            kvStore.sync { print("KV finished syncing. err: \(String(describing: $0))") }
+            kvStore.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
         }
     }
 
@@ -71,7 +71,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
         }
         if let kvStore = apiClient?.kv {
-            kvStore.sync { print("KV finished syncing. err: \(String(describing: $0))") }
+            kvStore.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
         }
     }
 
@@ -116,7 +116,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             exchangeUpdater?.refresh(completion: {})
             feeUpdater?.refresh()
             if let kvStore = apiClient?.kv {
-                kvStore.sync { print("KV finished syncing. err: \(String(describing: $0))") }
+                kvStore.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
             }
             updateAssetBundles()
         }
