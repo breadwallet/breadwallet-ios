@@ -30,6 +30,32 @@ import UIKit
 
 
 public extension String {
+    static func buildQueryString(_ options: [String: [String]]?, includeQ: Bool = false) -> String {
+        var s = ""
+        if let options = options , options.count > 0 {
+            s = includeQ ? "?" : ""
+            var i = 0
+            for (k, vals) in options {
+                for v in vals {
+                    if i != 0 {
+                        s += "&"
+                    }
+                    i += 1
+                    s += "\(k.urlEscapedString)=\(v.urlEscapedString)"
+                }
+            }
+        }
+        return s
+    }
+    
+    static var urlQuoteCharacterSet: CharacterSet {
+        if let cset = (NSMutableCharacterSet.urlQueryAllowed as NSCharacterSet).mutableCopy() as? NSMutableCharacterSet {
+            cset.removeCharacters(in: "?=&")
+            return cset as CharacterSet
+        }
+        return NSMutableCharacterSet.urlQueryAllowed as CharacterSet
+    }
+    
     func md5() -> String {
         guard let data = self.data(using: .utf8) else {
             assert(false, "couldnt encode string as utf8 data")
@@ -58,6 +84,10 @@ public extension String {
         }
     }
     
+    var urlEscapedString: String {
+        return addingPercentEncoding(withAllowedCharacters: String.urlQuoteCharacterSet) ?? ""
+    }
+    
     func parseQueryString() -> [String: [String]] {
         var ret = [String: [String]]()
         var strippedString = self
@@ -78,22 +108,16 @@ public extension String {
         }
         return ret
     }
-    
-    static func buildQueryString(_ options: [String: [String]]?, includeQ: Bool = false) -> String {
-        var s = ""
-        if let options = options , options.count > 0 {
-            s = includeQ ? "?" : ""
-            var i = 0
-            for (k, vals) in options {
-                for v in vals {
-                    if i != 0 {
-                        s += "&"
-                    }
-                    i += 1
-                    s += "\(k.urlEscapedString)=\(v.urlEscapedString)"
-                }
-            }
+}
+
+extension UserDefaults {
+    var deviceID: String {
+        if let s = string(forKey: "BR_DEVICE_ID") {
+            return s
         }
+        let s = CFUUIDCreateString(nil, CFUUIDCreate(nil)) as String
+        setValue(s, forKey: "BR_DEVICE_ID")
+        print("new device id \(s)")
         return s
     }
 }
