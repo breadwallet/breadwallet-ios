@@ -29,17 +29,14 @@ import Foundation
 // It has all the capabilities of the real API but with the ability to authenticate 
 // requests using the users private keys stored on device.
 //
-// Clients should set the "X-Should-Verify" to enable response verification and can set
-// "X-Should-Authenticate" to sign requests with the users private authentication key
+// Clients should set the "X-Should-Authenticate" to sign requests with the users private authentication key
 open class BRAPIProxy: BRHTTPMiddleware {
     var mountPoint: String
     var apiInstance: BRAPIClient
-    var shouldVerifyHeader: String = "x-should-verify"
     var shouldAuthHeader: String = "x-should-authenticate"
     
     var bannedSendHeaders: [String] {
         return [
-            shouldVerifyHeader,
             shouldAuthHeader,
             "connection",
             "authorization",
@@ -80,24 +77,21 @@ open class BRAPIProxy: BRHTTPMiddleware {
             }
             
             var auth = false
-            if let authHeader = request.headers[shouldAuthHeader] , authHeader.count > 0 {
+            if let authHeader = request.headers[shouldAuthHeader], authHeader.count > 0 {
                 if authHeader[0].lowercased() == "yes" || authHeader[0].lowercased() == "true" {
                     auth = true
                 }
             }
-            apiInstance.dataTaskWithRequest(nsReq, authenticated: auth, retryCount: 0, handler:
-                { (nsData, nsHttpResponse, nsError) -> Void in
-                    if let httpResp = nsHttpResponse {
+            apiInstance.dataTaskWithRequest(nsReq, authenticated: auth, retryCount: 0) { (data, nsHttpResponse, err) in
+                    if let httpResp = nsHttpResponse, let headers = httpResp.allHeaderFields as? [String: String] {
                         var hdrs = [String: [String]]()
-                        for (k, v) in httpResp.allHeaderFields {
-                            if self.bannedReceiveHeaders.contains((k as! String).lowercased()) { continue }
-                            hdrs[k as! String] = [v as! String]
+                        for (k, v) in headers {
+                            if self.bannedReceiveHeaders.contains(k.lowercased()) { continue }
+                            hdrs[k] = [v]
                         }
                         var body: [UInt8]? = nil
-                        if let bod = nsData {
-                            let bp = (bod as NSData).bytes.bindMemory(to: UInt8.self, capacity: bod.count)
-                            let b = UnsafeBufferPointer<UInt8>(start: bp, count: bod.count)
-                            body = Array(b)
+                        if let bod = data {
+                            body = [UInt8](bod)
                         }
                         let resp = BRHTTPResponse(
                             request: request, statusCode: httpResp.statusCode,
@@ -105,10 +99,10 @@ open class BRAPIProxy: BRHTTPMiddleware {
                             headers: hdrs, body: body)
                         return next(BRHTTPMiddlewareResponse(request: request, response: resp))
                     } else {
-                        print("[BRAPIProxy] error getting response from backend: \(String(describing: nsError))")
+                        print("[BRAPIProxy] error getting response from backend: \(String(describing: err))")
                         return next(BRHTTPMiddlewareResponse(request: request, response: nil))
                     }
-            }).resume()
+            }.resume()
         } else {
             return next(BRHTTPMiddlewareResponse(request: request, response: nil))
         }
