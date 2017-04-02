@@ -239,6 +239,24 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
         return mutableRequest
     }
     
+    func decorateRequest(_ request: URLRequest) -> URLRequest {
+        var actualRequest = request
+        #if Testnet
+            let testnet = true
+        #else
+            let testnet = false
+        #endif
+        #if Testflight
+            let testflight = true
+        #else
+            let testflight = false
+        #endif
+        
+        actualRequest.setValue("\(testnet ? 1 : 0)", forHTTPHeaderField: "X-Bitcoin-Testnet")
+        actualRequest.setValue("\(testflight ? 1 : 0)", forHTTPHeaderField: "X-Testflight")
+        return actualRequest
+    }
+    
     open func dataTaskWithRequest(_ request: URLRequest, authenticated: Bool = false,
                              retryCount: Int = 0, handler: @escaping URLSessionTaskHandler) -> URLSessionDataTask {
         let start = Date()
@@ -248,7 +266,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
         }
         
         // copy the request and authenticate it. retain the original request for retries
-        var actualRequest = request
+        var actualRequest = decorateRequest(request)
         if authenticated {
             actualRequest = signRequest(request)
         }
@@ -387,6 +405,27 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
                 completionHandler(.rejectProtectionSpace, nil)
             }
         }
+    }
+    
+    public func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+        var actualRequest = request
+        if let currentReq = task.currentRequest, var curHost = currentReq.url?.host, let curScheme = currentReq.url?.scheme {
+            if let curPort = currentReq.url?.port, curPort != 443 && curPort != 80 {
+                curHost = "\(curHost):\(curPort)"
+            }
+            if curHost == host && curScheme == proto {
+                // follow the redirect if we're interacting with our API
+                actualRequest = decorateRequest(request)
+                log("redirecting \(String(describing: currentReq.url)) to \(String(describing: request.url))")
+                if let curAuth = currentReq.allHTTPHeaderFields?["Authorization"], curAuth.hasPrefix("bread") {
+                    // add authentication because the previous request was authenticated
+                    log("adding authentication to redirected request")
+                    actualRequest = signRequest(actualRequest)
+                }
+                return completionHandler(actualRequest)
+            }
+        }
+        completionHandler(nil)
     }
     
     // MARK: API Functions
