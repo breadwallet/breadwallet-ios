@@ -209,7 +209,7 @@ open class BRHTTPMiddlewareResponse {
     }
     
     fileprivate func acceptClients() {
-        Q.async { () -> Void in
+        Q.async {
             while true {
                 var addr = sockaddr(sa_len: 0, sa_family: 0, sa_data: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
                 var len: socklen_t = 0
@@ -220,7 +220,7 @@ open class BRHTTPMiddlewareResponse {
                 var v: Int32 = 1
                 setsockopt(cli_fd, SOL_SOCKET, SO_NOSIGPIPE, &v, socklen_t(MemoryLayout<Int32>.size))
                 self.addClient(cli_fd)
-                self.Q.async { () -> Void in
+                self.Q.async {
                     while let req = try? BRHTTPRequestImpl(readFromFd: cli_fd, queue: self.Q) {
                         self.dispatch(middleware: self.middleware, req: req) { resp in
                             _ = Darwin.shutdown(cli_fd, SHUT_RDWR)
@@ -237,7 +237,7 @@ open class BRHTTPMiddlewareResponse {
     fileprivate func dispatch(middleware mw: [BRHTTPMiddleware], req: BRHTTPRequest, finish: @escaping (BRHTTPResponse) -> Void) {
         var newMw = mw
         if let curMw = newMw.popLast() {
-            curMw.handle(req, next: { (mwResp) -> Void in
+            curMw.handle(req, next: { mwResp in
                 if let httpResp = mwResp.response {
                     httpResp.done {
                         do {
