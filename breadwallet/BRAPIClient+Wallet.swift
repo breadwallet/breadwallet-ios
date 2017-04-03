@@ -9,7 +9,6 @@
 import Foundation
 
 extension BRAPIClient {
-    // Fetches the /v1/fee-per-kb endpoint
     func feePerKb(_ handler: @escaping (_ feePerKb: uint_fast64_t, _ error: String?) -> Void) {
         let req = URLRequest(url: url("/fee-per-kb"))
         let task = self.dataTaskWithRequest(req) { (data, response, err) -> Void in
@@ -50,8 +49,6 @@ extension BRAPIClient {
         task.resume()
     }
     
-    // MARK: push notifications
-    
     func savePushNotificationToken(_ token: Data, pushNotificationType: String = "d") {
         var req = URLRequest(url: url("/me/push-devices"))
         req.httpMethod = "POST"
@@ -72,6 +69,6 @@ extension BRAPIClient {
         dataTaskWithRequest(req as URLRequest, authenticated: true, retryCount: 0) { (dat, resp, er) in
             let dat2 = String(data: dat ?? Data(), encoding: .utf8)
             self.log("save push token resp: \(String(describing: resp)) data: \(String(describing: dat2))")
-            }.resume()
+        }.resume()
     }
 }
