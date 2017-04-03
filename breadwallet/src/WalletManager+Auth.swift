@@ -339,13 +339,14 @@ extension WalletManager : WalletAuthenticator {
     // wipe the existing wallet from the keychain
     func wipeWallet(pin: String = "forceWipe") -> Bool {
         guard pin == "forceWipe" || authenticate(pin: pin) else { return false }
-                
+
         do {
             peerManager = nil
             if db != nil { sqlite3_close(db) }
             db = nil
             masterPubKey = BRMasterPubKey()
             earliestKeyTime = 0
+            try BRAPIClient(authenticator: self).kv?.rmdb()
             try FileManager.default.removeItem(atPath: dbPath)
             try setKeychainItem(key: KeychainKey.apiAuthKey, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.spendLimit, item: nil as Int64?)

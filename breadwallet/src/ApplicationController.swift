@@ -47,6 +47,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         window.makeKeyAndVisible()
         startEventManager()
         updateAssetBundles()
+        self.apiClient?.updateFeatureFlags()
     }
 
     func willEnterForeground() {
@@ -63,6 +64,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         if let kvStore = apiClient?.kv {
             kvStore.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
         }
+        self.apiClient?.updateFeatureFlags()
     }
 
     func didEnterBackground() {
@@ -86,6 +88,10 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                 { completion in
                     self.syncEventManager(completion: completion)
                 },
+                { completion in
+                    self.apiClient?.updateFeatureFlags()
+                    completion()
+                }
             ], completion: {
                 completionHandler(.newData) //TODO - add a timeout for this
         })
@@ -119,6 +125,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                 kvStore.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
             }
             updateAssetBundles()
+            self.apiClient?.updateFeatureFlags()
         }
     }
 
@@ -171,6 +178,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                                 self.feeUpdater?.updateWalletFees()
                                 self.feeUpdater?.refresh()
                                 self.initKVStoreCoordinator()
+                                self.apiClient?.updateFeatureFlags()
                             }
         })
     }

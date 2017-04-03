@@ -28,6 +28,6 @@ func lazyAssociatedObject<T: AnyObject>(_ base: AnyObject, key: UnsafePointer<UI
     return nil
 }
 
-func associateObject<ValueType: AnyObject>(_ base: AnyObject, key: UnsafePointer<UInt8>, value: ValueType) {
+func associateObject<T: AnyObject>(_ base: AnyObject, key: UnsafePointer<UInt8>, value: T) {
     objc_setAssociatedObject(base, key, value, .OBJC_ASSOCIATION_RETAIN)
 }
