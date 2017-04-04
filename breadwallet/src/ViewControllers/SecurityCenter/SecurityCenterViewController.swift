@@ -17,7 +17,7 @@ class SecurityCenterHeader : UIView, GradientDrawable {
 
 private let headerHeight: CGFloat = 222.0
 
-class SecurityCenterViewController : UIViewController {
+class SecurityCenterViewController : UIViewController, Subscriber {
 
     var didTapPin: (() -> Void)? {
         didSet { pinCell.tap = didTapPin }
@@ -29,8 +29,8 @@ class SecurityCenterViewController : UIViewController {
         didSet { paperKeyCell.tap = didTapPaperKey }
     }
 
-    init(walletManager: WalletManager) {
-        self.walletManager = walletManager
+    init(store: Store) {
+        self.store = store
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -44,17 +44,16 @@ class SecurityCenterViewController : UIViewController {
     private let touchIdCell = SecurityCenterCell(title: S.SecurityCenter.Cells.touchIdTitle, descriptionText: S.SecurityCenter.Cells.touchIdDescription)
     private let paperKeyCell = SecurityCenterCell(title: S.SecurityCenter.Cells.paperKeyTitle, descriptionText: S.SecurityCenter.Cells.paperKeyDescription)
     private let separator = UIView(color: .secondaryShadow)
-    private let walletManager: WalletManager
+    private let store: Store
+
+    deinit {
+        store.unsubscribe(self)
+    }
 
     override func viewDidLoad() {
         setupSubviewProperties()
         addSubviews()
         addConstraints()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        touchIdCell.isCheckHighlighted = walletManager.spendingLimit > 0
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -74,9 +73,12 @@ class SecurityCenterViewController : UIViewController {
         info.lineBreakMode = .byWordWrapping
 
         pinCell.isCheckHighlighted = true
-        touchIdCell.isCheckHighlighted = walletManager.spendingLimit > 0
         paperKeyCell.isCheckHighlighted = true
         header.backgroundColor = .clear
+
+        store.subscribe(self, selector: { $0.isTouchIdEnabled != $1.isTouchIdEnabled }, callback: {
+            self.touchIdCell.isCheckHighlighted = $0.isTouchIdEnabled
+        })
     }
 
     private func addSubviews() {

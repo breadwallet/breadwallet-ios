@@ -227,7 +227,7 @@ class LoginViewController : UIViewController {
 
     private var shouldUseTouchId: Bool {
         guard let walletManager = self.walletManager else { return false }
-        return LAContext.canUseTouchID && !walletManager.pinLoginRequired && walletManager.spendingLimit > 0
+        return LAContext.canUseTouchID && !walletManager.pinLoginRequired && store.state.isTouchIdEnabled
     }
 
     @objc func touchIdTapped() {
