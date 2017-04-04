@@ -17,9 +17,10 @@ class LoginViewController : UIViewController {
     //MARK: - Public
     var walletManager: WalletManager?
     var isPresentedFromAccount = false
-    init(store: Store, walletManager: WalletManager? = nil) {
+    init(store: Store, isPresentedForLock: Bool, walletManager: WalletManager? = nil) {
         self.store = store
         self.walletManager = walletManager
+        self.isPresentedForLock = isPresentedForLock
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -31,6 +32,7 @@ class LoginViewController : UIViewController {
     private let pinView = PinView(style: .login)
     private let addressButton = SegmentedButton(title: S.LoginScreen.myAddress, type: .left)
     private let scanButton = SegmentedButton(title: S.LoginScreen.scan, type: .right)
+    private let isPresentedForLock: Bool
 
     private let touchId: UIButton = {
         let button = UIButton(type: .system)
@@ -76,7 +78,7 @@ class LoginViewController : UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if shouldUseTouchId && !hasAttemptedToShowTouchId {
+        if shouldUseTouchId && !hasAttemptedToShowTouchId && !isPresentedForLock {
             hasAttemptedToShowTouchId = true
             touchIdTapped()
         }
