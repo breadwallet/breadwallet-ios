@@ -9,12 +9,6 @@
 import UIKit
 import LocalAuthentication
 
-class UnEditableTextView : UITextView {
-    override var canBecomeFirstResponder: Bool {
-        return false
-    }
-}
-
 class TouchIdSettingsViewController : UIViewController, Subscriber {
 
     var presentSpendingLimit: (() -> Void)?
@@ -36,6 +30,10 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
     private let store: Store
     private var rate: Rate?
     fileprivate var didTapSpendingLimit = false
+
+    deinit {
+        store.unsubscribe(self)
+    }
 
     override func viewDidLoad() {
         store.subscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: {
@@ -100,9 +98,12 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         textView.delegate = self
         textView.attributedText = textViewText
         textView.tintColor = .primaryButton
-        toggle.isOn = walletManager.spendingLimit > 0
-        addGradientToToggle()
         addFaqButton()
+
+        store.subscribe(self, selector: { $0.isTouchIdEnabled != $1.isTouchIdEnabled }, callback: {
+            self.toggle.isOn = $0.isTouchIdEnabled
+        })
+        addGradientToToggle()
     }
 
     private func addFaqButton() {
@@ -123,14 +124,14 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         toggleBackground.clipsToBounds = true
         toggleBackground.layer.cornerRadius = 16.0
         toggleBackground.constrain(toSuperviewEdges: nil)
-        toggleBackground.alpha = walletManager.spendingLimit > 0 ? 1.0 : 0.0
+        toggleBackground.alpha = toggle.isOn ? 1.0 : 0.0
         toggle.valueChanged = { [weak self] in
             guard let myself = self else { return }
             if LAContext.canUseTouchID {
                 UIView.animate(withDuration: 0.1, animations: {
                     toggleBackground.alpha = myself.toggle.isOn ? 1.0 : 0.0
                 })
-                myself.walletManager.spendingLimit = myself.toggle.isOn ? C.satoshis : 0
+                myself.store.perform(action: TouchId.setIsEnabled(myself.toggle.isOn))
                 myself.textView.attributedText = myself.textViewText
             } else {
                 myself.presentCantUseTouchIdAlert()

@@ -274,21 +274,21 @@ class ModalPresenter : Subscriber {
 
     private func presentSecurityCenter() {
         guard let walletManager = walletManager else { return }
-        let securityCenter = SecurityCenterViewController(walletManager: walletManager)
+        let securityCenter = SecurityCenterViewController(store: store)
         let nc = ModalNavigationController(rootViewController: securityCenter)
         nc.setDefaultStyle()
         nc.isNavigationBarHidden = true
         nc.delegate = securityCenterNavigationDelegate
-        securityCenter.didTapPin = {
-            guard let walletManager = self.walletManager else { return }
-            let updatePin = UpdatePinViewController(store: self.store, walletManager: walletManager)
+        securityCenter.didTapPin = { [weak self] in
+            guard let myself = self else { return }
+            let updatePin = UpdatePinViewController(store: myself.store, walletManager: walletManager)
             nc.pushViewController(updatePin, animated: true)
         }
-        securityCenter.didTapTouchId = {
-            guard let walletManager = self.walletManager else { return }
-            let touchIdSettings = TouchIdSettingsViewController(walletManager: walletManager, store: self.store)
+        securityCenter.didTapTouchId = { [weak self] in
+            guard let myself = self else { return }
+            let touchIdSettings = TouchIdSettingsViewController(walletManager: walletManager, store: myself.store)
             touchIdSettings.presentSpendingLimit = {
-                let spendingLimit = TouchIdSpendingLimitViewController(walletManager: walletManager, store: self.store)
+                let spendingLimit = TouchIdSpendingLimitViewController(walletManager: walletManager, store: myself.store)
                 nc.pushViewController(spendingLimit, animated: true)
             }
             nc.pushViewController(touchIdSettings, animated: true)
