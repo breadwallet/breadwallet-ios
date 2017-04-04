@@ -26,7 +26,8 @@ struct HideStartFlow : Action {
                      walletState: state.walletState,
                      currency: state.currency,
                      currentRate: state.currentRate,
-                     alert: state.alert)
+                     alert: state.alert,
+                     isTouchIdEnabled: state.isTouchIdEnabled)
     }
 }
 
@@ -212,6 +213,16 @@ enum Alert {
     }
 }
 
+enum TouchId {
+    struct setIsEnabled : Action {
+        let reduce: Reducer
+        init(_ isTouchIdEnabled: Bool) {
+            UserDefaults.isTouchIdEnabled = isTouchIdEnabled
+            reduce = { $0.clone(isTouchIdEnabled: isTouchIdEnabled) }
+        }
+    }
+}
+
 //MARK: - State Creation Helpers
 extension State {
     func clone(isStartFlowVisible: Bool) -> State {
@@ -224,7 +235,8 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
     func clone(pinCreationStep: PinCreationStep) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -236,7 +248,8 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
 
     func rootModal(_ type: RootModal) -> State {
@@ -249,7 +262,8 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
     func clone(pasteboard: String?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -261,7 +275,8 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
     func clone(isModalDismissalBlocked: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -273,7 +288,8 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
     func clone(paperPhraseStep: PaperPhraseStep) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -285,7 +301,8 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
     func clone(walletSyncProgress: Double, timestamp: UInt32) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -297,7 +314,8 @@ extension State {
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: timestamp, name: walletState.name),
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
     func clone(walletIsSyncing: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -309,7 +327,8 @@ extension State {
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name),
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
     func clone(balance: UInt64) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -321,7 +340,8 @@ extension State {
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name),
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
     func clone(transactions: [Transaction]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -333,7 +353,8 @@ extension State {
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name),
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
     func clone(walletName: String) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -345,7 +366,8 @@ extension State {
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletName),
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
     func clone(currency: Currency) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -357,7 +379,8 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
     func clone(isLoginRequired: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -369,7 +392,8 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
     func clone(currentRate: Rate) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -381,7 +405,8 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
     func clone(alert: AlertType?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -393,6 +418,20 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
-                     alert: alert)
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
+    }
+    func clone(isTouchIdEnabled: Bool) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
+                     pinCreationStep: pinCreationStep,
+                     paperPhraseStep: paperPhraseStep,
+                     rootModal: rootModal,
+                     pasteboard: pasteboard,
+                     walletState: walletState,
+                     currency: currency,
+                     currentRate: currentRate,
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled)
     }
 }
