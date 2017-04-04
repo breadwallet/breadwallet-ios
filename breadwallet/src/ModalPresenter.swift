@@ -170,6 +170,11 @@ class ModalPresenter : Subscriber {
                 self?.store.perform(action: RequireLogin())
             }
         }
+        menu.didTapSettings = { [weak self] in
+            menu.dismiss(animated: true) {
+                self?.presentSettings()
+            }
+        }
         return root
     }
 
@@ -186,6 +191,59 @@ class ModalPresenter : Subscriber {
                 })
             }
         })
+    }
+
+    private func presentSettings() {
+        guard let parent = presentingViewController else { return }
+        guard let walletManager = self.walletManager else { return }
+
+        let nc = UINavigationController()
+        let sections = ["Wallet", "Manage", "Bread"]
+        let rows = [
+            "Wallet": [Setting(title: S.Settings.importTile, callback: {})],
+            "Manage": [
+                Setting(title: S.Settings.notifications, accessoryText: {
+                    return "Off"
+                }, callback: {
+
+                }),
+                Setting(title: S.Settings.touchIdLimit, accessoryText: {
+                    //TODO - use real rate here
+                    let amount = Amount(amount: walletManager.spendingLimit, rate: 1200)
+                    return amount.localCurrency
+                }, callback: {
+                    nc.pushViewController(TouchIdSpendingLimitViewController(walletManager: walletManager, store: self.store), animated: true)
+                }),
+                Setting(title: S.Settings.currency, accessoryText: {
+                    return "USD"
+                }, callback: {
+
+                }),
+                Setting(title: S.Settings.sync, callback: {
+
+                }),
+            ],
+            "Bread": [
+                Setting(title: S.Settings.shareData, callback: {
+
+                }),
+                Setting(title: S.Settings.buyBitcoin, callback: {
+
+                }),
+                Setting(title: S.Settings.about, callback: {
+
+                }),
+            ]
+        ]
+
+        let settings = SettingsViewController(sections: sections, rows: rows)
+        nc.viewControllers = [settings]
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
+        view.backgroundColor = .white
+        nc.navigationBar.setBackgroundImage(view.imageRepresentation, for: .default)
+        nc.navigationBar.shadowImage = UIImage()
+        nc.navigationBar.isTranslucent = false
+        parent.present(nc, animated: true, completion: nil)
     }
 
     private func presentScan(parent: UIViewController) -> PresentScan {
