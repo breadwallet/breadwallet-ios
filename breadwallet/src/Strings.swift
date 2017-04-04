@@ -134,4 +134,16 @@ enum S {
         static let title = NSLocalizedString("Touch ID Limit", comment: "Touch Id spending limit screen title")
         static let body = NSLocalizedString("You will be asked to enter you 6-Digit PIN for any send transaction over your Spending Limit, and every 48 hours since the last time you entered your 6-Digit PIN.", comment: "Touch ID spending limit screen body")
     }
+
+    enum Settings {
+        static let title = NSLocalizedString("Settings", comment: "Settings title")
+        static let importTile = NSLocalizedString("Import Wallet", comment: "Import wallet label")
+        static let notifications = NSLocalizedString("Notifications", comment: "Notifications label")
+        static let touchIdLimit = NSLocalizedString("Touch ID Spending Limit", comment: "Touch ID spending limit label")
+        static let currency = NSLocalizedString("Default Currency", comment: "Default currency label")
+        static let sync = NSLocalizedString("Sync Blockchain", comment: "Sync blockchain label")
+        static let shareData = NSLocalizedString("Share Anonymous Data", comment: "Share anonymous data lable")
+        static let buyBitcoin = NSLocalizedString("Buy Bitcoin", comment: "Buy bitcoin label")
+        static let about = NSLocalizedString("About", comment: "About label")
+    }
 }
