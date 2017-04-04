@@ -196,7 +196,7 @@ class StartFlowPresenter : Subscriber {
     }
 
     private func presentLoginFlow() {
-        let loginView = LoginViewController(store: store, walletManager: walletManager)
+        let loginView = LoginViewController(store: store, isPresentedForLock: true, walletManager: walletManager)
         loginView.transitioningDelegate = loginTransitionDelegate
         loginView.modalPresentationStyle = .overFullScreen
         loginViewController = loginView

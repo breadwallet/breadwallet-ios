@@ -44,8 +44,8 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         self.store = store
         self.transactionsTableView = TransactionsTableViewController(store: store, didSelectTransaction: didSelectTransaction)
         self.headerView = AccountHeaderView(store: store)
-        self.loginView = LoginViewController(store: store)
-        self.tempLoginView = LoginViewController(store: store)
+        self.loginView = LoginViewController(store: store, isPresentedForLock: false)
+        self.tempLoginView = LoginViewController(store: store, isPresentedForLock: false)
         super.init(nibName: nil, bundle: nil)
     }
 
