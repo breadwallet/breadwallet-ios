@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class AboutViewController : UIViewController {
 
@@ -31,6 +32,7 @@ class AboutViewController : UIViewController {
         addSubviews()
         addConstraints()
         setData()
+        setActions()
     }
 
     private func addSubviews() {
@@ -98,5 +100,29 @@ class AboutViewController : UIViewController {
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
             footer.text = "\(S.About.footer) \(version)"
         }
+    }
+
+    private func setActions() {
+        blog.button.tap = { [weak self] in
+            self?.presentURL(string: "https://breadwallet.com/blog/")
+        }
+        twitter.button.tap = { [weak self] in
+            self?.presentURL(string: "https://twitter.com/breadwalletapp")
+        }
+        reddit.button.tap = { [weak self] in
+            self?.presentURL(string: "https://reddit.com/r/breadwallet/")
+        }
+        //TODO - find this link
+        terms.tap = { [weak self] in
+            self?.presentURL(string: "https://breadwallet.com/terms?")
+        }
+        privacy.tap = { [weak self] in
+            self?.presentURL(string: "https://breadwallet.com/privacy-policy")
+        }
+    }
+
+    private func presentURL(string: String) {
+        let vc = SFSafariViewController(url: URL(string: string)!)
+        self.present(vc, animated: true, completion: nil)
     }
 }
