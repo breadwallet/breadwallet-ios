@@ -249,7 +249,6 @@ class ModalPresenter : Subscriber {
     private func presentScan(parent: UIViewController) -> PresentScan {
         return { scanCompletion in
             guard ScanViewController.isCameraAllowed else {
-                //TODO - add link to settings here
                 let alertController = UIAlertController(title: S.Send.cameraUnavailableTitle, message: S.Send.cameraUnavailableMessage, preferredStyle: .alert)
                 alertController.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
                 alertController.addAction(UIAlertAction(title: S.Button.settings, style: .`default`, handler: { _ in
