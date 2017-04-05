@@ -41,7 +41,7 @@ class ModalPresenter : Subscriber {
                         selector: { $0.alert != $1.alert && $1.alert != nil },
                         callback: { self.handleAlertChange($0.alert) })
         store.subscribe(self, name: .presentFaq, callback: {
-            print("Present faq")
+            self.presentFaq()
         })
     }
 
@@ -107,6 +107,12 @@ class ModalPresenter : Subscriber {
                 alertView.removeFromSuperview()
             })
         })
+    }
+
+    private func presentFaq() {
+        guard let walletManager = walletManager else { return }
+        let webView = BRWebViewController(bundleName: "test", walletManager: walletManager)
+        presentingViewController?.present(webView, animated: true, completion: {})
     }
 
     private func rootModalViewController(_ type: RootModal) -> UIViewController? {
