@@ -240,7 +240,7 @@ class ModalPresenter : Subscriber {
 
                 }),
                 Setting(title: S.Settings.about, callback: {
-
+                    nc.pushViewController(AboutViewController(), animated: true)
                 }),
             ]
         ]
@@ -252,6 +252,7 @@ class ModalPresenter : Subscriber {
         nc.navigationBar.setBackgroundImage(view.imageRepresentation, for: .default)
         nc.navigationBar.shadowImage = UIImage()
         nc.navigationBar.isTranslucent = false
+        nc.setBlackBackArrow()
         parent.present(nc, animated: true, completion: nil)
     }
 
