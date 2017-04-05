@@ -15,7 +15,6 @@ enum CameraGuideState {
 
     case normal, positive, negative
 
-    //TODO - pick proper green/red colors for these
     var color: UIColor {
         switch self {
         case .normal: return .darkLine
