@@ -19,22 +19,20 @@ class ModalHeaderView : UIView {
     var closeCallback: (() -> Void)? {
         didSet { close.tap = closeCallback }
     }
-    var faqCallback: (() -> Void)? {
-        didSet { faq.tap = faqCallback }
-    }
 
-    init(title: String, isFaqHidden: Bool, style: ModalHeaderViewStyle) {
+    init(title: String, isFaqHidden: Bool, style: ModalHeaderViewStyle, store: Store) {
         self.title.text = title
         self.style = style
-        faq.isHidden = isFaqHidden
+        self.faq = UIButton.buildFaqButton(store: store)
         super.init(frame: .zero)
+        faq.isHidden = isFaqHidden
         setupSubviews()
     }
 
     //MARK - Private
     private let title = UILabel(font: .customBold(size: 17.0))
     private let close = UIButton.close
-    private let faq = UIButton.faq
+    private let faq: UIButton
     private let border = UIView()
     private let buttonSize: CGFloat = 44.0
     private let style: ModalHeaderViewStyle

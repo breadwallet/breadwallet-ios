@@ -17,6 +17,7 @@ class RecoverWalletViewController : UIViewController {
         self.store = store
         self.walletManager = walletManager
         self.enterPhrase = EnterPhraseCollectionViewController(walletManager: walletManager)
+        self.faq = UIButton.buildFaqButton(store: store)
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -30,7 +31,7 @@ class RecoverWalletViewController : UIViewController {
     private let instruction = UILabel(font: .customBold(size: 14.0), color: .darkText)
     private let header = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let subheader = UILabel(font: .customBody(size: 16.0), color: .darkText)
-    private let faq = UIButton.faq
+    private let faq: UIButton
     private let scrollView = UIScrollView()
     private let container = UIView()
 

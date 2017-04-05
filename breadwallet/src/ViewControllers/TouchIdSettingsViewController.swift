@@ -109,12 +109,9 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
     private func addFaqButton() {
         let negativePadding = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         negativePadding.width = -16.0
-        let faqButton = UIButton.faq
+        let faqButton = UIButton.buildFaqButton(store: store)
         faqButton.tintColor = .white
         navigationItem.rightBarButtonItems = [negativePadding, UIBarButtonItem(customView: faqButton)]
-        faqButton.tap = {
-            print("Faq button tapped")
-        }
     }
 
     private func addGradientToToggle() {
