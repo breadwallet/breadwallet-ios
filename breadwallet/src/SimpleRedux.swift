@@ -24,11 +24,20 @@ extension Subscriber {
     }
 }
 
-typealias StateUpdatedCallback = (State) -> ()
+typealias StateUpdatedCallback = (State) -> Void
 
-struct Subscription{
+struct Subscription {
     let selector: ((_ oldState: State, _ newState: State) -> Bool)
-    let callback: (State) -> ()
+    let callback: (State) -> Void
+}
+
+struct Trigger {
+    let name: TriggerName
+    let callback: () -> Void
+}
+
+enum TriggerName {
+    case presentFaq
 }
 
 class Store {
@@ -42,15 +51,22 @@ class Store {
         state = action.reduce(state)
     }
 
+    func trigger(name: TriggerName) {
+        triggers
+            .flatMap { $0.value }
+            .filter { $0.name == name }
+            .forEach { $0.callback() }
+    }
+
     //Subscription callback is immediately called with current State value on subscription
     //and then any time the selected value changes
-    func subscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> ()) {
+    func subscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> Void) {
         lazySubscribe(subscriber, selector: selector, callback: callback)
         callback(state)
     }
 
     //Same as subscribe(), but doesn't call the callback with current state upon subscription
-    func lazySubscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> ()) {
+    func lazySubscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> Void) {
         let key = subscriber.hashValue
         let subscription = Subscription(selector: selector, callback: callback)
         if subscriptions[key] != nil {
@@ -60,8 +76,19 @@ class Store {
         }
     }
 
+    func subscribe(_ subscriber: Subscriber, name: TriggerName, callback: @escaping () -> Void) {
+        let key = subscriber.hashValue
+        let trigger = Trigger(name: name, callback: callback)
+        if triggers[key] != nil {
+            triggers[key]?.append(trigger)
+        } else {
+            triggers[key] = [trigger]
+        }
+    }
+
     func unsubscribe(_ subscriber: Subscriber) {
         subscriptions.removeValue(forKey: subscriber.hashValue)
+        triggers.removeValue(forKey: subscriber.hashValue)
     }
 
     //MARK: - Private
@@ -74,7 +101,8 @@ class Store {
         }
     }
 
-    private var subscriptions = [Int: [Subscription]]()
+    private var subscriptions: [Int: [Subscription]] = [:]
+    private var triggers: [Int: [Trigger]] = [:]
 
     private func addPasteboardSubscriptions() {
         NotificationCenter.default.addObserver(forName: .UIPasteboardChanged, object: nil, queue: nil, using: { note in
