@@ -146,4 +146,14 @@ enum S {
         static let buyBitcoin = NSLocalizedString("Buy Bitcoin", comment: "Buy bitcoin label")
         static let about = NSLocalizedString("About", comment: "About label")
     }
+
+    enum About {
+        static let title = NSLocalizedString("About", comment: "About screen title")
+        static let blog = NSLocalizedString("Blog", comment: "About screen blog label")
+        static let twitter = NSLocalizedString("Twitter", comment: "About screen twitter label")
+        static let reddit = NSLocalizedString("Reddit", comment: "About screen reddit label")
+        static let terms = NSLocalizedString("Terms of Use", comment: "Terms of Use button label")
+        static let privacy = NSLocalizedString("Privacy Policy", comment: "Privay Policy button label")
+        static let footer = NSLocalizedString("Made in North America. Version ", comment: "About screen footer")
+    }
 }
