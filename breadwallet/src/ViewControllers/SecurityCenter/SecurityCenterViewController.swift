@@ -31,12 +31,13 @@ class SecurityCenterViewController : UIViewController, Subscriber {
 
     init(store: Store) {
         self.store = store
+        self.header = ModalHeaderView(title: S.SecurityCenter.title, isFaqHidden: false, style: .light, store: store)
         super.init(nibName: nil, bundle: nil)
     }
 
     fileprivate var headerBackgroundHeight: NSLayoutConstraint?
     private let headerBackground = SecurityCenterHeader()
-    private let header = ModalHeaderView(title: S.SecurityCenter.title, isFaqHidden: false, style: .light)
+    private let header: ModalHeaderView
     private let shield = UIImageView(image: #imageLiteral(resourceName: "shield"))
     private let scrollView = UIScrollView()
     private let info = UILabel(font: .customBody(size: 16.0))

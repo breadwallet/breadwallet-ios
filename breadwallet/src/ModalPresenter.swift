@@ -40,6 +40,9 @@ class ModalPresenter : Subscriber {
         store.subscribe(self,
                         selector: { $0.alert != $1.alert && $1.alert != nil },
                         callback: { self.handleAlertChange($0.alert) })
+        store.subscribe(self, name: .presentFaq, callback: {
+            print("Present faq")
+        })
     }
 
     private func handlePinCreationStateChange(_ state: State) {
@@ -113,7 +116,7 @@ class ModalPresenter : Subscriber {
         case .send:
             guard let walletManager = walletManager else { return nil }
             let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager))
-            let root = ModalViewController(childViewController: sendVC)
+            let root = ModalViewController(childViewController: sendVC, store: store)
             sendVC.presentScan = presentScan(parent: root)
             sendVC.presentVerifyPin = { callback in
                 let vc = VerifyPinViewController(callback: callback)
@@ -137,14 +140,14 @@ class ModalPresenter : Subscriber {
         case .loginAddress:
             return receiveView(isRequestAmountVisible: false)
         case .manageWallet:
-            return ModalViewController(childViewController: ManageWalletViewController(store: store))
+            return ModalViewController(childViewController: ManageWalletViewController(store: store), store: store)
         }
     }
 
     private func receiveView(isRequestAmountVisible: Bool) -> UIViewController? {
         guard let wallet = walletManager?.wallet else { return nil }
         let receiveVC = ReceiveViewController(store: store, wallet: wallet, isRequestAmountVisible: isRequestAmountVisible)
-        let root = ModalViewController(childViewController: receiveVC)
+        let root = ModalViewController(childViewController: receiveVC, store: store)
         receiveVC.presentEmail = { address, image in
             self.messagePresenter.presenter = root
             self.messagePresenter.presentMailCompose(address: address, image: image)
@@ -158,7 +161,7 @@ class ModalPresenter : Subscriber {
 
     private func menuViewController() -> UIViewController? {
         let menu = MenuViewController()
-        let root = ModalViewController(childViewController: menu)
+        let root = ModalViewController(childViewController: menu, store: store)
         menu.didTapSecurity = { [weak self] in
             self?.modalTransitionDelegate.reset()
             root.dismiss(animated: true) {

@@ -172,7 +172,8 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         NotificationCenter.default.post(name: .WalletTxStatusUpdateNotification, object: nil)
     }
 
-    private let header = ModalHeaderView(title: S.TransactionDetails.title, isFaqHidden: false, style: .dark)
+    //TODO - this will need to get the real store somehow
+    private let header = ModalHeaderView(title: S.TransactionDetails.title, isFaqHidden: false, style: .dark, store: Store())
     private let timestamp = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let amount = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let address = UILabel(font: .customBold(size: 14.0), color: .darkText)
