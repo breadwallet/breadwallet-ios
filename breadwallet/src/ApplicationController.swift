@@ -16,19 +16,20 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     //Ideally the window would be private, but is unfortunately required
     //by the UIApplicationDelegate Protocol
     let window = UIWindow()
-    private let store = Store()
+    fileprivate let store = Store()
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
 
     private var walletManager: WalletManager?
     private var walletCreator: WalletCreator?
     private var walletCoordinator: WalletCoordinator?
-    private var apiClient: BRAPIClient?
+    fileprivate var apiClient: BRAPIClient?
     private var exchangeUpdater: ExchangeUpdater?
     private var feeUpdater: FeeUpdater?
     private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
     private var kvStoreCoordinator: KVStoreCoordinator?
     private var accountViewController: AccountViewController?
+    fileprivate var application: UIApplication?
 
     init() {
         DispatchQueue(label: C.walletQueue).async {
@@ -39,7 +40,8 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         }
     }
 
-    func launch(options: [UIApplicationLaunchOptionsKey: Any]?) {
+    func launch(application: UIApplication, options: [UIApplicationLaunchOptionsKey: Any]?) {
+        self.application = application
         setupDefaults()
         setupAppearance()
         setupRootViewController()
@@ -48,6 +50,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         startEventManager()
         updateAssetBundles()
         self.apiClient?.updateFeatureFlags()
+        listenForPushNotificationRequest()
     }
 
     func willEnterForeground() {
@@ -198,5 +201,31 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         kvStoreCoordinator = KVStoreCoordinator(store: store, kvStore: kvStore)
         kvStoreCoordinator?.retreiveStoredWalletName()
         kvStoreCoordinator?.listenForWalletChanges()
+    }
+}
+
+//MARK: - Push notifications
+extension ApplicationController {
+
+    func listenForPushNotificationRequest() {
+        store.subscribe(self, name: .registerForPushNotificationToken, callback: {
+            let settings = UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil)
+            self.application?.registerUserNotificationSettings(settings)
+        })
+    }
+
+    func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
+        if !notificationSettings.types.isEmpty {
+            application.registerForRemoteNotifications()
+        }
+    }
+
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        guard let apiClient = self.apiClient else { return }
+        apiClient.savePushNotificationToken(deviceToken)
+    }
+
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("didFailToRegisterForRemoteNotification: \(error)")
     }
 }
