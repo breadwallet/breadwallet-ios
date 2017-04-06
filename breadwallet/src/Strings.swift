@@ -156,4 +156,10 @@ enum S {
         static let privacy = NSLocalizedString("Privacy Policy", comment: "Privay Policy button label")
         static let footer = NSLocalizedString("Made in North America. Version ", comment: "About screen footer")
     }
+
+    enum PushNotifications {
+        static let title = NSLocalizedString("Notifications", comment: "Push notifications settings view title label")
+        static let body = NSLocalizedString("Get notified when money you’ve received is available for spending.", comment: "Push notifications settings view body")
+        static let label = NSLocalizedString("Push Notifications", comment: "Push notifications toggle switch label")
+    }
 }

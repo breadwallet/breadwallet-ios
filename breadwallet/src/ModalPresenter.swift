@@ -214,7 +214,7 @@ class ModalPresenter : Subscriber {
                 Setting(title: S.Settings.notifications, accessoryText: {
                     return "Off"
                 }, callback: {
-
+                    nc.pushViewController(PushNotificationsViewController(), animated: true)
                 }),
                 Setting(title: S.Settings.touchIdLimit, accessoryText: {
                     //TODO - use real rate here
