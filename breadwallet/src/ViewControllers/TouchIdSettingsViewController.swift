@@ -99,8 +99,12 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         textView.attributedText = textViewText
         textView.tintColor = .primaryButton
         addFaqButton()
+        let hasSetToggleInitialValue = false
         store.subscribe(self, selector: { $0.isTouchIdEnabled != $1.isTouchIdEnabled }, callback: {
             self.toggle.isOn = $0.isTouchIdEnabled
+            if !hasSetToggleInitialValue {
+                self.toggle.sendActions(for: .valueChanged) //This event is needed because the gradient background gets set on valueChanged events
+            }
         })
         toggle.valueChanged = { [weak self] in
             guard let myself = self else { return }
