@@ -23,7 +23,7 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "TouchId-Large"))
     private let label = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
     private let switchLabel = UILabel(font: .customBold(size: 14.0), color: .darkText)
-    private let toggle = UISwitch()
+    private let toggle = GradientSwitch()
     private let separator = UIView(color: .secondaryShadow)
     private let textView = UnEditableTextView()
     private let walletManager: WalletManager
@@ -99,11 +99,19 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         textView.attributedText = textViewText
         textView.tintColor = .primaryButton
         addFaqButton()
-
         store.subscribe(self, selector: { $0.isTouchIdEnabled != $1.isTouchIdEnabled }, callback: {
             self.toggle.isOn = $0.isTouchIdEnabled
         })
-        addGradientToToggle()
+        toggle.valueChanged = { [weak self] in
+            guard let myself = self else { return }
+            if LAContext.canUseTouchID {
+                myself.store.perform(action: TouchId.setIsEnabled(myself.toggle.isOn))
+                myself.textView.attributedText = myself.textViewText
+            } else {
+                myself.presentCantUseTouchIdAlert()
+                myself.toggle.isOn = false
+            }
+        }
     }
 
     private func addFaqButton() {
@@ -112,29 +120,6 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         let faqButton = UIButton.buildFaqButton(store: store)
         faqButton.tintColor = .white
         navigationItem.rightBarButtonItems = [negativePadding, UIBarButtonItem(customView: faqButton)]
-    }
-
-    private func addGradientToToggle() {
-        toggle.onTintColor = .clear
-        let toggleBackground = GradientView()
-        toggle.insertSubview(toggleBackground, at: 0)
-        toggleBackground.clipsToBounds = true
-        toggleBackground.layer.cornerRadius = 16.0
-        toggleBackground.constrain(toSuperviewEdges: nil)
-        toggleBackground.alpha = toggle.isOn ? 1.0 : 0.0
-        toggle.valueChanged = { [weak self] in
-            guard let myself = self else { return }
-            if LAContext.canUseTouchID {
-                UIView.animate(withDuration: 0.1, animations: {
-                    toggleBackground.alpha = myself.toggle.isOn ? 1.0 : 0.0
-                })
-                myself.store.perform(action: TouchId.setIsEnabled(myself.toggle.isOn))
-                myself.textView.attributedText = myself.textViewText
-            } else {
-                myself.presentCantUseTouchIdAlert()
-                myself.toggle.isOn = false
-            }
-        }
     }
 
     private var textViewText: NSAttributedString {
