@@ -10,6 +10,12 @@ import UIKit
 
 class PushNotificationsViewController : UIViewController {
 
+    init(store: Store) {
+        self.store = store
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    private let store: Store
     private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let body = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
     private let label = UILabel(font: .customBold(size: 16.0), color: .darkText)
@@ -56,6 +62,23 @@ class PushNotificationsViewController : UIViewController {
         titleLabel.text = S.PushNotifications.title
         body.text = S.PushNotifications.body
         label.text = S.PushNotifications.label
+
+        if let settings = UIApplication.shared.currentUserNotificationSettings {
+            if !settings.types.isEmpty {
+                toggle.isOn = true
+                toggle.sendActions(for: .valueChanged)
+            }
+        }
+        
+        toggle.valueChanged = { [weak self] in
+            guard let myself = self else { return }
+            if myself.toggle.isOn {
+                myself.store.trigger(name: .registerForPushNotificationToken)
+            }
+        }
     }
 
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }

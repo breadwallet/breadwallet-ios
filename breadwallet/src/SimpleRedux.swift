@@ -38,6 +38,7 @@ struct Trigger {
 
 enum TriggerName {
     case presentFaq
+    case registerForPushNotificationToken
 }
 
 class Store {
