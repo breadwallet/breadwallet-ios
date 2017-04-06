@@ -8,6 +8,7 @@
 
 import UIKit
 
+//TODO - make this a generic separator cell
 class SettingsCell : UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

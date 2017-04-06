@@ -12,15 +12,17 @@ class ModalPresenter : Subscriber {
 
     //MARK: - Public
     var walletManager: WalletManager?
-    init(store: Store, window: UIWindow) {
+    init(store: Store, apiClient: BRAPIClient, window: UIWindow) {
         self.store = store
         self.window = window
+        self.apiClient = apiClient
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular)
         addSubscriptions()
     }
 
     //MARK: - Private
     private let store: Store
+    private let apiClient: BRAPIClient
     private let window: UIWindow
     private let alertHeight: CGFloat = 260.0
     private let modalTransitionDelegate: ModalTransitionDelegate
@@ -226,7 +228,7 @@ class ModalPresenter : Subscriber {
                 Setting(title: S.Settings.currency, accessoryText: {
                     return "USD"
                 }, callback: {
-
+                    nc.pushViewController(DefaultCurrencyViewController(apiClient: self.apiClient, store: self.store), animated: true)
                 }),
                 Setting(title: S.Settings.sync, callback: {
 

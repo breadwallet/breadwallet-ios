@@ -27,7 +27,8 @@ struct HideStartFlow : Action {
                      currency: state.currency,
                      currentRate: state.currentRate,
                      alert: state.alert,
-                     isTouchIdEnabled: state.isTouchIdEnabled)
+                     isTouchIdEnabled: state.isTouchIdEnabled,
+                     defaultCurrency: state.defaultCurrency)
     }
 }
 
@@ -223,6 +224,16 @@ enum TouchId {
     }
 }
 
+enum DefaultCurrency {
+    struct setDefault : Action {
+        let reduce: Reducer
+        init(_ defaultCurrency: String) {
+            UserDefaults.defaultCurrency = defaultCurrency
+            reduce = { $0.clone(defaultCurrency: defaultCurrency) }
+        }
+    }
+}
+
 //MARK: - State Creation Helpers
 extension State {
     func clone(isStartFlowVisible: Bool) -> State {
@@ -236,7 +247,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(pinCreationStep: PinCreationStep) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -249,7 +261,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
 
     func rootModal(_ type: RootModal) -> State {
@@ -263,7 +276,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(pasteboard: String?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -276,7 +290,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(isModalDismissalBlocked: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -289,7 +304,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(paperPhraseStep: PaperPhraseStep) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -302,7 +318,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(walletSyncProgress: Double, timestamp: UInt32) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -315,7 +332,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(walletIsSyncing: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -328,7 +346,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(balance: UInt64) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -341,7 +360,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(transactions: [Transaction]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -354,7 +374,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(walletName: String) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -367,7 +388,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(currency: Currency) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -380,7 +402,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(isLoginRequired: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -393,7 +416,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(currentRate: Rate) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -406,7 +430,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(alert: AlertType?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -419,7 +444,8 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
     func clone(isTouchIdEnabled: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -432,6 +458,21 @@ extension State {
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled)
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
+    }
+    func clone(defaultCurrency: String) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
+                     pinCreationStep: pinCreationStep,
+                     paperPhraseStep: paperPhraseStep,
+                     rootModal: rootModal,
+                     pasteboard: pasteboard,
+                     walletState: walletState,
+                     currency: currency,
+                     currentRate: currentRate,
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
     }
 }
