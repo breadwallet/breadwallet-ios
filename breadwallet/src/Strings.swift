@@ -162,4 +162,9 @@ enum S {
         static let body = NSLocalizedString("Get notified when money you’ve received is available for spending.", comment: "Push notifications settings view body")
         static let label = NSLocalizedString("Push Notifications", comment: "Push notifications toggle switch label")
     }
+
+    enum DefaultCurrency {
+        static let title = NSLocalizedString("Default Currency", comment: "Default currency view title")
+        static let rateLabel = NSLocalizedString("Exchange Rate", comment: "Exchange rate label")
+    }
 }

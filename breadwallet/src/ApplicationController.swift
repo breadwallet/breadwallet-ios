@@ -45,7 +45,6 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         setupDefaults()
         setupAppearance()
         setupRootViewController()
-        setupPresenters()
         window.makeKeyAndVisible()
         startEventManager()
         updateAssetBundles()
@@ -105,6 +104,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         walletCreator = WalletCreator(walletManager: walletManager, store: store)
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
         apiClient = BRAPIClient(authenticator: walletManager)
+        modalPresenter = ModalPresenter(store: store, apiClient: apiClient!, window: window)
         exchangeUpdater = ExchangeUpdater(store: store, apiClient: apiClient!)
         feeUpdater = FeeUpdater(walletManager: walletManager, apiClient: apiClient!)
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: window.rootViewController!)
@@ -166,10 +166,6 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         accountViewController?.receiveCallback = { self.store.perform(action: RootModalActions.Present(modal: .receive)) }
         accountViewController?.menuCallback = { self.store.perform(action: RootModalActions.Present(modal: .menu)) }
         window.rootViewController = accountViewController
-    }
-
-    private func setupPresenters() {
-        modalPresenter = ModalPresenter(store: store, window: window)
     }
 
     private func addWalletCreationListener() {
