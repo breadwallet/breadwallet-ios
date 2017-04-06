@@ -49,7 +49,7 @@ extension BRAPIClient {
         task.resume()
     }
     
-    func savePushNotificationToken(_ token: Data, pushNotificationType: String = "d") {
+    func savePushNotificationToken(_ token: Data) {
         var req = URLRequest(url: url("/me/push-devices"))
         req.httpMethod = "POST"
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -57,7 +57,8 @@ extension BRAPIClient {
         let reqJson = [
             "token": token.hexString,
             "service": "apns",
-            "data": ["e": pushNotificationType]
+            "data": [   "e": pushNotificationEnvironment(),
+                        "b": Bundle.main.bundleIdentifier!]
             ] as [String : Any]
         do {
             let dat = try JSONSerialization.data(withJSONObject: reqJson, options: .prettyPrinted)
@@ -71,4 +72,12 @@ extension BRAPIClient {
             self.log("save push token resp: \(String(describing: resp)) data: \(String(describing: dat2))")
         }.resume()
     }
+}
+
+private func pushNotificationEnvironment() -> String {
+    #if Debug
+        return "d" //development
+    #else
+        return "p" //production
+    #endif
 }
