@@ -23,6 +23,18 @@ struct Amount {
         return string
     }
 
+    func string(forLocal local: Locale) -> String {
+        let format = NumberFormatter()
+        format.locale = local
+        format.isLenient = true
+        format.numberStyle = .currency
+        format.generatesDecimalNumbers = true
+        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+        guard let string = format.string(from: Double(amount)/100000000.0*rate as NSNumber) else { return "" }
+        return string
+    }
+
+
     func string(forCurrency: Currency) -> String {
         switch forCurrency {
         case .bitcoin:
