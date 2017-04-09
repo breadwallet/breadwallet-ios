@@ -12,6 +12,12 @@ struct Rate {
     let code: String
     let name: String
     let rate: Double
+
+    var locale: Locale {
+        let components: [String : String] = [NSLocale.Key.currencyCode.rawValue : code]
+        let identifier = Locale.identifier(fromComponents: components)
+        return Locale(identifier: identifier)
+    }
 }
 
 extension Rate {

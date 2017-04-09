@@ -49,7 +49,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
             self.defaultCurrency = $0.defaultCurrency
         })
         apiClient.exchangeRates { rates, error in
-            self.rates = rates
+            self.rates = rates.filter { $0.code != "BTC" }
         }
     }
 
@@ -92,7 +92,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         if let currentRate = rates.filter({ $0.code == defaultCurrency }).first {
             let amount = Amount(amount: C.satoshis, rate: currentRate.rate)
             rateLabel.textColor = .darkText
-            rateLabel.text = "\(amount.localCurrency) = 1 BTC"
+            rateLabel.text = "\(amount.string(forLocal: currentRate.locale)) = 1 BTC"
         }
     }
 
@@ -107,7 +107,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         let rate = rates[indexPath.row]
-        cell.textLabel?.text = "\(rate.name), \(rate.code)"
+        cell.textLabel?.text = "\(rate.code) (\(rate.locale.currencySymbol!))"
 
         if rate.code == defaultCurrency {
             cell.accessoryType = .checkmark
