@@ -13,12 +13,14 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     init(apiClient: BRAPIClient, store: Store) {
         self.apiClient = apiClient
         self.store = store
+        self.faq = .buildFaqButton(store: store)
         super.init(style: .plain)
     }
 
     private let apiClient: BRAPIClient
     private let store: Store
     private let cellIdentifier = "CellIdentifier"
+    private let faq: UIButton
     private var rates: [Rate] = [] {
         didSet {
             tableView.reloadData()
@@ -54,7 +56,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     }
 
     private func setHeader() {
-        let header = UIView()
+        let header = UIView(color: .whiteTint)
 
         let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
         let rateLabelTitle = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
@@ -62,6 +64,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         header.addSubview(titleLabel)
         header.addSubview(rateLabelTitle)
         header.addSubview(rateLabel)
+        header.addSubview(faq)
 
         titleLabel.constrain([
             titleLabel.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: C.padding[2]),
@@ -73,6 +76,11 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
             rateLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             rateLabel.topAnchor.constraint(equalTo: rateLabelTitle.bottomAnchor),
             rateLabel.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -C.padding[2]) ])
+        faq.constrain([
+            faq.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            faq.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: 0.0),
+            faq.constraint(.height, constant: 44.0),
+            faq.constraint(.width, constant: 44.0)])
 
         titleLabel.text = S.DefaultCurrency.title
         rateLabelTitle.text = S.DefaultCurrency.rateLabel
@@ -82,6 +90,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         rateLabel.textColor = .white
 
         tableView.tableHeaderView = header
+        tableView.backgroundColor = .whiteTint
 
         header.constrain([
             header.widthAnchor.constraint(equalTo: view.widthAnchor) ])
@@ -110,9 +119,11 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         cell.textLabel?.text = "\(rate.code) (\(rate.locale.currencySymbol!))"
 
         if rate.code == defaultCurrency {
-            cell.accessoryType = .checkmark
+            let check = UIImageView(image: #imageLiteral(resourceName: "CircleCheck").withRenderingMode(.alwaysTemplate))
+            check.tintColor = C.defaultTintColor
+            cell.accessoryView = check
         } else {
-            cell.accessoryType = .none
+            cell.accessoryView = nil
         }
 
         return cell
