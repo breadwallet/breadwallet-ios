@@ -253,7 +253,7 @@ class ModalPresenter : Subscriber {
         let settings = SettingsViewController(sections: sections, rows: rows)
         nc.viewControllers = [settings]
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteTint
         nc.navigationBar.setBackgroundImage(view.imageRepresentation, for: .default)
         nc.navigationBar.shadowImage = UIImage()
         nc.navigationBar.isTranslucent = false

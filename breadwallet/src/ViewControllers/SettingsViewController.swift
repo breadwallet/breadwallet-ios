@@ -22,6 +22,7 @@ class SettingsViewController : UITableViewController {
 
     override func viewDidLoad() {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 48.0))
+        headerView.backgroundColor = .whiteTint
         headerView.addSubview(titleLabel)
         titleLabel.constrain(toSuperviewEdges: UIEdgeInsetsMake(0, C.padding[2], 0, 0))
         titleLabel.text = S.Settings.title
@@ -30,6 +31,7 @@ class SettingsViewController : UITableViewController {
         tableView.tableHeaderView = headerView
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
+        tableView.backgroundColor = .whiteTint
         let close = UIButton.close
         close.tap = { [weak self] in
             self?.dismiss(animated: true, completion: nil)
@@ -82,7 +84,7 @@ class SettingsViewController : UITableViewController {
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 44))
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteTint
         let label = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
         view.addSubview(label)
         label.text = sections[section]
