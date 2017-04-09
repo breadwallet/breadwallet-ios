@@ -219,14 +219,17 @@ class ModalPresenter : Subscriber {
                     nc.pushViewController(PushNotificationsViewController(store: self.store), animated: true)
                 }),
                 Setting(title: S.Settings.touchIdLimit, accessoryText: {
-                    //TODO - use real rate here
-                    let amount = Amount(amount: walletManager.spendingLimit, rate: 1200)
+                    guard let rate = self.store.state.currentRate else { return "" }
+                    let amount = Amount(amount: walletManager.spendingLimit, rate: rate.rate)
                     return amount.localCurrency
                 }, callback: {
                     nc.pushViewController(TouchIdSpendingLimitViewController(walletManager: walletManager, store: self.store), animated: true)
                 }),
                 Setting(title: S.Settings.currency, accessoryText: {
-                    return "USD"
+                    let code = self.store.state.defaultCurrency
+                    let components: [String : String] = [NSLocale.Key.currencyCode.rawValue : code]
+                    let identifier = Locale.identifier(fromComponents: components)
+                    return Locale(identifier: identifier).currencyCode ?? ""
                 }, callback: {
                     nc.pushViewController(DefaultCurrencyViewController(apiClient: self.apiClient, store: self.store), animated: true)
                 }),
