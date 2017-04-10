@@ -185,4 +185,10 @@ enum S {
         static let alertMessage = NSLocalizedString("You will not be able to send money while syncing.", comment: "Alert message body")
         static let alertAction = NSLocalizedString("Sync", comment: "Alert action button label")
     }
+
+    enum ShareData {
+        static let header = NSLocalizedString("Share Data?", comment: "Share data header")
+        static let body = NSLocalizedString("Help improve Bread by sharing your annoymous data with us. This does not include any financial information. We respect your financial privacy.", comment: "Share data view body")
+        static let toggleLabel = NSLocalizedString("Share Anonymous Data?", comment: "Share data switch label.")
+    }
 }

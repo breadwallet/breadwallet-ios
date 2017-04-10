@@ -51,7 +51,6 @@ fileprivate class EventManager {
         static let hasDetermined =          "has_determined_sample_group"
         static let isMember =               "is_in_sample_group"
         static let hasPrompted =            "has_prompted_for_permission"
-        static let hasAquiredPermission =   "has_acquired_permission"
     }
     //private let eventServerUrl = URL(string: "https://api.breadwallet.com/events")!
     private let eventServerUrl = URL(string: "http://localhost:8080/events")!
@@ -115,12 +114,8 @@ fileprivate class EventManager {
         return UserDefaults.standard.bool(forKey: SampleGroup.isMember)
     }
 
-    private var hasAcquiredPermission: Bool {
-        return UserDefaults.standard.bool(forKey: SampleGroup.hasAquiredPermission)
-    }
-
     private var shouldRecordData: Bool {
-        return isInSampleGroup && hasAcquiredPermission
+        return isInSampleGroup && UserDefaults.hasAquiredShareDataPermission
     }
 
     func acquireUserPermission(callback: () -> Void) {
