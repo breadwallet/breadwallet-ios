@@ -40,6 +40,7 @@ enum TriggerName {
     case presentFaq
     case registerForPushNotificationToken
     case retrySync
+    case rescan
 }
 
 class Store {

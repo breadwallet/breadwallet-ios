@@ -112,5 +112,11 @@ class WalletCoordinator : Subscriber {
                 self.walletManager.peerManager?.connect()
             }
         })
+
+        store.subscribe(self, name: .rescan, callback: {
+            DispatchQueue(label: C.walletQueue).async {
+                self.walletManager.peerManager?.rescan()
+            }
+        })
     }
 }
