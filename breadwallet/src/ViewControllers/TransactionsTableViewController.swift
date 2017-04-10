@@ -77,6 +77,19 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
                         selector: { $0.currentRate != $1.currentRate},
                         callback: { self.rate = $0.currentRate })
 
+        store.subscribe(self, selector: { $0.walletState.syncErrorMessage != $1.walletState.syncErrorMessage
+        }, callback: {
+            if let message = $0.walletState.syncErrorMessage {
+                self.syncingView.setError(message: message)
+            }
+        })
+
+        syncingView.retry.tap = { [weak self] in
+            self?.syncingView.resetAfterError()
+            self?.store.perform(action: WalletChange.setSyncingErrorMessage(nil))
+            self?.store.trigger(name: .retrySync)
+        }
+
         emptyMessage.textAlignment = .center
         emptyMessage.text = S.TransactionDetails.emptyMessage
         reload()

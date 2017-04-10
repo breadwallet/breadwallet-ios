@@ -12,7 +12,7 @@ import UIKit //TODO - this shouldn't need uikit
 private let lastBlockHeightKey = "LastBlockHeightKey"
 private let progressUpdateInterval: TimeInterval = 0.5
 
-class WalletCoordinator {
+class WalletCoordinator : Subscriber {
 
     var kvStore: BRReplicatedKVStore?
 
@@ -25,6 +25,7 @@ class WalletCoordinator {
         self.walletManager = walletManager
         self.store = store
         addWalletObservers()
+        addSubscriptions()
     }
 
     private var lastBlockHeight: UInt32 {
@@ -64,13 +65,9 @@ class WalletCoordinator {
     }
 
     private func onSyncFail(notification: Notification) {
-        store.perform(action: WalletChange.setIsSyncing(false))
-        //TODO - handle this error properly
         guard let code = notification.userInfo?["errorCode"] else { return }
         guard let message = notification.userInfo?["errorDescription"] else { return }
-        let alert = UIAlertController(title: "Error", message: "Syncing Error: \(code), \(message)", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+        store.perform(action: WalletChange.setSyncingErrorMessage("\(message) (\(code))"))
     }
 
     private func updateTransactions() {
@@ -106,6 +103,14 @@ class WalletCoordinator {
 
         NotificationCenter.default.addObserver(forName: .WalletSyncFailedNotification, object: nil, queue: nil, using: {note in
             self.onSyncFail(notification: note)
+        })
+    }
+
+    private func addSubscriptions() {
+        store.subscribe(self, name: .retrySync, callback: {
+            DispatchQueue(label: C.walletQueue).async {
+                self.walletManager.peerManager?.connect()
+            }
         })
     }
 }
