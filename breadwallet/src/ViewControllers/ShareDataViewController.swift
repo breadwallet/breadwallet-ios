@@ -1,14 +1,14 @@
 //
-//  PushNotificationsViewController.swift
+//  ShareDataViewController.swift
 //  breadwallet
 //
-//  Created by Adrian Corscadden on 2017-04-05.
+//  Created by Adrian Corscadden on 2017-04-10.
 //  Copyright © 2017 breadwallet LLC. All rights reserved.
 //
 
 import UIKit
 
-class PushNotificationsViewController : UIViewController {
+class ShareDataViewController : UIViewController {
 
     init(store: Store) {
         self.store = store
@@ -25,7 +25,7 @@ class PushNotificationsViewController : UIViewController {
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
-        setData()
+        setInitialData()
     }
 
     private func addSubviews() {
@@ -57,24 +57,20 @@ class PushNotificationsViewController : UIViewController {
             separator.heightAnchor.constraint(equalToConstant: 1.0) ])
     }
 
-    private func setData() {
+    private func setInitialData() {
         view.backgroundColor = .whiteTint
-        titleLabel.text = S.PushNotifications.title
-        body.text = S.PushNotifications.body
-        label.text = S.PushNotifications.label
+        titleLabel.text = S.ShareData.header
+        body.text = S.ShareData.body
+        label.text = S.ShareData.toggleLabel
 
-        if let settings = UIApplication.shared.currentUserNotificationSettings {
-            if !settings.types.isEmpty {
-                toggle.isOn = true
-                toggle.sendActions(for: .valueChanged)
-            }
+        if UserDefaults.hasAquiredShareDataPermission {
+            toggle.isOn = true
+            toggle.sendActions(for: .valueChanged)
         }
-        
+
         toggle.valueChanged = { [weak self] in
             guard let myself = self else { return }
-            if myself.toggle.isOn {
-                myself.store.trigger(name: .registerForPushNotificationToken)
-            }
+            UserDefaults.hasAquiredShareDataPermission = myself.toggle.isOn
         }
     }
 

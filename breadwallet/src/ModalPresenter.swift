@@ -239,7 +239,7 @@ class ModalPresenter : Subscriber {
             ],
             "Bread": [
                 Setting(title: S.Settings.shareData, callback: {
-
+                    nc.pushViewController(ShareDataViewController(store: self.store), animated: true)
                 }),
                 Setting(title: S.Settings.buyBitcoin, callback: {
 
