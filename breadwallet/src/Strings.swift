@@ -172,4 +172,14 @@ enum S {
         static let header = NSLocalizedString("Syncing", comment: "Syncing view header text")
         static let retry = NSLocalizedString("Retry", comment: "Retry button label")
     }
+
+    enum ReScan {
+        static let header = NSLocalizedString("Sync Blockchain", comment: "Sync Blockchain view header")
+        static let subheader1 = NSLocalizedString("Estimated time\n", comment: "Subheader label")
+        static let subheader2 = NSLocalizedString("When to Sync?\n", comment: "Subheader label")
+        static let body1 = NSLocalizedString("5-30 minutes\n\n", comment: "extimated time")
+        static let body2 = NSLocalizedString("If a transaction is taking much longer than its estimated time to complete.\n\nIf you believe a transaction is missing from your account history.", comment: "Syncing explanation\n")
+        static let buttonTitle = NSLocalizedString("Start Sync", comment: "Start Sync button label")
+        static let footer = NSLocalizedString("You will not be able to send money while syncing with the blockchain.", comment: "Sync blockchain view footer")
+    }
 }

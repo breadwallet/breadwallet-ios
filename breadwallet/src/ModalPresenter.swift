@@ -234,7 +234,7 @@ class ModalPresenter : Subscriber {
                     nc.pushViewController(DefaultCurrencyViewController(apiClient: self.apiClient, store: self.store), animated: true)
                 }),
                 Setting(title: S.Settings.sync, callback: {
-
+                    nc.pushViewController(ReScanViewController(store: self.store), animated: true)
                 }),
             ],
             "Bread": [
