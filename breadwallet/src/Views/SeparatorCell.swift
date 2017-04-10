@@ -1,5 +1,5 @@
 //
-//  SettingsCell.swift
+//  SeparatorCell.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-04-01.
@@ -8,8 +8,7 @@
 
 import UIKit
 
-//TODO - make this a generic separator cell
-class SettingsCell : UITableViewCell {
+class SeparatorCell : UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         let separator = UIView()
