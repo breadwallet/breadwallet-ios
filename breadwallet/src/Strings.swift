@@ -181,5 +181,8 @@ enum S {
         static let body2 = NSLocalizedString("If a transaction is taking much longer than its estimated time to complete.\n\nIf you believe a transaction is missing from your account history.", comment: "Syncing explanation\n")
         static let buttonTitle = NSLocalizedString("Start Sync", comment: "Start Sync button label")
         static let footer = NSLocalizedString("You will not be able to send money while syncing with the blockchain.", comment: "Sync blockchain view footer")
+        static let alertTitle = NSLocalizedString("Sync with Blockchain?", comment: "Alert message title")
+        static let alertMessage = NSLocalizedString("You will not be able to send money while syncing.", comment: "Alert message body")
+        static let alertAction = NSLocalizedString("Sync", comment: "Alert action button label")
     }
 }
