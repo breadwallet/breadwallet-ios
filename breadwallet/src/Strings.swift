@@ -167,4 +167,9 @@ enum S {
         static let title = NSLocalizedString("Default Currency", comment: "Default currency view title")
         static let rateLabel = NSLocalizedString("Exchange Rate", comment: "Exchange rate label")
     }
+
+    enum SyncingView {
+        static let header = NSLocalizedString("Syncing", comment: "Syncing view header text")
+        static let retry = NSLocalizedString("Retry", comment: "Retry button label")
+    }
 }

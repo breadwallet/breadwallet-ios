@@ -32,8 +32,27 @@ class SyncingView : UIView {
         }
     }
 
+    func setError(message: String) {
+        header.text = message
+        header.textColor = .cameraGuideNegative
+        retry.isHidden = false
+    }
+
+    func resetAfterError() {
+        setInitialData()
+        header.textColor = .darkText
+        retry.isHidden = true
+    }
+
     private let header = UILabel(font: .customBold(size: 14.0))
     private let date = UILabel(font: .customBody(size: 13.0))
+
+    let retry: UIButton = {
+        let retry = UIButton(type: .system)
+        retry.tintColor = C.defaultTintColor
+        retry.setTitle(S.SyncingView.retry, for: .normal)
+        return retry
+    }()
 
     private let progressBackground: UIView = {
         let view = UIView()
@@ -62,6 +81,8 @@ class SyncingView : UIView {
         addSubview(header)
         addSubview(date)
         addSubview(progressBackground)
+        addSubview(retry)
+
         progressBackground.addSubview(progressForeground)
 
         header.constrain([
@@ -84,13 +105,17 @@ class SyncingView : UIView {
             progressForeground.leadingAnchor.constraint(equalTo: progressBackground.leadingAnchor),
             progressForeground.centerYAnchor.constraint(equalTo: progressBackground.centerYAnchor),
             progressForeground.heightAnchor.constraint(equalTo: progressBackground.heightAnchor) ])
+        retry.constrain([
+            retry.centerYAnchor.constraint(equalTo: header.centerYAnchor),
+            retry.trailingAnchor.constraint(equalTo: progressBackground.trailingAnchor) ])
 
-        setData()
+        setInitialData()
     }
 
-    private func setData() {
-        header.text = "Syncing"
+    private func setInitialData() {
+        header.text = S.SyncingView.header
         date.text = ""
+        retry.isHidden = true
     }
 
     required init?(coder aDecoder: NSCoder) {
