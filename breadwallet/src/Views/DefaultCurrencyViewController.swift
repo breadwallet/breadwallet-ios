@@ -46,7 +46,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
     override func viewDidLoad() {
         setHeader()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
         store.subscribe(self, selector: { $0.defaultCurrency != $1.defaultCurrency }, callback: {
             self.defaultCurrency = $0.defaultCurrency
         })
@@ -91,6 +91,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
         tableView.tableHeaderView = header
         tableView.backgroundColor = .whiteTint
+        tableView.separatorStyle = .none
 
         header.constrain([
             header.widthAnchor.constraint(equalTo: view.widthAnchor) ])

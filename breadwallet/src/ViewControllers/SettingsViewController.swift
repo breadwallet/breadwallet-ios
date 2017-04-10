@@ -27,11 +27,12 @@ class SettingsViewController : UITableViewController {
         titleLabel.constrain(toSuperviewEdges: UIEdgeInsetsMake(0, C.padding[2], 0, 0))
         titleLabel.text = S.Settings.title
 
-        tableView.register(SettingsCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.tableHeaderView = headerView
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
         tableView.backgroundColor = .whiteTint
+
         let close = UIButton.close
         close.tap = { [weak self] in
             self?.dismiss(animated: true, completion: nil)
