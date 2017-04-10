@@ -11,6 +11,7 @@ import Foundation
 private let defaults = UserDefaults.standard
 private let isTouchIdEnabledKey = "istouchidenabled"
 private let defaultCurrencyKey = "defaultcurrency"
+private let hasAquiredShareDataPermissionKey = "has_acquired_permission"
 
 extension UserDefaults {
 
@@ -35,6 +36,18 @@ extension UserDefaults {
         }
         set {
             defaults.set(newValue, forKey: defaultCurrencyKey)
+        }
+    }
+
+    static var hasAquiredShareDataPermission: Bool {
+        get {
+            guard defaults.object(forKey: hasAquiredShareDataPermissionKey) != nil else {
+                return  false
+            }
+            return defaults.bool(forKey: hasAquiredShareDataPermissionKey)
+        }
+        set {
+            defaults.set(newValue, forKey: hasAquiredShareDataPermissionKey)
         }
     }
 }
