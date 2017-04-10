@@ -11,7 +11,13 @@ class SettingsViewController : UITableViewController {
 
     init(sections: [String], rows: [String: [Setting]]) {
         self.sections = sections
-        self.rows = rows
+        if UserDefaults.isTouchIdEnabled {
+            self.rows = rows
+        } else {
+            var tempRows = rows
+            tempRows["Manage"] = tempRows["Manage"]?.filter { $0.title != S.Settings.touchIdLimit }
+            self.rows = tempRows
+        }
         super.init(style: .plain)
     }
 
