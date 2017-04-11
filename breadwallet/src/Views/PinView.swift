@@ -25,20 +25,20 @@ class PinView : UIView {
         }
     }
     var width: CGFloat {
-        return (itemSize + C.padding[1]) * 6.0
+        return (itemSize + C.padding[1]) * CGFloat(length)
     }
     let shakeDuration: CFTimeInterval = 0.6
 
-    init(style: PinViewStyle) {
+    init(style: PinViewStyle, length: Int) {
         self.style = style
-
+        self.length = length
         switch style {
         case .create:
-            unFilled = (0...5).map { _ in Circle(color: .borderGray) }
+            unFilled = (0...(length-1)).map { _ in Circle(color: .borderGray) }
         case .login:
-            unFilled = (0...5).map { _ in Circle(color: .white) }
+            unFilled = (0...(length-1)).map { _ in Circle(color: .white) }
         }
-
+        filled = (0...(length-1)).map { _ in Circle(color: .black) }
         super.init(frame: CGRect())
         setupSubviews()
     }
@@ -68,8 +68,9 @@ class PinView : UIView {
 
     //MARK: - Private
     private let unFilled: [Circle]
-    private let filled = (0...5).map { _ in Circle(color: .black) }
+    private var filled: [Circle]
     private let style: PinViewStyle
+    private let length: Int
 
     private func toRadian(value: Int) -> CGFloat {
         return CGFloat(Double(value) / 180.0 * .pi)

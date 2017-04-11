@@ -23,7 +23,7 @@ class VerifyPinViewController : UIViewController {
     private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad)
     private let titleLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
     private let body = UILabel(font: .customBody(size: 14.0), color: .darkText)
-    private let pinView = PinView(style: .create)
+    private let pinView = PinView(style: .create, length: 6)
 
     override func viewDidLoad() {
         addSubviews()
