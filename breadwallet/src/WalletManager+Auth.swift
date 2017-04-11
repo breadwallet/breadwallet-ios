@@ -157,7 +157,20 @@ extension WalletManager : WalletAuthenticator {
             return 0
         }
     }
-    
+
+    var pinLength: Int {
+        do {
+            if let pin: String = try keychainItem(key: KeychainKey.pin) {
+                return pin.utf8.count
+            } else {
+                return 6
+            }
+        } catch let error {
+            print("Pin keychain error: \(error)")
+            return 6
+        }
+    }
+
     // true if pin is correct
     func authenticate(pin: String) -> Bool {
         do {

@@ -15,12 +15,21 @@ private let topControlHeight: CGFloat = 32.0
 class LoginViewController : UIViewController {
 
     //MARK: - Public
-    var walletManager: WalletManager?
+    var walletManager: WalletManager? {
+        didSet {
+            guard let walletManager = walletManager else { return }
+            self.pinView = PinView(style: .login, length: walletManager.pinLength)
+        }
+    }
     var isPresentedFromAccount = false
     init(store: Store, isPresentedForLock: Bool, walletManager: WalletManager? = nil) {
         self.store = store
         self.walletManager = walletManager
         self.isPresentedForLock = isPresentedForLock
+
+        if let walletManager = walletManager {
+            self.pinView = PinView(style: .login, length: walletManager.pinLength)
+        }
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -29,7 +38,7 @@ class LoginViewController : UIViewController {
     private let backgroundView = LoginBackgroundView()
     private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad)
     private let pinViewContainer = UIView()
-    private let pinView = PinView(style: .login)
+    private var pinView: PinView?
     private let addressButton = SegmentedButton(title: S.LoginScreen.myAddress, type: .left)
     private let scanButton = SegmentedButton(title: S.LoginScreen.scan, type: .right)
     private let isPresentedForLock: Bool
@@ -74,6 +83,9 @@ class LoginViewController : UIViewController {
         addConstraints()
         addTouchIdButton()
         addPinPadCallback()
+        if pinView != nil {
+            addPinView()
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -90,15 +102,28 @@ class LoginViewController : UIViewController {
         unlockTimer?.invalidate()
     }
 
+    private func addPinView() {
+        guard let pinView = pinView else { return }
+        pinViewContainer.addSubview(pinView)
+        view.addSubview(subheader)
+        pinView.constrain([
+            pinView.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -95.0),
+            pinView.centerXAnchor.constraint(equalTo: pinViewContainer.centerXAnchor),
+            pinView.widthAnchor.constraint(equalToConstant: pinView.width),
+            pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
+        subheader.constrain([
+            subheader.bottomAnchor.constraint(equalTo: pinView.topAnchor, constant: -C.padding[1]),
+            subheader.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
+
+    }
+
     private func addSubviews() {
         view.addSubview(backgroundView)
         view.addSubview(pinViewContainer)
-        pinViewContainer.addSubview(pinView)
         view.addSubview(topControlContainer)
         topControlContainer.addSubview(addressButton)
         topControlContainer.addSubview(scanButton)
         view.addSubview(header)
-        view.addSubview(subheader)
         view.addSubview(pinPadBackground)
     }
 
@@ -113,11 +138,7 @@ class LoginViewController : UIViewController {
                 pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height) ])
         })
         pinViewContainer.constrain(toSuperviewEdges: nil)
-        pinView.constrain([
-            pinView.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -95.0),
-            pinView.centerXAnchor.constraint(equalTo: pinViewContainer.centerXAnchor),
-            pinView.widthAnchor.constraint(equalToConstant: pinView.width),
-            pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
+
         topControlTop = topControlContainer.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[1] + 20.0)
         topControlContainer.constrain([
             topControlTop,
@@ -134,9 +155,7 @@ class LoginViewController : UIViewController {
             scanButton.topAnchor.constraint(equalTo: topControlContainer.topAnchor),
             scanButton.trailingAnchor.constraint(equalTo: topControlContainer.trailingAnchor),
             scanButton.bottomAnchor.constraint(equalTo: topControlContainer.bottomAnchor) ])
-        subheader.constrain([
-            subheader.bottomAnchor.constraint(equalTo: pinView.topAnchor, constant: -C.padding[1]),
-            subheader.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
+
         header.constrain([
             header.topAnchor.constraint(equalTo: topControlContainer.bottomAnchor, constant: C.padding[6]),
             header.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
@@ -167,10 +186,12 @@ class LoginViewController : UIViewController {
 
     private func addPinPadCallback() {
         pinPad.ouputDidUpdate = { [weak self] pin in
-            let length = pin.lengthOfBytes(using: .utf8)
-            self?.pinView.fill(length)
-            self?.pinPad.isAppendingDisabled = length < 6 ? false : true
-            if length == 6 {
+            guard let walletManager = self?.walletManager else { return }
+            guard let pinView = self?.pinView else { return }
+            let attemptLength = pin.utf8.count
+            pinView.fill(attemptLength)
+            self?.pinPad.isAppendingDisabled = attemptLength < walletManager.pinLength ? false : true
+            if attemptLength == walletManager.pinLength {
                 self?.authenticate(pin: pin)
             }
         }
@@ -208,7 +229,7 @@ class LoginViewController : UIViewController {
             label.alpha = 1.0
             self.header.alpha = 0.0
             self.subheader.alpha = 0.0
-            self.pinView.alpha = 0.0
+            self.pinView?.alpha = 0.0
             self.view.layoutIfNeeded()
         }) { completion in
             if self.isPresentedFromAccount {
@@ -219,10 +240,11 @@ class LoginViewController : UIViewController {
     }
 
     private func authenticationFailed() {
+        guard let pinView = pinView else { return }
         pinView.shake()
         pinPad.clear()
         DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
-            self?.pinView.fill(0)
+            pinView.fill(0)
             self?.lockIfNeeded()
         }
     }
