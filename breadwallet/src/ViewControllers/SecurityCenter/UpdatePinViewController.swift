@@ -17,6 +17,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
         self.store = store
         self.walletManager = walletManager
         self.phrase = phrase
+        self.pinView = PinView(style: .create, length: walletManager.pinLength)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -24,7 +25,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private let header = UILabel.wrapping(font: .customBold(size: 26.0), color: .darkText)
     private let instruction = UILabel.wrapping(font: .customBody(size: 14.0), color: .darkText)
     private let caption = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
-    private let pinView = PinView(style: .create, length: 6)
+    private var pinView: PinView
     private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad)
     private let store: Store
     private let walletManager: WalletManager
@@ -53,6 +54,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private var isCreatingPin: Bool {
         return phrase != nil
     }
+    private let newPinLength = 6
 
     private enum Step {
         case current
@@ -122,10 +124,11 @@ class UpdatePinViewController : UIViewController, Subscriber {
 
     private func didUpdateForCurrent(pin: String) {
         pinView.fill(pin.utf8.count)
-        if pin.utf8.count == 6 {
+        if pin.utf8.count == walletManager.pinLength {
             if walletManager.authenticate(pin: pin) {
                 pushNewStep(.new)
                 currentPin = pin
+                replacePinView()
             } else {
                 clearAfterFailure()
             }
@@ -134,7 +137,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
 
     private func didUpdateForNew(pin: String) {
         pinView.fill(pin.utf8.count)
-        if pin.utf8.count == 6 {
+        if pin.utf8.count == newPinLength {
             newPin = pin
             pushNewStep(.confirmNew)
         }
@@ -143,7 +146,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private func didUpdateForConfirmNew(pin: String) {
         guard let newPin = newPin else { return }
         pinView.fill(pin.utf8.count)
-        if pin.utf8.count == 6 {
+        if pin.utf8.count == newPinLength {
             if pin == newPin {
                 didSetNewPin()
             } else {
@@ -158,6 +161,17 @@ class UpdatePinViewController : UIViewController, Subscriber {
         }
         pinView.shake()
         pinPad.clear()
+    }
+
+    private func replacePinView() {
+        pinView.removeFromSuperview()
+        pinView = PinView(style: .create, length: newPinLength)
+        view.addSubview(pinView)
+        pinView.constrain([
+            pinView.topAnchor.constraint(equalTo: instruction.bottomAnchor, constant: C.padding[6]),
+            pinView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pinView.widthAnchor.constraint(equalToConstant: pinView.width),
+            pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
     }
 
     private func pushNewStep(_ newStep: Step) {
@@ -191,7 +205,12 @@ class UpdatePinViewController : UIViewController, Subscriber {
                 })
             })
         } else {
-            //TODO - handle set pin failure
+            let alert = UIAlertController(title: S.UpdatePin.updateTitle, message: S.UpdatePin.setPinError, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: { [weak self] _ in
+                self?.clearAfterFailure()
+                self?.pushNewStep(.new)
+            }))
+            present(alert, animated: true, completion: nil)
         }
     }
 
