@@ -29,8 +29,9 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         didSet { paperKeyCell.tap = didTapPaperKey }
     }
 
-    init(store: Store) {
+    init(store: Store, walletManager: WalletManager) {
         self.store = store
+        self.walletManager = walletManager
         self.header = ModalHeaderView(title: S.SecurityCenter.title, isFaqHidden: false, style: .light, store: store)
         super.init(nibName: nil, bundle: nil)
     }
@@ -46,6 +47,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     private let paperKeyCell = SecurityCenterCell(title: S.SecurityCenter.Cells.paperKeyTitle, descriptionText: S.SecurityCenter.Cells.paperKeyDescription)
     private let separator = UIView(color: .secondaryShadow)
     private let store: Store
+    private let walletManager: WalletManager
 
     deinit {
         store.unsubscribe(self)
@@ -55,6 +57,11 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         setupSubviewProperties()
         addSubviews()
         addConstraints()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        pinCell.isCheckHighlighted = walletManager.pinLength == 6
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -73,7 +80,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         info.numberOfLines = 0
         info.lineBreakMode = .byWordWrapping
 
-        pinCell.isCheckHighlighted = true
+        pinCell.isCheckHighlighted = walletManager.pinLength == 6
         paperKeyCell.isCheckHighlighted = true
         header.backgroundColor = .clear
 

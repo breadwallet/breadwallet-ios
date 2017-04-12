@@ -288,7 +288,7 @@ class ModalPresenter : Subscriber {
 
     private func presentSecurityCenter() {
         guard let walletManager = walletManager else { return }
-        let securityCenter = SecurityCenterViewController(store: store)
+        let securityCenter = SecurityCenterViewController(store: store, walletManager: walletManager)
         let nc = ModalNavigationController(rootViewController: securityCenter)
         nc.setDefaultStyle()
         nc.isNavigationBarHidden = true
