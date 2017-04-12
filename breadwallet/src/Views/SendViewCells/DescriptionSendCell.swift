@@ -1,5 +1,5 @@
 //
-//  TextFieldSendCell.swift
+//  DescriptionSendCell.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-12-16.
@@ -8,9 +8,9 @@
 
 import UIKit
 
-class TextFieldSendCell : SendCell {
+class DescriptionSendCell : SendCell {
 
-    init(placeholder: String, isKeyboardHidden: Bool) {
+    init(placeholder: String) {
         super.init()
         let attributes: [String: Any] = [
             NSForegroundColorAttributeName: UIColor.grayTextTint,
@@ -20,11 +20,7 @@ class TextFieldSendCell : SendCell {
         textField.tintColor = C.defaultTintColor
         textField.delegate = self
         textField.textColor = .darkText
-        if isKeyboardHidden {
-            textField.inputView = UIView()
-        } else {
-            textField.returnKeyType = .done
-        }
+        textField.returnKeyType = .done
         setupViews()
     }
 
@@ -67,7 +63,7 @@ class TextFieldSendCell : SendCell {
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
 
-        textField.addTarget(self, action: #selector(TextFieldSendCell.editingChanged(textField:)), for: .editingChanged)
+        textField.addTarget(self, action: #selector(DescriptionSendCell.editingChanged(textField:)), for: .editingChanged)
     }
 
     @objc private func editingChanged(textField: UITextField) {
@@ -80,7 +76,7 @@ class TextFieldSendCell : SendCell {
     }
 }
 
-extension TextFieldSendCell : UITextFieldDelegate {
+extension DescriptionSendCell : UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textFieldDidBeginEditing?()
     }
