@@ -20,16 +20,18 @@ class Sender {
         self.walletManager = walletManager
     }
 
+    func createTransaction(amount: UInt64, to: String) {
+        transaction = walletManager.wallet?.createTransaction(forAmount: amount, toAddress: to)
+    }
+
+    var fee: UInt64 {
+        guard let tx = transaction else { return 0 }
+        return walletManager.wallet?.feeForTx(tx) ?? 0
+    }
+
     //Amount in bits
-    func send(amount: UInt64, to: String, verifyPin: (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
-        let satoshis = amount * 100
-
-        if let maxOutput = walletManager.wallet?.maxOutputAmount, satoshis > maxOutput {
-            return completion(.creationError("Insufficient funds"))
-        }
-
-        transaction = walletManager.wallet?.createTransaction(forAmount: satoshis, toAddress: to)
-        guard let tx = transaction else { return }
+    func send(verifyPin: (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
+        guard let tx = transaction else { return completion(.creationError("Transaction not created")) }
         verifyPin({ pin in
             if self.walletManager.signTransaction(tx, pin: pin) {
                 self.walletManager.peerManager?.publishTx(tx, completion: { success, error in
