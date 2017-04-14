@@ -14,7 +14,8 @@ struct Amount {
     let amount: UInt64 //amount in satoshis
     let rate: Double
     var bits: String {
-        guard let string = format.string(from: amount/100 as NSNumber) else { return "" }
+        let number = NSNumber(value: Double(amount)/100.0)
+        guard let string = format.string(from: number) else { return "" }
         return string
     }
 
@@ -54,7 +55,7 @@ struct Amount {
         format.currencyCode = "XBT"
         format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
         format.maximumFractionDigits = 2
-        format.minimumFractionDigits = 0
+        format.minimumFractionDigits = 0 // iOS 8 bug, minimumFractionDigits now has to be set after currencySymbol
         format.maximum = C.maxMoney as NSNumber
         return format
     }()
