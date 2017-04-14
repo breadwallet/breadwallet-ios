@@ -56,6 +56,8 @@ class SendAmountCell : SendCell {
     private func setupViews() {
         addSubview(textField)
         addSubview(label)
+        addSubview(amountLabel)
+
         textField.constrain([
             textField.constraint(.leading, toView: self, constant: C.padding[2]),
             textField.centerYAnchor.constraint(equalTo: accessoryView.centerYAnchor),
@@ -63,18 +65,18 @@ class SendAmountCell : SendCell {
             textField.constraint(toLeading: accessoryView, constant: 0.0) ])
         label.constrain([
             label.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
-            label.topAnchor.constraint(equalTo: accessoryView.bottomAnchor),
+            label.topAnchor.constraint(equalTo: amountLabel.bottomAnchor, constant: C.padding[2]),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
-            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1]) ])
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-
-        addSubview(amountLabel)
+            label.bottomAnchor.constraint(equalTo: bottomAnchor)
+            ])
         amountLabel.constrain([
             amountLabel.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
             amountLabel.topAnchor.constraint(equalTo: textField.topAnchor),
             amountLabel.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
             amountLabel.bottomAnchor.constraint(equalTo: textField.bottomAnchor) ])
+
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
 
         textField.addTarget(self, action: #selector(SendAmountCell.editingChanged(textField:)), for: .editingChanged)
     }

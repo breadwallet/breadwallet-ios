@@ -172,7 +172,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
             guard let rate = myself.rate else { return }
             let amount = Amount(amount: myself.balance, rate: rate.rate)
-            myself.amount.setLabel(text: "Current Balance: \(amount.bits)", color: .grayTextTint)
+            myself.amount.setLabel(text: "Balance: \(amount.bits)", color: .grayTextTint)
 
         }
         amount.textFieldDidChange = { text in
@@ -210,15 +210,25 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             //Set balance text
             var data: (String, UIColor) = ("Balance: \(balanceAmount.bits)", .grayTextTint)
             if let value = Double(text) {
+
+                var feeString = ""
+                if let toAddress = self.to.content {
+                    self.sender.createTransaction(amount: UInt64(value * 100.0), to: toAddress)
+                    feeString = ", Fee: \(formatter.string(from: self.sender.fee/100 as NSNumber)!)"
+                }
+
                 if Int(value * 100.0) > Int(self.balance) {
-                    data = ("Balance: \(balanceAmount.bits)", .red)
+                    data = ("Balance: \(balanceAmount.bits)\(feeString)", .red)
                     self.send.isEnabled = false
                 } else {
+                    data = ("Balance: \(balanceAmount.bits)\(feeString)", .grayTextTint)
                     self.send.isEnabled = true
                 }
 
+                self.amount.setLabel(text: data.0, color: data.1)
+            } else {
+                self.amount.setLabel(text: "Balance: \(balanceAmount.bits)", color: .grayTextTint)
             }
-            self.amount.setLabel(text: data.0, color: data.1)
 
         }
         descriptionCell.textFieldDidReturn = { textField in
@@ -314,13 +324,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     @objc private func sendTapped() {
-        guard let address = to.content else { return /*TODO - no address error*/ }
-        guard let amount = amount.content else { return /*TODO - bad amount*/ }
-        guard let numericAmount = UInt64(amount) else { return /*TODO - bad amount*/ }
-
-        sender.send(amount: numericAmount,
-                    to: address,
-                    verifyPin: { pinValidationCallback in
+        sender.send(verifyPin: { pinValidationCallback in
                         presentVerifyPin? { pin, vc in
                             if pinValidationCallback(pin) {
                                 vc.dismiss(animated: true, completion: {
