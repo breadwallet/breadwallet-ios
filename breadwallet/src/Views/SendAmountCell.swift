@@ -42,10 +42,16 @@ class SendAmountCell : SendCell {
         label.textColor = color
     }
 
+    func setAmountLabel(text: String) {
+        textField.isHidden = text.utf8.count > 0 //Textfield should be hidden if amount label has text
+        amountLabel.text = text
+    }
+
     private let placeholderFont = UIFont.customBody(size: 16.0)
     private let textFieldFont = UIFont.customBody(size: 26.0)
     let textField = UITextField()
     fileprivate let label = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
+    private let amountLabel = UILabel(font: .customBody(size: 26.0), color: .darkText)
 
     private func setupViews() {
         addSubview(textField)
@@ -62,6 +68,13 @@ class SendAmountCell : SendCell {
             label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1]) ])
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
+
+        addSubview(amountLabel)
+        amountLabel.constrain([
+            amountLabel.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
+            amountLabel.topAnchor.constraint(equalTo: textField.topAnchor),
+            amountLabel.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
+            amountLabel.bottomAnchor.constraint(equalTo: textField.bottomAnchor) ])
 
         textField.addTarget(self, action: #selector(SendAmountCell.editingChanged(textField:)), for: .editingChanged)
     }

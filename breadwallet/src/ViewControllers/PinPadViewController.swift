@@ -128,6 +128,20 @@ class PinPadViewController : UICollectionViewController {
     func shouldAppendChar(char: String) -> Bool {
         let numberFormatter = NumberFormatter()
         let decimalLocation = currentOutput.range(of: numberFormatter.currencyDecimalSeparator)?.lowerBound
+
+        //Don't allow more that 2 decimal points
+        if let location = decimalLocation {
+            let locationValue = currentOutput.distance(from: currentOutput.endIndex, to: location)
+            if locationValue < -2 {
+                return false
+            }
+        }
+
+        //Don't allow more than 2 decimal separators
+        if currentOutput.contains("\(numberFormatter.currencyDecimalSeparator)") && char == numberFormatter.currencyDecimalSeparator {
+            return false
+        }
+
         if char == numberFormatter.currencyDecimalSeparator {
             if decimalLocation == nil {
                 //Prepend a 0 if the first character is a decimal point
