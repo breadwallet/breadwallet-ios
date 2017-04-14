@@ -177,22 +177,68 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         }
         amount.textFieldDidChange = { text in
             guard let rate = self.rate else { return }
-            let amount = Amount(amount: self.balance, rate: rate.rate)
-            var data: (String, UIColor) = ("Current balance: \(amount.bits)", .grayTextTint)
-            if let value = Int(text) {
-                if value * 100 > Int(self.balance) {
-                    data = ("Insufficient Funds. Max balance: \(amount.bits)", .red)
+            let balanceAmount = Amount(amount: self.balance, rate: rate.rate)
+
+            //Set amount label
+            let formatter = self.bitsFormatter
+            if let value = Double(text) {
+
+                let numberFormatter = NumberFormatter()
+                if let decimalLocation = text.range(of: numberFormatter.currencyDecimalSeparator)?.upperBound {
+                    let locationValue = text.distance(from: text.endIndex, to: decimalLocation)
+                    if locationValue == -2 {
+                        formatter.minimumFractionDigits = 2
+                    } else if locationValue == -1 {
+                        formatter.minimumFractionDigits = 1
+                    }
+                }
+
+                var output = formatter.string(from: value as NSNumber)
+
+                //If trailing decimal, append the decimal to the output
+                if let decimalLocation = text.range(of: numberFormatter.currencyDecimalSeparator)?.upperBound {
+                    if text.endIndex == decimalLocation {
+                        output = output?.appending(".")
+                    }
+                }
+
+                self.amount.setAmountLabel(text: output!)
+            } else {
+                self.amount.setAmountLabel(text: "")
+            }
+
+            //Set balance text
+            var data: (String, UIColor) = ("Balance: \(balanceAmount.bits)", .grayTextTint)
+            if let value = Double(text) {
+                if Int(value * 100.0) > Int(self.balance) {
+                    data = ("Balance: \(balanceAmount.bits)", .red)
                     self.send.isEnabled = false
                 } else {
                     self.send.isEnabled = true
                 }
+
             }
             self.amount.setLabel(text: data.0, color: data.1)
+
         }
         descriptionCell.textFieldDidReturn = { textField in
             textField.resignFirstResponder()
         }
         send.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
+    }
+
+    private var bitsFormatter: NumberFormatter {
+        let format = NumberFormatter()
+        format.isLenient = true
+        format.numberStyle = .currency
+        format.generatesDecimalNumbers = true
+        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+        format.currencyCode = "XBT"
+        format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+        format.maximumFractionDigits = 2
+        format.minimumFractionDigits = 0 // iOS 8 bug, minimumFractionDigits now has to be set after currencySymbol
+        format.maximum = C.maxMoney as NSNumber
+        return format
     }
 
     @objc private func pasteTapped() {
