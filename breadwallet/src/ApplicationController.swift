@@ -170,15 +170,27 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
 
     private func addWalletCreationListener() {
         store.subscribe(self,
-                        selector: { $0.pinCreationStep != $1.pinCreationStep },
+                        selector: { $0.pinCreationStep != $1.pinCreationStep || $0.alert != $1.alert },
                         callback: {
+
+                            //TODO - figure out a better way to do this..should use a trigger instead
+                            var shouldLoadWallet = false
                             if case .saveSuccess = $0.pinCreationStep {
+                                shouldLoadWallet = true
+                            }
+                            if let alert = $0.alert {
+                                if alert == .pinSet {
+                                    shouldLoadWallet = true
+                                }
+                            }
+                            if shouldLoadWallet {
                                 self.modalPresenter?.walletManager = self.walletManager
                                 self.feeUpdater?.updateWalletFees()
                                 self.feeUpdater?.refresh()
                                 self.initKVStoreCoordinator()
                                 self.apiClient?.updateFeatureFlags()
                             }
+
         })
     }
     
