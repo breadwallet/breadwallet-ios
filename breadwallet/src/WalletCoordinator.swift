@@ -114,6 +114,9 @@ class WalletCoordinator : Subscriber {
         })
 
         store.subscribe(self, name: .rescan, callback: {
+            //In case rescan is called while a sync is in progess
+            //we need to make sure it's false before a rescan starts
+            //self.store.perform(action: WalletChange.setIsSyncing(false))
             DispatchQueue(label: C.walletQueue).async {
                 self.walletManager.peerManager?.rescan()
             }
