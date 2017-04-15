@@ -8,6 +8,7 @@
 
 import UIKit
 import BRCore
+import MachO
 
 let accountHeaderHeight: CGFloat = 136.0
 private let notificationViewHeight: CGFloat = 48.0
