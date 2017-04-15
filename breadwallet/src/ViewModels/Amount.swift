@@ -13,14 +13,23 @@ struct Amount {
     //MARK: - Public
     let amount: UInt64 //amount in satoshis
     let rate: Double
+
+    var bitsAmount: Double {
+        return Double(amount)/100.0
+    }
+
+    var localAmount: Double {
+        return Double(amount)/100000000.0*rate
+    }
+
     var bits: String {
         let number = NSNumber(value: Double(amount)/100.0)
-        guard let string = format.string(from: number) else { return "" }
+        guard let string = Amount.btcFormat.string(from: number) else { return "" }
         return string
     }
 
     var localCurrency: String {
-        guard let string = localFormat.string(from: Double(amount)/100000000.0*rate as NSNumber) else { return "" }
+        guard let string = Amount.localFormat.string(from: Double(amount)/100000000.0*rate as NSNumber) else { return "" }
         return string
     }
 
@@ -35,7 +44,6 @@ struct Amount {
         return string
     }
 
-
     func string(forCurrency: Currency) -> String {
         switch forCurrency {
         case .bitcoin:
@@ -46,7 +54,7 @@ struct Amount {
     }
 
     //MARK: - Private
-    private let format: NumberFormatter = {
+    static let btcFormat: NumberFormatter = {
         let format = NumberFormatter()
         format.isLenient = true
         format.numberStyle = .currency
@@ -60,7 +68,7 @@ struct Amount {
         return format
     }()
 
-    private let localFormat: NumberFormatter = {
+    static let localFormat: NumberFormatter = {
         let format = NumberFormatter()
         format.isLenient = true
         format.numberStyle = .currency
