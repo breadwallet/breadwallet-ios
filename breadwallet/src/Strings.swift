@@ -19,6 +19,7 @@ enum S {
         static let ok = NSLocalizedString("OK", comment: "OK button label")
         static let cancel = NSLocalizedString("Cancel", comment: "Cancel button label")
         static let settings = NSLocalizedString("Settings", comment: "Settings button label")
+        static let submit = NSLocalizedString("Submit", comment: "Settings button label")
     }
 
     enum Scanner {
@@ -192,5 +193,10 @@ enum S {
         static let header = NSLocalizedString("Share Data?", comment: "Share data header")
         static let body = NSLocalizedString("Help improve Bread by sharing your annoymous data with us. This does not include any financial information. We respect your financial privacy.", comment: "Share data view body")
         static let toggleLabel = NSLocalizedString("Share Anonymous Data?", comment: "Share data switch label.")
+    }
+
+    enum ConfirmPaperPhrase {
+        static let word = NSLocalizedString("Word", comment: "Word label eg. Word 1, Word 2")
+        static let label = NSLocalizedString("Prove you wrote down your paper key by answering the following questions.", comment: "Confirm paper phrase view label.")
     }
 }

@@ -308,7 +308,33 @@ class ModalPresenter : Subscriber {
             nc.pushViewController(touchIdSettings, animated: true)
         }
         securityCenter.didTapPaperKey = {
-            print("paperkey")
+            guard let walletManager = self.walletManager else { return }
+            let paperPhraseNavigationController = UINavigationController()
+            paperPhraseNavigationController.setClearNavbar()
+            paperPhraseNavigationController.setWhiteStyle()
+            paperPhraseNavigationController.modalPresentationStyle = .overFullScreen
+
+            let verify = VerifyPinViewController(callback: { pin, vc in
+                if walletManager.authenticate(pin: pin) {
+                    let write = WritePaperPhraseViewController(store: self.store, walletManager: walletManager, pin: pin)
+                    write.addCloseNavigationItem(tintColor: .white)
+                    write.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
+                    write.lastWordSeen = {
+                        let confirm = ConfirmPaperPhraseViewController(store: self.store, walletManager: walletManager, pin: pin)
+                        write.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
+                        confirm.didConfirm = {
+                            confirm.dismiss(animated: true, completion: {
+                                //TODO - fix this animation
+                                self.store.perform(action: PaperPhrase.Confirmed())
+                            })
+                        }
+                        paperPhraseNavigationController.pushViewController(confirm, animated: true)
+                    }
+                    paperPhraseNavigationController.pushViewController(write, animated: true)
+                }
+            })
+            paperPhraseNavigationController.viewControllers = [verify]
+            nc.present(paperPhraseNavigationController, animated: true, completion: nil)
         }
 
         window.rootViewController?.present(nc, animated: true, completion: nil)
