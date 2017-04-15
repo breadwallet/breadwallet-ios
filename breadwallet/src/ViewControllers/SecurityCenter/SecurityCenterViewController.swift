@@ -61,7 +61,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        pinCell.isCheckHighlighted = walletManager.pinLength == 6
+        setPinAndPhraseChecks()
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -79,11 +79,9 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         info.text = S.SecurityCenter.info
         info.numberOfLines = 0
         info.lineBreakMode = .byWordWrapping
-
-        pinCell.isCheckHighlighted = walletManager.pinLength == 6
-        paperKeyCell.isCheckHighlighted = true
         header.backgroundColor = .clear
 
+        setPinAndPhraseChecks()
         store.subscribe(self, selector: { $0.isTouchIdEnabled != $1.isTouchIdEnabled }, callback: {
             self.touchIdCell.isCheckHighlighted = $0.isTouchIdEnabled
         })
@@ -147,6 +145,24 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         if !LAContext.isTouchIdAvailable {
             touchIdCell.constrain([touchIdCell.heightAnchor.constraint(equalToConstant: 0.0)])
         }
+    }
+
+    private func setPinAndPhraseChecks() {
+        pinCell.isCheckHighlighted = walletManager.pinLength == 6
+        setPaperKeyCheck()
+    }
+
+    private func setPaperKeyCheck() {
+        if let legacyWalletNeedsBackup = UserDefaults.legacyWalletNeedsBackup, legacyWalletNeedsBackup == true {
+            paperKeyCell.isCheckHighlighted = false
+            return
+        }
+
+        if UserDefaults.writePaperPhraseDate == nil {
+            paperKeyCell.isCheckHighlighted = false
+            return
+        }
+        paperKeyCell.isCheckHighlighted = true
     }
 
     required init?(coder aDecoder: NSCoder) {

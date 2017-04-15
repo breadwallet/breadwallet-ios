@@ -12,6 +12,8 @@ private let defaults = UserDefaults.standard
 private let isTouchIdEnabledKey = "istouchidenabled"
 private let defaultCurrencyKey = "defaultcurrency"
 private let hasAquiredShareDataPermissionKey = "has_acquired_permission"
+private let legacyWalletNeedsBackupKey = "WALLET_NEEDS_BACKUP"
+private let writePaperPhraseDateKey = "writepaperphrasedatekey"
 
 extension UserDefaults {
 
@@ -48,6 +50,26 @@ extension UserDefaults {
         }
         set {
             defaults.set(newValue, forKey: hasAquiredShareDataPermissionKey)
+        }
+    }
+
+    static var legacyWalletNeedsBackup: Bool? {
+        guard defaults.object(forKey: legacyWalletNeedsBackupKey) != nil else {
+            return nil
+        }
+        return defaults.bool(forKey: legacyWalletNeedsBackupKey)
+    }
+
+    static func removeLegacyWalletNeedsBackupKey() {
+        defaults.removeObject(forKey: legacyWalletNeedsBackupKey)
+    }
+
+    static var writePaperPhraseDate: Date? {
+        get {
+            return defaults.object(forKey: writePaperPhraseDateKey) as! Date?
+        }
+        set {
+            defaults.set(newValue, forKey: writePaperPhraseDateKey)
         }
     }
 }
