@@ -116,6 +116,9 @@ class RecoverWalletViewController : UIViewController {
         errorLabel.isHidden = true
 
         if self.walletManager.setSeedPhrase(phrase) {
+            //Since we know that the user had their phrase at this point,
+            //this counts as a write date
+            UserDefaults.writePaperPhraseDate = Date()
             didSetSeedPhrase?(phrase)
         } else {
             //TODO - handle failure
