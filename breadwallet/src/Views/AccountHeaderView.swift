@@ -28,12 +28,13 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     //MARK: - Private
     private let name = UILabel(font: UIFont.boldSystemFont(ofSize: 17.0))
     private let manage = UIButton(type: .system)
-    private let primaryBalance = UILabel()
-    private let secondaryBalance = UILabel()
+    private let primaryBalance = UpdatingLabel(formatter: Amount.btcFormat)
+    private let secondaryBalance = UpdatingLabel(formatter: Amount.localFormat)
     private let info = UILabel()
     private let search = UIButton(type: .system)
     private let currencyTapView = UIView()
     private let store: Store
+    //TODO - add equal sign logo
 
     private var exchangeRate: Rate? {
         didSet { setBalances() }
@@ -138,8 +139,12 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private func setBalances() {
         guard let rate = exchangeRate else { return }
         let amount = Amount(amount: balance, rate: rate.rate)
-        primaryBalance.text = currency == .bitcoin ? amount.bits : amount.localCurrency
-        secondaryBalance.text = currency == .bitcoin ? "= \(amount.localCurrency)" : "= \(amount.bits)"
+
+        primaryBalance.formatter = currency == .bitcoin ? Amount.btcFormat : Amount.localFormat
+        secondaryBalance.formatter = currency == .bitcoin ? Amount.localFormat : Amount.btcFormat
+
+        primaryBalance.setValue(currency == .bitcoin ? amount.bitsAmount : amount.localAmount)
+        secondaryBalance.setValue(currency == .bitcoin ? amount.localAmount : amount.bitsAmount)
     }
 
     override func draw(_ rect: CGRect) {
