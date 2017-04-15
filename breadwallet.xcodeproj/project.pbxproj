@@ -334,6 +334,7 @@
 		CED82D4E1E575A5500507A9B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED82D4D1E575A5500507A9B /* main.swift */; };
 		CEDD8F101E575DD4007A4123 /* WalletAuthenticationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */; };
 		CEE1F5631DF13E5A00D733AD /* ModalHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */; };
+		CEE20C2D1EA288FA0086F724 /* UpdatingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C2C1EA288FA0086F724 /* UpdatingLabel.swift */; };
 		CEE65DF01E39056F0002994D /* Rate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE65DEF1E39056F0002994D /* Rate.swift */; };
 		CEE7F1D01E07653B00283981 /* CurrencySlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */; };
 		CEEC707F1E8D6B4100EF788E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC707E1E8D6B4100EF788E /* SettingsViewController.swift */; };
@@ -1457,6 +1458,7 @@
 		CED82D4D1E575A5500507A9B /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = src/main.swift; sourceTree = "<group>"; };
 		CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletAuthenticationTests.swift; sourceTree = "<group>"; };
 		CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalHeaderView.swift; path = src/Views/ModalHeaderView.swift; sourceTree = "<group>"; };
+		CEE20C2C1EA288FA0086F724 /* UpdatingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UpdatingLabel.swift; path = src/Views/UpdatingLabel.swift; sourceTree = "<group>"; };
 		CEE65DEF1E39056F0002994D /* Rate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Rate.swift; path = src/Models/Rate.swift; sourceTree = "<group>"; };
 		CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CurrencySlider.swift; path = src/Views/CurrencySlider.swift; sourceTree = "<group>"; };
 		CEEC707E1E8D6B4100EF788E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = src/ViewControllers/SettingsViewController.swift; sourceTree = "<group>"; };
@@ -2800,6 +2802,7 @@
 				CEEC708D1E954AAB00EF788E /* AboutCell.swift */,
 				CEEC70911E95DA4400EF788E /* GradientSwitch.swift */,
 				CE83DE291E9EB7F600D07636 /* SendAmountCell.swift */,
+				CEE20C2C1EA288FA0086F724 /* UpdatingLabel.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -3633,6 +3636,7 @@
 				CEF3D2DB1E8B55C80070178E /* UISlider+Gradient.swift in Sources */,
 				CEC6AA4B1DEFD24C00EE5AFD /* MenuButtonType.swift in Sources */,
 				CEC6AA421DEFC88F00EE5AFD /* ReceiveViewController.swift in Sources */,
+				CEE20C2D1EA288FA0086F724 /* UpdatingLabel.swift in Sources */,
 				CEE65DF01E39056F0002994D /* Rate.swift in Sources */,
 				CE3754AF1DDE6E2E0045B0CB /* RoundedContainer.swift in Sources */,
 				CEC6AA461DEFCE9200EE5AFD /* MenuViewController.swift in Sources */,
