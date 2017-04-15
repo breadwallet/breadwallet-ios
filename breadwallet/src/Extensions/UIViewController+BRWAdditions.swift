@@ -21,4 +21,17 @@ extension UIViewController {
         view.removeFromSuperview()
         removeFromParentViewController()
     }
+
+    func addCloseNavigationItem(tintColor: UIColor? = nil) {
+        let close = UIButton.close
+        close.tap = { [weak self] in
+            self?.dismiss(animated: true, completion: nil)
+        }
+        if let color = tintColor {
+            close.tintColor = color
+        }
+        let padding = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        padding.width = -16.0
+        navigationItem.leftBarButtonItems = [padding, UIBarButtonItem(customView: close)]
+    }
 }

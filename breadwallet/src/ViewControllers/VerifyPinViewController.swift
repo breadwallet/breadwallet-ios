@@ -24,6 +24,8 @@ class VerifyPinViewController : UIViewController {
     private let titleLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
     private let body = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let pinView = PinView(style: .create, length: 6)
+    private let toolbar = UIView(color: .whiteTint)
+    private let cancel = UIButton(type: .system)
 
     override func viewDidLoad() {
         addSubviews()
@@ -34,6 +36,9 @@ class VerifyPinViewController : UIViewController {
     private func addSubviews() {
         view.addSubview(blurView)
         view.addSubview(box)
+        view.addSubview(toolbar)
+        toolbar.addSubview(cancel)
+
         box.addSubview(titleLabel)
         box.addSubview(body)
         box.addSubview(pinView)
@@ -63,6 +68,14 @@ class VerifyPinViewController : UIViewController {
             pinView.centerXAnchor.constraint(equalTo: body.centerXAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.width),
             pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
+        toolbar.constrain([
+            toolbar.leadingAnchor.constraint(equalTo: pinPad.view.leadingAnchor),
+            toolbar.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor),
+            toolbar.trailingAnchor.constraint(equalTo: pinPad.view.trailingAnchor),
+            toolbar.heightAnchor.constraint(equalToConstant: 44.0) ])
+        cancel.constrain([
+            cancel.centerYAnchor.constraint(equalTo: toolbar.centerYAnchor),
+            cancel.trailingAnchor.constraint(equalTo: toolbar.trailingAnchor, constant: -C.padding[2]) ])
     }
 
     private func setupSubviews() {
@@ -86,7 +99,12 @@ class VerifyPinViewController : UIViewController {
                 self.callback(output, self)
             }
         }
-
+        cancel.tap = { [weak self] in
+            self?.dismiss(animated: true, completion: nil)
+        }
+        cancel.tintColor = C.defaultTintColor
+        cancel.setTitle(S.Button.cancel, for: .normal)
+        view.backgroundColor = .clear
     }
 
     required init?(coder aDecoder: NSCoder) {
