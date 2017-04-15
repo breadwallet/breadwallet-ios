@@ -45,6 +45,15 @@ enum S {
         static let loadingMessage = NSLocalizedString("Loading Wallet", comment: "Loading Wallet Message")
     }
 
+    enum JailbreakWarnings {
+        static let title = NSLocalizedString("WARNING", comment: "Jailbreak warning title")
+        static let messageWithBalance = NSLocalizedString("DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access any other app's keychain data (and steal your bitcoins). Wipe this wallet immediately and restore on a secure device.", comment: "Jailbreak warning message")
+        static let messageWithoutBalance = NSLocalizedString("DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access any other app's keychain data (and steal your bitcoins).", comment: "Jailbreak warning message")
+        static let ignore = NSLocalizedString("Ignore", comment: "Ignore jailbreak warning button")
+        static let wipe = NSLocalizedString("Wipe", comment: "Wipe wallet button")
+        static let close = NSLocalizedString("Close", comment: "Close app button")
+    }
+
     enum ErrorMessages {
         static let emailUnavailableTitle = NSLocalizedString("Email unavailable", comment: "Email unavailable alert title")
         static let emailUnavailableMessage = NSLocalizedString("This device isn't configured to send email with the iOS mail app.", comment: "Email unavailable alert title")

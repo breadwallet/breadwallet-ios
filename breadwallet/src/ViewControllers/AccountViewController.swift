@@ -64,8 +64,23 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     private let loginTransitionDelegate = LoginTransitionDelegate()
 
     override func viewDidLoad() {
-        addTransactionsView()
+        // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
+        var s = stat()
+        var isJailbroken = (stat("/bin/sh", &s) == 0) ? true : false
+        for i in 0..<_dyld_image_count() {
+            guard !isJailbroken else { break }
+            // some anti-jailbreak detection tools re-sandbox apps, so do a secondary check for any MobileSubstrate dyld images
+            if strstr(_dyld_get_image_name(i), "MobileSubstrate") != nil {
+                isJailbroken = true
+            }
+        }
+        NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: nil) { note in
+            self.showJailbreakWarnings(isJailbroken: isJailbroken)
+        }
+        showJailbreakWarnings(isJailbroken: isJailbroken)
 
+        //Start Accont View
+        addTransactionsView()
         view.addSubview(headerView)
         view.addSubview(footerView)
 
@@ -101,6 +116,8 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
 
         addAppLifecycleNotificationEvents()
         addTemporaryStartupViews()
+
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -182,6 +199,22 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
                 self.blurView.constrain(toSuperviewEdges: nil)
             }
         }
+    }
+
+    private func showJailbreakWarnings(isJailbroken: Bool) {
+        guard isJailbroken else { return }
+        let totalSent = walletManager?.wallet?.totalSent ?? 0
+        let message = totalSent > 0 ? S.JailbreakWarnings.messageWithBalance : S.JailbreakWarnings.messageWithBalance
+        let alert = UIAlertController(title: S.JailbreakWarnings.title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.JailbreakWarnings.ignore, style: .default, handler: nil))
+        if totalSent > 0 {
+            alert.addAction(UIAlertAction(title: S.JailbreakWarnings.wipe, style: .default, handler: nil)) //TODO - implement wipe
+        } else {
+            alert.addAction(UIAlertAction(title: S.JailbreakWarnings.close, style: .default, handler: { _ in
+                exit(0)
+            }))
+        }
+        present(alert, animated: true, completion: nil)
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
