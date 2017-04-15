@@ -36,6 +36,8 @@ class WritePaperPhraseViewController: UIViewController {
         }
     }
 
+    var lastWordSeen: (() -> Void)?
+
     init(store: Store, walletManager: WalletManager, pin: String) {
         self.store = store
         self.walletManager = walletManager
@@ -123,7 +125,14 @@ class WritePaperPhraseViewController: UIViewController {
 
     @objc private func proceedTapped() {
         guard currentPhraseIndex < phraseViews.count - 1 else {
-            return store.perform(action: PaperPhrase.Confirm()) }
+
+            if lastWordSeen != nil {
+                lastWordSeen?()
+            } else {
+                store.perform(action: PaperPhrase.Confirm())
+            }
+            return
+        }
         if currentPhraseIndex == 0 {
             showBothButtons()
         }

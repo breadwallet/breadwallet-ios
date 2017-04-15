@@ -17,10 +17,13 @@ class ConfirmPaperPhraseViewController : UIViewController {
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
     }
+
+    var didConfirm: (() -> Void)?
+
     private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
-    lazy private var confirmFirstPhrase: ConfirmPhrase = { ConfirmPhrase(text: "Word \(self.indices.0 + 1)") }()
-    lazy private var confirmSecondPhrase: ConfirmPhrase = { ConfirmPhrase(text: "Word \(self.indices.1 + 1)") }()
-    private let submit = ShadowButton(title: NSLocalizedString("Submit", comment: "button label"), type: .primary)
+    lazy private var confirmFirstPhrase: ConfirmPhrase = { ConfirmPhrase(text: "\(S.ConfirmPaperPhrase.word) \(self.indices.0 + 1)") }()
+    lazy private var confirmSecondPhrase: ConfirmPhrase = { ConfirmPhrase(text: "\(S.ConfirmPaperPhrase.word) \(self.indices.1 + 1)") }()
+    private let submit = ShadowButton(title: S.Button.submit, type: .primary)
     private let header = RadialGradientView(backgroundColor: .brand)
     private let store: Store
     private let pin: String
@@ -48,7 +51,7 @@ class ConfirmPaperPhraseViewController : UIViewController {
 
     override func viewDidLoad() {
         view.backgroundColor = .white
-        label.text = "Prove you wrote down your paper key by answering the following questions."
+        label.text = S.ConfirmPaperPhrase.label
         label.textColor = .white
         
         addSubviews()
@@ -100,7 +103,11 @@ class ConfirmPaperPhraseViewController : UIViewController {
     @objc private func checkTextFields() {
         //TODO - These strings should be received from the store and more feedback for incorrect strings should be added
         if confirmFirstPhrase.textField.text == words[indices.0] && confirmSecondPhrase.textField.text == words[indices.1] {
-            store.perform(action: PaperPhrase.Confirmed())
+            if didConfirm != nil {
+                didConfirm?()
+            } else {
+                store.perform(action: PaperPhrase.Confirmed())
+            }
         }
     }
 

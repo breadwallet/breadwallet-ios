@@ -69,7 +69,7 @@ class PinPadViewController : UICollectionViewController {
     override func viewDidLoad() {
         switch style {
         case .white:
-            collectionView?.backgroundColor = .white
+            collectionView?.backgroundColor = .whiteTint
             switch keyboardType {
             case .decimalPad:
                 collectionView?.register(WhiteDecimalPad.self, forCellWithReuseIdentifier: cellIdentifier)
