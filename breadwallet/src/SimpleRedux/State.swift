@@ -76,9 +76,9 @@ struct WalletState {
     let lastBlockTimestamp: UInt32
     let name: String
     let syncErrorMessage: String?
-
+    let creationDate: Date
     static var initial: WalletState {
-        return WalletState(isConnected: false, syncProgress: 0.0, isSyncing: false, balance: 0, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, syncErrorMessage: nil)
+        return WalletState(isConnected: false, syncProgress: 0.0, isSyncing: false, balance: 0, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, syncErrorMessage: nil, creationDate: Date.zeroValue())
     }
 }
 
@@ -111,5 +111,5 @@ func ==(lhs: PinCreationStep, rhs: PinCreationStep) -> Bool {
 extension WalletState : Equatable {}
 
 func ==(lhs: WalletState, rhs: WalletState) -> Bool {
-    return lhs.isConnected == rhs.isConnected && lhs.syncProgress == rhs.syncProgress && lhs.isSyncing == rhs.isSyncing && lhs.balance == rhs.balance && lhs.transactions == rhs.transactions && lhs.name == rhs.name && lhs.syncErrorMessage == rhs.syncErrorMessage
+    return lhs.isConnected == rhs.isConnected && lhs.syncProgress == rhs.syncProgress && lhs.isSyncing == rhs.isSyncing && lhs.balance == rhs.balance && lhs.transactions == rhs.transactions && lhs.name == rhs.name && lhs.syncErrorMessage == rhs.syncErrorMessage && lhs.creationDate == rhs.creationDate
 }

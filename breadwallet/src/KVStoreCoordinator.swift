@@ -19,6 +19,7 @@ class KVStoreCoordinator : Subscriber {
         guard !hasRetreivedInitialWalletName else { return }
         if let walletInfo = WalletInfo(kvStore: kvStore) {
             store.perform(action: WalletChange.setWalletName(walletInfo.name))
+            store.perform(action: WalletChange.setWalletCreationDate(walletInfo.creationDate))
         }
         hasRetreivedInitialWalletName = true
     }
@@ -32,6 +33,19 @@ class KVStoreCoordinator : Subscriber {
                                     self.set(existingInfo)
                                 } else {
                                     let newInfo = WalletInfo(name: $0.walletState.name)
+                                    self.set(newInfo)
+                                }
+        })
+
+        store.lazySubscribe(self,
+                            selector: { $0.walletState.creationDate != $1.walletState.creationDate },
+                            callback: {
+                                if let existingInfo = WalletInfo(kvStore: self.kvStore) {
+                                    existingInfo.creationDate = $0.walletState.creationDate
+                                    self.set(existingInfo)
+                                } else {
+                                    let newInfo = WalletInfo(name: $0.walletState.name)
+                                    newInfo.creationDate = $0.walletState.creationDate
                                     self.set(newInfo)
                                 }
         })
