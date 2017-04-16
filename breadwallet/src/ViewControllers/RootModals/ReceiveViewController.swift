@@ -32,10 +32,10 @@ class ReceiveViewController : UIViewController {
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 14.0))
     private let addressPopout = InViewAlert(type: .primary)
-    private let share = ShadowButton(title: NSLocalizedString("Share", comment: "Share button label"), type: .tertiary, image: #imageLiteral(resourceName: "Share"))
+    private let share = ShadowButton(title: S.Receive.share, type: .tertiary, image: #imageLiteral(resourceName: "Share"))
     private let sharePopout = InViewAlert(type: .secondary)
     private let border = UIView()
-    private let request = ShadowButton(title: NSLocalizedString("Request an Amount", comment: "Request button label"), type: .secondary)
+    private let request = ShadowButton(title: S.Receive.request, type: .secondary)
     private var topSharePopoutConstraint: NSLayoutConstraint?
     private let wallet: BRWallet
     fileprivate let isRequestAmountVisible: Bool
@@ -124,7 +124,7 @@ class ReceiveViewController : UIViewController {
     private func setupCopiedMessage() {
         let copiedMessage = UILabel(font: .customMedium(size: 14.0))
         copiedMessage.textColor = .white
-        copiedMessage.text = NSLocalizedString("Copied to Clipboard.", comment: "Address copied message.")
+        copiedMessage.text = S.Receive.copied
         copiedMessage.textAlignment = .center
         addressPopout.contentView = copiedMessage
     }
@@ -132,8 +132,8 @@ class ReceiveViewController : UIViewController {
     private func setupShareButtons() {
         let container = UIView()
         container.translatesAutoresizingMaskIntoConstraints = false
-        let email = ShadowButton(title: NSLocalizedString("Email", comment: "Share via email button label"), type: .tertiary)
-        let text = ShadowButton(title: NSLocalizedString("Text Message", comment: "Share via text message label"), type: .tertiary)
+        let email = ShadowButton(title: S.Receive.emailButton, type: .tertiary)
+        let text = ShadowButton(title: S.Receive.textButton, type: .tertiary)
         container.addSubview(email)
         container.addSubview(text)
         email.constrain([
@@ -221,7 +221,7 @@ class ReceiveViewController : UIViewController {
 
 extension ReceiveViewController : ModalDisplayable {
     var modalTitle: String {
-        return NSLocalizedString("Receive", comment: "Receive modal title")
+        return S.Receive.title
     }
 
     var isFaqHidden: Bool {
