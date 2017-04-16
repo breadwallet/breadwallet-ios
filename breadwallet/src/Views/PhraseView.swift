@@ -29,7 +29,7 @@ class PhraseView: UIView {
         label.textColor = .white
         label.text = phrase
         label.font = UIFont.customBold(size: 16.0)
-        backgroundColor = .brand
+        backgroundColor = .pink
         layer.cornerRadius = 10.0
     }
 

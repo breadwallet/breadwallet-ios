@@ -273,7 +273,6 @@ class ModalPresenter : Subscriber {
                         UIApplication.shared.openURL(appSettings)
                     }
                 }))
-                alertController.view.tintColor = C.defaultTintColor
                 parent?.present(alertController, animated: true, completion: nil)
                 return
             }

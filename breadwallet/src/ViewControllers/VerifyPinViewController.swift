@@ -102,7 +102,6 @@ class VerifyPinViewController : UIViewController {
         cancel.tap = { [weak self] in
             self?.dismiss(animated: true, completion: nil)
         }
-        cancel.tintColor = C.defaultTintColor
         cancel.setTitle(S.Button.cancel, for: .normal)
         view.backgroundColor = .clear
     }

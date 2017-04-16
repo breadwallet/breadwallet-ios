@@ -43,7 +43,6 @@ class MessageUIPresenter: NSObject {
 
     private func present(_ viewController: UIViewController) {
         presenter?.view.isFrameChangeBlocked = true
-        viewController.view.tintColor = C.defaultTintColor
         presenter?.present(viewController, animated: true, completion: {})
     }
 
@@ -57,14 +56,12 @@ class MessageUIPresenter: NSObject {
     private func showEmailUnavailableAlert() {
         let alert = UIAlertController(title: S.ErrorMessages.emailUnavailableTitle, message: S.ErrorMessages.emailUnavailableMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
-        alert.view.tintColor = C.defaultTintColor
         presenter?.present(alert, animated: true, completion: nil)
     }
 
     private func showMessageUnavailableAlert() {
         let alert = UIAlertController(title: S.ErrorMessages.messagingUnavailableTitle, message: S.ErrorMessages.messagingUnavailableMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
-        alert.view.tintColor = C.defaultTintColor
         presenter?.present(alert, animated: true, completion: nil)
     }
 }

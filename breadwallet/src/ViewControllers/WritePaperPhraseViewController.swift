@@ -15,7 +15,8 @@ class WritePaperPhraseViewController: UIViewController {
     private let pin: String
     private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
     private let stepLabel = UILabel.wrapping(font: UIFont.customMedium(size: 13.0))
-    private let header = RadialGradientView(backgroundColor: .brand)
+    private let header = RadialGradientView(backgroundColor: .pink)
+    
     private lazy var phraseViews: [PhraseView] = {
         guard let phraseString = self.walletManager.seedPhrase(pin: self.pin) else { return [] }
         let words = phraseString.components(separatedBy: " ")

@@ -73,7 +73,6 @@ class ReScanViewController : UIViewController {
 
     private func presentRescanAlert() {
         let alert = UIAlertController(title: S.ReScan.alertTitle, message: S.ReScan.alertMessage, preferredStyle: .alert)
-        alert.view.tintColor = C.defaultTintColor
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
         alert.addAction(UIAlertAction(title: S.ReScan.alertAction, style: .default, handler: { _ in
             self.store.trigger(name: .rescan)
