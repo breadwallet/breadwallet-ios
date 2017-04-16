@@ -22,8 +22,7 @@ class ReceiveViewController : UIViewController {
     var presentEmail: PresentShare?
     var presentText: PresentShare?
 
-    init(store: Store, wallet: BRWallet, isRequestAmountVisible: Bool) {
-        self.store = store
+    init(wallet: BRWallet, isRequestAmountVisible: Bool) {
         self.wallet = wallet
         self.isRequestAmountVisible = isRequestAmountVisible
         super.init(nibName: nil, bundle: nil)
@@ -38,7 +37,6 @@ class ReceiveViewController : UIViewController {
     private let border = UIView()
     private let request = ShadowButton(title: NSLocalizedString("Request an Amount", comment: "Request button label"), type: .secondary)
     private var topSharePopoutConstraint: NSLayoutConstraint?
-    private let store: Store
     private let wallet: BRWallet
     fileprivate let isRequestAmountVisible: Bool
 

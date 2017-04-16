@@ -23,6 +23,7 @@ class ModalTransitionDelegate : NSObject, Subscriber {
 
     func reset() {
         isInteractive = false
+        presentedViewController = nil
         if let panGr = panGestureRecognizer {
             UIApplication.shared.keyWindow?.removeGestureRecognizer(panGr)
         }
@@ -45,7 +46,9 @@ class ModalTransitionDelegate : NSObject, Subscriber {
         switch gr.state {
         case .began:
             isInteractive = true
-            presentedViewController?.dismiss(animated: true, completion: {})
+            presentedViewController?.dismiss(animated: true, completion: {
+                self.presentedViewController = nil
+            })
         case .changed:
             guard let vc = presentedViewController else { break }
             let yOffset = gr.translation(in: vc.view).y

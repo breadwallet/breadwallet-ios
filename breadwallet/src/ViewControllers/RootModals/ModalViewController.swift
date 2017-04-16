@@ -31,11 +31,11 @@ class ModalViewController : UIViewController {
         view.backgroundColor = .clear
         view.addSubview(header)
 
-        header.closeCallback = {
-            if let delegate = self.transitioningDelegate as? ModalTransitionDelegate {
+        header.closeCallback = { [weak self] in
+            if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
                 delegate.reset()
             }
-            self.dismiss(animated: true, completion: {})
+            self?.dismiss(animated: true, completion: {})
         }
         
         addTopCorners()
