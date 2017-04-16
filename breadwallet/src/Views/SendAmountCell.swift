@@ -23,7 +23,6 @@ class SendAmountCell : SendCell {
         setupViews()
     }
 
-
     var textFieldDidBeginEditing: (() -> Void)?
     var textFieldDidReturn: ((UITextField) -> Void)?
     var textFieldDidChange: ((String) -> Void)?
@@ -35,7 +34,7 @@ class SendAmountCell : SendCell {
             textField.font = count > 0 ? textFieldFont : placeholderFont
         }
     }
-
+    
     func setLabel(text: String, color: UIColor) {
         label.text = text
         label.textColor = color
@@ -43,6 +42,7 @@ class SendAmountCell : SendCell {
 
     func setAmountLabel(text: String) {
         textField.isHidden = text.utf8.count > 0 //Textfield should be hidden if amount label has text
+        cursor.isHidden = !textField.isHidden
         amountLabel.text = text
     }
 
@@ -51,11 +51,13 @@ class SendAmountCell : SendCell {
     let textField = UITextField()
     fileprivate let label = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
     private let amountLabel = UILabel(font: .customBody(size: 26.0), color: .darkText)
+    private let cursor = BlinkingView(blinkColor: C.defaultTintColor)
 
     private func setupViews() {
         addSubview(textField)
         addSubview(label)
         addSubview(amountLabel)
+        addSubview(cursor)
 
         textField.constrain([
             textField.constraint(.leading, toView: self, constant: C.padding[2]),
@@ -71,13 +73,19 @@ class SendAmountCell : SendCell {
         amountLabel.constrain([
             amountLabel.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
             amountLabel.topAnchor.constraint(equalTo: textField.topAnchor),
-            amountLabel.trailingAnchor.constraint(equalTo: textField.trailingAnchor),
             amountLabel.bottomAnchor.constraint(equalTo: textField.bottomAnchor) ])
+        cursor.constrain([
+            cursor.leadingAnchor.constraint(equalTo: amountLabel.trailingAnchor, constant: 2.0),
+            cursor.heightAnchor.constraint(equalTo: amountLabel.heightAnchor, constant: -4.0),
+            cursor.centerYAnchor.constraint(equalTo: amountLabel.centerYAnchor),
+            cursor.widthAnchor.constraint(equalToConstant: 2.0) ])
 
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
 
         textField.addTarget(self, action: #selector(SendAmountCell.editingChanged(textField:)), for: .editingChanged)
+        cursor.startBlinking()
+        cursor.isHidden = true
     }
 
     @objc private func editingChanged(textField: UITextField) {
