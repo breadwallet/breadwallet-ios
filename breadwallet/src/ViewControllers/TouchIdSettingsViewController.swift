@@ -145,7 +145,6 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
 
     fileprivate func presentCantUseTouchIdAlert() {
         let alert = UIAlertController(title: S.TouchIdSettings.unavailableAlertTitle, message: S.TouchIdSettings.unavailableAlertMessage, preferredStyle: .alert)
-        alert.view.tintColor = C.defaultTintColor
         alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }

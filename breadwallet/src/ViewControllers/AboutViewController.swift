@@ -89,7 +89,6 @@ class AboutViewController : UIViewController {
 
     private func setData() {
         view.backgroundColor = .white
-        view.tintColor = C.defaultTintColor
         titleLabel.text = S.About.title
         subheader.text = "Bread"
         terms.setTitle(S.About.terms, for: .normal)

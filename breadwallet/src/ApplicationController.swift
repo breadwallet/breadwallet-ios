@@ -146,7 +146,6 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     }
 
     private func setupAppearance() {
-        window.tintColor = .brand
         UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: UIFont.header]
         //Hack to globally hide the back button text
         UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffsetMake(-500.0, -500.0), for: .default)

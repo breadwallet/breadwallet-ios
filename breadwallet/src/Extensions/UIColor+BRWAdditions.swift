@@ -48,10 +48,6 @@ extension UIColor {
         return UIColor(red: 252.0/255.0, green: 83.0/255.0, blue: 148.0/255.0, alpha: 1.0)
     }
 
-    static var brand: UIColor {
-        return UIColor(red: 252.0/255.0, green: 83.0/255.0, blue: 148.0/255.0, alpha: 1.0)
-    }
-
     static var offWhite: UIColor {
         return UIColor(white: 247.0/255.0, alpha: 1.0)
     }
@@ -94,6 +90,10 @@ extension UIColor {
 
     static var darkPurple: UIColor {
         return UIColor(red: 127.0/255.0, green: 83.0/255.0, blue: 230.0/255.0, alpha: 1.0)
+    }
+
+    static var pink: UIColor {
+        return UIColor(red: 252.0/255.0, green: 83.0/255.0, blue: 148.0/255.0, alpha: 1.0)
     }
 
     static var whiteTint: UIColor {

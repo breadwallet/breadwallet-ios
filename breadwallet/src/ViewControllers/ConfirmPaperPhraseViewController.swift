@@ -24,7 +24,7 @@ class ConfirmPaperPhraseViewController : UIViewController {
     lazy private var confirmFirstPhrase: ConfirmPhrase = { ConfirmPhrase(text: "\(S.ConfirmPaperPhrase.word) \(self.indices.0 + 1)") }()
     lazy private var confirmSecondPhrase: ConfirmPhrase = { ConfirmPhrase(text: "\(S.ConfirmPaperPhrase.word) \(self.indices.1 + 1)") }()
     private let submit = ShadowButton(title: S.Button.submit, type: .primary)
-    private let header = RadialGradientView(backgroundColor: .brand)
+    private let header = RadialGradientView(backgroundColor: .pink)
     private let store: Store
     private let pin: String
     private let walletManager: WalletManager

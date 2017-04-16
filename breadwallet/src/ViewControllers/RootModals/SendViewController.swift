@@ -381,7 +381,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private func invalidAddressAlert() {
         let alertController = UIAlertController(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
-        alertController.view.tintColor = C.defaultTintColor
         present(alertController, animated: true, completion: nil)
     }
 

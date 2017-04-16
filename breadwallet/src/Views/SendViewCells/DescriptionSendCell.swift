@@ -17,7 +17,6 @@ class DescriptionSendCell : SendCell {
             NSFontAttributeName : placeholderFont
         ]
         textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: attributes)
-        textField.tintColor = C.defaultTintColor
         textField.delegate = self
         textField.textColor = .darkText
         textField.returnKeyType = .done

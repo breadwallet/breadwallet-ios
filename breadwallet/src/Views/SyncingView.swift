@@ -49,7 +49,6 @@ class SyncingView : UIView {
 
     let retry: UIButton = {
         let retry = UIButton(type: .system)
-        retry.tintColor = C.defaultTintColor
         retry.setTitle(S.SyncingView.retry, for: .normal)
         return retry
     }()
