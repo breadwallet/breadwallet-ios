@@ -149,20 +149,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
 
     private func setPinAndPhraseChecks() {
         pinCell.isCheckHighlighted = walletManager.pinLength == 6
-        setPaperKeyCheck()
-    }
-
-    private func setPaperKeyCheck() {
-        if let legacyWalletNeedsBackup = UserDefaults.legacyWalletNeedsBackup, legacyWalletNeedsBackup == true {
-            paperKeyCell.isCheckHighlighted = false
-            return
-        }
-
-        if UserDefaults.writePaperPhraseDate == nil {
-            paperKeyCell.isCheckHighlighted = false
-            return
-        }
-        paperKeyCell.isCheckHighlighted = true
+        paperKeyCell.isCheckHighlighted = !UserDefaults.walletRequiresBackup
     }
 
     required init?(coder aDecoder: NSCoder) {
