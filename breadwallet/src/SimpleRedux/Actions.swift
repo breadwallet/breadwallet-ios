@@ -182,6 +182,12 @@ enum WalletChange {
             reduce = { $0.clone(walletSyncingErrorMessage: message) }
         }
     }
+    struct setWalletCreationDate: Action {
+        let reduce: Reducer
+        init(_ date: Date) {
+            reduce = { $0.clone(walletCreationDate: date) }
+        }
+    }
 }
 
 //MARK: - Currency
@@ -334,7 +340,7 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: timestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: timestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
@@ -348,7 +354,7 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
@@ -362,7 +368,7 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
@@ -376,7 +382,7 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
@@ -390,7 +396,7 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletName, syncErrorMessage: walletState.syncErrorMessage),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletName, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,
@@ -404,7 +410,21 @@ extension State {
                      paperPhraseStep: paperPhraseStep,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletSyncingErrorMessage),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletSyncingErrorMessage, creationDate: walletState.creationDate),
+                     currency: currency,
+                     currentRate: currentRate,
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrency: defaultCurrency)
+    }
+    func clone(walletCreationDate: Date) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
+                     pinCreationStep: pinCreationStep,
+                     paperPhraseStep: paperPhraseStep,
+                     rootModal: rootModal,
+                     pasteboard: pasteboard,
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletCreationDate),
                      currency: currency,
                      currentRate: currentRate,
                      alert: alert,

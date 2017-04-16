@@ -76,11 +76,16 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
         textField.returnKeyType = .done
         textFieldLabel.text = S.ManageWallet.textFieldLabel
         textField.delegate = self
-        store.subscribe(self, selector: { $0.walletState.name != $1.walletState.name }, callback: {
-            self.textField.text = $0.walletState.name
-            self.store.unsubscribe(self)
-        })
-        body.text = "\(S.ManageWallet.description) February 21, 2014" //TODO - use real creation date
+
+        self.textField.text = store.state.walletState.name
+        let creationDate = store.state.walletState.creationDate
+        if creationDate.timeIntervalSinceReferenceDate > 0 {
+            let df = DateFormatter()
+            df.dateFormat = "MMMM 3, yyyy"
+            body.text = "\(S.ManageWallet.description)\n\n\(S.ManageWallet.creationDatePrefix) \(df.string(from: creationDate))"
+        } else {
+            body.text = "\(S.ManageWallet.description)"
+        }
     }
 
     //MARK: - Keyboard Notifications
