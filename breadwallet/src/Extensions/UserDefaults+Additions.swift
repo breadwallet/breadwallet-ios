@@ -72,4 +72,14 @@ extension UserDefaults {
             defaults.set(newValue, forKey: writePaperPhraseDateKey)
         }
     }
+
+    static var walletRequiresBackup: Bool {
+        if let legacyWalletNeedsBackup = UserDefaults.legacyWalletNeedsBackup, legacyWalletNeedsBackup == true {
+            return true
+        }
+        if UserDefaults.writePaperPhraseDate == nil {
+            return true
+        }
+        return false
+    }
 }
