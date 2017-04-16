@@ -92,7 +92,6 @@ class EnterPhraseCell : UICollectionViewCell {
         textField.autocorrectionType = .no
         textField.textAlignment = .center
         textField.autocapitalizationType = .none
-        textField.tintColor = C.defaultTintColor
         textField.delegate = self
         textField.addTarget(self, action: #selector(EnterPhraseCell.textChanged(textField:)), for: .editingChanged)
 
