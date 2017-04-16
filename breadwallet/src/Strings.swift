@@ -41,6 +41,15 @@ enum S {
         static let cameraUnavailableMessage = NSLocalizedString("Go to Settings to Allow camera access.", comment: "Camera not allowed message")
     }
 
+    enum Receive {
+        static let title = NSLocalizedString("Receive", comment: "Receive modal title")
+        static let emailButton = NSLocalizedString("Email", comment: "Share via email button label")
+        static let textButton = NSLocalizedString("Text Message", comment: "Share via text message label")
+        static let copied = NSLocalizedString("Copied to Clipboard.", comment: "Address copied message.")
+        static let share = NSLocalizedString("Share", comment: "Share button label")
+        static let request = NSLocalizedString("Request an Amount", comment: "Request button label")
+    }
+
     enum Account {
         static let loadingMessage = NSLocalizedString("Loading Wallet", comment: "Loading Wallet Message")
     }
