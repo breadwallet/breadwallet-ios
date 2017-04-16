@@ -126,17 +126,17 @@ class ModalPresenter : Subscriber {
             let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager))
             let root = ModalViewController(childViewController: sendVC, store: store)
             sendVC.presentScan = presentScan(parent: root)
-            sendVC.presentVerifyPin = { callback in
+            sendVC.presentVerifyPin = { [weak root] callback in
                 let vc = VerifyPinViewController(callback: callback)
                 vc.modalPresentationStyle = .overFullScreen
-                root.view.isFrameChangeBlocked = true
-                root.present(vc, animated: true, completion: nil)
+                root?.view.isFrameChangeBlocked = true
+                root?.present(vc, animated: true, completion: nil)
             }
-            sendVC.onPublishSuccess = {
-                self.presentAlert(.sendSuccess, completion: {})
+            sendVC.onPublishSuccess = { [weak self] in
+                self?.presentAlert(.sendSuccess, completion: {})
             }
-            sendVC.onPublishFailure = {
-                self.presentAlert(.sendFailure, completion: {})
+            sendVC.onPublishFailure = { [weak self] in
+                self?.presentAlert(.sendFailure, completion: {})
             }
             return root
         case .receive:
@@ -154,15 +154,17 @@ class ModalPresenter : Subscriber {
 
     private func receiveView(isRequestAmountVisible: Bool) -> UIViewController? {
         guard let wallet = walletManager?.wallet else { return nil }
-        let receiveVC = ReceiveViewController(store: store, wallet: wallet, isRequestAmountVisible: isRequestAmountVisible)
+        let receiveVC = ReceiveViewController(wallet: wallet, isRequestAmountVisible: isRequestAmountVisible)
         let root = ModalViewController(childViewController: receiveVC, store: store)
-        receiveVC.presentEmail = { address, image in
-            self.messagePresenter.presenter = root
-            self.messagePresenter.presentMailCompose(address: address, image: image)
+        receiveVC.presentEmail = { [weak self, weak root] address, image in
+            guard let root = root else { return }
+            self?.messagePresenter.presenter = root
+            self?.messagePresenter.presentMailCompose(address: address, image: image)
         }
-        receiveVC.presentText = { address, image in
-            self.messagePresenter.presenter = root
-            self.messagePresenter.presentMessageCompose(address: address, image: image)
+        receiveVC.presentText = { [weak self, weak root] address, image in
+            guard let root = root else { return }
+            self?.messagePresenter.presenter = root
+            self?.messagePresenter.presentMessageCompose(address: address, image: image)
         }
         return root
     }
@@ -170,19 +172,19 @@ class ModalPresenter : Subscriber {
     private func menuViewController() -> UIViewController? {
         let menu = MenuViewController()
         let root = ModalViewController(childViewController: menu, store: store)
-        menu.didTapSecurity = { [weak self] in
+        menu.didTapSecurity = { [weak self, weak menu] in
             self?.modalTransitionDelegate.reset()
-            root.dismiss(animated: true) {
+            menu?.dismiss(animated: true) {
                 self?.presentSecurityCenter()
             }
         }
-        menu.didTapLock = { [weak self] in
-            menu.dismiss(animated: true) {
+        menu.didTapLock = { [weak self, weak menu] in
+            menu?.dismiss(animated: true) {
                 self?.store.perform(action: RequireLogin())
             }
         }
-        menu.didTapSettings = { [weak self] in
-            menu.dismiss(animated: true) {
+        menu.didTapSettings = { [weak self, weak menu] in
+            menu?.dismiss(animated: true) {
                 self?.presentSettings()
             }
         }
@@ -262,7 +264,7 @@ class ModalPresenter : Subscriber {
     }
 
     private func presentScan(parent: UIViewController) -> PresentScan {
-        return { scanCompletion in
+        return { [weak parent] scanCompletion in
             guard ScanViewController.isCameraAllowed else {
                 let alertController = UIAlertController(title: S.Send.cameraUnavailableTitle, message: S.Send.cameraUnavailableMessage, preferredStyle: .alert)
                 alertController.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
@@ -272,17 +274,17 @@ class ModalPresenter : Subscriber {
                     }
                 }))
                 alertController.view.tintColor = C.defaultTintColor
-                parent.present(alertController, animated: true, completion: nil)
+                parent?.present(alertController, animated: true, completion: nil)
                 return
             }
             let vc = ScanViewController(completion: { address in
                 scanCompletion(address)
-                parent.view.isFrameChangeBlocked = false
+                parent?.view.isFrameChangeBlocked = false
             }, isValidURI: { address in
                 return address.isValidAddress
             })
-            parent.view.isFrameChangeBlocked = true
-            parent.present(vc, animated: true, completion: {})
+            parent?.view.isFrameChangeBlocked = true
+            parent?.present(vc, animated: true, completion: {})
         }
     }
 

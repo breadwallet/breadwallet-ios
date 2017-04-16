@@ -36,6 +36,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
     //MARK - Private
     deinit {
+        store.unsubscribe(self)
         NotificationCenter.default.removeObserver(self)
     }
 
@@ -134,9 +135,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         addButtonActions()
 
         let currencySlider = CurrencySlider()
-        currencySlider.didSelectCurrency = { currency in
+        currencySlider.didSelectCurrency = { [weak self] currency in
             //TODO add real currency logic here
-            self.currency.title = "\(currency.substring(to: currency.index(currency.startIndex, offsetBy: 3))) \u{25BC}"
+            self?.currency.title = "\(currency.substring(to: currency.index(currency.startIndex, offsetBy: 3))) \u{25BC}"
         }
         currencySwitcher.contentView = currencySlider
 
@@ -175,12 +176,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             myself.amount.setLabel(text: "Balance: \(amount.bits)", color: .grayTextTint)
 
         }
-        amount.textFieldDidChange = { text in
-            guard let rate = self.rate else { return }
-            let balanceAmount = Amount(amount: self.balance, rate: rate.rate)
+        amount.textFieldDidChange = { [weak self] text in
+            guard let myself = self else { return }
+            guard let rate = myself.rate else { return }
+            let balanceAmount = Amount(amount: myself.balance, rate: rate.rate)
 
             //Set amount label
-            let formatter = self.bitsFormatter
+            let formatter = myself.bitsFormatter
             if let value = Double(text) {
 
                 let numberFormatter = NumberFormatter()
@@ -202,9 +204,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                     }
                 }
 
-                self.amount.setAmountLabel(text: output!)
+                myself.amount.setAmountLabel(text: output!)
             } else {
-                self.amount.setAmountLabel(text: "")
+                myself.amount.setAmountLabel(text: "")
             }
 
             //Set balance text
@@ -212,22 +214,22 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             if let value = Double(text) {
 
                 var feeString = ""
-                if let toAddress = self.to.content {
-                    self.sender.createTransaction(amount: UInt64(value * 100.0), to: toAddress)
-                    feeString = ", Fee: \(formatter.string(from: self.sender.fee/100 as NSNumber)!)"
+                if let toAddress = myself.to.content {
+                    myself.sender.createTransaction(amount: UInt64(value * 100.0), to: toAddress)
+                    feeString = ", Fee: \(formatter.string(from: myself.sender.fee/100 as NSNumber)!)"
                 }
 
-                if Int(value * 100.0) > Int(self.balance) {
+                if Int(value * 100.0) > Int(myself.balance) {
                     data = ("Balance: \(balanceAmount.bits)\(feeString)", .red)
-                    self.send.isEnabled = false
+                    myself.send.isEnabled = false
                 } else {
                     data = ("Balance: \(balanceAmount.bits)\(feeString)", .grayTextTint)
-                    self.send.isEnabled = true
+                    myself.send.isEnabled = true
                 }
 
-                self.amount.setLabel(text: data.0, color: data.1)
+                myself.amount.setLabel(text: data.0, color: data.1)
             } else {
-                self.amount.setLabel(text: "Balance: \(balanceAmount.bits)", color: .grayTextTint)
+                myself.amount.setLabel(text: "Balance: \(balanceAmount.bits)", color: .grayTextTint)
             }
 
         }
@@ -260,19 +262,21 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                     self.invalidAddressAlert()
                 }
             }
+            //TODO - this should be a granular unsubscribe
+            //just for pasteboard
             self.store.unsubscribe(self)
         })
     }
 
     @objc private func scanTapped() {
         descriptionCell.textField.resignFirstResponder()
-        presentScan? { paymentRequest in
+        presentScan? { [weak self] paymentRequest in
             guard let request = paymentRequest else { return }
             switch request.type {
             case .local:
-                self.to.content = request.toAddress
+                self?.to.content = request.toAddress
                 if let amount = request.amount {
-                    self.amount.content = String(amount/100)
+                    self?.amount.content = String(amount/100)
                 }
             case .remote:
                 print("remote request")
@@ -325,23 +329,23 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
     @objc private func sendTapped() {
         sender.send(verifyPin: { pinValidationCallback in
-                        presentVerifyPin? { pin, vc in
+                        presentVerifyPin? { [weak self] pin, vc in
                             if pinValidationCallback(pin) {
                                 vc.dismiss(animated: true, completion: {
-                                    self.parent?.view.isFrameChangeBlocked = false
+                                    self?.parent?.view.isFrameChangeBlocked = false
                                 })
                             }
                         }
-                    }, completion: { result in
+                    }, completion: { [weak self] result in
                         switch result {
                         case .success:
-                            self.dismiss(animated: true, completion: {
-                                self.onPublishSuccess?()
+                            self?.dismiss(animated: true, completion: {
+                                self?.onPublishSuccess?()
                             })
                         case .creationError(let message):
                             print("creation error: \(message)")
                         case .publishFailure(_): //TODO -add error messages here
-                            self.onPublishFailure?()
+                            self?.onPublishFailure?()
                         }
                     })
     }
