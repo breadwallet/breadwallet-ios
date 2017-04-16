@@ -11,8 +11,9 @@ import Foundation
 let walletInfoKey = "wallet-info"
 
 class WalletInfo : BRKVStoreObject, BRCoding {
-    var classVersion = 1
+    var classVersion = 2
     var name = ""
+    var creationDate = Date.zeroValue()
 
     //Create new
     init(name: String) {
@@ -43,16 +44,19 @@ class WalletInfo : BRKVStoreObject, BRCoding {
     override func dataWasSet(_ value: Data) {
         guard let s: WalletInfo = BRKeyedUnarchiver.unarchiveObjectWithData(value) else { return }
         name = s.name
+        creationDate = s.creationDate
     }
 
     required public init?(coder decoder: BRCoder) {
         classVersion = decoder.decode("classVersion")
         name = decoder.decode("name")
+        creationDate = decoder.decode("creationDate")
         super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
     }
 
     func encode(_ coder: BRCoder) {
         coder.encode(classVersion, key: "classVersion")
         coder.encode(name, key: "name")
+        coder.encode(creationDate, key: "creationDate")
     }
 }

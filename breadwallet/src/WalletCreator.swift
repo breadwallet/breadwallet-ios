@@ -33,6 +33,7 @@ class WalletCreator : Subscriber {
                         self.walletManager.peerManager?.connect()
                         DispatchQueue.main.async {
                             self.store.perform(action: PinCreation.SaveSuccess())
+                            self.store.perform(action: WalletChange.setWalletCreationDate(Date()))
                         }
                     }
                 }
