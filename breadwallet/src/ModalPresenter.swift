@@ -308,33 +308,44 @@ class ModalPresenter : Subscriber {
             }
             nc.pushViewController(touchIdSettings, animated: true)
         }
-        securityCenter.didTapPaperKey = {
-            guard let walletManager = self.walletManager else { return }
+        securityCenter.didTapPaperKey = { [weak self] in
+            guard let myself = self else { return }
+            guard let walletManager = myself.walletManager else { return }
+
             let paperPhraseNavigationController = UINavigationController()
             paperPhraseNavigationController.setClearNavbar()
             paperPhraseNavigationController.setWhiteStyle()
             paperPhraseNavigationController.modalPresentationStyle = .overFullScreen
 
-            let verify = VerifyPinViewController(callback: { pin, vc in
-                if walletManager.authenticate(pin: pin) {
-                    let write = WritePaperPhraseViewController(store: self.store, walletManager: walletManager, pin: pin)
-                    write.addCloseNavigationItem(tintColor: .white)
-                    write.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-                    write.lastWordSeen = {
-                        let confirm = ConfirmPaperPhraseViewController(store: self.store, walletManager: walletManager, pin: pin)
+            let start = StartPaperPhraseViewController(store: myself.store)
+            start.addCloseNavigationItem(tintColor: .white)
+            start.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
+            start.didTapWrite = {
+                let verify = VerifyPinViewController(callback: { pin, vc in
+                    if walletManager.authenticate(pin: pin) {
+                        let write = WritePaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin)
+                        write.addCloseNavigationItem(tintColor: .white)
                         write.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-                        confirm.didConfirm = {
-                            confirm.dismiss(animated: true, completion: {
-                                //TODO - fix this animation
-                                self.store.perform(action: PaperPhrase.Confirmed())
-                            })
+                        write.lastWordSeen = {
+                            let confirm = ConfirmPaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin)
+                            write.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
+                            confirm.didConfirm = {
+                                confirm.dismiss(animated: true, completion: {
+                                    //TODO - fix this animation
+                                    myself.store.perform(action: PaperPhrase.Confirmed())
+                                })
+                            }
+                            paperPhraseNavigationController.pushViewController(confirm, animated: true)
                         }
-                        paperPhraseNavigationController.pushViewController(confirm, animated: true)
+                        vc.dismiss(animated: true, completion: {
+                            paperPhraseNavigationController.pushViewController(write, animated: true)
+                        })
                     }
-                    paperPhraseNavigationController.pushViewController(write, animated: true)
-                }
-            })
-            paperPhraseNavigationController.viewControllers = [verify]
+                })
+                paperPhraseNavigationController.present(verify, animated: true, completion: nil)
+            }
+
+            paperPhraseNavigationController.viewControllers = [start]
             nc.present(paperPhraseNavigationController, animated: true, completion: nil)
         }
 

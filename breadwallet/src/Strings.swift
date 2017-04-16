@@ -218,4 +218,11 @@ enum S {
         static let word = NSLocalizedString("Word", comment: "Word label eg. Word 1, Word 2")
         static let label = NSLocalizedString("Prove you wrote down your paper key by answering the following questions.", comment: "Confirm paper phrase view label.")
     }
+
+    enum StartPaperPhrase {
+        static let body = NSLocalizedString("Protect your wallet against theft and ensure you can recover your wallet after replacing your phone or updating its software. ", comment: "Paper key explanation text.")
+        static let buttonTitle = NSLocalizedString("Write Down Paper Key", comment: "button label")
+        static let againButtonTitle = NSLocalizedString("Write Down Paper Key Again", comment: "button label")
+        static let datePrefix = NSLocalizedString("You last wrote down your paper key on", comment: "Date prefix")
+    }
 }
