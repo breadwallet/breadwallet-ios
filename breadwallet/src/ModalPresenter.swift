@@ -113,8 +113,15 @@ class ModalPresenter : Subscriber {
 
     private func presentFaq() {
         guard let walletManager = walletManager else { return }
-        let webView = BRWebViewController(bundleName: "test", walletManager: walletManager)
-        presentingViewController?.present(webView, animated: true, completion: {})
+        let vc: BRWebViewController
+        #if Debug || Testflight
+            vc = BRWebViewController(bundleName: "bread-support-staging", mountPoint: "/", walletManager: walletManager)
+        #else
+            vc = BRWebViewController(bundleName: "bread-support", mountPoint: "/", walletManager: walletManager)
+        #endif
+        vc.startServer()
+        vc.preload()
+        presentingViewController?.present(vc, animated: true, completion: {})
     }
 
     private func rootModalViewController(_ type: RootModal) -> UIViewController? {
