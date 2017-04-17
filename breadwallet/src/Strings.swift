@@ -164,8 +164,8 @@ enum S {
         static let touchIdLimit = NSLocalizedString("Touch ID Spending Limit", comment: "Touch ID spending limit label")
         static let currency = NSLocalizedString("Default Currency", comment: "Default currency label")
         static let sync = NSLocalizedString("Sync Blockchain", comment: "Sync blockchain label")
-        static let shareData = NSLocalizedString("Share Anonymous Data", comment: "Share anonymous data lable")
-        static let buyBitcoin = NSLocalizedString("Buy Bitcoin", comment: "Buy bitcoin label")
+        static let shareData = NSLocalizedString("Share Anonymous Data", comment: "Share anonymous data label")
+        static let earlyAccess = NSLocalizedString("Join Early Access", comment: "Join Early access label")
         static let about = NSLocalizedString("About", comment: "About label")
     }
 

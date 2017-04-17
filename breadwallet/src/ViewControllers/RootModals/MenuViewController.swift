@@ -15,11 +15,12 @@ class MenuViewController : UIViewController {
     var didTapSupport: (() -> Void)?
     var didTapSettings: (() -> Void)?
     var didTapLock: (() -> Void)?
+    var didTapBuy: (() -> Void)?
 
     //MARK: - Private
     fileprivate let buttonHeight: CGFloat = 72.0
     fileprivate let buttons: [MenuButton] = {
-        let types: [MenuButtonType] = [.security, .support, .settings, .lock]
+        let types: [MenuButtonType] = [.security, .support, .settings, .lock, .buy]
         return types.map { MenuButton(type: $0) }
     }()
     fileprivate let bottomPadding: CGFloat = 32.0
@@ -60,6 +61,8 @@ class MenuViewController : UIViewController {
             didTapSettings?()
         case .lock:
             didTapLock?()
+        case .buy:
+            didTapBuy?()
         }
     }
 }
