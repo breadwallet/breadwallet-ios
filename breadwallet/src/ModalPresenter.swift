@@ -188,6 +188,11 @@ class ModalPresenter : Subscriber {
                 self?.presentSettings()
             }
         }
+        menu.didTapBuy = { [weak self, weak menu] in
+            menu?.dismiss(animated: true, completion: {
+                self?.presentBuyController("/buy")
+            })
+        }
         return root
     }
 
@@ -243,8 +248,10 @@ class ModalPresenter : Subscriber {
                 Setting(title: S.Settings.shareData, callback: {
                     nc.pushViewController(ShareDataViewController(store: self.store), animated: true)
                 }),
-                Setting(title: S.Settings.buyBitcoin, callback: {
-
+                Setting(title: S.Settings.earlyAccess, callback: {
+                    nc.dismiss(animated: true, completion: {
+                        self.presentBuyController("/ea")
+                    })
                 }),
                 Setting(title: S.Settings.about, callback: {
                     nc.pushViewController(AboutViewController(), animated: true)
@@ -350,6 +357,19 @@ class ModalPresenter : Subscriber {
         }
 
         window.rootViewController?.present(nc, animated: true, completion: nil)
+    }
+
+    private func presentBuyController(_ mountPoint: String) {
+        guard let walletManager = self.walletManager else { return }
+        let vc: BRWebViewController
+        #if Debug || Testflight
+            vc = BRWebViewController(bundleName: "bread-buy-staging", mountPoint: mountPoint, walletManager: walletManager)
+        #else
+            vc = BRWebViewController(bundleName: "bread-buy", mountPoint: mountPoint, walletManager: walletManager)
+        #endif
+        vc.startServer()
+        vc.preload()
+        self.presentingViewController?.present(vc, animated: true, completion: nil)
     }
 
     //TODO - This is a total hack to grab the window that keyboard is in

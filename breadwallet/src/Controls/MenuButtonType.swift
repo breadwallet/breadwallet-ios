@@ -13,6 +13,7 @@ enum MenuButtonType {
     case support
     case settings
     case lock
+    case buy
 
     var title: String {
         switch self {
@@ -24,6 +25,8 @@ enum MenuButtonType {
             return NSLocalizedString("Settings", comment: "Menu button title")
         case .lock:
             return NSLocalizedString("Lock Wallet", comment: "Menu button title")
+        case .buy:
+            return NSLocalizedString("Buy Bitcoin", comment: "Buy bitcoin title")
         }
     }
 
@@ -37,6 +40,8 @@ enum MenuButtonType {
             return #imageLiteral(resourceName: "Settings")
         case .lock:
             return #imageLiteral(resourceName: "Lock")
+        case .buy:
+            return #imageLiteral(resourceName: "Shield") //TODO - Add buy bitcoin icon
         }
     }
 }
