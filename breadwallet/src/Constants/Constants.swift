@@ -37,6 +37,7 @@ struct C {
         return UIView().tintColor
     }()
     static let animationDuration: TimeInterval = 0.3
+    static let secondsInDay: TimeInterval = 86400
     static let maxMoney: UInt64 = 21000000*100000000
     static let satoshis: UInt64 = 100000000
     static let walletQueue = "com.breadwallet.walletqueue"
