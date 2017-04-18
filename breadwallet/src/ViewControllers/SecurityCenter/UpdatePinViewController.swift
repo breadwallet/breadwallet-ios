@@ -189,26 +189,23 @@ class UpdatePinViewController : UIViewController, Subscriber {
     }
 
     private func didSetNewPin() {
-        var seedPhrase: String?
-        if phrase != nil {
-            seedPhrase = phrase
-        } else {
-            guard let currentPin = currentPin else { return }
-            seedPhrase = walletManager.seedPhrase(pin: currentPin)
+        guard let newPin = newPin else { return }
+        var success: Bool = false
+        if let seedPhrase = phrase {
+            success = walletManager.forceSetPin(newPin: newPin, seedPhrase: seedPhrase)
+        } else if let currentPin = currentPin {
+            success = walletManager.changePin(newPin: newPin, pin: currentPin)
         }
 
-        guard let newPin = newPin else { return }
-        guard seedPhrase != nil else { return }
-
-        if walletManager.forceSetPin(newPin: newPin, seedPhrase: seedPhrase) {
+        if success {
             setPinSuccess?()
             store.perform(action: Alert.Show(.pinSet))
             store.lazySubscribe(self,
-                            selector: { $0.alert != $1.alert && $1.alert == nil },
-                            callback: { _ in
-                self.parent?.dismiss(animated: true, completion: {
-                    self.store.unsubscribe(self)
-                })
+                                selector: { $0.alert != $1.alert && $1.alert == nil },
+                                callback: { _ in
+                                    self.parent?.dismiss(animated: true, completion: {
+                                        self.store.unsubscribe(self)
+                                    })
             })
         } else {
             let alert = UIAlertController(title: S.UpdatePin.updateTitle, message: S.UpdatePin.setPinError, preferredStyle: .alert)
