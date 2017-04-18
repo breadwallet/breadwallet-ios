@@ -17,7 +17,7 @@ class RecoverWalletViewController : UIViewController {
         self.store = store
         self.walletManager = walletManager
         self.enterPhrase = EnterPhraseCollectionViewController(walletManager: walletManager)
-        self.faq = UIButton.buildFaqButton(store: store)
+        self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.recoverWallet)
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)

@@ -215,7 +215,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
 extension ApplicationController {
 
     func listenForPushNotificationRequest() {
-        store.subscribe(self, name: .registerForPushNotificationToken, callback: {
+        store.subscribe(self, name: .registerForPushNotificationToken, callback: { _ in 
             let settings = UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil)
             self.application?.registerUserNotificationSettings(settings)
         })

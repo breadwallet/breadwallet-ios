@@ -33,14 +33,31 @@ struct Subscription {
 
 struct Trigger {
     let name: TriggerName
-    let callback: () -> Void
+    let callback: (TriggerName?) -> Void
 }
 
 enum TriggerName {
-    case presentFaq
+    case presentFaq(String)
     case registerForPushNotificationToken
     case retrySync
     case rescan
+}
+
+extension TriggerName : Equatable {}
+
+func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
+    switch (lhs, rhs) {
+    case (.presentFaq(_), .presentFaq(_)):
+        return true
+    case (.registerForPushNotificationToken, .registerForPushNotificationToken):
+        return true
+    case (.retrySync, .retrySync):
+        return true
+    case (.rescan, .rescan):
+        return true
+    default:
+        return false
+    }
 }
 
 class Store {
@@ -58,7 +75,7 @@ class Store {
         triggers
             .flatMap { $0.value }
             .filter { $0.name == name }
-            .forEach { $0.callback() }
+            .forEach { $0.callback(name) }
     }
 
     //Subscription callback is immediately called with current State value on subscription
@@ -79,7 +96,7 @@ class Store {
         }
     }
 
-    func subscribe(_ subscriber: Subscriber, name: TriggerName, callback: @escaping () -> Void) {
+    func subscribe(_ subscriber: Subscriber, name: TriggerName, callback: @escaping (TriggerName?) -> Void) {
         let key = subscriber.hashValue
         let trigger = Trigger(name: name, callback: callback)
         if triggers[key] != nil {

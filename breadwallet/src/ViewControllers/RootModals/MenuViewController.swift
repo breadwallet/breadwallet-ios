@@ -68,11 +68,11 @@ class MenuViewController : UIViewController {
 }
 
 extension MenuViewController : ModalDisplayable {
+    var faqArticleId: String? {
+        return nil
+    }
+
     var modalTitle: String {
         return NSLocalizedString("Menu", comment: "Menu modal title")
-    }
-    
-    var isFaqHidden: Bool {
-        return true
     }
 }

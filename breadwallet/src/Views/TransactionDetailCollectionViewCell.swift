@@ -173,7 +173,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     }
 
     //TODO - this will need to get the real store somehow
-    private let header = ModalHeaderView(title: S.TransactionDetails.title, isFaqHidden: false, style: .dark, store: Store())
+    private let header = ModalHeaderView(title: S.TransactionDetails.title, style: .dark, store: Store(), faqArticleId: ArticleIds.transactionDetails)
     private let timestamp = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let amount = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let address = UILabel(font: .customBold(size: 14.0), color: .darkText)

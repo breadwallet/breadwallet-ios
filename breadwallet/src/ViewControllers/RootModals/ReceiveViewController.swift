@@ -220,11 +220,11 @@ class ReceiveViewController : UIViewController {
 }
 
 extension ReceiveViewController : ModalDisplayable {
-    var modalTitle: String {
-        return S.Receive.title
+    var faqArticleId: String? {
+        return "receive"
     }
 
-    var isFaqHidden: Bool {
-        return false
+    var modalTitle: String {
+        return S.Receive.title
     }
 }
