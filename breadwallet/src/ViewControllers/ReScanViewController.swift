@@ -12,7 +12,7 @@ class ReScanViewController : UIViewController {
 
     init(store: Store) {
         self.store = store
-        self.faq = .buildFaqButton(store: store)
+        self.faq = .buildFaqButton(store: store, articleId: ArticleIds.reScan)
         super.init(nibName: nil, bundle: nil)
     }
 

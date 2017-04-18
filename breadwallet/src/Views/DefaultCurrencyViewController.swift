@@ -13,7 +13,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     init(apiClient: BRAPIClient, store: Store) {
         self.apiClient = apiClient
         self.store = store
-        self.faq = .buildFaqButton(store: store)
+        self.faq = .buildFaqButton(store: store, articleId: ArticleIds.defaultCurrency)
         super.init(style: .plain)
     }
 

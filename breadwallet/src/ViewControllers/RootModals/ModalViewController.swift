@@ -16,7 +16,7 @@ class ModalViewController : UIViewController {
     init<T: UIViewController>(childViewController: T, store: Store) where T: ModalDisplayable {
         self.childViewController = childViewController
         self.modalInfo = childViewController
-        self.header = ModalHeaderView(title: modalInfo.modalTitle, isFaqHidden: modalInfo.isFaqHidden, style: .dark, store: store)
+        self.header = ModalHeaderView(title: modalInfo.modalTitle, style: .dark, store: store, faqArticleId: childViewController.faqArticleId)
 
         super.init(nibName: nil, bundle: nil)
     }

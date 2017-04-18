@@ -30,10 +30,10 @@ extension UIButton {
         return UIButton.icon(image: #imageLiteral(resourceName: "Close"), accessibilityLabel: NSLocalizedString("Close", comment: "Close modal button accessibility label"))
     }
 
-    static func buildFaqButton(store: Store) -> UIButton {
+    static func buildFaqButton(store: Store, articleId: String) -> UIButton {
         let button = UIButton.icon(image: #imageLiteral(resourceName: "Faq"), accessibilityLabel: NSLocalizedString("Faq", comment: "Frequently asked questions button accessibility label"))
         button.tap = {
-            store.trigger(name: .presentFaq)
+            store.trigger(name: .presentFaq(articleId))
         }
         return button
     }

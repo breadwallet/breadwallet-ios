@@ -20,19 +20,22 @@ class ModalHeaderView : UIView {
         didSet { close.tap = closeCallback }
     }
 
-    init(title: String, isFaqHidden: Bool, style: ModalHeaderViewStyle, store: Store) {
+    init(title: String, style: ModalHeaderViewStyle, store: Store, faqArticleId: String?) {
         self.title.text = title
         self.style = style
-        self.faq = UIButton.buildFaqButton(store: store)
+
+        if let faqArticleId = faqArticleId {
+            self.faq = UIButton.buildFaqButton(store: store, articleId: faqArticleId)
+        }
+
         super.init(frame: .zero)
-        faq.isHidden = isFaqHidden
         setupSubviews()
     }
 
     //MARK - Private
     private let title = UILabel(font: .customBold(size: 17.0))
     private let close = UIButton.close
-    private let faq: UIButton
+    private var faq: UIButton? = nil
     private let border = UIView()
     private let buttonSize: CGFloat = 44.0
     private let style: ModalHeaderViewStyle
@@ -40,7 +43,9 @@ class ModalHeaderView : UIView {
     private func setupSubviews() {
         addSubview(title)
         addSubview(close)
-        addSubview(faq)
+        if let faq = self.faq {
+            addSubview(faq)
+        }
         addSubview(border)
         close.constrain([
             close.constraint(.leading, toView: self, constant: 0.0),
@@ -50,11 +55,11 @@ class ModalHeaderView : UIView {
         title.constrain([
             title.constraint(.centerX, toView: self, constant: 0.0),
             title.constraint(.centerY, toView: self, constant: 0.0) ])
-        faq.constrain([
-            faq.constraint(.trailing, toView: self, constant: 0.0),
-            faq.constraint(.centerY, toView: self, constant: 0.0),
-            faq.constraint(.height, constant: buttonSize),
-            faq.constraint(.width, constant: buttonSize) ])
+        faq?.constrain([
+            faq?.constraint(.trailing, toView: self, constant: 0.0),
+            faq?.constraint(.centerY, toView: self, constant: 0.0),
+            faq?.constraint(.height, constant: buttonSize),
+            faq?.constraint(.width, constant: buttonSize) ])
         border.constrain([
             border.constraint(.height, constant: 1.0) ])
         border.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
@@ -69,7 +74,7 @@ class ModalHeaderView : UIView {
         case .light:
             title.textColor = .white
             close.tintColor = .white
-            faq.tintColor = .white
+            faq?.tintColor = .white
         case .dark:
             border.backgroundColor = .secondaryShadow
         }
