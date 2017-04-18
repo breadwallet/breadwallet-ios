@@ -130,7 +130,13 @@ class UpdatePinViewController : UIViewController, Subscriber {
                 currentPin = pin
                 replacePinView()
             } else {
-                clearAfterFailure()
+                if walletManager.walletDisabledUntil > 0 {
+                    dismiss(animated: true, completion: {
+                        self.store.perform(action: RequireLogin())
+                    })
+                } else {
+                    clearAfterFailure()
+                }
             }
         }
     }
