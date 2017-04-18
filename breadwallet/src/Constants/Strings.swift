@@ -80,6 +80,13 @@ enum S {
         static let unlocked = NSLocalizedString("Wallet Unlocked", comment: "Wallet unlocked message")
     }
 
+    enum Transaction {
+        static let justNow = NSLocalizedString("just now", comment: "Timestamp label for event that just happened")
+        static let invalid = NSLocalizedString("INVALID", comment: "Invalid transaction")
+        static let complete = NSLocalizedString("Complete", comment: "Transaction complete label")
+        static let waiting = NSLocalizedString("Waiting to be confirmed. Some merchants require confirmation to complete a transaction. Estimated time: 1-2 hours.", comment: "Waiting to be confirmed string")
+    }
+
     enum TransactionDetails {
         static let title = NSLocalizedString("Transaction Details", comment: "Transaction Details Title")
         static let statusHeader = NSLocalizedString("Status", comment: "Status section header")
