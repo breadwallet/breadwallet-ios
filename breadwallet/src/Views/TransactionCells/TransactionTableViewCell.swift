@@ -80,6 +80,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
             transactionLabel.constraint(.leading, toView: container, constant: C.padding[2]),
             transactionLabel.constraint(.top, toView: container, constant: topPadding),
             transactionLabel.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1]) ])
+        timestamp.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
         timestamp.constrain([
             timestamp.constraint(.trailing, toView: container, constant: -C.padding[2]),
             timestamp.constraint(.top, toView: container, constant: topPadding) ])
@@ -106,6 +107,9 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         shadowView.layer.shadowOffset = CGSize(width: 0, height: 0)
 
         innerShadow.backgroundColor = .secondaryShadow
+
+        transactionLabel.numberOfLines = 0
+        transactionLabel.lineBreakMode = .byWordWrapping
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
