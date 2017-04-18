@@ -32,14 +32,20 @@ class Transaction {
         }
         self.timestamp = Int(tx.pointee.timestamp)
 
+        self.isValid = wallet.transactionIsValid(tx)
         let transactionBlockHeight = tx.pointee.blockHeight
-        let transactionIsValid = wallet.transactionIsValid(tx)
         let transactionIsVerified = wallet.transactionIsVerified(tx)
         let transactionIsPending = wallet.transactionIsPending(tx)
 
         let confirms = transactionBlockHeight > blockHeight ? 0 : Int((blockHeight - transactionBlockHeight) + 1)
-        self.status = makeStatus(isValid: transactionIsValid, isPending: transactionIsPending, isVerified: transactionIsVerified, confirms: confirms)
-        self.longStatus = confirms > 6 ? "Complete" : "Waiting to be confirmed. Some merchants require confirmation to complete a transaction. Estimated time: 1-2 hours."
+        self.status = makeStatus(isValid: isValid, isPending: transactionIsPending, isVerified: transactionIsVerified, confirms: confirms)
+
+        if isValid {
+            self.longStatus = confirms > 6 ? S.Transaction.complete : S.Transaction.waiting
+        } else {
+            self.longStatus = S.Transaction.invalid
+        }
+
         self.hash = tx.pointee.txHash.description
     }
 
@@ -81,6 +87,7 @@ class Transaction {
     let timestamp: Int
     let fee: UInt64
     let hash: String
+    let isValid: Bool
 
     //MARK: - Private
     private let tx: BRTxRef
@@ -134,7 +141,7 @@ class Transaction {
     }()
 
     var timeSince: String {
-        guard timestamp > 0 else { return "just now" }
+        guard timestamp > 0 else { return S.Transaction.justNow }
         let difference = Int(Date().timeIntervalSince1970) - timestamp
         let secondsInMinute = 60
         let secondsInHour = 3600
@@ -151,6 +158,7 @@ class Transaction {
     }
 
     var longTimestamp: String {
+        guard timestamp > 0 else { return wallet.transactionIsValid(tx) ? S.Transaction.justNow : "" }
         let date = Date(timeIntervalSince1970: Double(timestamp))
         return longDateFormatter.string(from: date)
     }
