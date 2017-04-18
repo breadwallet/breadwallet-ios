@@ -272,14 +272,14 @@ class LoginViewController : UIViewController {
 
     private func lockIfNeeded() {
         if let disabledUntil = walletManager?.walletDisabledUntil {
-            if disabledUntil > Date.timeIntervalSinceReferenceDate {
+            let now = Date.timeIntervalSinceReferenceDate
+            if disabledUntil > now {
                 let disabledUntilDate = Date(timeIntervalSinceReferenceDate: disabledUntil)
+                let unlockInterval = disabledUntil - Date.timeIntervalSinceReferenceDate
                 let df = DateFormatter()
-                df.dateFormat = "h:mm a 'on' MMM d, yyy"
+                df.dateFormat = unlockInterval > C.secondsInDay ? "h:mm a 'on' MMM d, yyy" : "h:mm a"
                 subheader.text = "Disabled until: \(df.string(from: disabledUntilDate))"
                 pinPad.view.isUserInteractionEnabled = false
-
-                let unlockInterval = disabledUntil - Date.timeIntervalSinceReferenceDate
                 unlockTimer?.invalidate()
                 unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)
             } else {
