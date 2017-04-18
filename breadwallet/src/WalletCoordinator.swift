@@ -107,13 +107,13 @@ class WalletCoordinator : Subscriber {
     }
 
     private func addSubscriptions() {
-        store.subscribe(self, name: .retrySync, callback: {
+        store.subscribe(self, name: .retrySync, callback: { _ in 
             DispatchQueue(label: C.walletQueue).async {
                 self.walletManager.peerManager?.connect()
             }
         })
 
-        store.subscribe(self, name: .rescan, callback: {
+        store.subscribe(self, name: .rescan, callback: { _ in
             //In case rescan is called while a sync is in progess
             //we need to make sure it's false before a rescan starts
             //self.store.perform(action: WalletChange.setIsSyncing(false))

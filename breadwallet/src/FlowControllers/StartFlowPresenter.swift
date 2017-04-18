@@ -162,7 +162,7 @@ class StartFlowPresenter : Subscriber {
         paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
         paperPhraseViewController.navigationItem.leftBarButtonItems = [negativePadding, UIBarButtonItem(customView: closeButton)]
 
-        let faqButton = UIButton.buildFaqButton(store: store)
+        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.paperPhrase)
         faqButton.tintColor = .white
         paperPhraseViewController.navigationItem.rightBarButtonItems = [negativePadding, UIBarButtonItem(customView: faqButton)]
 

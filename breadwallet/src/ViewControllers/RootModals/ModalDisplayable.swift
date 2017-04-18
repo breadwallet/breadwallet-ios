@@ -10,7 +10,7 @@ import UIKit
 
 protocol ModalDisplayable {
     var modalTitle: String { get }
-    var isFaqHidden: Bool { get }
+    var faqArticleId: String? { get }
 }
 
 protocol ModalPresentable {

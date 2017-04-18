@@ -408,11 +408,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 }
 
 extension SendViewController : ModalDisplayable {
+    var faqArticleId: String? {
+        return "send"
+    }
+
     var modalTitle: String {
         return NSLocalizedString("Send Money", comment: "Send modal title")
-    }
-    
-    var isFaqHidden: Bool {
-        return false
     }
 }

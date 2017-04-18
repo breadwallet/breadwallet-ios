@@ -42,8 +42,11 @@ class ModalPresenter : Subscriber {
         store.subscribe(self,
                         selector: { $0.alert != $1.alert && $1.alert != nil },
                         callback: { self.handleAlertChange($0.alert) })
-        store.subscribe(self, name: .presentFaq, callback: {
-            self.presentFaq()
+        store.subscribe(self, name: .presentFaq(""), callback: {
+            guard let trigger = $0 else { return }
+            if case .presentFaq(let articleId) = trigger {
+                self.presentFaq(articleId: articleId)
+            }
         })
     }
 
@@ -111,13 +114,13 @@ class ModalPresenter : Subscriber {
         })
     }
 
-    private func presentFaq() {
+    private func presentFaq(articleId: String) {
         guard let walletManager = walletManager else { return }
         let vc: BRWebViewController
         #if Debug || Testflight
-            vc = BRWebViewController(bundleName: "bread-support-staging", mountPoint: "/", walletManager: walletManager)
+            vc = BRWebViewController(bundleName: "bread-support-staging", mountPoint: "/?id=\(articleId)", walletManager: walletManager)
         #else
-            vc = BRWebViewController(bundleName: "bread-support", mountPoint: "/", walletManager: walletManager)
+            vc = BRWebViewController(bundleName: "bread-support", mountPoint: "/?id=\(articleId)", walletManager: walletManager)
         #endif
         vc.startServer()
         vc.preload()

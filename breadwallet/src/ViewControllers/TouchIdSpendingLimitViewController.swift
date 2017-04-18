@@ -25,7 +25,7 @@ class TouchIdSpendingLimitViewController : UIViewController, Subscriber {
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
         self.store = store
-        self.faq = UIButton.buildFaqButton(store: store)
+        self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.touchIdSpendingLimit)
         super.init(nibName: nil, bundle: nil)
     }
 
