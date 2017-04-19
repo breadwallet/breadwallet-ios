@@ -189,6 +189,10 @@ class BRWallet {
         get { return BRWalletFeePerKb(cPtr) }
         set (value) { BRWalletSetFeePerKb(cPtr, value) }
     }
+
+    func feeForTx(amount: UInt64) -> UInt64 {
+        return BRWalletFeeForTxAmount(cPtr, amount)
+    }
     
     // returns an unsigned transaction that sends the specified amount from the wallet to the given address
     func createTransaction(forAmount: UInt64, toAddress: String) -> BRTxRef? {

@@ -176,6 +176,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             myself.amount.setLabel(text: "Balance: \(amount.bits)", color: .grayTextTint)
 
         }
+
+        //TODO - send multiple currencies
         amount.textFieldDidChange = { [weak self] text in
             guard let myself = self else { return }
             guard let rate = myself.rate else { return }
@@ -213,11 +215,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             var data: (String, UIColor) = ("Balance: \(balanceAmount.bits)", .grayTextTint)
             if let value = Double(text) {
 
-                var feeString = ""
-                if let toAddress = myself.to.content {
-                    myself.sender.createTransaction(amount: UInt64(value * 100.0), to: toAddress)
-                    feeString = ", Fee: \(formatter.string(from: myself.sender.fee/100 as NSNumber)!)"
-                }
+                let fee = myself.sender.feeForTx(amount: UInt64(value * 100.0))
+                let feeString = ", Fee: \(formatter.string(from: fee/100 as NSNumber)!)"
 
                 if Int(value * 100.0) > Int(myself.balance) {
                     data = ("Balance: \(balanceAmount.bits)\(feeString)", .red)
@@ -328,6 +327,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     @objc private func sendTapped() {
+        guard let text = amount.textField.text else { return }
+        guard let amount = UInt64(text) else { return }
+        guard let address = to.content else { return }
+        sender.createTransaction(amount: amount*100, to: address)
         sender.send(verifyPin: { pinValidationCallback in
                         presentVerifyPin? { [weak self] pin, vc in
                             if pinValidationCallback(pin) {
