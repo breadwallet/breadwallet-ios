@@ -40,9 +40,10 @@ class WalletCoordinator : Subscriber {
     @objc private func updateProgress() {
         if let progress = walletManager.peerManager?.syncProgress(fromStartHeight: lastBlockHeight) {
             DispatchQueue(label: C.walletQueue).async {
-                let timestamp = self.walletManager.lastBlockTimestamp
-                DispatchQueue.main.async {
-                    self.store.perform(action: WalletChange.setProgress(progress: progress, timestamp: timestamp))
+                if let timestamp = self.walletManager.peerManager?.lastBlockTimestamp {
+                    DispatchQueue.main.async {
+                        self.store.perform(action: WalletChange.setProgress(progress: progress, timestamp: timestamp))
+                    }
                 }
             }
         }
