@@ -29,6 +29,10 @@ class Sender {
         return walletManager.wallet?.feeForTx(tx) ?? 0
     }
 
+    func feeForTx(amount: UInt64) -> UInt64 {
+        return walletManager.wallet?.feeForTx(amount:amount) ?? 0
+    }
+
     //Amount in bits
     func send(verifyPin: (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
         guard let tx = transaction else { return completion(.creationError("Transaction not created")) }
