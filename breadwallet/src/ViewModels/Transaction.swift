@@ -67,7 +67,9 @@ class Transaction {
     }
 
     func amountDetails(currency: Currency, rate: Rate) -> String {
-        let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate.rate).string(forCurrency: currency))"
+        let feeAmount = Amount(amount: fee, rate: rate.rate)
+        let feeString = direction == .sent ? " (\(feeAmount.string(forCurrency: currency)) fee)" : ""
+        let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate.rate).string(forCurrency: currency))\(feeString)"
         let startingString = "Starting balance: \(Amount(amount: startingBalance, rate: rate.rate).string(forCurrency: currency))"
         let endingString = "Ending balance: \(Amount(amount: balanceAfter, rate: rate.rate).string(forCurrency: currency))"
 
