@@ -79,7 +79,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         if !hasShownInitialIndex {
             guard let contentSize = collectionView?.contentSize else { return }
             guard let collectionView = collectionView else { return }
-            secretScrollView.contentSize = contentSize
+            secretScrollView.contentSize = CGSize(width: contentSize.width + C.padding[1], height: contentSize.height)
             var contentOffset = collectionView.contentOffset
             contentOffset.x = contentOffset.x + collectionView.contentInset.left
             contentOffset.y = contentOffset.y + collectionView.contentInset.top
