@@ -349,6 +349,10 @@ class BRPeerManager {
     var lastBlockHeight: UInt32 {
         return BRPeerManagerLastBlockHeight(cPtr)
     }
+
+    var lastBlockTimestamp: UInt32 {
+        return BRPeerManagerLastBlockTimestamp(cPtr)
+    }
     
     // the (unverified) best block height reported by connected peers
     var estimatedBlockHeight: UInt32 {
