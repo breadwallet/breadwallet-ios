@@ -46,9 +46,7 @@ class ModalTransitionDelegate : NSObject, Subscriber {
         switch gr.state {
         case .began:
             isInteractive = true
-            presentedViewController?.dismiss(animated: true, completion: {
-                self.presentedViewController = nil
-            })
+            presentedViewController?.dismiss(animated: true, completion: nil)
         case .changed:
             guard let vc = presentedViewController else { break }
             let yOffset = gr.translation(in: vc.view).y
