@@ -46,6 +46,14 @@ open class AssetArchive {
     func update(completionHandler: @escaping (_ error: Error?) -> Void) {
         do {
             try ensureExtractedPath()
+        //If directory creation failed due to file existing
+        } catch let error as NSError where error.code == 512 && error.domain == NSCocoaErrorDomain {
+            do {
+                try fileManager.removeItem(at: apiClient.bundleDirUrl)
+                try fileManager.createDirectory(at: extractedUrl, withIntermediateDirectories: true, attributes: nil)
+            } catch let e {
+                return completionHandler(e)
+            }
         } catch let e {
             return completionHandler(e)
         }
