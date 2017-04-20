@@ -41,7 +41,7 @@ class StartPaperPhraseViewController: UIViewController {
         }
         if let writePaperPhraseDate = UserDefaults.writePaperPhraseDate {
             let df = DateFormatter()
-            df.dateFormat = "MMMM 3, yyyy"
+            df.dateFormat = "MMMM d, yyyy"
             footer.text = "\(S.StartPaperPhrase.datePrefix) \(df.string(from: writePaperPhraseDate))"
         }
     }
