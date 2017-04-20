@@ -132,7 +132,7 @@ open class AssetArchive {
                 try data.write(to: URL(fileURLWithPath: diffPath), options: .atomic)
                 try fm.moveItem(atPath: self.archivePath, toPath: oldBundlePath)
                 _ = try BRBSPatch.patch(
-                    oldBundlePath, newFilePath: self.apiClient.bundleDirUrl.path, patchFilePath: diffPath)
+                    oldBundlePath, newFilePath: self.archivePath, patchFilePath: diffPath)
                 try fm.removeItem(atPath: diffPath)
                 try fm.removeItem(atPath: oldBundlePath)
                 try self.extractArchive()
