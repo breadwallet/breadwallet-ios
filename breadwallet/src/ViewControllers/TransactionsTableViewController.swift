@@ -172,11 +172,13 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
 
     private func reload() {
         tableView.reloadData()
-        if transactions.count == 0 && emptyMessage.superview == nil {
-            tableView.addSubview(emptyMessage)
-            emptyMessage.constrain([
-                emptyMessage.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
-                emptyMessage.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -accountHeaderHeight) ])
+        if transactions.count == 0 {
+            if emptyMessage.superview == nil {
+                tableView.addSubview(emptyMessage)
+                emptyMessage.constrain([
+                    emptyMessage.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
+                    emptyMessage.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -accountHeaderHeight) ])
+            }
         } else {
             emptyMessage.removeFromSuperview()
         }
