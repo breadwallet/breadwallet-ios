@@ -18,7 +18,10 @@ class UpdatingLabel : UILabel {
         text = self.formatter.string(from: 0 as NSNumber)
     }
 
-    func setValue(_ endingValue: Double) {
+    var completion: (() -> Void)?
+
+    func setValue(_ endingValue: Double, completion: @escaping () -> Void) {
+        self.completion = completion
         guard let currentText = text else { return }
         guard let startingValue = formatter.number(from: currentText)?.doubleValue else { return }
         self.startingValue = startingValue
@@ -54,6 +57,7 @@ class UpdatingLabel : UILabel {
             timer?.invalidate()
             timer = nil
             setFormattedText(forValue: endingValue)
+            completion?()
         } else {
             let percentProgress = progress/duration
             let easedVal = 1.0-pow((1.0-percentProgress), easingRate)
