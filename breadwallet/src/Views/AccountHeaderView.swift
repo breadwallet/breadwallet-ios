@@ -8,6 +8,9 @@
 
 import UIKit
 
+private let largeFontSize: CGFloat = 26.0
+private let smallFontSize: CGFloat = 13.0
+
 class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     //MARK: - Public
@@ -33,7 +36,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private let search = UIButton(type: .system)
     private let currencyTapView = UIView()
     private let store: Store
-    private let equals = UILabel(font: .customBody(size: 13.0), color: .darkText)
+    private let equals = UILabel(font: .customBody(size: smallFontSize), color: .darkText)
     private var regularConstraints: [NSLayoutConstraint] = []
     private var swappedConstraints: [NSLayoutConstraint] = []
     private var exchangeRate: Rate? {
@@ -61,10 +64,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             self.store.perform(action: RootModalActions.Present(modal: .manageWallet))
         }
         primaryBalance.textColor = .white
-        primaryBalance.font = UIFont.customBody(size: 26.0)
+        primaryBalance.font = UIFont.customBody(size: largeFontSize)
 
         secondaryBalance.textColor = .darkText
-        secondaryBalance.font = UIFont.customBody(size: 13.0)
+        secondaryBalance.font = UIFont.customBody(size: largeFontSize)
 
         search.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
         search.tintColor = .white
@@ -136,6 +139,14 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         currencyTapView.addGestureRecognizer(gr)
     }
 
+    private func transform(forView: UIView) ->  CGAffineTransform {
+        let scaleFactor: CGFloat = smallFontSize/largeFontSize
+        let deltaX = forView.frame.width * (1-scaleFactor)
+        let deltaY = forView.frame.height * (1-scaleFactor)
+        let scale = CGAffineTransform(scaleX: scaleFactor, y: scaleFactor)
+        return scale.translatedBy(x: -deltaX, y: deltaY/2.0)
+    }
+
     private func addShadow() {
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
@@ -156,8 +167,28 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         guard let rate = exchangeRate else { return }
         let amount = Amount(amount: balance, rate: rate.rate)
 
-        primaryBalance.setValue(amount.bitsAmount)
-        secondaryBalance.setValue(amount.localAmount)
+        primaryBalance.setValue(amount.bitsAmount, completion: { [weak self] in
+            guard let myself = self else { return }
+            myself.layoutIfNeeded()
+            if myself.currency == .bitcoin {
+                myself.primaryBalance.transform = .identity
+            } else {
+                if myself.primaryBalance.transform == .identity {
+                    myself.primaryBalance.transform = myself.transform(forView: myself.primaryBalance)
+                }
+            }
+        })
+        secondaryBalance.setValue(amount.localAmount, completion: { [weak self] in
+            guard let myself = self else { return }
+            myself.layoutIfNeeded()
+            if myself.currency == .local {
+                myself.secondaryBalance.transform = .identity
+            } else {
+                if myself.secondaryBalance.transform == .identity {
+                    myself.secondaryBalance.transform = myself.transform(forView: myself.secondaryBalance)
+                }
+            }
+        })
     }
 
     override func draw(_ rect: CGRect) {
@@ -171,6 +202,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         self.primaryBalance.textColor = willSwap ? .darkText : .white
         self.secondaryBalance.textColor = willSwap ? .white : .darkText
         UIView.spring(C.animationDuration, animations: {
+            self.primaryBalance.transform = self.primaryBalance.transform.isIdentity ? self.transform(forView: self.primaryBalance) : .identity
+            self.secondaryBalance.transform = self.secondaryBalance.transform.isIdentity ? self.transform(forView: self.secondaryBalance) : .identity
             NSLayoutConstraint.deactivate(willSwap ? self.regularConstraints : self.swappedConstraints)
             NSLayoutConstraint.activate(willSwap ? self.swappedConstraints : self.regularConstraints)
             self.layoutIfNeeded()
