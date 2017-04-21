@@ -18,10 +18,14 @@ class FeeUpdater {
 
     func updateWalletFees() {
         guard feePerKb < maxFeePerKB && feePerKb > minFeePerKB else {
-            self.walletManager.wallet?.feePerKb = defaultFeePerKB
+            DispatchQueue.walletQueue.async {
+                self.walletManager.wallet?.feePerKb = self.defaultFeePerKB
+            }
             return
         }
-        self.walletManager.wallet?.feePerKb = feePerKb
+        DispatchQueue.walletQueue.async {
+            self.walletManager.wallet?.feePerKb = self.feePerKb
+        }
     }
 
     func refresh(completion: @escaping () -> Void) {
