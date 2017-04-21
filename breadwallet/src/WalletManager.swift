@@ -222,7 +222,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     func txAdded(_ tx: BRTxRef) {
-        DispatchQueue(label: C.walletQueue).sync {
+        DispatchQueue.walletQueue.sync {
             var buf = [UInt8](repeating: 0, count: BRTransactionSerialize(tx, nil, 0))
             let extra = [tx.pointee.blockHeight.littleEndian, tx.pointee.timestamp.littleEndian]
             guard BRTransactionSerialize(tx, &buf, buf.count) == buf.count else { return }
@@ -267,7 +267,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     func txUpdated(_ txHashes: [UInt256], blockHeight: UInt32, timestamp: UInt32) {
-        DispatchQueue(label: C.walletQueue).sync {
+        DispatchQueue.walletQueue.sync {
             guard txHashes.count > 0 else { return }
             let extra = [blockHeight.littleEndian, timestamp.littleEndian]
             let extraBuf = UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
@@ -304,7 +304,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     func txDeleted(_ txHash: UInt256, notifyUser: Bool, recommendRescan: Bool) {
-        DispatchQueue(label: C.walletQueue).sync {
+        DispatchQueue.walletQueue.sync {
             var sql: OpaquePointer? = nil
             sqlite3_prepare_v2(self.db, "delete from ZBRTXMETADATAENTITY where ZTYPE = 1 and ZTXHASH = ?", -1, &sql, nil)
             defer { sqlite3_finalize(sql) }
@@ -354,7 +354,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     func saveBlocks(_ blocks: [BRBlockRef?]) {
-        DispatchQueue(label: C.walletQueue).sync {
+        DispatchQueue.walletQueue.sync {
             var pk: Int32 = 0
             sqlite3_exec(self.db, "begin exclusive", nil, nil, nil)
 
@@ -422,7 +422,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     func savePeers(_ peers: [BRPeer]) {
-        DispatchQueue(label: C.walletQueue).sync {
+        DispatchQueue.walletQueue.sync {
             var pk: Int32 = 0
             sqlite3_exec(self.db, "begin exclusive", nil, nil, nil)
 

@@ -39,7 +39,7 @@ class WalletCoordinator : Subscriber {
 
     @objc private func updateProgress() {
         if let progress = walletManager.peerManager?.syncProgress(fromStartHeight: lastBlockHeight) {
-            DispatchQueue(label: C.walletQueue).async {
+            DispatchQueue.walletQueue.async {
                 if let timestamp = self.walletManager.peerManager?.lastBlockTimestamp {
                     DispatchQueue.main.async {
                         self.store.perform(action: WalletChange.setProgress(progress: progress, timestamp: timestamp))
@@ -109,7 +109,7 @@ class WalletCoordinator : Subscriber {
 
     private func addSubscriptions() {
         store.subscribe(self, name: .retrySync, callback: { _ in 
-            DispatchQueue(label: C.walletQueue).async {
+            DispatchQueue.walletQueue.async {
                 self.walletManager.peerManager?.connect()
             }
         })
@@ -118,7 +118,7 @@ class WalletCoordinator : Subscriber {
             //In case rescan is called while a sync is in progess
             //we need to make sure it's false before a rescan starts
             //self.store.perform(action: WalletChange.setIsSyncing(false))
-            DispatchQueue(label: C.walletQueue).async {
+            DispatchQueue.walletQueue.async {
                 self.walletManager.peerManager?.rescan()
             }
         })

@@ -32,7 +32,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     fileprivate var application: UIApplication?
 
     init() {
-        DispatchQueue(label: C.walletQueue).async {
+        DispatchQueue.walletQueue.async {
             self.walletManager = try! WalletManager(dbPath: nil)
             DispatchQueue.main.async {
                 self.didInitWallet()
@@ -58,7 +58,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         if shouldRequireLogin() {
             store.perform(action: RequireLogin())
         }
-        DispatchQueue(label: C.walletQueue).async {
+        DispatchQueue.walletQueue.async {
             walletManager.peerManager?.connect()
         }
         exchangeUpdater?.refresh(completion: {})
@@ -117,7 +117,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             } else {
                 initKVStoreCoordinator()
                 modalPresenter?.walletManager = walletManager
-                DispatchQueue(label: C.walletQueue).async {
+                DispatchQueue.walletQueue.async {
                     walletManager.peerManager?.connect()
                 }
                 feeUpdater?.updateWalletFees()
