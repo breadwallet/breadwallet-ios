@@ -56,6 +56,9 @@ class StartFlowPresenter : Subscriber {
         store.subscribe(self,
                         selector: { $0.isLoginRequired != $1.isLoginRequired },
                         callback: { self.handleLoginRequiredChange(state: $0) })
+        store.subscribe(self, name: .lock, callback: { _ in
+            self.presentLoginFlow(isPresentedForLock: true)
+        })
     }
 
     private func handleStartFlowChange(state: State) {
@@ -92,7 +95,7 @@ class StartFlowPresenter : Subscriber {
 
     private func handleLoginRequiredChange(state: State) {
         if state.isLoginRequired {
-            presentLoginFlow()
+            presentLoginFlow(isPresentedForLock: false)
         } else {
             dismissLoginFlow()
         }
@@ -192,8 +195,11 @@ class StartFlowPresenter : Subscriber {
         navigationController?.pushViewController(confirmViewController, animated: true)
     }
 
-    private func presentLoginFlow() {
-        let loginView = LoginViewController(store: store, isPresentedForLock: true, walletManager: walletManager)
+    private func presentLoginFlow(isPresentedForLock: Bool) {
+        let loginView = LoginViewController(store: store, isPresentedForLock: isPresentedForLock, walletManager: walletManager)
+        if isPresentedForLock {
+            loginView.shouldSelfDismiss = true
+        }
         loginView.transitioningDelegate = loginTransitionDelegate
         loginView.modalPresentationStyle = .overFullScreen
         loginViewController = loginView
