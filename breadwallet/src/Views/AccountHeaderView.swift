@@ -201,7 +201,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         //TODO - add font animation with CATextLayer
         self.primaryBalance.textColor = willSwap ? .darkText : .white
         self.secondaryBalance.textColor = willSwap ? .white : .darkText
-        UIView.spring(C.animationDuration, animations: {
+        UIView.spring(0.7, animations: {
             self.primaryBalance.transform = self.primaryBalance.transform.isIdentity ? self.transform(forView: self.primaryBalance) : .identity
             self.secondaryBalance.transform = self.secondaryBalance.transform.isIdentity ? self.transform(forView: self.secondaryBalance) : .identity
             NSLayoutConstraint.deactivate(willSwap ? self.regularConstraints : self.swappedConstraints)
