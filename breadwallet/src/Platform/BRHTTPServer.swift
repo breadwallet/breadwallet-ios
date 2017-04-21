@@ -56,14 +56,10 @@ open class BRHTTPMiddlewareResponse {
     var isStarted: Bool { return fd != -1 }
     var port: in_port_t = 0
     var listenAddress: String = "127.0.0.1"
-    
-    var _Q: DispatchQueue? = nil
-    var Q: DispatchQueue {
-        if _Q == nil {
-            _Q = DispatchQueue(label: "br_http_server", attributes: DispatchQueue.Attributes.concurrent)
-        }
-        return _Q!
-    }
+    private var isShutdownCancelled = false
+    var Q: DispatchQueue = {
+        return DispatchQueue(label: "br_http_server", attributes: DispatchQueue.Attributes.concurrent)
+    }()
     
     func prependMiddleware(middleware mw: BRHTTPMiddleware) {
         middleware.insert(mw, at: 0)
@@ -167,14 +163,21 @@ open class BRHTTPMiddlewareResponse {
     
     func suspend(_: Notification) {
         if isStarted {
+            objc_sync_enter(self)
+            defer { objc_sync_exit(self) }
+            isShutdownCancelled = false
             if self.clients.count == 0 {
                 shutdownServer()
                 print("[BRHTTPServer] suspended")
             } else {
                 // give it 500ms to complete, then kill it
                 print("[BRHTTPServer] suspending: waiting for clients")
-                Q.asyncAfter(deadline: .now() + .milliseconds(500)) {
-                    self.shutdownServer()
+                Q.asyncAfter(deadline: .now() + .milliseconds(500)) { [weak self] in
+                    guard let myself = self else { return }
+                    objc_sync_enter(myself)
+                    defer { objc_sync_exit(myself) }
+                    guard !myself.isShutdownCancelled else { return print("[BRHTTPServer] suspending cancelled") }
+                    myself.shutdownServer()
                     print("[BRHTTPServer] suspended")
                 }
             }
@@ -182,8 +185,11 @@ open class BRHTTPMiddlewareResponse {
             print("[BRHTTPServer] already suspended")
         }
     }
-    
+
     func resume(_: Notification) {
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        isShutdownCancelled = true
         if !isStarted {
             do {
                 try listenServer(port)
