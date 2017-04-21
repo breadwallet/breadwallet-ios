@@ -41,6 +41,7 @@ enum TriggerName {
     case registerForPushNotificationToken
     case retrySync
     case rescan
+    case lock
 }
 
 extension TriggerName : Equatable {}
@@ -54,6 +55,8 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.retrySync, .retrySync):
         return true
     case (.rescan, .rescan):
+        return true
+    case (.lock, .lock):
         return true
     default:
         return false

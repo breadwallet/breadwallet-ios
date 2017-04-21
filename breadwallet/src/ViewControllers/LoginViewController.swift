@@ -21,7 +21,7 @@ class LoginViewController : UIViewController {
             self.pinView = PinView(style: .login, length: walletManager.pinLength)
         }
     }
-    var isPresentedFromAccount = false
+    var shouldSelfDismiss = false
     init(store: Store, isPresentedForLock: Bool, walletManager: WalletManager? = nil) {
         self.store = store
         self.walletManager = walletManager
@@ -232,7 +232,7 @@ class LoginViewController : UIViewController {
             self.pinView?.alpha = 0.0
             self.view.layoutIfNeeded()
         }) { completion in
-            if self.isPresentedFromAccount {
+            if self.shouldSelfDismiss {
                 self.dismiss(animated: true, completion: nil)
             }
             self.store.perform(action: LoginSuccess())

@@ -33,7 +33,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
                 loginView.walletManager = walletManager
                 loginView.transitioningDelegate = loginTransitionDelegate
                 loginView.modalPresentationStyle = .overFullScreen
-                loginView.isPresentedFromAccount = true
+                loginView.shouldSelfDismiss = true
                 present(loginView, animated: false, completion: {
                     self.tempLoginView.remove()
                 })

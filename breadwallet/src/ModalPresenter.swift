@@ -190,7 +190,7 @@ class ModalPresenter : Subscriber {
         }
         menu.didTapLock = { [weak self, weak menu] in
             menu?.dismiss(animated: true) {
-                self?.store.perform(action: RequireLogin())
+                self?.store.trigger(name: .lock)
             }
         }
         menu.didTapSettings = { [weak self, weak menu] in
