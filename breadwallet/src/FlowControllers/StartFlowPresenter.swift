@@ -130,7 +130,7 @@ class StartFlowPresenter : Subscriber {
             guard let myself = self else { return }
             let pinCreationView = UpdatePinViewController(store: myself.store, walletManager: myself.walletManager, phrase: phrase)
             pinCreationView.setPinSuccess = { [weak self] in
-                DispatchQueue(label: C.walletQueue).async {
+                DispatchQueue.walletQueue.async {
                     self?.walletManager.peerManager?.connect()
                 }
             }

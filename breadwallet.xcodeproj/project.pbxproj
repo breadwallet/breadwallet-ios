@@ -337,6 +337,7 @@
 		CEE20C341EA5B4550086F724 /* ArticleIds.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C331EA5B4550086F724 /* ArticleIds.swift */; };
 		CEE20C361EA5B4620086F724 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C351EA5B4620086F724 /* Constants.swift */; };
 		CEE20C381EA5B4680086F724 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C371EA5B4680086F724 /* Strings.swift */; };
+		CEE6282A1EA98B6D001035AA /* DispatchQueue+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE628291EA98B6D001035AA /* DispatchQueue+Additions.swift */; };
 		CEE65DF01E39056F0002994D /* Rate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE65DEF1E39056F0002994D /* Rate.swift */; };
 		CEE7F1D01E07653B00283981 /* CurrencySlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */; };
 		CEEC707F1E8D6B4100EF788E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC707E1E8D6B4100EF788E /* SettingsViewController.swift */; };
@@ -1463,6 +1464,7 @@
 		CEE20C331EA5B4550086F724 /* ArticleIds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ArticleIds.swift; path = src/Constants/ArticleIds.swift; sourceTree = "<group>"; };
 		CEE20C351EA5B4620086F724 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = src/Constants/Constants.swift; sourceTree = "<group>"; };
 		CEE20C371EA5B4680086F724 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Strings.swift; path = src/Constants/Strings.swift; sourceTree = "<group>"; };
+		CEE628291EA98B6D001035AA /* DispatchQueue+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "DispatchQueue+Additions.swift"; path = "src/Extensions/DispatchQueue+Additions.swift"; sourceTree = "<group>"; };
 		CEE65DEF1E39056F0002994D /* Rate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Rate.swift; path = src/Models/Rate.swift; sourceTree = "<group>"; };
 		CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CurrencySlider.swift; path = src/Views/CurrencySlider.swift; sourceTree = "<group>"; };
 		CEEC707E1E8D6B4100EF788E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = src/ViewControllers/SettingsViewController.swift; sourceTree = "<group>"; };
@@ -2742,6 +2744,7 @@
 				CEF3D2DC1E8CBA790070178E /* LAContext+Extensions.swift */,
 				222C42511E904C5000078EB5 /* AssociatedObject.swift */,
 				CEEC70851E94397D00EF788E /* UserDefaults+Additions.swift */,
+				CEE628291EA98B6D001035AA /* DispatchQueue+Additions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -3615,6 +3618,7 @@
 				CE92F9F41DED59E80046B516 /* UIView+AnimationAdditions.swift in Sources */,
 				CEEC70941E96A24F00EF788E /* DefaultCurrencyViewController.swift in Sources */,
 				CECB9DB61E4985CE0081A172 /* LoginBackgroundView.swift in Sources */,
+				CEE6282A1EA98B6D001035AA /* DispatchQueue+Additions.swift in Sources */,
 				CEC6AA3D1DEE687000EE5AFD /* RadialGradientView.swift in Sources */,
 				CEEC70921E95DA4400EF788E /* GradientSwitch.swift in Sources */,
 				CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */,
