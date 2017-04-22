@@ -40,21 +40,34 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     var rate: Rate?
 
     //MARK: - Private
-    private func setup() {
-        backgroundColor = .white
+    //TODO - this will need to get the real store somehow
+    private let header = ModalHeaderView(title: S.TransactionDetails.title, style: .dark, store: Store(), faqArticleId: ArticleIds.transactionDetails)
+    private let timestamp = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+    private let amount = UILabel(font: .customBold(size: 26.0), color: .darkText)
+    private let address = UILabel(font: .customBold(size: 14.0), color: .darkText)
+    private let separators = (0...4).map { _ in UIView(color: .secondaryShadow) }
+    private let statusHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+    private let status = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
+    private let commentsHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+    private let comment = UITextField()
+    private let amountHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+    private let amountDetails = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
+    private let addressHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+    private let fullAddress = UILabel(font: .customBody(size: 13.0), color: .darkText)
+    private let headerHeight: CGFloat = 48.0
+    private let scrollViewContent = UIView()
+    private let scrollView = UIScrollView()
 
-        let scrollView = UIScrollView()
+    private func setup() {
+        addSubviews()
+        addConstraints()
+        setData()
+    }
+
+    private func addSubviews() {
         contentView.addSubview(scrollView)
         contentView.addSubview(header)
-        header.constrainTopCorners(height: 48.0)
-        scrollView.constrain(toSuperviewEdges: UIEdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0))
-
-        let scrollViewContent = UIView()
         scrollView.addSubview(scrollViewContent)
-
-        scrollViewContent.constrain([
-            scrollViewContent.widthAnchor.constraint(equalTo: scrollView.widthAnchor) ])
-
         scrollViewContent.addSubview(timestamp)
         scrollViewContent.addSubview(amount)
         scrollViewContent.addSubview(address)
@@ -67,7 +80,13 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         scrollViewContent.addSubview(amountDetails)
         scrollViewContent.addSubview(addressHeader)
         scrollViewContent.addSubview(fullAddress)
+    }
 
+    private func addConstraints() {
+        header.constrainTopCorners(height: headerHeight)
+        scrollView.constrain(toSuperviewEdges: UIEdgeInsets(top: headerHeight, left: 0, bottom: 0, right: 0))
+        scrollViewContent.constrain([
+            scrollViewContent.widthAnchor.constraint(equalTo: scrollView.widthAnchor) ])
         timestamp.constrain([
             timestamp.leadingAnchor.constraint(equalTo: scrollViewContent.leadingAnchor, constant: C.padding[2]),
             timestamp.topAnchor.constraint(equalTo: scrollViewContent.topAnchor, constant: C.padding[3]),
@@ -139,6 +158,10 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
             separators[4].trailingAnchor.constraint(equalTo: fullAddress.trailingAnchor),
             separators[4].heightAnchor.constraint(equalToConstant: 1.0),
             separators[4].bottomAnchor.constraint(equalTo: scrollViewContent.bottomAnchor, constant: -C.padding[2]) ])
+    }
+
+    private func setData() {
+        backgroundColor = .white
 
         statusHeader.text = S.TransactionDetails.statusHeader
         commentsHeader.text = S.TransactionDetails.commentsHeader
@@ -183,21 +206,6 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         }
         NotificationCenter.default.post(name: .WalletTxStatusUpdateNotification, object: nil)
     }
-
-    //TODO - this will need to get the real store somehow
-    private let header = ModalHeaderView(title: S.TransactionDetails.title, style: .dark, store: Store(), faqArticleId: ArticleIds.transactionDetails)
-    private let timestamp = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let amount = UILabel(font: .customBold(size: 26.0), color: .darkText)
-    private let address = UILabel(font: .customBold(size: 14.0), color: .darkText)
-    private let separators = (0...4).map { _ in UIView(color: .secondaryShadow) }
-    private let statusHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let status = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
-    private let commentsHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let comment = UITextField()
-    private let amountHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let amountDetails = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
-    private let addressHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let fullAddress = UILabel(font: .customBody(size: 13.0), color: .darkText)
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
