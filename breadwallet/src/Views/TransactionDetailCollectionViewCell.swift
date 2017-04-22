@@ -42,25 +42,36 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     //MARK: - Private
     private func setup() {
         backgroundColor = .white
-        contentView.addSubview(header)
-        contentView.addSubview(timestamp)
-        contentView.addSubview(amount)
-        contentView.addSubview(address)
-        separators.forEach { self.contentView.addSubview($0) }
-        contentView.addSubview(statusHeader)
-        contentView.addSubview(status)
-        contentView.addSubview(commentsHeader)
-        contentView.addSubview(comment)
-        contentView.addSubview(amountHeader)
-        contentView.addSubview(amountDetails)
-        contentView.addSubview(addressHeader)
-        contentView.addSubview(fullAddress)
 
+        let scrollView = UIScrollView()
+        contentView.addSubview(scrollView)
+        contentView.addSubview(header)
         header.constrainTopCorners(height: 48.0)
+        scrollView.constrain(toSuperviewEdges: UIEdgeInsets(top: 48.0, left: 0, bottom: 0, right: 0))
+
+        let scrollViewContent = UIView()
+        scrollView.addSubview(scrollViewContent)
+
+        scrollViewContent.constrain([
+            scrollViewContent.widthAnchor.constraint(equalTo: scrollView.widthAnchor) ])
+
+        scrollViewContent.addSubview(timestamp)
+        scrollViewContent.addSubview(amount)
+        scrollViewContent.addSubview(address)
+        separators.forEach { scrollViewContent.addSubview($0) }
+        scrollViewContent.addSubview(statusHeader)
+        scrollViewContent.addSubview(status)
+        scrollViewContent.addSubview(commentsHeader)
+        scrollViewContent.addSubview(comment)
+        scrollViewContent.addSubview(amountHeader)
+        scrollViewContent.addSubview(amountDetails)
+        scrollViewContent.addSubview(addressHeader)
+        scrollViewContent.addSubview(fullAddress)
+
         timestamp.constrain([
-            timestamp.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[2]),
-            timestamp.topAnchor.constraint(equalTo: header.bottomAnchor, constant: C.padding[3]),
-            timestamp.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -C.padding[2]) ])
+            timestamp.leadingAnchor.constraint(equalTo: scrollViewContent.leadingAnchor, constant: C.padding[2]),
+            timestamp.topAnchor.constraint(equalTo: scrollViewContent.topAnchor, constant: C.padding[3]),
+            timestamp.trailingAnchor.constraint(equalTo: scrollViewContent.trailingAnchor, constant: -C.padding[2]) ])
         amount.constrain([
             amount.leadingAnchor.constraint(equalTo: timestamp.leadingAnchor),
             amount.trailingAnchor.constraint(equalTo: timestamp.trailingAnchor),
@@ -126,7 +137,8 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
             separators[4].topAnchor.constraint(equalTo: fullAddress.bottomAnchor, constant: C.padding[2]),
             separators[4].leadingAnchor.constraint(equalTo: fullAddress.leadingAnchor),
             separators[4].trailingAnchor.constraint(equalTo: fullAddress.trailingAnchor),
-            separators[4].heightAnchor.constraint(equalToConstant: 1.0) ])
+            separators[4].heightAnchor.constraint(equalToConstant: 1.0),
+            separators[4].bottomAnchor.constraint(equalTo: scrollViewContent.bottomAnchor, constant: -C.padding[2]) ])
 
         statusHeader.text = S.TransactionDetails.statusHeader
         commentsHeader.text = S.TransactionDetails.commentsHeader
