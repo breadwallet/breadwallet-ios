@@ -25,6 +25,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         amountDetails.text = transaction.amountDetails(currency: currency, rate: rate)
         addressHeader.text = "To" //Should this be from sometimes?
         fullAddress.text = transaction.toAddress ?? ""
+        txHash.text = transaction.hash
         self.transaction = transaction
         self.rate = rate
     }
@@ -57,6 +58,10 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     private let headerHeight: CGFloat = 48.0
     private let scrollViewContent = UIView()
     private let scrollView = UIScrollView()
+    private let moreButton = UIButton(type: .system)
+    private let moreContentView = UIView()
+    private let txHash = UILabel(font: .customBody(size: 13.0), color: .darkText)
+    private let txHashHeader = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
 
     private func setup() {
         addSubviews()
@@ -80,13 +85,20 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         scrollViewContent.addSubview(amountDetails)
         scrollViewContent.addSubview(addressHeader)
         scrollViewContent.addSubview(fullAddress)
+        scrollViewContent.addSubview(moreContentView)
+        moreContentView.addSubview(moreButton)
     }
 
     private func addConstraints() {
         header.constrainTopCorners(height: headerHeight)
         scrollView.constrain(toSuperviewEdges: UIEdgeInsets(top: headerHeight, left: 0, bottom: 0, right: 0))
         scrollViewContent.constrain([
-            scrollViewContent.widthAnchor.constraint(equalTo: scrollView.widthAnchor) ])
+            scrollViewContent.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            scrollViewContent.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            scrollViewContent.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            scrollViewContent.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            scrollViewContent.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+            ])
         timestamp.constrain([
             timestamp.leadingAnchor.constraint(equalTo: scrollViewContent.leadingAnchor, constant: C.padding[2]),
             timestamp.topAnchor.constraint(equalTo: scrollViewContent.topAnchor, constant: C.padding[3]),
@@ -156,8 +168,16 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
             separators[4].topAnchor.constraint(equalTo: fullAddress.bottomAnchor, constant: C.padding[2]),
             separators[4].leadingAnchor.constraint(equalTo: fullAddress.leadingAnchor),
             separators[4].trailingAnchor.constraint(equalTo: fullAddress.trailingAnchor),
-            separators[4].heightAnchor.constraint(equalToConstant: 1.0),
-            separators[4].bottomAnchor.constraint(equalTo: scrollViewContent.bottomAnchor, constant: -C.padding[2]) ])
+            separators[4].heightAnchor.constraint(equalToConstant: 1.0) ])
+        moreContentView.constrain([
+            moreContentView.leadingAnchor.constraint(equalTo: separators[4].leadingAnchor),
+            moreContentView.topAnchor.constraint(equalTo: separators[4].bottomAnchor, constant: C.padding[2]),
+            moreContentView.trailingAnchor.constraint(equalTo: separators[4].trailingAnchor),
+            moreContentView.bottomAnchor.constraint(equalTo: scrollViewContent.bottomAnchor, constant: -C.padding[2]) ])
+        moreButton.constrain([
+            moreButton.leadingAnchor.constraint(equalTo: moreContentView.leadingAnchor),
+            moreButton.topAnchor.constraint(equalTo: moreContentView.topAnchor),
+            moreButton.bottomAnchor.constraint(equalTo: moreContentView.bottomAnchor) ])
     }
 
     private func setData() {
@@ -175,6 +195,50 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         comment.contentVerticalAlignment = .top
         comment.returnKeyType = .done
         comment.delegate = self
+
+        moreButton.setTitle(S.TransactionDetails.more, for: .normal)
+        moreButton.tintColor = .grayTextTint
+        moreButton.titleLabel?.font = .customBold(size: 14.0)
+
+        txHash.numberOfLines = 0
+        txHash.lineBreakMode = .byCharWrapping
+
+        moreButton.tap = { [weak self] in
+            self?.addMoreView()
+        }
+
+    }
+
+    private func addMoreView() {
+        moreButton.removeFromSuperview()
+        let newSeparator = UIView(color: .secondaryShadow)
+        moreContentView.addSubview(newSeparator)
+        moreContentView.addSubview(txHashHeader)
+        moreContentView.addSubview(txHash)
+        txHashHeader.text = S.TransactionDetails.txHashHeader
+
+        txHashHeader.constrain([
+            txHashHeader.leadingAnchor.constraint(equalTo: moreContentView.leadingAnchor),
+            txHashHeader.topAnchor.constraint(equalTo: moreContentView.topAnchor) ])
+
+        txHash.constrain([
+            txHash.leadingAnchor.constraint(equalTo: txHashHeader.leadingAnchor),
+            txHash.topAnchor.constraint(equalTo: txHashHeader.bottomAnchor),
+            txHash.trailingAnchor.constraint(equalTo: moreContentView.trailingAnchor) ])
+
+        newSeparator.constrain([
+            newSeparator.leadingAnchor.constraint(equalTo: txHash.leadingAnchor),
+            newSeparator.topAnchor.constraint(equalTo: txHash.bottomAnchor, constant: C.padding[2]),
+            newSeparator.trailingAnchor.constraint(equalTo: moreContentView.trailingAnchor),
+            newSeparator.heightAnchor.constraint(equalToConstant: 1.0),
+            newSeparator.bottomAnchor.constraint(equalTo: moreContentView.bottomAnchor) ])
+
+        //Scroll to expaned more view
+        scrollView.layoutIfNeeded()
+        if scrollView.contentSize.height > scrollView.bounds.height {
+            let point = CGPoint(x: 0, y: scrollView.contentSize.height - scrollView.bounds.height)
+            self.scrollView.setContentOffset(point, animated: true)
+        }
     }
 
     override func layoutSubviews() {
