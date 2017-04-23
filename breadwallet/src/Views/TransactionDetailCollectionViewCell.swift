@@ -233,12 +233,21 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
             newSeparator.heightAnchor.constraint(equalToConstant: 1.0),
             newSeparator.bottomAnchor.constraint(equalTo: moreContentView.bottomAnchor) ])
 
+        let gr = UITapGestureRecognizer(target: self, action: #selector(tapTxHash))
+        txHash.addGestureRecognizer(gr)
+        txHash.isUserInteractionEnabled = true
+
         //Scroll to expaned more view
         scrollView.layoutIfNeeded()
         if scrollView.contentSize.height > scrollView.bounds.height {
             let point = CGPoint(x: 0, y: scrollView.contentSize.height - scrollView.bounds.height)
             self.scrollView.setContentOffset(point, animated: true)
         }
+    }
+
+    @objc private func tapTxHash() {
+        guard let hash = transaction?.hash else { return }
+        UIPasteboard.general.string = hash
     }
 
     override func layoutSubviews() {
