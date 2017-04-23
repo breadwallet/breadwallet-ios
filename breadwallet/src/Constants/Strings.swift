@@ -93,6 +93,8 @@ enum S {
         static let commentsHeader = NSLocalizedString("Comments", comment: "Comment section header")
         static let amountHeader = NSLocalizedString("Amount", comment: "Amount section header")
         static let emptyMessage = NSLocalizedString("Your transactions will appear here.", comment: "Empty transaction list message.")
+        static let more = NSLocalizedString("More...", comment: "More button title")
+        static let txHashHeader = NSLocalizedString("Transaction Hash", comment: "Transaction hash header")
     }
 
     enum SecurityCenter {
