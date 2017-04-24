@@ -125,7 +125,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
         search.constrain([
             search.constraint(.trailing, toView: self, constant: -C.padding[2]),
-            search.topAnchor.constraint(equalTo: manage.bottomAnchor, constant: C.padding[1]),
+            search.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[4]),
             search.constraint(.width, constant: 24.0),
             search.constraint(.height, constant: 24.0) ])
 
