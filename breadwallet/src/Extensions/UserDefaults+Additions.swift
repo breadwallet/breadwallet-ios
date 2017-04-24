@@ -52,7 +52,10 @@ extension UserDefaults {
             defaults.set(newValue, forKey: hasAquiredShareDataPermissionKey)
         }
     }
+}
 
+//MARK: - Wallet Requires Backup
+extension UserDefaults {
     static var legacyWalletNeedsBackup: Bool? {
         guard defaults.object(forKey: legacyWalletNeedsBackupKey) != nil else {
             return nil
