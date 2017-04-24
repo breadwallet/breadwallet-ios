@@ -79,8 +79,7 @@ class WritePaperPhraseViewController: UIViewController {
 
         header.constrainTopCorners(sidePadding: 0, topPadding: 0)
         header.constrain([
-            header.constraint(.height, constant: 152.0)
-            ])
+            header.constraint(.height, constant: 152.0) ])
         label.constrainBottomCorners(sidePadding: C.padding[3], bottomPadding: C.padding[2])
 
         phraseViews.enumerated().forEach { index, phraseView in
