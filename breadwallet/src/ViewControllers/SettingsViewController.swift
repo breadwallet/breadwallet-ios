@@ -43,10 +43,7 @@ class SettingsViewController : UITableViewController {
         close.tap = { [weak self] in
             self?.dismiss(animated: true, completion: nil)
         }
-        let padding = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        padding.width = -16.0
-
-        navigationItem.leftBarButtonItems = [padding, UIBarButtonItem(customView: close)]
+        navigationItem.leftBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: close)]
     }
 
     override func viewDidAppear(_ animated: Bool) {
