@@ -73,7 +73,7 @@ class ModalPresenter : Subscriber {
         vc.modalPresentationStyle = .overFullScreen
         vc.modalPresentationCapturesStatusBarAppearance = true
         configuration?(vc)
-        presentingViewController?.present(vc, animated: true, completion: {
+        topViewController?.present(vc, animated: true, completion: {
             self.store.perform(action: RootModalActions.Present(modal: .none))
         })
     }
@@ -124,7 +124,7 @@ class ModalPresenter : Subscriber {
         #endif
         vc.startServer()
         vc.preload()
-        presentingViewController?.present(vc, animated: true, completion: {})
+        topViewController?.present(vc, animated: true, completion: {})
     }
 
     private func rootModalViewController(_ type: RootModal) -> UIViewController? {
@@ -207,8 +207,8 @@ class ModalPresenter : Subscriber {
     }
 
     private func presentLoginScan() {
-        guard let parent = presentingViewController else { return }
-        let present = presentScan(parent: parent)
+        guard let top = topViewController else { return }
+        let present = presentScan(parent: top)
         store.perform(action: RootModalActions.Present(modal: .none))
         present({ paymentRequest in
             if paymentRequest != nil {
@@ -222,7 +222,7 @@ class ModalPresenter : Subscriber {
     }
 
     private func presentSettings() {
-        guard let parent = presentingViewController else { return }
+        guard let top = topViewController else { return }
         guard let walletManager = self.walletManager else { return }
 
         let nc = UINavigationController()
@@ -277,7 +277,7 @@ class ModalPresenter : Subscriber {
         nc.navigationBar.shadowImage = UIImage()
         nc.navigationBar.isTranslucent = false
         nc.setBlackBackArrow()
-        parent.present(nc, animated: true, completion: nil)
+        top.present(nc, animated: true, completion: nil)
     }
 
     private func presentScan(parent: UIViewController) -> PresentScan {
@@ -337,6 +337,9 @@ class ModalPresenter : Subscriber {
             let start = StartPaperPhraseViewController(store: myself.store)
             start.addCloseNavigationItem(tintColor: .white)
             start.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
+            let faqButton = UIButton.buildFaqButton(store: myself.store, articleId: ArticleIds.paperPhrase)
+            faqButton.tintColor = .white
+            start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
             start.didTapWrite = {
                 let verify = VerifyPinViewController(callback: { pin, vc in
                     if walletManager.authenticate(pin: pin) {
@@ -379,7 +382,7 @@ class ModalPresenter : Subscriber {
         #endif
         vc.startServer()
         vc.preload()
-        self.presentingViewController?.present(vc, animated: true, completion: nil)
+        self.topViewController?.present(vc, animated: true, completion: nil)
     }
 
     //TODO - This is a total hack to grab the window that keyboard is in
@@ -393,14 +396,12 @@ class ModalPresenter : Subscriber {
         return window
     }
 
-    private var presentingViewController: UIViewController? {
-        if window.rootViewController?.presentedViewController != nil {
-            return window.rootViewController?.presentedViewController
-        } else if window.rootViewController != nil {
-            return window.rootViewController
-        } else {
-            return nil
+    private var topViewController: UIViewController? {
+        var viewController = window.rootViewController
+        while viewController?.presentedViewController != nil {
+            viewController = viewController?.presentedViewController
         }
+        return viewController
     }
 }
 
