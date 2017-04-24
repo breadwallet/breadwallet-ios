@@ -140,6 +140,7 @@ extension TransactionDetailsViewController {
             self?.dismiss(animated: true, completion: nil)
         }
         transactionDetailCell.kvStore = kvStore
+        transactionDetailCell.store = store
         return transactionDetailCell
     }
 }

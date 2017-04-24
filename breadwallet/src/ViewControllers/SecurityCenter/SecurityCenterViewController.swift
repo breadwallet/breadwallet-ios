@@ -32,7 +32,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     init(store: Store, walletManager: WalletManager) {
         self.store = store
         self.walletManager = walletManager
-        self.header = ModalHeaderView(title: S.SecurityCenter.title, style: .light, store: store, faqArticleId: ArticleIds.securityCenter)
+        self.header = ModalHeaderView(title: S.SecurityCenter.title, style: .light, faqInfo: (store, ArticleIds.securityCenter))
         super.init(nibName: nil, bundle: nil)
     }
 
