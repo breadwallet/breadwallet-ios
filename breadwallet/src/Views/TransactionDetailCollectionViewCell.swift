@@ -39,10 +39,17 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     var kvStore: BRReplicatedKVStore?
     var transaction: Transaction?
     var rate: Rate?
+    var store: Store? {
+        didSet {
+            if oldValue == nil {
+                guard let store = store else { return }
+                header.faqInfo = (store, ArticleIds.transactionDetails)
+            }
+        }
+    }
 
     //MARK: - Private
-    //TODO - this will need to get the real store somehow
-    private let header = ModalHeaderView(title: S.TransactionDetails.title, style: .dark, store: Store(), faqArticleId: ArticleIds.transactionDetails)
+    private let header = ModalHeaderView(title: S.TransactionDetails.title, style: .dark)
     private let timestamp = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let amount = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let address = UILabel(font: .customBold(size: 14.0), color: .darkText)
