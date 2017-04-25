@@ -18,12 +18,12 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
 
     func set(transaction: Transaction, currency: Currency, rate: Rate) {
         timestamp.text = transaction.longTimestamp
-        amount.text = "\(transaction.direction.rawValue) \(transaction.amountDescription(currency: currency, rate: rate))"
+        amount.text = "\(transaction.direction.string.capitalized) \(transaction.amountDescription(currency: currency, rate: rate))"
         address.text = "\(transaction.direction.preposition) an address"
         status.text = transaction.longStatus
         comment.text = transaction.comment
         amountDetails.text = transaction.amountDetails(currency: currency, rate: rate)
-        addressHeader.text = "To" //Should this be from sometimes?
+        addressHeader.text = S.TransactionDirection.to.capitalized //Should this be from sometimes?
         fullAddress.text = transaction.toAddress ?? ""
         txHash.text = transaction.hash
         self.transaction = transaction

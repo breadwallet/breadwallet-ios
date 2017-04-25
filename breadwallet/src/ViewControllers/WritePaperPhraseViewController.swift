@@ -33,7 +33,7 @@ class WritePaperPhraseViewController: UIViewController {
     }
     private var currentPhraseIndex = 0 {
         didSet {
-            stepLabel.text = "\(currentPhraseIndex + 1) of \(phraseViews.count)"
+            stepLabel.text = String(format: S.WritePaperPhrase.step, currentPhraseIndex + 1, phraseViews.count)
         }
     }
 
@@ -49,11 +49,11 @@ class WritePaperPhraseViewController: UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = .white
         
-        label.text = "Write down each word on a piece of paper and store it in a safe place."
+        label.text = S.WritePaperPhrase.instruction
         label.textAlignment = .center
         label.textColor = .white
 
-        stepLabel.text = "1 of \(phraseViews.count)"
+        stepLabel.text = String(format: S.WritePaperPhrase.step, 1, phraseViews.count)
         stepLabel.textAlignment = .center
         stepLabel.textColor = UIColor(white: 170.0/255.0, alpha: 1.0)
 
