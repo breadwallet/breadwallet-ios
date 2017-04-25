@@ -25,14 +25,14 @@ class ClearNumberPad : GenericPinPadCell {
         sublabel.textColor = .white
 
         if isHighlighted {
-            backgroundColor = UIColor(white: 0.0, alpha: 0.3)
+            backgroundColor = .transparentBlack
         } else {
             if text == "" || text == deleteKeyIdentifier {
                 backgroundColor = .clear
                 imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
                 imageView.tintColor = .white
             } else {
-                backgroundColor = UIColor(white: 1.0, alpha: 0.3)
+                backgroundColor = .transparentWhite
             }
         }
     }

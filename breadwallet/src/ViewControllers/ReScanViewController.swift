@@ -83,7 +83,7 @@ class ReScanViewController : UIViewController {
 
     private func showSyncView() {
         guard let window = UIApplication.shared.keyWindow else { return }
-        let mask = UIView(color: UIColor(white: 0.0, alpha: 0.3))
+        let mask = UIView(color: .transparentBlack)
         mask.alpha = 0.0
         window.addSubview(mask)
         mask.constrain(toSuperviewEdges: nil)

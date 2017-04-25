@@ -9,9 +9,9 @@
 import UIKit
 
 struct CurrencyOverlay {
-    let top = UIView(color: UIColor(white: 0.0, alpha: 0.3))
-    let middle = UIView(color: UIColor(white: 0.0, alpha: 0.3))
-    let bottom = UIView(color: UIColor(white: 0.0, alpha: 0.3))
+    let top = UIView(color: .transparentBlack)
+    let middle = UIView(color: .transparentBlack)
+    let bottom = UIView(color: .transparentBlack)
     let blocker = UIView()
 
     var alpha: CGFloat = 0.0 {
