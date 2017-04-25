@@ -279,7 +279,7 @@ class LoginViewController : UIViewController {
                 let unlockInterval = disabledUntil - Date.timeIntervalSinceReferenceDate
                 let df = DateFormatter()
                 df.dateFormat = unlockInterval > C.secondsInDay ? "h:mm a 'on' MMM d, yyy" : "h:mm a"
-                subheader.text = "Disabled until: \(df.string(from: disabledUntilDate))"
+                subheader.text = String(format: S.LoginScreen.disabled, df.string(from: disabledUntilDate))
                 pinPad.view.isUserInteractionEnabled = false
                 unlockTimer?.invalidate()
                 unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)

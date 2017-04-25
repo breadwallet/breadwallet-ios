@@ -84,7 +84,7 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
             df.dateFormat = "MMMM 3, yyyy"
             body.text = "\(S.ManageWallet.description)\n\n\(S.ManageWallet.creationDatePrefix) \(df.string(from: creationDate))"
         } else {
-            body.text = "\(S.ManageWallet.description)"
+            body.text = S.ManageWallet.description
         }
     }
 

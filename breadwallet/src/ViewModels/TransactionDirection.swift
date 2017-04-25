@@ -12,12 +12,21 @@ enum TransactionDirection : String {
     case sent = "Sent"
     case received = "Received"
 
+    var string: String {
+        switch self {
+        case .sent:
+            return S.TransactionDirection.sent
+        case .received:
+            return S.TransactionDirection.received
+        }
+    }
+
     var preposition: String {
         switch self {
         case .sent:
-            return "to"
+            return S.TransactionDirection.to
         case .received:
-            return "from"
+            return S.TransactionDirection.from
         }
     }
 
