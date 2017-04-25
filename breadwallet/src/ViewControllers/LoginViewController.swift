@@ -55,7 +55,7 @@ class LoginViewController : UIViewController {
         return button
     }()
     private let header = UILabel(font: .systemFont(ofSize: 40.0))
-    private let subheader = UILabel(font: .customBody(size: 16.0))
+    private let subheader = UILabel(font: .customBody(size: 16.0), color: .darkText)
     private var pinPadPottom: NSLayoutConstraint?
     private var topControlTop: NSLayoutConstraint?
     private var unlockTimer: Timer?
@@ -77,6 +77,7 @@ class LoginViewController : UIViewController {
         return view
     }()
     private var hasAttemptedToShowTouchId = false
+    private let lockedOverlay = UIVisualEffectView()
 
     override func viewDidLoad() {
         addSubviews()
@@ -282,9 +283,23 @@ class LoginViewController : UIViewController {
                 pinPad.view.isUserInteractionEnabled = false
                 unlockTimer?.invalidate()
                 unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)
+                if lockedOverlay.superview == nil {
+                    view.addSubview(lockedOverlay)
+                    lockedOverlay.constrain(toSuperviewEdges: nil)
+                    view.bringSubview(toFront: subheader)
+                    UIView.animate(withDuration: C.animationDuration, animations: {
+                        self.lockedOverlay.effect = UIBlurEffect(style: .light)
+                    })
+                }
             } else {
                 subheader.text = S.LoginScreen.subheader
                 pinPad.view.isUserInteractionEnabled = true
+                UIView.animate(withDuration: C.animationDuration, animations: {
+                    self.lockedOverlay.effect = nil
+                }, completion: { _ in
+                    self.lockedOverlay.removeFromSuperview()
+                })
+
             }
         }
     }
@@ -293,6 +308,11 @@ class LoginViewController : UIViewController {
         subheader.pushNewText(S.LoginScreen.subheader)
         pinPad.view.isUserInteractionEnabled = true
         unlockTimer = nil
+        UIView.animate(withDuration: C.animationDuration, animations: {
+            self.lockedOverlay.effect = nil
+        }, completion: { _ in
+            self.lockedOverlay.removeFromSuperview()
+        })
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

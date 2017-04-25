@@ -99,4 +99,12 @@ extension UIColor {
     static var whiteTint: UIColor {
         return UIColor(red: 245.0/255.0, green: 247.0/255.0, blue: 250.0/255.0, alpha: 1.0)
     }
+
+    static var transparentWhite: UIColor {
+        return UIColor(white: 1.0, alpha: 0.3)
+    }
+
+    static var transparentBlack: UIColor {
+        return UIColor(white: 0.0, alpha: 0.3)
+    }
 }
