@@ -96,6 +96,7 @@ enum S {
         static let emptyMessage = NSLocalizedString("Your transactions will appear here.", comment: "Empty transaction list message.")
         static let more = NSLocalizedString("More...", comment: "More button title")
         static let txHashHeader = NSLocalizedString("Transaction Hash", comment: "Transaction hash header")
+        static let addressFormat = NSLocalizedString("%@ an address", comment: "Will read 'for and address' or 'to and address'")
     }
 
     enum SecurityCenter {
@@ -247,6 +248,7 @@ enum S {
         static let from = NSLocalizedString("from", comment: "Usage: received transaction from")
         static let sent = NSLocalizedString("sent", comment: "Usage: sent transaction")
         static let received = NSLocalizedString("received", comment: "Usage: received transaction")
+        static let address = NSLocalizedString("Address", comment: "")
     }
 
     enum RequestAnAmount {

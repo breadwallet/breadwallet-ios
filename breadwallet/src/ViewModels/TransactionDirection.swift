@@ -38,4 +38,13 @@ enum TransactionDirection : String {
             return ""
         }
     }
+
+    var addressHeader: String {
+        switch self {
+        case .sent:
+            return S.TransactionDirection.to
+        case .received:
+            return S.TransactionDirection.address
+        }
+    }
 }
