@@ -114,13 +114,14 @@ class ModalPresenter : Subscriber {
         })
     }
 
-    private func presentFaq(articleId: String) {
+    private func presentFaq(articleId: String? = nil) {
         guard let walletManager = walletManager else { return }
+        let mountPoint = articleId == nil ? "/support" : "/support/id=\(articleId!)"
         let vc: BRWebViewController
         #if Debug || Testflight
-            vc = BRWebViewController(bundleName: "bread-support-staging", mountPoint: "/?id=\(articleId)", walletManager: walletManager)
+            vc = BRWebViewController(bundleName: "bread-support-staging", mountPoint: mountPoint, walletManager: walletManager)
         #else
-            vc = BRWebViewController(bundleName: "bread-support", mountPoint: "/?id=\(articleId)", walletManager: walletManager)
+            vc = BRWebViewController(bundleName: "bread-support", mountPoint: mountPoint, walletManager: walletManager)
         #endif
         vc.startServer()
         vc.preload()
@@ -187,6 +188,11 @@ class ModalPresenter : Subscriber {
             menu?.dismiss(animated: true) {
                 self?.presentSecurityCenter()
             }
+        }
+        menu.didTapSupport = { [weak self, weak menu] in
+            menu?.dismiss(animated: true, completion: {
+                self?.presentFaq()
+            })
         }
         menu.didTapLock = { [weak self, weak menu] in
             menu?.dismiss(animated: true) {
