@@ -78,6 +78,7 @@ enum S {
         static let header = NSLocalizedString("bread", comment: "Login Screen header")
         static let subheader = NSLocalizedString("Enter Pin", comment: "Login Screen sub-header")
         static let unlocked = NSLocalizedString("Wallet Unlocked", comment: "Wallet unlocked message")
+        static let disabled = NSLocalizedString("Disabled until: %@", comment: "Disabled until date")
     }
 
     enum Transaction {
@@ -233,6 +234,22 @@ enum S {
         static let body = NSLocalizedString("Protect your wallet against theft and ensure you can recover your wallet after replacing your phone or updating its software. ", comment: "Paper key explanation text.")
         static let buttonTitle = NSLocalizedString("Write Down Paper Key", comment: "button label")
         static let againButtonTitle = NSLocalizedString("Write Down Paper Key Again", comment: "button label")
-        static let datePrefix = NSLocalizedString("You last wrote down your paper key on", comment: "Date prefix")
+        static let date = NSLocalizedString("You last wrote down your paper key on %@", comment: "Argument is date")
+    }
+
+    enum WritePaperPhrase {
+        static let instruction = NSLocalizedString("Write down each word on a piece of paper and store it in a safe place.", comment: "")
+        static let step = NSLocalizedString("%d of %d", comment: "Eg. 1 of 3")
+    }
+
+    enum TransactionDirection {
+        static let to = NSLocalizedString("to", comment: "Usage: sent transaction to")
+        static let from = NSLocalizedString("from", comment: "Usage: received transaction from")
+        static let sent = NSLocalizedString("sent", comment: "Usage: sent transaction")
+        static let received = NSLocalizedString("received", comment: "Usage: received transaction")
+    }
+
+    enum RequestAnAmount {
+        static let title = NSLocalizedString("Request an Amount", comment: "")
     }
 }

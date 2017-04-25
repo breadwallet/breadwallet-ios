@@ -56,7 +56,7 @@ class Transaction {
 
     func descriptionString(currency: Currency, rate: Rate) -> NSAttributedString {
         let amount = Amount(amount: satoshis, rate: rate.rate)
-        let prefix = NSMutableAttributedString(string: "\(direction.rawValue) ", attributes: UIFont.regularAttributes)
+        let prefix = NSMutableAttributedString(string: "\(direction.string.capitalized) ", attributes: UIFont.regularAttributes)
         let amountAttributedString = NSMutableAttributedString(string: amount.string(forCurrency: currency), attributes: UIFont.boldAttributes)
         let preposition = NSMutableAttributedString(string: " \(direction.preposition) ", attributes: UIFont.regularAttributes)
         let suffix = NSMutableAttributedString(string: "account", attributes: UIFont.boldAttributes)
