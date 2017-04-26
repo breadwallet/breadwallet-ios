@@ -60,6 +60,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private var balance: UInt64 = 0
     private var rate: Rate?
     private let currencySlider: CurrencySlider
+    private var satoshis: UInt64 = 0 {
+        didSet {
+            setAmountLabel()
+            setBalanceText()
+        }
+    }
+    private var minimumFractionDigits = 0
+    private var hasTrailingDecimal = false
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -137,9 +145,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         
         addButtonActions()
 
-        currencySlider.didSelectCurrency = { [weak self] currency in
+        currencySlider.didSelectCurrency = { [weak self] rate in
             //TODO add real currency logic here
-            self?.currency.title = "\(currency.substring(to: currency.index(currency.startIndex, offsetBy: 3))) \u{25BC}"
+            self?.currency.title = "\(rate.code) (\(rate.currencySymbol))"
+            //self?.currency.title = "\(currency.substring(to: currency.index(currency.startIndex, offsetBy: 3))) \u{25BC}"
+
+
+
         }
         currencySwitcher.contentView = currencySlider
 
@@ -182,62 +194,72 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         //TODO - send multiple currencies
         amount.textFieldDidChange = { [weak self] text in
             guard let myself = self else { return }
-            guard let rate = myself.rate else { return }
-            let balanceAmount = Amount(amount: myself.balance, rate: rate.rate)
-
-            //Set amount label
-            let formatter = myself.bitsFormatter
-            if let value = Double(text) {
-
-                let numberFormatter = NumberFormatter()
-                if let decimalLocation = text.range(of: numberFormatter.currencyDecimalSeparator)?.upperBound {
-                    let locationValue = text.distance(from: text.endIndex, to: decimalLocation)
-                    if locationValue == -2 {
-                        formatter.minimumFractionDigits = 2
-                    } else if locationValue == -1 {
-                        formatter.minimumFractionDigits = 1
-                    }
+            myself.minimumFractionDigits = 0 //set default
+            if let decimalLocation = text.range(of: NumberFormatter().currencyDecimalSeparator)?.upperBound {
+                let locationValue = text.distance(from: text.endIndex, to: decimalLocation)
+                if locationValue == -2 {
+                    myself.minimumFractionDigits = 2
+                } else if locationValue == -1 {
+                    myself.minimumFractionDigits = 1
                 }
-
-                var output = formatter.string(from: value as NSNumber)
-
-                //If trailing decimal, append the decimal to the output
-                if let decimalLocation = text.range(of: numberFormatter.currencyDecimalSeparator)?.upperBound {
-                    if text.endIndex == decimalLocation {
-                        output = output?.appending(".")
-                    }
-                }
-
-                myself.amount.setAmountLabel(text: output!)
-            } else {
-                myself.amount.setAmountLabel(text: "")
             }
 
-            //Set balance text
-            var data: (String, UIColor) = ("Balance: \(balanceAmount.bits)", .grayTextTint)
-            if let value = Double(text) {
-
-                let fee = myself.sender.feeForTx(amount: UInt64(value * 100.0))
-                let feeString = ", Fee: \(formatter.string(from: fee/100 as NSNumber)!)"
-
-                if Int(value * 100.0) > Int(myself.balance) {
-                    data = ("Balance: \(balanceAmount.bits)\(feeString)", .red)
-                    myself.send.isEnabled = false
-                } else {
-                    data = ("Balance: \(balanceAmount.bits)\(feeString)", .grayTextTint)
-                    myself.send.isEnabled = true
+            //If trailing decimal, append the decimal to the output
+            myself.hasTrailingDecimal = false //set default
+            if let decimalLocation = text.range(of: NumberFormatter().currencyDecimalSeparator)?.upperBound {
+                if text.endIndex == decimalLocation {
+                    myself.hasTrailingDecimal = true
                 }
-
-                myself.amount.setLabel(text: data.0, color: data.1)
-            } else {
-                myself.amount.setLabel(text: "Balance: \(balanceAmount.bits)", color: .grayTextTint)
             }
 
+            //Satoshis amount should be the last thing to be set here
+            //b/c it triggers a UI update
+            if let value = Double(text) {
+                myself.satoshis = UInt64((value * 100.0).rounded(.toNearestOrEven))
+            } else {
+                myself.satoshis = 0
+            }
         }
         descriptionCell.textFieldDidReturn = { textField in
             textField.resignFirstResponder()
         }
         send.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
+    }
+
+    private func setAmountLabel() {
+        //Set amount label
+        let formatter = bitsFormatter
+        if satoshis > 0 {
+            formatter.minimumFractionDigits = minimumFractionDigits
+            var output = formatter.string(from: Double(satoshis)/100.0 as NSNumber)
+            if hasTrailingDecimal {
+                output = output?.appending(".")
+            }
+            amount.setAmountLabel(text: output!)
+        } else {
+            amount.setAmountLabel(text: "")
+        }
+    }
+
+    private func setBalanceText() {
+        guard let rate = self.rate else { return }
+        let balanceAmount = Amount(amount: balance, rate: rate.rate)
+        let formatter = bitsFormatter
+        var data: (String, UIColor)
+        if satoshis > 0 {
+            let fee = sender.feeForTx(amount: satoshis)
+            let feeString = ", Fee: \(formatter.string(from: fee/100 as NSNumber)!)"
+            if satoshis > (balance - fee) {
+                data = ("Balance: \(balanceAmount.bits)\(feeString)", .red)
+                send.isEnabled = false
+            } else {
+                data = ("Balance: \(balanceAmount.bits)\(feeString)", .grayTextTint)
+                send.isEnabled = true
+            }
+        } else {
+            data = ("Balance: \(balanceAmount.bits)", .grayTextTint)
+        }
+        amount.setLabel(text: data.0, color: data.1)
     }
 
     private var bitsFormatter: NumberFormatter {
