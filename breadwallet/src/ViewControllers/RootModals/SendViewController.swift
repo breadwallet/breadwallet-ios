@@ -29,6 +29,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         self.store = store
         self.sender = sender
         self.initialAddress = initialAddress
+        self.currencySlider = CurrencySlider(rates: store.state.rates)
+        
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -57,6 +59,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private var currencyOverlay = CurrencyOverlay()
     private var balance: UInt64 = 0
     private var rate: Rate?
+    private let currencySlider: CurrencySlider
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -134,7 +137,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         
         addButtonActions()
 
-        let currencySlider = CurrencySlider()
         currencySlider.didSelectCurrency = { [weak self] currency in
             //TODO add real currency logic here
             self?.currency.title = "\(currency.substring(to: currency.index(currency.startIndex, offsetBy: 3))) \u{25BC}"
