@@ -117,7 +117,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         let rate = rates[indexPath.row]
-        cell.textLabel?.text = "\(rate.code) (\(rate.locale.currencySymbol!))"
+        cell.textLabel?.text = "\(rate.code) (\(rate.currencySymbol))"
 
         if rate.code == defaultCurrency {
             let check = UIImageView(image: #imageLiteral(resourceName: "CircleCheck").withRenderingMode(.alwaysTemplate))
