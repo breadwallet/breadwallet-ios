@@ -8,18 +8,19 @@
 
 import UIKit
 
-private let buttonSize = CGSize(width: 64.0, height: 32.0)
+private let buttonSize = CGSize(width: 80.0, height: 32.0)
 
 class CurrencySlider : UIView {
 
-    init() {
+    init(rates: [Rate]) {
+        self.rates = rates
         super.init(frame: .zero)
         setupViews()
     }
 
     var didSelectCurrency: ((String) -> Void)?
 
-    private let currencies = ["BTC (\(S.Symbols.bits))", "USD ($)", "EUR (€)", "GBP (£)", "AUD ($)"]
+    private let rates: [Rate]
     private var buttons = [ShadowButton]()
 
     private func setupViews() {
@@ -28,12 +29,14 @@ class CurrencySlider : UIView {
         scrollView.constrain(toSuperviewEdges: nil)
 
         var previous: ShadowButton?
-        currencies.forEach {
-            let button = ShadowButton(title: $0, type: .tertiary)
+        rates.forEach { rate in
+            let button = ShadowButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
             button.addTarget(self, action: #selector(CurrencySlider.tapped(sender:)), for: .touchUpInside)
             button.isToggleable = true
             buttons.append(button)
-            if $0 == "BTC (\(S.Symbols.bits))" {
+
+
+            if rate.currencySymbol == "BTC" {
                 button.isSelected = true
             }
             scrollView.addSubview(button)
@@ -46,7 +49,7 @@ class CurrencySlider : UIView {
             }
 
             var trailingConstraint: NSLayoutConstraint?
-            if currencies.last == $0 {
+            if rates.last == rate {
                 trailingConstraint = button.constraint(.trailing, toView: scrollView, constant: -C.padding[1])
             }
             button.constrain([
