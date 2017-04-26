@@ -18,6 +18,7 @@ struct State {
     let walletState: WalletState
     let currency: Currency
     let currentRate: Rate?
+    let rates: [Rate]
     let alert: AlertType?
     let isTouchIdEnabled: Bool
     let defaultCurrency: String
@@ -34,6 +35,7 @@ extension State {
                         walletState: WalletState.initial,
                         currency: .bitcoin,
                         currentRate: nil,
+                        rates: [],
                         alert: nil,
                         isTouchIdEnabled: UserDefaults.isTouchIdEnabled,
                         defaultCurrency: UserDefaults.defaultCurrency)
