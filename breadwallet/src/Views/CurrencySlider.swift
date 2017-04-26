@@ -18,7 +18,7 @@ class CurrencySlider : UIView {
         setupViews()
     }
 
-    var didSelectCurrency: ((String) -> Void)?
+    var didSelectCurrency: ((Rate) -> Void)?
 
     private let rates: [Rate]
     private var buttons = [ShadowButton]()
@@ -31,10 +31,8 @@ class CurrencySlider : UIView {
         var previous: ShadowButton?
         rates.forEach { rate in
             let button = ShadowButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
-            button.addTarget(self, action: #selector(CurrencySlider.tapped(sender:)), for: .touchUpInside)
             button.isToggleable = true
             buttons.append(button)
-
 
             if rate.currencySymbol == "BTC" {
                 button.isSelected = true
@@ -60,22 +58,23 @@ class CurrencySlider : UIView {
                 trailingConstraint ])
 
             previous = button
-        }
-    }
 
-    @objc private func tapped(sender: ShadowButton) {
-        //Disable unselecting a selected button
-        //because we have to have at least one currency selected
-        if !sender.isSelected {
-            sender.isSelected = true
-            return
-        }
-        buttons.forEach {
-            if sender != $0 {
-                $0.isSelected = false
+
+            button.tap = {
+                //Disable unselecting a selected button
+                //because we have to have at least one currency selected
+                if !button.isSelected {
+                    button.isSelected = true
+                    return
+                }
+                self.buttons.forEach {
+                    if button != $0 {
+                        $0.isSelected = false
+                    }
+                }
+                self.didSelectCurrency?(rate)
             }
         }
-        didSelectCurrency?(sender.title)
     }
 
     required init?(coder aDecoder: NSCoder) {
