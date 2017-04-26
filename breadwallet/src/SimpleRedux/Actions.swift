@@ -26,6 +26,7 @@ struct HideStartFlow : Action {
                      walletState: state.walletState,
                      currency: state.currency,
                      currentRate: state.currentRate,
+                     rates: state.rates,
                      alert: state.alert,
                      isTouchIdEnabled: state.isTouchIdEnabled,
                      defaultCurrency: state.defaultCurrency)
@@ -205,10 +206,10 @@ enum CurrencyChange {
 
 //MARK: - Exchange Rates
 enum ExchangeRates {
-    struct setRate : Action {
+    struct setRates : Action {
         let reduce: Reducer
-        init(_ rate: Rate) {
-            reduce = { $0.clone(currentRate: rate) }
+        init(currentRate: Rate, rates: [Rate] ) {
+            reduce = { $0.clone(currentRate: currentRate, rates: rates) }
         }
     }
 }
@@ -258,6 +259,7 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -272,6 +274,7 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -287,6 +290,7 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -301,6 +305,7 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -315,6 +320,7 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -329,6 +335,7 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -343,6 +350,7 @@ extension State {
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: timestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -357,6 +365,7 @@ extension State {
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -371,6 +380,7 @@ extension State {
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -385,6 +395,7 @@ extension State {
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -399,6 +410,7 @@ extension State {
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletName, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -413,6 +425,7 @@ extension State {
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletSyncingErrorMessage, creationDate: walletState.creationDate),
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -427,6 +440,7 @@ extension State {
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletCreationDate),
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -441,6 +455,7 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -455,11 +470,12 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
     }
-    func clone(currentRate: Rate) -> State {
+    func clone(currentRate: Rate, rates: [Rate]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      pinCreationStep: pinCreationStep,
@@ -469,6 +485,7 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -483,6 +500,7 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -497,6 +515,7 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
@@ -511,6 +530,7 @@ extension State {
                      walletState: walletState,
                      currency: currency,
                      currentRate: currentRate,
+                     rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
