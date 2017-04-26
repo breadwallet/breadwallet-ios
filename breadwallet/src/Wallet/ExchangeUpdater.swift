@@ -20,7 +20,7 @@ class ExchangeUpdater {
         apiClient.exchangeRates { rates, error in
             guard let currencyCode = Locale.current.currencyCode else { completion(); return }
             guard let currentRate = rates.first( where: { $0.code == currencyCode }) else { completion(); return }
-            self.store.perform(action: ExchangeRates.setRate(currentRate))
+            self.store.perform(action: ExchangeRates.setRates(currentRate: currentRate, rates: rates))
             completion()
         }
     }
