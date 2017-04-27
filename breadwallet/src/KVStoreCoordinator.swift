@@ -15,13 +15,15 @@ class KVStoreCoordinator : Subscriber {
         self.kvStore = kvStore
     }
 
-    func retreiveStoredWalletName() {
-        guard !hasRetreivedInitialWalletName else { return }
+    func retreiveStoredWalletInfo() {
+        guard !hasRetreivedInitialWalletInfo else { return }
         if let walletInfo = WalletInfo(kvStore: kvStore) {
             store.perform(action: WalletChange.setWalletName(walletInfo.name))
             store.perform(action: WalletChange.setWalletCreationDate(walletInfo.creationDate))
+        } else {
+            print("no wallet info found")
         }
-        hasRetreivedInitialWalletName = true
+        hasRetreivedInitialWalletInfo = true
     }
 
     func listenForWalletChanges() {
@@ -61,5 +63,5 @@ class KVStoreCoordinator : Subscriber {
 
     private let store: Store
     private let kvStore: BRReplicatedKVStore
-    private var hasRetreivedInitialWalletName = false
+    private var hasRetreivedInitialWalletInfo = false
 }
