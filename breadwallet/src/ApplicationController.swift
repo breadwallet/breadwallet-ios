@@ -48,7 +48,6 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         window.makeKeyAndVisible()
         startEventManager()
         updateAssetBundles()
-        self.apiClient?.updateFeatureFlags()
         listenForPushNotificationRequest()
     }
 
@@ -63,20 +62,17 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         }
         exchangeUpdater?.refresh(completion: {})
         feeUpdater?.refresh()
-        if let kvStore = apiClient?.kv {
-            kvStore.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
-        }
-        self.apiClient?.updateFeatureFlags()
+        apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
+        apiClient?.updateFeatureFlags()
     }
 
     func didEnterBackground() {
         //Save the backgrounding time if the user is logged in
+        //TODO - fix this
         if !store.state.isLoginRequired {
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
         }
-        if let kvStore = apiClient?.kv {
-            kvStore.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
-        }
+        apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
     }
 
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -115,20 +111,17 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                 addWalletCreationListener()
                 store.perform(action: ShowStartFlow())
             } else {
-                initKVStoreCoordinator()
                 modalPresenter?.walletManager = walletManager
                 DispatchQueue.walletQueue.async {
                     walletManager.peerManager?.connect()
                 }
                 feeUpdater?.updateWalletFees()
+                apiClient?.updateFeatureFlags()
+                initKVStoreCoordinator()
             }
             exchangeUpdater?.refresh(completion: {})
             feeUpdater?.refresh()
-            if let kvStore = apiClient?.kv {
-                kvStore.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
-            }
             updateAssetBundles()
-            self.apiClient?.updateFeatureFlags()
         }
     }
 
@@ -204,10 +197,13 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private func initKVStoreCoordinator() {
         guard let kvStore = apiClient?.kv else { return }
         guard kvStoreCoordinator == nil else { return }
-        walletCoordinator?.kvStore = kvStore
-        kvStoreCoordinator = KVStoreCoordinator(store: store, kvStore: kvStore)
-        kvStoreCoordinator?.retreiveStoredWalletName()
-        kvStoreCoordinator?.listenForWalletChanges()
+        kvStore.syncAllKeys { error in
+            print("KV finished syncing. err: \(String(describing: error))")
+            self.walletCoordinator?.kvStore = kvStore
+            self.kvStoreCoordinator = KVStoreCoordinator(store: self.store, kvStore: kvStore)
+            self.kvStoreCoordinator?.retreiveStoredWalletInfo()
+            self.kvStoreCoordinator?.listenForWalletChanges()
+        }
     }
 }
 
