@@ -68,6 +68,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
     private var minimumFractionDigits = 0
     private var hasTrailingDecimal = false
+    private var selectedRate: Rate? {
+        didSet {
+            setAmountLabel()
+            setBalanceText()
+        }
+    }
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -150,6 +156,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             self?.currency.title = "\(rate.code) (\(rate.currencySymbol))"
             //self?.currency.title = "\(currency.substring(to: currency.index(currency.startIndex, offsetBy: 3))) \u{25BC}"
 
+            self?.selectedRate = rate
 
 
         }
@@ -227,18 +234,27 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     private func setAmountLabel() {
-        //Set amount label
-        let formatter = bitsFormatter
+        var formatter: NumberFormatter
+        var output = ""
+        if let selectedRate = selectedRate {
+            formatter = NumberFormatter()
+            formatter.locale = selectedRate.locale
+            let amount = (Double(satoshis)/Double(C.satoshis))*selectedRate.rate
+            output = formatter.string(from: amount as NSNumber) ?? "error"
+        } else {
+            formatter = bitsFormatter
+            output = formatter.string(from: Double(satoshis)/100.0 as NSNumber) ?? "error"
+        }
+
         if satoshis > 0 {
             formatter.minimumFractionDigits = minimumFractionDigits
-            var output = formatter.string(from: Double(satoshis)/100.0 as NSNumber)
+
             if hasTrailingDecimal {
-                output = output?.appending(".")
+                output = output.appending(".")
             }
-            amount.setAmountLabel(text: output!)
-        } else {
-            amount.setAmountLabel(text: "")
         }
+
+        amount.setAmountLabel(text: output)
     }
 
     private func setBalanceText() {
