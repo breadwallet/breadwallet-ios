@@ -81,7 +81,7 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
         let creationDate = store.state.walletState.creationDate
         if creationDate.timeIntervalSinceReferenceDate > 0 {
             let df = DateFormatter()
-            df.dateFormat = "MMMM 3, yyyy"
+            df.dateFormat = "MMMM d, yyyy"
             body.text = "\(S.ManageWallet.description)\n\n\(S.ManageWallet.creationDatePrefix) \(df.string(from: creationDate))"
         } else {
             body.text = S.ManageWallet.description
