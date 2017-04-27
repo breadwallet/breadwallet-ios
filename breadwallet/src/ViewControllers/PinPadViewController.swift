@@ -34,6 +34,8 @@ class PinPadViewController : UICollectionViewController {
         }
     }
 
+    var currentOutput = ""
+
     func clear() {
         isAppendingDisabled = false
         currentOutput = ""
@@ -64,7 +66,6 @@ class PinPadViewController : UICollectionViewController {
     private let style: PinPadStyle
     private let keyboardType: KeyboardType
     private let items: [String]
-    private var currentOutput = ""
 
     override func viewDidLoad() {
         switch style {
