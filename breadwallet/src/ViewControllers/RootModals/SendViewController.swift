@@ -72,6 +72,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         didSet {
             setAmountLabel()
             setBalanceText()
+
+            //Update pinpad content to match currency change
+            let currentOutput = amount.content ?? ""
+            var set = CharacterSet.decimalDigits
+            set.formUnion(CharacterSet(charactersIn: "."))
+            pinPad.currentOutput = String(String.UnicodeScalarView(currentOutput.unicodeScalars.filter { set.contains($0) }))
         }
     }
 
@@ -152,13 +158,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         addButtonActions()
 
         currencySlider.didSelectCurrency = { [weak self] rate in
-            //TODO add real currency logic here
+            if rate.code == "BTC" {
+                self?.selectedRate = nil
+            } else {
+                self?.selectedRate = rate
+            }
             self?.currency.title = "\(rate.code) (\(rate.currencySymbol))"
-            //self?.currency.title = "\(currency.substring(to: currency.index(currency.startIndex, offsetBy: 3))) \u{25BC}"
-
-            self?.selectedRate = rate
-
-
+            self?.currencySwitchTapped() //collapse currency view
         }
         currencySwitcher.contentView = currencySlider
 
@@ -239,6 +245,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         if let selectedRate = selectedRate {
             formatter = NumberFormatter()
             formatter.locale = selectedRate.locale
+            formatter.numberStyle = .currency
             let amount = (Double(satoshis)/Double(C.satoshis))*selectedRate.rate
             output = formatter.string(from: amount as NSNumber) ?? "error"
         } else {
@@ -253,7 +260,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                 output = output.appending(".")
             }
         }
-
         amount.setAmountLabel(text: output)
     }
 
@@ -367,10 +373,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     @objc private func sendTapped() {
-        guard let text = amount.textField.text else { return }
-        guard let amount = UInt64(text) else { return }
         guard let address = to.content else { return }
-        sender.createTransaction(amount: amount*100, to: address)
+        sender.createTransaction(amount: satoshis, to: address)
         sender.send(verifyPin: { pinValidationCallback in
                         presentVerifyPin? { [weak self] pin, vc in
                             if pinValidationCallback(pin) {
