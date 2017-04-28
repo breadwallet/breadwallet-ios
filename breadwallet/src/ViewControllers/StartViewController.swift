@@ -20,8 +20,8 @@ class StartViewController : UIViewController {
     //MARK: - Private
     private let circle = GradientCircle()
     private let brand = UILabel()
-    private let create = ShadowButton(title: NSLocalizedString("Create New Wallet", comment: "button label"), type: .primary)
-    private let recover = ShadowButton(title: NSLocalizedString("Recover Wallet", comment: "button label"), type: .secondary)
+    private let create = ShadowButton(title: S.StartViewController.createButton, type: .primary)
+    private let recover = ShadowButton(title: S.StartViewController.recoverButton, type: .secondary)
     private let store: Store
     private let didTapRecover: () -> Void
 

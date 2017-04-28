@@ -17,26 +17,26 @@ enum AlertType {
     var header: String {
         switch self {
         case .pinSet:
-            return NSLocalizedString("PIN Set", comment: "Alert Header label")
+            return S.Alerts.pinSet
         case .paperKeySet:
-            return NSLocalizedString("Paper Key Set", comment: "Alert Header Label")
+            return S.Alerts.paperKeySet
         case .sendSuccess:
-            return NSLocalizedString("Send Confirmation", comment: "Send success alert header label")
+            return S.Alerts.sendSuccess
         case .sendFailure:
-            return NSLocalizedString("Send failed", comment: "Send failure alert header label")
+            return S.Alerts.sendFailure
         }
     }
 
     var subheader: String {
         switch self {
         case .pinSet:
-            return NSLocalizedString("Use your PIN to login and send money.", comment: "Alert Subheader label")
+            return S.Alerts.pinSetSubheader
         case .paperKeySet:
-            return NSLocalizedString("Awesome!", comment: "Alert Subheader label")
+            return S.Alerts.paperKeySetSubheader
         case .sendSuccess:
-            return NSLocalizedString("Money Sent!", comment: "Send success alert subheader label")
+            return S.Alerts.sendSuccessSubheader
         case .sendFailure:
-            return NSLocalizedString("Send Failed", comment: "Send failure alert subheader label")
+            return S.Alerts.sendFailureSubheader
         }
     }
 

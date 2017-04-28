@@ -39,6 +39,7 @@ enum S {
 
         static let cameraUnavailableTitle = NSLocalizedString("Bread is not allowed to access the camera", comment: "Camera not allowed alert title")
         static let cameraUnavailableMessage = NSLocalizedString("Go to Settings to Allow camera access.", comment: "Camera not allowed message")
+        static let modalTitle = NSLocalizedString("Send Money", comment: "Send modal title")
     }
 
     enum Receive {
@@ -128,8 +129,8 @@ enum S {
     enum RecoverWallet {
         static let next = NSLocalizedString("Next", comment: "Next button label")
         static let intro = NSLocalizedString("Recover your Breadwallet with your recovery phrase.", comment: "Recover wallet intro")
-        static let leftArrow = NSLocalizedString("Left Arrow", comment: "Previous button label")
-        static let rightArrow = NSLocalizedString("Right Arrow", comment: "Next button label")
+        static let leftArrow = NSLocalizedString("Left Arrow", comment: "Previous button accessibility label")
+        static let rightArrow = NSLocalizedString("Right Arrow", comment: "Next button accessibility label")
         static let done = NSLocalizedString("Done", comment: "Done buttohn text")
         static let instruction = NSLocalizedString("Enter Recovery Phrase", comment: "Enter recovery phrase instruction")
         static let header = NSLocalizedString("Recover Wallet", comment: "Recover wallet header")
@@ -241,6 +242,8 @@ enum S {
     enum WritePaperPhrase {
         static let instruction = NSLocalizedString("Write down each word on a piece of paper and store it in a safe place.", comment: "")
         static let step = NSLocalizedString("%d of %d", comment: "Eg. 1 of 3")
+        static let next = NSLocalizedString("Next", comment: "button label")
+        static let previous = NSLocalizedString("Previous", comment: "button label")
     }
 
     enum TransactionDirection {
@@ -253,5 +256,47 @@ enum S {
 
     enum RequestAnAmount {
         static let title = NSLocalizedString("Request an Amount", comment: "")
+    }
+
+    enum PinCreationView {
+        static let setPinText = NSLocalizedString("Set PIN", comment: "Set pin instruction")
+        static let confirmPinText = NSLocalizedString("Re-Enter PIN", comment: "Confirm pin instruction")
+        static let wrongPinText = NSLocalizedString("Wrong PIN , please try again", comment: "Wrong pin entered instruction")
+        static let caption = NSLocalizedString("Your PIN will be used to unlock your  Bread and send money.", comment: "Set Pin screen caption")
+        static let body = NSLocalizedString("Write down your PIN and store it in a place you can access even if your phone is broken or lost.", comment: "Set Pin screen body")
+    }
+
+    enum Alerts {
+        static let pinSet = NSLocalizedString("PIN Set", comment: "Alert Header label")
+        static let paperKeySet = NSLocalizedString("Paper Key Set", comment: "Alert Header Label")
+        static let sendSuccess = NSLocalizedString("Send Confirmation", comment: "Send success alert header label")
+        static let sendFailure = NSLocalizedString("Send failed", comment: "Send failure alert header label")
+
+        static let pinSetSubheader = NSLocalizedString("Use your PIN to login and send money.", comment: "Alert Subheader label")
+        static let paperKeySetSubheader = NSLocalizedString("Awesome!", comment: "Alert Subheader label")
+        static let sendSuccessSubheader = NSLocalizedString("Money Sent!", comment: "Send success alert subheader label")
+        static let sendFailureSubheader = NSLocalizedString("Send Failed", comment: "Send failure alert subheader label")
+    }
+
+    enum MenuButton {
+        static let security = NSLocalizedString("Security Center", comment: "Menu button title")
+        static let support = NSLocalizedString("Support", comment: "Menu button title")
+        static let settings = NSLocalizedString("Settings", comment: "Menu button title")
+        static let lock = NSLocalizedString("Lock Wallet", comment: "Menu button title")
+        static let buy = NSLocalizedString("Buy Bitcoin", comment: "Buy bitcoin title")
+    }
+
+    enum MenuViewController {
+        static let modalTitle = NSLocalizedString("Menu", comment: "Menu modal title")
+    }
+
+    enum StartViewController {
+        static let createButton = NSLocalizedString("Create New Wallet", comment: "button label")
+        static let recoverButton = NSLocalizedString("Recover Wallet", comment: "button label")
+    }
+
+    enum AccessibilityLabels {
+        static let close = NSLocalizedString("Close", comment: "Close modal button accessibility label")
+        static let faq = NSLocalizedString("Support Center", comment: "Support center accessibiliy label")
     }
 }
