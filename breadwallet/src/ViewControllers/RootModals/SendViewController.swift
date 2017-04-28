@@ -460,6 +460,6 @@ extension SendViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        return NSLocalizedString("Send Money", comment: "Send modal title")
+        return S.Send.modalTitle
     }
 }

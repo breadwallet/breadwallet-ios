@@ -73,6 +73,6 @@ extension MenuViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        return NSLocalizedString("Menu", comment: "Menu modal title")
+        return S.MenuViewController.modalTitle
     }
 }

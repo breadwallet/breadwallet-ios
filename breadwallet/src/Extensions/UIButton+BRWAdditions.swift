@@ -27,11 +27,11 @@ extension UIButton {
     }
 
     static var close: UIButton {
-        return UIButton.icon(image: #imageLiteral(resourceName: "Close"), accessibilityLabel: NSLocalizedString("Close", comment: "Close modal button accessibility label"))
+        return UIButton.icon(image: #imageLiteral(resourceName: "Close"), accessibilityLabel: S.AccessibilityLabels.close)
     }
 
     static func buildFaqButton(store: Store, articleId: String) -> UIButton {
-        let button = UIButton.icon(image: #imageLiteral(resourceName: "Faq"), accessibilityLabel: NSLocalizedString("Faq", comment: "Frequently asked questions button accessibility label"))
+        let button = UIButton.icon(image: #imageLiteral(resourceName: "Faq"), accessibilityLabel: S.AccessibilityLabels.faq)
         button.tap = {
             store.trigger(name: .presentFaq(articleId))
         }

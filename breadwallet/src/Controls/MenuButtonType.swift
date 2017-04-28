@@ -18,15 +18,15 @@ enum MenuButtonType {
     var title: String {
         switch self {
         case .security:
-            return NSLocalizedString("Security Center", comment: "Menu button title")
+            return S.MenuButton.security
         case .support:
-            return NSLocalizedString("Support", comment: "Menu button title")
+            return S.MenuButton.support
         case .settings:
-            return NSLocalizedString("Settings", comment: "Menu button title")
+            return S.MenuButton.settings
         case .lock:
-            return NSLocalizedString("Lock Wallet", comment: "Menu button title")
+            return S.MenuButton.lock
         case .buy:
-            return NSLocalizedString("Buy Bitcoin", comment: "Buy bitcoin title")
+            return S.MenuButton.buy
         }
     }
 
