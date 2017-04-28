@@ -12,16 +12,40 @@ import Foundation
 
 class InterfaceController: WKInterfaceController {
 
+    @IBOutlet var bitsBalance: WKInterfaceLabel!
+    @IBOutlet var localBalance: WKInterfaceLabel!
+    @IBOutlet var loadingIndicator: WKInterfaceImage!
+
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
-        
+
+        print("context: \(String(describing: context))")
+
+
+
         // Configure interface objects here.
     }
     
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(InterfaceController.update), name: .ApplicationDataDidUpdateNotification, object: nil)
+
+        update()
     }
+
+    @objc func update() {
+        if let data = WatchDataManager.shared.data {
+            loadingIndicator.setHidden(true)
+            bitsBalance.setText(data.balance)
+            localBalance.setText(data.localBalance)
+        } else {
+            bitsBalance.setText("")
+            localBalance.setText("")
+        }
+    }
+
     
     override func didDeactivate() {
         // This method is called when watch view controller is no longer visible
