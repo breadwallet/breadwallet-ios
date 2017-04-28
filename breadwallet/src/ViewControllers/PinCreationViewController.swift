@@ -8,10 +8,6 @@
 
 import UIKit
 
-private let setPinText = NSLocalizedString("Set PIN", comment: "Set pin instruction")
-private let confirmPinText = NSLocalizedString("Re-Enter PIN", comment: "Confirm pin instruction")
-private let wrongPinText = NSLocalizedString("Wrong PIN , please try again", comment: "Wrong pin entered instruction")
-
 class PinCreationViewController : UIViewController, Subscriber {
 
     private let instruction = UILabel.wrapping(font: .customBold(size: 26.0))
@@ -59,8 +55,8 @@ class PinCreationViewController : UIViewController, Subscriber {
     }
 
     private func setData() {
-        caption.text = NSLocalizedString("Your PIN will be used to unlock your  Bread and send money.", comment: "Set Pin screen caption")
-        body.text = NSLocalizedString("Write down your PIN and store it in a place you can access even if your phone is broken or lost.", comment: "Set Pin screen body")
+        caption.text = S.PinCreationView.caption
+        body.text = S.PinCreationView.body
 
         instruction.textColor = .darkText
         caption.textColor = .darkText
@@ -124,18 +120,18 @@ class PinCreationViewController : UIViewController, Subscriber {
     private func handlePinCreationStepChange(state: State) {
         switch state.pinCreationStep {
         case .start:
-            instruction.text = setPinText
+            instruction.text = S.PinCreationView.setPinText
         case .confirm:
-            instruction.text = confirmPinText
+            instruction.text = S.PinCreationView.confirmPinText
             hiddenPin.text = ""
             //If this delay isn't here, the last pin filling in is never seen
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
                 self?.pinView.fill(0)
             }
         case .save:
-            instruction.text = confirmPinText
+            instruction.text = S.PinCreationView.confirmPinText
         case .confirmFail:
-            instruction.text = wrongPinText
+            instruction.text = S.PinCreationView.wrongPinText
             hiddenPin.text = ""
             pinView.shake()
             DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
