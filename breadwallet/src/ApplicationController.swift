@@ -30,7 +30,8 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private var kvStoreCoordinator: KVStoreCoordinator?
     private var accountViewController: AccountViewController?
     fileprivate var application: UIApplication?
-
+    private let watchSessionManager = PhoneWCSessionManager()
+    
     init() {
         DispatchQueue.walletQueue.async {
             self.walletManager = try! WalletManager(dbPath: nil)
@@ -106,7 +107,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: window.rootViewController!)
         accountViewController?.walletManager = walletManager
 
-        if UIApplication.shared.applicationState != .background {
+        //if UIApplication.shared.applicationState != .background {
             if walletManager.noWallet {
                 addWalletCreationListener()
                 store.perform(action: ShowStartFlow())
@@ -118,11 +119,12 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                 feeUpdater?.updateWalletFees()
                 apiClient?.updateFeatureFlags()
                 initKVStoreCoordinator()
+                watchSessionManager.walletManager = walletManager
             }
             exchangeUpdater?.refresh(completion: {})
             feeUpdater?.refresh()
             updateAssetBundles()
-        }
+        //}
     }
 
     private func shouldRequireLogin() -> Bool {
