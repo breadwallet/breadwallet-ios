@@ -40,20 +40,22 @@ extension PhoneWCSessionManager : WCSessionDelegate {
     }
 
     func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
-        print("didreceivemessage: \(message)")
-
         guard let walletManager = walletManager else { return replyHandler(["error":"no wallet manager"])}
-        guard let rawRequestType = message[AW_SESSION_REQUEST_TYPE] as? Int else { return replyHandler([:]) }
-        guard let requestType = AWSessionRequestType(rawValue: rawRequestType) else { return replyHandler([:]) }
-        guard let rawDataType = message[AW_SESSION_REQUEST_DATA_TYPE_KEY] as? Int else { return replyHandler([:]) }
-        guard let dataType = AWSessionRequestDataType(rawValue: rawDataType) else { return replyHandler([:]) }
+        guard let rawRequestType = message[AW_SESSION_REQUEST_TYPE] as? Int else { return replyHandler(["error":"unknown request type"]) }
+        guard let requestType = AWSessionRequestType(rawValue: rawRequestType) else { return replyHandler(["error":"unknown request type"]) }
+        guard let rawDataType = message[AW_SESSION_REQUEST_DATA_TYPE_KEY] as? Int else { return replyHandler(["error":"unknown data type"]) }
+        guard let dataType = AWSessionRequestDataType(rawValue: rawDataType) else { return replyHandler(["error":"unknown data type"]) }
 
-        switch dataType {
-        case .applicationContextData:
-            let data = watchData(forWalletManager: walletManager).toDictionary
-            replyHandler([AW_SESSION_RESPONSE_KEY: data])
-        case .qrCodeBits:
-            replyHandler([:])
+        if case .fetchData = requestType {
+            switch dataType {
+            case .applicationContextData:
+                let data = watchData(forWalletManager: walletManager).toDictionary
+                replyHandler([AW_SESSION_RESPONSE_KEY: data])
+            case .qrCodeBits:
+                replyHandler([:])
+            }
+        } else {
+            replyHandler(["error":"unknown request type"])
         }
     }
 

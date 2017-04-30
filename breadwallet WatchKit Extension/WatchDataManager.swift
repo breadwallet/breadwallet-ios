@@ -60,19 +60,14 @@ class WatchDataManager : NSObject {
     }
 
     func requestAllData() {
-        guard session.isReachable else {
-            print("not reachable")
-            return
-        }
+        guard session.isReachable else { return }
 
         let message = [
             AW_SESSION_REQUEST_TYPE: AWSessionRequestType.fetchData.rawValue,
             AW_SESSION_REQUEST_DATA_TYPE_KEY: AWSessionRequestDataType.applicationContextData.rawValue
         ]
 
-        print("request: \(message)")
         session.sendMessage(message, replyHandler: { replyMessage in
-            //print("reply: \(replyMessage)")
             if let data = replyMessage[AW_SESSION_RESPONSE_KEY] as? [String: Any] {
                 let newData = WatchData(data: data)
                 let previousAppleWatchData = self.data

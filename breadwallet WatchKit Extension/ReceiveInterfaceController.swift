@@ -22,11 +22,7 @@ class ReceiveInterfaceController : WKInterfaceController {
     }
 
     @objc func update() {
-        if let data = WatchDataManager.shared.data {
-            image.setImage(data.qrCode)
-            print("New Data")
-        } else {
-            print("No Data")
-        }
+        guard let data = WatchDataManager.shared.data else { return }
+        image.setImage(data.qrCode)
     }
 }
