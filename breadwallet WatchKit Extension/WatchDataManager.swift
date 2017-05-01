@@ -27,7 +27,7 @@ class WatchDataManager : NSObject {
 
     let session = WCSession.default()
     var data: WatchData?
-    let timerFireInterval : TimeInterval = 7; // have iphone app sync with peer every 7 seconds
+    let timerFireInterval : TimeInterval = 1.0
 
     var timer : Timer?
     var walletStatus: WalletStatus {
@@ -39,6 +39,9 @@ class WatchDataManager : NSObject {
 
     private override init() {
         super.init()
+        if data == nil {
+            unarchiveData()
+        }
         session.delegate = self
         session.activate()
     }
@@ -69,18 +72,19 @@ class WatchDataManager : NSObject {
 
         session.sendMessage(message, replyHandler: { replyMessage in
             if let data = replyMessage[AW_SESSION_RESPONSE_KEY] as? [String: Any] {
-                let newData = WatchData(data: data)
-                let previousAppleWatchData = self.data
-                let previousWalletStatus = self.walletStatus
-                self.data = newData
-                if previousAppleWatchData != self.data {
-                    self.archiveData(newData)
-                    NotificationCenter.default.post(
-                        name: .ApplicationDataDidUpdateNotification, object: nil)
-                }
-                if self.walletStatus != previousWalletStatus {
-                    NotificationCenter.default.post(
-                        name: .WalletStatusDidChangeNotification, object: nil)
+                if let newData = WatchData(data: data) {
+                    let previousAppleWatchData = self.data
+                    let previousWalletStatus = self.walletStatus
+                    self.data = newData
+                    if previousAppleWatchData != self.data {
+                        self.archiveData(newData)
+                        NotificationCenter.default.post(
+                            name: .ApplicationDataDidUpdateNotification, object: nil)
+                    }
+                    if self.walletStatus != previousWalletStatus {
+                        NotificationCenter.default.post(
+                            name: .WalletStatusDidChangeNotification, object: nil)
+                    }
                 }
             }
         }, errorHandler: { error in
@@ -89,14 +93,16 @@ class WatchDataManager : NSObject {
     }
 
     func archiveData(_ appleWatchData: WatchData){
-        //TODO - archive data
-        //try? NSKeyedArchiver.archivedData(withRootObject: appleWatchData).write(to: dataFilePath, options: [.atomic])
+        NSKeyedArchiver.archiveRootObject(appleWatchData.toDictionary, toFile: dataFilePath.path)
     }
 
     func unarchiveData() {
-        if let newData = try? Data(contentsOf: dataFilePath) {
-            data = NSKeyedUnarchiver.unarchiveObject(with: newData) as? WatchData
-        }
+        guard let newData = try? Data(contentsOf: dataFilePath) else { return }
+        guard let dictionary = NSKeyedUnarchiver.unarchiveObject(with: newData) as? [String: Any] else { return }
+        guard let watchData = WatchData(data: dictionary) else { return }
+        NotificationCenter.default.post(
+            name: .ApplicationDataDidUpdateNotification, object: nil)
+        self.data = watchData
     }
 
     lazy var dataFilePath: URL = {
