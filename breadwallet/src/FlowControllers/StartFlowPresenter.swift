@@ -125,7 +125,7 @@ class StartFlowPresenter : Subscriber {
     private var pushPinCreationView: (String) -> Void {
         return { [weak self] phrase in
             guard let myself = self else { return }
-            let pinCreationView = UpdatePinViewController(store: myself.store, walletManager: myself.walletManager, phrase: phrase)
+            let pinCreationView = UpdatePinViewController(store: myself.store, walletManager: myself.walletManager, showsBackButton: false, phrase: phrase)
             pinCreationView.setPinSuccess = { [weak self] in
                 DispatchQueue.walletQueue.async {
                     self?.walletManager.peerManager?.connect()
@@ -148,7 +148,7 @@ class StartFlowPresenter : Subscriber {
         //This makes the keyboard slide in from the right.
         let _ = pinCreationViewController.view
         navigationController?.setNavigationBarHidden(false, animated: false)
-        navigationController?.setBlackBackArrow()
+        navigationController?.setTintableBackArrow()
         navigationController?.setClearNavbar()
         navigationController?.pushViewController(pinCreationViewController, animated: true)
     }

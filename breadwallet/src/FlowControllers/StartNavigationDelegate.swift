@@ -40,6 +40,7 @@ class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
                 NSFontAttributeName: UIFont.customBold(size: 17.0)
             ]
             navigationController.setClearNavbar()
+            navigationController.navigationBar.barTintColor = .clear
         }
 
         if viewController is RecoverWalletViewController {
@@ -48,7 +49,24 @@ class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
                 NSForegroundColorAttributeName: UIColor.darkText,
                 NSFontAttributeName: UIFont.customBold(size: 17.0)
             ]
-            navigationController.setNormalNavbar()
+            navigationController.setClearNavbar()
+            navigationController.navigationBar.isTranslucent = false
+            navigationController.navigationBar.barTintColor = .whiteTint
+        }
+
+        if viewController is PinCreationViewController {
+            navigationController.navigationBar.tintColor = .darkText
+            navigationController.navigationBar.titleTextAttributes = [
+                NSForegroundColorAttributeName: UIColor.darkText,
+                NSFontAttributeName: UIFont.customBold(size: 17.0)
+            ]
+            navigationController.setClearNavbar()
+        }
+
+        if viewController is UpdatePinViewController {
+            if let gr = navigationController.interactivePopGestureRecognizer {
+                navigationController.view.removeGestureRecognizer(gr)
+            }
         }
     }
 }

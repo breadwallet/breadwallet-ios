@@ -13,11 +13,12 @@ class UpdatePinViewController : UIViewController, Subscriber {
     //MARK: - Public
     var setPinSuccess: (() -> Void)?
 
-    init(store: Store, walletManager: WalletManager, phrase: String? = nil) {
+    init(store: Store, walletManager: WalletManager, showsBackButton: Bool = true, phrase: String? = nil) {
         self.store = store
         self.walletManager = walletManager
         self.phrase = phrase
         self.pinView = PinView(style: .create, length: walletManager.pinLength)
+        self.showsBackButton = showsBackButton
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -55,6 +56,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
         return phrase != nil
     }
     private let newPinLength = 6
+    private let showsBackButton: Bool
 
     private enum Step {
         case current
@@ -119,6 +121,11 @@ class UpdatePinViewController : UIViewController, Subscriber {
 
         if phrase != nil {
             step = .new
+        }
+
+        if !showsBackButton {
+            navigationItem.leftBarButtonItem = nil
+            navigationItem.hidesBackButton = true
         }
     }
 
