@@ -12,6 +12,7 @@ enum ButtonType {
     case primary
     case secondary
     case tertiary
+    case blackTransparent
 }
 
 class ShadowButton: UIControl {
@@ -172,6 +173,13 @@ class ShadowButton: UIControl {
             shadowView.layer.shadowColor = UIColor.secondaryShadow.cgColor
             shadowView.layer.shadowOpacity = 1.0
             imageView?.tintColor = .grayTextTint
+        case .blackTransparent:
+            container.backgroundColor = .clear
+            label.textColor = .darkText
+            container.layer.borderColor = UIColor.darkText.cgColor
+            container.layer.borderWidth = 1.0
+            imageView?.tintColor = .grayTextTint
+            shadowView.isHidden = true
         }
     }
 
