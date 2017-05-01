@@ -201,7 +201,7 @@
 		75A2A7BF1DA5934300A983D8 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7BD1DA5934300A983D8 /* Interface.storyboard */; };
 		75A2A7C11DA5934300A983D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7C01DA5934300A983D8 /* Assets.xcassets */; };
 		75A2A7C81DA5934300A983D8 /* breadwallet WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 75A2A7C71DA5934300A983D8 /* breadwallet WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		75A2A7CF1DA5934300A983D8 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7CE1DA5934300A983D8 /* InterfaceController.swift */; };
+		75A2A7CF1DA5934300A983D8 /* BalanceInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7CE1DA5934300A983D8 /* BalanceInterfaceController.swift */; };
 		75A2A7D11DA5934300A983D8 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7D01DA5934300A983D8 /* ExtensionDelegate.swift */; };
 		75A2A7D31DA5934300A983D8 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7D21DA5934300A983D8 /* NotificationController.swift */; };
 		75A2A7D51DA5934300A983D8 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7D41DA5934300A983D8 /* ComplicationController.swift */; };
@@ -348,6 +348,7 @@
 		CEE20C341EA5B4550086F724 /* ArticleIds.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C331EA5B4550086F724 /* ArticleIds.swift */; };
 		CEE20C361EA5B4620086F724 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C351EA5B4620086F724 /* Constants.swift */; };
 		CEE20C381EA5B4680086F724 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C371EA5B4680086F724 /* Strings.swift */; };
+		CEE513EF1EB6A84800D6E4D7 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C371EA5B4680086F724 /* Strings.swift */; };
 		CEE6282A1EA98B6D001035AA /* DispatchQueue+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE628291EA98B6D001035AA /* DispatchQueue+Additions.swift */; };
 		CEE65DF01E39056F0002994D /* Rate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE65DEF1E39056F0002994D /* Rate.swift */; };
 		CEE7F1D01E07653B00283981 /* CurrencySlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */; };
@@ -1242,7 +1243,7 @@
 		75A2A7C21DA5934300A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		75A2A7C71DA5934300A983D8 /* breadwallet WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "breadwallet WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		75A2A7CD1DA5934300A983D8 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
-		75A2A7CE1DA5934300A983D8 /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
+		75A2A7CE1DA5934300A983D8 /* BalanceInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceInterfaceController.swift; sourceTree = "<group>"; };
 		75A2A7D01DA5934300A983D8 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		75A2A7D21DA5934300A983D8 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		75A2A7D41DA5934300A983D8 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
@@ -2587,16 +2588,16 @@
 			isa = PBXGroup;
 			children = (
 				75A2A7D01DA5934300A983D8 /* ExtensionDelegate.swift */,
-				75A2A7CE1DA5934300A983D8 /* InterfaceController.swift */,
+				75A2A7CE1DA5934300A983D8 /* BalanceInterfaceController.swift */,
 				75A2A7D21DA5934300A983D8 /* NotificationController.swift */,
 				75A2A7D41DA5934300A983D8 /* ComplicationController.swift */,
-				75A2A7D61DA5934300A983D8 /* Assets.xcassets */,
-				75A2A7D81DA5934400A983D8 /* Info.plist */,
-				75A2A7CC1DA5934300A983D8 /* Supporting Files */,
+				CED811E41EB30846003A8D1E /* ReceiveInterfaceController.swift */,
 				CE30F0E71EB27FA2004B8EE5 /* WatchDataManager.swift */,
 				CE30F0E91EB282C8004B8EE5 /* SharedConstants.swift */,
 				CED811AB1EB2BCDE003A8D1E /* BRAWWeakTimerTarget.swift */,
-				CED811E41EB30846003A8D1E /* ReceiveInterfaceController.swift */,
+				75A2A7D61DA5934300A983D8 /* Assets.xcassets */,
+				75A2A7D81DA5934400A983D8 /* Info.plist */,
+				75A2A7CC1DA5934300A983D8 /* Supporting Files */,
 			);
 			path = "breadwallet WatchKit Extension";
 			sourceTree = "<group>";
@@ -3823,6 +3824,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CED811E51EB30846003A8D1E /* ReceiveInterfaceController.swift in Sources */,
+				CEE513EF1EB6A84800D6E4D7 /* Strings.swift in Sources */,
 				CED811AC1EB2BCDE003A8D1E /* BRAWWeakTimerTarget.swift in Sources */,
 				CE30F0E81EB27FA2004B8EE5 /* WatchDataManager.swift in Sources */,
 				75A2A7D31DA5934300A983D8 /* NotificationController.swift in Sources */,
@@ -3830,7 +3832,7 @@
 				75A2A7D51DA5934300A983D8 /* ComplicationController.swift in Sources */,
 				75A2A7D11DA5934300A983D8 /* ExtensionDelegate.swift in Sources */,
 				CE30F0EA1EB282C8004B8EE5 /* SharedConstants.swift in Sources */,
-				75A2A7CF1DA5934300A983D8 /* InterfaceController.swift in Sources */,
+				75A2A7CF1DA5934300A983D8 /* BalanceInterfaceController.swift in Sources */,
 				CED811E31EB302E2003A8D1E /* WatchTransaction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -46,14 +46,22 @@ struct WatchData {
 }
 
 extension WatchData {
-    init(data: [String: Any]) {
-        balance = data[Keys.balance] as! String
-        localBalance = data[Keys.localBalance] as! String
-        receiveAddress = data[Keys.receiveAddress] as! String
-        latestTransaction = data[Keys.latestTransaction] as! String
-        qrCode = NSKeyedUnarchiver.unarchiveObject(with: data[Keys.qrCode] as! Data) as! UIImage
-        transactions = []
-        hasWallet = data[Keys.hasWallet] as! Bool
+    init?(data: [String: Any]) {
+        guard let balance = data[Keys.balance] as? String else { return nil }
+        guard let localBalance = data[Keys.localBalance] as? String else { return nil }
+        guard let receiveAddress = data[Keys.receiveAddress] as? String else { return nil }
+        guard let latestTransaction = data[Keys.latestTransaction] as? String else { return nil }
+        guard let qrData = data[Keys.qrCode] as? Data else { return nil }
+        guard let qrImage = NSKeyedUnarchiver.unarchiveObject(with: qrData) as? UIImage else { return nil }
+        guard let hasWallet = data[Keys.hasWallet] as? Bool else { return nil }
+
+        self.balance = balance
+        self.localBalance = localBalance
+        self.receiveAddress = receiveAddress
+        self.latestTransaction = latestTransaction
+        self.qrCode = qrImage
+        self.hasWallet = hasWallet
+        transactions = [] //TODO - add transactions here
     }
 }
 

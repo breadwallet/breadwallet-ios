@@ -107,7 +107,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: window.rootViewController!)
         accountViewController?.walletManager = walletManager
 
-        //if UIApplication.shared.applicationState != .background {
+        if UIApplication.shared.applicationState != .background {
             if walletManager.noWallet {
                 addWalletCreationListener()
                 store.perform(action: ShowStartFlow())
@@ -119,12 +119,24 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                 feeUpdater?.updateWalletFees()
                 apiClient?.updateFeatureFlags()
                 initKVStoreCoordinator()
-                watchSessionManager.walletManager = walletManager
             }
-            exchangeUpdater?.refresh(completion: {})
+            exchangeUpdater?.refresh(completion: {
+                self.watchSessionManager.walletManager = self.walletManager
+                self.watchSessionManager.rate = self.store.state.currentRate
+            })
             feeUpdater?.refresh()
             updateAssetBundles()
-        //}
+
+        //For when watch app launches app in background
+        } else {
+            DispatchQueue.walletQueue.async {
+                walletManager.peerManager?.connect()
+            }
+            exchangeUpdater?.refresh(completion: {
+                self.watchSessionManager.walletManager = self.walletManager
+                self.watchSessionManager.rate = self.store.state.currentRate
+            })
+        }
     }
 
     private func shouldRequireLogin() -> Bool {

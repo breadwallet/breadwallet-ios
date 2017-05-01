@@ -12,8 +12,8 @@ import WatchConnectivity
 class PhoneWCSessionManager : NSObject {
     private let session: WCSession
 
-
     var walletManager: WalletManager?
+    var rate: Rate?
 
     override init() {
         session = WCSession.default()
@@ -25,13 +25,22 @@ class PhoneWCSessionManager : NSObject {
 
 extension PhoneWCSessionManager : WCSessionDelegate {
 
-    func watchData(forWalletManager: WalletManager) -> WatchData {
-        let wallet = forWalletManager.wallet!
-        let image = UIImage.qrCode(data: "\(wallet.receiveAddress)".data(using: .utf8)!, color: CIColor(color: .black))?
-            .resize(CGSize(width: 150.0, height: 150.0))!
+    func watchData(forWalletManager: WalletManager, rate: Rate) -> WatchData? {
 
-        return WatchData(balance: String(wallet.balance/100),
-                         localBalance: "$\(String(wallet.balance/C.satoshis*1300))",
+        if let noWallet = walletManager?.noWallet, noWallet == true {
+            return WatchData(balance: "", localBalance: "", receiveAddress: "", latestTransaction: "", qrCode: UIImage(), transactions: [], hasWallet: false)
+        }
+
+
+        guard let wallet = forWalletManager.wallet else { return nil }
+
+        let amount = Amount(amount: wallet.balance, rate: rate.rate)
+
+        let image = UIImage.qrCode(data: "\(wallet.receiveAddress)".data(using: .utf8)!, color: CIColor(color: .black))?
+            .resize(CGSize(width: 136.0, height: 136.0))!
+
+        return WatchData(balance: amount.bits,
+                         localBalance: amount.localCurrency,
                             receiveAddress: wallet.receiveAddress,
                             latestTransaction: "Latest transaction",
                             qrCode: image!,
@@ -40,7 +49,8 @@ extension PhoneWCSessionManager : WCSessionDelegate {
     }
 
     func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
-        guard let walletManager = walletManager else { return replyHandler(["error":"no wallet manager"])}
+        guard let walletManager = walletManager else { return replyHandler(["error": "no wallet manager"])}
+        guard let rate = rate else { return replyHandler(["error": "rate not set"]) }
         guard let rawRequestType = message[AW_SESSION_REQUEST_TYPE] as? Int else { return replyHandler(["error":"unknown request type"]) }
         guard let requestType = AWSessionRequestType(rawValue: rawRequestType) else { return replyHandler(["error":"unknown request type"]) }
         guard let rawDataType = message[AW_SESSION_REQUEST_DATA_TYPE_KEY] as? Int else { return replyHandler(["error":"unknown data type"]) }
@@ -49,8 +59,11 @@ extension PhoneWCSessionManager : WCSessionDelegate {
         if case .fetchData = requestType {
             switch dataType {
             case .applicationContextData:
-                let data = watchData(forWalletManager: walletManager).toDictionary
-                replyHandler([AW_SESSION_RESPONSE_KEY: data])
+                if let data = watchData(forWalletManager: walletManager, rate: rate) {
+                    replyHandler([AW_SESSION_RESPONSE_KEY: data.toDictionary])
+                } else {
+                    replyHandler(["error": "unable to generate data"])
+                }
             case .qrCodeBits:
                 replyHandler([:])
             }

@@ -10,10 +10,11 @@ import WatchKit
 import Foundation
 
 
-class InterfaceController: WKInterfaceController {
+class BalanceInterfaceController: WKInterfaceController {
 
     @IBOutlet var bitsBalance: WKInterfaceLabel!
     @IBOutlet var localBalance: WKInterfaceLabel!
+    @IBOutlet var noWallet: WKInterfaceLabel!
     @IBOutlet var loadingIndicator: WKInterfaceImage!
 
     override func awake(withContext context: Any?) {
@@ -24,7 +25,7 @@ class InterfaceController: WKInterfaceController {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(InterfaceController.update), name: .ApplicationDataDidUpdateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(BalanceInterfaceController.update), name: .ApplicationDataDidUpdateNotification, object: nil)
 
         update()
     }
@@ -32,11 +33,20 @@ class InterfaceController: WKInterfaceController {
     @objc func update() {
         if let data = WatchDataManager.shared.data {
             loadingIndicator.setHidden(true)
-            bitsBalance.setText(data.balance)
-            localBalance.setText(data.localBalance)
+
+            if data.hasWallet {
+                bitsBalance.setText(data.balance)
+                localBalance.setText(data.localBalance)
+                noWallet.setText("")
+            } else {
+                noWallet.setText(S.Watch.noWalletWarning)
+                bitsBalance.setText("")
+                localBalance.setText("")
+            }
         } else {
             bitsBalance.setText("")
             localBalance.setText("")
+            noWallet.setText("")
         }
     }
 
