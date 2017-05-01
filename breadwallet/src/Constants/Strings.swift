@@ -80,6 +80,7 @@ enum S {
         static let subheader = NSLocalizedString("LoginScreen.subheader", value:"Enter Pin", comment: "Login Screen sub-header")
         static let unlocked = NSLocalizedString("LoginScreen.unlocked", value:"Wallet Unlocked", comment: "Wallet unlocked message")
         static let disabled = NSLocalizedString("LoginScreen.disabled", value:"Disabled until: %@", comment: "Disabled until date")
+        static let resetPin = NSLocalizedString("LoginScreen.resetPin", value:"Reset Pin with Phrase", comment: "Reset Pin with Phrase button label.")
     }
 
     enum Transaction {

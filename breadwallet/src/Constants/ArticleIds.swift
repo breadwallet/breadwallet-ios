@@ -20,4 +20,5 @@ enum ArticleIds {
     static let manageWallet = "manage-wallet"
     static let receive = "receive"
     static let send = "send"
+    static let walletDisabled = "wallet-disabled"
 }

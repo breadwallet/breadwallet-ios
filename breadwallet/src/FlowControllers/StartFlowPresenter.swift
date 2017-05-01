@@ -196,6 +196,7 @@ class StartFlowPresenter : Subscriber {
         }
         loginView.transitioningDelegate = loginTransitionDelegate
         loginView.modalPresentationStyle = .overFullScreen
+        loginView.modalPresentationCapturesStatusBarAppearance = true
         loginViewController = loginView
         rootViewController.present(loginView, animated: false, completion: nil)
     }
