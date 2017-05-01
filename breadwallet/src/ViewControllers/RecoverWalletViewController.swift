@@ -61,6 +61,11 @@ class RecoverWalletViewController : UIViewController {
 
     private func addConstraints() {
         scrollView.constrain(toSuperviewEdges: nil)
+        scrollView.constrain([
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor) ])
         container.constrain(toSuperviewEdges: nil)
         container.constrain([
             container.widthAnchor.constraint(equalTo: view.widthAnchor) ])
