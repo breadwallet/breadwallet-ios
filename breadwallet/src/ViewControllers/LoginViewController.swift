@@ -26,7 +26,7 @@ class LoginViewController : UIViewController {
         self.store = store
         self.walletManager = walletManager
         self.isPresentedForLock = isPresentedForLock
-
+        self.disabledView = WalletDisabledView(store: store)
         if let walletManager = walletManager {
             self.pinView = PinView(style: .login, length: walletManager.pinLength)
         }
@@ -42,6 +42,7 @@ class LoginViewController : UIViewController {
     private let addressButton = SegmentedButton(title: S.LoginScreen.myAddress, type: .left)
     private let scanButton = SegmentedButton(title: S.LoginScreen.scan, type: .right)
     private let isPresentedForLock: Bool
+    private let disabledView: WalletDisabledView
 
     private let touchId: UIButton = {
         let button = UIButton(type: .system)
@@ -275,31 +276,28 @@ class LoginViewController : UIViewController {
         if let disabledUntil = walletManager?.walletDisabledUntil {
             let now = Date.timeIntervalSinceReferenceDate
             if disabledUntil > now {
+
                 let disabledUntilDate = Date(timeIntervalSinceReferenceDate: disabledUntil)
                 let unlockInterval = disabledUntil - Date.timeIntervalSinceReferenceDate
                 let df = DateFormatter()
                 df.dateFormat = unlockInterval > C.secondsInDay ? "h:mm a 'on' MMM d, yyy" : "h:mm a"
-                subheader.text = String(format: S.LoginScreen.disabled, df.string(from: disabledUntilDate))
+
+                disabledView.setTimeLabel(string: String(format: S.LoginScreen.disabled, df.string(from: disabledUntilDate)))
+
                 pinPad.view.isUserInteractionEnabled = false
                 unlockTimer?.invalidate()
                 unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)
-                if lockedOverlay.superview == nil {
-                    view.addSubview(lockedOverlay)
-                    lockedOverlay.constrain(toSuperviewEdges: nil)
-                    view.bringSubview(toFront: subheader)
-                    UIView.animate(withDuration: C.animationDuration, animations: {
-                        self.lockedOverlay.effect = UIBlurEffect(style: .light)
-                    })
+
+                if disabledView.superview == nil {
+                    view.addSubview(disabledView)
+                    disabledView.constrain(toSuperviewEdges: nil)
+                    disabledView.show()
                 }
             } else {
-                subheader.text = S.LoginScreen.subheader
                 pinPad.view.isUserInteractionEnabled = true
-                UIView.animate(withDuration: C.animationDuration, animations: {
-                    self.lockedOverlay.effect = nil
-                }, completion: { _ in
-                    self.lockedOverlay.removeFromSuperview()
-                })
-
+                disabledView.hide {
+                    self.disabledView.removeFromSuperview()
+                }
             }
         }
     }
@@ -308,15 +306,13 @@ class LoginViewController : UIViewController {
         subheader.pushNewText(S.LoginScreen.subheader)
         pinPad.view.isUserInteractionEnabled = true
         unlockTimer = nil
-        UIView.animate(withDuration: C.animationDuration, animations: {
-            self.lockedOverlay.effect = nil
-        }, completion: { _ in
-            self.lockedOverlay.removeFromSuperview()
-        })
+        disabledView.hide {
+            self.disabledView.removeFromSuperview()
+        }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
+        return .default
     }
 
     required init?(coder aDecoder: NSCoder) {
