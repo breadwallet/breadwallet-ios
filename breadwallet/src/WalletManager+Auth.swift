@@ -191,18 +191,7 @@ extension WalletManager : WalletAuthenticator {
             }
             
             if try pin == keychainItem(key: KeychainKey.pin) { // successful pin attempt
-                let limit = Int64(UserDefaults.standard.double(forKey: DefaultsKey.spendLimitAmount))
-                
-                WalletManager.failedPins.removeAll()
-                UserDefaults.standard.set(Date.timeIntervalSinceReferenceDate, forKey: DefaultsKey.pinUnlockTime)
-                try setKeychainItem(key: KeychainKey.pinFailTime, item: Int64(0))
-                try setKeychainItem(key: KeychainKey.pinFailCount, item: Int64(0))
-                
-                if let wallet = wallet, limit > 0 {
-                    try setKeychainItem(key: KeychainKey.spendLimit,
-                                        item: Int64(wallet.totalSent) + limit)
-                }
-                
+                try authenticationSuccess()
                 return true
             }
             else if !WalletManager.failedPins.contains(pin) { // unique failed attempt
@@ -225,7 +214,21 @@ extension WalletManager : WalletAuthenticator {
             return false
         }
     }
-    
+
+    private func authenticationSuccess() throws {
+        let limit = Int64(UserDefaults.standard.double(forKey: DefaultsKey.spendLimitAmount))
+
+        WalletManager.failedPins.removeAll()
+        UserDefaults.standard.set(Date.timeIntervalSinceReferenceDate, forKey: DefaultsKey.pinUnlockTime)
+        try setKeychainItem(key: KeychainKey.pinFailTime, item: Int64(0))
+        try setKeychainItem(key: KeychainKey.pinFailCount, item: Int64(0))
+
+        if let wallet = wallet, limit > 0 {
+            try setKeychainItem(key: KeychainKey.spendLimit,
+                                item: Int64(wallet.totalSent) + limit)
+        }
+    }
+
     // show touch ID dialog and call completion block with success or failure
     func authenticate(touchIDPrompt: String, completion: @escaping (Bool) -> ()) {
         LAContext().evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: touchIDPrompt,
@@ -344,6 +347,7 @@ extension WalletManager : WalletAuthenticator {
             else if try keychainItem(key: KeychainKey.pin) != nil { return false }
             
             try setKeychainItem(key: KeychainKey.pin, item: newPin)
+            try authenticationSuccess()
             return true
         }
         catch { return false }
