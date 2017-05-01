@@ -299,4 +299,8 @@ enum S {
         static let close = NSLocalizedString("AccessibilityLabels.close", value:"Close", comment: "Close modal button accessibility label")
         static let faq = NSLocalizedString("AccessibilityLabels.faq", value: "Support Center", comment: "Support center accessibiliy label")
     }
+
+    enum Watch {
+        static let noWalletWarning = NSLocalizedString("Watch.noWalletWarning", value: "Open breadwallet iPhone app to setup your wallet", comment: "No wallet warning for watch app")
+    }
 }

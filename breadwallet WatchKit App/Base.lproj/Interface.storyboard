@@ -11,16 +11,23 @@
         <!--Balance-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller title="Balance" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="breadwallet_WatchKit_App" customModuleProvider="target">
+                <controller title="Balance" id="AgC-eL-Hgc" customClass="BalanceInterfaceController" customModule="breadwallet_WatchKit_Extension">
                     <items>
                         <imageView alignment="center" verticalAlignment="center" image="LoadingIndicator" id="q0L-Rc-67d" userLabel="LoadingIndicator"/>
-                        <label alignment="left" text="1,000" id="A9h-CR-kAQ" userLabel="BitsBalance"/>
-                        <label alignment="left" text="$500" id="mB1-E9-tTW" userLabel="LocalBalance"/>
+                        <label alignment="center" verticalAlignment="center" text="1,000" textAlignment="center" minimumScaleFactor="0.5" id="A9h-CR-kAQ" userLabel="BitsBalance">
+                            <fontDescription key="font" type="system" pointSize="30"/>
+                        </label>
+                        <label alignment="center" verticalAlignment="center" text="$500" textAlignment="center" minimumScaleFactor="0.5" id="mB1-E9-tTW" userLabel="LocalBalance">
+                            <color key="textColor" red="0.86591726540000002" green="0.88387340309999995" blue="0.90069425110000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <fontDescription key="font" type="system" pointSize="20"/>
+                        </label>
+                        <label alignment="center" text="NoWallet Label" numberOfLines="0" id="SUN-9p-WiB"/>
                     </items>
                     <connections>
                         <outlet property="bitsBalance" destination="A9h-CR-kAQ" id="t1O-Ne-1y5"/>
                         <outlet property="loadingIndicator" destination="q0L-Rc-67d" id="xzD-r0-JI9"/>
                         <outlet property="localBalance" destination="mB1-E9-tTW" id="RVn-jt-MH9"/>
+                        <outlet property="noWallet" destination="SUN-9p-WiB" id="gCl-Ej-t0x"/>
                         <segue destination="9Xz-xI-XUr" kind="relationship" relationship="nextPage" id="qpD-Hu-ebe"/>
                     </connections>
                 </controller>
@@ -57,7 +64,7 @@
                     <items>
                         <group width="1" alignment="center" verticalAlignment="center" id="UhH-Xs-grj">
                             <items>
-                                <imageView width="136" height="105" alignment="center" verticalAlignment="center" id="q3q-2Z-Dci" userLabel="QRCode">
+                                <imageView alignment="center" verticalAlignment="center" contentMode="center" id="q3q-2Z-Dci" userLabel="QRCode">
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </imageView>
                             </items>
