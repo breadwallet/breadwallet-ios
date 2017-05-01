@@ -79,6 +79,7 @@ class LoginViewController : UIViewController {
     }()
     private var hasAttemptedToShowTouchId = false
     private let lockedOverlay = UIVisualEffectView()
+    private var isResetting = false
 
     override func viewDidLoad() {
         addSubviews()
@@ -88,6 +89,37 @@ class LoginViewController : UIViewController {
         if pinView != nil {
             addPinView()
         }
+        disabledView.didTapReset = { [weak self] in
+            guard let store = self?.store else { return }
+            guard let walletManager = self?.walletManager else { return }
+            self?.isResetting = true
+            let recover = RecoverWalletViewController(store: store, walletManager: walletManager)
+            let nc = UINavigationController(rootViewController: recover)
+            nc.navigationBar.tintColor = .darkText
+            nc.navigationBar.titleTextAttributes = [
+                NSForegroundColorAttributeName: UIColor.darkText,
+                NSFontAttributeName: UIFont.customBold(size: 17.0)
+            ]
+            nc.setClearNavbar()
+            nc.navigationBar.isTranslucent = false
+            nc.navigationBar.barTintColor = .whiteTint
+
+            nc.viewControllers = [recover]
+
+            recover.didValidateSeedPhrase = { phrase in
+                let updatePin = UpdatePinViewController(store: store, walletManager: walletManager, showsBackButton: false, phrase: phrase)
+                nc.pushViewController(updatePin, animated: true)
+                updatePin.resetFromDisabledWillSucceed = {
+                    self?.disabledView.isHidden = true
+                }
+                updatePin.resetFromDisabledSuccess = {
+                    self?.authenticationSucceded()
+                }
+            }
+
+            self?.present(nc, animated: true, completion: nil)
+
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -96,7 +128,9 @@ class LoginViewController : UIViewController {
             hasAttemptedToShowTouchId = true
             touchIdTapped()
         }
-        lockIfNeeded()
+        if !isResetting {
+            lockIfNeeded()
+        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {

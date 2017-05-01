@@ -12,6 +12,7 @@ class RecoverWalletViewController : UIViewController {
 
     //MARK: - Public
     var didSetSeedPhrase: ((String) -> Void)?
+    var didValidateSeedPhrase: ((String) -> Void)?
 
     init(store: Store, walletManager: WalletManager) {
         self.store = store
@@ -118,6 +119,13 @@ class RecoverWalletViewController : UIViewController {
             errorLabel.isHidden = false
             return
         }
+
+        guard didValidateSeedPhrase == nil else {
+            UserDefaults.writePaperPhraseDate = Date()
+            didValidateSeedPhrase?(phrase)
+            return
+        }
+
         errorLabel.isHidden = true
 
         if self.walletManager.setSeedPhrase(phrase) {
