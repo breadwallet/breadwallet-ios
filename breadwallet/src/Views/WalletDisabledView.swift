@@ -36,6 +36,12 @@ class WalletDisabledView : UIView {
         })
     }
 
+    var didTapReset: (() -> Void)? {
+        didSet {
+            reset.tap = didTapReset
+        }
+    }
+
     private let label = UILabel(font: .customBold(size: 20.0), color: .darkText)
     private let store: Store
     private let faq: UIButton

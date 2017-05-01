@@ -12,6 +12,8 @@ class UpdatePinViewController : UIViewController, Subscriber {
 
     //MARK: - Public
     var setPinSuccess: (() -> Void)?
+    var resetFromDisabledSuccess: (() -> Void)?
+    var resetFromDisabledWillSucceed: (() -> Void)?
 
     init(store: Store, walletManager: WalletManager, showsBackButton: Bool = true, phrase: String? = nil) {
         self.store = store
@@ -205,15 +207,28 @@ class UpdatePinViewController : UIViewController, Subscriber {
         }
 
         if success {
-            setPinSuccess?()
-            store.perform(action: Alert.Show(.pinSet))
-            store.lazySubscribe(self,
-                                selector: { $0.alert != $1.alert && $1.alert == nil },
-                                callback: { _ in
-                                    self.parent?.dismiss(animated: true, completion: {
-                                        self.store.unsubscribe(self)
-                                    })
-            })
+            if resetFromDisabledSuccess != nil {
+                resetFromDisabledWillSucceed?()
+                store.perform(action: Alert.Show(.pinSet))
+                store.lazySubscribe(self,
+                                    selector: { $0.alert != $1.alert && $1.alert == nil },
+                                    callback: { _ in
+                                        self.dismiss(animated: true, completion: {
+                                            self.resetFromDisabledSuccess?()
+                                        })
+                })
+            } else {
+                setPinSuccess?()
+                store.perform(action: Alert.Show(.pinSet))
+                store.lazySubscribe(self,
+                                    selector: { $0.alert != $1.alert && $1.alert == nil },
+                                    callback: { _ in
+                                        self.parent?.dismiss(animated: true, completion: {
+                                            self.store.unsubscribe(self)
+                                        })
+                })
+            }
+
         } else {
             let alert = UIAlertController(title: S.UpdatePin.updateTitle, message: S.UpdatePin.setPinError, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: { [weak self] _ in
