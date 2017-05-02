@@ -185,6 +185,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             to.content = initialAddress
             amount.textField.becomeFirstResponder()
         }
+        currencySlider.load()
     }
 
     private func addButtonActions() {
