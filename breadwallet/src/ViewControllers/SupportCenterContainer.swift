@@ -10,6 +10,10 @@ import UIKit
 
 class SupportCenterContainer : UIViewController {
 
+    func navigate(to: String) {
+        webView.navigate(to: to)
+    }
+
     init(walletManager: WalletManager) {
         let mountPoint = "/support"
         #if Debug || Testflight
