@@ -13,8 +13,11 @@ private let buttonSize = CGSize(width: 80.0, height: 32.0)
 class CurrencySlider : UIView {
 
     init(rates: [Rate]) {
-        self.rates = rates
+        self.rates = Array(rates[0...15]) //TODO - what rates should be shown here?
         super.init(frame: .zero)
+    }
+
+    func load() {
         setupViews()
     }
 
