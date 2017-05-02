@@ -327,13 +327,15 @@ class LoginViewController : UIViewController {
 
                 if disabledView.superview == nil {
                     view.addSubview(disabledView)
+                    setNeedsStatusBarAppearanceUpdate()
                     disabledView.constrain(toSuperviewEdges: nil)
                     disabledView.show()
                 }
             } else {
                 pinPad.view.isUserInteractionEnabled = true
-                disabledView.hide {
-                    self.disabledView.removeFromSuperview()
+                disabledView.hide { [weak self] in
+                    self?.disabledView.removeFromSuperview()
+                    self?.setNeedsStatusBarAppearanceUpdate()
                 }
             }
         }
@@ -343,13 +345,18 @@ class LoginViewController : UIViewController {
         subheader.pushNewText(S.LoginScreen.subheader)
         pinPad.view.isUserInteractionEnabled = true
         unlockTimer = nil
-        disabledView.hide {
-            self.disabledView.removeFromSuperview()
+        disabledView.hide { [weak self] in
+            self?.disabledView.removeFromSuperview()
+            self?.setNeedsStatusBarAppearanceUpdate()
         }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .default
+        if disabledView.superview == nil {
+            return .lightContent
+        } else {
+            return .default
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
