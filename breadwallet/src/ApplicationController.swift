@@ -50,6 +50,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         startEventManager()
         updateAssetBundles()
         listenForPushNotificationRequest()
+        offMainInitialization()
     }
 
     func willEnterForeground() {
@@ -217,6 +218,12 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             self.kvStoreCoordinator = KVStoreCoordinator(store: self.store, kvStore: kvStore)
             self.kvStoreCoordinator?.retreiveStoredWalletInfo()
             self.kvStoreCoordinator?.listenForWalletChanges()
+        }
+    }
+
+    private func offMainInitialization() {
+        DispatchQueue.global(qos: .background).async {
+            let _ = Rate.symbolMap //Initialize currency symbol map
         }
     }
 }
