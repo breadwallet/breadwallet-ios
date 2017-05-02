@@ -28,6 +28,7 @@ class PinView : UIView {
         return (itemSize + C.padding[1]) * CGFloat(length)
     }
     let shakeDuration: CFTimeInterval = 0.6
+    fileprivate var shakeCompletion: (() -> Void)?
 
     init(style: PinViewStyle, length: Int) {
         self.style = style
@@ -49,7 +50,8 @@ class PinView : UIView {
         }
     }
 
-    func shake() {
+    func shake(completion: (() -> Void)? = nil) {
+        shakeCompletion = completion
         let translation = CAKeyframeAnimation(keyPath: "transform.translation.x");
         translation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
         translation.values = [-5, 5, -5, 5, -3, 3, -2, 2, 0]
@@ -63,6 +65,7 @@ class PinView : UIView {
         let shakeGroup: CAAnimationGroup = CAAnimationGroup()
         shakeGroup.animations = [translation, rotation]
         shakeGroup.duration = shakeDuration
+        shakeGroup.delegate = self
         self.layer.add(shakeGroup, forKey: "shakeIt")
     }
 
@@ -101,5 +104,11 @@ class PinView : UIView {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension PinView : CAAnimationDelegate {
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        shakeCompletion?()
     }
 }

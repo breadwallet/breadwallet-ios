@@ -174,7 +174,10 @@ class UpdatePinViewController : UIViewController, Subscriber {
         DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
             self?.pinView.fill(0)
         }
-        pinView.shake()
+        pinPad.view.isUserInteractionEnabled = false
+        pinView.shake { [weak self] in
+            self?.pinPad.view.isUserInteractionEnabled = true
+        }
         pinPad.clear()
     }
 

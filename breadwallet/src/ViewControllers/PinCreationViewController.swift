@@ -17,6 +17,7 @@ class PinCreationViewController : UIViewController, Subscriber {
     //This hidden Textfield is used under the hood for pin entry
     //PinView is what actually gets displayed on the screen
     private let hiddenPin: UITextField = {
+        //TODO - use custom pinpad here
         let textField = UITextField()
         textField.keyboardType = .numberPad
         textField.isSecureTextEntry = true

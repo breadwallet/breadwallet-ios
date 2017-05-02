@@ -277,7 +277,10 @@ class LoginViewController : UIViewController {
 
     private func authenticationFailed() {
         guard let pinView = pinView else { return }
-        pinView.shake()
+        pinPad.view.isUserInteractionEnabled = false
+        pinView.shake { [weak self] in
+            self?.pinPad.view.isUserInteractionEnabled = true
+        }
         pinPad.clear()
         DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
             pinView.fill(0)
