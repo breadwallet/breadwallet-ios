@@ -16,6 +16,8 @@ class SecurityCenterHeader : UIView, GradientDrawable {
 }
 
 private let headerHeight: CGFloat = 222.0
+private let fadeStart: CGFloat = 185.0
+private let fadeEnd: CGFloat = 160.0
 
 class SecurityCenterViewController : UIViewController, Subscriber {
 
@@ -39,7 +41,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     fileprivate var headerBackgroundHeight: NSLayoutConstraint?
     private let headerBackground = SecurityCenterHeader()
     private let header: ModalHeaderView
-    private let shield = UIImageView(image: #imageLiteral(resourceName: "shield"))
+    fileprivate let shield = UIImageView(image: #imageLiteral(resourceName: "shield"))
     private let scrollView = UIScrollView()
     private let info = UILabel(font: .customBody(size: 16.0))
     private let pinCell = SecurityCenterCell(title: S.SecurityCenter.Cells.pinTitle, descriptionText: S.SecurityCenter.Cells.pinDescription)
@@ -48,6 +50,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     private let separator = UIView(color: .secondaryShadow)
     private let store: Store
     private let walletManager: WalletManager
+    fileprivate var didViewAppear = false
 
     deinit {
         store.unsubscribe(self)
@@ -62,6 +65,17 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setPinAndPhraseChecks()
+        didViewAppear = false
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        didViewAppear = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        didViewAppear = false
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -164,7 +178,18 @@ class SecurityCenterViewController : UIViewController, Subscriber {
 
 extension SecurityCenterViewController : UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let yOffset = scrollView.contentOffset.y
-        headerBackgroundHeight?.constant = headerHeight - yOffset
+        guard didViewAppear else { return } //We don't want to be doing an stretchy header stuff during interactive pop gestures
+        let yOffset = scrollView.contentOffset.y + 20.0
+        let newHeight = headerHeight - yOffset
+        headerBackgroundHeight?.constant = newHeight
+
+        if newHeight < fadeStart {
+            let range = fadeStart - fadeEnd
+            let alpha = (newHeight - fadeEnd)/range
+            shield.alpha = max(alpha, 0.0)
+        } else {
+            shield.alpha = 1.0
+        }
+
     }
 }
