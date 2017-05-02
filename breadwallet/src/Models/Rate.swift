@@ -23,7 +23,7 @@ struct Rate {
         }
     }
 
-    private static var symbolMap: [String: String] = {
+    static var symbolMap: [String: String] = {
         var map = [String: String]()
         Locale.availableIdentifiers.forEach { identifier in
             let locale = Locale(identifier: identifier)
