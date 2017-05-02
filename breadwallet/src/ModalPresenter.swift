@@ -11,7 +11,12 @@ import UIKit
 class ModalPresenter : Subscriber {
 
     //MARK: - Public
-    var walletManager: WalletManager?
+    var walletManager: WalletManager? {
+        didSet {
+            guard let walletManager = walletManager else { return }
+            initializeSupportCenter(walletManager: walletManager)
+        }
+    }
     init(store: Store, apiClient: BRAPIClient, window: UIWindow) {
         self.store = store
         self.window = window
@@ -28,6 +33,11 @@ class ModalPresenter : Subscriber {
     private let modalTransitionDelegate: ModalTransitionDelegate
     private let messagePresenter = MessageUIPresenter()
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
+    private var supportCenter: SupportCenterContainer?
+
+    private func initializeSupportCenter(walletManager: WalletManager) {
+        supportCenter = SupportCenterContainer(walletManager: walletManager)
+    }
 
     private func addSubscriptions() {
         store.subscribe(self,
@@ -115,17 +125,10 @@ class ModalPresenter : Subscriber {
     }
 
     private func presentFaq(articleId: String? = nil) {
-        guard let walletManager = walletManager else { return }
-        let mountPoint = articleId == nil ? "/support" : "/support/id=\(articleId!)"
-        let vc: BRWebViewController
-        #if Debug || Testflight
-            vc = BRWebViewController(bundleName: "bread-support-staging", mountPoint: mountPoint, walletManager: walletManager)
-        #else
-            vc = BRWebViewController(bundleName: "bread-support", mountPoint: mountPoint, walletManager: walletManager)
-        #endif
-        vc.startServer()
-        vc.preload()
-        topViewController?.present(vc, animated: true, completion: {})
+        guard let supportCenter = supportCenter else { return }
+        supportCenter.modalPresentationStyle = .overFullScreen
+        supportCenter.modalPresentationCapturesStatusBarAppearance = true
+        topViewController?.present(supportCenter, animated: true, completion: {})
     }
 
     private func rootModalViewController(_ type: RootModal) -> UIViewController? {
