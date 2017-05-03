@@ -13,6 +13,7 @@ enum SearchFilterType {
     case received
     case pending
     case complete
+    case text(String)
 
     var description: String {
         switch self {
@@ -24,6 +25,8 @@ enum SearchFilterType {
             return S.Search.pending
         case .complete:
             return S.Search.complete
+        case .text(_):
+            return ""
         }
     }
 
@@ -37,9 +40,41 @@ enum SearchFilterType {
             return { $0.isPending }
         case .complete:
             return { !$0.isPending }
+        case .text(let text):
+            return { transaction in
+                if transaction.hash.contains(text) {
+                    return true
+                }
+                if let address = transaction.toAddress, address.contains(text) {
+                    if address.contains(text) {
+                        return true
+                    }
+                }
+                return false
+            }
         }
     }
 }
+
+extension SearchFilterType : Equatable {}
+
+func ==(lhs: SearchFilterType, rhs: SearchFilterType) -> Bool {
+    switch (lhs, rhs) {
+    case (.sent, .sent):
+        return true
+    case (.received, .received):
+        return true
+    case (.pending, .pending):
+        return true
+    case (.complete, .complete):
+        return true
+    case (.text(_), .text(_)):
+        return true
+    default:
+        return false
+    }
+}
+
 
 typealias TransactionFilter = (Transaction) -> Bool
 
@@ -60,7 +95,7 @@ class SearchHeaderView : UIView {
     private let pending = ShadowButton(title: S.Search.pending, type: .tertiary)
     private let complete = ShadowButton(title: S.Search.complete, type: .tertiary)
     private let cancel = UIButton(type: .system)
-    private var filters: [SearchFilterType] = [] {
+    fileprivate var filters: [SearchFilterType] = [] {
         didSet {
             didChangeFilters?(filters.map { $0.filter })
         }
@@ -94,9 +129,10 @@ class SearchHeaderView : UIView {
     private func setData() {
         backgroundColor = .whiteTint
         searchBar.backgroundImage = UIImage()
-        searchBar.showsScopeBar = true
+        searchBar.delegate = self
         cancel.setTitle(S.Button.cancel, for: .normal)
         cancel.tap = { [weak self] in
+            self?.filters = []
             self?.searchBar.resignFirstResponder()
             self?.didCancel?()
         }
@@ -196,17 +232,13 @@ class SearchHeaderView : UIView {
 }
 
 extension SearchHeaderView : UISearchBarDelegate {
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        print("did end")
-    }
-
-
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print("textdid change: \(searchText)")
+        let filter: SearchFilterType = .text(searchText)
+        if let index = filters.index(of: filter) {
+            filters.remove(at: index)
+        }
+        if searchText != "" {
+            filters.append(filter)
+        }
     }
-
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print("search button clicked")
-    }
-
 }
