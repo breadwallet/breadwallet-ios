@@ -38,11 +38,23 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
         }
     }
 
+    var filters: [TransactionFilter] = [] {
+        didSet {
+            transactions = filters.reduce(allTransactions, { $0.filter($1) })
+            tableView.reloadData()
+        }
+    }
+
     //MARK: - Private
     private let store: Store
     private let headerCellIdentifier = "HeaderCellIdentifier"
     private let transactionCellIdentifier = "TransactionCellIdentifier"
     private var transactions: [Transaction] = []
+    private var allTransactions: [Transaction] = [] {
+        didSet {
+            transactions = allTransactions
+        }
+    }
     private var currency: Currency = .bitcoin {
         didSet {
             reload()
@@ -63,10 +75,11 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
         tableView.separatorStyle = .none
         tableView.estimatedRowHeight = 100.0
         tableView.rowHeight = UITableViewAutomaticDimension
-
+        tableView.backgroundColor = .whiteTint
+        
         store.subscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions },
                         callback: { state in
-                            self.transactions = state.walletState.transactions
+                            self.allTransactions = state.walletState.transactions
                             self.reload()
         })
 

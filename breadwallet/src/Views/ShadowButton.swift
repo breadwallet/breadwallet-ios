@@ -137,6 +137,10 @@ class ShadowButton: UIControl {
 
         iconImageView.constrainLeadingCorners()
         label.constrainTrailingCorners()
+        label.constrain([
+            label.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[1]),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[1]),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1]) ])
 
         iconImageView.constrain([
                 iconImageView.constraint(toLeading: label, constant: -C.padding[1])
@@ -146,7 +150,7 @@ class ShadowButton: UIControl {
 
     private func setupLabelOnly() {
         container.addSubview(label)
-        label.constrain(toSuperviewEdges: nil)
+        label.constrain(toSuperviewEdges: UIEdgeInsets(top: C.padding[1], left: C.padding[1], bottom: -C.padding[1], right: -C.padding[1]))
     }
 
     private func setColors() {

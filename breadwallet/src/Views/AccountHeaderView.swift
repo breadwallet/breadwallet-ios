@@ -28,12 +28,13 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         setup()
     }
 
+    let search = UIButton(type: .system)
+
     //MARK: - Private
     private let name = UILabel(font: UIFont.boldSystemFont(ofSize: 17.0))
     private let manage = UIButton(type: .system)
     private let primaryBalance = UpdatingLabel(formatter: Amount.btcFormat)
     private let secondaryBalance = UpdatingLabel(formatter: Amount.localFormat)
-    private let search = UIButton(type: .system)
     private let currencyTapView = UIView()
     private let store: Store
     private let equals = UILabel(font: .customBody(size: smallFontSize), color: .darkText)

@@ -304,4 +304,11 @@ enum S {
     enum Watch {
         static let noWalletWarning = NSLocalizedString("Watch.noWalletWarning", value: "Open breadwallet iPhone app to setup your wallet", comment: "No wallet warning for watch app")
     }
+
+    enum Search {
+        static let sent = NSLocalizedString("Search.sent", value: "sent", comment: "Sent filter label")
+        static let received = NSLocalizedString("Search.received", value: "received", comment: "Received filter label")
+        static let pending = NSLocalizedString("Search.pending", value: "pending", comment: "Pending filter label")
+        static let complete = NSLocalizedString("Search.complete", value: "complete", comment: "Complete filter label")
+    }
 }
