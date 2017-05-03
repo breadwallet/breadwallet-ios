@@ -19,6 +19,7 @@ enum ArticleIds {
     static let transactionDetails = "transaction-details"
     static let manageWallet = "manage-wallet"
     static let receive = "receive"
+    static let requestAmount = "request-amount"
     static let send = "send"
     static let walletDisabled = "wallet-disabled"
 }
