@@ -100,6 +100,8 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         status.textColor = .darkText
         timestamp.textColor = .grayTextTint
 
+        backgroundColor = .whiteTint
+
         shadowView.backgroundColor = .clear
         shadowView.layer.shadowColor = UIColor.black.cgColor
         shadowView.layer.shadowOpacity = 0.5

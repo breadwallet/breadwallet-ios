@@ -37,7 +37,7 @@ class Transaction {
         let transactionIsVerified = wallet.transactionIsVerified(tx)
         let transactionIsPending = wallet.transactionIsPending(tx)
 
-        let confirms = transactionBlockHeight > blockHeight ? 0 : Int((blockHeight - transactionBlockHeight) + 1)
+        confirms = transactionBlockHeight > blockHeight ? 0 : Int((blockHeight - transactionBlockHeight) + 1)
         self.status = makeStatus(isValid: isValid, isPending: transactionIsPending, isVerified: transactionIsVerified, confirms: confirms)
 
         if isValid {
@@ -90,6 +90,7 @@ class Transaction {
     let fee: UInt64
     let hash: String
     let isValid: Bool
+    let confirms: Int
 
     //MARK: - Private
     private let tx: BRTxRef
@@ -167,6 +168,10 @@ class Transaction {
 
     var rawTransaction: BRTransaction {
         return tx.pointee
+    }
+
+    var isPending: Bool {
+        return confirms < 6
     }
 
     private let longDateFormatter: DateFormatter = {

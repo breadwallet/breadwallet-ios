@@ -64,6 +64,12 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     private let loginView: LoginViewController
     private let tempLoginView: LoginViewController
     private let loginTransitionDelegate = LoginTransitionDelegate()
+    private let searchHeaderview: SearchHeaderView = {
+        let view = SearchHeaderView()
+        view.isHidden = true
+        return view
+    }()
+    private let headerContainer = UIView()
 
     override func viewDidLoad() {
         // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
@@ -83,12 +89,14 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
 
         //Start Accont View
         addTransactionsView()
-        view.addSubview(headerView)
+        view.addSubview(headerContainer)
+        headerContainer.addSubview(headerView)
         view.addSubview(footerView)
 
-        headerView.constrainTopCorners(sidePadding: 0, topPadding: 0)
-        headerView.constrain([
-            headerView.constraint(.height, constant: accountHeaderHeight) ])
+        headerContainer.constrainTopCorners(sidePadding: 0, topPadding: 0)
+        headerContainer.constrain([
+            headerContainer.constraint(.height, constant: accountHeaderHeight) ])
+        headerView.constrain(toSuperviewEdges: nil)
 
         footerView.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         footerView.constrain([
@@ -119,6 +127,36 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         addAppLifecycleNotificationEvents()
         addTemporaryStartupViews()
 
+
+        headerContainer.addSubview(searchHeaderview)
+        searchHeaderview.constrain(toSuperviewEdges: nil)
+
+        headerView.search.tap = { [weak self] in
+            guard let myself = self else { return }
+            UIView.transition(from: myself.headerView,
+                              to: myself.searchHeaderview,
+                              duration: C.animationDuration,
+                              options: [.transitionFlipFromBottom, .showHideTransitionViews, .curveEaseOut],
+                              completion: { _ in
+                                myself.setNeedsStatusBarAppearanceUpdate()
+            })
+        }
+
+        searchHeaderview.didCancel = { [weak self] in
+            guard let myself = self else { return }
+            UIView.transition(from: myself.searchHeaderview,
+                              to: myself.headerView,
+                              duration: C.animationDuration,
+                              options: [.transitionFlipFromTop, .showHideTransitionViews, .curveEaseOut],
+                              completion: { _ in
+                                myself.setNeedsStatusBarAppearanceUpdate()
+            })
+        }
+
+
+        searchHeaderview.didChangeFilters = { [weak self] filters in
+            self?.transactionsTableView.filters = filters
+        }
 
     }
 
@@ -220,7 +258,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
+        return searchHeaderview.isHidden ? .lightContent : .default
     }
 
     required init?(coder aDecoder: NSCoder) {

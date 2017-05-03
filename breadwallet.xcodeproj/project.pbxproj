@@ -284,6 +284,7 @@
 		CE8CD8DF1E2E825100785E02 /* VerifyPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8DE1E2E825000785E02 /* VerifyPinViewController.swift */; };
 		CE8CD8E11E31976800785E02 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8E01E31976800785E02 /* LoginViewController.swift */; };
 		CE8CD8E31E31978100785E02 /* LoginBackgroundTriangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8E21E31978100785E02 /* LoginBackgroundTriangle.swift */; };
+		CE8F0AE31EB91BB500AA7642 /* SearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8F0AE21EB91BB500AA7642 /* SearchHeaderView.swift */; };
 		CE9057181DFF0FA8006BA848 /* String+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9057171DFF0FA8006BA848 /* String+Additions.swift */; };
 		CE90571A1DFF18B2006BA848 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9057191DFF18B2006BA848 /* ScanViewController.swift */; };
 		CE92F9F01DED0C790046B516 /* PresentModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */; };
@@ -1438,6 +1439,7 @@
 		CE8CD8DE1E2E825000785E02 /* VerifyPinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VerifyPinViewController.swift; path = src/ViewControllers/VerifyPinViewController.swift; sourceTree = "<group>"; };
 		CE8CD8E01E31976800785E02 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = src/ViewControllers/LoginViewController.swift; sourceTree = "<group>"; };
 		CE8CD8E21E31978100785E02 /* LoginBackgroundTriangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginBackgroundTriangle.swift; path = src/Views/LoginBackgroundTriangle.swift; sourceTree = "<group>"; };
+		CE8F0AE21EB91BB500AA7642 /* SearchHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchHeaderView.swift; path = src/Views/SearchHeaderView.swift; sourceTree = "<group>"; };
 		CE9057171DFF0FA8006BA848 /* String+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Additions.swift"; path = "src/Extensions/String+Additions.swift"; sourceTree = "<group>"; };
 		CE9057191DFF18B2006BA848 /* ScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScanViewController.swift; path = src/ViewControllers/ScanViewController.swift; sourceTree = "<group>"; };
 		CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PresentModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/PresentModalAnimator.swift; sourceTree = "<group>"; };
@@ -2858,6 +2860,7 @@
 				CEE20C2C1EA288FA0086F724 /* UpdatingLabel.swift */,
 				CEE20C2E1EA3E5820086F724 /* BlinkingView.swift */,
 				CE5E6C931EB7964900A476DB /* WalletDisabledView.swift */,
+				CE8F0AE21EB91BB500AA7642 /* SearchHeaderView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -3736,6 +3739,7 @@
 				CE124CF81E67A8E500DFA146 /* TransactionDirection.swift in Sources */,
 				CE8CD8DD1E2D9EF200785E02 /* Sender.swift in Sources */,
 				CE4DFB2C1E9BE5880014009E /* ReScanViewController.swift in Sources */,
+				CE8F0AE31EB91BB500AA7642 /* SearchHeaderView.swift in Sources */,
 				22A9A9551DF61945000F0016 /* BRTar.swift in Sources */,
 				CE14E4091E4D506000AEA83A /* TransactionDetailsViewController.swift in Sources */,
 				CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */,
