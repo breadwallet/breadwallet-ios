@@ -20,6 +20,7 @@ class MaskedShadow: UIView {
     override func layoutSubviews() {
 
         guard style != .single else {
+            layer.mask = nil
             layer.shadowPath = UIBezierPath(rect: bounds).cgPath
             return
         }
