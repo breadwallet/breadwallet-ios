@@ -165,4 +165,20 @@ extension UIView {
             constraint(.centerY, toView: view)
         ])
     }
+
+    func pinTo(viewAbove: UIView, padding: CGFloat = 0.0, height: CGFloat? = nil) {
+        guard superview != nil else { assert(false, "Superview cannot be nil when adding contraints"); return }
+        constrain([
+                constraint(.width, toView: viewAbove),
+                constraint(toBottom: viewAbove, constant: padding),
+                height != nil ? constraint(.height, constant: height!) : nil
+            ])
+    }
+
+    func pin(toSize: CGSize) {
+        guard superview != nil else { assert(false, "Superview cannot be nil when adding contraints"); return }
+        constrain([
+            widthAnchor.constraint(equalToConstant: toSize.width),
+            heightAnchor.constraint(equalToConstant: toSize.height)])
+    }
 }
