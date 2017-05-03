@@ -139,23 +139,7 @@ class ModalPresenter : Subscriber {
         case .none:
             return nil
         case .send:
-            guard let walletManager = walletManager else { return nil }
-            let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager))
-            let root = ModalViewController(childViewController: sendVC, store: store)
-            sendVC.presentScan = presentScan(parent: root)
-            sendVC.presentVerifyPin = { [weak root] callback in
-                let vc = VerifyPinViewController(callback: callback)
-                vc.modalPresentationStyle = .overFullScreen
-                root?.view.isFrameChangeBlocked = true
-                root?.present(vc, animated: true, completion: nil)
-            }
-            sendVC.onPublishSuccess = { [weak self] in
-                self?.presentAlert(.sendSuccess, completion: {})
-            }
-            sendVC.onPublishFailure = { [weak self] in
-                self?.presentAlert(.sendFailure, completion: {})
-            }
-            return root
+            return makeSendView()
         case .receive:
             return receiveView(isRequestAmountVisible: true)
         case .menu:
@@ -166,12 +150,35 @@ class ModalPresenter : Subscriber {
             return receiveView(isRequestAmountVisible: false)
         case .manageWallet:
             return ModalViewController(childViewController: ManageWalletViewController(store: store), store: store)
+        case .requestAmount:
+            guard let wallet = walletManager?.wallet else { return nil }
+            return ModalViewController(childViewController: RequestAmountViewController(wallet: wallet, store: store), store: store)
         }
+    }
+
+    private func makeSendView() -> UIViewController? {
+        guard let walletManager = walletManager else { return nil }
+        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager))
+        let root = ModalViewController(childViewController: sendVC, store: store)
+        sendVC.presentScan = presentScan(parent: root)
+        sendVC.presentVerifyPin = { [weak root] callback in
+            let vc = VerifyPinViewController(callback: callback)
+            vc.modalPresentationStyle = .overFullScreen
+            root?.view.isFrameChangeBlocked = true
+            root?.present(vc, animated: true, completion: nil)
+        }
+        sendVC.onPublishSuccess = { [weak self] in
+            self?.presentAlert(.sendSuccess, completion: {})
+        }
+        sendVC.onPublishFailure = { [weak self] in
+            self?.presentAlert(.sendFailure, completion: {})
+        }
+        return root
     }
 
     private func receiveView(isRequestAmountVisible: Bool) -> UIViewController? {
         guard let wallet = walletManager?.wallet else { return nil }
-        let receiveVC = ReceiveViewController(wallet: wallet, isRequestAmountVisible: isRequestAmountVisible)
+        let receiveVC = ReceiveViewController(wallet: wallet, store: store, isRequestAmountVisible: isRequestAmountVisible)
         let root = ModalViewController(childViewController: receiveVC, store: store)
         receiveVC.presentEmail = { [weak self, weak root] address, image in
             guard let root = root else { return }

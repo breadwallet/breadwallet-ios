@@ -67,6 +67,7 @@ enum RootModal {
     case loginAddress
     case loginScan
     case manageWallet
+    case requestAmount
 }
 
 struct WalletState {

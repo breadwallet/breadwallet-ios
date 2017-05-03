@@ -34,7 +34,7 @@ class ModalViewController : UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = .clear
         view.addSubview(header)
-
+        view.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .vertical)
         header.closeCallback = { [weak self] in
             if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
                 delegate.reset()

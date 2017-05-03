@@ -1,47 +1,42 @@
 //
-//  ReceiveViewController.swift
+//  RequestAmountViewController.swift
 //  breadwallet
 //
-//  Created by Adrian Corscadden on 2016-11-30.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Created by Adrian Corscadden on 2017-05-03.
+//  Copyright © 2017 breadwallet LLC. All rights reserved.
 //
 
 import UIKit
 
-private let qrSize: CGFloat = 186.0
+private let qrSize: CGSize = CGSize(width: 186.0, height: 186.0)
 private let smallButtonHeight: CGFloat = 32.0
 private let buttonPadding: CGFloat = 20.0
 private let smallSharePadding: CGFloat = 12.0
 private let largeSharePadding: CGFloat = 20.0
 
-typealias PresentShare = (String, UIImage) -> Void
+class RequestAmountViewController : UIViewController {
 
-class ReceiveViewController : UIViewController {
-
-    //MARK - Public
     var presentEmail: PresentShare?
     var presentText: PresentShare?
 
-    init(wallet: BRWallet, store: Store, isRequestAmountVisible: Bool) {
+    init(wallet: BRWallet, store: Store) {
         self.wallet = wallet
-        self.isRequestAmountVisible = isRequestAmountVisible
-        self.store = store
+        self.currencySlider = CurrencySlider(rates: store.state.rates)
         super.init(nibName: nil, bundle: nil)
     }
 
     //MARK - Private
+    private let amount = SendAmountCell(placeholder: S.Send.amountLabel)
+    private let pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad)
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 14.0))
     private let addressPopout = InViewAlert(type: .primary)
     private let share = ShadowButton(title: S.Receive.share, type: .tertiary, image: #imageLiteral(resourceName: "Share"))
     private let sharePopout = InViewAlert(type: .secondary)
     private let border = UIView()
-    private let request = ShadowButton(title: S.Receive.request, type: .secondary)
     private var topSharePopoutConstraint: NSLayoutConstraint?
     private let wallet: BRWallet
-    private let store: Store
-
-    fileprivate let isRequestAmountVisible: Bool
+    private let currencySlider: CurrencySlider?
 
     override func viewDidLoad() {
         addSubviews()
@@ -53,20 +48,24 @@ class ReceiveViewController : UIViewController {
     }
 
     private func addSubviews() {
+        view.addSubview(amount)
         view.addSubview(qrCode)
         view.addSubview(address)
         view.addSubview(addressPopout)
         view.addSubview(share)
         view.addSubview(sharePopout)
         view.addSubview(border)
-        view.addSubview(request)
     }
 
     private func addConstraints() {
+        amount.constrainTopCorners(height: SendCell.defaultHeight)
+        addChildViewController(pinPad, layout: {
+            pinPad.view.pinTo(viewAbove: amount, padding: 0.0, height: pinPad.height)
+        })
         qrCode.constrain([
-            qrCode.constraint(.width, constant: qrSize),
-            qrCode.constraint(.height, constant: qrSize),
-            qrCode.constraint(.top, toView: view, constant: C.padding[4]),
+            qrCode.constraint(.width, constant: qrSize.width),
+            qrCode.constraint(.height, constant: qrSize.height),
+            qrCode.topAnchor.constraint(equalTo: pinPad.view.bottomAnchor, constant: C.padding[2]),
             qrCode.constraint(.centerX, toView: view) ])
         address.constrain([
             address.constraint(toBottom: qrCode, constant: C.padding[1]),
@@ -80,7 +79,7 @@ class ReceiveViewController : UIViewController {
         share.constrain([
             share.constraint(toBottom: addressPopout, constant: C.padding[2]),
             share.constraint(.centerX, toView: view),
-            share.constraint(.width, constant: qrSize),
+            share.constraint(.width, constant: qrSize.width),
             share.constraint(.height, constant: smallButtonHeight) ])
         sharePopout.heightConstraint = sharePopout.constraint(.height, constant: 0.0)
         topSharePopoutConstraint = sharePopout.constraint(toBottom: share, constant: largeSharePadding)
@@ -93,13 +92,8 @@ class ReceiveViewController : UIViewController {
             border.constraint(.width, toView: view),
             border.constraint(toBottom: sharePopout, constant: 0.0),
             border.constraint(.centerX, toView: view),
-            border.constraint(.height, constant: 1.0) ])
-        request.constrain([
-            request.constraint(toBottom: border, constant: C.padding[3]),
-            request.constraint(.leading, toView: view, constant: C.padding[2]),
-            request.constraint(.trailing, toView: view, constant: -C.padding[2]),
-            request.constraint(.height, constant: C.Sizes.buttonHeight),
-            request.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
+            border.constraint(.height, constant: 1.0),
+            border.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
     }
 
     private func setStyle() {
@@ -109,27 +103,16 @@ class ReceiveViewController : UIViewController {
         border.backgroundColor = .secondaryBorder
         //TODO - use payment request object here
         qrCode.image = UIImage.qrCode(data: "\(address.text!)".data(using: .utf8)!, color: CIColor(color: .black))?
-                            .resize(CGSize(width: qrSize, height: qrSize))!
+            .resize(qrSize)!
         share.isToggleable = true
-        if !isRequestAmountVisible {
-            border.isHidden = true
-            request.isHidden = true
-        }
         sharePopout.clipsToBounds = true
-        request.tap = { [weak self] in
-            guard let modalTransitionDelegate = self?.parent?.transitioningDelegate as? ModalTransitionDelegate else { return }
-            modalTransitionDelegate.reset()
-            self?.dismiss(animated: true, completion: {
-                self?.store.perform(action: RootModalActions.Present(modal: .requestAmount))
-            })
-        }
     }
 
     private func addActions() {
-        let gr = UITapGestureRecognizer(target: self, action: #selector(ReceiveViewController.addressTapped))
+        let gr = UITapGestureRecognizer(target: self, action: #selector(RequestAmountViewController.addressTapped))
         address.addGestureRecognizer(gr)
         address.isUserInteractionEnabled = true
-        share.addTarget(self, action: #selector(ReceiveViewController.shareTapped), for: .touchUpInside)
+        share.addTarget(self, action: #selector(RequestAmountViewController.shareTapped), for: .touchUpInside)
     }
 
     private func setupCopiedMessage() {
@@ -158,8 +141,8 @@ class ReceiveViewController : UIViewController {
             text.constraint(.bottom, toView: container, constant: -buttonPadding),
             text.leadingAnchor.constraint(equalTo: container.centerXAnchor, constant: C.padding[1]) ])
         sharePopout.contentView = container
-        email.addTarget(self, action: #selector(ReceiveViewController.emailTapped), for: .touchUpInside)
-        text.addTarget(self, action: #selector(ReceiveViewController.textTapped), for: .touchUpInside)
+        email.addTarget(self, action: #selector(RequestAmountViewController.emailTapped), for: .touchUpInside)
+        text.addTarget(self, action: #selector(RequestAmountViewController.textTapped), for: .touchUpInside)
     }
 
     @objc private func shareTapped() {
@@ -224,18 +207,18 @@ class ReceiveViewController : UIViewController {
             }
         })
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-extension ReceiveViewController : ModalDisplayable {
+extension RequestAmountViewController : ModalDisplayable {
     var faqArticleId: String? {
-        return "receive"
+        return ArticleIds.requestAmount
     }
 
     var modalTitle: String {
-        return S.Receive.title
+        return S.Receive.request
     }
 }

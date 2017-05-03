@@ -368,6 +368,7 @@
 		CEEC70921E95DA4400EF788E /* GradientSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70911E95DA4400EF788E /* GradientSwitch.swift */; };
 		CEEC70941E96A24F00EF788E /* DefaultCurrencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70931E96A24F00EF788E /* DefaultCurrencyViewController.swift */; };
 		CEEC70981E96BF8800EF788E /* DefaultCurrencyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70971E96BF8800EF788E /* DefaultCurrencyTests.swift */; };
+		CEEE92F11EBA7CBA00B7AC9C /* RequestAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEE92F01EBA7CBA00B7AC9C /* RequestAmountViewController.swift */; };
 		CEF3D2D71E8AB9980070178E /* SpendingLimitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3D2D61E8AB9980070178E /* SpendingLimitTests.swift */; };
 		CEF3D2D91E8B3C380070178E /* TouchIdSpendingLimitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3D2D81E8B3C380070178E /* TouchIdSpendingLimitViewController.swift */; };
 		CEF3D2DB1E8B55C80070178E /* UISlider+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3D2DA1E8B55C80070178E /* UISlider+Gradient.swift */; };
@@ -1518,6 +1519,7 @@
 		CEEC70911E95DA4400EF788E /* GradientSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GradientSwitch.swift; path = src/Views/GradientSwitch.swift; sourceTree = "<group>"; };
 		CEEC70931E96A24F00EF788E /* DefaultCurrencyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DefaultCurrencyViewController.swift; path = src/Views/DefaultCurrencyViewController.swift; sourceTree = "<group>"; };
 		CEEC70971E96BF8800EF788E /* DefaultCurrencyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultCurrencyTests.swift; sourceTree = "<group>"; };
+		CEEE92F01EBA7CBA00B7AC9C /* RequestAmountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RequestAmountViewController.swift; path = src/ViewControllers/RequestAmountViewController.swift; sourceTree = "<group>"; };
 		CEF3D2D61E8AB9980070178E /* SpendingLimitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpendingLimitTests.swift; sourceTree = "<group>"; };
 		CEF3D2D81E8B3C380070178E /* TouchIdSpendingLimitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TouchIdSpendingLimitViewController.swift; path = src/ViewControllers/TouchIdSpendingLimitViewController.swift; sourceTree = "<group>"; };
 		CEF3D2DA1E8B55C80070178E /* UISlider+Gradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UISlider+Gradient.swift"; path = "src/Extensions/UISlider+Gradient.swift"; sourceTree = "<group>"; };
@@ -2762,6 +2764,7 @@
 				CE4DFB2B1E9BE5880014009E /* ReScanViewController.swift */,
 				CE4DFB2D1E9C26DA0014009E /* ShareDataViewController.swift */,
 				CE5E6C951EB8CCF500A476DB /* SupportCenterContainer.swift */,
+				CEEE92F01EBA7CBA00B7AC9C /* RequestAmountViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -3731,6 +3734,7 @@
 				CE3754AF1DDE6E2E0045B0CB /* RoundedContainer.swift in Sources */,
 				CEC6AA461DEFCE9200EE5AFD /* MenuViewController.swift in Sources */,
 				CEEC707F1E8D6B4100EF788E /* SettingsViewController.swift in Sources */,
+				CEEE92F11EBA7CBA00B7AC9C /* RequestAmountViewController.swift in Sources */,
 				CE8CD8DF1E2E825100785E02 /* VerifyPinViewController.swift in Sources */,
 				CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */,
 				CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */,
