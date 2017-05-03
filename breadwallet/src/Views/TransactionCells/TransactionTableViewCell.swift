@@ -96,11 +96,11 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     }
 
     private func setupStyle() {
+        backgroundColor = .clear
+
         comment.textColor = .darkText
         status.textColor = .darkText
         timestamp.textColor = .grayTextTint
-
-        backgroundColor = .whiteTint
 
         shadowView.backgroundColor = .clear
         shadowView.layer.shadowColor = UIColor.black.cgColor
