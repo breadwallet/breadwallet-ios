@@ -112,6 +112,7 @@ class ReceiveViewController : UIViewController {
             border.isHidden = true
             request.isHidden = true
         }
+        sharePopout.clipsToBounds = true
     }
 
     private func addActions() {
