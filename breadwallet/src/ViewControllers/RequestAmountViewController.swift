@@ -46,6 +46,7 @@ class RequestAmountViewController : UIViewController {
     private var satoshis: UInt64 = 0 {
         didSet {
             setAmountLabel()
+            setQrCode()
         }
     }
     private var minimumFractionDigits = 0
@@ -53,7 +54,7 @@ class RequestAmountViewController : UIViewController {
     private var selectedRate: Rate? {
         didSet {
             setAmountLabel()
-
+            setQrCode()
             //Update pinpad content to match currency change
             let currentOutput = amount.content ?? ""
             var set = CharacterSet.decimalDigits
@@ -148,8 +149,7 @@ class RequestAmountViewController : UIViewController {
         address.text = wallet.receiveAddress
         address.textColor = .grayTextTint
         border.backgroundColor = .secondaryBorder
-        //TODO - use payment request object here
-        qrCode.image = UIImage.qrCode(data: "\(address.text!)".data(using: .utf8)!, color: CIColor(color: .black))?
+        qrCode.image = UIImage.qrCode(data: "\(wallet.receiveAddress)".data(using: .utf8)!, color: CIColor(color: .black))?
             .resize(qrSize)!
         share.isToggleable = true
         sharePopout.clipsToBounds = true
@@ -248,6 +248,12 @@ class RequestAmountViewController : UIViewController {
             }
         }
         amount.setAmountLabel(text: output)
+    }
+
+    private func setQrCode(){
+        let request = PaymentRequest.requestString(withAddress: wallet.receiveAddress, forAmount: satoshis)
+        qrCode.image = UIImage.qrCode(data: request.data(using: .utf8)!, color: CIColor(color: .black))?
+            .resize(qrSize)!
     }
 
     private func setupCopiedMessage() {
