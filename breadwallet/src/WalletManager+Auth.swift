@@ -77,20 +77,14 @@ extension WalletManager : WalletAuthenticator {
     // true if keychain is available and we know that no wallet exists on it
     var noWallet: Bool {
         if didInitWallet { return false }
+        return WalletManager.staticNoWallet
+    }
 
+    static var staticNoWallet: Bool {
         do {
             if try keychainItem(key: KeychainKey.masterPubKey) as Data? != nil { return false }
             if try keychainItem(key: KeychainKey.seed) as Data? != nil { return false } // check for old keychain scheme
             return true
-        }
-        catch { return false }
-    }
-
-    static var hasWallet: Bool {
-        do {
-            if try keychainItem(key: KeychainKey.masterPubKey) as Data? != nil { return true }
-            if try keychainItem(key: KeychainKey.seed) as Data? != nil { return true } // check for old keychain scheme
-            return false
         }
         catch { return false }
     }
