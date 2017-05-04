@@ -76,7 +76,6 @@ enum S {
         static let scan = NSLocalizedString("LoginScreen.scan", value:"Scan", comment: "Scan button title")
         static let touchIdText = NSLocalizedString("LoginScreen.touchIdText", value:"Login With TouchID", comment: "Login with TouchID accessibility label")
         static let touchIdPrompt = NSLocalizedString("LoginScreen.touchIdPrompt", value:"Unlock your Breadwallet", comment: "TouchID prompt text")
-        static let header = NSLocalizedString("LoginScreen.header", value:"bread", comment: "Login Screen header")
         static let subheader = NSLocalizedString("LoginScreen.subheader", value:"Enter Pin", comment: "Login Screen sub-header")
         static let unlocked = NSLocalizedString("LoginScreen.unlocked", value:"Wallet Unlocked", comment: "Wallet unlocked message")
         static let disabled = NSLocalizedString("LoginScreen.disabled", value:"Disabled until: %@", comment: "Disabled until date")
