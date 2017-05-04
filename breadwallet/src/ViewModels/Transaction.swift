@@ -46,7 +46,7 @@ class Transaction {
             self.longStatus = S.Transaction.invalid
         }
 
-        self.hash = tx.pointee.txHash.description
+        self.hash = tx.pointee.txHash.hexString
     }
 
     func amountDescription(currency: Currency, rate: Rate) -> String {

@@ -340,6 +340,22 @@ public extension Data {
             return Data(outData)
         }
     }
+
+    var masterPubKey: BRMasterPubKey? {
+        guard self.count >= (4 + 32 + 33) else { return nil }
+        var mpk = BRMasterPubKey()
+        mpk.fingerPrint = self.subdata(in: 0..<4).withUnsafeBytes({ $0.pointee })
+        mpk.chainCode = self.subdata(in: 4..<(4 + 32)).withUnsafeBytes({ $0.pointee })
+        mpk.pubKey = self.subdata(in: (4 + 32)..<(4 + 32 + 33)).withUnsafeBytes({ $0.pointee })
+        return mpk
+    }
+
+    init(masterPubKey mpk: BRMasterPubKey) {
+        var data = Data(buffer: UnsafeBufferPointer(start: [mpk.fingerPrint], count: 1))
+        data.append(UnsafeBufferPointer(start: [mpk.chainCode], count: 1))
+        data.append(UnsafeBufferPointer(start: [mpk.pubKey], count: 1))
+        self.init(data)
+    }
 }
 
 public extension Date {
