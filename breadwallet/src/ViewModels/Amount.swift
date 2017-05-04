@@ -53,6 +53,20 @@ struct Amount {
         }
     }
 
+    static var bitsFormatter: NumberFormatter {
+        let format = NumberFormatter()
+        format.isLenient = true
+        format.numberStyle = .currency
+        format.generatesDecimalNumbers = true
+        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+        format.currencyCode = "XBT"
+        format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+        format.maximumFractionDigits = 2
+        format.minimumFractionDigits = 0 // iOS 8 bug, minimumFractionDigits now has to be set after currencySymbol
+        format.maximum = C.maxMoney as NSNumber
+        return format
+    }
+
     //MARK: - Private
     static let btcFormat: NumberFormatter = {
         let format = NumberFormatter()
