@@ -10,7 +10,6 @@ import UIKit
 
 private let largeFontSize: CGFloat = 26.0
 private let smallFontSize: CGFloat = 13.0
-private let logoAspectRatio: CGFloat = 125.0/417.0
 private let logoWidth: CGFloat = 0.22 //percentage of width
 
 class AccountHeaderView : UIView, GradientDrawable, Subscriber {
@@ -153,7 +152,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         logo.constrain([
             logo.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
             logo.topAnchor.constraint(equalTo: topAnchor, constant: 30.0),
-            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: logoAspectRatio),
+            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: C.Sizes.logoAspectRatio),
             logo.widthAnchor.constraint(equalTo: widthAnchor, multiplier: logoWidth) ])
     }
 
