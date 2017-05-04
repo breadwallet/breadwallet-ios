@@ -97,7 +97,7 @@ class LoginViewController : UIViewController {
             guard let store = self?.store else { return }
             guard let walletManager = self?.walletManager else { return }
             self?.isResetting = true
-            let recover = RecoverWalletViewController(store: store, walletManager: walletManager)
+            let recover = RecoverWalletViewController(store: store, walletManager: walletManager, isResettingPin: true)
             let nc = UINavigationController(rootViewController: recover)
             nc.navigationBar.tintColor = .darkText
             nc.navigationBar.titleTextAttributes = [
@@ -206,7 +206,6 @@ class LoginViewController : UIViewController {
             pinPadBackground.trailingAnchor.constraint(equalTo: pinPad.view.trailingAnchor),
             pinPadBackground.topAnchor.constraint(equalTo: pinPad.view.topAnchor),
             pinPadBackground.bottomAnchor.constraint(equalTo: pinPad.view.bottomAnchor) ])
-
         subheader.text = S.LoginScreen.subheader
 
         addressButton.addTarget(self, action: #selector(addressTapped), for: .touchUpInside)

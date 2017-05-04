@@ -14,11 +14,12 @@ class RecoverWalletViewController : UIViewController {
     var didSetSeedPhrase: ((String) -> Void)?
     var didValidateSeedPhrase: ((String) -> Void)?
 
-    init(store: Store, walletManager: WalletManager) {
+    init(store: Store, walletManager: WalletManager, isResettingPin: Bool = false) {
         self.store = store
         self.walletManager = walletManager
         self.enterPhrase = EnterPhraseCollectionViewController(walletManager: walletManager)
         self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.recoverWallet)
+        self.isResettingPin = isResettingPin
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -35,6 +36,8 @@ class RecoverWalletViewController : UIViewController {
     private let faq: UIButton
     private let scrollView = UIScrollView()
     private let container = UIView()
+    private var isResettingPin: Bool
+    private let moreInfoButton = UIButton(type: .system)
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -54,7 +57,8 @@ class RecoverWalletViewController : UIViewController {
         container.addSubview(errorLabel)
         container.addSubview(instruction)
         container.addSubview(faq)
-        
+        container.addSubview(moreInfoButton)
+
         addChildViewController(enterPhrase)
         container.addSubview(enterPhrase.view)
         enterPhrase.didMove(toParentViewController: self)
@@ -95,6 +99,9 @@ class RecoverWalletViewController : UIViewController {
             faq.centerYAnchor.constraint(equalTo: header.centerYAnchor),
             faq.widthAnchor.constraint(equalToConstant: 44.0),
             faq.heightAnchor.constraint(equalToConstant: 44.0) ])
+        moreInfoButton.constrain([
+            moreInfoButton.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: C.padding[2]),
+            moreInfoButton.leadingAnchor.constraint(equalTo: subheader.leadingAnchor) ])
     }
 
     private func setData() {
@@ -108,8 +115,22 @@ class RecoverWalletViewController : UIViewController {
             self?.validatePhrase(phrase)
         }
         instruction.text = S.RecoverWallet.instruction
-        header.text = S.RecoverWallet.header
-        subheader.text = S.RecoverWallet.subheader
+
+        if isResettingPin {
+            header.text = S.RecoverWallet.headerResetPin
+            subheader.text = S.RecoverWallet.subheaderResetPin
+            instruction.isHidden = true
+            moreInfoButton.setTitle(S.RecoverWallet.resetPinInfo, for: .normal)
+            moreInfoButton.tap = { [weak self] in
+                self?.store.trigger(name: .presentFaq(ArticleIds.resetPinWithPaperKey))
+            }
+            faq.isHidden = true
+        } else {
+            header.text = S.RecoverWallet.header
+            subheader.text = S.RecoverWallet.subheader
+            moreInfoButton.isHidden = true
+        }
+
         subheader.numberOfLines = 0
         subheader.lineBreakMode = .byWordWrapping
     }

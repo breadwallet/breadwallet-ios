@@ -22,4 +22,5 @@ enum ArticleIds {
     static let requestAmount = "request-amount"
     static let send = "send"
     static let walletDisabled = "wallet-disabled"
+    static let resetPinWithPaperKey = "reset-pin-paper-key"
 }
