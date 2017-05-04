@@ -188,7 +188,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     }
 
     private func addTemporaryStartupViews() {
-        if WalletManager.staticNoWallet {
+        if !WalletManager.staticNoWallet {
             addChildViewController(tempLoginView, layout: {
                 tempLoginView.view.constrain(toSuperviewEdges: nil)
             })
