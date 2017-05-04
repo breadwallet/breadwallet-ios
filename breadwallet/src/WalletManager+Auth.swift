@@ -364,6 +364,9 @@ extension WalletManager : WalletAuthenticator {
             try setKeychainItem(key: KeychainKey.masterPubKey, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.seed, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.mnemonic, item: nil as String?, authenticated: true)
+            if let bundleId = Bundle.main.bundleIdentifier {
+                UserDefaults.standard.removePersistentDomain(forName: bundleId)
+            }
             return true
         }
         catch { return false }
