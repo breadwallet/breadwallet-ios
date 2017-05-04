@@ -10,6 +10,8 @@ import UIKit
 
 private let largeFontSize: CGFloat = 26.0
 private let smallFontSize: CGFloat = 13.0
+private let logoAspectRatio: CGFloat = 125.0/417.0
+private let logoWidth: CGFloat = 0.22 //percentage of width
 
 class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
@@ -43,6 +45,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private var exchangeRate: Rate? {
         didSet { setBalances() }
     }
+    private var logo: UIImageView = {
+        let image = UIImageView(image: #imageLiteral(resourceName: "Logo"))
+        image.contentMode = .scaleAspectFit
+        return image
+    }()
 
     private func setup() {
         setData()
@@ -78,6 +85,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         }
 
         equals.text = S.AccountHeader.equals
+
+        manage.isHidden = true
+        name.isHidden = true
     }
 
     private func addSubviews() {
@@ -88,6 +98,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         addSubview(search)
         addSubview(currencyTapView)
         addSubview(equals)
+        addSubview(logo)
     }
 
     private func addConstraints() {
@@ -138,6 +149,12 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
         let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
         currencyTapView.addGestureRecognizer(gr)
+
+        logo.constrain([
+            logo.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
+            logo.topAnchor.constraint(equalTo: topAnchor, constant: 30.0),
+            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: logoAspectRatio),
+            logo.widthAnchor.constraint(equalTo: widthAnchor, multiplier: logoWidth) ])
     }
 
     private func transform(forView: UIView) ->  CGAffineTransform {
