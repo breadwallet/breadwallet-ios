@@ -55,12 +55,12 @@ extension WalletManager : WalletAuthenticator {
             let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
             seed = UInt512() // clear seed
             try setKeychainItem(key: KeychainKey.mnemonic, item: seedPhrase, authenticated: true)
-            try setKeychainItem(key: KeychainKey.masterPubKey,
-                                item: Data(buffer: UnsafeBufferPointer(start: [mpk], count: 1)))
+            try setKeychainItem(key: KeychainKey.masterPubKey, item: Data(masterPubKey: mpk))
             try setKeychainItem(key: KeychainKey.seed, item: nil as Data?)
         }
 
-        guard var mpk: Data = try keychainItem(key: KeychainKey.masterPubKey), mpk.count >= 69 else {
+        let mpkData: Data? = try keychainItem(key: KeychainKey.masterPubKey)
+        guard let masterPubKey = mpkData?.masterPubKey else {
             try self.init(masterPubKey: BRMasterPubKey(), earliestKeyTime: 0, dbPath: dbPath)
             return
         }
@@ -71,9 +71,7 @@ extension WalletManager : WalletAuthenticator {
             creationTime.withUnsafeBytes({ earliestKeyTime = $0.pointee })
         }
         
-        if mpk.count < MemoryLayout<BRMasterPubKey>.stride { mpk.count = MemoryLayout<BRMasterPubKey>.stride }
-        try self.init(masterPubKey: mpk.withUnsafeBytes({ $0.pointee }), earliestKeyTime: earliestKeyTime,
-                      dbPath: dbPath)
+        try self.init(masterPubKey: masterPubKey, earliestKeyTime: earliestKeyTime, dbPath: dbPath)
     }
     
     // true if keychain is available and we know that no wallet exists on it
@@ -277,10 +275,9 @@ extension WalletManager : WalletAuthenticator {
             var seed = UInt512()
             try setKeychainItem(key: KeychainKey.mnemonic, item: phrase, authenticated: true)
             BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
-            masterPubKey = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
+            self.masterPubKey = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
             seed = UInt512() // clear seed
-            try setKeychainItem(key: KeychainKey.masterPubKey,
-                                item: Data(buffer: UnsafeBufferPointer(start: [masterPubKey], count: 1)))
+            try setKeychainItem(key: KeychainKey.masterPubKey, item: Data(masterPubKey: self.masterPubKey))
             return true
         }
         catch { return false }
@@ -340,9 +337,8 @@ extension WalletManager : WalletAuthenticator {
                 BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
                 let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
                 seed = UInt512() // clear seed
-                guard var mpkData: Data = try keychainItem(key: KeychainKey.masterPubKey) else { return false }
-                mpkData.count = MemoryLayout<BRMasterPubKey>.stride
-                guard mpkData.withUnsafeBytes({ $0.pointee == mpk }) else { return false }
+                let mpkData: Data? = try keychainItem(key: KeychainKey.masterPubKey)
+                guard mpkData?.masterPubKey == mpk else { return false }
             }
             else if try keychainItem(key: KeychainKey.pin) != nil { return false }
             
