@@ -138,6 +138,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
                               duration: C.animationDuration,
                               options: [.transitionFlipFromBottom, .showHideTransitionViews, .curveEaseOut],
                               completion: { _ in
+                                myself.searchHeaderview.triggerUpdate()
                                 myself.setNeedsStatusBarAppearanceUpdate()
             })
         }

@@ -89,6 +89,10 @@ class SearchHeaderView : UIView {
 
     var didChangeFilters: (([TransactionFilter]) -> Void)?
 
+    func triggerUpdate() {
+        didChangeFilters?(filters.map { $0.filter })
+    }
+
     private let searchBar = UISearchBar()
     private let sent = ShadowButton(title: S.Search.sent, type: .tertiary)
     private let received = ShadowButton(title: S.Search.received, type: .tertiary)
@@ -132,7 +136,7 @@ class SearchHeaderView : UIView {
         searchBar.delegate = self
         cancel.setTitle(S.Button.cancel, for: .normal)
         cancel.tap = { [weak self] in
-            self?.filters = []
+            self?.didChangeFilters?([])
             self?.searchBar.resignFirstResponder()
             self?.didCancel?()
         }
