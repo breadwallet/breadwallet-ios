@@ -420,7 +420,7 @@ class ModalPresenter : Subscriber {
                     }))
                     self.topViewController?.present(success, animated: true, completion: nil)
                 } else {
-                    let failure = UIAlertController(title: "Success", message: "Successfully wiped wallet....shutting down", preferredStyle: .alert)
+                    let failure = UIAlertController(title: "Failed", message: "Failed to wipe wallet.", preferredStyle: .alert)
                     failure.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                     self.topViewController?.present(failure, animated: true, completion: nil)
                 }
