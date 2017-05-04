@@ -43,6 +43,11 @@ class LoginViewController : UIViewController {
     private let scanButton = SegmentedButton(title: S.LoginScreen.scan, type: .right)
     private let isPresentedForLock: Bool
     private let disabledView: WalletDisabledView
+    private var logo: UIImageView = {
+        let image = UIImageView(image: #imageLiteral(resourceName: "Logo"))
+        image.contentMode = .scaleAspectFit
+        return image
+    }()
 
     private let touchId: UIButton = {
         let button = UIButton(type: .system)
@@ -55,7 +60,6 @@ class LoginViewController : UIViewController {
         button.accessibilityLabel = S.LoginScreen.touchIdText
         return button
     }()
-    private let header = UILabel(font: .systemFont(ofSize: 40.0))
     private let subheader = UILabel(font: .customBody(size: 16.0), color: .darkText)
     private var pinPadPottom: NSLayoutConstraint?
     private var topControlTop: NSLayoutConstraint?
@@ -159,7 +163,7 @@ class LoginViewController : UIViewController {
         view.addSubview(topControlContainer)
         topControlContainer.addSubview(addressButton)
         topControlContainer.addSubview(scanButton)
-        view.addSubview(header)
+        view.addSubview(logo)
         view.addSubview(pinPadBackground)
     }
 
@@ -192,9 +196,11 @@ class LoginViewController : UIViewController {
             scanButton.trailingAnchor.constraint(equalTo: topControlContainer.trailingAnchor),
             scanButton.bottomAnchor.constraint(equalTo: topControlContainer.bottomAnchor) ])
 
-        header.constrain([
-            header.topAnchor.constraint(equalTo: topControlContainer.bottomAnchor, constant: C.padding[6]),
-            header.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
+        logo.constrain([
+            logo.topAnchor.constraint(equalTo: topControlContainer.bottomAnchor, constant: C.padding[8]),
+            logo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: C.Sizes.logoAspectRatio),
+            logo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.35) ])
         pinPadBackground.constrain([
             pinPadBackground.leadingAnchor.constraint(equalTo: pinPad.view.leadingAnchor),
             pinPadBackground.trailingAnchor.constraint(equalTo: pinPad.view.trailingAnchor),
@@ -202,8 +208,6 @@ class LoginViewController : UIViewController {
             pinPadBackground.bottomAnchor.constraint(equalTo: pinPad.view.bottomAnchor) ])
 
         subheader.text = S.LoginScreen.subheader
-        header.text = S.LoginScreen.header
-        header.textColor = .white
 
         addressButton.addTarget(self, action: #selector(addressTapped), for: .touchUpInside)
         scanButton.addTarget(self, action: #selector(scanTapped), for: .touchUpInside)
@@ -263,7 +267,7 @@ class LoginViewController : UIViewController {
             self.topControlTop?.constant = -100.0
             lock.alpha = 1.0
             label.alpha = 1.0
-            self.header.alpha = 0.0
+            self.logo.alpha = 0.0
             self.subheader.alpha = 0.0
             self.pinView?.alpha = 0.0
             self.view.layoutIfNeeded()
