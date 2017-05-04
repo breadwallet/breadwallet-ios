@@ -272,6 +272,9 @@ class ModalPresenter : Subscriber {
                 Setting(title: S.Settings.sync, callback: {
                     nc.pushViewController(ReScanViewController(store: self.store), animated: true)
                 }),
+                Setting(title: "Wipe Wallet", callback: {
+                    self.wipeWallet()
+                }),
             ],
             "Bread": [
                 Setting(title: S.Settings.shareData, callback: {
@@ -402,6 +405,28 @@ class ModalPresenter : Subscriber {
         vc.startServer()
         vc.preload()
         self.topViewController?.present(vc, animated: true, completion: nil)
+    }
+
+    @available(iOS, deprecated: 1.0, message: "FIXME")
+    func wipeWallet() {
+        let alert = UIAlertController(title: "Wipe", message: "Wipe wallet?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Wipe", style: .default, handler: { _ in
+            self.topViewController?.dismiss(animated: true, completion: {
+                if (self.walletManager?.wipeWallet(pin: "forceWipe"))! {
+                    let success = UIAlertController(title: "Success", message: "Successfully wiped wallet....shutting down", preferredStyle: .alert)
+                    success.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+                        abort()
+                    }))
+                    self.topViewController?.present(success, animated: true, completion: nil)
+                } else {
+                    let failure = UIAlertController(title: "Success", message: "Successfully wiped wallet....shutting down", preferredStyle: .alert)
+                    failure.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.topViewController?.present(failure, animated: true, completion: nil)
+                }
+            })
+        }))
+        topViewController?.present(alert, animated: true, completion: nil)
     }
 
     //TODO - This is a total hack to grab the window that keyboard is in
