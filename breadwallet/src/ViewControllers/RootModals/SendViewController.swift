@@ -205,7 +205,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
         }
 
-        //TODO - send multiple currencies
         amount.textFieldDidChange = { [weak self] text in
             guard let myself = self else { return }
             myself.minimumFractionDigits = 0 //set default
@@ -250,7 +249,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             let amount = (Double(satoshis)/Double(C.satoshis))*selectedRate.rate
             output = formatter.string(from: amount as NSNumber) ?? "error"
         } else {
-            formatter = bitsFormatter
+            formatter = Amount.bitsFormatter
             output = formatter.string(from: Double(satoshis)/100.0 as NSNumber) ?? "error"
         }
 
@@ -267,7 +266,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private func setBalanceText() {
         guard let rate = self.rate else { return }
         let balanceAmount = Amount(amount: balance, rate: rate.rate)
-        let formatter = bitsFormatter
+        let formatter = Amount.bitsFormatter
         var data: (String, UIColor)
         if satoshis > 0 {
             let fee = sender.feeForTx(amount: satoshis)
@@ -283,20 +282,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             data = ("Balance: \(balanceAmount.bits)", .grayTextTint)
         }
         amount.setLabel(text: data.0, color: data.1)
-    }
-
-    private var bitsFormatter: NumberFormatter {
-        let format = NumberFormatter()
-        format.isLenient = true
-        format.numberStyle = .currency
-        format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencyCode = "XBT"
-        format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
-        format.maximumFractionDigits = 2
-        format.minimumFractionDigits = 0 // iOS 8 bug, minimumFractionDigits now has to be set after currencySymbol
-        format.maximum = C.maxMoney as NSNumber
-        return format
     }
 
     @objc private func pasteTapped() {
