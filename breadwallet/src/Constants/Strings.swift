@@ -128,14 +128,18 @@ enum S {
 
     enum RecoverWallet {
         static let next = NSLocalizedString("RecoverWallet.next", value:"Next", comment: "Next button label")
-        static let intro = NSLocalizedString("RecoverWallet.intro", value:"Recover your Breadwallet with your recovery phrase.", comment: "Recover wallet intro")
+        static let intro = NSLocalizedString("RecoverWallet.intro", value:"Recover your Breadwallet with your paper key.", comment: "Recover wallet intro")
         static let leftArrow = NSLocalizedString("RecoverWallet.leftArrow", value:"Left Arrow", comment: "Previous button accessibility label")
         static let rightArrow = NSLocalizedString("RecoverWallet.rightArrow", value:"Right Arrow", comment: "Next button accessibility label")
         static let done = NSLocalizedString("RecoverWallet.done", value:"Done", comment: "Done buttohn text")
-        static let instruction = NSLocalizedString("RecoverWallet.instruction", value:"Enter Recovery Phrase", comment: "Enter recovery phrase instruction")
+        static let instruction = NSLocalizedString("RecoverWallet.instruction", value:"Enter Paper Key", comment: "Enter paper key instruction")
         static let header = NSLocalizedString("RecoverWallet.header", value:"Recover Wallet", comment: "Recover wallet header")
-        static let subheader = NSLocalizedString("RecoverWallet.subheader", value:"Enter the recovery phrase associated with the wallet you want to recover.", comment: "Recover wallet sub-header")
-        static let invalid = NSLocalizedString("RecoverWallet.invalid", value:"The phrase you entered is invalid. Please double-check each word and try again.", comment: "Invalid phrase message")
+        static let subheader = NSLocalizedString("RecoverWallet.subheader", value:"Enter the paper key associated with the wallet you want to recover.", comment: "Recover wallet sub-header")
+
+        static let headerResetPin = NSLocalizedString("RecoverWallet.header-reset-pin", value:"Reset Pin", comment: "Reset Pin with paper key header")
+        static let subheaderResetPin = NSLocalizedString("RecoverWallet.subheader-reset-pin", value:"To reset your PIN, enter the words from your paper key into the boxes below.", comment: "Reset pin with papker key sub-header")
+        static let resetPinInfo = NSLocalizedString("RecoverWallet.reset-pin-more-info", value:"Tap here for more information.", comment: "Reset pin with papker key more information button.")
+        static let invalid = NSLocalizedString("RecoverWallet.invalid", value:"The paper key you entered is invalid. Please double-check each word and try again.", comment: "Invalid paper key message")
     }
 
     enum ManageWallet {
