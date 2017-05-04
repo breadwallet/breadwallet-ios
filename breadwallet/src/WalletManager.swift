@@ -70,7 +70,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             #if !Debug
                 do { try FileManager.default.removeItem(atPath: self.dbPath) } catch { }
             #endif
-            abort()
+            return nil
         }
         
         self.didInitWallet = true
