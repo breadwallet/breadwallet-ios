@@ -196,8 +196,10 @@ enum CurrencyChange {
     struct toggle: Action {
         let reduce: Reducer = {
             if $0.currency == .bitcoin {
+                UserDefaults.displayCurrency = .local
                 return $0.clone(currency: .local)
             } else {
+                UserDefaults.displayCurrency = .bitcoin
                 return $0.clone(currency: .bitcoin)
             }
         }

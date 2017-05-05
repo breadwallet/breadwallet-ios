@@ -33,7 +33,7 @@ extension State {
                         rootModal: .none,
                         pasteboard: UIPasteboard.general.string,
                         walletState: WalletState.initial,
-                        currency: .bitcoin,
+                        currency: UserDefaults.displayCurrency,
                         currentRate: nil,
                         rates: [],
                         alert: nil,
@@ -85,8 +85,8 @@ struct WalletState {
     }
 }
 
-enum Currency {
-    case bitcoin
+enum Currency : Int {
+    case bitcoin = 0
     case local
 }
 
