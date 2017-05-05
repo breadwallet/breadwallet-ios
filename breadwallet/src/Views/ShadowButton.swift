@@ -13,6 +13,7 @@ enum ButtonType {
     case secondary
     case tertiary
     case blackTransparent
+    case search
 }
 
 class ShadowButton: UIControl {
@@ -68,7 +69,7 @@ class ShadowButton: UIControl {
     override var isSelected: Bool {
         didSet {
             guard isToggleable else { return }
-            if type == .tertiary {
+            if type == .tertiary || type == .search {
                 if isSelected {
                     container.layer.borderColor = UIColor.primaryButton.cgColor
                     imageView?.tintColor = .primaryButton
@@ -184,6 +185,15 @@ class ShadowButton: UIControl {
             container.layer.borderWidth = 1.0
             imageView?.tintColor = .grayTextTint
             shadowView.isHidden = true
+        case .search:
+            label.font = UIFont.customBody(size: 13.0)
+            container.backgroundColor = .secondaryButton
+            label.textColor = .grayTextTint
+            container.layer.borderColor = UIColor.secondaryBorder.cgColor
+            container.layer.borderWidth = 1.0
+            shadowView.layer.shadowColor = UIColor.secondaryShadow.cgColor
+            shadowView.layer.shadowOpacity = 1.0
+            imageView?.tintColor = .grayTextTint
         }
     }
 
