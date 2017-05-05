@@ -314,4 +314,19 @@ enum S {
         static let pending = NSLocalizedString("Search.pending", value: "pending", comment: "Pending filter label")
         static let complete = NSLocalizedString("Search.complete", value: "complete", comment: "Complete filter label")
     }
+
+    enum Prompts {
+        enum TouchId {
+            static let title = NSLocalizedString("Prompts.TouchId.title", value: "Enable Touch Id", comment: "Enable touch Id prompt title")
+            static let body = NSLocalizedString("Prompts.TouchId.body", value: "Tap here to enable Touch Id", comment: "Enable touch id prompt body")
+        }
+        enum PaperKey {
+            static let title = NSLocalizedString("Prompts.PaperKey.title", value: "Paper Key not Saved", comment: "Paper Key not saved prompt title")
+            static let body = NSLocalizedString("Prompts.PaperKey.body", value: "This wallet's paper key hasn't been written down. Tap here to view.", comment: "Paper Key not save prompt body")
+        }
+        enum UpgradePin {
+            static let title = NSLocalizedString("Prompts.UpgradePin.title", value: "Upgrade PIN", comment: "Upgrade PIN prompt title.")
+            static let body = NSLocalizedString("Prompts.UpgradePin.body", value: "Bread has updated to using a 6-digit PIN. Tap here to upgrade.", comment: "Upgrade PIN prompt body.")
+        }
+    }
 }
