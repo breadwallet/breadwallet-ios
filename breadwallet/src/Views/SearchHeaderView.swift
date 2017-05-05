@@ -94,10 +94,10 @@ class SearchHeaderView : UIView {
     }
 
     private let searchBar = UISearchBar()
-    private let sent = ShadowButton(title: S.Search.sent, type: .tertiary)
-    private let received = ShadowButton(title: S.Search.received, type: .tertiary)
-    private let pending = ShadowButton(title: S.Search.pending, type: .tertiary)
-    private let complete = ShadowButton(title: S.Search.complete, type: .tertiary)
+    private let sent = ShadowButton(title: S.Search.sent, type: .search)
+    private let received = ShadowButton(title: S.Search.received, type: .search)
+    private let pending = ShadowButton(title: S.Search.pending, type: .search)
+    private let complete = ShadowButton(title: S.Search.complete, type: .search)
     private let cancel = UIButton(type: .system)
     fileprivate var filters: [SearchFilterType] = [] {
         didSet {
