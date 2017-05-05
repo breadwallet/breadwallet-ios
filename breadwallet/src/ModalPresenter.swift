@@ -33,6 +33,7 @@ class ModalPresenter : Subscriber {
     private let modalTransitionDelegate: ModalTransitionDelegate
     private let messagePresenter = MessageUIPresenter()
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
+    private let verifyPinTransitionDelegate = PinTransitioningDelegate()
     private var supportCenter: SupportCenterContainer?
 
     private func initializeSupportCenter(walletManager: WalletManager) {
@@ -172,9 +173,11 @@ class ModalPresenter : Subscriber {
         let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager))
         let root = ModalViewController(childViewController: sendVC, store: store)
         sendVC.presentScan = presentScan(parent: root)
-        sendVC.presentVerifyPin = { [weak root] callback in
+        sendVC.presentVerifyPin = { [weak self, weak root] callback in
             let vc = VerifyPinViewController(callback: callback)
+            vc.transitioningDelegate = self?.verifyPinTransitionDelegate
             vc.modalPresentationStyle = .overFullScreen
+            vc.modalPresentationCapturesStatusBarAppearance = true
             root?.view.isFrameChangeBlocked = true
             root?.present(vc, animated: true, completion: nil)
         }
@@ -402,6 +405,9 @@ class ModalPresenter : Subscriber {
                     })
                 }
             })
+            verify.transitioningDelegate = self?.verifyPinTransitionDelegate
+            verify.modalPresentationStyle = .overFullScreen
+            verify.modalPresentationCapturesStatusBarAppearance = true
             paperPhraseNavigationController.present(verify, animated: true, completion: nil)
         }
 
