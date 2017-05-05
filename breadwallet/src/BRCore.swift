@@ -412,6 +412,17 @@ class BRPeerManager {
     }
 }
 
+extension UInt256 : CustomStringConvertible {
+    public var description: String {
+        return String(format:"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x" +
+            "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+                      self.u8.31, self.u8.30, self.u8.29, self.u8.28, self.u8.27, self.u8.26, self.u8.25, self.u8.24,
+                      self.u8.23, self.u8.22, self.u8.21, self.u8.20, self.u8.19, self.u8.18, self.u8.17, self.u8.16,
+                      self.u8.15, self.u8.14, self.u8.13, self.u8.12, self.u8.11, self.u8.10, self.u8.9, self.u8.8,
+                      self.u8.7, self.u8.6, self.u8.5, self.u8.4, self.u8.3, self.u8.2, self.u8.1, self.u8.0)
+    }
+}
+
 extension UInt128: Equatable {
     static public func == (l: UInt128, r: UInt128) -> Bool {
         return l.u64 == r.u64
