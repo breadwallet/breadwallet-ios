@@ -192,7 +192,7 @@ enum S {
         static let reddit = NSLocalizedString("About.reddit", value:"Reddit", comment: "About screen reddit label")
         static let terms = NSLocalizedString("About.terms", value:"Terms of Use", comment: "Terms of Use button label")
         static let privacy = NSLocalizedString("About.privacy", value:"Privacy Policy", comment: "Privay Policy button label")
-        static let footer = NSLocalizedString("About.footer", value:"Made in North America. Version ", comment: "About screen footer")
+        static let footer = NSLocalizedString("About.footer", value:"Made in North America. Version %@", comment: "About screen footer")
     }
 
     enum PushNotifications {
@@ -232,7 +232,7 @@ enum S {
     }
 
     enum ConfirmPaperPhrase {
-        static let word = NSLocalizedString("ConfirmPaperPhrase.word", value:"Word", comment: "Word label eg. Word 1, Word 2")
+        static let word = NSLocalizedString("ConfirmPaperPhrase.word", value:"Word %@", comment: "Word label eg. Word 1, Word 2")
         static let label = NSLocalizedString("ConfirmPaperPhrase.label", value:"Prove you wrote down your paper key by answering the following questions.", comment: "Confirm paper phrase view label.")
     }
 
