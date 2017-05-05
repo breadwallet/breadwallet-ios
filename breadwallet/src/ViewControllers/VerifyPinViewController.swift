@@ -17,9 +17,10 @@ class VerifyPinViewController : UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    let blurView = UIVisualEffectView()
+    let effect = UIBlurEffect(style: .dark)
+    let contentBox = UIView()
     private let callback: VerifyPinCallback
-    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-    private let box = UIView()
     private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad)
     private let titleLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
     private let body = UILabel(font: .customBody(size: 14.0), color: .darkText)
@@ -34,14 +35,13 @@ class VerifyPinViewController : UIViewController {
     }
 
     private func addSubviews() {
-        view.addSubview(blurView)
-        view.addSubview(box)
+        view.addSubview(contentBox)
         view.addSubview(toolbar)
         toolbar.addSubview(cancel)
 
-        box.addSubview(titleLabel)
-        box.addSubview(body)
-        box.addSubview(pinView)
+        contentBox.addSubview(titleLabel)
+        contentBox.addSubview(body)
+        contentBox.addSubview(pinView)
         addChildViewController(pinPad, layout: {
             pinPad.view.constrain([
                 pinPad.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -52,12 +52,11 @@ class VerifyPinViewController : UIViewController {
     }
 
     private func addConstraints() {
-        blurView.constrain(toSuperviewEdges: nil)
-        box.constrain([
-            box.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            box.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[12]),
-            box.widthAnchor.constraint(equalToConstant: 256.0),
-            box.heightAnchor.constraint(equalToConstant: 148.0) ])
+        contentBox.constrain([
+            contentBox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            contentBox.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[12]),
+            contentBox.widthAnchor.constraint(equalToConstant: 256.0),
+            contentBox.heightAnchor.constraint(equalToConstant: 148.0) ])
         titleLabel.constrainTopCorners(sidePadding: C.padding[2], topPadding: C.padding[2])
         body.constrain([
             body.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
@@ -79,14 +78,14 @@ class VerifyPinViewController : UIViewController {
     }
 
     private func setupSubviews() {
-        box.backgroundColor = .white
-        box.layer.cornerRadius = 8.0
-        box.layer.borderWidth = 1.0
-        box.layer.borderColor = UIColor.secondaryShadow.cgColor
-        box.layer.shadowColor = UIColor.black.cgColor
-        box.layer.shadowOpacity = 0.15
-        box.layer.shadowRadius = 4.0
-        box.layer.shadowOffset = .zero
+        contentBox.backgroundColor = .white
+        contentBox.layer.cornerRadius = 8.0
+        contentBox.layer.borderWidth = 1.0
+        contentBox.layer.borderColor = UIColor.secondaryShadow.cgColor
+        contentBox.layer.shadowColor = UIColor.black.cgColor
+        contentBox.layer.shadowOpacity = 0.15
+        contentBox.layer.shadowRadius = 4.0
+        contentBox.layer.shadowOffset = .zero
 
         titleLabel.text = S.VerifyPin.title
         body.text = S.VerifyPin.body
@@ -104,6 +103,10 @@ class VerifyPinViewController : UIViewController {
         }
         cancel.setTitle(S.Button.cancel, for: .normal)
         view.backgroundColor = .clear
+    }
+
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
 
     required init?(coder aDecoder: NSCoder) {
