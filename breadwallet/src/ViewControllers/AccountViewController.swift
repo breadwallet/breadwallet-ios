@@ -39,6 +39,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
                     self.tempLoginView.remove()
                 })
             }
+            transactionsTableView.walletManager = walletManager
         }
     }
 
@@ -108,13 +109,9 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
                             self.transactionsTableView.syncingView.timestamp = state.walletState.lastBlockTimestamp
         })
 
-        store.subscribe(self, selector: { $0.walletState.isSyncing != $1.walletState.isSyncing },
+        store.lazySubscribe(self, selector: { $0.walletState.isSyncing != $1.walletState.isSyncing },
                         callback: { state in
-                            if state.walletState.isSyncing {
-                                self.transactionsTableView.isSyncingViewVisible = true
-                            } else {
-                                self.transactionsTableView.isSyncingViewVisible = false
-                            }
+                            self.transactionsTableView.isSyncingViewVisible = state.walletState.isSyncing
         })
 
         store.subscribe(self, selector: {$0.walletState.balance != $1.walletState.balance },

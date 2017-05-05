@@ -14,6 +14,7 @@ private let defaultCurrencyKey = "defaultcurrency"
 private let hasAquiredShareDataPermissionKey = "has_acquired_permission"
 private let legacyWalletNeedsBackupKey = "WALLET_NEEDS_BACKUP"
 private let writePaperPhraseDateKey = "writepaperphrasedatekey"
+private let hasPromptedTouchIdKey = "haspromptedtouched"
 
 extension UserDefaults {
 
@@ -84,5 +85,17 @@ extension UserDefaults {
             return true
         }
         return false
+    }
+}
+
+//MARK: - Prompts
+extension UserDefaults {
+    static var hasPromptedTouchId: Bool {
+        get {
+            return defaults.bool(forKey: hasPromptedTouchIdKey)
+        }
+        set {
+            defaults.set(newValue, forKey: hasPromptedTouchIdKey)
+        }
     }
 }
