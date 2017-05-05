@@ -8,7 +8,7 @@
 
 import UIKit
 
-private let buttonSize = CGSize(width: 80.0, height: 32.0)
+private let buttonHeight: CGFloat = 32.0
 
 class CurrencySlider : UIView {
 
@@ -56,12 +56,10 @@ class CurrencySlider : UIView {
             button.constrain([
                 leadingConstraint,
                 button.constraint(.centerY, toView: scrollView),
-                button.constraint(.width, constant: buttonSize.width),
-                button.constraint(.height, constant: buttonSize.height),
+                button.constraint(.height, constant: buttonHeight),
                 trailingConstraint ])
 
             previous = button
-
 
             button.tap = {
                 //Disable unselecting a selected button

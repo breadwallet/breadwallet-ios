@@ -28,7 +28,6 @@ class SendCell : UIView {
             accessoryView.constraint(.top, toView: self),
             accessoryView.constraint(.trailing, toView: self),
             accessoryView.heightAnchor.constraint(equalToConstant: SendCell.defaultHeight) ])
-
         border.constrainBottomCorners(height: 1.0)
         border.backgroundColor = .secondaryShadow
     }

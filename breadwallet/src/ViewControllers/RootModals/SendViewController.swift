@@ -102,7 +102,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             amount.topAnchor.constraint(equalTo: to.bottomAnchor),
             amount.leadingAnchor.constraint(equalTo: to.leadingAnchor) ])
 
-        //amount.pinToBottom(to: to, height: SendCell.defaultHeight)
         amount.clipsToBounds = false
 
         currencySwitcherHeightConstraint = currencySwitcher.constraint(.height, constant: 0.0)
@@ -140,29 +139,20 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         scan.constrain([
             scan.constraint(.centerY, toView: to.accessoryView),
             scan.constraint(.trailing, toView: to.accessoryView, constant: -C.padding[2]),
-            scan.constraint(.height, constant: buttonSize.height),
-            scan.constraint(.width, constant: buttonSize.width) ])
+            scan.constraint(.height, constant: buttonSize.height) ])
         paste.constrain([
             paste.constraint(.centerY, toView: to.accessoryView),
             paste.constraint(toLeading: scan, constant: -C.padding[1]),
-            paste.constraint(.height, constant: buttonSize.height),
-            paste.constraint(.width, constant: buttonSize.width),
-            paste.constraint(.leading, toView: to.accessoryView) ]) //This constraint is needed because it gives the accessory view an intrinsic horizontal size
+            paste.constraint(.height, constant: buttonSize.height) ])
         currency.constrain([
             currency.constraint(.centerY, toView: amount.accessoryView),
             currency.constraint(.trailing, toView: amount, constant: -C.padding[2]),
-            currency.constraint(.height, constant: buttonSize.height),
-            currency.constraint(.width, constant: 64.0),
-            currency.constraint(.leading, toView: amount.accessoryView, constant: C.padding[2]) ]) //This constraint is needed because it gives the accessory view an intrinsic horizontal size
+            currency.constraint(.height, constant: buttonSize.height) ])
         
         addButtonActions()
 
         currencySlider.didSelectCurrency = { [weak self] rate in
-            if rate.code == "BTC" {
-                self?.selectedRate = nil
-            } else {
-                self?.selectedRate = rate
-            }
+            self?.selectedRate = rate.code == "BTC" ? nil : rate
             self?.currency.title = "\(rate.code) (\(rate.currencySymbol))"
             self?.currencySwitchTapped() //collapse currency view
         }
