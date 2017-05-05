@@ -8,6 +8,8 @@
 
 import UIKit
 
+private let promptDelay: TimeInterval = 0.6
+
 class TransactionsTableViewController : UITableViewController, Subscriber {
 
     //MARK: - Public
@@ -20,20 +22,24 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
     let didSelectTransaction: ([Transaction], Int) -> Void
     let syncingView = SyncingView()
     
-    var isSyncingViewVisible = true {
+    var isSyncingViewVisible = false {
         didSet {
+            guard oldValue != isSyncingViewVisible else { return } //We only care about changes
             if isSyncingViewVisible {
-                if tableView.numberOfSections == 1 {
-                    tableView.beginUpdates()
-                    tableView.insertSections(IndexSet(integer: 0), with: .automatic)
-                    tableView.endUpdates()
+                if currentPrompt != nil {
+                    currentPrompt = nil
                 }
+                tableView.beginUpdates()
+                tableView.insertSections(IndexSet(integer: 0), with: .automatic)
+                tableView.endUpdates()
             } else {
-                if tableView.numberOfSections == 2 {
-                    tableView.beginUpdates()
-                    tableView.deleteSections(IndexSet(integer: 0), with: .automatic)
-                    tableView.endUpdates()
-                }
+                tableView.beginUpdates()
+                tableView.deleteSections(IndexSet(integer: 0), with: .automatic)
+                tableView.endUpdates()
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + promptDelay , execute: {
+                    self.attemptShowPrompt()
+                })
             }
         }
     }
@@ -44,6 +50,8 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
             tableView.reloadData()
         }
     }
+
+    var walletManager: WalletManager?
 
     //MARK: - Private
     private let store: Store
@@ -66,6 +74,22 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
         }
     }
     private let emptyMessage = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
+    private var currentPrompt: Prompt? {
+        didSet {
+            if currentPrompt != nil && oldValue == nil {
+                tableView.beginUpdates()
+                tableView.insertSections(IndexSet(integer: 0), with: .automatic)
+                tableView.endUpdates()
+            } else if currentPrompt == nil && oldValue != nil {
+                tableView.beginUpdates()
+                tableView.deleteSections(IndexSet(integer: 0), with: .automatic)
+                tableView.endUpdates()
+            }
+        }
+    }
+    private var hasExtraSection: Bool {
+        return isSyncingViewVisible || (currentPrompt != nil)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -110,11 +134,11 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
 
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return isSyncingViewVisible ? 2 : 1
+        return hasExtraSection ? 2 : 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isSyncingViewVisible && section == 0 {
+        if hasExtraSection && section == 0 {
             return 1
         } else {
             return transactions.count
@@ -122,18 +146,26 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if isSyncingViewVisible && indexPath.section == 0 {
+        if hasExtraSection && indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath)
             if let transactionCell = cell as? TransactionTableViewCell {
                 transactionCell.setStyle(.single)
-                transactionCell.selectionStyle = .none
                 transactionCell.container.subviews.forEach {
                     $0.removeFromSuperview()
                 }
-                transactionCell.container.addSubview(syncingView)
-                syncingView.constrain(toSuperviewEdges: nil)
-                syncingView.constrain([
-                    syncingView.heightAnchor.constraint(equalToConstant: 88.0) ])
+                if let prompt = currentPrompt {
+                    transactionCell.container.addSubview(prompt)
+                    prompt.constrain(toSuperviewEdges: nil)
+                    prompt.constrain([
+                        prompt.heightAnchor.constraint(equalToConstant: 88.0) ])
+                    transactionCell.selectionStyle = .default
+                } else {
+                    transactionCell.container.addSubview(syncingView)
+                    syncingView.constrain(toSuperviewEdges: nil)
+                    syncingView.constrain([
+                        syncingView.heightAnchor.constraint(equalToConstant: 88.0) ])
+                    transactionCell.selectionStyle = .none
+                }
             }
             return cell
         } else {
@@ -161,7 +193,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
     }
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if isSyncingViewVisible && section == 1 {
+        if hasExtraSection && section == 1 {
             return C.padding[2]
         } else {
             return 0
@@ -169,7 +201,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
     }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if isSyncingViewVisible && section == 1 {
+        if hasExtraSection && section == 1 {
             let view = UIView()
             view.backgroundColor = .clear
             return view
@@ -180,6 +212,11 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isSyncingViewVisible && indexPath.section == 0 { return }
+        if let currentPrompt = currentPrompt, indexPath.section == 0 {
+            store.trigger(name: currentPrompt.type.trigger)
+            self.currentPrompt = nil
+            return
+        }
         didSelectTransaction(transactions, indexPath.row)
     }
 
@@ -194,6 +231,22 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
             }
         } else {
             emptyMessage.removeFromSuperview()
+        }
+    }
+
+    private func attemptShowPrompt() {
+        guard let walletManager = walletManager else { return }
+        let types = PromptType.defaultOrder
+        if let type = types.first(where: { $0.shouldPrompt(walletManager: walletManager) }) {
+            currentPrompt = Prompt(type: type)
+            currentPrompt?.close.tap = { [weak self] in
+                self?.currentPrompt = nil
+            }
+            if type == .touchId {
+                UserDefaults.hasPromptedTouchId = true
+            }
+        } else {
+            currentPrompt = nil
         }
     }
 

@@ -58,6 +58,17 @@ class ModalPresenter : Subscriber {
                 self.presentFaq(articleId: articleId)
             }
         })
+
+        //Subscribe to prompt actions
+        store.subscribe(self, name: .promptUpgradePin, callback: { _ in
+            self.presentUpgradePin()
+        })
+        store.subscribe(self, name: .promptPaperKey, callback: { _ in
+            self.presentWritePaperKey()
+        })
+        store.subscribe(self, name: .promptTouchId, callback: { _ in
+            self.presentTouchIdSetting()
+        })
     }
 
     private func handlePinCreationStateChange(_ state: State) {
@@ -348,50 +359,54 @@ class ModalPresenter : Subscriber {
             nc.pushViewController(touchIdSettings, animated: true)
         }
         securityCenter.didTapPaperKey = { [weak self] in
-            guard let myself = self else { return }
-            guard let walletManager = myself.walletManager else { return }
-
-            let paperPhraseNavigationController = UINavigationController()
-            paperPhraseNavigationController.setClearNavbar()
-            paperPhraseNavigationController.setWhiteStyle()
-            paperPhraseNavigationController.modalPresentationStyle = .overFullScreen
-
-            let start = StartPaperPhraseViewController(store: myself.store)
-            start.addCloseNavigationItem(tintColor: .white)
-            start.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-            let faqButton = UIButton.buildFaqButton(store: myself.store, articleId: ArticleIds.paperPhrase)
-            faqButton.tintColor = .white
-            start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
-            start.didTapWrite = {
-                let verify = VerifyPinViewController(callback: { pin, vc in
-                    if walletManager.authenticate(pin: pin) {
-                        let write = WritePaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin)
-                        write.addCloseNavigationItem(tintColor: .white)
-                        write.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-                        write.lastWordSeen = {
-                            let confirm = ConfirmPaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin)
-                            write.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-                            confirm.didConfirm = {
-                                confirm.dismiss(animated: true, completion: {
-                                    //TODO - fix this animation
-                                    myself.store.perform(action: PaperPhrase.Confirmed())
-                                })
-                            }
-                            paperPhraseNavigationController.pushViewController(confirm, animated: true)
-                        }
-                        vc.dismiss(animated: true, completion: {
-                            paperPhraseNavigationController.pushViewController(write, animated: true)
-                        })
-                    }
-                })
-                paperPhraseNavigationController.present(verify, animated: true, completion: nil)
-            }
-
-            paperPhraseNavigationController.viewControllers = [start]
-            nc.present(paperPhraseNavigationController, animated: true, completion: nil)
+            self?.presentWritePaperKey(fromViewController: nc)
         }
 
         window.rootViewController?.present(nc, animated: true, completion: nil)
+    }
+
+    private func presentWritePaperKey(fromViewController vc: UIViewController) {
+        guard let walletManager = walletManager else { return }
+
+        let paperPhraseNavigationController = UINavigationController()
+        paperPhraseNavigationController.setClearNavbar()
+        paperPhraseNavigationController.setWhiteStyle()
+        paperPhraseNavigationController.modalPresentationStyle = .overFullScreen
+
+        let start = StartPaperPhraseViewController(store: store)
+        start.addCloseNavigationItem(tintColor: .white)
+        start.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
+        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.paperPhrase)
+        faqButton.tintColor = .white
+        start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
+        start.didTapWrite = { [weak self] in
+            guard let myself = self else { return }
+            let verify = VerifyPinViewController(callback: { pin, vc in
+                if walletManager.authenticate(pin: pin) {
+                    let write = WritePaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin)
+                    write.addCloseNavigationItem(tintColor: .white)
+                    write.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
+                    write.lastWordSeen = {
+                        let confirm = ConfirmPaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin)
+                        write.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
+                        confirm.didConfirm = {
+                            confirm.dismiss(animated: true, completion: {
+                                //TODO - fix this animation
+                                myself.store.perform(action: PaperPhrase.Confirmed())
+                            })
+                        }
+                        paperPhraseNavigationController.pushViewController(confirm, animated: true)
+                    }
+                    vc.dismiss(animated: true, completion: {
+                        paperPhraseNavigationController.pushViewController(write, animated: true)
+                    })
+                }
+            })
+            paperPhraseNavigationController.present(verify, animated: true, completion: nil)
+        }
+
+        paperPhraseNavigationController.viewControllers = [start]
+        vc.present(paperPhraseNavigationController, animated: true, completion: nil)
     }
 
     private func presentBuyController(_ mountPoint: String) {
@@ -427,6 +442,41 @@ class ModalPresenter : Subscriber {
             })
         }))
         topViewController?.present(alert, animated: true, completion: nil)
+    }
+
+    //MARK: - Prompts
+    func presentTouchIdSetting() {
+        guard let walletManager = walletManager else { return }
+        let touchIdSettings = TouchIdSettingsViewController(walletManager: walletManager, store: store)
+        touchIdSettings.addCloseNavigationItem(tintColor: .white)
+        let nc = ModalNavigationController(rootViewController: touchIdSettings)
+
+        touchIdSettings.presentSpendingLimit = { [weak self] in
+            guard let myself = self else { return }
+            let spendingLimit = TouchIdSpendingLimitViewController(walletManager: walletManager, store: myself.store)
+            nc.pushViewController(spendingLimit, animated: true)
+        }
+
+        nc.setDefaultStyle()
+        nc.isNavigationBarHidden = true
+        nc.delegate = securityCenterNavigationDelegate
+        topViewController?.present(nc, animated: true, completion: nil)
+    }
+
+    func presentWritePaperKey() {
+        guard let vc = topViewController else { return }
+        presentWritePaperKey(fromViewController: vc)
+    }
+
+    func presentUpgradePin() {
+        guard let walletManager = walletManager else { return }
+        let updatePin = UpdatePinViewController(store: store, walletManager: walletManager)
+        let nc = ModalNavigationController(rootViewController: updatePin)
+        nc.setDefaultStyle()
+        nc.isNavigationBarHidden = true
+        nc.delegate = securityCenterNavigationDelegate
+        updatePin.addCloseNavigationItem()
+        topViewController?.present(nc, animated: true, completion: nil)
     }
 
     //TODO - This is a total hack to grab the window that keyboard is in
