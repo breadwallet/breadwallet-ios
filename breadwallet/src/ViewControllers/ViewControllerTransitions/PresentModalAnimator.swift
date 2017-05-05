@@ -34,7 +34,7 @@ extension PresentModalAnimator : UIViewControllerAnimatedTransitioning {
         let container = transitionContext.containerView
 
         blurView.frame = container.frame
-        blurView.alpha = 0.0
+        blurView.effect = nil
         container.addSubview(blurView)
 
         //This mask view is placed below the bottom of the modal being presented.
@@ -54,7 +54,7 @@ extension PresentModalAnimator : UIViewControllerAnimatedTransitioning {
 
         UIView.spring(duration, animations: {
             maskView?.frame = CGRect(x: 0, y: fromFrame.height - 30.0, width: fromFrame.width, height: 40.0)
-            blurView.alpha = 0.9
+            blurView.effect = UIBlurEffect(style: .dark)
             toView.frame = finalToViewFrame
         }, completion: { _ in
             transitionContext.completeTransition(true)
