@@ -60,8 +60,7 @@ class TouchIdSpendingLimitViewController : UIViewController, Subscriber {
         currencyButton.constrain([
             currencyButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             currencyButton.centerYAnchor.constraint(equalTo: amount.centerYAnchor),
-            currencyButton.heightAnchor.constraint(equalToConstant: 32.0),
-            currencyButton.widthAnchor.constraint(equalToConstant: 62.0) ])
+            currencyButton.heightAnchor.constraint(equalToConstant: 32.0) ])
         currencySwitcherHeight = currencySwitcher.heightAnchor.constraint(equalToConstant: 0.0)
         currencySwitcher.constrain([
             currencySwitcherHeight,
