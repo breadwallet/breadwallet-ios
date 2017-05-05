@@ -16,6 +16,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
     init(store: Store, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
         self.store = store
         self.didSelectTransaction = didSelectTransaction
+        self.currency = store.state.currency
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -63,7 +64,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
             transactions = allTransactions
         }
     }
-    private var currency: Currency = .bitcoin {
+    private var currency: Currency {
         didSet {
             reload()
         }

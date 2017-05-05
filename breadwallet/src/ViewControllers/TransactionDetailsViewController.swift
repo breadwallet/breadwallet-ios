@@ -16,6 +16,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         self.transactions = transactions
         self.selectedIndex = selectedIndex
         self.kvStore = kvStore
+        self.currency = store.state.currency
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: UIScreen.main.bounds.width-C.padding[4], height: UIScreen.main.bounds.height - C.padding[1])
         layout.sectionInset = UIEdgeInsetsMake(C.padding[1], 0, 0, 0)
@@ -30,7 +31,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
     fileprivate let selectedIndex: Int
     fileprivate let kvStore: BRReplicatedKVStore
     fileprivate let cellIdentifier = "CellIdentifier"
-    fileprivate var currency: Currency = .bitcoin
+    fileprivate var currency: Currency
     fileprivate var rate: Rate?
 
     //The secretScrollView is to help with the limitation where if isPagingEnabled
