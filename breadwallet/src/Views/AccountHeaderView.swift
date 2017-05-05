@@ -19,12 +19,13 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         didSet { setBalances() }
     }
 
-    var currency: Currency = .bitcoin {
+    var currency: Currency {
         didSet { setBalances() }
     }
 
     init(store: Store) {
         self.store = store
+        self.currency = store.state.currency
         super.init(frame: CGRect())
         setup()
     }
@@ -41,6 +42,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private let equals = UILabel(font: .customBody(size: smallFontSize), color: .darkText)
     private var regularConstraints: [NSLayoutConstraint] = []
     private var swappedConstraints: [NSLayoutConstraint] = []
+    private var hasInitialized = false
     private var exchangeRate: Rate? {
         didSet { setBalances() }
     }
@@ -206,6 +208,16 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                 }
             }
         })
+
+        if !hasInitialized {
+            let shouldSwap = currency == .local
+            NSLayoutConstraint.deactivate(shouldSwap ? self.regularConstraints : self.swappedConstraints)
+            NSLayoutConstraint.activate(shouldSwap ? self.swappedConstraints : self.regularConstraints)
+            self.primaryBalance.textColor = shouldSwap ? .darkText : .white
+            self.secondaryBalance.textColor = shouldSwap ? .white : .darkText
+            layoutIfNeeded()
+            hasInitialized = true
+        }
     }
 
     override func draw(_ rect: CGRect) {
@@ -215,7 +227,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     @objc private func currencySwitchTapped() {
         layoutIfNeeded()
         let willSwap = currency == .bitcoin
-        //TODO - add font animation with CATextLayer
         self.primaryBalance.textColor = willSwap ? .darkText : .white
         self.secondaryBalance.textColor = willSwap ? .white : .darkText
         UIView.spring(0.7, animations: {

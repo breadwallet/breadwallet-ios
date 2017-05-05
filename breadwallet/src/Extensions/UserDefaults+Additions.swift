@@ -15,6 +15,7 @@ private let hasAquiredShareDataPermissionKey = "has_acquired_permission"
 private let legacyWalletNeedsBackupKey = "WALLET_NEEDS_BACKUP"
 private let writePaperPhraseDateKey = "writepaperphrasedatekey"
 private let hasPromptedTouchIdKey = "haspromptedtouched"
+private let displayCurrencyKey = "displayCurrencyKey"
 
 extension UserDefaults {
 
@@ -51,6 +52,19 @@ extension UserDefaults {
         }
         set {
             defaults.set(newValue, forKey: hasAquiredShareDataPermissionKey)
+        }
+    }
+
+    static var displayCurrency: Currency {
+        get {
+            guard defaults.object(forKey: displayCurrencyKey) != nil else {
+                return .bitcoin
+            }
+            let intValue = defaults.integer(forKey: displayCurrencyKey)
+            return Currency(rawValue: intValue) ?? .bitcoin
+        }
+        set {
+            defaults.set(newValue.rawValue, forKey: displayCurrencyKey)
         }
     }
 }
