@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
@@ -30,7 +31,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         self.sender = sender
         self.initialAddress = initialAddress
         self.currencySlider = CurrencySlider(rates: store.state.rates)
-        
+        if LAContext.canUseTouchID && store.state.isTouchIdEnabled {
+            self.send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
+        } else {
+            self.send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "PinForSend"))
+        }
+
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -49,7 +55,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private let currencySwitcher = InViewAlert(type: .secondary)
     private let pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad)
     private let descriptionCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
-    private let send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
+    private let send: ShadowButton
     private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
     private let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
     private let currency = ShadowButton(title: S.Send.defaultCurrencyLabel, type: .tertiary)
@@ -64,6 +70,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         didSet {
             setAmountLabel()
             setBalanceText()
+            setSendButton()
         }
     }
     private var minimumFractionDigits = 0
@@ -272,6 +279,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             data = ("Balance: \(balanceAmount.bits)", .grayTextTint)
         }
         amount.setLabel(text: data.0, color: data.1)
+    }
+
+    private func setSendButton() {
+        if sender.maybeCanUseTouchId(forAmount: satoshis) {
+            send.image = #imageLiteral(resourceName: "TouchId")
+        } else {
+            send.image = #imageLiteral(resourceName: "PinForSend")
+        }
     }
 
     @objc private func pasteTapped() {
