@@ -366,8 +366,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     @objc private func sendTapped() {
         guard let address = to.content else { return }
         sender.createTransaction(amount: satoshis, to: address)
-        sender.send(verifyPin: { pinValidationCallback in
-                        presentVerifyPin? { [weak self] pin, vc in
+        sender.send(verifyPinFunction: { [weak self] pinValidationCallback in
+                        self?.presentVerifyPin? { [weak self] pin, vc in
                             if pinValidationCallback(pin) {
                                 vc.dismiss(animated: true, completion: {
                                     self?.parent?.view.isFrameChangeBlocked = false
