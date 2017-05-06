@@ -40,6 +40,7 @@ enum S {
         static let cameraUnavailableTitle = NSLocalizedString("Send.cameraUnavailableTitle", value:"Bread is not allowed to access the camera", comment: "Camera not allowed alert title")
         static let cameraUnavailableMessage = NSLocalizedString("Send.cameraunavailableMessage", value:"Go to Settings to Allow camera access.", comment: "Camera not allowed message")
         static let modalTitle = NSLocalizedString("Send.modalTitle", value:"Send Money", comment: "Send modal title")
+        static let touchIdPrompt = NSLocalizedString("Send", value:"Authenticate transaction.", comment: "Send with TouchID prompt text")
     }
 
     enum Receive {
