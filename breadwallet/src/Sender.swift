@@ -33,34 +33,48 @@ class Sender {
         return walletManager.wallet?.feeForTx(amount:amount) ?? 0
     }
 
-    //Used for sending
-    var secureCanUseTouchId: Bool {
-        guard let tx = transaction else { return false }
-        return walletManager.canUseTouchID(forTx: tx) && UserDefaults.isTouchIdEnabled
-    }
-
     //For display purposes only
     func maybeCanUseTouchId(forAmount: UInt64) -> Bool {
         return forAmount < walletManager.spendingLimit && UserDefaults.isTouchIdEnabled
     }
 
     //Amount in bits
-    func send(verifyPin: (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
+    func send(verifyPinFunction: @escaping (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
         guard let tx = transaction else { return completion(.creationError("Transaction not created")) }
-        verifyPin({ pin in
+
+        if UserDefaults.isTouchIdEnabled && walletManager.canUseTouchID(forTx:tx) {
+            walletManager.signTransaction(tx, touchIDPrompt:S.Send.touchIdPrompt, completion: { success in
+                if success {
+                    self.publish(completion: completion)
+                } else {
+                    self.verifyPin(tx: tx, withFunction: verifyPinFunction, completion: completion)
+                }
+            })
+        } else {
+            self.verifyPin(tx: tx, withFunction: verifyPinFunction, completion: completion)
+        }
+    }
+
+    private func verifyPin(tx: BRTxRef, withFunction: (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
+        withFunction({ pin in
             if self.walletManager.signTransaction(tx, pin: pin) {
-                self.walletManager.peerManager?.publishTx(tx, completion: { success, error in
-                    DispatchQueue.main.async {
-                        if let error = error {
-                            completion(.publishFailure(error))
-                        } else {
-                            completion(.success)
-                        }
-                    }
-                })
+                self.publish(completion: completion)
                 return true
             } else {
                 return false
+            }
+        })
+    }
+
+    private func publish(completion: @escaping (SendResult) -> Void) {
+        guard let tx = transaction else { return }
+        walletManager.peerManager?.publishTx(tx, completion: { success, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    completion(.publishFailure(error))
+                } else {
+                    completion(.success)
+                }
             }
         })
     }
