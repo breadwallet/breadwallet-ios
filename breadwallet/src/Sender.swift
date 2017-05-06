@@ -33,6 +33,17 @@ class Sender {
         return walletManager.wallet?.feeForTx(amount:amount) ?? 0
     }
 
+    //Used for sending
+    var secureCanUseTouchId: Bool {
+        guard let tx = transaction else { return false }
+        return walletManager.canUseTouchID(forTx: tx) && UserDefaults.isTouchIdEnabled
+    }
+
+    //For display purposes only
+    func maybeCanUseTouchId(forAmount: UInt64) -> Bool {
+        return forAmount < walletManager.spendingLimit && UserDefaults.isTouchIdEnabled
+    }
+
     //Amount in bits
     func send(verifyPin: (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
         guard let tx = transaction else { return completion(.creationError("Transaction not created")) }
