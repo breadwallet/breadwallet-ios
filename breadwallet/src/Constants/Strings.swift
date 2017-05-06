@@ -265,7 +265,7 @@ enum S {
     enum PinCreationView {
         static let setPinText = NSLocalizedString("PinCreationView.setPinText", value:"Set PIN", comment: "Set pin instruction")
         static let confirmPinText = NSLocalizedString("PinCreationView.confirmPinText", value:"Re-Enter PIN", comment: "Confirm pin instruction")
-        static let wrongPinText = NSLocalizedString("PinCreationView.wrongPinText", value:"Wrong PIN , please try again", comment: "Wrong pin entered instruction")
+        static let wrongPinText = NSLocalizedString("PinCreationView.wrongPinText", value:"Wrong PIN, please try again", comment: "Wrong pin entered instruction")
         static let caption = NSLocalizedString("PinCreationView.caption", value:"Your PIN will be used to unlock your  Bread and send money.", comment: "Set Pin screen caption")
         static let body = NSLocalizedString("PinCreationView.body", value:"Write down your PIN and store it in a place you can access even if your phone is broken or lost.", comment: "Set Pin screen body")
     }
