@@ -71,13 +71,14 @@ class TouchIdSpendingLimitViewController : UIViewController, Subscriber {
             slider.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             slider.topAnchor.constraint(equalTo: currencySwitcher.bottomAnchor, constant: C.padding[2]),
             slider.trailingAnchor.constraint(equalTo: currencyButton.trailingAnchor),
-            slider.heightAnchor.constraint(equalToConstant: 8.0)
-            ])
+            slider.heightAnchor.constraint(equalToConstant: 8.0) ])
         body.constrain([
             body.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             body.topAnchor.constraint(equalTo: slider.bottomAnchor, constant: C.padding[2]),
             body.trailingAnchor.constraint(equalTo: currencyButton.trailingAnchor) ])
         slider.addGradientTrack()
+
+        currencyButton.isHidden = true
     }
 
     private func setData() {
@@ -90,19 +91,24 @@ class TouchIdSpendingLimitViewController : UIViewController, Subscriber {
 
         if let rate = self.rate, let wallet = walletManager.wallet {
             let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate.rate)
-            amount.text = spendingLimit.bits
+            setAmount(limitAmount: spendingLimit)
             slider.minimumValue = 0.0
             slider.maximumValue = Float(max(wallet.balance*3, C.satoshis*2))
             slider.value = Float(walletManager.spendingLimit)
         }
 
-        slider.valueChanged = {
-            if let rate = self.rate {
-                let spendingLimit = Amount(amount: UInt64(self.slider.value), rate: rate.rate)
-                self.amount.text = spendingLimit.bits
+        slider.valueChanged = { [weak self] in
+            guard let myself = self else { return }
+            if let rate = myself.rate {
+                let spendingLimit = Amount(amount: UInt64(myself.slider.value), rate: rate.rate)
+                myself.setAmount(limitAmount: spendingLimit)
             }
-            self.walletManager.spendingLimit = UInt64(self.slider.value)
+            myself.walletManager.spendingLimit = UInt64(myself.slider.value)
         }
+    }
+
+    private func setAmount(limitAmount: Amount) {
+        amount.text = "\(limitAmount.bits) = \(limitAmount.localCurrency)"
     }
 
     required init?(coder aDecoder: NSCoder) {
