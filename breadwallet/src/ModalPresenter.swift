@@ -249,6 +249,7 @@ class ModalPresenter : Subscriber {
                     guard let modal = modal as? ModalViewController else { return }
                     guard let child = modal.childViewController as? SendViewController else { return }
                     child.initialAddress = paymentRequest?.toAddress
+                    child.isPresentedFromLock = true
                 })
             }
         })

@@ -12,7 +12,7 @@ import LocalAuthentication
 private let touchIdSize: CGFloat = 32.0
 private let topControlHeight: CGFloat = 32.0
 
-class LoginViewController : UIViewController {
+class LoginViewController : UIViewController, Subscriber {
 
     //MARK: - Public
     var walletManager: WalletManager? {
@@ -31,6 +31,10 @@ class LoginViewController : UIViewController {
             self.pinView = PinView(style: .login, length: walletManager.pinLength)
         }
         super.init(nibName: nil, bundle: nil)
+    }
+
+    deinit {
+        store.unsubscribe(self)
     }
 
     //MARK: - Private
@@ -122,8 +126,10 @@ class LoginViewController : UIViewController {
             }
 
             self?.present(nc, animated: true, completion: nil)
-
         }
+        store.subscribe(self, name: .loginFromSend, callback: {_ in 
+            self.authenticationSucceded()
+        })
     }
 
     override func viewDidAppear(_ animated: Bool) {

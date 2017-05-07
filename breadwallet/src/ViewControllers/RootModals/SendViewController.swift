@@ -25,6 +25,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     var onPublishFailure: (()->Void)?
     var parentView: UIView? //ModalPresentable
     var initialAddress: String?
+    var isPresentedFromLock = false
 
     init(store: Store, sender: Sender, initialAddress: String? = nil) {
         self.store = store
@@ -175,6 +176,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                         callback: {
                             self.rate = $0.currentRate
         })
+
+        if isPresentedFromLock {
+            amount.label.isHidden = true
+        }
     }
 
     private func preventCellContentOverflow() {
@@ -388,7 +393,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                         switch result {
                         case .success:
                             self?.dismiss(animated: true, completion: {
-                                self?.onPublishSuccess?()
+                                guard let myself = self else { return }
+                                if myself.isPresentedFromLock {
+                                    myself.store.trigger(name: .loginFromSend)
+                                }
+                                myself.onPublishSuccess?()
                             })
                         case .creationError(let message):
                             print("creation error: \(message)")
