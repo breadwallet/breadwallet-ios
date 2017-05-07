@@ -160,7 +160,8 @@ enum S {
 
     enum VerifyPin {
         static let title = NSLocalizedString("VerifyPin.title", value:"PIN Required", comment: "Verify Pin view title")
-        static let body = NSLocalizedString("VerifyPin.body", value:"Please enter your PIN to authorize this transaction.", comment: "Verify pin view body")
+        static let transactionBody = NSLocalizedString("VerifyPin.transactionBody", value:"Please enter your PIN to authorize this transaction.", comment: "Verify pin view body")
+        static let continueBody = NSLocalizedString("VerifyPin.continueBody", value:"Please enter your PIN to continue.", comment: "Verify pin view body")
     }
 
     enum TouchIdSettings {

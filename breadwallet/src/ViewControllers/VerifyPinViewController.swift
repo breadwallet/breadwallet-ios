@@ -12,7 +12,8 @@ typealias VerifyPinCallback = (String, UIViewController) -> Void
 
 class VerifyPinViewController : UIViewController {
 
-    init(callback: @escaping VerifyPinCallback) {
+    init(bodyText: String, callback: @escaping VerifyPinCallback) {
+        self.bodyText = bodyText
         self.callback = callback
         super.init(nibName: nil, bundle: nil)
     }
@@ -27,6 +28,7 @@ class VerifyPinViewController : UIViewController {
     private let pinView = PinView(style: .create, length: 6)
     private let toolbar = UIView(color: .whiteTint)
     private let cancel = UIButton(type: .system)
+    private let bodyText: String
 
     override func viewDidLoad() {
         addSubviews()
@@ -88,7 +90,7 @@ class VerifyPinViewController : UIViewController {
         contentBox.layer.shadowOffset = .zero
 
         titleLabel.text = S.VerifyPin.title
-        body.text = S.VerifyPin.body
+        body.text = bodyText
         body.numberOfLines = 0
         body.lineBreakMode = .byWordWrapping
 
