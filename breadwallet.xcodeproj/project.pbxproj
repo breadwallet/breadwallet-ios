@@ -3154,6 +3154,7 @@
 				75A2A7E21DA5934400A983D8 /* Embed Watch Content */,
 				75A2A8031DA5935F00A983D8 /* Embed App Extensions */,
 				22A9A9831DF63288000F0016 /* Embed Frameworks */,
+				CEE0EF531EBF8C8A0018DB36 /* Icon Versioning */,
 			);
 			buildRules = (
 			);
@@ -3515,6 +3516,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CEE0EF531EBF8C8A0018DB36 /* Icon Versioning */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Icon Versioning";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/scripts/icon_versioning.sh\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		22A9A9911DF63426000F0016 /* Sources */ = {
