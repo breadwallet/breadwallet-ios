@@ -49,7 +49,7 @@ class SendAmountCell : SendCell {
     private let placeholderFont = UIFont.customBody(size: 16.0)
     private let textFieldFont = UIFont.customBody(size: 26.0)
     let textField = UITextField()
-    fileprivate let label = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
+    let label = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
     let amountLabel = UILabel(font: .customBody(size: 26.0), color: .darkText)
     private let cursor = BlinkingView(blinkColor: C.defaultTintColor)
 
