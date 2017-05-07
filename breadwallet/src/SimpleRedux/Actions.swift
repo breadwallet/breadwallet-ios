@@ -312,21 +312,6 @@ extension State {
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
     }
-    func clone(isModalDismissalBlocked: Bool) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
-                     isLoginRequired: isLoginRequired,
-                     pinCreationStep: pinCreationStep,
-                     paperPhraseStep: paperPhraseStep,
-                     rootModal: rootModal,
-                     pasteboard: pasteboard,
-                     walletState: walletState,
-                     currency: currency,
-                     currentRate: currentRate,
-                     rates: rates,
-                     alert: alert,
-                     isTouchIdEnabled: isTouchIdEnabled,
-                     defaultCurrency: defaultCurrency)
-    }
     func clone(paperPhraseStep: PaperPhraseStep) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,

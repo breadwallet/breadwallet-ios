@@ -46,6 +46,8 @@ enum TriggerName {
     case promptPaperKey
     case promptUpgradePin
     case loginFromSend
+    case blockModalDismissal
+    case unblockModalDismissal
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName : Equatable {}
@@ -69,6 +71,10 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.promptUpgradePin, .promptUpgradePin):
         return true
     case (.loginFromSend, .loginFromSend):
+        return true
+    case (.blockModalDismissal, .blockModalDismissal):
+        return true
+    case (.unblockModalDismissal, .unblockModalDismissal):
         return true
     default:
         return false
