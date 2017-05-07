@@ -166,8 +166,8 @@ class BRWebSocketServer {
             
             // read for all readers that have data waiting
             for i in 0..<resp.read_fd_len {
-                log("handle read fd \(sockets[resp.read_fds[Int(i)]]!.fd)")
                 if let readSock = sockets[resp.read_fds[Int(i)]] {
+                    log("handle read fd \(readSock.fd)")
                     do {
                         try readSock.handleRead()
                     } catch {
@@ -175,6 +175,8 @@ class BRWebSocketServer {
                         readSock.client.socketDidDisconnect(readSock)
                         sockets.removeValue(forKey: readSock.fd)
                     }
+                } else {
+                    log("nil read socket")
                 }
             }
             
@@ -205,7 +207,7 @@ class BRWebSocketServer {
                         sockets.removeValue(forKey: writeSock.fd)
                     }
                 } else {
-                    log("nil writeSock")
+                    log("nil write socket")
                 }
             }
             
