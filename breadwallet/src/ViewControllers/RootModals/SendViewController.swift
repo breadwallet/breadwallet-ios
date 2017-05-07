@@ -155,7 +155,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             currency.constraint(.centerY, toView: amount.accessoryView),
             currency.constraint(.trailing, toView: amount, constant: -C.padding[2]),
             currency.constraint(.height, constant: buttonSize.height) ])
-        
+
+        preventCellContentOverflow()
         addButtonActions()
 
         currencySlider.didSelectCurrency = { [weak self] rate in
@@ -174,6 +175,16 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                         callback: {
                             self.rate = $0.currentRate
         })
+    }
+
+    private func preventCellContentOverflow() {
+        to.contentLabel.constrain([
+            to.contentLabel.trailingAnchor.constraint(lessThanOrEqualTo: paste.leadingAnchor, constant: -C.padding[2]) ])
+        amount.amountLabel.constrain([
+            amount.amountLabel.trailingAnchor.constraint(lessThanOrEqualTo: currency.leadingAnchor, constant: -C.padding[2]) ])
+        amount.amountLabel.minimumScaleFactor = 0.5
+        amount.amountLabel.adjustsFontSizeToFitWidth = true
+        amount.amountLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
     }
 
     override func viewDidAppear(_ animated: Bool) {
