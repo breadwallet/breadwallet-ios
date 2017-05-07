@@ -232,7 +232,7 @@ class ReceiveViewController : UIViewController {
 
 extension ReceiveViewController : ModalDisplayable {
     var faqArticleId: String? {
-        return "receive"
+        return ArticleIds.receive
     }
 
     var modalTitle: String {
