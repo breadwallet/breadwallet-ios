@@ -209,8 +209,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
             guard let rate = myself.rate else { return }
             let amount = Amount(amount: myself.balance, rate: rate.rate)
-            myself.amount.setLabel(text: "Balance: \(amount.bits)", color: .grayTextTint)
-
+            myself.amount.setLabel(text: String(format: S.Send.balance, "\(amount.bits)"), color: .grayTextTint)
         }
 
         amount.textFieldDidChange = { [weak self] text in
@@ -278,16 +277,16 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         var data: (String, UIColor)
         if satoshis > 0 {
             let fee = sender.feeForTx(amount: satoshis)
-            let feeString = ", Fee: \(formatter.string(from: fee/100 as NSNumber)!)"
+            let feeString = formatter.string(from: fee/100 as NSNumber)!
             if satoshis > (balance - fee) {
-                data = ("Balance: \(balanceAmount.bits)\(feeString)", .red)
+                data = (String(format: S.Send.balanceWithFee, balanceAmount.bits, feeString), .red)
                 send.isEnabled = false
             } else {
-                data = ("Balance: \(balanceAmount.bits)\(feeString)", .grayTextTint)
+                data = (String(format: S.Send.balanceWithFee, balanceAmount.bits, feeString), .grayTextTint)
                 send.isEnabled = true
             }
         } else {
-            data = ("Balance: \(balanceAmount.bits)", .grayTextTint)
+            data = (String(format: S.Send.balance, balanceAmount.bits), .grayTextTint)
         }
         amount.setLabel(text: data.0, color: data.1)
     }
@@ -458,7 +457,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
 extension SendViewController : ModalDisplayable {
     var faqArticleId: String? {
-        return "send"
+        return ArticleIds.send
     }
 
     var modalTitle: String {
