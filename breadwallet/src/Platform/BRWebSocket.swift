@@ -180,8 +180,8 @@ class BRWebSocketServer {
             
             // write for all writers
             for i in 0..<resp.write_fd_len {
-                log("handle write fd=\(sockets[resp.write_fds[Int(i)]]!.fd)")
                 if let writeSock = sockets[resp.write_fds[Int(i)]] {
+                    log("handle write fd=\(writeSock.fd)")
                     let (opcode, payload) = writeSock.sendq.removeFirst()
                     do {
                         let sentBytes = try sendBuffer(writeSock.fd, buffer: payload)
@@ -204,6 +204,8 @@ class BRWebSocketServer {
                         writeSock.client.socketDidDisconnect(writeSock)
                         sockets.removeValue(forKey: writeSock.fd)
                     }
+                } else {
+                    log("nil writeSock")
                 }
             }
             
