@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ModalViewController : UIViewController {
+class ModalViewController : UIViewController, Subscriber {
 
     //MARK: - Public
     var childViewController: UIViewController
@@ -16,6 +16,7 @@ class ModalViewController : UIViewController {
     init<T: UIViewController>(childViewController: T, store: Store) where T: ModalDisplayable {
         self.childViewController = childViewController
         self.modalInfo = childViewController
+        self.store = store
         if let articleId = childViewController.faqArticleId {
             self.header = ModalHeaderView(title: modalInfo.modalTitle, style: .dark, faqInfo: (store, articleId))
         } else {
@@ -30,6 +31,11 @@ class ModalViewController : UIViewController {
     private let headerHeight: CGFloat = 49.0
     fileprivate let header: ModalHeaderView
     private let tapGestureRecognizer = UITapGestureRecognizer()
+    private let store: Store
+
+    deinit {
+        store.unsubscribe(self)
+    }
 
     override func viewDidLoad() {
         view.backgroundColor = .clear
@@ -64,6 +70,13 @@ class ModalViewController : UIViewController {
         tapGestureRecognizer.delegate = self
         tapGestureRecognizer.addTarget(self, action: #selector(didTap))
         view.addGestureRecognizer(tapGestureRecognizer)
+        store.subscribe(self, name: .blockModalDismissal, callback: { _ in
+            self.tapGestureRecognizer.isEnabled = false
+        })
+
+        store.subscribe(self, name: .unblockModalDismissal, callback: { _ in
+            self.tapGestureRecognizer.isEnabled = true
+        })
     }
 
     override func viewDidAppear(_ animated: Bool) {

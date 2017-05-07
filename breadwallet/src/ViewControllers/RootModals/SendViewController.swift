@@ -201,6 +201,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         currencySlider.load()
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        UIApplication.shared.keyWindow?.gestureRecognizers?.forEach {
+            $0.isEnabled = true
+        }
+        store.trigger(name: .unblockModalDismissal)
+    }
+
     private func addButtonActions() {
         paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
@@ -356,10 +364,18 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         if isCurrencySwitcherCollapsed() {
             addCurrencyOverlay()
             isPresenting = true
+            UIApplication.shared.keyWindow?.gestureRecognizers?.forEach {
+                $0.isEnabled = false
+            }
+            store.trigger(name: .blockModalDismissal)
         } else {
             UIView.animate(withDuration: 0.1, animations: {
                 self.currencyOverlay.alpha = 0.0
             }, completion: { _ in
+                UIApplication.shared.keyWindow?.gestureRecognizers?.forEach {
+                    $0.isEnabled = true
+                }
+                self.store.trigger(name: .unblockModalDismissal)
                 self.currencyOverlay.removeFromSuperview()
             })
         }

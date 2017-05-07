@@ -40,7 +40,6 @@ class ModalTransitionDelegate : NSObject, Subscriber {
     private var progress: CGFloat = 0.0
     private let velocityThreshold: CGFloat = 50.0
     private let progressThreshold: CGFloat = 0.5
-    fileprivate var isModalDismissalBlocked = false
 
     @objc fileprivate func didUpdate(gr: UIPanGestureRecognizer) {
         switch gr.state {
