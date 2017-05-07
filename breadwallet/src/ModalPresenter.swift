@@ -174,7 +174,7 @@ class ModalPresenter : Subscriber {
         let root = ModalViewController(childViewController: sendVC, store: store)
         sendVC.presentScan = presentScan(parent: root)
         sendVC.presentVerifyPin = { [weak self, weak root] callback in
-            let vc = VerifyPinViewController(callback: callback)
+            let vc = VerifyPinViewController(bodyText: S.VerifyPin.transactionBody, callback: callback)
             vc.transitioningDelegate = self?.verifyPinTransitionDelegate
             vc.modalPresentationStyle = .overFullScreen
             vc.modalPresentationCapturesStatusBarAppearance = true
@@ -385,7 +385,7 @@ class ModalPresenter : Subscriber {
         start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
         start.didTapWrite = { [weak self] in
             guard let myself = self else { return }
-            let verify = VerifyPinViewController(callback: { pin, vc in
+            let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, callback: { pin, vc in
                 if walletManager.authenticate(pin: pin) {
                     let write = WritePaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin)
                     write.addCloseNavigationItem(tintColor: .white)
