@@ -50,7 +50,7 @@ class SendAmountCell : SendCell {
     private let textFieldFont = UIFont.customBody(size: 26.0)
     let textField = UITextField()
     fileprivate let label = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
-    private let amountLabel = UILabel(font: .customBody(size: 26.0), color: .darkText)
+    let amountLabel = UILabel(font: .customBody(size: 26.0), color: .darkText)
     private let cursor = BlinkingView(blinkColor: C.defaultTintColor)
 
     private func setupViews() {
@@ -68,8 +68,7 @@ class SendAmountCell : SendCell {
             label.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
             label.topAnchor.constraint(equalTo: amountLabel.bottomAnchor, constant: C.padding[2]),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
-            label.bottomAnchor.constraint(equalTo: bottomAnchor)
-            ])
+            label.bottomAnchor.constraint(equalTo: bottomAnchor) ])
         amountLabel.constrain([
             amountLabel.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
             amountLabel.topAnchor.constraint(equalTo: textField.topAnchor),

@@ -22,8 +22,8 @@ class LabelSendCell : SendCell {
         }
     }
 
+    let contentLabel = UILabel(font: .customBody(size: 14.0))
     private let label = UILabel(font: .customBody(size: 16.0))
-    private let contentLabel = UILabel(font: .customBody(size: 14.0))
 
     private func setupViews() {
         addSubview(label)
