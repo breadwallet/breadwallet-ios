@@ -129,7 +129,7 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
     private var textViewText: NSAttributedString {
         guard let rate = rate else { return NSAttributedString(string: "") }
         let amount = Amount(amount: walletManager.spendingLimit, rate: rate.rate)
-        let string = "Spending Limit: \(amount.bits) = \(amount.localCurrency) \(rate.code) \n\nYou can customize your Touch ID Spending Limit from the "
+        let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.bits, amount.localCurrency))\n\n\(S.TouchIdSettings.customizeText) "
         let link = "Touch ID Spending Limit Screen"
         let attributedString = NSMutableAttributedString(string: string, attributes: [
                 NSFontAttributeName: UIFont.customBody(size: 13.0),

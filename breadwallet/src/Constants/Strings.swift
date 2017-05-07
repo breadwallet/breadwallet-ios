@@ -170,6 +170,9 @@ enum S {
         static let switchLabel = NSLocalizedString("TouchIdSettings.switchLabel", value:"Enable Touch ID for Bread", comment: "Touch id switch label.")
         static let unavailableAlertTitle = NSLocalizedString("TouchIdSettings.unavailableAlertTitle", value:"Touch ID Not Setup", comment: "Touch ID unavailable alert title")
         static let unavailableAlertMessage = NSLocalizedString("TouchIdSettings.unavailableAlertMessage", value:"You have not setup Touch ID on this device. Go to Settings->Touch ID & Passcode to set it up now.", comment: "Touch ID unavailable alert message")
+        static let spendingLimit = NSLocalizedString("TouchIdSettings.spendingLimit", value: "Spending Limit: %@ = %@", comment: "Spending Limit: b100,000 = $100")
+        static let customizeText = NSLocalizedString("TouchIdSettings.customizeText", value: "You can customize your Touch ID Spending Limit from the", comment: "You can customize your Touch ID Spending Limit from the <buttonname=Touch ID Spending Limit Screen>")
+        static let linkText = NSLocalizedString("TouchIdSettings.linkText", value: "Touch ID Spending Limit Screen", comment: "Link Text")
     }
 
     enum TouchIdSpendingLimit {
