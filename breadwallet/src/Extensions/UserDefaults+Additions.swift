@@ -10,7 +10,7 @@ import Foundation
 
 private let defaults = UserDefaults.standard
 private let isTouchIdEnabledKey = "istouchidenabled"
-private let defaultCurrencyKey = "defaultcurrency"
+private let defaultCurrencyCodeKey = "defaultcurrency"
 private let hasAquiredShareDataPermissionKey = "has_acquired_permission"
 private let legacyWalletNeedsBackupKey = "WALLET_NEEDS_BACKUP"
 private let writePaperPhraseDateKey = "writepaperphrasedatekey"
@@ -31,15 +31,15 @@ extension UserDefaults {
         }
     }
 
-    static var defaultCurrency: String {
+    static var defaultCurrencyCode: String {
         get {
-            guard defaults.object(forKey: defaultCurrencyKey) != nil else {
+            guard defaults.object(forKey: defaultCurrencyCodeKey) != nil else {
                 return Locale.current.currencyCode ?? "USD"
             }
-            return defaults.string(forKey: defaultCurrencyKey)!
+            return defaults.string(forKey: defaultCurrencyCodeKey)!
         }
         set {
-            defaults.set(newValue, forKey: defaultCurrencyKey)
+            defaults.set(newValue, forKey: defaultCurrencyCodeKey)
         }
     }
 
