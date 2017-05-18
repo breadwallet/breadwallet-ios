@@ -71,7 +71,6 @@ class RequestAmountViewController : UIViewController {
         setupCopiedMessage()
         setupShareButtons()
         amount.clipsToBounds = true
-        currencySlider.backgroundColor = .clear
         currencyContainer.contentView = currencySlider
     }
 
@@ -214,10 +213,6 @@ class RequestAmountViewController : UIViewController {
     }
 
     private func currencySwitchTapped() {
-        func isCurrencySwitcherCollapsed() -> Bool {
-            return currencyContainerHeight?.constant == 0.0
-        }
-
         UIView.spring(C.animationDuration, animations: {
             self.currencyContainer.toggle()
             self.view.superview?.layoutIfNeeded()

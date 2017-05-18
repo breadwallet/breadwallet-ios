@@ -171,6 +171,7 @@ extension UIView {
         constrain([
                 constraint(.width, toView: viewAbove),
                 constraint(toBottom: viewAbove, constant: padding),
+                self.centerXAnchor.constraint(equalTo: viewAbove.centerXAnchor),
                 height != nil ? constraint(.height, constant: height!) : nil
             ])
     }
