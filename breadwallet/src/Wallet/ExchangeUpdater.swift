@@ -8,12 +8,18 @@
 
 import Foundation
 
-class ExchangeUpdater {
+class ExchangeUpdater : Subscriber {
 
     //MARK: - Public
     init(store: Store, apiClient: BRAPIClient) {
         self.store = store
         self.apiClient = apiClient
+        store.subscribe(self,
+                        selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode },
+                        callback: { state in
+                            guard let currentRate = state.rates.first( where: { $0.code == state.defaultCurrencyCode }) else { return }
+                            self.store.perform(action: ExchangeRates.setRate(currentRate))
+        })
     }
 
     func refresh(completion: @escaping () -> Void) {

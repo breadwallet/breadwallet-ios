@@ -209,6 +209,12 @@ enum ExchangeRates {
             reduce = { $0.clone(currentRate: currentRate, rates: rates) }
         }
     }
+    struct setRate: Action {
+        let reduce: Reducer
+        init(_ currentRate: Rate) {
+            reduce = { $0.clone(currentRate: currentRate) }
+        }
+    }
 }
 
 //MARK: - Alerts
@@ -458,6 +464,21 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode)
     }
     func clone(currentRate: Rate, rates: [Rate]) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
+                     pinCreationStep: pinCreationStep,
+                     paperPhraseStep: paperPhraseStep,
+                     rootModal: rootModal,
+                     pasteboard: pasteboard,
+                     walletState: walletState,
+                     isBtcSwapped: isBtcSwapped,
+                     currentRate: currentRate,
+                     rates: rates,
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrencyCode: defaultCurrencyCode)
+    }
+    func clone(currentRate: Rate) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      pinCreationStep: pinCreationStep,
