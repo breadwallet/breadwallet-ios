@@ -277,7 +277,7 @@ class ModalPresenter : Subscriber {
                     nc.pushViewController(TouchIdSpendingLimitViewController(walletManager: walletManager, store: self.store), animated: true)
                 }),
                 Setting(title: S.Settings.currency, accessoryText: {
-                    let code = self.store.state.defaultCurrency
+                    let code = self.store.state.defaultCurrencyCode
                     let components: [String : String] = [NSLocale.Key.currencyCode.rawValue : code]
                     let identifier = Locale.identifier(fromComponents: components)
                     return Locale(identifier: identifier).currencyCode ?? ""

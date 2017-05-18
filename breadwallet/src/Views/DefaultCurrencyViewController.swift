@@ -27,10 +27,10 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
             setExchangeRateLabel()
         }
     }
-    private var defaultCurrency: String? = nil {
+    private var defaultCurrencyCode: String? = nil {
         didSet {
             //Grab index paths of new and old rows when the currency changes
-            let paths: [IndexPath] = rates.enumerated().filter { $0.1.code == defaultCurrency || $0.1.code == oldValue } .map { IndexPath(row: $0.0, section: 0) }
+            let paths: [IndexPath] = rates.enumerated().filter { $0.1.code == defaultCurrencyCode || $0.1.code == oldValue } .map { IndexPath(row: $0.0, section: 0) }
             tableView.beginUpdates()
             tableView.reloadRows(at: paths, with: .automatic)
             tableView.endUpdates()
@@ -47,8 +47,8 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     override func viewDidLoad() {
         setHeader()
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
-        store.subscribe(self, selector: { $0.defaultCurrency != $1.defaultCurrency }, callback: {
-            self.defaultCurrency = $0.defaultCurrency
+        store.subscribe(self, selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode }, callback: {
+            self.defaultCurrencyCode = $0.defaultCurrencyCode
         })
         apiClient.exchangeRates { rates, error in
             self.rates = rates.filter { $0.code != "BTC" }
@@ -99,7 +99,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     }
 
     private func setExchangeRateLabel() {
-        if let currentRate = rates.filter({ $0.code == defaultCurrency }).first {
+        if let currentRate = rates.filter({ $0.code == defaultCurrencyCode }).first {
             let amount = Amount(amount: C.satoshis, rate: currentRate.rate)
             rateLabel.textColor = .darkText
             rateLabel.text = "\(amount.string(forLocal: currentRate.locale)) = 1 BTC"
@@ -119,7 +119,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         let rate = rates[indexPath.row]
         cell.textLabel?.text = "\(rate.code) (\(rate.currencySymbol))"
 
-        if rate.code == defaultCurrency {
+        if rate.code == defaultCurrencyCode {
             let check = UIImageView(image: #imageLiteral(resourceName: "CircleCheck").withRenderingMode(.alwaysTemplate))
             check.tintColor = C.defaultTintColor
             cell.accessoryView = check
