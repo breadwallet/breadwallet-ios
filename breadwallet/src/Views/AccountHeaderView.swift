@@ -186,7 +186,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     private func setBalances() {
         guard let rate = exchangeRate else { return }
-        let amount = Amount(amount: balance, rate: rate.rate)
+        let amount = Amount(amount: balance, rate: rate)
 
         primaryBalance.setValue(amount.bitsAmount, completion: { [weak self] in
             guard let myself = self else { return }

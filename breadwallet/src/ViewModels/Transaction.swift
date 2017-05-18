@@ -50,12 +50,12 @@ class Transaction {
     }
 
     func amountDescription(isBtcSwapped: Bool, rate: Rate) -> String {
-        let amount = Amount(amount: satoshis, rate: rate.rate)
+        let amount = Amount(amount: satoshis, rate: rate)
         return isBtcSwapped ? amount.localCurrency : amount.bits
     }
 
     func descriptionString(isBtcSwapped: Bool, rate: Rate) -> NSAttributedString {
-        let amount = Amount(amount: satoshis, rate: rate.rate)
+        let amount = Amount(amount: satoshis, rate: rate)
         let prefix = NSMutableAttributedString(string: "\(direction.string.capitalized) ", attributes: UIFont.regularAttributes)
         let amountAttributedString = NSMutableAttributedString(string: amount.string(isBtcSwapped: isBtcSwapped), attributes: UIFont.boldAttributes)
         let preposition = NSMutableAttributedString(string: " \(direction.preposition) ", attributes: UIFont.regularAttributes)
@@ -67,11 +67,11 @@ class Transaction {
     }
 
     func amountDetails(isBtcSwapped: Bool, rate: Rate) -> String {
-        let feeAmount = Amount(amount: fee, rate: rate.rate)
+        let feeAmount = Amount(amount: fee, rate: rate)
         let feeString = direction == .sent ? " (\(feeAmount.string(isBtcSwapped: isBtcSwapped)) fee)" : ""
-        let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate.rate).string(isBtcSwapped: isBtcSwapped))\(feeString)"
-        let startingString = "Starting balance: \(Amount(amount: startingBalance, rate: rate.rate).string(isBtcSwapped: isBtcSwapped))"
-        let endingString = "Ending balance: \(Amount(amount: balanceAfter, rate: rate.rate).string(isBtcSwapped: isBtcSwapped))"
+        let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate).string(isBtcSwapped: isBtcSwapped))\(feeString)"
+        let startingString = "Starting balance: \(Amount(amount: startingBalance, rate: rate).string(isBtcSwapped: isBtcSwapped))"
+        let endingString = "Ending balance: \(Amount(amount: balanceAfter, rate: rate).string(isBtcSwapped: isBtcSwapped))"
 
         var exchangeRateInfo = ""
         if let metaData = metaData {
