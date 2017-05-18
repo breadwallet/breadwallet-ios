@@ -33,9 +33,9 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         }
     }
 
-    func setTransaction(_ transaction: Transaction, currency: Currency, rate: Rate) {
+    func setTransaction(_ transaction: Transaction, isBtcSwapped: Bool, rate: Rate) {
         self.transaction = transaction
-        self.transactionLabel.attributedText = transaction.descriptionString(currency: currency, rate: rate)
+        self.transactionLabel.attributedText = transaction.descriptionString(isBtcSwapped: isBtcSwapped, rate: rate)
         status.text = transaction.status
         comment.text = transaction.comment
         timestamp.text = transaction.timeSince

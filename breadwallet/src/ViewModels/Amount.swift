@@ -44,13 +44,8 @@ struct Amount {
         return string
     }
 
-    func string(forCurrency: Currency) -> String {
-        switch forCurrency {
-        case .bitcoin:
-            return bits
-        case .local:
-            return localCurrency
-        }
+    func string(isBtcSwapped: Bool) -> String {
+        return isBtcSwapped ? localCurrency : bits
     }
 
     static var bitsFormatter: NumberFormatter {

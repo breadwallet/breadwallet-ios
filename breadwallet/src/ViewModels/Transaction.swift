@@ -49,15 +49,15 @@ class Transaction {
         self.hash = tx.pointee.txHash.description
     }
 
-    func amountDescription(currency: Currency, rate: Rate) -> String {
+    func amountDescription(isBtcSwapped: Bool, rate: Rate) -> String {
         let amount = Amount(amount: satoshis, rate: rate.rate)
-        return currency == .bitcoin ? amount.bits : amount.localCurrency
+        return isBtcSwapped ? amount.localCurrency : amount.bits
     }
 
-    func descriptionString(currency: Currency, rate: Rate) -> NSAttributedString {
+    func descriptionString(isBtcSwapped: Bool, rate: Rate) -> NSAttributedString {
         let amount = Amount(amount: satoshis, rate: rate.rate)
         let prefix = NSMutableAttributedString(string: "\(direction.string.capitalized) ", attributes: UIFont.regularAttributes)
-        let amountAttributedString = NSMutableAttributedString(string: amount.string(forCurrency: currency), attributes: UIFont.boldAttributes)
+        let amountAttributedString = NSMutableAttributedString(string: amount.string(isBtcSwapped: isBtcSwapped), attributes: UIFont.boldAttributes)
         let preposition = NSMutableAttributedString(string: " \(direction.preposition) ", attributes: UIFont.regularAttributes)
         let suffix = NSMutableAttributedString(string: "account", attributes: UIFont.boldAttributes)
         prefix.append(amountAttributedString)
@@ -66,12 +66,12 @@ class Transaction {
         return prefix
     }
 
-    func amountDetails(currency: Currency, rate: Rate) -> String {
+    func amountDetails(isBtcSwapped: Bool, rate: Rate) -> String {
         let feeAmount = Amount(amount: fee, rate: rate.rate)
-        let feeString = direction == .sent ? " (\(feeAmount.string(forCurrency: currency)) fee)" : ""
-        let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate.rate).string(forCurrency: currency))\(feeString)"
-        let startingString = "Starting balance: \(Amount(amount: startingBalance, rate: rate.rate).string(forCurrency: currency))"
-        let endingString = "Ending balance: \(Amount(amount: balanceAfter, rate: rate.rate).string(forCurrency: currency))"
+        let feeString = direction == .sent ? " (\(feeAmount.string(isBtcSwapped: isBtcSwapped)) fee)" : ""
+        let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate.rate).string(isBtcSwapped: isBtcSwapped))\(feeString)"
+        let startingString = "Starting balance: \(Amount(amount: startingBalance, rate: rate.rate).string(isBtcSwapped: isBtcSwapped))"
+        let endingString = "Ending balance: \(Amount(amount: balanceAfter, rate: rate.rate).string(isBtcSwapped: isBtcSwapped))"
 
         var exchangeRateInfo = ""
         if let metaData = metaData {
