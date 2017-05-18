@@ -21,7 +21,9 @@ class RequestAmountViewController : UIViewController {
 
     init(wallet: BRWallet, store: Store) {
         self.wallet = wallet
-        self.currencySlider = CurrencySlider(rates: store.state.rates)
+        self.currencySlider = CurrencySlider(rates: store.state.rates,
+                                             defaultCode: store.state.defaultCurrencyCode,
+                                             isBtcSwapped: store.state.isBtcSwapped)
         super.init(nibName: nil, bundle: nil)
     }
 
