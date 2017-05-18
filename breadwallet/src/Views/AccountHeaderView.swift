@@ -15,17 +15,9 @@ private let logoWidth: CGFloat = 0.22 //percentage of width
 class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     //MARK: - Public
-    var balance: UInt64 = 0 {
-        didSet { setBalances() }
-    }
-
-    var currency: Currency {
-        didSet { setBalances() }
-    }
-
     init(store: Store) {
         self.store = store
-        self.currency = store.state.currency
+        self.isBtcSwapped = store.state.isBtcSwapped
         super.init(frame: CGRect())
         setup()
     }
@@ -51,6 +43,12 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         image.contentMode = .scaleAspectFit
         return image
     }()
+    private var balance: UInt64 = 0 {
+        didSet { setBalances() }
+    }
+    private var isBtcSwapped: Bool {
+        didSet { setBalances() }
+    }
 
     private func setup() {
         setData()
@@ -61,9 +59,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     private func setData() {
-        store.subscribe(self, selector: { $0.walletState.name != $1.walletState.name }, callback: {
-            self.name.text = $0.walletState.name
-        })
         name.textColor = .white
 
         manage.setTitle(S.AccountHeader.manageButtonName, for: .normal)
@@ -175,11 +170,18 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     private func addSubscriptions() {
         store.subscribe(self,
-                        selector: { $0.currency != $1.currency },
-                        callback: { self.currency = $0.currency })
+                        selector: { $0.isBtcSwapped != $1.isBtcSwapped },
+                        callback: { self.isBtcSwapped = $0.isBtcSwapped })
         store.subscribe(self,
                         selector: { $0.currentRate != $1.currentRate},
                         callback: { self.exchangeRate = $0.currentRate })
+        store.subscribe(self,
+                        selector: { $0.walletState.name != $1.walletState.name },
+                        callback: { self.name.text = $0.walletState.name })
+        store.subscribe(self,
+                        selector: {$0.walletState.balance != $1.walletState.balance },
+                        callback: { state in
+                            self.balance = state.walletState.balance })
     }
 
     private func setBalances() {
@@ -189,7 +191,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         primaryBalance.setValue(amount.bitsAmount, completion: { [weak self] in
             guard let myself = self else { return }
             myself.layoutIfNeeded()
-            if myself.currency == .bitcoin {
+            if !myself.isBtcSwapped {
                 myself.primaryBalance.transform = .identity
             } else {
                 if myself.primaryBalance.transform == .identity {
@@ -200,7 +202,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         secondaryBalance.setValue(amount.localAmount, completion: { [weak self] in
             guard let myself = self else { return }
             myself.layoutIfNeeded()
-            if myself.currency == .local {
+            if myself.isBtcSwapped {
                 myself.secondaryBalance.transform = .identity
             } else {
                 if myself.secondaryBalance.transform == .identity {
@@ -210,11 +212,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         })
 
         if !hasInitialized {
-            let shouldSwap = currency == .local
-            NSLayoutConstraint.deactivate(shouldSwap ? self.regularConstraints : self.swappedConstraints)
-            NSLayoutConstraint.activate(shouldSwap ? self.swappedConstraints : self.regularConstraints)
-            self.primaryBalance.textColor = shouldSwap ? .darkText : .white
-            self.secondaryBalance.textColor = shouldSwap ? .white : .darkText
+            NSLayoutConstraint.deactivate(isBtcSwapped ? self.regularConstraints : self.swappedConstraints)
+            NSLayoutConstraint.activate(isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
+            self.primaryBalance.textColor = isBtcSwapped ? .darkText : .white
+            self.secondaryBalance.textColor = isBtcSwapped ? .white : .darkText
             layoutIfNeeded()
             hasInitialized = true
         }
@@ -226,14 +227,13 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     @objc private func currencySwitchTapped() {
         layoutIfNeeded()
-        let willSwap = currency == .bitcoin
-        self.primaryBalance.textColor = willSwap ? .darkText : .white
-        self.secondaryBalance.textColor = willSwap ? .white : .darkText
+        self.primaryBalance.textColor = !isBtcSwapped ? .darkText : .white
+        self.secondaryBalance.textColor = !isBtcSwapped ? .white : .darkText
         UIView.spring(0.7, animations: {
             self.primaryBalance.transform = self.primaryBalance.transform.isIdentity ? self.transform(forView: self.primaryBalance) : .identity
             self.secondaryBalance.transform = self.secondaryBalance.transform.isIdentity ? self.transform(forView: self.secondaryBalance) : .identity
-            NSLayoutConstraint.deactivate(willSwap ? self.regularConstraints : self.swappedConstraints)
-            NSLayoutConstraint.activate(willSwap ? self.swappedConstraints : self.regularConstraints)
+            NSLayoutConstraint.deactivate(!self.isBtcSwapped ? self.regularConstraints : self.swappedConstraints)
+            NSLayoutConstraint.activate(!self.isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
             self.layoutIfNeeded()
         }) { _ in
         }

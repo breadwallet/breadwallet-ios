@@ -16,7 +16,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
     init(store: Store, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
         self.store = store
         self.didSelectTransaction = didSelectTransaction
-        self.currency = store.state.currency
+        self.isBtcSwapped = store.state.isBtcSwapped
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -64,7 +64,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
             transactions = allTransactions
         }
     }
-    private var currency: Currency {
+    private var isBtcSwapped: Bool {
         didSet {
             reload()
         }
@@ -109,8 +109,8 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
         })
 
         store.subscribe(self,
-                        selector: { $0.currency != $1.currency },
-                        callback: { self.currency = $0.currency })
+                        selector: { $0.isBtcSwapped != $1.isBtcSwapped },
+                        callback: { self.isBtcSwapped = $0.isBtcSwapped })
         store.subscribe(self,
                         selector: { $0.currentRate != $1.currentRate},
                         callback: { self.rate = $0.currentRate })
@@ -187,7 +187,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
             let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
             if let transactionCell = cell as? TransactionTableViewCell, let rate = rate {
                 transactionCell.setStyle(style)
-                transactionCell.setTransaction(transactions[indexPath.row], currency: currency, rate: rate)
+                transactionCell.setTransaction(transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate)
             }
             return cell
         }

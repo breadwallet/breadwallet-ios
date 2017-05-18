@@ -114,11 +114,6 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
                             self.transactionsTableView.isSyncingViewVisible = state.walletState.isSyncing
         })
 
-        store.subscribe(self, selector: {$0.walletState.balance != $1.walletState.balance },
-                        callback: { state in
-                            self.headerView.balance = state.walletState.balance
-        })
-
         store.subscribe(self, selector: { $0.isLoginRequired != $1.isLoginRequired }, callback: { self.isLoginRequired = $0.isLoginRequired })
 
         addAppLifecycleNotificationEvents()

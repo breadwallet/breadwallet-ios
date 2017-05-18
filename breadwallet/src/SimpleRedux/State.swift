@@ -16,7 +16,7 @@ struct State {
     let rootModal: RootModal
     let pasteboard: String?
     let walletState: WalletState
-    let currency: Currency
+    let isBtcSwapped: Bool
     let currentRate: Rate?
     let rates: [Rate]
     let alert: AlertType?
@@ -33,7 +33,7 @@ extension State {
                         rootModal: .none,
                         pasteboard: UIPasteboard.general.string,
                         walletState: WalletState.initial,
-                        currency: UserDefaults.displayCurrency,
+                        isBtcSwapped: UserDefaults.isBtcSwapped,
                         currentRate: nil,
                         rates: [],
                         alert: nil,
@@ -83,11 +83,6 @@ struct WalletState {
     static var initial: WalletState {
         return WalletState(isConnected: false, syncProgress: 0.0, isSyncing: false, balance: 0, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, syncErrorMessage: nil, creationDate: Date.zeroValue())
     }
-}
-
-enum Currency : Int {
-    case bitcoin = 0
-    case local
 }
 
 extension PinCreationStep : Equatable {}
