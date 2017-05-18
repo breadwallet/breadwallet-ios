@@ -39,11 +39,7 @@ class SettingsViewController : UITableViewController {
         tableView.separatorStyle = .none
         tableView.backgroundColor = .whiteTint
 
-        let close = UIButton.close
-        close.tap = { [weak self] in
-            self?.dismiss(animated: true, completion: nil)
-        }
-        navigationItem.leftBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: close)]
+        addCloseNavigationItem()
     }
 
     override func viewDidAppear(_ animated: Bool) {
