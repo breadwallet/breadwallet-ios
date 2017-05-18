@@ -90,7 +90,7 @@ class TouchIdSpendingLimitViewController : UIViewController, Subscriber {
         body.text = S.TouchIdSpendingLimit.body
 
         if let rate = self.rate, let wallet = walletManager.wallet {
-            let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate.rate)
+            let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate)
             setAmount(limitAmount: spendingLimit)
             slider.minimumValue = 0.0
             slider.maximumValue = Float(max(wallet.balance*3, C.satoshis*2))
@@ -100,7 +100,7 @@ class TouchIdSpendingLimitViewController : UIViewController, Subscriber {
         slider.valueChanged = { [weak self] in
             guard let myself = self else { return }
             if let rate = myself.rate {
-                let spendingLimit = Amount(amount: UInt64(myself.slider.value), rate: rate.rate)
+                let spendingLimit = Amount(amount: UInt64(myself.slider.value), rate: rate)
                 myself.setAmount(limitAmount: spendingLimit)
             }
             myself.walletManager.spendingLimit = UInt64(myself.slider.value)

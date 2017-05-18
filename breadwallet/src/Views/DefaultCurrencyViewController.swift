@@ -100,7 +100,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
     private func setExchangeRateLabel() {
         if let currentRate = rates.filter({ $0.code == defaultCurrencyCode }).first {
-            let amount = Amount(amount: C.satoshis, rate: currentRate.rate)
+            let amount = Amount(amount: C.satoshis, rate: currentRate)
             rateLabel.textColor = .darkText
             rateLabel.text = "\(amount.string(forLocal: currentRate.locale)) = 1 BTC"
         }
