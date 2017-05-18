@@ -24,7 +24,7 @@ struct HideStartFlow : Action {
                      rootModal: .none,
                      pasteboard: UIPasteboard.general.string,
                      walletState: state.walletState,
-                     currency: state.currency,
+                     isBtcSwapped: state.isBtcSwapped,
                      currentRate: state.currentRate,
                      rates: state.rates,
                      alert: state.alert,
@@ -195,13 +195,8 @@ enum WalletChange {
 enum CurrencyChange {
     struct toggle: Action {
         let reduce: Reducer = {
-            if $0.currency == .bitcoin {
-                UserDefaults.displayCurrency = .local
-                return $0.clone(currency: .local)
-            } else {
-                UserDefaults.displayCurrency = .bitcoin
-                return $0.clone(currency: .bitcoin)
-            }
+            UserDefaults.isBtcSwapped = !$0.isBtcSwapped
+            return $0.clone(isBtcSwapped: !$0.isBtcSwapped)
         }
     }
 }
@@ -259,7 +254,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: walletState,
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -274,7 +269,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: walletState,
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -290,7 +285,7 @@ extension State {
                      rootModal: type,
                      pasteboard: pasteboard,
                      walletState: walletState,
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -305,7 +300,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: walletState,
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -320,7 +315,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: walletState,
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -335,7 +330,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: timestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -350,7 +345,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -365,7 +360,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -380,7 +375,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -395,7 +390,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletName, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -410,7 +405,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletSyncingErrorMessage, creationDate: walletState.creationDate),
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -425,14 +420,14 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletCreationDate),
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrency: defaultCurrency)
     }
-    func clone(currency: Currency) -> State {
+    func clone(isBtcSwapped: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      pinCreationStep: pinCreationStep,
@@ -440,7 +435,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: walletState,
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -455,7 +450,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: walletState,
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -470,7 +465,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: walletState,
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -485,7 +480,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: walletState,
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -500,7 +495,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: walletState,
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,
@@ -515,7 +510,7 @@ extension State {
                      rootModal: rootModal,
                      pasteboard: pasteboard,
                      walletState: walletState,
-                     currency: currency,
+                     isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
                      alert: alert,

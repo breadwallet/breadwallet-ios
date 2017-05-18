@@ -15,7 +15,7 @@ private let hasAquiredShareDataPermissionKey = "has_acquired_permission"
 private let legacyWalletNeedsBackupKey = "WALLET_NEEDS_BACKUP"
 private let writePaperPhraseDateKey = "writepaperphrasedatekey"
 private let hasPromptedTouchIdKey = "haspromptedtouched"
-private let displayCurrencyKey = "displayCurrencyKey"
+private let isBtcSwappedKey = "isBtcSwappedKey"
 
 extension UserDefaults {
 
@@ -34,7 +34,7 @@ extension UserDefaults {
     static var defaultCurrency: String {
         get {
             guard defaults.object(forKey: defaultCurrencyKey) != nil else {
-                return  Locale.current.currencyCode ?? "USD"
+                return Locale.current.currencyCode ?? "USD"
             }
             return defaults.string(forKey: defaultCurrencyKey)!
         }
@@ -46,7 +46,7 @@ extension UserDefaults {
     static var hasAquiredShareDataPermission: Bool {
         get {
             guard defaults.object(forKey: hasAquiredShareDataPermissionKey) != nil else {
-                return  false
+                return false
             }
             return defaults.bool(forKey: hasAquiredShareDataPermissionKey)
         }
@@ -55,16 +55,12 @@ extension UserDefaults {
         }
     }
 
-    static var displayCurrency: Currency {
+    static var isBtcSwapped: Bool {
         get {
-            guard defaults.object(forKey: displayCurrencyKey) != nil else {
-                return .bitcoin
-            }
-            let intValue = defaults.integer(forKey: displayCurrencyKey)
-            return Currency(rawValue: intValue) ?? .bitcoin
+            return defaults.bool(forKey: isBtcSwappedKey)
         }
         set {
-            defaults.set(newValue.rawValue, forKey: displayCurrencyKey)
+            defaults.set(newValue, forKey: isBtcSwappedKey)
         }
     }
 }
