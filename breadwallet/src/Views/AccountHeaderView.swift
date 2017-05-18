@@ -18,6 +18,13 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     init(store: Store) {
         self.store = store
         self.isBtcSwapped = store.state.isBtcSwapped
+        if let rate = store.state.currentRate {
+            let placeholderAmount = Amount(amount: 0, rate: rate)
+            self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
+        } else {
+            self.secondaryBalance = UpdatingLabel(formatter: NumberFormatter())
+        }
+
         super.init(frame: CGRect())
         setup()
     }
@@ -28,7 +35,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private let name = UILabel(font: UIFont.boldSystemFont(ofSize: 17.0))
     private let manage = UIButton(type: .system)
     private let primaryBalance = UpdatingLabel(formatter: Amount.btcFormat)
-    private let secondaryBalance = UpdatingLabel(formatter: Amount.localFormat)
+    private let secondaryBalance: UpdatingLabel
     private let currencyTapView = UIView()
     private let store: Store
     private let equals = UILabel(font: .customBody(size: smallFontSize), color: .darkText)
@@ -174,7 +181,13 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                         callback: { self.isBtcSwapped = $0.isBtcSwapped })
         store.subscribe(self,
                         selector: { $0.currentRate != $1.currentRate},
-                        callback: { self.exchangeRate = $0.currentRate })
+                        callback: {
+                            self.exchangeRate = $0.currentRate
+                            if let rate = $0.currentRate {
+                                let placeholderAmount = Amount(amount: 0, rate: rate)
+                                self.secondaryBalance.formatter = placeholderAmount.localFormat
+                            }
+                        })
         store.subscribe(self,
                         selector: { $0.walletState.name != $1.walletState.name },
                         callback: { self.name.text = $0.walletState.name })
