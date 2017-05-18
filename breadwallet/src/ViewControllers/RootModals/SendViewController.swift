@@ -221,7 +221,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             self?.amountTapped()
 
             guard let rate = myself.rate else { return }
-            let amount = Amount(amount: myself.balance, rate: rate.rate)
+            let amount = Amount(amount: myself.balance, rate: rate)
             myself.amount.setLabel(text: String(format: S.Send.balance, "\(amount.bits)"), color: .grayTextTint)
         }
 
@@ -285,7 +285,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
     private func setBalanceText() {
         guard let rate = self.rate else { return }
-        let balanceAmount = Amount(amount: balance, rate: rate.rate)
+        let balanceAmount = Amount(amount: balance, rate: rate)
         let formatter = Amount.bitsFormatter
         var data: (String, UIColor)
         if satoshis > 0 {

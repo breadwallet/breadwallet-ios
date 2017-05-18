@@ -271,7 +271,7 @@ class ModalPresenter : Subscriber {
                 }),
                 Setting(title: S.Settings.touchIdLimit, accessoryText: {
                     guard let rate = self.store.state.currentRate else { return "" }
-                    let amount = Amount(amount: walletManager.spendingLimit, rate: rate.rate)
+                    let amount = Amount(amount: walletManager.spendingLimit, rate: rate)
                     return amount.localCurrency
                 }, callback: {
                     nc.pushViewController(TouchIdSpendingLimitViewController(walletManager: walletManager, store: self.store), animated: true)

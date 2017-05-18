@@ -12,14 +12,14 @@ struct Amount {
 
     //MARK: - Public
     let amount: UInt64 //amount in satoshis
-    let rate: Double
+    let rate: Rate
 
     var bitsAmount: Double {
         return Double(amount)/100.0
     }
 
     var localAmount: Double {
-        return Double(amount)/100000000.0*rate
+        return Double(amount)/100000000.0*rate.rate
     }
 
     var bits: String {
@@ -29,7 +29,7 @@ struct Amount {
     }
 
     var localCurrency: String {
-        guard let string = Amount.localFormat.string(from: Double(amount)/100000000.0*rate as NSNumber) else { return "" }
+        guard let string = Amount.localFormat.string(from: Double(amount)/100000000.0*rate.rate as NSNumber) else { return "" }
         return string
     }
 
@@ -40,7 +40,7 @@ struct Amount {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        guard let string = format.string(from: Double(amount)/100000000.0*rate as NSNumber) else { return "" }
+        guard let string = format.string(from: Double(amount)/100000000.0*rate.rate as NSNumber) else { return "" }
         return string
     }
 
