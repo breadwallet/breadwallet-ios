@@ -8,12 +8,28 @@
 
 import UIKit
 
+private let popularCodes = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "CNY", "CHF", "SEK", "NZD", "KRW"]
 private let buttonHeight: CGFloat = 32.0
 
 class CurrencySlider : UIView {
 
-    init(rates: [Rate]) {
-        self.rates = Array(rates[0...15]) //TODO - what rates should be shown here?
+    init(rates: [Rate], defaultCode: String, isBtcSwapped: Bool) {
+
+        var tempRates: [Rate] = []
+        if isBtcSwapped {
+            tempRates = rates.filter({ $0.code == defaultCode })
+            tempRates += rates.filter({ $0.code == "BTC" })
+        } else {
+            tempRates = rates.filter({ $0.code == "BTC" })
+            tempRates += rates.filter({ $0.code == defaultCode })
+        }
+        //At this stage, the rates array looks like [USD, BTC] or [BTC, USD]
+        //We now need to add the remaining unique popular codes
+        tempRates += rates.filter({ popularCodes.contains($0.code) && $0.code != defaultCode })
+        self.rates = tempRates
+        self.defaultCode = defaultCode
+        self.isBtcSwapped = isBtcSwapped
+        
         super.init(frame: .zero)
     }
 
@@ -25,6 +41,8 @@ class CurrencySlider : UIView {
 
     private let rates: [Rate]
     private var buttons = [ShadowButton]()
+    private let defaultCode: String
+    private let isBtcSwapped: Bool
 
     private func setupViews() {
         let scrollView = UIScrollView()
@@ -37,9 +55,16 @@ class CurrencySlider : UIView {
             button.isToggleable = true
             buttons.append(button)
 
-            if rate.currencySymbol == "BTC" {
-                button.isSelected = true
+            if isBtcSwapped {
+                if rate.code == defaultCode {
+                    button.isSelected = true
+                }
+            } else {
+                if rate.code == "BTC" {
+                    button.isSelected = true
+                }
             }
+
             scrollView.addSubview(button)
 
             let leadingConstraint: NSLayoutConstraint

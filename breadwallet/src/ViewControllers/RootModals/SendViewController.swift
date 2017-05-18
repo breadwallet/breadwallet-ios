@@ -31,13 +31,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         self.store = store
         self.sender = sender
         self.initialAddress = initialAddress
-        self.currencySlider = CurrencySlider(rates: store.state.rates)
+        self.currencySlider = CurrencySlider(rates: store.state.rates,
+                                             defaultCode: store.state.defaultCurrencyCode,
+                                             isBtcSwapped: store.state.isBtcSwapped)
         if LAContext.canUseTouchID && store.state.isTouchIdEnabled {
             self.send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
         } else {
             self.send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "PinForSend"))
         }
-
+        self.isBtcSwapped = store.state.isBtcSwapped
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -88,6 +90,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             pinPad.currentOutput = String(String.UnicodeScalarView(currentOutput.unicodeScalars.filter { set.contains($0) }))
         }
     }
+    private let isBtcSwapped: Bool
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -179,6 +182,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
         if isPresentedFromLock {
             amount.label.isHidden = true
+        }
+
+        if store.state.isBtcSwapped {
+            if let rate = store.state.rates.first(where: { $0.code == store.state.defaultCurrencyCode }) {
+                selectedRate = rate.code == "BTC" ? nil : rate
+                currency.title = "\(rate.code) (\(rate.currencySymbol))"
+            }
         }
     }
 
