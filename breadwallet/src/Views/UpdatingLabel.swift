@@ -10,7 +10,11 @@ import UIKit
 
 class UpdatingLabel : UILabel {
 
-    var formatter: NumberFormatter
+    var formatter: NumberFormatter {
+        didSet {
+            setFormattedText(forValue: value)
+        }
+    }
 
     init(formatter: NumberFormatter) {
         self.formatter = formatter
@@ -19,6 +23,7 @@ class UpdatingLabel : UILabel {
     }
 
     var completion: (() -> Void)?
+    private var value: Double = 0.0
 
     func setValue(_ endingValue: Double, completion: @escaping () -> Void) {
         self.completion = completion
@@ -66,6 +71,7 @@ class UpdatingLabel : UILabel {
     }
 
     private func setFormattedText(forValue: Double) {
+        value = forValue
         text = formatter.string(from: forValue as NSNumber)
     }
 
