@@ -102,6 +102,7 @@ class LoginViewController : UIViewController, Subscriber {
             guard let walletManager = self?.walletManager else { return }
             self?.isResetting = true
             let recover = RecoverWalletViewController(store: store, walletManager: walletManager, isResettingPin: true)
+            recover.addCloseNavigationItem()
             let nc = UINavigationController(rootViewController: recover)
             nc.navigationBar.tintColor = .darkText
             nc.navigationBar.titleTextAttributes = [
@@ -111,9 +112,7 @@ class LoginViewController : UIViewController, Subscriber {
             nc.setClearNavbar()
             nc.navigationBar.isTranslucent = false
             nc.navigationBar.barTintColor = .whiteTint
-
             nc.viewControllers = [recover]
-
             recover.didValidateSeedPhrase = { phrase in
                 let updatePin = UpdatePinViewController(store: store, walletManager: walletManager, showsBackButton: false, phrase: phrase)
                 nc.pushViewController(updatePin, animated: true)
