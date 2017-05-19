@@ -488,8 +488,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         // TODO: XXX call BRPeerManagerConnect() whenever network reachability status changes
     }
     
-    private func loadTransactions() -> [BRTxRef] {
-        var transactions = [BRTxRef]()
+    private func loadTransactions() -> [BRTxRef?] {
+        var transactions = [BRTxRef?]()
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "select ZBLOB from ZBRTXMETADATAENTITY where ZTYPE = 1", -1, &sql, nil)
         defer { sqlite3_finalize(sql) }
