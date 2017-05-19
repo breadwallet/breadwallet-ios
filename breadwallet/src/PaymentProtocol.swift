@@ -49,6 +49,12 @@ class PaymentProtocolDetails {
         self.isManaged = true
     }
     
+    var bytes: [UInt8] {
+        var bytes = [UInt8](repeating: 0, count: BRPaymentProtocolDetailsSerialize(cPtr, nil, 0))
+        BRPaymentProtocolDetailsSerialize(cPtr, &bytes, bytes.count)
+        return bytes
+    }
+    
     var network: String { // "main" or "test", default is "main"
         return String(cString: cPtr.pointee.network)
     }
@@ -113,6 +119,12 @@ class PaymentProtocolRequest {
         self.isManaged = true
     }
     
+    var bytes: [UInt8] {
+        var bytes = [UInt8](repeating: 0, count: BRPaymentProtocolRequestSerialize(cPtr, nil, 0))
+        BRPaymentProtocolRequestSerialize(cPtr, &bytes, bytes.count)
+        return bytes
+    }
+
     var version: UInt32 { // default is 1
         return cPtr.pointee.version
     }
@@ -269,6 +281,12 @@ class PaymentProtocolPayment {
         self.isManaged = true
     }
     
+    var bytes: [UInt8] {
+        var bytes = [UInt8](repeating: 0, count: BRPaymentProtocolPaymentSerialize(cPtr, nil, 0))
+        BRPaymentProtocolPaymentSerialize(cPtr, &bytes, bytes.count)
+        return bytes
+    }
+
     var merchantData: [UInt8]? { // from request->details->merchantData, optional
         guard cPtr.pointee.merchantData != nil else { return nil }
         return [UInt8](UnsafeBufferPointer(start: cPtr.pointee.merchantData, count: cPtr.pointee.merchDataLen))
@@ -315,6 +333,12 @@ class PaymentProtocolACK {
         self.isManaged = true
     }
     
+    var bytes: [UInt8] {
+        var bytes = [UInt8](repeating: 0, count: BRPaymentProtocolACKSerialize(cPtr, nil, 0))
+        BRPaymentProtocolACKSerialize(cPtr, &bytes, bytes.count)
+        return bytes
+    }
+
     var payment: PaymentProtocolPayment { // payment message that triggered this ack, required
         return PaymentProtocolPayment(cPtr.pointee.payment)
     }
