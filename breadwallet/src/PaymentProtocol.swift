@@ -23,18 +23,30 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-
 import Foundation
-import Security
 import BRCore
 
 class PaymentProtocolDetails {
-    private let cPtr: UnsafeMutablePointer<BRPaymentProtocolDetails>
-    private let isManaged: Bool
+    internal let cPtr: UnsafeMutablePointer<BRPaymentProtocolDetails>
+    internal var isManaged: Bool
     
-    init(_ cPtr: UnsafeMutablePointer<BRPaymentProtocolDetails>) {
+    internal init(_ cPtr: UnsafeMutablePointer<BRPaymentProtocolDetails>) {
         self.cPtr = cPtr
         self.isManaged = false
+    }
+    
+    init?(network: String = "main", outputs: [BRTxOutput], time: UInt64, expires: UInt64, memo: String? = nil,
+          paymentURL: String? = nil, merchantData: [UInt8]? = nil) {
+        guard let cPtr = BRPaymentProtocolDetailsNew(network, outputs, outputs.count, time, expires, memo, paymentURL,
+                                                     merchantData, merchantData?.count ?? 0) else { return nil }
+        self.cPtr = cPtr
+        self.isManaged = true
+    }
+    
+    init?(bytes: [UInt8]) {
+        guard let cPtr = BRPaymentProtocolDetailsParse(bytes, bytes.count) else { return nil }
+        self.cPtr = cPtr
+        self.isManaged = true
     }
     
     var network: String { // "main" or "test", default is "main"
@@ -74,14 +86,29 @@ class PaymentProtocolDetails {
 }
 
 class PaymentProtocolRequest {
-    private let cPtr: UnsafeMutablePointer<BRPaymentProtocolRequest>
-    private let isManaged: Bool
+    internal let cPtr: UnsafeMutablePointer<BRPaymentProtocolRequest>
+    internal var isManaged: Bool
     private var cName: String?
     private var errMsg: String?
     private var didValidate: Bool = false
     
-    init?(buffer: [UInt8]) {
-        guard let cPtr = BRPaymentProtocolRequestParse(buffer, buffer.count) else { return nil }
+    internal init(_ cPtr: UnsafeMutablePointer<BRPaymentProtocolRequest>) {
+        self.cPtr = cPtr
+        self.isManaged = false
+    }
+
+    init?(version: UInt32 = 1, pkiType: String = "none", pkiData: [UInt8]? = nil, details: PaymentProtocolDetails,
+          signature: [UInt8]? = nil) {
+        guard details.isManaged else { return nil } // request must be able take over memory management of details
+        guard let cPtr = BRPaymentProtocolRequestNew(version, pkiType, pkiData, pkiData?.count ?? 0, details.cPtr,
+                                                     signature, signature?.count ?? 0) else { return nil }
+        details.isManaged = false
+        self.cPtr = cPtr
+        self.isManaged = true
+    }
+
+    init?(bytes: [UInt8]) {
+        guard let cPtr = BRPaymentProtocolRequestParse(bytes, bytes.count) else { return nil }
         self.cPtr = cPtr
         self.isManaged = true
     }
@@ -217,24 +244,31 @@ class PaymentProtocolRequest {
 }
 
 class PaymentProtocolPayment {
-    private let cPtr: UnsafeMutablePointer<BRPaymentProtocolPayment>
-    private let isManaged: Bool
+    internal let cPtr: UnsafeMutablePointer<BRPaymentProtocolPayment>
+    internal var isManaged: Bool
 
-    init(_ cPtr: UnsafeMutablePointer<BRPaymentProtocolPayment>) {
+    internal init(_ cPtr: UnsafeMutablePointer<BRPaymentProtocolPayment>) {
         self.cPtr = cPtr
         self.isManaged = false
     }
 
-    init(merchantData: [UInt8]? = nil, transactions: [BRTxRef?],
-         refundTo: [(address: String, amount: UInt64)] = [(String, UInt64)](), memo: String? = nil) {
+    init?(merchantData: [UInt8]? = nil, transactions: [BRTxRef?], refundTo: [(address: String, amount: UInt64)],
+          memo: String? = nil) {
         var txRefs = transactions
-        let refundToAddrs = refundTo.map { BRAddress(string: $0.address) ?? BRAddress() }
-        let refundToAmounts = refundTo.map { $0.amount }
-        self.cPtr = BRPaymentProtocolPaymentNew(merchantData, merchantData?.count ?? 0, &txRefs, txRefs.count,
-                                                refundToAmounts, refundToAddrs, refundTo.count, memo)
+        guard let cPtr = BRPaymentProtocolPaymentNew(merchantData, merchantData?.count ?? 0, &txRefs, txRefs.count,
+                                                     refundTo.map { $0.amount },
+                                                     refundTo.map { BRAddress(string: $0.address) ?? BRAddress() },
+                                                     refundTo.count, memo) else { return nil }
+        self.cPtr = cPtr
         self.isManaged = true
     }
 
+    init?(bytes: [UInt8]) {
+        guard let cPtr = BRPaymentProtocolPaymentParse(bytes, bytes.count) else { return nil }
+        self.cPtr = cPtr
+        self.isManaged = true
+    }
+    
     var merchantData: [UInt8]? { // from request->details->merchantData, optional
         guard cPtr.pointee.merchantData != nil else { return nil }
         return [UInt8](UnsafeBufferPointer(start: cPtr.pointee.merchantData, count: cPtr.pointee.merchDataLen))
@@ -259,11 +293,24 @@ class PaymentProtocolPayment {
 }
 
 class PaymentProtocolACK {
-    private let cPtr: UnsafeMutablePointer<BRPaymentProtocolACK>
-    private let isManaged: Bool
+    internal let cPtr: UnsafeMutablePointer<BRPaymentProtocolACK>
+    internal var isManaged: Bool
     
-    init?(buffer: [UInt8]) {
-        guard let cPtr = BRPaymentProtocolACKParse(buffer, buffer.count) else { return nil }
+    internal init(_ cPtr: UnsafeMutablePointer<BRPaymentProtocolACK>) {
+        self.cPtr = cPtr
+        self.isManaged = false
+    }
+    
+    init?(payment: PaymentProtocolPayment, memo: String? = nil) {
+        guard payment.isManaged else { return nil } // ack must be able to take over memory management of payment
+        guard let cPtr = BRPaymentProtocolACKNew(payment.cPtr, memo) else { return nil }
+        payment.isManaged = false
+        self.cPtr = cPtr
+        self.isManaged = true
+    }
+    
+    init?(bytes: [UInt8]) {
+        guard let cPtr = BRPaymentProtocolACKParse(bytes, bytes.count) else { return nil }
         self.cPtr = cPtr
         self.isManaged = true
     }
@@ -281,4 +328,3 @@ class PaymentProtocolACK {
         if isManaged { BRPaymentProtocolACKFree(cPtr) }
     }
 }
-
