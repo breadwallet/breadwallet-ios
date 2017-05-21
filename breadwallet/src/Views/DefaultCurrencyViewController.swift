@@ -51,7 +51,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
             self.defaultCurrencyCode = $0.defaultCurrencyCode
         })
         apiClient.exchangeRates { rates, error in
-            self.rates = rates.filter { $0.code != "BTC" }
+            self.rates = rates.filter { $0.code != C.btcCurrencyCode }
         }
     }
 
