@@ -144,6 +144,13 @@ class PinPadViewController : UICollectionViewController {
             return false
         }
 
+        //Next char has to be a . if first is 0
+        if keyboardType == .decimalPad {
+            if currentOutput == "0" && char != numberFormatter.currencyDecimalSeparator {
+                return false
+            }
+        }
+
         if char == numberFormatter.currencyDecimalSeparator {
             if decimalLocation == nil {
                 //Prepend a 0 if the first character is a decimal point

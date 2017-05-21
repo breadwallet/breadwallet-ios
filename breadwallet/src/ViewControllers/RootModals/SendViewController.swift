@@ -11,10 +11,9 @@ import LocalAuthentication
 
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
-private let currencyHeight: CGFloat = 80.0
 private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
-private let currencyButtonWidth: CGFloat = 64.0
+//private let currencyButtonWidth: CGFloat = 64.0
 
 class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
@@ -39,7 +38,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         } else {
             self.send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "PinForSend"))
         }
-        self.isBtcSwapped = store.state.isBtcSwapped
+
+        amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
+
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -53,10 +54,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
     private let store: Store
     private let sender: Sender
+    private let currencySlider: CurrencySlider
+    private let amountView: AmountViewController
     private let to = LabelSendCell(label: S.Send.toLabel)
-    private let amount = SendAmountCell(placeholder: S.Send.amountLabel)
-    private let currencySwitcher = InViewAlert(type: .secondary)
-    private let pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad)
     private let descriptionCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let send: ShadowButton
     private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
@@ -65,80 +65,31 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
-    private var currencyOverlay = CurrencyOverlay()
     private var balance: UInt64 = 0
-    private var rate: Rate?
-    private let currencySlider: CurrencySlider
-    private var satoshis: UInt64 = 0 {
+    private var amount: Satoshis? {
         didSet {
-            setAmountLabel()
-            setBalanceText()
             setSendButton()
         }
     }
-    private var minimumFractionDigits = 0
-    private var hasTrailingDecimal = false
-    private var selectedRate: Rate? {
-        didSet {
-            setAmountLabel()
-            setBalanceText()
-
-            //Update pinpad content to match currency change
-            let currentOutput = amount.content ?? ""
-            var set = CharacterSet.decimalDigits
-            set.formUnion(CharacterSet(charactersIn: "."))
-            pinPad.currentOutput = String(String.UnicodeScalarView(currentOutput.unicodeScalars.filter { set.contains($0) }))
-        }
-    }
-    private let isBtcSwapped: Bool
 
     override func viewDidLoad() {
         view.backgroundColor = .white
         view.addSubview(to)
-        view.addSubview(amount)
-        view.addSubview(currencySwitcher)
-        view.addSubview(currencyBorder)
-        view.addSubview(pinPad.view)
         view.addSubview(descriptionCell)
         view.addSubview(send)
 
         to.accessoryView.addSubview(paste)
         to.accessoryView.addSubview(scan)
-        amount.addSubview(currency)
-        currency.isToggleable = true
         to.constrainTopCorners(height: SendCell.defaultHeight)
 
-        amount.constrain([
-            amount.widthAnchor.constraint(equalTo: to.widthAnchor),
-            amount.topAnchor.constraint(equalTo: to.bottomAnchor),
-            amount.leadingAnchor.constraint(equalTo: to.leadingAnchor) ])
-
-        amount.clipsToBounds = false
-
-        currencySwitcherHeightConstraint = currencySwitcher.constraint(.height, constant: 0.0)
-        currencySwitcher.constrain([
-            currencySwitcher.constraint(toBottom: amount, constant: 0.0),
-            currencySwitcher.constraint(.leading, toView: view),
-            currencySwitcher.constraint(.trailing, toView: view),
-            currencySwitcherHeightConstraint ])
-        currencySwitcher.arrowXLocation = view.bounds.width - currencyButtonWidth/2.0 - C.padding[2]
-
-        amount.border.isHidden = true //Hide the default border because it needs to stay below the currency switcher when it gets expanded
-        currencyBorder.constrain([
-            currencyBorder.constraint(.height, constant: 1.0),
-            currencyBorder.constraint(.leading, toView: view),
-            currencyBorder.constraint(.trailing, toView: view),
-            currencyBorder.constraint(toBottom: currencySwitcher, constant: 0.0) ])
-
-        pinPadHeightConstraint = pinPad.view.constraint(.height, constant: 0.0)
-        addChildViewController(pinPad, layout: {
-            pinPad.view.constrain([
-                pinPad.view.constraint(toBottom: currencyBorder, constant: 0.0),
-                pinPad.view.constraint(.leading, toView: view),
-                pinPad.view.constraint(.trailing, toView: view),
-                pinPadHeightConstraint ])
+        addChildViewController(amountView, layout: {
+            amountView.view.constrain([
+                amountView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                amountView.view.topAnchor.constraint(equalTo: to.bottomAnchor),
+                amountView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         })
-        descriptionCell.pinToBottom(to: pinPad.view, height: SendCell.defaultHeight)
+
+        descriptionCell.pinToBottom(to: amountView.view, height: SendCell.defaultHeight)
         descriptionCell.accessoryView.constrain([
                 descriptionCell.accessoryView.constraint(.width, constant: 0.0) ])
         send.constrain([
@@ -155,167 +106,75 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             paste.constraint(.centerY, toView: to.accessoryView),
             paste.constraint(toLeading: scan, constant: -C.padding[1]),
             paste.constraint(.height, constant: buttonSize.height) ])
-        currency.constrain([
-            currency.constraint(.centerY, toView: amount.accessoryView),
-            currency.constraint(.trailing, toView: amount, constant: -C.padding[2]),
-            currency.constraint(.height, constant: buttonSize.height) ])
 
         preventCellContentOverflow()
         addButtonActions()
-
-        currencySlider.didSelectCurrency = { [weak self] rate in
-            self?.selectedRate = rate.code == "BTC" ? nil : rate
-            self?.currency.title = "\(rate.code) (\(rate.currencySymbol))"
-            self?.currencySwitchTapped() //collapse currency view
-        }
-        currencySwitcher.contentView = currencySlider
 
         store.subscribe(self, selector: { $0.walletState.balance != $1.walletState.balance },
                         callback: {
                             self.balance = $0.walletState.balance
         })
-
-        store.subscribe(self, selector: { $0.currentRate != $1.currentRate },
-                        callback: {
-                            self.rate = $0.currentRate
-        })
-
-        if isPresentedFromLock {
-            amount.label.isHidden = true
-        }
-
-        if store.state.isBtcSwapped {
-            if let rate = store.state.rates.first(where: { $0.code == store.state.defaultCurrencyCode }) {
-                selectedRate = rate.code == "BTC" ? nil : rate
-                currency.title = "\(rate.code) (\(rate.currencySymbol))"
-            }
-        }
     }
 
     private func preventCellContentOverflow() {
         to.contentLabel.constrain([
             to.contentLabel.trailingAnchor.constraint(lessThanOrEqualTo: paste.leadingAnchor, constant: -C.padding[2]) ])
-        amount.amountLabel.constrain([
-            amount.amountLabel.trailingAnchor.constraint(lessThanOrEqualTo: currency.leadingAnchor, constant: -C.padding[2]) ])
-        amount.amountLabel.minimumScaleFactor = 0.5
-        amount.amountLabel.adjustsFontSizeToFitWidth = true
-        amount.amountLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if initialAddress != nil {
             to.content = initialAddress
-            amount.textField.becomeFirstResponder()
+            amountView.expandPinPad()
         }
-        currencySlider.load()
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        UIApplication.shared.keyWindow?.gestureRecognizers?.forEach {
-            $0.isEnabled = true
-        }
-        store.trigger(name: .unblockModalDismissal)
     }
 
     private func addButtonActions() {
         paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
-        currency.addTarget(self, action: #selector(SendViewController.currencySwitchTapped), for: .touchUpInside)
-        pinPad.ouputDidUpdate = { [weak self] output in
-            self?.amount.content = output
-        }
-        amount.textFieldDidBeginEditing = { [weak self] in
-            guard let myself = self else { return }
-            self?.amountTapped()
-
-            guard let rate = myself.rate else { return }
-            let amount = Amount(amount: myself.balance, rate: rate)
-            myself.amount.setLabel(text: String(format: S.Send.balance, "\(amount.bits)"), color: .grayTextTint)
-        }
-
-        amount.textFieldDidChange = { [weak self] text in
-            guard let myself = self else { return }
-            myself.minimumFractionDigits = 0 //set default
-            if let decimalLocation = text.range(of: NumberFormatter().currencyDecimalSeparator)?.upperBound {
-                let locationValue = text.distance(from: text.endIndex, to: decimalLocation)
-                if locationValue == -2 {
-                    myself.minimumFractionDigits = 2
-                } else if locationValue == -1 {
-                    myself.minimumFractionDigits = 1
-                }
-            }
-
-            //If trailing decimal, append the decimal to the output
-            myself.hasTrailingDecimal = false //set default
-            if let decimalLocation = text.range(of: NumberFormatter().currencyDecimalSeparator)?.upperBound {
-                if text.endIndex == decimalLocation {
-                    myself.hasTrailingDecimal = true
-                }
-            }
-
-            //Satoshis amount should be the last thing to be set here
-            //b/c it triggers a UI update
-            if let value = Double(text) {
-                myself.satoshis = UInt64((value * 100.0).rounded(.toNearestOrEven))
-            } else {
-                myself.satoshis = 0
-            }
-        }
+        send.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
         descriptionCell.textFieldDidReturn = { textField in
             textField.resignFirstResponder()
         }
-        send.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
+        amountView.balanceTextForAmount = { [weak self] amount, rate in
+            return self?.balanceTextForAmount(amount: amount, rate: rate)
+        }
+
+        amountView.didUpdateAmount = { [weak self] amount in
+            self?.amount = amount
+        }
     }
 
-    private func setAmountLabel() {
-        var formatter: NumberFormatter
+    private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> NSAttributedString? {
+        let balanceText = NumberFormatter.formattedString(amount: Satoshis(rawValue: balance), rate: rate, minimumFractionDigits: nil)
         var output = ""
-        if let selectedRate = selectedRate {
-            formatter = NumberFormatter()
-            formatter.locale = selectedRate.locale
-            formatter.numberStyle = .currency
-            let amount = (Double(satoshis)/Double(C.satoshis))*selectedRate.rate
-            output = formatter.string(from: amount as NSNumber) ?? "error"
-        } else {
-            formatter = Amount.bitsFormatter
-            output = formatter.string(from: Double(satoshis)/100.0 as NSNumber) ?? "error"
-        }
-
-        if satoshis > 0 {
-            formatter.minimumFractionDigits = minimumFractionDigits
-
-            if hasTrailingDecimal {
-                output = output.appending(".")
-            }
-        }
-        amount.setAmountLabel(text: output)
-    }
-
-    private func setBalanceText() {
-        guard let rate = self.rate else { return }
-        let balanceAmount = Amount(amount: balance, rate: rate)
-        let formatter = Amount.bitsFormatter
-        var data: (String, UIColor)
-        if satoshis > 0 {
-            let fee = sender.feeForTx(amount: satoshis)
-            let feeString = formatter.string(from: fee/100 as NSNumber)!
-            if satoshis > (balance - fee) {
-                data = (String(format: S.Send.balanceWithFee, balanceAmount.bits, feeString), .red)
+        var color: UIColor = .grayTextTint
+        if let amount = amount, amount.rawValue > 0 {
+            let fee = sender.feeForTx(amount: amount.rawValue)
+            let feeText = NumberFormatter.formattedString(amount: Satoshis(rawValue: fee), rate: rate, minimumFractionDigits: nil)
+            output = String(format: S.Send.balanceWithFee, balanceText, feeText)
+            if amount.rawValue > (balance - fee) {
                 send.isEnabled = false
+                color = .cameraGuideNegative
             } else {
-                data = (String(format: S.Send.balanceWithFee, balanceAmount.bits, feeString), .grayTextTint)
                 send.isEnabled = true
             }
         } else {
-            data = (String(format: S.Send.balance, balanceAmount.bits), .grayTextTint)
+            output = String(format: S.Send.balance, balanceText)
+            send.isEnabled = false
         }
-        amount.setLabel(text: data.0, color: data.1)
+
+        let attributes: [String: Any] = [
+            NSFontAttributeName: UIFont.customBody(size: 14.0),
+            NSForegroundColorAttributeName: color
+        ]
+
+        return NSAttributedString(string: output, attributes: attributes)
     }
 
     private func setSendButton() {
-        if sender.maybeCanUseTouchId(forAmount: satoshis) {
+        guard let amount = amount else { send.image = nil; return }
+        if sender.maybeCanUseTouchId(forAmount: amount.rawValue) {
             send.image = #imageLiteral(resourceName: "TouchId")
         } else {
             send.image = #imageLiteral(resourceName: "PinForSend")
@@ -344,69 +203,19 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             switch request.type {
             case .local:
                 self?.to.content = request.toAddress
-                if let amount = request.amount {
-                    self?.amount.content = String(amount/100)
-                }
+                //if let amount = request.amount {
+                    //self?.amount.content = String(amount/100) //TODO - implement
+                //}
             case .remote:
                 print("remote request")
             }
         }
     }
 
-    @objc private func amountTapped() {
-        descriptionCell.textField.resignFirstResponder()
-        UIView.spring(C.animationDuration, animations: {
-            if self.pinPadHeightConstraint?.constant == 0.0 {
-                self.pinPadHeightConstraint?.constant = self.pinPad.height
-            } else {
-                self.pinPadHeightConstraint?.constant = 0.0
-            }
-            self.parent?.view.layoutIfNeeded()
-        }, completion: {_ in })
-    }
-
-    @objc private func currencySwitchTapped() {
-        func isCurrencySwitcherCollapsed() -> Bool {
-            return self.currencySwitcherHeightConstraint?.constant == 0.0
-        }
-
-        var isPresenting = false
-        if isCurrencySwitcherCollapsed() {
-            addCurrencyOverlay()
-            isPresenting = true
-            UIApplication.shared.keyWindow?.gestureRecognizers?.forEach {
-                $0.isEnabled = false
-            }
-            store.trigger(name: .blockModalDismissal)
-        } else {
-            UIView.animate(withDuration: 0.1, animations: {
-                self.currencyOverlay.alpha = 0.0
-            }, completion: { _ in
-                UIApplication.shared.keyWindow?.gestureRecognizers?.forEach {
-                    $0.isEnabled = true
-                }
-                self.store.trigger(name: .unblockModalDismissal)
-                self.currencyOverlay.removeFromSuperview()
-            })
-        }
-
-        amount.layoutIfNeeded()
-        UIView.spring(C.animationDuration, animations: {
-            if isCurrencySwitcherCollapsed() {
-                self.currencySwitcherHeightConstraint?.constant = currencyHeight
-            } else {
-                self.currencySwitcherHeightConstraint?.constant = 0.0
-            }
-            if isPresenting {
-                self.currencyOverlay.alpha = 1.0
-            }
-            self.view.superview?.layoutIfNeeded()
-        }, completion: {_ in })
-    }
-
     @objc private func sendTapped() {
         guard let address = to.content else { return }
-        sender.createTransaction(amount: satoshis, to: address)
+        guard let amount = amount else { return }
+        sender.createTransaction(amount: amount.rawValue, to: address)
         sender.send(verifyPinFunction: { [weak self] pinValidationCallback in
                         self?.presentVerifyPin? { [weak self] pin, vc in
                             if pinValidationCallback(pin) {
@@ -431,34 +240,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                             self?.onPublishFailure?()
                         }
                     })
-    }
-
-    private func addCurrencyOverlay() {
-        guard let parentView = parentView else { return }
-        guard let parentSuperView = parentView.superview else { return }
-
-        amount.addSubview(currencyOverlay.middle)
-        parentSuperView.addSubview(currencyOverlay.bottom)
-        parentSuperView.insertSubview(currencyOverlay.top, belowSubview: parentView)
-        parentView.addSubview(currencyOverlay.blocker)
-        currencyOverlay.top.constrain(toSuperviewEdges: nil)
-        currencyOverlay.middle.constrain([
-            currencyOverlay.middle.constraint(.leading, toView: parentSuperView),
-            currencyOverlay.middle.constraint(.trailing, toView: parentSuperView),
-            currencyOverlay.middle.constraint(.bottom, toView: amount, constant: InViewAlert.arrowSize.height),
-            currencyOverlay.middle.constraint(toBottom: to, constant: -1000.0) ])
-        currencyOverlay.bottom.constrain([
-            currencyOverlay.bottom.constraint(.leading, toView: parentSuperView),
-            currencyOverlay.bottom.constraint(.bottom, toView: parentSuperView),
-            currencyOverlay.bottom.constraint(.trailing, toView: parentSuperView),
-            currencyOverlay.bottom.constraint(toBottom: currencyBorder, constant: 0.0)])
-        currencyOverlay.blocker.constrain([
-            currencyOverlay.blocker.constraint(.leading, toView: parentView),
-            currencyOverlay.blocker.constraint(.top, toView: parentView),
-            currencyOverlay.blocker.constraint(.trailing, toView: parentView),
-            currencyOverlay.blocker.constraint(toTop: amount, constant: 0.0) ])
-        currencyOverlay.alpha = 0.0
-        self.amount.bringSubview(toFront: self.currency)
     }
 
     private func invalidAddressAlert() {

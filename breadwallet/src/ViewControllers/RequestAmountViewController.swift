@@ -199,7 +199,7 @@ class RequestAmountViewController : UIViewController {
         }
 
         currencySlider.didSelectCurrency = { [weak self] rate in
-            if rate.code == "BTC" {
+            if rate.code == C.btcCurrencyCode {
                 self?.selectedRate = nil
             } else {
                 self?.selectedRate = rate

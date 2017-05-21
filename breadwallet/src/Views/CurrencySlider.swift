@@ -18,9 +18,9 @@ class CurrencySlider : UIView {
         var tempRates: [Rate] = []
         if isBtcSwapped {
             tempRates = rates.filter({ $0.code == defaultCode })
-            tempRates += rates.filter({ $0.code == "BTC" })
+            tempRates += rates.filter({ $0.code == C.btcCurrencyCode })
         } else {
-            tempRates = rates.filter({ $0.code == "BTC" })
+            tempRates = rates.filter({ $0.code == C.btcCurrencyCode })
             tempRates += rates.filter({ $0.code == defaultCode })
         }
         //At this stage, the rates array looks like [USD, BTC] or [BTC, USD]
@@ -60,7 +60,7 @@ class CurrencySlider : UIView {
                     button.isSelected = true
                 }
             } else {
-                if rate.code == "BTC" {
+                if rate.code == C.btcCurrencyCode {
                     button.isSelected = true
                 }
             }
