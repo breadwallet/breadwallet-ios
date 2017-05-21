@@ -34,7 +34,7 @@ struct PaymentRequest {
 
                         switch key {
                         case "amount":
-                            amount = convertToSatoshis(fromBTC: value)
+                            amount = Satoshis(btcString: value)
                         case "label":
                             label = value
                         case "message":
@@ -99,22 +99,10 @@ struct PaymentRequest {
 
     var toAddress: String?
     let type: PaymentRequestType
-    var amount: UInt64?
+    var amount: Satoshis?
     var label: String?
     var message: String?
     var remoteRequest: NSURL?
-}
-
-private func convertToSatoshis(fromBTC: String) -> UInt64? {
-    var decimal: Decimal = 0.0
-    var amount: Decimal = 0.0
-
-    if Scanner(string: fromBTC).scanDecimal(&decimal) {
-        NSDecimalMultiplyByPowerOf10(&amount, &decimal, 8, .up)
-        return NSDecimalNumber(decimal: amount).uint64Value
-    } else {
-        return nil
-    }
 }
 
 private func convertToBTC(fromSatoshis: UInt64) -> String {

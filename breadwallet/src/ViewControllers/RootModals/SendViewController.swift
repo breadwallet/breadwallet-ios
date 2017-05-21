@@ -203,9 +203,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             switch request.type {
             case .local:
                 self?.to.content = request.toAddress
-                //if let amount = request.amount {
-                    //self?.amount.content = String(amount/100) //TODO - implement
-                //}
+                if let amount = request.amount {
+                    self?.amountView.forceUpdateAmount(amount: amount)
+                }
             case .remote:
                 print("remote request")
             }

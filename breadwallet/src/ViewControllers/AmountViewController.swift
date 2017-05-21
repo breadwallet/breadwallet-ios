@@ -23,13 +23,11 @@ class AmountViewController : UIViewController {
 
     var balanceTextForAmount: ((Satoshis?, Rate?) -> NSAttributedString?)?
     var didUpdateAmount: ((Satoshis?) -> Void)?
-    var amount: Satoshis? {
-        didSet {
-            updateAmountLabel()
-            updateBalanceLabel()
-            didUpdateAmount?(amount)
-        }
+    func forceUpdateAmount(amount: Satoshis) {
+        self.amount = amount
+        fullRefresh()
     }
+
     func expandPinPad() {
         if pinPadHeight?.constant == 0.0 {
             togglePinPad()
@@ -55,10 +53,17 @@ class AmountViewController : UIViewController {
     private let currencySlider: CurrencySlider
     private var selectedRate: Rate? {
         didSet {
-            handleRateChange()
+            fullRefresh()
         }
     }
-    
+    private var amount: Satoshis? {
+        didSet {
+            updateAmountLabel()
+            updateBalanceLabel()
+            didUpdateAmount?(amount)
+        }
+    }
+
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
@@ -205,6 +210,7 @@ class AmountViewController : UIViewController {
             output = output.appending(NumberFormatter().currencyDecimalSeparator)
         }
         amountLabel.text = output
+        placeholder.isHidden = output.utf8.count > 0 ? true : false
     }
 
     private func updateBalanceLabel() {
@@ -244,12 +250,13 @@ class AmountViewController : UIViewController {
         updateBalanceLabel()
     }
 
-    private func handleRateChange() {
+    private func fullRefresh() {
         if let rate = selectedRate {
             currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
         } else {
             currencyToggle.title = S.Send.defaultCurrencyLabel
         }
+        updateBalanceLabel()
         updateAmountLabel()
 
         //Update pinpad content to match currency change

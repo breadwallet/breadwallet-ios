@@ -21,6 +21,14 @@ extension Satoshis {
     init(value: Double, rate: Rate) {
         rawValue = UInt64((value / rate.rate * Double(C.satoshis)).rounded(.toNearestOrEven))
     }
+
+    init?(btcString: String) {
+        var decimal: Decimal = 0.0
+        var amount: Decimal = 0.0
+        guard Scanner(string: btcString).scanDecimal(&decimal) else { return nil }
+        NSDecimalMultiplyByPowerOf10(&amount, &decimal, 8, .up)
+        rawValue = NSDecimalNumber(decimal: amount).uint64Value
+    }
 }
 
 //MARK: - Bits
