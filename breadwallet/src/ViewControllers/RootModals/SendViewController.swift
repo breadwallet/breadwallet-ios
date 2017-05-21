@@ -13,7 +13,6 @@ typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
 private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
-//private let currencyButtonWidth: CGFloat = 64.0
 
 class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
@@ -30,9 +29,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         self.store = store
         self.sender = sender
         self.initialAddress = initialAddress
-        self.currencySlider = CurrencySlider(rates: store.state.rates,
-                                             defaultCode: store.state.defaultCurrencyCode,
-                                             isBtcSwapped: store.state.isBtcSwapped)
         if LAContext.canUseTouchID && store.state.isTouchIdEnabled {
             self.send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
         } else {
@@ -54,7 +50,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
     private let store: Store
     private let sender: Sender
-    private let currencySlider: CurrencySlider
     private let amountView: AmountViewController
     private let to = LabelSendCell(label: S.Send.toLabel)
     private let descriptionCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
