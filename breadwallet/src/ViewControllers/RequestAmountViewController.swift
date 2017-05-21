@@ -21,17 +21,12 @@ class RequestAmountViewController : UIViewController {
 
     init(wallet: BRWallet, store: Store) {
         self.wallet = wallet
-        self.currencySlider = CurrencySlider(rates: store.state.rates,
-                                             defaultCode: store.state.defaultCurrencyCode,
-                                             isBtcSwapped: store.state.isBtcSwapped)
+        amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: true)
         super.init(nibName: nil, bundle: nil)
     }
 
     //MARK - Private
-    private let amount = SendAmountCell(placeholder: S.Send.amountLabel)
-    private let currencyButton = ShadowButton(title: S.Send.defaultCurrencyLabel, type: .tertiary)
-    private let currencyContainer = InViewAlert(type: .secondary)
-    private let pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad)
+    private let amountView: AmountViewController
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 14.0))
     private let addressPopout = InViewAlert(type: .primary)
@@ -39,32 +34,14 @@ class RequestAmountViewController : UIViewController {
     private let sharePopout = InViewAlert(type: .secondary)
     private let border = UIView()
     private var topSharePopoutConstraint: NSLayoutConstraint?
-    private var currencyContainerHeight: NSLayoutConstraint?
-    private let currencyBorder = UIView(color: .secondaryShadow)
     private let wallet: BRWallet
-    private let currencySlider: CurrencySlider
 
     //MARK - PinPad State
-    private var satoshis: UInt64 = 0 {
+    private var amount: Satoshis? {
         didSet {
-            setAmountLabel()
             setQrCode()
         }
     }
-    private var minimumFractionDigits = 0
-    private var hasTrailingDecimal = false
-    private var selectedRate: Rate? {
-        didSet {
-            setAmountLabel()
-            setQrCode()
-            //Update pinpad content to match currency change
-            let currentOutput = amount.content ?? ""
-            var set = CharacterSet.decimalDigits
-            set.formUnion(CharacterSet(charactersIn: "."))
-            pinPad.currentOutput = String(String.UnicodeScalarView(currentOutput.unicodeScalars.filter { set.contains($0) }))
-        }
-    }
-
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
@@ -72,49 +49,28 @@ class RequestAmountViewController : UIViewController {
         addActions()
         setupCopiedMessage()
         setupShareButtons()
-        amount.clipsToBounds = true
-        currencyContainer.contentView = currencySlider
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        amount.textField.becomeFirstResponder()
-        currencySlider.load()
     }
 
     private func addSubviews() {
-        view.addSubview(amount)
-        view.addSubview(currencyContainer)
-        view.addSubview(currencyBorder)
         view.addSubview(qrCode)
         view.addSubview(address)
         view.addSubview(addressPopout)
         view.addSubview(share)
         view.addSubview(sharePopout)
         view.addSubview(border)
-        amount.addSubview(currencyButton)
     }
 
     private func addConstraints() {
-        amount.constrainTopCorners(height: SendCell.defaultHeight)
-        currencyButton.constrain([
-            currencyButton.constraint(.centerY, toView: amount.accessoryView),
-            currencyButton.constraint(.trailing, toView: amount, constant: -C.padding[2]) ])
-
-        currencyContainer.heightConstraint = currencyContainer.heightAnchor.constraint(equalToConstant: 0.0)
-        currencyContainer.pinTo(viewAbove: amount)
-        currencyContainer.constrain([currencyContainer.heightConstraint])
-        currencyContainer.arrowXLocation = view.bounds.width - 64.0/2.0 - C.padding[2]
-
-        currencyBorder.pinTo(viewAbove: currencyContainer, height: 1.0)
-
-        addChildViewController(pinPad, layout: {
-            pinPad.view.pinTo(viewAbove: currencyBorder, padding: 0.0, height: pinPad.height)
+        addChildViewController(amountView, layout: {
+            amountView.view.constrain([
+                amountView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                amountView.view.topAnchor.constraint(equalTo: view.topAnchor),
+                amountView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         })
         qrCode.constrain([
             qrCode.constraint(.width, constant: qrSize.width),
             qrCode.constraint(.height, constant: qrSize.height),
-            qrCode.topAnchor.constraint(equalTo: pinPad.view.bottomAnchor, constant: C.padding[2]),
+            qrCode.topAnchor.constraint(equalTo: amountView.view.bottomAnchor, constant: C.padding[2]),
             qrCode.constraint(.centerX, toView: view) ])
         address.constrain([
             address.constraint(toBottom: qrCode, constant: C.padding[1]),
@@ -154,9 +110,6 @@ class RequestAmountViewController : UIViewController {
             .resize(qrSize)!
         share.isToggleable = true
         sharePopout.clipsToBounds = true
-        currencyButton.isToggleable = true
-
-        amount.border.isHidden = true //Hide the default border because it needs to stay below the currency switcher when it gets expanded
     }
 
     private func addActions() {
@@ -164,91 +117,14 @@ class RequestAmountViewController : UIViewController {
         address.addGestureRecognizer(gr)
         address.isUserInteractionEnabled = true
         share.addTarget(self, action: #selector(RequestAmountViewController.shareTapped), for: .touchUpInside)
-
-        pinPad.ouputDidUpdate = { [weak self] output in
-            self?.amount.content = output
+        amountView.didUpdateAmount = { [weak self] amount in
+            self?.amount = amount
         }
-
-        amount.textFieldDidChange = { [weak self] text in
-            guard let myself = self else { return }
-            myself.minimumFractionDigits = 0 //set default
-            if let decimalLocation = text.range(of: NumberFormatter().currencyDecimalSeparator)?.upperBound {
-                let locationValue = text.distance(from: text.endIndex, to: decimalLocation)
-                if locationValue == -2 {
-                    myself.minimumFractionDigits = 2
-                } else if locationValue == -1 {
-                    myself.minimumFractionDigits = 1
-                }
-            }
-
-            //If trailing decimal, append the decimal to the output
-            myself.hasTrailingDecimal = false //set default
-            if let decimalLocation = text.range(of: NumberFormatter().currencyDecimalSeparator)?.upperBound {
-                if text.endIndex == decimalLocation {
-                    myself.hasTrailingDecimal = true
-                }
-            }
-
-            //Satoshis amount should be the last thing to be set here
-            //b/c it triggers a UI update
-            if let value = Double(text) {
-                myself.satoshis = UInt64((value * 100.0).rounded(.toNearestOrEven))
-            } else {
-                myself.satoshis = 0
-            }
-        }
-
-        currencySlider.didSelectCurrency = { [weak self] rate in
-            if rate.code == C.btcCurrencyCode {
-                self?.selectedRate = nil
-            } else {
-                self?.selectedRate = rate
-            }
-            self?.currencyButton.title = "\(rate.code) (\(rate.currencySymbol))"
-            self?.currencySwitchTapped() //collapse currency view
-        }
-        currencyContainer.contentView = currencySlider
-
-        currencyButton.tap = { [weak self] in
-            self?.currencySwitchTapped()
-        }
-    }
-
-    private func currencySwitchTapped() {
-        UIView.spring(C.animationDuration, animations: {
-            self.currencyContainer.toggle()
-            self.view.superview?.layoutIfNeeded()
-        }, completion: {_ in
-            self.currencyContainer.isExpanded = !self.currencyContainer.isExpanded
-        })
-    }
-
-    private func setAmountLabel() {
-        var formatter: NumberFormatter
-        var output = ""
-        if let selectedRate = selectedRate {
-            formatter = NumberFormatter()
-            formatter.locale = selectedRate.locale
-            formatter.numberStyle = .currency
-            let amount = (Double(satoshis)/Double(C.satoshis))*selectedRate.rate
-            output = formatter.string(from: amount as NSNumber) ?? "error"
-        } else {
-            formatter = Amount.bitsFormatter
-            output = formatter.string(from: Double(satoshis)/100.0 as NSNumber) ?? "error"
-        }
-
-        if satoshis > 0 {
-            formatter.minimumFractionDigits = minimumFractionDigits
-
-            if hasTrailingDecimal {
-                output = output.appending(".")
-            }
-        }
-        amount.setAmountLabel(text: output)
     }
 
     private func setQrCode(){
-        let request = PaymentRequest.requestString(withAddress: wallet.receiveAddress, forAmount: satoshis)
+        guard let amount = amount else { return }
+        let request = PaymentRequest.requestString(withAddress: wallet.receiveAddress, forAmount: amount.rawValue)
         qrCode.image = UIImage.qrCode(data: request.data(using: .utf8)!, color: CIColor(color: .black))?
             .resize(qrSize)!
     }
