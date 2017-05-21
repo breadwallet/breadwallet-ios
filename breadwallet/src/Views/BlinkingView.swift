@@ -16,7 +16,7 @@ class BlinkingView : UIView {
     }
 
     func startBlinking() {
-        timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 0.53, target: self, selector: #selector(update), userInfo: nil, repeats: true)
     }
 
     func stopBlinking() {
