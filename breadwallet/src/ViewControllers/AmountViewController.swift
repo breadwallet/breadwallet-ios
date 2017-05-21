@@ -158,6 +158,10 @@ class AmountViewController : UIViewController {
         let gr = UITapGestureRecognizer(target: self, action: #selector(didTap))
         tapView.addGestureRecognizer(gr)
         tapView.isUserInteractionEnabled = true
+
+        if isPinPadExpandedAtLaunch {
+            didTap()
+        }
     }
 
     private func preventAmountOverflow() {
