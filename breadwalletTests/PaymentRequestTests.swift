@@ -27,14 +27,14 @@ class PaymentRequestTests : XCTestCase {
         let request = PaymentRequest(string: uri)
         XCTAssertNotNil(request)
         XCTAssertTrue(request?.toAddress == "12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu")
-        XCTAssertTrue(request?.amount == 120000000)
+        XCTAssertTrue(request?.amount?.rawValue == 120000000)
     }
 
     func testRequestMetaData() {
         let uri = "bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu?amount=1.2&message=Payment&label=Satoshi"
         let request = PaymentRequest(string: uri)
         XCTAssertTrue(request?.toAddress == "12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu")
-        XCTAssertTrue(request?.amount == 120000000)
+        XCTAssertTrue(request?.amount?.rawValue == 120000000)
         XCTAssertTrue(request?.message == "Payment")
         XCTAssertTrue(request?.label == "Satoshi")
     }
