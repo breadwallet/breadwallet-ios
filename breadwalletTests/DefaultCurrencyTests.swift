@@ -20,19 +20,19 @@ class DefaultCurrencyTests : XCTestCase {
             XCTFail("We should have a local currency")
             return
         }
-        XCTAssertTrue(localCurrency == UserDefaults.defaultCurrency, "Default currency should be equal to the local currency by default")
+        XCTAssertTrue(localCurrency == UserDefaults.defaultCurrencyCode, "Default currency should be equal to the local currency by default")
     }
 
     func testUpdate() {
-        UserDefaults.defaultCurrency = "EUR"
-        XCTAssertTrue(UserDefaults.defaultCurrency == "EUR", "Default currency should update.")
+        UserDefaults.defaultCurrencyCode = "EUR"
+        XCTAssertTrue(UserDefaults.defaultCurrencyCode == "EUR", "Default currency should update.")
     }
 
     func testAction() {
-        UserDefaults.defaultCurrency = "USD"
+        UserDefaults.defaultCurrencyCode = "USD"
         let store = Store()
         store.perform(action: DefaultCurrency.setDefault("CAD"))
-        XCTAssertTrue(UserDefaults.defaultCurrency == "CAD", "Actions should persist new value")
+        XCTAssertTrue(UserDefaults.defaultCurrencyCode == "CAD", "Actions should persist new value")
     }
     
 }
