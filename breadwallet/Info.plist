@@ -102,5 +102,86 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
+			<key>CFBundleTypeName</key>
+			<string>Bitcoin Payment Request</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>bitcoin.paymentrequest</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
+			<key>CFBundleTypeName</key>
+			<string>Bitcoin Payment</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>bitcoin.payment</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
+			<key>CFBundleTypeName</key>
+			<string>Bitcoin Payment ACK</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>bitcoin.paymentack</string>
+			</array>
+		</dict>
+	</array>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Bitcoin Payment Request</string>
+			<key>UTTypeIdentifier</key>
+			<string>bitcoin.paymentrequest</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.mime-type</key>
+				<string>application/bitcoin-paymentrequest</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Bitcoin Payment</string>
+			<key>UTTypeIdentifier</key>
+			<string>bitcoin.payment</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.mime-type</key>
+				<string>application/bitcoin-payment</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Bitcoin Payment ACK</string>
+			<key>UTTypeIdentifier</key>
+			<string>bitcoin.paymentack</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.mime-type</key>
+				<string>application/bitcoin-paymentack</string>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>
