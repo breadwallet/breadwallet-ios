@@ -21,6 +21,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
         self.phrase = phrase
         self.pinView = PinView(style: .create, length: walletManager.pinLength)
         self.showsBackButton = showsBackButton
+        self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.setPin)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -32,6 +33,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad)
     private let store: Store
     private let walletManager: WalletManager
+    private let faq: UIButton
     private var step: Step = .current {
         didSet {
             switch step {
@@ -77,6 +79,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
         view.addSubview(instruction)
         view.addSubview(caption)
         view.addSubview(pinView)
+        view.addSubview(faq)
     }
 
     private func addConstraints() {
@@ -97,6 +100,11 @@ class UpdatePinViewController : UIViewController, Subscriber {
             pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
             pinPad.view.constrain([pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height) ])
         })
+        faq.constrain([
+            faq.centerYAnchor.constraint(equalTo: header.centerYAnchor),
+            faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+            faq.constraint(.height, constant: 44.0),
+            faq.constraint(.width, constant: 44.0)])
         caption.constrain([
             caption.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             caption.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[2]),

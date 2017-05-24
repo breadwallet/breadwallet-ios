@@ -23,4 +23,5 @@ enum ArticleIds {
     static let send = "send"
     static let walletDisabled = "wallet-disabled"
     static let resetPinWithPaperKey = "reset-pin-paper-key"
+    static let setPin = "set-pin"
 }
