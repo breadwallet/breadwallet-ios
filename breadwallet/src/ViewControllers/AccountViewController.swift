@@ -74,19 +74,21 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
 
     override func viewDidLoad() {
         // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
-        var s = stat()
-        var isJailbroken = (stat("/bin/sh", &s) == 0) ? true : false
-        for i in 0..<_dyld_image_count() {
-            guard !isJailbroken else { break }
-            // some anti-jailbreak detection tools re-sandbox apps, so do a secondary check for any MobileSubstrate dyld images
-            if strstr(_dyld_get_image_name(i), "MobileSubstrate") != nil {
-                isJailbroken = true
+        if !Environment.isSimulator {
+            var s = stat()
+            var isJailbroken = (stat("/bin/sh", &s) == 0) ? true : false
+            for i in 0..<_dyld_image_count() {
+                guard !isJailbroken else { break }
+                // some anti-jailbreak detection tools re-sandbox apps, so do a secondary check for any MobileSubstrate dyld images
+                if strstr(_dyld_get_image_name(i), "MobileSubstrate") != nil {
+                    isJailbroken = true
+                }
             }
+            NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: nil) { note in
+                self.showJailbreakWarnings(isJailbroken: isJailbroken)
+            }
+            showJailbreakWarnings(isJailbroken: isJailbroken)
         }
-        NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: nil) { note in
-            self.showJailbreakWarnings(isJailbroken: isJailbroken)
-        }
-        showJailbreakWarnings(isJailbroken: isJailbroken)
 
         //Start Accont View
         addTransactionsView()
