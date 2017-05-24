@@ -277,6 +277,7 @@ enum S {
         static let from = NSLocalizedString("TransactionDirection.from", value:"from", comment: "Usage: received transaction from")
         static let sent = NSLocalizedString("TransactionDirection.sent", value:"sent", comment: "Usage: sent transaction")
         static let received = NSLocalizedString("TransactionDirection.received", value:"received", comment: "Usage: received transaction")
+        static let moved = NSLocalizedString("TransactionDirection.moved", value:"moved", comment: "Usage: received transaction")
         static let address = NSLocalizedString("TransactionDirection.address", value:"Address", comment: "Usage: to/from Address")
     }
 
