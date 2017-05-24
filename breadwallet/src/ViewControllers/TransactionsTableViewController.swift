@@ -27,11 +27,13 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
         didSet {
             guard oldValue != isSyncingViewVisible else { return } //We only care about changes
             if isSyncingViewVisible {
+                tableView.beginUpdates()
                 if currentPrompt != nil {
                     currentPrompt = nil
+                    tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+                } else {
+                    tableView.insertSections(IndexSet(integer: 0), with: .automatic)
                 }
-                tableView.beginUpdates()
-                tableView.insertSections(IndexSet(integer: 0), with: .automatic)
                 tableView.endUpdates()
             } else {
                 tableView.beginUpdates()
@@ -81,7 +83,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
                 tableView.beginUpdates()
                 tableView.insertSections(IndexSet(integer: 0), with: .automatic)
                 tableView.endUpdates()
-            } else if currentPrompt == nil && oldValue != nil {
+            } else if currentPrompt == nil && oldValue != nil && !isSyncingViewVisible {
                 tableView.beginUpdates()
                 tableView.deleteSections(IndexSet(integer: 0), with: .automatic)
                 tableView.endUpdates()
