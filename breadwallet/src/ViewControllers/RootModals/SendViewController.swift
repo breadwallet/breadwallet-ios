@@ -19,7 +19,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
     //MARK - Public
     var presentScan: PresentScan?
-    var presentVerifyPin: ((@escaping VerifyPinCallback)->Void)?
+    var presentVerifyPin: ((String, @escaping VerifyPinCallback)->Void)?
     var onPublishSuccess: (()->Void)?
     var onPublishFailure: (()->Void)?
     var parentView: UIView? //ModalPresentable
@@ -230,8 +230,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     private func send() {
-        sender.send(verifyPinFunction: { [weak self] pinValidationCallback in
-            self?.presentVerifyPin? { [weak self] pin, vc in
+
+        let feeText = NumberFormatter.formattedString(amount: Satoshis(sender.fee), rate: amountView.selectedRate, minimumFractionDigits: nil)
+        let touchIdMessage = String(format: S.Send.touchIdPrompt, amountView.currentOutput, to.content ?? "", feeText)
+        let pinMessage = String(format: S.VerifyPin.transactionBody, amountView.currentOutput, to.content ?? "", feeText)
+
+        sender.send(touchIdMessage: touchIdMessage, verifyPinFunction: { [weak self] pinValidationCallback in
+            self?.presentVerifyPin?(pinMessage) { [weak self] pin, vc in
                 if pinValidationCallback(pin) {
                     vc.dismiss(animated: true, completion: {
                         self?.parent?.view.isFrameChangeBlocked = false
