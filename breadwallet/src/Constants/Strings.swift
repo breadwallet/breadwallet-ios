@@ -48,7 +48,7 @@ enum S {
         static let cameraUnavailableTitle = NSLocalizedString("Send.cameraUnavailableTitle", value:"Bread is not allowed to access the camera", comment: "Camera not allowed alert title")
         static let cameraUnavailableMessage = NSLocalizedString("Send.cameraunavailableMessage", value:"Go to Settings to allow camera access.", comment: "Camera not allowed message")
         static let modalTitle = NSLocalizedString("Send.modalTitle", value:"Send Money", comment: "Send modal title")
-        static let touchIdPrompt = NSLocalizedString("Send.touchIdPrompt", value:"Authenticate transaction.", comment: "Send with TouchID prompt text")
+        static let touchIdPrompt = NSLocalizedString("Send.touchIdPrompt", value:"Authenticate transaction of %@ to %@ with network fee: %@", comment: "Authenticate transaction of $5.00 to <bitcoin address> with network fee: %0.01")
         static let balance = NSLocalizedString("Send.balance", value:"Balance: %@", comment: "Balance: $4.00")
         static let balanceWithFee = NSLocalizedString("Send.balanceWithFee", value:"Balance: %@ Fee: %@", comment: "Balance: $4.00, Fee: $0.01")
         static let containsAddress = NSLocalizedString("Send.containsAddress", value: "This payment address is already in your wallet.", comment: "")
@@ -175,7 +175,7 @@ enum S {
 
     enum VerifyPin {
         static let title = NSLocalizedString("VerifyPin.title", value:"PIN Required", comment: "Verify Pin view title")
-        static let transactionBody = NSLocalizedString("VerifyPin.transactionBody", value:"Please enter your PIN to authorize this transaction.", comment: "Verify pin view body")
+        static let transactionBody = NSLocalizedString("VerifyPin.transactionBody", value:"Please enter your PIN to authorize this transaction of %@ to %@ with network fee: %@", comment: "Verify pin view body. eg. Please enter your PIN to authorize this transaction of $5.00 to 1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2 with network fee: $0.1")
         static let continueBody = NSLocalizedString("VerifyPin.continueBody", value:"Please enter your PIN to continue.", comment: "Verify pin view body")
     }
 

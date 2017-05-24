@@ -179,8 +179,8 @@ class ModalPresenter : Subscriber {
         let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager), walletManager: walletManager)
         let root = ModalViewController(childViewController: sendVC, store: store)
         sendVC.presentScan = presentScan(parent: root)
-        sendVC.presentVerifyPin = { [weak self, weak root] callback in
-            let vc = VerifyPinViewController(bodyText: S.VerifyPin.transactionBody, callback: callback)
+        sendVC.presentVerifyPin = { [weak self, weak root] bodyText, callback in
+            let vc = VerifyPinViewController(bodyText: bodyText, callback: callback)
             vc.transitioningDelegate = self?.verifyPinTransitionDelegate
             vc.modalPresentationStyle = .overFullScreen
             vc.modalPresentationCapturesStatusBarAppearance = true

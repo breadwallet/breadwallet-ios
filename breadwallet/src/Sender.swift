@@ -47,11 +47,11 @@ class Sender {
     }
 
     //Amount in bits
-    func send(verifyPinFunction: @escaping (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
+    func send(touchIdMessage: String, verifyPinFunction: @escaping (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
         guard let tx = transaction else { return completion(.creationError("Transaction not created")) }
 
         if UserDefaults.isTouchIdEnabled && walletManager.canUseTouchID(forTx:tx) {
-            walletManager.signTransaction(tx, touchIDPrompt:S.Send.touchIdPrompt, completion: { success in
+            walletManager.signTransaction(tx, touchIDPrompt: touchIdMessage, completion: { success in
                 if success {
                     self.publish(completion: completion)
                 } else {

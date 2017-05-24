@@ -23,6 +23,14 @@ class AmountViewController : UIViewController {
 
     var balanceTextForAmount: ((Satoshis?, Rate?) -> NSAttributedString?)?
     var didUpdateAmount: ((Satoshis?) -> Void)?
+    var currentOutput: String {
+        return amountLabel.text ?? ""
+    }
+    var selectedRate: Rate? {
+        didSet {
+            fullRefresh()
+        }
+    }
     func forceUpdateAmount(amount: Satoshis) {
         self.amount = amount
         fullRefresh()
@@ -51,11 +59,7 @@ class AmountViewController : UIViewController {
     private let currencyContainer = InViewAlert(type: .secondary)
     private let tapView = UIView()
     private let currencySlider: CurrencySlider
-    private var selectedRate: Rate? {
-        didSet {
-            fullRefresh()
-        }
-    }
+
     private var amount: Satoshis? {
         didSet {
             updateAmountLabel()
