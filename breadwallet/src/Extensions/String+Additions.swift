@@ -20,4 +20,8 @@ extension String {
             return false
         }
     }
+
+    var sanitized: String {
+        return applyingTransform(.toUnicodeName, reverse: false) ?? ""
+    }
 }

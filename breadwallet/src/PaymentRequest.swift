@@ -23,8 +23,7 @@ struct PaymentRequest {
 
                 if url.scheme == "bitcoin", let host = url.host {
                     toAddress = host
-                    type = .local
-                    guard let components = url.query?.components(separatedBy: "&") else { return }
+                    guard let components = url.query?.components(separatedBy: "&") else { type = .local; return }
                     for component in components {
                         let pair = component.components(separatedBy: "=")
                         if pair.count < 2 { continue }
@@ -39,11 +38,13 @@ struct PaymentRequest {
                             label = value
                         case "message":
                             message = value
+                        case "r":
+                            r = URL(string: value)
                         default:
                             print("Key not found: \(key)")
                         }
                     }
-
+                    type = r == nil ? .local : .remote
                     return
                 }
             } else if url.scheme == "http" || url.scheme == "https" {
@@ -63,17 +64,20 @@ struct PaymentRequest {
     }
 
     init?(data: Data) {
-        data.withUnsafeBytes({ (bytes: UnsafePointer<UInt8>) -> Void in
-            let _ = BRPaymentProtocolRequestParse(bytes, data.count)
-            //TODO - we now have a BRPaymentProtocolRequest struct to play with here
-        })
+        self.paymentProtoclRequest = PaymentProtocolRequest(data: data)
         type = .local
     }
 
     func fetchRemoteRequest(completion: @escaping (PaymentRequest?) -> Void) {
-        let request = NSMutableURLRequest(url: remoteRequest! as URL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0)
-        request.setValue("application/bitcoin-paymentrequest", forHTTPHeaderField: "Accept")
 
+        let request: NSMutableURLRequest
+        if let url = r {
+            request = NSMutableURLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0)
+        } else {
+            request = NSMutableURLRequest(url: remoteRequest! as URL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0) //TODO - fix !
+        }
+
+        request.setValue("application/bitcoin-paymentrequest", forHTTPHeaderField: "Accept")
 
         URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
             guard error == nil else { return completion(nil) }
@@ -103,6 +107,8 @@ struct PaymentRequest {
     var label: String?
     var message: String?
     var remoteRequest: NSURL?
+    var paymentProtoclRequest: PaymentProtocolRequest?
+    var r: URL?
 }
 
 private func convertToBTC(fromSatoshis: UInt64) -> String {

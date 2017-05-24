@@ -13,6 +13,8 @@ enum S {
     enum Symbols {
         static let bits = "ƀ"
         static let narrowSpace = "\u{2009}"
+        static let lock = "\u{1F512}"
+        static let redX = "\u{274C}"
     }
 
     enum Button {
@@ -20,6 +22,11 @@ enum S {
         static let cancel = NSLocalizedString("Button.cancel", value:"Cancel", comment: "Cancel button label")
         static let settings = NSLocalizedString("Button.settings", value:"Settings", comment: "Settings button label")
         static let submit = NSLocalizedString("Button.submit", value:"Submit", comment: "Settings button label")
+        static let ignore = NSLocalizedString("Button.ignore", value:"Ignore", comment: "Ignore button label")
+    }
+
+    enum Alert {
+        static let warning = NSLocalizedString("Alert.warning", value: "Waring", comment: "Warning alert title")
     }
 
     enum Scanner {
@@ -43,6 +50,13 @@ enum S {
         static let touchIdPrompt = NSLocalizedString("Send.touchIdPrompt", value:"Authenticate transaction.", comment: "Send with TouchID prompt text")
         static let balance = NSLocalizedString("Send.balance", value:"Balance: %@", comment: "Balance: $4.00")
         static let balanceWithFee = NSLocalizedString("Send.balanceWithFee", value:"Balance: %@ Fee: %@", comment: "Balance: $4.00, Fee: $0.01")
+        static let containsAddress = NSLocalizedString("Send.containsAddress", value: "This payment address is already in your wallet.", comment: "")
+        enum UsedAddress {
+            static let title = NSLocalizedString("Send.UsedAddress.title", value: "Address Already Used", comment: "Adress already used alert title")
+            static let firstLine = NSLocalizedString("Send.UsedAddress.firstLine", value: "Bitcoin addresses are intended for single use only.", comment: "Adress already used alert message - first part")
+            static let secondLine = NSLocalizedString("Send.UsedAddress.secondLIne", value: "Re-use reduces privacy for both you and the recipient and can result in loss if the recipient doesn't directly control the address", comment: "Adress already used alert message - second part")
+        }
+        static let identityNotCertified = NSLocalizedString("Send.identityNotCertified", value: "Payee identity isn't certified", comment: "Payee identity not certified alert title.")
     }
 
     enum Receive {
@@ -334,6 +348,19 @@ enum S {
         enum UpgradePin {
             static let title = NSLocalizedString("Prompts.UpgradePin.title", value: "Upgrade PIN", comment: "Upgrade PIN prompt title.")
             static let body = NSLocalizedString("Prompts.UpgradePin.body", value: "Bread has updated to using a 6-digit PIN. Tap here to upgrade.", comment: "Upgrade PIN prompt body.")
+        }
+    }
+
+    enum PaymentProtocol {
+        enum Errors {
+            static let untrustedCertificate = NSLocalizedString("PaymentProtocol.Errors.untrustedCertificate", value: "untrusted certificate", comment: "Untrusted certificate payment protocol error message")
+            static let missingCertificate = NSLocalizedString("PaymentProtocol.Errors.missingCertificate", value: "missing certificate", comment: "Missing certificate payment protocol error message")
+            static let unsupportedSignatureType = NSLocalizedString("PaymentProtocol.Errors.unsupportedSignatureType", value: "unsupported signature type", comment: "Unsupported signature type payment protocol error message")
+            static let requestExpired = NSLocalizedString("PaymentProtocol.Errors.requestExpired", value: "request expired", comment: "Request expired payment protocol error message")
+            static let badPaymentRequest = NSLocalizedString("PaymentProtocol.Errors.badPaymentRequest", value: "Bad Payment Request", comment: "Bad Payment request alert title")
+            static let smallOutputErrorTitle = NSLocalizedString("PaymentProtocol.Errors.smallOutputError", value: "Couldn't make payment", comment: "Payment too small alert title")
+            static let smallPayment = NSLocalizedString("PaymentProtocol.Errors.smallPayment", value: "Bitcoin payments can't be less than %@.", comment: "Amount too small error message")
+            static let smallTransaction = NSLocalizedString("PaymentProtocol.Errors.smallTransaction", value: "Bitcoin transaction outputs can't be less than $@.", comment: "Output too small error message.")
         }
     }
 }
