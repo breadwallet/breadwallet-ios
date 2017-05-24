@@ -10,12 +10,21 @@ import UIKit
 
 let π: CGFloat = .pi
 
-var isTestnet: Bool {
-    #if Testnet
-        return true
-    #else
-        return false
-    #endif
+struct Environment {
+    static let isTestnet: Bool = {
+        #if Testnet
+            return true
+        #else
+            return false
+        #endif
+    }()
+    static let isSimulator: Bool = {
+        #if arch(i386) || arch(x86_64)
+            return true
+        #else
+            return false
+        #endif
+    }()
 }
 
 struct Padding {

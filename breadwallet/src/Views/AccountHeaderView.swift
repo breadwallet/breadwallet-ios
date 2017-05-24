@@ -83,7 +83,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         search.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
         search.tintColor = .white
 
-        if isTestnet {
+        if Environment.isTestnet {
             name.textColor = .red
         }
 
