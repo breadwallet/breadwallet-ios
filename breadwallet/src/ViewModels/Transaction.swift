@@ -18,12 +18,17 @@ class Transaction {
         self.tx = tx
         self.wallet = wallet
         self.kvStore = kvStore
-        
-        self.fee = wallet.feeForTx(tx) ?? 0
+
+        let fee = wallet.feeForTx(tx) ?? 0
+        self.fee = fee
 
         let amountReceived = wallet.amountReceivedFromTx(tx)
         let amountSent = wallet.amountSentByTx(tx)
-        if amountSent > 0 {
+
+        if amountSent > 0 && (amountReceived + fee) == amountSent {
+            self.direction = .moved
+            self.satoshis = amountSent
+        } else if amountSent > 0 {
             self.direction = .sent
             self.satoshis = amountSent - amountReceived - fee
         } else {
@@ -110,6 +115,11 @@ class Transaction {
                 self.wallet.containsAddress(output.swiftAddress)
             }).first else { return nil }
             return output.swiftAddress
+        case .moved:
+            guard let output = self.tx.pointee.swiftOutputs.filter({ output in
+                self.wallet.containsAddress(output.swiftAddress)
+            }).first else { return nil }
+            return output.swiftAddress
         }
     }()
 
@@ -140,6 +150,8 @@ class Transaction {
             return self.balanceAfter - self.satoshis - self.fee
         case .sent:
             return self.balanceAfter + self.satoshis + self.fee
+        case .moved:
+            return self.balanceAfter + self.fee
         }
     }()
 

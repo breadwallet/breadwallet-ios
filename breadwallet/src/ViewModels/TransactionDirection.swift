@@ -11,6 +11,7 @@ import Foundation
 enum TransactionDirection : String {
     case sent = "Sent"
     case received = "Received"
+    case moved = "Moved"
 
     var string: String {
         switch self {
@@ -18,6 +19,8 @@ enum TransactionDirection : String {
             return S.TransactionDirection.sent
         case .received:
             return S.TransactionDirection.received
+        case .moved:
+            return S.TransactionDirection.moved
         }
     }
 
@@ -27,6 +30,8 @@ enum TransactionDirection : String {
             return S.TransactionDirection.to
         case .received:
             return S.TransactionDirection.from
+        case .moved:
+            return S.TransactionDirection.to
         }
     }
 
@@ -36,6 +41,8 @@ enum TransactionDirection : String {
             return "-"
         case .received:
             return ""
+        case .moved:
+            return ""
         }
     }
 
@@ -44,6 +51,8 @@ enum TransactionDirection : String {
         case .sent:
             return S.TransactionDirection.to
         case .received:
+            return S.TransactionDirection.address
+        case .moved:
             return S.TransactionDirection.address
         }
     }
