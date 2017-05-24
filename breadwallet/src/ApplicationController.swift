@@ -51,6 +51,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         updateAssetBundles()
         listenForPushNotificationRequest()
         offMainInitialization()
+        handleLaunchOptions(options)
     }
 
     func willEnterForeground() {
@@ -224,6 +225,19 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private func offMainInitialization() {
         DispatchQueue.global(qos: .background).async {
             let _ = Rate.symbolMap //Initialize currency symbol map
+        }
+    }
+
+    private func handleLaunchOptions(_ options: [UIApplicationLaunchOptionsKey: Any]?) {
+        if let url = options?[.url] as? URL {
+            do {
+                let file = try Data(contentsOf: url)
+                if file.count > 0 {
+                    store.trigger(name: .openFile(file))
+                }
+            } catch let error {
+                print("Could not open file at: \(url), error: \(error)")
+            }
         }
     }
 }
