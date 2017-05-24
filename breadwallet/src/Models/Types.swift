@@ -14,6 +14,11 @@ struct Satoshis {
 }
 
 extension Satoshis {
+
+    init(_ rawValue: UInt64) {
+        self.rawValue = rawValue
+    }
+
     init(bits: Bits) {
         rawValue = UInt64((bits.rawValue * 100.0).rounded(.toNearestOrEven))
     }
@@ -29,6 +34,32 @@ extension Satoshis {
         NSDecimalMultiplyByPowerOf10(&amount, &decimal, 8, .up)
         rawValue = NSDecimalNumber(decimal: amount).uint64Value
     }
+}
+
+extension Satoshis : Equatable {}
+
+func ==(lhs: Satoshis, rhs: Satoshis) -> Bool {
+    return lhs.rawValue == rhs.rawValue
+}
+
+func ==(lhs: Satoshis?, rhs: UInt64) -> Bool {
+    return lhs?.rawValue == rhs
+}
+
+func +(lhs: Satoshis, rhs: UInt64) -> Satoshis {
+    return Satoshis(lhs.rawValue + rhs)
+}
+
+func +=(lhs: inout Satoshis, rhs: UInt64) {
+    lhs = lhs + rhs
+}
+
+func >(lhs: Satoshis, rhs: UInt64) -> Bool {
+    return lhs.rawValue > rhs
+}
+
+func <(lhs: Satoshis, rhs: UInt64) -> Bool {
+    return lhs.rawValue < rhs
 }
 
 //MARK: - Bits

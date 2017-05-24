@@ -170,7 +170,7 @@ class ModalPresenter : Subscriber {
 
     private func makeSendView() -> UIViewController? {
         guard let walletManager = walletManager else { return nil }
-        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager))
+        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager), walletManager: walletManager)
         let root = ModalViewController(childViewController: sendVC, store: store)
         sendVC.presentScan = presentScan(parent: root)
         sendVC.presentVerifyPin = { [weak self, weak root] callback in

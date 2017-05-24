@@ -36,31 +36,17 @@ class DescriptionSendCell : SendCell {
         }
     }
 
-    func setLabel(text: String, color: UIColor) {
-        label.text = text
-        label.textColor = color
-    }
-
     private let placeholderFont = UIFont.customBody(size: 16.0)
-    private let textFieldFont = UIFont.customBody(size: 26.0)
+    private let textFieldFont = UIFont.customBody(size: 20.0)
     let textField = UITextField()
-    fileprivate let label = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
 
     private func setupViews() {
         addSubview(textField)
-        addSubview(label)
         textField.constrain([
             textField.constraint(.leading, toView: self, constant: C.padding[2]),
             textField.centerYAnchor.constraint(equalTo: accessoryView.centerYAnchor),
             textField.heightAnchor.constraint(greaterThanOrEqualToConstant: 30.0),
-            textField.constraint(toLeading: accessoryView, constant: 0.0) ])
-        label.constrain([
-            label.leadingAnchor.constraint(equalTo: textField.leadingAnchor),
-            label.topAnchor.constraint(equalTo: accessoryView.bottomAnchor),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
-            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1]) ])
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
+            textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]) ])
 
         textField.addTarget(self, action: #selector(DescriptionSendCell.editingChanged(textField:)), for: .editingChanged)
     }
