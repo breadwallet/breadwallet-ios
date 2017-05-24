@@ -57,8 +57,7 @@ class VerifyPinViewController : UIViewController {
         contentBox.constrain([
             contentBox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             contentBox.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[12]),
-            contentBox.widthAnchor.constraint(equalToConstant: 256.0),
-            contentBox.heightAnchor.constraint(equalToConstant: 148.0) ])
+            contentBox.widthAnchor.constraint(equalToConstant: 256.0) ])
         titleLabel.constrainTopCorners(sidePadding: C.padding[2], topPadding: C.padding[2])
         body.constrain([
             body.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
@@ -68,7 +67,8 @@ class VerifyPinViewController : UIViewController {
             pinView.topAnchor.constraint(equalTo: body.bottomAnchor, constant: C.padding[2]),
             pinView.centerXAnchor.constraint(equalTo: body.centerXAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.width),
-            pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
+            pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize),
+            pinView.bottomAnchor.constraint(equalTo: contentBox.bottomAnchor, constant: -C.padding[2]) ])
         toolbar.constrain([
             toolbar.leadingAnchor.constraint(equalTo: pinPad.view.leadingAnchor),
             toolbar.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor),
