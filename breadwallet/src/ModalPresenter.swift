@@ -70,6 +70,12 @@ class ModalPresenter : Subscriber {
         store.subscribe(self, name: .promptTouchId, callback: { _ in
             self.presentTouchIdSetting()
         })
+        store.subscribe(self, name: .openFile(Data()), callback: {
+            guard let trigger = $0 else { return }
+            if case .openFile(let file) = trigger {
+                self.handleFile(file)
+            }
+        })
     }
 
     private func handlePinCreationStateChange(_ state: State) {
@@ -484,6 +490,40 @@ class ModalPresenter : Subscriber {
         nc.delegate = securityCenterNavigationDelegate
         updatePin.addCloseNavigationItem()
         topViewController?.present(nc, animated: true, completion: nil)
+    }
+
+    private func handleFile(_ file: Data) {
+        if let request = PaymentProtocolRequest(data: file) {
+            if let topVC = topViewController as? ModalViewController {
+                let attemptConfirmRequest: () -> Bool = {
+                    if let send = topVC.childViewController as? SendViewController {
+                        send.confirmProtocolRequest(protoReq: request)
+                        return true
+                    }
+                    return false
+                }
+                if !attemptConfirmRequest() {
+                    modalTransitionDelegate.reset()
+                    topVC.dismiss(animated: true, completion: {
+                        self.store.perform(action: RootModalActions.Present(modal: .send))
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { //This is a hack because present has no callback
+                            let _ = attemptConfirmRequest()
+                        })
+                    })
+                }
+            }
+        } else if let ack = PaymentProtocolACK(data: file) {
+            if let memo = ack.memo {
+                let alert = UIAlertController(title: "", message: memo, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
+                topViewController?.present(alert, animated: true, completion: nil)
+            }
+        //TODO - handle payment type
+        } else {
+            let alert = UIAlertController(title: S.Alert.error, message: S.PaymentProtocol.Errors.corruptedDocument, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
+            topViewController?.present(alert, animated: true, completion: nil)
+        }
     }
 
     //TODO - This is a total hack to grab the window that keyboard is in

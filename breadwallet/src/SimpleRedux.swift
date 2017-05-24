@@ -48,6 +48,7 @@ enum TriggerName {
     case loginFromSend
     case blockModalDismissal
     case unblockModalDismissal
+    case openFile(Data)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName : Equatable {}
@@ -75,6 +76,8 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.blockModalDismissal, .blockModalDismissal):
         return true
     case (.unblockModalDismissal, .unblockModalDismissal):
+        return true
+    case (.openFile(_), .openFile(_)):
         return true
     default:
         return false

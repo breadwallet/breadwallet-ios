@@ -256,7 +256,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         })
     }
 
-    private func confirmProtocolRequest(protoReq: PaymentProtocolRequest) {
+    func confirmProtocolRequest(protoReq: PaymentProtocolRequest) {
         guard let firstOutput = protoReq.details.outputs.first else { return }
         guard let wallet = walletManager.wallet else { return }
 
