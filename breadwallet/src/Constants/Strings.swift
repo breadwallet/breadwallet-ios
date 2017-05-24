@@ -26,7 +26,8 @@ enum S {
     }
 
     enum Alert {
-        static let warning = NSLocalizedString("Alert.warning", value: "Waring", comment: "Warning alert title")
+        static let warning = NSLocalizedString("Alert.warning", value: "Warning", comment: "Warning alert title")
+        static let error = NSLocalizedString("Alert.error", value: "Error", comment: "Error alert title")
     }
 
     enum Scanner {
@@ -361,6 +362,7 @@ enum S {
             static let smallOutputErrorTitle = NSLocalizedString("PaymentProtocol.Errors.smallOutputError", value: "Couldn't make payment", comment: "Payment too small alert title")
             static let smallPayment = NSLocalizedString("PaymentProtocol.Errors.smallPayment", value: "Bitcoin payments can't be less than %@.", comment: "Amount too small error message")
             static let smallTransaction = NSLocalizedString("PaymentProtocol.Errors.smallTransaction", value: "Bitcoin transaction outputs can't be less than $@.", comment: "Output too small error message.")
+            static let corruptedDocument = NSLocalizedString("PaymentProtocol.Errors.corruptedDocument", value: "Unsupported or corrupted document", comment: "Error opening payment protocol file message")
         }
     }
 }
