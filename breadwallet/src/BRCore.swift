@@ -174,6 +174,10 @@ class BRWallet {
     func containsAddress(_ address: String) -> Bool {
         return BRWalletContainsAddress(cPtr, address) != 0
     }
+
+    func addressIsUsed(_ address: String) -> Bool {
+        return BRWalletAddressIsUsed(cPtr, address) != 0
+    }
     
     // transactions registered in the wallet, sorted by date, oldest first
     var transactions: [BRTxRef?] {

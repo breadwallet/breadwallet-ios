@@ -113,7 +113,8 @@ class PaymentProtocolRequest {
         self.isManaged = true
     }
 
-    init?(bytes: [UInt8]) {
+    init?(data: Data) {
+        let bytes = [UInt8](data)
         guard let cPtr = BRPaymentProtocolRequestParse(bytes, bytes.count) else { return nil }
         self.cPtr = cPtr
         self.isManaged = true
@@ -188,8 +189,7 @@ class PaymentProtocolRequest {
             
             // .unspecified indicates a positive result that wasn't decided by the user
             guard trustResult == .unspecified || trustResult == .proceed else {
-                errMsg = certs.count > 0 ? NSLocalizedString("untrusted certificate", comment: "") :
-                         NSLocalizedString("missing certificate", comment: "")
+                errMsg = certs.count > 0 ? S.PaymentProtocol.Errors.untrustedCertificate : S.PaymentProtocol.Errors.missingCertificate
                 
                 if let trust = trust, let properties = SecTrustCopyProperties(trust) {
                     for prop in properties as! [Dictionary<AnyHashable, Any>] {
@@ -217,7 +217,7 @@ class PaymentProtocolRequest {
 
             guard status == errSecSuccess else {
                 if status == errSecUnimplemented {
-                    errMsg = NSLocalizedString("unsupported signature type", comment: "")
+                    errMsg = S.PaymentProtocol.Errors.unsupportedSignatureType
                     print(errMsg!)
                 }
                 else {
@@ -233,7 +233,7 @@ class PaymentProtocolRequest {
         }
         
         guard details.expires == 0 || NSDate.timeIntervalSinceReferenceDate <= Double(details.expires) else {
-            errMsg = NSLocalizedString("request expired", comment: "")
+            errMsg = S.PaymentProtocol.Errors.requestExpired
             return false
         }
         
@@ -327,7 +327,8 @@ class PaymentProtocolACK {
         self.isManaged = true
     }
     
-    init?(bytes: [UInt8]) {
+    init?(data: Data) {
+        let bytes = [UInt8](data)
         guard let cPtr = BRPaymentProtocolACKParse(bytes, bytes.count) else { return nil }
         self.cPtr = cPtr
         self.isManaged = true

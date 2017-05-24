@@ -8,6 +8,7 @@
 
 import UIKit
 import LocalAuthentication
+import BRCore
 
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
@@ -25,14 +26,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     var initialAddress: String?
     var isPresentedFromLock = false
 
-    init(store: Store, sender: Sender, initialAddress: String? = nil) {
+    init(store: Store, sender: Sender, walletManager: WalletManager, initialAddress: String? = nil) {
         self.store = store
         self.sender = sender
+        self.walletManager = walletManager
         self.initialAddress = initialAddress
         if LAContext.canUseTouchID && store.state.isTouchIdEnabled {
-            self.send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
+            self.sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
         } else {
-            self.send = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "PinForSend"))
+            self.sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "PinForSend"))
         }
 
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
@@ -50,10 +52,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
     private let store: Store
     private let sender: Sender
+    private let walletManager: WalletManager
     private let amountView: AmountViewController
     private let to = LabelSendCell(label: S.Send.toLabel)
     private let descriptionCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
-    private let send: ShadowButton
+    private let sendButton: ShadowButton
     private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
     private let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
     private let currency = ShadowButton(title: S.Send.defaultCurrencyLabel, type: .tertiary)
@@ -66,12 +69,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             setSendButton()
         }
     }
+    private var didIgnoreUsedAddressWarning = false
+    private var didIgnoreIdentityNotCertified = false
 
     override func viewDidLoad() {
         view.backgroundColor = .white
         view.addSubview(to)
         view.addSubview(descriptionCell)
-        view.addSubview(send)
+        view.addSubview(sendButton)
 
         to.accessoryView.addSubview(paste)
         to.accessoryView.addSubview(scan)
@@ -87,12 +92,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         descriptionCell.pinToBottom(to: amountView.view, height: SendCell.defaultHeight)
         descriptionCell.accessoryView.constrain([
                 descriptionCell.accessoryView.constraint(.width, constant: 0.0) ])
-        send.constrain([
-            send.constraint(.leading, toView: view, constant: C.padding[2]),
-            send.constraint(.trailing, toView: view, constant: -C.padding[2]),
-            send.constraint(toBottom: descriptionCell, constant: verticalButtonPadding),
-            send.constraint(.height, constant: C.Sizes.buttonHeight),
-            send.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
+        sendButton.constrain([
+            sendButton.constraint(.leading, toView: view, constant: C.padding[2]),
+            sendButton.constraint(.trailing, toView: view, constant: -C.padding[2]),
+            sendButton.constraint(toBottom: descriptionCell, constant: verticalButtonPadding),
+            sendButton.constraint(.height, constant: C.Sizes.buttonHeight),
+            sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
         scan.constrain([
             scan.constraint(.centerY, toView: to.accessoryView),
             scan.constraint(.trailing, toView: to.accessoryView, constant: -C.padding[2]),
@@ -127,7 +132,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private func addButtonActions() {
         paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
-        send.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
+        sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
         descriptionCell.textFieldDidReturn = { textField in
             textField.resignFirstResponder()
         }
@@ -149,14 +154,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             let feeText = NumberFormatter.formattedString(amount: Satoshis(rawValue: fee), rate: rate, minimumFractionDigits: nil)
             output = String(format: S.Send.balanceWithFee, balanceText, feeText)
             if amount.rawValue > (balance - fee) {
-                send.isEnabled = false
+                sendButton.isEnabled = false
                 color = .cameraGuideNegative
             } else {
-                send.isEnabled = true
+                sendButton.isEnabled = true
             }
         } else {
             output = String(format: S.Send.balance, balanceText)
-            send.isEnabled = false
+            sendButton.isEnabled = false
         }
 
         let attributes: [String: Any] = [
@@ -168,11 +173,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     private func setSendButton() {
-        guard let amount = amount else { send.image = nil; return }
+        guard let amount = amount else { sendButton.image = nil; return }
         if sender.maybeCanUseTouchId(forAmount: amount.rawValue) {
-            send.image = #imageLiteral(resourceName: "TouchId")
+            sendButton.image = #imageLiteral(resourceName: "TouchId")
         } else {
-            send.image = #imageLiteral(resourceName: "PinForSend")
+            sendButton.image = #imageLiteral(resourceName: "PinForSend")
         }
     }
 
@@ -202,39 +207,128 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                     self?.amountView.forceUpdateAmount(amount: amount)
                 }
             case .remote:
-                print("remote request")
+                request.fetchRemoteRequest(completion: { [weak self] request in
+                    if let paymentProtocolRequest = request?.paymentProtoclRequest {
+                        DispatchQueue.main.async {
+                            self?.confirmProtocolRequest(protoReq: paymentProtocolRequest)
+                        }
+                    }
+                })
             }
         }
     }
 
     @objc private func sendTapped() {
-        guard let address = to.content else { return }
-        guard let amount = amount else { return }
-        sender.createTransaction(amount: amount.rawValue, to: address)
+        if sender.transaction != nil {
+            send()
+        } else {
+            guard let address = to.content else { return }
+            guard let amount = amount else { return }
+            sender.createTransaction(amount: amount.rawValue, to: address)
+            send()
+        }
+    }
+
+    private func send() {
         sender.send(verifyPinFunction: { [weak self] pinValidationCallback in
-                        self?.presentVerifyPin? { [weak self] pin, vc in
-                            if pinValidationCallback(pin) {
-                                vc.dismiss(animated: true, completion: {
-                                    self?.parent?.view.isFrameChangeBlocked = false
-                                })
-                            }
-                        }
-                    }, completion: { [weak self] result in
-                        switch result {
-                        case .success:
-                            self?.dismiss(animated: true, completion: {
-                                guard let myself = self else { return }
-                                if myself.isPresentedFromLock {
-                                    myself.store.trigger(name: .loginFromSend)
-                                }
-                                myself.onPublishSuccess?()
-                            })
-                        case .creationError(let message):
-                            print("creation error: \(message)")
-                        case .publishFailure(_): //TODO -add error messages here
-                            self?.onPublishFailure?()
-                        }
+            self?.presentVerifyPin? { [weak self] pin, vc in
+                if pinValidationCallback(pin) {
+                    vc.dismiss(animated: true, completion: {
+                        self?.parent?.view.isFrameChangeBlocked = false
                     })
+                }
+            }
+            }, completion: { [weak self] result in
+                switch result {
+                case .success:
+                    self?.dismiss(animated: true, completion: {
+                        guard let myself = self else { return }
+                        if myself.isPresentedFromLock {
+                            myself.store.trigger(name: .loginFromSend)
+                        }
+                        myself.onPublishSuccess?()
+                    })
+                case .creationError(let message):
+                    print("creation error: \(message)")
+                case .publishFailure(_): //TODO -add error messages here
+                    self?.onPublishFailure?()
+                }
+        })
+    }
+
+    private func confirmProtocolRequest(protoReq: PaymentProtocolRequest) {
+        guard let firstOutput = protoReq.details.outputs.first else { return }
+        guard let wallet = walletManager.wallet else { return }
+
+        let address = firstOutput.swiftAddress
+        let isValid = protoReq.isValid()
+        var isOutputTooSmall = false
+
+        if let errorMessage = protoReq.errorMessage, errorMessage == S.PaymentProtocol.Errors.requestExpired, !isValid {
+            return showProtocolError(title: S.PaymentProtocol.Errors.badPaymentRequest, message: errorMessage, buttonLabel: S.Button.ok)
+        }
+
+        //TODO: check for duplicates of already paid requests
+        var requestAmount = Satoshis(0)
+        protoReq.details.outputs.forEach { output in
+            if output.amount > 0 && output.amount < wallet.minOutputAmount {
+                isOutputTooSmall = true
+            }
+            requestAmount += output.amount
+        }
+
+        if wallet.containsAddress(address) {
+            return showProtocolError(title: S.Alert.warning, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
+        } else if wallet.addressIsUsed(address) {
+            let message = "\(S.Send.UsedAddress.title)\n\n\(S.Send.UsedAddress.firstLine)\n\n\(S.Send.UsedAddress.secondLine)"
+            return showProtocolError(title: S.Alert.warning, message: message, ignore: { [weak self] in
+                self?.didIgnoreUsedAddressWarning = true
+                self?.confirmProtocolRequest(protoReq: protoReq)
+            })
+        } else if let message = protoReq.errorMessage, message.utf8.count > 0 && (protoReq.commonName?.utf8.count)! > 0 {
+            return showProtocolError(title: S.Send.identityNotCertified, message: message, ignore: { [weak self] in
+                self?.didIgnoreUsedAddressWarning = true
+                self?.confirmProtocolRequest(protoReq: protoReq)
+            })
+        } else if requestAmount < wallet.minOutputAmount {
+            let message = String(format: S.PaymentProtocol.Errors.smallPayment, "\(Amount.bitsFormatter.string(from: Double(wallet.minOutputAmount)/100.0 as NSNumber) ?? "")")
+            return showProtocolError(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
+        } else if isOutputTooSmall {
+            let message = String(format: S.PaymentProtocol.Errors.smallTransaction, "\(Amount.bitsFormatter.string(from: Double(wallet.minOutputAmount)/100.0 as NSNumber) ?? "")")
+            return showProtocolError(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
+        }
+
+        if let name = protoReq.commonName {
+            to.content = protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized
+        }
+
+        if requestAmount > 0 {
+            amountView.forceUpdateAmount(amount: requestAmount)
+        }
+        descriptionCell.content = protoReq.details.memo
+
+        if requestAmount == 0 {
+            if let amount = amount {
+                sender.createTransaction(amount: amount.rawValue, to: address)
+            }
+        } else {
+            sender.createTransaction(forPaymentProtocol: protoReq)
+        }
+    }
+
+    private func showProtocolError(title: String, message: String, buttonLabel: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
+
+    private func showProtocolError(title: String, message: String, ignore: @escaping () -> Void) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: S.Button.ignore, style: .default, handler: { _ in
+            ignore()
+        }))
+        alertController.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
     }
 
     private func invalidAddressAlert() {
