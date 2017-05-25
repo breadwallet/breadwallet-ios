@@ -104,8 +104,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
             scrollViewContent.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             scrollViewContent.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             scrollViewContent.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            scrollViewContent.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
-            ])
+            scrollViewContent.widthAnchor.constraint(equalTo: scrollView.widthAnchor) ])
         timestamp.constrain([
             timestamp.leadingAnchor.constraint(equalTo: scrollViewContent.leadingAnchor, constant: C.padding[2]),
             timestamp.topAnchor.constraint(equalTo: scrollViewContent.topAnchor, constant: C.padding[3]),
