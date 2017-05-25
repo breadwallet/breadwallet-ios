@@ -8,18 +8,24 @@
 
 import UIKit
 
+private let circleRadius: CGFloat = 12.0
 
 class ConfirmPhrase: UIView {
 
-    private let label =     UILabel()
-    private let separator = UIView()
-    let textField =         UITextField()
+    let textField = UITextField()
+    var callback: (() -> Void)?
 
-    init(text: String) {
+    init(text: String, word: String) {
+        self.word = word
         super.init(frame: CGRect())
         label.text = text
         setupSubviews()
     }
+
+    private let word: String
+    private let label = UILabel()
+    private let separator = UIView()
+    private let circle = DrawableCircle()
 
     private func setupSubviews() {
         label.font = UIFont.customBody(size: 14.0)
@@ -32,25 +38,37 @@ class ConfirmPhrase: UIView {
         addSubview(label)
         addSubview(textField)
         addSubview(separator)
+        addSubview(circle)
 
         label.constrain([
-                label.constraint(.leading, toView: self, constant: C.padding[1]),
-                label.constraint(.top, toView: self, constant: C.padding[1])
-            ])
+            label.constraint(.leading, toView: self, constant: C.padding[1]),
+            label.constraint(.top, toView: self, constant: C.padding[1]) ])
         textField.constrain([
-                textField.constraint(.leading, toView: label, constant: nil),
-                textField.constraint(toBottom: label, constant: C.padding[1]/2.0),
-                textField.constraint(.width, toView: self, constant: -C.padding[1]*2)
-            ])
+            textField.constraint(.leading, toView: label, constant: nil),
+            textField.constraint(toBottom: label, constant: C.padding[1]/2.0),
+            textField.constraint(.width, toView: self, constant: -C.padding[1]*2) ])
 
         separator.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
         separator.constrain([
-                //This contraint to the bottom of the textField is pretty crucial. Without it,
-                //this view will have an intrinsicHeight of 0
-                separator.constraint(toBottom: textField, constant: C.padding[1]),
-                separator.constraint(.height, constant: 1.0)
-            ])
+            //This contraint to the bottom of the textField is pretty crucial. Without it,
+            //this view will have an intrinsicHeight of 0
+            separator.constraint(toBottom: textField, constant: C.padding[1]),
+            separator.constraint(.height, constant: 1.0) ])
+        circle.constrain([
+            circle.centerYAnchor.constraint(equalTo: textField.centerYAnchor),
+            circle.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
+            circle.heightAnchor.constraint(equalToConstant: circleRadius*2.0),
+            circle.widthAnchor.constraint(equalToConstant: circleRadius*2.0) ])
 
+        textField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+    }
+
+    @objc private func textFieldChanged() {
+        if textField.text == word {
+            circle.show()
+            textField.isEnabled = false
+            callback?()
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
