@@ -25,6 +25,9 @@ struct Environment {
             return false
         #endif
     }()
+    static let isIPhone4: Bool = {
+        return UIApplication.shared.keyWindow?.bounds.height == 480.0
+    }()
 }
 
 struct Padding {
