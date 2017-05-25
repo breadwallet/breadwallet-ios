@@ -22,8 +22,8 @@ class ConfirmPaperPhraseViewController : UIViewController {
 
     private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
 
-    lazy private var confirmFirstPhrase: ConfirmPhrase = { ConfirmPhrase(text: String(format:S.ConfirmPaperPhrase.word, "\(self.indices.0 + 1)")) }()
-    lazy private var confirmSecondPhrase: ConfirmPhrase = { ConfirmPhrase(text: String(format:S.ConfirmPaperPhrase.word, "\(self.indices.1 + 1)")) }()
+    lazy private var confirmFirstPhrase: ConfirmPhrase = { ConfirmPhrase(text: String(format:S.ConfirmPaperPhrase.word, "\(self.indices.0 + 1)"), word: self.words[self.indices.0]) }()
+    lazy private var confirmSecondPhrase: ConfirmPhrase = { ConfirmPhrase(text: String(format:S.ConfirmPaperPhrase.word, "\(self.indices.1 + 1)"), word: self.words[self.indices.1]) }()
     private let submit = ShadowButton(title: S.Button.submit, type: .primary)
     private let header = RadialGradientView(backgroundColor: .pink)
     private let store: Store
@@ -91,6 +91,9 @@ class ConfirmPaperPhraseViewController : UIViewController {
 
     private func addButtonActions() {
         submit.addTarget(self, action: #selector(checkTextFields), for: .touchUpInside)
+        confirmFirstPhrase.callback = { [weak self] in
+            self?.confirmSecondPhrase.textField.becomeFirstResponder()
+        }
     }
 
     private func addSubmitButtonConstraints(keyboardHeight: CGFloat) {
