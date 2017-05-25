@@ -351,6 +351,10 @@ enum S {
             static let title = NSLocalizedString("Prompts.UpgradePin.title", value: "Upgrade PIN", comment: "Upgrade PIN prompt title.")
             static let body = NSLocalizedString("Prompts.UpgradePin.body", value: "Bread has updated to using a 6-digit PIN. Tap here to upgrade.", comment: "Upgrade PIN prompt body.")
         }
+        enum RecommendRescan {
+            static let title = NSLocalizedString("Prompts.RecommendRescan.title", value: "Transaction Rejected", comment: "Transaction rejected prompt title")
+            static let body = NSLocalizedString("Prompts.RecommendRescan.body", value: "Your wallet may be out of sync. This can often be fixed by rescanning the blockchain.", comment: "Transaction rejected prompt body")
+        }
     }
 
     enum PaymentProtocol {
