@@ -152,7 +152,7 @@ class LoginViewController : UIViewController, Subscriber {
         pinViewContainer.addSubview(pinView)
         view.addSubview(subheader)
         pinView.constrain([
-            pinView.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -95.0),
+            pinView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: Environment.isIPhone4 ? -C.padding[2] : 0.0),
             pinView.centerXAnchor.constraint(equalTo: pinViewContainer.centerXAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.width),
             pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
