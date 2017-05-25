@@ -54,6 +54,7 @@ class WalletCoordinator : Subscriber {
     private func onSyncStart() {
         progressTimer = Timer.scheduledTimer(timeInterval: progressUpdateInterval, target: self, selector: #selector(WalletCoordinator.updateProgress), userInfo: nil, repeats: true)
         store.perform(action: WalletChange.setIsSyncing(true))
+        startActivity()
     }
 
     private func onSyncSucceed() {
@@ -63,12 +64,14 @@ class WalletCoordinator : Subscriber {
         progressTimer?.invalidate()
         progressTimer = nil
         store.perform(action: WalletChange.setIsSyncing(false))
+        endActivity()
     }
 
     private func onSyncFail(notification: Notification) {
         guard let code = notification.userInfo?["errorCode"] else { return }
         guard let message = notification.userInfo?["errorDescription"] else { return }
         store.perform(action: WalletChange.setSyncingErrorMessage("\(message) (\(code))"))
+        endActivity()
     }
 
     private func updateTransactions() {
@@ -126,5 +129,15 @@ class WalletCoordinator : Subscriber {
                 self.walletManager.peerManager?.rescan()
             }
         })
+    }
+
+    private func startActivity() {
+        UIApplication.shared.isIdleTimerDisabled = true
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+    }
+
+    private func endActivity() {
+        UIApplication.shared.isIdleTimerDisabled = false
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
 }
