@@ -22,6 +22,7 @@ struct State {
     let alert: AlertType?
     let isTouchIdEnabled: Bool
     let defaultCurrencyCode: String
+    let recommendRescan: Bool
 }
 
 extension State {
@@ -38,7 +39,8 @@ extension State {
                         rates: [],
                         alert: nil,
                         isTouchIdEnabled: UserDefaults.isTouchIdEnabled,
-                        defaultCurrencyCode: UserDefaults.defaultCurrencyCode)
+                        defaultCurrencyCode: UserDefaults.defaultCurrencyCode,
+                        recommendRescan: false)
     }
 }
 

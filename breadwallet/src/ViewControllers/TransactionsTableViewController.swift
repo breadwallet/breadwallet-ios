@@ -124,6 +124,10 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
             }
         })
 
+        store.subscribe(self, selector: { $0.recommendRescan != $1.recommendRescan }, callback: { _ in
+            self.attemptShowPrompt()
+        })
+
         syncingView.retry.tap = { [weak self] in
             self?.syncingView.resetAfterError()
             self?.store.perform(action: WalletChange.setSyncingErrorMessage(nil))
@@ -239,8 +243,9 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
 
     private func attemptShowPrompt() {
         guard let walletManager = walletManager else { return }
+        guard !isSyncingViewVisible else { return }
         let types = PromptType.defaultOrder
-        if let type = types.first(where: { $0.shouldPrompt(walletManager: walletManager) }) {
+        if let type = types.first(where: { $0.shouldPrompt(walletManager: walletManager, state: store.state) }) {
             currentPrompt = Prompt(type: type)
             currentPrompt?.close.tap = { [weak self] in
                 self?.currentPrompt = nil

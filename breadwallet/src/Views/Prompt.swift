@@ -13,9 +13,10 @@ enum PromptType {
     case touchId
     case paperKey
     case upgradePin
+    case recommendRescan
 
     static var defaultOrder: [PromptType] = {
-        return [.upgradePin, .paperKey, .touchId]
+        return [.recommendRescan, .upgradePin, .paperKey, .touchId]
     }()
 
     var title: String {
@@ -26,6 +27,8 @@ enum PromptType {
             return S.Prompts.PaperKey.title
         case .upgradePin:
             return S.Prompts.UpgradePin.title
+        case .recommendRescan:
+            return S.Prompts.RecommendRescan.title
         }
     }
 
@@ -37,9 +40,12 @@ enum PromptType {
             return S.Prompts.PaperKey.body
         case .upgradePin:
             return S.Prompts.UpgradePin.body
+        case .recommendRescan:
+            return S.Prompts.RecommendRescan.body
         }
     }
 
+    //This is the trigger that happens when the prompt is tapped
     var trigger: TriggerName {
         switch self {
         case .touchId:
@@ -48,10 +54,12 @@ enum PromptType {
             return .promptPaperKey
         case .upgradePin:
             return .promptUpgradePin
+        case .recommendRescan:
+            return .recommendRescan
         }
     }
 
-    func shouldPrompt(walletManager: WalletManager) -> Bool {
+    func shouldPrompt(walletManager: WalletManager, state: State) -> Bool {
         switch self {
         case .touchId:
             return !UserDefaults.hasPromptedTouchId && LAContext.canUseTouchID && !UserDefaults.isTouchIdEnabled
@@ -59,6 +67,8 @@ enum PromptType {
             return UserDefaults.walletRequiresBackup
         case .upgradePin:
             return walletManager.pinLength != 6
+        case .recommendRescan:
+            return state.recommendRescan
         }
     }
 }
