@@ -76,6 +76,9 @@ class ModalPresenter : Subscriber {
                 self.handleFile(file)
             }
         })
+        store.subscribe(self, name: .recommendRescan, callback: { _ in
+            self.presentRescan()
+        })
     }
 
     private func handlePinCreationStateChange(_ state: State) {
@@ -433,6 +436,14 @@ class ModalPresenter : Subscriber {
         vc.startServer()
         vc.preload()
         self.topViewController?.present(vc, animated: true, completion: nil)
+    }
+
+    private func presentRescan() {
+        let vc = ReScanViewController(store: self.store)
+        let nc = UINavigationController(rootViewController: vc)
+        nc.setClearNavbar()
+        vc.addCloseNavigationItem()
+        topViewController?.present(nc, animated: true, completion: nil)
     }
 
     @available(iOS, deprecated: 1.0, message: "FIXME")

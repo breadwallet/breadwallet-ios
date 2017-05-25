@@ -91,7 +91,10 @@ class WalletCoordinator : Subscriber {
         })
 
         NotificationCenter.default.addObserver(forName: .WalletTxRejectedNotification, object: nil, queue: nil, using: {note in
-            print("WalletTxRejectedNotification")
+            guard let recommendRescan = note.userInfo?["recommendRescan"] as? Bool else { return }
+            if recommendRescan {
+                self.store.perform(action: RecommendRescan.set(recommendRescan))
+            }
         })
 
         NotificationCenter.default.addObserver(forName: .WalletSyncStartedNotification, object: nil, queue: nil, using: {note in
@@ -115,6 +118,7 @@ class WalletCoordinator : Subscriber {
         })
 
         store.subscribe(self, name: .rescan, callback: { _ in
+            self.store.perform(action: RecommendRescan.set(false))
             //In case rescan is called while a sync is in progess
             //we need to make sure it's false before a rescan starts
             //self.store.perform(action: WalletChange.setIsSyncing(false))
