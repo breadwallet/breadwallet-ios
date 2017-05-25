@@ -32,37 +32,68 @@ class ModalViewController : UIViewController, Subscriber {
     fileprivate let header: ModalHeaderView
     private let tapGestureRecognizer = UITapGestureRecognizer()
     private let store: Store
+    private let scrollView = UIScrollView()
+    private let scrollViewContent = UIView()
 
     deinit {
         store.unsubscribe(self)
     }
 
     override func viewDidLoad() {
-        view.backgroundColor = .clear
+        addSubviews()
+        addConstraints()
+        setInitialData()
+    }
+
+    private func addSubviews() {
         view.addSubview(header)
-        view.setContentHuggingPriority(UILayoutPriorityDefaultLow, for: .vertical)
-        header.closeCallback = { [weak self] in
-            if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
-                delegate.reset()
-            }
-            self?.dismiss(animated: true, completion: {})
-        }
-        
-        addTopCorners()
+        view.addSubview(scrollView)
+        scrollView.addSubview(scrollViewContent)
 
-        addChildViewController(childViewController, layout: {
-            childViewController.view?.constrain([
-                childViewController.view?.constraint(.leading, toView: view, constant: 0.0),
-                childViewController.view?.constraint(.trailing, toView: view, constant: 0.0),
-                childViewController.view?.constraint(.bottom, toView: view, constant: 0.0) ])
-        })
+        addChildViewController(childViewController)
+        scrollViewContent.addSubview(childViewController.view)
+        childViewController.didMove(toParentViewController: self)
 
+    }
+
+    private func addConstraints() {
         header.constrain([
             header.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            header.bottomAnchor.constraint(equalTo: childViewController.view.topAnchor),
+            header.bottomAnchor.constraint(equalTo: scrollView.topAnchor),
             header.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             header.heightAnchor.constraint(equalToConstant: headerHeight)])
+        scrollView.constrain([
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor) ])
+        scrollViewContent.constrain([
+            scrollViewContent.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            scrollViewContent.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            scrollViewContent.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            scrollViewContent.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            scrollViewContent.widthAnchor.constraint(equalTo: scrollView.widthAnchor) ])
 
+        childViewController.view.constrain(toSuperviewEdges: nil)
+
+        //Two stage layout is required here because we need the height constant
+        //of the content at initial layout
+        view.layoutIfNeeded()
+
+        let height = scrollViewContent.bounds.size.height
+        let minHeight = scrollView.heightAnchor.constraint(greaterThanOrEqualToConstant: height)
+        let midHeight = scrollView.heightAnchor.constraint(equalTo: scrollViewContent.heightAnchor)
+        let maxHeight = scrollView.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, constant: -headerHeight)
+        midHeight.priority = UILayoutPriorityDefaultLow
+        scrollView.constrain([
+            minHeight,
+            midHeight,
+            maxHeight ])
+
+    }
+
+    private func setInitialData() {
+        view.backgroundColor = .clear
+        scrollView.backgroundColor = .white
         if var modalPresentable = childViewController as? ModalPresentable {
             modalPresentable.parentView = view
         }
@@ -77,6 +108,13 @@ class ModalViewController : UIViewController, Subscriber {
         store.subscribe(self, name: .unblockModalDismissal, callback: { _ in
             self.tapGestureRecognizer.isEnabled = true
         })
+        addTopCorners()
+        header.closeCallback = { [weak self] in
+            if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
+                delegate.reset()
+            }
+            self?.dismiss(animated: true, completion: {})
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
