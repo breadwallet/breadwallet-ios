@@ -59,6 +59,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     private var txEnt: Int32 = 0
     private var blockEnt: Int32 = 0
     private var peerEnt: Int32 = 0
+    private let store: Store
     
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
@@ -98,13 +99,13 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         return wordList.map({ $0.utf8String })
     }
 
-    init(masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
+    init(masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil, store: Store) throws {
         self.masterPubKey = masterPubKey
         self.earliestKeyTime = earliestKeyTime
         self.dbPath = try dbPath ??
             FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
                                     create: false).appendingPathComponent("BreadWallet.sqlite").path
-        
+        self.store = store
         // open sqlite database
         if sqlite3_open(self.dbPath, &db) != SQLITE_OK {
             print(String(cString: sqlite3_errmsg(db)))
@@ -211,7 +212,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         }
         
         if sqlite3_errcode(db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(db))) }
-        let _ = wallet //attempt to initialize wallet
     }
     
     func balanceChanged(_ balance: UInt64) {
@@ -489,6 +489,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     private func loadTransactions() -> [BRTxRef?] {
+        DispatchQueue.main.async { self.store.perform(action: LoadTransactions.set(true)) }
         var transactions = [BRTxRef?]()
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "select ZBLOB from ZBRTXMETADATAENTITY where ZTYPE = 1", -1, &sql, nil)
@@ -505,6 +506,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         }
         
         if sqlite3_errcode(db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(db))) }
+        DispatchQueue.main.async { self.store.perform(action: LoadTransactions.set(false)) }
         return transactions
     }
     

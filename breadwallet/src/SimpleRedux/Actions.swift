@@ -30,7 +30,8 @@ struct HideStartFlow : Action {
                      alert: state.alert,
                      isTouchIdEnabled: state.isTouchIdEnabled,
                      defaultCurrencyCode: state.defaultCurrencyCode,
-                     recommendRescan: state.recommendRescan)
+                     recommendRescan: state.recommendRescan,
+                     isLoadingTransactions: state.isLoadingTransactions)
     }
 }
 
@@ -260,6 +261,15 @@ enum RecommendRescan {
     }
 }
 
+enum LoadTransactions {
+    struct set : Action {
+        let reduce: Reducer
+        init(_ isLoadingTransactions: Bool) {
+            reduce = { $0.clone(isLoadingTransactions: isLoadingTransactions) }
+        }
+    }
+}
+
 //MARK: - State Creation Helpers
 extension State {
     func clone(isStartFlowVisible: Bool) -> State {
@@ -276,7 +286,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(pinCreationStep: PinCreationStep) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -292,7 +303,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
 
     func rootModal(_ type: RootModal) -> State {
@@ -309,7 +321,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(pasteboard: String?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -325,7 +338,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(paperPhraseStep: PaperPhraseStep) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -341,7 +355,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(walletSyncProgress: Double, timestamp: UInt32) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -357,7 +372,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(walletIsSyncing: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -373,7 +389,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(balance: UInt64) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -389,7 +406,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(transactions: [Transaction]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -405,7 +423,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(walletName: String) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -421,7 +440,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(walletSyncingErrorMessage: String?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -437,7 +457,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(walletCreationDate: Date) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -453,7 +474,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(isBtcSwapped: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -469,7 +491,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(isLoginRequired: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -485,7 +508,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(currentRate: Rate, rates: [Rate]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -501,7 +525,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(currentRate: Rate) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -517,7 +542,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(alert: AlertType?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -533,7 +559,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(isTouchIdEnabled: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -549,7 +576,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(defaultCurrencyCode: String) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -565,7 +593,8 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
     func clone(recommendRescan: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -581,6 +610,24 @@ extension State {
                      alert: alert,
                      isTouchIdEnabled: isTouchIdEnabled,
                      defaultCurrencyCode: defaultCurrencyCode,
-                     recommendRescan: recommendRescan)
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
+    }
+    func clone(isLoadingTransactions: Bool) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
+                     pinCreationStep: pinCreationStep,
+                     paperPhraseStep: paperPhraseStep,
+                     rootModal: rootModal,
+                     pasteboard: pasteboard,
+                     walletState: walletState,
+                     isBtcSwapped: isBtcSwapped,
+                     currentRate: currentRate,
+                     rates: rates,
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrencyCode: defaultCurrencyCode,
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions)
     }
 }
