@@ -42,6 +42,12 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private var regularConstraints: [NSLayoutConstraint] = []
     private var swappedConstraints: [NSLayoutConstraint] = []
     private var hasInitialized = false
+    private let testnetLabel: UILabel = {
+        let label = UILabel()
+        label.text = "(Testnet)"
+        label.font = .customBody(size: 12.0)
+        return label
+    }()
     private var exchangeRate: Rate? {
         didSet { setBalances() }
     }
@@ -102,6 +108,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         addSubview(currencyTapView)
         addSubview(equals)
         addSubview(logo)
+        addSubview(testnetLabel)
     }
 
     private func addConstraints() {
@@ -111,8 +118,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         if let manageTitleLabel = manage.titleLabel {
             manage.constrain([
                 manage.constraint(.trailing, toView: self, constant: -C.padding[2]),
-                manageTitleLabel.firstBaselineAnchor.constraint(equalTo: name.firstBaselineAnchor)
-                ])
+                manageTitleLabel.firstBaselineAnchor.constraint(equalTo: name.firstBaselineAnchor) ])
         }
         secondaryBalance.constrain([
             secondaryBalance.constraint(.firstBaseline, toView: primaryBalance, constant: 0.0) ])
@@ -158,6 +164,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             logo.topAnchor.constraint(equalTo: topAnchor, constant: 30.0),
             logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: C.Sizes.logoAspectRatio),
             logo.widthAnchor.constraint(equalTo: widthAnchor, multiplier: logoWidth) ])
+        testnetLabel.constrain([
+            testnetLabel.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: C.padding[1]/2.0),
+            testnetLabel.firstBaselineAnchor.constraint(equalTo: logo.bottomAnchor, constant: -2.0) ])
+        testnetLabel.isHidden = !Environment.isTestnet
     }
 
     private func transform(forView: UIView) ->  CGAffineTransform {
