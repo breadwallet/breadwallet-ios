@@ -31,6 +31,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private var accountViewController: AccountViewController?
     fileprivate var application: UIApplication?
     private let watchSessionManager = PhoneWCSessionManager()
+    private lazy var urlController: URLController = { return URLController(store: self.store) }()
     
     init() {
         DispatchQueue.walletQueue.async {
@@ -97,6 +98,10 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             ], completion: {
                 completionHandler(.newData) //TODO - add a timeout for this
         })
+    }
+
+    func open(url: URL) -> Bool {
+        return urlController.handleUrl(url)
     }
 
     private func didInitWallet() {
