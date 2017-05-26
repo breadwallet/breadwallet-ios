@@ -11,7 +11,7 @@ import BRCore
 import MachO
 
 let accountHeaderHeight: CGFloat = 136.0
-private let notificationViewHeight: CGFloat = 48.0
+private let transactionsLoadingViewHeightConstant: CGFloat = 48.0
 
 class AccountViewController : UIViewController, Trackable, Subscriber {
 
@@ -56,10 +56,10 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     private let store: Store
     private let headerView: AccountHeaderView
     private let footerView = AccountFooterView()
-    private let notificationView = LoadingProgressView()
+    private let transactionsLoadingView = LoadingProgressView()
     private let transactionsTableView: TransactionsTableViewController
     private let footerHeight: CGFloat = 56.0
-    private var notificationViewTop: NSLayoutConstraint?
+    private var transactionsLoadingViewTop: NSLayoutConstraint?
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var isLoginRequired = false
     private let loginView: LoginViewController
@@ -71,6 +71,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         return view
     }()
     private let headerContainer = UIView()
+    private var loadingTimer: Timer?
 
     override func viewDidLoad() {
         // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
@@ -90,12 +91,28 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
             showJailbreakWarnings(isJailbroken: isJailbroken)
         }
 
-        //Start Accont View
         addTransactionsView()
+        addSubviews()
+        addConstraints()
+        addSubscriptions()
+        addAppLifecycleNotificationEvents()
+        addTemporaryStartupViews()
+        setInitialData()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        saveEvent("accout:did_appear")
+    }
+
+    private func addSubviews() {
         view.addSubview(headerContainer)
         headerContainer.addSubview(headerView)
         view.addSubview(footerView)
+        headerContainer.addSubview(searchHeaderview)
+    }
 
+    private func addConstraints() {
         headerContainer.constrainTopCorners(sidePadding: 0, topPadding: 0)
         headerContainer.constrain([
             headerContainer.constraint(.height, constant: accountHeaderHeight) ])
@@ -104,7 +121,10 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         footerView.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         footerView.constrain([
             footerView.constraint(.height, constant: footerHeight) ])
+        searchHeaderview.constrain(toSuperviewEdges: nil)
+    }
 
+    private func addSubscriptions() {
         store.subscribe(self, selector: { $0.walletState.syncProgress != $1.walletState.syncProgress },
                         callback: { state in
                             self.transactionsTableView.syncingView.progress = CGFloat(state.walletState.syncProgress)
@@ -112,19 +132,21 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         })
 
         store.lazySubscribe(self, selector: { $0.walletState.isSyncing != $1.walletState.isSyncing },
-                        callback: { state in
-                            self.transactionsTableView.isSyncingViewVisible = state.walletState.isSyncing
+                            callback: { state in
+                                self.transactionsTableView.isSyncingViewVisible = state.walletState.isSyncing
         })
 
+        store.subscribe(self, selector: { $0.isLoadingTransactions != $1.isLoadingTransactions }, callback: {
+            if $0.isLoadingTransactions {
+                self.showLoadingView()
+            } else {
+                self.hideLoadingView()
+            }
+        })
         store.subscribe(self, selector: { $0.isLoginRequired != $1.isLoginRequired }, callback: { self.isLoginRequired = $0.isLoginRequired })
+    }
 
-        addAppLifecycleNotificationEvents()
-        addTemporaryStartupViews()
-
-
-        headerContainer.addSubview(searchHeaderview)
-        searchHeaderview.constrain(toSuperviewEdges: nil)
-
+    private func setInitialData() {
         headerView.search.tap = { [weak self] in
             guard let myself = self else { return }
             UIView.transition(from: myself.headerView,
@@ -152,34 +174,48 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         searchHeaderview.didChangeFilters = { [weak self] filters in
             self?.transactionsTableView.filters = filters
         }
-
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        saveEvent("accout:did_appear")
     }
 
     private func showLoadingView() {
-        view.addSubview(notificationView)
-        view.bringSubview(toFront: headerView)
-        notificationViewTop = notificationView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -notificationViewHeight)
-        notificationView.constrain([
-            notificationViewTop,
-            notificationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            notificationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            notificationView.heightAnchor.constraint(equalToConstant: notificationViewHeight) ])
-
+        view.insertSubview(transactionsLoadingView, belowSubview: headerContainer)
+        transactionsLoadingViewTop = transactionsLoadingView.topAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -transactionsLoadingViewHeightConstant)
+        transactionsLoadingView.constrain([
+            transactionsLoadingViewTop,
+            transactionsLoadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            transactionsLoadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            transactionsLoadingView.heightAnchor.constraint(equalToConstant: transactionsLoadingViewHeightConstant) ])
+        transactionsLoadingView.progress = 0.01
         view.layoutIfNeeded()
-
         UIView.animate(withDuration: C.animationDuration, animations: { 
-            self.transactionsTableView.tableView.verticallyOffsetContent(notificationViewHeight)
-            self.notificationViewTop?.constant = 0.0
+            self.transactionsTableView.tableView.verticallyOffsetContent(transactionsLoadingViewHeightConstant)
+            self.transactionsLoadingViewTop?.constant = 0.0
             self.view.layoutIfNeeded()
         }) { completed in
             //This view needs to be brought to the front so that it's above the headerview shadow. It looks weird if it's below.
-            self.view.bringSubview(toFront: self.notificationView)
+            self.view.insertSubview(self.transactionsLoadingView, aboveSubview: self.headerContainer)
         }
+        loadingTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateLoadingProgress), userInfo: nil, repeats: true)
+    }
+
+    private func hideLoadingView() {
+        guard self.transactionsLoadingViewTop?.constant == 0.0 else { return } //Should skip hide if it's not shown
+        loadingTimer?.invalidate()
+        loadingTimer = nil
+        transactionsLoadingView.progress = 1.0
+        view.insertSubview(transactionsLoadingView, belowSubview: headerContainer)
+        if transactionsLoadingView.superview != nil {
+            UIView.animate(withDuration: C.animationDuration, animations: {
+                self.transactionsTableView.tableView.verticallyOffsetContent(-transactionsLoadingViewHeightConstant)
+                self.transactionsLoadingViewTop?.constant = -transactionsLoadingViewHeightConstant
+                self.view.layoutIfNeeded()
+            }) { completed in
+                self.transactionsLoadingView.removeFromSuperview()
+            }
+        }
+    }
+
+    @objc private func updateLoadingProgress() {
+        transactionsLoadingView.progress = transactionsLoadingView.progress + (1.0 - transactionsLoadingView.progress)/8.0
     }
 
     private func addTemporaryStartupViews() {
@@ -196,18 +232,6 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
                 startView.remove()
             })
-        }
-    }
-
-    private func hideLoadingView() {
-        if notificationView.superview != nil {
-            UIView.animate(withDuration: C.animationDuration, animations: {
-                self.transactionsTableView.tableView.verticallyOffsetContent(-notificationViewHeight)
-                self.notificationViewTop?.constant = -notificationViewHeight
-                self.view.layoutIfNeeded()
-            }) { completed in
-                self.notificationView.removeFromSuperview()
-            }
         }
     }
 

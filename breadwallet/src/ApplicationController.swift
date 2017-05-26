@@ -34,10 +34,11 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     
     init() {
         DispatchQueue.walletQueue.async {
-            self.walletManager = try! WalletManager(dbPath: nil)
+            self.walletManager = try! WalletManager(store: self.store, dbPath: nil)
             DispatchQueue.main.async {
                 self.didInitWallet()
             }
+            let _ = self.walletManager?.wallet //attempt to initialize wallet
         }
     }
 
