@@ -23,7 +23,7 @@ class DismissModalAnimator : NSObject, UIViewControllerAnimatedTransitioning {
         guard let fromView = transitionContext.view(forKey: .from) else { assert(false, "Missing from view"); return }
 
         UIView.animate(withDuration: duration, animations: {
-            blurView.effect = nil
+            blurView.alpha = 0.0 //Preferrably, this would animatate .effect, but it's not playing nicely with UIPercentDrivenInteractiveTransition
             fromView.frame = fromView.frame.offsetBy(dx: 0, dy: fromView.frame.height)
         }, completion: { _ in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
