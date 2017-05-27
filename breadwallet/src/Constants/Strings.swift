@@ -125,6 +125,11 @@ enum S {
         static let receivedDescription = NSLocalizedString("TransactionDetails.receivedDescription", value: "Received <b>%@</b> from <b>%@</b>", comment: "Received $5.00 from <address>")
         static let movedDescription = NSLocalizedString("TransactionDetails.movedDescription", value: "Moved <b>%@</b> to <b>%@</b>", comment: "Moved $5.00 to <address>")
         static let account = NSLocalizedString("TransactionDetails.account", value: "account", comment: "e.g. I received money from an account.")
+        static let sent = NSLocalizedString("TransactionDetails.sent", value:"Sent %@", comment: "Send $5.00")
+        static let received = NSLocalizedString("TransactionDetails.received", value:"Received %@", comment: "Received $5.00")
+        static let moved = NSLocalizedString("TransactionDetails.moved", value:"Moved %@", comment: "Moved $5.00")
+        static let to = NSLocalizedString("TransactionDetails.to", value:"to an address", comment: "Line above will read Sent $5.00")
+        static let from = NSLocalizedString("TransactionDetails.from", value:"from an address", comment: "Line above will read Received $5.00")
     }
 
     enum SecurityCenter {
@@ -284,9 +289,6 @@ enum S {
     enum TransactionDirection {
         static let to = NSLocalizedString("TransactionDirection.to", value:"to", comment: "Usage: sent transaction to")
         static let from = NSLocalizedString("TransactionDirection.from", value:"from", comment: "Usage: received transaction from")
-        static let sent = NSLocalizedString("TransactionDirection.sent", value:"sent", comment: "Usage: sent transaction")
-        static let received = NSLocalizedString("TransactionDirection.received", value:"received", comment: "Usage: received transaction")
-        static let moved = NSLocalizedString("TransactionDirection.moved", value:"moved", comment: "Usage: received transaction")
         static let address = NSLocalizedString("TransactionDirection.address", value:"Address", comment: "Usage: to/from Address")
     }
 
