@@ -73,16 +73,18 @@ class Transaction {
 
     func amountDetails(isBtcSwapped: Bool, rate: Rate) -> String {
         let feeAmount = Amount(amount: fee, rate: rate)
-        let feeString = direction == .sent ? " (\(feeAmount.string(isBtcSwapped: isBtcSwapped)) fee)" : ""
-        let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate).string(isBtcSwapped: isBtcSwapped))\(feeString)"
-        let startingString = "Starting balance: \(Amount(amount: startingBalance, rate: rate).string(isBtcSwapped: isBtcSwapped))"
-        let endingString = "Ending balance: \(Amount(amount: balanceAfter, rate: rate).string(isBtcSwapped: isBtcSwapped))"
+        let feeString = direction == .sent ? String(format: S.Transaction.fee, "\(feeAmount.string(isBtcSwapped: isBtcSwapped))") : ""
+        let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate).string(isBtcSwapped: isBtcSwapped)) \(feeString)"
+        let startingString = String(format: S.Transaction.starting, "\(Amount(amount: startingBalance, rate: rate).string(isBtcSwapped: isBtcSwapped))")
+        let endingString = String(format: String(format: S.Transaction.ending, "\(Amount(amount: balanceAfter, rate: rate).string(isBtcSwapped: isBtcSwapped))"))
 
         var exchangeRateInfo = ""
         if let metaData = metaData {
             let difference = (rate.rate - metaData.exchangeRate)/metaData.exchangeRate*100.0
             let prefix = difference > 0.0 ? "+" : ""
-            exchangeRateInfo = "Exchange Rate on Day-of-Transaction\n$\(metaData.exchangeRate)/btc \(prefix)\(String(format: "%.2f", difference))% since day-of-transaction"
+            let firstLine = S.Transaction.exchangeOnDay
+            let secondLine = String(format: S.Transaction.exchange, "$\(metaData.exchangeRate)/btc \(prefix)\(String(format: "%.2f", difference))%")
+            exchangeRateInfo = "\(firstLine)\n\(secondLine)"
         }
 
         return "\(amountString)\n\n\(startingString)\n\(endingString)\n\n\(exchangeRateInfo)"
