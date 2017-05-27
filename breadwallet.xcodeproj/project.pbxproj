@@ -51,7 +51,6 @@
 		22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431331DF89DFE0017CAEA /* BRCoderTests.swift */; };
 		22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */; };
 		7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */; };
-		750377401DF63BD6005EB8AE /* BIP39Words.plist in Resources */ = {isa = PBXBuildFile; fileRef = 750377421DF63BD6005EB8AE /* BIP39Words.plist */; };
 		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
 		752438751DAAC50800844BEC /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6761DAA0E400075898E /* alloc.c */; };
 		752438761DAAC52700844BEC /* config_file.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD67A1DAA0E400075898E /* config_file.c */; };
@@ -261,6 +260,7 @@
 		CE4B6C201E233C2C00CF935B /* UITableView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4B6C1F1E233C2C00CF935B /* UITableView+Additions.swift */; };
 		CE4C1CC61ED65D830063E184 /* DrawableCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4C1CC51ED65D830063E184 /* DrawableCircle.swift */; };
 		CE4C1CC81ED88B600063E184 /* UrlController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4C1CC71ED88B600063E184 /* UrlController.swift */; };
+		CE4C1CD01ED8BCC70063E184 /* BIP39Words.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE4C1CD21ED8BCC70063E184 /* BIP39Words.plist */; };
 		CE4DFB2C1E9BE5880014009E /* ReScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4DFB2B1E9BE5880014009E /* ReScanViewController.swift */; };
 		CE4DFB2E1E9C26DA0014009E /* ShareDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4DFB2D1E9C26DA0014009E /* ShareDataViewController.swift */; };
 		CE5E6C941EB7964900A476DB /* WalletDisabledView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5E6C931EB7964900A476DB /* WalletDisabledView.swift */; };
@@ -627,7 +627,6 @@
 		22C431331DF89DFE0017CAEA /* BRCoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRCoderTests.swift; sourceTree = "<group>"; };
 		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WalletManager+Auth.swift"; path = "src/WalletManager+Auth.swift"; sourceTree = "<group>"; };
-		750377411DF63BD6005EB8AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/BIP39Words.plist; sourceTree = "<group>"; };
 		7528D2971ECF655500925DBC /* PaymentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentProtocol.swift; path = src/PaymentProtocol.swift; sourceTree = "<group>"; };
 		752FB03B1DF8BE4B009086FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		752FB03C1DF8BE4B009086FB /* iphone.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = iphone.modulemap; sourceTree = "<group>"; };
@@ -1424,6 +1423,11 @@
 		CE4B6C1F1E233C2C00CF935B /* UITableView+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UITableView+Additions.swift"; path = "src/Extensions/UITableView+Additions.swift"; sourceTree = "<group>"; };
 		CE4C1CC51ED65D830063E184 /* DrawableCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DrawableCircle.swift; path = src/Views/DrawableCircle.swift; sourceTree = "<group>"; };
 		CE4C1CC71ED88B600063E184 /* UrlController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UrlController.swift; path = src/FlowControllers/UrlController.swift; sourceTree = "<group>"; };
+		CE4C1CD11ED8BCC70063E184 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/BIP39Words.plist; sourceTree = "<group>"; };
+		CE4C1CD31ED8BCCA0063E184 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = fr; path = fr.lproj/BIP39Words.plist; sourceTree = "<group>"; };
+		CE4C1CD41ED8BCCC0063E184 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hans"; path = "zh-Hans.lproj/BIP39Words.plist"; sourceTree = "<group>"; };
+		CE4C1CD51ED8BCCF0063E184 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ja; path = ja.lproj/BIP39Words.plist; sourceTree = "<group>"; };
+		CE4C1CD61ED8BCD10063E184 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = es; path = es.lproj/BIP39Words.plist; sourceTree = "<group>"; };
 		CE4DFB2B1E9BE5880014009E /* ReScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReScanViewController.swift; path = src/ViewControllers/ReScanViewController.swift; sourceTree = "<group>"; };
 		CE4DFB2D1E9C26DA0014009E /* ShareDataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareDataViewController.swift; path = src/ViewControllers/ShareDataViewController.swift; sourceTree = "<group>"; };
 		CE5E6C931EB7964900A476DB /* WalletDisabledView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletDisabledView.swift; path = src/Views/WalletDisabledView.swift; sourceTree = "<group>"; };
@@ -2558,7 +2562,7 @@
 				CE20C8F01DBAF6E100C8397A /* Extensions */,
 				22A9A9311DF61930000F0016 /* Platform */,
 				CEAA9E9C1DC2F8270066731D /* Fonts */,
-				750377421DF63BD6005EB8AE /* BIP39Words.plist */,
+				CE4C1CD21ED8BCC70063E184 /* BIP39Words.plist */,
 				2218BD781E8F6CBA0091D5E8 /* AssetBundles.plist */,
 				75A2A79A1DA5934300A983D8 /* Assets.xcassets */,
 				CE5E6C991EB9135000A476DB /* Icon.xcassets */,
@@ -3420,6 +3424,10 @@
 			knownRegions = (
 				en,
 				Base,
+				fr,
+				es,
+				ja,
+				"zh-Hans",
 			);
 			mainGroup = 75A2A7871DA5934300A983D8;
 			productRefGroup = 75A2A7911DA5934300A983D8 /* Products */;
@@ -3463,13 +3471,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE4C1CD01ED8BCC70063E184 /* BIP39Words.plist in Resources */,
 				75A2A79E1DA5934300A983D8 /* LaunchScreen.storyboard in Resources */,
 				CEAA9EA31DC2FC700066731D /* CircularPro-Book.otf in Resources */,
 				CE5E6C9A1EB9135000A476DB /* Icon.xcassets in Resources */,
 				2218BD791E8F6CBA0091D5E8 /* AssetBundles.plist in Resources */,
 				CEAA9EA41DC2FC700066731D /* CircularPro-Medium.otf in Resources */,
 				CEAA9E9E1DC2F90C0066731D /* CircularPro-Bold.otf in Resources */,
-				750377401DF63BD6005EB8AE /* BIP39Words.plist in Resources */,
 				75A2A79B1DA5934300A983D8 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4058,14 +4066,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		750377421DF63BD6005EB8AE /* BIP39Words.plist */ = {
-			isa = PBXVariantGroup;
-			children = (
-				750377411DF63BD6005EB8AE /* Base */,
-			);
-			name = BIP39Words.plist;
-			sourceTree = "<group>";
-		};
 		75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -4164,6 +4164,18 @@
 				75A2A87B1DA59C8B00A983D8 /* el */,
 			);
 			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+		CE4C1CD21ED8BCC70063E184 /* BIP39Words.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CE4C1CD11ED8BCC70063E184 /* en */,
+				CE4C1CD31ED8BCCA0063E184 /* fr */,
+				CE4C1CD41ED8BCCC0063E184 /* zh-Hans */,
+				CE4C1CD51ED8BCCF0063E184 /* ja */,
+				CE4C1CD61ED8BCD10063E184 /* es */,
+			);
+			name = BIP39Words.plist;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
