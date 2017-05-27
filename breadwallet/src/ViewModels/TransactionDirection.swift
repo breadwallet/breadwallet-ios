@@ -56,4 +56,15 @@ enum TransactionDirection : String {
             return S.TransactionDirection.address
         }
     }
+
+    var descriptionFormat: String {
+        switch self {
+        case .sent:
+            return S.TransactionDetails.sendDescription
+        case .received:
+            return S.TransactionDetails.receivedDescription
+        case .moved:
+            return S.TransactionDetails.movedDescription
+        }
+    }
 }
