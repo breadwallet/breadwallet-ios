@@ -85,6 +85,24 @@ class ShadowButton: UIControl {
         }
     }
 
+    override var isEnabled: Bool {
+        didSet {
+            if isEnabled {
+                setColors()
+            } else {
+                if type == .primary {
+                    container.backgroundColor = .secondaryButton
+                    label.textColor = .grayTextTint
+                    container.layer.borderColor = UIColor.secondaryBorder.cgColor
+                    container.layer.borderWidth = 1.0
+                    shadowView.layer.shadowColor = UIColor.secondaryShadow.cgColor
+                    shadowView.layer.shadowOpacity = 1.0
+                    imageView?.tintColor = .grayTextTint
+                }
+            }
+        }
+    }
+
     private func setupViews() {
         addShadowView()
         addContent()
