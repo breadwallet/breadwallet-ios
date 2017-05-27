@@ -13,25 +13,14 @@ enum TransactionDirection : String {
     case received = "Received"
     case moved = "Moved"
 
-    var string: String {
+    var amountFormat: String {
         switch self {
         case .sent:
-            return S.TransactionDirection.sent
+            return S.TransactionDetails.sent
         case .received:
-            return S.TransactionDirection.received
+            return S.TransactionDetails.received
         case .moved:
-            return S.TransactionDirection.moved
-        }
-    }
-
-    var preposition: String {
-        switch self {
-        case .sent:
-            return S.TransactionDirection.to
-        case .received:
-            return S.TransactionDirection.from
-        case .moved:
-            return S.TransactionDirection.to
+            return S.TransactionDetails.moved
         }
     }
 
@@ -65,6 +54,17 @@ enum TransactionDirection : String {
             return S.TransactionDetails.receivedDescription
         case .moved:
             return S.TransactionDetails.movedDescription
+        }
+    }
+
+    var addressText: String {
+        switch self {
+        case .sent:
+            return S.TransactionDetails.to
+        case .received:
+            return S.TransactionDetails.from
+        case .moved:
+            return S.TransactionDetails.to
         }
     }
 }
