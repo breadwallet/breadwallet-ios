@@ -105,6 +105,11 @@ enum S {
         static let invalid = NSLocalizedString("Transaction.invalid", value:"INVALID", comment: "Invalid transaction")
         static let complete = NSLocalizedString("Transaction.complete", value:"Complete", comment: "Transaction complete label")
         static let waiting = NSLocalizedString("Transaction.waiting", value:"Waiting to be confirmed. Some merchants require confirmation to complete a transaction. Estimated time: 1-2 hours.", comment: "Waiting to be confirmed string")
+        static let starting = NSLocalizedString("Transaction.starting", value: "Startings balance: %@", comment: "eg. Starting balance: $50.00")
+        static let fee = NSLocalizedString("Transaction.fee", value: "(%@ fee)", comment: "(b600 fee)")
+        static let ending = NSLocalizedString("Transaction.ending", value: "Ending balance: %@", comment: "eg. Ending balance: $50.00")
+        static let exchangeOnDay = NSLocalizedString("Transaction.exchangeOnDay", value: "Exchange Rate on Day-of-Transaction", comment: "Exchange rate on date header")
+        static let exchange = NSLocalizedString("Transaction.exchange", value: "%@ since day-of-transaction", comment: "$581.63 / btc +2.8% since day-of-transaction")
     }
 
     enum TransactionDetails {
