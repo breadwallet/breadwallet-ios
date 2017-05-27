@@ -60,15 +60,10 @@ class Transaction {
     }
 
     func descriptionString(isBtcSwapped: Bool, rate: Rate) -> NSAttributedString {
-        let amount = Amount(amount: satoshis, rate: rate)
-        let prefix = NSMutableAttributedString(string: "\(direction.string.capitalized) ", attributes: UIFont.regularAttributes)
-        let amountAttributedString = NSMutableAttributedString(string: amount.string(isBtcSwapped: isBtcSwapped), attributes: UIFont.boldAttributes)
-        let preposition = NSMutableAttributedString(string: " \(direction.preposition) ", attributes: UIFont.regularAttributes)
-        let suffix = NSMutableAttributedString(string: "account", attributes: UIFont.boldAttributes)
-        prefix.append(amountAttributedString)
-        prefix.append(preposition)
-        prefix.append(suffix)
-        return prefix
+        let amount = Amount(amount: satoshis, rate: rate).string(isBtcSwapped: isBtcSwapped)
+        let format = direction.descriptionFormat
+        let string = String(format: format, amount, S.TransactionDetails.account)
+        return string.attributedStringForTags
     }
 
     func amountDetails(isBtcSwapped: Bool, rate: Rate) -> String {
