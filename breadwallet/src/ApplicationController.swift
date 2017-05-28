@@ -30,7 +30,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private var accountViewController: AccountViewController?
     fileprivate var application: UIApplication?
     private let watchSessionManager = PhoneWCSessionManager()
-    private lazy var urlController: URLController = { return URLController(store: self.store) }()
+    private var urlController: URLController?
     private var defaultsUpdater: UserDefaultsUpdater?
 
     init() {
@@ -101,7 +101,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     }
 
     func open(url: URL) -> Bool {
-        return urlController.handleUrl(url)
+        return urlController?.handleUrl(url) ?? false
     }
 
     private func didInitWallet() {
@@ -114,6 +114,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: window.rootViewController!)
         accountViewController?.walletManager = walletManager
         defaultsUpdater = UserDefaultsUpdater(walletManager: walletManager)
+        urlController = URLController(store: self.store, walletManager: walletManager)
 
         if UIApplication.shared.applicationState != .background {
             if walletManager.noWallet {
