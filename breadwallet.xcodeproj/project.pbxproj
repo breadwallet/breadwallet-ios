@@ -257,7 +257,7 @@
 		CE4B6C1C1E21A96D00CF935B /* LoadingProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4B6C1B1E21A96D00CF935B /* LoadingProgressView.swift */; };
 		CE4B6C201E233C2C00CF935B /* UITableView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4B6C1F1E233C2C00CF935B /* UITableView+Additions.swift */; };
 		CE4C1CC61ED65D830063E184 /* DrawableCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4C1CC51ED65D830063E184 /* DrawableCircle.swift */; };
-		CE4C1CC81ED88B600063E184 /* UrlController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4C1CC71ED88B600063E184 /* UrlController.swift */; };
+		CE4C1CC81ED88B600063E184 /* URLController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4C1CC71ED88B600063E184 /* URLController.swift */; };
 		CE4C1CD01ED8BCC70063E184 /* BIP39Words.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE4C1CD21ED8BCC70063E184 /* BIP39Words.plist */; };
 		CE4DFB2C1E9BE5880014009E /* ReScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4DFB2B1E9BE5880014009E /* ReScanViewController.swift */; };
 		CE4DFB2E1E9C26DA0014009E /* ShareDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4DFB2D1E9C26DA0014009E /* ShareDataViewController.swift */; };
@@ -1422,7 +1422,7 @@
 		CE4B6C1B1E21A96D00CF935B /* LoadingProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoadingProgressView.swift; path = src/Views/LoadingProgressView.swift; sourceTree = "<group>"; };
 		CE4B6C1F1E233C2C00CF935B /* UITableView+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UITableView+Additions.swift"; path = "src/Extensions/UITableView+Additions.swift"; sourceTree = "<group>"; };
 		CE4C1CC51ED65D830063E184 /* DrawableCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DrawableCircle.swift; path = src/Views/DrawableCircle.swift; sourceTree = "<group>"; };
-		CE4C1CC71ED88B600063E184 /* UrlController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UrlController.swift; path = src/FlowControllers/UrlController.swift; sourceTree = "<group>"; };
+		CE4C1CC71ED88B600063E184 /* URLController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLController.swift; path = src/FlowControllers/URLController.swift; sourceTree = "<group>"; };
 		CE4C1CD11ED8BCC70063E184 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/BIP39Words.plist; sourceTree = "<group>"; };
 		CE4C1CD31ED8BCCA0063E184 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = fr; path = fr.lproj/BIP39Words.plist; sourceTree = "<group>"; };
 		CE4C1CD41ED8BCCC0063E184 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hans"; path = "zh-Hans.lproj/BIP39Words.plist"; sourceTree = "<group>"; };
@@ -2558,7 +2558,7 @@
 				CE45C1FC1E7650F5002C3847 /* KVStoreCoordinator.swift */,
 				CEC6F8441E886723000795B8 /* PaymentRequest.swift */,
 				7528D2971ECF655500925DBC /* PaymentProtocol.swift */,
-				CE4C1CC71ED88B600063E184 /* UrlController.swift */,
+				CE4C1CC71ED88B600063E184 /* URLController.swift */,
 				CE916E321EDA800E00D641D6 /* UserDefaultsUpdater.swift */,
 				CE30F0E41EB27821004B8EE5 /* Watch */,
 				CEE20C321EA5B2EC0086F724 /* Constants */,
@@ -3754,7 +3754,7 @@
 				CEC6F8451E886723000795B8 /* PaymentRequest.swift in Sources */,
 				CEF8A4A51E2869D200048B20 /* Wallet+ViewModels.swift in Sources */,
 				CEC6F8491E89C462000795B8 /* TouchIdSettingsViewController.swift in Sources */,
-				CE4C1CC81ED88B600063E184 /* UrlController.swift in Sources */,
+				CE4C1CC81ED88B600063E184 /* URLController.swift in Sources */,
 				CE20C9171DBE6F2A00C8397A /* UIButton+BRWAdditions.swift in Sources */,
 				CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */,
 				CE92F9F41DED59E80046B516 /* UIView+AnimationAdditions.swift in Sources */,

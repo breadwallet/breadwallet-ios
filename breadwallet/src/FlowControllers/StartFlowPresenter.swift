@@ -41,9 +41,9 @@ class StartFlowPresenter : Subscriber {
         store.subscribe(self,
                         selector: { $0.isStartFlowVisible != $1.isStartFlowVisible },
                         callback: { self.handleStartFlowChange(state: $0) })
-        store.subscribe(self,
+        store.lazySubscribe(self,
                         selector: { $0.isLoginRequired != $1.isLoginRequired },
-                        callback: { self.handleLoginRequiredChange(state: $0) })
+                        callback: { self.handleLoginRequiredChange(state: $0) }) //TODO - this should probably be in modal presenter
         store.subscribe(self, name: .lock, callback: { _ in
             self.presentLoginFlow(isPresentedForLock: true)
         })
