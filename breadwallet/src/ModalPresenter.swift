@@ -87,6 +87,12 @@ class ModalPresenter : Subscriber {
         store.subscribe(self, name: .scanQr, callback: { _ in
             self.handleScanQrURL()
         })
+        store.subscribe(self, name: .copyWalletAddresses(nil, nil), callback: {
+            guard let trigger = $0 else { return }
+            if case .copyWalletAddresses(let success, let error) = trigger {
+                self.handleCopyAddresses(success: success, error: error)
+            }
+        })
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
@@ -565,6 +571,36 @@ class ModalPresenter : Subscriber {
                 })
             }
         }
+    }
+
+    private func handleCopyAddresses(success: String?, error: String?) {
+        let alert = UIAlertController(title: S.URLHandling.addressListAlertTitle, message: S.URLHandling.addressListAlertMessage, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: S.URLHandling.copy, style: .default, handler: { [weak self] _ in
+            let verify = VerifyPinViewController(bodyText: S.URLHandling.addressListVerifyPrompt, callback: { [weak self] pin, view in
+                guard let manager = self?.walletManager else { return }
+                if manager.authenticate(pin: pin) {
+                    self?.copyAllAddressesToClipboard()
+                    view.dismiss(animated: true, completion: {
+                        self?.store.perform(action: Alert.Show(.addressesCopied))
+                        if let success = success, let url = URL(string: success) {
+                            UIApplication.shared.openURL(url)
+                        }
+                    })
+                }
+            })
+            verify.transitioningDelegate = self?.verifyPinTransitionDelegate
+            verify.modalPresentationStyle = .overFullScreen
+            verify.modalPresentationCapturesStatusBarAppearance = true
+            self?.topViewController?.present(verify, animated: true, completion: nil)
+        }))
+        topViewController?.present(alert, animated: true, completion: nil)
+    }
+
+    private func copyAllAddressesToClipboard() {
+        guard let wallet = walletManager?.wallet else { return }
+        let addresses = wallet.allAddresses.filter({wallet.addressIsUsed($0)})
+        UIPasteboard.general.string = addresses.joined(separator: "\n")
     }
 
     private var topViewController: UIViewController? {

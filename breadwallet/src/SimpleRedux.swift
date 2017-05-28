@@ -52,6 +52,7 @@ enum TriggerName {
     case recommendRescan
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
+    case copyWalletAddresses(String?, String?)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName : Equatable {}
@@ -87,6 +88,8 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.receivedPaymentRequest(_), .receivedPaymentRequest(_)):
         return true
     case (.scanQr, .scanQr):
+        return true
+    case (.copyWalletAddresses(_,_), .copyWalletAddresses(_,_)):
         return true
     default:
         return false
