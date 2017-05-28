@@ -35,6 +35,7 @@ class ModalPresenter : Subscriber {
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
     private let verifyPinTransitionDelegate = PinTransitioningDelegate()
     private var supportCenter: SupportCenterContainer?
+    private var currentRequest: PaymentRequest?
 
     private func initializeSupportCenter(walletManager: WalletManager) {
         supportCenter = SupportCenterContainer(walletManager: walletManager)
@@ -72,6 +73,14 @@ class ModalPresenter : Subscriber {
         })
         store.subscribe(self, name: .recommendRescan, callback: { _ in
             self.presentRescan()
+        })
+        store.subscribe(self, name: .receivedPaymentRequest(nil), callback: {
+            guard let trigger = $0 else { return }
+            if case let .receivedPaymentRequest(request) = trigger {
+                if let request = request {
+                    self.handlePaymentRequest(request: request)
+                }
+            }
         })
     }
 
@@ -163,7 +172,13 @@ class ModalPresenter : Subscriber {
 
     private func makeSendView() -> UIViewController? {
         guard let walletManager = walletManager else { return nil }
-        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager), walletManager: walletManager)
+        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager), walletManager: walletManager, initialRequest: currentRequest)
+        currentRequest = nil
+
+        if store.state.isLoginRequired {
+            sendVC.isPresentedFromLock = true
+        }
+
         let root = ModalViewController(childViewController: sendVC, store: store)
         sendVC.presentScan = presentScan(parent: root)
         sendVC.presentVerifyPin = { [weak self, weak root] bodyText, callback in
@@ -520,6 +535,21 @@ class ModalPresenter : Subscriber {
             let alert = UIAlertController(title: S.Alert.error, message: S.PaymentProtocol.Errors.corruptedDocument, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
             topViewController?.present(alert, animated: true, completion: nil)
+        }
+    }
+
+    private func handlePaymentRequest(request: PaymentRequest) {
+        self.currentRequest = request
+        guard !store.state.isLoginRequired else { presentModal(.send); return }
+
+        if topViewController is AccountViewController {
+            presentModal(.send)
+        } else {
+            if let presented = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
+                presented.dismiss(animated: true, completion: {
+                    self.presentModal(.send)
+                })
+            }
         }
     }
 
