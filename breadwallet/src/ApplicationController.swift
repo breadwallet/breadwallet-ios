@@ -31,7 +31,8 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     fileprivate var application: UIApplication?
     private let watchSessionManager = PhoneWCSessionManager()
     private lazy var urlController: URLController = { return URLController(store: self.store) }()
-    
+    private var defaultsUpdater: UserDefaultsUpdater?
+
     init() {
         DispatchQueue.walletQueue.async {
             self.walletManager = try! WalletManager(store: self.store, dbPath: nil)
@@ -112,6 +113,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         feeUpdater = FeeUpdater(walletManager: walletManager, apiClient: apiClient!)
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: window.rootViewController!)
         accountViewController?.walletManager = walletManager
+        defaultsUpdater = UserDefaultsUpdater(walletManager: walletManager)
 
         if UIApplication.shared.applicationState != .background {
             if walletManager.noWallet {
@@ -132,6 +134,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             })
             feeUpdater?.refresh()
             updateAssetBundles()
+            defaultsUpdater?.refresh()
 
         //For when watch app launches app in background
         } else {

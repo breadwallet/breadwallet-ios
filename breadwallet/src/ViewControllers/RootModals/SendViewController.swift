@@ -230,7 +230,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     private func send() {
-
         let feeText = NumberFormatter.formattedString(amount: Satoshis(sender.fee), rate: amountView.selectedRate, minimumFractionDigits: nil)
         let touchIdMessage = String(format: S.Send.touchIdPrompt, amountView.currentOutput, to.content ?? "", feeText)
         let pinMessage = String(format: S.VerifyPin.transactionBody, amountView.currentOutput, to.content ?? "", feeText)
