@@ -42,12 +42,6 @@ class StartFlowPresenter : Subscriber {
                         selector: { $0.isStartFlowVisible != $1.isStartFlowVisible },
                         callback: { self.handleStartFlowChange(state: $0) })
         store.subscribe(self,
-                        selector: { $0.pinCreationStep != $1.pinCreationStep },
-                        callback: { self.handlePinCreationStepChange(state: $0) })
-        store.subscribe(self,
-                        selector: { $0.paperPhraseStep != $1.paperPhraseStep },
-                        callback: { self.handlePaperPhraseCreationChange(state: $0) })
-        store.subscribe(self,
                         selector: { $0.isLoginRequired != $1.isLoginRequired },
                         callback: { self.handleLoginRequiredChange(state: $0) })
         store.subscribe(self, name: .lock, callback: { _ in
@@ -63,30 +57,6 @@ class StartFlowPresenter : Subscriber {
         }
     }
 
-    private func handlePinCreationStepChange(state: State) {
-        if case .start = state.pinCreationStep {
-            pushPinCreationViewController()
-        }
-    }
-
-    private func handlePaperPhraseCreationChange(state: State) {
-        if case .start = state.paperPhraseStep {
-            pushStartPaperPhraseCreationViewController()
-        }
-
-        if case .write = state.paperPhraseStep {
-            if case .saveSuccess(let pin) = state.pinCreationStep {
-                pushWritePaperPhraseViewController(pin: pin)
-            }
-        }
-
-        if case .confirm = state.paperPhraseStep {
-            if case .saveSuccess(let pin) = state.pinCreationStep {
-                pushConfirmPaperPhraseViewController(pin: pin)
-            }
-        }
-    }
-
     private func handleLoginRequiredChange(state: State) {
         if state.isLoginRequired {
             presentLoginFlow(isPresentedForLock: false)
@@ -96,7 +66,11 @@ class StartFlowPresenter : Subscriber {
     }
 
     private func presentStartFlow() {
-        let startViewController = StartViewController(store: store, didTapRecover: { [weak self] in
+        let startViewController = StartViewController(store: store,
+                                                      didTapCreate: { [weak self] in
+                                                        self?.pushPinCreationViewControllerForNewWallet()
+        },
+                                                      didTapRecover: { [weak self] in
             guard let myself = self else { return }
             let recoverIntro = RecoverWalletIntroViewController(didTapNext: myself.pushRecoverWalletView)
             myself.navigationController?.setTintableBackArrow()
@@ -117,16 +91,16 @@ class StartFlowPresenter : Subscriber {
         return { [weak self] in
             guard let myself = self else { return }
             let recoverWalletViewController = RecoverWalletViewController(store: myself.store, walletManager: myself.walletManager)
-            recoverWalletViewController.didSetSeedPhrase = myself.pushPinCreationView
+            recoverWalletViewController.didSetSeedPhrase = myself.pushPinCreationViewForRecoveredWallet
             myself.navigationController?.pushViewController(recoverWalletViewController, animated: true)
         }
     }
 
-    private var pushPinCreationView: (String) -> Void {
+    private var pushPinCreationViewForRecoveredWallet: (String) -> Void {
         return { [weak self] phrase in
             guard let myself = self else { return }
-            let pinCreationView = UpdatePinViewController(store: myself.store, walletManager: myself.walletManager, showsBackButton: false, phrase: phrase)
-            pinCreationView.setPinSuccess = { [weak self] in
+            let pinCreationView = UpdatePinViewController(store: myself.store, walletManager: myself.walletManager, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
+            pinCreationView.setPinSuccess = { [weak self] _ in
                 DispatchQueue.walletQueue.async {
                     self?.walletManager.peerManager?.connect()
                 }
@@ -141,21 +115,34 @@ class StartFlowPresenter : Subscriber {
         }
     }
 
-    private func pushPinCreationViewController() {
-        let pinCreationViewController = PinCreationViewController(store: store)
+    private func pushPinCreationViewControllerForNewWallet() {
+        let pinCreationViewController = UpdatePinViewController(store: store, walletManager: walletManager, type: .creationNoPhrase, showsBackButton: true, phrase: nil)
+        pinCreationViewController.setPinSuccess = { [weak self] pin in
+            autoreleasepool {
+                guard self?.walletManager.setRandomSeedPhrase() != nil else { self?.handleWalletCreationError(); return }
+                self?.store.perform(action: WalletChange.setWalletCreationDate(Date()))
+                DispatchQueue.walletQueue.async {
+                    self?.walletManager.peerManager?.connect()
+                }
+                self?.pushStartPaperPhraseCreationViewController(pin: pin)
+            }
+        }
 
-        //Access the view as we want to trigger viewDidLoad before it gets pushed.
-        //This makes the keyboard slide in from the right.
-        let _ = pinCreationViewController.view
         navigationController?.setNavigationBarHidden(false, animated: false)
         navigationController?.setTintableBackArrow()
         navigationController?.setClearNavbar()
         navigationController?.pushViewController(pinCreationViewController, animated: true)
     }
 
-    private func pushStartPaperPhraseCreationViewController() {
-        let paperPhraseViewController = StartPaperPhraseViewController(store: store)
-        paperPhraseViewController.title = "Paper Key"
+    private func handleWalletCreationError() {
+        //TODO
+    }
+
+    private func pushStartPaperPhraseCreationViewController(pin: String) {
+        let paperPhraseViewController = StartPaperPhraseViewController(store: store, callback: {
+            self.pushWritePaperPhraseViewController(pin: pin)
+        })
+        paperPhraseViewController.title = S.SecurityCenter.Cells.paperKeyTitle
         paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
         paperPhraseViewController.navigationItem.leftBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: closeButton)]
 
@@ -171,20 +158,22 @@ class StartFlowPresenter : Subscriber {
     }
 
     private func pushWritePaperPhraseViewController(pin: String) {
-        //TODO - This is a pretty back hack. It's due to a limitation in the architecture, where the write state
-        //will get triggered when the back button is pressed on the phrase confirm screen
-        let writeViewInStack = (navigationController?.viewControllers.filter { $0 is WritePaperPhraseViewController}.count)! > 0
-        guard !writeViewInStack else { return }
-
-        let writeViewController = WritePaperPhraseViewController(store: store, walletManager: walletManager, pin: pin)
-        writeViewController.title = "Paper Key"
+        let writeViewController = WritePaperPhraseViewController(store: store, walletManager: walletManager, pin: pin, callback: {
+            self.pushConfirmPaperPhraseViewController(pin: pin)
+        })
+        writeViewController.title = S.SecurityCenter.Cells.paperKeyTitle
         writeViewController.navigationItem.leftBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: closeButton)]
         navigationController?.pushViewController(writeViewController, animated: true)
     }
 
     private func pushConfirmPaperPhraseViewController(pin: String) {
-        let confirmViewController = ConfirmPaperPhraseViewController(store: store, walletManager: walletManager, pin: pin)
-        confirmViewController.title = "Paper Key"
+        let confirmViewController = ConfirmPaperPhraseViewController(store: store, walletManager: walletManager, pin: pin, callback: { [weak self] in
+            guard let myself = self else { return }
+            myself.store.perform(action: Alert.Show(.paperKeySet(callback: {
+                self?.store.perform(action: HideStartFlow())
+            })))
+        })
+        confirmViewController.title = S.SecurityCenter.Cells.paperKeyTitle
         navigationController?.navigationBar.tintColor = .white
         navigationController?.pushViewController(confirmViewController, animated: true)
     }

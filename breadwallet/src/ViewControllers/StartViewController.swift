@@ -11,9 +11,10 @@ import UIKit
 class StartViewController : UIViewController {
 
     //MARK: - Public
-    init(store: Store, didTapRecover: @escaping () -> Void) {
+    init(store: Store, didTapCreate: @escaping () -> Void, didTapRecover: @escaping () -> Void) {
         self.store = store
         self.didTapRecover = didTapRecover
+        self.didTapCreate = didTapCreate
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -24,6 +25,7 @@ class StartViewController : UIViewController {
     private let recover = ShadowButton(title: S.StartViewController.recoverButton, type: .secondary)
     private let store: Store
     private let didTapRecover: () -> Void
+    private let didTapCreate: () -> Void
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -68,9 +70,7 @@ class StartViewController : UIViewController {
 
     private func addButtonActions() {
         recover.tap = didTapRecover
-        create.tap = { [weak self] in
-            self?.store.perform(action: PinCreation.Start())
-        }
+        create.tap = didTapCreate
     }
 
     required init?(coder aDecoder: NSCoder) {

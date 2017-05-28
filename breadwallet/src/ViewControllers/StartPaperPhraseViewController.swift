@@ -10,10 +10,9 @@ import UIKit
 
 class StartPaperPhraseViewController: UIViewController {
 
-    var didTapWrite: (() -> Void)?
-
-    init(store: Store) {
+    init(store: Store, callback: @escaping () -> Void) {
         self.store = store
+        self.callback = callback
         let buttonTitle = UserDefaults.walletRequiresBackup ? S.StartPaperPhrase.buttonTitle : S.StartPaperPhrase.againButtonTitle
         button = ShadowButton(title: buttonTitle, type: .primary)
         super.init(nibName: nil, bundle: nil)
@@ -26,6 +25,7 @@ class StartPaperPhraseViewController: UIViewController {
     private let store: Store
     private let header = RadialGradientView(backgroundColor: .pink, offset: 64.0)
     private let footer = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
+    private let callback: () -> Void
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -33,11 +33,7 @@ class StartPaperPhraseViewController: UIViewController {
         addSubviews()
         addConstraints()
         button.tap = { [weak self] in
-            if self?.didTapWrite != nil {
-                self?.didTapWrite?()
-            } else {
-                self?.store.perform(action: PaperPhrase.Write())
-            }
+            self?.callback()
         }
         if let writePaperPhraseDate = UserDefaults.writePaperPhraseDate {
             let df = DateFormatter()

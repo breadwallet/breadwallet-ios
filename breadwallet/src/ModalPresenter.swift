@@ -42,12 +42,6 @@ class ModalPresenter : Subscriber {
 
     private func addSubscriptions() {
         store.subscribe(self,
-                        selector: { $0.pinCreationStep != $1.pinCreationStep },
-                        callback: { self.handlePinCreationStateChange($0) })
-        store.subscribe(self,
-                        selector: { $0.paperPhraseStep != $1.paperPhraseStep },
-                        callback: { self.handlePaperPhraseStateChange($0) })
-        store.subscribe(self,
                         selector: { $0.rootModal != $1.rootModal},
                         callback: { self.presentModal($0.rootModal) })
         store.subscribe(self,
@@ -81,22 +75,6 @@ class ModalPresenter : Subscriber {
         })
     }
 
-    private func handlePinCreationStateChange(_ state: State) {
-        if case .saveSuccess = state.pinCreationStep {
-            self.presentAlert(.pinSet) {
-                self.store.perform(action: PaperPhrase.Start())
-            }
-        }
-    }
-
-    private func handlePaperPhraseStateChange(_ state: State) {
-        if case .confirmed = state.paperPhraseStep {
-            self.presentAlert(.paperKeySet) {
-                self.store.perform(action: HideStartFlow())
-            }
-        }
-    }
-
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
         guard type != .loginScan else { return presentLoginScan() }
         guard let vc = rootModalViewController(type) else { return }
@@ -118,7 +96,7 @@ class ModalPresenter : Subscriber {
 
     private func presentAlert(_ type: AlertType, completion: @escaping ()->Void) {
         let alertView = AlertView(type: type)
-        let window = type == .sendSuccess ? UIApplication.shared.keyWindow! : activeWindow
+        let window = UIApplication.shared.keyWindow!
         let size = window.bounds.size
         window.addSubview(alertView)
 
@@ -139,6 +117,12 @@ class ModalPresenter : Subscriber {
                 topConstraint?.constant = size.height
                 window.layoutIfNeeded()
             }, completion: { _ in
+                if case .paperKeySet(let callback) = type {
+                    callback()
+                }
+                if case .pinSet(let callback) = type {
+                    callback()
+                }
                 completion()
                 alertView.removeFromSuperview()
             })
@@ -359,7 +343,7 @@ class ModalPresenter : Subscriber {
         nc.delegate = securityCenterNavigationDelegate
         securityCenter.didTapPin = { [weak self] in
             guard let myself = self else { return }
-            let updatePin = UpdatePinViewController(store: myself.store, walletManager: walletManager)
+            let updatePin = UpdatePinViewController(store: myself.store, walletManager: walletManager, type: .update)
             nc.pushViewController(updatePin, animated: true)
         }
         securityCenter.didTapTouchId = { [weak self] in
@@ -380,37 +364,35 @@ class ModalPresenter : Subscriber {
 
     private func presentWritePaperKey(fromViewController vc: UIViewController) {
         guard let walletManager = walletManager else { return }
-
         let paperPhraseNavigationController = UINavigationController()
         paperPhraseNavigationController.setClearNavbar()
         paperPhraseNavigationController.setWhiteStyle()
         paperPhraseNavigationController.modalPresentationStyle = .overFullScreen
-
-        let start = StartPaperPhraseViewController(store: store)
-        start.addCloseNavigationItem(tintColor: .white)
-        start.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.paperPhrase)
-        faqButton.tintColor = .white
-        start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
-        start.didTapWrite = { [weak self] in
+        let start = StartPaperPhraseViewController(store: store, callback: { [weak self] in
             guard let myself = self else { return }
             let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, callback: { pin, vc in
                 if walletManager.authenticate(pin: pin) {
-                    let write = WritePaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin)
-                    write.addCloseNavigationItem(tintColor: .white)
-                    write.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-                    write.lastWordSeen = {
-                        let confirm = ConfirmPaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin)
-                        write.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-                        confirm.didConfirm = {
-                            confirm.dismiss(animated: true, completion: {
-                                //TODO - fix this animation
-                                myself.store.perform(action: PaperPhrase.Confirmed())
+                    var write: WritePaperPhraseViewController?
+                    write = WritePaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin, callback: { [weak self] in
+                        guard let myself = self else { return }
+                        var confirm: ConfirmPaperPhraseViewController?
+                        confirm = ConfirmPaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin, callback: {
+                                confirm?.dismiss(animated: true, completion: {
+                                    self?.presentAlert(.paperKeySet(callback: {})) {
+                                        self?.store.perform(action: HideStartFlow())
+                                    }
                             })
+                        })
+                        write?.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
+                        if let confirm = confirm {
+                            paperPhraseNavigationController.pushViewController(confirm, animated: true)
                         }
-                        paperPhraseNavigationController.pushViewController(confirm, animated: true)
-                    }
+                    })
+                    write?.addCloseNavigationItem(tintColor: .white)
+                    write?.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
+
                     vc.dismiss(animated: true, completion: {
+                        guard let write = write else { return }
                         paperPhraseNavigationController.pushViewController(write, animated: true)
                     })
                 }
@@ -419,8 +401,12 @@ class ModalPresenter : Subscriber {
             verify.modalPresentationStyle = .overFullScreen
             verify.modalPresentationCapturesStatusBarAppearance = true
             paperPhraseNavigationController.present(verify, animated: true, completion: nil)
-        }
-
+        })
+        start.addCloseNavigationItem(tintColor: .white)
+        start.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
+        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.paperPhrase)
+        faqButton.tintColor = .white
+        start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
         paperPhraseNavigationController.viewControllers = [start]
         vc.present(paperPhraseNavigationController, animated: true, completion: nil)
     }
@@ -494,7 +480,7 @@ class ModalPresenter : Subscriber {
 
     func presentUpgradePin() {
         guard let walletManager = walletManager else { return }
-        let updatePin = UpdatePinViewController(store: store, walletManager: walletManager)
+        let updatePin = UpdatePinViewController(store: store, walletManager: walletManager, type: .update)
         let nc = ModalNavigationController(rootViewController: updatePin)
         nc.setDefaultStyle()
         nc.isNavigationBarHidden = true
@@ -535,17 +521,6 @@ class ModalPresenter : Subscriber {
             alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
             topViewController?.present(alert, animated: true, completion: nil)
         }
-    }
-
-    //TODO - This is a total hack to grab the window that keyboard is in
-    //After pin creation, the alert view needs to be presented over the keyboard
-    //TODO - Phase this out once all pin creation view use custom pinpad
-    private var activeWindow: UIWindow {
-        let windowsCount = UIApplication.shared.windows.count
-        if let keyboardWindow = UIApplication.shared.windows.last, windowsCount > 1 {
-            return keyboardWindow
-        }
-        return window
     }
 
     private var topViewController: UIViewController? {

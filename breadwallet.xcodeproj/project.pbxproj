@@ -232,7 +232,6 @@
 		CE20C8FE1DBB133A00C8397A /* SimpleRedux.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8FD1DBB133A00C8397A /* SimpleRedux.swift */; };
 		CE20C9011DBBFFF800C8397A /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9001DBBFFF800C8397A /* Actions.swift */; };
 		CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9061DBC587200C8397A /* StartViewController.swift */; };
-		CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */; };
 		CE20C90C1DBC59E600C8397A /* StartFlowPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C90B1DBC59E600C8397A /* StartFlowPresenter.swift */; };
 		CE20C90E1DBE52B000C8397A /* UIView+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C90D1DBE52B000C8397A /* UIView+BRWAdditions.swift */; };
 		CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9101DBE5B6F00C8397A /* Circle.swift */; };
@@ -339,7 +338,6 @@
 		CECCE5AE1E04AD6300D99448 /* LabelSendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5AD1E04AD6300D99448 /* LabelSendCell.swift */; };
 		CECCE5B01E04AD7600D99448 /* DescriptionSendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5AF1E04AD7600D99448 /* DescriptionSendCell.swift */; };
 		CECCE5B21E04B00D00D99448 /* SendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5B11E04B00D00D99448 /* SendCell.swift */; };
-		CECF8D691E17108600B707AE /* WalletCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECF8D681E17108600B707AE /* WalletCreator.swift */; };
 		CED811AA1EB2B2D1003A8D1E /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30F0E91EB282C8004B8EE5 /* SharedConstants.swift */; };
 		CED811AC1EB2BCDE003A8D1E /* BRAWWeakTimerTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED811AB1EB2BCDE003A8D1E /* BRAWWeakTimerTarget.swift */; };
 		CED811E01EB302DA003A8D1E /* WatchData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30F0EB1EB28542004B8EE5 /* WatchData.swift */; };
@@ -1394,7 +1392,6 @@
 		CE20C8FD1DBB133A00C8397A /* SimpleRedux.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleRedux.swift; path = src/SimpleRedux.swift; sourceTree = "<group>"; };
 		CE20C9001DBBFFF800C8397A /* Actions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Actions.swift; path = src/SimpleRedux/Actions.swift; sourceTree = "<group>"; };
 		CE20C9061DBC587200C8397A /* StartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartViewController.swift; path = src/ViewControllers/StartViewController.swift; sourceTree = "<group>"; };
-		CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinCreationViewController.swift; path = src/ViewControllers/PinCreationViewController.swift; sourceTree = "<group>"; };
 		CE20C90B1DBC59E600C8397A /* StartFlowPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartFlowPresenter.swift; path = src/FlowControllers/StartFlowPresenter.swift; sourceTree = "<group>"; };
 		CE20C90D1DBE52B000C8397A /* UIView+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+BRWAdditions.swift"; path = "src/Extensions/UIView+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CE20C9101DBE5B6F00C8397A /* Circle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Circle.swift; path = src/Views/Circle.swift; sourceTree = "<group>"; };
@@ -1506,7 +1503,6 @@
 		CECCE5AD1E04AD6300D99448 /* LabelSendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LabelSendCell.swift; path = src/Views/SendViewCells/LabelSendCell.swift; sourceTree = "<group>"; };
 		CECCE5AF1E04AD7600D99448 /* DescriptionSendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DescriptionSendCell.swift; path = src/Views/SendViewCells/DescriptionSendCell.swift; sourceTree = "<group>"; };
 		CECCE5B11E04B00D00D99448 /* SendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SendCell.swift; path = src/Views/SendViewCells/SendCell.swift; sourceTree = "<group>"; };
-		CECF8D681E17108600B707AE /* WalletCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletCreator.swift; path = src/WalletCreator.swift; sourceTree = "<group>"; };
 		CED811A51EB29692003A8D1E /* WatchTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WatchTransaction.swift; path = src/Watch/WatchTransaction.swift; sourceTree = "<group>"; };
 		CED811AB1EB2BCDE003A8D1E /* BRAWWeakTimerTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAWWeakTimerTarget.swift; sourceTree = "<group>"; };
 		CED811E41EB30846003A8D1E /* ReceiveInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiveInterfaceController.swift; sourceTree = "<group>"; };
@@ -2541,7 +2537,6 @@
 				7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */,
 				22A9A9691DF6218B000F0016 /* WalletManager+Plat.swift */,
 				CEF8A4A41E2869D200048B20 /* Wallet+ViewModels.swift */,
-				CECF8D681E17108600B707AE /* WalletCreator.swift */,
 				CE4B6C191E219CA600CF935B /* WalletCoordinator.swift */,
 				CE8CD8DC1E2D9EF200785E02 /* Sender.swift */,
 				CE74F58C1E3BA85600ED5FA9 /* ExchangeUpdater.swift */,
@@ -2764,7 +2759,6 @@
 				CE760ED71E55F9E000EFAC2B /* SecurityCenter */,
 				CEBF32EF1DDCD30600348FC6 /* AccountViewController.swift */,
 				CE20C9061DBC587200C8397A /* StartViewController.swift */,
-				CE20C9081DBC58DB00C8397A /* PinCreationViewController.swift */,
 				CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */,
 				CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */,
 				CEAA9E981DC262800066731D /* ConfirmPaperPhraseViewController.swift */,
@@ -3770,7 +3764,6 @@
 				CEEC70901E95D5C100EF788E /* PushNotificationsViewController.swift in Sources */,
 				222C42501E90492800078EB5 /* BRAPIClient+KV.swift in Sources */,
 				CE5E6C941EB7964900A476DB /* WalletDisabledView.swift in Sources */,
-				CE20C9091DBC58DB00C8397A /* PinCreationViewController.swift in Sources */,
 				CEF3E8341DE57166007C0A9E /* AnimatableIcon.swift in Sources */,
 				22A9A96A1DF6218B000F0016 /* WalletManager+Plat.swift in Sources */,
 				CEF61B161ED2056D00C7EA6A /* NumberFormatter+Additions.swift in Sources */,
@@ -3850,7 +3843,6 @@
 				CECCE5A51E02408300D99448 /* UIView+FrameChangeBlocking.swift in Sources */,
 				22A9A94F1DF61945000F0016 /* BRHTTPRouter.swift in Sources */,
 				CE6DCC271E6108D50044257B /* EnterPhraseCell.swift in Sources */,
-				CECF8D691E17108600B707AE /* WalletCreator.swift in Sources */,
 				CE760EDD1E561DF900EFAC2B /* UpdatePinViewController.swift in Sources */,
 				22A9A9481DF61945000F0016 /* BRBitID.swift in Sources */,
 				CEBF32F41DDCE12900348FC6 /* AccountFooterView.swift in Sources */,

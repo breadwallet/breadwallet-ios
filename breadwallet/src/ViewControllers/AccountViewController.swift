@@ -224,7 +224,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
                 tempLoginView.view.constrain(toSuperviewEdges: nil)
             })
         } else {
-            let startView = StartViewController(store: store, didTapRecover: {})
+            let startView = StartViewController(store: store, didTapCreate: {}, didTapRecover: {})
             addChildViewController(startView, layout: {
                 startView.view.constrain(toSuperviewEdges: nil)
                 startView.view.isUserInteractionEnabled = false
