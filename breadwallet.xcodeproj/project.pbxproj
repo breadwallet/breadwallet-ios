@@ -211,7 +211,6 @@
 		75A2A7F91DA5935F00A983D8 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7F71DA5935F00A983D8 /* MainInterface.storyboard */; };
 		75A2A7FB1DA5935F00A983D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A7FA1DA5935F00A983D8 /* Assets.xcassets */; };
 		75A2A80A1DA5936F00A983D8 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75A2A8091DA5936F00A983D8 /* NotificationCenter.framework */; };
-		75A2A80D1DA5936F00A983D8 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A80C1DA5936F00A983D8 /* TodayViewController.swift */; };
 		75A2A8101DA5936F00A983D8 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A80E1DA5936F00A983D8 /* MainInterface.storyboard */; };
 		75A2A8141DA5936F00A983D8 /* TodayExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 75A2A8081DA5936F00A983D8 /* TodayExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		75A2A81F1DA5938500A983D8 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A81E1DA5938500A983D8 /* NotificationService.swift */; };
@@ -289,6 +288,11 @@
 		CE8F0AE31EB91BB500AA7642 /* SearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8F0AE21EB91BB500AA7642 /* SearchHeaderView.swift */; };
 		CE9057181DFF0FA8006BA848 /* String+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9057171DFF0FA8006BA848 /* String+Additions.swift */; };
 		CE90571A1DFF18B2006BA848 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9057191DFF18B2006BA848 /* ScanViewController.swift */; };
+		CE916E2A1EDA7E4400D641D6 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE916E291EDA7E4400D641D6 /* Media.xcassets */; };
+		CE916E2E1EDA7ED000D641D6 /* BRBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE916E2D1EDA7ED000D641D6 /* BRBubbleView.m */; };
+		CE916E311EDA7F1400D641D6 /* UIImage+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = CE916E301EDA7F1400D641D6 /* UIImage+Utils.m */; };
+		CE916E331EDA800E00D641D6 /* UserDefaultsUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE916E321EDA800E00D641D6 /* UserDefaultsUpdater.swift */; };
+		CE916E371EDA855800D641D6 /* BRTodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE916E361EDA855800D641D6 /* BRTodayViewController.m */; };
 		CE92F9F01DED0C790046B516 /* PresentModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */; };
 		CE92F9F41DED59E80046B516 /* UIView+AnimationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9F31DED59E80046B516 /* UIView+AnimationAdditions.swift */; };
 		CE92F9F61DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9F51DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift */; };
@@ -1267,7 +1271,6 @@
 		75A2A7FC1DA5935F00A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		75A2A8081DA5936F00A983D8 /* TodayExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TodayExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		75A2A8091DA5936F00A983D8 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
-		75A2A80C1DA5936F00A983D8 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
 		75A2A80F1DA5936F00A983D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		75A2A8111DA5936F00A983D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		75A2A81C1DA5938500A983D8 /* NotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1454,6 +1457,16 @@
 		CE8F0AE21EB91BB500AA7642 /* SearchHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchHeaderView.swift; path = src/Views/SearchHeaderView.swift; sourceTree = "<group>"; };
 		CE9057171DFF0FA8006BA848 /* String+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Additions.swift"; path = "src/Extensions/String+Additions.swift"; sourceTree = "<group>"; };
 		CE9057191DFF18B2006BA848 /* ScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScanViewController.swift; path = src/ViewControllers/ScanViewController.swift; sourceTree = "<group>"; };
+		CE916E291EDA7E4400D641D6 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		CE916E2B1EDA7E9100D641D6 /* BRAppGroupConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRAppGroupConstants.h; sourceTree = "<group>"; };
+		CE916E2C1EDA7ED000D641D6 /* BRBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRBubbleView.h; sourceTree = "<group>"; };
+		CE916E2D1EDA7ED000D641D6 /* BRBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRBubbleView.m; sourceTree = "<group>"; };
+		CE916E2F1EDA7F1400D641D6 /* UIImage+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Utils.h"; sourceTree = "<group>"; };
+		CE916E301EDA7F1400D641D6 /* UIImage+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Utils.m"; sourceTree = "<group>"; };
+		CE916E321EDA800E00D641D6 /* UserDefaultsUpdater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserDefaultsUpdater.swift; path = src/UserDefaultsUpdater.swift; sourceTree = "<group>"; };
+		CE916E341EDA848B00D641D6 /* TodayExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TodayExtension.entitlements; sourceTree = "<group>"; };
+		CE916E351EDA855800D641D6 /* BRTodayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRTodayViewController.h; sourceTree = "<group>"; };
+		CE916E361EDA855800D641D6 /* BRTodayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRTodayViewController.m; sourceTree = "<group>"; };
 		CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PresentModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/PresentModalAnimator.swift; sourceTree = "<group>"; };
 		CE92F9F31DED59E80046B516 /* UIView+AnimationAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+AnimationAdditions.swift"; path = "src/Extensions/UIView+AnimationAdditions.swift"; sourceTree = "<group>"; };
 		CE92F9F51DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewControllerContextTransitioning+BRAdditions.swift"; path = "src/Extensions/UIViewControllerContextTransitioning+BRAdditions.swift"; sourceTree = "<group>"; };
@@ -2546,6 +2559,7 @@
 				CEC6F8441E886723000795B8 /* PaymentRequest.swift */,
 				7528D2971ECF655500925DBC /* PaymentProtocol.swift */,
 				CE4C1CC71ED88B600063E184 /* UrlController.swift */,
+				CE916E321EDA800E00D641D6 /* UserDefaultsUpdater.swift */,
 				CE30F0E41EB27821004B8EE5 /* Watch */,
 				CEE20C321EA5B2EC0086F724 /* Constants */,
 				CE20C90A1DBC59C500C8397A /* FlowControllers */,
@@ -2666,9 +2680,17 @@
 		75A2A80B1DA5936F00A983D8 /* TodayExtension */ = {
 			isa = PBXGroup;
 			children = (
-				75A2A80C1DA5936F00A983D8 /* TodayViewController.swift */,
+				CE916E341EDA848B00D641D6 /* TodayExtension.entitlements */,
+				CE916E2C1EDA7ED000D641D6 /* BRBubbleView.h */,
+				CE916E2D1EDA7ED000D641D6 /* BRBubbleView.m */,
+				CE916E2B1EDA7E9100D641D6 /* BRAppGroupConstants.h */,
+				CE916E351EDA855800D641D6 /* BRTodayViewController.h */,
+				CE916E361EDA855800D641D6 /* BRTodayViewController.m */,
+				CE916E2F1EDA7F1400D641D6 /* UIImage+Utils.h */,
+				CE916E301EDA7F1400D641D6 /* UIImage+Utils.m */,
 				75A2A80E1DA5936F00A983D8 /* MainInterface.storyboard */,
 				75A2A8111DA5936F00A983D8 /* Info.plist */,
+				CE916E291EDA7E4400D641D6 /* Media.xcassets */,
 			);
 			path = TodayExtension;
 			sourceTree = "<group>";
@@ -3400,6 +3422,11 @@
 					75A2A8071DA5936F00A983D8 = {
 						CreatedOnToolsVersion = 8.0;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					75A2A81B1DA5938500A983D8 = {
 						CreatedOnToolsVersion = 8.0;
@@ -3521,6 +3548,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE916E2A1EDA7E4400D641D6 /* Media.xcassets in Resources */,
 				75A2A8101DA5936F00A983D8 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3781,6 +3809,7 @@
 				CEEC707F1E8D6B4100EF788E /* SettingsViewController.swift in Sources */,
 				CEEE92F11EBA7CBA00B7AC9C /* RequestAmountViewController.swift in Sources */,
 				CE8CD8DF1E2E825100785E02 /* VerifyPinViewController.swift in Sources */,
+				CE916E331EDA800E00D641D6 /* UserDefaultsUpdater.swift in Sources */,
 				CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */,
 				CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */,
 				223DB2151DF654940076A151 /* WalletManager.swift in Sources */,
@@ -3915,7 +3944,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75A2A80D1DA5936F00A983D8 /* TodayViewController.swift in Sources */,
+				CE916E311EDA7F1400D641D6 /* UIImage+Utils.m in Sources */,
+				CE916E2E1EDA7ED000D641D6 /* BRBubbleView.m in Sources */,
+				CE916E371EDA855800D641D6 /* BRTodayViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4638,6 +4669,7 @@
 		75A2A8161DA5936F00A983D8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = TodayExtension/TodayExtension.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				INFOPLIST_FILE = TodayExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -4650,6 +4682,7 @@
 		75A2A8171DA5936F00A983D8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = TodayExtension/TodayExtension.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				INFOPLIST_FILE = TodayExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -4856,6 +4889,7 @@
 		CEE0EF5B1EBF8D7F0018DB36 /* Testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = TodayExtension/TodayExtension.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				INFOPLIST_FILE = TodayExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
