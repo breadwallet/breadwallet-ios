@@ -39,12 +39,15 @@ class WritePaperPhraseViewController: UIViewController {
 
     var lastWordSeen: (() -> Void)?
 
-    init(store: Store, walletManager: WalletManager, pin: String) {
+    init(store: Store, walletManager: WalletManager, pin: String, callback: @escaping () -> Void) {
         self.store = store
         self.walletManager = walletManager
         self.pin = pin
+        self.callback = callback
         super.init(nibName: nil, bundle: nil)
     }
+
+    private let callback: () -> Void
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -124,15 +127,7 @@ class WritePaperPhraseViewController: UIViewController {
     }
 
     @objc private func proceedTapped() {
-        guard currentPhraseIndex < phraseViews.count - 1 else {
-
-            if lastWordSeen != nil {
-                lastWordSeen?()
-            } else {
-                store.perform(action: PaperPhrase.Confirm())
-            }
-            return
-        }
+        guard currentPhraseIndex < phraseViews.count - 1 else { callback(); return }
         if currentPhraseIndex == 0 {
             showBothButtons()
         }

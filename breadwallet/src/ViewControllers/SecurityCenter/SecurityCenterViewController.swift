@@ -99,10 +99,9 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         store.subscribe(self, selector: { $0.isTouchIdEnabled != $1.isTouchIdEnabled }, callback: {
             self.touchIdCell.isCheckHighlighted = $0.isTouchIdEnabled
         })
-        store.subscribe(self, selector: { $0.paperPhraseStep != $1.paperPhraseStep }, callback: {
-            if case .confirmed = $0.paperPhraseStep {
-                self.setPinAndPhraseChecks() //When paper phrase is confirmed, we need to update the check mark status
-            }
+        store.subscribe(self, selector: { $1.alert == .paperKeySet(callback: {})
+        }, callback: { _ in
+            self.setPinAndPhraseChecks() //When paper phrase is confirmed, we need to update the check mark status
         })
     }
 

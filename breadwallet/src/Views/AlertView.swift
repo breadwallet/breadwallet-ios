@@ -9,8 +9,8 @@
 import UIKit
 
 enum AlertType {
-    case pinSet
-    case paperKeySet
+    case pinSet(callback: () -> Void)
+    case paperKeySet(callback: () -> Void)
     case sendSuccess
     case sendFailure
 
@@ -42,6 +42,23 @@ enum AlertType {
 
     var icon: UIView {
         return CheckView()
+    }
+}
+
+extension AlertType : Equatable {}
+
+func ==(lhs: AlertType, rhs: AlertType) -> Bool {
+    switch (lhs, rhs) {
+    case (.pinSet(_), .pinSet(_)):
+        return true
+    case (.paperKeySet(_), .paperKeySet(_)):
+        return true
+    case (.sendSuccess, .sendSuccess):
+        return true
+    case (.sendFailure, .sendFailure):
+        return true
+    default:
+        return false
     }
 }
 
