@@ -27,7 +27,7 @@ struct State {
 extension State {
     static var initial: State {
         return State(   isStartFlowVisible: false,
-                        isLoginRequired: false,
+                        isLoginRequired: true,
                         rootModal: .none,
                         pasteboard: UIPasteboard.general.string,
                         walletState: WalletState.initial,

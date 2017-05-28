@@ -26,11 +26,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     var initialAddress: String?
     var isPresentedFromLock = false
 
-    init(store: Store, sender: Sender, walletManager: WalletManager, initialAddress: String? = nil) {
+    init(store: Store, sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil) {
         self.store = store
         self.sender = sender
         self.walletManager = walletManager
         self.initialAddress = initialAddress
+        self.initialRequest = initialRequest
         if LAContext.canUseTouchID && store.state.isTouchIdEnabled {
             self.sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
         } else {
@@ -71,6 +72,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
+    private let initialRequest: PaymentRequest?
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -114,6 +116,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                         callback: {
                             self.balance = $0.walletState.balance
         })
+
     }
 
     private func preventCellContentOverflow() {
@@ -126,6 +129,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         if initialAddress != nil {
             to.content = initialAddress
             amountView.expandPinPad()
+        } else if let initialRequest = initialRequest {
+            handleRequest(initialRequest)
         }
     }
 
@@ -200,21 +205,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         descriptionCell.textField.resignFirstResponder()
         presentScan? { [weak self] paymentRequest in
             guard let request = paymentRequest else { return }
-            switch request.type {
-            case .local:
-                self?.to.content = request.toAddress
-                if let amount = request.amount {
-                    self?.amountView.forceUpdateAmount(amount: amount)
-                }
-            case .remote:
-                request.fetchRemoteRequest(completion: { [weak self] request in
-                    if let paymentProtocolRequest = request?.paymentProtoclRequest {
-                        DispatchQueue.main.async {
-                            self?.confirmProtocolRequest(protoReq: paymentProtocolRequest)
-                        }
-                    }
-                })
-            }
+            self?.handleRequest(request)
         }
     }
 
@@ -226,6 +217,24 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             guard let amount = amount else { return }
             sender.createTransaction(amount: amount.rawValue, to: address)
             send()
+        }
+    }
+
+    private func handleRequest(_ request: PaymentRequest) {
+        switch request.type {
+        case .local:
+            to.content = request.toAddress
+            if let amount = request.amount {
+                amountView.forceUpdateAmount(amount: amount)
+            }
+        case .remote:
+            request.fetchRemoteRequest(completion: { [weak self] request in
+                if let paymentProtocolRequest = request?.paymentProtoclRequest {
+                    DispatchQueue.main.async {
+                        self?.confirmProtocolRequest(protoReq: paymentProtocolRequest)
+                    }
+                }
+            })
         }
     }
 

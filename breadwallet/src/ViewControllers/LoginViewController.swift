@@ -159,7 +159,6 @@ class LoginViewController : UIViewController, Subscriber {
         subheader.constrain([
             subheader.bottomAnchor.constraint(equalTo: pinView.topAnchor, constant: -C.padding[1]),
             subheader.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
-
     }
 
     private func addSubviews() {
