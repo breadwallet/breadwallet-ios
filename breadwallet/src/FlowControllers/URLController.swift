@@ -52,7 +52,7 @@ class URLController : Trackable {
             if url.host == "scanqr" || url.path == "/scanqr" {
                 store.trigger(name: .scanQr)
             } else if url.host == "addresslist" || url.path == "/addresslist" {
-                //copyWalletAddresses()
+                store.trigger(name: .copyWalletAddresses(xSuccess, xError))
             } else if url.path == "/address" {
                 if let success = xSuccess {
                     copyAddress(callback: success)
@@ -90,10 +90,6 @@ class URLController : Trackable {
         }
     }
 
-    private func copyWalletAddresses(callback: String) {
-
-    }
-
     private func handleBitcoinUri(_ uri: URL) -> Bool {
         if let request = PaymentRequest(string: uri.absoluteString) {
             store.trigger(name: .receivedPaymentRequest(request))
@@ -106,5 +102,4 @@ class URLController : Trackable {
     private func handleBitId() {
 
     }
-
 }
