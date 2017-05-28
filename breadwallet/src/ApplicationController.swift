@@ -21,7 +21,6 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private var modalPresenter: ModalPresenter?
 
     private var walletManager: WalletManager?
-    private var walletCreator: WalletCreator?
     private var walletCoordinator: WalletCoordinator?
     fileprivate var apiClient: BRAPIClient?
     private var exchangeUpdater: ExchangeUpdater?
@@ -106,7 +105,6 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
 
     private func didInitWallet() {
         guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
-        walletCreator = WalletCreator(walletManager: walletManager, store: store)
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
         apiClient = BRAPIClient(authenticator: walletManager)
         modalPresenter = ModalPresenter(store: store, apiClient: apiClient!, window: window)
@@ -184,25 +182,16 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
 
     private func addWalletCreationListener() {
         store.subscribe(self,
-                        selector: { $0.pinCreationStep != $1.pinCreationStep || $0.alert != $1.alert },
+                        selector: { $0.alert != $1.alert },
                         callback: {
-
-                            //TODO - figure out a better way to do this..should use a trigger instead
-                            var shouldLoadWallet = false
-                            if case .saveSuccess = $0.pinCreationStep {
-                                shouldLoadWallet = true
-                            }
                             if let alert = $0.alert {
-                                if alert == .pinSet {
-                                    shouldLoadWallet = true
+                                if case .pinSet(_) = alert {
+                                    self.modalPresenter?.walletManager = self.walletManager
+                                    self.feeUpdater?.updateWalletFees()
+                                    self.feeUpdater?.refresh()
+                                    self.initKVStoreCoordinator()
+                                    self.apiClient?.updateFeatureFlags()
                                 }
-                            }
-                            if shouldLoadWallet {
-                                self.modalPresenter?.walletManager = self.walletManager
-                                self.feeUpdater?.updateWalletFees()
-                                self.feeUpdater?.refresh()
-                                self.initKVStoreCoordinator()
-                                self.apiClient?.updateFeatureFlags()
                             }
 
         })

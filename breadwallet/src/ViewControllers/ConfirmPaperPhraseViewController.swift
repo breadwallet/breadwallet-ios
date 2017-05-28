@@ -10,15 +10,14 @@ import UIKit
 
 class ConfirmPaperPhraseViewController : UIViewController {
 
-    init(store: Store, walletManager: WalletManager, pin: String) {
+    init(store: Store, walletManager: WalletManager, pin: String, callback: @escaping () -> Void) {
         self.store = store
         self.pin = pin
         self.walletManager = walletManager
+        self.callback = callback
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
     }
-
-    var didConfirm: (() -> Void)?
 
     private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
 
@@ -29,7 +28,8 @@ class ConfirmPaperPhraseViewController : UIViewController {
     private let store: Store
     private let pin: String
     private let walletManager: WalletManager
-
+    private let callback: () -> Void
+    
     //Select 2 random indices from 1 to 10. The second number must
     //be at least one number away from the first.
     private let indices: (Int, Int) = {
@@ -105,14 +105,9 @@ class ConfirmPaperPhraseViewController : UIViewController {
     }
 
     @objc private func checkTextFields() {
-        //TODO - These strings should be received from the store and more feedback for incorrect strings should be added
         if confirmFirstPhrase.textField.text == words[indices.0] && confirmSecondPhrase.textField.text == words[indices.1] {
             UserDefaults.writePaperPhraseDate = Date()
-            if didConfirm != nil {
-                didConfirm?()
-            } else {
-                store.perform(action: PaperPhrase.Confirmed())
-            }
+            callback()
         }
     }
 

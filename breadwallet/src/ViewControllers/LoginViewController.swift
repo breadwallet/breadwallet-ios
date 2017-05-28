@@ -114,7 +114,7 @@ class LoginViewController : UIViewController, Subscriber {
             nc.navigationBar.barTintColor = .whiteTint
             nc.viewControllers = [recover]
             recover.didValidateSeedPhrase = { phrase in
-                let updatePin = UpdatePinViewController(store: store, walletManager: walletManager, showsBackButton: false, phrase: phrase)
+                let updatePin = UpdatePinViewController(store: store, walletManager: walletManager, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
                 nc.pushViewController(updatePin, animated: true)
                 updatePin.resetFromDisabledWillSucceed = {
                     self?.disabledView.isHidden = true

@@ -8,20 +8,27 @@
 
 import UIKit
 
+enum UpdatePinType {
+    case creationNoPhrase
+    case creationWithPhrase
+    case update
+}
+
 class UpdatePinViewController : UIViewController, Subscriber {
 
     //MARK: - Public
-    var setPinSuccess: (() -> Void)?
+    var setPinSuccess: ((String) -> Void)?
     var resetFromDisabledSuccess: (() -> Void)?
     var resetFromDisabledWillSucceed: (() -> Void)?
 
-    init(store: Store, walletManager: WalletManager, showsBackButton: Bool = true, phrase: String? = nil) {
+    init(store: Store, walletManager: WalletManager, type: UpdatePinType, showsBackButton: Bool = true, phrase: String? = nil) {
         self.store = store
         self.walletManager = walletManager
         self.phrase = phrase
         self.pinView = PinView(style: .create, length: walletManager.pinLength)
         self.showsBackButton = showsBackButton
         self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.setPin)
+        self.type = type
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -43,7 +50,11 @@ class UpdatePinViewController : UIViewController, Subscriber {
                 if !isCreatingPin {
                     instruction.pushNewText(S.UpdatePin.enterNew)
                 }
-                caption.text = S.UpdatePin.caption
+                if type == .creationNoPhrase {
+                    caption.text = S.UpdatePin.pinCreationMessage
+                } else {
+                    caption.text = S.UpdatePin.caption
+                }
             case .confirmNew:
                 if isCreatingPin {
                     header.text = S.UpdatePin.createTitleConfirm
@@ -56,8 +67,9 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private var currentPin: String?
     private var newPin: String?
     private var phrase: String?
+    private let type: UpdatePinType
     private var isCreatingPin: Bool {
-        return phrase != nil
+        return type != .update
     }
     private let newPinLength = 6
     private let showsBackButton: Bool
@@ -129,7 +141,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
             }
         }
 
-        if phrase != nil {
+        if isCreatingPin {
             step = .new
         }
 
@@ -215,29 +227,25 @@ class UpdatePinViewController : UIViewController, Subscriber {
             success = walletManager.forceSetPin(newPin: newPin, seedPhrase: seedPhrase)
         } else if let currentPin = currentPin {
             success = walletManager.changePin(newPin: newPin, pin: currentPin)
+        } else if type == .creationNoPhrase {
+            success = walletManager.forceSetPin(newPin: newPin)
         }
 
         if success {
             if resetFromDisabledSuccess != nil {
                 resetFromDisabledWillSucceed?()
-                store.perform(action: Alert.Show(.pinSet))
-                store.lazySubscribe(self,
-                                    selector: { $0.alert != $1.alert && $1.alert == nil },
-                                    callback: { _ in
-                                        self.dismiss(animated: true, completion: {
-                                            self.resetFromDisabledSuccess?()
-                                        })
-                })
+                store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
+                    self?.dismiss(animated: true, completion: {
+                        self?.resetFromDisabledSuccess?()
+                    })
+                })))
             } else {
-                setPinSuccess?()
-                store.perform(action: Alert.Show(.pinSet))
-                store.lazySubscribe(self,
-                                    selector: { $0.alert != $1.alert && $1.alert == nil },
-                                    callback: { _ in
-                                        self.parent?.dismiss(animated: true, completion: {
-                                            self.store.unsubscribe(self)
-                                        })
-                })
+                store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
+                    self?.setPinSuccess?(newPin)
+                    if self?.type != .creationNoPhrase {
+                        self?.parent?.dismiss(animated: true, completion: nil)
+                    }
+                })))
             }
 
         } else {

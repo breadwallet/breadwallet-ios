@@ -156,6 +156,7 @@ enum S {
         static let caption = NSLocalizedString("UpdatePin.caption", value:"Write down your PIN and store it in a place you can access even if your phone is broken or lost.", comment: "Update pin caption text")
         static let setPinErrorTitle = NSLocalizedString("UpdatePin.setPinErrorTitle", value:"Set Pin Error", comment: "Update pin failure alert view title")
         static let setPinError = NSLocalizedString("UpdatePin.setPinError", value:"Sorry, could not update pin.", comment: "Update pin failure error message.")
+        static let pinCreationMessage = NSLocalizedString("UpdatePin.pinCreationMessage", value:"Remember this PIN. If you forget it, you won't be able to access your bitcoin.", comment: "Set Pin screen message")
     }
 
     enum RecoverWallet {
@@ -293,15 +294,7 @@ enum S {
     }
 
     enum RequestAnAmount {
-        static let title = NSLocalizedString("RequestAnAmoutn.title", value:"Request an Amount", comment: "Request a specific amount of bitcoin")
-    }
-
-    enum PinCreationView {
-        static let setPinText = NSLocalizedString("PinCreationView.setPinText", value:"Set PIN", comment: "Set pin instruction")
-        static let confirmPinText = NSLocalizedString("PinCreationView.confirmPinText", value:"Re-Enter PIN", comment: "Confirm pin instruction")
-        static let wrongPinText = NSLocalizedString("PinCreationView.wrongPinText", value:"PINs don't match, set PIN", comment: "Wrong pin entered instruction")
-        static let caption = NSLocalizedString("PinCreationView.caption", value:"Your PIN will be used to unlock your  Bread and send money.", comment: "Set Pin screen caption")
-        static let body = NSLocalizedString("PinCreationView.body", value:"Remember this PIN. If you forget it, you won't be able to access your bitcoin.", comment: "Set Pin screen body")
+        static let title = NSLocalizedString("RequestAnAmount.title", value:"Request an Amount", comment: "Request a specific amount of bitcoin")
     }
 
     enum Alerts {
