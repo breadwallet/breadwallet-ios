@@ -11,7 +11,7 @@ import XCTest
 
 class WalletAuthenticationTests : XCTestCase {
 
-    private let walletManager: WalletManager = try! WalletManager(dbPath: nil)
+    private let walletManager: WalletManager = try! WalletManager(store: Store(), dbPath: nil)
     private let pin = "123456"
 
     override func setUp() {
