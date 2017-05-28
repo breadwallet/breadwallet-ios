@@ -175,6 +175,8 @@ class ShadowButton: UIControl {
         case .primary:
             container.backgroundColor = .primaryButton
             label.textColor = .primaryText
+            container.layer.borderColor = nil
+            container.layer.borderWidth = 0.0
             shadowView.layer.shadowColor = UIColor.black.cgColor
             shadowView.layer.shadowOpacity = 0.3
             imageView?.tintColor = .white
