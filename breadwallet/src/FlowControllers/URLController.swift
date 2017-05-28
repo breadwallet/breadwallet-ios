@@ -24,29 +24,30 @@ class URLController : Trackable {
 
         switch url.scheme ?? "" {
         case "bread":
-            guard let query = url.query else { return false }
-            for component in query.components(separatedBy: "&") {
-                let pair = component.components(separatedBy: "+")
-                if pair.count < 2 { continue }
-                let key = pair[0]
-                var value = component.substring(from: component.index(key.endIndex, offsetBy: 2))
-                value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
-                switch key {
-                case "x-source":
-                    xSource = value
-                case "x-success":
-                    xSuccess = value
-                case "x-error":
-                    xError = value
-                case "uri":
-                    uri = value
-                default:
-                    print("Key not supported: \(key)")
+            if let query = url.query {
+                for component in query.components(separatedBy: "&") {
+                    let pair = component.components(separatedBy: "+")
+                    if pair.count < 2 { continue }
+                    let key = pair[0]
+                    var value = component.substring(from: component.index(key.endIndex, offsetBy: 2))
+                    value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
+                    switch key {
+                    case "x-source":
+                        xSource = value
+                    case "x-success":
+                        xSuccess = value
+                    case "x-error":
+                        xError = value
+                    case "uri":
+                        uri = value
+                    default:
+                        print("Key not supported: \(key)")
+                    }
                 }
             }
 
             if url.host == "scanqr" || url.path == "/scanqr" {
-                scanQr()
+                store.trigger(name: .scanQr)
             } else if url.host == "addresslist" || url.path == "/addresslist" {
                 copyWalletAddresses()
             } else if isBitcoinUri(url: url, uri: uri) {
@@ -71,10 +72,6 @@ class URLController : Trackable {
         guard let uri = uri else { return false }
         guard let bitcoinUrl = URL(string: uri) else { return false }
         return (url.host == "bitcoin-uri" || url.path == "/bitcoin-uri") && bitcoinUrl.scheme == "bitcoin"
-    }
-
-    private func scanQr() {
-
     }
 
     private func copyWalletAddresses() {

@@ -74,6 +74,8 @@ class ModalPresenter : Subscriber {
         store.subscribe(self, name: .recommendRescan, callback: { _ in
             self.presentRescan()
         })
+
+        //URLs
         store.subscribe(self, name: .receivedPaymentRequest(nil), callback: {
             guard let trigger = $0 else { return }
             if case let .receivedPaymentRequest(request) = trigger {
@@ -81,6 +83,9 @@ class ModalPresenter : Subscriber {
                     self.handlePaymentRequest(request: request)
                 }
             }
+        })
+        store.subscribe(self, name: .scanQr, callback: { _ in
+            self.handleScanQrURL()
         })
     }
 
@@ -252,14 +257,9 @@ class ModalPresenter : Subscriber {
         let present = presentScan(parent: top)
         store.perform(action: RootModalActions.Present(modal: .none))
         present({ paymentRequest in
-            if paymentRequest != nil {
-                self.presentModal(.send, configuration: { modal in
-                    guard let modal = modal as? ModalViewController else { return }
-                    guard let child = modal.childViewController as? SendViewController else { return }
-                    child.initialAddress = paymentRequest?.toAddress
-                    child.isPresentedFromLock = true
-                })
-            }
+            guard let request = paymentRequest else { return }
+            self.currentRequest = request
+            self.presentModal(.send)
         })
     }
 
@@ -548,6 +548,20 @@ class ModalPresenter : Subscriber {
             if let presented = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
                 presented.dismiss(animated: true, completion: {
                     self.presentModal(.send)
+                })
+            }
+        }
+    }
+
+    private func handleScanQrURL() {
+        guard !store.state.isLoginRequired else { presentLoginScan(); return }
+
+        if topViewController is AccountViewController {
+            presentLoginScan()
+        } else {
+            if let presented = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
+                presented.dismiss(animated: true, completion: {
+                    self.presentLoginScan()
                 })
             }
         }
