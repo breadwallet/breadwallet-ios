@@ -80,7 +80,7 @@ class WalletCoordinator : Subscriber {
 
     private func updateTransactions() {
         guard let blockHeight = self.walletManager.peerManager?.lastBlockHeight else { return }
-        guard let transactions = self.walletManager.wallet?.makeTransactionViewModels(blockHeight: blockHeight, kvStore: kvStore) else { return }
+        guard let transactions = self.walletManager.wallet?.makeTransactionViewModels(blockHeight: blockHeight, kvStore: kvStore, rate: store.state.currentRate) else { return }
         if transactions.count > 0 {
             self.store.perform(action: WalletChange.setTransactions(transactions))
         }
