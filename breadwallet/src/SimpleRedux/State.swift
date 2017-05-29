@@ -22,6 +22,7 @@ struct State {
     let defaultCurrencyCode: String
     let recommendRescan: Bool
     let isLoadingTransactions: Bool
+    let maxDigits: Int
 }
 
 extension State {
@@ -38,7 +39,8 @@ extension State {
                         isTouchIdEnabled: UserDefaults.isTouchIdEnabled,
                         defaultCurrencyCode: UserDefaults.defaultCurrencyCode,
                         recommendRescan: false,
-                        isLoadingTransactions: false)
+                        isLoadingTransactions: false,
+                        maxDigits: UserDefaults.maxDigits)
     }
 }
 
