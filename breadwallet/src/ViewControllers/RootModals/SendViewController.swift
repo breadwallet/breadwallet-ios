@@ -158,7 +158,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             let fee = sender.feeForTx(amount: amount.rawValue)
             let feeText = NumberFormatter.formattedString(amount: Satoshis(rawValue: fee), rate: rate, minimumFractionDigits: nil)
             output = String(format: S.Send.balanceWithFee, balanceText, feeText)
-            if amount.rawValue > (balance - fee) {
+            if (balance > fee) && amount.rawValue > (balance - fee) {
                 sendButton.isEnabled = false
                 color = .cameraGuideNegative
             } else {
@@ -243,7 +243,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         let touchIdMessage = String(format: S.Send.touchIdPrompt, amountView.currentOutput, to.content ?? "", feeText)
         let pinMessage = String(format: S.VerifyPin.transactionBody, amountView.currentOutput, to.content ?? "", feeText)
 
-        sender.send(touchIdMessage: touchIdMessage, verifyPinFunction: { [weak self] pinValidationCallback in
+        guard let rate = store.state.currentRate else { return }
+        guard let feePerKb = walletManager.wallet?.feePerKb else { return }
+
+        sender.send(touchIdMessage: touchIdMessage,
+                    rate: rate,
+                    comment: descriptionCell.textField.text,
+                    feePerKb: feePerKb,
+                    verifyPinFunction: { [weak self] pinValidationCallback in
             self?.presentVerifyPin?(pinMessage) { [weak self] pin, vc in
                 if pinValidationCallback(pin) {
                     vc.dismiss(animated: true, completion: {

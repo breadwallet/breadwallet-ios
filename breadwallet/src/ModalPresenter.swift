@@ -183,7 +183,8 @@ class ModalPresenter : Subscriber {
 
     private func makeSendView() -> UIViewController? {
         guard let walletManager = walletManager else { return nil }
-        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager), walletManager: walletManager, initialRequest: currentRequest)
+        guard let kvStore = apiClient.kv else { return nil }
+        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore), walletManager: walletManager, initialRequest: currentRequest)
         currentRequest = nil
 
         if store.state.isLoginRequired {
