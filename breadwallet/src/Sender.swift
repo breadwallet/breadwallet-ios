@@ -19,9 +19,18 @@ private let protocolPaymentTimeout: TimeInterval = 20.0
 
 class Sender {
 
-    init(walletManager: WalletManager) {
+    init(walletManager: WalletManager, kvStore: BRReplicatedKVStore) {
         self.walletManager = walletManager
+        self.kvStore = kvStore
     }
+
+    private let walletManager: WalletManager
+    private let kvStore: BRReplicatedKVStore
+    var transaction: BRTxRef?
+    var protocolRequest: PaymentProtocolRequest?
+    var rate: Rate?
+    var comment: String?
+    var feePerKb: UInt64?
 
     func createTransaction(amount: UInt64, to: String) {
         transaction = walletManager.wallet?.createTransaction(forAmount: amount, toAddress: to)
@@ -47,8 +56,12 @@ class Sender {
     }
 
     //Amount in bits
-    func send(touchIdMessage: String, verifyPinFunction: @escaping (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
+    func send(touchIdMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
         guard let tx = transaction else { return completion(.creationError("Transaction not created")) }
+
+        self.rate = rate
+        self.comment = comment
+        self.feePerKb = feePerKb
 
         if UserDefaults.isTouchIdEnabled && walletManager.canUseTouchID(forTx:tx) {
             walletManager.signTransaction(tx, touchIDPrompt: touchIdMessage, completion: { success in
@@ -81,11 +94,28 @@ class Sender {
                 if let error = error {
                     completion(.publishFailure(error))
                 } else {
+                    self?.setMetaData()
                     completion(.success)
                     self?.postProtocolPaymentIfNeeded()
                 }
             }
         })
+    }
+
+    private func setMetaData() {
+        guard let rate = rate, let tx = transaction, let feePerKb = feePerKb else { print("Incomplete tx metadata"); return }
+        let metaData = BRTxMetadataObject(transaction: tx.pointee,
+                                          exchangeRate: rate.rate,
+                                          exchangeRateCurrency: rate.code,
+                                          feeRate: Double(feePerKb),
+                                          deviceId: UserDefaults.standard.deviceID)
+        metaData.comment = comment ?? ""
+        do {
+            let _ = try kvStore.set(metaData)
+        } catch let error {
+            print("could not update metadata: \(error)")
+        }
+        NotificationCenter.default.post(name: .WalletTxStatusUpdateNotification, object: nil)
     }
 
     private func postProtocolPaymentIfNeeded() {
@@ -122,8 +152,4 @@ class Sender {
         }.resume()
 
     }
-
-    private let walletManager: WalletManager
-    var transaction: BRTxRef?
-    var protocolRequest: PaymentProtocolRequest?
 }

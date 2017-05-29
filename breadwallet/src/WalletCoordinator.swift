@@ -14,7 +14,11 @@ private let progressUpdateInterval: TimeInterval = 0.5
 
 class WalletCoordinator : Subscriber {
 
-    var kvStore: BRReplicatedKVStore?
+    var kvStore: BRReplicatedKVStore? {
+        didSet {
+            updateTransactions()
+        }
+    }
 
     private let walletManager: WalletManager
     private let store: Store
@@ -26,6 +30,7 @@ class WalletCoordinator : Subscriber {
         self.store = store
         addWalletObservers()
         addSubscriptions()
+        updateBalance()
     }
 
     private var lastBlockHeight: UInt32 {
@@ -47,8 +52,7 @@ class WalletCoordinator : Subscriber {
                 }
             }
         }
-        guard let balance = walletManager.wallet?.balance else { return }
-        store.perform(action: WalletChange.setBalance(balance))
+        self.updateBalance()
     }
 
     private func onSyncStart() {
@@ -84,8 +88,7 @@ class WalletCoordinator : Subscriber {
 
     private func addWalletObservers() {
         NotificationCenter.default.addObserver(forName: .WalletBalanceChangedNotification, object: nil, queue: nil, using: { note in
-            guard let balance = self.walletManager.wallet?.balance else { return }
-            self.store.perform(action: WalletChange.setBalance(balance))
+            self.updateBalance()
             self.updateTransactions()
         })
 
@@ -111,6 +114,11 @@ class WalletCoordinator : Subscriber {
         NotificationCenter.default.addObserver(forName: .WalletSyncFailedNotification, object: nil, queue: nil, using: {note in
             self.onSyncFail(notification: note)
         })
+    }
+
+    private func updateBalance() {
+        guard let balance = walletManager.wallet?.balance else { assert(false, "Walled doesn't exist!"); return }
+        store.perform(action: WalletChange.setBalance(balance))
     }
 
     private func addSubscriptions() {

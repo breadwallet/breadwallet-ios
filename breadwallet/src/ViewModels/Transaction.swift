@@ -76,7 +76,7 @@ class Transaction {
         var exchangeRateInfo = ""
         if let metaData = metaData {
             let difference = (rate.rate - metaData.exchangeRate)/metaData.exchangeRate*100.0
-            let prefix = difference > 0.0 ? "+" : ""
+            let prefix = difference > 0.0 ? "+" : "-"
             let firstLine = S.Transaction.exchangeOnDay
             let secondLine = String(format: S.Transaction.exchange, "$\(metaData.exchangeRate)/btc \(prefix)\(String(format: "%.2f", difference))%")
             exchangeRateInfo = "\(firstLine)\n\(secondLine)"
@@ -120,26 +120,22 @@ class Transaction {
         }
     }()
 
-    lazy var exchangeRate: Double? = {
-        guard let kvStore = self.kvStore else { return nil }
-        guard let metaData = self.metaData else { return nil }
-        return metaData.exchangeRate
-    }()
+    var exchangeRate: Double? {
+        return metaData?.exchangeRate
+    }
 
-    lazy var comment: String? = {
-        guard let kvStore = self.kvStore else { return nil }
-        guard let metaData = self.metaData else { return nil }
-        return metaData.comment
-    }()
+    var comment: String? {
+        return metaData?.comment
+    }
 
-    lazy var metaData: BRTxMetadataObject? = {
+    var metaData: BRTxMetadataObject? {
         guard let kvStore = self.kvStore else { return nil }
         return BRTxMetadataObject(txHash: self.tx.pointee.txHash, store: kvStore)
-    }()
+    }
 
-    private lazy var balanceAfter: UInt64 = {
-        return self.wallet.balanceAfterTx(self.tx)
-    }()
+    private var balanceAfter: UInt64 {
+        return wallet.balanceAfterTx(tx)
+    }
 
     private lazy var startingBalance: UInt64 = {
         switch self.direction {
