@@ -192,7 +192,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                 if address.isValidAddress {
                     self.to.content = address
                 } else {
-                    self.invalidAddressAlert()
+                    self.showError(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
                 }
             }
             //TODO - this should be a granular unsubscribe
@@ -213,8 +213,25 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         if sender.transaction != nil {
             send()
         } else {
-            guard let address = to.content else { return }
-            guard let amount = amount else { return }
+            guard let address = to.content else {
+                showError(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
+                return }
+            guard let amount = amount else {
+                showError(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
+                return }
+            if let minOutput = walletManager.wallet?.minOutputAmount {
+                guard amount.rawValue >= minOutput else {
+                    let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: store.state.maxDigits)
+                    let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutputAmount.string(isBtcSwapped: store.state.isBtcSwapped))
+                    showError(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
+                    return
+                }
+            }
+            guard !(walletManager.wallet?.containsAddress(address) ?? false) else {
+                showError(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
+                return
+            }
+
             sender.createTransaction(amount: amount.rawValue, to: address)
             send()
         }
@@ -269,7 +286,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                         myself.onPublishSuccess?()
                     })
                 case .creationError(let message):
-                    print("creation error: \(message)")
+                    self?.showError(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
                 case .publishFailure(_): //TODO -add error messages here
                     self?.onPublishFailure?()
                 }
@@ -285,7 +302,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         var isOutputTooSmall = false
 
         if let errorMessage = protoReq.errorMessage, errorMessage == S.PaymentProtocol.Errors.requestExpired, !isValid {
-            return showProtocolError(title: S.PaymentProtocol.Errors.badPaymentRequest, message: errorMessage, buttonLabel: S.Button.ok)
+            return showError(title: S.PaymentProtocol.Errors.badPaymentRequest, message: errorMessage, buttonLabel: S.Button.ok)
         }
 
         //TODO: check for duplicates of already paid requests
@@ -298,26 +315,26 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         }
 
         if wallet.containsAddress(address) {
-            return showProtocolError(title: S.Alert.warning, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
+            return showError(title: S.Alert.warning, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
         } else if wallet.addressIsUsed(address) {
             let message = "\(S.Send.UsedAddress.title)\n\n\(S.Send.UsedAddress.firstLine)\n\n\(S.Send.UsedAddress.secondLine)"
-            return showProtocolError(title: S.Alert.warning, message: message, ignore: { [weak self] in
+            return showError(title: S.Alert.warning, message: message, ignore: { [weak self] in
                 self?.didIgnoreUsedAddressWarning = true
                 self?.confirmProtocolRequest(protoReq: protoReq)
             })
         } else if let message = protoReq.errorMessage, message.utf8.count > 0 && (protoReq.commonName?.utf8.count)! > 0 {
-            return showProtocolError(title: S.Send.identityNotCertified, message: message, ignore: { [weak self] in
+            return showError(title: S.Send.identityNotCertified, message: message, ignore: { [weak self] in
                 self?.didIgnoreUsedAddressWarning = true
                 self?.confirmProtocolRequest(protoReq: protoReq)
             })
         } else if requestAmount < wallet.minOutputAmount {
             let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: store.state.maxDigits)
             let message = String(format: S.PaymentProtocol.Errors.smallPayment, amount.bits)
-            return showProtocolError(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
+            return showError(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         } else if isOutputTooSmall {
             let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: store.state.maxDigits)
             let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.bits)
-            return showProtocolError(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
+            return showError(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         }
 
         if let name = protoReq.commonName {
@@ -338,24 +355,18 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         }
     }
 
-    private func showProtocolError(title: String, message: String, buttonLabel: String) {
+    private func showError(title: String, message: String, buttonLabel: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
 
-    private func showProtocolError(title: String, message: String, ignore: @escaping () -> Void) {
+    private func showError(title: String, message: String, ignore: @escaping () -> Void) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: S.Button.ignore, style: .default, handler: { _ in
             ignore()
         }))
         alertController.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
-        present(alertController, animated: true, completion: nil)
-    }
-
-    private func invalidAddressAlert() {
-        let alertController = UIAlertController(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
 
