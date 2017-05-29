@@ -137,6 +137,7 @@ open class BRTxMetadataObject: BRKVStoreObject, BRCoding {
         deviceId = s.deviceId
         comment = s.comment
     }
+
 }
 
 fileprivate extension UInt256 {
