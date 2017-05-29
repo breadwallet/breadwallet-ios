@@ -58,24 +58,24 @@ class Transaction {
         }
     }
 
-    func amountDescription(isBtcSwapped: Bool, rate: Rate) -> String {
-        let amount = Amount(amount: satoshis, rate: rate)
+    func amountDescription(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> String {
+        let amount = Amount(amount: satoshis, rate: rate, maxDigits: maxDigits)
         return isBtcSwapped ? amount.localCurrency : amount.bits
     }
 
-    func descriptionString(isBtcSwapped: Bool, rate: Rate) -> NSAttributedString {
-        let amount = Amount(amount: satoshis, rate: rate).string(isBtcSwapped: isBtcSwapped)
+    func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
+        let amount = Amount(amount: satoshis, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
         let format = direction.descriptionFormat
         let string = String(format: format, amount, S.TransactionDetails.account)
         return string.attributedStringForTags
     }
 
-    func amountDetails(isBtcSwapped: Bool, rate: Rate) -> String {
-        let feeAmount = Amount(amount: fee, rate: rate)
+    func amountDetails(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> String {
+        let feeAmount = Amount(amount: fee, rate: rate, maxDigits: maxDigits)
         let feeString = direction == .sent ? String(format: S.Transaction.fee, "\(feeAmount.string(isBtcSwapped: isBtcSwapped))") : ""
-        let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate).string(isBtcSwapped: isBtcSwapped)) \(feeString)"
-        let startingString = String(format: S.Transaction.starting, "\(Amount(amount: startingBalance, rate: rate).string(isBtcSwapped: isBtcSwapped))")
-        let endingString = String(format: String(format: S.Transaction.ending, "\(Amount(amount: balanceAfter, rate: rate).string(isBtcSwapped: isBtcSwapped))"))
+        let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)) \(feeString)"
+        let startingString = String(format: S.Transaction.starting, "\(Amount(amount: startingBalance, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped))")
+        let endingString = String(format: String(format: S.Transaction.ending, "\(Amount(amount: balanceAfter, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped))"))
 
         var exchangeRateInfo = ""
         if let metaData = metaData {

@@ -190,7 +190,8 @@ enum MaxDigits {
     struct set : Action {
         let reduce: Reducer
         init(_ maxDigits: Int) {
-            reduce = { $0.clone(maxDigits: maxDigits) }
+            UserDefaults.maxDigits = maxDigits
+            reduce = { $0.clone(maxDigits: maxDigits)}
         }
     }
 }

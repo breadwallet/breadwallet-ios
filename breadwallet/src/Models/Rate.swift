@@ -46,6 +46,10 @@ struct Rate {
         let identifier = Locale.identifier(fromComponents: components)
         return Locale(identifier: identifier)
     }
+
+    static var empty: Rate {
+        return Rate(code: "", name: "", rate: 0.0)
+    }
 }
 
 extension Rate {
