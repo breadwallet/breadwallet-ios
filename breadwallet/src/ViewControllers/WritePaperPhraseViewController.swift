@@ -49,6 +49,10 @@ class WritePaperPhraseViewController: UIViewController {
 
     private let callback: () -> Void
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     override func viewDidLoad() {
         view.backgroundColor = .white
         
@@ -63,6 +67,10 @@ class WritePaperPhraseViewController: UIViewController {
         addSubviews()
         addConstraints()
         addButtonTargets()
+
+        NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { [weak self] note in
+            self?.dismiss(animated: true, completion: nil)
+        }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

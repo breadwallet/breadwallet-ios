@@ -60,6 +60,10 @@ class ConfirmPaperPhraseViewController : UIViewController {
         addButtonActions()
 
         confirmFirstPhrase.textField.becomeFirstResponder()
+
+        NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { [weak self] note in
+            self?.dismiss(animated: true, completion: nil)
+        }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
