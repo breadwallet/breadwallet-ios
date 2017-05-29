@@ -117,7 +117,7 @@ class WalletCoordinator : Subscriber {
     }
 
     private func updateBalance() {
-        guard let balance = walletManager.wallet?.balance else { assert(false, "Walled doesn't exist!"); return }
+        guard let balance = walletManager.wallet?.balance else { return }
         store.perform(action: WalletChange.setBalance(balance))
     }
 
