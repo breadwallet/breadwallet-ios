@@ -213,7 +213,7 @@ class AmountViewController : UIViewController {
 
     private func updateAmountLabel() {
         guard let amount = amount else { amountLabel.text = ""; return }
-        var output = NumberFormatter.formattedString(amount: amount, rate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+        var output = NumberFormatter.formattedString(amount: amount, rate: selectedRate, minimumFractionDigits: minimumFractionDigits, maxDigits: store.state.maxDigits)
         if hasTrailingDecimal {
             output = output.appending(NumberFormatter().currencyDecimalSeparator)
         }

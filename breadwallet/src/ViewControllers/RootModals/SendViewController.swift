@@ -151,12 +151,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> NSAttributedString? {
-        let balanceText = NumberFormatter.formattedString(amount: Satoshis(rawValue: balance), rate: rate, minimumFractionDigits: nil)
+        let balanceText = NumberFormatter.formattedString(amount: Satoshis(rawValue: balance), rate: rate, minimumFractionDigits: nil, maxDigits: store.state.maxDigits)
         var output = ""
         var color: UIColor = .grayTextTint
         if let amount = amount, amount.rawValue > 0 {
             let fee = sender.feeForTx(amount: amount.rawValue)
-            let feeText = NumberFormatter.formattedString(amount: Satoshis(rawValue: fee), rate: rate, minimumFractionDigits: nil)
+            let feeText = NumberFormatter.formattedString(amount: Satoshis(rawValue: fee), rate: rate, minimumFractionDigits: nil, maxDigits: store.state.maxDigits)
             output = String(format: S.Send.balanceWithFee, balanceText, feeText)
             if (balance > fee) && amount.rawValue > (balance - fee) {
                 sendButton.isEnabled = false
@@ -239,7 +239,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     private func send() {
-        let feeText = NumberFormatter.formattedString(amount: Satoshis(sender.fee), rate: amountView.selectedRate, minimumFractionDigits: nil)
+        let feeText = NumberFormatter.formattedString(amount: Satoshis(sender.fee), rate: amountView.selectedRate, minimumFractionDigits: nil, maxDigits: store.state.maxDigits)
         let touchIdMessage = String(format: S.Send.touchIdPrompt, amountView.currentOutput, to.content ?? "", feeText)
         let pinMessage = String(format: S.VerifyPin.transactionBody, amountView.currentOutput, to.content ?? "", feeText)
 
@@ -311,10 +311,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                 self?.confirmProtocolRequest(protoReq: protoReq)
             })
         } else if requestAmount < wallet.minOutputAmount {
-            let message = String(format: S.PaymentProtocol.Errors.smallPayment, "\(Amount.bitsFormatter.string(from: Double(wallet.minOutputAmount)/100.0 as NSNumber) ?? "")")
+            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: store.state.maxDigits)
+            let message = String(format: S.PaymentProtocol.Errors.smallPayment, amount.bits)
             return showProtocolError(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         } else if isOutputTooSmall {
-            let message = String(format: S.PaymentProtocol.Errors.smallTransaction, "\(Amount.bitsFormatter.string(from: Double(wallet.minOutputAmount)/100.0 as NSNumber) ?? "")")
+            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: store.state.maxDigits)
+            let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.bits)
             return showProtocolError(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         }
 

@@ -16,13 +16,13 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         setup()
     }
 
-    func set(transaction: Transaction, isBtcSwapped: Bool, rate: Rate) {
+    func set(transaction: Transaction, isBtcSwapped: Bool, rate: Rate, maxDigits: Int) {
         timestamp.text = transaction.longTimestamp
-        amount.text = String(format: transaction.direction.amountFormat, "\(transaction.amountDescription(isBtcSwapped: isBtcSwapped, rate: rate))")
+        amount.text = String(format: transaction.direction.amountFormat, "\(transaction.amountDescription(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits))")
         address.text = transaction.direction.addressText
         status.text = transaction.longStatus
         comment.text = transaction.comment
-        amountDetails.text = transaction.amountDetails(isBtcSwapped: isBtcSwapped, rate: rate)
+        amountDetails.text = transaction.amountDetails(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits)
         addressHeader.text = transaction.direction.addressHeader.capitalized
         fullAddress.text = transaction.toAddress ?? ""
         txHash.text = transaction.hash

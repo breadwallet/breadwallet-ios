@@ -19,10 +19,12 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         self.store = store
         self.isBtcSwapped = store.state.isBtcSwapped
         if let rate = store.state.currentRate {
-            let placeholderAmount = Amount(amount: 0, rate: rate)
+            let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: store.state.maxDigits)
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
+            self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.btcFormat)
         } else {
             self.secondaryBalance = UpdatingLabel(formatter: NumberFormatter())
+            self.primaryBalance = UpdatingLabel(formatter: NumberFormatter())
         }
 
         super.init(frame: CGRect())
@@ -34,7 +36,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     //MARK: - Private
     private let name = UILabel(font: UIFont.boldSystemFont(ofSize: 17.0))
     private let manage = UIButton(type: .system)
-    private let primaryBalance = UpdatingLabel(formatter: Amount.btcFormat)
+    private let primaryBalance: UpdatingLabel
     private let secondaryBalance: UpdatingLabel
     private let currencyTapView = UIView()
     private let store: Store
@@ -194,10 +196,22 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                         callback: {
                             self.exchangeRate = $0.currentRate
                             if let rate = $0.currentRate {
-                                let placeholderAmount = Amount(amount: 0, rate: rate)
+                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits)
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
+                                self.primaryBalance.formatter = placeholderAmount.btcFormat
                             }
                         })
+        
+        store.subscribe(self,
+                        selector: { $0.maxDigits != $1.maxDigits},
+                        callback: {
+                            if let rate = $0.currentRate {
+                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits)
+                                self.secondaryBalance.formatter = placeholderAmount.localFormat
+                                self.primaryBalance.formatter = placeholderAmount.btcFormat
+                                self.setBalances()
+                            }
+        })
         store.subscribe(self,
                         selector: { $0.walletState.name != $1.walletState.name },
                         callback: { self.name.text = $0.walletState.name })
@@ -209,9 +223,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     private func setBalances() {
         guard let rate = exchangeRate else { return }
-        let amount = Amount(amount: balance, rate: rate)
+        let amount = Amount(amount: balance, rate: rate, maxDigits: store.state.maxDigits)
 
-        primaryBalance.setValue(amount.bitsAmount, completion: { [weak self] in
+        primaryBalance.setValue(amount.amountForBtcFormat, completion: { [weak self] in
             guard let myself = self else { return }
             myself.layoutIfNeeded()
             if !myself.isBtcSwapped {

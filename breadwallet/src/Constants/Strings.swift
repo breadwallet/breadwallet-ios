@@ -12,6 +12,7 @@ enum S {
 
     enum Symbols {
         static let bits = "ƀ"
+        static let btc = "Ƀ"
         static let narrowSpace = "\u{2009}"
         static let lock = "\u{1F512}"
         static let redX = "\u{274C}"
