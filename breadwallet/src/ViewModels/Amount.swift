@@ -13,9 +13,13 @@ struct Amount {
     //MARK: - Public
     let amount: UInt64 //amount in satoshis
     let rate: Rate
-
-    var bitsAmount: Double {
-        return Double(amount)/100.0
+    let maxDigits: Int
+    
+    var amountForBtcFormat: Double {
+        var decimal = Decimal(self.amount)
+        var amount: Decimal = 0.0
+        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-maxDigits), .up)
+        return NSDecimalNumber(decimal: amount).doubleValue
     }
 
     var localAmount: Double {
@@ -23,8 +27,11 @@ struct Amount {
     }
 
     var bits: String {
-        let number = NSNumber(value: Double(amount)/100.0)
-        guard let string = Amount.btcFormat.string(from: number) else { return "" }
+        var decimal = Decimal(self.amount)
+        var amount: Decimal = 0.0
+        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-maxDigits), .up)
+        let number = NSDecimalNumber(decimal: amount)
+        guard let string = btcFormat.string(from: number) else { return "" }
         return string
     }
 
@@ -48,34 +55,34 @@ struct Amount {
         return isBtcSwapped ? localCurrency : bits
     }
 
-    static var bitsFormatter: NumberFormatter {
+    var btcFormat: NumberFormatter {
         let format = NumberFormatter()
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         format.currencyCode = "XBT"
-        format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
-        format.maximumFractionDigits = 2
+
+        switch maxDigits {
+        case 2:
+            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+            format.maximum = (C.maxMoney/C.satoshis)*100000 as NSNumber
+        case 5:
+            format.currencySymbol = "m\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
+            format.maximum = (C.maxMoney/C.satoshis)*1000 as NSNumber
+        case 8:
+            format.currencySymbol = "\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
+            format.maximum = C.maxMoney/C.satoshis as NSNumber
+        default:
+            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+        }
+
+        format.maximumFractionDigits = maxDigits
         format.minimumFractionDigits = 0 // iOS 8 bug, minimumFractionDigits now has to be set after currencySymbol
-        format.maximum = C.maxMoney as NSNumber
+        format.maximum = Decimal(C.maxMoney)/(pow(10.0, maxDigits)) as NSNumber
+
         return format
     }
-
-    //MARK: - Private
-    static let btcFormat: NumberFormatter = {
-        let format = NumberFormatter()
-        format.isLenient = true
-        format.numberStyle = .currency
-        format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencyCode = "XBT"
-        format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
-        format.maximumFractionDigits = 2
-        format.minimumFractionDigits = 0 // iOS 8 bug, minimumFractionDigits now has to be set after currencySymbol
-        format.maximum = C.maxMoney as NSNumber
-        return format
-    }()
 
     var localFormat: NumberFormatter {
         let format = NumberFormatter()

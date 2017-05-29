@@ -73,7 +73,7 @@ extension UserDefaults {
             return defaults.integer(forKey: maxDigitsKey)
         }
         set {
-            defaults.set(maxDigits, forKey: maxDigitsKey)
+            defaults.set(newValue, forKey: maxDigitsKey)
         }
     }
 }

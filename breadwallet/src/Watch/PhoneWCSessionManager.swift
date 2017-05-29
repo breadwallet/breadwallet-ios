@@ -34,7 +34,7 @@ extension PhoneWCSessionManager : WCSessionDelegate {
 
         guard let wallet = forWalletManager.wallet else { return nil }
 
-        let amount = Amount(amount: wallet.balance, rate: rate)
+        let amount = Amount(amount: wallet.balance, rate: rate, maxDigits: 2) //TODO - fix always bits on watch
 
         let image = UIImage.qrCode(data: "\(wallet.receiveAddress)".data(using: .utf8)!, color: CIColor(color: .black))?
             .resize(CGSize(width: 136.0, height: 136.0))!

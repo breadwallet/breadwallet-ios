@@ -9,7 +9,8 @@
 import Foundation
 
 extension NumberFormatter {
-    static func formattedString(amount: Satoshis, rate: Rate?, minimumFractionDigits: Int?) -> String {
+    static func formattedString(amount: Satoshis, rate: Rate?, minimumFractionDigits: Int?, maxDigits: Int) -> String {
+        let displayAmount = Amount(amount: amount.rawValue, rate: rate ?? Rate.empty, maxDigits: maxDigits)
         var formatter: NumberFormatter
         var output = ""
         if let rate = rate {
@@ -22,7 +23,7 @@ extension NumberFormatter {
             let value = (Double(amount.rawValue)/Double(C.satoshis))*rate.rate
             output = formatter.string(from: value as NSNumber) ?? "error"
         } else {
-            formatter = Amount.bitsFormatter
+            formatter = displayAmount.btcFormat
             if let minimumFractionDigits = minimumFractionDigits {
                 formatter.minimumFractionDigits = minimumFractionDigits
             }

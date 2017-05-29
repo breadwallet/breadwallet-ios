@@ -27,6 +27,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
             setExchangeRateLabel()
         }
     }
+    private var swipeGr = UISwipeGestureRecognizer()
     private var defaultCurrencyCode: String? = nil {
         didSet {
             //Grab index paths of new and old rows when the currency changes
@@ -39,6 +40,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         }
     }
     private let rateLabel = UILabel(font: .customBody(size: 16.0), color: .darkText)
+    private let swipeView = UIView()
 
     deinit {
         store.unsubscribe(self)
@@ -50,9 +52,18 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         store.subscribe(self, selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode }, callback: {
             self.defaultCurrencyCode = $0.defaultCurrencyCode
         })
+        store.subscribe(self, selector: { $0.maxDigits != $1.maxDigits }, callback: { _ in
+            self.setExchangeRateLabel()
+        })
         apiClient.exchangeRates { rates, error in
             self.rates = rates.filter { $0.code != C.btcCurrencyCode }
         }
+
+        swipeGr.addTarget(self, action: #selector(swipe))
+        swipeGr.delegate = self
+        swipeGr.direction = .left
+        swipeView.addGestureRecognizer(swipeGr)
+        swipeView.isUserInteractionEnabled = true
     }
 
     private func setHeader() {
@@ -65,6 +76,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         header.addSubview(rateLabelTitle)
         header.addSubview(rateLabel)
         header.addSubview(faq)
+        header.addSubview(swipeView)
 
         titleLabel.constrain([
             titleLabel.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: C.padding[2]),
@@ -81,6 +93,11 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
             faq.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: 0.0),
             faq.constraint(.height, constant: 44.0),
             faq.constraint(.width, constant: 44.0)])
+        swipeView.constrain([
+            swipeView.leadingAnchor.constraint(equalTo: rateLabelTitle.leadingAnchor),
+            swipeView.topAnchor.constraint(equalTo: rateLabelTitle.topAnchor),
+            swipeView.bottomAnchor.constraint(equalTo: rateLabel.bottomAnchor),
+            swipeView.trailingAnchor.constraint(equalTo: faq.leadingAnchor) ])
 
         titleLabel.text = S.DefaultCurrency.title
         rateLabelTitle.text = S.DefaultCurrency.rateLabel
@@ -100,10 +117,16 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
     private func setExchangeRateLabel() {
         if let currentRate = rates.filter({ $0.code == defaultCurrencyCode }).first {
-            let amount = Amount(amount: C.satoshis, rate: currentRate)
+            let amount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: store.state.maxDigits)
+            let bitsAmount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: store.state.maxDigits)
             rateLabel.textColor = .darkText
-            rateLabel.text = "\(amount.string(forLocal: currentRate.locale)) = 1 BTC"
+            rateLabel.text = "\(amount.string(forLocal: currentRate.locale)) = \(bitsAmount.bits)"
         }
+    }
+
+    @objc private func swipe() {
+        let newDigits = (((store.state.maxDigits - 2)/3 + 1) % 3)*3 + 2 //cycle through 2, 5, 8
+        store.perform(action: MaxDigits.set(newDigits))
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -138,5 +161,10 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
+extension DefaultCurrencyViewController : UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
 }

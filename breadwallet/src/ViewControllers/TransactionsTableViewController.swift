@@ -116,6 +116,9 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
         store.subscribe(self,
                         selector: { $0.currentRate != $1.currentRate},
                         callback: { self.rate = $0.currentRate })
+        store.subscribe(self, selector: { $0.maxDigits != $1.maxDigits }, callback: {_ in 
+            self.reload()
+        })
 
         store.subscribe(self, selector: { $0.walletState.syncErrorMessage != $1.walletState.syncErrorMessage
         }, callback: {
@@ -193,7 +196,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
             let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
             if let transactionCell = cell as? TransactionTableViewCell, let rate = rate {
                 transactionCell.setStyle(style)
-                transactionCell.setTransaction(transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate)
+                transactionCell.setTransaction(transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits)
             }
             return cell
         }
