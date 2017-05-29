@@ -128,9 +128,19 @@ class Transaction {
         return metaData?.comment
     }
 
+    var _metaData: BRTxMetadataObject?
     var metaData: BRTxMetadataObject? {
-        guard let kvStore = self.kvStore else { return nil }
-        return BRTxMetadataObject(txHash: self.tx.pointee.txHash, store: kvStore)
+        if _metaData != nil {
+            return _metaData
+        } else {
+            guard let kvStore = self.kvStore else { return nil }
+            if let data = BRTxMetadataObject(txHash: self.tx.pointee.txHash, store: kvStore) {
+                _metaData = data
+                return _metaData
+            } else {
+                return nil
+            }
+        }
     }
 
     private var balanceAfter: UInt64 {
