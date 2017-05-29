@@ -14,7 +14,7 @@ import BRCore
 class Transaction {
 
     //MARK: - Public
-    init(_ tx: BRTxRef, wallet: BRWallet, blockHeight: UInt32, kvStore: BRReplicatedKVStore?) {
+    init(_ tx: BRTxRef, wallet: BRWallet, blockHeight: UInt32, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         self.tx = tx
         self.wallet = wallet
         self.kvStore = kvStore
@@ -52,6 +52,10 @@ class Transaction {
         }
 
         self.hash = tx.pointee.txHash.description
+
+        if let rate = rate, confirms < 6 {
+            attemptCreateMetaData(tx: tx, rate: rate)
+        }
     }
 
     func amountDescription(isBtcSwapped: Bool, rate: Rate) -> String {
@@ -194,6 +198,20 @@ class Transaction {
         df.dateFormat = "MMMM d, yyy 'at' h:mm a"
         return df
     }()
+
+    private func attemptCreateMetaData(tx: BRTxRef, rate: Rate) {
+        guard metaData == nil else { return }
+        let newData = BRTxMetadataObject(transaction: tx.pointee,
+                                          exchangeRate: rate.rate,
+                                          exchangeRateCurrency: rate.currencySymbol,
+                                          feeRate: 0.0,
+                                          deviceId: UserDefaults.standard.deviceID)
+        do {
+            let _ = try kvStore?.set(newData)
+        } catch let error {
+            print("could not update metadata: \(error)")
+        }
+    }
 }
 
 private func makeStatus(isValid: Bool, isPending: Bool, isVerified: Bool, confirms: Int) -> String {
