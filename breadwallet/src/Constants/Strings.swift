@@ -59,6 +59,10 @@ enum S {
             static let secondLine = NSLocalizedString("Send.UsedAddress.secondLIne", value: "Re-use reduces privacy for both you and the recipient and can result in loss if the recipient doesn't directly control the address", comment: "Adress already used alert message - second part")
         }
         static let identityNotCertified = NSLocalizedString("Send.identityNotCertified", value: "Payee identity isn't certified", comment: "Payee identity not certified alert title.")
+        static let createTransactionError = NSLocalizedString("Send.creatTransactionError", value: "Could not create Transaction", comment: "Could not create transaction alert title")
+        static let publicTransactionError = NSLocalizedString("Send.publishTransactionError", value: "Could not publish Transaction", comment: "Could not publish transaction alert title")
+        static let noAddress = NSLocalizedString("Send.noAddress", value: "Please enter the receiver's address.", comment: "Empty address alert message")
+        static let noAmount = NSLocalizedString("Send.noAmount", value: "Please enter an amount to send.", comment: "Emtpy amount alert message")
     }
 
     enum Receive {

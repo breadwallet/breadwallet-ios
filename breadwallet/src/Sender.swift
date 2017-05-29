@@ -57,7 +57,7 @@ class Sender {
 
     //Amount in bits
     func send(touchIdMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
-        guard let tx = transaction else { return completion(.creationError("Transaction not created")) }
+        guard let tx = transaction else { return completion(.creationError(S.Send.createTransactionError)) }
 
         self.rate = rate
         self.comment = comment
