@@ -16,6 +16,7 @@ private let legacyWalletNeedsBackupKey = "WALLET_NEEDS_BACKUP"
 private let writePaperPhraseDateKey = "writepaperphrasedatekey"
 private let hasPromptedTouchIdKey = "haspromptedtouched"
 private let isBtcSwappedKey = "isBtcSwappedKey"
+private let maxDigitsKey = "SETTINGS_MAX_DIGITS"
 
 extension UserDefaults {
 
@@ -61,6 +62,18 @@ extension UserDefaults {
         }
         set {
             defaults.set(newValue, forKey: isBtcSwappedKey)
+        }
+    }
+
+    static var maxDigits: Int {
+        get {
+            guard defaults.object(forKey: maxDigitsKey) != nil else {
+                return 2
+            }
+            return defaults.integer(forKey: maxDigitsKey)
+        }
+        set {
+            defaults.set(maxDigits, forKey: maxDigitsKey)
         }
     }
 }
