@@ -266,8 +266,10 @@ extension WalletManager : WalletAuthenticator {
         guard noWallet else { return false }
         
         do {
+            let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString)
+            CFStringNormalize(nfkdPhrase, .KD)
             var seed = UInt512()
-            try setKeychainItem(key: KeychainKey.mnemonic, item: phrase, authenticated: true)
+            try setKeychainItem(key: KeychainKey.mnemonic, item: nfkdPhrase as String?, authenticated: true)
             BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
             self.masterPubKey = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
             seed = UInt512() // clear seed
