@@ -136,8 +136,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             secondaryBalance.leadingAnchor.constraint(equalTo: equals.trailingAnchor, constant: C.padding[1]/2.0)
         ]
 
-        NSLayoutConstraint.activate(regularConstraints)
-
         swappedConstraints = [
             secondaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[4]),
             secondaryBalance.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
@@ -194,12 +192,12 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         store.subscribe(self,
                         selector: { $0.currentRate != $1.currentRate},
                         callback: {
-                            self.exchangeRate = $0.currentRate
                             if let rate = $0.currentRate {
                                 let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits)
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.btcFormat
                             }
+                            self.exchangeRate = $0.currentRate
                         })
         
         store.subscribe(self,
@@ -224,37 +222,43 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private func setBalances() {
         guard let rate = exchangeRate else { return }
         let amount = Amount(amount: balance, rate: rate, maxDigits: store.state.maxDigits)
-
-        primaryBalance.setValue(amount.amountForBtcFormat, completion: { [weak self] in
-            guard let myself = self else { return }
-            myself.layoutIfNeeded()
-            if !myself.isBtcSwapped {
-                myself.primaryBalance.transform = .identity
-            } else {
-                if myself.primaryBalance.transform == .identity {
-                    myself.primaryBalance.transform = myself.transform(forView: myself.primaryBalance)
-                }
-            }
-        })
-        secondaryBalance.setValue(amount.localAmount, completion: { [weak self] in
-            guard let myself = self else { return }
-            myself.layoutIfNeeded()
-            if myself.isBtcSwapped {
-                myself.secondaryBalance.transform = .identity
-            } else {
-                if myself.secondaryBalance.transform == .identity {
-                    myself.secondaryBalance.transform = myself.transform(forView: myself.secondaryBalance)
-                }
-            }
-        })
-
         if !hasInitialized {
-            NSLayoutConstraint.deactivate(isBtcSwapped ? self.regularConstraints : self.swappedConstraints)
+            let amount = Amount(amount: balance, rate: exchangeRate!, maxDigits: store.state.maxDigits)
             NSLayoutConstraint.activate(isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
             self.primaryBalance.textColor = isBtcSwapped ? .darkText : .white
             self.secondaryBalance.textColor = isBtcSwapped ? .white : .darkText
+            primaryBalance.setValue(amount.amountForBtcFormat)
+            secondaryBalance.setValue(amount.localAmount)
             layoutIfNeeded()
+            if isBtcSwapped {
+                primaryBalance.transform = transform(forView: primaryBalance)
+            } else {
+                secondaryBalance.transform = transform(forView: secondaryBalance)
+            }
             hasInitialized = true
+        } else {
+            primaryBalance.setValueAnimated(amount.amountForBtcFormat, completion: { [weak self] in
+                guard let myself = self else { return }
+                myself.layoutIfNeeded()
+                if !myself.isBtcSwapped {
+                    myself.primaryBalance.transform = .identity
+                } else {
+                    if myself.primaryBalance.transform == .identity {
+                        myself.primaryBalance.transform = myself.transform(forView: myself.primaryBalance)
+                    }
+                }
+            })
+            secondaryBalance.setValueAnimated(amount.localAmount, completion: { [weak self] in
+                guard let myself = self else { return }
+                myself.layoutIfNeeded()
+                if myself.isBtcSwapped {
+                    myself.secondaryBalance.transform = .identity
+                } else {
+                    if myself.secondaryBalance.transform == .identity {
+                        myself.secondaryBalance.transform = myself.transform(forView: myself.secondaryBalance)
+                    }
+                }
+            })
         }
     }
 
