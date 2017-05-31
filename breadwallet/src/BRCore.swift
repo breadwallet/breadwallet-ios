@@ -72,10 +72,10 @@ public let secureAllocator: CFAllocator = {
 extension BRAddress: CustomStringConvertible {
     init?(string: String) {
         self.init()
-        let count = string.utf8CString.count
-        guard count <= MemoryLayout<BRAddress>.size else { return nil }
-        let cStr = UnsafeRawPointer([string.utf8CString]).assumingMemoryBound(to: CChar.self)
-        UnsafeMutableRawPointer(mutating: [self.s]).assumingMemoryBound(to: CChar.self).assign(from: cStr, count: count)
+        let cStr = [CChar](string.utf8CString)
+        guard cStr.count <= MemoryLayout<BRAddress>.size else { return nil }
+        UnsafeMutableRawPointer(mutating: [self.s]).assumingMemoryBound(to: CChar.self).assign(from: cStr,
+                                                                                               count: cStr.count)
     }
     
     public var description: String {
