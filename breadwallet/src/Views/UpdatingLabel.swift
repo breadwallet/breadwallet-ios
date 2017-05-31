@@ -25,7 +25,12 @@ class UpdatingLabel : UILabel {
     var completion: (() -> Void)?
     private var value: Double = 0.0
 
-    func setValue(_ endingValue: Double, completion: @escaping () -> Void) {
+    func setValue(_ value: Double) {
+        self.value = value
+        setFormattedText(forValue: value)
+    }
+
+    func setValueAnimated(_ endingValue: Double, completion: @escaping () -> Void) {
         self.completion = completion
         guard let currentText = text else { return }
         guard let startingValue = formatter.number(from: currentText)?.doubleValue else { return }
@@ -73,6 +78,7 @@ class UpdatingLabel : UILabel {
     private func setFormattedText(forValue: Double) {
         value = forValue
         text = formatter.string(from: forValue as NSNumber)
+        sizeToFit()
     }
 
     required init?(coder aDecoder: NSCoder) {
