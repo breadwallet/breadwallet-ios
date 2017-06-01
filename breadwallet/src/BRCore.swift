@@ -84,10 +84,89 @@ extension BRAddress: CustomStringConvertible {
 }
 
 extension BRKey {
-    mutating func address() -> String {
+    // privKey must be wallet import format (WIF), mini private key format, or hex string
+    init?(privKey: String) {
+        self.init()
+        guard BRKeySetPrivKey(&self, privKey) != 0 else { return nil }
+    }
+    
+    // pubKey must be a DER encoded public key
+    init?(pubKey: [UInt8]) {
+        self.init()
+        guard BRKeySetPubKey(&self, pubKey, pubKey.count) != 0 else { return nil }
+    }
+    
+    init?(secret: UnsafePointer<UInt256>, compact: Bool) {
+        self.init()
+        guard BRKeySetSecret(&self, secret, compact ? 1 : 0) != 0 else { return nil }
+    }
+    
+    // recover a pubKey from a compact signature
+    init?(md: UInt256, compactSig: [UInt8]) {
+        self.init()
+        guard BRKeyRecoverPubKey(&self, md, compactSig, compactSig.count) != 0 else { return nil }
+    }
+    
+    // WIF private key
+    mutating func privKey() -> String? {
+        return autoreleasepool { // wrapping in autoreleasepool ensures sensitive memory is wiped and freed immediately
+            let cPtr = UnsafeMutablePointer(&self)
+            let count = BRKeyPrivKey(cPtr, nil, 0)
+            var data = CFDataCreateMutable(secureAllocator, count) as Data
+            data.count = count
+            guard data.withUnsafeMutableBytes({ BRKeyPrivKey(cPtr, $0, data.count) }) != 0 else { return nil }
+            return CFStringCreateFromExternalRepresentation(secureAllocator, data as CFData,
+                                                            CFStringBuiltInEncodings.UTF8.rawValue) as String
+        }
+    }
+    
+    // DER encoded public key
+    mutating func pubKey() -> [UInt8]? {
+        var pubKey = [UInt8](repeating: 0, count: BRKeyPubKey(&self, nil, 0))
+        guard BRKeyPubKey(&self, &pubKey, pubKey.count) == pubKey.count else { return nil }
+        return pubKey
+    }
+    
+    // ripemd160 hash of the sha256 hash of the public key
+    mutating func hash160() -> UInt160? {
+        let hash = BRKeyHash160(&self)
+        guard hash != UInt160() else { return nil }
+        return hash
+    }
+    
+    // pay-to-pubkey-hash bitcoin address
+    mutating func address() -> String? {
         var addr = [CChar](repeating: 0, count: MemoryLayout<BRAddress>.size)
-        BRKeyAddress(&self, &addr, addr.count)
+        guard BRKeyAddress(&self, &addr, addr.count) > 0 else { return nil }
         return String(cString: addr)
+    }
+    
+    mutating func sign(md: UInt256) -> [UInt8]? {
+        var sig = [UInt8](repeating:0, count: 73)
+        let count = BRKeySign(&self, &sig, sig.count, md)
+        guard count > 0 else { return nil }
+        while count < sig.count { sig.remove(at: count - 1) }
+        return sig
+    }
+
+    mutating func verify(sig: [UInt8], md: UInt256) -> Bool {
+        var sig = sig
+        return BRKeyVerify(&self, md, &sig, sig.count) != 0
+    }
+    
+    // wipes key material
+    mutating func clean() {
+        BRKeyClean(&self)
+    }
+    
+    // Pieter Wuille's compact signature encoding used for bitcoin message signing
+    // to verify a compact signature, recover a public key from the sig and verify that it matches the signer's pubkey
+    mutating func compactSign(md: UInt256) -> [UInt8]? {
+        var sig = [UInt8](repeating:0, count: 65)
+        let count = BRKeyCompactSign(&self, &sig, sig.count, md)
+        guard count > 0 else { return nil }
+        while count < sig.count { sig.remove(at: count - 1) }
+        return sig
     }
 }
 
