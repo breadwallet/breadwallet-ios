@@ -83,6 +83,14 @@ extension BRAddress: CustomStringConvertible {
     }
 }
 
+extension BRKey {
+    mutating func address() -> String {
+        var addr = [CChar](repeating: 0, count: MemoryLayout<BRAddress>.size)
+        BRKeyAddress(&self, &addr, addr.count)
+        return String(cString: addr)
+    }
+}
+
 extension BRTxInput {
     var swiftAddress: String {
         return String(cString: UnsafeRawPointer([self.address]).assumingMemoryBound(to: CChar.self))
