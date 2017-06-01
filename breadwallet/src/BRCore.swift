@@ -145,7 +145,7 @@ extension BRKey {
         var sig = [UInt8](repeating:0, count: 73)
         let count = BRKeySign(&self, &sig, sig.count, md)
         guard count > 0 else { return nil }
-        while count < sig.count { sig.remove(at: count - 1) }
+        while count < sig.count { sig.remove(at: sig.count - 1) }
         return sig
     }
 
@@ -165,7 +165,7 @@ extension BRKey {
         var sig = [UInt8](repeating:0, count: 65)
         let count = BRKeyCompactSign(&self, &sig, sig.count, md)
         guard count > 0 else { return nil }
-        while count < sig.count { sig.remove(at: count - 1) }
+        while count < sig.count { sig.remove(at: sig.count - 1) }
         return sig
     }
 }
