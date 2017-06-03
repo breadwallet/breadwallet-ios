@@ -38,6 +38,7 @@ import WebKit
     var mountPoint: String
     var walletManager: WalletManager
     let store: Store
+    let apiClient: BRAPIClient
     // didLoad should be set to true within didLoadTimeout otherwise a view will be shown which
     // indicates some error. this is to prevent the white-screen-of-death where there is some
     // javascript exception (or other error) that prevents the content from loading
@@ -57,12 +58,13 @@ import WebKit
         return URL(string: "http://127.0.0.1:\(server.port)\(mountPoint)")!
     }
     
-    init(bundleName: String, mountPoint: String = "/", walletManager: WalletManager, store: Store) {
+    init(bundleName: String, mountPoint: String = "/", walletManager: WalletManager, store: Store, apiClient: BRAPIClient) {
         wkProcessPool = WKProcessPool()
         self.bundleName = bundleName
         self.mountPoint = mountPoint
         self.walletManager = walletManager
         self.store = store
+        self.apiClient = apiClient
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -125,22 +127,47 @@ import WebKit
     // that is has loaded by didLoadTimeout then an alert will be shown allowing the user to back out
     // of the faulty webview
     fileprivate func beginDidLoadCountdown() {
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(didLoadTimeout)) {
+        let timeout = DispatchTime.now() + .milliseconds(self.didLoadTimeout)
+        DispatchQueue.main.asyncAfter(deadline: timeout) {
             if self.didAppear && !self.didLoad {
-                let alert = UIAlertController.init(
-                    title: NSLocalizedString("Error", comment: ""),
-                    message: NSLocalizedString("There was an error loading the content. Please try again", comment: ""),
-                    preferredStyle: .alert
-                )
-                let action = UIAlertAction(title: NSLocalizedString("Dismiss", comment: ""), style: .default) { _ in
-                    self.closeNow()
-                }
-                alert.addAction(action)
-                self.present(alert, animated: true, completion: nil)
+                // if the webview did not load the first time lets refresh the bundle. occasionally the bundle
+                // update can fail, so this update should fetch an entirely new copy
+                let activity = BRActivityViewController(message: NSLocalizedString("Updating...", comment: ""))
+                self.present(activity, animated: true, completion: nil)
+                self.apiClient.updateBundles(completionHandler: { results in
+                    results.forEach({ message, err in
+                        if err != nil {
+                            print("[BRWebViewController] error updating bundle: \(String(describing: err))")
+                        }
+                        // give the webview another chance to load
+                        self.refresh()
+                        // XXX(sam): log this event so we know how frequently it happens
+                        DispatchQueue.main.asyncAfter(deadline: timeout) {
+                            self.dismiss(animated: true) {
+                                self.notifyUserOfLoadFailure()
+                            }
+                        }
+                    })
+                })
             }
         }
     }
-    
+
+    fileprivate func notifyUserOfLoadFailure() {
+        if self.didAppear && !self.didLoad {
+            let alert = UIAlertController.init(
+                title: NSLocalizedString("Error", comment: ""),
+                message: NSLocalizedString("There was an error loading the content. Please try again", comment: ""),
+                preferredStyle: .alert
+            )
+            let action = UIAlertAction(title: NSLocalizedString("Dismiss", comment: ""), style: .default) { _ in
+                self.closeNow()
+            }
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+
     // signal to the presenter that the webview content successfully loaded
     fileprivate func webviewDidLoad() {
         didLoad = true
