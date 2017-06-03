@@ -37,6 +37,7 @@ import WebKit
     var debugEndpoint: String?
     var mountPoint: String
     var walletManager: WalletManager
+    let store: Store
     // didLoad should be set to true within didLoadTimeout otherwise a view will be shown which
     // indicates some error. this is to prevent the white-screen-of-death where there is some
     // javascript exception (or other error) that prevents the content from loading
@@ -56,11 +57,12 @@ import WebKit
         return URL(string: "http://127.0.0.1:\(server.port)\(mountPoint)")!
     }
     
-    init(bundleName name: String, mountPoint mp: String = "/", walletManager wm: WalletManager) {
+    init(bundleName: String, mountPoint: String = "/", walletManager: WalletManager, store: Store) {
         wkProcessPool = WKProcessPool()
-        bundleName = name
-        mountPoint = mp
-        walletManager = wm
+        self.bundleName = bundleName
+        self.mountPoint = mountPoint
+        self.walletManager = walletManager
+        self.store = store
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -206,7 +208,7 @@ import WebKit
         router.plugin(BRCameraPlugin(fromViewController: self))
         
         // wallet plugin provides access to the wallet
-        router.plugin(BRWalletPlugin(walletManager: walletManager))
+        router.plugin(BRWalletPlugin(walletManager: walletManager, store: store))
         
         // link plugin which allows opening links to other apps
         router.plugin(BRLinkPlugin(fromViewController: self))
