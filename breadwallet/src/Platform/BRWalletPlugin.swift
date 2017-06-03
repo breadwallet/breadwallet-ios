@@ -157,28 +157,28 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient {
     }
     
     // MARK: - basic wallet functions
-    
     func walletInfo() -> [String: Any] {
         var d = [String: Any]()
         d["no_wallet"] = walletManager.noWallet
-        // FIXME: convert BRAddress to String
-//        if let wallet = walletManager.wallet {
-//            var addr = BRWalletReceiveAddress(wallet.ptr)
-//            d["receive_address"] = String.fromCString(addr)
-//        }
+        if let wallet = walletManager.wallet {
+            d["receive_address"] = wallet.receiveAddress
+            //d["watch_only"] = TODO - add watch only
+        }
+        d["btc_denomination_digits"] = store.state.maxDigits
         return d
     }
     
     func currencyFormat(_ amount: Int64) -> [String: Any] {
-        // FIXME: when currency formatting is added back in
-        let d = [String: Any]()
-//        d["local_currency_amount"] = manager.localCurrencyString(forAmount: Int64(amount))
-//        d["currency_amount"] = manager.string(forAmount: amount)
+        var d = [String: Any]()
+        if let rate = store.state.currentRate {
+            let amount = Amount(amount: UInt64(amount), rate: rate, maxDigits: store.state.maxDigits)
+            d["local_currency_amount"] = amount.localCurrency
+            d["currency_amount"] = amount.bits
+        }
         return d
     }
     
     // MARK: - socket handlers
-    
     func sendWalletInfo(_ socket: BRWebSocket) {
         var d = self.walletInfo()
         d["type"] = "wallet"
