@@ -29,10 +29,12 @@ import BRCore
 
 class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient {
     var sockets = [String: BRWebSocket]()
-    var walletManager: WalletManager
+    let walletManager: WalletManager
+    let store: Store
  
-    init(walletManager wm: WalletManager) {
-        walletManager = wm
+    init(walletManager: WalletManager, store: Store) {
+        self.walletManager = walletManager
+        self.store = store
     }
     
     func announce(_ json: [String: Any]) {
@@ -117,51 +119,39 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient {
         //          "signature": "oibwaeofbawoefb" // base64-encoded signature
         //      }
         router.post("/_wallet/sign_bitid") { (request, match) -> BRHTTPResponse in
-            // FIXME: fix bitid
-//            guard let cts = request.headers["content-type"] , cts.count == 1 && cts[0] == "application/json" else {
-//                return BRHTTPResponse(request: request, code: 400)
-//            }
-//            guard let data = request.body(),
-//                      let j = try? JSONSerialization.jsonObject(with: data, options: []),
-//                      let json = j as? [String: String],
-//                      let stringToSign = json["string_to_sign"],
-//                      let bitidUrlString = json["bitid_url"],
-//                      let bitidUrl = URL(string: bitidUrlString),
-//                      let bii = json["bitid_index"],
-//                      let bitidIndex = Int(bii) else {
-//                return BRHTTPResponse(request: request, code: 400)
-//            }
+            guard let cts = request.headers["content-type"] , cts.count == 1 && cts[0] == "application/json" else {
+                return BRHTTPResponse(request: request, code: 400)
+            }
+            guard let data = request.body(),
+                      let j = try? JSONSerialization.jsonObject(with: data, options: []),
+                      let json = j as? [String: String],
+                      let stringToSign = json["string_to_sign"],
+                      let bitidUrlString = json["bitid_url"],
+                      let bitidUrl = URL(string: bitidUrlString),
+                      let bii = json["bitid_index"],
+                      let bitidIndex = Int(bii) else {
+                return BRHTTPResponse(request: request, code: 400)
+            }
             let asyncResp = BRHTTPResponse(async: request)
-//            var maybeSeed: Data?
-//            DispatchQueue.main.sync {
-//                CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
-//                    maybeSeed = self.manager.seed(withPrompt: (bitidUrl.host ?? bitidUrl.description), forAmount: 0)
-//                    guard let seed = maybeSeed else {
-//                        request.queue.async {
-//                            asyncResp.provide(401)
-//                        }
-//                        return
-//                    }
-//                    let seq = BRBIP32Sequence()
-//                    let biuri = bitidUrl.host ?? bitidUrl.absoluteString
-//                    guard let kd = seq.bitIdPrivateKey(UInt32(bitidIndex), forURI: biuri, fromSeed: seed),
-//                        let key = BRKey(privateKey: kd) else {
-//                            request.queue.async {
-//                                asyncResp.provide(500)
-//                            }
-//                            return
-//                    }
-//                    let sig = BRBitID.signMessage(stringToSign, usingKey: key)
-//                    let ret: [String: Any] = [
-//                        "signature": sig,
-//                        "address": key.address ?? ""
-//                    ]
-//                    request.queue.async {
-//                        asyncResp.provide(200, json: ret)
-//                    }
-//
-//                }
-//            }
+            DispatchQueue.main.sync {
+                CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
+                    let prompt = bitidUrl.host ?? bitidUrl.description
+                    self.store.trigger(name: .authenticateForBitId(prompt, { authenticationSuccess in
+                        if authenticationSuccess {
+                            let response = self.walletManager.buildBitIdResponse(stringToSign: stringToSign,
+                                                                                 url: bitidUrl.host ?? bitidUrl.absoluteString,
+                                                                                 index: bitidIndex )
+                            guard let json = response.1 else {
+                                request.queue.async { asyncResp.provide(response.0) }
+                                return
+                            }
+                            request.queue.async {
+                                asyncResp.provide(response.0, json: json)
+                            }
+                        }
+                    }))
+                }
+            }
             return asyncResp
         }
     }

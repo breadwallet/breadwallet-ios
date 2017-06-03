@@ -38,7 +38,7 @@ class ModalPresenter : Subscriber {
     private var currentRequest: PaymentRequest?
 
     private func initializeSupportCenter(walletManager: WalletManager) {
-        supportCenter = SupportCenterContainer(walletManager: walletManager)
+        supportCenter = SupportCenterContainer(walletManager: walletManager, store: store)
     }
 
     private func addSubscriptions() {
@@ -91,6 +91,12 @@ class ModalPresenter : Subscriber {
             guard let trigger = $0 else { return }
             if case .copyWalletAddresses(let success, let error) = trigger {
                 self.handleCopyAddresses(success: success, error: error)
+            }
+        })
+        store.subscribe(self, name: .authenticateForBitId("", {_ in}), callback: {
+            guard let trigger = $0 else { return }
+            if case .authenticateForBitId(let prompt, let callback) = trigger {
+                self.authenticateForBitId(prompt: prompt, callback: callback)
             }
         })
     }
@@ -438,9 +444,9 @@ class ModalPresenter : Subscriber {
         guard let walletManager = self.walletManager else { return }
         let vc: BRWebViewController
         #if Debug || Testflight
-            vc = BRWebViewController(bundleName: "bread-buy-staging", mountPoint: mountPoint, walletManager: walletManager)
+            vc = BRWebViewController(bundleName: "bread-buy-staging", mountPoint: mountPoint, walletManager: walletManager, store: store)
         #else
-            vc = BRWebViewController(bundleName: "bread-buy", mountPoint: mountPoint, walletManager: walletManager)
+            vc = BRWebViewController(bundleName: "bread-buy", mountPoint: mountPoint, walletManager: walletManager, store: store)
         #endif
         vc.startServer()
         vc.preload()
@@ -597,6 +603,32 @@ class ModalPresenter : Subscriber {
             self?.topViewController?.present(verify, animated: true, completion: nil)
         }))
         topViewController?.present(alert, animated: true, completion: nil)
+    }
+
+    private func authenticateForBitId(prompt: String, callback: @escaping (Bool) -> Void) {
+        if UserDefaults.isTouchIdEnabled {
+            walletManager?.authenticate(touchIDPrompt: prompt, completion: { success in
+                guard success else { self.verifyPinForBitId(prompt: prompt, callback: callback); return }
+                callback(true)
+            })
+        } else {
+            self.verifyPinForBitId(prompt: prompt, callback: callback)
+        }
+    }
+
+    private func verifyPinForBitId(prompt: String, callback: @escaping (Bool) -> Void) {
+        let verify = VerifyPinViewController(bodyText: prompt, callback: { [weak self] pin, view in
+            guard let manager = self?.walletManager else { return }
+            if manager.authenticate(pin: pin) {
+                view.dismiss(animated: true, completion: {
+                    callback(true)
+                })
+            }
+        })
+        verify.transitioningDelegate = verifyPinTransitionDelegate
+        verify.modalPresentationStyle = .overFullScreen
+        verify.modalPresentationCapturesStatusBarAppearance = true
+        topViewController?.present(verify, animated: true, completion: nil)
     }
 
     private func copyAllAddressesToClipboard() {

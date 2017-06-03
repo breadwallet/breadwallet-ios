@@ -122,6 +122,38 @@ extension UserDefaults {
     }
 }
 
+let VAR_INT16_HEADER: UInt64 = 0xfd
+let VAR_INT32_HEADER: UInt64 = 0xfe
+let VAR_INT64_HEADER: UInt64 = 0xff
+
+extension NSMutableData {
+
+    func appendVarInt(i: UInt64) {
+        if (i < VAR_INT16_HEADER) {
+            var payload = UInt8(i)
+            append(&payload, length: MemoryLayout<UInt8>.size)
+        }
+        else if (Int32(i) <= UINT16_MAX) {
+            var header = UInt8(VAR_INT16_HEADER)
+            var payload = CFSwapInt16HostToLittle(UInt16(i))
+            append(&header, length: MemoryLayout<UInt8>.size)
+            append(&payload, length: MemoryLayout<UInt16>.size)
+        }
+        else if (UInt32(i) <= UINT32_MAX) {
+            var header = UInt8(VAR_INT32_HEADER)
+            var payload = CFSwapInt32HostToLittle(UInt32(i))
+            append(&header, length: MemoryLayout<UInt8>.size)
+            append(&payload, length: MemoryLayout<UInt32>.size)
+        }
+        else {
+            var header = UInt8(VAR_INT64_HEADER)
+            var payload = CFSwapInt64HostToLittle(i)
+            append(&header, length: MemoryLayout<UInt8>.size)
+            append(&payload, length: MemoryLayout<UInt64>.size)
+        }
+    }
+}
+
 var BZCompressionBufferSize: UInt32 = 1024
 var BZDefaultBlockSize: Int32 = 7
 var BZDefaultWorkFactor: Int32 = 100
