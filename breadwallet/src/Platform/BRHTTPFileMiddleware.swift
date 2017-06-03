@@ -42,7 +42,7 @@ open class BRHTTPFileMiddleware: BRHTTPMiddleware {
         var headers = [String: [String]]()
         if debugURL == nil {
             // fetch the file locally
-            fileURL = baseURL.appendingPathComponent(request.path)
+            fileURL = baseURL.appendingPathComponent(request.path.ltrim(["/"]))
             let fm = FileManager.default
             // read the file attributes
             guard let attrs = try? fm.attributesOfItem(atPath: fileURL.path) else {
