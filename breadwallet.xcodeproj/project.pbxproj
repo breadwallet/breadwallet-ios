@@ -260,6 +260,7 @@
 		CE4C1CC81ED88B600063E184 /* URLController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4C1CC71ED88B600063E184 /* URLController.swift */; };
 		CE4C1CD01ED8BCC70063E184 /* BIP39Words.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE4C1CD21ED8BCC70063E184 /* BIP39Words.plist */; };
 		CE4CA7BA1EE0C8D900373F11 /* BitIdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4CA7B91EE0C8D900373F11 /* BitIdTests.swift */; };
+		CE4CA7BC1EE3649100373F11 /* BRActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4CA7BB1EE3649100373F11 /* BRActivityView.swift */; };
 		CE4DFB2C1E9BE5880014009E /* ReScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4DFB2B1E9BE5880014009E /* ReScanViewController.swift */; };
 		CE4DFB2E1E9C26DA0014009E /* ShareDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4DFB2D1E9C26DA0014009E /* ShareDataViewController.swift */; };
 		CE5E6C941EB7964900A476DB /* WalletDisabledView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5E6C931EB7964900A476DB /* WalletDisabledView.swift */; };
@@ -1430,6 +1431,7 @@
 		CE4C1CD51ED8BCCF0063E184 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ja; path = ja.lproj/BIP39Words.plist; sourceTree = "<group>"; };
 		CE4C1CD61ED8BCD10063E184 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = es; path = es.lproj/BIP39Words.plist; sourceTree = "<group>"; };
 		CE4CA7B91EE0C8D900373F11 /* BitIdTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitIdTests.swift; sourceTree = "<group>"; };
+		CE4CA7BB1EE3649100373F11 /* BRActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRActivityView.swift; path = src/Platform/BRActivityView.swift; sourceTree = "<group>"; };
 		CE4DFB2B1E9BE5880014009E /* ReScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReScanViewController.swift; path = src/ViewControllers/ReScanViewController.swift; sourceTree = "<group>"; };
 		CE4DFB2D1E9C26DA0014009E /* ShareDataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareDataViewController.swift; path = src/ViewControllers/ShareDataViewController.swift; sourceTree = "<group>"; };
 		CE5E6C931EB7964900A476DB /* WalletDisabledView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletDisabledView.swift; path = src/Views/WalletDisabledView.swift; sourceTree = "<group>"; };
@@ -1670,6 +1672,7 @@
 		22A9A9311DF61930000F0016 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
+				CE4CA7BB1EE3649100373F11 /* BRActivityView.swift */,
 				22A9A95B1DF61964000F0016 /* Middleware */,
 				22A9A95A1DF61950000F0016 /* Plugins */,
 				22A9A9321DF61945000F0016 /* BRAPIClient.swift */,
@@ -3810,6 +3813,7 @@
 				CECCE5A91E0378FB00D99448 /* PinPadViewController.swift in Sources */,
 				CEF3D2DB1E8B55C80070178E /* UISlider+Gradient.swift in Sources */,
 				CEC6AA4B1DEFD24C00EE5AFD /* MenuButtonType.swift in Sources */,
+				CE4CA7BC1EE3649100373F11 /* BRActivityView.swift in Sources */,
 				CEC6AA421DEFC88F00EE5AFD /* ReceiveViewController.swift in Sources */,
 				CEE20C2D1EA288FA0086F724 /* UpdatingLabel.swift in Sources */,
 				CEE20C341EA5B4550086F724 /* ArticleIds.swift in Sources */,
