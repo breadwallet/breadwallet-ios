@@ -421,13 +421,22 @@ open class BRHTTPRequestImpl: BRHTTPRequest {
         if _bodyRead {
             return nil
         }
-        var buf = [UInt8](repeating: 0, count: contentLength)
-        let n = recv(fd, &buf, contentLength, 0)
-        if n <= 0 {
-            _bodyRead = true
-            return nil
+        let buffSize = 4096
+        var body = [UInt8]()
+        var buf = [UInt8](repeating: 0, count: buffSize)
+        var total = 0
+        while true {
+            let n = recv(fd, &buf, buffSize, 0)
+            total += n
+            if n < buffSize {
+                _bodyRead = true
+            }
+            body += buf[0..<n]
+            if _bodyRead || total >= contentLength {
+                break
+            }
         }
-        _body = buf
+        _body = body
         let bp = UnsafeMutablePointer<UInt8>(UnsafeMutablePointer(mutating: _body!))
         return Data(bytesNoCopy: bp, count: contentLength, deallocator: .none)
     }
