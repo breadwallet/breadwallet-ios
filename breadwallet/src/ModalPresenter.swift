@@ -38,7 +38,7 @@ class ModalPresenter : Subscriber {
     private var currentRequest: PaymentRequest?
 
     private func initializeSupportCenter(walletManager: WalletManager) {
-        supportCenter = SupportCenterContainer(walletManager: walletManager, store: store)
+        supportCenter = SupportCenterContainer(walletManager: walletManager, store: store, apiClient: apiClient)
     }
 
     private func addSubscriptions() {
@@ -444,9 +444,9 @@ class ModalPresenter : Subscriber {
         guard let walletManager = self.walletManager else { return }
         let vc: BRWebViewController
         #if Debug || Testflight
-            vc = BRWebViewController(bundleName: "bread-buy-staging", mountPoint: mountPoint, walletManager: walletManager, store: store)
+            vc = BRWebViewController(bundleName: "bread-buy-staging", mountPoint: mountPoint, walletManager: walletManager, store: store, apiClient: apiClient)
         #else
-            vc = BRWebViewController(bundleName: "bread-buy", mountPoint: mountPoint, walletManager: walletManager, store: store)
+            vc = BRWebViewController(bundleName: "bread-buy", mountPoint: mountPoint, walletManager: walletManager, store: store, apiClient: apiClient)
         #endif
         vc.startServer()
         vc.preload()
