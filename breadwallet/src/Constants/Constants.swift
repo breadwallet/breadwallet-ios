@@ -18,6 +18,13 @@ struct Environment {
             return false
         #endif
     }()
+    static let isTestFlight: Bool = {
+        #if Testflight
+            return true
+        #else
+            return false
+        #endif
+    }()
     static let isSimulator: Bool = {
         #if arch(i386) || arch(x86_64)
             return true
