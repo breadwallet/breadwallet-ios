@@ -271,7 +271,7 @@ extension WalletManager : WalletAuthenticator {
             let sig = BRBitID.signMessage(stringToSign, usingKey: key)
             let ret: [String: Any] = [
                 "signature": sig,
-                "address": key.address()
+                "address": key.address() ?? ""
             ]
             return(200, ret)
         }

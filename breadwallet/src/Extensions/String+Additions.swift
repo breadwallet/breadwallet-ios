@@ -24,6 +24,14 @@ extension String {
     var sanitized: String {
         return applyingTransform(.toUnicodeName, reverse: false) ?? ""
     }
+
+    func ltrim(_ chars: Set<Character>) -> String {
+        if let index = self.characters.index(where: {!chars.contains($0)}) {
+            return self[index..<self.endIndex]
+        } else {
+            return ""
+        }
+    }
 }
 
 private let startTag = "<b>"
