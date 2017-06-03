@@ -259,6 +259,7 @@
 		CE4C1CC61ED65D830063E184 /* DrawableCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4C1CC51ED65D830063E184 /* DrawableCircle.swift */; };
 		CE4C1CC81ED88B600063E184 /* URLController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4C1CC71ED88B600063E184 /* URLController.swift */; };
 		CE4C1CD01ED8BCC70063E184 /* BIP39Words.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE4C1CD21ED8BCC70063E184 /* BIP39Words.plist */; };
+		CE4CA7BA1EE0C8D900373F11 /* BitIdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4CA7B91EE0C8D900373F11 /* BitIdTests.swift */; };
 		CE4DFB2C1E9BE5880014009E /* ReScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4DFB2B1E9BE5880014009E /* ReScanViewController.swift */; };
 		CE4DFB2E1E9C26DA0014009E /* ShareDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4DFB2D1E9C26DA0014009E /* ShareDataViewController.swift */; };
 		CE5E6C941EB7964900A476DB /* WalletDisabledView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5E6C931EB7964900A476DB /* WalletDisabledView.swift */; };
@@ -1428,6 +1429,7 @@
 		CE4C1CD41ED8BCCC0063E184 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hans"; path = "zh-Hans.lproj/BIP39Words.plist"; sourceTree = "<group>"; };
 		CE4C1CD51ED8BCCF0063E184 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ja; path = ja.lproj/BIP39Words.plist; sourceTree = "<group>"; };
 		CE4C1CD61ED8BCD10063E184 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = es; path = es.lproj/BIP39Words.plist; sourceTree = "<group>"; };
+		CE4CA7B91EE0C8D900373F11 /* BitIdTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitIdTests.swift; sourceTree = "<group>"; };
 		CE4DFB2B1E9BE5880014009E /* ReScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReScanViewController.swift; path = src/ViewControllers/ReScanViewController.swift; sourceTree = "<group>"; };
 		CE4DFB2D1E9C26DA0014009E /* ShareDataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShareDataViewController.swift; path = src/ViewControllers/ShareDataViewController.swift; sourceTree = "<group>"; };
 		CE5E6C931EB7964900A476DB /* WalletDisabledView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletDisabledView.swift; path = src/Views/WalletDisabledView.swift; sourceTree = "<group>"; };
@@ -2585,13 +2587,7 @@
 			isa = PBXGroup;
 			children = (
 				75A2A7AA1DA5934300A983D8 /* Info.plist */,
-				22C431291DF89D0A0017CAEA /* BRTarTests.swift */,
-				22C4312B1DF89D700017CAEA /* BRBSPatchTests.swift */,
-				22C4312D1DF89D970017CAEA /* BRHTTPServerTests.swift */,
-				22C4312F1DF89DC00017CAEA /* BRReplicatedKVStoreTests.swift */,
-				22C431311DF89DDB0017CAEA /* NSDataExtensionTests.swift */,
-				22C431331DF89DFE0017CAEA /* BRCoderTests.swift */,
-				22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */,
+				CE4CA7B81EE0C89F00373F11 /* Platform */,
 				CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */,
 				CE6DCC281E63D0280044257B /* PhraseTests.swift */,
 				CE6DCC2A1E63D6290044257B /* WalletCreationTests.swift */,
@@ -2936,6 +2932,21 @@
 				CEF3E8261DE2C9C5007C0A9E /* EventManagerCoordinator.swift */,
 			);
 			name = EventManager;
+			sourceTree = "<group>";
+		};
+		CE4CA7B81EE0C89F00373F11 /* Platform */ = {
+			isa = PBXGroup;
+			children = (
+				22C431291DF89D0A0017CAEA /* BRTarTests.swift */,
+				22C4312B1DF89D700017CAEA /* BRBSPatchTests.swift */,
+				22C4312D1DF89D970017CAEA /* BRHTTPServerTests.swift */,
+				22C4312F1DF89DC00017CAEA /* BRReplicatedKVStoreTests.swift */,
+				22C431311DF89DDB0017CAEA /* NSDataExtensionTests.swift */,
+				22C431331DF89DFE0017CAEA /* BRCoderTests.swift */,
+				22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */,
+				CE4CA7B91EE0C8D900373F11 /* BitIdTests.swift */,
+			);
+			name = Platform;
 			sourceTree = "<group>";
 		};
 		CE6D0E5A1E14BF8400137DF1 /* Models */ = {
@@ -3898,6 +3909,7 @@
 				CE6DCC291E63D0280044257B /* PhraseTests.swift in Sources */,
 				CEEC70881E943DC900EF788E /* TouchIdEnabledTests.swift in Sources */,
 				CE6DCC2D1E63D6B10044257B /* TestHelpers.swift in Sources */,
+				CE4CA7BA1EE0C8D900373F11 /* BitIdTests.swift in Sources */,
 				22C431301DF89DC00017CAEA /* BRReplicatedKVStoreTests.swift in Sources */,
 				22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */,
 				CEEC70981E96BF8800EF788E /* DefaultCurrencyTests.swift in Sources */,

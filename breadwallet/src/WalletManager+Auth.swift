@@ -249,7 +249,34 @@ extension WalletManager : WalletAuthenticator {
             completion(self.signTx(tx))
         }
     }
-    
+
+    func buildBitIdResponse(stringToSign: String, url: String, index: Int) -> (Int, [String: Any]?) {
+        return autoreleasepool {
+            var tempKey = self.tempBitIDKeys[url]
+            if tempKey == nil {
+                do {
+                    guard let seed: String = try keychainItem(key: KeychainKey.mnemonic) else { return(401, nil) }
+                    var key = BRKey()
+                    BRBIP32BitIDKey(&key, seed, seed.utf8.count, UInt32(index), url)
+                    tempKey = key
+                    tempBitIDKeys[url] = key
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(60)) {
+                        self.tempBitIDKeys[url] = nil
+                    }
+                } catch {
+                    return(401, nil)
+                }
+            }
+            guard var key = tempKey else { return (500, nil) }
+            let sig = BRBitID.signMessage(stringToSign, usingKey: key)
+            let ret: [String: Any] = [
+                "signature": sig,
+                "address": key.address()
+            ]
+            return(200, ret)
+        }
+    }
+
     // the 12 word wallet recovery phrase
     func seedPhrase(pin: String) -> String? {
         guard authenticate(pin: pin) else { return nil }

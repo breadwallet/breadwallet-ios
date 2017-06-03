@@ -42,15 +42,14 @@ open class BRBitID : NSObject {
     static let BITCOIN_SIGNED_MESSAGE_HEADER = "Bitcoin Signed Message:\n".data(using: String.Encoding.utf8)!
     
     class func formatMessageForBitcoinSigning(_ message: String) -> Data {
-        // FIXME: write these append methods
-//        let data = NSMutableData()
-//        data.append(UInt8(BITCOIN_SIGNED_MESSAGE_HEADER.count))
-//        data.append(BITCOIN_SIGNED_MESSAGE_HEADER)
-//        let msgBytes = message.data(using: String.Encoding.utf8)!
-//        data.appendVarInt(UInt64(msgBytes.count))
-//        data.append(msgBytes)
-//        return data as Data
-        return Data()
+        let data = NSMutableData()
+        var messageHeaderCount = UInt8(BITCOIN_SIGNED_MESSAGE_HEADER.count)
+        data.append(NSData(bytes: &messageHeaderCount, length: MemoryLayout<UInt8>.size) as Data)
+        data.append(BITCOIN_SIGNED_MESSAGE_HEADER)
+        let msgBytes = message.data(using: String.Encoding.utf8)!
+        data.appendVarInt(i: UInt64(msgBytes.count))
+        data.append(msgBytes)
+        return data as Data
     }
     
     // sign a message with a key and return a base64 representation
