@@ -235,7 +235,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
         }
         guard let authKey = authKey else {
             return handler(NSError(domain: BRAPIClientErrorDomain, code: 500, userInfo: [
-                NSLocalizedDescriptionKey: NSLocalizedString("Wallet not ready", comment: "")]))
+                NSLocalizedDescriptionKey: S.ApiClient.notReady]))
         }
         let authPubKey = authKey.publicKey
         isFetchingAuth = true
@@ -257,7 +257,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
             isFetchingAuth = false
             authFetchGroup.leave()
             return handler(NSError(domain: BRAPIClientErrorDomain, code: 500, userInfo: [
-                NSLocalizedDescriptionKey: NSLocalizedString("JSON Serialization Error", comment: "")]))
+                NSLocalizedDescriptionKey: S.ApiClient.jsonError]))
         }
         session.dataTask(with: req, completionHandler: { (data, resp, err) in
             DispatchQueue.main.async {
@@ -270,7 +270,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
                         self.isFetchingAuth = false
                         self.authFetchGroup.leave()
                         return handler(NSError(domain: BRAPIClientErrorDomain, code: httpResp.statusCode, userInfo: [
-                            NSLocalizedDescriptionKey: NSLocalizedString("Unable to retrieve API token", comment: "")]))
+                            NSLocalizedDescriptionKey: S.ApiClient.tokenError]))
                     }
                 }
                 if let data = data {

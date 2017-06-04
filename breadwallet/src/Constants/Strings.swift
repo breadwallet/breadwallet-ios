@@ -388,4 +388,26 @@ enum S {
         static let addressListVerifyPrompt = NSLocalizedString("URLHandling.addressList", value: "Authorize to copy wallet address to clipboard", comment: "Authorize to copy wallet address pin view prompt.")
         static let copy = NSLocalizedString("URLHandling.copy", value: "Copy", comment: "Copy wallet addresses alert button label")
     }
+
+    enum ApiClient {
+        static let notReady = NSLocalizedString("ApiClient.notReady", value: "Wallet not ready", comment: "Wallet not ready error message")
+        static let jsonError = NSLocalizedString("ApiClient.jsonError", value: "JSON Serialization Error", comment: "JSON Serialization error message")
+        static let tokenError = NSLocalizedString("ApiClient.tokenError", value: "Unable to retrieve API token", comment: "API Token error message")
+    }
+
+    enum CameraPlugin {
+        static let centerInstruction = NSLocalizedString("CameraPlugin.centerInstruction", value: "Center your ID in the box", comment: "Camera plugin instruction")
+    }
+
+    enum LocationPlugin {
+        static let disabled = NSLocalizedString("LocationPlugin.disabled", value: "Location services are disabled", comment: "Location services disabled error")
+        static let notAuthorized = NSLocalizedString("LocationPluggin.notAuthorized", value: "Location services are not authorized.", comment: "Location services not authorized error")
+    }
+
+    enum Webview {
+        static let updating = NSLocalizedString("Webview.updating", value: "Updating...", comment: "Updating webview message")
+        static let errorMessage = NSLocalizedString("Webview.errorMessage", value: "There was an error loading the content. Please try again.", comment: "Webview loading error message")
+        static let dismiss = NSLocalizedString("Webview.dismiss", value: "Dismiss", comment: "Dismiss button label")
+
+    }
 }
