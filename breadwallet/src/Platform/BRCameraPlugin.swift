@@ -254,7 +254,7 @@ class IDCameraOverlay: UIView, CameraOverlay {
             y: overlayRect.maxX + (frame.height - overlayRect.maxX) * 0.75
         )
         cancelButton = UIButton(type: .custom)
-        cancelButton.setTitle(NSLocalizedString("Cancel", comment: ""), for: UIControlState())
+        cancelButton.setTitle(S.Button.cancel, for: UIControlState())
         cancelButton.frame = CGRect(x: 0, y: 0, width: 88, height: 44)
         cancelButton.center = CGPoint(x: takePhotoButton.center.x * 0.3, y: takePhotoButton.center.y)
         cancelButton.setTitleColor(UIColor.white, for: UIControlState())
@@ -299,7 +299,7 @@ class IDCameraOverlay: UIView, CameraOverlay {
         
         ctx.setBlendMode(.normal)
         
-        let str = NSLocalizedString("Center your ID in the box", comment: "") as NSString
+        let str = S.CameraPlugin.centerInstruction as NSString
         
         let style = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
         style.alignment = .center

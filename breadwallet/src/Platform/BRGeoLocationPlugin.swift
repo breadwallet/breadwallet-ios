@@ -198,12 +198,12 @@ open class BRGeoLocationPlugin: NSObject, BRHTTPRouterPlugin, CLLocationManagerD
     func getAuthorizationError() -> [String: Any]? {
         var retJson = [String: Any]()
         if !CLLocationManager.locationServicesEnabled() {
-            retJson["error"] = NSLocalizedString("Location services are disabled", comment: "")
+            retJson["error"] = S.LocationPlugin.disabled
             return retJson
         }
         let authzStatus = CLLocationManager.authorizationStatus()
         if authzStatus != .authorizedWhenInUse && authzStatus != .authorizedAlways {
-            retJson["error"] = NSLocalizedString("Location services are not authorized", comment: "")
+            retJson["error"] = S.LocationPlugin.notAuthorized
             return retJson
         }
         return nil
