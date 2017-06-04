@@ -132,7 +132,7 @@ import WebKit
             if self.didAppear && !self.didLoad {
                 // if the webview did not load the first time lets refresh the bundle. occasionally the bundle
                 // update can fail, so this update should fetch an entirely new copy
-                let activity = BRActivityViewController(message: NSLocalizedString("Updating...", comment: ""))
+                let activity = BRActivityViewController(message: S.Webview.dismiss)
                 self.present(activity, animated: true, completion: nil)
                 self.apiClient.updateBundles(completionHandler: { results in
                     results.forEach({ message, err in
@@ -156,11 +156,11 @@ import WebKit
     fileprivate func notifyUserOfLoadFailure() {
         if self.didAppear && !self.didLoad {
             let alert = UIAlertController.init(
-                title: NSLocalizedString("Error", comment: ""),
-                message: NSLocalizedString("There was an error loading the content. Please try again", comment: ""),
+                title: S.Alert.error,
+                message: S.Webview.errorMessage,
                 preferredStyle: .alert
             )
-            let action = UIAlertAction(title: NSLocalizedString("Dismiss", comment: ""), style: .default) { _ in
+            let action = UIAlertAction(title: S.Webview.dismiss, style: .default) { _ in
                 self.closeNow()
             }
             alert.addAction(action)
