@@ -189,10 +189,10 @@ extension BRAPIClient {
                 log("updateBundles unable to load bundle names")
                 return completionHandler([("INVALID", BRAPIClientError.unknownError)])
         }
-        
-        #if Debug || Testflight
+
+        if Environment.isDebug || Environment.isTestFlight {
             names = names.map { n in return n + "-staging" }
-        #endif
+        }
         
         let grp = DispatchGroup()
         let queue = DispatchQueue.global(qos: .utility)
