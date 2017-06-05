@@ -314,11 +314,6 @@ class ModalPresenter : Subscriber {
                 Setting(title: S.Settings.shareData, callback: {
                     nc.pushViewController(ShareDataViewController(store: self.store), animated: true)
                 }),
-                Setting(title: S.Settings.earlyAccess, callback: {
-                    nc.dismiss(animated: true, completion: {
-                        self.presentBuyController("/ea")
-                    })
-                }),
                 Setting(title: S.Settings.about, callback: {
                     nc.pushViewController(AboutViewController(), animated: true)
                 }),
@@ -331,6 +326,14 @@ class ModalPresenter : Subscriber {
                     self.wipeWallet()
                 })
             )
+        }
+
+        if BRAPIClient.featureEnabled(.earlyAccess) {
+            rows["Bread"]?.insert(Setting(title: S.Settings.earlyAccess, callback: {
+                nc.dismiss(animated: true, completion: {
+                    self.presentBuyController("/ea")
+                })
+            }), at: 1)
         }
 
         let settings = SettingsViewController(sections: sections, rows: rows)
