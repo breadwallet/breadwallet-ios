@@ -293,11 +293,11 @@ extension WalletManager : WalletAuthenticator {
         guard noWallet else { return false }
         
         do {
-            let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString)
+            guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString) else { return false }
             CFStringNormalize(nfkdPhrase, .KD)
             var seed = UInt512()
             try setKeychainItem(key: KeychainKey.mnemonic, item: nfkdPhrase as String?, authenticated: true)
-            BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
+            BRBIP39DeriveKey(&seed.u8.0, nfkdPhrase as String, nil)
             self.masterPubKey = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
             seed = UInt512() // clear seed
             try setKeychainItem(key: KeychainKey.masterPubKey, item: Data(masterPubKey: self.masterPubKey))
@@ -355,9 +355,11 @@ extension WalletManager : WalletAuthenticator {
     // recovery phrase is optional if no pin is currently set
     func forceSetPin(newPin: String, seedPhrase: String? = nil) -> Bool {
         do {
-            if seedPhrase != nil {
+            if let phrase = seedPhrase {
                 var seed = UInt512()
-                BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
+                guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString) else { return false }
+                CFStringNormalize(nfkdPhrase, .KD)
+                BRBIP39DeriveKey(&seed.u8.0, nfkdPhrase as String, nil)
                 let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
                 seed = UInt512() // clear seed
                 let mpkData: Data? = try keychainItem(key: KeychainKey.masterPubKey)
