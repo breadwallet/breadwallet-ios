@@ -93,7 +93,6 @@
 		754868DE1DAB597B00732D70 /* mini_event.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6941DAA0E400075898E /* mini_event.c */; };
 		754868DF1DAB599700732D70 /* modstack.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD4811DAA0E3E0075898E /* modstack.c */; };
 		754868E01DAB5A8400732D70 /* mini-gmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD84B1DAA16820075898E /* mini-gmp.c */; };
-		754868E11DAB5AAE00732D70 /* libnettle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75C735AF1DAA1C9F00251ECF /* libnettle.a */; };
 		754868E21DAB5B0200732D70 /* bignum.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD75A1DAA16810075898E /* bignum.c */; };
 		754868E31DAB5B3B00732D70 /* rsa.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8B01DAA16820075898E /* rsa.c */; };
 		754868E41DAB5B6400732D70 /* rsa-sha1-verify.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8A61DAA16820075898E /* rsa-sha1-verify.c */; };
@@ -216,7 +215,6 @@
 		75A2A81F1DA5938500A983D8 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A81E1DA5938500A983D8 /* NotificationService.swift */; };
 		75A2A8231DA5938500A983D8 /* NotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 75A2A81C1DA5938500A983D8 /* NotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		75C735AA1DAA1B9C00251ECF /* libunbound.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD4121DAA0E3E0075898E /* libunbound.c */; };
-		75C735BC1DAA1D8B00251ECF /* libunbound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 755CD9C41DAA18420075898E /* libunbound.a */; };
 		CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */; };
 		CE124CF81E67A8E500DFA146 /* TransactionDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CF71E67A8E500DFA146 /* TransactionDirection.swift */; };
 		CE124CFC1E68932C00DFA146 /* FeeUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFB1E68932C00DFA146 /* FeeUpdater.swift */; };
@@ -1610,8 +1608,6 @@
 				223DB21B1DF69F0F0076A151 /* libbz2.framework in Frameworks */,
 				752FB04D1DF8BF4B009086FB /* sqlite3.framework in Frameworks */,
 				759DA0BE1DAC36A3008CC49B /* libBRCore.a in Frameworks */,
-				754868E11DAB5AAE00732D70 /* libnettle.a in Frameworks */,
-				75C735BC1DAA1D8B00251ECF /* libunbound.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
