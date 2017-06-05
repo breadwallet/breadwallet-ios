@@ -32,6 +32,13 @@ struct Environment {
             return false
         #endif
     }()
+    static let isDebug: Bool = {
+        #if Debug
+            return true
+        #else
+            return false
+        #endif
+    }()
     static let isIPhone4: Bool = {
         return UIApplication.shared.keyWindow?.bounds.height == 480.0
     }()
