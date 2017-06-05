@@ -224,7 +224,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     func txAdded(_ tx: BRTxRef) {
         DispatchQueue.walletQueue.sync {
             var buf = [UInt8](repeating: 0, count: BRTransactionSerialize(tx, nil, 0))
-            let extra = [tx.pointee.blockHeight.littleEndian, tx.pointee.timestamp.littleEndian]
+            let timestamp = tx.pointee.timestamp - UInt32(NSTimeIntervalSince1970)
+            let extra = [tx.pointee.blockHeight.littleEndian, timestamp.littleEndian]
             guard BRTransactionSerialize(tx, &buf, buf.count) == buf.count else { return }
             buf.append(contentsOf: UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
                                                        count: MemoryLayout<UInt32>.size*2))
@@ -269,6 +270,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     func txUpdated(_ txHashes: [UInt256], blockHeight: UInt32, timestamp: UInt32) {
         DispatchQueue.walletQueue.sync {
             guard txHashes.count > 0 else { return }
+            let timestamp = timestamp - UInt32(NSTimeIntervalSince1970)
             let extra = [blockHeight.littleEndian, timestamp.littleEndian]
             let extraBuf = UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
                                                count: MemoryLayout<UInt32>.size*2)
@@ -376,9 +378,9 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             }
 
             var sql2: OpaquePointer? = nil
-            sqlite3_prepare_v2(self.db, "insert or rollback into ZBRMERKLEBLOCKENTITY (Z_PK, Z_ENT, Z_OPT, ZHEIGHT, ZNONCE, " +
-                "ZTARGET, ZTOTALTRANSACTIONS, ZVERSION, ZTIMESTAMP, ZBLOCKHASH, ZFLAGS, ZHASHES, ZMERKLEROOT, " +
-                "ZPREVBLOCK) values (?, \(self.blockEnt), 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", -1, &sql2, nil)
+            sqlite3_prepare_v2(self.db, "insert or rollback into ZBRMERKLEBLOCKENTITY (Z_PK, Z_ENT, Z_OPT, ZHEIGHT, " +
+                "ZNONCE, ZTARGET, ZTOTALTRANSACTIONS, ZVERSION, ZTIMESTAMP, ZBLOCKHASH, ZFLAGS, ZHASHES, " +
+                "ZMERKLEROOT, ZPREVBLOCK) values (?, \(self.blockEnt), 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", -1, &sql2, nil)
             defer { sqlite3_finalize(sql2) }
 
             for b in blocks {
@@ -394,7 +396,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                 sqlite3_bind_int(sql2, 4, Int32(bitPattern: b.pointee.target))
                 sqlite3_bind_int(sql2, 5, Int32(bitPattern: b.pointee.totalTx))
                 sqlite3_bind_int(sql2, 6, Int32(bitPattern: b.pointee.version))
-                sqlite3_bind_int(sql2, 7, Int32(bitPattern: b.pointee.timestamp))
+                sqlite3_bind_int(sql2, 7, Int32(bitPattern: b.pointee.timestamp) - Int32(NSTimeIntervalSince1970))
                 sqlite3_bind_blob(sql2, 8, [b.pointee.blockHash], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
                 sqlite3_bind_blob(sql2, 9, [b.pointee.flags], Int32(b.pointee.flagsLen), SQLITE_TRANSIENT)
                 sqlite3_bind_blob(sql2, 10, [b.pointee.hashes], Int32(MemoryLayout<UInt256>.size*b.pointee.hashesCount),
@@ -410,7 +412,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                 sqlite3_reset(sql2)
             }
 
-            sqlite3_exec(self.db, "update or rollback Z_PRIMARYKEY set Z_MAX = \(pk) where Z_ENT = \(self.blockEnt)", nil, nil, nil)
+            sqlite3_exec(self.db, "update or rollback Z_PRIMARYKEY set Z_MAX = \(pk) where Z_ENT = \(self.blockEnt)",
+                         nil, nil, nil)
             
             guard sqlite3_errcode(self.db) == SQLITE_OK else {
                 print(String(cString: sqlite3_errmsg(self.db)))
@@ -455,7 +458,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                 sqlite3_bind_int(sql2, 2, Int32(bitPattern: p.address.u32.3.bigEndian))
                 sqlite3_bind_int(sql2, 3, Int32(p.port))
                 sqlite3_bind_int64(sql2, 4, Int64(bitPattern: p.services))
-                sqlite3_bind_int64(sql2, 5, Int64(bitPattern: p.timestamp))
+                sqlite3_bind_int64(sql2, 5, Int64(bitPattern: p.timestamp) - Int64(NSTimeIntervalSince1970))
 
                 guard sqlite3_step(sql2) == SQLITE_DONE else {
                     print(String(cString: sqlite3_errmsg(self.db)))
@@ -465,7 +468,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                 sqlite3_reset(sql2)
             }
 
-            sqlite3_exec(self.db, "update or rollback Z_PRIMARYKEY set Z_MAX = \(pk) where Z_ENT = \(self.peerEnt)", nil, nil, nil)
+            sqlite3_exec(self.db, "update or rollback Z_PRIMARYKEY set Z_MAX = \(pk) where Z_ENT = \(self.peerEnt)",
+                         nil, nil, nil)
             
             guard sqlite3_errcode(self.db) == SQLITE_OK else {
                 print(String(cString: sqlite3_errmsg(self.db)))
@@ -498,10 +502,15 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         while sqlite3_step(sql) == SQLITE_ROW {
             let len = Int(sqlite3_column_bytes(sql, 0))
             let buf = sqlite3_column_blob(sql, 0).assumingMemoryBound(to: UInt8.self)
-            guard len >= MemoryLayout<UInt32>.size*2,
-                let tx = BRTransactionParse(buf, len - MemoryLayout<UInt32>.size*2) else { return transactions }
-            tx.pointee.blockHeight = UnsafeRawPointer(buf).advanced(by: len - MemoryLayout<UInt32>.size*2).assumingMemoryBound(to: UInt32.self).pointee
-            tx.pointee.timestamp = UnsafeRawPointer(buf).advanced(by: len - MemoryLayout<UInt32>.size).assumingMemoryBound(to: UInt32.self).pointee
+            guard len >= MemoryLayout<UInt32>.size*2 else { return transactions }
+            var off = len - MemoryLayout<UInt32>.size*2
+            guard let tx = BRTransactionParse(buf, off) else { return transactions }
+            tx.pointee.blockHeight =
+                UnsafeRawPointer(buf).advanced(by: off).assumingMemoryBound(to: UInt32.self).pointee.littleEndian
+            off = off + MemoryLayout<UInt32>.size
+            tx.pointee.timestamp =
+                UnsafeRawPointer(buf).advanced(by: off).assumingMemoryBound(to: UInt32.self).pointee.littleEndian +
+                UInt32(NSTimeIntervalSince1970)
             transactions.append(tx)
         }
         
@@ -524,7 +533,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             b.pointee.target = UInt32(bitPattern: sqlite3_column_int(sql, 2))
             b.pointee.totalTx = UInt32(bitPattern: sqlite3_column_int(sql, 3))
             b.pointee.version = UInt32(bitPattern: sqlite3_column_int(sql, 4))
-            b.pointee.timestamp = UInt32(bitPattern: sqlite3_column_int(sql, 5))
+            b.pointee.timestamp = UInt32(bitPattern: sqlite3_column_int(sql, 5)) + UInt32(NSTimeIntervalSince1970)
             b.pointee.blockHash = sqlite3_column_blob(sql, 6).assumingMemoryBound(to: UInt256.self).pointee
 
             let flags: UnsafePointer<UInt8>? = SafeSqlite3ColumnBlob(statement: sql!, iCol: 7)
@@ -553,7 +562,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                                       UInt32(bitPattern: sqlite3_column_int(sql, 0)).bigEndian))
             p.port = UInt16(truncatingBitPattern: sqlite3_column_int(sql, 1))
             p.services = UInt64(bitPattern: sqlite3_column_int64(sql, 2))
-            p.timestamp = UInt64(bitPattern: sqlite3_column_int64(sql, 3))
+            p.timestamp = UInt64(bitPattern: sqlite3_column_int64(sql, 3)) + UInt64(NSTimeIntervalSince1970)
             peers.append(p)
         }
         

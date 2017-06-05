@@ -149,7 +149,7 @@ extension BRKey {
         return sig
     }
 
-    mutating func verify(sig: [UInt8], md: UInt256) -> Bool {
+    mutating func verify(md: UInt256, sig: [UInt8]) -> Bool {
         var sig = sig
         return BRKeyVerify(&self, md, &sig, sig.count) != 0
     }
@@ -453,6 +453,7 @@ class BRPeerManager {
         return BRPeerManagerLastBlockHeight(cPtr)
     }
 
+    // current proof-of-work verified best block timestamp (time interval since unix epoch)
     var lastBlockTimestamp: UInt32 {
         return BRPeerManagerLastBlockTimestamp(cPtr)
     }
