@@ -282,7 +282,7 @@ class ModalPresenter : Subscriber {
 
         let nc = UINavigationController()
         let sections = ["Wallet", "Manage", "Bread"]
-        let rows = [
+        var rows = [
             "Wallet": [Setting(title: S.Settings.importTile, callback: {})],
             "Manage": [
                 Setting(title: S.Settings.notifications, accessoryText: {
@@ -308,10 +308,7 @@ class ModalPresenter : Subscriber {
                 }),
                 Setting(title: S.Settings.sync, callback: {
                     nc.pushViewController(ReScanViewController(store: self.store), animated: true)
-                }),
-                Setting(title: "Wipe Wallet", callback: {
-                    self.wipeWallet()
-                }),
+                })
             ],
             "Bread": [
                 Setting(title: S.Settings.shareData, callback: {
@@ -327,6 +324,14 @@ class ModalPresenter : Subscriber {
                 }),
             ]
         ]
+
+        if Environment.isTestFlight || Environment.isDebug {
+            rows["Manage"]?.append(
+                Setting(title: "Wipe Wallet", callback: {
+                    self.wipeWallet()
+                })
+            )
+        }
 
         let settings = SettingsViewController(sections: sections, rows: rows)
         nc.viewControllers = [settings]
@@ -461,7 +466,6 @@ class ModalPresenter : Subscriber {
         topViewController?.present(nc, animated: true, completion: nil)
     }
 
-    @available(iOS, deprecated: 1.0, message: "FIXME")
     func wipeWallet() {
         let alert = UIAlertController(title: "Wipe", message: "Wipe wallet?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
