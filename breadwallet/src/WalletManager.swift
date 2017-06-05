@@ -563,12 +563,14 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
 
     func isPhraseValid(_ phrase: String) -> Bool {
         guard var words = rawWordList else { return false }
-        return BRBIP39PhraseIsValid(&words, phrase) != 0
+        guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString) else { return false }
+        CFStringNormalize(nfkdPhrase, .KD)
+        return BRBIP39PhraseIsValid(&words, nfkdPhrase as String) != 0
     }
 
     func isWordValid(_ word: String) -> Bool {
         guard let words = wordList else { return false }
-        return words.contains(word as NSString)
+        return words.map { $0 as String }.contains(word)
     }
 
     deinit {
