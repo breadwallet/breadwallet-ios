@@ -9,7 +9,7 @@
 import Foundation
 
 extension BRAPIClient {
-    func defaultsKeyForFeatureFlag(_ name: String) -> String {
+    static func defaultsKeyForFeatureFlag(_ name: String) -> String {
         return "ff:\(name)"
     }
     
@@ -26,7 +26,7 @@ extension BRAPIClient {
                             if let fn = feat["name"], let fname = fn as? String,
                                 let fe = feat["enabled"], let fenabled = fe as? Bool {
                                 self.log("feature \(fname) enabled: \(fenabled)")
-                                defaults.set(fenabled, forKey: self.defaultsKeyForFeatureFlag(fname))
+                                defaults.set(fenabled, forKey: BRAPIClient.defaultsKeyForFeatureFlag(fname))
                             } else {
                                 self.log("malformed feature: \(feat)")
                             }
@@ -41,8 +41,9 @@ extension BRAPIClient {
             }.resume()
     }
     
-    func featureEnabled(_ flag: BRFeatureFlags) -> Bool {
+    static func featureEnabled(_ flag: BRFeatureFlags) -> Bool {
+        if Environment.isDebug || Environment.isTestFlight { return true }
         let defaults = UserDefaults.standard
-        return defaults.bool(forKey: defaultsKeyForFeatureFlag(flag.description))
+        return defaults.bool(forKey: BRAPIClient.defaultsKeyForFeatureFlag(flag.description))
     }
 }
