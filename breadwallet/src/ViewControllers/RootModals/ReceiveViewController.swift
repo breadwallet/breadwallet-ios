@@ -37,6 +37,7 @@ class ReceiveViewController : UIViewController {
     private let sharePopout = InViewAlert(type: .secondary)
     private let border = UIView()
     private let request = ShadowButton(title: S.Receive.request, type: .secondary)
+    private let addressButton = UIButton(type: .system)
     private var topSharePopoutConstraint: NSLayoutConstraint?
     private let wallet: BRWallet
     private let store: Store
@@ -60,6 +61,7 @@ class ReceiveViewController : UIViewController {
         view.addSubview(sharePopout)
         view.addSubview(border)
         view.addSubview(request)
+        view.addSubview(addressButton)
     }
 
     private func addConstraints() {
@@ -100,6 +102,11 @@ class ReceiveViewController : UIViewController {
             request.constraint(.trailing, toView: view, constant: -C.padding[2]),
             request.constraint(.height, constant: C.Sizes.buttonHeight),
             request.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
+        addressButton.constrain([
+            addressButton.leadingAnchor.constraint(equalTo: address.leadingAnchor, constant: -C.padding[1]),
+            addressButton.topAnchor.constraint(equalTo: qrCode.topAnchor),
+            addressButton.trailingAnchor.constraint(equalTo: address.trailingAnchor, constant: C.padding[1]),
+            addressButton.bottomAnchor.constraint(equalTo: address.bottomAnchor, constant: C.padding[1]) ])
     }
 
     private func setStyle() {
@@ -116,6 +123,15 @@ class ReceiveViewController : UIViewController {
             request.isHidden = true
         }
         sharePopout.clipsToBounds = true
+        addressButton.setBackgroundImage(UIImage.imageForColor(.secondaryShadow), for: .highlighted)
+        addressButton.layer.cornerRadius = 4.0
+        addressButton.layer.masksToBounds = true
+    }
+
+    private func addActions() {
+        addressButton.tap = { [weak self] in
+            self?.addressTapped()
+        }
         request.tap = { [weak self] in
             guard let modalTransitionDelegate = self?.parent?.transitioningDelegate as? ModalTransitionDelegate else { return }
             modalTransitionDelegate.reset()
@@ -123,12 +139,6 @@ class ReceiveViewController : UIViewController {
                 self?.store.perform(action: RootModalActions.Present(modal: .requestAmount))
             })
         }
-    }
-
-    private func addActions() {
-        let gr = UITapGestureRecognizer(target: self, action: #selector(ReceiveViewController.addressTapped))
-        address.addGestureRecognizer(gr)
-        address.isUserInteractionEnabled = true
         share.addTarget(self, action: #selector(ReceiveViewController.shareTapped), for: .touchUpInside)
     }
 
