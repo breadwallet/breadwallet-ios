@@ -25,6 +25,14 @@ class PhraseTests: XCTestCase {
         XCTAssertTrue(walletManager.isPhraseValid("kind butter gasp around unfair tape again suit else example toast orphan"), "Valid phrase should be valid.")
     }
 
+    func testFrenchPhrase() {
+        XCTAssertTrue(walletManager.isPhraseValid("épidémie bison départ ignorer juriste admirer urticant octupler flocon grappin alvéole chagrin"), "Valid phrase should be valid.")
+    }
+
+    func testFrenchWord() {
+        XCTAssertTrue(walletManager.isWordValid("épidémie"), "Valid word should be valid.")
+    }
+
     func testValidWord() {
         XCTAssertTrue(walletManager.isWordValid("kind"), "Valid word should be valid.")
     }
