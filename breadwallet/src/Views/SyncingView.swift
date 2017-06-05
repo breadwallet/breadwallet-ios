@@ -70,7 +70,7 @@ class SyncingView : UIView {
 
     private let dateFormatter: DateFormatter = {
         let df = DateFormatter()
-        df.dateFormat = "MMM. d, yyyy"
+        df.dateFormat = "MMM d, yyyy"
         return df
     }()
 
