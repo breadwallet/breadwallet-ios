@@ -160,7 +160,7 @@ class ModalPresenter : Subscriber {
         supportCenter.modalPresentationStyle = .overFullScreen
         supportCenter.modalPresentationCapturesStatusBarAppearance = true
         supportCenter.transitioningDelegate = supportCenter
-        let url = articleId == nil ? "/support" : "/support/?id=\(articleId!)"
+        let url = articleId == nil ? "/support" : "/staticarticle/\(articleId!)"
         supportCenter.navigate(to: url)
         topViewController?.present(supportCenter, animated: true, completion: {})
     }
