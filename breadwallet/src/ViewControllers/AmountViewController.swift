@@ -23,6 +23,8 @@ class AmountViewController : UIViewController {
 
     var balanceTextForAmount: ((Satoshis?, Rate?) -> NSAttributedString?)?
     var didUpdateAmount: ((Satoshis?) -> Void)?
+    var didChangeFirstResponder: ((Bool) -> Void)?
+
     var currentOutput: String {
         return amountLabel.text ?? ""
     }
@@ -246,6 +248,17 @@ class AmountViewController : UIViewController {
         }, completion: { completed in })
     }
 
+    func closePinPad() {
+        pinPadHeight?.constant = 0.0
+        cursor.isHidden = true
+        if let amount = amount, amount.rawValue > 0 {
+            balanceLabel.isHidden = false
+        } else {
+            balanceLabel.isHidden = cursor.isHidden
+        }
+        updateBalanceLabel()
+    }
+
     private func togglePinPad() {
         let isCollapsed: Bool = pinPadHeight?.constant == 0.0
         pinPadHeight?.constant = isCollapsed ? pinPad.height : 0.0
@@ -256,6 +269,7 @@ class AmountViewController : UIViewController {
             balanceLabel.isHidden = cursor.isHidden
         }
         updateBalanceLabel()
+        didChangeFirstResponder?(isCollapsed)
     }
 
     private func fullRefresh() {
