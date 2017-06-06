@@ -197,9 +197,12 @@ import WebKit
     }
 
     func navigate(to: String) {
-        let url = URL(string: "http://127.0.0.1:\(server.port)\(to)")!
-        let request = URLRequest(url: url)
-        webView?.load(request)
+        let js = "window.location = '\(to)';"
+        webView?.evaluateJavaScript(js, completionHandler: { result, error in
+            if let error = error {
+                print("WEBVIEW navigate to error: \(String(describing: error))")
+            }
+        })
     }
     
     fileprivate func setupIntegrations() {
