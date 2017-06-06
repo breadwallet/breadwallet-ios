@@ -70,4 +70,5 @@ struct C {
     static let walletQueue = "com.breadwallet.walletqueue"
     static let btcCurrencyCode = "BTC"
     static let null = "(null)"
+    static let maxMemoLength = 250
 }
