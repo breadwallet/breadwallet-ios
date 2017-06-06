@@ -224,7 +224,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     func txAdded(_ tx: BRTxRef) {
         DispatchQueue.walletQueue.sync {
             var buf = [UInt8](repeating: 0, count: BRTransactionSerialize(tx, nil, 0))
-            let timestamp = tx.pointee.timestamp - UInt32(NSTimeIntervalSince1970)
+            let timestamp = (tx.pointee.timestamp > UInt32(NSTimeIntervalSince1970)) ? tx.pointee.timestamp - UInt32(NSTimeIntervalSince1970) : 0
             let extra = [tx.pointee.blockHeight.littleEndian, timestamp.littleEndian]
             guard BRTransactionSerialize(tx, &buf, buf.count) == buf.count else { return }
             buf.append(contentsOf: UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
@@ -270,7 +270,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     func txUpdated(_ txHashes: [UInt256], blockHeight: UInt32, timestamp: UInt32) {
         DispatchQueue.walletQueue.sync {
             guard txHashes.count > 0 else { return }
-            let timestamp = timestamp - UInt32(NSTimeIntervalSince1970)
+            let timestamp = (timestamp > UInt32(NSTimeIntervalSince1970)) ? timestamp - UInt32(NSTimeIntervalSince1970) : 0
             let extra = [blockHeight.littleEndian, timestamp.littleEndian]
             let extraBuf = UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
                                                count: MemoryLayout<UInt32>.size*2)
@@ -508,9 +508,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             tx.pointee.blockHeight =
                 UnsafeRawPointer(buf).advanced(by: off).assumingMemoryBound(to: UInt32.self).pointee.littleEndian
             off = off + MemoryLayout<UInt32>.size
-            tx.pointee.timestamp =
-                UnsafeRawPointer(buf).advanced(by: off).assumingMemoryBound(to: UInt32.self).pointee.littleEndian +
-                UInt32(NSTimeIntervalSince1970)
+            let timestamp = UnsafeRawPointer(buf).advanced(by: off).assumingMemoryBound(to: UInt32.self).pointee.littleEndian
+            tx.pointee.timestamp = (timestamp == 0) ? timestamp : timestamp + UInt32(NSTimeIntervalSince1970)
             transactions.append(tx)
         }
         
