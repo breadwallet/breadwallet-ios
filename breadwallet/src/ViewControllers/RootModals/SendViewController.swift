@@ -141,12 +141,21 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         descriptionCell.textFieldDidReturn = { textField in
             textField.resignFirstResponder()
         }
+        descriptionCell.textFieldDidBeginEditing = { [weak self] in
+            self?.amountView.closePinPad()
+        }
         amountView.balanceTextForAmount = { [weak self] amount, rate in
             return self?.balanceTextForAmount(amount: amount, rate: rate)
         }
 
         amountView.didUpdateAmount = { [weak self] amount in
             self?.amount = amount
+        }
+
+        amountView.didChangeFirstResponder = { [weak self] isFirstResponder in
+            if isFirstResponder {
+                self?.descriptionCell.textField.resignFirstResponder()
+            }
         }
     }
 
