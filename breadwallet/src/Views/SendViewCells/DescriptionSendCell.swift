@@ -66,6 +66,15 @@ extension DescriptionSendCell : UITextFieldDelegate {
         textFieldDidBeginEditing?()
     }
 
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let count = (textField.text ?? "").utf8.count + string.utf8.count
+        if count > C.maxMemoLength {
+            return false
+        } else {
+            return true
+        }
+    }
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textFieldDidReturn?(textField)
         return true
