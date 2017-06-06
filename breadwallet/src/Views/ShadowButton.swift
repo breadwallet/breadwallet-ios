@@ -87,6 +87,7 @@ class ShadowButton: UIControl {
 
     override var isEnabled: Bool {
         didSet {
+            guard !isToggleable else { return }
             if isEnabled {
                 setColors()
             } else {
