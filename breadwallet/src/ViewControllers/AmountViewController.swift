@@ -56,6 +56,7 @@ class AmountViewController : UIViewController {
     private let pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad)
     private let currencyToggle = ShadowButton(title: S.Send.defaultCurrencyLabel, type: .tertiary)
     private let border = UIView(color: .secondaryShadow)
+    private let bottomBorder = UIView(color: .secondaryShadow)
     private let cursor = BlinkingView(blinkColor: C.defaultTintColor)
     private let balanceLabel = UILabel()
     private let currencyContainer = InViewAlert(type: .secondary)
@@ -85,6 +86,7 @@ class AmountViewController : UIViewController {
         view.addSubview(cursor)
         view.addSubview(balanceLabel)
         view.addSubview(tapView)
+        view.addSubview(bottomBorder)
     }
 
     private func addConstraints() {
@@ -124,9 +126,14 @@ class AmountViewController : UIViewController {
                 pinPad.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 pinPad.view.topAnchor.constraint(equalTo: border.bottomAnchor),
                 pinPad.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                pinPad.view.bottomAnchor.constraint(equalTo: bottomBorder.topAnchor),
                 pinPadHeight ])
         })
+        bottomBorder.constrain([
+            bottomBorder.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomBorder.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            bottomBorder.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomBorder.heightAnchor.constraint(equalToConstant: 1.0) ])
         tapView.constrain([
             tapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tapView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -143,21 +150,19 @@ class AmountViewController : UIViewController {
         currencySlider.load()
         currencyContainer.contentView = currencySlider
         currencyToggle.isToggleable = true
+        bottomBorder.isHidden = true
         if store.state.isBtcSwapped {
             if let rate = store.state.currentRate {
                 selectedRate = rate
             }
         }
-
         pinPad.ouputDidUpdate = { [weak self] output in
             self?.handlePinPadUpdate(output: output)
         }
-
         currencySlider.didSelectCurrency = { [weak self] rate in
             self?.selectedRate = rate.code == C.btcCurrencyCode ? nil : rate
             self?.toggleCurrencyContainer()
         }
-
         currencyToggle.tap = { [weak self] in
             self?.toggleCurrencyContainer()
         }
@@ -251,6 +256,7 @@ class AmountViewController : UIViewController {
     func closePinPad() {
         pinPadHeight?.constant = 0.0
         cursor.isHidden = true
+        bottomBorder.isHidden = true
         if let amount = amount, amount.rawValue > 0 {
             balanceLabel.isHidden = false
         } else {
@@ -263,6 +269,7 @@ class AmountViewController : UIViewController {
         let isCollapsed: Bool = pinPadHeight?.constant == 0.0
         pinPadHeight?.constant = isCollapsed ? pinPad.height : 0.0
         cursor.isHidden = isCollapsed ? false : true
+        bottomBorder.isHidden = isCollapsed ? false : true
         if let amount = amount, amount.rawValue > 0 {
             balanceLabel.isHidden = false
         } else {
