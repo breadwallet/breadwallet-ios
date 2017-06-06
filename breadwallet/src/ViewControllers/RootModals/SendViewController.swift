@@ -161,7 +161,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             let fee = sender.feeForTx(amount: amount.rawValue)
             let feeText = NumberFormatter.formattedString(amount: Satoshis(rawValue: fee), rate: rate, minimumFractionDigits: nil, maxDigits: store.state.maxDigits)
             output = String(format: S.Send.balanceWithFee, balanceText, feeText)
-            if (balance > fee) && amount.rawValue > (balance - fee) {
+            if (balance >= fee) && amount.rawValue > (balance - fee) {
                 sendButton.isEnabled = false
                 color = .cameraGuideNegative
             } else {
