@@ -35,6 +35,16 @@ class TouchIdSpendingLimitViewController : UIViewController, Subscriber {
         setData()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+    }
+
     private func addSubviews() {
         view.addSubview(titleLabel)
         view.addSubview(faq)
@@ -99,6 +109,8 @@ class TouchIdSpendingLimitViewController : UIViewController, Subscriber {
 
         slider.valueChanged = { [weak self] in
             guard let myself = self else { return }
+            let step: Float = 10000.0
+            myself.slider.value = round(myself.slider.value/step)*step
             if let rate = myself.rate {
                 let spendingLimit = Amount(amount: UInt64(myself.slider.value), rate: rate, maxDigits: myself.store.state.maxDigits)
                 myself.setAmount(limitAmount: spendingLimit)
