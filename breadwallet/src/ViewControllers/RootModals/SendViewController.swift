@@ -32,12 +32,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         self.walletManager = walletManager
         self.initialAddress = initialAddress
         self.initialRequest = initialRequest
-        if LAContext.canUseTouchID && store.state.isTouchIdEnabled {
-            self.sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
-        } else {
-            self.sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "PinForSend"))
-        }
-
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
 
         super.init(nibName: nil, bundle: nil)
@@ -57,7 +51,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private let amountView: AmountViewController
     private let to = LabelSendCell(label: S.Send.toLabel)
     private let descriptionCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
-    private let sendButton: ShadowButton
+    private let sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "PinForSend"))
     private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
     private let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
     private let currency = ShadowButton(title: S.Send.defaultCurrencyLabel, type: .tertiary)
@@ -116,7 +110,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                         callback: {
                             self.balance = $0.walletState.balance
         })
-
+        sendButton.isEnabled = false
     }
 
     private func preventCellContentOverflow() {
@@ -187,7 +181,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     private func setSendButton() {
-        guard let amount = amount else { sendButton.image = nil; return }
+        guard let amount = amount else { sendButton.image = #imageLiteral(resourceName: "PinForSend"); return }
         if sender.maybeCanUseTouchId(forAmount: amount.rawValue) {
             sendButton.image = #imageLiteral(resourceName: "TouchId")
         } else {
