@@ -254,9 +254,12 @@ extension WalletManager : WalletAuthenticator {
     func buildBitIdKey(url: String, index: Int) -> BRKey? {
         return autoreleasepool {
             do {
-                guard let seed: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
+                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
                 var key = BRKey()
-                BRBIP32BitIDKey(&key, seed, seed.utf8.count, UInt32(index), url)
+                var seed = UInt512()
+                BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
+                BRBIP32BitIDKey(&key, &seed, MemoryLayout<UInt512>.size, UInt32(index), url)
+                seed = UInt512()
                 return key
             } catch {
                 return nil
