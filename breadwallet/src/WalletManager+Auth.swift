@@ -31,6 +31,7 @@ import sqlite3
 
 private let WalletSecAttrService = "org.voisine.breadwallet"
 private let SeedEntropyLength = (128/8)
+private let BIP39CreationTime = TimeInterval(BIP39_CREATION_TIME) - NSTimeIntervalSince1970
 
 /// WalletAuthenticator is a protocol whose implementors are able to interact with wallet authentication
 public protocol WalletAuthenticator {
@@ -65,7 +66,7 @@ extension WalletManager : WalletAuthenticator {
             return
         }
         
-        var earliestKeyTime = TimeInterval(BIP39_CREATION_TIME) - NSTimeIntervalSince1970
+        var earliestKeyTime = BIP39CreationTime
         if let creationTime: Data = try keychainItem(key: KeychainKey.creationTime),
             creationTime.count == MemoryLayout<TimeInterval>.stride {
             creationTime.withUnsafeBytes({ earliestKeyTime = $0.pointee })
@@ -287,7 +288,7 @@ extension WalletManager : WalletAuthenticator {
             BRBIP39DeriveKey(&seed.u8.0, nfkdPhrase as String, nil)
             self.masterPubKey = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
             seed = UInt512() // clear seed
-            self.earliestKeyTime = TimeInterval(BIP39_CREATION_TIME) - NSTimeIntervalSince1970
+            if self.earliestKeyTime < BIP39CreationTime { self.earliestKeyTime = BIP39CreationTime }
             try setKeychainItem(key: KeychainKey.masterPubKey, item: Data(masterPubKey: self.masterPubKey))
             return true
         }
@@ -348,7 +349,7 @@ extension WalletManager : WalletAuthenticator {
                 guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString)
                     else { return false }
                 CFStringNormalize(nfkdPhrase, .KD)
-                BRBIP39DeriveKey(&seed.u8.0, nfkdPhrase as String?, nil)
+                BRBIP39DeriveKey(&seed.u8.0, nfkdPhrase as String, nil)
                 let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
                 seed = UInt512() // clear seed
                 let mpkData: Data? = try keychainItem(key: KeychainKey.masterPubKey)
