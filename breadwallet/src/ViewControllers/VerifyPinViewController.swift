@@ -118,6 +118,7 @@ class VerifyPinViewController : UIViewController {
         pinPad.view.isUserInteractionEnabled = false
         pinView.shake { [weak self] in
             self?.pinPad.view.isUserInteractionEnabled = true
+            self?.pinView.fill(0)
         }
         pinPad.clear()
     }
