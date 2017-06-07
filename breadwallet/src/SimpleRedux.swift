@@ -53,7 +53,7 @@ enum TriggerName {
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
     case copyWalletAddresses(String?, String?)
-    case authenticateForBitId(String, (Bool)->Void)
+    case authenticateForBitId(String, ()->Void)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName : Equatable {}

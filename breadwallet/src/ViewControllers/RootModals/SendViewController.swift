@@ -276,6 +276,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                     vc.dismiss(animated: true, completion: {
                         self?.parent?.view.isFrameChangeBlocked = false
                     })
+                    return true
+                } else {
+                    return false
                 }
             }
             }, completion: { [weak self] result in

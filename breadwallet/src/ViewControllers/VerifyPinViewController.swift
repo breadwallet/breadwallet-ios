@@ -8,13 +8,14 @@
 
 import UIKit
 
-typealias VerifyPinCallback = (String, UIViewController) -> Void
+typealias VerifyPinCallback = (String, UIViewController) -> Bool
 
 class VerifyPinViewController : UIViewController {
 
-    init(bodyText: String, callback: @escaping VerifyPinCallback) {
+    init(bodyText: String, pinLength: Int, callback: @escaping VerifyPinCallback) {
         self.bodyText = bodyText
         self.callback = callback
+        self.pinLength = pinLength
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -29,6 +30,7 @@ class VerifyPinViewController : UIViewController {
     private let toolbar = UIView(color: .whiteTint)
     private let cancel = UIButton(type: .system)
     private let bodyText: String
+    private let pinLength: Int
 
     override func viewDidLoad() {
         addSubviews()
@@ -94,10 +96,15 @@ class VerifyPinViewController : UIViewController {
         body.numberOfLines = 0
         body.lineBreakMode = .byWordWrapping
 
-        pinPad.ouputDidUpdate = { output in
-            self.pinView.fill(output.utf8.count)
-            if output.utf8.count == 6 {
-                self.callback(output, self)
+        pinPad.ouputDidUpdate = { [weak self] output in
+            guard let myself = self else { return }
+            let attemptLength = output.utf8.count
+            myself.pinView.fill(attemptLength)
+            myself.pinPad.isAppendingDisabled = attemptLength < myself.pinLength ? false : true
+            if attemptLength == myself.pinLength {
+                if !myself.callback(output, myself) {
+                    myself.authenticationFailed()
+                } 
             }
         }
         cancel.tap = { [weak self] in
@@ -105,6 +112,14 @@ class VerifyPinViewController : UIViewController {
         }
         cancel.setTitle(S.Button.cancel, for: .normal)
         view.backgroundColor = .clear
+    }
+
+    private func authenticationFailed() {
+        pinPad.view.isUserInteractionEnabled = false
+        pinView.shake { [weak self] in
+            self?.pinPad.view.isUserInteractionEnabled = true
+        }
+        pinPad.clear()
     }
 
     override var prefersStatusBarHidden: Bool {
