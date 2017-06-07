@@ -200,7 +200,7 @@ class ModalPresenter : Subscriber {
         let root = ModalViewController(childViewController: sendVC, store: store)
         sendVC.presentScan = presentScan(parent: root)
         sendVC.presentVerifyPin = { [weak self, weak root] bodyText, callback in
-            let vc = VerifyPinViewController(bodyText: bodyText, callback: callback)
+            let vc = VerifyPinViewController(bodyText: bodyText, pinLength: walletManager.pinLength, callback: callback)
             vc.transitioningDelegate = self?.verifyPinTransitionDelegate
             vc.modalPresentationStyle = .overFullScreen
             vc.modalPresentationCapturesStatusBarAppearance = true
@@ -407,7 +407,7 @@ class ModalPresenter : Subscriber {
         paperPhraseNavigationController.modalPresentationStyle = .overFullScreen
         let start = StartPaperPhraseViewController(store: store, callback: { [weak self] in
             guard let myself = self else { return }
-            let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, callback: { pin, vc in
+            let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: walletManager.pinLength, callback: { pin, vc in
                 if walletManager.authenticate(pin: pin) {
                     var write: WritePaperPhraseViewController?
                     write = WritePaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin, callback: { [weak self] in
@@ -432,6 +432,9 @@ class ModalPresenter : Subscriber {
                         guard let write = write else { return }
                         paperPhraseNavigationController.pushViewController(write, animated: true)
                     })
+                    return true
+                } else {
+                    return false
                 }
             })
             verify.transitioningDelegate = self?.verifyPinTransitionDelegate
@@ -589,12 +592,12 @@ class ModalPresenter : Subscriber {
     }
 
     private func handleCopyAddresses(success: String?, error: String?) {
+        guard let walletManager = walletManager else { return }
         let alert = UIAlertController(title: S.URLHandling.addressListAlertTitle, message: S.URLHandling.addressListAlertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: S.URLHandling.copy, style: .default, handler: { [weak self] _ in
-            let verify = VerifyPinViewController(bodyText: S.URLHandling.addressListVerifyPrompt, callback: { [weak self] pin, view in
-                guard let manager = self?.walletManager else { return }
-                if manager.authenticate(pin: pin) {
+            let verify = VerifyPinViewController(bodyText: S.URLHandling.addressListVerifyPrompt, pinLength: walletManager.pinLength, callback: { [weak self] pin, view in
+                if walletManager.authenticate(pin: pin) {
                     self?.copyAllAddressesToClipboard()
                     view.dismiss(animated: true, completion: {
                         self?.store.perform(action: Alert.Show(.addressesCopied))
@@ -602,6 +605,9 @@ class ModalPresenter : Subscriber {
                             UIApplication.shared.openURL(url)
                         }
                     })
+                    return true
+                } else {
+                    return false
                 }
             })
             verify.transitioningDelegate = self?.verifyPinTransitionDelegate
@@ -612,24 +618,27 @@ class ModalPresenter : Subscriber {
         topViewController?.present(alert, animated: true, completion: nil)
     }
 
-    private func authenticateForBitId(prompt: String, callback: @escaping (Bool) -> Void) {
+    private func authenticateForBitId(prompt: String, callback: @escaping () -> Void) {
         if UserDefaults.isTouchIdEnabled {
             walletManager?.authenticate(touchIDPrompt: prompt, completion: { success in
                 guard success else { self.verifyPinForBitId(prompt: prompt, callback: callback); return }
-                callback(true)
+                callback()
             })
         } else {
             self.verifyPinForBitId(prompt: prompt, callback: callback)
         }
     }
 
-    private func verifyPinForBitId(prompt: String, callback: @escaping (Bool) -> Void) {
-        let verify = VerifyPinViewController(bodyText: prompt, callback: { [weak self] pin, view in
-            guard let manager = self?.walletManager else { return }
-            if manager.authenticate(pin: pin) {
+    private func verifyPinForBitId(prompt: String, callback: @escaping () -> Void) {
+        guard let walletManager = walletManager else { return }
+        let verify = VerifyPinViewController(bodyText: prompt, pinLength: walletManager.pinLength, callback: { pin, view in
+            if walletManager.authenticate(pin: pin) {
                 view.dismiss(animated: true, completion: {
-                    callback(true)
+                    callback()
                 })
+                return true
+            } else {
+                return false
             }
         })
         verify.transitioningDelegate = verifyPinTransitionDelegate
