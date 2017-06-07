@@ -31,7 +31,8 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient {
     var sockets = [String: BRWebSocket]()
     let walletManager: WalletManager
     let store: Store
- 
+    var tempBitIDKeys = [String: BRKey]() // this should only ever be mutated from the main thread
+
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
         self.store = store
@@ -135,27 +136,47 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient {
             let asyncResp = BRHTTPResponse(async: request)
             DispatchQueue.main.sync {
                 CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
-                    let prompt = bitidUrl.host ?? bitidUrl.description
-                    self.store.trigger(name: .authenticateForBitId(prompt, { authenticationSuccess in
-                        if authenticationSuccess {
-                            let response = self.walletManager.buildBitIdResponse(stringToSign: stringToSign,
-                                                                                 url: bitidUrl.host ?? bitidUrl.absoluteString,
-                                                                                 index: bitidIndex )
-                            guard let json = response.1 else {
-                                request.queue.async { asyncResp.provide(response.0) }
-                                return
+                    let url = bitidUrl.host ?? bitidUrl.absoluteString
+                    if let key = self.tempBitIDKeys[url] {
+                        self.sendBitIDResponse(stringToSign, usingKey: key, request: request, asyncResp: asyncResp)
+                    } else {
+                        let prompt = bitidUrl.host ?? bitidUrl.description
+                        self.store.trigger(name: .authenticateForBitId(prompt, {
+                            if let key = self.walletManager.buildBitIdKey(url: url, index: bitidIndex) {
+                                self.addKeyToCache(key, url: url)
+                                self.sendBitIDResponse(stringToSign, usingKey: key, request: request, asyncResp: asyncResp)
+                            } else {
+                                request.queue.async {
+                                    asyncResp.provide(401)
+                                }
                             }
-                            request.queue.async {
-                                asyncResp.provide(response.0, json: json)
-                            }
-                        }
-                    }))
+                        }))
+                    }
                 }
             }
             return asyncResp
         }
     }
-    
+
+    private func addKeyToCache(_ key: BRKey, url: String) {
+        self.tempBitIDKeys[url] = key
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(60)) {
+            self.tempBitIDKeys[url] = nil
+        }
+    }
+
+    private func sendBitIDResponse(_ stringToSign: String, usingKey key: BRKey, request: BRHTTPRequest, asyncResp: BRHTTPResponse) -> Void {
+        var key = key
+        let sig = BRBitID.signMessage(stringToSign, usingKey: key)
+        let json: [String: Any] = [
+            "signature": sig,
+            "address": key.address() ?? ""
+        ]
+        request.queue.async {
+            asyncResp.provide(200, json: json)
+        }
+    }
+
     // MARK: - basic wallet functions
     func walletInfo() -> [String: Any] {
         var d = [String: Any]()

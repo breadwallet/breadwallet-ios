@@ -60,7 +60,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     private var blockEnt: Int32 = 0
     private var peerEnt: Int32 = 0
     private let store: Store
-    var tempBitIDKeys = [String: BRKey]() // this should only ever be mutated from the main thread
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
 
