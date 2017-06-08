@@ -43,8 +43,8 @@ class LoginViewController : UIViewController, Subscriber {
     private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad)
     private let pinViewContainer = UIView()
     private var pinView: PinView?
-    private let addressButton = SegmentedButton(title: S.LoginScreen.myAddress, type: .left)
-    private let scanButton = SegmentedButton(title: S.LoginScreen.scan, type: .right)
+    private let addressButton = SegmentedButton(title: S.UnlockScreen.myAddress, type: .left)
+    private let scanButton = SegmentedButton(title: S.UnlockScreen.scan, type: .right)
     private let isPresentedForLock: Bool
     private let disabledView: WalletDisabledView
     private var logo: UIImageView = {
@@ -61,7 +61,7 @@ class LoginViewController : UIViewController, Subscriber {
         button.layer.borderWidth = 1.0
         button.layer.cornerRadius = touchIdSize/2.0
         button.layer.masksToBounds = true
-        button.accessibilityLabel = S.LoginScreen.touchIdText
+        button.accessibilityLabel = S.UnlockScreen.touchIdText
         return button
     }()
     private let subheader = UILabel(font: .customBody(size: 16.0), color: .darkText)
@@ -210,7 +210,7 @@ class LoginViewController : UIViewController, Subscriber {
             pinPadBackground.trailingAnchor.constraint(equalTo: pinPad.view.trailingAnchor),
             pinPadBackground.topAnchor.constraint(equalTo: pinPad.view.topAnchor),
             pinPadBackground.bottomAnchor.constraint(equalTo: pinPad.view.bottomAnchor) ])
-        subheader.text = S.LoginScreen.subheader
+        subheader.text = S.UnlockScreen.subheader
 
         addressButton.addTarget(self, action: #selector(addressTapped), for: .touchUpInside)
         scanButton.addTarget(self, action: #selector(scanTapped), for: .touchUpInside)
@@ -249,7 +249,7 @@ class LoginViewController : UIViewController, Subscriber {
     private func authenticationSucceded() {
         let label = UILabel(font: subheader.font)
         label.textColor = .white
-        label.text = S.LoginScreen.unlocked
+        label.text = S.UnlockScreen.unlocked
         label.alpha = 0.0
         let lock = UIImageView(image: #imageLiteral(resourceName: "unlock"))
         lock.alpha = 0.0
@@ -301,7 +301,7 @@ class LoginViewController : UIViewController, Subscriber {
     }
 
     @objc func touchIdTapped() {
-        walletManager?.authenticate(touchIDPrompt: S.LoginScreen.touchIdPrompt, completion: { success in
+        walletManager?.authenticate(touchIDPrompt: S.UnlockScreen.touchIdPrompt, completion: { success in
             if success {
                 self.authenticationSucceded()
             }
@@ -326,7 +326,7 @@ class LoginViewController : UIViewController, Subscriber {
                 let df = DateFormatter()
                 df.dateFormat = unlockInterval > C.secondsInDay ? "h:mm a 'on' MMM d, yyy" : "h:mm a"
 
-                disabledView.setTimeLabel(string: String(format: S.LoginScreen.disabled, df.string(from: disabledUntilDate)))
+                disabledView.setTimeLabel(string: String(format: S.UnlockScreen.disabled, df.string(from: disabledUntilDate)))
 
                 pinPad.view.isUserInteractionEnabled = false
                 unlockTimer?.invalidate()
@@ -349,7 +349,7 @@ class LoginViewController : UIViewController, Subscriber {
     }
 
     @objc private func unlock() {
-        subheader.pushNewText(S.LoginScreen.subheader)
+        subheader.pushNewText(S.UnlockScreen.subheader)
         pinPad.view.isUserInteractionEnabled = true
         unlockTimer = nil
         disabledView.hide { [weak self] in
