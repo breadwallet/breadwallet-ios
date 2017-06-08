@@ -173,7 +173,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
         // copy the request and authenticate it. retain the original request for retries
         var actualRequest = decorateRequest(request)
         if authenticated {
-            actualRequest = signRequest(request)
+            actualRequest = signRequest(actualRequest)
         }
         return session.dataTask(with: actualRequest, completionHandler: { (data, resp, err) -> Void in
             DispatchQueue.main.async {
