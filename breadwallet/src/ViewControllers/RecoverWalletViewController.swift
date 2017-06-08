@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RecoverWalletViewController : UIViewController {
+class RecoverWalletViewController : UIViewController, UIScrollViewDelegate, CustomTitleView {
 
     //MARK: - Public
     var didSetSeedPhrase: ((String) -> Void)?
@@ -20,6 +20,12 @@ class RecoverWalletViewController : UIViewController {
         self.enterPhrase = EnterPhraseCollectionViewController(walletManager: walletManager)
         self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.recoverWallet)
         self.isResettingPin = isResettingPin
+
+        if isResettingPin {
+            self.customTitle = S.RecoverWallet.headerResetPin
+        } else {
+            self.customTitle = S.RecoverWallet.header
+        }
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -31,13 +37,14 @@ class RecoverWalletViewController : UIViewController {
     private let enterPhrase: EnterPhraseCollectionViewController
     private let errorLabel = UILabel(font: .customBody(size: 16.0), color: .cameraGuideNegative)
     private let instruction = UILabel(font: .customBold(size: 14.0), color: .darkText)
-    private let header = UILabel(font: .customBold(size: 26.0), color: .darkText)
+    let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let subheader = UILabel(font: .customBody(size: 16.0), color: .darkText)
     private let faq: UIButton
     private let scrollView = UIScrollView()
     private let container = UIView()
     private var isResettingPin: Bool
     private let moreInfoButton = UIButton(type: .system)
+    let customTitle: String
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -52,7 +59,7 @@ class RecoverWalletViewController : UIViewController {
     private func addSubviews() {
         view.addSubview(scrollView)
         scrollView.addSubview(container)
-        container.addSubview(header)
+        container.addSubview(titleLabel)
         container.addSubview(subheader)
         container.addSubview(errorLabel)
         container.addSubview(instruction)
@@ -74,12 +81,12 @@ class RecoverWalletViewController : UIViewController {
         container.constrain(toSuperviewEdges: nil)
         container.constrain([
             container.widthAnchor.constraint(equalTo: view.widthAnchor) ])
-        header.constrain([
-            header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            header.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[1]) ])
+        titleLabel.constrain([
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
+            titleLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[1]) ])
         subheader.constrain([
-            subheader.leadingAnchor.constraint(equalTo: header.leadingAnchor),
-            subheader.topAnchor.constraint(equalTo: header.bottomAnchor),
+            subheader.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            subheader.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
             subheader.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
         instruction.constrain([
             instruction.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: C.padding[3]),
@@ -96,7 +103,7 @@ class RecoverWalletViewController : UIViewController {
             errorLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -C.padding[2] )])
         faq.constrain([
             faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            faq.centerYAnchor.constraint(equalTo: header.centerYAnchor),
+            faq.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
             faq.widthAnchor.constraint(equalToConstant: 44.0),
             faq.heightAnchor.constraint(equalToConstant: 44.0) ])
         moreInfoButton.constrain([
@@ -117,7 +124,7 @@ class RecoverWalletViewController : UIViewController {
         instruction.text = S.RecoverWallet.instruction
 
         if isResettingPin {
-            header.text = S.RecoverWallet.headerResetPin
+            titleLabel.text = S.RecoverWallet.headerResetPin
             subheader.text = S.RecoverWallet.subheaderResetPin
             instruction.isHidden = true
             moreInfoButton.setTitle(S.RecoverWallet.resetPinInfo, for: .normal)
@@ -126,13 +133,15 @@ class RecoverWalletViewController : UIViewController {
             }
             faq.isHidden = true
         } else {
-            header.text = S.RecoverWallet.header
+            titleLabel.text = S.RecoverWallet.header
             subheader.text = S.RecoverWallet.subheader
             moreInfoButton.isHidden = true
         }
 
         subheader.numberOfLines = 0
         subheader.lineBreakMode = .byWordWrapping
+        scrollView.delegate = self
+        addCustomTitle()
     }
 
     private func validatePhrase(_ phrase: String) {
@@ -175,6 +184,14 @@ class RecoverWalletViewController : UIViewController {
             contentInset.bottom = 0.0
         }
         scrollView.contentInset = contentInset
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        didScrollForCustomTitle(yOffset: scrollView.contentOffset.y)
+    }
+
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        scrollViewWillEndDraggingForCustomTitle(yOffset: targetContentOffset.pointee.y)
     }
 
     required init?(coder aDecoder: NSCoder) {
