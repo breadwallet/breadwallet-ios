@@ -7,7 +7,7 @@
 //
 import UIKit
 
-class SettingsViewController : UITableViewController {
+class SettingsViewController : UITableViewController, CustomTitleView {
 
     init(sections: [String], rows: [String: [Setting]]) {
         self.sections = sections
@@ -18,13 +18,15 @@ class SettingsViewController : UITableViewController {
             tempRows["Manage"] = tempRows["Manage"]?.filter { $0.title != S.Settings.touchIdLimit }
             self.rows = tempRows
         }
+        customTitle = S.Settings.title
         super.init(style: .plain)
     }
 
     private let sections: [String]
     private let rows: [String: [Setting]]
     private let cellIdentifier = "CellIdentifier"
-    private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
+    let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
+    let customTitle: String
 
     override func viewDidLoad() {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 48.0))
@@ -40,6 +42,7 @@ class SettingsViewController : UITableViewController {
         tableView.backgroundColor = .whiteTint
 
         addCloseNavigationItem()
+        addCustomTitle()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -117,6 +120,14 @@ class SettingsViewController : UITableViewController {
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 48.0
+    }
+
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        didScrollForCustomTitle(yOffset: scrollView.contentOffset.y)
+    }
+
+    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        scrollViewWillEndDraggingForCustomTitle(yOffset: targetContentOffset.pointee.y)
     }
 
     required init?(coder aDecoder: NSCoder) {

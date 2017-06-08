@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DefaultCurrencyViewController : UITableViewController, Subscriber {
+class DefaultCurrencyViewController : UITableViewController, Subscriber, CustomTitleView {
 
     init(apiClient: BRAPIClient, store: Store) {
         self.apiClient = apiClient
@@ -41,6 +41,8 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     }
     private let rateLabel = UILabel(font: .customBody(size: 16.0), color: .darkText)
     private let swipeView = UIView()
+    let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
+    let customTitle = S.DefaultCurrency.title
 
     deinit {
         store.unsubscribe(self)
@@ -68,8 +70,6 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
     private func setHeader() {
         let header = UIView(color: .whiteTint)
-
-        let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
         let rateLabelTitle = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
 
         header.addSubview(titleLabel)
@@ -112,7 +112,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
         header.constrain([
             header.widthAnchor.constraint(equalTo: view.widthAnchor) ])
-
+        addCustomTitle()
     }
 
     private func setExchangeRateLabel() {
@@ -156,6 +156,14 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let rate = rates[indexPath.row]
         store.perform(action: DefaultCurrency.setDefault(rate.code))
+    }
+
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        didScrollForCustomTitle(yOffset: scrollView.contentOffset.y)
+    }
+
+    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        scrollViewWillEndDraggingForCustomTitle(yOffset: targetContentOffset.pointee.y)
     }
 
     required init?(coder aDecoder: NSCoder) {
