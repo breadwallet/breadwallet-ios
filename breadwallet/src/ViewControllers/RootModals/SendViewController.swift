@@ -405,6 +405,6 @@ extension SendViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        return S.Send.modalTitle
+        return S.Send.title
     }
 }
