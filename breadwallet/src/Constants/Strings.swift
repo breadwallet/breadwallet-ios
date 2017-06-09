@@ -417,4 +417,27 @@ enum S {
         static let hours = NSLocalizedString("TimeSince.hours", value: "%@ h", comment: "6 h (6 hours)")
         static let days = NSLocalizedString("TimeSince.days", value:"%@ d", comment: "6 d (6 days)")
     }
+
+    enum Import {
+        static let leftCaption = NSLocalizedString("Import.leftCaption", value: "Wallet to be imported", comment: "Caption for graphics")
+        static let rightCaption = NSLocalizedString("Import.rightCaption", value: "Your Bread Wallet", comment: "Caption for graphics")
+        static let importMessage = NSLocalizedString("Import.message", value: "Importing a wallet transfers all your money into your Bread wallet in a single transaction.", comment: "Import wallet intro screen message")
+        static let importWarning = NSLocalizedString("Import.warning", value: "Import wallet does not include transaction history or meta data.", comment: "Import wallet intro warning message")
+        static let scan = NSLocalizedString("Import.scan", value: "Scan Private Key", comment: "Scan Private key button label")
+        static let title = NSLocalizedString("Import.title", value: "Import Wallet", comment: "Import Wallet screen title")
+        static let importing = NSLocalizedString("Import.importing", value: "Importing Wallet", comment: "Importing wallet progress view label")
+        static let confirm = NSLocalizedString("Import.confirm", value: "Send %@ from this private key into your wallet? The bitcoin network will receive a fee of %@.", comment: "Sweep private key confirmation message")
+        static let checking = NSLocalizedString("Import.checking", value: "Checking private key balance", comment: "Checking private key balance progress view text")
+        static let password = NSLocalizedString("Import.password", value: "Password protected key", comment: "Enter password alert view title")
+        static let passwordPlaceholder = NSLocalizedString("Import.passwordPlaceholder", value: "password", comment: "password textfield placeholder")
+
+        enum Error {
+            static let notValid = NSLocalizedString("Import.Error.notValid", value: "Not a valid private key", comment: "Not a valid private key error message")
+            static let duplicate = NSLocalizedString("Import.Error.duplicate", value: "This private key is already in your wallet", comment: "Duplicate key error message")
+            static let empty = NSLocalizedString("Import.Error.empty", value: "This private key is empty", comment: "empty private key error message")
+            static let highFees = NSLocalizedString("Import.Error.highFees", value: "Transaction fees would cost more than the funds available on this private key (due to tiny \"dust\" deposits)", comment: "High fees error message")
+            static let signing = NSLocalizedString("Import.Error.signing", value: "Error signing transaction", comment: "")
+        }
+
+    }
 }
