@@ -14,7 +14,10 @@ import BRCore
 class Transaction {
 
     //MARK: - Public
-    init(_ tx: BRTxRef, wallet: BRWallet, blockHeight: UInt32, kvStore: BRReplicatedKVStore?, rate: Rate?) {
+    init?(_ tx: BRTxRef, walletManager: WalletManager, kvStore: BRReplicatedKVStore?, rate: Rate?) {
+        guard let wallet = walletManager.wallet else { return nil }
+        guard let peerManager = walletManager.peerManager  else { return nil }
+
         self.tx = tx
         self.wallet = wallet
         self.kvStore = kvStore
@@ -38,18 +41,12 @@ class Transaction {
         self.timestamp = Int(tx.pointee.timestamp)
 
         self.isValid = wallet.transactionIsValid(tx)
+
+
         let transactionBlockHeight = tx.pointee.blockHeight
-        let transactionIsVerified = wallet.transactionIsVerified(tx)
-        let transactionIsPending = wallet.transactionIsPending(tx)
-
-        confirms = transactionBlockHeight > blockHeight ? 0 : Int((blockHeight - transactionBlockHeight) + 1)
-        self.status = makeStatus(isValid: isValid, isPending: transactionIsPending, isVerified: transactionIsVerified, confirms: confirms)
-
-        if isValid {
-            self.longStatus = confirms > 6 ? S.Transaction.complete : S.Transaction.waiting
-        } else {
-            self.longStatus = S.Transaction.invalid
-        }
+        let blockHeight = peerManager.lastBlockHeight
+        confirms = transactionBlockHeight > blockHeight ? 0 : Int(blockHeight - transactionBlockHeight) + 1
+        self.status = makeStatus(tx, wallet: wallet, peerManager: peerManager, confirms: confirms, direction: self.direction)
 
         self.hash = tx.pointee.txHash.description
 
@@ -91,12 +88,11 @@ class Transaction {
 
     let direction: TransactionDirection
     let status: String
-    let longStatus: String
     let timestamp: Int
     let fee: UInt64
     let hash: String
     let isValid: Bool
-    let confirms: Int
+    private let confirms: Int
 
     //MARK: - Private
     private let tx: BRTxRef
@@ -212,25 +208,40 @@ class Transaction {
             print("could not update metadata: \(error)")
         }
     }
+
+    var shouldDisplayAvailableToSpend: Bool {
+        return confirms > 1 && confirms < 6
+    }
 }
 
-private func makeStatus(isValid: Bool, isPending: Bool, isVerified: Bool, confirms: Int) -> String {
-    if confirms == 0 && !isValid {
-        return "INVALID"
-    } else if confirms == 0 && isPending {
-        return "Pending"
-    } else if confirms == 0 && !isVerified {
-        return "Unverified"
-    } else if confirms < 6 {
+private func makeStatus(_ txRef: BRTxRef, wallet: BRWallet, peerManager: BRPeerManager, confirms: Int, direction: TransactionDirection) -> String {
+    let tx = txRef.pointee
+    guard wallet.transactionIsValid(txRef) else {
+        return S.Transaction.invalid
+    }
+
+    if confirms < 6 {
+        var percentageString = ""
         if confirms == 0 {
-            return "0 confirmations"
+            let relayCount = peerManager.relayCount(tx.txHash)
+            if relayCount == 0 {
+                percentageString = "0%"
+            } else if relayCount == 1 {
+                percentageString = "20%"
+            } else if relayCount > 1 {
+                percentageString = "40%"
+            }
         } else if confirms == 1 {
-            return "1 confirmation"
-        } else {
-            return "\(confirms) confirmations"
+            percentageString = "60%"
+        } else if confirms == 2 {
+            percentageString = "80%"
+        } else if confirms > 2 {
+            percentageString = "100%"
         }
+        let format = direction == .sent ? S.Transaction.sendingStatus : S.Transaction.receivedStatus
+        return String(format: format, percentageString)
     } else {
-        return "Complete"
+        return S.Transaction.complete
     }
 }
 

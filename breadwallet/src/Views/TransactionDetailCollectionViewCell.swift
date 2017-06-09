@@ -20,7 +20,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         timestamp.text = transaction.longTimestamp
         amount.text = String(format: transaction.direction.amountFormat, "\(transaction.amountDescription(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits))")
         address.text = transaction.direction.addressText
-        status.text = transaction.longStatus
+        status.text = transaction.status
         comment.text = transaction.comment
         amountDetails.text = transaction.amountDetails(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits)
         addressHeader.text = transaction.direction.addressHeader.capitalized
