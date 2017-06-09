@@ -90,6 +90,14 @@ extension BRKey {
         guard BRKeySetPrivKey(&self, privKey) != 0 else { return nil }
     }
     
+    // decrypts a BIP38 key using the given passphrase and returns nil if passphrase is incorrect
+    init?(bip38Key: String, passphrase: String) {
+        self.init()
+        guard let nfcPhrase = CFStringCreateMutableCopy(secureAllocator, 0, passphrase as CFString) else { return nil }
+        CFStringNormalize(nfcPhrase, .C) // NFC unicode normalization
+        guard BRKeySetBIP38Key(&self, bip38Key, nfcPhrase as String) != 0 else { return nil }
+    }
+    
     // pubKey must be a DER encoded public key
     init?(pubKey: [UInt8]) {
         self.init()
@@ -115,6 +123,23 @@ extension BRKey {
             var data = CFDataCreateMutable(secureAllocator, count) as Data
             data.count = count
             guard data.withUnsafeMutableBytes({ BRKeyPrivKey(cPtr, $0, data.count) }) != 0 else { return nil }
+            return CFStringCreateFromExternalRepresentation(secureAllocator, data as CFData,
+                                                            CFStringBuiltInEncodings.UTF8.rawValue) as String
+        }
+    }
+    
+    // encrypts key with passphrase
+    mutating func bip38Key(passphrase: String) -> String? {
+        return autoreleasepool {
+            let cPtr = UnsafeMutablePointer(&self)
+            guard let nfcPhrase = CFStringCreateMutableCopy(secureAllocator, 0, passphrase as CFString)
+                else { return nil }
+            CFStringNormalize(nfcPhrase, .C) // NFC unicode normalization
+            let count = BRKeyBIP38Key(cPtr, nil, 0, nfcPhrase as String)
+            var data = CFDataCreateMutable(secureAllocator, count) as Data
+            data.count = count
+            guard data.withUnsafeMutableBytes({ BRKeyBIP38Key(cPtr, $0, data.count, nfcPhrase as String) }) != 0
+                else { return nil }
             return CFStringCreateFromExternalRepresentation(secureAllocator, data as CFData,
                                                             CFStringBuiltInEncodings.UTF8.rawValue) as String
         }
