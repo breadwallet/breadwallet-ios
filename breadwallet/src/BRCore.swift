@@ -269,9 +269,9 @@ extension UnsafeMutablePointer where Pointee == BRTransaction, Pointee : Hashabl
     }
     
     // adds an input to tx
-    func addInput(txHash: UInt256, index: UInt32, script: [UInt8]?, signature: [UInt8]?, sequence: UInt32) {
-        BRTransactionAddInput(self, txHash, index, script, script?.count ?? 0, signature, signature?.count ?? 0,
-                              sequence)
+    func addInput(txHash: UInt256, index: UInt32, script: [UInt8],
+                  signature: [UInt8]? = nil, sequence: UInt32 = TXIN_SEQUENCE) {
+        BRTransactionAddInput(self, txHash, index, script, script.count, signature, signature?.count ?? 0, sequence)
     }
     
     // adds an output to tx
