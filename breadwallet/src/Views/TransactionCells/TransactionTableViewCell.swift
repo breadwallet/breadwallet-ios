@@ -39,7 +39,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         status.text = transaction.status
         comment.text = transaction.comment
         timestamp.text = transaction.timeSince
-        availability.isHidden = !transaction.shouldDisplayAvailableToSpend
+        availability.text = transaction.shouldDisplayAvailableToSpend ? S.Transaction.available : ""
     }
 
     let container = RoundedContainer()
@@ -119,7 +119,6 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         transactionLabel.numberOfLines = 0
         transactionLabel.lineBreakMode = .byWordWrapping
 
-        availability.text = S.Transaction.available
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
