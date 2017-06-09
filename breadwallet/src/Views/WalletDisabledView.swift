@@ -46,7 +46,7 @@ class WalletDisabledView : UIView {
     private let store: Store
     private let faq: UIButton
     private let blur: UIVisualEffectView
-    private let reset = ShadowButton(title: S.LoginScreen.resetPin, type: .blackTransparent)
+    private let reset = ShadowButton(title: S.UnlockScreen.resetPin, type: .blackTransparent)
     private let effect = UIBlurEffect(style: .light)
 
     private func setup() {
