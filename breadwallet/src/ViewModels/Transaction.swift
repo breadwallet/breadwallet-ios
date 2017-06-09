@@ -210,7 +210,7 @@ class Transaction {
     }
 
     var shouldDisplayAvailableToSpend: Bool {
-        return confirms > 1 && confirms < 6
+        return confirms > 1 && confirms < 6 && direction == .received
     }
 }
 
