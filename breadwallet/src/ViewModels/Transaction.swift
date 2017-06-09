@@ -160,18 +160,38 @@ class Transaction {
 
     var timeSince: String {
         guard timestamp > 0 else { return S.Transaction.justNow }
+        let then = Date(timeIntervalSince1970: TimeInterval(timestamp))
+        let now = Date()
+
+        if !now.hasEqualYear(then) {
+            let df = DateFormatter()
+            df.setLocalizedDateFormatFromTemplate("dd/MM/yy")
+            return df.string(from: then)
+        }
+
+        if !now.hasEqualMonth(then) {
+            let df = DateFormatter()
+            df.setLocalizedDateFormatFromTemplate("MMM dd")
+            return df.string(from: then)
+        }
+
         let difference = Int(Date().timeIntervalSince1970) - timestamp
         let secondsInMinute = 60
         let secondsInHour = 3600
         let secondsInDay = 86400
+        let secondsInWeek = secondsInDay * 7
         if (difference < secondsInMinute) {
-            return "\(difference) s"
+            return String(format: S.TimeSince.seconds, "\(difference)")
         } else if difference < secondsInHour {
-            return "\(difference/secondsInMinute) m"
+            return String(format: S.TimeSince.minutes, "\(difference/secondsInMinute)")
         } else if difference < secondsInDay {
-            return "\(difference/secondsInHour) h"
+            return String(format: S.TimeSince.hours, "\(difference/secondsInHour)")
+        } else if difference < secondsInWeek {
+            return String(format: S.TimeSince.days, "\(difference/secondsInDay)")
         } else {
-            return "\(difference/secondsInDay) d"
+            let df = DateFormatter()
+            df.setLocalizedDateFormatFromTemplate("MMM dd")
+            return df.string(from: then)
         }
     }
 
