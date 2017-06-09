@@ -220,7 +220,7 @@ extension BRTxOutput {
     }
 }
 
-extension UnsafeMutablePointer where Pointee == BRTransaction, Pointee : Hashable {
+extension UnsafeMutablePointer where Pointee == BRTransaction {
     init?() {
         self.init(BRTransactionNew())
     }
@@ -301,7 +301,7 @@ extension UnsafeMutablePointer where Pointee == BRTransaction, Pointee : Hashabl
 
     // adds signatures to any inputs with NULL signatures that can be signed with any keys
     // returns true if tx is signed
-    mutating func sign(keys: inout [BRKey]) -> Bool {
+    func sign(keys: inout [BRKey]) -> Bool {
         return BRTransactionSign(self, &keys, keys.count) != 0
     }
     
