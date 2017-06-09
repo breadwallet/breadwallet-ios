@@ -411,4 +411,11 @@ enum S {
         static let dismiss = NSLocalizedString("Webview.dismiss", value: "Dismiss", comment: "Dismiss button label")
 
     }
+
+    enum TimeSince {
+        static let seconds = NSLocalizedString("TimeSince.seconds", value: "%@ s", comment: "6 s (6 seconds)")
+        static let minutes = NSLocalizedString("TimeSince.minutes", value: "%@ m", comment: "6 m (6 minutes)")
+        static let hours = NSLocalizedString("TimeSince.hours", value: "%@ h", comment: "6 h (6 hours)")
+        static let days = NSLocalizedString("TimeSince.days", value:"%@ d", comment: "6 d (6 days)")
+    }
 }
