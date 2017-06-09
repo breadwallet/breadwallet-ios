@@ -128,9 +128,9 @@ enum S {
         static let emptyMessage = NSLocalizedString("TransactionDetails.emptyMessage", value:"Your transactions will appear here.", comment: "Empty transaction list message.")
         static let more = NSLocalizedString("TransactionDetails.more", value:"More...", comment: "More button title")
         static let txHashHeader = NSLocalizedString("TransactionDetails.txHashHeader", value:"Transaction Hash", comment: "Transaction hash header")
-        static let sendDescription = NSLocalizedString("TransactionDetails.sendDescription", value: "Sent <b>%@</b> to <b>%@</b>", comment: "Sent $5.00 to <address>")
-        static let receivedDescription = NSLocalizedString("TransactionDetails.receivedDescription", value: "Received <b>%@</b> from <b>%@</b>", comment: "Received $5.00 from <address>")
-        static let movedDescription = NSLocalizedString("TransactionDetails.movedDescription", value: "Moved <b>%@</b> to <b>%@</b>", comment: "Moved $5.00 to <address>")
+        static let sendDescription = NSLocalizedString("TransactionDetails.sendDescription", value: "Sent <b>%1@</b> to %2@", comment: "Sent $5.00 to <address>")
+        static let receivedDescription = NSLocalizedString("TransactionDetails.receivedDescription", value: "Received <b>%1@</b> at %2@", comment: "Received $5.00 from <address>")
+        static let movedDescription = NSLocalizedString("TransactionDetails.movedDescription", value: "Moved <b>%2@</b> to %2@", comment: "Moved $5.00 to <address>")
         static let account = NSLocalizedString("TransactionDetails.account", value: "account", comment: "e.g. I received money from an account.")
         static let sent = NSLocalizedString("TransactionDetails.sent", value:"Sent %@", comment: "Sent $5.00 (sent title 1/2)")
         static let received = NSLocalizedString("TransactionDetails.received", value:"Received %@", comment: "Received $5.00 (received title 1/2)")
@@ -295,8 +295,7 @@ enum S {
 
     enum TransactionDirection {
         static let to = NSLocalizedString("TransactionDirection.to", value:"to", comment: "Usage: sent transaction to")
-        static let from = NSLocalizedString("TransactionDirection.from", value:"from", comment: "Usage: received transaction from")
-        static let address = NSLocalizedString("TransactionDirection.address", value:"Address", comment: "Usage: to/from Address")
+        static let received = NSLocalizedString("TransactionDirection.address", value:"received at this address", comment: "Usage: to/from Address")
     }
 
     enum RequestAnAmount {

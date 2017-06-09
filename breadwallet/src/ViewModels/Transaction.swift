@@ -63,7 +63,14 @@ class Transaction {
     func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
         let amount = Amount(amount: satoshis, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
         let format = direction.descriptionFormat
-        let string = String(format: format, amount, S.TransactionDetails.account)
+
+        var address = toAddress
+        if let theAddress = address {
+            let start = theAddress.substring(to: theAddress.index(theAddress.startIndex, offsetBy: 5))
+            let end = theAddress.substring(from: theAddress.index(theAddress.endIndex, offsetBy: -5))
+            address = start + "..." + end
+        }
+        let string = String(format: format, amount, address ?? S.TransactionDetails.account)
         return string.attributedStringForTags
     }
 
