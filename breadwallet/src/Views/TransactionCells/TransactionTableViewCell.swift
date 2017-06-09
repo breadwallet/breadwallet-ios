@@ -39,6 +39,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         status.text = transaction.status
         comment.text = transaction.comment
         timestamp.text = transaction.timeSince
+        availability.isHidden = !transaction.shouldDisplayAvailableToSpend
     }
 
     let container = RoundedContainer()
@@ -53,6 +54,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     private let topPadding: CGFloat = 19.0
     private var style: TransactionCellStyle = .first
     private var transaction: Transaction?
+    private let availability = UILabel(font: .customBold(size: 13.0), color: .cameraGuidePositive)
 
     private func setupViews() {
         addSubviews()
@@ -68,6 +70,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         container.addSubview(status)
         container.addSubview(comment)
         container.addSubview(timestamp)
+        container.addSubview(availability)
     }
 
     private func addConstraints() {
@@ -84,15 +87,18 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         timestamp.constrain([
             timestamp.constraint(.trailing, toView: container, constant: -C.padding[2]),
             timestamp.constraint(.top, toView: container, constant: topPadding) ])
-        status.constrain([
-            status.constraint(.leading, toView: container, constant: C.padding[2]),
-            status.constraint(toBottom: transactionLabel, constant: C.padding[1]),
-            status.constraint(.trailing, toView: container, constant: -C.padding[2]) ])
         comment.constrain([
             comment.constraint(.leading, toView: container, constant: C.padding[2]),
-            comment.constraint(toBottom: status, constant: C.padding[1]),
-            comment.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1]),
-            comment.constraint(.bottom, toView: container, constant: -C.padding[2]) ])
+            comment.constraint(toBottom: transactionLabel, constant: C.padding[1]),
+            comment.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1]) ])
+        status.constrain([
+            status.constraint(.leading, toView: container, constant: C.padding[2]),
+            status.constraint(toBottom: comment, constant: C.padding[1]),
+            status.constraint(.trailing, toView: container, constant: -C.padding[2]) ])
+        availability.constrain([
+            availability.leadingAnchor.constraint(equalTo: status.leadingAnchor),
+            availability.topAnchor.constraint(equalTo: status.bottomAnchor),
+            availability.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -C.padding[2]) ])
     }
 
     private func setupStyle() {
@@ -112,6 +118,8 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
 
         transactionLabel.numberOfLines = 0
         transactionLabel.lineBreakMode = .byWordWrapping
+
+        availability.text = S.Transaction.available
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

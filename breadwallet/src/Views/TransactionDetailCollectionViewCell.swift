@@ -26,6 +26,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         addressHeader.text = transaction.direction.addressHeader.capitalized
         fullAddress.text = transaction.toAddress ?? ""
         txHash.text = transaction.hash
+        availability.isHidden = !transaction.shouldDisplayAvailableToSpend
         self.transaction = transaction
         self.rate = rate
     }
@@ -69,6 +70,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     private let moreContentView = UIView()
     private let txHash = UILabel(font: .customBody(size: 13.0), color: .darkText)
     private let txHashHeader = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
+    private let availability = UILabel(font: .customBold(size: 13.0), color: .cameraGuidePositive)
 
     private func setup() {
         addSubviews()
@@ -86,6 +88,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         separators.forEach { scrollViewContent.addSubview($0) }
         scrollViewContent.addSubview(statusHeader)
         scrollViewContent.addSubview(status)
+        scrollViewContent.addSubview(availability)
         scrollViewContent.addSubview(commentsHeader)
         scrollViewContent.addSubview(comment)
         scrollViewContent.addSubview(amountHeader)
@@ -130,8 +133,11 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
             status.topAnchor.constraint(equalTo: statusHeader.bottomAnchor),
             status.leadingAnchor.constraint(equalTo: statusHeader.leadingAnchor),
             status.trailingAnchor.constraint(equalTo: statusHeader.trailingAnchor) ])
+        availability.constrain([
+            availability.topAnchor.constraint(equalTo: status.bottomAnchor),
+            availability.leadingAnchor.constraint(equalTo: status.leadingAnchor)])
         separators[1].constrain([
-            separators[1].topAnchor.constraint(equalTo: status.bottomAnchor, constant: C.padding[2]),
+            separators[1].topAnchor.constraint(equalTo: availability.bottomAnchor, constant: C.padding[2]),
             separators[1].leadingAnchor.constraint(equalTo: status.leadingAnchor),
             separators[1].trailingAnchor.constraint(equalTo: status.trailingAnchor),
             separators[1].heightAnchor.constraint(equalToConstant: 1.0) ])
@@ -192,6 +198,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         statusHeader.text = S.TransactionDetails.statusHeader
         commentsHeader.text = S.TransactionDetails.commentsHeader
         amountHeader.text = S.TransactionDetails.amountHeader
+        availability.text = S.Transaction.available
 
         fullAddress.numberOfLines = 0
         fullAddress.lineBreakMode = .byCharWrapping
