@@ -74,7 +74,7 @@ class Transaction {
         return string.attributedStringForTags
     }
 
-    func amountDetails(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> String {
+    func amountDetails(isBtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) -> String {
         let feeAmount = Amount(amount: fee, rate: rate, maxDigits: maxDigits)
         let feeString = direction == .sent ? String(format: S.Transaction.fee, "\(feeAmount.string(isBtcSwapped: isBtcSwapped))") : ""
         let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)) \(feeString)"
@@ -82,12 +82,17 @@ class Transaction {
         let endingString = String(format: String(format: S.Transaction.ending, "\(Amount(amount: balanceAfter, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped))"))
 
         var exchangeRateInfo = ""
-        if let metaData = metaData {
-            let difference = (rate.rate - metaData.exchangeRate)/metaData.exchangeRate*100.0
+        if let metaData = metaData, let currentRate = rates.filter({ $0.code == metaData.exchangeRateCurrency }).first{
+            let difference = (currentRate.rate - metaData.exchangeRate)/metaData.exchangeRate*100.0
             let prefix = difference > 0.0 ? "+" : "-"
             let firstLine = S.Transaction.exchangeOnDay
-            let secondLine = String(format: S.Transaction.exchange, "$\(metaData.exchangeRate)/btc \(prefix)\(String(format: "%.2f", difference))%")
-            exchangeRateInfo = "\(firstLine)\n\(secondLine)"
+            let nf = NumberFormatter()
+            nf.locale = currentRate.locale
+            nf.currencyCode = currentRate.currencySymbol
+            if let rateString = nf.string(from: metaData.exchangeRate as NSNumber) {
+                let secondLine = "\(rateString)/btc \(prefix)\(String(format: "%.2f", difference))%"
+                exchangeRateInfo = "\(firstLine)\n\(secondLine)"
+            }
         }
 
         return "\(amountString)\n\n\(startingString)\n\(endingString)\n\n\(exchangeRateInfo)"
