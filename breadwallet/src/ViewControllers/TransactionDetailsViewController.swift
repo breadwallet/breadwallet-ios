@@ -133,7 +133,7 @@ extension TransactionDetailsViewController {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
         guard let transactionDetailCell = item as? TransactionDetailCollectionViewCell else { return item }
         guard let rate = rate else { return item }
-        transactionDetailCell.set(transaction: transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits)
+        transactionDetailCell.set(transaction: transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, rates: store.state.rates, maxDigits: store.state.maxDigits)
         transactionDetailCell.closeCallback = { [weak self] in
             if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
                 delegate.reset()
