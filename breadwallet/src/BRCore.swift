@@ -83,7 +83,7 @@ extension BRAddress: CustomStringConvertible {
     }
 }
 
-extension BRKey {
+extension BRKey {    
     // privKey must be wallet import format (WIF), mini private key format, or hex string
     init?(privKey: String) {
         self.init()
@@ -118,11 +118,10 @@ extension BRKey {
     // WIF private key
     mutating func privKey() -> String? {
         return autoreleasepool { // wrapping in autoreleasepool ensures sensitive memory is wiped and freed immediately
-            let cPtr = UnsafeMutablePointer(&self)
-            let count = BRKeyPrivKey(cPtr, nil, 0)
+            let count = BRKeyPrivKey(&self, nil, 0)
             var data = CFDataCreateMutable(secureAllocator, count) as Data
             data.count = count
-            guard data.withUnsafeMutableBytes({ BRKeyPrivKey(cPtr, $0, data.count) }) != 0 else { return nil }
+            guard data.withUnsafeMutableBytes({ BRKeyPrivKey(&self, $0, data.count) }) != 0 else { return nil }
             return CFStringCreateFromExternalRepresentation(secureAllocator, data as CFData,
                                                             CFStringBuiltInEncodings.UTF8.rawValue) as String
         }
@@ -131,14 +130,13 @@ extension BRKey {
     // encrypts key with passphrase
     mutating func bip38Key(passphrase: String) -> String? {
         return autoreleasepool {
-            let cPtr = UnsafeMutablePointer(&self)
             guard let nfcPhrase = CFStringCreateMutableCopy(secureAllocator, 0, passphrase as CFString)
                 else { return nil }
             CFStringNormalize(nfcPhrase, .C) // NFC unicode normalization
-            let count = BRKeyBIP38Key(cPtr, nil, 0, nfcPhrase as String)
+            let count = BRKeyBIP38Key(&self, nil, 0, nfcPhrase as String)
             var data = CFDataCreateMutable(secureAllocator, count) as Data
             data.count = count
-            guard data.withUnsafeMutableBytes({ BRKeyBIP38Key(cPtr, $0, data.count, nfcPhrase as String) }) != 0
+            guard data.withUnsafeMutableBytes({ BRKeyBIP38Key(&self, $0, data.count, nfcPhrase as String) }) != 0
                 else { return nil }
             return CFStringCreateFromExternalRepresentation(secureAllocator, data as CFData,
                                                             CFStringBuiltInEncodings.UTF8.rawValue) as String
@@ -188,44 +186,131 @@ extension BRKey {
     // to verify a compact signature, recover a public key from the sig and verify that it matches the signer's pubkey
     mutating func compactSign(md: UInt256) -> [UInt8]? {
         var sig = [UInt8](repeating:0, count: 65)
-        let count = BRKeyCompactSign(&self, &sig, sig.count, md)
-        guard count > 0 else { return nil }
-        while count < sig.count { sig.remove(at: sig.count - 1) }
+        guard BRKeyCompactSign(&self, &sig, sig.count, md) == sig.count else { return nil }
         return sig
     }
 }
 
 extension BRTxInput {
     var swiftAddress: String {
-        return String(cString: UnsafeRawPointer([self.address]).assumingMemoryBound(to: CChar.self))
+        get { return String(cString: UnsafeRawPointer([self.address]).assumingMemoryBound(to: CChar.self)) }
+        set { BRTxInputSetAddress(&self, newValue) }
     }
     
     var swiftScript: [UInt8] {
-        return [UInt8](UnsafeBufferPointer(start: self.script, count: self.scriptLen))
+        get { return [UInt8](UnsafeBufferPointer(start: self.script, count: self.scriptLen)) }
+        set { BRTxInputSetScript(&self, newValue, newValue.count) }
     }
     
     var swiftSignature: [UInt8] {
-        return [UInt8](UnsafeBufferPointer(start: self.signature, count: self.sigLen))
+        get { return [UInt8](UnsafeBufferPointer(start: self.signature, count: self.sigLen)) }
+        set { BRTxInputSetSignature(&self, newValue, newValue.count) }
     }
 }
 
 extension BRTxOutput {
     var swiftAddress: String {
-        return String(cString: UnsafeRawPointer([self.address]).assumingMemoryBound(to: CChar.self))
+        get { return String(cString: UnsafeRawPointer([self.address]).assumingMemoryBound(to: CChar.self)) }
+        set { BRTxOutputSetAddress(&self, newValue) }
     }
     
     var swiftScript: [UInt8] {
-        return [UInt8](UnsafeBufferPointer(start: self.script, count: self.scriptLen))
+        get { return [UInt8](UnsafeBufferPointer(start: self.script, count: self.scriptLen)) }
+        set { BRTxOutputSetScript(&self, newValue, newValue.count) }
     }
 }
 
-extension BRTransaction {
-    var swiftInputs: [BRTxInput] {
-        return [BRTxInput](UnsafeBufferPointer(start: self.inputs, count: self.inCount))
+extension UnsafeMutablePointer where Pointee == BRTransaction, Pointee : Hashable {
+    init?() {
+        self.init(BRTransactionNew())
     }
     
-    var swiftOutputs: [BRTxOutput] {
-        return [BRTxOutput](UnsafeBufferPointer(start: self.outputs, count: self.outCount))
+    // bytes must contain a serialized tx
+    init?(bytes: [UInt8]) {
+        self.init(BRTransactionParse(bytes, bytes.count))
+    }
+    
+    var txHash: UInt256 {
+        return self.pointee.txHash
+    }
+    
+    var version: UInt32 {
+        return self.pointee.version
+    }
+    
+    var inputs: [BRTxInput] {
+        return [BRTxInput](UnsafeBufferPointer(start: self.pointee.inputs, count: self.pointee.inCount))
+    }
+    
+    var outputs: [BRTxOutput] {
+        return [BRTxOutput](UnsafeBufferPointer(start: self.pointee.outputs, count: self.pointee.outCount))
+    }
+    
+    var lockTime: UInt32 {
+        return self.pointee.lockTime
+    }
+    
+    var blockHeight: UInt32 {
+        get { return self.pointee.blockHeight }
+        set { self.pointee.blockHeight = newValue }
+    }
+    
+    var timestamp: TimeInterval {
+        get { return self.pointee.timestamp > UInt32(NSTimeIntervalSince1970) ?
+              TimeInterval(self.pointee.timestamp) - NSTimeIntervalSince1970 : 0 }
+        set { self.pointee.timestamp = newValue > 0 ? UInt32(newValue + NSTimeIntervalSince1970) : 0 }
+    }
+
+    // serialized transaction (blockHeight and timestamp are not serialized)
+    var bytes: [UInt8]? {
+        var bytes = [UInt8](repeating:0, count: BRTransactionSerialize(self, nil, 0))
+        guard BRTransactionSerialize(self, &bytes, bytes.count) == bytes.count else { return nil }
+        return bytes
+    }
+    
+    // adds an input to tx
+    func addInput(txHash: UInt256, index: UInt32, script: [UInt8]?, signature: [UInt8]?, sequence: UInt32) {
+        BRTransactionAddInput(self, txHash, index, script, script?.count ?? 0, signature, signature?.count ?? 0,
+                              sequence)
+    }
+    
+    // adds an output to tx
+    func addOutput(amount: UInt64, script: [UInt8]?) {
+        BRTransactionAddOutput(self, amount, script, script?.count ?? 0)
+    }
+    
+    // shuffles order of tx outputs
+    func shuffleOutputs() {
+        BRTransactionShuffleOutputs(self)
+    }
+    
+    // size in bytes if signed, or estimated size assuming compact pubkey sigs
+    var size: Int {
+        return BRTransactionSize(self)
+    }
+    
+    // minimum transaction fee needed for tx to relay across the bitcoin network
+    var standardFee: UInt64 {
+        return BRTransactionStandardFee(self)
+    }
+    
+    // checks if all signatures exist, but does not verify them
+    var isSigned: Bool {
+        return BRTransactionIsSigned(self) != 0
+    }
+
+    // adds signatures to any inputs with NULL signatures that can be signed with any keys
+    // returns true if tx is signed
+    mutating func sign(keys: inout [BRKey]) -> Bool {
+        return BRTransactionSign(self, &keys, keys.count) != 0
+    }
+    
+    public var hashValue: Int {
+        return BRTransactionHash(self)
+    }
+    
+    static public func == (l: UnsafeMutablePointer<Pointee>, r: UnsafeMutablePointer<Pointee>) -> Bool {
+        return BRTransactionEq(l, r) != 0
     }
 }
 
