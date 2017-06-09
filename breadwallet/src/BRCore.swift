@@ -69,17 +69,51 @@ public let secureAllocator: CFAllocator = {
     return CFAllocatorCreate(kCFAllocatorDefault, &context).takeRetainedValue()
 }()
 
-extension BRAddress: CustomStringConvertible {
+extension BRAddress: CustomStringConvertible, Hashable {
     init?(string: String) {
         self.init()
         let cStr = [CChar](string.utf8CString)
         guard cStr.count <= MemoryLayout<BRAddress>.size else { return nil }
-        UnsafeMutableRawPointer(mutating: [self.s]).assumingMemoryBound(to: CChar.self).assign(from: cStr,
-                                                                                               count: cStr.count)
+        UnsafeMutableRawPointer(mutating: &self.s).assumingMemoryBound(to: CChar.self).assign(from: cStr,
+                                                                                              count: cStr.count)
+    }
+    
+    init?(scriptPubKey: [UInt8]) {
+        self.init()
+        guard BRAddressFromScriptPubKey(&self.s.0, MemoryLayout<BRAddress>.size, scriptPubKey, scriptPubKey.count) > 0
+            else { return nil }
+    }
+
+    init?(scriptSig: [UInt8]) {
+        self.init()
+        guard BRAddressFromScriptSig(&self.s.0, MemoryLayout<BRAddress>.size, scriptSig, scriptSig.count) > 0
+            else { return nil }
+    }
+
+    var scriptPubKey: [UInt8]? {
+        let cStr = UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self)
+        var script = [UInt8](repeating: 0, count: BRAddressScriptPubKey(nil, 0, cStr))
+        guard BRAddressScriptPubKey(&script, script.count, cStr) > 0 else { return nil }
+        return script
+    }
+    
+    var hash160: UInt160? {
+        let cStr = UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self)
+        var hash = UInt160()
+        guard BRAddressHash160(&hash.u8.0, cStr) != 0 else { return nil }
+        return hash
     }
     
     public var description: String {
         return String(cString: UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self))
+    }
+    
+    public var hashValue: Int {
+        return BRAddressHash([self.s])
+    }
+    
+    static public func == (l: BRAddress, r: BRAddress) -> Bool {
+        return BRAddressEq([l.s], [r.s]) != 0
     }
 }
 
