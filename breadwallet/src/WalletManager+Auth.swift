@@ -30,7 +30,6 @@ import BRCore
 import sqlite3
 
 private let WalletSecAttrService = "org.voisine.breadwallet"
-private let SeedEntropyLength = (128/8)
 private let BIP39CreationTime = TimeInterval(BIP39_CREATION_TIME) - NSTimeIntervalSince1970
 
 /// WalletAuthenticator is a protocol whose implementors are able to interact with wallet authentication
@@ -315,16 +314,16 @@ extension WalletManager : WalletAuthenticator {
 
         // wrapping in an autorelease pool ensures sensitive memory is wiped and released immediately
         return autoreleasepool {
-            var entropy = CFDataCreateMutable(secureAllocator, SeedEntropyLength) as Data
-            entropy.count = SeedEntropyLength
-            guard entropy.withUnsafeMutableBytes({ SecRandomCopyBytes(kSecRandomDefault, entropy.count, $0) }) == 0
+            var entropy = UInt128()
+            guard SecRandomCopyBytes(kSecRandomDefault, MemoryLayout<UInt128>.size, &entropy.u8.0) == 0
                 else { return nil }
-            let phraseLen = entropy.withUnsafeBytes({ BRBIP39Encode(nil, 0, &words, $0, entropy.count) })
+            let phraseLen = BRBIP39Encode(nil, 0, &words, &entropy.u8.0, MemoryLayout<UInt128>.size)
             var phraseData = CFDataCreateMutable(secureAllocator, phraseLen) as Data
             phraseData.count = phraseLen
-            guard phraseData.withUnsafeMutableBytes({ bytes -> Int in
-                entropy.withUnsafeBytes({ BRBIP39Encode(bytes, phraseData.count, &words, $0, entropy.count) })
+            guard phraseData.withUnsafeMutableBytes({
+                BRBIP39Encode($0, phraseData.count, &words, &entropy.u8.0, MemoryLayout<UInt128>.size)
             }) == phraseData.count else { return nil }
+            entropy = UInt128()
             let phrase = CFStringCreateFromExternalRepresentation(secureAllocator, phraseData as CFData,
                                                                   CFStringBuiltInEncodings.UTF8.rawValue) as String
             guard setSeedPhrase(phrase) else { return nil }
