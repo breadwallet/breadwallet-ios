@@ -79,10 +79,24 @@ class WalletCoordinator : Subscriber {
     }
 
     private func updateTransactions() {
-        guard let blockHeight = self.walletManager.peerManager?.lastBlockHeight else { return }
-        guard let transactions = self.walletManager.wallet?.makeTransactionViewModels(blockHeight: blockHeight, kvStore: kvStore, rate: store.state.currentRate) else { return }
+        guard let txRefs = walletManager.wallet?.transactions else { return }
+        let transactions = makeTransactionViewModels(transactions: txRefs, walletManager: walletManager, kvStore: kvStore, rate: store.state.currentRate)
         if transactions.count > 0 {
             self.store.perform(action: WalletChange.setTransactions(transactions))
+        }
+    }
+
+    func makeTransactionViewModels(transactions: [BRTxRef?], walletManager: WalletManager, kvStore: BRReplicatedKVStore?, rate: Rate?) -> [Transaction] {
+        return transactions.flatMap{ $0 }.sorted {
+                if $0.pointee.timestamp == 0 {
+                    return true
+                } else if $1.pointee.timestamp == 0 {
+                    return false
+                } else {
+                    return $0.pointee.timestamp > $1.pointee.timestamp
+                }
+            }.flatMap {
+                return Transaction($0, walletManager: walletManager, kvStore: kvStore, rate: rate)
         }
     }
 

@@ -115,6 +115,8 @@ enum S {
         static let ending = NSLocalizedString("Transaction.ending", value: "Ending balance: %@", comment: "eg. Ending balance: $50.00")
         static let exchangeOnDay = NSLocalizedString("Transaction.exchangeOnDay", value: "Exchange rate when sent:", comment: "Exchange rate on date header")
         static let exchange = NSLocalizedString("Transaction.exchange", value: "%1$@ / btc (now worth xxx)", comment: "$581.63 / btc (now worth +2.8%)")
+        static let receivedStatus = NSLocalizedString("Transaction.receivedStatus", value: "Receiving - %@", comment: "Receiving - 20%")
+        static let sendingStatus = NSLocalizedString("Transaction.sendingStatus", value: "Sending - %@", comment: "Sending - 20%")
     }
 
     enum TransactionDetails {
