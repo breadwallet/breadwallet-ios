@@ -40,9 +40,9 @@ enum TransactionDirection : String {
         case .sent:
             return S.TransactionDirection.to
         case .received:
-            return S.TransactionDirection.address
+            return S.TransactionDirection.received
         case .moved:
-            return S.TransactionDirection.address
+            return S.TransactionDirection.to
         }
     }
 
