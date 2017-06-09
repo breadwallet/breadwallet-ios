@@ -103,17 +103,17 @@ class Transaction {
     lazy var toAddress: String? = {
         switch self.direction {
         case .sent:
-            guard let output = self.tx.pointee.swiftOutputs.filter({ output in
+            guard let output = self.tx.outputs.filter({ output in
                 !self.wallet.containsAddress(output.swiftAddress)
             }).first else { return nil }
             return output.swiftAddress
         case .received:
-            guard let output = self.tx.pointee.swiftOutputs.filter({ output in
+            guard let output = self.tx.outputs.filter({ output in
                 self.wallet.containsAddress(output.swiftAddress)
             }).first else { return nil }
             return output.swiftAddress
         case .moved:
-            guard let output = self.tx.pointee.swiftOutputs.filter({ output in
+            guard let output = self.tx.outputs.filter({ output in
                 self.wallet.containsAddress(output.swiftAddress)
             }).first else { return nil }
             return output.swiftAddress
