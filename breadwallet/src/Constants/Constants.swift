@@ -71,4 +71,6 @@ struct C {
     static let btcCurrencyCode = "BTC"
     static let null = "(null)"
     static let maxMemoLength = 250
+    static let feedbackEmail = "feedback@breadwallet.com"
+    static let reviewLink = "https://itunes.apple.com/app/breadwallet-bitcoin-wallet/id885251393?action=write-review"
 }

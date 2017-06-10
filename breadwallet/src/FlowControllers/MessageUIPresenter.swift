@@ -26,6 +26,16 @@ class MessageUIPresenter: NSObject {
         present(emailView)
     }
 
+    func presentFeedbackCompose() {
+        guard MFMailComposeViewController.canSendMail() else { showEmailUnavailableAlert(); return }
+        originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
+        UINavigationBar.appearance().titleTextAttributes = nil
+        let emailView = MFMailComposeViewController()
+        emailView.setToRecipients([C.feedbackEmail])
+        emailView.mailComposeDelegate = self
+        present(emailView)
+    }
+
     func presentMessageCompose(address: String, image: UIImage) {
         guard MFMessageComposeViewController.canSendText() else { showMessageUnavailableAlert(); return }
         originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
