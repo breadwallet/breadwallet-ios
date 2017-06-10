@@ -336,6 +336,21 @@ class ModalPresenter : Subscriber {
             }), at: 1)
         }
 
+        rows["Bread"]?.append( Setting(title: S.Settings.review, callback: {
+                let alert = UIAlertController(title: S.Settings.review, message: S.Settings.enjoying, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: S.Button.no, style: .default, handler: { _ in
+                    self.messagePresenter.presenter = self.topViewController
+                    self.messagePresenter.presentFeedbackCompose()
+                }))
+                alert.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
+                    if let url = URL(string: C.reviewLink) {
+                        UIApplication.shared.openURL(url)
+                    }
+                }))
+                self.topViewController?.present(alert, animated: true, completion: nil)
+            })
+        )
+
         let settings = SettingsViewController(sections: sections, rows: rows)
         nc.viewControllers = [settings]
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
