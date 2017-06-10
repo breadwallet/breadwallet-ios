@@ -24,6 +24,8 @@ enum S {
         static let settings = NSLocalizedString("Button.settings", value:"Settings", comment: "Settings button label")
         static let submit = NSLocalizedString("Button.submit", value:"Submit", comment: "Settings button label")
         static let ignore = NSLocalizedString("Button.ignore", value:"Ignore", comment: "Ignore button label")
+        static let yes = NSLocalizedString("Button.yes", value: "Yes", comment: "")
+        static let no = NSLocalizedString("Button.no", value: "No", comment: "")
     }
 
     enum Alert {
@@ -225,6 +227,8 @@ enum S {
         static let shareData = NSLocalizedString("Settings.shareData", value:"Share Anonymous Data", comment: "Share anonymous data label")
         static let earlyAccess = NSLocalizedString("Settings.earlyAccess", value:"Join Early Access", comment: "Join Early access label")
         static let about = NSLocalizedString("Settings.about", value:"About", comment: "About label")
+        static let review = NSLocalizedString("Settings.review", value: "Leave us a Review", comment: "Leave review button label")
+        static let enjoying = NSLocalizedString("Settings.enjoying", value: "Are you enjoying Bread?", comment: "Are you enjoying bread alert message body")
     }
 
     enum About {
