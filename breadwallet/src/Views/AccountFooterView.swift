@@ -29,15 +29,15 @@ class AccountFooterView: UIView {
         addSubview(backgroundView)
         backgroundView.constrain(toSuperviewEdges: nil)
 
-        let send = UIButton.vertical(title: "SEND", image: #imageLiteral(resourceName: "SendButtonIcon"))
+        let send = UIButton.vertical(title: S.Button.send.uppercased(), image: #imageLiteral(resourceName: "SendButtonIcon"))
         send.tintColor = .grayTextTint
         send.addTarget(self, action: #selector(AccountFooterView.send), for: .touchUpInside)
 
-        let receive = UIButton.vertical(title: "RECEIVE", image: #imageLiteral(resourceName: "ReceiveButtonIcon"))
+        let receive = UIButton.vertical(title: S.Button.receive.uppercased(), image: #imageLiteral(resourceName: "ReceiveButtonIcon"))
         receive.tintColor = .grayTextTint
         receive.addTarget(self, action: #selector(AccountFooterView.receive), for: .touchUpInside)
 
-        let menu = UIButton.vertical(title: "MENU", image: #imageLiteral(resourceName: "MenuButtonIcon"))
+        let menu = UIButton.vertical(title: S.Button.menu.uppercased(), image: #imageLiteral(resourceName: "MenuButtonIcon"))
         menu.tintColor = .grayTextTint
         menu.addTarget(self, action: #selector(AccountFooterView.menu), for: .touchUpInside)
 
