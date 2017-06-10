@@ -26,6 +26,9 @@ enum S {
         static let ignore = NSLocalizedString("Button.ignore", value:"Ignore", comment: "Ignore button label")
         static let yes = NSLocalizedString("Button.yes", value: "Yes", comment: "")
         static let no = NSLocalizedString("Button.no", value: "No", comment: "")
+        static let send = NSLocalizedString("Button.send", value: "send", comment: "")
+        static let receive = NSLocalizedString("Button.receive", value: "receive", comment: "")
+        static let menu = NSLocalizedString("Button.menu", value: "menu", comment: "")
     }
 
     enum Alert {
