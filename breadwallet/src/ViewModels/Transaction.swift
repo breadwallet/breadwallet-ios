@@ -82,13 +82,13 @@ class Transaction {
         let endingString = String(format: String(format: S.Transaction.ending, "\(Amount(amount: balanceAfter, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped))"))
 
         var exchangeRateInfo = ""
-        if let metaData = metaData, let currentRate = rates.filter({ $0.code == metaData.exchangeRateCurrency }).first{
+        if let metaData = metaData, let currentRate = rates.filter({ $0.code.lowercased() == metaData.exchangeRateCurrency.lowercased() }).first{
             let difference = (currentRate.rate - metaData.exchangeRate)/metaData.exchangeRate*100.0
             let prefix = difference > 0.0 ? "+" : "-"
             let firstLine = S.Transaction.exchangeOnDay
             let nf = NumberFormatter()
-            nf.locale = currentRate.locale
-            nf.currencyCode = currentRate.currencySymbol
+            nf.currencySymbol = currentRate.currencySymbol
+            nf.numberStyle = .currency
             if let rateString = nf.string(from: metaData.exchangeRate as NSNumber) {
                 let secondLine = "\(rateString)/btc \(prefix)\(String(format: "%.2f", difference))%"
                 exchangeRateInfo = "\(firstLine)\n\(secondLine)"
