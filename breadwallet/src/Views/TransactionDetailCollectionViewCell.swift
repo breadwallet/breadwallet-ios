@@ -220,6 +220,8 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
             self?.addMoreView()
         }
 
+        amount.minimumScaleFactor = 0.5
+        amount.adjustsFontSizeToFitWidth = true
     }
 
     private func addMoreView() {
