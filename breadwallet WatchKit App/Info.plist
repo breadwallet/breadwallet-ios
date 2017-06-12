@@ -26,7 +26,7 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>WKCompanionAppBundleIdentifier</key>
-	<string>com.breadwalet.new</string>
+	<string>org.voisine.breadwallet</string>
 	<key>WKWatchKitApp</key>
 	<true/>
 </dict>
