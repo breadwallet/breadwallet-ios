@@ -492,16 +492,25 @@ class ModalPresenter : Subscriber {
         alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
         alert.addAction(UIAlertAction(title: "Wipe", style: .default, handler: { _ in
             self.topViewController?.dismiss(animated: true, completion: {
-                if (self.walletManager?.wipeWallet(pin: "forceWipe"))! {
-                    let success = UIAlertController(title: "Success", message: "Successfully wiped wallet....shutting down", preferredStyle: .alert)
-                    success.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-                        abort()
-                    }))
-                    self.topViewController?.present(success, animated: true, completion: nil)
-                } else {
-                    let failure = UIAlertController(title: "Failed", message: "Failed to wipe wallet.", preferredStyle: .alert)
-                    failure.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                    self.topViewController?.present(failure, animated: true, completion: nil)
+                let activity = BRActivityViewController(message: "wiping...")
+                self.topViewController?.present(activity, animated: true, completion: nil)
+                DispatchQueue.walletQueue.sync {
+                    self.walletManager?.peerManager?.disconnect()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: {
+                        activity.dismiss(animated: true, completion: {
+                            if (self.walletManager?.wipeWallet(pin: "forceWipe"))! {
+                                let success = UIAlertController(title: "Success", message: "Successfully wiped wallet....shutting down", preferredStyle: .alert)
+                                success.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+                                    abort()
+                                }))
+                                self.topViewController?.present(success, animated: true, completion: nil)
+                            } else {
+                                let failure = UIAlertController(title: "Failed", message: "Failed to wipe wallet.", preferredStyle: .alert)
+                                failure.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                                self.topViewController?.present(failure, animated: true, completion: nil)
+                            }
+                        })
+                    })
                 }
             })
         }))
