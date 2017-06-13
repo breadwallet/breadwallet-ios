@@ -93,6 +93,30 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         return NSArray(contentsOfFile: path) as? [NSString]
     }
 
+    lazy var allWordsLists: [[NSString]] = {
+        var array: [[NSString]] = []
+        Bundle.main.localizations.forEach { lang in
+            if let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist", inDirectory: nil, forLocalization: lang) {
+                if let words = NSArray(contentsOfFile: path) as? [NSString] {
+                    array.append(words)
+                }
+            }
+        }
+        return array
+    }()
+
+    lazy var allWords: Set<String> = {
+        var set: Set<String> = Set()
+        Bundle.main.localizations.forEach { lang in
+            if let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist", inDirectory: nil, forLocalization: lang) {
+                if let words = NSArray(contentsOfFile: path) as? [NSString] {
+                    set.formUnion(words.map { $0 as String })
+                }
+            }
+        }
+        return set
+    }()
+
     var rawWordList: [UnsafePointer<CChar>?]? {
         guard let wordList = wordList, wordList.count == 2048 else { return nil }
         return wordList.map({ $0.utf8String })
@@ -569,15 +593,19 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
 
     func isPhraseValid(_ phrase: String) -> Bool {
-        guard var words = rawWordList else { return false }
-        guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString) else { return false }
-        CFStringNormalize(nfkdPhrase, .KD)
-        return BRBIP39PhraseIsValid(&words, nfkdPhrase as String) != 0
+        for wordList in allWordsLists {
+            var words = wordList.map({ $0.utf8String })
+            guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString) else { return false }
+            CFStringNormalize(nfkdPhrase, .KD)
+            if BRBIP39PhraseIsValid(&words, nfkdPhrase as String) != 0 {
+                return true
+            }
+        }
+        return false
     }
 
     func isWordValid(_ word: String) -> Bool {
-        guard let words = wordList else { return false }
-        return words.map { $0 as String }.contains(word)
+        return allWords.contains(word)
     }
 
     deinit {
