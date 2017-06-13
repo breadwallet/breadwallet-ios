@@ -357,7 +357,9 @@ extension WalletManager : WalletAuthenticator {
                 let mpkData: Data? = try keychainItem(key: KeychainKey.masterPubKey)
                 guard mpkData?.masterPubKey == mpk else { return false }
             }
-            else if try keychainItem(key: KeychainKey.pin) != nil { return false }
+            else if try keychainItem(key: KeychainKey.pin) as String? != nil {
+                return authenticate(pin: newPin)
+            }
             
             try setKeychainItem(key: KeychainKey.pin, item: newPin)
             try authenticationSuccess()
@@ -548,6 +550,8 @@ private func setKeychainItem<T>(key: String, item: T?, authenticated: Bool = fal
         status = SecItemAdd(item as CFDictionary, nil)
     }
     
-    guard status == noErr else { throw NSError(domain: NSOSStatusErrorDomain, code: Int(status)) }
+    guard status == noErr else {
+        throw NSError(domain: NSOSStatusErrorDomain, code: Int(status))
+    }
 }
 
