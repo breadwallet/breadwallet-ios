@@ -51,7 +51,7 @@ extension WalletManager : WalletAuthenticator {
             let seedPhrase: String? = try keychainItem(key: KeychainKey.mnemonic)
             var seed = UInt512()
             print("upgrading to authenticated keychain scheme")
-            BRBIP39DeriveKey(&seed.u8.0, seedPhrase, nil)
+            BRBIP39DeriveKey(&seed, seedPhrase, nil)
             let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
             seed = UInt512() // clear seed
             try setKeychainItem(key: KeychainKey.mnemonic, item: seedPhrase, authenticated: true)
@@ -256,7 +256,7 @@ extension WalletManager : WalletAuthenticator {
                 guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
                 var key = BRKey()
                 var seed = UInt512()
-                BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
+                BRBIP39DeriveKey(&seed, phrase, nil)
                 BRBIP32BitIDKey(&key, &seed, MemoryLayout<UInt512>.size, UInt32(index), url)
                 seed = UInt512()
                 return key
@@ -287,7 +287,7 @@ extension WalletManager : WalletAuthenticator {
             CFStringNormalize(nfkdPhrase, .KD)
             var seed = UInt512()
             try setKeychainItem(key: KeychainKey.mnemonic, item: nfkdPhrase as String?, authenticated: true)
-            BRBIP39DeriveKey(&seed.u8.0, nfkdPhrase as String, nil)
+            BRBIP39DeriveKey(&seed, nfkdPhrase as String, nil)
             self.masterPubKey = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
             seed = UInt512() // clear seed
             if self.earliestKeyTime < BIP39CreationTime { self.earliestKeyTime = BIP39CreationTime }
@@ -315,13 +315,14 @@ extension WalletManager : WalletAuthenticator {
         // wrapping in an autorelease pool ensures sensitive memory is wiped and released immediately
         return autoreleasepool {
             var entropy = UInt128()
-            guard SecRandomCopyBytes(kSecRandomDefault, MemoryLayout<UInt128>.size, &entropy.u8.0) == 0
+            let entropyRef = UnsafeMutableRawPointer(mutating: &entropy).assumingMemoryBound(to: UInt8.self)
+            guard SecRandomCopyBytes(kSecRandomDefault, MemoryLayout<UInt128>.size, entropyRef) == 0
                 else { return nil }
-            let phraseLen = BRBIP39Encode(nil, 0, &words, &entropy.u8.0, MemoryLayout<UInt128>.size)
+            let phraseLen = BRBIP39Encode(nil, 0, &words, entropyRef, MemoryLayout<UInt128>.size)
             var phraseData = CFDataCreateMutable(secureAllocator, phraseLen) as Data
             phraseData.count = phraseLen
             guard phraseData.withUnsafeMutableBytes({
-                BRBIP39Encode($0, phraseData.count, &words, &entropy.u8.0, MemoryLayout<UInt128>.size)
+                BRBIP39Encode($0, phraseData.count, &words, entropyRef, MemoryLayout<UInt128>.size)
             }) == phraseData.count else { return nil }
             entropy = UInt128()
             let phrase = CFStringCreateFromExternalRepresentation(secureAllocator, phraseData as CFData,
@@ -351,7 +352,7 @@ extension WalletManager : WalletAuthenticator {
                 guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString)
                     else { return false }
                 CFStringNormalize(nfkdPhrase, .KD)
-                BRBIP39DeriveKey(&seed.u8.0, nfkdPhrase as String, nil)
+                BRBIP39DeriveKey(&seed, nfkdPhrase as String, nil)
                 let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
                 seed = UInt512() // clear seed
                 let mpkData: Data? = try keychainItem(key: KeychainKey.masterPubKey)
@@ -409,7 +410,7 @@ extension WalletManager : WalletAuthenticator {
                 var key = BRKey()
                 var seed = UInt512()
                 guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
-                BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
+                BRBIP39DeriveKey(&seed, phrase, nil)
                 BRBIP32APIAuthKey(&key, &seed, MemoryLayout<UInt512>.size)
                 seed = UInt512() // clear seed
                 let pkLen = BRKeyPrivKey(&key, nil, 0)
@@ -470,7 +471,7 @@ extension WalletManager : WalletAuthenticator {
                 defer { seed = UInt512() }
                 guard let wallet = wallet else { return false }
                 guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return false }
-                BRBIP39DeriveKey(&seed.u8.0, phrase, nil)
+                BRBIP39DeriveKey(&seed, phrase, nil)
                 return wallet.signTransaction(tx, seed: &seed)
             }
             catch { return false }
