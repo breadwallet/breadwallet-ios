@@ -80,13 +80,15 @@ extension BRAddress: CustomStringConvertible, Hashable {
     
     init?(scriptPubKey: [UInt8]) {
         self.init()
-        guard BRAddressFromScriptPubKey(&self.s.0, MemoryLayout<BRAddress>.size, scriptPubKey, scriptPubKey.count) > 0
+        let cStr = UnsafeMutableRawPointer(mutating: &self.s).assumingMemoryBound(to: CChar.self)
+        guard BRAddressFromScriptPubKey(cStr, MemoryLayout<BRAddress>.size, scriptPubKey, scriptPubKey.count) > 0
             else { return nil }
     }
 
     init?(scriptSig: [UInt8]) {
         self.init()
-        guard BRAddressFromScriptSig(&self.s.0, MemoryLayout<BRAddress>.size, scriptSig, scriptSig.count) > 0
+        let cStr = UnsafeMutableRawPointer(mutating: &self.s).assumingMemoryBound(to: CChar.self)
+        guard BRAddressFromScriptSig(cStr, MemoryLayout<BRAddress>.size, scriptSig, scriptSig.count) > 0
             else { return nil }
     }
 
@@ -100,7 +102,7 @@ extension BRAddress: CustomStringConvertible, Hashable {
     var hash160: UInt160? {
         let cStr = UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self)
         var hash = UInt160()
-        guard BRAddressHash160(&hash.u8.0, cStr) != 0 else { return nil }
+        guard BRAddressHash160(&hash, cStr) != 0 else { return nil }
         return hash
     }
     
@@ -309,8 +311,8 @@ extension UnsafeMutablePointer where Pointee == BRTransaction {
     }
     
     // adds an output to tx
-    func addOutput(amount: UInt64, script: [UInt8]?) {
-        BRTransactionAddOutput(self, amount, script, script?.count ?? 0)
+    func addOutput(amount: UInt64, script: [UInt8]) {
+        BRTransactionAddOutput(self, amount, script, script.count)
     }
     
     // shuffles order of tx outputs
@@ -451,7 +453,7 @@ class BRWallet {
     // seed is the master private key (wallet seed) corresponding to the master public key given when wallet was created
     // returns true if all inputs were signed, or false if there was an error or not all inputs were able to be signed
     func signTransaction(_ tx: BRTxRef, seed: inout UInt512) -> Bool {
-        return BRWalletSignTransaction(cPtr, tx, &seed.u8.0, MemoryLayout<UInt512>.stride) != 0
+        return BRWalletSignTransaction(cPtr, tx, &seed, MemoryLayout<UInt512>.stride) != 0
     }
     
     // true if no previous wallet transaction spends any of the given transaction's inputs, and no inputs are invalid
