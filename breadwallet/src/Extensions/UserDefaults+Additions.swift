@@ -17,6 +17,7 @@ private let writePaperPhraseDateKey = "writepaperphrasedatekey"
 private let hasPromptedTouchIdKey = "haspromptedtouched"
 private let isBtcSwappedKey = "isBtcSwappedKey"
 private let maxDigitsKey = "SETTINGS_MAX_DIGITS"
+private let pinLengthKey = "pinlengthkey"
 
 extension UserDefaults {
 
@@ -74,6 +75,18 @@ extension UserDefaults {
         }
         set {
             defaults.set(newValue, forKey: maxDigitsKey)
+        }
+    }
+
+    static var pinLength: Int? {
+        get {
+            guard defaults.object(forKey: pinLengthKey) != nil else {
+                return nil
+            }
+            return defaults.integer(forKey: pinLengthKey)
+        }
+        set {
+            defaults.set(newValue, forKey: pinLengthKey)
         }
     }
 }

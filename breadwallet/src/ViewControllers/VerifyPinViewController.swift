@@ -16,6 +16,7 @@ class VerifyPinViewController : UIViewController {
         self.bodyText = bodyText
         self.callback = callback
         self.pinLength = pinLength
+        self.pinView = PinView(style: .create, length: pinLength)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -26,7 +27,7 @@ class VerifyPinViewController : UIViewController {
     private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad)
     private let titleLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
     private let body = UILabel(font: .customBody(size: 14.0), color: .darkText)
-    private let pinView = PinView(style: .create, length: 6)
+    private let pinView: PinView
     private let toolbar = UIView(color: .whiteTint)
     private let cancel = UIButton(type: .system)
     private let bodyText: String
