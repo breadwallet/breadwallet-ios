@@ -283,7 +283,21 @@ class ModalPresenter : Subscriber {
         let nc = UINavigationController()
         let sections = ["Wallet", "Manage", "Bread"]
         var rows = [
-            "Wallet": [Setting(title: S.Settings.importTile, callback: {})],
+            "Wallet": [Setting(title: S.Settings.importTile, callback: { [weak self] in
+                    guard let myself = self else { return }
+                    let nc = ModalNavigationController()
+                    nc.setClearNavbar()
+                    nc.setWhiteStyle()
+                    nc.modalPresentationStyle = .overFullScreen
+                    let start = StartImportViewController()
+                    start.addCloseNavigationItem(tintColor: .white)
+                    start.navigationItem.title = S.Import.title
+                    let faqButton = UIButton.buildFaqButton(store: myself.store, articleId: ArticleIds.importWallet)
+                    faqButton.tintColor = .white
+                    start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
+                    nc.viewControllers = [start]
+                    myself.topViewController?.present(nc, animated: true, completion: nil)
+                })],
             "Manage": [
                 Setting(title: S.Settings.notifications, accessoryText: {
                     return "Off"
