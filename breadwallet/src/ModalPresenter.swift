@@ -288,7 +288,6 @@ class ModalPresenter : Subscriber {
                     let nc = ModalNavigationController()
                     nc.setClearNavbar()
                     nc.setWhiteStyle()
-                    nc.modalPresentationStyle = .overFullScreen
                     let start = StartImportViewController()
                     start.addCloseNavigationItem(tintColor: .white)
                     start.navigationItem.title = S.Import.title
