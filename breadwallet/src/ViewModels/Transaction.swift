@@ -42,7 +42,6 @@ class Transaction {
 
         self.isValid = wallet.transactionIsValid(tx)
 
-
         let transactionBlockHeight = tx.pointee.blockHeight
         let blockHeight = peerManager.lastBlockHeight
         confirms = transactionBlockHeight > blockHeight ? 0 : Int(blockHeight - transactionBlockHeight) + 1
