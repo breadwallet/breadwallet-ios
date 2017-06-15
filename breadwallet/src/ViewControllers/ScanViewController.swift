@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 
 typealias ScanCompletion = (PaymentRequest?) -> Void
+typealias KeyScanCompletion = (String) -> Void
 
 class ScanViewController : UIViewController {
 
@@ -17,7 +18,8 @@ class ScanViewController : UIViewController {
         return AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != .denied
     }
 
-    let completion: ScanCompletion
+    let completion: ScanCompletion?
+    let scanKeyCompletion: KeyScanCompletion?
     let isValidURI: (String) -> Bool
 
     fileprivate let guide = CameraGuideView()
@@ -29,6 +31,14 @@ class ScanViewController : UIViewController {
 
     init(completion: @escaping ScanCompletion, isValidURI: @escaping (String) -> Bool) {
         self.completion = completion
+        self.scanKeyCompletion = nil
+        self.isValidURI = isValidURI
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    init(scanKeyCompletion: @escaping KeyScanCompletion, isValidURI: @escaping (String) -> Bool) {
+        self.scanKeyCompletion = scanKeyCompletion
+        self.completion = nil
         self.isValidURI = isValidURI
         super.init(nibName: nil, bundle: nil)
     }
@@ -67,7 +77,7 @@ class ScanViewController : UIViewController {
 
         close.tap = {
             self.dismiss(animated: true, completion: {
-                self.completion(nil)
+                self.completion?(nil)
             })
         }
 
@@ -135,23 +145,43 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
             } else {
                 data.forEach {
                     guard let uri = $0.stringValue else { return }
-                    if self.currentUri != uri {
-                        self.currentUri = uri
-                        if let paymentRequest = PaymentRequest(string: uri) {
-                            guide.state = .positive
-                            //Add a small delay so the green guide will be seen
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-                                self.dismiss(animated: true, completion: {
-                                    print("completion")
-                                    self.completion(paymentRequest)
-                                })
-                            })
-                        } else {
-                            guide.state = .negative
-                        }
+                    if completion != nil {
+                        handleURI(uri)
+                    } else if scanKeyCompletion != nil {
+                        handleKey(uri)
                     }
                 }
             }
+        }
+    }
+
+    func handleURI(_ uri: String) {
+        if self.currentUri != uri {
+            self.currentUri = uri
+            if let paymentRequest = PaymentRequest(string: uri) {
+                guide.state = .positive
+                //Add a small delay so the green guide will be seen
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                    self.dismiss(animated: true, completion: {
+                        self.completion?(paymentRequest)
+                    })
+                })
+            } else {
+                guide.state = .negative
+            }
+        }
+    }
+
+    func handleKey(_ address: String) {
+        if isValidURI(address) {
+            guide.state = .positive
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                self.dismiss(animated: true, completion: {
+                    self.scanKeyCompletion?(address)
+                })
+            })
+        } else {
+            guide.state = .negative
         }
     }
 }

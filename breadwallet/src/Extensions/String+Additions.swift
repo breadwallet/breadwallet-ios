@@ -62,3 +62,34 @@ extension String {
         return output
     }
 }
+
+// MARK: - Hex String conversions
+extension String {
+    var hexToData: Data? {
+        let scalars = unicodeScalars
+        var bytes = Array<UInt8>(repeating: 0, count: (scalars.count + 1) >> 1)
+        for (index, scalar) in scalars.enumerated() {
+            guard var nibble = scalar.nibble else { return nil }
+            if index & 1 == 0 {
+                nibble <<= 4
+            }
+            bytes[index >> 1] |= nibble
+        }
+        return Data(bytes: bytes)
+    }
+}
+
+extension UnicodeScalar {
+    var nibble: UInt8? {
+        if 48 <= value && value <= 57 {
+            return UInt8(value - 48)
+        }
+        else if 65 <= value && value <= 70 {
+            return UInt8(value - 55)
+        }
+        else if 97 <= value && value <= 102 {
+            return UInt8(value - 87)
+        }
+        return nil
+    }
+}

@@ -143,10 +143,14 @@ class ModalPresenter : Subscriber {
                 topConstraint?.constant = size.height
                 window.layoutIfNeeded()
             }, completion: { _ in
+                //TODO - Make these callbacks generic
                 if case .paperKeySet(let callback) = type {
                     callback()
                 }
                 if case .pinSet(let callback) = type {
+                    callback()
+                }
+                if case .sweepSuccess(let callback) = type {
                     callback()
                 }
                 completion()
@@ -280,28 +284,31 @@ class ModalPresenter : Subscriber {
         guard let top = topViewController else { return }
         guard let walletManager = self.walletManager else { return }
 
-        let nc = UINavigationController()
+        let settingsNav = UINavigationController()
         let sections = ["Wallet", "Manage", "Bread"]
         var rows = [
             "Wallet": [Setting(title: S.Settings.importTile, callback: { [weak self] in
                     guard let myself = self else { return }
-                    let nc = ModalNavigationController()
-                    nc.setClearNavbar()
-                    nc.setWhiteStyle()
-                    let start = StartImportViewController()
+                    guard let walletManager = myself.walletManager else { return }
+                    let importNav = ModalNavigationController()
+                    importNav.setClearNavbar()
+                    importNav.setWhiteStyle()
+                    let start = StartImportViewController(walletManager: walletManager, store: myself.store)
                     start.addCloseNavigationItem(tintColor: .white)
                     start.navigationItem.title = S.Import.title
                     let faqButton = UIButton.buildFaqButton(store: myself.store, articleId: ArticleIds.importWallet)
                     faqButton.tintColor = .white
                     start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
-                    nc.viewControllers = [start]
-                    myself.topViewController?.present(nc, animated: true, completion: nil)
+                    importNav.viewControllers = [start]
+                    settingsNav.dismiss(animated: true, completion: {
+                        myself.topViewController?.present(importNav, animated: true, completion: nil)
+                    })
                 })],
             "Manage": [
                 Setting(title: S.Settings.notifications, accessoryText: {
                     return "Off"
                 }, callback: {
-                    nc.pushViewController(PushNotificationsViewController(store: self.store), animated: true)
+                    settingsNav.pushViewController(PushNotificationsViewController(store: self.store), animated: true)
                 }),
                 Setting(title: S.Settings.touchIdLimit, accessoryText: { [weak self] in
                     guard let myself = self else { return "" }
@@ -309,7 +316,7 @@ class ModalPresenter : Subscriber {
                     let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: myself.store.state.maxDigits)
                     return amount.localCurrency
                 }, callback: {
-                    nc.pushViewController(TouchIdSpendingLimitViewController(walletManager: walletManager, store: self.store), animated: true)
+                    settingsNav.pushViewController(TouchIdSpendingLimitViewController(walletManager: walletManager, store: self.store), animated: true)
                 }),
                 Setting(title: S.Settings.currency, accessoryText: {
                     let code = self.store.state.defaultCurrencyCode
@@ -317,18 +324,18 @@ class ModalPresenter : Subscriber {
                     let identifier = Locale.identifier(fromComponents: components)
                     return Locale(identifier: identifier).currencyCode ?? ""
                 }, callback: {
-                    nc.pushViewController(DefaultCurrencyViewController(apiClient: self.apiClient, store: self.store), animated: true)
+                    settingsNav.pushViewController(DefaultCurrencyViewController(apiClient: self.apiClient, store: self.store), animated: true)
                 }),
                 Setting(title: S.Settings.sync, callback: {
-                    nc.pushViewController(ReScanViewController(store: self.store), animated: true)
+                    settingsNav.pushViewController(ReScanViewController(store: self.store), animated: true)
                 })
             ],
             "Bread": [
                 Setting(title: S.Settings.shareData, callback: {
-                    nc.pushViewController(ShareDataViewController(store: self.store), animated: true)
+                    settingsNav.pushViewController(ShareDataViewController(store: self.store), animated: true)
                 }),
                 Setting(title: S.Settings.about, callback: {
-                    nc.pushViewController(AboutViewController(), animated: true)
+                    settingsNav.pushViewController(AboutViewController(), animated: true)
                 }),
             ]
         ]
@@ -343,7 +350,7 @@ class ModalPresenter : Subscriber {
 
         if BRAPIClient.featureEnabled(.earlyAccess) {
             rows["Bread"]?.insert(Setting(title: S.Settings.earlyAccess, callback: {
-                nc.dismiss(animated: true, completion: {
+                settingsNav.dismiss(animated: true, completion: {
                     self.presentBuyController("/ea")
                 })
             }), at: 1)
@@ -365,14 +372,14 @@ class ModalPresenter : Subscriber {
         )
 
         let settings = SettingsViewController(sections: sections, rows: rows)
-        nc.viewControllers = [settings]
+        settingsNav.viewControllers = [settings]
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
         view.backgroundColor = .whiteTint
-        nc.navigationBar.setBackgroundImage(view.imageRepresentation, for: .default)
-        nc.navigationBar.shadowImage = UIImage()
-        nc.navigationBar.isTranslucent = false
-        nc.setBlackBackArrow()
-        top.present(nc, animated: true, completion: nil)
+        settingsNav.navigationBar.setBackgroundImage(view.imageRepresentation, for: .default)
+        settingsNav.navigationBar.shadowImage = UIImage()
+        settingsNav.navigationBar.isTranslucent = false
+        settingsNav.setBlackBackArrow()
+        top.present(settingsNav, animated: true, completion: nil)
     }
 
     private func presentScan(parent: UIViewController) -> PresentScan {
