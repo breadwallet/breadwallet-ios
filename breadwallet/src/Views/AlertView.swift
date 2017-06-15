@@ -14,6 +14,7 @@ enum AlertType {
     case sendSuccess
     case sendFailure
     case addressesCopied
+    case sweepSuccess(callback: () -> Void)
 
     var header: String {
         switch self {
@@ -27,6 +28,8 @@ enum AlertType {
             return S.Alerts.sendFailure
         case .addressesCopied:
             return S.Alerts.copiedAddressesHeader
+        case .sweepSuccess:
+            return "Success"
         }
     }
 
@@ -42,6 +45,8 @@ enum AlertType {
             return S.Alerts.sendFailureSubheader
         case .addressesCopied:
             return S.Alerts.copiedAddressesSubheader
+        case .sweepSuccess:
+            return "Success"
         }
     }
 
@@ -63,6 +68,8 @@ func ==(lhs: AlertType, rhs: AlertType) -> Bool {
     case (.sendFailure, .sendFailure):
         return true
     case (.addressesCopied, .addressesCopied):
+        return true
+    case (.sweepSuccess(_), .sweepSuccess(_)):
         return true
     default:
         return false

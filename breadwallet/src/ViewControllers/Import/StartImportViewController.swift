@@ -7,12 +7,22 @@
 //
 
 import UIKit
+import BRCore
+
+private let mainURL = "https://api.breadwallet.com/q/addrs/utxo"
+private let fallbackURL = "https://insight.bitpay.com/api/addrs/utxo"
+private let testnetURL = "https://test-insight.bitpay.com/api/addrs/utxo"
 
 class StartImportViewController : UIViewController {
 
-    init() {
+    init(walletManager: WalletManager, store: Store) {
+        self.walletManager = walletManager
+        self.store = store
         super.init(nibName: nil, bundle: nil)
     }
+
+    private let walletManager: WalletManager
+    private let store: Store
     private let header = RadialGradientView(backgroundColor: .blue, offset: 64.0)
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "ImportIllustration"))
     private let message = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
@@ -21,6 +31,9 @@ class StartImportViewController : UIViewController {
     private let bullet = UIImageView(image: #imageLiteral(resourceName: "deletecircle"))
     private let leftCaption = UILabel.wrapping(font: .customMedium(size: 13.0), color: .darkText)
     private let rightCaption = UILabel.wrapping(font: .customMedium(size: 13.0), color: .darkText)
+    private let balanceActivity = BRActivityViewController(message: S.Import.checking)
+    private let importingActivity = BRActivityViewController(message: S.Import.importing)
+    private let unlockingActivity = BRActivityViewController(message: S.Import.unlockingActivity)
 
     override func viewDidLoad() {
         addSubviews()
@@ -88,13 +101,156 @@ class StartImportViewController : UIViewController {
         warning.text = S.Import.importWarning
 
         button.tap = { [weak self] in
-            let scan = ScanViewController(completion: { (request) in
-                print("blah")
+            let scan = ScanViewController(scanKeyCompletion: { address in
+                self?.didReceiveAddress(address)
             }, isValidURI: { (string) -> Bool in
-                return true
+                return string.isValidPrivateKey || string.isValidBip38Key
             })
             self?.parent?.present(scan, animated: true, completion: nil)
         }
+    }
+
+    private func didReceiveAddress(_ address: String) {
+        if address.isValidPrivateKey {
+            if let key = BRKey(privKey: address) {
+                checkBalance(key: key)
+            }
+        } else if address.isValidBip38Key {
+            unlock(address: address, callback: { key in
+                self.checkBalance(key: key)
+            })
+        }
+    }
+
+    private func unlock(address: String, callback: @escaping (BRKey) -> Void) {
+        let alert = UIAlertController(title: S.Import.title, message: S.Import.password, preferredStyle: .alert)
+        alert.addTextField(configurationHandler: { textField in
+            textField.placeholder = S.Import.passwordPlaceholder
+            textField.isSecureTextEntry = true
+            textField.returnKeyType = .done
+        })
+        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: { _ in
+            self.present(self.unlockingActivity, animated: true, completion: {
+                if let password = alert.textFields?.first?.text {
+                    if let key = BRKey(bip38Key: address, passphrase: password) {
+                        self.unlockingActivity.dismiss(animated: true, completion: {
+                            callback(key)
+                        })
+                        return
+                    }
+                }
+                self.unlockingActivity.dismiss(animated: true, completion: {
+                    self.displayError(message: "Wrong password, please try again.")
+                })
+            })
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+
+    private func checkBalance(key: BRKey) {
+        present(balanceActivity, animated: true, completion: {
+            var key = key
+            guard let address = key.address() else { return }
+            let urlString = Environment.isTestnet ? testnetURL : mainURL
+            let request = NSMutableURLRequest(url: URL(string: urlString)!,
+                                              cachePolicy: .reloadIgnoringLocalCacheData,
+                                              timeoutInterval: 20.0)
+            request.httpMethod = "POST"
+            request.httpBody = "addrs=\(address)".data(using: .utf8)
+            let task = URLSession.shared.dataTask(with: request as URLRequest) { [weak self] data, response, error in
+                guard let myself = self else { return }
+                guard error == nil else { print("error: \(error!)"); return }
+                guard let data = data,
+                    let jsonData = try? JSONSerialization.jsonObject(with: data, options: []),
+                    let json = jsonData as? [[String: Any]] else { return }
+                myself.handleData(data: json, key: key)
+            }
+            task.resume()
+        })
+    }
+
+    private func handleData(data: [[String: Any]], key: BRKey) {
+        var key = key
+        guard let tx = UnsafeMutablePointer<BRTransaction>() else { return }
+        guard let wallet = walletManager.wallet else { return }
+        guard let address = key.address() else { return }
+        guard !wallet.containsAddress(address) else {
+            displayError(message: S.Import.Error.duplicate)
+            return
+        }
+        let outputs = data.flatMap { SimpleUTXO(json: $0) }
+        let balance = outputs.map { $0.satoshis }.reduce(0, +)
+        outputs.forEach { output in
+            tx.addInput(txHash: output.hash, index: output.index, script: output.script)
+        }
+
+        let pubKeyLength = key.pubKey()?.count ?? 0
+        let fee = wallet.feeForTxSize(tx.size + 34 + (pubKeyLength - 34)*tx.inputs.count)
+        balanceActivity.dismiss(animated: true, completion: {
+            guard outputs.count > 0 && balance > 0 else {
+                self.displayError(message: S.Import.Error.empty)
+                return
+            }
+            guard fee + wallet.minOutputAmount <= balance else {
+                self.displayError(message: S.Import.Error.highFees)
+                return
+            }
+            guard let rate = self.store.state.currentRate else { return }
+            let balanceAmount = Amount(amount: balance, rate: rate, maxDigits: self.store.state.maxDigits)
+            let feeAmount = Amount(amount: fee, rate: rate, maxDigits: self.store.state.maxDigits)
+            let balanceText = self.store.state.isBtcSwapped ? balanceAmount.localCurrency : balanceAmount.bits
+            let feeText = self.store.state.isBtcSwapped ? feeAmount.localCurrency : feeAmount.bits
+            let message = String(format: S.Import.confirm, balanceText, feeText)
+            let alert = UIAlertController(title: S.Import.title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: S.Import.importButton, style: .default, handler: { _ in
+                self.publish(tx: tx, balance: balance, fee: fee, key: key)
+            }))
+            self.present(alert, animated: true, completion: nil)
+        })
+    }
+
+    private func publish(tx: UnsafeMutablePointer<BRTransaction>, balance: UInt64, fee: UInt64, key: BRKey) {
+        present(importingActivity, animated: true, completion: {
+            guard let wallet = self.walletManager.wallet else { return }
+            guard let script = BRAddress(string: wallet.receiveAddress)?.scriptPubKey else { return }
+            tx.addOutput(amount: balance - fee, script: script)
+            var keys = [key]
+            let _ = tx.sign(keys: &keys)
+
+                guard tx.isSigned else {
+                    self.importingActivity.dismiss(animated: true, completion: {
+                        self.displayError(message: S.Import.Error.signing)
+                    })
+                    return
+                }
+                self.walletManager.peerManager?.publishTx(tx, completion: { [weak self] success, error in
+                    guard let myself = self else { return }
+                    myself.importingActivity.dismiss(animated: true, completion: {
+                        DispatchQueue.main.async {
+                            if let error = error {
+                                myself.displayError(message: error.localizedDescription)
+                                return
+                            }
+                            myself.showSuccess()
+                        }
+                    })
+                })
+        })
+    }
+
+    private func showSuccess() {
+        store.perform(action: Alert.Show(.sweepSuccess(callback: { [weak self] in
+            guard let myself = self else { return }
+            myself.dismiss(animated: true, completion: nil)
+        })))
+    }
+
+    private func displayError(message: String) {
+        let alert = UIAlertController(title: S.Alert.error, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -103,5 +259,12 @@ class StartImportViewController : UIViewController {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension Data {
+    var reverse: Data {
+        let tempBytes = Array(([UInt8](self)).reversed())
+        return Data(bytes: tempBytes)
     }
 }
