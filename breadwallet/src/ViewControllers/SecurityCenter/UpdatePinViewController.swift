@@ -41,15 +41,17 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private let store: Store
     private let walletManager: WalletManager
     private let faq: UIButton
-    private var step: Step = .current {
+    private var step: Step = .verify {
         didSet {
             switch step {
-            case .current:
+            case .verify:
                 instruction.text = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterCurrent
             case .new:
-                if !isCreatingPin {
-                    instruction.pushNewText(S.UpdatePin.enterNew)
+                let instructionText = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterNew
+                if instruction.text != instructionText {
+                    instruction.pushNewText(instructionText)
                 }
+                header.text = S.UpdatePin.createTitle
                 caption.text = S.UpdatePin.caption
             case .confirmNew:
                 if isCreatingPin {
@@ -71,7 +73,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private let showsBackButton: Bool
 
     private enum Step {
-        case current
+        case verify
         case new
         case confirmNew
     }
@@ -123,12 +125,11 @@ class UpdatePinViewController : UIViewController, Subscriber {
         view.backgroundColor = .whiteTint
 
         header.text = isCreatingPin ? S.UpdatePin.createTitle : S.UpdatePin.updateTitle
-        instruction.text = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterCurrent
 
         pinPad.ouputDidUpdate = { [weak self] text in
             guard let step = self?.step else { return }
             switch step {
-            case .current:
+            case .verify:
                 self?.didUpdateForCurrent(pin: text)
             case .new :
                 self?.didUpdateForNew(pin: text)
@@ -139,6 +140,8 @@ class UpdatePinViewController : UIViewController, Subscriber {
 
         if isCreatingPin {
             step = .new
+        } else {
+            instruction.text = S.UpdatePin.enterCurrent
         }
 
         if !showsBackButton {
@@ -182,17 +185,16 @@ class UpdatePinViewController : UIViewController, Subscriber {
                 didSetNewPin()
             } else {
                 clearAfterFailure()
+                pushNewStep(.new)
             }
         }
     }
 
     private func clearAfterFailure() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
-            self?.pinView.fill(0)
-        }
         pinPad.view.isUserInteractionEnabled = false
         pinView.shake { [weak self] in
             self?.pinPad.view.isUserInteractionEnabled = true
+            self?.pinView.fill(0)
         }
         pinPad.clear()
     }
