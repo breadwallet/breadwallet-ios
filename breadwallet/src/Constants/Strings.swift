@@ -438,7 +438,8 @@ enum S {
         static let passwordPlaceholder = NSLocalizedString("Import.passwordPlaceholder", value: "password", comment: "password textfield placeholder")
         static let unlockingActivity = NSLocalizedString("Import.unlockingActivity", value: "Unlocking Key", comment: "Unlocking Private key activity view message.")
         static let importButton = NSLocalizedString("Import.importButton", value: "Import", comment: "Import button label")
-
+        static let success = NSLocalizedString("Import.success", value: "Success", comment: "Import wallet success alert title")
+        static let successBody = NSLocalizedString("Import.SuccessBody", value: "Successfully imported wallet.", comment: "Successfully imported wallet message body")
         enum Error {
             static let notValid = NSLocalizedString("Import.Error.notValid", value: "Not a valid private key", comment: "Not a valid private key error message")
             static let duplicate = NSLocalizedString("Import.Error.duplicate", value: "This private key is already in your wallet", comment: "Duplicate key error message")
