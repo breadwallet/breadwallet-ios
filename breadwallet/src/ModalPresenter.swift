@@ -36,7 +36,9 @@ class ModalPresenter : Subscriber {
     private let verifyPinTransitionDelegate = PinTransitioningDelegate()
     private var supportCenter: SupportCenterContainer?
     private var currentRequest: PaymentRequest?
-
+    private var reachability = ReachabilityManager(host: "google.com")
+    private var notReachableAlert: InAppAlert?
+    
     private func initializeSupportCenter(walletManager: WalletManager) {
         supportCenter = SupportCenterContainer(walletManager: walletManager, store: store, apiClient: apiClient)
     }
@@ -99,6 +101,16 @@ class ModalPresenter : Subscriber {
                 self.authenticateForBitId(prompt: prompt, callback: callback)
             }
         })
+        reachability.didChange = { isReachable in
+            if isReachable {
+                self.hideNotReachable()
+                DispatchQueue.walletQueue.async {
+                    self.walletManager?.peerManager?.connect()
+                }
+            } else {
+                self.showNotReachable()
+            }
+        }
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
@@ -703,6 +715,40 @@ class ModalPresenter : Subscriber {
             viewController = viewController?.presentedViewController
         }
         return viewController
+    }
+
+    private func showNotReachable() {
+        guard notReachableAlert == nil else { return }
+        let alert = InAppAlert(message: S.Alert.noInternet, image: #imageLiteral(resourceName: "BrokenCloud"))
+        notReachableAlert = alert
+        let window = UIApplication.shared.keyWindow!
+        let size = window.bounds.size
+        window.addSubview(alert)
+        let bottomConstraint = alert.bottomAnchor.constraint(equalTo: window.topAnchor, constant: 0.0)
+        alert.constrain([
+            alert.constraint(.width, constant: size.width),
+            alert.constraint(.height, constant: InAppAlert.height),
+            alert.constraint(.leading, toView: window, constant: nil),
+            bottomConstraint ])
+        window.layoutIfNeeded()
+        alert.bottomConstraint = bottomConstraint
+        alert.hide = {
+            self.hideNotReachable()
+        }
+        UIView.spring(C.animationDuration, animations: {
+            alert.bottomConstraint?.constant = InAppAlert.height
+            window.layoutIfNeeded()
+        }, completion: {_ in})
+    }
+
+    private func hideNotReachable() {
+        UIView.animate(withDuration: C.animationDuration, animations: {
+            self.notReachableAlert?.bottomConstraint?.constant = 0.0
+            self.notReachableAlert?.superview?.layoutIfNeeded()
+        }, completion: { _ in
+            self.notReachableAlert?.removeFromSuperview()
+            self.notReachableAlert = nil
+        })
     }
 }
 

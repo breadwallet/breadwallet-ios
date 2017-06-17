@@ -111,4 +111,12 @@ extension UIColor {
     static var transparentBlack: UIColor {
         return UIColor(white: 0.0, alpha: 0.3)
     }
+
+    static var blueGradientStart: UIColor {
+        return UIColor(red: 99.0/255.0, green: 188.0/255.0, blue: 255.0/255.0, alpha: 1.0)
+    }
+
+    static var blueGradientEnd: UIColor {
+        return UIColor(red: 56.0/255.0, green: 141.0/255.0, blue: 252.0/255.0, alpha: 1.0)
+    }
 }

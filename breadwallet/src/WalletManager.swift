@@ -511,8 +511,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         guard let reachability = SCNetworkReachabilityCreateWithAddress(nil, &zeroAddress) else { return false }
         if !SCNetworkReachabilityGetFlags(reachability, &flags) { return false }
         return flags.contains(.reachable) && !flags.contains(.connectionRequired)
-        
-        // TODO: XXX call BRPeerManagerConnect() whenever network reachability status changes
     }
     
     private func loadTransactions() -> [BRTxRef?] {

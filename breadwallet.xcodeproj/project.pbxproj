@@ -253,6 +253,7 @@
 		CE3754AD1DDE6E080045B0CB /* MaskedShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3754AC1DDE6E080045B0CB /* MaskedShadow.swift */; };
 		CE3754AF1DDE6E2E0045B0CB /* RoundedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3754AE1DDE6E2E0045B0CB /* RoundedContainer.swift */; };
 		CE3754B21DE0E31F0045B0CB /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3754B11DE0E31F0045B0CB /* EventManager.swift */; };
+		CE3D4C571EF5D5740016B1C8 /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D4C561EF5D5740016B1C8 /* ReachabilityManager.swift */; };
 		CE45C1F91E74B400002C3847 /* ManageWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45C1F81E74B400002C3847 /* ManageWalletViewController.swift */; };
 		CE45C1FB1E74F89C002C3847 /* WalletInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45C1FA1E74F89C002C3847 /* WalletInfo.swift */; };
 		CE45C1FD1E7650F5002C3847 /* KVStoreCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45C1FC1E7650F5002C3847 /* KVStoreCoordinator.swift */; };
@@ -348,6 +349,7 @@
 		CECCE5AE1E04AD6300D99448 /* LabelSendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5AD1E04AD6300D99448 /* LabelSendCell.swift */; };
 		CECCE5B01E04AD7600D99448 /* DescriptionSendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5AF1E04AD7600D99448 /* DescriptionSendCell.swift */; };
 		CECCE5B21E04B00D00D99448 /* SendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECCE5B11E04B00D00D99448 /* SendCell.swift */; };
+		CED341331EF5A5C00014912A /* InAppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED341321EF5A5C00014912A /* InAppAlert.swift */; };
 		CED811AA1EB2B2D1003A8D1E /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30F0E91EB282C8004B8EE5 /* SharedConstants.swift */; };
 		CED811AC1EB2BCDE003A8D1E /* BRAWWeakTimerTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED811AB1EB2BCDE003A8D1E /* BRAWWeakTimerTarget.swift */; };
 		CED811E01EB302DA003A8D1E /* WatchData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30F0EB1EB28542004B8EE5 /* WatchData.swift */; };
@@ -1425,6 +1427,7 @@
 		CE3754AC1DDE6E080045B0CB /* MaskedShadow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MaskedShadow.swift; path = src/Views/TransactionCells/MaskedShadow.swift; sourceTree = "<group>"; };
 		CE3754AE1DDE6E2E0045B0CB /* RoundedContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoundedContainer.swift; path = src/Views/TransactionCells/RoundedContainer.swift; sourceTree = "<group>"; };
 		CE3754B11DE0E31F0045B0CB /* EventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventManager.swift; path = src/EventManager/EventManager.swift; sourceTree = "<group>"; };
+		CE3D4C561EF5D5740016B1C8 /* ReachabilityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReachabilityManager.swift; path = src/ReachabilityManager.swift; sourceTree = "<group>"; };
 		CE45C1F81E74B400002C3847 /* ManageWalletViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ManageWalletViewController.swift; path = src/ViewControllers/RootModals/ManageWalletViewController.swift; sourceTree = "<group>"; };
 		CE45C1FA1E74F89C002C3847 /* WalletInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletInfo.swift; path = src/Platform/WalletInfo.swift; sourceTree = "<group>"; };
 		CE45C1FC1E7650F5002C3847 /* KVStoreCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KVStoreCoordinator.swift; path = src/KVStoreCoordinator.swift; sourceTree = "<group>"; };
@@ -1529,6 +1532,7 @@
 		CECCE5AD1E04AD6300D99448 /* LabelSendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LabelSendCell.swift; path = src/Views/SendViewCells/LabelSendCell.swift; sourceTree = "<group>"; };
 		CECCE5AF1E04AD7600D99448 /* DescriptionSendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DescriptionSendCell.swift; path = src/Views/SendViewCells/DescriptionSendCell.swift; sourceTree = "<group>"; };
 		CECCE5B11E04B00D00D99448 /* SendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SendCell.swift; path = src/Views/SendViewCells/SendCell.swift; sourceTree = "<group>"; };
+		CED341321EF5A5C00014912A /* InAppAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InAppAlert.swift; path = src/Views/InAppAlert.swift; sourceTree = "<group>"; };
 		CED811A51EB29692003A8D1E /* WatchTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WatchTransaction.swift; path = src/Watch/WatchTransaction.swift; sourceTree = "<group>"; };
 		CED811AB1EB2BCDE003A8D1E /* BRAWWeakTimerTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAWWeakTimerTarget.swift; sourceTree = "<group>"; };
 		CED811E41EB30846003A8D1E /* ReceiveInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiveInterfaceController.swift; sourceTree = "<group>"; };
@@ -2571,6 +2575,7 @@
 				7528D2971ECF655500925DBC /* PaymentProtocol.swift */,
 				CE4C1CC71ED88B600063E184 /* URLController.swift */,
 				CE916E321EDA800E00D641D6 /* UserDefaultsUpdater.swift */,
+				CE3D4C561EF5D5740016B1C8 /* ReachabilityManager.swift */,
 				CE30F0E41EB27821004B8EE5 /* Watch */,
 				CEE20C321EA5B2EC0086F724 /* Constants */,
 				CE20C90A1DBC59C500C8397A /* FlowControllers */,
@@ -2880,6 +2885,7 @@
 			isa = PBXGroup;
 			children = (
 				CE6BCF5C1EE9E89A0029849C /* CustomTitleView.swift */,
+				CED341321EF5A5C00014912A /* InAppAlert.swift */,
 				CE3645461E7B40280079D0CF /* PinPadCells */,
 				CECCE5AC1E04AD4100D99448 /* SendViewCells */,
 				CEBF32F71DDD191300348FC6 /* TransactionCells */,
@@ -3896,6 +3902,7 @@
 				CEEC70861E94397D00EF788E /* UserDefaults+Additions.swift in Sources */,
 				22A9A9501DF61945000F0016 /* BRHTTPServer.swift in Sources */,
 				22A9A9531DF61945000F0016 /* BRLinkPlugin.swift in Sources */,
+				CE3D4C571EF5D5740016B1C8 /* ReachabilityManager.swift in Sources */,
 				22A9A9571DF61945000F0016 /* BRWebSocket.swift in Sources */,
 				CE4DFB2E1E9C26DA0014009E /* ShareDataViewController.swift in Sources */,
 				CE1E5F261EF083A600BD0F72 /* StartImportViewController.swift in Sources */,
@@ -3915,6 +3922,7 @@
 				22A9A9481DF61945000F0016 /* BRBitID.swift in Sources */,
 				CEBF32F41DDCE12900348FC6 /* AccountFooterView.swift in Sources */,
 				CE9057181DFF0FA8006BA848 /* String+Additions.swift in Sources */,
+				CED341331EF5A5C00014912A /* InAppAlert.swift in Sources */,
 				CE3754AD1DDE6E080045B0CB /* MaskedShadow.swift in Sources */,
 				222C42521E904C5000078EB5 /* AssociatedObject.swift in Sources */,
 				CEB909F51E5FE63D001804DC /* RecoverWalletViewController.swift in Sources */,
