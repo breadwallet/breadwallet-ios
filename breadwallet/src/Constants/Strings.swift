@@ -34,6 +34,7 @@ enum S {
     enum Alert {
         static let warning = NSLocalizedString("Alert.warning", value: "Warning", comment: "Warning alert title")
         static let error = NSLocalizedString("Alert.error", value: "Error", comment: "Error alert title")
+        static let noInternet = NSLocalizedString("Alert.noInternet", value: "No internet connection found. Check your connection and try again.", comment: "No internet alert message")
     }
 
     enum Scanner {
