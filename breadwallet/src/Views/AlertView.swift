@@ -29,7 +29,7 @@ enum AlertType {
         case .addressesCopied:
             return S.Alerts.copiedAddressesHeader
         case .sweepSuccess:
-            return "Success"
+            return S.Import.success
         }
     }
 
@@ -46,7 +46,7 @@ enum AlertType {
         case .addressesCopied:
             return S.Alerts.copiedAddressesSubheader
         case .sweepSuccess:
-            return "Success"
+            return S.Import.successBody
         }
     }
 
