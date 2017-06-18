@@ -219,19 +219,21 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     }
 
     private func addTemporaryStartupViews() {
-        if !WalletManager.staticNoWallet {
-            addChildViewController(tempLoginView, layout: {
-                tempLoginView.view.constrain(toSuperviewEdges: nil)
-            })
-        } else {
-            let startView = StartViewController(store: store, didTapCreate: {}, didTapRecover: {})
-            addChildViewController(startView, layout: {
-                startView.view.constrain(toSuperviewEdges: nil)
-                startView.view.isUserInteractionEnabled = false
-            })
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                startView.remove()
-            })
+        guardProtected {
+            if !WalletManager.staticNoWallet {
+                self.addChildViewController(self.tempLoginView, layout: {
+                    self.tempLoginView.view.constrain(toSuperviewEdges: nil)
+                })
+            } else {
+                let startView = StartViewController(store: self.store, didTapCreate: {}, didTapRecover: {})
+                self.addChildViewController(startView, layout: {
+                    startView.view.constrain(toSuperviewEdges: nil)
+                    startView.view.isUserInteractionEnabled = false
+                })
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                    startView.remove()
+                })
+            }
         }
     }
 
