@@ -51,7 +51,9 @@ class StartFlowPresenter : Subscriber {
 
     private func handleStartFlowChange(state: State) {
         if state.isStartFlowVisible {
-            presentStartFlow()
+            guardProtected {
+                self.presentStartFlow()
+            }
         } else {
             dismissStartFlow()
         }

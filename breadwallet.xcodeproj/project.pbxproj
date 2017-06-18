@@ -254,6 +254,7 @@
 		CE3754AF1DDE6E2E0045B0CB /* RoundedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3754AE1DDE6E2E0045B0CB /* RoundedContainer.swift */; };
 		CE3754B21DE0E31F0045B0CB /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3754B11DE0E31F0045B0CB /* EventManager.swift */; };
 		CE3D4C571EF5D5740016B1C8 /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D4C561EF5D5740016B1C8 /* ReachabilityManager.swift */; };
+		CE3D4C591EF743EF0016B1C8 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D4C581EF743EF0016B1C8 /* Functions.swift */; };
 		CE45C1F91E74B400002C3847 /* ManageWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45C1F81E74B400002C3847 /* ManageWalletViewController.swift */; };
 		CE45C1FB1E74F89C002C3847 /* WalletInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45C1FA1E74F89C002C3847 /* WalletInfo.swift */; };
 		CE45C1FD1E7650F5002C3847 /* KVStoreCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45C1FC1E7650F5002C3847 /* KVStoreCoordinator.swift */; };
@@ -1428,6 +1429,7 @@
 		CE3754AE1DDE6E2E0045B0CB /* RoundedContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoundedContainer.swift; path = src/Views/TransactionCells/RoundedContainer.swift; sourceTree = "<group>"; };
 		CE3754B11DE0E31F0045B0CB /* EventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventManager.swift; path = src/EventManager/EventManager.swift; sourceTree = "<group>"; };
 		CE3D4C561EF5D5740016B1C8 /* ReachabilityManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReachabilityManager.swift; path = src/ReachabilityManager.swift; sourceTree = "<group>"; };
+		CE3D4C581EF743EF0016B1C8 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Functions.swift; path = src/Constants/Functions.swift; sourceTree = "<group>"; };
 		CE45C1F81E74B400002C3847 /* ManageWalletViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ManageWalletViewController.swift; path = src/ViewControllers/RootModals/ManageWalletViewController.swift; sourceTree = "<group>"; };
 		CE45C1FA1E74F89C002C3847 /* WalletInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletInfo.swift; path = src/Platform/WalletInfo.swift; sourceTree = "<group>"; };
 		CE45C1FC1E7650F5002C3847 /* KVStoreCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KVStoreCoordinator.swift; path = src/KVStoreCoordinator.swift; sourceTree = "<group>"; };
@@ -3088,6 +3090,7 @@
 				CEE20C351EA5B4620086F724 /* Constants.swift */,
 				CEE20C331EA5B4550086F724 /* ArticleIds.swift */,
 				CEE20C371EA5B4680086F724 /* Strings.swift */,
+				CE3D4C581EF743EF0016B1C8 /* Functions.swift */,
 			);
 			name = Constants;
 			sourceTree = "<group>";
@@ -3844,6 +3847,7 @@
 				CE4CA7BC1EE3649100373F11 /* BRActivityView.swift in Sources */,
 				CEC6AA421DEFC88F00EE5AFD /* ReceiveViewController.swift in Sources */,
 				CEE20C2D1EA288FA0086F724 /* UpdatingLabel.swift in Sources */,
+				CE3D4C591EF743EF0016B1C8 /* Functions.swift in Sources */,
 				CEE20C341EA5B4550086F724 /* ArticleIds.swift in Sources */,
 				CEE65DF01E39056F0002994D /* Rate.swift in Sources */,
 				CEE20C361EA5B4620086F724 /* Constants.swift in Sources */,
