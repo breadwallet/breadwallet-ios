@@ -33,13 +33,14 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         }
     }
 
-    func setTransaction(_ transaction: Transaction, isBtcSwapped: Bool, rate: Rate, maxDigits: Int) {
+    func setTransaction(_ transaction: Transaction, isBtcSwapped: Bool, rate: Rate, maxDigits: Int, isSyncing: Bool) {
         self.transaction = transaction
         self.transactionLabel.attributedText = transaction.descriptionString(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits)
         status.text = transaction.status
         comment.text = transaction.comment
         timestamp.text = transaction.timeSince
         availability.text = transaction.shouldDisplayAvailableToSpend ? S.Transaction.available : ""
+        status.isHidden = isSyncing
     }
 
     let container = RoundedContainer()
