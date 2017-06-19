@@ -26,7 +26,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             self.secondaryBalance = UpdatingLabel(formatter: NumberFormatter())
             self.primaryBalance = UpdatingLabel(formatter: NumberFormatter())
         }
-
         super.init(frame: CGRect())
         setup()
     }
@@ -44,12 +43,25 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private var regularConstraints: [NSLayoutConstraint] = []
     private var swappedConstraints: [NSLayoutConstraint] = []
     private var hasInitialized = false
-    private let testnetLabel: UILabel = {
+    private let modeLabel: UILabel = {
         let label = UILabel()
-        label.text = "(Testnet)"
         label.font = .customBody(size: 12.0)
         return label
     }()
+    var isWatchOnly: Bool = false {
+        didSet {
+            if Environment.isTestnet || isWatchOnly {
+                if Environment.isTestnet && isWatchOnly {
+                    modeLabel.text = "(Testnet - Watch Only)"
+                } else if Environment.isTestnet {
+                    modeLabel.text = "(Testnet)"
+                } else if isWatchOnly {
+                    modeLabel.text = "(Watch Only)"
+                }
+                modeLabel.isHidden = false
+            }
+        }
+    }
     private var exchangeRate: Rate? {
         didSet { setBalances() }
     }
@@ -99,6 +111,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
         manage.isHidden = true
         name.isHidden = true
+        modeLabel.isHidden = true
     }
 
     private func addSubviews() {
@@ -110,7 +123,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         addSubview(currencyTapView)
         addSubview(equals)
         addSubview(logo)
-        addSubview(testnetLabel)
+        addSubview(modeLabel)
     }
 
     private func addConstraints() {
@@ -164,10 +177,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             logo.topAnchor.constraint(equalTo: topAnchor, constant: 30.0),
             logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: C.Sizes.logoAspectRatio),
             logo.widthAnchor.constraint(equalTo: widthAnchor, multiplier: logoWidth) ])
-        testnetLabel.constrain([
-            testnetLabel.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: C.padding[1]/2.0),
-            testnetLabel.firstBaselineAnchor.constraint(equalTo: logo.bottomAnchor, constant: -2.0) ])
-        testnetLabel.isHidden = !Environment.isTestnet
+        modeLabel.constrain([
+            modeLabel.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: C.padding[1]/2.0),
+            modeLabel.firstBaselineAnchor.constraint(equalTo: logo.bottomAnchor, constant: -2.0) ])
     }
 
     private func transform(forView: UIView) ->  CGAffineTransform {

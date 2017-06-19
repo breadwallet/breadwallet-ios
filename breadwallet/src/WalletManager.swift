@@ -606,6 +606,11 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         return allWords.contains(word)
     }
 
+    var isWatchOnly: Bool {
+        let mpkData = Data(masterPubKey: masterPubKey)
+        return mpkData.count == 0
+    }
+
     deinit {
         if db != nil { sqlite3_close(db) }
     }
