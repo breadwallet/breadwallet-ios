@@ -286,6 +286,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                 case .success:
                     self?.dismiss(animated: true, completion: {
                         guard let myself = self else { return }
+                        myself.store.trigger(name: .showStatusBar)
                         if myself.isPresentedFromLock {
                             myself.store.trigger(name: .loginFromSend)
                         }
