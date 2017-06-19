@@ -279,6 +279,7 @@ class LoginViewController : UIViewController, Subscriber {
                 self.dismiss(animated: true, completion: nil)
             }
             self.store.perform(action: LoginSuccess())
+            self.store.trigger(name: .showStatusBar)
         }
     }
 
