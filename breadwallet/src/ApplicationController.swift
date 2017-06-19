@@ -25,7 +25,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     fileprivate var apiClient: BRAPIClient?
     private var exchangeUpdater: ExchangeUpdater?
     private var feeUpdater: FeeUpdater?
-    private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
+    private let transitionDelegate: ModalTransitionDelegate
     private var kvStoreCoordinator: KVStoreCoordinator?
     private var accountViewController: AccountViewController?
     fileprivate var application: UIApplication?
@@ -34,6 +34,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private var defaultsUpdater: UserDefaultsUpdater?
 
     init() {
+        transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
         DispatchQueue.walletQueue.async {
             guardProtected {
                 self.initWallet()

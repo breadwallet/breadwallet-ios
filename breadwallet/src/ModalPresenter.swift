@@ -21,7 +21,7 @@ class ModalPresenter : Subscriber {
         self.store = store
         self.window = window
         self.apiClient = apiClient
-        self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular)
+        self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular, store: store)
         addSubscriptions()
     }
 
@@ -122,6 +122,7 @@ class ModalPresenter : Subscriber {
         configuration?(vc)
         topViewController?.present(vc, animated: true, completion: {
             self.store.perform(action: RootModalActions.Present(modal: .none))
+            self.store.trigger(name: .hideStatusBar)
         })
     }
 
