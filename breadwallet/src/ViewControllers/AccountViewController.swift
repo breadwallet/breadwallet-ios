@@ -73,6 +73,15 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     }()
     private let headerContainer = UIView()
     private var loadingTimer: Timer?
+    private var shouldShowStatusBar: Bool = true {
+        didSet {
+            if oldValue != shouldShowStatusBar {
+                UIView.animate(withDuration: C.animationDuration) {
+                    self.setNeedsStatusBarAppearanceUpdate()
+                }
+            }
+        }
+    }
 
     override func viewDidLoad() {
         // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
@@ -99,6 +108,11 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         addAppLifecycleNotificationEvents()
         addTemporaryStartupViews()
         setInitialData()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        shouldShowStatusBar = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -145,6 +159,12 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
             }
         })
         store.subscribe(self, selector: { $0.isLoginRequired != $1.isLoginRequired }, callback: { self.isLoginRequired = $0.isLoginRequired })
+        store.subscribe(self, name: .showStatusBar, callback: { _ in
+            self.shouldShowStatusBar = true
+        })
+        store.subscribe(self, name: .hideStatusBar, callback: { _ in
+            self.shouldShowStatusBar = false
+        })
     }
 
     private func setInitialData() {
@@ -281,6 +301,14 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return searchHeaderview.isHidden ? .lightContent : .default
+    }
+
+    override var prefersStatusBarHidden: Bool {
+        return !shouldShowStatusBar
+    }
+
+    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return .slide
     }
 
     required init?(coder aDecoder: NSCoder) {

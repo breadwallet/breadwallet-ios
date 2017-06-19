@@ -152,6 +152,7 @@ import WebKit
                         self.refresh()
                         // XXX(sam): log this event so we know how frequently it happens
                         DispatchQueue.main.asyncAfter(deadline: timeout) {
+                            self.store.trigger(name: .showStatusBar)
                             self.dismiss(animated: true) {
                                 self.notifyUserOfLoadFailure()
                             }
@@ -184,6 +185,7 @@ import WebKit
     }
     
     fileprivate func closeNow() {
+        store.trigger(name: .showStatusBar)
         dismiss(animated: true, completion: nil)
     }
     
