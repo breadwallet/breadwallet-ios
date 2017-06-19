@@ -45,6 +45,7 @@ class EnterPhraseCell : UICollectionViewCell {
         }
     }
 
+    var didEnterSpace: (() -> Void)?
     var isWordValid: ((String) -> Bool)?
 
     func disablePreviousButton() {
@@ -143,6 +144,12 @@ extension EnterPhraseCell : UITextFieldDelegate {
     }
 
     @objc func textChanged(textField: UITextField) {
+        if let text = textField.text {
+            if text.characters.last == " " {
+                textField.text = text.replacingOccurrences(of: " ", with: "")
+                didEnterSpace?()
+            }
+        }
         if hasDisplayedInvalidState {
             setColors(textField: textField)
         }
