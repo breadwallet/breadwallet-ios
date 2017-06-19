@@ -131,6 +131,10 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
             self.attemptShowPrompt()
         })
 
+        store.subscribe(self, selector: { $0.walletState.isSyncing != $1.walletState.isSyncing }, callback: { _ in
+            self.reload()
+        })
+
         syncingView.retry.tap = { [weak self] in
             self?.syncingView.resetAfterError()
             self?.store.perform(action: WalletChange.setSyncingErrorMessage(nil))
@@ -196,7 +200,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
             let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
             if let transactionCell = cell as? TransactionTableViewCell, let rate = rate {
                 transactionCell.setStyle(style)
-                transactionCell.setTransaction(transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits)
+                transactionCell.setTransaction(transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits, isSyncing: store.state.walletState.isSyncing)
             }
             return cell
         }
