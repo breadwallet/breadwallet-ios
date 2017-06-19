@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ReScanViewController : UIViewController {
+class ReScanViewController : UIViewController, Subscriber {
 
     init(store: Store) {
         self.store = store
@@ -22,6 +22,10 @@ class ReScanViewController : UIViewController {
     private let footer = UILabel.wrapping(font: .customBody(size: 16.0), color: .secondaryGrayText)
     private let store: Store
     private let faq: UIButton
+
+    deinit {
+        store.unsubscribe(self)
+    }
 
     override func viewDidLoad() {
         addSubviews()
@@ -94,8 +98,11 @@ class ReScanViewController : UIViewController {
         syncView.layer.masksToBounds = true
 
         //TODO - use real values here
-        syncView.timestamp = 1231006505
-        syncView.progress = 0.01
+        store.subscribe(self, selector: { $0.walletState.syncProgress != $1.walletState.syncProgress },
+                        callback: { state in
+                            syncView.timestamp = state.walletState.lastBlockTimestamp
+                            syncView.progress = CGFloat(state.walletState.syncProgress)
+        })
         mask.addSubview(syncView)
         syncView.constrain([
             syncView.leadingAnchor.constraint(equalTo: window.leadingAnchor, constant: C.padding[2]),
