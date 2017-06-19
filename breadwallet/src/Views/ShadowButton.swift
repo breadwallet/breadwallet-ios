@@ -16,6 +16,8 @@ enum ButtonType {
     case search
 }
 
+private let minTargetSize: CGFloat = 48.0
+
 class ShadowButton: UIControl {
 
     init(title: String, type: ButtonType) {
@@ -195,6 +197,14 @@ class ShadowButton: UIControl {
             shadowView.layer.shadowOpacity = 1.0
             imageView?.tintColor = .grayTextTint
         }
+    }
+
+    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard !isHidden || isUserInteractionEnabled else { return nil }
+        let deltaX = max(minTargetSize - bounds.width, 0)
+        let deltaY = max(minTargetSize - bounds.height, 0)
+        let hitFrame = bounds.insetBy(dx: -deltaX/2.0, dy: -deltaY/2.0)
+        return hitFrame.contains(point) ? self : nil
     }
 
     @objc private func touchUpInside() {
