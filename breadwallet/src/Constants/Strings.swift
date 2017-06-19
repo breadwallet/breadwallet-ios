@@ -24,11 +24,11 @@ enum S {
         static let settings = NSLocalizedString("Button.settings", value:"Settings", comment: "Settings button label")
         static let submit = NSLocalizedString("Button.submit", value:"Submit", comment: "Settings button label")
         static let ignore = NSLocalizedString("Button.ignore", value:"Ignore", comment: "Ignore button label")
-        static let yes = NSLocalizedString("Button.yes", value: "Yes", comment: "")
-        static let no = NSLocalizedString("Button.no", value: "No", comment: "")
-        static let send = NSLocalizedString("Button.send", value: "send", comment: "")
-        static let receive = NSLocalizedString("Button.receive", value: "receive", comment: "")
-        static let menu = NSLocalizedString("Button.menu", value: "menu", comment: "")
+        static let yes = NSLocalizedString("Button.yes", value: "Yes", comment: "Yes button")
+        static let no = NSLocalizedString("Button.no", value: "No", comment: "No button")
+        static let send = NSLocalizedString("Button.send", value: "send", comment: "send button")
+        static let receive = NSLocalizedString("Button.receive", value: "receive", comment: "receive button")
+        static let menu = NSLocalizedString("Button.menu", value: "menu", comment: "menu button")
     }
 
     enum Alert {
@@ -120,8 +120,8 @@ enum S {
         static let fee = NSLocalizedString("Transaction.fee", value: "(%@ fee)", comment: "(b600 fee)")
         static let ending = NSLocalizedString("Transaction.ending", value: "Ending balance: %@", comment: "eg. Ending balance: $50.00")
         static let exchangeOnDay = NSLocalizedString("Transaction.exchangeOnDay", value: "Exchange rate when sent:", comment: "Exchange rate on date header")
-        static let receivedStatus = NSLocalizedString("Transaction.receivedStatus", value: "Receiving - %@", comment: "Receiving - 20%")
-        static let sendingStatus = NSLocalizedString("Transaction.sendingStatus", value: "Sending - %@", comment: "Sending - 20%")
+        static let receivedStatus = NSLocalizedString("Transaction.receivedStatus", value: "In progress: %@", comment: "Receive status text: 'In progress: 20%'")
+        static let sendingStatus = NSLocalizedString("Transaction.sendingStatus", value: "In progress: %@", comment: "Send status text: 'In progress: 20%'")
         static let available = NSLocalizedString("Transaction.available", value: "Available to Spend", comment: "Availability status text")
     }
 
@@ -428,14 +428,14 @@ enum S {
     enum Import {
         static let leftCaption = NSLocalizedString("Import.leftCaption", value: "Wallet to be imported", comment: "Caption for graphics")
         static let rightCaption = NSLocalizedString("Import.rightCaption", value: "Your Bread Wallet", comment: "Caption for graphics")
-        static let importMessage = NSLocalizedString("Import.message", value: "Importing a wallet transfers all your money into your Bread wallet in a single transaction.", comment: "Import wallet intro screen message")
-        static let importWarning = NSLocalizedString("Import.warning", value: "Import wallet does not include transaction history or meta data.", comment: "Import wallet intro warning message")
+        static let importMessage = NSLocalizedString("Import.message", value: "Importing a wallet transfers all the money from your other wallet into your Bread wallet using a single transaction.", comment: "Import wallet intro screen message")
+        static let importWarning = NSLocalizedString("Import.warning", value: "Importing a wallet does not include transaction history or other details.", comment: "Import wallet intro warning message")
         static let scan = NSLocalizedString("Import.scan", value: "Scan Private Key", comment: "Scan Private key button label")
         static let title = NSLocalizedString("Import.title", value: "Import Wallet", comment: "Import Wallet screen title")
         static let importing = NSLocalizedString("Import.importing", value: "Importing Wallet", comment: "Importing wallet progress view label")
         static let confirm = NSLocalizedString("Import.confirm", value: "Send %@ from this private key into your wallet? The bitcoin network will receive a fee of %@.", comment: "Sweep private key confirmation message")
-        static let checking = NSLocalizedString("Import.checking", value: "Checking private key balance", comment: "Checking private key balance progress view text")
-        static let password = NSLocalizedString("Import.password", value: "Password protected key", comment: "Enter password alert view title")
+        static let checking = NSLocalizedString("Import.checking", value: "Checking private key balance...", comment: "Checking private key balance progress view text")
+        static let password = NSLocalizedString("Import.password", value: "This private key is password protected.", comment: "Enter password alert view title")
         static let passwordPlaceholder = NSLocalizedString("Import.passwordPlaceholder", value: "password", comment: "password textfield placeholder")
         static let unlockingActivity = NSLocalizedString("Import.unlockingActivity", value: "Unlocking Key", comment: "Unlocking Private key activity view message.")
         static let importButton = NSLocalizedString("Import.importButton", value: "Import", comment: "Import button label")
@@ -443,10 +443,10 @@ enum S {
         static let successBody = NSLocalizedString("Import.SuccessBody", value: "Successfully imported wallet.", comment: "Successfully imported wallet message body")
         enum Error {
             static let notValid = NSLocalizedString("Import.Error.notValid", value: "Not a valid private key", comment: "Not a valid private key error message")
-            static let duplicate = NSLocalizedString("Import.Error.duplicate", value: "This private key is already in your wallet", comment: "Duplicate key error message")
-            static let empty = NSLocalizedString("Import.Error.empty", value: "This private key is empty", comment: "empty private key error message")
+            static let duplicate = NSLocalizedString("Import.Error.duplicate", value: "This private key is already in your wallet.", comment: "Duplicate key error message")
+            static let empty = NSLocalizedString("Import.Error.empty", value: "This private key is empty.", comment: "empty private key error message")
             static let highFees = NSLocalizedString("Import.Error.highFees", value: "Transaction fees would cost more than the funds available on this private key (due to tiny \"dust\" deposits)", comment: "High fees error message")
-            static let signing = NSLocalizedString("Import.Error.signing", value: "Error signing transaction", comment: "")
+            static let signing = NSLocalizedString("Import.Error.signing", value: "Error signing transaction", comment: "Import signing error message")
         }
 
     }
