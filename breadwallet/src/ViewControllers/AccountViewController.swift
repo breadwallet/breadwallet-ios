@@ -40,6 +40,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
                 })
             }
             transactionsTableView.walletManager = walletManager
+            headerView.isWatchOnly = walletManager.isWatchOnly
         }
     }
 
