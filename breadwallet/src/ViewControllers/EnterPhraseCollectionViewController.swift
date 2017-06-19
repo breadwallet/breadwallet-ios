@@ -40,9 +40,7 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
     }
 
     override func viewDidLoad() {
-
         collectionView = NonScrollingCollectionView(frame: view.bounds, collectionViewLayout: collectionViewLayout)
-
         collectionView?.backgroundColor = .white
         collectionView?.register(EnterPhraseCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView?.delegate = self
@@ -81,6 +79,9 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         enterPhraseCell.isWordValid = { [weak self] word in
             guard let myself = self else { return false }
             return myself.walletManager.isWordValid(word)
+        }
+        enterPhraseCell.didEnterSpace = {
+            enterPhraseCell.didTapNext?()
         }
 
         if indexPath.item == 0 {
