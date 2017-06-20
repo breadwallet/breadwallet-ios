@@ -65,8 +65,9 @@ struct WalletState {
     let name: String
     let syncErrorMessage: String?
     let creationDate: Date
+    let isRescanning: Bool
     static var initial: WalletState {
-        return WalletState(isConnected: false, syncProgress: 0.0, isSyncing: false, balance: 0, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, syncErrorMessage: nil, creationDate: Date.zeroValue())
+        return WalletState(isConnected: false, syncProgress: 0.0, isSyncing: false, balance: 0, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, syncErrorMessage: nil, creationDate: Date.zeroValue(), isRescanning: false)
     }
 }
 

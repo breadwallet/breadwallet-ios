@@ -107,6 +107,12 @@ enum WalletChange {
             reduce = { $0.clone(walletCreationDate: date) }
         }
     }
+    struct setIsRescanning: Action {
+        let reduce: Reducer
+        init(_ isRescanning: Bool) {
+            reduce = { $0.clone(isRescanning: isRescanning) }
+        }
+    }
 }
 
 //MARK: - Currency
@@ -251,7 +257,7 @@ extension State {
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: timestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletSyncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: timestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate, isRescanning: walletState.isRescanning),
                      isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
@@ -267,7 +273,7 @@ extension State {
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletIsSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate, isRescanning: walletState.isRescanning),
                      isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
@@ -283,7 +289,7 @@ extension State {
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate, isRescanning: walletState.isRescanning),
                      isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
@@ -299,7 +305,7 @@ extension State {
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate, isRescanning: walletState.isRescanning),
                      isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
@@ -315,7 +321,7 @@ extension State {
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletName, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletName, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate, isRescanning: walletState.isRescanning),
                      isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
@@ -331,7 +337,7 @@ extension State {
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletSyncingErrorMessage, creationDate: walletState.creationDate),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletSyncingErrorMessage, creationDate: walletState.creationDate, isRescanning: walletState.isRescanning),
                      isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
@@ -347,7 +353,23 @@ extension State {
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      pasteboard: pasteboard,
-                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletCreationDate),
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletCreationDate, isRescanning: walletState.isRescanning),
+                     isBtcSwapped: isBtcSwapped,
+                     currentRate: currentRate,
+                     rates: rates,
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrencyCode: defaultCurrencyCode,
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions,
+                     maxDigits: maxDigits)
+    }
+    func clone(isRescanning: Bool) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
+                     rootModal: rootModal,
+                     pasteboard: pasteboard,
+                     walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, isSyncing: walletState.isSyncing, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, syncErrorMessage: walletState.syncErrorMessage, creationDate: walletState.creationDate, isRescanning: isRescanning),
                      isBtcSwapped: isBtcSwapped,
                      currentRate: currentRate,
                      rates: rates,
