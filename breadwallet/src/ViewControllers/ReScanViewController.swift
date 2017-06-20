@@ -97,7 +97,6 @@ class ReScanViewController : UIViewController, Subscriber {
         syncView.layer.cornerRadius = 4.0
         syncView.layer.masksToBounds = true
 
-        //TODO - use real values here
         store.subscribe(self, selector: { $0.walletState.syncProgress != $1.walletState.syncProgress },
                         callback: { state in
                             syncView.timestamp = state.walletState.lastBlockTimestamp

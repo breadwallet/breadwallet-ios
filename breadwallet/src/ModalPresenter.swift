@@ -121,7 +121,10 @@ class ModalPresenter : Subscriber {
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
         guard type != .loginScan else { return presentLoginScan() }
-        guard let vc = rootModalViewController(type) else { return }
+        guard let vc = rootModalViewController(type) else {
+            self.store.perform(action: RootModalActions.Present(modal: .none))
+            return
+        }
         vc.transitioningDelegate = modalTransitionDelegate
         vc.modalPresentationStyle = .overFullScreen
         vc.modalPresentationCapturesStatusBarAppearance = true
@@ -211,6 +214,12 @@ class ModalPresenter : Subscriber {
     }
 
     private func makeSendView() -> UIViewController? {
+        guard !store.state.walletState.isRescanning else {
+            let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
+            topViewController?.present(alert, animated: true, completion: nil)
+            return nil
+        }
         guard let walletManager = walletManager else { return nil }
         guard let kvStore = apiClient.kv else { return nil }
         let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore), walletManager: walletManager, initialRequest: currentRequest)

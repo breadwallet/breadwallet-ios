@@ -68,6 +68,7 @@ class WalletCoordinator : Subscriber {
         progressTimer?.invalidate()
         progressTimer = nil
         store.perform(action: WalletChange.setIsSyncing(false))
+        store.perform(action: WalletChange.setIsRescanning(false))
         endActivity()
     }
 
@@ -150,6 +151,10 @@ class WalletCoordinator : Subscriber {
             DispatchQueue.walletQueue.async {
                 self.walletManager.peerManager?.rescan()
             }
+        })
+
+        store.subscribe(self, name: .rescan, callback: { _ in
+            self.store.perform(action: WalletChange.setIsRescanning(true))
         })
     }
 
