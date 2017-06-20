@@ -56,6 +56,7 @@ enum TriggerName {
     case authenticateForBitId(String, ()->Void)
     case hideStatusBar
     case showStatusBar
+    case lightWeightAlert(String)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName : Equatable {}
@@ -99,6 +100,8 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.showStatusBar, .showStatusBar):
         return true
     case (.hideStatusBar, .hideStatusBar):
+        return true
+    case (.lightWeightAlert(_), .lightWeightAlert(_)):
         return true
     default:
         return false

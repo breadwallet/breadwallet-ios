@@ -111,6 +111,12 @@ class ModalPresenter : Subscriber {
                 self.showNotReachable()
             }
         }
+        store.subscribe(self, name: .lightWeightAlert(""), callback: {
+            guard let trigger = $0 else { return }
+            if case let .lightWeightAlert(message) = trigger {
+                self.showLightWeightAlert(message: message)
+            }
+        })
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
@@ -749,6 +755,25 @@ class ModalPresenter : Subscriber {
         }, completion: { _ in
             self.notReachableAlert?.removeFromSuperview()
             self.notReachableAlert = nil
+        })
+    }
+
+    private func showLightWeightAlert(message: String) {
+        let alert = LightWeightAlert(message: message)
+        let view = UIApplication.shared.keyWindow!
+        view.addSubview(alert)
+        alert.constrain([
+            alert.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            alert.centerYAnchor.constraint(equalTo: view.centerYAnchor) ])
+        alert.alpha = 0.0
+        UIView.animate(withDuration: 0.7, animations: {
+            alert.alpha = 1.0
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.7, delay: 0.7, options: [], animations: {
+                alert.alpha = 0.0
+            }, completion: { _ in
+                alert.removeFromSuperview()
+            })
         })
     }
 }
