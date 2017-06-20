@@ -24,8 +24,8 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         comment.text = transaction.comment
         amountDetails.text = transaction.amountDetails(isBtcSwapped: isBtcSwapped, rate: rate, rates: rates, maxDigits: maxDigits)
         addressHeader.text = transaction.direction.addressHeader.capitalized
-        fullAddress.text = transaction.toAddress ?? ""
-        txHash.text = transaction.hash
+        fullAddress.setTitle(transaction.toAddress ?? "", for: .normal)
+        txHash.setTitle(transaction.hash, for: .normal)
         availability.isHidden = !transaction.shouldDisplayAvailableToSpend
         self.transaction = transaction
         self.rate = rate
@@ -62,14 +62,14 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     private let amountHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let amountDetails = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
     private let addressHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let fullAddress = UILabel(font: .customBody(size: 13.0), color: .darkText)
+    private let fullAddress = UIButton(type: .system)
     private let headerHeight: CGFloat = 48.0
     private let scrollViewContent = UIView()
     private let scrollView = UIScrollView()
     private let moreButton = UIButton(type: .system)
     private let moreContentView = UIView()
-    private let txHash = UILabel(font: .customBody(size: 13.0), color: .darkText)
-    private let txHashHeader = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
+    private let txHash = UIButton(type: .system)
+    private let txHashHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let availability = UILabel(font: .customBold(size: 13.0), color: .cameraGuidePositive)
 
     private func setup() {
@@ -175,7 +175,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         fullAddress.constrain([
             fullAddress.topAnchor.constraint(equalTo: addressHeader.bottomAnchor),
             fullAddress.leadingAnchor.constraint(equalTo: addressHeader.leadingAnchor),
-            fullAddress.trailingAnchor.constraint(equalTo: addressHeader.trailingAnchor) ])
+            fullAddress.trailingAnchor.constraint(lessThanOrEqualTo: addressHeader.trailingAnchor) ])
         separators[4].constrain([
             separators[4].topAnchor.constraint(equalTo: fullAddress.bottomAnchor, constant: C.padding[2]),
             separators[4].leadingAnchor.constraint(equalTo: fullAddress.leadingAnchor),
@@ -200,9 +200,6 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         amountHeader.text = S.TransactionDetails.amountHeader
         availability.text = S.Transaction.available
 
-        fullAddress.numberOfLines = 0
-        fullAddress.lineBreakMode = .byCharWrapping
-
         comment.font = .customBody(size: 13.0)
         comment.textColor = .darkText
         comment.contentVerticalAlignment = .top
@@ -213,15 +210,32 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         moreButton.tintColor = .grayTextTint
         moreButton.titleLabel?.font = .customBold(size: 14.0)
 
-        txHash.numberOfLines = 0
-        txHash.lineBreakMode = .byCharWrapping
-
         moreButton.tap = { [weak self] in
             self?.addMoreView()
         }
 
         amount.minimumScaleFactor = 0.5
         amount.adjustsFontSizeToFitWidth = true
+
+        fullAddress.titleLabel?.font = .customBody(size: 13.0)
+        fullAddress.titleLabel?.numberOfLines = 0
+        fullAddress.titleLabel?.lineBreakMode = .byCharWrapping
+        fullAddress.tintColor = .darkText
+        fullAddress.tap = { [weak self] in
+            self?.store?.trigger(name: .lightWeightAlert(S.Receive.copied))
+            UIPasteboard.general.string = self?.fullAddress.titleLabel?.text
+        }
+        fullAddress.contentHorizontalAlignment = .left
+
+        txHash.titleLabel?.font = .customBody(size: 13.0)
+        txHash.titleLabel?.numberOfLines = 0
+        txHash.titleLabel?.lineBreakMode = .byCharWrapping
+        txHash.tintColor = .darkText
+        txHash.contentHorizontalAlignment = .left
+        txHash.tap = { [weak self] in
+            self?.store?.trigger(name: .lightWeightAlert(S.Receive.copied))
+            UIPasteboard.general.string = self?.txHash.titleLabel?.text
+        }
     }
 
     private func addMoreView() {
@@ -238,8 +252,8 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
 
         txHash.constrain([
             txHash.leadingAnchor.constraint(equalTo: txHashHeader.leadingAnchor),
-            txHash.topAnchor.constraint(equalTo: txHashHeader.bottomAnchor),
-            txHash.trailingAnchor.constraint(equalTo: moreContentView.trailingAnchor) ])
+            txHash.topAnchor.constraint(equalTo: txHashHeader.bottomAnchor, constant: 2.0),
+            txHash.trailingAnchor.constraint(lessThanOrEqualTo: moreContentView.trailingAnchor) ])
 
         newSeparator.constrain([
             newSeparator.leadingAnchor.constraint(equalTo: txHash.leadingAnchor),
@@ -248,21 +262,12 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
             newSeparator.heightAnchor.constraint(equalToConstant: 1.0),
             newSeparator.bottomAnchor.constraint(equalTo: moreContentView.bottomAnchor) ])
 
-        let gr = UITapGestureRecognizer(target: self, action: #selector(tapTxHash))
-        txHash.addGestureRecognizer(gr)
-        txHash.isUserInteractionEnabled = true
-
         //Scroll to expaned more view
         scrollView.layoutIfNeeded()
         if scrollView.contentSize.height > scrollView.bounds.height {
             let point = CGPoint(x: 0, y: scrollView.contentSize.height - scrollView.bounds.height)
             self.scrollView.setContentOffset(point, animated: true)
         }
-    }
-
-    @objc private func tapTxHash() {
-        guard let hash = transaction?.hash else { return }
-        UIPasteboard.general.string = hash
     }
 
     override func layoutSubviews() {
