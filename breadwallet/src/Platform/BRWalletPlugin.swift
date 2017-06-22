@@ -186,6 +186,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient {
             //d["watch_only"] = TODO - add watch only
         }
         d["btc_denomination_digits"] = store.state.maxDigits
+        d["local_currency_code"] = store.state.defaultCurrencyCode
         return d
     }
     
