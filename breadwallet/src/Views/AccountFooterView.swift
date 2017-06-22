@@ -14,13 +14,16 @@ class AccountFooterView: UIView {
     var receiveCallback: (() -> Void)?
     var menuCallback: (() -> Void)?
 
-    override init (frame : CGRect) {
-        super.init(frame : frame)
-        setupSubViews()
+    init() {
+        super.init(frame: .zero)
     }
 
-    convenience init () {
-        self.init(frame: .zero)
+    var hasSetup = false
+
+    override func layoutSubviews() {
+        guard !hasSetup else { return }
+        setupSubViews()
+        hasSetup = true
     }
 
     func setupSubViews(){

@@ -82,12 +82,11 @@ class SearchHeaderView : UIView {
 
     init() {
         super.init(frame: .zero)
-        setup()
     }
 
     var didCancel: (() -> Void)?
-
     var didChangeFilters: (([TransactionFilter]) -> Void)?
+    var hasSetup = false
 
     func triggerUpdate() {
         didChangeFilters?(filters.map { $0.filter })
@@ -107,6 +106,12 @@ class SearchHeaderView : UIView {
 
     private let sentFilter: TransactionFilter = { return $0.direction == .sent }
     private let receivedFilter: TransactionFilter = { return $0.direction == .received }
+
+    override func layoutSubviews() {
+        guard !hasSetup else { return }
+        setup()
+        hasSetup = true
+    }
 
     private func setup() {
         addSubviews()

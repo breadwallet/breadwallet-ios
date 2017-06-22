@@ -10,40 +10,6 @@ import UIKit
 
 let π: CGFloat = .pi
 
-struct Environment {
-    static let isTestnet: Bool = {
-        #if Testnet
-            return true
-        #else
-            return false
-        #endif
-    }()
-    static let isTestFlight: Bool = {
-        #if Testflight
-            return true
-        #else
-            return false
-        #endif
-    }()
-    static let isSimulator: Bool = {
-        #if arch(i386) || arch(x86_64)
-            return true
-        #else
-            return false
-        #endif
-    }()
-    static let isDebug: Bool = {
-        #if Debug
-            return true
-        #else
-            return false
-        #endif
-    }()
-    static let isIPhone4: Bool = {
-        return UIApplication.shared.keyWindow?.bounds.height == 480.0
-    }()
-}
-
 struct Padding {
     subscript(multiplier: Int) -> CGFloat {
         get {

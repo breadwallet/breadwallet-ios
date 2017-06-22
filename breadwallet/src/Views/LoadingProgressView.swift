@@ -21,8 +21,9 @@ class LoadingProgressView : UIView, GradientDrawable {
 
     init() {
         super.init(frame: .zero)
-        setupView()
     }
+
+    private var hasSetup = false
 
     lazy private var progressBackground: UIView = self.makeProgressView(backgroundColor: .transparentBlack)
     lazy private var progressForeground: UIView = self.makeProgressView(backgroundColor: .white)
@@ -68,6 +69,10 @@ class LoadingProgressView : UIView, GradientDrawable {
     }
 
     override func layoutSubviews() {
+        if !hasSetup {
+            setupView()
+            hasSetup = true
+        }
         addBottomCorners()
     }
 
