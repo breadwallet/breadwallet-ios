@@ -245,6 +245,12 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             }
         }
     }
+
+    func willResignActive() {
+        guard !store.state.isPushNotificationsEnabled else { return }
+        guard let pushToken = UserDefaults.pushToken else { return }
+        apiClient?.deletePushNotificationToken(pushToken)
+    }
 }
 
 //MARK: - Push notifications
@@ -265,6 +271,8 @@ extension ApplicationController {
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         guard let apiClient = self.apiClient else { return }
+        guard UserDefaults.pushToken != deviceToken else { return }
+        UserDefaults.pushToken = deviceToken
         apiClient.savePushNotificationToken(deviceToken)
     }
 

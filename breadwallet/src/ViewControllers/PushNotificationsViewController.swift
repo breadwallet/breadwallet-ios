@@ -63,15 +63,12 @@ class PushNotificationsViewController : UIViewController {
         body.text = S.PushNotifications.body
         label.text = S.PushNotifications.label
 
-        if let settings = UIApplication.shared.currentUserNotificationSettings {
-            if !settings.types.isEmpty {
-                toggle.isOn = true
-                toggle.sendActions(for: .valueChanged)
-            }
-        }
+        toggle.isOn = store.state.isPushNotificationsEnabled
+        toggle.sendActions(for: .valueChanged)
         
         toggle.valueChanged = { [weak self] in
             guard let myself = self else { return }
+            myself.store.perform(action: PushNotifications.setIsEnabled(myself.toggle.isOn))
             if myself.toggle.isOn {
                 myself.store.trigger(name: .registerForPushNotificationToken)
             }

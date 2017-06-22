@@ -47,6 +47,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         applicationController.didEnterBackground()
     }
 
+    func applicationWillResignActive(_ application: UIApplication) {
+        applicationController.willResignActive()
+    }
+
     func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         applicationController.performFetch(completionHandler)
     }
