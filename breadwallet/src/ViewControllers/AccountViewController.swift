@@ -82,6 +82,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
             }
         }
     }
+    private var didEndLoading = false
 
     override func viewDidLoad() {
         // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
@@ -153,7 +154,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
 
         store.subscribe(self, selector: { $0.isLoadingTransactions != $1.isLoadingTransactions }, callback: {
             if $0.isLoadingTransactions {
-                self.showLoadingView()
+                self.loadingDidStart()
             } else {
                 self.hideLoadingView()
             }
@@ -197,6 +198,14 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
         }
     }
 
+    private func loadingDidStart() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
+            if !self.didEndLoading {
+                self.showLoadingView()
+            }
+        })
+    }
+
     private func showLoadingView() {
         view.insertSubview(transactionsLoadingView, belowSubview: headerContainer)
         transactionsLoadingViewTop = transactionsLoadingView.topAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -transactionsLoadingViewHeightConstant)
@@ -207,8 +216,8 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
             transactionsLoadingView.heightAnchor.constraint(equalToConstant: transactionsLoadingViewHeightConstant) ])
         transactionsLoadingView.progress = 0.01
         view.layoutIfNeeded()
-        UIView.animate(withDuration: C.animationDuration, animations: { 
-            self.transactionsTableView.tableView.verticallyOffsetContent(transactionsLoadingViewHeightConstant)
+        UIView.animate(withDuration: C.animationDuration, animations: {
+        self.transactionsTableView.tableView.verticallyOffsetContent(transactionsLoadingViewHeightConstant)
             self.transactionsLoadingViewTop?.constant = 0.0
             self.view.layoutIfNeeded()
         }) { completed in
@@ -219,6 +228,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
     }
 
     private func hideLoadingView() {
+        didEndLoading = true
         guard self.transactionsLoadingViewTop?.constant == 0.0 else { return } //Should skip hide if it's not shown
         loadingTimer?.invalidate()
         loadingTimer = nil

@@ -27,7 +27,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             self.primaryBalance = UpdatingLabel(formatter: NumberFormatter())
         }
         super.init(frame: CGRect())
-        setup()
     }
 
     let search = UIButton(type: .system)
@@ -48,6 +47,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         label.font = .customBody(size: 12.0)
         return label
     }()
+    var hasSetup = false
+
     var isWatchOnly: Bool = false {
         didSet {
             if Environment.isTestnet || isWatchOnly {
@@ -75,6 +76,12 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
     private var isBtcSwapped: Bool {
         didSet { setBalances() }
+    }
+
+    override func layoutSubviews() {
+        guard !hasSetup else { return }
+        setup()
+        hasSetup = true
     }
 
     private func setup() {
@@ -275,7 +282,19 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     override func draw(_ rect: CGRect) {
+        guard !Environment.isIPhone4 && !Environment.isIPhone5 else {
+            addFallbackImageBackground()
+            return
+        }
         drawGradient(rect)
+    }
+
+    private func addFallbackImageBackground() {
+        let image = UIImageView(image: #imageLiteral(resourceName: "HeaderGradient"))
+        image.contentMode = .scaleAspectFill
+        addSubview(image)
+        image.constrain(toSuperviewEdges: nil)
+        sendSubview(toBack: image)
     }
 
     @objc private func currencySwitchTapped() {

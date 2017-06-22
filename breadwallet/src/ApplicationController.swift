@@ -57,7 +57,6 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         setupRootViewController()
         window.makeKeyAndVisible()
         startEventManager()
-        updateAssetBundles()
         listenForPushNotificationRequest()
         offMainInitialization()
         handleLaunchOptions(options)

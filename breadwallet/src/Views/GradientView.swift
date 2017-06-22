@@ -25,6 +25,17 @@ extension GradientDrawable {
 
 class GradientView : UIView, GradientDrawable {
     override func draw(_ rect: CGRect) {
+        guard !Environment.isIPhone4 || !Environment.isIPhone5 else {
+            addFallbackImageBackground()
+            return
+        }
         drawGradient(rect)
+    }
+
+    private func addFallbackImageBackground() {
+        let image = UIImageView(image: #imageLiteral(resourceName: "HeaderGradient"))
+        image.contentMode = .scaleAspectFill
+        addSubview(image)
+        image.constrain(toSuperviewEdges: nil)
     }
 }

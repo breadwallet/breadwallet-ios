@@ -14,7 +14,9 @@ class ModalPresenter : Subscriber {
     var walletManager: WalletManager? {
         didSet {
             guard let walletManager = walletManager else { return }
-            initializeSupportCenter(walletManager: walletManager)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                self.initializeSupportCenter(walletManager: walletManager)
+            })
         }
     }
     init(store: Store, apiClient: BRAPIClient, window: UIWindow) {
