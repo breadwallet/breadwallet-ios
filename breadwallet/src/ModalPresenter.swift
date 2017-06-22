@@ -336,7 +336,7 @@ class ModalPresenter : Subscriber {
                 })],
             "Manage": [
                 Setting(title: S.Settings.notifications, accessoryText: {
-                    return "Off"
+                    return self.store.state.isPushNotificationsEnabled ? S.PushNotifications.on : S.PushNotifications.off
                 }, callback: {
                     settingsNav.pushViewController(PushNotificationsViewController(store: self.store), animated: true)
                 }),

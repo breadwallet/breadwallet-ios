@@ -250,6 +250,8 @@ enum S {
         static let title = NSLocalizedString("PushNotifications.title", value:"Notifications", comment: "Push notifications settings view title label")
         static let body = NSLocalizedString("PushNotifications.body", value:"Get notified when money you’ve received is available for spending.", comment: "Push notifications settings view body")
         static let label = NSLocalizedString("PushNotifications.label", value:"Push Notifications", comment: "Push notifications toggle switch label")
+        static let on = NSLocalizedString("PushNotifications.on", value: "On", comment: "Push notifications are on label")
+        static let off = NSLocalizedString("PushNotifications.off", value: "Off", comment: "Push notifications are off label")
     }
 
     enum DefaultCurrency {
