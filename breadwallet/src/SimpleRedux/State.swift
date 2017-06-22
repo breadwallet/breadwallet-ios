@@ -23,6 +23,7 @@ struct State {
     let recommendRescan: Bool
     let isLoadingTransactions: Bool
     let maxDigits: Int
+    let isPushNotificationsEnabled: Bool
 }
 
 extension State {
@@ -40,7 +41,8 @@ extension State {
                         defaultCurrencyCode: UserDefaults.defaultCurrencyCode,
                         recommendRescan: false,
                         isLoadingTransactions: false,
-                        maxDigits: UserDefaults.maxDigits)
+                        maxDigits: UserDefaults.maxDigits,
+                        isPushNotificationsEnabled: false)
     }
 }
 

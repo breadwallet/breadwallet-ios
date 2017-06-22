@@ -81,7 +81,6 @@ class SettingsViewController : UITableViewController, CustomTitleView {
             label.sizeToFit()
             cell.accessoryView = label
         }
-
         return cell
     }
 

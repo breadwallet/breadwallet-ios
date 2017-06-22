@@ -72,6 +72,20 @@ extension BRAPIClient {
             self.log("save push token resp: \(String(describing: resp)) data: \(String(describing: dat2))")
         }.resume()
     }
+
+    func deletePushNotificationToken(_ token: Data) {
+        var req = URLRequest(url: url("/me/push-devices/apns/\(token.hexString)"))
+        req.httpMethod = "DELETE"
+        dataTaskWithRequest(req as URLRequest, authenticated: true, retryCount: 0) { (dat, resp, er) in
+            self.log("delete push token resp: \(String(describing: resp))")
+            if let statusCode = resp?.statusCode {
+                if statusCode >= 200 && statusCode < 300 {
+                    UserDefaults.pushToken = nil
+                    self.log("deleted old token")
+                }
+            }
+        }.resume()
+    }
 }
 
 private func pushNotificationEnvironment() -> String {

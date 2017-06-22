@@ -30,7 +30,8 @@ struct HideStartFlow : Action {
                      defaultCurrencyCode: state.defaultCurrencyCode,
                      recommendRescan: state.recommendRescan,
                      isLoadingTransactions: state.isLoadingTransactions,
-                     maxDigits: state.maxDigits)
+                     maxDigits: state.maxDigits,
+                     isPushNotificationsEnabled: state.isPushNotificationsEnabled)
     }
 }
 
@@ -202,6 +203,15 @@ enum MaxDigits {
     }
 }
 
+enum PushNotifications {
+    struct setIsEnabled : Action {
+        let reduce: Reducer
+        init(_ isEnabled: Bool) {
+            reduce = { $0.clone(isPushNotificationsEnabled: isEnabled) }
+        }
+    }
+}
+
 //MARK: - State Creation Helpers
 extension State {
     func clone(isStartFlowVisible: Bool) -> State {
@@ -218,7 +228,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func rootModal(_ type: RootModal) -> State {
         return State(isStartFlowVisible: false,
@@ -234,7 +245,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(pasteboard: String?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -250,7 +262,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(walletSyncProgress: Double, timestamp: UInt32) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -266,7 +279,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(walletIsSyncing: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -282,7 +296,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(balance: UInt64) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -298,7 +313,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(transactions: [Transaction]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -314,7 +330,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(walletName: String) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -330,7 +347,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(walletSyncingErrorMessage: String?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -346,7 +364,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(walletCreationDate: Date) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -362,7 +381,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(isRescanning: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -378,7 +398,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(isBtcSwapped: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -394,7 +415,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(isLoginRequired: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -410,7 +432,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(currentRate: Rate, rates: [Rate]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -426,7 +449,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(currentRate: Rate) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -442,7 +466,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(alert: AlertType?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -458,7 +483,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(isTouchIdEnabled: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -474,7 +500,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(defaultCurrencyCode: String) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -490,7 +517,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(recommendRescan: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -506,7 +534,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(isLoadingTransactions: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -522,7 +551,8 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
     func clone(maxDigits: Int) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -538,6 +568,24 @@ extension State {
                      defaultCurrencyCode: defaultCurrencyCode,
                      recommendRescan: recommendRescan,
                      isLoadingTransactions: isLoadingTransactions,
-                     maxDigits: maxDigits)
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
+    }
+    func clone(isPushNotificationsEnabled: Bool) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
+                     rootModal: rootModal,
+                     pasteboard: pasteboard,
+                     walletState: walletState,
+                     isBtcSwapped: isBtcSwapped,
+                     currentRate: currentRate,
+                     rates: rates,
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrencyCode: defaultCurrencyCode,
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions,
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled)
     }
 }

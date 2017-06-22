@@ -18,6 +18,7 @@ private let hasPromptedTouchIdKey = "haspromptedtouched"
 private let isBtcSwappedKey = "isBtcSwappedKey"
 private let maxDigitsKey = "SETTINGS_MAX_DIGITS"
 private let pinLengthKey = "pinlengthkey"
+private let pushTokenKey = "pushTokenKey"
 
 extension UserDefaults {
 
@@ -87,6 +88,18 @@ extension UserDefaults {
         }
         set {
             defaults.set(newValue, forKey: pinLengthKey)
+        }
+    }
+
+    static var pushToken: Data? {
+        get {
+            guard defaults.object(forKey: pushTokenKey) != nil else {
+                return nil
+            }
+            return defaults.data(forKey: pushTokenKey)
+        }
+        set {
+            defaults.set(newValue, forKey: pushTokenKey)
         }
     }
 }
