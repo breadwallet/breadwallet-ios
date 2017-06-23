@@ -191,19 +191,12 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     }
 
     private func addWalletCreationListener() {
-        store.subscribe(self,
-                        selector: { $0.alert != $1.alert },
-                        callback: {
-                            if let alert = $0.alert {
-                                if case .pinSet(_) = alert {
-                                    self.modalPresenter?.walletManager = self.walletManager
-                                    self.feeUpdater?.updateWalletFees()
-                                    self.feeUpdater?.refresh()
-                                    self.initKVStoreCoordinator()
-                                    self.apiClient?.updateFeatureFlags()
-                                }
-                            }
-
+        store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
+            self.modalPresenter?.walletManager = self.walletManager
+            self.feeUpdater?.updateWalletFees()
+            self.feeUpdater?.refresh()
+            self.initKVStoreCoordinator()
+            self.apiClient?.updateFeatureFlags()
         })
     }
     
