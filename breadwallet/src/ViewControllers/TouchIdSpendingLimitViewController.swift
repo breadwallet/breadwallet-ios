@@ -13,7 +13,7 @@ class TouchIdSpendingLimitViewController : UIViewController, Subscriber {
     private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let faq: UIButton
     private let amount = UILabel(font: .customMedium(size: 26.0), color: .darkText)
-    private let currencyButton = ShadowButton(title: S.Send.defaultCurrencyLabel, type: .tertiary)
+    private let currencyButton: ShadowButton
     private let currencySwitcher = InViewAlert(type: .secondary)
     private let slider = UISlider()
     private let body = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
@@ -26,6 +26,7 @@ class TouchIdSpendingLimitViewController : UIViewController, Subscriber {
         self.walletManager = walletManager
         self.store = store
         self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.touchIdSpendingLimit)
+        self.currencyButton = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
         super.init(nibName: nil, bundle: nil)
     }
 

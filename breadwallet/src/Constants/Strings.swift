@@ -16,6 +16,18 @@ enum S {
         static let narrowSpace = "\u{2009}"
         static let lock = "\u{1F512}"
         static let redX = "\u{274C}"
+        static func currencyButtonTitle(maxDigits: Int) -> String {
+            switch maxDigits {
+            case 2:
+                return "Bits\(S.Symbols.narrowSpace)(\(S.Symbols.bits))"
+            case 5:
+                return "\(S.Symbols.narrowSpace)(m\(S.Symbols.btc))"
+            case 8:
+                return "BTC\(S.Symbols.narrowSpace)(\(S.Symbols.btc))"
+            default:
+                return "\(S.Symbols.bits)"
+            }
+        }
     }
 
     enum Button {
@@ -49,7 +61,6 @@ enum S {
         static let sendLabel = NSLocalizedString("Send.sendLabel", value:"Send", comment: "Send button label")
         static let pasteLabel = NSLocalizedString("Send.pasteLabel", value:"Paste", comment: "Paste button label")
         static let scanLabel = NSLocalizedString("Send.scanLabel", value:"Scan", comment: "Scan button label")
-        static let defaultCurrencyLabel = NSLocalizedString("Send.defaultCurrencyLabel", value:"bits (\(S.Symbols.bits))", comment: "Currency button label")
         static let invalidAddressTitle = NSLocalizedString("Send.invalidAddressTitle", value:"Invalid Address", comment: "Invalid address alert title")
         static let invalidAddressMessage = NSLocalizedString("Send.invalidAddressMessage", value:"Your clipboard does not contain a valid bitcoin address.", comment: "Invalid address alert message")
 
