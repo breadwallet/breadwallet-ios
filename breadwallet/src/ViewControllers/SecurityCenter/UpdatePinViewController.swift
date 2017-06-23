@@ -38,6 +38,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private let caption = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
     private var pinView: PinView
     private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad)
+    private let spacer = UIView()
     private let store: Store
     private let walletManager: WalletManager
     private let faq: UIButton
@@ -90,6 +91,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
         view.addSubview(caption)
         view.addSubview(pinView)
         view.addSubview(faq)
+        view.addSubview(spacer)
     }
 
     private func addConstraints() {
@@ -101,8 +103,11 @@ class UpdatePinViewController : UIViewController, Subscriber {
             instruction.leadingAnchor.constraint(equalTo: header.leadingAnchor),
             instruction.topAnchor.constraint(equalTo: header.bottomAnchor, constant: C.padding[2]),
             instruction.trailingAnchor.constraint(equalTo: header.trailingAnchor) ])
+        spacer.constrain([
+            spacer.topAnchor.constraint(equalTo: instruction.bottomAnchor),
+            spacer.bottomAnchor.constraint(equalTo: caption.topAnchor) ])
         pinView.constrain([
-            pinView.topAnchor.constraint(equalTo: instruction.bottomAnchor, constant: C.padding[6]),
+            pinView.centerYAnchor.constraint(equalTo: spacer.centerYAnchor),
             pinView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.width),
             pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
