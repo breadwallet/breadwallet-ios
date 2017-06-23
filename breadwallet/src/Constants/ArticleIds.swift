@@ -25,4 +25,6 @@ enum ArticleIds {
     static let resetPinWithPaperKey = "reset-pin-paper-key"
     static let setPin = "set-pin"
     static let importWallet = "import-wallet"
+    static let writePhrase = "write-phrase"
+    static let confirmPhrase = "confirm-phrase"
 }
