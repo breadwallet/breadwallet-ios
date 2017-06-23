@@ -243,6 +243,7 @@
 		CE25BF911DF9ADE700BC67B6 /* UIImage+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25BF901DF9ADE700BC67B6 /* UIImage+Utils.swift */; };
 		CE25BF931DFDA7A600BC67B6 /* MessageUIPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25BF921DFDA7A500BC67B6 /* MessageUIPresenter.swift */; };
 		CE27F9591E2C8EA300F7F7F2 /* Amount.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE27F9581E2C8EA300F7F7F2 /* Amount.swift */; };
+		CE29901A1EFD6DE50093A0F2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE29901C1EFD6DE50093A0F2 /* Localizable.strings */; };
 		CE2DC1391EBC36EE000FE727 /* Prompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2DC1381EBC36EE000FE727 /* Prompt.swift */; };
 		CE30F0E61EB27844004B8EE5 /* PhoneWCSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30F0E51EB27844004B8EE5 /* PhoneWCSessionManager.swift */; };
 		CE30F0E81EB27FA2004B8EE5 /* WatchDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30F0E71EB27FA2004B8EE5 /* WatchDataManager.swift */; };
@@ -1419,6 +1420,12 @@
 		CE25BF901DF9ADE700BC67B6 /* UIImage+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIImage+Utils.swift"; path = "src/Extensions/UIImage+Utils.swift"; sourceTree = "<group>"; };
 		CE25BF921DFDA7A500BC67B6 /* MessageUIPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageUIPresenter.swift; path = src/FlowControllers/MessageUIPresenter.swift; sourceTree = "<group>"; };
 		CE27F9581E2C8EA300F7F7F2 /* Amount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Amount.swift; path = src/ViewModels/Amount.swift; sourceTree = "<group>"; };
+		CE29901B1EFD6DE50093A0F2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE29901F1EFD6E060093A0F2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE2990201EFD6F3E0093A0F2 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE2990211EFD6F4B0093A0F2 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE2990221EFD6F500093A0F2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE2990231EFD6F5D0093A0F2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE2DC1381EBC36EE000FE727 /* Prompt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Prompt.swift; path = src/Views/Prompt.swift; sourceTree = "<group>"; };
 		CE30F0E51EB27844004B8EE5 /* PhoneWCSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = PhoneWCSessionManager.swift; path = src/Watch/PhoneWCSessionManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CE30F0E71EB27FA2004B8EE5 /* WatchDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchDataManager.swift; sourceTree = "<group>"; };
@@ -2582,6 +2589,7 @@
 				CE4C1CC71ED88B600063E184 /* URLController.swift */,
 				CE916E321EDA800E00D641D6 /* UserDefaultsUpdater.swift */,
 				CE3D4C561EF5D5740016B1C8 /* ReachabilityManager.swift */,
+				CE2990171EFD6DAF0093A0F2 /* Strings */,
 				CE30F0E41EB27821004B8EE5 /* Watch */,
 				CEE20C321EA5B2EC0086F724 /* Constants */,
 				CE20C90A1DBC59C500C8397A /* FlowControllers */,
@@ -2935,6 +2943,14 @@
 				CEBF292D1EF99E55005C330A /* LightWeightAlert.swift */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		CE2990171EFD6DAF0093A0F2 /* Strings */ = {
+			isa = PBXGroup;
+			children = (
+				CE29901C1EFD6DE50093A0F2 /* Localizable.strings */,
+			);
+			name = Strings;
 			sourceTree = "<group>";
 		};
 		CE30F0E41EB27821004B8EE5 /* Watch */ = {
@@ -3497,6 +3513,10 @@
 				es,
 				ja,
 				"zh-Hans",
+				de,
+				da,
+				ru,
+				nl,
 			);
 			mainGroup = 75A2A7871DA5934300A983D8;
 			productRefGroup = 75A2A7911DA5934300A983D8 /* Products */;
@@ -3544,6 +3564,7 @@
 				75A2A79E1DA5934300A983D8 /* LaunchScreen.storyboard in Resources */,
 				CEAA9EA31DC2FC700066731D /* CircularPro-Book.otf in Resources */,
 				CE5E6C9A1EB9135000A476DB /* Icon.xcassets in Resources */,
+				CE29901A1EFD6DE50093A0F2 /* Localizable.strings in Resources */,
 				2218BD791E8F6CBA0091D5E8 /* AssetBundles.plist in Resources */,
 				CEAA9EA41DC2FC700066731D /* CircularPro-Medium.otf in Resources */,
 				CEAA9E9E1DC2F90C0066731D /* CircularPro-Bold.otf in Resources */,
@@ -4247,6 +4268,20 @@
 				75A2A87B1DA59C8B00A983D8 /* el */,
 			);
 			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+		CE29901C1EFD6DE50093A0F2 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CE29901B1EFD6DE50093A0F2 /* Base */,
+				CE29901F1EFD6E060093A0F2 /* de */,
+				CE2990201EFD6F3E0093A0F2 /* ja */,
+				CE2990211EFD6F4B0093A0F2 /* da */,
+				CE2990221EFD6F500093A0F2 /* ru */,
+				CE2990231EFD6F5D0093A0F2 /* nl */,
+			);
+			name = Localizable.strings;
+			path = src/Strings;
 			sourceTree = "<group>";
 		};
 		CE4C1CD21ED8BCC70063E184 /* BIP39Words.plist */ = {
