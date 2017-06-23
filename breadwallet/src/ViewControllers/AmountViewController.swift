@@ -18,6 +18,7 @@ class AmountViewController : UIViewController {
         self.currencySlider = CurrencySlider(rates: store.state.rates,
                                              defaultCode: store.state.defaultCurrencyCode,
                                              isBtcSwapped: store.state.isBtcSwapped)
+        self.currencyToggle = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -54,7 +55,7 @@ class AmountViewController : UIViewController {
     private let placeholder = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
     private let amountLabel = UILabel(font: .customBody(size: 26.0), color: .darkText)
     private let pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad)
-    private let currencyToggle = ShadowButton(title: S.Send.defaultCurrencyLabel, type: .tertiary)
+    private let currencyToggle: ShadowButton
     private let border = UIView(color: .secondaryShadow)
     private let bottomBorder = UIView(color: .secondaryShadow)
     private let cursor = BlinkingView(blinkColor: C.defaultTintColor)
@@ -283,7 +284,7 @@ class AmountViewController : UIViewController {
         if let rate = selectedRate {
             currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
         } else {
-            currencyToggle.title = S.Send.defaultCurrencyLabel
+            currencyToggle.title = S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
         }
         updateBalanceLabel()
         updateAmountLabel()

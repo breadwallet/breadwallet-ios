@@ -32,6 +32,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         self.walletManager = walletManager
         self.initialAddress = initialAddress
         self.initialRequest = initialRequest
+        self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
 
         super.init(nibName: nil, bundle: nil)
@@ -54,7 +55,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private let sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "PinForSend"))
     private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
     private let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
-    private let currency = ShadowButton(title: S.Send.defaultCurrencyLabel, type: .tertiary)
+    private let currency: ShadowButton
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
