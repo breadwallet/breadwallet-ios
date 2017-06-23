@@ -15,17 +15,24 @@ class StartViewController : UIViewController {
         self.store = store
         self.didTapRecover = didTapRecover
         self.didTapCreate = didTapCreate
+        self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.startView)
         super.init(nibName: nil, bundle: nil)
     }
 
     //MARK: - Private
-    private let circle = GradientCircle()
-    private let brand = UILabel()
+    private let message = UILabel(font: .customMedium(size: 18.0), color: .whiteTint)
     private let create = ShadowButton(title: S.StartViewController.createButton, type: .primary)
     private let recover = ShadowButton(title: S.StartViewController.recoverButton, type: .secondary)
     private let store: Store
     private let didTapRecover: () -> Void
     private let didTapCreate: () -> Void
+    private let background = LoginBackgroundView()
+    private var logo: UIImageView = {
+        let image = UIImageView(image: #imageLiteral(resourceName: "Logo"))
+        image.contentMode = .scaleAspectFit
+        return image
+    }()
+    private var faq: UIButton
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -36,26 +43,32 @@ class StartViewController : UIViewController {
     }
 
     private func setData() {
-        brand.text = "Bread"
-        brand.font = UIFont.customBold(size: 26.0)
+        message.text = S.StartViewController.message
+        message.lineBreakMode = .byWordWrapping
+        message.numberOfLines = 0
+        message.textAlignment = .center
+        faq.tintColor = .whiteTint
     }
 
     private func addSubviews() {
-        view.addSubview(circle)
-        view.addSubview(brand)
+        view.addSubview(background)
+        view.addSubview(logo)
+        view.addSubview(message)
         view.addSubview(create)
         view.addSubview(recover)
+        view.addSubview(faq)
     }
 
     private func addConstraints() {
-        circle.constrain([
-            circle.constraint(.centerX, toView: view, constant: nil),
-            circle.constraint(.top, toView: view, constant: 120.0),
-            circle.constraint(.width, constant: Circle.defaultSize),
-            circle.constraint(.height, constant: Circle.defaultSize) ])
-        brand.constrain([
-            brand.constraint(.centerX, toView: circle, constant: nil),
-            brand.constraint(toBottom: circle, constant: C.padding[1]) ])
+        background.constrain(toSuperviewEdges: nil)
+        let yConstraint = NSLayoutConstraint(item: logo, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 0.5, constant: 0.0)
+        logo.constrain([
+            logo.constraint(.centerX, toView: view, constant: nil),
+            yConstraint])
+        message.constrain([
+            message.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
+            message.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: C.padding[3]),
+            message.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
         recover.constrain([
             recover.constraint(.leading, toView: view, constant: C.padding[2]),
             recover.constraint(.bottom, toView: view, constant: -C.padding[3]),
@@ -66,11 +79,20 @@ class StartViewController : UIViewController {
             create.constraint(.centerX, toView: recover, constant: nil),
             create.constraint(.width, toView: recover, constant: nil),
             create.constraint(.height, constant: C.Sizes.buttonHeight) ])
+        faq.constrain([
+            faq.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2]),
+            faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+            faq.widthAnchor.constraint(equalToConstant: 44.0),
+            faq.heightAnchor.constraint(equalToConstant: 44.0) ])
     }
 
     private func addButtonActions() {
         recover.tap = didTapRecover
         create.tap = didTapCreate
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 
     required init?(coder aDecoder: NSCoder) {
