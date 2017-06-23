@@ -126,9 +126,12 @@ class SearchHeaderView : UIView {
     }
 
     private func addConstraints() {
+        cancel.setTitle(S.Button.cancel, for: .normal)
+        let titleSize = NSString(string: cancel.titleLabel!.text!).size(attributes: [NSFontAttributeName : cancel.titleLabel!.font])
         cancel.constrain([
             cancel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
-            cancel.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor) ])
+            cancel.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
+            cancel.widthAnchor.constraint(equalToConstant: titleSize.width + C.padding[4])])
         searchBar.constrain([
             searchBar.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[1]),
             searchBar.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[2]),
@@ -139,7 +142,6 @@ class SearchHeaderView : UIView {
         backgroundColor = .whiteTint
         searchBar.backgroundImage = UIImage()
         searchBar.delegate = self
-        cancel.setTitle(S.Button.cancel, for: .normal)
         cancel.tap = { [weak self] in
             self?.didChangeFilters?([])
             self?.searchBar.resignFirstResponder()

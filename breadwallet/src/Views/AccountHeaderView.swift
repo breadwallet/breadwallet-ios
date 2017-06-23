@@ -167,8 +167,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         search.constrain([
             search.constraint(.trailing, toView: self, constant: -C.padding[2]),
             search.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[4]),
-            search.constraint(.width, constant: 24.0),
-            search.constraint(.height, constant: 24.0) ])
+            search.constraint(.width, constant: 44.0),
+            search.constraint(.height, constant: 44.0) ])
+        search.imageEdgeInsets = UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0)
 
         currencyTapView.constrain([
             currencyTapView.leadingAnchor.constraint(equalTo: name.leadingAnchor, constant: -C.padding[1]),
