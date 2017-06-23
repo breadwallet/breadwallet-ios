@@ -245,6 +245,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
             } else {
                 store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
                     self?.setPinSuccess?(newPin)
+                    self?.store.trigger(name: .didCreateOrRecoverWallet)
                     if self?.type != .creationNoPhrase {
                         self?.parent?.dismiss(animated: true, completion: nil)
                     }
