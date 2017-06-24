@@ -89,20 +89,20 @@ open class BRKeyedUnarchiver {
 
 extension Date: BREncodable {
     func encode() -> AnyObject {
-        return self.timeIntervalSinceReferenceDate as AnyObject
+        return self.timeIntervalSince1970 as AnyObject
     }
     
     public static func zeroValue() -> Date {
-        return dateFromTimeIntervalSinceReferenceDate(0)
+        return dateFromTimeIntervalSince1970(0)
     }
     
     public static func decode(_ value: AnyObject) -> Date {
         let d = (value as? Double) ?? Double()
-        return dateFromTimeIntervalSinceReferenceDate(d)
+        return dateFromTimeIntervalSince1970(d)
     }
     
-    static func dateFromTimeIntervalSinceReferenceDate<T>(_ d: Double) -> T {
-        return Date(timeIntervalSinceReferenceDate: d) as! T
+    static func dateFromTimeIntervalSince1970<T>(_ d: Double) -> T {
+        return Date(timeIntervalSince1970: d) as! T
     }
 }
 

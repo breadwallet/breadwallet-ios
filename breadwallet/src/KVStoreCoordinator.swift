@@ -27,24 +27,11 @@ class KVStoreCoordinator : Subscriber {
     }
 
     func listenForWalletChanges() {
-        store.lazySubscribe(self,
-                            selector: { $0.walletState.name != $1.walletState.name },
-                            callback: {
-                                if let existingInfo = WalletInfo(kvStore: self.kvStore) {
-                                    existingInfo.name = $0.walletState.name
-                                    self.set(existingInfo)
-                                } else {
-                                    let newInfo = WalletInfo(name: $0.walletState.name)
-                                    self.set(newInfo)
-                                }
-        })
-
-        store.lazySubscribe(self,
+        store.subscribe(self,
                             selector: { $0.walletState.creationDate != $1.walletState.creationDate },
                             callback: {
                                 if let existingInfo = WalletInfo(kvStore: self.kvStore) {
-                                    existingInfo.creationDate = $0.walletState.creationDate
-                                    self.set(existingInfo)
+                                    self.store.perform(action: WalletChange.setWalletCreationDate(existingInfo.creationDate))
                                 } else {
                                     let newInfo = WalletInfo(name: $0.walletState.name)
                                     newInfo.creationDate = $0.walletState.creationDate
