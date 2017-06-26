@@ -1419,6 +1419,11 @@
 		CE25BF8C1DF3B8A500BC67B6 /* InViewAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InViewAlert.swift; path = src/Views/InViewAlert.swift; sourceTree = "<group>"; };
 		CE25BF901DF9ADE700BC67B6 /* UIImage+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIImage+Utils.swift"; path = "src/Extensions/UIImage+Utils.swift"; sourceTree = "<group>"; };
 		CE25BF921DFDA7A500BC67B6 /* MessageUIPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageUIPresenter.swift; path = src/FlowControllers/MessageUIPresenter.swift; sourceTree = "<group>"; };
+		CE27074B1F016B6B00431BBC /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE27074C1F016B6D00431BBC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE27074D1F016B7000431BBC /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE27074E1F016D2400431BBC /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE27074F1F016D7900431BBC /* sv-SE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sv-SE"; path = "sv-SE.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		CE27F9581E2C8EA300F7F7F2 /* Amount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Amount.swift; path = src/ViewModels/Amount.swift; sourceTree = "<group>"; };
 		CE29901B1EFD6DE50093A0F2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE29901F1EFD6E060093A0F2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -3517,6 +3522,9 @@
 				da,
 				ru,
 				nl,
+				it,
+				pt,
+				"sv-SE",
 			);
 			mainGroup = 75A2A7871DA5934300A983D8;
 			productRefGroup = 75A2A7911DA5934300A983D8 /* Products */;
@@ -4279,6 +4287,11 @@
 				CE2990211EFD6F4B0093A0F2 /* da */,
 				CE2990221EFD6F500093A0F2 /* ru */,
 				CE2990231EFD6F5D0093A0F2 /* nl */,
+				CE27074B1F016B6B00431BBC /* fr */,
+				CE27074C1F016B6D00431BBC /* es */,
+				CE27074D1F016B7000431BBC /* it */,
+				CE27074E1F016D2400431BBC /* pt */,
+				CE27074F1F016D7900431BBC /* sv-SE */,
 			);
 			name = Localizable.strings;
 			path = src/Strings;
