@@ -16,12 +16,18 @@ class LightWeightAlert : UIView {
         setup()
     }
 
-    private let label = UILabel(font: .customBold(size: 16.0), color: .whiteTint)
+    let effect = UIBlurEffect(style: .dark)
+    let background = UIVisualEffectView()
+    let container = UIVisualEffectView(effect: UIVibrancyEffect(blurEffect: UIBlurEffect(style: .dark)))
+    private let label = UILabel(font: .customBold(size: 16.0))
 
     private func setup() {
-        addSubview(label)
+        addSubview(background)
+        background.constrain(toSuperviewEdges: nil)
+        background.contentView.addSubview(container)
+        container.contentView.addSubview(label)
+        container.constrain(toSuperviewEdges: nil)
         label.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[2], C.padding[2], -C.padding[2], -C.padding[2]))
-        backgroundColor = .transparentBlack
         layer.cornerRadius = 4.0
         layer.masksToBounds = true
     }

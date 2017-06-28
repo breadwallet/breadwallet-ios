@@ -7,7 +7,8 @@
 //
 
 import Foundation
-import UIKit //TODO - this shouldn't need uikit
+import UIKit
+import AVFoundation
 
 private let lastBlockHeightKey = "LastBlockHeightKey"
 private let progressUpdateInterval: TimeInterval = 0.5
@@ -132,8 +133,48 @@ class WalletCoordinator : Subscriber {
     }
 
     private func updateBalance() {
-        guard let balance = walletManager.wallet?.balance else { return }
-        store.perform(action: WalletChange.setBalance(balance))
+        guard let newBalance = walletManager.wallet?.balance else { return }
+        if let oldBalance = store.state.walletState.balance {
+            if newBalance > oldBalance {
+                if !store.state.walletState.isSyncing {
+                    self.showReceived(amount: newBalance - oldBalance)
+                }
+            }
+        }
+        store.perform(action: WalletChange.setBalance(newBalance))
+    }
+
+    private func showReceived(amount: UInt64) {
+        if let rate = store.state.currentRate {
+            let amount = Amount(amount: amount, rate: rate, maxDigits: store.state.maxDigits)
+            let primary = store.state.isBtcSwapped ? amount.localCurrency : amount.bits
+            let secondary = store.state.isBtcSwapped ? amount.bits : amount.localCurrency
+            let message = String(format: S.TransactionDetails.received, "\(primary) (\(secondary))")
+            store.trigger(name: .lightWeightAlert(message))
+            showLocalNotification(message: message)
+            ping()
+        }
+    }
+
+    private func ping() {
+        if let url = Bundle.main.url(forResource: "coinflip", withExtension: "aiff"){
+            var id: SystemSoundID = 0
+            AudioServicesCreateSystemSoundID(url as CFURL , &id)
+            AudioServicesAddSystemSoundCompletion(id, nil, nil, { soundId, _ in
+                AudioServicesDisposeSystemSoundID(soundId)
+            }, nil)
+            AudioServicesPlaySystemSound(id)
+        }
+    }
+
+    private func showLocalNotification(message: String) {
+        guard UIApplication.shared.applicationState == .background || UIApplication.shared.applicationState == .inactive else { return }
+        guard store.state.isPushNotificationsEnabled else { return }
+        UIApplication.shared.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
+        let notification = UILocalNotification()
+        notification.alertBody = message
+        notification.soundName = "coinflip.aiff"
+        UIApplication.shared.presentLocalNotificationNow(notification)
     }
 
     private func addSubscriptions() {

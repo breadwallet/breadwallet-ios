@@ -39,6 +39,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        UIApplication.shared.applicationIconBadgeNumber = 0
+    }
+
     func applicationWillEnterForeground(_ application: UIApplication) {
         applicationController.willEnterForeground()
     }

@@ -109,7 +109,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
         store.subscribe(self, selector: { $0.walletState.balance != $1.walletState.balance },
                         callback: {
-                            self.balance = $0.walletState.balance
+                            if let balance = $0.walletState.balance {
+                                self.balance = balance
+                            }
         })
         sendButton.isEnabled = false
     }
