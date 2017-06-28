@@ -75,6 +75,9 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         feeUpdater?.refresh()
         apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
         apiClient?.updateFeatureFlags()
+        if modalPresenter?.walletManager == nil {
+            modalPresenter?.walletManager = walletManager
+        }
     }
 
     func didEnterBackground() {
