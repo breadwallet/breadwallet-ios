@@ -16,7 +16,7 @@ private let largeSharePadding: CGFloat = 20.0
 
 typealias PresentShare = (String, UIImage) -> Void
 
-class ReceiveViewController : UIViewController {
+class ReceiveViewController : UIViewController, Subscriber {
 
     //MARK - Public
     var presentEmail: PresentShare?
@@ -41,7 +41,15 @@ class ReceiveViewController : UIViewController {
     private var topSharePopoutConstraint: NSLayoutConstraint?
     private let wallet: BRWallet
     private let store: Store
-
+    private var balance: UInt64? = nil {
+        didSet {
+            if let newValue = balance, let oldValue = oldValue {
+                if newValue > oldValue {
+                    setReceiveAddress()
+                }
+            }
+        }
+    }
     fileprivate let isRequestAmountVisible: Bool
 
     override func viewDidLoad() {
@@ -51,6 +59,9 @@ class ReceiveViewController : UIViewController {
         addActions()
         setupCopiedMessage()
         setupShareButtons()
+        store.subscribe(self, selector: { $0.walletState.balance != $1.walletState.balance }, callback: {
+            self.balance = $0.walletState.balance
+        })
     }
 
     private func addSubviews() {
@@ -111,12 +122,8 @@ class ReceiveViewController : UIViewController {
 
     private func setStyle() {
         view.backgroundColor = .white
-        address.text = wallet.receiveAddress
         address.textColor = .grayTextTint
         border.backgroundColor = .secondaryBorder
-        //TODO - use payment request object here
-        qrCode.image = UIImage.qrCode(data: "\(address.text!)".data(using: .utf8)!, color: CIColor(color: .black))?
-                            .resize(CGSize(width: qrSize, height: qrSize))!
         share.isToggleable = true
         if !isRequestAmountVisible {
             border.isHidden = true
@@ -126,6 +133,13 @@ class ReceiveViewController : UIViewController {
         addressButton.setBackgroundImage(UIImage.imageForColor(.secondaryShadow), for: .highlighted)
         addressButton.layer.cornerRadius = 4.0
         addressButton.layer.masksToBounds = true
+        setReceiveAddress()
+    }
+
+    private func setReceiveAddress() {
+        address.text = wallet.receiveAddress
+        qrCode.image = UIImage.qrCode(data: "\(address.text!)".data(using: .utf8)!, color: CIColor(color: .black))?
+            .resize(CGSize(width: qrSize, height: qrSize))!
     }
 
     private func addActions() {
