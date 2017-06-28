@@ -236,7 +236,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         store.subscribe(self,
                         selector: {$0.walletState.balance != $1.walletState.balance },
                         callback: { state in
-                            self.balance = state.walletState.balance })
+                            if let balance = state.walletState.balance {
+                                self.balance = balance
+                            } })
     }
 
     private func setBalances() {

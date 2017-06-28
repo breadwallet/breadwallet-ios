@@ -776,12 +776,12 @@ class ModalPresenter : Subscriber {
         alert.constrain([
             alert.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             alert.centerYAnchor.constraint(equalTo: view.centerYAnchor) ])
-        alert.alpha = 0.0
+        alert.background.effect = nil
         UIView.animate(withDuration: 0.7, animations: {
-            alert.alpha = 1.0
+            alert.background.effect = alert.effect
         }, completion: { _ in
-            UIView.animate(withDuration: 0.7, delay: 0.7, options: [], animations: {
-                alert.alpha = 0.0
+            UIView.animate(withDuration: 0.7, delay: 2.0, options: [], animations: {
+                alert.background.effect = nil
             }, completion: { _ in
                 alert.removeFromSuperview()
             })
