@@ -133,6 +133,7 @@ class LoginViewController : UIViewController, Subscriber {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        guard UIApplication.shared.applicationState != .background else { return }
         if shouldUseTouchId && !hasAttemptedToShowTouchId && !isPresentedForLock {
             hasAttemptedToShowTouchId = true
             touchIdTapped()
