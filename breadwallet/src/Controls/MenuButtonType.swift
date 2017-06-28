@@ -41,7 +41,7 @@ enum MenuButtonType {
         case .lock:
             return #imageLiteral(resourceName: "Lock")
         case .buy:
-            return #imageLiteral(resourceName: "Shield") //TODO - Add buy bitcoin icon
+            return #imageLiteral(resourceName: "BuyBitcoin")
         }
     }
 }
