@@ -285,7 +285,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
             })
         }
         NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { note in
-            if !self.isLoginRequired {
+            if !self.isLoginRequired && !self.store.state.isPromptingTouchId {
                 self.blurView.alpha = 1.0
                 self.view.addSubview(self.blurView)
                 self.blurView.constrain(toSuperviewEdges: nil)

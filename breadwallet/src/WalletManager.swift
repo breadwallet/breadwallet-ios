@@ -59,7 +59,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     private var txEnt: Int32 = 0
     private var blockEnt: Int32 = 0
     private var peerEnt: Int32 = 0
-    private let store: Store
+    internal let store: Store
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
 
