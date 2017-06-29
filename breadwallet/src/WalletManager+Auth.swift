@@ -244,10 +244,10 @@ extension WalletManager : WalletAuthenticator {
             }
         }
         catch { return completion(false) }
-            
+        store.perform(action: TouchIdActions.setIsPrompting(true))
         authenticate(touchIDPrompt: touchIDPrompt) { success in
+            self.store.perform(action: TouchIdActions.setIsPrompting(false))
             guard success else { return completion(false) }
-            
             completion(self.signTx(tx))
         }
     }
