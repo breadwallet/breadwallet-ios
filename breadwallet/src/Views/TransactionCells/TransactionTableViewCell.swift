@@ -15,12 +15,29 @@ enum TransactionCellStyle {
     case single
 }
 
+private let timestampRefreshRate: TimeInterval = 10.0
+
 class TransactionTableViewCell : UITableViewCell, Subscriber {
+
+    private class TransactionTableViewCellWrapper {
+        weak var target: TransactionTableViewCell?
+        init(target: TransactionTableViewCell) {
+            self.target = target
+        }
+
+        @objc func timerDidFire() {
+            target?.updateTimestamp()
+        }
+    }
 
     //MARK: - Public
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
+    }
+
+    deinit {
+        timer?.invalidate()
     }
 
     func setStyle(_ style: TransactionCellStyle) {
@@ -38,9 +55,15 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         self.transactionLabel.attributedText = transaction.descriptionString(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits)
         status.text = transaction.status
         comment.text = transaction.comment
-        timestamp.text = transaction.timeSince
         availability.text = transaction.shouldDisplayAvailableToSpend ? S.Transaction.available : ""
         status.isHidden = isSyncing
+        let timestampInfo = transaction.timeSince
+        timestamp.text = timestampInfo.0
+        if timestampInfo.1 {
+            timer = Timer.scheduledTimer(timeInterval: timestampRefreshRate, target: TransactionTableViewCellWrapper(target: self), selector: NSSelectorFromString("timerDidFire"), userInfo: nil, repeats: true)
+        } else {
+            timer?.invalidate()
+        }
     }
 
     let container = RoundedContainer()
@@ -56,6 +79,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     private var style: TransactionCellStyle = .first
     private var transaction: Transaction?
     private let availability = UILabel(font: .customBold(size: 13.0), color: .cameraGuidePositive)
+    private var timer: Timer? = nil
 
     private func setupViews() {
         addSubviews()
@@ -120,6 +144,15 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         transactionLabel.numberOfLines = 0
         transactionLabel.lineBreakMode = .byWordWrapping
 
+    }
+
+    func updateTimestamp() {
+        guard let tx = transaction else { return }
+        let timestampInfo = tx.timeSince
+        timestamp.text = timestampInfo.0
+        if !timestampInfo.1 {
+            timer?.invalidate()
+        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
