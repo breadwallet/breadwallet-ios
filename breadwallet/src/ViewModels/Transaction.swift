@@ -169,21 +169,22 @@ class Transaction {
         }
     }()
 
-    var timeSince: String {
-        guard timestamp > 0 else { return S.Transaction.justNow }
+    // return: (timestampString, shouldStartTimer)
+    var timeSince: (String, Bool) {
+        guard timestamp > 0 else { return (S.Transaction.justNow, false) }
         let then = Date(timeIntervalSince1970: TimeInterval(timestamp))
         let now = Date()
 
         if !now.hasEqualYear(then) {
             let df = DateFormatter()
             df.setLocalizedDateFormatFromTemplate("dd/MM/yy")
-            return df.string(from: then)
+            return (df.string(from: then), false)
         }
 
         if !now.hasEqualMonth(then) {
             let df = DateFormatter()
             df.setLocalizedDateFormatFromTemplate("MMM dd")
-            return df.string(from: then)
+            return (df.string(from: then), false)
         }
 
         let difference = Int(Date().timeIntervalSince1970) - timestamp
@@ -192,17 +193,17 @@ class Transaction {
         let secondsInDay = 86400
         let secondsInWeek = secondsInDay * 7
         if (difference < secondsInMinute) {
-            return String(format: S.TimeSince.seconds, "\(difference)")
+            return (String(format: S.TimeSince.seconds, "\(difference)"), true)
         } else if difference < secondsInHour {
-            return String(format: S.TimeSince.minutes, "\(difference/secondsInMinute)")
+            return (String(format: S.TimeSince.minutes, "\(difference/secondsInMinute)"), true)
         } else if difference < secondsInDay {
-            return String(format: S.TimeSince.hours, "\(difference/secondsInHour)")
+            return (String(format: S.TimeSince.hours, "\(difference/secondsInHour)"), false)
         } else if difference < secondsInWeek {
-            return String(format: S.TimeSince.days, "\(difference/secondsInDay)")
+            return (String(format: S.TimeSince.days, "\(difference/secondsInDay)"), false)
         } else {
             let df = DateFormatter()
             df.setLocalizedDateFormatFromTemplate("MMM dd")
-            return df.string(from: then)
+            return (df.string(from: then), false)
         }
     }
 
