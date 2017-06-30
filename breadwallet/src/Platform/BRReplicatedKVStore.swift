@@ -501,6 +501,7 @@ open class BRReplicatedKVStore: NSObject {
             q.async {
                 q.async {
                     for k in allKeyData {
+                        grp.enter()
                         _ = seph.wait(timeout: DispatchTime.distantFuture)
                         q.async(group: grp) {
                             do {
@@ -510,10 +511,12 @@ open class BRReplicatedKVStore: NSObject {
                                             failures += 1
                                         }
                                         seph.signal()
+                                        grp.leave()
                                 })
                             } catch {
                                 failures += 1
                                 seph.signal()
+                                grp.leave()
                             }
                         }
                     }
