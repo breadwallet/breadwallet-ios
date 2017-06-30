@@ -111,7 +111,7 @@ open class BRReplicatedKVStore: NSObject {
     /// Whether the data is encrypted at rest on disk
     open var encrypted = true
     
-    fileprivate var path: URL {
+    static var dbPath: URL {
         let fm = FileManager.default
         let docsUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!
         let bundleDirUrl = docsUrl.appendingPathComponent("kvstore.sqlite3")
@@ -132,7 +132,7 @@ open class BRReplicatedKVStore: NSObject {
     open func rmdb() throws {
         try dispatch_sync_throws(dbQueue) {
             try self.checkErr(sqlite3_close(self.db), s: "rmdb - close")
-            try FileManager.default.removeItem(at: self.path)
+            try FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
             self.db = nil
         }
     }
@@ -145,10 +145,10 @@ open class BRReplicatedKVStore: NSObject {
                 throw BRReplicatedKVStoreError.sqLiteError
             }
             try self.checkErr(sqlite3_open_v2(
-                self.path.absoluteString, &self.db,
+                BRReplicatedKVStore.dbPath.absoluteString, &self.db,
                 SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, nil
             ), s: "opening db")
-            self.log("opened DB at \(self.path.absoluteString)")
+            self.log("opened DB at \(BRReplicatedKVStore.dbPath.absoluteString)")
         }
     }
     
