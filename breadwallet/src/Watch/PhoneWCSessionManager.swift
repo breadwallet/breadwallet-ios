@@ -20,17 +20,22 @@ class PhoneWCSessionManager : NSObject {
         super.init()
         session.delegate = self
         session.activate()
+        listenForSeedChange()
+    }
+
+    func listenForSeedChange() {
+        NotificationCenter.default.addObserver(forName: .WalletDidWipe, object: nil, queue: nil, using: { _ in
+            self.session.sendMessage([AW_SESSION_RESPONSE_KEY: "didWipe"], replyHandler: nil, errorHandler: nil)
+        })
     }
 }
 
 extension PhoneWCSessionManager : WCSessionDelegate {
 
     func watchData(forWalletManager: WalletManager, rate: Rate) -> WatchData? {
-
         if let noWallet = walletManager?.noWallet, noWallet == true {
             return WatchData(balance: "", localBalance: "", receiveAddress: "", latestTransaction: "", qrCode: UIImage(), transactions: [], hasWallet: false)
         }
-
 
         guard let wallet = forWalletManager.wallet else { return nil }
 

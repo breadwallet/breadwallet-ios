@@ -126,6 +126,11 @@ extension WatchDataManager : WCSessionDelegate {
     }
 
     func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
-        print("did receive message: \(message)")
+        guard let response = message[AW_SESSION_RESPONSE_KEY] as? String else { return }
+        if response == "didWipe" {
+            try? FileManager.default.removeItem(at: dataFilePath)
+            NotificationCenter.default.post(
+                name: .ApplicationDataDidUpdateNotification, object: nil)
+        }
     }
 }

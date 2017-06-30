@@ -382,9 +382,12 @@ extension WalletManager : WalletAuthenticator {
             db = nil
             masterPubKey = BRMasterPubKey()
             earliestKeyTime = 0
-            UserDefaults.pinLength = nil
+            if let bundleId = Bundle.main.bundleIdentifier {
+                UserDefaults.standard.removePersistentDomain(forName: bundleId)
+            }
             try BRAPIClient(authenticator: self).kv?.rmdb()
-            try FileManager.default.removeItem(atPath: dbPath)
+            try? FileManager.default.removeItem(atPath: dbPath)
+            try? FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
             try setKeychainItem(key: KeychainKey.apiAuthKey, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.spendLimit, item: nil as Int64?)
             try setKeychainItem(key: KeychainKey.creationTime, item: nil as Data?)
@@ -394,12 +397,13 @@ extension WalletManager : WalletAuthenticator {
             try setKeychainItem(key: KeychainKey.masterPubKey, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.seed, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.mnemonic, item: nil as String?, authenticated: true)
-            if let bundleId = Bundle.main.bundleIdentifier {
-                UserDefaults.standard.removePersistentDomain(forName: bundleId)
-            }
+            NotificationCenter.default.post(name: .WalletDidWipe, object: nil)
             return true
         }
-        catch { return false }
+        catch let error {
+            print("Wipe wallet error: \(error)")
+            return false
+        }
     }
     
     // key used for authenticated API calls
