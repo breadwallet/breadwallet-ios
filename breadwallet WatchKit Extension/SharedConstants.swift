@@ -29,8 +29,5 @@ enum AWSessionRequestType : Int {
     case dataUpdateNotification = 0
     case fetchData
     case qRCodeBits
-}
-
-enum AWPhoneNotificationType : Int {
-    case AWPhoneNotificationTypeTxReceive = 0
+    case didWipe
 }
