@@ -12,48 +12,39 @@ class DescriptionSendCell : SendCell {
 
     init(placeholder: String) {
         super.init()
-        let attributes: [String: Any] = [
-            NSForegroundColorAttributeName: UIColor.grayTextTint,
-            NSFontAttributeName : placeholderFont
-        ]
-        textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: attributes)
-        textField.delegate = self
-        textField.textColor = .darkText
-        textField.returnKeyType = .done
+        textView.delegate = self
+        textView.textColor = .darkText
+        textView.font = .customBody(size: 20.0)
+        textView.returnKeyType = .done
+        self.placeholder.text = placeholder
         setupViews()
     }
 
-
-    var textFieldDidBeginEditing: (() -> Void)?
-    var textFieldDidReturn: ((UITextField) -> Void)?
-    var textFieldDidChange: ((String) -> Void)?
+    var didBeginEditing: (() -> Void)?
+    var didReturn: ((UITextView) -> Void)?
+    var didChange: ((String) -> Void)?
     var content: String? {
         didSet {
-            textField.text = content
-            textField.sendActions(for: .editingChanged)
-            guard let count = content?.characters.count else { return }
-            textField.font = count > 0 ? textFieldFont : placeholderFont
+            textView.text = content
+            textViewDidChange(textView)
         }
     }
 
-    private let placeholderFont = UIFont.customBody(size: 16.0)
-    private let textFieldFont = UIFont.customBody(size: 20.0)
-    let textField = UITextField()
-
+    let textView = UITextView()
+    fileprivate let placeholder = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
     private func setupViews() {
-        addSubview(textField)
-        textField.constrain([
-            textField.constraint(.leading, toView: self, constant: C.padding[2]),
-            textField.centerYAnchor.constraint(equalTo: accessoryView.centerYAnchor),
-            textField.heightAnchor.constraint(greaterThanOrEqualToConstant: 30.0),
-            textField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]) ])
+        textView.isScrollEnabled = false
+        addSubview(textView)
+        textView.constrain([
+            textView.constraint(.leading, toView: self, constant: 11.0),
+            textView.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[2]),
+            textView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30.0),
+            textView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]) ])
 
-        textField.addTarget(self, action: #selector(DescriptionSendCell.editingChanged(textField:)), for: .editingChanged)
-    }
-
-    @objc private func editingChanged(textField: UITextField) {
-        guard let text = textField.text else { return }
-        textFieldDidChange?(text)
+        textView.addSubview(placeholder)
+        placeholder.constrain([
+            placeholder.centerYAnchor.constraint(equalTo: textView.centerYAnchor),
+            placeholder.leadingAnchor.constraint(equalTo: textView.leadingAnchor, constant: 5.0) ])
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -61,13 +52,30 @@ class DescriptionSendCell : SendCell {
     }
 }
 
-extension DescriptionSendCell : UITextFieldDelegate {
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textFieldDidBeginEditing?()
+extension DescriptionSendCell : UITextViewDelegate {
+
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        didBeginEditing?()
     }
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let count = (textField.text ?? "").utf8.count + string.utf8.count
+    func textViewDidChange(_ textView: UITextView) {
+        placeholder.isHidden = textView.text.utf8.count > 0
+        if let text = textView.text {
+            didChange?(text)
+        }
+    }
+
+    func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        return true
+    }
+
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard text.rangeOfCharacter(from: CharacterSet.newlines) == nil else {
+            textView.resignFirstResponder()
+            return false
+        }
+
+        let count = (textView.text ?? "").utf8.count + text.utf8.count
         if count > C.maxMemoLength {
             return false
         } else {
@@ -75,8 +83,8 @@ extension DescriptionSendCell : UITextFieldDelegate {
         }
     }
 
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textFieldDidReturn?(textField)
-        return true
+    func textViewDidEndEditing(_ textView: UITextView) {
+        didReturn?(textView)
     }
+
 }
