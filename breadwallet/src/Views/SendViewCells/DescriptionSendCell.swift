@@ -53,7 +53,6 @@ class DescriptionSendCell : SendCell {
 }
 
 extension DescriptionSendCell : UITextViewDelegate {
-
     func textViewDidBeginEditing(_ textView: UITextView) {
         didBeginEditing?()
     }
@@ -86,5 +85,4 @@ extension DescriptionSendCell : UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         didReturn?(textView)
     }
-
 }
