@@ -66,7 +66,6 @@ enum S {
 
         static let cameraUnavailableTitle = NSLocalizedString("Send.cameraUnavailableTitle", value:"Bread is not allowed to access the camera", comment: "Camera not allowed alert title")
         static let cameraUnavailableMessage = NSLocalizedString("Send.cameraunavailableMessage", value:"Go to Settings to allow camera access.", comment: "Camera not allowed message")
-        static let touchIdPrompt = NSLocalizedString("Send.touchIdPrompt", value:"Authorize transaction of %@ to %@ with network fee: %@", comment: "Authorize transaction of $5.00 to <bitcoin address> with network fee: %0.01")
         static let balance = NSLocalizedString("Send.balance", value:"Balance: %@", comment: "Balance: $4.00")
         static let balanceWithFee = NSLocalizedString("Send.balanceWithFee", value:"Balance: %@, Fee: %@", comment: "Balance: $4.00, Fee: $0.01")
         static let containsAddress = NSLocalizedString("Send.containsAddress", value: "The destination is your own address. You cannot send to yourself.", comment: "Warning when sending to self.")
@@ -213,7 +212,10 @@ enum S {
 
     enum VerifyPin {
         static let title = NSLocalizedString("VerifyPin.title", value:"PIN Required", comment: "Verify PIN view title")
-        static let transactionBody = NSLocalizedString("VerifyPin.transactionBody", value:"Please enter your PIN to authorize this transaction of %@ to %@ with network fee: %@", comment: "Verify PIN view body. eg. Please enter your PIN to authorize this transaction of $5.00 to 1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2 with network fee: $0.1")
+        static let to = NSLocalizedString("VerifyPin.to", value: "To: %@", comment: "To: <bitcoin_address>")
+        static let amount = NSLocalizedString("VerifyPin.amount", value: "Amount: %@", comment: "Amount: $5.00")
+        static let fee = NSLocalizedString("VerifyPin.fee", value: "Fee: %@", comment: "Fee: $1.00")
+        static let total = NSLocalizedString("VerifyPIn.total", value: "Total: %@", comment: "Total: $6.00")
         static let continueBody = NSLocalizedString("VerifyPin.continueBody", value:"Please enter your PIN to continue.", comment: "Verify PIN view body")
     }
 
