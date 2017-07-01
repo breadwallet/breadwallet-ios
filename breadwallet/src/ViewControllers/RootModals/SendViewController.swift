@@ -261,29 +261,43 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         }
     }
 
-    private func send() {
+    private var sendMessage: String {
         let feeText = NumberFormatter.formattedString(amount: Satoshis(sender.fee), rate: amountView.selectedRate, minimumFractionDigits: nil, maxDigits: store.state.maxDigits)
-        let touchIdMessage = String(format: S.Send.touchIdPrompt, amountView.currentOutput, to.content ?? "", feeText)
-        let pinMessage = String(format: S.VerifyPin.transactionBody, amountView.currentOutput, to.content ?? "", feeText)
+        let totalText = NumberFormatter.formattedString(amount: Satoshis(sender.fee + (amount?.rawValue ?? 0)), rate: amountView.selectedRate, minimumFractionDigits: nil, maxDigits: store.state.maxDigits)
 
+        func shrink(_ string: String) -> String {
+            let start = string.substring(to: string.index(string.startIndex, offsetBy: 6))
+            let end = string.substring(from: string.index(string.endIndex, offsetBy: -6))
+            return start + "..." + end
+        }
+
+        let toLine = String(format: S.VerifyPin.to, shrink(to.content ?? ""))
+        let amountLine = String(format: S.VerifyPin.amount, amountView.currentOutput)
+        let feeLine = String(format: S.VerifyPin.fee, feeText)
+        let total = String(format: S.VerifyPin.total, totalText)
+        return "\(toLine)\n\(amountLine)\n\(feeLine)\n\(total)"
+    }
+
+    private func send() {
         guard let rate = store.state.currentRate else { return }
         guard let feePerKb = walletManager.wallet?.feePerKb else { return }
 
-        sender.send(touchIdMessage: touchIdMessage,
+        sender.send(touchIdMessage: sendMessage,
                     rate: rate,
                     comment: descriptionCell.textField.text,
                     feePerKb: feePerKb,
                     verifyPinFunction: { [weak self] pinValidationCallback in
-            self?.presentVerifyPin?(pinMessage) { [weak self] pin, vc in
-                if pinValidationCallback(pin) {
-                    vc.dismiss(animated: true, completion: {
-                        self?.parent?.view.isFrameChangeBlocked = false
-                    })
-                    return true
-                } else {
-                    return false
-                }
-            }
+                        guard let myself = self else { return }
+                        self?.presentVerifyPin?(myself.sendMessage) { [weak self] pin, vc in
+                            if pinValidationCallback(pin) {
+                                vc.dismiss(animated: true, completion: {
+                                    self?.parent?.view.isFrameChangeBlocked = false
+                                })
+                                return true
+                            } else {
+                                return false
+                            }
+                        }
             }, completion: { [weak self] result in
                 switch result {
                 case .success:
