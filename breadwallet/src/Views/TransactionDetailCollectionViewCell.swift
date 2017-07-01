@@ -58,7 +58,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     private let statusHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let status = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
     private let commentsHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let comment = UITextField()
+    private let comment = UITextView()
     private let amountHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let amountDetails = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
     private let addressHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
@@ -148,8 +148,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         comment.constrain([
             comment.topAnchor.constraint(equalTo: commentsHeader.bottomAnchor),
             comment.leadingAnchor.constraint(equalTo: commentsHeader.leadingAnchor),
-            comment.trailingAnchor.constraint(equalTo: commentsHeader.trailingAnchor),
-            comment.heightAnchor.constraint(greaterThanOrEqualToConstant: 44.0) ])
+            comment.trailingAnchor.constraint(equalTo: commentsHeader.trailingAnchor) ])
         separators[2].constrain([
             separators[2].topAnchor.constraint(equalTo: comment.bottomAnchor, constant: C.padding[2]),
             separators[2].leadingAnchor.constraint(equalTo: comment.leadingAnchor),
@@ -202,7 +201,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
 
         comment.font = .customBody(size: 13.0)
         comment.textColor = .darkText
-        comment.contentVerticalAlignment = .top
+        comment.isScrollEnabled = false
         comment.returnKeyType = .done
         comment.delegate = self
 
@@ -305,25 +304,24 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     }
 }
 
-extension TransactionDetailCollectionViewCell : UITextFieldDelegate {
+extension TransactionDetailCollectionViewCell : UITextViewDelegate {
 
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        guard let text = textField.text else { return }
+    func textViewDidEndEditing(_ textView: UITextView) {
+        guard let text = textView.text else { return }
         saveComment(comment: text)
     }
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let count = (textField.text ?? "").utf8.count + string.utf8.count
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard text.rangeOfCharacter(from: CharacterSet.newlines) == nil else {
+            textView.resignFirstResponder()
+            return false
+        }
+
+        let count = (textView.text ?? "").utf8.count + text.utf8.count
         if count > C.maxMemoLength {
             return false
         } else {
             return true
         }
     }
-
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-
 }
