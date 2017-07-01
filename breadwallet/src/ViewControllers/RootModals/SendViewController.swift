@@ -86,9 +86,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                 amountView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         })
 
-        descriptionCell.pinToBottom(to: amountView.view, height: SendCell.defaultHeight)
+        descriptionCell.constrain([
+            descriptionCell.widthAnchor.constraint(equalTo: amountView.view.widthAnchor),
+            descriptionCell.topAnchor.constraint(equalTo: amountView.view.bottomAnchor),
+            descriptionCell.leadingAnchor.constraint(equalTo: amountView.view.leadingAnchor),
+            descriptionCell.heightAnchor.constraint(equalTo: descriptionCell.textView.heightAnchor, constant: C.padding[4]) ])
+
         descriptionCell.accessoryView.constrain([
                 descriptionCell.accessoryView.constraint(.width, constant: 0.0) ])
+
         sendButton.constrain([
             sendButton.constraint(.leading, toView: view, constant: C.padding[2]),
             sendButton.constraint(.trailing, toView: view, constant: -C.padding[2]),
@@ -135,10 +141,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
         sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
-        descriptionCell.textFieldDidReturn = { textField in
-            textField.resignFirstResponder()
+        descriptionCell.didReturn = { textView in
+            textView.resignFirstResponder()
         }
-        descriptionCell.textFieldDidBeginEditing = { [weak self] in
+        descriptionCell.didBeginEditing = { [weak self] in
             self?.amountView.closePinPad()
         }
         amountView.balanceTextForAmount = { [weak self] amount, rate in
@@ -151,7 +157,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
         amountView.didChangeFirstResponder = { [weak self] isFirstResponder in
             if isFirstResponder {
-                self?.descriptionCell.textField.resignFirstResponder()
+                self?.descriptionCell.textView.resignFirstResponder()
             }
         }
     }
@@ -208,7 +214,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     @objc private func scanTapped() {
-        descriptionCell.textField.resignFirstResponder()
+        descriptionCell.textView.resignFirstResponder()
         presentScan? { [weak self] paymentRequest in
             guard let request = paymentRequest else { return }
             self?.handleRequest(request)
@@ -271,7 +277,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             return start + "..." + end
         }
 
-        let toLine = String(format: S.VerifyPin.to, shrink(to.content ?? ""))
+        var address = to.content ?? ""
+        if address.isValidAddress {
+            address = shrink(address)
+        }
+
+        let toLine = String(format: S.VerifyPin.to, address)
         let amountLine = String(format: S.VerifyPin.amount, amountView.currentOutput)
         let feeLine = String(format: S.VerifyPin.fee, feeText)
         let total = String(format: S.VerifyPin.total, totalText)
@@ -284,7 +295,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
         sender.send(touchIdMessage: sendMessage,
                     rate: rate,
-                    comment: descriptionCell.textField.text,
+                    comment: descriptionCell.textView.text,
                     feePerKb: feePerKb,
                     verifyPinFunction: { [weak self] pinValidationCallback in
                         guard let myself = self else { return }
