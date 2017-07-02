@@ -13,12 +13,12 @@ class MessageUIPresenter: NSObject {
 
     weak var presenter: UIViewController?
 
-    func presentMailCompose(address: String, image: UIImage) {
+    func presentMailCompose(bitcoinAddress: String, image: UIImage) {
         guard MFMailComposeViewController.canSendMail() else { showEmailUnavailableAlert(); return }
         originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
         UINavigationBar.appearance().titleTextAttributes = nil
         let emailView = MFMailComposeViewController()
-        emailView.setMessageBody("bitcoin: \(address)", isHTML: false)
+        emailView.setMessageBody("bitcoin: \(bitcoinAddress)", isHTML: false)
         if let data = UIImagePNGRepresentation(image) {
             emailView.addAttachmentData(data, mimeType: "image/png", fileName: "bitcoinqr.png")
         }
@@ -32,6 +32,16 @@ class MessageUIPresenter: NSObject {
         UINavigationBar.appearance().titleTextAttributes = nil
         let emailView = MFMailComposeViewController()
         emailView.setToRecipients([C.feedbackEmail])
+        emailView.mailComposeDelegate = self
+        present(emailView)
+    }
+
+    func presentMailCompose(emailAddress: String) {
+        guard MFMailComposeViewController.canSendMail() else { showEmailUnavailableAlert(); return }
+        originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
+        UINavigationBar.appearance().titleTextAttributes = nil
+        let emailView = MFMailComposeViewController()
+        emailView.setToRecipients([emailAddress])
         emailView.mailComposeDelegate = self
         present(emailView)
     }

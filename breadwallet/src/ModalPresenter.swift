@@ -257,7 +257,7 @@ class ModalPresenter : Subscriber {
         receiveVC.presentEmail = { [weak self, weak root] address, image in
             guard let root = root else { return }
             self?.messagePresenter.presenter = root
-            self?.messagePresenter.presentMailCompose(address: address, image: image)
+            self?.messagePresenter.presentMailCompose(bitcoinAddress: address, image: image)
         }
         receiveVC.presentText = { [weak self, weak root] address, image in
             guard let root = root else { return }
