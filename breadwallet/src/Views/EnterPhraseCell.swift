@@ -127,8 +127,7 @@ class EnterPhraseCell : UICollectionViewCell {
         done.constrain([
             done.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             done.topAnchor.constraint(equalTo: view.topAnchor),
-            done.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            done.widthAnchor.constraint(equalToConstant: 44.0) ])
+            done.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
 
         return view
     }
