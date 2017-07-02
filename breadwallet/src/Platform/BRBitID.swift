@@ -100,67 +100,68 @@ open class BRBitID : NSObject {
         return nonce
     }
     
-    func runCallback(_ completionHandler: @escaping (Data?, URLResponse?, NSError?) -> Void) {
-        guard walletManager.noWallet else {
+    func runCallback(store: Store, _ completionHandler: @escaping (Data?, URLResponse?, NSError?) -> Void) {
+        guard !walletManager.noWallet else {
             DispatchQueue.main.async {
                 completionHandler(nil, nil, NSError(domain: "", code: -1001, userInfo:
                     [NSLocalizedDescriptionKey: NSLocalizedString("No wallet", comment: "")]))
             }
             return
         }
+        let prompt = url.host ?? url.description
+        store.trigger(name: .authenticateForBitId(prompt, {
+            self.run(completionHandler)
+        }))
+    }
+
+    private func run(_ completionHandler: @escaping (Data?, URLResponse?, NSError?) -> Void) {
         autoreleasepool {
-            // FIXME: make this work
-//            guard let seed = manager.seed(withPrompt: "", forAmount: 0) else {
-//                DispatchQueue.main.async {
-//                    completionHandler(nil, nil, NSError(domain: "", code: -1001, userInfo:
-//                        [NSLocalizedDescriptionKey: NSLocalizedString("Could not unlock", comment: "")]))
-//                }
-//                return
-//            }
-//            let seq = BRBIP32Sequence()
-//            var scheme = "https"
-//            var nonce: String
-//            guard let query = url.query?.parseQueryString() else {
-//                DispatchQueue.main.async {
-//                    completionHandler(nil, nil, NSError(domain: "", code: -1001, userInfo:
-//                        [NSLocalizedDescriptionKey: NSLocalizedString("Malformed URI", comment: "")]))
-//                }
-//                return
-//            }
-//            if let u = query[BRBitID.PARAM_UNSECURE] , u.count == 1 && u[0] == "1" {
-//                scheme = "http"
-//            }
-//            if let x = query[BRBitID.PARAM_NONCE] , x.count == 1 {
-//                nonce = x[0] // service is providing a nonce
-//            } else {
-//                nonce = newNonce() // we are generating our own nonce
-//            }
-//            let uri = "\(scheme)://\(url.host!)\(url.path)"
-//            
-//            // build a payload consisting of the signature, address and signed uri
-//            let priv = BRKey(privateKey: seq.bitIdPrivateKey(BRBitID.DEFAULT_INDEX, forURI: uri, fromSeed: seed)!)!
-//            let uriWithNonce = "bitid://\(url.host!)\(url.path)?x=\(nonce)"
-//            let signature = BRBitID.signMessage(uriWithNonce, usingKey: priv)
-//            let payload: [String: String] = [
-//                "address": priv.address!,
-//                "signature": signature,
-//                "uri": uriWithNonce
-//            ]
-//            let json = try! JSONSerialization.data(withJSONObject: payload, options: [])
-//            
-//            // send off said payload
-//            var req = URLRequest(url: URL(string: "\(uri)?x=\(nonce)")!)
-//            req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//            req.httpMethod = "POST"
-//            req.httpBody = json
-//            let session = URLSession.shared
-//            session.dataTask(with: req, completionHandler: { (dat: Data?, resp: URLResponse?, err: Error?) in
-//                var rerr: NSError?
-//                if err != nil {
-//                    rerr = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "\(err)"])
-//                }
-//                completionHandler(dat, resp, rerr)
-//            }).resume()
+            var scheme = "https"
+            var nonce: String
+            guard let query = url.query?.parseQueryString() else {
+                DispatchQueue.main.async {
+                    completionHandler(nil, nil, NSError(domain: "", code: -1001, userInfo:
+                        [NSLocalizedDescriptionKey: NSLocalizedString("Malformed URI", comment: "")]))
+                }
+                return
+            }
+            if let u = query[BRBitID.PARAM_UNSECURE] , u.count == 1 && u[0] == "1" {
+                scheme = "http"
+            }
+            if let x = query[BRBitID.PARAM_NONCE] , x.count == 1 {
+                nonce = x[0] // service is providing a nonce
+            } else {
+                nonce = newNonce() // we are generating our own nonce
+            }
+            let uri = "\(scheme)://\(url.host!)\(url.path)"
+
+            // build a payload consisting of the signature, address and signed uri
+            guard var priv = walletManager.buildBitIdKey(url: uri, index: Int(BRBitID.DEFAULT_INDEX)) else {
+                return
+            }
+
+            let uriWithNonce = "bitid://\(url.host!)\(url.path)?x=\(nonce)"
+            let signature = BRBitID.signMessage(uriWithNonce, usingKey: priv)
+            let payload: [String: String] = [
+                "address": priv.address()!,
+                "signature": signature,
+                "uri": uriWithNonce
+            ]
+            let json = try! JSONSerialization.data(withJSONObject: payload, options: [])
+
+            // send off said payload
+            var req = URLRequest(url: URL(string: "\(uri)?x=\(nonce)")!)
+            req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            req.httpMethod = "POST"
+            req.httpBody = json
+            let session = URLSession.shared
+            session.dataTask(with: req, completionHandler: { (dat: Data?, resp: URLResponse?, err: Error?) in
+                var rerr: NSError?
+                if err != nil {
+                    rerr = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "\(err!)"])
+                }
+                completionHandler(dat, resp, rerr)
+            }).resume()
         }
     }
 }

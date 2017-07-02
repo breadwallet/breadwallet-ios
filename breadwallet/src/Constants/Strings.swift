@@ -467,4 +467,15 @@ enum S {
         }
 
     }
+
+    enum BitID {
+        static let title = NSLocalizedString("BitID.title", value: "BitID Authentication Request", comment: "BitID Authentication Request alert view title")
+        static let authenticationRequest = NSLocalizedString("BitID.authenticationRequest", value: "%@ is requesting authentication using your bitcoin wallet", comment: "<sitename> is requesting authentication using your bitcoin wallet")
+        static let deny = NSLocalizedString("BitID.deny", value: "Deny", comment: "Deny button label")
+        static let approve = NSLocalizedString("BitID.approve", value: "Approve", comment: "Approve button label")
+        static let success = NSLocalizedString("BitID.success", value: "Successfully Authenticated", comment: "BitID success alert title")
+        static let error = NSLocalizedString("BitID.error", value: "Authentication Error", comment: "BitID error alert title")
+        static let errorMessage = NSLocalizedString("BitID.errorMessage", value: "Please check with the service. You may need to try again.", comment: "BitID error alert messaage")
+        
+    }
 }
