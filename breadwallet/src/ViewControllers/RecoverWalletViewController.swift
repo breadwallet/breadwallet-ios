@@ -35,10 +35,10 @@ class RecoverWalletViewController : UIViewController, UIScrollViewDelegate, Cust
     private let store: Store
     private let walletManager: WalletManager
     private let enterPhrase: EnterPhraseCollectionViewController
-    private let errorLabel = UILabel(font: .customBody(size: 16.0), color: .cameraGuideNegative)
+    private let errorLabel = UILabel.wrapping(font: .customBody(size: 16.0), color: .cameraGuideNegative)
     private let instruction = UILabel(font: .customBold(size: 14.0), color: .darkText)
-    let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
-    private let subheader = UILabel(font: .customBody(size: 16.0), color: .darkText)
+    internal let titleLabel = UILabel.wrapping(font: .customBold(size: 26.0), color: .darkText)
+    private let subheader = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
     private let faq: UIButton
     private let scrollView = UIScrollView()
     private let container = UIView()
@@ -83,7 +83,8 @@ class RecoverWalletViewController : UIViewController, UIScrollViewDelegate, Cust
             container.widthAnchor.constraint(equalTo: view.widthAnchor) ])
         titleLabel.constrain([
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            titleLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[1]) ])
+            titleLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[1]),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: faq.leadingAnchor) ])
         subheader.constrain([
             subheader.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             subheader.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
@@ -116,8 +117,6 @@ class RecoverWalletViewController : UIViewController, UIScrollViewDelegate, Cust
         errorLabel.text = S.RecoverWallet.invalid
         errorLabel.isHidden = true
         errorLabel.textAlignment = .center
-        errorLabel.numberOfLines = 0
-        errorLabel.lineBreakMode = .byWordWrapping
         enterPhrase.didFinishPhraseEntry = { [weak self] phrase in
             self?.validatePhrase(phrase)
         }
@@ -138,8 +137,6 @@ class RecoverWalletViewController : UIViewController, UIScrollViewDelegate, Cust
             moreInfoButton.isHidden = true
         }
 
-        subheader.numberOfLines = 0
-        subheader.lineBreakMode = .byWordWrapping
         scrollView.delegate = self
         addCustomTitle()
     }
