@@ -119,6 +119,14 @@ class ModalPresenter : Subscriber {
                 self.showLightWeightAlert(message: message)
             }
         })
+        store.subscribe(self, name: .showAlert(nil), callback: {
+            guard let trigger = $0 else { return }
+            if case let .showAlert(alert) = trigger {
+                if let alert = alert {
+                    self.topViewController?.present(alert, animated: true, completion: nil)
+                }
+            }
+        })
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
