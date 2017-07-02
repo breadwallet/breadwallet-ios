@@ -63,6 +63,7 @@ import WebKit
     var indexUrl: URL {
         return URL(string: "http://127.0.0.1:\(server.port)\(mountPoint)")!
     }
+    private let messageUIPresenter = MessageUIPresenter()
     
     init(bundleName: String, mountPoint: String = "/", walletManager: WalletManager, store: Store, apiClient: BRAPIClient) {
         wkProcessPool = WKProcessPool()
@@ -289,6 +290,21 @@ import WebKit
                 self.closeNow()
             }
             return BRHTTPResponse(request: request, code: 204)
+        }
+
+        //GET /_email opens system email dialog
+        // Status codes:
+        //   - 200: Presented email UI
+        //   - 400: No address param provided
+        router.get("_email") { (request, match) -> BRHTTPResponse in
+            if let email = request.query["address"], email.count == 1 {
+                DispatchQueue.main.async {
+                    self.messageUIPresenter.presentMailCompose(emailAddress: email[0])
+                }
+                return BRHTTPResponse(request: request, code: 200)
+            } else {
+                return BRHTTPResponse(request: request, code: 400)
+            }
         }
         
         // GET /_didload signals to the presenter that the content successfully loaded
