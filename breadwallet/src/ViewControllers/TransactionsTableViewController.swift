@@ -76,7 +76,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
             reload()
         }
     }
-    private let emptyMessage = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
+    private let emptyMessage = UILabel.wrapping(font: .customBody(size: 16.0), color: .grayTextTint)
     private var currentPrompt: Prompt? {
         didSet {
             if currentPrompt != nil && oldValue == nil {
@@ -216,9 +216,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if hasExtraSection && section == 1 {
-            let view = UIView()
-            view.backgroundColor = .clear
-            return view
+            return UIView(color: .clear)
         } else {
             return nil
         }
@@ -241,7 +239,8 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
                 tableView.addSubview(emptyMessage)
                 emptyMessage.constrain([
                     emptyMessage.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
-                    emptyMessage.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -accountHeaderHeight) ])
+                    emptyMessage.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -accountHeaderHeight),
+                    emptyMessage.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -C.padding[2]) ])
             }
         } else {
             emptyMessage.removeFromSuperview()
