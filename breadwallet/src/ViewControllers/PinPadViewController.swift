@@ -40,6 +40,13 @@ class PinPadViewController : UICollectionViewController {
         isAppendingDisabled = false
         currentOutput = ""
     }
+
+    func removeLast() {
+        if currentOutput.utf8.count > 0 {
+            currentOutput = currentOutput.substring(to: currentOutput.index(currentOutput.startIndex, offsetBy: currentOutput.utf8.count - 1))
+        }
+    }
+
     init(style: PinPadStyle, keyboardType: KeyboardType) {
         self.style = style
         self.keyboardType = keyboardType
