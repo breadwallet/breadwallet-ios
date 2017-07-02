@@ -204,18 +204,25 @@ class AmountViewController : UIViewController {
             }
         }
 
+        var newAmount: Satoshis?
         if let rate = selectedRate {
             if let value = Double(output) {
-                amount = Satoshis(value: value, rate: rate)
-            } else {
-                amount = nil
+                newAmount = Satoshis(value: value, rate: rate)
             }
         } else {
             if let bits = Bits(string: output) {
-                amount = Satoshis(bits: bits)
-            } else {
-                amount = nil
+                newAmount = Satoshis(bits: bits)
             }
+        }
+
+        if let newAmount = newAmount {
+            if newAmount > C.maxMoney {
+                pinPad.removeLast()
+            } else {
+                amount = newAmount
+            }
+        } else {
+            amount = nil
         }
     }
 
