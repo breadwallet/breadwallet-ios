@@ -223,7 +223,7 @@ class Transaction {
 
     private let longDateFormatter: DateFormatter = {
         let df = DateFormatter()
-        df.dateFormat = "MMMM d, yyy 'at' h:mm a"
+        df.setLocalizedDateFormatFromTemplate("MMMM d, yyy h:mm a")
         return df
     }()
 
