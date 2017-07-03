@@ -176,11 +176,21 @@ class RequestAmountViewController : UIViewController {
     }
 
     @objc private func emailTapped() {
-        presentEmail?(address.text!, qrCode.image!)
+        guard let amount = amount else { return showNoAmountAlert() }
+        let text = PaymentRequest.requestString(withAddress: wallet.receiveAddress, forAmount: amount.rawValue)
+        presentEmail?(text, qrCode.image!)
     }
 
     @objc private func textTapped() {
-        presentText?(address.text!, qrCode.image!)
+        guard let amount = amount else { return showNoAmountAlert() }
+        let text = PaymentRequest.requestString(withAddress: wallet.receiveAddress, forAmount: amount.rawValue)
+        presentText?(text, qrCode.image!)
+    }
+
+    private func showNoAmountAlert() {
+        let alert = UIAlertController(title: S.Alert.error, message: S.RequestAnAmount.noAmount, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 
     private func toggle(alertView: InViewAlert, shouldAdjustPadding: Bool, shouldShrinkAfter: Bool = false) {

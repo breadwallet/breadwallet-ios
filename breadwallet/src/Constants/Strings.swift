@@ -323,6 +323,7 @@ enum S {
 
     enum RequestAnAmount {
         static let title = NSLocalizedString("RequestAnAmount.title", value:"Request an Amount", comment: "Request a specific amount of bitcoin")
+        static let noAmount = NSLocalizedString("RequestAnAmount.noAmount", value: "Please enter an amount first.", comment: "No amount entered error message.")
     }
 
     enum Alerts {

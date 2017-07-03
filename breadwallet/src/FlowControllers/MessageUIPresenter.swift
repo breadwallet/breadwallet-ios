@@ -14,11 +14,19 @@ class MessageUIPresenter: NSObject {
     weak var presenter: UIViewController?
 
     func presentMailCompose(bitcoinAddress: String, image: UIImage) {
+        presentMailCompose(string: "bitcoin: \(bitcoinAddress)", image: image)
+    }
+
+    func presentMailCompose(bitcoinURL: String, image: UIImage) {
+        presentMailCompose(string: bitcoinURL, image: image)
+    }
+
+    private func presentMailCompose(string: String, image: UIImage) {
         guard MFMailComposeViewController.canSendMail() else { showEmailUnavailableAlert(); return }
         originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
         UINavigationBar.appearance().titleTextAttributes = nil
         let emailView = MFMailComposeViewController()
-        emailView.setMessageBody("bitcoin: \(bitcoinAddress)", isHTML: false)
+        emailView.setMessageBody(string, isHTML: false)
         if let data = UIImagePNGRepresentation(image) {
             emailView.addAttachmentData(data, mimeType: "image/png", fileName: "bitcoinqr.png")
         }
@@ -47,11 +55,19 @@ class MessageUIPresenter: NSObject {
     }
 
     func presentMessageCompose(address: String, image: UIImage) {
+        presentMessage(string: "bitcoin: \(address)", image: image)
+    }
+
+    func presentMessageCompose(bitcoinURL: String, image: UIImage) {
+        presentMessage(string: bitcoinURL, image: image)
+    }
+
+    private func presentMessage(string: String, image: UIImage) {
         guard MFMessageComposeViewController.canSendText() else { showMessageUnavailableAlert(); return }
         originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
         UINavigationBar.appearance().titleTextAttributes = nil
         let textView = MFMessageComposeViewController()
-        textView.body = "bitcoin: \(address)"
+        textView.body = string
         if let data = UIImagePNGRepresentation(image) {
             textView.addAttachmentData(data, typeIdentifier: "public.image", filename: "bitcoinqr.png")
         }
