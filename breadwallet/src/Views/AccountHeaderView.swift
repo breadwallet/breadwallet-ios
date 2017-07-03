@@ -51,15 +51,18 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     var isWatchOnly: Bool = false {
         didSet {
-            if Environment.isTestnet || isWatchOnly {
-                if Environment.isTestnet && isWatchOnly {
+            if E.isTestnet || isWatchOnly {
+                if E.isTestnet && isWatchOnly {
                     modeLabel.text = "(Testnet - Watch Only)"
-                } else if Environment.isTestnet {
+                } else if E.isTestnet {
                     modeLabel.text = "(Testnet)"
                 } else if isWatchOnly {
                     modeLabel.text = "(Watch Only)"
                 }
                 modeLabel.isHidden = false
+            }
+            if E.isScreenshots {
+                modeLabel.isHidden = true
             }
         }
     }
@@ -110,7 +113,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         search.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
         search.tintColor = .white
 
-        if Environment.isTestnet {
+        if E.isTestnet {
             name.textColor = .red
         }
 
@@ -285,7 +288,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     override func draw(_ rect: CGRect) {
-        guard !Environment.isIPhone4 && !Environment.isIPhone5 else {
+        guard !E.isIPhone4 && !E.isIPhone5 else {
             addFallbackImageBackground()
             return
         }

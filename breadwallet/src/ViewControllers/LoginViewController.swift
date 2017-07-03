@@ -153,7 +153,7 @@ class LoginViewController : UIViewController, Subscriber {
         pinViewContainer.addSubview(pinView)
         view.addSubview(subheader)
         pinView.constrain([
-            pinView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: Environment.isIPhone4 ? -C.padding[2] : 0.0),
+            pinView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: E.isIPhone4 ? -C.padding[2] : 0.0),
             pinView.centerXAnchor.constraint(equalTo: pinViewContainer.centerXAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.width),
             pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
@@ -243,6 +243,7 @@ class LoginViewController : UIViewController, Subscriber {
 
     private func authenticate(pin: String) {
         guard let walletManager = walletManager else { return }
+        guard !E.isScreenshots else { return authenticationSucceded() }
         guard walletManager.authenticate(pin: pin) else { return authenticationFailed() }
         authenticationSucceded()
     }

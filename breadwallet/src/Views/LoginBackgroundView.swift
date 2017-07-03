@@ -22,7 +22,7 @@ class LoginBackgroundView : UIView, GradientDrawable {
     }
 
     private func setupTriangles() {
-        guard !Environment.isIPhone4 && !Environment.isIPhone5 else {
+        guard !E.isIPhone4 && !E.isIPhone5 else {
             addFallbackImageBackground()
             return
         }
@@ -51,7 +51,7 @@ class LoginBackgroundView : UIView, GradientDrawable {
     }
 
     override func draw(_ rect: CGRect) {
-        guard !Environment.isIPhone4 && !Environment.isIPhone5 else { return }
+        guard !E.isIPhone4 && !E.isIPhone5 else { return }
         drawGradient(rect)
     }
 

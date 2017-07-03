@@ -86,7 +86,7 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
 
     override func viewDidLoad() {
         // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
-        if !Environment.isSimulator {
+        if !E.isSimulator {
             var s = stat()
             var isJailbroken = (stat("/bin/sh", &s) == 0) ? true : false
             for i in 0..<_dyld_image_count() {
