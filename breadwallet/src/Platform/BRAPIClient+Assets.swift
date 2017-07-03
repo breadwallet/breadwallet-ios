@@ -196,7 +196,7 @@ extension BRAPIClient {
                 return completionHandler([("INVALID", BRAPIClientError.unknownError)])
         }
 
-        if Environment.isDebug || Environment.isTestFlight {
+        if E.isDebug || E.isTestFlight {
             names = names.map { n in return n + "-staging" }
         }
         

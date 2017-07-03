@@ -77,6 +77,28 @@ class GenericPinPadCell : UICollectionViewCell {
             sublabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             sublabel.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: -3.0) ])
     }
+
+    override var isAccessibilityElement: Bool {
+        get {
+            return true
+        }
+        set { }
+    }
+
+    override var accessibilityLabel: String? {
+        get {
+            return topLabel.text
+        }
+        set { }
+    }
+
+    override var accessibilityTraits: UIAccessibilityTraits {
+        get {
+            return UIAccessibilityTraitStaticText
+        }
+        set { }
+    }
+
     func setAppearance() {}
     func setSublabel() {}
 

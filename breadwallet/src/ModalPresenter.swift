@@ -378,7 +378,7 @@ class ModalPresenter : Subscriber {
             ]
         ]
 
-        if Environment.isTestFlight || Environment.isDebug {
+        if E.isTestFlight || E.isDebug {
             rows["Manage"]?.append(
                 Setting(title: "Wipe Wallet", callback: {
                     self.wipeWallet()

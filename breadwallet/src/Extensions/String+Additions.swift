@@ -11,7 +11,7 @@ import UIKit
 extension String {
     var isValidAddress: Bool {
         guard lengthOfBytes(using: .utf8) > 0 else { return false }
-        guard !Environment.isTestnet else { return true }
+        guard !E.isTestnet else { return true }
         if characters.first == "1" || characters.first == "3" {
             return true
         } else {

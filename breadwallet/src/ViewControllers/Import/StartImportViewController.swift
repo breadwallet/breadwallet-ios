@@ -152,7 +152,7 @@ class StartImportViewController : UIViewController {
         present(balanceActivity, animated: true, completion: {
             var key = key
             guard let address = key.address() else { return }
-            let urlString = Environment.isTestnet ? testnetURL : mainURL
+            let urlString = E.isTestnet ? testnetURL : mainURL
             let request = NSMutableURLRequest(url: URL(string: urlString)!,
                                               cachePolicy: .reloadIgnoringLocalCacheData,
                                               timeoutInterval: 20.0)
