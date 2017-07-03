@@ -25,7 +25,7 @@ extension GradientDrawable {
 
 class GradientView : UIView, GradientDrawable {
     override func draw(_ rect: CGRect) {
-        guard !Environment.isIPhone4 || !Environment.isIPhone5 else {
+        guard !E.isIPhone4 || !E.isIPhone5 else {
             addFallbackImageBackground()
             return
         }
