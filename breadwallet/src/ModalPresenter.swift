@@ -219,7 +219,16 @@ class ModalPresenter : Subscriber {
             return ModalViewController(childViewController: ManageWalletViewController(store: store), store: store)
         case .requestAmount:
             guard let wallet = walletManager?.wallet else { return nil }
-            return ModalViewController(childViewController: RequestAmountViewController(wallet: wallet, store: store), store: store)
+            let requestVc = RequestAmountViewController(wallet: wallet, store: store)
+            requestVc.presentEmail = { [weak self] bitcoinURL, image in
+                    self?.messagePresenter.presenter = self?.topViewController
+                    self?.messagePresenter.presentMailCompose(bitcoinURL: bitcoinURL, image: image)
+            }
+            requestVc.presentText = { [weak self] bitcoinURL, image in
+                self?.messagePresenter.presenter = self?.topViewController
+                self?.messagePresenter.presentMessageCompose(bitcoinURL: bitcoinURL, image: image)
+            }
+            return ModalViewController(childViewController: requestVc, store: store)
         }
     }
 
