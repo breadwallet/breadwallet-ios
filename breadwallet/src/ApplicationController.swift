@@ -11,7 +11,7 @@ import UIKit
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
-class ApplicationController : EventManagerCoordinator, Subscriber {
+class ApplicationController : Subscriber {
 
     //Ideally the window would be private, but is unfortunately required
     //by the UIApplicationDelegate Protocol
@@ -20,9 +20,8 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
 
-    private var walletManager: WalletManager?
+    fileprivate var walletManager: WalletManager?
     private var walletCoordinator: WalletCoordinator?
-    fileprivate var apiClient: BRAPIClient?
     private var exchangeUpdater: ExchangeUpdater?
     private var feeUpdater: FeeUpdater?
     private let transitionDelegate: ModalTransitionDelegate
@@ -44,7 +43,6 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
 
     private func initWallet() {
         self.walletManager = try? WalletManager(store: self.store, dbPath: nil)
-        let _ = self.walletManager?.wallet //attempt to initialize wallet
         DispatchQueue.main.async {
             self.didInitWallet()
         }
@@ -56,7 +54,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         setupAppearance()
         setupRootViewController()
         window.makeKeyAndVisible()
-        startEventManager()
+        self.walletManager?.apiClient?.events?.up()
         listenForPushNotificationRequest()
         offMainInitialization()
         handleLaunchOptions(options)
@@ -73,8 +71,8 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         }
         exchangeUpdater?.refresh(completion: {})
         feeUpdater?.refresh()
-        apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
-        apiClient?.updateFeatureFlags()
+        walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
+        walletManager.apiClient?.updateFeatureFlags()
         if modalPresenter?.walletManager == nil {
             modalPresenter?.walletManager = walletManager
         }
@@ -86,7 +84,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
         if !store.state.isLoginRequired {
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
         }
-        apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
+        walletManager?.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
     }
 
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -98,10 +96,10 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                     self.feeUpdater?.refresh(completion: completion)
                 },
                 { completion in
-                    self.syncEventManager(completion: completion)
+                    self.walletManager?.apiClient?.events?.sync(completion: completion)
                 },
                 { completion in
-                    self.apiClient?.updateFeatureFlags()
+                    self.walletManager?.apiClient?.updateFeatureFlags()
                     completion()
                 }
             ], completion: {
@@ -116,10 +114,9 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     private func didInitWallet() {
         guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
-        apiClient = BRAPIClient(authenticator: walletManager)
-        modalPresenter = ModalPresenter(store: store, apiClient: apiClient!, window: window)
-        exchangeUpdater = ExchangeUpdater(store: store, apiClient: apiClient!)
-        feeUpdater = FeeUpdater(walletManager: walletManager, apiClient: apiClient!)
+        modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window)
+        exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
+        feeUpdater = FeeUpdater(walletManager: walletManager)
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: window.rootViewController!)
         accountViewController?.walletManager = walletManager
         defaultsUpdater = UserDefaultsUpdater(walletManager: walletManager)
@@ -135,7 +132,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
                     walletManager.peerManager?.connect()
                 }
                 feeUpdater?.updateWalletFees()
-                apiClient?.updateFeatureFlags()
+                walletManager.apiClient?.updateFeatureFlags()
                 initKVStoreCoordinator()
             }
             exchangeUpdater?.refresh(completion: {
@@ -179,7 +176,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
 
     private func setupRootViewController() {
         let didSelectTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
-            guard let kvStore = self.apiClient?.kv else { return }
+            guard let kvStore = self.walletManager?.apiClient?.kv else { return }
             let transactionDetails = TransactionDetailsViewController(store: self.store, transactions: transactions, selectedIndex: selectedIndex, kvStore: kvStore)
             transactionDetails.modalPresentationStyle = .overFullScreen
             transactionDetails.transitioningDelegate = self.transitionDelegate
@@ -199,12 +196,12 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
             self.feeUpdater?.updateWalletFees()
             self.feeUpdater?.refresh()
             self.initKVStoreCoordinator()
-            self.apiClient?.updateFeatureFlags()
+            self.walletManager?.apiClient?.updateFeatureFlags()
         })
     }
     
     private func updateAssetBundles() {
-        apiClient?.updateBundles { errors in
+        walletManager?.apiClient?.updateBundles { errors in
             for (n, e) in errors {
                 print("Bundle \(n) ran update. err: \(String(describing: e))")
             }
@@ -212,7 +209,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     }
 
     private func initKVStoreCoordinator() {
-        guard let kvStore = apiClient?.kv else { return }
+        guard let kvStore = walletManager?.apiClient?.kv else { return }
         guard kvStoreCoordinator == nil else { return }
         kvStore.syncAllKeys { error in
             print("KV finished syncing. err: \(String(describing: error))")
@@ -245,7 +242,7 @@ class ApplicationController : EventManagerCoordinator, Subscriber {
     func willResignActive() {
         guard !store.state.isPushNotificationsEnabled else { return }
         guard let pushToken = UserDefaults.pushToken else { return }
-        apiClient?.deletePushNotificationToken(pushToken)
+        walletManager?.apiClient?.deletePushNotificationToken(pushToken)
     }
 }
 
@@ -265,7 +262,7 @@ extension ApplicationController {
     }
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        guard let apiClient = self.apiClient else { return }
+        guard let apiClient = walletManager?.apiClient else { return }
         guard UserDefaults.pushToken != deviceToken else { return }
         UserDefaults.pushToken = deviceToken
         apiClient.savePushNotificationToken(deviceToken)

@@ -19,17 +19,16 @@ class ModalPresenter : Subscriber {
             })
         }
     }
-    init(store: Store, apiClient: BRAPIClient, window: UIWindow) {
+    init(store: Store, walletManager: WalletManager, window: UIWindow) {
         self.store = store
         self.window = window
-        self.apiClient = apiClient
+        self.walletManager = walletManager
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular, store: store)
         addSubscriptions()
     }
 
     //MARK: - Private
     private let store: Store
-    private let apiClient: BRAPIClient
     private let window: UIWindow
     private let alertHeight: CGFloat = 260.0
     private let modalTransitionDelegate: ModalTransitionDelegate
@@ -42,7 +41,7 @@ class ModalPresenter : Subscriber {
     private var notReachableAlert: InAppAlert?
     
     private func initializeSupportCenter(walletManager: WalletManager) {
-        supportCenter = SupportCenterContainer(walletManager: walletManager, store: store, apiClient: apiClient)
+        supportCenter = SupportCenterContainer(walletManager: walletManager, store: store)
     }
 
     private func addSubscriptions() {
@@ -240,7 +239,7 @@ class ModalPresenter : Subscriber {
             return nil
         }
         guard let walletManager = walletManager else { return nil }
-        guard let kvStore = apiClient.kv else { return nil }
+        guard let kvStore = walletManager.apiClient?.kv else { return nil }
         let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore), walletManager: walletManager, initialRequest: currentRequest)
         currentRequest = nil
 
@@ -368,7 +367,8 @@ class ModalPresenter : Subscriber {
                     let identifier = Locale.identifier(fromComponents: components)
                     return Locale(identifier: identifier).currencyCode ?? ""
                 }, callback: {
-                    settingsNav.pushViewController(DefaultCurrencyViewController(apiClient: self.apiClient, store: self.store), animated: true)
+                    guard let wm = self.walletManager else { print("NO WALLET MANAGER!"); return }
+                    settingsNav.pushViewController(DefaultCurrencyViewController(walletManager: wm, store: self.store), animated: true)
                 }),
                 Setting(title: S.Settings.sync, callback: {
                     settingsNav.pushViewController(ReScanViewController(store: self.store), animated: true)
@@ -534,9 +534,9 @@ class ModalPresenter : Subscriber {
         guard let walletManager = self.walletManager else { return }
         let vc: BRWebViewController
         #if Debug || Testflight
-            vc = BRWebViewController(bundleName: "bread-buy-staging", mountPoint: mountPoint, walletManager: walletManager, store: store, apiClient: apiClient)
+            vc = BRWebViewController(bundleName: "bread-buy-staging", mountPoint: mountPoint, walletManager: walletManager, store: store)
         #else
-            vc = BRWebViewController(bundleName: "bread-buy", mountPoint: mountPoint, walletManager: walletManager, store: store, apiClient: apiClient)
+            vc = BRWebViewController(bundleName: "bread-buy", mountPoint: mountPoint, walletManager: walletManager, store: store)
         #endif
         vc.startServer()
         vc.preload()

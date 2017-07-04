@@ -11,9 +11,8 @@ import Foundation
 class FeeUpdater {
 
     //MARK: - Public
-    init(walletManager: WalletManager, apiClient: BRAPIClient) {
+    init(walletManager: WalletManager) {
         self.walletManager = walletManager
-        self.apiClient = apiClient
     }
 
     func updateWalletFees() {
@@ -29,7 +28,7 @@ class FeeUpdater {
     }
 
     func refresh(completion: @escaping () -> Void) {
-        apiClient.feePerKb { newFee, error in
+        walletManager.apiClient?.feePerKb { newFee, error in
             guard error == nil else { print("feePerKb error: \(String(describing: error))"); completion(); return }
             self.feePerKb = newFee
             self.updateWalletFees()
@@ -60,7 +59,6 @@ class FeeUpdater {
 
     //MARK: - Private
     private let walletManager: WalletManager
-    private let apiClient: BRAPIClient
     private let feeKey = "FEE_PER_KB"
     private let txFeePerKb: UInt64 = 1000
     private let defaultFeePerKB: UInt64 = (5000*1000 + 99)/100 // bitcoind 0.11 min relay fee on 100bytes

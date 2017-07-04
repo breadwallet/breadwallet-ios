@@ -11,9 +11,9 @@ import Foundation
 class ExchangeUpdater : Subscriber {
 
     //MARK: - Public
-    init(store: Store, apiClient: BRAPIClient) {
+    init(store: Store, walletManager: WalletManager) {
         self.store = store
-        self.apiClient = apiClient
+        self.walletManager = walletManager
         store.subscribe(self,
                         selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode },
                         callback: { state in
@@ -23,7 +23,7 @@ class ExchangeUpdater : Subscriber {
     }
 
     func refresh(completion: @escaping () -> Void) {
-        apiClient.exchangeRates { rates, error in
+        walletManager.apiClient?.exchangeRates { rates, error in
             guard let currentRate = rates.first( where: { $0.code == self.store.state.defaultCurrencyCode }) else { completion(); return }
             self.store.perform(action: ExchangeRates.setRates(currentRate: currentRate, rates: rates))
             completion()
@@ -32,5 +32,5 @@ class ExchangeUpdater : Subscriber {
 
     //MARK: - Private
     let store: Store
-    let apiClient: BRAPIClient
+    let walletManager: WalletManager
 }

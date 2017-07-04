@@ -10,14 +10,14 @@ import UIKit
 
 class DefaultCurrencyViewController : UITableViewController, Subscriber, CustomTitleView {
 
-    init(apiClient: BRAPIClient, store: Store) {
-        self.apiClient = apiClient
+    init(walletManager: WalletManager, store: Store) {
+        self.walletManager = walletManager
         self.store = store
         self.faq = .buildFaqButton(store: store, articleId: ArticleIds.defaultCurrency)
         super.init(style: .plain)
     }
 
-    private let apiClient: BRAPIClient
+    private let walletManager: WalletManager
     private let store: Store
     private let cellIdentifier = "CellIdentifier"
     private let faq: UIButton
@@ -57,7 +57,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber, CustomT
         store.subscribe(self, selector: { $0.maxDigits != $1.maxDigits }, callback: { _ in
             self.setExchangeRateLabel()
         })
-        apiClient.exchangeRates { rates, error in
+        walletManager.apiClient?.exchangeRates { rates, error in
             self.rates = rates.filter { $0.code != C.btcCurrencyCode }
         }
 
