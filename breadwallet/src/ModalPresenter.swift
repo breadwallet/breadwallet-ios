@@ -261,9 +261,6 @@ class ModalPresenter : Subscriber {
         sendVC.onPublishSuccess = { [weak self] in
             self?.presentAlert(.sendSuccess, completion: {})
         }
-        sendVC.onPublishFailure = { [weak self] in
-            self?.presentAlert(.sendFailure, completion: {})
-        }
         return root
     }
 

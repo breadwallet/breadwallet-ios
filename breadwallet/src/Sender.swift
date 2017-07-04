@@ -32,8 +32,9 @@ class Sender {
     var comment: String?
     var feePerKb: UInt64?
 
-    func createTransaction(amount: UInt64, to: String) {
+    func createTransaction(amount: UInt64, to: String) -> Bool {
         transaction = walletManager.wallet?.createTransaction(forAmount: amount, toAddress: to)
+        return transaction != nil
     }
 
     func createTransaction(forPaymentProtocol: PaymentProtocolRequest) {

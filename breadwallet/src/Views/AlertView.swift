@@ -12,7 +12,6 @@ enum AlertType {
     case pinSet(callback: () -> Void)
     case paperKeySet(callback: () -> Void)
     case sendSuccess
-    case sendFailure
     case addressesCopied
     case sweepSuccess(callback: () -> Void)
 
@@ -24,8 +23,6 @@ enum AlertType {
             return S.Alerts.paperKeySet
         case .sendSuccess:
             return S.Alerts.sendSuccess
-        case .sendFailure:
-            return S.Alerts.sendFailure
         case .addressesCopied:
             return S.Alerts.copiedAddressesHeader
         case .sweepSuccess:
@@ -41,8 +38,6 @@ enum AlertType {
             return S.Alerts.paperKeySetSubheader
         case .sendSuccess:
             return S.Alerts.sendSuccessSubheader
-        case .sendFailure:
-            return S.Alerts.sendFailureSubheader
         case .addressesCopied:
             return S.Alerts.copiedAddressesSubheader
         case .sweepSuccess:
@@ -64,8 +59,6 @@ func ==(lhs: AlertType, rhs: AlertType) -> Bool {
     case (.paperKeySet(_), .paperKeySet(_)):
         return true
     case (.sendSuccess, .sendSuccess):
-        return true
-    case (.sendFailure, .sendFailure):
         return true
     case (.addressesCopied, .addressesCopied):
         return true
