@@ -38,21 +38,24 @@ import WebKit
     var mountPoint: String
     var walletManager: WalletManager
     let store: Store
-    let apiClient: BRAPIClient
+    
     // bonjour debug endpoint establishment - this will configure the debugEndpoint 
     // over bonjour if debugOverBonjour is set to true. this MUST be set to false 
     // for production deploy targets
     let debugOverBonjour = false
     let bonjourBrowser = Bonjour()
     var debugNetService: NetService?
+    
     // didLoad should be set to true within didLoadTimeout otherwise a view will be shown which
     // indicates some error. this is to prevent the white-screen-of-death where there is some
     // javascript exception (or other error) that prevents the content from loading
     var didLoad = false
     var didAppear = false
     var didLoadTimeout = 2500
+    
     // we are also a socket server which sends didview/didload events to the listening client(s)
     var sockets = [String: BRWebSocket]()
+    
     // this is the data that occasionally gets sent to the above connected sockets
     var webViewInfo: [String: Any] {
         return [
@@ -60,18 +63,19 @@ import WebKit
             "loaded": didLoad,
         ]
     }
+    
     var indexUrl: URL {
         return URL(string: "http://127.0.0.1:\(server.port)\(mountPoint)")!
     }
+    
     private let messageUIPresenter = MessageUIPresenter()
     
-    init(bundleName: String, mountPoint: String = "/", walletManager: WalletManager, store: Store, apiClient: BRAPIClient) {
+    init(bundleName: String, mountPoint: String = "/", walletManager: WalletManager, store: Store) {
         wkProcessPool = WKProcessPool()
         self.bundleName = bundleName
         self.mountPoint = mountPoint
         self.walletManager = walletManager
         self.store = store
-        self.apiClient = apiClient
         super.init(nibName: nil, bundle: nil)
         if debugOverBonjour {
             setupBonjour()
@@ -144,7 +148,8 @@ import WebKit
                 // update can fail, so this update should fetch an entirely new copy
                 let activity = BRActivityViewController(message: S.Webview.dismiss)
                 self.present(activity, animated: true, completion: nil)
-                self.apiClient.updateBundles(completionHandler: { results in
+                guard let apiClient = self.walletManager.apiClient else { return }
+                apiClient.updateBundles(completionHandler: { results in
                     results.forEach({ message, err in
                         if err != nil {
                             print("[BRWebViewController] error updating bundle: \(String(describing: err))")
@@ -244,15 +249,16 @@ import WebKit
     }
     
     fileprivate func setupIntegrations() {
+        guard let apiClient = walletManager.apiClient else { return }
         // proxy api for signing and verification
-        let apiProxy = BRAPIProxy(mountAt: "/_api", client: walletManager.apiClient)
+        let apiProxy = BRAPIProxy(mountAt: "/_api", client: apiClient)
         server.prependMiddleware(middleware: apiProxy)
         
         // http router for native functionality
         let router = BRHTTPRouter()
         server.prependMiddleware(middleware: router)
         
-        if let archive = AssetArchive(name: bundleName, apiClient: walletManager.apiClient) {
+        if let archive = AssetArchive(name: bundleName, apiClient: apiClient) {
             // basic file server for static assets
             let fileMw = BRHTTPFileMiddleware(baseURL: archive.extractedUrl)
             server.prependMiddleware(middleware: fileMw)
@@ -282,7 +288,7 @@ import WebKit
         router.plugin(BRLinkPlugin(fromViewController: self))
         
         // kvstore plugin provides access to the shared replicated kv store
-        router.plugin(BRKVStorePlugin(client: walletManager.apiClient))
+        router.plugin(BRKVStorePlugin(client: apiClient))
         
         // GET /_close closes the browser modal
         router.get("/_close") { (request, match) -> BRHTTPResponse in

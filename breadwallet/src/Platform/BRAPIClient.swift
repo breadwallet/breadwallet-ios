@@ -58,6 +58,8 @@ public protocol BRAPIAdaptor {
         _ request: URLRequest, authenticated: Bool, retryCount: Int,
         handler: @escaping URLSessionTaskHandler
     ) -> URLSessionDataTask
+    
+    func url(_ path: String, args: Dictionary<String, String>?) -> URL
 }
 
 open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, BRAPIAdaptor {
@@ -127,7 +129,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
     // MARK: Networking functions
     
     // Constructs a full NSURL for a given path and url parameters
-    func url(_ path: String, args: Dictionary<String, String>? =  nil) -> URL {
+    public func url(_ path: String, args: Dictionary<String, String>? =  nil) -> URL {
         func joinPath(_ k: String...) -> URL {
             return URL(string: ([baseUrl] + k).joined(separator: ""))!
         }
