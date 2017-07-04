@@ -21,7 +21,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     var presentScan: PresentScan?
     var presentVerifyPin: ((String, @escaping VerifyPinCallback)->Void)?
     var onPublishSuccess: (()->Void)?
-    var onPublishFailure: (()->Void)?
     var parentView: UIView? //ModalPresentable
     var initialAddress: String?
     var isPresentedFromLock = false
@@ -226,25 +225,27 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             send()
         } else {
             guard let address = to.content else {
-                showError(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
-                return }
+                return showError(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
+            }
+            guard address.isValidAddress else {
+                return showError(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
+            }
             guard let amount = amount else {
-                showError(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
-                return }
+                return showError(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
+            }
             if let minOutput = walletManager.wallet?.minOutputAmount {
                 guard amount.rawValue >= minOutput else {
                     let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: store.state.maxDigits)
                     let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutputAmount.string(isBtcSwapped: store.state.isBtcSwapped))
-                    showError(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
-                    return
+                    return showError(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
                 }
             }
             guard !(walletManager.wallet?.containsAddress(address) ?? false) else {
-                showError(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
-                return
+                return showError(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
             }
-
-            sender.createTransaction(amount: amount.rawValue, to: address)
+            guard sender.createTransaction(amount: amount.rawValue, to: address) else {
+                return showError(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
+            }
             send()
         }
     }
@@ -322,8 +323,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                     })
                 case .creationError(let message):
                     self?.showError(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
-                case .publishFailure(_): //TODO -add error messages here
-                    self?.onPublishFailure?()
+                case .publishFailure(let error):
+                    if case .posixError(let code, let description) = error {
+                        self?.showError(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
+                    }
                 }
         })
     }
@@ -383,7 +386,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
         if requestAmount == 0 {
             if let amount = amount {
-                sender.createTransaction(amount: amount.rawValue, to: address)
+                guard sender.createTransaction(amount: amount.rawValue, to: address) else {
+                    return showError(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
+                }
             }
         } else {
             sender.createTransaction(forPaymentProtocol: protoReq)
