@@ -8,6 +8,8 @@
 
 import Foundation
 
+private let fallbackRatesURL = "https://bitpay.com/api/rates"
+
 extension BRAPIClient {
     func feePerKb(_ handler: @escaping (_ feePerKb: uint_fast64_t, _ error: String?) -> Void) {
         let req = URLRequest(url: url("/fee-per-kb"))
@@ -36,15 +38,30 @@ extension BRAPIClient {
         task.resume()
     }
     
-    func exchangeRates(_ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
-        let request = URLRequest(url: url("/rates"))
+    func exchangeRates(isFallback: Bool = false, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
+        let request = isFallback ? URLRequest(url: URL(string: fallbackRatesURL)!) : URLRequest(url: url("/rates"))
         let task = dataTaskWithRequest(request) { (data, response, error) in
-            guard error == nil else { return handler([], error!.localizedDescription) }
-            guard let data = data else { return handler([], "/rates returned no data") }
-            guard let parsedData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) else { return handler([], "/rates bad data format") }
-            guard let dict = parsedData as? [String: Any] else { return handler([], "/rates didn't return a dictionary") }
-            guard let array = dict["body"] as? [Any] else { return handler([], "/rates didn't return an array for body key") }
-            handler(array.flatMap { Rate(data: $0) }, nil)
+            if error == nil, let data = data,
+                let parsedData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) {
+                if isFallback {
+                    guard let array = parsedData as? [Any] else {
+                        return handler([], "/rates didn't return an array")
+                    }
+                    handler(array.flatMap { Rate(data: $0) }, nil)
+                } else {
+                    guard let dict = parsedData as? [String: Any],
+                        let array = dict["body"] as? [Any] else {
+                            return self.exchangeRates(isFallback: true, handler)
+                    }
+                    handler(array.flatMap { Rate(data: $0) }, nil)
+                }
+            } else {
+                if isFallback {
+                    handler([], "Error fetching from fallback url")
+                } else {
+                    self.exchangeRates(isFallback: true, handler)
+                }
+            }
         }
         task.resume()
     }
