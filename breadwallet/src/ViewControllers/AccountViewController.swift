@@ -13,7 +13,7 @@ import MachO
 let accountHeaderHeight: CGFloat = 136.0
 private let transactionsLoadingViewHeightConstant: CGFloat = 48.0
 
-class AccountViewController : UIViewController, Trackable, Subscriber {
+class AccountViewController : UIViewController, Subscriber {
 
     //MARK: - Public
     var sendCallback: (() -> Void)? {
@@ -118,7 +118,6 @@ class AccountViewController : UIViewController, Trackable, Subscriber {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        saveEvent("accout:did_appear")
     }
 
     private func addSubviews() {
