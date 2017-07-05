@@ -48,7 +48,6 @@ class StartImportViewController : UIViewController {
         header.addSubview(rightCaption)
         view.addSubview(message)
         view.addSubview(button)
-        view.addSubview(message)
         view.addSubview(bullet)
         view.addSubview(warning)
     }
@@ -141,7 +140,7 @@ class StartImportViewController : UIViewController {
                     }
                 }
                 self.unlockingActivity.dismiss(animated: true, completion: {
-                    self.displayError(message: "Wrong password, please try again.")
+                    self.showErrorMessage(S.Import.wrongPassword)
                 })
             })
         }))
@@ -176,8 +175,7 @@ class StartImportViewController : UIViewController {
         guard let wallet = walletManager.wallet else { return }
         guard let address = key.address() else { return }
         guard !wallet.containsAddress(address) else {
-            displayError(message: S.Import.Error.duplicate)
-            return
+            return showErrorMessage(S.Import.Error.duplicate)
         }
         let outputs = data.flatMap { SimpleUTXO(json: $0) }
         let balance = outputs.map { $0.satoshis }.reduce(0, +)
@@ -189,12 +187,10 @@ class StartImportViewController : UIViewController {
         let fee = wallet.feeForTxSize(tx.size + 34 + (pubKeyLength - 34)*tx.inputs.count)
         balanceActivity.dismiss(animated: true, completion: {
             guard outputs.count > 0 && balance > 0 else {
-                self.displayError(message: S.Import.Error.empty)
-                return
+                return self.showErrorMessage(S.Import.Error.empty)
             }
             guard fee + wallet.minOutputAmount <= balance else {
-                self.displayError(message: S.Import.Error.highFees)
-                return
+                return self.showErrorMessage(S.Import.Error.highFees)
             }
             guard let rate = self.store.state.currentRate else { return }
             let balanceAmount = Amount(amount: balance, rate: rate, maxDigits: self.store.state.maxDigits)
@@ -221,7 +217,7 @@ class StartImportViewController : UIViewController {
 
                 guard tx.isSigned else {
                     self.importingActivity.dismiss(animated: true, completion: {
-                        self.displayError(message: S.Import.Error.signing)
+                        self.showErrorMessage(S.Import.Error.signing)
                     })
                     return
                 }
@@ -230,7 +226,7 @@ class StartImportViewController : UIViewController {
                     myself.importingActivity.dismiss(animated: true, completion: {
                         DispatchQueue.main.async {
                             if let error = error {
-                                myself.displayError(message: error.localizedDescription)
+                                myself.showErrorMessage(error.localizedDescription)
                                 return
                             }
                             myself.showSuccess()
@@ -245,12 +241,6 @@ class StartImportViewController : UIViewController {
             guard let myself = self else { return }
             myself.dismiss(animated: true, completion: nil)
         })))
-    }
-
-    private func displayError(message: String) {
-        let alert = UIAlertController(title: S.Alert.error, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

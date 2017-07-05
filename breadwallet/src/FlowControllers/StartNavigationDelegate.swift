@@ -28,7 +28,7 @@ class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
             navigationController.navigationBar.barTintColor = .clear
         }
 
-        if viewController is RecoverWalletViewController {
+        if viewController is EnterPhraseViewController {
             navigationController.navigationBar.tintColor = .darkText
             navigationController.navigationBar.titleTextAttributes = [
                 NSForegroundColorAttributeName: UIColor.darkText,
@@ -52,6 +52,11 @@ class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
             if let gr = navigationController.interactivePopGestureRecognizer {
                 navigationController.view.removeGestureRecognizer(gr)
             }
+        }
+
+        if viewController is StartWipeWalletViewController {
+            navigationController.setClearNavbar()
+            navigationController.setWhiteStyle()
         }
     }
 }

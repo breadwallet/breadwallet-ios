@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StartPaperPhraseViewController: UIViewController {
+class StartPaperPhraseViewController : UIViewController {
 
     init(store: Store, callback: @escaping () -> Void) {
         self.store = store

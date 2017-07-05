@@ -24,6 +24,7 @@ class ModalPresenter : Subscriber {
         self.window = window
         self.walletManager = walletManager
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular, store: store)
+        self.wipeNavigationDelegate = StartNavigationDelegate(store: store)
         addSubscriptions()
     }
 
@@ -39,7 +40,8 @@ class ModalPresenter : Subscriber {
     private var currentRequest: PaymentRequest?
     private var reachability = ReachabilityManager(host: "google.com")
     private var notReachableAlert: InAppAlert?
-    
+    private let wipeNavigationDelegate: StartNavigationDelegate
+
     private func initializeSupportCenter(walletManager: WalletManager) {
         supportCenter = SupportCenterContainer(walletManager: walletManager, store: store)
     }
@@ -346,7 +348,31 @@ class ModalPresenter : Subscriber {
                     settingsNav.dismiss(animated: true, completion: {
                         myself.topViewController?.present(importNav, animated: true, completion: nil)
                     })
-                })],
+                }),
+               Setting(title: S.Settings.wipe, callback: { [weak self] in
+                    guard let myself = self else { return }
+                    guard let walletManager = myself.walletManager else { return }
+                    let nc = ModalNavigationController()
+                    nc.setClearNavbar()
+                    nc.setWhiteStyle()
+                    nc.delegate = myself.wipeNavigationDelegate
+                    let start = StartWipeWalletViewController {
+                        let recover = EnterPhraseViewController(store: myself.store, walletManager: walletManager, reason: .validateForWipingWallet( { _ in
+                            myself.wipeWallet()
+                        }))
+                        nc.pushViewController(recover, animated: true)
+                    }
+                    start.addCloseNavigationItem(tintColor: .white)
+                    start.navigationItem.title = S.WipeWallet.title
+                    let faqButton = UIButton.buildFaqButton(store: myself.store, articleId: ArticleIds.importWallet)
+                    faqButton.tintColor = .white
+                    start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
+                    nc.viewControllers = [start]
+                    settingsNav.dismiss(animated: true, completion: {
+                        myself.topViewController?.present(nc, animated: true, completion: nil)
+                    })
+               })
+            ],
             "Manage": [
                 Setting(title: S.Settings.notifications, accessoryText: {
                     return self.store.state.isPushNotificationsEnabled ? S.PushNotifications.on : S.PushNotifications.off
@@ -372,7 +398,7 @@ class ModalPresenter : Subscriber {
                 }),
                 Setting(title: S.Settings.sync, callback: {
                     settingsNav.pushViewController(ReScanViewController(store: self.store), animated: true)
-                })
+                }),
             ],
             "Bread": [
                 Setting(title: S.Settings.shareData, callback: {
@@ -383,14 +409,6 @@ class ModalPresenter : Subscriber {
                 }),
             ]
         ]
-
-        if E.isTestFlight || E.isDebug {
-            rows["Manage"]?.append(
-                Setting(title: "Wipe Wallet", callback: {
-                    self.wipeWallet()
-                })
-            )
-        }
 
         if BRAPIClient.featureEnabled(.earlyAccess) {
             rows["Bread"]?.insert(Setting(title: S.Settings.earlyAccess, callback: {
@@ -552,25 +570,21 @@ class ModalPresenter : Subscriber {
     }
 
     func wipeWallet() {
-        let alert = UIAlertController(title: "Wipe", message: "Wipe wallet?", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
-        alert.addAction(UIAlertAction(title: "Wipe", style: .default, handler: { _ in
+        let alert = UIAlertController(title: S.WipeWallet.alertTitle, message: S.WipeWallet.alertMessage, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: S.WipeWallet.wipe, style: .default, handler: { _ in
             self.topViewController?.dismiss(animated: true, completion: {
-                let activity = BRActivityViewController(message: "wiping...")
+                let activity = BRActivityViewController(message: S.WipeWallet.wiping)
                 self.topViewController?.present(activity, animated: true, completion: nil)
                 DispatchQueue.walletQueue.sync {
                     self.walletManager?.peerManager?.disconnect()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                         activity.dismiss(animated: true, completion: {
                             if (self.walletManager?.wipeWallet(pin: "forceWipe"))! {
-                                let success = UIAlertController(title: "Success", message: "Successfully wiped wallet....shutting down", preferredStyle: .alert)
-                                success.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-                                    abort()
-                                }))
-                                self.topViewController?.present(success, animated: true, completion: nil)
+                                self.store.trigger(name: .reinitWalletManager({}))
                             } else {
-                                let failure = UIAlertController(title: "Failed", message: "Failed to wipe wallet.", preferredStyle: .alert)
-                                failure.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                                let failure = UIAlertController(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage, preferredStyle: .alert)
+                                failure.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
                                 self.topViewController?.present(failure, animated: true, completion: nil)
                             }
                         })

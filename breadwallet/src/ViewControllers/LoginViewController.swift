@@ -101,9 +101,19 @@ class LoginViewController : UIViewController, Subscriber {
             guard let store = self?.store else { return }
             guard let walletManager = self?.walletManager else { return }
             self?.isResetting = true
-            let recover = RecoverWalletViewController(store: store, walletManager: walletManager, isResettingPin: true)
+            let nc = UINavigationController()
+            let recover = EnterPhraseViewController(store: store, walletManager: walletManager, reason: .validateForResettingPin({ phrase in
+                let updatePin = UpdatePinViewController(store: store, walletManager: walletManager, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
+                nc.pushViewController(updatePin, animated: true)
+                updatePin.resetFromDisabledWillSucceed = {
+                    self?.disabledView.isHidden = true
+                }
+                updatePin.resetFromDisabledSuccess = {
+                    self?.authenticationSucceded()
+                }
+            }))
             recover.addCloseNavigationItem()
-            let nc = UINavigationController(rootViewController: recover)
+            nc.viewControllers = [recover]
             nc.navigationBar.tintColor = .darkText
             nc.navigationBar.titleTextAttributes = [
                 NSForegroundColorAttributeName: UIColor.darkText,
@@ -113,17 +123,6 @@ class LoginViewController : UIViewController, Subscriber {
             nc.navigationBar.isTranslucent = false
             nc.navigationBar.barTintColor = .whiteTint
             nc.viewControllers = [recover]
-            recover.didValidateSeedPhrase = { phrase in
-                let updatePin = UpdatePinViewController(store: store, walletManager: walletManager, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
-                nc.pushViewController(updatePin, animated: true)
-                updatePin.resetFromDisabledWillSucceed = {
-                    self?.disabledView.isHidden = true
-                }
-                updatePin.resetFromDisabledSuccess = {
-                    self?.authenticationSucceded()
-                }
-            }
-
             self?.present(nc, animated: true, completion: nil)
         }
         store.subscribe(self, name: .loginFromSend, callback: {_ in 
