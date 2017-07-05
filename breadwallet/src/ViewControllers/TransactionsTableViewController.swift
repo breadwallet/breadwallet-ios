@@ -10,7 +10,7 @@ import UIKit
 
 private let promptDelay: TimeInterval = 0.6
 
-class TransactionsTableViewController : UITableViewController, Subscriber {
+class TransactionsTableViewController : UITableViewController, Subscriber, Trackable {
 
     //MARK: - Public
     init(store: Store, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
@@ -226,6 +226,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
         if isSyncingViewVisible && indexPath.section == 0 { return }
         if let currentPrompt = currentPrompt, indexPath.section == 0 {
             store.trigger(name: currentPrompt.type.trigger)
+            saveEvent("prompt.\(currentPrompt.type.name).trigger")
             self.currentPrompt = nil
             return
         }
@@ -252,8 +253,10 @@ class TransactionsTableViewController : UITableViewController, Subscriber {
         guard !isSyncingViewVisible else { return }
         let types = PromptType.defaultOrder
         if let type = types.first(where: { $0.shouldPrompt(walletManager: walletManager, state: store.state) }) {
+            self.saveEvent("prompt\(type.name).displayed")
             currentPrompt = Prompt(type: type)
             currentPrompt?.close.tap = { [weak self] in
+                self?.saveEvent("prompt.\(type.name).dismissed")
                 self?.currentPrompt = nil
             }
             if type == .touchId {
