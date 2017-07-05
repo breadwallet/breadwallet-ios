@@ -31,8 +31,8 @@ class StartFlowPresenter : Subscriber {
     private var closeButton: UIButton {
         let button = UIButton.close
         button.tintColor = .white
-        button.tap = {
-            self.store.perform(action: HideStartFlow())
+        button.tap = { [weak self] in
+            self?.store.perform(action: HideStartFlow())
         }
         return button
     }
@@ -51,8 +51,8 @@ class StartFlowPresenter : Subscriber {
 
     private func handleStartFlowChange(state: State) {
         if state.isStartFlowVisible {
-            guardProtected {
-                self.presentStartFlow()
+            guardProtected { [weak self] in
+                self?.presentStartFlow()
             }
         } else {
             dismissStartFlow()
@@ -92,8 +92,7 @@ class StartFlowPresenter : Subscriber {
     private var pushRecoverWalletView: () -> Void {
         return { [weak self] in
             guard let myself = self else { return }
-            let recoverWalletViewController = RecoverWalletViewController(store: myself.store, walletManager: myself.walletManager)
-            recoverWalletViewController.didSetSeedPhrase = myself.pushPinCreationViewForRecoveredWallet
+            let recoverWalletViewController = EnterPhraseViewController(store: myself.store, walletManager: myself.walletManager, reason: .setSeed(myself.pushPinCreationViewForRecoveredWallet))
             myself.navigationController?.pushViewController(recoverWalletViewController, animated: true)
         }
     }
@@ -137,12 +136,14 @@ class StartFlowPresenter : Subscriber {
     }
 
     private func handleWalletCreationError() {
-        //TODO
+        let alert = UIAlertController(title: S.Alert.error, message: "Could not create wallet", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
+        navigationController?.present(alert, animated: true, completion: nil)
     }
 
     private func pushStartPaperPhraseCreationViewController(pin: String) {
-        let paperPhraseViewController = StartPaperPhraseViewController(store: store, callback: {
-            self.pushWritePaperPhraseViewController(pin: pin)
+        let paperPhraseViewController = StartPaperPhraseViewController(store: store, callback: { [weak self] in
+            self?.pushWritePaperPhraseViewController(pin: pin)
         })
         paperPhraseViewController.title = S.SecurityCenter.Cells.paperKeyTitle
         paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
@@ -160,8 +161,8 @@ class StartFlowPresenter : Subscriber {
     }
 
     private func pushWritePaperPhraseViewController(pin: String) {
-        let writeViewController = WritePaperPhraseViewController(store: store, walletManager: walletManager, pin: pin, callback: {
-            self.pushConfirmPaperPhraseViewController(pin: pin)
+        let writeViewController = WritePaperPhraseViewController(store: store, walletManager: walletManager, pin: pin, callback: { [weak self] in
+            self?.pushConfirmPaperPhraseViewController(pin: pin)
         })
         writeViewController.title = S.SecurityCenter.Cells.paperKeyTitle
         writeViewController.navigationItem.leftBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: closeButton)]
@@ -193,8 +194,8 @@ class StartFlowPresenter : Subscriber {
     }
 
     private func dismissLoginFlow() {
-        loginViewController?.dismiss(animated: true, completion: {
-            self.loginViewController = nil
+        loginViewController?.dismiss(animated: true, completion: { [weak self] in
+            self?.loginViewController = nil
         })
     }
 }
