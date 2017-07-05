@@ -418,9 +418,8 @@ open class BRHTTPRequestImpl: BRHTTPRequest {
             let bp = UnsafeMutablePointer<UInt8>(UnsafeMutablePointer(mutating: _body!))
             return Data(bytesNoCopy: bp, count: contentLength, deallocator: .none)
         }
-        if _bodyRead {
-            return nil
-        }
+        guard !_bodyRead else { return nil }
+        guard contentLength > 0 else { return nil }
         let buffSize = 4096
         var body = [UInt8]()
         var buf = [UInt8](repeating: 0, count: buffSize)
@@ -443,7 +442,9 @@ open class BRHTTPRequestImpl: BRHTTPRequest {
     
     open func json() -> AnyObject? {
         if let b = body() {
-            return try! JSONSerialization.jsonObject(with: b, options: []) as AnyObject?
+            if let j = try? JSONSerialization.jsonObject(with: b, options: []) {
+                return j as AnyObject?
+            }
         }
         return nil
     }
