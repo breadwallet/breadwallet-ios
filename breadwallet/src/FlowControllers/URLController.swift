@@ -8,7 +8,7 @@
 
 import UIKit
 
-class URLController {
+class URLController : Trackable {
 
     init(store: Store, walletManager: WalletManager) {
         self.store = store
@@ -20,7 +20,7 @@ class URLController {
     private var xSource, xSuccess, xError, uri: String?
 
     func handleUrl(_ url: URL) -> Bool {
-        walletManager.apiClient?.saveEvent("send:handle_url", attributes: [
+        saveEvent("send.handle_url", attributes: [
             "scheme" : url.scheme ?? C.null,
             "host" : url.host ?? C.null,
             "path" : url.path
