@@ -54,7 +54,6 @@ class ApplicationController : Subscriber {
         setupAppearance()
         setupRootViewController()
         window.makeKeyAndVisible()
-        self.walletManager?.apiClient?.events?.up()
         listenForPushNotificationRequest()
         offMainInitialization()
         handleLaunchOptions(options)
@@ -134,6 +133,7 @@ class ApplicationController : Subscriber {
                 feeUpdater?.updateWalletFees()
                 walletManager.apiClient?.updateFeatureFlags()
                 initKVStoreCoordinator()
+                walletManager.apiClient?.events?.up()
             }
             exchangeUpdater?.refresh(completion: {
                 self.watchSessionManager.walletManager = self.walletManager
