@@ -16,7 +16,7 @@ private func callback(reachability:SCNetworkReachability, flags: SCNetworkReacha
     reachability.notify()
 }
 
-class ReachabilityManager {
+class ReachabilityManager : Trackable {
 
     init(host: String) {
         networkReachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, host)
@@ -31,6 +31,7 @@ class ReachabilityManager {
     func notify() {
         DispatchQueue.main.async {
             self.didChange?(self.isReachable)
+            self.saveEvent(self.isReachable ? "reachability.isReachble" : "reachability.isNotReachable")
         }
     }
 

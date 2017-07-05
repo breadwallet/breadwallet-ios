@@ -8,8 +8,30 @@
 
 import Foundation
 
+/// Implement Trackabble in your class to have access to these functions
+public protocol Trackable {
+    func saveEvent(_ eventName: String)
+    func saveEvent(_ eventName: String, attributes: [String: String])
+}
+
+extension Trackable {
+    func saveEvent(_ eventName: String) {
+        NotificationCenter.default.post(name: EventManager.eventNotification, object: nil, userInfo: [
+            EventManager.eventNameKey: eventName
+        ])
+    }
+    
+    func saveEvent(_ eventName: String, attributes: [String: String]) {
+        NotificationCenter.default.post(name: EventManager.eventNotification, object: nil, userInfo: [
+            EventManager.eventNameKey: eventName,
+            EventManager.eventAttributesKey: attributes
+        ])
+    }
+}
+
 fileprivate var emKey: UInt8 = 1
 
+// EventManager is attached to BRAPIClient
 extension BRAPIClient {
     var events: EventManager? {
         get {
@@ -32,6 +54,10 @@ class EventManager {
     
     typealias Attributes = [String: String]
     
+    fileprivate static let eventNotification = Notification.Name("__saveEvent__")
+    fileprivate static let eventNameKey = "__event_name__"
+    fileprivate static let eventAttributesKey = "__event_attributes__"
+    
     private let sessionId = NSUUID().uuidString
     private let queue = OperationQueue()
     private let sampleChance: UInt32 = 10
@@ -47,8 +73,7 @@ class EventManager {
         static let isMember =               "is_in_sample_group"
         static let hasPrompted =            "has_prompted_for_permission"
     }
-    //private let eventServerUrl = URL(string: "https://api.breadwallet.com/events")!
-    private let eventServerUrl = URL(string: "http://localhost:8080/events")!
+    
     private let adaptor: BRAPIAdaptor
     
     struct Event {
@@ -89,6 +114,7 @@ class EventManager {
         guard !isSubscribed else { return }
         defer { isSubscribed = true }
         
+        // slurp up app lifecycle events and save them as events
         eventToNotifications.forEach { key, value in
             NotificationCenter.default.addObserver(forName: value, object: nil, queue: self.queue, using: { [weak self] note in
                 self?.saveEvent(key)
@@ -98,6 +124,20 @@ class EventManager {
                 }
             })
         }
+        
+        // slurp up events sent as notifications
+        NotificationCenter.default.addObserver(
+            forName: EventManager.eventNotification, object: nil, queue: self.queue) { [weak self] note in
+                guard let eventName = note.userInfo?[EventManager.eventNameKey] as? String else {
+                    print("[EventManager] received invalid userInfo dict: \(String(describing: note.userInfo))")
+                    return
+                }
+                if let eventAttributes = note.userInfo?[EventManager.eventAttributesKey] as? Attributes {
+                    self?.saveEvent(eventName, attributes: eventAttributes)
+                } else {
+                    self?.saveEvent(eventName)
+                }
+            }
     }
     
     func down() {
@@ -123,6 +163,7 @@ class EventManager {
     private func pushEvent(eventName: String, attributes: [String: String]) {
         queue.addOperation { [weak self] in
             guard let myself = self else { return }
+            print("[EventManager] pushEvent name=\(eventName) attributes=\(attributes)")
             myself.buffer.append(  Event(sessionId:     myself.sessionId,
                                          time:          Date().timeIntervalSince1970 * 1000.0,
                                          eventName:     eventName,
@@ -150,6 +191,8 @@ class EventManager {
                 var error: NSError?
                 if JSONSerialization.writeJSONObject(dataToSerialize, to: outputStream, options: [], error: &error) == 0 {
                     print("[EventManager] Unable to write JSON for events file: \(String(describing: error))")
+                } else {
+                    print("[EventManager] saved \(myself.buffer.count) events to disk")
                 }
             }
             myself.buffer.removeAll()
@@ -193,7 +236,7 @@ class EventManager {
                             }
                         } else {
                             if let data = data {
-                                print("[EventManager] Successfully sent event data to server \(fileName) => \(resp.statusCode) data=\(String(describing: String(data: data, encoding: .utf8)))")
+                                print("[EventManager] Successfully sent \(eventDump.count) events to server \(fileName) => \(resp.statusCode) data=\(String(describing: String(data: data, encoding: .utf8)))")
                             }
                         }
                     }
