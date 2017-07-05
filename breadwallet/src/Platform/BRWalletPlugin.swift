@@ -27,7 +27,7 @@ import Foundation
 import BRCore
 
 
-class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient {
+class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     var sockets = [String: BRWebSocket]()
     let walletManager: WalletManager
     let store: Store
@@ -155,6 +155,23 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient {
                 }
             }
             return asyncResp
+        }
+        
+        router.post("/_event/(name)") { (req, m) -> BRHTTPResponse in
+            guard let nameArray = m["name"], nameArray.count == 1 else {
+                return BRHTTPResponse(request: req, code: 400)
+            }
+            let name = nameArray[0]
+            if let body = req.body(), body.count > 0 {
+                if let json = try? JSONSerialization.jsonObject(with: body, options: []) as? [String: String] {
+                    self.saveEvent(name, attributes: json ?? [:])
+                } else {
+                    return BRHTTPResponse(request: req, code: 400)
+                }
+            } else {
+                self.saveEvent(name)
+            }
+            return BRHTTPResponse(request: req, code: 200)
         }
     }
 
