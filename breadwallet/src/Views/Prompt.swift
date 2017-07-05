@@ -31,6 +31,15 @@ enum PromptType {
             return S.Prompts.RecommendRescan.title
         }
     }
+    
+    var name: String {
+        switch self {
+        case .touchId: return "touchIdPrompt"
+        case .paperKey: return "paperKeyPrompt"
+        case .upgradePin: return "upgradePinPrompt"
+        case .recommendRescan: return "recommendRescanPrompt"
+        }
+    }
 
     var body: String {
         switch self {
