@@ -20,7 +20,7 @@ class URLController : Trackable {
     private var xSource, xSuccess, xError, uri: String?
 
     func handleUrl(_ url: URL) -> Bool {
-        saveEvent("send.handle_url", attributes: [
+        saveEvent("send.handleURL", attributes: [
             "scheme" : url.scheme ?? C.null,
             "host" : url.host ?? C.null,
             "path" : url.path
