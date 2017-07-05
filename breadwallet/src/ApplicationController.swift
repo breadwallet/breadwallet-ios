@@ -50,13 +50,39 @@ class ApplicationController : Subscriber {
 
     func launch(application: UIApplication, options: [UIApplicationLaunchOptionsKey: Any]?) {
         self.application = application
+        setup()
+        handleLaunchOptions(options)
+    }
+
+    private func setup() {
         setupDefaults()
         setupAppearance()
         setupRootViewController()
         window.makeKeyAndVisible()
         listenForPushNotificationRequest()
         offMainInitialization()
-        handleLaunchOptions(options)
+        store.subscribe(self, name: .reinitWalletManager(nil), callback: {
+            guard let trigger = $0 else { return }
+            if case .reinitWalletManager(let callback) = trigger {
+                if let callback = callback {
+                    self.store.removeAllSubscriptions()
+                    self.store.perform(action: Reset())
+                    self.setup()
+                    DispatchQueue.walletQueue.async {
+                        do {
+                            self.walletManager = try WalletManager(store: self.store, dbPath: nil)
+                            let _ = self.walletManager?.wallet //attempt to initialize wallet
+                        } catch let error {
+                            assert(false, "Error creating new wallet: \(error)")
+                        }
+                        DispatchQueue.main.async {
+                            self.didInitWallet()
+                            callback()
+                        }
+                    }
+                }
+            }
+        })
     }
 
     func willEnterForeground() {

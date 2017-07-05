@@ -1,5 +1,5 @@
 //
-//  RecoverWalletViewController.swift
+//  EnterPhraseViewController.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-02-23.
@@ -8,24 +8,32 @@
 
 import UIKit
 
-class RecoverWalletViewController : UIViewController, UIScrollViewDelegate, CustomTitleView {
+enum PhraseEntryReason {
+    case setSeed(EnterPhraseCallback)
+    case validateForResettingPin(EnterPhraseCallback)
+    case validateForWipingWallet(EnterPhraseCallback)
+}
 
-    //MARK: - Public
-    var didSetSeedPhrase: ((String) -> Void)?
-    var didValidateSeedPhrase: ((String) -> Void)?
+typealias EnterPhraseCallback = (String) -> Void
 
-    init(store: Store, walletManager: WalletManager, isResettingPin: Bool = false) {
+class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, CustomTitleView {
+
+    init(store: Store, walletManager: WalletManager, reason: PhraseEntryReason) {
         self.store = store
         self.walletManager = walletManager
         self.enterPhrase = EnterPhraseCollectionViewController(walletManager: walletManager)
         self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.recoverWallet)
-        self.isResettingPin = isResettingPin
+        self.reason = reason
 
-        if isResettingPin {
-            self.customTitle = S.RecoverWallet.headerResetPin
-        } else {
+        switch reason {
+        case .setSeed(_):
             self.customTitle = S.RecoverWallet.header
+        case .validateForResettingPin(_):
+            self.customTitle = S.RecoverWallet.headerResetPin
+        case .validateForWipingWallet(_):
+            self.customTitle = S.WipeWallet.title
         }
+
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -34,6 +42,7 @@ class RecoverWalletViewController : UIViewController, UIScrollViewDelegate, Cust
     //MARK: - Private
     private let store: Store
     private let walletManager: WalletManager
+    private let reason: PhraseEntryReason
     private let enterPhrase: EnterPhraseCollectionViewController
     private let errorLabel = UILabel.wrapping(font: .customBody(size: 16.0), color: .cameraGuideNegative)
     private let instruction = UILabel(font: .customBold(size: 14.0), color: .darkText)
@@ -42,7 +51,6 @@ class RecoverWalletViewController : UIViewController, UIScrollViewDelegate, Cust
     private let faq: UIButton
     private let scrollView = UIScrollView()
     private let container = UIView()
-    private var isResettingPin: Bool
     private let moreInfoButton = UIButton(type: .system)
     let customTitle: String
 
@@ -122,7 +130,12 @@ class RecoverWalletViewController : UIViewController, UIScrollViewDelegate, Cust
         }
         instruction.text = S.RecoverWallet.instruction
 
-        if isResettingPin {
+        switch reason {
+        case .setSeed(_):
+            titleLabel.text = S.RecoverWallet.header
+            subheader.text = S.RecoverWallet.subheader
+            moreInfoButton.isHidden = true
+        case .validateForResettingPin(_):
             titleLabel.text = S.RecoverWallet.headerResetPin
             subheader.text = S.RecoverWallet.subheaderResetPin
             instruction.isHidden = true
@@ -131,10 +144,9 @@ class RecoverWalletViewController : UIViewController, UIScrollViewDelegate, Cust
                 self?.store.trigger(name: .presentFaq(ArticleIds.resetPinWithPaperKey))
             }
             faq.isHidden = true
-        } else {
-            titleLabel.text = S.RecoverWallet.header
-            subheader.text = S.RecoverWallet.subheader
-            moreInfoButton.isHidden = true
+        case .validateForWipingWallet(_):
+            titleLabel.text = S.WipeWallet.title
+            subheader.text = S.WipeWallet.instruction
         }
 
         scrollView.delegate = self
@@ -146,22 +158,24 @@ class RecoverWalletViewController : UIViewController, UIScrollViewDelegate, Cust
             errorLabel.isHidden = false
             return
         }
-
-        guard didValidateSeedPhrase == nil else {
-            UserDefaults.writePaperPhraseDate = Date()
-            didValidateSeedPhrase?(phrase)
-            return
-        }
-
         errorLabel.isHidden = true
 
-        if self.walletManager.setSeedPhrase(phrase) {
-            //Since we know that the user had their phrase at this point,
-            //this counts as a write date
+        switch reason {
+        case .setSeed(let callback):
+            if self.walletManager.setSeedPhrase(phrase) {
+                //Since we know that the user had their phrase at this point,
+                //this counts as a write date
+                UserDefaults.writePaperPhraseDate = Date()
+                return callback(phrase)
+            } else {
+                print("here")
+            }
+        case .validateForResettingPin(let callback):
             UserDefaults.writePaperPhraseDate = Date()
-            didSetSeedPhrase?(phrase)
-        } else {
-            //TODO - handle failure
+            return callback(phrase)
+        case .validateForWipingWallet(let callback):
+            //TODO - do actual phrase validation here
+            return callback(phrase)
         }
     }
 

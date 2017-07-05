@@ -36,6 +36,12 @@ struct HideStartFlow : Action {
     }
 }
 
+struct Reset : Action {
+    let reduce: Reducer = { _ in
+        return State.initial.clone(isLoginRequired: false)
+    }
+}
+
 struct RequireLogin : Action {
     let reduce: Reducer = {
         return $0.clone(isLoginRequired: true)

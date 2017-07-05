@@ -59,6 +59,7 @@ enum TriggerName {
     case lightWeightAlert(String)
     case didCreateOrRecoverWallet
     case showAlert(UIAlertController?)
+    case reinitWalletManager((()->Void)?)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName : Equatable {}
@@ -108,6 +109,8 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.didCreateOrRecoverWallet, .didCreateOrRecoverWallet):
         return true
     case (.showAlert(_), .showAlert(_)):
+        return true
+    case (.reinitWalletManager(_), .reinitWalletManager(_)):
         return true
     default:
         return false
@@ -173,6 +176,11 @@ class Store {
                 .filter { $0.selector(oldValue, state) }
                 .forEach { $0.callback(state) }
         }
+    }
+
+    func removeAllSubscriptions() {
+        subscriptions.removeAll()
+        triggers.removeAll()
     }
 
     private var subscriptions: [Int: [Subscription]] = [:]

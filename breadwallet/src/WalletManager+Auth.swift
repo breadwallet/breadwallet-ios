@@ -381,6 +381,7 @@ extension WalletManager : WalletAuthenticator {
             if db != nil { sqlite3_close(db) }
             db = nil
             masterPubKey = BRMasterPubKey()
+            didInitWallet = false
             earliestKeyTime = 0
             if let bundleId = Bundle.main.bundleIdentifier {
                 UserDefaults.standard.removePersistentDomain(forName: bundleId)
