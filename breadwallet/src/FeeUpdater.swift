@@ -8,7 +8,7 @@
 
 import Foundation
 
-class FeeUpdater {
+class FeeUpdater : Trackable {
 
     //MARK: - Public
     init(walletManager: WalletManager) {
@@ -18,6 +18,7 @@ class FeeUpdater {
     func updateWalletFees() {
         guard feePerKb < maxFeePerKB && feePerKb > minFeePerKB else {
             DispatchQueue.walletQueue.async {
+                self.saveEvent("wallet.didUseDefaultFeePerKB")
                 self.walletManager.wallet?.feePerKb = self.defaultFeePerKB
             }
             return
