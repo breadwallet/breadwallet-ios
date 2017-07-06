@@ -60,6 +60,7 @@ enum TriggerName {
     case didCreateOrRecoverWallet
     case showAlert(UIAlertController?)
     case reinitWalletManager((()->Void)?)
+    case didUpgradePin
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName : Equatable {}
@@ -111,6 +112,8 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.showAlert(_), .showAlert(_)):
         return true
     case (.reinitWalletManager(_), .reinitWalletManager(_)):
+        return true
+    case (.didUpgradePin, .didUpgradePin):
         return true
     default:
         return false
