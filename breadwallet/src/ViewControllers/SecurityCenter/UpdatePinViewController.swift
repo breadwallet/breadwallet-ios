@@ -230,6 +230,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
             success = walletManager.forceSetPin(newPin: newPin, seedPhrase: seedPhrase)
         } else if let currentPin = currentPin {
             success = walletManager.changePin(newPin: newPin, pin: currentPin)
+            store.trigger(name: .didUpgradePin)
         } else if type == .creationNoPhrase {
             success = walletManager.forceSetPin(newPin: newPin)
         }

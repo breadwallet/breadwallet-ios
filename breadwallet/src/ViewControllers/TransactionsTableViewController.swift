@@ -135,6 +135,12 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             self.reload()
         })
 
+        store.subscribe(self, name: .didUpgradePin, callback: { _ in
+            if self.currentPrompt?.type == .upgradePin {
+                self.currentPrompt = nil
+            }
+        })
+
         syncingView.retry.tap = { [weak self] in
             self?.syncingView.resetAfterError()
             self?.store.perform(action: WalletChange.setSyncingErrorMessage(nil))
