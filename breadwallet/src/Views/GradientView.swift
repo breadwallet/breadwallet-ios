@@ -34,7 +34,7 @@ class GradientView : UIView, GradientDrawable {
 
     private func addFallbackImageBackground() {
         let image = UIImageView(image: #imageLiteral(resourceName: "HeaderGradient"))
-        image.contentMode = .scaleAspectFill
+        image.contentMode = .scaleToFill
         addSubview(image)
         image.constrain(toSuperviewEdges: nil)
     }

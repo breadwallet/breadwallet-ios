@@ -291,19 +291,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     override func draw(_ rect: CGRect) {
-        guard !E.isIPhone4 && !E.isIPhone5 else {
-            addFallbackImageBackground()
-            return
-        }
         drawGradient(rect)
-    }
-
-    private func addFallbackImageBackground() {
-        let image = UIImageView(image: #imageLiteral(resourceName: "HeaderGradient"))
-        image.contentMode = .scaleAspectFill
-        addSubview(image)
-        image.constrain(toSuperviewEdges: nil)
-        sendSubview(toBack: image)
     }
 
     @objc private func currencySwitchTapped() {
