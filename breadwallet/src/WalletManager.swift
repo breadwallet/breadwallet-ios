@@ -80,17 +80,21 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     
     var apiClient: BRAPIClient? {
         guard self.masterPubKey != BRMasterPubKey() else { return nil }
-        guard let _ = self.wallet else { return nil }
         return lazyAPIClient
     }
 
-    lazy var peerManager: BRPeerManager? = {
+    var peerManager: BRPeerManager? {
+        guard self.wallet != nil else { return nil }
+        return self.lazyPeerManager
+    }
+
+    internal lazy var lazyPeerManager: BRPeerManager? = {
         guard let wallet = self.wallet else { return nil }
         return BRPeerManager(wallet: wallet, earliestKeyTime: self.earliestKeyTime,
                              blocks: self.loadBlocks(), peers: self.loadPeers(), listener: self)
     }()
 
-    private lazy var lazyWallet: BRWallet? = {
+    internal lazy var lazyWallet: BRWallet? = {
         return BRWallet(transactions: self.loadTransactions(), masterPubKey: self.masterPubKey,
                         listener: self)
     }()
