@@ -167,6 +167,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             primaryBalance.leadingAnchor.constraint(equalTo: equals.trailingAnchor, constant: C.padding[1]/2.0)
         ]
 
+        NSLayoutConstraint.activate(isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
+
         search.constrain([
             search.constraint(.trailing, toView: self, constant: -C.padding[2]),
             search.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[4]),
@@ -249,6 +251,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         let amount = Amount(amount: balance, rate: rate, maxDigits: store.state.maxDigits)
         if !hasInitialized {
             let amount = Amount(amount: balance, rate: exchangeRate!, maxDigits: store.state.maxDigits)
+            NSLayoutConstraint.deactivate(isBtcSwapped ? self.regularConstraints : self.swappedConstraints)
             NSLayoutConstraint.activate(isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
             self.primaryBalance.textColor = isBtcSwapped ? .darkText : .white
             self.secondaryBalance.textColor = isBtcSwapped ? .white : .darkText
