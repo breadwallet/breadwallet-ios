@@ -23,7 +23,7 @@ extension Notification.Name {
 
 class WatchDataManager : NSObject {
 
-    static let applicationContextDataFileName = "applicationContextData.txt"
+    static let applicationContextDataFileName = "applicationContextDataV2.txt"
 
     let session = WCSession.default()
     var data: WatchData?
