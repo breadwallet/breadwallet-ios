@@ -64,6 +64,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         } else {
             timer?.invalidate()
         }
+        timestamp.isHidden = !transaction.isValid
     }
 
     let container = RoundedContainer()
