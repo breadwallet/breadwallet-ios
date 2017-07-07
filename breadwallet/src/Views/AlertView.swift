@@ -33,7 +33,7 @@ enum AlertType {
     var subheader: String {
         switch self {
         case .pinSet:
-            return S.Alerts.pinSetSubheader
+            return ""
         case .paperKeySet:
             return S.Alerts.paperKeySetSubheader
         case .sendSuccess:
