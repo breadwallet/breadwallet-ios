@@ -37,6 +37,9 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         }
     }
 
+    var didBeginEditing: (() -> Void)?
+    var didEndEditing: (() -> Void)?
+
     var kvStore: BRReplicatedKVStore?
     var transaction: Transaction?
     var rate: Rate?
@@ -306,7 +309,12 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
 
 extension TransactionDetailCollectionViewCell : UITextViewDelegate {
 
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        didBeginEditing?()
+    }
+
     func textViewDidEndEditing(_ textView: UITextView) {
+        didEndEditing?()
         guard let text = textView.text else { return }
         saveComment(comment: text)
     }

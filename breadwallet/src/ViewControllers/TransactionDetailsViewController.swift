@@ -142,6 +142,21 @@ extension TransactionDetailsViewController {
         }
         transactionDetailCell.kvStore = kvStore
         transactionDetailCell.store = store
+
+        if transactionDetailCell.didBeginEditing == nil {
+            transactionDetailCell.didBeginEditing = { [weak self] in
+                self?.secretScrollView.isScrollEnabled = false
+                self?.collectionView?.isScrollEnabled = false
+            }
+        }
+
+        if transactionDetailCell.didEndEditing == nil {
+            transactionDetailCell.didEndEditing = { [weak self] in
+                self?.secretScrollView.isScrollEnabled = true
+                self?.collectionView?.isScrollEnabled = true
+            }
+        }
+
         return transactionDetailCell
     }
 }
