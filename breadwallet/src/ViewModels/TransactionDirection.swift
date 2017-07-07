@@ -57,7 +57,7 @@ enum TransactionDirection : String {
         }
     }
 
-    var addressText: String {
+    var addressTextFormat: String {
         switch self {
         case .sent:
             return S.TransactionDetails.to
