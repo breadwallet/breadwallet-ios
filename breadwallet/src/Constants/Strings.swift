@@ -151,8 +151,8 @@ enum S {
         static let sent = NSLocalizedString("TransactionDetails.sent", value:"Sent %@", comment: "Sent $5.00 (sent title 1/2)")
         static let received = NSLocalizedString("TransactionDetails.received", value:"Received %@", comment: "Received $5.00 (received title 1/2)")
         static let moved = NSLocalizedString("TransactionDetails.moved", value:"Moved %@", comment: "Moved $5.00")
-        static let to = NSLocalizedString("TransactionDetails.to", value:"to an address", comment: "[sent] to an address (sent title 2/2)")
-        static let from = NSLocalizedString("TransactionDetails.from", value:"from an address", comment: "[received] from an address (received title 2/2)")
+        static let to = NSLocalizedString("TransactionDetails.to", value:"to %@", comment: "[sent] to <address> (sent title 2/2)")
+        static let from = NSLocalizedString("TransactionDetails.from", value:"at %@", comment: "[received] at <address> (received title 2/2)")
     }
 
     enum SecurityCenter {

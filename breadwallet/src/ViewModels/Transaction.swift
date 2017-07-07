@@ -63,14 +63,14 @@ class Transaction {
         let amount = Amount(amount: satoshis, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
         let format = direction.descriptionFormat
 
-        var address = toAddress
-        if let theAddress = address {
-            let start = theAddress.substring(to: theAddress.index(theAddress.startIndex, offsetBy: 5))
-            let end = theAddress.substring(from: theAddress.index(theAddress.endIndex, offsetBy: -5))
-            address = start + "..." + end
-        }
+        let address = toAddress?.smallCondensed
         let string = String(format: format, amount, address ?? S.TransactionDetails.account)
         return string.attributedStringForTags
+    }
+
+    var detailsAddressText: String {
+        let address = toAddress?.largeCondensed
+        return String(format: direction.addressTextFormat, address ?? S.TransactionDetails.account)
     }
 
     func amountDetails(isBtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) -> String {
@@ -243,6 +243,20 @@ class Transaction {
 
     var shouldDisplayAvailableToSpend: Bool {
         return confirms > 1 && confirms < 6 && direction == .received
+    }
+}
+
+private extension String {
+    var smallCondensed: String {
+        let start = substring(to: index(startIndex, offsetBy: 5))
+        let end = substring(from: index(endIndex, offsetBy: -5))
+        return start + "..." + end
+    }
+
+    var largeCondensed: String {
+        let start = substring(to: index(startIndex, offsetBy: 10))
+        let end = substring(from: index(endIndex, offsetBy: -10))
+        return start + "..." + end
     }
 }
 
