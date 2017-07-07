@@ -30,6 +30,5 @@
 + (instancetype)imageWithQRCodeData:(NSData *)data color:(CIColor *)color;
 
 - (UIImage *)resize:(CGSize)size withInterpolationQuality:(CGInterpolationQuality)quality;
-- (UIImage *)blurWithRadius:(CGFloat)radius;
 
 @end
