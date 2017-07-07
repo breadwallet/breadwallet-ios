@@ -22,10 +22,6 @@ class LoginBackgroundView : UIView, GradientDrawable {
     }
 
     private func setupTriangles() {
-        guard !E.isIPhone4 && !E.isIPhone5 else {
-            addFallbackImageBackground()
-            return
-        }
         let top = LoginBackgroundTriangle(vertexLocation: 0.0)
         let bottom = LoginBackgroundTriangle(vertexLocation: 70.0/418.0)
         let topHeightMultiplier: CGFloat = 148.0/568.0
@@ -43,15 +39,7 @@ class LoginBackgroundView : UIView, GradientDrawable {
             bottom.bottomAnchor.constraint(equalTo: bottomAnchor) ])
     }
 
-    private func addFallbackImageBackground() {
-        let image = UIImageView(image: #imageLiteral(resourceName: "HeaderGradient"))
-        image.contentMode = .scaleAspectFill
-        addSubview(image)
-        image.constrain(toSuperviewEdges: nil)
-    }
-
     override func draw(_ rect: CGRect) {
-        guard !E.isIPhone4 && !E.isIPhone5 else { return }
         drawGradient(rect)
     }
 
