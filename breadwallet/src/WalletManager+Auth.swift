@@ -377,7 +377,8 @@ extension WalletManager : WalletAuthenticator {
         guard pin == "forceWipe" || authenticate(pin: pin) else { return false }
 
         do {
-            peerManager = nil
+            lazyWallet = nil
+            lazyPeerManager = nil
             if db != nil { sqlite3_close(db) }
             db = nil
             masterPubKey = BRMasterPubKey()

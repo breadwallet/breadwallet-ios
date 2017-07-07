@@ -43,6 +43,7 @@ class ApplicationController : Subscriber {
 
     private func initWallet() {
         self.walletManager = try? WalletManager(store: self.store, dbPath: nil)
+        let _ = self.walletManager?.wallet //attempt to initialize wallet
         DispatchQueue.main.async {
             self.didInitWallet()
         }
@@ -156,18 +157,8 @@ class ApplicationController : Subscriber {
                 DispatchQueue.walletQueue.async {
                     walletManager.peerManager?.connect()
                 }
-                feeUpdater?.updateWalletFees()
-                walletManager.apiClient?.updateFeatureFlags()
-                initKVStoreCoordinator()
-                walletManager.apiClient?.events?.up()
+                self.startDataFetchers()
             }
-            exchangeUpdater?.refresh(completion: {
-                self.watchSessionManager.walletManager = self.walletManager
-                self.watchSessionManager.rate = self.store.state.currentRate
-            })
-            feeUpdater?.refresh()
-            updateAssetBundles()
-            defaultsUpdater?.refresh()
 
         //For when watch app launches app in background
         } else {
@@ -216,13 +207,24 @@ class ApplicationController : Subscriber {
         window.rootViewController = accountViewController
     }
 
+    private func startDataFetchers() {
+        feeUpdater?.updateWalletFees()
+        walletManager?.apiClient?.updateFeatureFlags()
+        initKVStoreCoordinator()
+        feeUpdater?.refresh()
+        updateAssetBundles()
+        defaultsUpdater?.refresh()
+        walletManager?.apiClient?.events?.up()
+        exchangeUpdater?.refresh(completion: {
+            self.watchSessionManager.walletManager = self.walletManager
+            self.watchSessionManager.rate = self.store.state.currentRate
+        })
+    }
+
     private func addWalletCreationListener() {
         store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
             self.modalPresenter?.walletManager = self.walletManager
-            self.feeUpdater?.updateWalletFees()
-            self.feeUpdater?.refresh()
-            self.initKVStoreCoordinator()
-            self.walletManager?.apiClient?.updateFeatureFlags()
+            self.startDataFetchers()
         })
     }
     

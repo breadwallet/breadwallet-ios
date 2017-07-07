@@ -104,6 +104,9 @@ class StartFlowPresenter : Subscriber {
             pinCreationView.setPinSuccess = { [weak self] _ in
                 DispatchQueue.walletQueue.async {
                     self?.walletManager.peerManager?.connect()
+                    DispatchQueue.main.async {
+                        self?.store.trigger(name: .didCreateOrRecoverWallet)
+                    }
                 }
             }
             myself.navigationController?.pushViewController(pinCreationView, animated: true)
@@ -124,8 +127,11 @@ class StartFlowPresenter : Subscriber {
                 self?.store.perform(action: WalletChange.setWalletCreationDate(Date()))
                 DispatchQueue.walletQueue.async {
                     self?.walletManager.peerManager?.connect()
+                    DispatchQueue.main.async {
+                        self?.pushStartPaperPhraseCreationViewController(pin: pin)
+                        self?.store.trigger(name: .didCreateOrRecoverWallet)
+                    }
                 }
-                self?.pushStartPaperPhraseCreationViewController(pin: pin)
             }
         }
 
