@@ -264,7 +264,16 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                 secondaryBalance.transform = transform(forView: secondaryBalance)
             }
             hasInitialized = true
+            hideExtraViews()
         } else {
+            if primaryBalance.isHidden {
+                primaryBalance.isHidden = false
+            }
+
+            if secondaryBalance.isHidden {
+                secondaryBalance.isHidden = false
+            }
+
             primaryBalance.setValueAnimated(amount.amountForBtcFormat, completion: { [weak self] in
                 guard let myself = self else { return }
                 myself.layoutIfNeeded()
@@ -275,6 +284,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                         myself.primaryBalance.transform = myself.transform(forView: myself.primaryBalance)
                     }
                 }
+                self?.hideExtraViews()
             })
             secondaryBalance.setValueAnimated(amount.localAmount, completion: { [weak self] in
                 guard let myself = self else { return }
@@ -286,8 +296,28 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                         myself.secondaryBalance.transform = myself.transform(forView: myself.secondaryBalance)
                     }
                 }
+                self?.hideExtraViews()
             })
         }
+    }
+
+    private func hideExtraViews() {
+        var didHide = false
+        if secondaryBalance.frame.maxX > search.frame.minX {
+            secondaryBalance.isHidden = true
+            didHide = true
+        } else {
+            secondaryBalance.isHidden = false
+        }
+
+        if primaryBalance.frame.maxX > search.frame.minX {
+            primaryBalance.isHidden = true
+            didHide = true
+        } else {
+            primaryBalance.isHidden = false
+        }
+
+        equals.isHidden = didHide
     }
 
     override func draw(_ rect: CGRect) {
