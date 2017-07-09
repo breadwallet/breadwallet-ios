@@ -257,6 +257,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             if let amount = request.amount {
                 amountView.forceUpdateAmount(amount: amount)
             }
+            if request.label {
+                descriptionCell.content = request.label
+            }
         case .remote:
             request.fetchRemoteRequest(completion: { [weak self] request in
                 if let paymentProtocolRequest = request?.paymentProtoclRequest {
