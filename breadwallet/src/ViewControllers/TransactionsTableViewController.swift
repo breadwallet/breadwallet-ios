@@ -141,6 +141,13 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             }
         })
 
+        store.subscribe(self, name: .txMemoUpdated(""), callback: {
+            guard let trigger = $0 else { return }
+            if case .txMemoUpdated(let txHash) = trigger {
+                self.reload(txHash: txHash)
+            }
+        })
+
         syncingView.retry.tap = { [weak self] in
             self?.syncingView.resetAfterError()
             self?.store.perform(action: WalletChange.setSyncingErrorMessage(nil))
@@ -150,6 +157,18 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         emptyMessage.textAlignment = .center
         emptyMessage.text = S.TransactionDetails.emptyMessage
         reload()
+    }
+
+    private func reload(txHash: String) {
+        self.transactions.enumerated().forEach { i, tx in
+            if tx.hash == txHash {
+                DispatchQueue.main.async {
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadRows(at: [IndexPath(row: i, section: self.hasExtraSection ? 1 : 0)], with: .automatic)
+                    self.tableView.endUpdates()
+                }
+            }
+        }
     }
 
     // MARK: - Table view data source

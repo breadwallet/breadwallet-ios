@@ -48,7 +48,7 @@ class Transaction {
 
         self.hash = tx.pointee.txHash.description
 
-        if let rate = rate, confirms < 6 {
+        if let rate = rate, confirms < 6 && direction == .received {
             attemptCreateMetaData(tx: tx, rate: rate)
         }
     }
@@ -80,7 +80,7 @@ class Transaction {
         let endingString = String(format: String(format: S.Transaction.ending, "\(Amount(amount: balanceAfter, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped))"))
 
         var exchangeRateInfo = ""
-        if let metaData = metaData, let currentRate = rates.filter({ $0.code.lowercased() == metaData.exchangeRateCurrency.lowercased() }).first{
+        if let metaData = metaData, let currentRate = rates.filter({ $0.code.lowercased() == metaData.exchangeRateCurrency.lowercased() }).first {
             let difference = (currentRate.rate - metaData.exchangeRate)/metaData.exchangeRate*100.0
             let prefix = difference > 0.0 ? "+" : "-"
             let firstLine = direction == .sent ? S.Transaction.exchangeOnDaySent : S.Transaction.exchangeOnDayReceived
