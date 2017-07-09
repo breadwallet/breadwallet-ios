@@ -29,7 +29,7 @@ import BRCore
 // MARK: - Txn Metadata
 
 // Txn metadata stores additional information about a given transaction
-open class BRTxMetadataObject: BRKVStoreObject, BRCoding {
+open class TxMetaData : BRKVStoreObject, BRCoding {
     var classVersion: Int = 2
     
     var blockHeight: Int = 0
@@ -124,7 +124,7 @@ open class BRTxMetadataObject: BRKVStoreObject, BRCoding {
     }
     
     override func dataWasSet(_ value: Data) {
-        guard let s: BRTxMetadataObject = BRKeyedUnarchiver.unarchiveObjectWithData(value) else {
+        guard let s: TxMetaData = BRKeyedUnarchiver.unarchiveObjectWithData(value) else {
             print("[BRTxMetadataObject] unable to deserialise tx metadata")
             return
         }
