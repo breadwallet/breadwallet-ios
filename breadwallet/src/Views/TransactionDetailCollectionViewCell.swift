@@ -291,7 +291,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         } else {
             guard let rate = self.rate else { return }
             guard let transaction = self.transaction else { return }
-            let newMetaData = BRTxMetadataObject(transaction: transaction.rawTransaction, exchangeRate: rate.rate, exchangeRateCurrency: rate.code, feeRate: 0.0, deviceId: UserDefaults.standard.deviceID)
+            let newMetaData = TxMetaData(transaction: transaction.rawTransaction, exchangeRate: rate.rate, exchangeRateCurrency: rate.code, feeRate: 0.0, deviceId: UserDefaults.standard.deviceID)
             newMetaData.comment = comment
             do {
                 let _ = try kvStore.set(newMetaData)

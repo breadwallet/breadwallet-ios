@@ -12,19 +12,6 @@ import XCTest
 private var walletManager: WalletManager?
 private var client: BRAPIClient?
 
-func deleteDb() {
-    let fm = FileManager.default
-    let docsUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!
-    let url = docsUrl.appendingPathComponent("kvstore.sqlite3")
-    if fm.fileExists(atPath: url.path) {
-        do {
-            try fm.removeItem(at: url)
-        } catch let error {
-            XCTFail("Could not delete kv store data: \(error)")
-        }
-    }
-}
-
 class WalletInfoTest : XCTestCase {
 
     override class func setUp() {
@@ -32,7 +19,7 @@ class WalletInfoTest : XCTestCase {
         deleteDb()
         walletManager = try! WalletManager(store: Store(), dbPath: nil)
         let _ = walletManager?.setRandomSeedPhrase()
-        client = BRAPIClient(authenticator: walletManager!)
+        client = walletManager?.apiClient
     }
 
     func testRecoverWalletInfo() {
