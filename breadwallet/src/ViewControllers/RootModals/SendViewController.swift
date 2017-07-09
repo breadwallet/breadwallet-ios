@@ -257,7 +257,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             if let amount = request.amount {
                 amountView.forceUpdateAmount(amount: amount)
             }
-            if request.label {
+            if request.label != nil {
                 descriptionCell.content = request.label
             }
         case .remote:
