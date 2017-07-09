@@ -48,7 +48,7 @@ class Transaction {
 
         self.hash = tx.pointee.txHash.description
 
-        if let rate = rate, confirms < 6 {
+        if let rate = rate, confirms < 6, confirms > 1{
             attemptCreateMetaData(tx: tx, rate: rate)
         }
     }
@@ -138,13 +138,13 @@ class Transaction {
         return metaData?.comment
     }
 
-    var _metaData: BRTxMetadataObject?
-    var metaData: BRTxMetadataObject? {
+    var _metaData: TxMetaData?
+    var metaData: TxMetaData? {
         if _metaData != nil {
             return _metaData
         } else {
             guard let kvStore = self.kvStore else { return nil }
-            if let data = BRTxMetadataObject(txHash: self.tx.pointee.txHash, store: kvStore) {
+            if let data = TxMetaData(txHash: self.tx.pointee.txHash, store: kvStore) {
                 _metaData = data
                 return _metaData
             } else {
@@ -228,7 +228,7 @@ class Transaction {
 
     private func attemptCreateMetaData(tx: BRTxRef, rate: Rate) {
         guard metaData == nil else { return }
-        let newData = BRTxMetadataObject(transaction: tx.pointee,
+        let newData = TxMetaData(transaction: tx.pointee,
                                           exchangeRate: rate.rate,
                                           exchangeRateCurrency: rate.currencySymbol,
                                           feeRate: 0.0,

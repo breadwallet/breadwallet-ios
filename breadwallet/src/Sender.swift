@@ -105,11 +105,11 @@ class Sender {
 
     private func setMetaData() {
         guard let rate = rate, let tx = transaction, let feePerKb = feePerKb else { print("Incomplete tx metadata"); return }
-        let metaData = BRTxMetadataObject(transaction: tx.pointee,
-                                          exchangeRate: rate.rate,
-                                          exchangeRateCurrency: rate.code,
-                                          feeRate: Double(feePerKb),
-                                          deviceId: UserDefaults.standard.deviceID)
+        let metaData = TxMetaData(transaction: tx.pointee,
+                                  exchangeRate: rate.rate,
+                                  exchangeRateCurrency: rate.code,
+                                  feeRate: Double(feePerKb),
+                                  deviceId: UserDefaults.standard.deviceID)
         metaData.comment = comment ?? ""
         do {
             let _ = try kvStore.set(metaData)
