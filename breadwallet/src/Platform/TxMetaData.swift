@@ -106,7 +106,7 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
     
     /// Create new transaction metadata
     public init(transaction: BRTransaction, exchangeRate: Double, exchangeRateCurrency: String, feeRate: Double,
-                deviceId: String) {
+                deviceId: String, comment: String? = nil) {
         print("[BRTxMetadataObject] new \(transaction.txHash.txKey)")
         super.init(key: transaction.txHash.txKey, version: 0, lastModified: Date(), deleted: false, data: Data())
         self.blockHeight = Int(transaction.blockHeight)
@@ -117,6 +117,7 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
         self.exchangeRateCurrency = exchangeRateCurrency
         self.feeRate = feeRate
         self.deviceId = deviceId
+        self.comment = comment ?? ""
     }
     
     override func getData() -> Data? {

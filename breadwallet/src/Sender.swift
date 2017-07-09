@@ -19,13 +19,15 @@ private let protocolPaymentTimeout: TimeInterval = 20.0
 
 class Sender {
 
-    init(walletManager: WalletManager, kvStore: BRReplicatedKVStore) {
+    init(walletManager: WalletManager, kvStore: BRReplicatedKVStore, store: Store) {
         self.walletManager = walletManager
         self.kvStore = kvStore
+        self.store = store
     }
 
     private let walletManager: WalletManager
     private let kvStore: BRReplicatedKVStore
+    private let store: Store
     var transaction: BRTxRef?
     var protocolRequest: PaymentProtocolRequest?
     var rate: Rate?
@@ -109,14 +111,14 @@ class Sender {
                                   exchangeRate: rate.rate,
                                   exchangeRateCurrency: rate.code,
                                   feeRate: Double(feePerKb),
-                                  deviceId: UserDefaults.standard.deviceID)
-        metaData.comment = comment ?? ""
+                                  deviceId: UserDefaults.standard.deviceID,
+                                  comment: comment)
         do {
             let _ = try kvStore.set(metaData)
         } catch let error {
             print("could not update metadata: \(error)")
         }
-        NotificationCenter.default.post(name: .WalletTxStatusUpdateNotification, object: nil)
+        store.trigger(name: .txMemoUpdated(tx.pointee.txHash.description))
     }
 
     private func postProtocolPaymentIfNeeded() {

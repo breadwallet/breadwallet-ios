@@ -299,7 +299,9 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
                 print("could not update metadata: \(error)")
             }
         }
-        NotificationCenter.default.post(name: .WalletTxStatusUpdateNotification, object: nil)
+        if let tx = transaction {
+            store?.trigger(name: .txMemoUpdated(tx.hash))
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
