@@ -48,7 +48,7 @@ class Transaction {
 
         self.hash = tx.pointee.txHash.description
 
-        if let rate = rate, confirms < 6, confirms > 1{
+        if let rate = rate, confirms < 6 {
             attemptCreateMetaData(tx: tx, rate: rate)
         }
     }
@@ -83,7 +83,7 @@ class Transaction {
         if let metaData = metaData, let currentRate = rates.filter({ $0.code.lowercased() == metaData.exchangeRateCurrency.lowercased() }).first{
             let difference = (currentRate.rate - metaData.exchangeRate)/metaData.exchangeRate*100.0
             let prefix = difference > 0.0 ? "+" : "-"
-            let firstLine = S.Transaction.exchangeOnDay
+            let firstLine = direction == .sent ? S.Transaction.exchangeOnDaySent : S.Transaction.exchangeOnDayReceived
             let nf = NumberFormatter()
             nf.currencySymbol = currentRate.currencySymbol
             nf.numberStyle = .currency
@@ -230,7 +230,7 @@ class Transaction {
         guard metaData == nil else { return }
         let newData = TxMetaData(transaction: tx.pointee,
                                           exchangeRate: rate.rate,
-                                          exchangeRateCurrency: rate.currencySymbol,
+                                          exchangeRateCurrency: rate.code,
                                           feeRate: 0.0,
                                           deviceId: UserDefaults.standard.deviceID)
         do {
