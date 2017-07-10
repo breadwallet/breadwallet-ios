@@ -47,6 +47,7 @@ class LoginViewController : UIViewController, Subscriber {
     private let scanButton = SegmentedButton(title: S.UnlockScreen.scan, type: .right)
     private let isPresentedForLock: Bool
     private let disabledView: WalletDisabledView
+    private let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     private var logo: UIImageView = {
         let image = UIImageView(image: #imageLiteral(resourceName: "Logo"))
         image.contentMode = .scaleAspectFit
@@ -168,19 +169,25 @@ class LoginViewController : UIViewController, Subscriber {
         topControlContainer.addSubview(addressButton)
         topControlContainer.addSubview(scanButton)
         view.addSubview(logo)
-        view.addSubview(pinPadBackground)
+        if walletManager != nil {
+            view.addSubview(pinPadBackground)
+        } else {
+            view.addSubview(activityView)
+        }
     }
 
     private func addConstraints() {
         backgroundView.constrain(toSuperviewEdges: nil)
-        addChildViewController(pinPad, layout: {
-            pinPadPottom = pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            pinPad.view.constrain([
-                pinPad.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                pinPad.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                pinPadPottom,
-                pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height) ])
-        })
+        if walletManager != nil {
+            addChildViewController(pinPad, layout: {
+                pinPadPottom = pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+                pinPad.view.constrain([
+                    pinPad.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                    pinPad.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                    pinPadPottom,
+                    pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height) ])
+            })
+        }
         pinViewContainer.constrain(toSuperviewEdges: nil)
 
         topControlTop = topControlContainer.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[1] + 20.0)
@@ -205,11 +212,18 @@ class LoginViewController : UIViewController, Subscriber {
             logo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: C.Sizes.logoAspectRatio),
             logo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.35) ])
-        pinPadBackground.constrain([
-            pinPadBackground.leadingAnchor.constraint(equalTo: pinPad.view.leadingAnchor),
-            pinPadBackground.trailingAnchor.constraint(equalTo: pinPad.view.trailingAnchor),
-            pinPadBackground.topAnchor.constraint(equalTo: pinPad.view.topAnchor),
-            pinPadBackground.bottomAnchor.constraint(equalTo: pinPad.view.bottomAnchor) ])
+        if walletManager != nil {
+            pinPadBackground.constrain([
+                pinPadBackground.leadingAnchor.constraint(equalTo: pinPad.view.leadingAnchor),
+                pinPadBackground.trailingAnchor.constraint(equalTo: pinPad.view.trailingAnchor),
+                pinPadBackground.topAnchor.constraint(equalTo: pinPad.view.topAnchor),
+                pinPadBackground.bottomAnchor.constraint(equalTo: pinPad.view.bottomAnchor) ])
+        } else {
+            activityView.constrain([
+                activityView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                activityView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20.0) ])
+            activityView.startAnimating()
+        }
         subheader.text = S.UnlockScreen.subheader
 
         addressButton.addTarget(self, action: #selector(addressTapped), for: .touchUpInside)
