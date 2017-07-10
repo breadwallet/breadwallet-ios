@@ -209,7 +209,7 @@ class Transaction {
     var longTimestamp: String {
         guard timestamp > 0 else { return wallet.transactionIsValid(tx) ? S.Transaction.justNow : "" }
         let date = Date(timeIntervalSince1970: Double(timestamp))
-        return longDateFormatter.string(from: date)
+        return Transaction.longDateFormatter.string(from: date)
     }
 
     var rawTransaction: BRTransaction {
@@ -220,7 +220,7 @@ class Transaction {
         return confirms < 6
     }
 
-    private let longDateFormatter: DateFormatter = {
+    static let longDateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.setLocalizedDateFormatFromTemplate("MMMM d, yyy h:mm a")
         return df

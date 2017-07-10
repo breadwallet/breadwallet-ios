@@ -35,14 +35,14 @@ class BRGeoLocationDelegate: NSObject, CLLocationManagerDelegate {
     init(response: BRHTTPResponse) {
         self.response = response
         super.init()
-        DispatchQueue.main.sync { () -> Void in
+        DispatchQueue.main.async {
             self.manager = CLLocationManager()
             self.manager?.delegate = self
         }
     }
     
     func getOne() {
-        DispatchQueue.main.sync { () -> Void in
+        DispatchQueue.main.async {
             self.manager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
             self.manager?.requestLocation()
         }
@@ -266,7 +266,7 @@ open class BRGeoLocationPlugin: NSObject, BRHTTPRouterPlugin, CLLocationManagerD
             }
             // begin updating location
             isUpdatingSockets = true
-            DispatchQueue.main.sync { () -> Void in
+            DispatchQueue.main.async {
                 self.manager.delegate = self
                 self.manager.startUpdatingLocation()
             }

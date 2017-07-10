@@ -11,14 +11,7 @@ import UIKit
 class ModalPresenter : Subscriber {
 
     //MARK: - Public
-    var walletManager: WalletManager? {
-        didSet {
-            guard let walletManager = walletManager else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                self.initializeSupportCenter(walletManager: walletManager)
-            })
-        }
-    }
+    var walletManager: WalletManager?
     init(store: Store, walletManager: WalletManager, window: UIWindow) {
         self.store = store
         self.window = window
@@ -36,15 +29,17 @@ class ModalPresenter : Subscriber {
     private let messagePresenter = MessageUIPresenter()
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
     private let verifyPinTransitionDelegate = PinTransitioningDelegate()
-    private var supportCenter: SupportCenterContainer?
+    private var supportCenter: SupportCenterContainer? {
+        guard walletManager != nil else { return nil }
+        return _supportCenter
+    }
+    private lazy var _supportCenter: SupportCenterContainer = {
+        return SupportCenterContainer(walletManager: self.walletManager!, store: self.store)
+    }()
     private var currentRequest: PaymentRequest?
     private var reachability = ReachabilityManager(host: "google.com")
     private var notReachableAlert: InAppAlert?
     private let wipeNavigationDelegate: StartNavigationDelegate
-
-    private func initializeSupportCenter(walletManager: WalletManager) {
-        supportCenter = SupportCenterContainer(walletManager: walletManager, store: store)
-    }
 
     private func addSubscriptions() {
         store.subscribe(self,
