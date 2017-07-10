@@ -31,6 +31,7 @@ class ApplicationController : Subscriber {
     private let watchSessionManager = PhoneWCSessionManager()
     private var urlController: URLController?
     private var defaultsUpdater: UserDefaultsUpdater?
+    private var reachability = ReachabilityManager(host: "google.com")
 
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
@@ -53,6 +54,15 @@ class ApplicationController : Subscriber {
         self.application = application
         setup()
         handleLaunchOptions(options)
+        reachability.didChange = { isReachable in
+            if !isReachable {
+                self.reachability.didChange = { isReachable in
+                    if isReachable {
+                        self.retryAfterIsReachable()
+                    }
+                }
+            }
+        }
     }
 
     private func setup() {
@@ -92,6 +102,21 @@ class ApplicationController : Subscriber {
         if shouldRequireLogin() {
             store.perform(action: RequireLogin())
         }
+        DispatchQueue.walletQueue.async {
+            walletManager.peerManager?.connect()
+        }
+        exchangeUpdater?.refresh(completion: {})
+        feeUpdater?.refresh()
+        walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
+        walletManager.apiClient?.updateFeatureFlags()
+        if modalPresenter?.walletManager == nil {
+            modalPresenter?.walletManager = walletManager
+        }
+    }
+
+    func retryAfterIsReachable() {
+        guard let walletManager = walletManager else { return }
+        guard !walletManager.noWallet else { return }
         DispatchQueue.walletQueue.async {
             walletManager.peerManager?.connect()
         }

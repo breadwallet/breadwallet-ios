@@ -102,9 +102,6 @@ class ModalPresenter : Subscriber {
         reachability.didChange = { isReachable in
             if isReachable {
                 self.hideNotReachable()
-                DispatchQueue.walletQueue.async {
-                    self.walletManager?.peerManager?.connect()
-                }
             } else {
                 self.showNotReachable()
             }
