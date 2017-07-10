@@ -78,10 +78,14 @@ class WalletCoordinator : Subscriber {
     }
 
     private func updateTransactions() {
-        guard let txRefs = walletManager.wallet?.transactions else { return }
-        let transactions = makeTransactionViewModels(transactions: txRefs, walletManager: walletManager, kvStore: kvStore, rate: store.state.currentRate)
-        if transactions.count > 0 {
-            self.store.perform(action: WalletChange.setTransactions(transactions))
+        DispatchQueue.walletQueue.async {
+            guard let txRefs = self.walletManager.wallet?.transactions else { return }
+            let transactions = self.makeTransactionViewModels(transactions: txRefs, walletManager: self.walletManager, kvStore: self.kvStore, rate: self.store.state.currentRate)
+            if transactions.count > 0 {
+                DispatchQueue.main.async {
+                    self.store.perform(action: WalletChange.setTransactions(transactions))
+                }
+            }
         }
     }
 
