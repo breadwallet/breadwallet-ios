@@ -35,7 +35,7 @@ extension State {
                         pasteboard: UIPasteboard.general.string,
                         walletState: WalletState.initial,
                         isBtcSwapped: UserDefaults.isBtcSwapped,
-                        currentRate: nil,
+                        currentRate: UserDefaults.currentRate,
                         rates: [],
                         alert: nil,
                         isTouchIdEnabled: UserDefaults.isTouchIdEnabled,

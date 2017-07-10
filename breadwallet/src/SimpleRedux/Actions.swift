@@ -138,6 +138,7 @@ enum ExchangeRates {
     struct setRates : Action {
         let reduce: Reducer
         init(currentRate: Rate, rates: [Rate] ) {
+            UserDefaults.currentRateData = currentRate.dictionary
             reduce = { $0.clone(currentRate: currentRate, rates: rates) }
         }
     }

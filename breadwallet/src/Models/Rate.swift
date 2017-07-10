@@ -60,6 +60,14 @@ extension Rate {
         guard let rate = dictionary["rate"] as? Double else { return nil }
         self.init(code: code, name: name, rate: rate)
     }
+
+    var dictionary: [String: Any] {
+        return [
+            "code": code,
+            "name": name,
+            "rate": rate
+        ]
+    }
 }
 
 extension Rate : Equatable {}

@@ -19,6 +19,7 @@ private let isBtcSwappedKey = "isBtcSwappedKey"
 private let maxDigitsKey = "SETTINGS_MAX_DIGITS"
 private let pinLengthKey = "pinlengthkey"
 private let pushTokenKey = "pushTokenKey"
+private let currentRateKey = "currentRateKey"
 
 extension UserDefaults {
 
@@ -100,6 +101,27 @@ extension UserDefaults {
         }
         set {
             defaults.set(newValue, forKey: pushTokenKey)
+        }
+    }
+
+    static var currentRate: Rate? {
+        get {
+            guard let data = defaults.object(forKey: currentRateKey) as? [String: Any] else {
+                return nil
+            }
+            return Rate(data: data)
+        }
+    }
+
+    static var currentRateData: [String: Any]? {
+        get {
+            guard let data = defaults.object(forKey: currentRateKey) as? [String: Any] else {
+                return nil
+            }
+            return data
+        }
+        set {
+            defaults.set(newValue, forKey: currentRateKey)
         }
     }
 }
