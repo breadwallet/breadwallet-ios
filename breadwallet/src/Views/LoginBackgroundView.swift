@@ -22,6 +22,7 @@ class LoginBackgroundView : UIView, GradientDrawable {
     }
 
     private func setupTriangles() {
+        guard !E.isIPhone4 && !E.isIPhone5 else { return }
         let top = LoginBackgroundTriangle(vertexLocation: 0.0)
         let bottom = LoginBackgroundTriangle(vertexLocation: 70.0/418.0)
         let topHeightMultiplier: CGFloat = 148.0/568.0

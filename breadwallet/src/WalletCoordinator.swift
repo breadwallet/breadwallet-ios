@@ -44,13 +44,10 @@ class WalletCoordinator : Subscriber {
     }
 
     @objc private func updateProgress() {
-        if let progress = walletManager.peerManager?.syncProgress(fromStartHeight: lastBlockHeight) {
-            DispatchQueue.walletQueue.async {
-                if let timestamp = self.walletManager.peerManager?.lastBlockTimestamp {
-                    DispatchQueue.main.async {
-                        self.store.perform(action: WalletChange.setProgress(progress: progress, timestamp: timestamp))
-                    }
-                }
+        DispatchQueue.walletQueue.async {
+            guard let progress = self.walletManager.peerManager?.syncProgress(fromStartHeight: self.lastBlockHeight), let timestamp = self.walletManager.peerManager?.lastBlockTimestamp else { return }
+            DispatchQueue.main.async {
+                self.store.perform(action: WalletChange.setProgress(progress: progress, timestamp: timestamp))
             }
         }
         self.updateBalance()
@@ -133,7 +130,16 @@ class WalletCoordinator : Subscriber {
     }
 
     private func updateBalance() {
-        guard let newBalance = walletManager.wallet?.balance else { return }
+        DispatchQueue.walletQueue.async {
+            guard let newBalance = self.walletManager.wallet?.balance else { return }
+            DispatchQueue.main.async {
+                self.checkForReceived(newBalance: newBalance)
+                self.store.perform(action: WalletChange.setBalance(newBalance))
+            }
+        }
+    }
+
+    private func checkForReceived(newBalance: UInt64) {
         if let oldBalance = store.state.walletState.balance {
             if newBalance > oldBalance {
                 if !store.state.walletState.isSyncing {
@@ -141,7 +147,6 @@ class WalletCoordinator : Subscriber {
                 }
             }
         }
-        store.perform(action: WalletChange.setBalance(newBalance))
     }
 
     private func showReceived(amount: UInt64) {
