@@ -19,6 +19,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         self.store = store
         self.isBtcSwapped = store.state.isBtcSwapped
         if let rate = store.state.currentRate {
+            self.exchangeRate = rate
             let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: store.state.maxDigits)
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
             self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.btcFormat)
@@ -211,10 +212,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     private func addSubscriptions() {
-        store.subscribe(self,
+        store.lazySubscribe(self,
                         selector: { $0.isBtcSwapped != $1.isBtcSwapped },
                         callback: { self.isBtcSwapped = $0.isBtcSwapped })
-        store.subscribe(self,
+        store.lazySubscribe(self,
                         selector: { $0.currentRate != $1.currentRate},
                         callback: {
                             if let rate = $0.currentRate {
@@ -225,7 +226,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                             self.exchangeRate = $0.currentRate
                         })
         
-        store.subscribe(self,
+        store.lazySubscribe(self,
                         selector: { $0.maxDigits != $1.maxDigits},
                         callback: {
                             if let rate = $0.currentRate {
