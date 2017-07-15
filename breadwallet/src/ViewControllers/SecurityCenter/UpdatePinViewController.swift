@@ -128,9 +128,8 @@ class UpdatePinViewController : UIViewController, Subscriber {
 
     private func setData() {
         view.backgroundColor = .whiteTint
-
         header.text = isCreatingPin ? S.UpdatePin.createTitle : S.UpdatePin.updateTitle
-
+        instruction.text = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterCurrent
         pinPad.ouputDidUpdate = { [weak self] text in
             guard let step = self?.step else { return }
             switch step {
@@ -145,8 +144,6 @@ class UpdatePinViewController : UIViewController, Subscriber {
 
         if isCreatingPin {
             step = .new
-        } else {
-            instruction.text = S.UpdatePin.enterCurrent
         }
 
         if !showsBackButton {
