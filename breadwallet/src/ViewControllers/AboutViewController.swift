@@ -12,10 +12,8 @@ import SafariServices
 class AboutViewController : UIViewController {
 
     private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
-
-    //TODO - replace circle and subheader with real logo
-    private let circle = GradientCircle()
-    private let subheader = UILabel(font: .customBody(size: 20.0), color: .darkText)
+    private let logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout"))
+    private let logoBackground = GradientView()
     private let blog = AboutCell(text: S.About.blog)
     private let twitter = AboutCell(text: S.About.twitter)
     private let reddit = AboutCell(text: S.About.reddit)
@@ -37,8 +35,8 @@ class AboutViewController : UIViewController {
 
     private func addSubviews() {
         view.addSubview(titleLabel)
-        view.addSubview(circle)
-        view.addSubview(subheader)
+        view.addSubview(logoBackground)
+        logoBackground.addSubview(logo)
         view.addSubview(blog)
         view.addSubview(twitter)
         view.addSubview(reddit)
@@ -52,16 +50,14 @@ class AboutViewController : UIViewController {
         titleLabel.constrain([
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             titleLabel.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2]) ])
-        circle.constrain([
-            circle.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: C.padding[4]),
-            circle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            circle.heightAnchor.constraint(equalToConstant: GradientCircle.defaultSize),
-            circle.widthAnchor.constraint(equalToConstant: GradientCircle.defaultSize) ])
-        subheader.constrain([
-            subheader.topAnchor.constraint(equalTo: circle.bottomAnchor, constant: C.padding[1]),
-            subheader.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
+        logoBackground.constrain([
+            logoBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoBackground.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: C.padding[3]),
+            logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
+            logoBackground.heightAnchor.constraint(equalTo: logoBackground.widthAnchor, multiplier: 342.0/553.0) ])
+        logo.constrain(toSuperviewEdges: nil)
         blog.constrain([
-            blog.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: C.padding[2]),
+            blog.topAnchor.constraint(equalTo: logoBackground.bottomAnchor, constant: C.padding[2]),
             blog.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             blog.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         twitter.constrain([
@@ -90,7 +86,6 @@ class AboutViewController : UIViewController {
     private func setData() {
         view.backgroundColor = .whiteTint
         titleLabel.text = S.About.title
-        subheader.text = "Bread"
         terms.setTitle(S.About.terms, for: .normal)
         terms.titleLabel?.font = UIFont.customBody(size: 13.0)
         privacy.setTitle(S.About.privacy, for: .normal)
