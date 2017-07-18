@@ -152,7 +152,6 @@ extension WalletManager : WalletAuthenticator {
 
     //Can be expensive...result should be cached
     var pinLength: Int {
-        if let length = UserDefaults.pinLength { return length }
         do {
             if let pin: String = try keychainItem(key: KeychainKey.pin) {
                 return pin.utf8.count
