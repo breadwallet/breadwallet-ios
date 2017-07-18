@@ -17,8 +17,8 @@ class LoginViewController : UIViewController, Subscriber {
     //MARK: - Public
     var walletManager: WalletManager? {
         didSet {
-            guard let walletManager = walletManager else { return }
-            self.pinView = PinView(style: .login, length: walletManager.pinLength)
+            guard walletManager != nil else { return }
+            pinView = PinView(style: .login, length: store.state.pinLength)
         }
     }
     var shouldSelfDismiss = false
@@ -27,8 +27,8 @@ class LoginViewController : UIViewController, Subscriber {
         self.walletManager = walletManager
         self.isPresentedForLock = isPresentedForLock
         self.disabledView = WalletDisabledView(store: store)
-        if let walletManager = walletManager {
-            self.pinView = PinView(style: .login, length: walletManager.pinLength)
+        if walletManager != nil {
+            self.pinView = PinView(style: .login, length: store.state.pinLength)
         }
         super.init(nibName: nil, bundle: nil)
     }
@@ -243,12 +243,12 @@ class LoginViewController : UIViewController, Subscriber {
 
     private func addPinPadCallback() {
         pinPad.ouputDidUpdate = { [weak self] pin in
-            guard let walletManager = self?.walletManager else { return }
+            guard let myself = self else { return }
             guard let pinView = self?.pinView else { return }
             let attemptLength = pin.utf8.count
             pinView.fill(attemptLength)
-            self?.pinPad.isAppendingDisabled = attemptLength < walletManager.pinLength ? false : true
-            if attemptLength == walletManager.pinLength {
+            self?.pinPad.isAppendingDisabled = attemptLength < myself.store.state.pinLength ? false : true
+            if attemptLength == myself.store.state.pinLength {
                 self?.authenticate(pin: pin)
             }
         }
