@@ -8,26 +8,23 @@
 
 import UIKit
 
-class DefaultCurrencyViewController : UITableViewController, Subscriber, CustomTitleView {
+class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
         self.store = store
-        self.faq = .buildFaqButton(store: store, articleId: ArticleIds.defaultCurrency)
         super.init(style: .plain)
     }
 
     private let walletManager: WalletManager
     private let store: Store
     private let cellIdentifier = "CellIdentifier"
-    private let faq: UIButton
     private var rates: [Rate] = [] {
         didSet {
             tableView.reloadData()
             setExchangeRateLabel()
         }
     }
-    private var swipeGr = UISwipeGestureRecognizer()
     private var defaultCurrencyCode: String? = nil {
         didSet {
             //Grab index paths of new and old rows when the currency changes
@@ -39,17 +36,17 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber, CustomT
             setExchangeRateLabel()
         }
     }
+
+    private let bitcoinLabel = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+    private let bitcoinSwitch = UISegmentedControl(items: ["Bits (\(S.Symbols.bits))", "BTC (\(S.Symbols.btc))"])
     private let rateLabel = UILabel(font: .customBody(size: 16.0), color: .darkText)
-    private let swipeView = UIView()
-    let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
-    let customTitle = S.DefaultCurrency.title
+    private var header: UIView?
 
     deinit {
         store.unsubscribe(self)
     }
 
     override func viewDidLoad() {
-        setHeader()
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
         store.subscribe(self, selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode }, callback: {
             self.defaultCurrencyCode = $0.defaultCurrencyCode
@@ -61,58 +58,19 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber, CustomT
             self.rates = rates.filter { $0.code != C.btcCurrencyCode }
         }
 
-        swipeGr.addTarget(self, action: #selector(swipe))
-        swipeGr.delegate = self
-        swipeGr.direction = .left
-        swipeView.addGestureRecognizer(swipeGr)
-        swipeView.isUserInteractionEnabled = true
-    }
-
-    private func setHeader() {
-        let header = UIView(color: .whiteTint)
-        let rateLabelTitle = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-
-        header.addSubview(titleLabel)
-        header.addSubview(rateLabelTitle)
-        header.addSubview(rateLabel)
-        header.addSubview(faq)
-        header.addSubview(swipeView)
-
-        titleLabel.constrain([
-            titleLabel.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: C.padding[2]),
-            titleLabel.topAnchor.constraint(equalTo: header.topAnchor, constant: C.padding[2]) ])
-        rateLabelTitle.constrain([
-            rateLabelTitle.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            rateLabelTitle.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: C.padding[2]) ])
-        rateLabel.constrain([
-            rateLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            rateLabel.topAnchor.constraint(equalTo: rateLabelTitle.bottomAnchor),
-            rateLabel.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -C.padding[2]) ])
-        faq.constrain([
-            faq.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-            faq.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: 0.0),
-            faq.constraint(.height, constant: 44.0),
-            faq.constraint(.width, constant: 44.0)])
-        swipeView.constrain([
-            swipeView.leadingAnchor.constraint(equalTo: rateLabelTitle.leadingAnchor),
-            swipeView.topAnchor.constraint(equalTo: rateLabelTitle.topAnchor),
-            swipeView.bottomAnchor.constraint(equalTo: rateLabel.bottomAnchor),
-            swipeView.trailingAnchor.constraint(equalTo: faq.leadingAnchor) ])
-
-        titleLabel.text = S.DefaultCurrency.title
-        rateLabelTitle.text = S.DefaultCurrency.rateLabel
-
-        //This is a hack so that autolayout gets the right size for the header
-        rateLabel.text = "blah blah"
-        rateLabel.textColor = .white
-
-        tableView.tableHeaderView = header
+        tableView.sectionHeaderHeight = UITableViewAutomaticDimension
+        tableView.estimatedSectionHeaderHeight = 140.0
         tableView.backgroundColor = .whiteTint
         tableView.separatorStyle = .none
 
-        header.constrain([
-            header.widthAnchor.constraint(equalTo: view.widthAnchor) ])
-        addCustomTitle()
+        let titleLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
+        titleLabel.text = S.Settings.currency
+        titleLabel.sizeToFit()
+        navigationItem.titleView = titleLabel
+
+        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.defaultCurrency)
+        faqButton.tintColor = .darkText
+        navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
     }
 
     private func setExchangeRateLabel() {
@@ -120,13 +78,8 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber, CustomT
             let amount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: store.state.maxDigits)
             let bitsAmount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: store.state.maxDigits)
             rateLabel.textColor = .darkText
-            rateLabel.text = "\(amount.string(forLocal: currentRate.locale)) = \(bitsAmount.bits)"
+            rateLabel.text = "\(bitsAmount.bits) = \(amount.string(forLocal: currentRate.locale))"
         }
-    }
-
-    @objc private func swipe() {
-        let newDigits = (((store.state.maxDigits - 2)/3 + 1) % 3)*3 + 2 //cycle through 2, 5, 8
-        store.perform(action: MaxDigits.set(newDigits))
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -153,18 +106,61 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber, CustomT
         return cell
     }
 
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if let header = self.header { return header }
+
+        let header = UIView(color: .whiteTint)
+        let rateLabelTitle = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+
+        header.addSubview(rateLabelTitle)
+        header.addSubview(rateLabel)
+        header.addSubview(bitcoinLabel)
+        header.addSubview(bitcoinSwitch)
+
+        rateLabelTitle.constrain([
+            rateLabelTitle.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: C.padding[2]),
+            rateLabelTitle.topAnchor.constraint(equalTo: header.topAnchor, constant: C.padding[1])])
+        rateLabel.constrain([
+            rateLabel.leadingAnchor.constraint(equalTo: rateLabelTitle.leadingAnchor),
+            rateLabel.topAnchor.constraint(equalTo: rateLabelTitle.bottomAnchor) ])
+
+        bitcoinLabel.constrain([
+            bitcoinLabel.leadingAnchor.constraint(equalTo: rateLabelTitle.leadingAnchor),
+            bitcoinLabel.topAnchor.constraint(equalTo: rateLabel.bottomAnchor, constant: C.padding[2]) ])
+        bitcoinSwitch.constrain([
+            bitcoinSwitch.leadingAnchor.constraint(equalTo: bitcoinLabel.leadingAnchor),
+            bitcoinSwitch.topAnchor.constraint(equalTo: bitcoinLabel.bottomAnchor, constant: C.padding[1]),
+            bitcoinSwitch.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -C.padding[2]),
+            bitcoinSwitch.widthAnchor.constraint(equalTo: header.widthAnchor, constant: -C.padding[4]) ])
+
+        if store.state.maxDigits == 8 {
+            bitcoinSwitch.selectedSegmentIndex = 1
+        } else {
+            bitcoinSwitch.selectedSegmentIndex = 0
+        }
+
+        bitcoinSwitch.valueChanged = {
+            let newIndex = self.bitcoinSwitch.selectedSegmentIndex
+            if newIndex == 1 {
+                self.store.perform(action: MaxDigits.set(8))
+            } else {
+                self.store.perform(action: MaxDigits.set(2))
+            }
+        }
+
+        bitcoinLabel.text = S.DefaultCurrency.bitcoinLabel
+        rateLabelTitle.text = S.DefaultCurrency.rateLabel
+        rateLabel.textColor = .white
+
+        self.header = header
+        return header
+    }
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let rate = rates[indexPath.row]
         store.perform(action: DefaultCurrency.setDefault(rate.code))
     }
 
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        didScrollForCustomTitle(yOffset: scrollView.contentOffset.y)
-    }
-
-    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        scrollViewWillEndDraggingForCustomTitle(yOffset: targetContentOffset.pointee.y)
-    }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

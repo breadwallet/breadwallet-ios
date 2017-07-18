@@ -67,12 +67,22 @@ extension UserDefaults {
         }
     }
 
+    //
+    // 2 - bits
+    // 5 - mBTC
+    // 8 - BTC
+    //
     static var maxDigits: Int {
         get {
             guard defaults.object(forKey: maxDigitsKey) != nil else {
                 return 2
             }
-            return defaults.integer(forKey: maxDigitsKey)
+            let maxDigits = defaults.integer(forKey: maxDigitsKey)
+            if maxDigits == 5 {
+                return 8 //Convert mBTC to BTC
+            } else {
+                return maxDigits
+            }
         }
         set {
             defaults.set(newValue, forKey: maxDigitsKey)

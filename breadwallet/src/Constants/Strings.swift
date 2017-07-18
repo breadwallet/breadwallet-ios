@@ -241,7 +241,7 @@ enum S {
         static let importTile = NSLocalizedString("Settings.importTitle", value:"Import Wallet", comment: "Import wallet label")
         static let notifications = NSLocalizedString("Settings.notifications", value:"Notifications", comment: "Notifications label")
         static let touchIdLimit = NSLocalizedString("Settings.touchIdLimit", value:"Touch ID Spending Limit", comment: "Touch ID spending limit label")
-        static let currency = NSLocalizedString("Settings.currency", value:"Default Currency", comment: "Default currency label")
+        static let currency = NSLocalizedString("Settings.currency", value:"Display Currency", comment: "Default currency label")
         static let sync = NSLocalizedString("Settings.sync", value:"Sync Blockchain", comment: "Sync blockchain label")
         static let shareData = NSLocalizedString("Settings.shareData", value:"Share Anonymous Data", comment: "Share anonymous data label")
         static let earlyAccess = NSLocalizedString("Settings.earlyAccess", value:"Join Early Access", comment: "Join Early access label")
@@ -270,8 +270,8 @@ enum S {
     }
 
     enum DefaultCurrency {
-        static let title = NSLocalizedString("DefaultCurrency.title", value:"Default Currency", comment: "Default currency view title")
         static let rateLabel = NSLocalizedString("DefaultCurrency.rateLabel", value:"Exchange Rate", comment: "Exchange rate label")
+        static let bitcoinLabel = NSLocalizedString("DefaultCurrency.bitcoinLabel", value: "Bitcoin Display Unit", comment: "Bitcoin denomination picker label")
     }
 
     enum SyncingView {
