@@ -150,11 +150,11 @@ extension WalletManager : WalletAuthenticator {
         }
     }
 
+    //Can be expensive...result should be cached
     var pinLength: Int {
         if let length = UserDefaults.pinLength { return length }
         do {
             if let pin: String = try keychainItem(key: KeychainKey.pin) {
-                UserDefaults.pinLength = pin.utf8.count
                 return pin.utf8.count
             } else {
                 return 6
@@ -337,9 +337,8 @@ extension WalletManager : WalletAuthenticator {
     // change wallet authentication pin
     func changePin(newPin: String, pin: String) -> Bool {
         guard authenticate(pin: pin) else { return false }
-
         do {
-            UserDefaults.pinLength = newPin.utf8.count
+            store.perform(action: PinLength.set(newPin.utf8.count))
             try setKeychainItem(key: KeychainKey.pin, item: newPin)
             return true
         }
@@ -364,7 +363,7 @@ extension WalletManager : WalletAuthenticator {
             else if try keychainItem(key: KeychainKey.pin) as String? != nil {
                 return authenticate(pin: newPin)
             }
-            UserDefaults.pinLength = newPin.utf8.count
+            store.perform(action: PinLength.set(newPin.utf8.count))
             try setKeychainItem(key: KeychainKey.pin, item: newPin)
             try authenticationSuccess()
             return true
