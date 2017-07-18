@@ -166,7 +166,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     }
 
     private func setPinAndPhraseChecks() {
-        pinCell.isCheckHighlighted = walletManager.pinLength == 6
+        pinCell.isCheckHighlighted = store.state.pinLength == 6
         paperKeyCell.isCheckHighlighted = !UserDefaults.walletRequiresBackup
     }
 
