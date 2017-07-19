@@ -38,7 +38,8 @@ import WebKit
     var mountPoint: String
     var walletManager: WalletManager
     let store: Store
-    
+    let noAuthApiClient: BRAPIClient?
+
     // bonjour debug endpoint establishment - this will configure the debugEndpoint 
     // over bonjour if debugOverBonjour is set to true. this MUST be set to false 
     // for production deploy targets
@@ -70,12 +71,13 @@ import WebKit
     
     private let messageUIPresenter = MessageUIPresenter()
     
-    init(bundleName: String, mountPoint: String = "/", walletManager: WalletManager, store: Store) {
+    init(bundleName: String, mountPoint: String = "/", walletManager: WalletManager, store: Store, noAuthApiClient: BRAPIClient? = nil) {
         wkProcessPool = WKProcessPool()
         self.bundleName = bundleName
         self.mountPoint = mountPoint
         self.walletManager = walletManager
         self.store = store
+        self.noAuthApiClient = noAuthApiClient
         super.init(nibName: nil, bundle: nil)
         if debugOverBonjour {
             setupBonjour()
@@ -249,7 +251,8 @@ import WebKit
     }
     
     fileprivate func setupIntegrations() {
-        guard let apiClient = walletManager.apiClient else { return }
+        let client: BRAPIClient? = noAuthApiClient != nil ? noAuthApiClient : walletManager.apiClient
+        guard let apiClient = client else { return }
         // proxy api for signing and verification
         let apiProxy = BRAPIProxy(mountAt: "/_api", client: apiClient)
         server.prependMiddleware(middleware: apiProxy)
