@@ -12,12 +12,13 @@ class ModalPresenter : Subscriber {
 
     //MARK: - Public
     var walletManager: WalletManager?
-    init(store: Store, walletManager: WalletManager, window: UIWindow) {
+    init(store: Store, walletManager: WalletManager, window: UIWindow, apiClient: BRAPIClient) {
         self.store = store
         self.window = window
         self.walletManager = walletManager
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular, store: store)
         self.wipeNavigationDelegate = StartNavigationDelegate(store: store)
+        self.noAuthApiClient = apiClient
         addSubscriptions()
     }
 
@@ -29,12 +30,14 @@ class ModalPresenter : Subscriber {
     private let messagePresenter = MessageUIPresenter()
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
     private let verifyPinTransitionDelegate = PinTransitioningDelegate()
-    private var supportCenter: SupportCenterContainer? {
+    private let noAuthApiClient: BRAPIClient
+
+    var supportCenter: SupportCenterContainer? {
         guard walletManager != nil else { return nil }
         return _supportCenter
     }
     private lazy var _supportCenter: SupportCenterContainer = {
-        return SupportCenterContainer(walletManager: self.walletManager!, store: self.store)
+        return SupportCenterContainer(walletManager: self.walletManager!, store: self.store, apiClient: self.noAuthApiClient)
     }()
     private var currentRequest: PaymentRequest?
     private var reachability = ReachabilityManager(host: "google.com")

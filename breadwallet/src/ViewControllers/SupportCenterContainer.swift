@@ -14,12 +14,12 @@ class SupportCenterContainer : UIViewController {
         webView.navigate(to: to)
     }
 
-    init(walletManager: WalletManager, store: Store) {
+    init(walletManager: WalletManager, store: Store, apiClient: BRAPIClient) {
         let mountPoint = "/support"
         #if Debug || Testflight
-            webView = BRWebViewController(bundleName: "bread-support-staging", mountPoint: mountPoint, walletManager: walletManager, store: store)
+            webView = BRWebViewController(bundleName: "bread-support-staging", mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: apiClient)
         #else
-            webView = BRWebViewController(bundleName: "bread-support", mountPoint: mountPoint, walletManager: walletManager, store: store)
+            webView = BRWebViewController(bundleName: "bread-support", mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: apiClient)
         #endif
         webView.startServer()
         webView.preload()

@@ -39,6 +39,12 @@ public protocol WalletAuthenticator {
     var userAccount: Dictionary<AnyHashable, Any>? { get set }
 }
 
+struct NoAuthAuthenticator : WalletAuthenticator {
+    let noWallet = true
+    let apiAuthKey: String? = nil
+    var userAccount: Dictionary<AnyHashable, Any>? = nil
+}
+
 extension WalletManager : WalletAuthenticator {
     static private var failedPins = [String]()
     
