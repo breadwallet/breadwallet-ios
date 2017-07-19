@@ -66,8 +66,8 @@ enum S {
 
         static let cameraUnavailableTitle = NSLocalizedString("Send.cameraUnavailableTitle", value:"Bread is not allowed to access the camera", comment: "Camera not allowed alert title")
         static let cameraUnavailableMessage = NSLocalizedString("Send.cameraunavailableMessage", value:"Go to Settings to allow camera access.", comment: "Camera not allowed message")
-        static let balance = NSLocalizedString("Send.balance", value:"Balance: %@", comment: "Balance: $4.00")
-        static let balanceWithFee = NSLocalizedString("Send.balanceWithFee", value:"Balance: %@, Fee: %@", comment: "Balance: $4.00, Fee: $0.01")
+        static let balance = NSLocalizedString("Send.balance", value:"Balance: %1$@", comment: "Balance: $4.00")
+        static let balanceWithFee = NSLocalizedString("Send.balanceWithFee", value:"Balance: %1$@, Fee: %2$@", comment: "Balance: $4.00, Fee: $0.01")
         static let containsAddress = NSLocalizedString("Send.containsAddress", value: "The destination is your own address. You cannot send to yourself.", comment: "Warning when sending to self.")
         enum UsedAddress {
             static let title = NSLocalizedString("Send.UsedAddress.title", value: "Address Already Used", comment: "Adress already used alert title")
@@ -127,13 +127,13 @@ enum S {
         static let invalid = NSLocalizedString("Transaction.invalid", value:"INVALID", comment: "Invalid transaction")
         static let complete = NSLocalizedString("Transaction.complete", value:"Complete", comment: "Transaction complete label")
         static let waiting = NSLocalizedString("Transaction.waiting", value:"Waiting to be confirmed. Some merchants require confirmation to complete a transaction. Estimated time: 1-2 hours.", comment: "Waiting to be confirmed string")
-        static let starting = NSLocalizedString("Transaction.starting", value: "Starting balance: %@", comment: "eg. Starting balance: $50.00")
-        static let fee = NSLocalizedString("Transaction.fee", value: "(%@ fee)", comment: "(b600 fee)")
-        static let ending = NSLocalizedString("Transaction.ending", value: "Ending balance: %@", comment: "eg. Ending balance: $50.00")
+        static let starting = NSLocalizedString("Transaction.starting", value: "Starting balance: %1$@", comment: "eg. Starting balance: $50.00")
+        static let fee = NSLocalizedString("Transaction.fee", value: "(%1$@ fee)", comment: "(b600 fee)")
+        static let ending = NSLocalizedString("Transaction.ending", value: "Ending balance: %1$@", comment: "eg. Ending balance: $50.00")
         static let exchangeOnDaySent = NSLocalizedString("Transaction.exchangeOnDaySent", value: "Exchange rate when sent:", comment: "Exchange rate on date header")
         static let exchangeOnDayReceived = NSLocalizedString("Transaction.exchangeOnDayReceived", value: "Exchange rate when received:", comment: "Exchange rate on date header")
-        static let receivedStatus = NSLocalizedString("Transaction.receivedStatus", value: "In progress: %@", comment: "Receive status text: 'In progress: 20%'")
-        static let sendingStatus = NSLocalizedString("Transaction.sendingStatus", value: "In progress: %@", comment: "Send status text: 'In progress: 20%'")
+        static let receivedStatus = NSLocalizedString("Transaction.receivedStatus", value: "In progress: %1$@", comment: "Receive status text: 'In progress: 20%'")
+        static let sendingStatus = NSLocalizedString("Transaction.sendingStatus", value: "In progress: %1$@", comment: "Send status text: 'In progress: 20%'")
         static let available = NSLocalizedString("Transaction.available", value: "Available to Spend", comment: "Availability status text")
     }
 
@@ -149,11 +149,11 @@ enum S {
         static let receivedDescription = NSLocalizedString("TransactionDetails.receivedDescription", value: "Received <b>%1@</b> at %2@", comment: "Received $5.00 from <address>")
         static let movedDescription = NSLocalizedString("TransactionDetails.movedDescription", value: "Moved <b>%2@</b> to %2@", comment: "Moved $5.00 to <address>")
         static let account = NSLocalizedString("TransactionDetails.account", value: "account", comment: "e.g. I received money from an account.")
-        static let sent = NSLocalizedString("TransactionDetails.sent", value:"Sent %@", comment: "Sent $5.00 (sent title 1/2)")
-        static let received = NSLocalizedString("TransactionDetails.received", value:"Received %@", comment: "Received $5.00 (received title 1/2)")
-        static let moved = NSLocalizedString("TransactionDetails.moved", value:"Moved %@", comment: "Moved $5.00")
-        static let to = NSLocalizedString("TransactionDetails.to", value:"to %@", comment: "[sent] to <address> (sent title 2/2)")
-        static let from = NSLocalizedString("TransactionDetails.from", value:"at %@", comment: "[received] at <address> (received title 2/2)")
+        static let sent = NSLocalizedString("TransactionDetails.sent", value:"Sent %1$@", comment: "Sent $5.00 (sent title 1/2)")
+        static let received = NSLocalizedString("TransactionDetails.received", value:"Received %1$@", comment: "Received $5.00 (received title 1/2)")
+        static let moved = NSLocalizedString("TransactionDetails.moved", value:"Moved %1$@", comment: "Moved $5.00")
+        static let to = NSLocalizedString("TransactionDetails.to", value:"to %1$@", comment: "[sent] to <address> (sent title 2/2)")
+        static let from = NSLocalizedString("TransactionDetails.from", value:"at %1$@", comment: "[received] at <address> (received title 2/2)")
     }
 
     enum SecurityCenter {
@@ -213,10 +213,10 @@ enum S {
 
     enum VerifyPin {
         static let title = NSLocalizedString("VerifyPin.title", value:"PIN Required", comment: "Verify PIN view title")
-        static let to = NSLocalizedString("VerifyPin.to", value: "To: %@", comment: "To: <bitcoin_address>")
-        static let amount = NSLocalizedString("VerifyPin.amount", value: "Amount: %@", comment: "Amount: $5.00")
-        static let fee = NSLocalizedString("VerifyPin.fee", value: "Fee: %@", comment: "Fee: $1.00")
-        static let total = NSLocalizedString("VerifyPIn.total", value: "Total: %@", comment: "Total: $6.00")
+        static let to = NSLocalizedString("VerifyPin.to", value: "To: %1$@", comment: "To: <bitcoin_address>")
+        static let amount = NSLocalizedString("VerifyPin.amount", value: "Amount: %1$@", comment: "Amount: $5.00")
+        static let fee = NSLocalizedString("VerifyPin.fee", value: "Fee: %1$@", comment: "Fee: $1.00")
+        static let total = NSLocalizedString("VerifyPIn.total", value: "Total: %1$@", comment: "Total: $6.00")
         static let continueBody = NSLocalizedString("VerifyPin.continueBody", value:"Please enter your PIN to continue.", comment: "Verify PIN view body")
     }
 
@@ -226,7 +226,7 @@ enum S {
         static let switchLabel = NSLocalizedString("TouchIdSettings.switchLabel", value:"Enable Touch ID for Bread", comment: "Touch id switch label.")
         static let unavailableAlertTitle = NSLocalizedString("TouchIdSettings.unavailableAlertTitle", value:"Touch ID Not Set Up", comment: "Touch ID unavailable alert title")
         static let unavailableAlertMessage = NSLocalizedString("TouchIdSettings.unavailableAlertMessage", value:"You have not set up Touch ID on this device. Go to Settings->Touch ID & Passcode to set it up now.", comment: "Touch ID unavailable alert message")
-        static let spendingLimit = NSLocalizedString("TouchIdSettings.spendingLimit", value: "Spending limit: %@ (%@)", comment: "Spending Limit: b100,000 = $100")
+        static let spendingLimit = NSLocalizedString("TouchIdSettings.spendingLimit", value: "Spending limit: %1$@ (%2$@)", comment: "Spending Limit: b100,000 ($100)")
         static let customizeText = NSLocalizedString("TouchIdSettings.customizeText", value: "You can customize your Touch ID spending limit from the", comment: "You can customize your Touch ID Spending Limit from the <buttonname=Touch ID Spending Limit screen>")
         static let linkText = NSLocalizedString("TouchIdSettings.linkText", value: "Touch ID Spending Limit screen", comment: "Link Text")
     }
@@ -329,12 +329,12 @@ enum S {
     }
 
     enum Alerts {
-        static let pinSet = NSLocalizedString("Alerts.pinSet", value:"PIN Set", comment: "Alert Header label")
-        static let paperKeySet = NSLocalizedString("Alerts.paperKeySet", value:"Paper Key Set", comment: "Alert Header Label")
-        static let sendSuccess = NSLocalizedString("Alerts.sendSuccess", value:"Send Confirmation", comment: "Send success alert header label")
-        static let sendFailure = NSLocalizedString("Alerts.sendFailure", value:"Send failed", comment: "Send failure alert header label")
+        static let pinSet = NSLocalizedString("Alerts.pinSet", value:"PIN Set", comment: "Alert Header label (the PIN was set)")
+        static let paperKeySet = NSLocalizedString("Alerts.paperKeySet", value:"Paper Key Set", comment: "Alert Header Label (the paper key was set)")
+        static let sendSuccess = NSLocalizedString("Alerts.sendSuccess", value:"Send Confirmation", comment: "Send success alert header label (confirmation that the send happened)")
+        static let sendFailure = NSLocalizedString("Alerts.sendFailure", value:"Send failed", comment: "Send failure alert header label (the send failed to happen)")
         static let paperKeySetSubheader = NSLocalizedString("Alerts.paperKeySetSubheader", value:"Awesome!", comment: "Alert Subheader label (playfully positive)")
-        static let sendSuccessSubheader = NSLocalizedString("Alerts.sendSuccessSubheader", value:"Money Sent!", comment: "Send success alert subheader label")
+        static let sendSuccessSubheader = NSLocalizedString("Alerts.sendSuccessSubheader", value:"Money Sent!", comment: "Send success alert subheader label (e.g. the money was sent)")
         static let copiedAddressesHeader = NSLocalizedString("Alerts.copiedAddressesHeader", value:"Addresses Copied", comment: "'the addresses were copied'' Alert title")
         static let copiedAddressesSubheader = NSLocalizedString("Alerts.copiedAddressesSubheader", value:"All wallet addresses successfully copied.", comment: "Addresses Copied Alert sub header")
     }
@@ -400,7 +400,7 @@ enum S {
             static let requestExpired = NSLocalizedString("PaymentProtocol.Errors.requestExpired", value: "request expired", comment: "Request expired payment protocol error message")
             static let badPaymentRequest = NSLocalizedString("PaymentProtocol.Errors.badPaymentRequest", value: "Bad Payment Request", comment: "Bad Payment request alert title")
             static let smallOutputErrorTitle = NSLocalizedString("PaymentProtocol.Errors.smallOutputError", value: "Couldn't make payment", comment: "Payment too small alert title")
-            static let smallPayment = NSLocalizedString("PaymentProtocol.Errors.smallPayment", value: "Bitcoin payments can't be less than %@.", comment: "Amount too small error message")
+            static let smallPayment = NSLocalizedString("PaymentProtocol.Errors.smallPayment", value: "Bitcoin payments can't be less than %1$@.", comment: "Amount too small error message")
             static let smallTransaction = NSLocalizedString("PaymentProtocol.Errors.smallTransaction", value: "Bitcoin transaction outputs can't be less than $@.", comment: "Output too small error message.")
             static let corruptedDocument = NSLocalizedString("PaymentProtocol.Errors.corruptedDocument", value: "Unsupported or corrupted document", comment: "Error opening payment protocol file message")
         }
@@ -436,10 +436,10 @@ enum S {
     }
 
     enum TimeSince {
-        static let seconds = NSLocalizedString("TimeSince.seconds", value: "%@ s", comment: "6 s (6 seconds)")
-        static let minutes = NSLocalizedString("TimeSince.minutes", value: "%@ m", comment: "6 m (6 minutes)")
-        static let hours = NSLocalizedString("TimeSince.hours", value: "%@ h", comment: "6 h (6 hours)")
-        static let days = NSLocalizedString("TimeSince.days", value:"%@ d", comment: "6 d (6 days)")
+        static let seconds = NSLocalizedString("TimeSince.seconds", value: "%1$@ s", comment: "6 s (6 seconds)")
+        static let minutes = NSLocalizedString("TimeSince.minutes", value: "%1$@ m", comment: "6 m (6 minutes)")
+        static let hours = NSLocalizedString("TimeSince.hours", value: "%1$@ h", comment: "6 h (6 hours)")
+        static let days = NSLocalizedString("TimeSince.days", value:"%1$@ d", comment: "6 d (6 days)")
     }
 
     enum Import {
@@ -450,7 +450,7 @@ enum S {
         static let scan = NSLocalizedString("Import.scan", value: "Scan Private Key", comment: "Scan Private key button label")
         static let title = NSLocalizedString("Import.title", value: "Import Wallet", comment: "Import Wallet screen title")
         static let importing = NSLocalizedString("Import.importing", value: "Importing Wallet", comment: "Importing wallet progress view label")
-        static let confirm = NSLocalizedString("Import.confirm", value: "Send %@ from this private key into your wallet? The bitcoin network will receive a fee of %@.", comment: "Sweep private key confirmation message")
+        static let confirm = NSLocalizedString("Import.confirm", value: "Send %1$@ from this private key into your wallet? The bitcoin network will receive a fee of %2$@.", comment: "Sweep private key confirmation message")
         static let checking = NSLocalizedString("Import.checking", value: "Checking private key balance...", comment: "Checking private key balance progress view text")
         static let password = NSLocalizedString("Import.password", value: "This private key is password protected.", comment: "Enter password alert view title")
         static let passwordPlaceholder = NSLocalizedString("Import.passwordPlaceholder", value: "password", comment: "password textfield placeholder")
@@ -471,7 +471,7 @@ enum S {
 
     enum BitID {
         static let title = NSLocalizedString("BitID.title", value: "BitID Authentication Request", comment: "BitID Authentication Request alert view title")
-        static let authenticationRequest = NSLocalizedString("BitID.authenticationRequest", value: "%@ is requesting authentication using your bitcoin wallet", comment: "<sitename> is requesting authentication using your bitcoin wallet")
+        static let authenticationRequest = NSLocalizedString("BitID.authenticationRequest", value: "%1$@ is requesting authentication using your bitcoin wallet", comment: "<sitename> is requesting authentication using your bitcoin wallet")
         static let deny = NSLocalizedString("BitID.deny", value: "Deny", comment: "Deny button label")
         static let approve = NSLocalizedString("BitID.approve", value: "Approve", comment: "Approve button label")
         static let success = NSLocalizedString("BitID.success", value: "Successfully Authenticated", comment: "BitID success alert title")
