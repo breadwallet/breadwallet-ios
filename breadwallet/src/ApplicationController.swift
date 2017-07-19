@@ -32,6 +32,7 @@ class ApplicationController : Subscriber {
     private var urlController: URLController?
     private var defaultsUpdater: UserDefaultsUpdater?
     private var reachability = ReachabilityManager(host: "google.com")
+    private let noAuthApiClient = BRAPIClient(authenticator: NoAuthAuthenticator())
 
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
@@ -63,6 +64,7 @@ class ApplicationController : Subscriber {
                 }
             }
         }
+        updateAssetBundles()
     }
 
     private func setup() {
@@ -166,7 +168,7 @@ class ApplicationController : Subscriber {
         guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
         store.perform(action: PinLength.set(walletManager.pinLength))
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
-        modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window)
+        modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient)
         exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
         feeUpdater = FeeUpdater(walletManager: walletManager)
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: window.rootViewController!)
@@ -238,7 +240,6 @@ class ApplicationController : Subscriber {
         walletManager?.apiClient?.updateFeatureFlags()
         initKVStoreCoordinator()
         feeUpdater?.refresh()
-        updateAssetBundles()
         defaultsUpdater?.refresh()
         walletManager?.apiClient?.events?.up()
         exchangeUpdater?.refresh(completion: {
@@ -255,9 +256,15 @@ class ApplicationController : Subscriber {
     }
     
     private func updateAssetBundles() {
-        walletManager?.apiClient?.updateBundles { errors in
-            for (n, e) in errors {
-                print("Bundle \(n) ran update. err: \(String(describing: e))")
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let myself = self else { return }
+            myself.noAuthApiClient.updateBundles { errors in
+                for (n, e) in errors {
+                    print("Bundle \(n) ran update. err: \(String(describing: e))")
+                }
+                DispatchQueue.main.async {
+                    let _ = myself.modalPresenter?.supportCenter // Initialize support center
+                }
             }
         }
     }
