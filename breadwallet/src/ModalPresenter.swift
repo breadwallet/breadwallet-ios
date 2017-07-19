@@ -508,9 +508,9 @@ class ModalPresenter : Subscriber {
                         var confirm: ConfirmPaperPhraseViewController?
                         confirm = ConfirmPaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin, callback: {
                                 confirm?.dismiss(animated: true, completion: {
-                                    self?.presentAlert(.paperKeySet(callback: {})) {
-                                        self?.store.perform(action: HideStartFlow())
-                                    }
+                                    myself.store.perform(action: Alert.Show(.paperKeySet(callback: {
+                                        myself.store.perform(action: HideStartFlow())
+                                    })))
                             })
                         })
                         write?.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle

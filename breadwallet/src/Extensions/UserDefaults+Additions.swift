@@ -146,6 +146,9 @@ extension UserDefaults {
     }
 
     static var walletRequiresBackup: Bool {
+        if UserDefaults.writePaperPhraseDate != nil {
+            return false
+        }
         if let legacyWalletNeedsBackup = UserDefaults.legacyWalletNeedsBackup, legacyWalletNeedsBackup == true {
             return true
         }
