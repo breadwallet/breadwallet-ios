@@ -67,11 +67,13 @@ class Sender {
         self.feePerKb = feePerKb
 
         if UserDefaults.isTouchIdEnabled && walletManager.canUseTouchID(forTx:tx) {
-            walletManager.signTransaction(tx, touchIDPrompt: touchIdMessage, completion: { success in
-                if success {
+            walletManager.signTransaction(tx, touchIDPrompt: touchIdMessage, completion: { result in
+                if result == .success {
                     self.publish(completion: completion)
                 } else {
-                    self.verifyPin(tx: tx, withFunction: verifyPinFunction, completion: completion)
+                    if result == .failure || result == .fallback {
+                        self.verifyPin(tx: tx, withFunction: verifyPinFunction, completion: completion)
+                    }
                 }
             })
         } else {

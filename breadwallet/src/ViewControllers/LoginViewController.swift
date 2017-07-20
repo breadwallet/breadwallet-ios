@@ -317,8 +317,8 @@ class LoginViewController : UIViewController, Subscriber {
     }
 
     @objc func touchIdTapped() {
-        walletManager?.authenticate(touchIDPrompt: S.UnlockScreen.touchIdPrompt, completion: { success in
-            if success {
+        walletManager?.authenticate(touchIDPrompt: S.UnlockScreen.touchIdPrompt, completion: { result in
+            if result == .success {
                 self.authenticationSucceded()
             }
         })
