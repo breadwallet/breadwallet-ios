@@ -719,8 +719,8 @@ class ModalPresenter : Subscriber {
 
     private func authenticateForBitId(prompt: String, callback: @escaping () -> Void) {
         if UserDefaults.isTouchIdEnabled {
-            walletManager?.authenticate(touchIDPrompt: prompt, completion: { success in
-                guard success else { self.verifyPinForBitId(prompt: prompt, callback: callback); return }
+            walletManager?.authenticate(touchIDPrompt: prompt, completion: { result in
+                guard result == .success else { self.verifyPinForBitId(prompt: prompt, callback: callback); return }
                 callback()
             })
         } else {

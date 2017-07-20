@@ -45,6 +45,13 @@ struct NoAuthAuthenticator : WalletAuthenticator {
     var userAccount: Dictionary<AnyHashable, Any>? = nil
 }
 
+enum TouchIdResult {
+    case success
+    case cancel
+    case fallback
+    case failure
+}
+
 extension WalletManager : WalletAuthenticator {
     static private var failedPins = [String]()
     
@@ -229,9 +236,20 @@ extension WalletManager : WalletAuthenticator {
     }
 
     // show touch ID dialog and call completion block with success or failure
-    func authenticate(touchIDPrompt: String, completion: @escaping (Bool) -> ()) {
-        LAContext().evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: touchIDPrompt,
-                                   reply: { success, _ in DispatchQueue.main.async { completion(success) } })
+    func authenticate(touchIDPrompt: String, completion: @escaping (TouchIdResult) -> ()) {
+        let policy = LAPolicy.deviceOwnerAuthenticationWithBiometrics
+        LAContext().evaluatePolicy(policy, localizedReason: touchIDPrompt,
+                                   reply: { success, error in
+                                    DispatchQueue.main.async {
+                                        if success { return completion(.success) }
+                                        guard let error = error else { return completion(.failure) }
+                                        if error._code == Int(kLAErrorUserCancel) {
+                                            return completion (.cancel)
+                                        } else if error._code == Int(kLAErrorUserFallback) {
+                                            return completion (.fallback)
+                                        }
+                                        completion(.failure)
+                                    } })
     }
     
     // sign the given transaction using pin authentication
@@ -241,19 +259,19 @@ extension WalletManager : WalletAuthenticator {
     }
     
     // sign the given transaction using touch ID authentication
-    func signTransaction(_ tx: BRTxRef, touchIDPrompt: String, completion: @escaping (Bool) -> ()) {
+    func signTransaction(_ tx: BRTxRef, touchIDPrompt: String, completion: @escaping (TouchIdResult) -> ()) {
         do {
             let spendLimit: Int64 = try keychainItem(key: KeychainKey.spendLimit) ?? 0
             guard let wallet = wallet, wallet.amountSentByTx(tx) + wallet.totalSent <= UInt64(spendLimit) else {
-                return completion(false)
+                return completion(.failure)
             }
         }
-        catch { return completion(false) }
+        catch { return completion(.failure) }
         store.perform(action: TouchIdActions.setIsPrompting(true))
-        authenticate(touchIDPrompt: touchIDPrompt) { success in
+        authenticate(touchIDPrompt: touchIDPrompt) { result in
             self.store.perform(action: TouchIdActions.setIsPrompting(false))
-            guard success else { return completion(false) }
-            completion(self.signTx(tx))
+            guard result == .success else { return completion(result) }
+            completion(self.signTx(tx) == true ? .success : .failure)
         }
     }
 
