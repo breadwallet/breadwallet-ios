@@ -51,7 +51,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private let amountView: AmountViewController
     private let to = LabelSendCell(label: S.Send.toLabel)
     private let descriptionCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
-    private let sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary, image: #imageLiteral(resourceName: "PinForSend"))
+    private let sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary)
     private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
     private let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
     private let currency: ShadowButton
@@ -59,11 +59,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
     private var balance: UInt64 = 0
-    private var amount: Satoshis? {
-        didSet {
-            setSendButton()
-        }
-    }
+    private var amount: Satoshis?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
     private let initialRequest: PaymentRequest?
@@ -186,15 +182,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         ]
 
         return NSAttributedString(string: output, attributes: attributes)
-    }
-
-    private func setSendButton() {
-        guard let amount = amount else { sendButton.image = #imageLiteral(resourceName: "PinForSend"); return }
-        if sender.maybeCanUseTouchId(forAmount: amount.rawValue) {
-            sendButton.image = #imageLiteral(resourceName: "TouchId")
-        } else {
-            sendButton.image = #imageLiteral(resourceName: "PinForSend")
-        }
     }
 
     @objc private func pasteTapped() {
