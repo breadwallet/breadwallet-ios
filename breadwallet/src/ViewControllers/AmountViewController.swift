@@ -293,9 +293,9 @@ class AmountViewController : UIViewController {
     private func updateBalanceLabel() {
         balanceLabel.attributedText = balanceTextForAmount?(amount, selectedRate)
         if let amount = amount, amount > 0 {
-            editFee.isHidden = false
+            if !E.isTestFlight { editFee.isHidden = false }
         } else {
-            editFee.isHidden = true
+            if !E.isTestFlight { editFee.isHidden = true }
         }
     }
 
@@ -330,10 +330,10 @@ class AmountViewController : UIViewController {
         bottomBorder.isHidden = true
         if let amount = amount, amount.rawValue > 0 {
             balanceLabel.isHidden = false
-            editFee.isHidden = false
+            if !E.isTestFlight { editFee.isHidden = false }
         } else {
             balanceLabel.isHidden = cursor.isHidden
-            editFee.isHidden = true
+            if !E.isTestFlight { editFee.isHidden = true }
         }
         updateBalanceLabel()
     }
@@ -345,10 +345,10 @@ class AmountViewController : UIViewController {
         bottomBorder.isHidden = isCollapsed ? false : true
         if let amount = amount, amount.rawValue > 0 {
             balanceLabel.isHidden = false
-            editFee.isHidden = false
+            if !E.isTestFlight { editFee.isHidden = false }
         } else {
             balanceLabel.isHidden = cursor.isHidden
-            editFee.isHidden = true
+            if !E.isTestFlight { editFee.isHidden = true }
         }
         updateBalanceLabel()
         didChangeFirstResponder?(isCollapsed)
