@@ -47,9 +47,10 @@ class PinPadViewController : UICollectionViewController {
         }
     }
 
-    init(style: PinPadStyle, keyboardType: KeyboardType) {
+    init(style: PinPadStyle, keyboardType: KeyboardType, maxDigits: Int) {
         self.style = style
         self.keyboardType = keyboardType
+        self.maxDigits = maxDigits
         let layout = UICollectionViewFlowLayout()
         let screenWidth = UIScreen.main.bounds.width
 
@@ -73,6 +74,7 @@ class PinPadViewController : UICollectionViewController {
     private let style: PinPadStyle
     private let keyboardType: KeyboardType
     private let items: [String]
+    private let maxDigits: Int
 
     override func viewDidLoad() {
         switch style {
@@ -138,10 +140,10 @@ class PinPadViewController : UICollectionViewController {
         let numberFormatter = NumberFormatter()
         let decimalLocation = currentOutput.range(of: numberFormatter.currencyDecimalSeparator)?.lowerBound
 
-        //Don't allow more that 2 decimal points
+        //Don't allow more that maxDigits decimal points
         if let location = decimalLocation {
             let locationValue = currentOutput.distance(from: currentOutput.endIndex, to: location)
-            if locationValue < -2 {
+            if locationValue < -maxDigits {
                 return false
             }
         }

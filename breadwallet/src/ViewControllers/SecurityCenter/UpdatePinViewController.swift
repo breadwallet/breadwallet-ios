@@ -37,7 +37,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private let instruction = UILabel.wrapping(font: .customBody(size: 14.0), color: .darkText)
     private let caption = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
     private var pinView: PinView
-    private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad)
+    private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad, maxDigits: 0)
     private let spacer = UIView()
     private let store: Store
     private let walletManager: WalletManager

@@ -23,6 +23,10 @@ extension Satoshis {
         rawValue = UInt64((bits.rawValue * 100.0).rounded(.toNearestOrEven))
     }
 
+    init(bitcoin: Bitcoin) {
+        rawValue = UInt64((bitcoin.rawValue * Double(C.satoshis)).rounded(.toNearestOrEven))
+    }
+
     init(value: Double, rate: Rate) {
         rawValue = UInt64((value / rate.rate * Double(C.satoshis)).rounded(.toNearestOrEven))
     }
@@ -79,3 +83,14 @@ extension Bits {
     }
 }
 
+//MARK: - Bitcoin
+struct Bitcoin {
+    let rawValue: Double
+}
+
+extension Bitcoin {
+    init?(string: String) {
+        guard let value = Double(string) else { return nil }
+        rawValue = value
+    }
+}
