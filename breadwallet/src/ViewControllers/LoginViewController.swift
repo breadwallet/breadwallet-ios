@@ -40,7 +40,7 @@ class LoginViewController : UIViewController, Subscriber {
     //MARK: - Private
     private let store: Store
     private let backgroundView = LoginBackgroundView()
-    private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad)
+    private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0)
     private let pinViewContainer = UIView()
     private var pinView: PinView?
     private let addressButton = SegmentedButton(title: S.UnlockScreen.myAddress, type: .left)

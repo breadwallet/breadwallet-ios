@@ -21,6 +21,7 @@ class AmountViewController : UIViewController {
                                              isBtcSwapped: store.state.isBtcSwapped)
         self.currencyToggle = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
         self.feeSelector = FeeSelector(store: store)
+        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: store.state.maxDigits)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -58,7 +59,7 @@ class AmountViewController : UIViewController {
     private var feeSelectorTop: NSLayoutConstraint?
     private let placeholder = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
     private let amountLabel = UILabel(font: .customBody(size: 26.0), color: .darkText)
-    private let pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad)
+    private let pinPad: PinPadViewController
     private let currencyToggle: ShadowButton
     private let border = UIView(color: .secondaryShadow)
     private let bottomBorder = UIView(color: .secondaryShadow)
@@ -239,11 +240,7 @@ class AmountViewController : UIViewController {
         minimumFractionDigits = 0 //set default
         if let decimalLocation = output.range(of: NumberFormatter().currencyDecimalSeparator)?.upperBound {
             let locationValue = output.distance(from: output.endIndex, to: decimalLocation)
-            if locationValue == -2 {
-                minimumFractionDigits = 2
-            } else if locationValue == -1 {
-                minimumFractionDigits = 1
-            }
+            minimumFractionDigits = abs(locationValue)
         }
 
         //If trailing decimal, append the decimal to the output
@@ -260,8 +257,14 @@ class AmountViewController : UIViewController {
                 newAmount = Satoshis(value: value, rate: rate)
             }
         } else {
-            if let bits = Bits(string: output) {
-                newAmount = Satoshis(bits: bits)
+            if store.state.maxDigits == 2 {
+                if let bits = Bits(string: output) {
+                    newAmount = Satoshis(bits: bits)
+                }
+            } else {
+                if let bitcoin = Bitcoin(string: output) {
+                    newAmount = Satoshis(bitcoin: bitcoin)
+                }
             }
         }
 
@@ -278,7 +281,8 @@ class AmountViewController : UIViewController {
 
     private func updateAmountLabel() {
         guard let amount = amount else { amountLabel.text = ""; return }
-        var output = NumberFormatter.formattedString(amount: amount, rate: selectedRate, minimumFractionDigits: minimumFractionDigits, maxDigits: store.state.maxDigits)
+        let displayAmount = DisplayAmount(amount: amount, state: store.state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+        var output = displayAmount.description
         if hasTrailingDecimal {
             output = output.appending(NumberFormatter().currencyDecimalSeparator)
         }

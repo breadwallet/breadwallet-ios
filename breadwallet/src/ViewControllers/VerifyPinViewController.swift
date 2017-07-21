@@ -24,7 +24,7 @@ class VerifyPinViewController : UIViewController {
     let effect = UIBlurEffect(style: .dark)
     let contentBox = UIView()
     private let callback: VerifyPinCallback
-    private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad)
+    private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad, maxDigits: 0)
     private let titleLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
     private let body = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let pinView: PinView
