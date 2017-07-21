@@ -94,3 +94,69 @@ struct Amount {
         return format
     }
 }
+
+struct DisplayAmount {
+    let amount: Satoshis
+    let state: State
+    let selectedRate: Rate?
+
+    var description: String {
+        return selectedRate != nil ? fiatDescription : bitcoinDescription
+    }
+
+    private var fiatDescription: String {
+        guard let rate = selectedRate else { return "" }
+        guard let string = localFormat.string(from: Double(amount.rawValue)/100000000.0*rate.rate as NSNumber) else { return "" }
+        return string
+    }
+
+    private var bitcoinDescription: String {
+        var decimal = Decimal(self.amount.rawValue)
+        var amount: Decimal = 0.0
+        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-state.maxDigits), .up)
+        let number = NSDecimalNumber(decimal: amount)
+        guard let string = btcFormat.string(from: number) else { return "" }
+        return string
+    }
+
+    var localFormat: NumberFormatter {
+        let format = NumberFormatter()
+        format.isLenient = true
+        format.numberStyle = .currency
+        format.generatesDecimalNumbers = true
+        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+        if let rate = selectedRate {
+            format.currencySymbol = rate.currencySymbol
+        }
+        return format
+    }
+
+    var btcFormat: NumberFormatter {
+        let format = NumberFormatter()
+        format.isLenient = true
+        format.numberStyle = .currency
+        format.generatesDecimalNumbers = true
+        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+        format.currencyCode = "XBT"
+
+        switch state.maxDigits {
+        case 2:
+            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+            format.maximum = (C.maxMoney/C.satoshis)*100000 as NSNumber
+        case 5:
+            format.currencySymbol = "m\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
+            format.maximum = (C.maxMoney/C.satoshis)*1000 as NSNumber
+        case 8:
+            format.currencySymbol = "\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
+            format.maximum = C.maxMoney/C.satoshis as NSNumber
+        default:
+            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+        }
+
+        format.maximumFractionDigits = state.maxDigits
+        format.minimumFractionDigits = 0 // iOS 8 bug, minimumFractionDigits now has to be set after currencySymbol
+        format.maximum = Decimal(C.maxMoney)/(pow(10.0, state.maxDigits)) as NSNumber
+
+        return format
+    }
+}
