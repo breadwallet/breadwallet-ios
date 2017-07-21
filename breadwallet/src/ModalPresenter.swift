@@ -537,7 +537,7 @@ class ModalPresenter : Subscriber {
         })
         start.addCloseNavigationItem(tintColor: .white)
         start.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.paperPhrase)
+        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.paperKey)
         faqButton.tintColor = .white
         start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
         paperPhraseNavigationController.viewControllers = [start]

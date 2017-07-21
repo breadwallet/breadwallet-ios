@@ -256,7 +256,7 @@ class ReceiveViewController : UIViewController, Subscriber {
 
 extension ReceiveViewController : ModalDisplayable {
     var faqArticleId: String? {
-        return ArticleIds.receive
+        return ArticleIds.receiveBitcoin
     }
 
     var modalTitle: String {
