@@ -153,10 +153,21 @@ class PinPadViewController : UICollectionViewController {
             return false
         }
 
-        //Next char has to be a . if first is 0
         if keyboardType == .decimalPad {
-            if currentOutput == "0" && char != numberFormatter.currencyDecimalSeparator {
-                return false
+            if currentOutput == "0" {
+                //Append . to 0
+                if char == numberFormatter.currencyDecimalSeparator {
+                    return true
+
+                //Dont append 0 to 0
+                } else if char == "0" {
+                    return false
+
+                //Replace 0 with any other digit
+                } else {
+                    currentOutput = char
+                    return false
+                }
             }
         }
 
