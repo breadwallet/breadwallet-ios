@@ -99,6 +99,7 @@ struct DisplayAmount {
     let amount: Satoshis
     let state: State
     let selectedRate: Rate?
+    let minimumFractionDigits: Int?
 
     var description: String {
         return selectedRate != nil ? fiatDescription : bitcoinDescription
@@ -128,6 +129,9 @@ struct DisplayAmount {
         if let rate = selectedRate {
             format.currencySymbol = rate.currencySymbol
         }
+        if let minimumFractionDigits = minimumFractionDigits {
+            format.minimumFractionDigits = minimumFractionDigits
+        }
         return format
     }
 
@@ -154,7 +158,9 @@ struct DisplayAmount {
         }
 
         format.maximumFractionDigits = state.maxDigits
-        format.minimumFractionDigits = 0 // iOS 8 bug, minimumFractionDigits now has to be set after currencySymbol
+        if let minimumFractionDigits = minimumFractionDigits {
+            format.minimumFractionDigits = minimumFractionDigits
+        }
         format.maximum = Decimal(C.maxMoney)/(pow(10.0, state.maxDigits)) as NSNumber
 
         return format

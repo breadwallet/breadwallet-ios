@@ -158,13 +158,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> NSAttributedString? {
-        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), state: store.state, selectedRate: rate)
+        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
         let balanceText = balanceAmount.description
         var output = ""
         var color: UIColor = .grayTextTint
         if let amount = amount, amount.rawValue > 0 {
             let fee = sender.feeForTx(amount: amount.rawValue)
-            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate)
+            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
             let feeText = feeAmount.description
             output = String(format: S.Send.balanceWithFee, balanceText, feeText)
             if (balance >= fee) && amount.rawValue > (balance - fee) {
