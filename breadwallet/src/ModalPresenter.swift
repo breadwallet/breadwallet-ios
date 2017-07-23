@@ -360,7 +360,7 @@ class ModalPresenter : Subscriber {
                     }
                     start.addCloseNavigationItem(tintColor: .white)
                     start.navigationItem.title = S.WipeWallet.title
-                    let faqButton = UIButton.buildFaqButton(store: myself.store, articleId: ArticleIds.importWallet)
+                    let faqButton = UIButton.buildFaqButton(store: myself.store, articleId: ArticleIds.wipeWallet)
                     faqButton.tintColor = .white
                     start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
                     nc.viewControllers = [start]
