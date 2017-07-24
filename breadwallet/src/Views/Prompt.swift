@@ -17,7 +17,7 @@ enum PromptType {
     case noPasscode
 
     static var defaultOrder: [PromptType] = {
-        return [..recommendRescan, .upgradePin, .paperKey, .noPasscode, .touchId]
+        return [.recommendRescan, .upgradePin, .paperKey, .noPasscode, .touchId]
     }()
 
     var title: String {
