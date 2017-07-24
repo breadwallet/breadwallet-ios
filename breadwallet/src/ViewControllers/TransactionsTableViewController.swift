@@ -250,7 +250,9 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isSyncingViewVisible && indexPath.section == 0 { return }
         if let currentPrompt = currentPrompt, indexPath.section == 0 {
-            store.trigger(name: currentPrompt.type.trigger)
+            if let trigger = currentPrompt.type.trigger {
+                store.trigger(name: trigger)
+            }
             saveEvent("prompt.\(currentPrompt.type.name).trigger")
             self.currentPrompt = nil
             return
