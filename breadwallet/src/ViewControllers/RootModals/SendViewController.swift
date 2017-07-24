@@ -346,15 +346,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
         if wallet.containsAddress(address) {
             return showError(title: S.Alert.warning, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
-        } else if wallet.addressIsUsed(address) {
+        } else if wallet.addressIsUsed(address) && !didIgnoreUsedAddressWarning {
             let message = "\(S.Send.UsedAddress.title)\n\n\(S.Send.UsedAddress.firstLine)\n\n\(S.Send.UsedAddress.secondLine)"
             return showError(title: S.Alert.warning, message: message, ignore: { [weak self] in
                 self?.didIgnoreUsedAddressWarning = true
                 self?.confirmProtocolRequest(protoReq: protoReq)
             })
-        } else if let message = protoReq.errorMessage, message.utf8.count > 0 && (protoReq.commonName?.utf8.count)! > 0 {
+        } else if let message = protoReq.errorMessage, message.utf8.count > 0 && (protoReq.commonName?.utf8.count)! > 0 && !didIgnoreIdentityNotCertified {
             return showError(title: S.Send.identityNotCertified, message: message, ignore: { [weak self] in
-                self?.didIgnoreUsedAddressWarning = true
+                self?.didIgnoreIdentityNotCertified = true
                 self?.confirmProtocolRequest(protoReq: protoReq)
             })
         } else if requestAmount < wallet.minOutputAmount {
