@@ -28,4 +28,8 @@ extension LAContext {
         }
     }
 
+    static var isPasscodeEnabled: Bool {
+        return LAContext().canEvaluatePolicy(.deviceOwnerAuthentication, error: nil)
+    }
+
 }

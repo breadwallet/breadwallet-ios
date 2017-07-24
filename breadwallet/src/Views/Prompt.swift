@@ -14,21 +14,19 @@ enum PromptType {
     case paperKey
     case upgradePin
     case recommendRescan
+    case noPasscode
 
     static var defaultOrder: [PromptType] = {
-        return [.recommendRescan, .upgradePin, .paperKey, .touchId]
+        return [..recommendRescan, .upgradePin, .paperKey, .noPasscode, .touchId]
     }()
 
     var title: String {
         switch self {
-        case .touchId:
-            return S.Prompts.TouchId.title
-        case .paperKey:
-            return S.Prompts.PaperKey.title
-        case .upgradePin:
-            return S.Prompts.UpgradePin.title
-        case .recommendRescan:
-            return S.Prompts.RecommendRescan.title
+        case .touchId: return S.Prompts.TouchId.title
+        case .paperKey: return S.Prompts.PaperKey.title
+        case .upgradePin: return S.Prompts.UpgradePin.title
+        case .recommendRescan: return S.Prompts.RecommendRescan.title
+        case .noPasscode: return S.Prompts.NoPasscode.title
         }
     }
     
@@ -38,33 +36,28 @@ enum PromptType {
         case .paperKey: return "paperKeyPrompt"
         case .upgradePin: return "upgradePinPrompt"
         case .recommendRescan: return "recommendRescanPrompt"
+        case .noPasscode: return "noPasscodePrompt"
         }
     }
 
     var body: String {
         switch self {
-        case .touchId:
-            return S.Prompts.TouchId.body
-        case .paperKey:
-            return S.Prompts.PaperKey.body
-        case .upgradePin:
-            return S.Prompts.UpgradePin.body
-        case .recommendRescan:
-            return S.Prompts.RecommendRescan.body
+        case .touchId: return S.Prompts.TouchId.body
+        case .paperKey: return S.Prompts.PaperKey.body
+        case .upgradePin: return S.Prompts.UpgradePin.body
+        case .recommendRescan: return S.Prompts.RecommendRescan.body
+        case .noPasscode: return S.Prompts.NoPasscode.body
         }
     }
 
     //This is the trigger that happens when the prompt is tapped
-    var trigger: TriggerName {
+    var trigger: TriggerName? {
         switch self {
-        case .touchId:
-            return .promptTouchId
-        case .paperKey:
-            return .promptPaperKey
-        case .upgradePin:
-            return .promptUpgradePin
-        case .recommendRescan:
-            return .recommendRescan
+        case .touchId: return .promptTouchId
+        case .paperKey: return .promptPaperKey
+        case .upgradePin: return .promptUpgradePin
+        case .recommendRescan: return .recommendRescan
+        case .noPasscode: return nil
         }
     }
 
@@ -78,6 +71,8 @@ enum PromptType {
             return walletManager.pinLength != 6
         case .recommendRescan:
             return state.recommendRescan
+        case .noPasscode:
+            return !LAContext.isPasscodeEnabled
         }
     }
 }
