@@ -388,6 +388,13 @@ public extension Data {
         data.append(UnsafeBufferPointer(start: [mpk.pubKey], count: 1))
         self.init(data)
     }
+    
+    var urlEncodedObject: [String: [String]]? {
+        guard let str = String(data: self, encoding: .utf8) else {
+            return nil
+        }
+        return str.parseQueryString()
+    }
 }
 
 public extension Date {
@@ -542,5 +549,29 @@ extension UIImage {
         UIGraphicsEndImageContext()
         
         return scaledImage!
+    }
+}
+
+extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
+    var flattened: [Key: String] {
+        var ret = [Key: String]()
+        for (k, v) in self {
+            if let v = v as? [String] {
+                if v.count > 0 {
+                    ret[k] = v[0]
+                }
+            }
+        }
+        return ret
+    }
+    
+    var jsonString: String {
+        guard let json = try? JSONSerialization.data(withJSONObject: self, options: []) else {
+            return "null"
+        }
+        guard let jstring = String(data: json, encoding: .utf8) else {
+            return "null"
+        }
+        return jstring
     }
 }

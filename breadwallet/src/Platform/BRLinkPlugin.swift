@@ -80,17 +80,75 @@ class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate
                 return BRHTTPResponse(request: request, code: 400)
             }
             
-            let safari = SFSafariViewController(url: url)
-            safari.delegate = self
             self.hasBrowser = true
             DispatchQueue.main.async {
-                self.controller.present(safari, animated: true, completion: nil)
+                let browser = BRBrowserViewController()
+                let req = URLRequest(url: url)
+                browser.load(req)
+                browser.onDone = {
+                    self.hasBrowser = false
+                }
+                self.controller.present(browser, animated: true, completion: nil)
             }
             return BRHTTPResponse(request: request, code: 204)
         }
-    }
-    
-    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        hasBrowser = false
+        
+        // opens a browser with a customized request object
+        // params:
+        //  {
+        //    "url": "http://myirl.com",
+        //    "method": "POST",
+        //    "body": "stringified request body...",
+        //    "headers": {"X-Header": "Blerb"}
+        //    "closeOn": "http://someurl",
+        //  }
+        // Only the "url" parameter is required. If only the "url" parameter
+        // is supplied the request acts exactly like the GET /_browser resource above
+        //
+        // When the "closeOn" parameter is provided the web view will automatically close
+        // if the browser navigates to this exact URL. It is useful for oauth redirects
+        // and the like
+        router.post("/_browser") { (request, _) -> BRHTTPResponse in
+            if self.hasBrowser {
+                return BRHTTPResponse(request: request, code: 409)
+            }
+            guard let body = request.body() else {
+                print("[BRLinkPlugin] POST /_browser error reading body")
+                return BRHTTPResponse(request: request, code: 400)
+            }
+            guard let json = try? JSONSerialization.jsonObject(with: body, options: []) as? [String: Any] else {
+                print("[BRLinkPlugin] POST /_browser could not deserialize json object")
+                return BRHTTPResponse(request: request, code: 400)
+            }
+            guard let toURL = json?["url"] as? String, let url = URL(string: toURL) else {
+                print("[BRLinkPlugin] POST /_browser request body did not contain a valid URL")
+                return BRHTTPResponse(request: request, code: 400)
+            }
+            var req = URLRequest(url: url)
+            if let method = json?["method"] as? String {
+                req.httpMethod = method
+            }
+            if let body = json?["body"] as? String {
+                req.httpBody = Data(body.utf8)
+            }
+            if let headers = json?["headers"] as? [String: String] {
+                for (k, v) in headers {
+                    req.addValue(v, forHTTPHeaderField: k)
+                }
+            }
+            self.hasBrowser = true
+            DispatchQueue.main.async {
+                let browser = BRBrowserViewController()
+                browser.load(req)
+                if let closeOn = json?["closeOn"] as? String {
+                    browser.closeOnURL = closeOn
+                }
+                browser.onDone = {
+                    self.hasBrowser = false
+                }
+                self.controller.present(browser, animated: true, completion: nil)
+            }
+            return BRHTTPResponse(request: request, code: 204)
+        }
     }
 }
