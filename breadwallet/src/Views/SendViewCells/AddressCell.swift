@@ -54,7 +54,7 @@ class AddressCell : UIView {
         contentLabel.constrain([
             contentLabel.constraint(.leading, toView: label),
             contentLabel.constraint(toBottom: label, constant: 0.0),
-            contentLabel.trailingAnchor.constraint(lessThanOrEqualTo: paste.leadingAnchor, constant: -C.padding[1]) ])
+            contentLabel.trailingAnchor.constraint(equalTo: paste.leadingAnchor, constant: -C.padding[1]) ])
         textField.constrain([
             textField.constraint(.leading, toView: label),
             textField.constraint(toBottom: label, constant: 0.0),
