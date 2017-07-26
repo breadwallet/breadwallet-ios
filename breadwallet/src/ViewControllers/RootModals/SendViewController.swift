@@ -105,7 +105,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if initialAddress != nil {
-            addressCell.content = initialAddress
+            addressCell.setContent(initialAddress)
             amountView.expandPinPad()
         } else if let initialRequest = initialRequest {
             handleRequest(initialRequest)
@@ -170,7 +170,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         store.subscribe(self, selector: {$0.pasteboard != $1.pasteboard}, callback: {
             if let address = $0.pasteboard {
                 if address.isValidAddress {
-                    self.addressCell.content = address
+                    self.addressCell.setContent(address)
                 } else {
                     self.showError(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
                 }
@@ -194,7 +194,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         if sender.transaction != nil {
             send()
         } else {
-            guard let address = addressCell.content else {
+            guard let address = addressCell.address else {
                 return showError(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             }
             guard address.isValidAddress else {
@@ -223,7 +223,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private func handleRequest(_ request: PaymentRequest) {
         switch request.type {
         case .local:
-            addressCell.content = request.toAddress
+            addressCell.setContent(request.toAddress)
             addressCell.isEditable = true
             if let amount = request.amount {
                 amountView.forceUpdateAmount(amount: amount)
@@ -252,7 +252,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             return start + "..." + end
         }
 
-        var address = addressCell.content ?? ""
+        var address = addressCell.address ?? ""
         if address.isValidAddress {
             address = shrink(address)
         }
@@ -350,7 +350,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         }
 
         if let name = protoReq.commonName {
-            addressCell.content = protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized
+            addressCell.setContent(protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized)
         }
 
         if requestAmount > 0 {

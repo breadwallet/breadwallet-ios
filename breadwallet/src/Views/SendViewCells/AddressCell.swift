@@ -15,11 +15,13 @@ class AddressCell : UIView {
         setupViews()
     }
 
-    var content: String? {
-        didSet {
-            contentLabel.text = content
-            textField.text = content
-        }
+    var address: String? {
+        return contentLabel.text
+    }
+
+    func setContent(_ content: String?) {
+        contentLabel.text = content
+        textField.text = content
     }
 
     var isEditable = false {
@@ -28,7 +30,7 @@ class AddressCell : UIView {
         }
     }
 
-    let contentLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
+    fileprivate let contentLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let label = UILabel(font: .customBody(size: 16.0))
     private let textField = UITextField()
     fileprivate let gr = UITapGestureRecognizer()
