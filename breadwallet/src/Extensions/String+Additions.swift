@@ -7,16 +7,12 @@
 //
 
 import UIKit
+import BRCore
 
 extension String {
     var isValidAddress: Bool {
         guard lengthOfBytes(using: .utf8) > 0 else { return false }
-        guard !E.isTestnet else { return true }
-        if characters.first == "1" || characters.first == "3" {
-            return true
-        } else {
-            return false
-        }
+        return BRAddressIsValid(self) != 0
     }
 
     var sanitized: String {
