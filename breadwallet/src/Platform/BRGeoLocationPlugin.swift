@@ -155,7 +155,7 @@ open class BRGeoLocationPlugin: NSObject, BRHTTPRouterPlugin, CLLocationManagerD
         //
         // Response Object:
         //
-        // "coordinates" = { "latitude": double, "longitude": double }
+        // "coordinate" = { "latitude": double, "longitude": double }
         // "altitude" = double
         // "description" = "a string representation of this object"
         // "timestamp" = "ISO-8601 timestamp of when this location was generated"
