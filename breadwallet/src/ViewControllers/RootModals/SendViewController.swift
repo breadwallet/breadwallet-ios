@@ -122,6 +122,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         descriptionCell.didBeginEditing = { [weak self] in
             self?.amountView.closePinPad()
         }
+        addressCell.didBeginEditing = strongify(self) { myself in
+            myself.amountView.closePinPad()
+        }
         amountView.balanceTextForAmount = { [weak self] amount, rate in
             return self?.balanceTextForAmount(amount: amount, rate: rate)
         }
@@ -133,6 +136,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         amountView.didChangeFirstResponder = { [weak self] isFirstResponder in
             if isFirstResponder {
                 self?.descriptionCell.textView.resignFirstResponder()
+                self?.addressCell.textField.resignFirstResponder()
             }
         }
     }
@@ -184,6 +188,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
     @objc private func scanTapped() {
         descriptionCell.textView.resignFirstResponder()
+        addressCell.textField.resignFirstResponder()
         presentScan? { [weak self] paymentRequest in
             guard let request = paymentRequest else { return }
             self?.handleRequest(request)

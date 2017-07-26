@@ -19,6 +19,8 @@ class AddressCell : UIView {
         return contentLabel.text
     }
 
+    var didBeginEditing: (() -> Void)?
+
     func setContent(_ content: String?) {
         contentLabel.text = content
         textField.text = content
@@ -30,14 +32,14 @@ class AddressCell : UIView {
         }
     }
 
+    let textField = UITextField()
+    let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
+    let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
     fileprivate let contentLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let label = UILabel(font: .customBody(size: 16.0))
-    private let textField = UITextField()
     fileprivate let gr = UITapGestureRecognizer()
     fileprivate let tapView = UIView()
     private let border = UIView(color: .secondaryShadow)
-    let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
-    let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
 
     private func setupViews() {
         addSubviews()
@@ -118,6 +120,7 @@ class AddressCell : UIView {
 
 extension AddressCell : UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        didBeginEditing?()
         contentLabel.isHidden = true
         gr.isEnabled = false
         tapView.isUserInteractionEnabled = false
