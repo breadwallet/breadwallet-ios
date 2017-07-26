@@ -49,11 +49,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private let sender: Sender
     private let walletManager: WalletManager
     private let amountView: AmountViewController
-    private let to = LabelSendCell(label: S.Send.toLabel)
+    private let addressCell = AddressCell()
     private let descriptionCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary)
-    private let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
-    private let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
     private let currency: ShadowButton
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
@@ -66,18 +64,16 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
     override func viewDidLoad() {
         view.backgroundColor = .white
-        view.addSubview(to)
+        view.addSubview(addressCell)
         view.addSubview(descriptionCell)
         view.addSubview(sendButton)
 
-        to.accessoryView.addSubview(paste)
-        to.accessoryView.addSubview(scan)
-        to.constrainTopCorners(height: SendCell.defaultHeight)
+        addressCell.constrainTopCorners(height: SendCell.defaultHeight)
 
         addChildViewController(amountView, layout: {
             amountView.view.constrain([
                 amountView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                amountView.view.topAnchor.constraint(equalTo: to.bottomAnchor),
+                amountView.view.topAnchor.constraint(equalTo: addressCell.bottomAnchor),
                 amountView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         })
 
@@ -96,18 +92,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             sendButton.constraint(toBottom: descriptionCell, constant: verticalButtonPadding),
             sendButton.constraint(.height, constant: C.Sizes.buttonHeight),
             sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
-        scan.constrain([
-            scan.constraint(.centerY, toView: to.accessoryView),
-            scan.constraint(.trailing, toView: to.accessoryView, constant: -C.padding[2]),
-            scan.constraint(.height, constant: buttonSize.height) ])
-        paste.constrain([
-            paste.constraint(.centerY, toView: to.accessoryView),
-            paste.constraint(toLeading: scan, constant: -C.padding[1]),
-            paste.constraint(.height, constant: buttonSize.height) ])
-
-        preventCellContentOverflow()
         addButtonActions()
-
         store.subscribe(self, selector: { $0.walletState.balance != $1.walletState.balance },
                         callback: {
                             if let balance = $0.walletState.balance {
@@ -117,15 +102,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         sendButton.isEnabled = false
     }
 
-    private func preventCellContentOverflow() {
-        to.contentLabel.constrain([
-            to.contentLabel.trailingAnchor.constraint(lessThanOrEqualTo: paste.leadingAnchor, constant: -C.padding[2]) ])
-    }
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if initialAddress != nil {
-            to.content = initialAddress
+            addressCell.content = initialAddress
             amountView.expandPinPad()
         } else if let initialRequest = initialRequest {
             handleRequest(initialRequest)
@@ -133,8 +113,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     private func addButtonActions() {
-        paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
-        scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
+        addressCell.paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
+        addressCell.scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
         sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
         descriptionCell.didReturn = { textView in
             textView.resignFirstResponder()
@@ -190,7 +170,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         store.subscribe(self, selector: {$0.pasteboard != $1.pasteboard}, callback: {
             if let address = $0.pasteboard {
                 if address.isValidAddress {
-                    self.to.content = address
+                    self.addressCell.content = address
                 } else {
                     self.showError(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
                 }
@@ -213,7 +193,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         if sender.transaction != nil {
             send()
         } else {
-            guard let address = to.content else {
+            guard let address = addressCell.content else {
                 return showError(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             }
             guard address.isValidAddress else {
@@ -242,7 +222,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private func handleRequest(_ request: PaymentRequest) {
         switch request.type {
         case .local:
-            to.content = request.toAddress
+            addressCell.content = request.toAddress
             if let amount = request.amount {
                 amountView.forceUpdateAmount(amount: amount)
             }
@@ -270,7 +250,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             return start + "..." + end
         }
 
-        var address = to.content ?? ""
+        var address = addressCell.content ?? ""
         if address.isValidAddress {
             address = shrink(address)
         }
@@ -368,7 +348,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         }
 
         if let name = protoReq.commonName {
-            to.content = protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized
+            addressCell.content = protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized
         }
 
         if requestAmount > 0 {
