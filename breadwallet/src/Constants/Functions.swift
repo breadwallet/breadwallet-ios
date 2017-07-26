@@ -22,3 +22,10 @@ func guardProtected(callback: @escaping () -> Void) {
         })
     }
 }
+
+func strongify<Context: AnyObject>(_ context: Context, closure: @escaping(Context) -> Void) -> () -> Void {
+    return { [weak context] in
+        guard let strongContext = context else { return }
+        closure(strongContext)
+    }
+}

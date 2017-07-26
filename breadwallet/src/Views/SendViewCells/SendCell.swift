@@ -18,8 +18,7 @@ class SendCell : UIView {
     }
 
     let accessoryView = UIView()
-
-    let border = UIView()
+    let border = UIView(color: .secondaryShadow)
 
     private func setupViews() {
         addSubview(accessoryView)
@@ -29,7 +28,6 @@ class SendCell : UIView {
             accessoryView.constraint(.trailing, toView: self),
             accessoryView.heightAnchor.constraint(equalToConstant: SendCell.defaultHeight) ])
         border.constrainBottomCorners(height: 1.0)
-        border.backgroundColor = .secondaryShadow
     }
 
     required init?(coder aDecoder: NSCoder) {
