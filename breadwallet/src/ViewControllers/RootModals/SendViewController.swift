@@ -174,6 +174,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                 } else {
                     self.showError(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
                 }
+                self.addressCell.isEditable = true
             }
             //TODO - this should be a granular unsubscribe
             //just for pasteboard
@@ -223,6 +224,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         switch request.type {
         case .local:
             addressCell.content = request.toAddress
+            addressCell.isEditable = true
             if let amount = request.amount {
                 amountView.forceUpdateAmount(amount: amount)
             }
@@ -363,6 +365,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                 }
             }
         } else {
+            addressCell.isEditable = false
             sender.createTransaction(forPaymentProtocol: protoReq)
         }
     }

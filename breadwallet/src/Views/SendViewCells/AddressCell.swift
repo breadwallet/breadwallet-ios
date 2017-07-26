@@ -22,6 +22,12 @@ class AddressCell : UIView {
         }
     }
 
+    var isEditable = false {
+        didSet {
+            gr.isEnabled = isEditable
+        }
+    }
+
     let contentLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let label = UILabel(font: .customBody(size: 16.0))
     private let textField = UITextField()
