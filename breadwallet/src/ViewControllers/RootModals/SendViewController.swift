@@ -153,16 +153,17 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         }
     }
 
-    private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> NSAttributedString? {
+    private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
         let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
         let balanceText = balanceAmount.description
-        var output = ""
+        let balanceOutput = String(format: S.Send.balance, balanceText)
+        var feeOutput = ""
         var color: UIColor = .grayTextTint
         if let amount = amount, amount.rawValue > 0 {
             let fee = sender.feeForTx(amount: amount.rawValue)
             let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
             let feeText = feeAmount.description
-            output = String(format: S.Send.balanceWithFee, balanceText, feeText)
+            feeOutput = String(format: S.Send.fee, feeText)
             if (balance >= fee) && amount.rawValue > (balance - fee) {
                 sendButton.isEnabled = false
                 color = .cameraGuideNegative
@@ -170,7 +171,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                 sendButton.isEnabled = true
             }
         } else {
-            output = String(format: S.Send.balance, balanceText)
             sendButton.isEnabled = false
         }
 
@@ -179,7 +179,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             NSForegroundColorAttributeName: color
         ]
 
-        return NSAttributedString(string: output, attributes: attributes)
+        let feeAttributes: [String: Any] = [
+            NSFontAttributeName: UIFont.customBody(size: 14.0),
+            NSForegroundColorAttributeName: UIColor.grayTextTint
+        ]
+
+        return (NSAttributedString(string: balanceOutput, attributes: attributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))
     }
 
     @objc private func pasteTapped() {
