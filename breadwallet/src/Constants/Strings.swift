@@ -67,7 +67,7 @@ enum S {
         static let cameraUnavailableTitle = NSLocalizedString("Send.cameraUnavailableTitle", value:"Bread is not allowed to access the camera", comment: "Camera not allowed alert title")
         static let cameraUnavailableMessage = NSLocalizedString("Send.cameraunavailableMessage", value:"Go to Settings to allow camera access.", comment: "Camera not allowed message")
         static let balance = NSLocalizedString("Send.balance", value:"Balance: %1$@", comment: "Balance: $4.00")
-        static let balanceWithFee = NSLocalizedString("Send.balanceWithFee", value:"Balance: %1$@, Fee: %2$@", comment: "Balance: $4.00, Fee: $0.01")
+        static let fee = NSLocalizedString("Send.balanceWithFee", value:"Network Fee: %1$@", comment: "Network Fee: $0.01")
         static let containsAddress = NSLocalizedString("Send.containsAddress", value: "The destination is your own address. You cannot send to yourself.", comment: "Warning when sending to self.")
         enum UsedAddress {
             static let title = NSLocalizedString("Send.UsedAddress.title", value: "Address Already Used", comment: "Adress already used alert title")
