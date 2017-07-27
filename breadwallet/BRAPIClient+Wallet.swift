@@ -11,29 +11,31 @@ import Foundation
 private let fallbackRatesURL = "https://bitpay.com/api/rates"
 
 extension BRAPIClient {
-    func feePerKb(_ handler: @escaping (_ feePerKb: uint_fast64_t, _ error: String?) -> Void) {
+    func feePerKb(_ handler: @escaping (_ fees: Fees, _ error: String?) -> Void) {
         let req = URLRequest(url: url("/fee-per-kb"))
         let task = self.dataTaskWithRequest(req) { (data, response, err) -> Void in
-            var feePerKb: uint_fast64_t = 0
+            var regularFeePerKb: uint_fast64_t = 0
+            var economyFeePerKb: uint_fast64_t = 0
             var errStr: String? = nil
             if err == nil {
                 do {
                     let parsedObject: Any? = try JSONSerialization.jsonObject(
                         with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
-                    if let top = parsedObject as? NSDictionary, let n = top["fee_per_kb"] as? NSNumber {
-                        feePerKb = n.uint64Value
+                    if let top = parsedObject as? NSDictionary, let regular = top["fee_per_kb"] as? NSNumber, let economy = top["fee_per_kb"] as? NSNumber {
+                        regularFeePerKb = regular.uint64Value
+                        economyFeePerKb = UInt64(economy.doubleValue / 2.0) //TODO - use real key here
                     }
                 } catch (let e) {
                     self.log("fee-per-kb: error parsing json \(e)")
                 }
-                if feePerKb == 0 {
+                if regularFeePerKb == 0 || economyFeePerKb == 0 {
                     errStr = "invalid json"
                 }
             } else {
                 self.log("fee-per-kb network error: \(String(describing: err))")
                 errStr = "bad network connection"
             }
-            handler(feePerKb, errStr)
+            handler(Fees(regular: regularFeePerKb, economy: economyFeePerKb), errStr)
         }
         task.resume()
     }

@@ -8,31 +8,35 @@
 
 import Foundation
 
+struct Fees {
+    let regular: UInt64
+    let economy: UInt64
+}
+
+extension Fees {
+    static var defaultFees: Fees {
+        return Fees(regular: defaultFeePerKB, economy: defaultFeePerKB)
+    }
+}
+
+private let defaultFeePerKB: UInt64 = (5000*1000 + 99)/100 // bitcoind 0.11 min relay fee on 100bytes
+
 class FeeUpdater : Trackable {
 
     //MARK: - Public
-    init(walletManager: WalletManager) {
+    init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
-    }
-
-    func updateWalletFees() {
-        guard feePerKb < maxFeePerKB && feePerKb > minFeePerKB else {
-            DispatchQueue.walletQueue.async {
-                self.saveEvent("wallet.didUseDefaultFeePerKB")
-                self.walletManager.wallet?.feePerKb = self.defaultFeePerKB
-            }
-            return
-        }
-        DispatchQueue.walletQueue.async {
-            self.walletManager.wallet?.feePerKb = self.feePerKb
-        }
+        self.store = store
     }
 
     func refresh(completion: @escaping () -> Void) {
-        walletManager.apiClient?.feePerKb { newFee, error in
+        walletManager.apiClient?.feePerKb { newFees, error in
             guard error == nil else { print("feePerKb error: \(String(describing: error))"); completion(); return }
-            self.feePerKb = newFee
-            self.updateWalletFees()
+            guard newFees.regular < self.maxFeePerKB && newFees.economy > self.minFeePerKB else {
+                self.saveEvent("wallet.didUseDefaultFeePerKB")
+                return
+            }
+            self.store.perform(action: UpdateFees.set(newFees))
             completion()
         }
 
@@ -49,20 +53,11 @@ class FeeUpdater : Trackable {
         refresh(completion: {})
     }
 
-    var feePerKb: UInt64 {
-        get {
-            return UInt64(UserDefaults.standard.double(forKey: feeKey))
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: feeKey)
-        }
-    }
-
     //MARK: - Private
     private let walletManager: WalletManager
+    private let store: Store
     private let feeKey = "FEE_PER_KB"
     private let txFeePerKb: UInt64 = 1000
-    private let defaultFeePerKB: UInt64 = (5000*1000 + 99)/100 // bitcoind 0.11 min relay fee on 100bytes
     private lazy var minFeePerKB: UInt64 = {
         return ((self.txFeePerKb*1000 + 190)/191) // minimum relay fee on a 191byte tx
     }()
