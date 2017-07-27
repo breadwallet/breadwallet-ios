@@ -25,7 +25,7 @@ class AmountViewController : UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
-    var balanceTextForAmount: ((Satoshis?, Rate?) -> NSAttributedString?)?
+    var balanceTextForAmount: ((Satoshis?, Rate?) -> (NSAttributedString?, NSAttributedString?)?)?
     var didUpdateAmount: ((Satoshis?) -> Void)?
     var didChangeFirstResponder: ((Bool) -> Void)?
 
@@ -70,6 +70,7 @@ class AmountViewController : UIViewController {
     private let bottomBorder = UIView(color: .secondaryShadow)
     private let cursor = BlinkingView(blinkColor: C.defaultTintColor)
     private let balanceLabel = UILabel()
+    private let feeLabel = UILabel()
     private let currencyContainer = InViewAlert(type: .secondary)
     private let feeContainer = InViewAlert(type: .secondary)
     private let tapView = UIView()
@@ -100,6 +101,7 @@ class AmountViewController : UIViewController {
         view.addSubview(border)
         view.addSubview(cursor)
         view.addSubview(balanceLabel)
+        view.addSubview(feeLabel)
         view.addSubview(tapView)
         view.addSubview(bottomBorder)
         view.addSubview(editFee)
@@ -145,6 +147,9 @@ class AmountViewController : UIViewController {
         balanceLabel.constrain([
             balanceLabel.leadingAnchor.constraint(equalTo: amountLabel.leadingAnchor),
             balanceLabel.topAnchor.constraint(equalTo: cursor.bottomAnchor) ])
+        feeLabel.constrain([
+            feeLabel.leadingAnchor.constraint(equalTo: balanceLabel.leadingAnchor),
+            feeLabel.topAnchor.constraint(equalTo: balanceLabel.bottomAnchor) ])
         pinPadHeight = pinPad.view.heightAnchor.constraint(equalToConstant: 0.0)
         addChildViewController(pinPad, layout: {
             pinPad.view.constrain([
@@ -155,8 +160,8 @@ class AmountViewController : UIViewController {
                 pinPadHeight ])
         })
         editFee.constrain([
-            editFee.leadingAnchor.constraint(equalTo: balanceLabel.trailingAnchor, constant: -8.0),
-            editFee.centerYAnchor.constraint(equalTo: balanceLabel.centerYAnchor, constant: -2.0),
+            editFee.leadingAnchor.constraint(equalTo: feeLabel.trailingAnchor, constant: -8.0),
+            editFee.centerYAnchor.constraint(equalTo: feeLabel.centerYAnchor, constant: -2.0),
             editFee.widthAnchor.constraint(equalToConstant: 44.0),
             editFee.heightAnchor.constraint(equalToConstant: 44.0) ])
         bottomBorder.constrain([
@@ -296,11 +301,14 @@ class AmountViewController : UIViewController {
     }
 
     func updateBalanceLabel() {
-        balanceLabel.attributedText = balanceTextForAmount?(amount, selectedRate)
-        if let amount = amount, amount > 0 {
-            editFee.isHidden = false
-        } else {
-            editFee.isHidden = true
+        if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
+            balanceLabel.attributedText = balance
+            feeLabel.attributedText = fee
+            if let amount = amount, amount > 0 {
+                editFee.isHidden = false
+            } else {
+                editFee.isHidden = true
+            }
         }
     }
 
