@@ -123,7 +123,7 @@ class AmountViewController : UIViewController {
             currencyToggle.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[2]),
             currencyToggle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
         currencyContainerHeight = currencyContainer.constraint(.height, constant: 0.0)
-        currencyContainterTop = currencyContainer.constraint(toBottom: currencyToggle, constant: C.padding[2])
+        currencyContainterTop = currencyContainer.constraint(toBottom: feeLabel, constant: C.padding[2])
         currencyContainer.constrain([
             currencyContainterTop,
             currencyContainer.constraint(.leading, toView: view),
@@ -132,12 +132,13 @@ class AmountViewController : UIViewController {
         currencyContainer.arrowXLocation = view.bounds.width - 30.0 - C.padding[2]
 
         feeSelectorHeight = feeContainer.heightAnchor.constraint(equalToConstant: 0.0)
-        feeSelectorTop = feeContainer.topAnchor.constraint(equalTo: currencyContainer.bottomAnchor, constant: C.padding[2])
+        feeSelectorTop = feeContainer.topAnchor.constraint(equalTo: currencyContainer.bottomAnchor, constant: 0.0)
         feeContainer.constrain([
             feeSelectorTop,
             feeSelectorHeight,
             feeContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             feeContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
+        feeContainer.arrowXLocation = C.padding[4]
 
         border.constrain([
             border.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -161,7 +162,7 @@ class AmountViewController : UIViewController {
         })
         editFee.constrain([
             editFee.leadingAnchor.constraint(equalTo: feeLabel.trailingAnchor, constant: -8.0),
-            editFee.centerYAnchor.constraint(equalTo: feeLabel.centerYAnchor, constant: -2.0),
+            editFee.centerYAnchor.constraint(equalTo: feeLabel.centerYAnchor, constant: -1.0),
             editFee.widthAnchor.constraint(equalToConstant: 44.0),
             editFee.heightAnchor.constraint(equalToConstant: 44.0) ])
         bottomBorder.constrain([
@@ -214,27 +215,9 @@ class AmountViewController : UIViewController {
             self?.toggleFeeSelector()
         }
         editFee.setImage(#imageLiteral(resourceName: "Edit"), for: .normal)
-        editFee.imageEdgeInsets = UIEdgeInsetsMake(12.0, 12.0, 12.0, 12.0)
+        editFee.imageEdgeInsets = UIEdgeInsetsMake(15.0, 15.0, 15.0, 15.0)
         editFee.tintColor = .grayTextTint
         editFee.isHidden = true
-    }
-
-    private func toggleFeeSelector() {
-        let isCollapsed: Bool = feeSelectorHeight?.constant == 0.0
-        UIView.spring(C.animationDuration, animations: {
-            if isCollapsed {
-                if self.currencyContainerHeight?.constant != 0.0 {
-                    self.currencyContainerHeight?.constant = 0.0
-                    self.currencyContainterTop?.constant = C.padding[2]
-                }
-                self.feeSelectorHeight?.constant = feeHeight
-                self.feeSelectorTop?.constant = 4.0
-            } else {
-                self.feeSelectorHeight?.constant = 0.0
-                self.feeSelectorTop?.constant = C.padding[2]
-            }
-            self.parent?.parent?.view?.layoutIfNeeded()
-        }, completion: {_ in })
     }
 
     private func preventAmountOverflow() {
@@ -318,12 +301,28 @@ class AmountViewController : UIViewController {
             if isCurrencySwitcherCollapsed {
                 if self.feeSelectorHeight?.constant != 0.0 {
                     self.feeSelectorHeight?.constant = 0.0
-                    self.feeSelectorTop?.constant = C.padding[2]
                 }
                 self.currencyContainerHeight?.constant = currencyHeight
-                self.currencyContainterTop?.constant = 4.0
+                self.currencyContainterTop?.constant = 0.0
             } else {
                 self.currencyContainerHeight?.constant = 0.0
+                self.currencyContainterTop?.constant = C.padding[2]
+            }
+            self.parent?.parent?.view?.layoutIfNeeded()
+        }, completion: {_ in })
+    }
+
+    private func toggleFeeSelector() {
+        let isCollapsed: Bool = feeSelectorHeight?.constant == 0.0
+        UIView.spring(C.animationDuration, animations: {
+            if isCollapsed {
+                if self.currencyContainerHeight?.constant != 0.0 {
+                    self.currencyContainerHeight?.constant = 0.0
+                }
+                self.feeSelectorHeight?.constant = feeHeight
+                self.currencyContainterTop?.constant = 0.0
+            } else {
+                self.feeSelectorHeight?.constant = 0.0
                 self.currencyContainterTop?.constant = C.padding[2]
             }
             self.parent?.parent?.view?.layoutIfNeeded()
@@ -358,10 +357,10 @@ class AmountViewController : UIViewController {
         bottomBorder.isHidden = isCollapsed ? false : true
         if let amount = amount, amount.rawValue > 0 {
             balanceLabel.isHidden = false
-            if !E.isTestFlight { editFee.isHidden = false }
+            editFee.isHidden = false
         } else {
             balanceLabel.isHidden = cursor.isHidden
-            if !E.isTestFlight { editFee.isHidden = true }
+            editFee.isHidden = true
         }
         updateBalanceLabel()
         didChangeFirstResponder?(isCollapsed)
