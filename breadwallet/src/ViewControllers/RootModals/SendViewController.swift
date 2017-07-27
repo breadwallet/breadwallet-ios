@@ -100,6 +100,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                             }
         })
         sendButton.isEnabled = false
+        walletManager.wallet?.feePerKb = store.state.fees.regular
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -131,6 +132,17 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
 
         amountView.didUpdateAmount = { [weak self] amount in
             self?.amount = amount
+        }
+        amountView.didUpdateFee = strongify(self) { myself, fee in
+            guard let wallet = myself.walletManager.wallet else { return }
+            let fees = myself.store.state.fees
+            switch fee {
+            case .regular:
+                wallet.feePerKb = fees.regular
+            case .economy:
+                wallet.feePerKb = fees.economy
+            }
+            myself.amountView.updateBalanceLabel()
         }
 
         amountView.didChangeFirstResponder = { [weak self] isFirstResponder in

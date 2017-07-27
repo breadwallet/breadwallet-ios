@@ -14,6 +14,11 @@ private let regularLabel = "Estimated Delivery: 10-30 minutes"
 private let economyLabel = "Estimated Delivery: 60+ minutes"
 private let economyWarning = "Regular priority is recommended for all time-sensitive transactions"
 
+enum Fee {
+    case regular
+    case economy
+}
+
 class FeeSelector : UIView {
 
     init(store: Store) {
@@ -22,11 +27,12 @@ class FeeSelector : UIView {
         setupViews()
     }
 
+    var didUpdateFee: ((Fee) -> Void)?
+
     private let store: Store
     private let header = UILabel(font: .customMedium(size: 16.0), color: .darkText)
     private let subheader = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
     private let warning = UILabel.wrapping(font: .customBody(size: 14.0), color: .red)
-
     private let control = UISegmentedControl(items: ["Regular", "Economy"])
 
     private func setupViews() {
@@ -52,12 +58,13 @@ class FeeSelector : UIView {
             control.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: 4.0),
             control.widthAnchor.constraint(equalTo: widthAnchor, constant: -C.padding[4]) ])
 
-        control.valueChanged = { [weak self] in
-            guard let myself = self else { return }
+        control.valueChanged = strongify(self) { myself in
             if myself.control.selectedSegmentIndex == 0 {
+                myself.didUpdateFee?(.regular)
                 myself.subheader.text = regularLabel
                 myself.warning.text = ""
             } else {
+                myself.didUpdateFee?(.economy)
                 myself.subheader.text = economyLabel
                 myself.warning.text = economyWarning
             }
