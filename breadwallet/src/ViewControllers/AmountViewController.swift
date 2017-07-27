@@ -37,6 +37,11 @@ class AmountViewController : UIViewController {
             fullRefresh()
         }
     }
+    var didUpdateFee: ((Fee) -> Void)? {
+        didSet {
+            feeSelector.didUpdateFee = didUpdateFee
+        }
+    }
     func forceUpdateAmount(amount: Satoshis) {
         self.amount = amount
         fullRefresh()
@@ -290,12 +295,12 @@ class AmountViewController : UIViewController {
         placeholder.isHidden = output.utf8.count > 0 ? true : false
     }
 
-    private func updateBalanceLabel() {
+    func updateBalanceLabel() {
         balanceLabel.attributedText = balanceTextForAmount?(amount, selectedRate)
         if let amount = amount, amount > 0 {
-            if !E.isTestFlight { editFee.isHidden = false }
+            editFee.isHidden = false
         } else {
-            if !E.isTestFlight { editFee.isHidden = true }
+            editFee.isHidden = true
         }
     }
 
@@ -330,10 +335,10 @@ class AmountViewController : UIViewController {
         bottomBorder.isHidden = true
         if let amount = amount, amount.rawValue > 0 {
             balanceLabel.isHidden = false
-            if !E.isTestFlight { editFee.isHidden = false }
+            editFee.isHidden = false
         } else {
             balanceLabel.isHidden = cursor.isHidden
-            if !E.isTestFlight { editFee.isHidden = true }
+            editFee.isHidden = true
         }
         updateBalanceLabel()
     }
@@ -374,4 +379,10 @@ class AmountViewController : UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+extension Fees : Equatable {}
+
+func ==(lhs: Fees, rhs: Fees) -> Bool {
+    return lhs.regular == rhs.regular && lhs.economy == rhs.economy
 }

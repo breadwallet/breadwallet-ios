@@ -170,7 +170,7 @@ class ApplicationController : Subscriber {
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
         modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient)
         exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
-        feeUpdater = FeeUpdater(walletManager: walletManager)
+        feeUpdater = FeeUpdater(walletManager: walletManager, store: store)
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: window.rootViewController!)
         accountViewController?.walletManager = walletManager
         defaultsUpdater = UserDefaultsUpdater(walletManager: walletManager)
@@ -236,7 +236,6 @@ class ApplicationController : Subscriber {
     }
 
     private func startDataFetchers() {
-        feeUpdater?.updateWalletFees()
         walletManager?.apiClient?.updateFeatureFlags()
         initKVStoreCoordinator()
         feeUpdater?.refresh()

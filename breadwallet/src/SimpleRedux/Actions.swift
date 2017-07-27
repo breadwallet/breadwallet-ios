@@ -33,7 +33,8 @@ struct HideStartFlow : Action {
                      maxDigits: state.maxDigits,
                      isPushNotificationsEnabled: state.isPushNotificationsEnabled,
                      isPromptingTouchId: state.isPromptingTouchId,
-                     pinLength: state.pinLength)
+                     pinLength: state.pinLength,
+                     fees: state.fees)
     }
 }
 
@@ -239,6 +240,16 @@ enum PinLength {
     }
 }
 
+enum UpdateFees {
+    struct set : Action {
+        let reduce: Reducer
+        init(_ fees: Fees) {
+            reduce = { $0.clone(fees: fees) }
+        }
+    }
+}
+
+
 //MARK: - State Creation Helpers
 extension State {
     func clone(isStartFlowVisible: Bool) -> State {
@@ -258,7 +269,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func rootModal(_ type: RootModal) -> State {
         return State(isStartFlowVisible: false,
@@ -277,7 +289,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(pasteboard: String?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -296,7 +309,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(walletSyncProgress: Double, timestamp: UInt32) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -315,7 +329,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(walletIsSyncing: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -334,7 +349,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(balance: UInt64) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -353,7 +369,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(transactions: [Transaction]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -372,7 +389,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(walletName: String) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -391,7 +409,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(walletSyncingErrorMessage: String?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -410,7 +429,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(walletCreationDate: Date) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -429,7 +449,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(isRescanning: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -448,7 +469,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(isBtcSwapped: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -467,7 +489,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(isLoginRequired: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -486,7 +509,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(currentRate: Rate, rates: [Rate]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -505,7 +529,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(currentRate: Rate) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -524,7 +549,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(alert: AlertType?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -543,7 +569,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(isTouchIdEnabled: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -562,7 +589,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(defaultCurrencyCode: String) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -581,7 +609,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(recommendRescan: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -600,7 +629,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(isLoadingTransactions: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -619,7 +649,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(maxDigits: Int) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -638,7 +669,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(isPushNotificationsEnabled: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -657,7 +689,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(isPromptingTouchId: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -676,7 +709,8 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
     }
     func clone(pinLength: Int) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -695,6 +729,27 @@ extension State {
                      maxDigits: maxDigits,
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
-                     pinLength: pinLength)
+                     pinLength: pinLength,
+                     fees: fees)
+    }
+    func clone(fees: Fees) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
+                     rootModal: rootModal,
+                     pasteboard: pasteboard,
+                     walletState: walletState,
+                     isBtcSwapped: isBtcSwapped,
+                     currentRate: currentRate,
+                     rates: rates,
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrencyCode: defaultCurrencyCode,
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions,
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled,
+                     isPromptingTouchId: isPromptingTouchId,
+                     pinLength: pinLength,
+                     fees: fees)
     }
 }

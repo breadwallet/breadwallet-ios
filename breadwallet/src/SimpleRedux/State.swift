@@ -26,6 +26,7 @@ struct State {
     let isPushNotificationsEnabled: Bool
     let isPromptingTouchId: Bool
     let pinLength: Int
+    let fees: Fees
 }
 
 extension State {
@@ -46,7 +47,8 @@ extension State {
                         maxDigits: UserDefaults.maxDigits,
                         isPushNotificationsEnabled: false,
                         isPromptingTouchId: false,
-                        pinLength: 6 )
+                        pinLength: 6,
+                        fees: Fees.defaultFees )
     }
 }
 
