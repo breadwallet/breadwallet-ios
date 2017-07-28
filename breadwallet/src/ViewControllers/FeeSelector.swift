@@ -8,12 +8,6 @@
 
 import UIKit
 
-//TODO - localize these
-private let title = "Processing Speed"
-private let regularLabel = "Estimated Delivery: 10-30 minutes"
-private let economyLabel = "Estimated Delivery: 60+ minutes"
-private let economyWarning = "Regular priority is recommended for all time-sensitive transactions"
-
 enum Fee {
     case regular
     case economy
@@ -43,7 +37,7 @@ class FeeSelector : UIView {
     private let header = UILabel(font: .customMedium(size: 16.0), color: .darkText)
     private let subheader = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
     private let warning = UILabel.wrapping(font: .customBody(size: 14.0), color: .red)
-    private let control = UISegmentedControl(items: ["Regular", "Economy"])
+    private let control = UISegmentedControl(items: [S.FeeSelector.regular, S.FeeSelector.economy])
     private var bottomConstraint: NSLayoutConstraint?
 
     private func setupViews() {
@@ -64,8 +58,8 @@ class FeeSelector : UIView {
             warning.leadingAnchor.constraint(equalTo: subheader.leadingAnchor),
             warning.topAnchor.constraint(equalTo: control.bottomAnchor, constant: 4.0),
             warning.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]) ])
-        header.text = title
-        subheader.text = regularLabel
+        header.text = S.FeeSelector.title
+        subheader.text = S.FeeSelector.regularLabel
         control.constrain([
             control.leadingAnchor.constraint(equalTo: warning.leadingAnchor),
             control.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: 4.0),
@@ -74,12 +68,12 @@ class FeeSelector : UIView {
         control.valueChanged = strongify(self) { myself in
             if myself.control.selectedSegmentIndex == 0 {
                 myself.didUpdateFee?(.regular)
-                myself.subheader.text = regularLabel
+                myself.subheader.text = S.FeeSelector.regularLabel
                 myself.warning.text = ""
             } else {
                 myself.didUpdateFee?(.economy)
-                myself.subheader.text = economyLabel
-                myself.warning.text = economyWarning
+                myself.subheader.text = S.FeeSelector.economyLabel
+                myself.warning.text = S.FeeSelector.economyWarning
             }
         }
 
