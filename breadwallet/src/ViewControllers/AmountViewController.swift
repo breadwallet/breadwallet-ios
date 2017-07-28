@@ -13,9 +13,10 @@ private let feeHeight: CGFloat = 130.0
 
 class AmountViewController : UIViewController {
 
-    init(store: Store, isPinPadExpandedAtLaunch: Bool) {
+    init(store: Store, isPinPadExpandedAtLaunch: Bool, isRequesting: Bool = false) {
         self.store = store
         self.isPinPadExpandedAtLaunch = isPinPadExpandedAtLaunch
+        self.isRequesting = isRequesting
         self.currencySlider = CurrencySlider(rates: store.state.rates,
                                              defaultCode: store.state.defaultCurrencyCode,
                                              isBtcSwapped: store.state.isBtcSwapped)
@@ -55,6 +56,7 @@ class AmountViewController : UIViewController {
 
     private let store: Store
     private let isPinPadExpandedAtLaunch: Bool
+    private let isRequesting: Bool
     private var minimumFractionDigits = 0
     private var hasTrailingDecimal = false
     private var pinPadHeight: NSLayoutConstraint?
@@ -123,13 +125,16 @@ class AmountViewController : UIViewController {
             currencyToggle.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[2]),
             currencyToggle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
         currencyContainerHeight = currencyContainer.constraint(.height, constant: 0.0)
-        currencyContainterTop = currencyContainer.constraint(toBottom: feeLabel, constant: C.padding[2])
+        if isRequesting {
+            currencyContainterTop = currencyContainer.constraint(toBottom: currencyToggle, constant: C.padding[2])
+        } else {
+            currencyContainterTop = currencyContainer.constraint(toBottom: feeLabel, constant: C.padding[2])
+        }
         currencyContainer.constrain([
             currencyContainterTop,
             currencyContainer.constraint(.leading, toView: view),
             currencyContainer.constraint(.trailing, toView: view),
-            currencyContainerHeight
-            ])
+            currencyContainerHeight ])
         currencyContainer.arrowXLocation = view.bounds.width - 30.0 - C.padding[2]
 
         feeSelectorHeight = feeContainer.heightAnchor.constraint(equalToConstant: 0.0)
@@ -288,7 +293,7 @@ class AmountViewController : UIViewController {
         if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
             balanceLabel.attributedText = balance
             feeLabel.attributedText = fee
-            if let amount = amount, amount > 0 {
+            if let amount = amount, amount > 0, !isRequesting {
                 editFee.isHidden = false
             } else {
                 editFee.isHidden = true
@@ -305,10 +310,14 @@ class AmountViewController : UIViewController {
                     NSLayoutConstraint.activate([height])
                 }
                 self.currencyContainerHeight?.constant = currencyHeight
-                self.currencyContainterTop?.constant = 0.0
+                if !self.isRequesting {
+                    self.currencyContainterTop?.constant = 0.0
+                }
             } else {
                 self.currencyContainerHeight?.constant = 0.0
-                self.currencyContainterTop?.constant = C.padding[2]
+                if !self.isRequesting {
+                    self.currencyContainterTop?.constant = C.padding[2]
+                }
             }
             self.parent?.parent?.view?.layoutIfNeeded()
         }, completion: {_ in })
@@ -344,13 +353,7 @@ class AmountViewController : UIViewController {
         pinPadHeight?.constant = 0.0
         cursor.isHidden = true
         bottomBorder.isHidden = true
-        if let amount = amount, amount.rawValue > 0 {
-            balanceLabel.isHidden = false
-            editFee.isHidden = false
-        } else {
-            balanceLabel.isHidden = cursor.isHidden
-            editFee.isHidden = true
-        }
+        updateBalanceAndFeeLabels()
         updateBalanceLabel()
     }
 
@@ -359,15 +362,23 @@ class AmountViewController : UIViewController {
         pinPadHeight?.constant = isCollapsed ? pinPad.height : 0.0
         cursor.isHidden = isCollapsed ? false : true
         bottomBorder.isHidden = isCollapsed ? false : true
-        if let amount = amount, amount.rawValue > 0 {
-            balanceLabel.isHidden = false
-            editFee.isHidden = false
-        } else {
-            balanceLabel.isHidden = cursor.isHidden
-            editFee.isHidden = true
-        }
+        updateBalanceAndFeeLabels()
         updateBalanceLabel()
         didChangeFirstResponder?(isCollapsed)
+    }
+
+    private func updateBalanceAndFeeLabels() {
+        if let amount = amount, amount.rawValue > 0 {
+            balanceLabel.isHidden = false
+            if !isRequesting {
+                editFee.isHidden = false
+            }
+        } else {
+            balanceLabel.isHidden = cursor.isHidden
+            if !isRequesting {
+                editFee.isHidden = true
+            }
+        }
     }
 
     private func fullRefresh() {
