@@ -128,7 +128,8 @@ class AmountViewController : UIViewController {
             currencyContainterTop,
             currencyContainer.constraint(.leading, toView: view),
             currencyContainer.constraint(.trailing, toView: view),
-            currencyContainerHeight ])
+            currencyContainerHeight
+            ])
         currencyContainer.arrowXLocation = view.bounds.width - 30.0 - C.padding[2]
 
         feeSelectorHeight = feeContainer.heightAnchor.constraint(equalToConstant: 0.0)
@@ -299,8 +300,9 @@ class AmountViewController : UIViewController {
         let isCurrencySwitcherCollapsed: Bool = currencyContainerHeight?.constant == 0.0
         UIView.spring(C.animationDuration, animations: {
             if isCurrencySwitcherCollapsed {
-                if self.feeSelectorHeight?.constant != 0.0 {
-                    self.feeSelectorHeight?.constant = 0.0
+                if let height = self.feeSelectorHeight, !height.isActive {
+                    self.feeSelector.removeIntrinsicSize()
+                    NSLayoutConstraint.activate([height])
                 }
                 self.currencyContainerHeight?.constant = currencyHeight
                 self.currencyContainterTop?.constant = 0.0
@@ -313,17 +315,19 @@ class AmountViewController : UIViewController {
     }
 
     private func toggleFeeSelector() {
-        let isCollapsed: Bool = feeSelectorHeight?.constant == 0.0
+        guard let height = feeSelectorHeight else { return }
+        let isCollapsed: Bool = height.isActive
         UIView.spring(C.animationDuration, animations: {
             if isCollapsed {
                 if self.currencyContainerHeight?.constant != 0.0 {
                     self.currencyContainerHeight?.constant = 0.0
                 }
-                self.feeSelectorHeight?.constant = feeHeight
+                NSLayoutConstraint.deactivate([height])
+                self.feeSelector.addIntrinsicSize()
                 self.currencyContainterTop?.constant = 0.0
             } else {
-                self.feeSelectorHeight?.constant = 0.0
-                self.currencyContainterTop?.constant = C.padding[2]
+                self.feeSelector.removeIntrinsicSize()
+                NSLayoutConstraint.activate([height])
             }
             self.parent?.parent?.view?.layoutIfNeeded()
         }, completion: {_ in })
