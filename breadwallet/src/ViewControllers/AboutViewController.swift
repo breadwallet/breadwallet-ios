@@ -91,8 +91,8 @@ class AboutViewController : UIViewController {
         privacy.setTitle(S.About.privacy, for: .normal)
         privacy.titleLabel?.font = UIFont.customBody(size: 13.0)
         footer.textAlignment = .center
-        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
-            footer.text = String(format: S.About.footer, "\(version)")
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+            footer.text = String(format: S.About.footer, "\(version) (\(build))")
         }
     }
 
