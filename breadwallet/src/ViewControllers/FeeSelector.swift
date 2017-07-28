@@ -29,11 +29,22 @@ class FeeSelector : UIView {
 
     var didUpdateFee: ((Fee) -> Void)?
 
+    func removeIntrinsicSize() {
+        guard let bottomConstraint = bottomConstraint else { return }
+        NSLayoutConstraint.deactivate([bottomConstraint])
+    }
+
+    func addIntrinsicSize() {
+        guard let bottomConstraint = bottomConstraint else { return }
+        NSLayoutConstraint.activate([bottomConstraint])
+    }
+
     private let store: Store
     private let header = UILabel(font: .customMedium(size: 16.0), color: .darkText)
     private let subheader = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
     private let warning = UILabel.wrapping(font: .customBody(size: 14.0), color: .red)
     private let control = UISegmentedControl(items: ["Regular", "Economy"])
+    private var bottomConstraint: NSLayoutConstraint?
 
     private func setupViews() {
         addSubview(control)
@@ -47,6 +58,8 @@ class FeeSelector : UIView {
         subheader.constrain([
             subheader.leadingAnchor.constraint(equalTo: header.leadingAnchor),
             subheader.topAnchor.constraint(equalTo: header.bottomAnchor) ])
+
+        bottomConstraint = warning.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1])
         warning.constrain([
             warning.leadingAnchor.constraint(equalTo: subheader.leadingAnchor),
             warning.topAnchor.constraint(equalTo: control.bottomAnchor, constant: 4.0),
