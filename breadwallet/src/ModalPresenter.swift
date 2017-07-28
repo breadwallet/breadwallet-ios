@@ -395,6 +395,10 @@ class ModalPresenter : Subscriber {
                 Setting(title: S.Settings.sync, callback: {
                     settingsNav.pushViewController(ReScanViewController(store: self.store), animated: true)
                 }),
+                Setting(title: S.UpdatePin.updateTitle, callback: strongify(self) { myself in
+                    let updatePin = UpdatePinViewController(store: myself.store, walletManager: walletManager, type: .update)
+                    settingsNav.pushViewController(updatePin, animated: true)
+                })
             ],
             "Bread": [
                 Setting(title: S.Settings.shareData, callback: {
