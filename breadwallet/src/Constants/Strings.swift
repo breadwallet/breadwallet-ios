@@ -494,4 +494,13 @@ enum S {
         static let failedMessage = NSLocalizedString("WipeWallet.failedMessage", value: "Failed to wipe wallet.", comment: "Failed wipe wallet alert message")
         static let instruction = NSLocalizedString("WipeWallet.instruction", value: "Enter this wallet's recovery phrase to wipe it and start or recover another. Your current balance remains on this phrase.", comment: "Enter phrase to wipe wallet instruction.")
     }
+
+    enum FeeSelector {
+        static let title = NSLocalizedString("FeeSelector.title", value: "Processing Speed", comment: "Fee Selector title")
+        static let regularLabel = NSLocalizedString("FeeSelector.regularLabel", value: "Estimated Delivery: 10-30 minutes", comment: "Fee Selector regular fee description")
+        static let economyLabel = NSLocalizedString("FeeSelector.economyLabel", value: "Estimated Delivery: 60+ minutes", comment: "Fee Selector economly fee description")
+        static let economyWarning = NSLocalizedString("FeeSelector.economyWaring", value: "This option is not recommended for time-sensitive transactions.", comment: "Warning message for economy fee")
+        static let regular = NSLocalizedString("FeeSelector.regular", value: "Regular", comment: "Regular fee")
+        static let economy = NSLocalizedString("FeeSelector.economy", value: "Economy", comment: "Economy fee")
+    }
 }
