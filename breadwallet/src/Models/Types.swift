@@ -54,6 +54,10 @@ func +(lhs: Satoshis, rhs: UInt64) -> Satoshis {
     return Satoshis(lhs.rawValue + rhs)
 }
 
+func +(lhs: Satoshis, rhs: Satoshis) -> Satoshis {
+    return Satoshis(lhs.rawValue + rhs.rawValue)
+}
+
 func +=(lhs: inout Satoshis, rhs: UInt64) {
     lhs = lhs + rhs
 }

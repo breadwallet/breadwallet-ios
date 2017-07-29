@@ -61,6 +61,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
     private let initialRequest: PaymentRequest?
+    private let confirmDelegate = PinTransitioningDelegate()
+    private var feeType: Fee?
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -135,6 +137,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         }
         amountView.didUpdateFee = strongify(self) { myself, fee in
             guard let wallet = myself.walletManager.wallet else { return }
+            myself.feeType = fee
             let fees = myself.store.state.fees
             switch fee {
             case .regular:
@@ -213,9 +216,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     }
 
     @objc private func sendTapped() {
-        if sender.transaction != nil {
-            send()
-        } else {
+        if sender.transaction == nil {
             guard let address = addressCell.address else {
                 return showError(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             }
@@ -238,8 +239,20 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
             guard sender.createTransaction(amount: amount.rawValue, to: address) else {
                 return showError(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
             }
-            send()
         }
+
+        guard let amount = amount else { return }
+        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "")
+        confirm.callback = {
+            confirm.dismiss(animated: true, completion: {
+                self.send()
+            })
+        }
+        confirm.transitioningDelegate = confirmDelegate
+        confirm.modalPresentationStyle = .overFullScreen
+        confirm.modalPresentationCapturesStatusBarAppearance = true
+        present(confirm, animated: true, completion: nil)
+        return
     }
 
     private func handleRequest(_ request: PaymentRequest) {
@@ -290,13 +303,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         guard let rate = store.state.currentRate else { return }
         guard let feePerKb = walletManager.wallet?.feePerKb else { return }
 
-        sender.send(touchIdMessage: sendMessage,
+        sender.send(touchIdMessage: "Authorize this transaction.",
                     rate: rate,
                     comment: descriptionCell.textView.text,
                     feePerKb: feePerKb,
                     verifyPinFunction: { [weak self] pinValidationCallback in
-                        guard let myself = self else { return }
-                        self?.presentVerifyPin?(myself.sendMessage) { [weak self] pin, vc in
+                        self?.presentVerifyPin?("Please enter your PIN to authorize this transaction.") { [weak self] pin, vc in
                             if pinValidationCallback(pin) {
                                 vc.dismiss(animated: true, completion: {
                                     self?.parent?.view.isFrameChangeBlocked = false

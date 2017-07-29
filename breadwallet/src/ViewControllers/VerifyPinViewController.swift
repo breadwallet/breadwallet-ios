@@ -10,7 +10,13 @@ import UIKit
 
 typealias VerifyPinCallback = (String, UIViewController) -> Bool
 
-class VerifyPinViewController : UIViewController {
+protocol ContentBoxPresenter {
+    var contentBox : UIView { get }
+    var blurView: UIVisualEffectView { get }
+    var effect: UIBlurEffect { get }
+}
+
+class VerifyPinViewController : UIViewController, ContentBoxPresenter {
 
     init(bodyText: String, pinLength: Int, callback: @escaping VerifyPinCallback) {
         self.bodyText = bodyText
