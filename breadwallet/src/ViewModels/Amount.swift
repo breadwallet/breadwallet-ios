@@ -105,8 +105,12 @@ struct DisplayAmount {
         return selectedRate != nil ? fiatDescription : bitcoinDescription
     }
 
+    var combinedDescription: String {
+        return state.isBtcSwapped ? "\(fiatDescription) (\(bitcoinDescription))" : "\(bitcoinDescription) (\(fiatDescription))"
+    }
+
     private var fiatDescription: String {
-        guard let rate = selectedRate else { return "" }
+        guard let rate = selectedRate ?? state.currentRate else { return "" }
         guard let string = localFormat.string(from: Double(amount.rawValue)/100000000.0*rate.rate as NSNumber) else { return "" }
         return string
     }
@@ -127,6 +131,8 @@ struct DisplayAmount {
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         if let rate = selectedRate {
+            format.currencySymbol = rate.currencySymbol
+        } else if let rate = state.currentRate {
             format.currencySymbol = rate.currencySymbol
         }
         if let minimumFractionDigits = minimumFractionDigits {

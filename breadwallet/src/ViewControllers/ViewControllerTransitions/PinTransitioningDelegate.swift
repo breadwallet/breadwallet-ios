@@ -29,7 +29,7 @@ class PresentPinAnimator : NSObject, UIViewControllerAnimatedTransitioning {
         let duration = transitionDuration(using: transitionContext)
         let container = transitionContext.containerView
         guard let toView = transitionContext.view(forKey: .to) else { return }
-        guard let toVc = transitionContext.viewController(forKey: .to) as? VerifyPinViewController else { return }
+        guard let toVc = transitionContext.viewController(forKey: .to) as? ContentBoxPresenter else { return }
 
         let blurView = toVc.blurView
         blurView.frame = container.frame
@@ -71,7 +71,7 @@ class DismissPinAnimator : NSObject, UIViewControllerAnimatedTransitioning {
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let duration = transitionDuration(using: transitionContext)
         guard let fromView = transitionContext.view(forKey: .from) else { assert(false, "Missing from view"); return }
-        guard let fromVc = transitionContext.viewController(forKey: .from) as? VerifyPinViewController else { return }
+        guard let fromVc = transitionContext.viewController(forKey: .from) as? ContentBoxPresenter else { return }
 
         UIView.animate(withDuration: duration, animations: {
             fromVc.blurView.effect = nil
