@@ -57,7 +57,7 @@ class AmountViewController : UIViewController {
     private let store: Store
     private let isPinPadExpandedAtLaunch: Bool
     private let isRequesting: Bool
-    private var minimumFractionDigits = 0
+    var minimumFractionDigits = 0
     private var hasTrailingDecimal = false
     private var pinPadHeight: NSLayoutConstraint?
     private var currencyContainerHeight: NSLayoutConstraint?
