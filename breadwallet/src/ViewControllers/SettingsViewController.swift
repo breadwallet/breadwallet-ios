@@ -89,8 +89,14 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         view.backgroundColor = .whiteTint
         let label = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
         view.addSubview(label)
-        label.text = sections[section]
-
+        switch sections[section] {
+        case "Wallet":
+            label.text = S.Settings.wallet
+        case "Manage":
+            label.text = S.Settings.manage
+        default:
+            label.text = ""
+        }
         let separator = UIView()
         separator.backgroundColor = .secondaryShadow
         view.addSubview(separator)
