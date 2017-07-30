@@ -20,10 +20,6 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         self.addressText = address
         super.init(nibName: nil, bundle: nil)
     }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 
     private let amount: Satoshis
     private let feeAmount: Satoshis
@@ -33,15 +29,16 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private let minimumFractionDigits: Int?
     private let addressText: String
 
+    //ContentBoxPresenter
     let contentBox = UIView(color: .white)
     let blurView = UIVisualEffectView()
     let effect = UIBlurEffect(style: .dark)
 
     var callback: (() -> Void)?
 
-    private let header = ModalHeaderView(title: "Confirmation", style: .dark)
-    private let cancel = ShadowButton(title: "Cancel", type: .secondary)
-    private let sendButton = ShadowButton(title: "Send", type: .primary)
+    private let header = ModalHeaderView(title: S.Confirmation.title, style: .dark)
+    private let cancel = ShadowButton(title: S.Button.cancel, type: .secondary)
+    private let sendButton = ShadowButton(title: S.Confirmation.send, type: .primary)
 
     private let payLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
     private let toLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
@@ -66,21 +63,17 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private func addSubviews() {
         view.addSubview(contentBox)
         contentBox.addSubview(header)
-
         contentBox.addSubview(payLabel)
         contentBox.addSubview(toLabel)
         contentBox.addSubview(amountLabel)
         contentBox.addSubview(address)
-
         contentBox.addSubview(processingTime)
         contentBox.addSubview(sendLabel)
         contentBox.addSubview(feeLabel)
         contentBox.addSubview(totalLabel)
-
         contentBox.addSubview(send)
         contentBox.addSubview(fee)
         contentBox.addSubview(total)
-
         contentBox.addSubview(cancel)
         contentBox.addSubview(sendButton)
     }
@@ -136,12 +129,11 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
             sendButton.topAnchor.constraint(equalTo: totalLabel.bottomAnchor, constant: C.padding[2]),
             sendButton.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]),
             sendButton.bottomAnchor.constraint(equalTo: contentBox.bottomAnchor, constant: -C.padding[2]) ])
-
     }
 
     private func setInitialData() {
         view.backgroundColor = .clear
-        payLabel.text = "Send"
+        payLabel.text = S.Confirmation.send
 
         let displayAmount = DisplayAmount(amount: amount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
         let displayFee = DisplayAmount(amount: feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
@@ -149,23 +141,22 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
         amountLabel.text = displayAmount.combinedDescription
 
-        toLabel.text = "To"
+        toLabel.text = S.Confirmation.to
         address.text = addressText
         address.lineBreakMode = .byTruncatingMiddle
         switch feeType {
         case .regular:
-            // Abstract this out to placeholder version: "Processing time: This transaction will take %1$@ to process."
-            processingTime.text = "Processing time: This transaction will take 10-30 minutes to process."
+            processingTime.text = String(format: S.Confirmation.processingTime, "10-30")
         case .economy:
-            processingTime.text = "Processing time: This transaction will take 60+ minutes to process."
+            processingTime.text = String(format: S.Confirmation.processingTime, "60+")
         }
 
-        sendLabel.text = "Amount to Send:" // Modify this screen to show totals both in bitcoin and fiat: b100 ($1.00)
+        sendLabel.text = S.Confirmation.amountLabel
         send.text = displayAmount.description
-        feeLabel.text = "Network Fee:"
+        feeLabel.text = S.Confirmation.feeLabel
         fee.text = displayFee.description
 
-        totalLabel.text = "Total Cost:"
+        totalLabel.text = S.Confirmation.totalLabel
         total.text = displayTotal.description
 
         cancel.tap = strongify(self) { myself in
@@ -180,6 +171,10 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
         contentBox.layer.cornerRadius = 6.0
         contentBox.layer.masksToBounds = true
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override var prefersStatusBarHidden: Bool {
