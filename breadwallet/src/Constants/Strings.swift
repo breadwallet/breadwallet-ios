@@ -144,7 +144,7 @@ enum S {
         static let amountHeader = NSLocalizedString("TransactionDetails.amountHeader", value:"Amount", comment: "Amount section header")
         static let emptyMessage = NSLocalizedString("TransactionDetails.emptyMessage", value:"Your transactions will appear here.", comment: "Empty transaction list message.")
         static let more = NSLocalizedString("TransactionDetails.more", value:"More...", comment: "More button title")
-        static let txHashHeader = NSLocalizedString("TransactionDetails.txHashHeader", value:"Transaction Hash", comment: "Transaction hash header")
+        static let txHashHeader = NSLocalizedString("TransactionDetails.txHashHeader", value:"Bitcoin Transaction ID", comment: "Transaction ID header")
         static let sendDescription = NSLocalizedString("TransactionDetails.sendDescription", value: "Sent <b>%1@</b> to %2@", comment: "Sent $5.00 to <address>")
         static let receivedDescription = NSLocalizedString("TransactionDetails.receivedDescription", value: "Received <b>%1@</b> at %2@", comment: "Received $5.00 from <address>")
         static let movedDescription = NSLocalizedString("TransactionDetails.movedDescription", value: "Moved <b>%2@</b> to %2@", comment: "Moved $5.00 to <address>")
@@ -321,8 +321,8 @@ enum S {
     }
 
     enum TransactionDirection {
-        static let to = NSLocalizedString("TransactionDirection.to", value:"to", comment: "Usage: sent transaction to")
-        static let received = NSLocalizedString("TransactionDirection.address", value:"received at this address", comment: "Usage: to/from Address")
+        static let to = NSLocalizedString("TransactionDirection.to", value:"Sent to this Address", comment: "(this transaction was) Sent to this address:")
+        static let received = NSLocalizedString("TransactionDirection.address", value:"Received at this Address", comment: "(this transaction was) Received at this address:")
     }
 
     enum RequestAnAmount {

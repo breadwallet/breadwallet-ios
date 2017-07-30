@@ -141,7 +141,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
     private func setInitialData() {
         view.backgroundColor = .clear
-        payLabel.text = "Pay"
+        payLabel.text = "Send"
 
         let displayAmount = DisplayAmount(amount: amount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
         let displayFee = DisplayAmount(amount: feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
@@ -154,17 +154,18 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         address.lineBreakMode = .byTruncatingMiddle
         switch feeType {
         case .regular:
-            processingTime.text = "Processing time: this transaction will take 10-30 minutes to process"
+            // Abstract this out to placeholder version: "Processing time: This transaction will take %1$@ to process."
+            processingTime.text = "Processing time: This transaction will take 10-30 minutes to process."
         case .economy:
-            processingTime.text = "Processing time: this transaction will take 60+ minutes to process"
+            processingTime.text = "Processing time: This transaction will take 60+ minutes to process."
         }
 
-        sendLabel.text = "Sending:"
+        sendLabel.text = "Amount to Send:" // Modify this screen to show totals both in bitcoin and fiat: b100 ($1.00)
         send.text = displayAmount.description
-        feeLabel.text = "Network fee:"
+        feeLabel.text = "Network Fee:"
         fee.text = displayFee.description
 
-        totalLabel.text = "Total cost:"
+        totalLabel.text = "Total Cost:"
         total.text = displayTotal.description
 
         cancel.tap = strongify(self) { myself in
