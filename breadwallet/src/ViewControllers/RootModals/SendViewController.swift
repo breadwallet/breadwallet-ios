@@ -61,7 +61,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
     private let initialRequest: PaymentRequest?
-    private let confirmDelegate = PinTransitioningDelegate()
+    private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private var feeType: Fee?
 
     override func viewDidLoad() {
@@ -248,7 +248,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                 self.send()
             })
         }
-        confirm.transitioningDelegate = confirmDelegate
+        confirmTransitioningDelegate.shouldShowMaskView = false
+        confirm.transitioningDelegate = confirmTransitioningDelegate
         confirm.modalPresentationStyle = .overFullScreen
         confirm.modalPresentationCapturesStatusBarAppearance = true
         present(confirm, animated: true, completion: nil)
