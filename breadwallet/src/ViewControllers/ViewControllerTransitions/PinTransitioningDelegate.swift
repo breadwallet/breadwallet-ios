@@ -11,8 +11,11 @@ import UIKit
 private let duration: TimeInterval = 0.4
 
 class PinTransitioningDelegate : NSObject , UIViewControllerTransitioningDelegate {
+
+    var shouldShowMaskView = true
+
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return PresentPinAnimator()
+        return PresentPinAnimator(shouldShowMaskView: shouldShowMaskView)
     }
 
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -21,6 +24,13 @@ class PinTransitioningDelegate : NSObject , UIViewControllerTransitioningDelegat
 }
 
 class PresentPinAnimator : NSObject, UIViewControllerAnimatedTransitioning {
+
+    init(shouldShowMaskView: Bool) {
+        self.shouldShowMaskView = shouldShowMaskView
+    }
+
+    private let shouldShowMaskView: Bool
+
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return duration
     }
@@ -39,7 +49,9 @@ class PresentPinAnimator : NSObject, UIViewControllerAnimatedTransitioning {
         let fromFrame = container.frame
         let maskView = UIView(frame: CGRect(x: 0, y: fromFrame.height, width: fromFrame.width, height: 40.0))
         maskView.backgroundColor = .whiteTint
-        container.addSubview(maskView)
+        if shouldShowMaskView {
+            container.addSubview(maskView)
+        }
 
         let scaleFactor: CGFloat = 0.1
         let deltaX = toVc.contentBox.frame.width * (1-scaleFactor)
