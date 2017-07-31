@@ -19,7 +19,6 @@ private let isBtcSwappedKey = "isBtcSwappedKey"
 private let maxDigitsKey = "SETTINGS_MAX_DIGITS"
 private let pushTokenKey = "pushTokenKey"
 private let currentRateKey = "currentRateKey"
-private let canShareDataKey = "canShareDataKey"
 
 extension UserDefaults {
 
@@ -49,9 +48,6 @@ extension UserDefaults {
 
     static var hasAquiredShareDataPermission: Bool {
         get {
-            guard defaults.object(forKey: hasAquiredShareDataPermissionKey) != nil else {
-                return false
-            }
             return defaults.bool(forKey: hasAquiredShareDataPermissionKey)
         }
         set {
@@ -120,15 +116,6 @@ extension UserDefaults {
         }
         set {
             defaults.set(newValue, forKey: currentRateKey)
-        }
-    }
-
-    static var canShareData: Bool {
-        get {
-            return defaults.bool(forKey: canShareDataKey)
-        }
-        set {
-            defaults.set(newValue, forKey: canShareDataKey)
         }
     }
 }
