@@ -62,6 +62,8 @@ enum TriggerName {
     case reinitWalletManager((()->Void)?)
     case didUpgradePin
     case txMemoUpdated(String)
+    case promptShareData
+    case didEnableShareData
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName : Equatable {}
@@ -117,6 +119,10 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.didUpgradePin, .didUpgradePin):
         return true
     case (.txMemoUpdated(_), .txMemoUpdated(_)):
+        return true
+    case (.promptShareData, .promptShareData):
+        return true
+    case (.didEnableShareData, .didEnableShareData):
         return true
     default:
         return false

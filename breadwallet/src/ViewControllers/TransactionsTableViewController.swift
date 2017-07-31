@@ -130,13 +130,16 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         store.subscribe(self, selector: { $0.recommendRescan != $1.recommendRescan }, callback: { _ in
             self.attemptShowPrompt()
         })
-
         store.subscribe(self, selector: { $0.walletState.isSyncing != $1.walletState.isSyncing }, callback: { _ in
             self.reload()
         })
-
         store.subscribe(self, name: .didUpgradePin, callback: { _ in
             if self.currentPrompt?.type == .upgradePin {
+                self.currentPrompt = nil
+            }
+        })
+        store.subscribe(self, name: .didEnableShareData, callback: { _ in
+            if self.currentPrompt?.type == .shareData {
                 self.currentPrompt = nil
             }
         })
