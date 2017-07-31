@@ -42,6 +42,8 @@ class Transaction {
 
         self.isValid = wallet.transactionIsValid(tx)
         let transactionBlockHeight = tx.pointee.blockHeight
+        self.blockHeight = tx.pointee.blockHeight == UInt32(INT32_MAX) ? S.TransactionDetails.notConfirmedBlockHeightLabel : "\(tx.pointee.blockHeight)"
+
         let blockHeight = peerManager.lastBlockHeight
         confirms = transactionBlockHeight > blockHeight ? 0 : Int(blockHeight - transactionBlockHeight) + 1
         self.status = makeStatus(tx, wallet: wallet, peerManager: peerManager, confirms: confirms, direction: self.direction)
@@ -102,6 +104,7 @@ class Transaction {
     let fee: UInt64
     let hash: String
     let isValid: Bool
+    let blockHeight: String
     private let confirms: Int
 
     //MARK: - Private
