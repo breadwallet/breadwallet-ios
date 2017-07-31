@@ -67,13 +67,6 @@ class EventManager {
         "background": .UIApplicationDidEnterBackground
     ]
     private var buffer = [Event]()
-    
-    private enum SampleGroup {
-        static let hasDetermined =          "has_determined_sample_group"
-        static let isMember =               "is_in_sample_group"
-        static let hasPrompted =            "has_prompted_for_permission"
-    }
-    
     private let adaptor: BRAPIAdaptor
     
     struct Event {
@@ -93,13 +86,6 @@ class EventManager {
     init(adaptor: BRAPIAdaptor) {
         self.adaptor = adaptor
         queue.maxConcurrentOperationCount = 1
-        
-        let defaults = UserDefaults.standard
-        if !defaults.bool(forKey: SampleGroup.hasDetermined) {
-            let isInSample = arc4random_uniform(100) < sampleChance
-            defaults.set(isInSample, forKey: SampleGroup.isMember)
-            defaults.set(true, forKey: SampleGroup.hasDetermined)
-        }
     }
     
     func saveEvent(_ eventName: String) {
@@ -147,12 +133,8 @@ class EventManager {
         }
     }
     
-    private var isInSampleGroup: Bool {
-        return UserDefaults.standard.bool(forKey: SampleGroup.isMember)
-    }
-    
     private var shouldRecordData: Bool {
-        return isInSampleGroup && UserDefaults.hasAquiredShareDataPermission
+        return UserDefaults.hasAquiredShareDataPermission
     }
     
     func sync(completion: @escaping () -> Void) {
