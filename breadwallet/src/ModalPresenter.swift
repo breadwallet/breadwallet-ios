@@ -68,6 +68,9 @@ class ModalPresenter : Subscriber {
         store.subscribe(self, name: .promptTouchId, callback: { _ in
             self.presentTouchIdSetting()
         })
+        store.subscribe(self, name: .promptShareData, callback: { _ in
+            self.promptShareData()
+        })
         store.subscribe(self, name: .openFile(Data()), callback: {
             guard let trigger = $0 else { return }
             if case .openFile(let file) = trigger {
@@ -611,6 +614,16 @@ class ModalPresenter : Subscriber {
         nc.setDefaultStyle()
         nc.isNavigationBarHidden = true
         nc.delegate = securityCenterNavigationDelegate
+        topViewController?.present(nc, animated: true, completion: nil)
+    }
+
+    private func promptShareData() {
+        let shareData = ShareDataViewController(store: store)
+        let nc = ModalNavigationController(rootViewController: shareData)
+        nc.setDefaultStyle()
+        nc.isNavigationBarHidden = true
+        nc.delegate = securityCenterNavigationDelegate
+        shareData.addCloseNavigationItem()
         topViewController?.present(nc, animated: true, completion: nil)
     }
 

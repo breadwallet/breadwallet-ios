@@ -396,6 +396,10 @@ enum S {
             static let title = NSLocalizedString("Prompts.NoPasscode.title", value: "Turn device passcode on", comment: "No Passcode set warning title")
             static let body = NSLocalizedString("Prompts.NoPasscode.body", value: "A device passcode is needed to safeguard your wallet. Go to settings and turn passcode on.", comment: "No passcode set warning body")
         }
+        enum ShareData {
+            static let title = NSLocalizedString("Prompts.ShareData.title", value: "Share Anonymous Data", comment: "Share data prompt title")
+            static let body = NSLocalizedString("Prompts.ShareData.body", value: "Help improve Bread by sharing your anonymous data with us", comment: "Share data prompt body")
+        }
     }
 
     enum PaymentProtocol {
