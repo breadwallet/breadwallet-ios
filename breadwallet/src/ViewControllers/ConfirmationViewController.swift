@@ -10,7 +10,7 @@ import UIKit
 
 class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
-    init(amount: Satoshis, fee: Satoshis, feeType: Fee, state: State, selectedRate: Rate?, minimumFractionDigits: Int?, address: String) {
+    init(amount: Satoshis, fee: Satoshis, feeType: Fee, state: State, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingTouchId: Bool) {
         self.amount = amount
         self.feeAmount = fee
         self.feeType = feeType
@@ -18,6 +18,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         self.selectedRate = selectedRate
         self.minimumFractionDigits = minimumFractionDigits
         self.addressText = address
+        self.isUsingTouchId = isUsingTouchId
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -28,6 +29,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private let selectedRate: Rate?
     private let minimumFractionDigits: Int?
     private let addressText: String
+    private let isUsingTouchId: Bool
 
     //ContentBoxPresenter
     let contentBox = UIView(color: .white)
@@ -38,7 +40,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
     private let header = ModalHeaderView(title: S.Confirmation.title, style: .dark)
     private let cancel = ShadowButton(title: S.Button.cancel, type: .secondary)
-    private let sendButton = ShadowButton(title: S.Confirmation.send, type: .primary)
+    private let sendButton = ShadowButton(title: S.Confirmation.send, type: .primary, image: #imageLiteral(resourceName: "TouchId"))
 
     private let payLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
     private let toLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
@@ -171,6 +173,10 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
         contentBox.layer.cornerRadius = 6.0
         contentBox.layer.masksToBounds = true
+
+        if !isUsingTouchId {
+            sendButton.image = nil
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {

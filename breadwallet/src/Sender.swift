@@ -49,13 +49,13 @@ class Sender {
         return walletManager.wallet?.feeForTx(tx) ?? 0
     }
 
-    func feeForTx(amount: UInt64) -> UInt64 {
-        return walletManager.wallet?.feeForTx(amount:amount) ?? 0
+    var canUseTouchId: Bool {
+        guard let tx = transaction else  { return false }
+        return walletManager.canUseTouchID(forTx: tx)
     }
 
-    //For display purposes only
-    func maybeCanUseTouchId(forAmount: UInt64) -> Bool {
-        return forAmount < walletManager.spendingLimit && UserDefaults.isTouchIdEnabled
+    func feeForTx(amount: UInt64) -> UInt64 {
+        return walletManager.wallet?.feeForTx(amount:amount) ?? 0
     }
 
     //Amount in bits
