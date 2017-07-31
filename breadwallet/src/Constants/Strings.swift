@@ -213,11 +213,9 @@ enum S {
 
     enum VerifyPin {
         static let title = NSLocalizedString("VerifyPin.title", value:"PIN Required", comment: "Verify PIN view title")
-        static let to = NSLocalizedString("VerifyPin.to", value: "To: %1$@", comment: "To: <bitcoin_address>")
-        static let amount = NSLocalizedString("VerifyPin.amount", value: "Amount: %1$@", comment: "Amount: $5.00")
-        static let fee = NSLocalizedString("VerifyPin.fee", value: "Fee: %1$@", comment: "Fee: $1.00")
-        static let total = NSLocalizedString("VerifyPIn.total", value: "Total: %1$@", comment: "Total: $6.00")
         static let continueBody = NSLocalizedString("VerifyPin.continueBody", value:"Please enter your PIN to continue.", comment: "Verify PIN view body")
+        static let authorize = NSLocalizedString("VerifyPin.authorize", value: "Please enter your PIN to authorize this transaction.", comment: "Verify PIN for transaction view body")
+        static let touchIdMessage = NSLocalizedString("VerifyPin.touchIdMessage", value: "Authorize this transaction", comment: "Authorize transaction with touch id message")
     }
 
     enum TouchIdSettings {
