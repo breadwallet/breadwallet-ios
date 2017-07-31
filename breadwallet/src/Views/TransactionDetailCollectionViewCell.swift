@@ -27,6 +27,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         fullAddress.setTitle(transaction.toAddress ?? "", for: .normal)
         txHash.setTitle(transaction.hash, for: .normal)
         availability.isHidden = !transaction.shouldDisplayAvailableToSpend
+        blockHeight.text = transaction.blockHeight
         self.transaction = transaction
         self.rate = rate
     }
@@ -74,6 +75,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     private let txHash = UIButton(type: .system)
     private let txHashHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let availability = UILabel(font: .customBold(size: 13.0), color: .cameraGuidePositive)
+    private let blockHeight = UILabel(font: .customBody(size: 13.0), color: .darkText)
 
     private func setup() {
         addSubviews()
@@ -247,19 +249,28 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         moreContentView.addSubview(txHashHeader)
         moreContentView.addSubview(txHash)
         txHashHeader.text = S.TransactionDetails.txHashHeader
-
         txHashHeader.constrain([
             txHashHeader.leadingAnchor.constraint(equalTo: moreContentView.leadingAnchor),
             txHashHeader.topAnchor.constraint(equalTo: moreContentView.topAnchor) ])
-
         txHash.constrain([
             txHash.leadingAnchor.constraint(equalTo: txHashHeader.leadingAnchor),
             txHash.topAnchor.constraint(equalTo: txHashHeader.bottomAnchor, constant: 2.0),
             txHash.trailingAnchor.constraint(lessThanOrEqualTo: moreContentView.trailingAnchor) ])
 
+        let blockHeightHeader = UILabel(font: txHashHeader.font, color: txHashHeader.textColor)
+        blockHeightHeader.text = S.TransactionDetails.blockHeightLabel
+        moreContentView.addSubview(blockHeightHeader)
+        moreContentView.addSubview(blockHeight)
+        blockHeightHeader.constrain([
+            blockHeightHeader.leadingAnchor.constraint(equalTo: txHashHeader.leadingAnchor),
+            blockHeightHeader.topAnchor.constraint(equalTo: txHash.bottomAnchor, constant: C.padding[1]) ])
+        blockHeight.constrain([
+            blockHeight.leadingAnchor.constraint(equalTo: blockHeightHeader.leadingAnchor),
+            blockHeight.topAnchor.constraint(equalTo: blockHeightHeader.bottomAnchor) ])
+
         newSeparator.constrain([
-            newSeparator.leadingAnchor.constraint(equalTo: txHash.leadingAnchor),
-            newSeparator.topAnchor.constraint(equalTo: txHash.bottomAnchor, constant: C.padding[2]),
+            newSeparator.leadingAnchor.constraint(equalTo: blockHeight.leadingAnchor),
+            newSeparator.topAnchor.constraint(equalTo: blockHeight.bottomAnchor, constant: C.padding[2]),
             newSeparator.trailingAnchor.constraint(equalTo: moreContentView.trailingAnchor),
             newSeparator.heightAnchor.constraint(equalToConstant: 1.0),
             newSeparator.bottomAnchor.constraint(equalTo: moreContentView.bottomAnchor) ])
