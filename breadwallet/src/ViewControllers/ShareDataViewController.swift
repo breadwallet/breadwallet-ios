@@ -68,8 +68,7 @@ class ShareDataViewController : UIViewController {
             toggle.sendActions(for: .valueChanged)
         }
 
-        toggle.valueChanged = { [weak self] in
-            guard let myself = self else { return }
+        toggle.valueChanged = strongify(self) { myself in
             UserDefaults.hasAquiredShareDataPermission = myself.toggle.isOn
             if myself.toggle.isOn {
                 myself.store.trigger(name: .didEnableShareData)
