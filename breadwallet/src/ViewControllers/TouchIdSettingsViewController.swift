@@ -129,17 +129,23 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
     private var textViewText: NSAttributedString {
         guard let rate = rate else { return NSAttributedString(string: "") }
         let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: store.state.maxDigits)
-        let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.bits, amount.localCurrency))\n\n\(S.TouchIdSettings.customizeText) "
-        let link = "Touch ID Spending Limit Screen"
+        let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.bits, amount.localCurrency))\n\n\(String(format: S.TouchIdSettings.customizeText, S.TouchIdSettings.linkText))"
+        let linkText = S.TouchIdSettings.linkText
         let attributedString = NSMutableAttributedString(string: string, attributes: [
                 NSFontAttributeName: UIFont.customBody(size: 13.0),
                 NSForegroundColorAttributeName: UIColor.darkText
             ])
-        let attributedLink = NSMutableAttributedString(string: link, attributes: [
+        let linkAttributes = [
                 NSFontAttributeName: UIFont.customMedium(size: 13.0),
-                NSLinkAttributeName: NSURL(string:"http://spending-limit")!
-            ])
-        attributedString.append(attributedLink)
+                NSLinkAttributeName: NSURL(string:"http://spending-limit")!]
+
+        if let range = string.range(of: linkText, options: [], range: nil, locale: nil) {
+            let from = range.lowerBound.samePosition(in: string.utf16)
+            let to = range.upperBound.samePosition(in: string.utf16)
+            attributedString.addAttributes(linkAttributes, range: NSRange(location: string.utf16.distance(from: string.utf16.startIndex, to: from),
+                                                                          length: string.utf16.distance(from: from, to: to)))
+        }
+
         return attributedString
     }
 
