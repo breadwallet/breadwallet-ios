@@ -18,6 +18,7 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
             didMakePostRequest = false
         }
     }
+    var didCallLoadRequest = false
     var closeOnURL: URL?
     var onClose: (() -> Void)?
     
@@ -104,7 +105,7 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
         webView.addObserver(self, forKeyPath: "title", options: .new, context: nil)
         webView.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
         print("[BRBrowserViewController viewWillAppear request = \(String(describing: request))")
-        if let request = request {
+        if let request = request, !didCallLoadRequest {
             // this is part one of loading a POST request. since WKWebView will loose the POST body upon calling
             // load(request:) we have to instead load a custom HTML file with a javascript function that will allow
             // submit the form on behalf of the browser's request object. this is effectually performing a link 'bounce'
@@ -122,6 +123,7 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
             } else {
                 _ = webView.load(request)
             }
+            didCallLoadRequest = true
         }
     }
     
@@ -278,6 +280,11 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
         print("[BRBrowserViewController] webView didStartProfisionalNavigation navigation = \(navigation)")
         showLoading(true)
     }
+    
+    override open func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        if self.presentedViewController == nil { return }
+        super.dismiss(animated: flag, completion: completion)
+    }
 }
 
 @available(iOS 8.0, *)
@@ -322,6 +329,11 @@ open class BRBrowserViewController: UINavigationController {
                 onDone()
             }
         }
+    }
+    
+    override open func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        if self.presentedViewController == nil { return }
+        super.dismiss(animated: flag, completion: completion)
     }
 }
 
