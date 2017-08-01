@@ -236,6 +236,10 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
                 self.didMakePostRequest = true
                 print("[BRBrowserViewController] evaluated javascript POST bouncer. ret=\(String(describing: ret)) err=\(String(describing: err))")
             })
+        } else {
+            if let onClose = onClose, closeOnURLsMatch(webView.url) {
+                onClose()
+            }
         }
     }
     
@@ -257,6 +261,7 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
     }
     
     func closeOnURLsMatch(_ toURL: URL?) -> Bool {
+        print("[BRBrowserViewController] closeOnURLsMatch(toURL:\(String(describing: toURL))")
         guard let closeOnURL = closeOnURL, let toURL = toURL else {
             return false
         }
