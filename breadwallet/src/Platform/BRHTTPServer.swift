@@ -239,11 +239,12 @@ open class BRHTTPMiddlewareResponse {
             }
         }
     }
-    
+    // curl http://localhost:30079/_api/exchange -H 'X-Should-Authenticate: true' -H 'Accept: application/json'
     fileprivate func dispatch(middleware mw: [BRHTTPMiddleware], req: BRHTTPRequest, finish: @escaping (BRHTTPResponse) -> Void) {
         var newMw = mw
         if let curMw = newMw.popLast() {
             curMw.handle(req, next: { mwResp in
+                print("[BRHTTPServer] handling middleware = \(type(of: curMw))")
                 if let httpResp = mwResp.response {
                     httpResp.done {
                         do {
