@@ -17,10 +17,11 @@ class AmountViewController : UIViewController {
         self.store = store
         self.isPinPadExpandedAtLaunch = isPinPadExpandedAtLaunch
         self.isRequesting = isRequesting
-        self.currencySlider = CurrencySlider(rates: store.state.rates,
-                                             defaultCode: store.state.defaultCurrencyCode,
-                                             isBtcSwapped: store.state.isBtcSwapped)
-        self.currencyToggle = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
+        if let rate = store.state.currentRate, store.state.isBtcSwapped {
+            self.currencyToggle = ShadowButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
+        } else {
+            self.currencyToggle = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
+        }
         self.feeSelector = FeeSelector(store: store)
         self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: store.state.maxDigits)
         super.init(nibName: nil, bundle: nil)
@@ -60,8 +61,6 @@ class AmountViewController : UIViewController {
     var minimumFractionDigits = 0
     private var hasTrailingDecimal = false
     private var pinPadHeight: NSLayoutConstraint?
-    private var currencyContainerHeight: NSLayoutConstraint?
-    private var currencyContainterTop: NSLayoutConstraint?
     private var feeSelectorHeight: NSLayoutConstraint?
     private var feeSelectorTop: NSLayoutConstraint?
     private let placeholder = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
@@ -73,10 +72,8 @@ class AmountViewController : UIViewController {
     private let cursor = BlinkingView(blinkColor: C.defaultTintColor)
     private let balanceLabel = UILabel()
     private let feeLabel = UILabel()
-    private let currencyContainer = InViewAlert(type: .secondary)
     private let feeContainer = InViewAlert(type: .secondary)
     private let tapView = UIView()
-    private let currencySlider: CurrencySlider
     private let editFee = UIButton(type: .system)
     private let feeSelector: FeeSelector
 
@@ -98,7 +95,6 @@ class AmountViewController : UIViewController {
         view.addSubview(amountLabel)
         view.addSubview(placeholder)
         view.addSubview(currencyToggle)
-        view.addSubview(currencyContainer)
         view.addSubview(feeContainer)
         view.addSubview(border)
         view.addSubview(cursor)
@@ -124,21 +120,13 @@ class AmountViewController : UIViewController {
         currencyToggle.constrain([
             currencyToggle.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[2]),
             currencyToggle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
-        currencyContainerHeight = currencyContainer.constraint(.height, constant: 0.0)
-        if isRequesting {
-            currencyContainterTop = currencyContainer.constraint(toBottom: currencyToggle, constant: C.padding[2])
-        } else {
-            currencyContainterTop = currencyContainer.constraint(toBottom: feeLabel, constant: C.padding[2])
-        }
-        currencyContainer.constrain([
-            currencyContainterTop,
-            currencyContainer.constraint(.leading, toView: view),
-            currencyContainer.constraint(.trailing, toView: view),
-            currencyContainerHeight ])
-        currencyContainer.arrowXLocation = view.bounds.width - 30.0 - C.padding[2]
-
         feeSelectorHeight = feeContainer.heightAnchor.constraint(equalToConstant: 0.0)
-        feeSelectorTop = feeContainer.topAnchor.constraint(equalTo: currencyContainer.bottomAnchor, constant: 0.0)
+        if isRequesting {
+            feeSelectorTop = feeContainer.topAnchor.constraint(equalTo: currencyToggle.bottomAnchor, constant: 0.0)
+        } else {
+            feeSelectorTop = feeContainer.topAnchor.constraint(equalTo: feeLabel.bottomAnchor, constant: 0.0)
+        }
+
         feeContainer.constrain([
             feeSelectorTop,
             feeSelectorHeight,
@@ -172,6 +160,7 @@ class AmountViewController : UIViewController {
             editFee.widthAnchor.constraint(equalToConstant: 44.0),
             editFee.heightAnchor.constraint(equalToConstant: 44.0) ])
         bottomBorder.constrain([
+            bottomBorder.topAnchor.constraint(greaterThanOrEqualTo: currencyToggle.bottomAnchor, constant: C.padding[2]),
             bottomBorder.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomBorder.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             bottomBorder.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -180,7 +169,7 @@ class AmountViewController : UIViewController {
             tapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tapView.topAnchor.constraint(equalTo: view.topAnchor),
             tapView.trailingAnchor.constraint(equalTo: currencyToggle.leadingAnchor, constant: 4.0),
-            tapView.bottomAnchor.constraint(equalTo: currencyContainer.topAnchor) ])
+            tapView.bottomAnchor.constraint(equalTo: feeContainer.topAnchor) ])
         preventAmountOverflow()
     }
 
@@ -189,9 +178,6 @@ class AmountViewController : UIViewController {
         cursor.startBlinking()
         amountLabel.text = ""
         placeholder.text = S.Send.amountLabel
-        currencySlider.load()
-        currencyContainer.contentView = currencySlider
-        currencyToggle.isToggleable = true
         bottomBorder.isHidden = true
         if store.state.isBtcSwapped {
             if let rate = store.state.currentRate {
@@ -201,12 +187,8 @@ class AmountViewController : UIViewController {
         pinPad.ouputDidUpdate = { [weak self] output in
             self?.handlePinPadUpdate(output: output)
         }
-        currencySlider.didSelectCurrency = { [weak self] rate in
-            self?.selectedRate = rate.code == C.btcCurrencyCode ? nil : rate
-            self?.toggleCurrencyContainer()
-        }
-        currencyToggle.tap = { [weak self] in
-            self?.toggleCurrencyContainer()
+        currencyToggle.tap = strongify(self) { myself in
+            myself.toggleCurrency()
         }
         let gr = UITapGestureRecognizer(target: self, action: #selector(didTap))
         tapView.addGestureRecognizer(gr)
@@ -224,6 +206,11 @@ class AmountViewController : UIViewController {
         editFee.imageEdgeInsets = UIEdgeInsetsMake(15.0, 15.0, 15.0, 15.0)
         editFee.tintColor = .grayTextTint
         editFee.isHidden = true
+    }
+
+    private func toggleCurrency() {
+        selectedRate = selectedRate == nil ? store.state.currentRate : nil
+        setCurrencyToggleTitle()
     }
 
     private func preventAmountOverflow() {
@@ -301,39 +288,13 @@ class AmountViewController : UIViewController {
         }
     }
 
-    @objc private func toggleCurrencyContainer() {
-        let isCurrencySwitcherCollapsed: Bool = currencyContainerHeight?.constant == 0.0
-        UIView.spring(C.animationDuration, animations: {
-            if isCurrencySwitcherCollapsed {
-                if let height = self.feeSelectorHeight, !height.isActive {
-                    self.feeSelector.removeIntrinsicSize()
-                    NSLayoutConstraint.activate([height])
-                }
-                self.currencyContainerHeight?.constant = currencyHeight
-                if !self.isRequesting {
-                    self.currencyContainterTop?.constant = 0.0
-                }
-            } else {
-                self.currencyContainerHeight?.constant = 0.0
-                if !self.isRequesting {
-                    self.currencyContainterTop?.constant = C.padding[2]
-                }
-            }
-            self.parent?.parent?.view?.layoutIfNeeded()
-        }, completion: {_ in })
-    }
-
     private func toggleFeeSelector() {
         guard let height = feeSelectorHeight else { return }
         let isCollapsed: Bool = height.isActive
         UIView.spring(C.animationDuration, animations: {
             if isCollapsed {
-                if self.currencyContainerHeight?.constant != 0.0 {
-                    self.currencyContainerHeight?.constant = 0.0
-                }
                 NSLayoutConstraint.deactivate([height])
                 self.feeSelector.addIntrinsicSize()
-                self.currencyContainterTop?.constant = 0.0
             } else {
                 self.feeSelector.removeIntrinsicSize()
                 NSLayoutConstraint.activate([height])
@@ -382,11 +343,7 @@ class AmountViewController : UIViewController {
     }
 
     private func fullRefresh() {
-        if let rate = selectedRate {
-            currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
-        } else {
-            currencyToggle.title = S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
-        }
+        updateCurrencyToggleTitle()
         updateBalanceLabel()
         updateAmountLabel()
 
@@ -396,6 +353,14 @@ class AmountViewController : UIViewController {
         var set = CharacterSet.decimalDigits
         set.formUnion(CharacterSet(charactersIn: NumberFormatter().currencyDecimalSeparator))
         pinPad.currentOutput = String(String.UnicodeScalarView(currentOutput.unicodeScalars.filter { set.contains($0) }))
+    }
+
+    private func updateCurrencyToggleTitle() {
+        if let rate = selectedRate {
+            self.currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
+        } else {
+            self.currencyToggle.title = S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {

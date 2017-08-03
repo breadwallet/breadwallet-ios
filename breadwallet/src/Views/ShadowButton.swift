@@ -23,7 +23,7 @@ class ShadowButton: UIControl {
     init(title: String, type: ButtonType) {
         self.title = title
         self.type = type
-        super.init(frame: CGRect.zero)
+        super.init(frame: .zero)
         accessibilityLabel = title
         setupViews()
     }
@@ -32,7 +32,7 @@ class ShadowButton: UIControl {
         self.title = title
         self.type = type
         self.image = image
-        super.init(frame: CGRect.zero)
+        super.init(frame: .zero)
         accessibilityLabel = title
         setupViews()
     }
