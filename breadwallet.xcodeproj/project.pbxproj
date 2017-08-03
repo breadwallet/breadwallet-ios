@@ -382,7 +382,6 @@
 		CEE513EF1EB6A84800D6E4D7 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C371EA5B4680086F724 /* Strings.swift */; };
 		CEE6282A1EA98B6D001035AA /* DispatchQueue+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE628291EA98B6D001035AA /* DispatchQueue+Additions.swift */; };
 		CEE65DF01E39056F0002994D /* Rate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE65DEF1E39056F0002994D /* Rate.swift */; };
-		CEE7F1D01E07653B00283981 /* CurrencySlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */; };
 		CEEC707F1E8D6B4100EF788E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC707E1E8D6B4100EF788E /* SettingsViewController.swift */; };
 		CEEC70811E90C04700EF788E /* SeparatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70801E90C04700EF788E /* SeparatorCell.swift */; };
 		CEEC70831E90C07C00EF788E /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70821E90C07C00EF788E /* Setting.swift */; };
@@ -1573,7 +1572,6 @@
 		CEE20C371EA5B4680086F724 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Strings.swift; path = src/Constants/Strings.swift; sourceTree = "<group>"; };
 		CEE628291EA98B6D001035AA /* DispatchQueue+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "DispatchQueue+Additions.swift"; path = "src/Extensions/DispatchQueue+Additions.swift"; sourceTree = "<group>"; };
 		CEE65DEF1E39056F0002994D /* Rate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Rate.swift; path = src/Models/Rate.swift; sourceTree = "<group>"; };
-		CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = CurrencySlider.swift; path = src/Views/CurrencySlider.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CEEC707E1E8D6B4100EF788E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = src/ViewControllers/SettingsViewController.swift; sourceTree = "<group>"; };
 		CEEC70801E90C04700EF788E /* SeparatorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SeparatorCell.swift; path = src/Views/SeparatorCell.swift; sourceTree = "<group>"; };
 		CEEC70821E90C07C00EF788E /* Setting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Setting.swift; path = src/Models/Setting.swift; sourceTree = "<group>"; };
@@ -2946,7 +2944,6 @@
 				CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */,
 				CE25BF8C1DF3B8A500BC67B6 /* InViewAlert.swift */,
 				CEA362671E00EE320061FC0E /* CameraGuideView.swift */,
-				CEE7F1CF1E07653B00283981 /* CurrencySlider.swift */,
 				CE4B6C1B1E21A96D00CF935B /* LoadingProgressView.swift */,
 				CE8CD8E21E31978100785E02 /* LoginBackgroundTriangle.swift */,
 				CECB9DB51E4985CE0081A172 /* LoginBackgroundView.swift */,
@@ -3985,7 +3982,6 @@
 				22E773041EE7813000397E0E /* Bonjour.swift in Sources */,
 				CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */,
 				CEC6AA491DEFD00100EE5AFD /* MenuButton.swift in Sources */,
-				CEE7F1D01E07653B00283981 /* CurrencySlider.swift in Sources */,
 				CEF61B121ECF52C700C7EA6A /* AmountViewController.swift in Sources */,
 				CEBF32F21DDCE10D00348FC6 /* AccountHeaderView.swift in Sources */,
 				CECCE5B21E04B00D00D99448 /* SendCell.swift in Sources */,
