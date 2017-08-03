@@ -295,6 +295,7 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
 @available(iOS 8.0, *)
 open class BRBrowserViewController: UINavigationController {
     var onDone: (() -> Void)?
+    var isClosing = false
     var closeOnURL: String {
         get {
             return browser.closeOnURL == nil ? "" : "\(browser.closeOnURL!)"
@@ -329,6 +330,7 @@ open class BRBrowserViewController: UINavigationController {
     
     @objc private func done(_ control: UIControl?) {
         print("[BRBrowserViewController] done")
+        isClosing = true
         self.dismiss(animated: true) {
             if let onDone = self.onDone {
                 onDone()
@@ -337,7 +339,8 @@ open class BRBrowserViewController: UINavigationController {
     }
     
     override open func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        if self.presentedViewController == nil { return }
+        if self.presentedViewController == nil && !isClosing { return }
+        isClosing = false
         super.dismiss(animated: flag, completion: completion)
     }
 }
