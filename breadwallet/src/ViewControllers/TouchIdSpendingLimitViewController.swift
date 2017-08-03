@@ -8,116 +8,92 @@
 
 import UIKit
 
-class TouchIdSpendingLimitViewController : UIViewController, Subscriber {
+class TouchIdSpendingLimitViewController : UITableViewController, Subscriber {
 
-    private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
-    private let faq: UIButton
-    private let amount = UILabel(font: .customMedium(size: 26.0), color: .darkText)
-    private let currencyButton: ShadowButton
-    private let currencySwitcher = InViewAlert(type: .secondary)
-    private let slider = UISlider()
-    private let body = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
-    private var currencySwitcherHeight: NSLayoutConstraint?
-    private let walletManager: WalletManager
+    private let cellIdentifier = "CellIdentifier"
     private let store: Store
-    private var rate: Rate?
-
+    private let walletManager: WalletManager
+    private let limits: [UInt64] = [1000000, 10000000, 100000000]
+    private var selectedLimit: UInt64?
+    private var header: UIView?
+    private let amount = UILabel(font: .customMedium(size: 26.0), color: .darkText)
+    private let body = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
+    
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
         self.store = store
-        self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.touchIdSpendingLimit)
-        self.currencyButton = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
         super.init(nibName: nil, bundle: nil)
     }
 
     override func viewDidLoad() {
-        addSubviews()
-        addConstraints()
-        setData()
-    }
+        if limits.contains(walletManager.spendingLimit) {
+            selectedLimit = walletManager.spendingLimit
+        }
+        tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableView.sectionHeaderHeight = UITableViewAutomaticDimension
+        tableView.estimatedSectionHeaderHeight = 50.0
+        tableView.backgroundColor = .whiteTint
+        tableView.separatorStyle = .none
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-    }
-
-    private func addSubviews() {
-        view.addSubview(titleLabel)
-        view.addSubview(faq)
-        view.addSubview(amount)
-        view.addSubview(currencyButton)
-        view.addSubview(currencySwitcher)
-        view.addSubview(slider)
-        view.addSubview(body)
-    }
-
-    private func addConstraints() {
-        titleLabel.constrain([
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            titleLabel.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2]) ])
-        faq.constrain([
-            faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            faq.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-            faq.heightAnchor.constraint(equalToConstant: 44.0),
-            faq.widthAnchor.constraint(equalToConstant: 44.0)])
-        amount.constrain([
-            amount.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            amount.topAnchor.constraint(equalTo: titleLabel.bottomAnchor) ])
-        currencyButton.constrain([
-            currencyButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            currencyButton.centerYAnchor.constraint(equalTo: amount.centerYAnchor),
-            currencyButton.heightAnchor.constraint(equalToConstant: 32.0) ])
-        currencySwitcherHeight = currencySwitcher.heightAnchor.constraint(equalToConstant: 0.0)
-        currencySwitcher.constrain([
-            currencySwitcherHeight,
-            currencySwitcher.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            currencySwitcher.topAnchor.constraint(equalTo: currencyButton.bottomAnchor, constant: C.padding[2]),
-            currencyButton.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
-        slider.constrain([
-            slider.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            slider.topAnchor.constraint(equalTo: currencySwitcher.bottomAnchor, constant: C.padding[2]),
-            slider.trailingAnchor.constraint(equalTo: currencyButton.trailingAnchor),
-            slider.heightAnchor.constraint(equalToConstant: 8.0) ])
-        body.constrain([
-            body.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            body.topAnchor.constraint(equalTo: slider.bottomAnchor, constant: C.padding[2]),
-            body.trailingAnchor.constraint(equalTo: currencyButton.trailingAnchor) ])
-        slider.addGradientTrack()
-
-        currencyButton.isHidden = true
-    }
-
-    private func setData() {
-        store.subscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: {
-            self.rate = $0.currentRate
-        })
-        view.backgroundColor = .white
+        let titleLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
         titleLabel.text = S.TouchIdSpendingLimit.title
-        body.text = S.TouchIdSpendingLimit.body
+        titleLabel.sizeToFit()
+        navigationItem.titleView = titleLabel
 
-        if let rate = self.rate, let wallet = walletManager.wallet {
+        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.touchIdSpendingLimit)
+        faqButton.tintColor = .darkText
+        navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
+
+        body.text = S.TouchIdSpendingLimit.body
+        if let rate = store.state.currentRate {
             let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: store.state.maxDigits)
             setAmount(limitAmount: spendingLimit)
-            slider.minimumValue = 0.0
-            slider.maximumValue = Float(max(wallet.balance*3, C.satoshis*2))
-            slider.value = Float(walletManager.spendingLimit)
         }
+    }
 
-        slider.valueChanged = { [weak self] in
-            guard let myself = self else { return }
-            let step: Float = 10000.0
-            myself.slider.value = round(myself.slider.value/step)*step
-            if let rate = myself.rate {
-                let spendingLimit = Amount(amount: UInt64(myself.slider.value), rate: rate, maxDigits: myself.store.state.maxDigits)
-                myself.setAmount(limitAmount: spendingLimit)
-            }
-            myself.walletManager.spendingLimit = UInt64(myself.slider.value)
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return limits.count
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
+        let limit = limits[indexPath.row]
+        let displayAmount = DisplayAmount(amount: Satoshis(rawValue: limit), state: store.state, selectedRate: nil, minimumFractionDigits: 0)
+        cell.textLabel?.text = displayAmount.combinedDescription
+        if limits[indexPath.row] == selectedLimit {
+            let check = UIImageView(image: #imageLiteral(resourceName: "CircleCheck").withRenderingMode(.alwaysTemplate))
+            check.tintColor = C.defaultTintColor
+            cell.accessoryView = check
+        } else {
+            cell.accessoryView = nil
         }
+        return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let newLimit = limits[indexPath.row]
+        selectedLimit = newLimit
+        walletManager.spendingLimit = newLimit
+        tableView.reloadData()
+    }
+
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if let header = self.header { return header }
+        let header = UIView(color: .whiteTint)
+        header.addSubview(amount)
+        header.addSubview(body)
+        amount.pinTopLeft(padding: C.padding[2])
+        body.constrain([
+            body.leadingAnchor.constraint(equalTo: amount.leadingAnchor),
+            body.topAnchor.constraint(equalTo: amount.bottomAnchor),
+            body.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: -C.padding[2]),
+            body.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -C.padding[2]) ])
+        self.header = header
+        return header
     }
 
     private func setAmount(limitAmount: Amount) {
