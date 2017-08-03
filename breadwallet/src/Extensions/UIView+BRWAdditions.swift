@@ -182,4 +182,12 @@ extension UIView {
             widthAnchor.constraint(equalToConstant: toSize.width),
             heightAnchor.constraint(equalToConstant: toSize.height)])
     }
+
+    //Post iOS 8
+    func pinTopLeft(padding: CGFloat) {
+        guard let view = superview else { assert(false, "Superview cannot be nil when adding contraints"); return }
+        constrain([
+            leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            topAnchor.constraint(equalTo: view.topAnchor, constant: padding)])
+    }
 }

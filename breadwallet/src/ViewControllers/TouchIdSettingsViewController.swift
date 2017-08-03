@@ -47,6 +47,7 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         didTapSpendingLimit = false
+        textView.attributedText = textViewText
     }
 
     private func addSubviews() {
