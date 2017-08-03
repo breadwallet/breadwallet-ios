@@ -121,11 +121,7 @@ class AmountViewController : UIViewController {
             currencyToggle.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[2]),
             currencyToggle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
         feeSelectorHeight = feeContainer.heightAnchor.constraint(equalToConstant: 0.0)
-        if isRequesting {
-            feeSelectorTop = feeContainer.topAnchor.constraint(equalTo: currencyToggle.bottomAnchor, constant: 0.0)
-        } else {
-            feeSelectorTop = feeContainer.topAnchor.constraint(equalTo: feeLabel.bottomAnchor, constant: 0.0)
-        }
+        feeSelectorTop = feeContainer.topAnchor.constraint(equalTo: feeLabel.bottomAnchor, constant: 0.0)
 
         feeContainer.constrain([
             feeSelectorTop,
@@ -134,9 +130,10 @@ class AmountViewController : UIViewController {
             feeContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         feeContainer.arrowXLocation = C.padding[4]
 
+        let borderTop = isRequesting ? border.topAnchor.constraint(equalTo: currencyToggle.bottomAnchor, constant: C.padding[2]) : border.topAnchor.constraint(equalTo: feeContainer.bottomAnchor)
         border.constrain([
             border.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            border.topAnchor.constraint(equalTo: feeContainer.bottomAnchor),
+            borderTop,
             border.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             border.heightAnchor.constraint(equalToConstant: 1.0) ])
         balanceLabel.constrain([
@@ -165,6 +162,7 @@ class AmountViewController : UIViewController {
             bottomBorder.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             bottomBorder.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomBorder.heightAnchor.constraint(equalToConstant: 1.0) ])
+
         tapView.constrain([
             tapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tapView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -210,7 +208,7 @@ class AmountViewController : UIViewController {
 
     private func toggleCurrency() {
         selectedRate = selectedRate == nil ? store.state.currentRate : nil
-        setCurrencyToggleTitle()
+        updateCurrencyToggleTitle()
     }
 
     private func preventAmountOverflow() {
