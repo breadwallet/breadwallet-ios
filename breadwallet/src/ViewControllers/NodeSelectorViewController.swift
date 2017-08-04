@@ -11,9 +11,7 @@ import BRCore
 
 class NodeSelectorViewController : UIViewController {
 
-
     let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
-
     private let nodeLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
     private let node = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let statusLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
