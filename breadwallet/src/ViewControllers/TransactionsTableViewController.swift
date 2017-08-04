@@ -283,7 +283,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         guard !isSyncingViewVisible else { return }
         let types = PromptType.defaultOrder
         if let type = types.first(where: { $0.shouldPrompt(walletManager: walletManager, state: store.state) }) {
-            self.saveEvent("prompt\(type.name).displayed")
+            self.saveEvent("prompt.\(type.name).displayed")
             currentPrompt = Prompt(type: type)
             currentPrompt?.close.tap = { [weak self] in
                 self?.saveEvent("prompt.\(type.name).dismissed")
