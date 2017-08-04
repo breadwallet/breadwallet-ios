@@ -336,9 +336,10 @@ extension UnsafeMutablePointer where Pointee == BRTransaction {
     }
 
     // adds signatures to any inputs with NULL signatures that can be signed with any keys
+    // forkId is 0 for bitcoin, 0x40 for b-cash
     // returns true if tx is signed
-    func sign(keys: inout [BRKey]) -> Bool {
-        return BRTransactionSign(self, &keys, keys.count) != 0
+    func sign(forkId: Int = 0, keys: inout [BRKey]) -> Bool {
+        return BRTransactionSign(self, Int32(forkId), &keys, keys.count) != 0
     }
     
     public var hashValue: Int {
@@ -450,10 +451,11 @@ class BRWallet {
     }
     
     // signs any inputs in tx that can be signed using private keys from the wallet
+    // forkId is 0 for bitcoin, 0x40 for b-cash
     // seed is the master private key (wallet seed) corresponding to the master public key given when wallet was created
     // returns true if all inputs were signed, or false if there was an error or not all inputs were able to be signed
-    func signTransaction(_ tx: BRTxRef, seed: inout UInt512) -> Bool {
-        return BRWalletSignTransaction(cPtr, tx, &seed, MemoryLayout<UInt512>.stride) != 0
+    func signTransaction(_ tx: BRTxRef, forkId: Int = 0, seed: inout UInt512) -> Bool {
+        return BRWalletSignTransaction(cPtr, tx, Int32(forkId), &seed, MemoryLayout<UInt512>.stride) != 0
     }
     
     // true if no previous wallet transaction spends any of the given transaction's inputs, and no inputs are invalid
@@ -518,11 +520,10 @@ enum BRPeerManagerError: Error {
 
 protocol BRPeerManagerListener {
     func syncStarted()
-    func syncSucceeded()
-    func syncFailed(_ error: BRPeerManagerError)
+    func syncStopped(_ error: BRPeerManagerError?)
     func txStatusUpdate()
-    func saveBlocks(_ blocks: [BRBlockRef?])
-    func savePeers(_ peers: [BRPeer])
+    func saveBlocks(_ replace: Bool, _ blocks: [BRBlockRef?])
+    func savePeers(_ replace: Bool, _ peers: [BRPeer])
     func networkIsReachable() -> Bool
 }
 
@@ -543,28 +544,26 @@ class BRPeerManager {
             guard let info = info else { return }
             Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.syncStarted()
         },
-        { (info) in // syncSucceeded
-            guard let info = info else { return }
-            Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.syncSucceeded()
-        },
-        { (info, error) in // syncFailed
+        { (info, error) in // syncStopped
             guard let info = info else { return }
             let err = BRPeerManagerError.posixError(errorCode: error, description: String(cString: strerror(error)))
-            Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.syncFailed(err)
+            Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.syncStopped(error != 0 ? err : nil)
         },
         { (info) in // txStatusUpdate
             guard let info = info else { return }
             Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.txStatusUpdate()
         },
-        { (info, blocks, blocksCount) in // saveBlocks
+        { (info, replace, blocks, blocksCount) in // saveBlocks
             guard let info = info else { return }
+            let replace = Bool(replace != 0)
             let blockRefs = [BRBlockRef?](UnsafeBufferPointer(start: blocks, count: blocksCount))
-            Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.saveBlocks(blockRefs)
+            Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.saveBlocks(replace, blockRefs)
         },
-        { (info, peers, peersCount) in // savePeers
+        { (info, replace, peers, peersCount) in // savePeers
             guard let info = info else { return }
+            let replace = Bool(replace != 0)
             let peerList = [BRPeer](UnsafeBufferPointer(start: peers, count: peersCount))
-            Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.savePeers(peerList)
+            Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.savePeers(replace, peerList)
         },
         { (info) -> Int32 in // networkIsReachable
             guard let info = info else { return 0 }

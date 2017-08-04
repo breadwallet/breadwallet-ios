@@ -57,13 +57,9 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                                object: nil, queue: nil) { (note) in
             self.announce(["type": "sync_started"])
         }
-        noteCenter.addObserver(forName: NSNotification.Name.WalletSyncFailedNotification,
+        noteCenter.addObserver(forName: NSNotification.Name.WalletSyncStoppedNotification,
                                object: nil, queue: nil) { (note) in
-            self.announce(["type": "sync_failed"])
-        }
-        noteCenter.addObserver(forName: NSNotification.Name.WalletSyncSucceededNotification,
-                               object: nil, queue: nil) { (note) in
-            self.announce(["type": "sync_finished"])
+            self.announce(["type": "sync_stopped"])
         }
         noteCenter.addObserver(forName: NSNotification.Name.WalletTxStatusUpdateNotification,
                                object: nil, queue: nil) { (note) in

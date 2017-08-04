@@ -40,8 +40,7 @@ extension NSNotification.Name {
     public static let WalletTxStatusUpdateNotification = NSNotification.Name("WalletTxStatusUpdate")
     public static let WalletTxRejectedNotification = NSNotification.Name("WalletTxRejected")
     public static let WalletSyncStartedNotification = NSNotification.Name("WalletSyncStarted")
-    public static let WalletSyncSucceededNotification = NSNotification.Name("WalletSyncSucceeded")
-    public static let WalletSyncFailedNotification = NSNotification.Name("WalletSyncFailed")
+    public static let WalletSyncStoppedNotification = NSNotification.Name("WalletSyncStopped")
     public static let WalletDidWipe = NSNotification.Name("WalletDidWipe")
 }
 
@@ -371,19 +370,17 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         }
     }
     
-    func syncSucceeded() {
-        DispatchQueue.main.async() {
-            NotificationCenter.default.post(name: .WalletSyncSucceededNotification, object: nil)
-        }
-    }
-    
-    func syncFailed(_ error: BRPeerManagerError) {
+    func syncStopped(_ error: BRPeerManagerError?) {
         switch error {
-        case let .posixError(errorCode, description):
+        case .some(let .posixError(errorCode, description)):
             DispatchQueue.main.async() {
-                NotificationCenter.default.post(name: .WalletSyncFailedNotification, object: nil,
+                NotificationCenter.default.post(name: .WalletSyncStoppedNotification, object: nil,
                                                 userInfo: ["errorCode": errorCode,
                                                            "errorDescription": description])
+            }
+        case .none:
+            DispatchQueue.main.async() {
+                NotificationCenter.default.post(name: .WalletSyncStoppedNotification, object: nil)
             }
         }
     }
@@ -394,15 +391,15 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         }
     }
     
-    func saveBlocks(_ blocks: [BRBlockRef?]) {
+    func saveBlocks(_ replace: Bool, _ blocks: [BRBlockRef?]) {
         DispatchQueue.walletQueue.sync {
             var pk: Int32 = 0
             sqlite3_exec(self.db, "begin exclusive", nil, nil, nil)
 
-            if blocks.count > 1 { // delete existing blocks and replace
+            if replace { // delete existing blocks and replace
                 sqlite3_exec(self.db, "delete from ZBRMERKLEBLOCKENTITY", nil, nil, nil)
             }
-            else { // add a single block to existing blocks
+            else { // add to existing blocks
                 var sql: OpaquePointer? = nil
                 sqlite3_prepare_v2(self.db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(self.blockEnt)", -1, &sql, nil)
                 defer { sqlite3_finalize(sql) }
@@ -463,15 +460,15 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         }
     }
     
-    func savePeers(_ peers: [BRPeer]) {
+    func savePeers(_ replace: Bool, _ peers: [BRPeer]) {
         DispatchQueue.walletQueue.sync {
             var pk: Int32 = 0
             sqlite3_exec(self.db, "begin exclusive", nil, nil, nil)
 
-            if peers.count > 1 { // delete existing peers and replace
+            if replace { // delete existing peers and replace
                 sqlite3_exec(self.db, "delete from ZBRPEERENTITY", nil, nil, nil)
             }
-            else { // add a single peer to existing peers
+            else { // add to existing peers
                 var sql: OpaquePointer? = nil
                 sqlite3_prepare_v2(self.db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(self.peerEnt)", -1, &sql, nil)
                 defer { sqlite3_finalize(sql) }
