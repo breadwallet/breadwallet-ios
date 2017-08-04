@@ -19,6 +19,8 @@ private let isBtcSwappedKey = "isBtcSwappedKey"
 private let maxDigitsKey = "SETTINGS_MAX_DIGITS"
 private let pushTokenKey = "pushTokenKey"
 private let currentRateKey = "currentRateKey"
+private let customNodeIPKey = "customNodeIPKey"
+private let customNodePortKey = "customNodePortKey"
 
 extension UserDefaults {
 
@@ -116,6 +118,26 @@ extension UserDefaults {
         }
         set {
             defaults.set(newValue, forKey: currentRateKey)
+        }
+    }
+
+    static var customNodeIP: Int? {
+        get {
+            guard defaults.object(forKey: customNodeIPKey) != nil else { return nil }
+            return defaults.integer(forKey: customNodeIPKey)
+        }
+        set {
+            defaults.set(newValue, forKey: customNodeIPKey)
+        }
+    }
+
+    static var customNodePort: Int? {
+        get {
+            guard defaults.object(forKey: customNodePortKey) != nil else { return nil }
+            return defaults.integer(forKey: customNodePortKey)
+        }
+        set {
+            defaults.set(newValue, forKey: customNodePortKey)
         }
     }
 }

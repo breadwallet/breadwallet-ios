@@ -39,4 +39,7 @@ struct C {
     static let maxMemoLength = 250
     static let feedbackEmail = "feedback@breadwallet.com"
     static let reviewLink = "https://itunes.apple.com/app/breadwallet-bitcoin-wallet/id885251393?action=write-review"
+    static var standardPort: Int {
+        return E.isTestnet ? 18333 : 8333
+    }
 }
