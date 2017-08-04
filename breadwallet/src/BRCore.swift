@@ -555,15 +555,13 @@ class BRPeerManager {
         },
         { (info, replace, blocks, blocksCount) in // saveBlocks
             guard let info = info else { return }
-            let replace = Bool(replace != 0)
             let blockRefs = [BRBlockRef?](UnsafeBufferPointer(start: blocks, count: blocksCount))
-            Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.saveBlocks(replace, blockRefs)
+            Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.saveBlocks(replace != 0, blockRefs)
         },
         { (info, replace, peers, peersCount) in // savePeers
             guard let info = info else { return }
-            let replace = Bool(replace != 0)
             let peerList = [BRPeer](UnsafeBufferPointer(start: peers, count: peersCount))
-            Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.savePeers(replace, peerList)
+            Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.savePeers(replace != 0, peerList)
         },
         { (info) -> Int32 in // networkIsReachable
             guard let info = info else { return 0 }
