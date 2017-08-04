@@ -577,6 +577,11 @@ class BRPeerManager {
     
     // connect to bitcoin peer-to-peer network (also call this whenever networkIsReachable() status changes)
     func connect() {
+        if let fixedAddress = UserDefaults.customNodeIP {
+            setFixedPeer(address: fixedAddress, port: UserDefaults.customNodePort ?? C.standardPort)
+        } else {
+            setFixedPeer(address: 0, port: 0)
+        }
         BRPeerManagerConnect(cPtr)
     }
     
@@ -639,6 +644,18 @@ class BRPeerManager {
     // number of connected peers that have relayed the given unconfirmed transaction
     func relayCount(_ forTxHash: UInt256) -> Int {
         return BRPeerManagerRelayCount(cPtr, forTxHash)
+    }
+
+    func setFixedPeer(address: Int, port: Int) {
+        if address != 0 {
+            var newAddress = UInt128()
+            newAddress.u16.5 = 0xffff
+            newAddress.u32.3 = UInt32(address)
+            BRPeerManagerSetFixedPeer(cPtr, newAddress, UInt16(port))
+        } else {
+            BRPeerManagerSetFixedPeer(cPtr, UInt128(), 0)
+        }
+
     }
     
     deinit {

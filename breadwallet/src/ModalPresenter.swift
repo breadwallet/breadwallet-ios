@@ -329,7 +329,7 @@ class ModalPresenter : Subscriber {
         guard let walletManager = self.walletManager else { return }
 
         let settingsNav = UINavigationController()
-        let sections = ["Wallet", "Manage", "Bread"]
+        let sections = ["Wallet", "Manage", "Bread", "Advanced"]
         var rows = [
             "Wallet": [Setting(title: S.Settings.importTile, callback: { [weak self] in
                     guard let myself = self else { return }
@@ -410,6 +410,24 @@ class ModalPresenter : Subscriber {
                 Setting(title: S.Settings.about, callback: {
                     settingsNav.pushViewController(AboutViewController(), animated: true)
                 }),
+            ],
+            "Advanced": [
+                Setting(title: "Advanced", callback: {
+
+                    let sections = ["Network"]
+                    let advancedSettings = [
+                        "Network": [
+                            Setting(title: "Bitcoin Nodes", callback: {
+                                let nodeSelector = NodeSelectorViewController(walletManager: self.walletManager!)
+                                settingsNav.pushViewController(nodeSelector, animated: true)
+                            })
+                        ]
+                    ]
+
+                    let advancedSettingsVC = SettingsViewController(sections: sections, rows: advancedSettings)
+                    settingsNav.pushViewController(advancedSettingsVC, animated: true)
+
+                })
             ]
         ]
 

@@ -190,4 +190,11 @@ extension UIView {
             leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             topAnchor.constraint(equalTo: view.topAnchor, constant: padding)])
     }
+
+    func pinTopLeft(toView: UIView, topPadding: CGFloat) {
+        guard superview != nil else { assert(false, "Superview cannot be nil when adding contraints"); return }
+        constrain([
+            leadingAnchor.constraint(equalTo: toView.leadingAnchor),
+            topAnchor.constraint(equalTo: toView.bottomAnchor, constant: topPadding)])
+    }
 }
