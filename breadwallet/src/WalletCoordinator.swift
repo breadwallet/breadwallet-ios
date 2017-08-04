@@ -59,7 +59,16 @@ class WalletCoordinator : Subscriber {
         startActivity()
     }
 
-    private func onSyncSucceed() {
+
+    private func onSyncStop(notification: Notification) {
+        if notification.userInfo != nil {
+            guard let code = notification.userInfo?["errorCode"] else { return }
+            guard let message = notification.userInfo?["errorDescription"] else { return }
+            store.perform(action: WalletChange.setSyncingErrorMessage("\(message) (\(code))"))
+            endActivity()
+            return
+        }
+        
         if let height = walletManager.peerManager?.lastBlockHeight {
             self.lastBlockHeight = height
         }
@@ -67,13 +76,6 @@ class WalletCoordinator : Subscriber {
         progressTimer = nil
         store.perform(action: WalletChange.setIsSyncing(false))
         store.perform(action: WalletChange.setIsRescanning(false))
-        endActivity()
-    }
-
-    private func onSyncFail(notification: Notification) {
-        guard let code = notification.userInfo?["errorCode"] else { return }
-        guard let message = notification.userInfo?["errorDescription"] else { return }
-        store.perform(action: WalletChange.setSyncingErrorMessage("\(message) (\(code))"))
         endActivity()
     }
 
@@ -124,12 +126,8 @@ class WalletCoordinator : Subscriber {
             self.onSyncStart()
         })
 
-        NotificationCenter.default.addObserver(forName: .WalletSyncSucceededNotification, object: nil, queue: nil, using: {note in
-            self.onSyncSucceed()
-        })
-
-        NotificationCenter.default.addObserver(forName: .WalletSyncFailedNotification, object: nil, queue: nil, using: {note in
-            self.onSyncFail(notification: note)
+        NotificationCenter.default.addObserver(forName: .WalletSyncStoppedNotification, object: nil, queue: nil, using: {note in
+            self.onSyncStop(notification: note)
         })
     }
 
