@@ -38,6 +38,26 @@
                ReferencedContainer = "container:breadwallet.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "75A2A7A31DA5934300A983D8"
+               BuildableName = "breadwalletTests.xctest"
+               BlueprintName = "breadwalletTests"
+               ReferencedContainer = "container:breadwallet.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "75A2A7AE1DA5934300A983D8"
+               BuildableName = "breadwalletUITests.xctest"
+               BlueprintName = "breadwalletUITests"
+               ReferencedContainer = "container:breadwallet.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
