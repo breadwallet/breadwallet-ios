@@ -105,6 +105,22 @@ extension BRAPIClient {
             }
         }.resume()
     }
+
+    func publishBCashTransaction(_ txData: Data, callback: @escaping (String?) -> Void) {
+        var req = URLRequest(url: url("/bch/publish-transaction"))
+        req.httpMethod = "POST"
+        req.setValue("application/bcashdata", forHTTPHeaderField: "Content-Type")
+        req.httpBody = txData
+        dataTaskWithRequest(req as URLRequest, authenticated: true, retryCount: 0) { (dat, resp, er) in
+            if let statusCode = resp?.statusCode {
+                if statusCode >= 200 && statusCode < 300 {
+                    callback(nil)
+                } else {
+                    callback(String(describing: er))
+                }
+            }
+        }.resume()
+    }
 }
 
 private func pushNotificationEnvironment() -> String {
