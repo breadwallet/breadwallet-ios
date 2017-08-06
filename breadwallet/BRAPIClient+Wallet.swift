@@ -115,8 +115,10 @@ extension BRAPIClient {
             if let statusCode = resp?.statusCode {
                 if statusCode >= 200 && statusCode < 300 {
                     callback(nil)
+                } else if let error = er{
+                    callback(error.description)
                 } else {
-                    callback(String(describing: er))
+                    callback("\(statusCode)")
                 }
             }
         }.resume()

@@ -511,7 +511,7 @@ extension WalletManager : WalletAuthenticator {
     }
 }
 
-private func keychainItem<T>(key: String) throws -> T? {
+internal func keychainItem<T>(key: String) throws -> T? {
     let query = [kSecClass as String : kSecClassGenericPassword as String,
                  kSecAttrService as String : WalletSecAttrService,
                  kSecAttrAccount as String : key,
