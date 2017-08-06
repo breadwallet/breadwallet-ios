@@ -383,12 +383,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         }
     }
 
-    private func showError(title: String, message: String, buttonLabel: String) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
-        present(alertController, animated: true, completion: nil)
-    }
-
     private func showError(title: String, message: String, ignore: @escaping () -> Void) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: S.Button.ignore, style: .default, handler: { _ in
