@@ -327,7 +327,6 @@ class ModalPresenter : Subscriber {
     private func presentSettings() {
         guard let top = topViewController else { return }
         guard let walletManager = self.walletManager else { return }
-
         let settingsNav = UINavigationController()
         let sections = ["Wallet", "Manage", "Bread", "Advanced"]
         var rows = [
@@ -459,6 +458,7 @@ class ModalPresenter : Subscriber {
         )
 
         let settings = SettingsViewController(sections: sections, rows: rows)
+        settings.addCloseNavigationItem()
         settingsNav.viewControllers = [settings]
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
         view.backgroundColor = .whiteTint
