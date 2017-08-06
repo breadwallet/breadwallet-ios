@@ -292,6 +292,9 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             if type == .touchId {
                 UserDefaults.hasPromptedTouchId = true
             }
+            if type == .shareData {
+                UserDefaults.hasPromptedShareData = true
+            }
         } else {
             currentPrompt = nil
         }
