@@ -234,6 +234,7 @@ enum S {
     enum TouchIdSpendingLimit {
         static let title = NSLocalizedString("TouchIdSpendingLimit.title", value:"Touch ID Spending Limit", comment: "Touch Id spending limit screen title")
         static let body = NSLocalizedString("TouchIdSpendingLimit.body", value:"You will be asked to enter your 6-digit PIN to send any transaction over your spending limit, and every 48 hours since the last time you entered your 6-digit PIN.", comment: "Touch ID spending limit screen body")
+        static let requirePasscode = NSLocalizedString("TouchIdSpendingLimit", value: "Always require passcode", comment: "Always require passcode option")
     }
 
     enum Settings {
