@@ -17,6 +17,8 @@ class BCashTransactionViewController : UIViewController {
     private let send = ShadowButton(title: "Send", type: .primary)
     private let walletManager: WalletManager
     private let store: Store
+    private let txHash = UIButton(type: .system)
+    private let txHashHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
 
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
@@ -36,6 +38,8 @@ class BCashTransactionViewController : UIViewController {
         view.addSubview(topBorder)
         view.addSubview(addressCell)
         view.addSubview(send)
+        view.addSubview(txHash)
+        view.addSubview(txHashHeader)
     }
 
     private func addConstraints() {
@@ -59,9 +63,13 @@ class BCashTransactionViewController : UIViewController {
             send.topAnchor.constraint(equalTo: addressCell.bottomAnchor, constant: C.padding[2]),
             send.trailingAnchor.constraint(equalTo: addressCell.trailingAnchor, constant: -C.padding[2]),
             send.heightAnchor.constraint(equalToConstant: 44.0) ])
-        send.tap = strongify(self) {
-            $0.presentConfirm()
-        }
+        txHashHeader.constrain([
+            txHashHeader.leadingAnchor.constraint(equalTo: send.leadingAnchor),
+            txHashHeader.topAnchor.constraint(equalTo: send.bottomAnchor, constant: C.padding[4])])
+        txHash.constrain([
+            txHash.leadingAnchor.constraint(equalTo: txHashHeader.leadingAnchor),
+            txHash.topAnchor.constraint(equalTo: txHashHeader.bottomAnchor),
+            txHash.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
     }
 
     private func setInitialData() {
@@ -72,6 +80,24 @@ class BCashTransactionViewController : UIViewController {
         addressCell.paste.tap = strongify(self) { $0.pasteTapped() }
         addressCell.scan.tap = strongify(self) { $0.scanTapped() }
         send.tap = strongify(self) { $0.presentConfirm() }
+
+        txHash.titleLabel?.font = .customBody(size: 13.0)
+        txHash.titleLabel?.numberOfLines = 0
+        txHash.titleLabel?.lineBreakMode = .byCharWrapping
+        txHash.tintColor = .darkText
+        txHash.contentHorizontalAlignment = .left
+        txHash.tap = { [weak self] in
+            self?.store.trigger(name: .lightWeightAlert("Tx Hash Copied"))
+            UIPasteboard.general.string = self?.txHash.titleLabel?.text
+        }
+        setPreviousTx()
+    }
+
+    private func setPreviousTx() {
+        if let previousHash = UserDefaults.standard.string(forKey: "bCashTxHashKey") {
+            txHashHeader.text = "Bitcoin Cash Transaction ID"
+            txHash.setTitle(previousHash, for: .normal)
+        }
     }
 
     private func pasteTapped() {
@@ -127,6 +153,7 @@ class BCashTransactionViewController : UIViewController {
             guard let errorMessage = errorMessage else {
                 return myself.showError(title: "BCash Sent", message: "BCash was successfull sent to \(toAddress)", buttonLabel: S.Button.ok)
             }
+            myself.setPreviousTx()
             return myself.showErrorMessage(errorMessage)
         })
     }
