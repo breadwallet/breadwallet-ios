@@ -283,6 +283,7 @@ class AmountViewController : UIViewController {
             } else {
                 editFee.isHidden = true
             }
+            balanceLabel.isHidden = cursor.isHidden
         }
     }
 
