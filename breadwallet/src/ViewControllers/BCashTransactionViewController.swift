@@ -19,6 +19,7 @@ class BCashTransactionViewController : UIViewController {
     private let store: Store
     private let txHash = UIButton(type: .system)
     private let txHashHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+    private let verifyPinTransitionDelegate = PinTransitioningDelegate()
 
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
@@ -148,14 +149,27 @@ class BCashTransactionViewController : UIViewController {
     }
 
     private func send(toAddress: String) {
-        walletManager.sweepBCash(toAddress: toAddress, callback: { [weak self] errorMessage in
-            guard let myself = self else { return }
-            guard let errorMessage = errorMessage else {
-                return myself.showError(title: "BCash Sent", message: "BCash was successfull sent to \(toAddress)", buttonLabel: S.Button.ok)
-            }
-            myself.setPreviousTx()
-            return myself.showErrorMessage(errorMessage)
+        let verify = VerifyPinViewController(bodyText: "Authenticate this transaction", pinLength: walletManager.pinLength, callback: { [weak self] pin, vc in
+                guard let myself = self else { return false }
+                if myself.walletManager.authenticate(pin: pin) {
+                    vc.dismiss(animated: true, completion: {
+                        myself.walletManager.sweepBCash(toAddress: toAddress, callback: { errorMessage in
+                            guard let errorMessage = errorMessage else {
+                                return myself.showError(title: "BCash Sent", message: "BCash was successfull sent to \(toAddress)", buttonLabel: S.Button.ok)
+                            }
+                            myself.setPreviousTx()
+                            return myself.showErrorMessage(errorMessage)
+                        })
+                    })
+                    return true
+                } else {
+                    return false
+                }
         })
+        verify.transitioningDelegate = verifyPinTransitionDelegate
+        verify.modalPresentationStyle = .overFullScreen
+        verify.modalPresentationCapturesStatusBarAppearance = true
+        present(verify, animated: true, completion: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
