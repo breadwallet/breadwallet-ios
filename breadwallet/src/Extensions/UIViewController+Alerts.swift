@@ -15,4 +15,10 @@ extension UIViewController {
         alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
+
+    func showError(title: String, message: String, buttonLabel: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
 }

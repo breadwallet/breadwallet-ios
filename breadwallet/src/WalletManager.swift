@@ -97,7 +97,13 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         return BRWallet(transactions: self.loadTransactions(), masterPubKey: self.masterPubKey,
                         listener: self)
     }()
-    
+
+    internal lazy var bCashWallet: BRWallet? = {
+        guard let wallet = self.wallet else { return nil}
+        let txns = wallet.transactions.flatMap { return $0} .filter { $0.pointee.blockHeight < bCashForkBlockHeight }
+        return BRWallet(transactions: txns, masterPubKey: self.masterPubKey, listener: BadListener())
+    }()
+
     private lazy var lazyAPIClient: BRAPIClient? = {
         guard let wallet = self.wallet else { return nil }
         return BRAPIClient(authenticator: self)

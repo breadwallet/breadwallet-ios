@@ -16,16 +16,13 @@ class BCashTransactionViewController : UIViewController {
     private let addressCell = AddressCell()
     private let send = ShadowButton(title: "Send", type: .primary)
     private let walletManager: WalletManager
+    private let store: Store
 
-    init(walletManager: WalletManager) {
+    init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
+        self.store = store
         super.init(nibName: nil, bundle: nil)
     }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
 
     override func viewDidLoad() {
         addSubviews()
@@ -70,15 +67,52 @@ class BCashTransactionViewController : UIViewController {
     private func setInitialData() {
         view.backgroundColor = .whiteTint
         titleLabel.text = "Withdraw Bitcoin Cash"
-        body.text = "Send your total Bread balance to a BCash address. blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah"
+        let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), state: store.state, selectedRate: nil, minimumFractionDigits: 0)
+        body.text = "Send your entire BCash balance. You have \(amount.description) bCash"
+        addressCell.paste.tap = strongify(self) { $0.pasteTapped() }
+        addressCell.scan.tap = strongify(self) { $0.scanTapped() }
+        send.tap = strongify(self) { $0.presentConfirm() }
     }
 
-//    private func send() {
-//
-//    }
+    private func pasteTapped() {
+        if let address = store.state.pasteboard {
+            if address.isValidAddress {
+                addressCell.setContent(address)
+            } else {
+                showError(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
+            }
+        }
+    }
+
+    private func scanTapped() {
+        guard ScanViewController.isCameraAllowed else {
+            guard ScanViewController.isCameraAllowed else {
+                ScanViewController.presentCameraUnavailableAlert(fromRoot: self)
+                return
+            }
+            return
+        }
+        let vc = ScanViewController(completion: { [weak self] paymentRequest in
+            guard let myself = self else { return }
+            myself.handlePaymentRequest(paymentRequest)
+            myself.view.isFrameChangeBlocked = false
+        }, isValidURI: { address in
+            return address.isValidAddress
+        })
+        view.isFrameChangeBlocked = true
+        present(vc, animated: true, completion: {})
+    }
+
+    private func handlePaymentRequest(_ request: PaymentRequest?) {
+        guard let request = request else { return }
+        guard request.type == .local else { return showErrorMessage("Payment Protocol Requests are not supported for BCash transactions") }
+        addressCell.setContent(request.toAddress)
+    }
 
     private func presentConfirm() {
-        let alert = UIAlertController(title: "Confirmation", message: "Confirm the transaction of $1.00 to sa8vm89we98jf3829mv?", preferredStyle: .alert)
+        let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), state: store.state, selectedRate: nil, minimumFractionDigits: 0)
+        body.text = "Send your entire BCash balance. You have \(amount.description) bCash"
+        let alert = UIAlertController(title: "Confirmation", message: "Confirm sending \(amount.description) to \(addressCell.address ?? "")", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: { _ in
             //self.send()
@@ -86,4 +120,7 @@ class BCashTransactionViewController : UIViewController {
         present(alert, animated: true, completion: nil)
     }
 
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
