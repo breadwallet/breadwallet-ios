@@ -21,6 +21,7 @@ private let pushTokenKey = "pushTokenKey"
 private let currentRateKey = "currentRateKey"
 private let customNodeIPKey = "customNodeIPKey"
 private let customNodePortKey = "customNodePortKey"
+private let hasPromptedShareDataKey = "hasPromptedShareDataKey"
 
 extension UserDefaults {
 
@@ -31,9 +32,7 @@ extension UserDefaults {
             }
             return defaults.bool(forKey: isTouchIdEnabledKey)
         }
-        set {
-            defaults.set(newValue, forKey: isTouchIdEnabledKey)
-        }
+        set { defaults.set(newValue, forKey: isTouchIdEnabledKey) }
     }
 
     static var defaultCurrencyCode: String {
@@ -43,27 +42,18 @@ extension UserDefaults {
             }
             return defaults.string(forKey: defaultCurrencyCodeKey)!
         }
-        set {
-            defaults.set(newValue, forKey: defaultCurrencyCodeKey)
-        }
+        set { defaults.set(newValue, forKey: defaultCurrencyCodeKey) }
     }
 
     static var hasAquiredShareDataPermission: Bool {
-        get {
-            return defaults.bool(forKey: hasAquiredShareDataPermissionKey)
-        }
-        set {
-            defaults.set(newValue, forKey: hasAquiredShareDataPermissionKey)
-        }
+        get { return defaults.bool(forKey: hasAquiredShareDataPermissionKey) }
+        set { defaults.set(newValue, forKey: hasAquiredShareDataPermissionKey) }
     }
 
     static var isBtcSwapped: Bool {
-        get {
-            return defaults.bool(forKey: isBtcSwappedKey)
+        get { return defaults.bool(forKey: isBtcSwappedKey)
         }
-        set {
-            defaults.set(newValue, forKey: isBtcSwappedKey)
-        }
+        set { defaults.set(newValue, forKey: isBtcSwappedKey) }
     }
 
     //
@@ -83,9 +73,7 @@ extension UserDefaults {
                 return maxDigits
             }
         }
-        set {
-            defaults.set(newValue, forKey: maxDigitsKey)
-        }
+        set { defaults.set(newValue, forKey: maxDigitsKey) }
     }
 
     static var pushToken: Data? {
@@ -95,9 +83,7 @@ extension UserDefaults {
             }
             return defaults.data(forKey: pushTokenKey)
         }
-        set {
-            defaults.set(newValue, forKey: pushTokenKey)
-        }
+        set { defaults.set(newValue, forKey: pushTokenKey) }
     }
 
     static var currentRate: Rate? {
@@ -116,9 +102,7 @@ extension UserDefaults {
             }
             return data
         }
-        set {
-            defaults.set(newValue, forKey: currentRateKey)
-        }
+        set { defaults.set(newValue, forKey: currentRateKey) }
     }
 
     static var customNodeIP: Int? {
@@ -126,9 +110,7 @@ extension UserDefaults {
             guard defaults.object(forKey: customNodeIPKey) != nil else { return nil }
             return defaults.integer(forKey: customNodeIPKey)
         }
-        set {
-            defaults.set(newValue, forKey: customNodeIPKey)
-        }
+        set { defaults.set(newValue, forKey: customNodeIPKey) }
     }
 
     static var customNodePort: Int? {
@@ -136,9 +118,12 @@ extension UserDefaults {
             guard defaults.object(forKey: customNodePortKey) != nil else { return nil }
             return defaults.integer(forKey: customNodePortKey)
         }
-        set {
-            defaults.set(newValue, forKey: customNodePortKey)
-        }
+        set { defaults.set(newValue, forKey: customNodePortKey) }
+    }
+
+    static var hasPromptedShareData: Bool {
+        get { return defaults.bool(forKey: hasPromptedTouchIdKey) }
+        set { defaults.set(newValue, forKey: hasPromptedTouchIdKey) }
     }
 }
 
@@ -156,12 +141,8 @@ extension UserDefaults {
     }
 
     static var writePaperPhraseDate: Date? {
-        get {
-            return defaults.object(forKey: writePaperPhraseDateKey) as! Date?
-        }
-        set {
-            defaults.set(newValue, forKey: writePaperPhraseDateKey)
-        }
+        get { return defaults.object(forKey: writePaperPhraseDateKey) as! Date? }
+        set { defaults.set(newValue, forKey: writePaperPhraseDateKey) }
     }
 
     static var walletRequiresBackup: Bool {
@@ -181,11 +162,7 @@ extension UserDefaults {
 //MARK: - Prompts
 extension UserDefaults {
     static var hasPromptedTouchId: Bool {
-        get {
-            return defaults.bool(forKey: hasPromptedTouchIdKey)
-        }
-        set {
-            defaults.set(newValue, forKey: hasPromptedTouchIdKey)
-        }
+        get { return defaults.bool(forKey: hasPromptedTouchIdKey) }
+        set { defaults.set(newValue, forKey: hasPromptedTouchIdKey) }
     }
 }

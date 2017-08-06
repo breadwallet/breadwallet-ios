@@ -79,7 +79,7 @@ enum PromptType {
         case .noPasscode:
             return !LAContext.isPasscodeEnabled
         case .shareData:
-            return !UserDefaults.hasAquiredShareDataPermission
+            return !UserDefaults.hasAquiredShareDataPermission && !UserDefaults.hasPromptedShareData
         }
     }
 }
