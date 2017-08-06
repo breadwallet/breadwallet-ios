@@ -35,7 +35,12 @@ extension WalletManager {
         var seed = UInt512()
         guard bCashWallet.signTransaction(tx, seed: &seed) else { return callback(genericError)}
         guard var bytes = tx.bytes else { return callback(genericError)}
-        apiClient?.publishBCashTransaction(Data(bytes: &bytes, count: bytes.count), callback: callback)
+        apiClient?.publishBCashTransaction(Data(bytes: &bytes, count: bytes.count), callback: { errorMessage in
+            if errorMessage == nil {
+                UserDefaults.standard.set(tx.txHash.description, forKey: "bCashTxHashKey")
+            }
+            callback(errorMessage)
+        })
     }
 
 }
