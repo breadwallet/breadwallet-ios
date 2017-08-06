@@ -116,7 +116,7 @@ extension WalletManager : WalletAuthenticator {
         
         do {
             let spendLimit: Int64 = try keychainItem(key: KeychainKey.spendLimit) ?? 0
-            guard let wallet = wallet else { return false }
+            guard let wallet = wallet else { assert(false, "No wallet!"); return false }
             return wallet.amountSentByTx(forTx) + wallet.totalSent <= UInt64(spendLimit)
         }
         catch { return false }
@@ -132,7 +132,7 @@ extension WalletManager : WalletAuthenticator {
         set {
             guard let wallet = self.wallet else { assert(false, "No wallet!"); return }
             do {
-                try setKeychainItem(key: KeychainKey.spendLimit, item: Int64(wallet.totalSent + spendingLimit))
+                try setKeychainItem(key: KeychainKey.spendLimit, item: Int64(wallet.totalSent + newValue))
                 UserDefaults.standard.set(newValue, forKey: DefaultsKey.spendLimitAmount)
             } catch let error {
                 print("Set spending limit error: \(error)")

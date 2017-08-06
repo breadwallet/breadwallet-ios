@@ -13,7 +13,7 @@ class TouchIdSpendingLimitViewController : UITableViewController, Subscriber {
     private let cellIdentifier = "CellIdentifier"
     private let store: Store
     private let walletManager: WalletManager
-    private let limits: [UInt64] = [1000000, 10000000, 100000000]
+    private let limits: [UInt64] = [0, 1000000, 10000000, 100000000, 1000000000]
     private var selectedLimit: UInt64?
     private var header: UIView?
     private let amount = UILabel(font: .customMedium(size: 26.0), color: .darkText)
@@ -45,9 +45,13 @@ class TouchIdSpendingLimitViewController : UITableViewController, Subscriber {
         navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
 
         body.text = S.TouchIdSpendingLimit.body
-        if let rate = store.state.currentRate {
-            let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: store.state.maxDigits)
-            setAmount(limitAmount: spendingLimit)
+
+        //If the user has a limit that is not a current option, we display their limit
+        if !limits.contains(walletManager.spendingLimit) {
+            if let rate = store.state.currentRate {
+                let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: store.state.maxDigits)
+                setAmount(limitAmount: spendingLimit)
+            }
         }
     }
 
@@ -62,8 +66,12 @@ class TouchIdSpendingLimitViewController : UITableViewController, Subscriber {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         let limit = limits[indexPath.row]
-        let displayAmount = DisplayAmount(amount: Satoshis(rawValue: limit), state: store.state, selectedRate: nil, minimumFractionDigits: 0)
-        cell.textLabel?.text = displayAmount.combinedDescription
+        if limit == 0 {
+            cell.textLabel?.text = S.TouchIdSpendingLimit.requirePasscode
+        } else {
+            let displayAmount = DisplayAmount(amount: Satoshis(rawValue: limit), state: store.state, selectedRate: nil, minimumFractionDigits: 0)
+            cell.textLabel?.text = displayAmount.combinedDescription
+        }
         if limits[indexPath.row] == selectedLimit {
             let check = UIImageView(image: #imageLiteral(resourceName: "CircleCheck").withRenderingMode(.alwaysTemplate))
             check.tintColor = C.defaultTintColor
@@ -78,6 +86,9 @@ class TouchIdSpendingLimitViewController : UITableViewController, Subscriber {
         let newLimit = limits[indexPath.row]
         selectedLimit = newLimit
         walletManager.spendingLimit = newLimit
+        amount.isHidden = true
+        amount.constrain([
+            amount.heightAnchor.constraint(equalToConstant: 0.0) ])
         tableView.reloadData()
     }
 
