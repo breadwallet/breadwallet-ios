@@ -26,21 +26,29 @@ extension WalletManager {
     }
 
     func sweepBCash(toAddress: String, callback: @escaping (String?) -> Void) {
-        let genericError = "Something went wrong"
-        guard let bCashWallet = bCashWallet else { return callback(genericError) }
-        bCashWallet.feePerKb = minFeePerKb
-        let maxOutputAmount = bCashWallet.maxOutputAmount
-        guard let tx = bCashWallet.createTransaction(forAmount: maxOutputAmount, toAddress: toAddress) else { return callback(genericError)}
-        defer { BRTransactionFree(tx) }
-        var seed = UInt512()
-        guard bCashWallet.signTransaction(tx, seed: &seed) else { return callback(genericError)}
-        guard var bytes = tx.bytes else { return callback(genericError)}
-        apiClient?.publishBCashTransaction(Data(bytes: &bytes, count: bytes.count), callback: { errorMessage in
-            if errorMessage == nil {
-                UserDefaults.standard.set(tx.txHash.description, forKey: "bCashTxHashKey")
-            }
-            callback(errorMessage)
-        })
+        return autoreleasepool {
+            let genericError = "Something went wrong"
+            guard let bCashWallet = bCashWallet else { return callback(genericError) }
+            bCashWallet.feePerKb = minFeePerKb
+            let maxOutputAmount = bCashWallet.maxOutputAmount
+            guard let tx = bCashWallet.createTransaction(forAmount: maxOutputAmount, toAddress: toAddress) else { return callback(genericError)}
+            defer { BRTransactionFree(tx) }
+
+            do {
+                var seed = UInt512()
+                defer { seed = UInt512() }
+                guard let phrase: String = try keychainItem(key: "mnemonic") else { return callback(genericError) }
+                BRBIP39DeriveKey(&seed, phrase, nil)
+                guard bCashWallet.signTransaction(tx, forkId: 0x40, seed: &seed) else { return callback(genericError)}
+                guard var bytes = tx.bytes else { return callback(genericError)}
+                apiClient?.publishBCashTransaction(Data(bytes: &bytes, count: bytes.count), callback: { errorMessage in
+                    if errorMessage == nil {
+                        UserDefaults.standard.set(tx.txHash.description, forKey: "bCashTxHashKey")
+                    }
+                    callback(errorMessage)
+                })
+            } catch { return callback(genericError) }
+        }
     }
 
 }
