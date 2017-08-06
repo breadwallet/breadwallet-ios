@@ -429,9 +429,8 @@ class ModalPresenter : Subscriber {
                         ]
                     ]
 
-                    let advancedSettingsVC = SettingsViewController(sections: sections, rows: advancedSettings)
+                    let advancedSettingsVC = SettingsViewController(sections: sections, rows: advancedSettings, optionalTitle: S.Settings.advancedTitle)
                     settingsNav.pushViewController(advancedSettingsVC, animated: true)
-
                 })
             ]
         ]

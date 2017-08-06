@@ -9,7 +9,7 @@ import UIKit
 
 class SettingsViewController : UITableViewController, CustomTitleView {
 
-    init(sections: [String], rows: [String: [Setting]]) {
+    init(sections: [String], rows: [String: [Setting]], optionalTitle: String? = nil) {
         self.sections = sections
         if UserDefaults.isTouchIdEnabled {
             self.rows = rows
@@ -18,7 +18,8 @@ class SettingsViewController : UITableViewController, CustomTitleView {
             tempRows["Manage"] = tempRows["Manage"]?.filter { $0.title != S.Settings.touchIdLimit }
             self.rows = tempRows
         }
-        customTitle = S.Settings.title
+        customTitle = optionalTitle ?? S.Settings.title
+        titleLabel.text = optionalTitle ?? S.Settings.title
         super.init(style: .plain)
     }
 
@@ -33,7 +34,6 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         headerView.backgroundColor = .whiteTint
         headerView.addSubview(titleLabel)
         titleLabel.constrain(toSuperviewEdges: UIEdgeInsetsMake(0, C.padding[2], 0, 0))
-        titleLabel.text = S.Settings.title
 
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.tableHeaderView = headerView
