@@ -34,14 +34,11 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         headerView.backgroundColor = .whiteTint
         headerView.addSubview(titleLabel)
         titleLabel.constrain(toSuperviewEdges: UIEdgeInsetsMake(0, C.padding[2], 0, 0))
-
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.tableHeaderView = headerView
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
         tableView.backgroundColor = .whiteTint
-
-        addCloseNavigationItem()
         addCustomTitle()
     }
 
