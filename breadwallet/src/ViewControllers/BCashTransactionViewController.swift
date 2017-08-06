@@ -111,13 +111,24 @@ class BCashTransactionViewController : UIViewController {
 
     private func presentConfirm() {
         let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), state: store.state, selectedRate: nil, minimumFractionDigits: 0)
+        guard let address = addressCell.address else { return showErrorMessage("Please enter an address") }
         body.text = "Send your entire BCash balance. You have \(amount.description) bCash"
-        let alert = UIAlertController(title: "Confirmation", message: "Confirm sending \(amount.description) to \(addressCell.address ?? "")", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Confirmation", message: "Confirm sending \(amount.description) to \(address)", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: { _ in
-            //self.send()
+            self.send(toAddress: address)
         }))
         present(alert, animated: true, completion: nil)
+    }
+
+    private func send(toAddress: String) {
+        walletManager.sweepBCash(toAddress: toAddress, callback: { [weak self] errorMessage in
+            guard let myself = self else { return }
+            guard let errorMessage = errorMessage else {
+                return myself.showError(title: "BCash Sent", message: "BCash was successfull sent to \(toAddress)", buttonLabel: S.Button.ok)
+            }
+            return myself.showErrorMessage(errorMessage)
+        })
     }
 
     required init?(coder aDecoder: NSCoder) {

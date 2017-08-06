@@ -107,7 +107,7 @@ extension BRAPIClient {
     }
 
     func publishBCashTransaction(_ txData: Data, callback: @escaping (String?) -> Void) {
-        var req = URLRequest(url: url("/bch/publish-transaction"))
+        var req = URLRequest(url: url("/bch/publish-transaction-test"))
         req.httpMethod = "POST"
         req.setValue("application/bcashdata", forHTTPHeaderField: "Content-Type")
         req.httpBody = txData
