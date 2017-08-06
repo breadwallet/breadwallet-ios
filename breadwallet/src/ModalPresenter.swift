@@ -412,17 +412,18 @@ class ModalPresenter : Subscriber {
                 }),
             ],
             "Advanced": [
-                Setting(title: "Advanced", callback: {
-
+                Setting(title: "Advanced", callback: { [weak self] in
+                    guard let myself = self else { return }
+                    guard let walletManager = myself.walletManager else { return }
                     let sections = ["Network"]
                     let advancedSettings = [
                         "Network": [
                             Setting(title: "Bitcoin Nodes", callback: {
-                                let nodeSelector = NodeSelectorViewController(walletManager: self.walletManager!)
+                                let nodeSelector = NodeSelectorViewController(walletManager: walletManager)
                                 settingsNav.pushViewController(nodeSelector, animated: true)
                             }),
                             Setting(title: "Withdraw Bitcoin Cash", callback: {
-                                let bCash = BCashTransactionViewController(walletManager: self.walletManager!)
+                                let bCash = BCashTransactionViewController(walletManager: walletManager, store: myself.store)
                                 settingsNav.pushViewController(bCash, animated: true)
                             })
                         ]
@@ -472,18 +473,13 @@ class ModalPresenter : Subscriber {
     private func presentScan(parent: UIViewController) -> PresentScan {
         return { [weak parent] scanCompletion in
             guard ScanViewController.isCameraAllowed else {
-                let alertController = UIAlertController(title: S.Send.cameraUnavailableTitle, message: S.Send.cameraUnavailableMessage, preferredStyle: .alert)
-                alertController.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
-                alertController.addAction(UIAlertAction(title: S.Button.settings, style: .`default`, handler: { _ in
-                    if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
-                        UIApplication.shared.openURL(appSettings)
-                    }
-                }))
-                parent?.present(alertController, animated: true, completion: nil)
+                if let parent = parent {
+                    ScanViewController.presentCameraUnavailableAlert(fromRoot: parent)
+                }
                 return
             }
-            let vc = ScanViewController(completion: { address in
-                scanCompletion(address)
+            let vc = ScanViewController(completion: { paymentRequest in
+                scanCompletion(paymentRequest)
                 parent?.view.isFrameChangeBlocked = false
             }, isValidURI: { address in
                 return address.isValidAddress

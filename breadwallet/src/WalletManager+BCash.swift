@@ -9,7 +9,7 @@
 import Foundation
 import BRCore
 
-private let forkBlockHeight: UInt32 = 478559
+let bCashForkBlockHeight: UInt32 = E.isTestnet ? 1155744 : 478559 //Testnet is just a guess
 private let minFeePerKb: UInt64 = ((1000*1000 + 190)/191)
 
 class BadListener : BRWalletListener {
@@ -21,11 +21,13 @@ class BadListener : BRWalletListener {
 
 extension WalletManager {
 
+    var bCashBalance: UInt64 {
+        return bCashWallet?.maxOutputAmount ?? 0
+    }
+
     func sweepBCash(toAddress: String, callback: @escaping (String?) -> Void) {
         let genericError = "Something went wrong"
-        guard let wallet = wallet else { return callback(genericError)}
-        let txns = wallet.transactions.flatMap { return $0} .filter { $0.pointee.blockHeight < forkBlockHeight }
-        guard let bCashWallet = BRWallet(transactions: txns, masterPubKey: self.masterPubKey, listener: BadListener()) else { return callback(genericError)}
+        guard let bCashWallet = bCashWallet else { return callback(genericError) }
         bCashWallet.feePerKb = minFeePerKb
         let maxOutputAmount = bCashWallet.maxOutputAmount
         guard let tx = bCashWallet.createTransaction(forAmount: maxOutputAmount, toAddress: toAddress) else { return callback(genericError)}
