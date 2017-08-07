@@ -153,7 +153,7 @@ class BCashTransactionViewController : UIViewController {
                 guard let myself = self else { return false }
                 if myself.walletManager.authenticate(pin: pin) {
                     vc.dismiss(animated: true, completion: {
-                        myself.walletManager.sweepBCash(toAddress: toAddress, callback: { errorMessage in
+                        myself.walletManager.sweepBCash(toAddress: toAddress, pin: pin, callback: { errorMessage in
                             guard let errorMessage = errorMessage else {
                                 return myself.showError(title: "BCash Sent", message: "BCash was successfull sent to \(toAddress)", buttonLabel: S.Button.ok)
                             }

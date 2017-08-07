@@ -253,9 +253,9 @@ extension WalletManager : WalletAuthenticator {
     }
     
     // sign the given transaction using pin authentication
-    func signTransaction(_ tx: BRTxRef, pin: String) -> Bool {
+    func signTransaction(_ tx: BRTxRef, forkId: Int = 0, pin: String) -> Bool {
         guard authenticate(pin: pin) else { return false }
-        return signTx(tx)
+        return signTx(tx, forkId: forkId)
     }
     
     // sign the given transaction using touch ID authentication
@@ -496,7 +496,7 @@ extension WalletManager : WalletAuthenticator {
         public static let pinUnlockTime = "PIN_UNLOCK_TIME"
     }
     
-    private func signTx(_ tx: BRTxRef) -> Bool {
+    private func signTx(_ tx: BRTxRef, forkId: Int = 0) -> Bool {
         return autoreleasepool {
             do {
                 var seed = UInt512()
@@ -511,7 +511,7 @@ extension WalletManager : WalletAuthenticator {
     }
 }
 
-internal func keychainItem<T>(key: String) throws -> T? {
+private func keychainItem<T>(key: String) throws -> T? {
     let query = [kSecClass as String : kSecClassGenericPassword as String,
                  kSecAttrService as String : WalletSecAttrService,
                  kSecAttrAccount as String : key,
