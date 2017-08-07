@@ -55,6 +55,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             if E.isTestnet || isWatchOnly {
                 if E.isTestnet && isWatchOnly {
                     modeLabel.text = "(Testnet - Watch Only)"
+                } else if E.isRegtest {
+                    modeLabel.text = "(Regtest)"
                 } else if E.isTestnet {
                     modeLabel.text = "(Testnet)"
                 } else if isWatchOnly {
@@ -114,7 +116,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         search.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
         search.tintColor = .white
 
-        if E.isTestnet {
+        if E.isTestnet || E.isRegtest {
             name.textColor = .red
         }
 

@@ -12,6 +12,7 @@ import BRCore
 private let mainURL = "https://api.breadwallet.com/q/addrs/utxo"
 private let fallbackURL = "https://insight.bitpay.com/api/addrs/utxo"
 private let testnetURL = "https://test-insight.bitpay.com/api/addrs/utxo"
+private let regtestURL = "" // private
 
 class StartImportViewController : UIViewController {
 
@@ -151,7 +152,7 @@ class StartImportViewController : UIViewController {
         present(balanceActivity, animated: true, completion: {
             var key = key
             guard let address = key.address() else { return }
-            let urlString = E.isTestnet ? testnetURL : mainURL
+            let urlString = E.isTestnet ? testnetURL : ( E.isRegtest ? regtestURL : mainURL);
             let request = NSMutableURLRequest(url: URL(string: urlString)!,
                                               cachePolicy: .reloadIgnoringLocalCacheData,
                                               timeoutInterval: 20.0)

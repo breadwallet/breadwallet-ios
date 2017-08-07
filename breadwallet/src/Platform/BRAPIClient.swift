@@ -164,6 +164,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
     private func decorateRequest(_ request: URLRequest) -> URLRequest {
         var actualRequest = request
         actualRequest.setValue("\(E.isTestnet ? 1 : 0)", forHTTPHeaderField: "X-Bitcoin-Testnet")
+        actualRequest.setValue("\(E.isRegtest ? 1 : 0)", forHTTPHeaderField: "X-Bitcoin-Regtest")
         actualRequest.setValue("\((E.isTestFlight || E.isDebug) ? 1 : 0)", forHTTPHeaderField: "X-Testflight")
         return actualRequest
     }

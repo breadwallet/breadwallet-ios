@@ -9,6 +9,13 @@
 import UIKit
 
 struct E {
+    static let isRegtest: Bool = {
+        #if Regtest
+            return true
+        #else
+            return false
+        #endif
+    }()
     static let isTestnet: Bool = {
         #if Testnet
             return true
