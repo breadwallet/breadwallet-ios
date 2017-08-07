@@ -25,7 +25,7 @@ extension WalletManager {
         return bCashWallet?.maxOutputAmount ?? 0
     }
 
-    func sweepBCash(toAddress: String, callback: @escaping (String?) -> Void) {
+    func sweepBCash(toAddress: String, pin: String, callback: @escaping (String?) -> Void) {
         return autoreleasepool {
             let genericError = "Something went wrong"
             guard let bCashWallet = bCashWallet else { return callback(genericError) }
@@ -35,11 +35,7 @@ extension WalletManager {
             defer { BRTransactionFree(tx) }
 
             do {
-                var seed = UInt512()
-                defer { seed = UInt512() }
-                guard let phrase: String = try keychainItem(key: "mnemonic") else { return callback(genericError) }
-                BRBIP39DeriveKey(&seed, phrase, nil)
-                guard bCashWallet.signTransaction(tx, forkId: 0x40, seed: &seed) else { return callback(genericError)}
+                guard signTransaction(tx, forkId: 0x40, pin: pin) else { return callback(genericError)}
                 guard var bytes = tx.bytes else { return callback(genericError)}
                 apiClient?.publishBCashTransaction(Data(bytes: &bytes, count: bytes.count), callback: { errorMessage in
                     if errorMessage == nil {
