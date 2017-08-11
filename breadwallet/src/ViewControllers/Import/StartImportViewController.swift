@@ -180,7 +180,7 @@ class StartImportViewController : UIViewController {
         let outputs = data.flatMap { SimpleUTXO(json: $0) }
         let balance = outputs.map { $0.satoshis }.reduce(0, +)
         outputs.forEach { output in
-            tx.addInput(txHash: output.hash, index: output.index, script: output.script)
+            tx.addInput(txHash: output.hash, index: output.index, amount: output.satoshis, script: output.script)
         }
 
         let pubKeyLength = key.pubKey()?.count ?? 0
