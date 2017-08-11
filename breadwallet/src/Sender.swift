@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import BRCore
 
 enum SendResult {
@@ -67,15 +68,18 @@ class Sender {
         self.feePerKb = feePerKb
 
         if UserDefaults.isTouchIdEnabled && walletManager.canUseTouchID(forTx:tx) {
-            walletManager.signTransaction(tx, touchIDPrompt: touchIdMessage, completion: { result in
-                if result == .success {
-                    self.publish(completion: completion)
-                } else {
-                    if result == .failure || result == .fallback {
-                        self.verifyPin(tx: tx, withFunction: verifyPinFunction, completion: completion)
+            DispatchQueue.walletQueue.async { [weak self] in
+                guard let myself = self else { return }
+                myself.walletManager.signTransaction(tx, touchIDPrompt: touchIdMessage, completion: { result in
+                    if result == .success {
+                        myself.publish(completion: completion)
+                    } else {
+                        if result == .failure || result == .fallback {
+                            myself.verifyPin(tx: tx, withFunction: verifyPinFunction, completion: completion)
+                        }
                     }
-                }
-            })
+                })
+            }
         } else {
             self.verifyPin(tx: tx, withFunction: verifyPinFunction, completion: completion)
         }
@@ -83,28 +87,52 @@ class Sender {
 
     private func verifyPin(tx: BRTxRef, withFunction: (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
         withFunction({ pin in
-            if self.walletManager.signTransaction(tx, pin: pin) {
-                self.publish(completion: completion)
-                return true
-            } else {
+            var success = false
+            let group = DispatchGroup()
+            group.enter()
+            DispatchQueue.walletQueue.async {
+                if self.walletManager.signTransaction(tx, pin: pin) {
+                    self.publish(completion: completion)
+                    success = true
+                }
+                group.leave()
+            }
+            let result = group.wait(timeout: .now() + 4.0)
+            if result == .timedOut {
+                let alert = UIAlertController(title: "Error", message: "Did not sign tx within timeout", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.topViewController?.present(alert, animated: true, completion: nil)
                 return false
             }
+            return success
         })
     }
 
+    //TODO - remove this -- only temporary for testing
+    private var topViewController: UIViewController? {
+        var viewController = UIApplication.shared.keyWindow?.rootViewController
+        while viewController?.presentedViewController != nil {
+            viewController = viewController?.presentedViewController
+        }
+        return viewController
+    }
+
     private func publish(completion: @escaping (SendResult) -> Void) {
-        guard let tx = transaction else { return }
-        walletManager.peerManager?.publishTx(tx, completion: { [weak self] success, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    completion(.publishFailure(error))
-                } else {
-                    self?.setMetaData()
-                    completion(.success)
-                    self?.postProtocolPaymentIfNeeded()
+        guard let tx = transaction else { assert(false, "publish failure"); return }
+        DispatchQueue.walletQueue.async { [weak self] in
+            guard let myself = self else { assert(false, "myelf didn't exist"); return }
+            myself.walletManager.peerManager?.publishTx(tx, completion: { success, error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        completion(.publishFailure(error))
+                    } else {
+                        myself.setMetaData()
+                        completion(.success)
+                        myself.postProtocolPaymentIfNeeded()
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     private func setMetaData() {
