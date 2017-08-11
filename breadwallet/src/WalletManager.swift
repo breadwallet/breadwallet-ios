@@ -601,8 +601,15 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                                       UInt32(bitPattern: sqlite3_column_int(sql, 0)).bigEndian))
             p.port = UInt16(truncatingBitPattern: sqlite3_column_int(sql, 1))
             p.services = UInt64(bitPattern: sqlite3_column_int64(sql, 2))
-            p.timestamp = UInt64(bitPattern: sqlite3_column_int64(sql, 3)) + UInt64(NSTimeIntervalSince1970)
-            peers.append(p)
+
+            let result = UInt64.addWithOverflow(UInt64(bitPattern: sqlite3_column_int64(sql, 3)), UInt64(NSTimeIntervalSince1970))
+            if result.1 {
+                print("skipped overflowed timestamp: \(sqlite3_column_int64(sql, 3))")
+                continue
+            } else {
+                p.timestamp = result.0
+                peers.append(p)
+            }
         }
         
         if sqlite3_errcode(db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(db))) }
