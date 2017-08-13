@@ -54,7 +54,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         self.transaction = transaction
         transactionLabel.attributedText = transaction.descriptionString(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits)
         addressPrefix.text = transaction.direction.addressPrefix
-        address.text = transaction.toAddress
+        address.text = " \(transaction.toAddress ?? "")"
         status.text = transaction.status
         comment.text = transaction.comment
         availability.text = transaction.shouldDisplayAvailableToSpend ? S.Transaction.available : ""
@@ -125,7 +125,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
             addressPrefix.topAnchor.constraint(equalTo: transactionLabel.bottomAnchor) ])
 
         address.constrain([
-            address.leadingAnchor.constraint(equalTo: addressPrefix.trailingAnchor, constant: 4.0),
+            address.leadingAnchor.constraint(equalTo: addressPrefix.trailingAnchor),
             address.firstBaselineAnchor.constraint(equalTo: addressPrefix.firstBaselineAnchor),
             address.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1])])
 
