@@ -64,6 +64,7 @@ enum TriggerName {
     case txMemoUpdated(String)
     case promptShareData
     case didEnableShareData
+    case didWritePaperKey
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName : Equatable {}
@@ -123,6 +124,8 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.promptShareData, .promptShareData):
         return true
     case (.didEnableShareData, .didEnableShareData):
+        return true
+    case (.didWritePaperKey, .didWritePaperKey):
         return true
     default:
         return false
