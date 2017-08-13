@@ -62,10 +62,8 @@ class Transaction {
 
     func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
         let amount = Amount(amount: satoshis, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
-        let format = direction.descriptionFormat
-
-        let address = toAddress?.smallCondensed
-        let string = String(format: format, amount, address ?? S.TransactionDetails.account)
+        let format = direction.amountDescriptionFormat
+        let string = String(format: format, amount)
         return string.attributedStringForTags
     }
 
