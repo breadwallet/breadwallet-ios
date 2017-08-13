@@ -143,6 +143,11 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                 self.currentPrompt = nil
             }
         })
+        store.subscribe(self, name: .didWritePaperKey, callback: { _ in
+            if self.currentPrompt?.type == .paperKey {
+                self.currentPrompt = nil
+            }
+        })
 
         store.subscribe(self, name: .txMemoUpdated(""), callback: {
             guard let trigger = $0 else { return }
