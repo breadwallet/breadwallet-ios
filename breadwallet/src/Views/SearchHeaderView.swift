@@ -42,11 +42,17 @@ enum SearchFilterType {
             return { !$0.isPending }
         case .text(let text):
             return { transaction in
-                if transaction.hash.contains(text) {
+                let loweredText = text.lowercased()
+                if transaction.hash.lowercased().contains(loweredText) {
                     return true
                 }
-                if let address = transaction.toAddress, address.contains(text) {
-                    if address.contains(text) {
+                if let address = transaction.toAddress {
+                    if address.lowercased().contains(loweredText) {
+                        return true
+                    }
+                }
+                if let metaData = transaction.metaData {
+                    if metaData.comment.lowercased().contains(loweredText) {
                         return true
                     }
                 }
