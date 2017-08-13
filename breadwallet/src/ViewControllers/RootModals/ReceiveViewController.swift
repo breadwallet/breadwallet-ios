@@ -51,6 +51,8 @@ class ReceiveViewController : UIViewController, Subscriber {
         }
     }
     fileprivate let isRequestAmountVisible: Bool
+    private var requestTop: NSLayoutConstraint?
+    private var requestBottom: NSLayoutConstraint?
 
     override func viewDidLoad() {
         addSubviews()
@@ -107,12 +109,14 @@ class ReceiveViewController : UIViewController, Subscriber {
             border.constraint(toBottom: sharePopout, constant: 0.0),
             border.constraint(.centerX, toView: view),
             border.constraint(.height, constant: 1.0) ])
+        requestTop = request.constraint(toBottom: border, constant: C.padding[3])
+        requestBottom = request.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2])
         request.constrain([
-            request.constraint(toBottom: border, constant: C.padding[3]),
+            requestTop,
             request.constraint(.leading, toView: view, constant: C.padding[2]),
             request.constraint(.trailing, toView: view, constant: -C.padding[2]),
             request.constraint(.height, constant: C.Sizes.buttonHeight),
-            request.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
+            requestBottom ])
         addressButton.constrain([
             addressButton.leadingAnchor.constraint(equalTo: address.leadingAnchor, constant: -C.padding[1]),
             addressButton.topAnchor.constraint(equalTo: qrCode.topAnchor),
@@ -128,6 +132,10 @@ class ReceiveViewController : UIViewController, Subscriber {
         if !isRequestAmountVisible {
             border.isHidden = true
             request.isHidden = true
+            request.constrain([
+                request.heightAnchor.constraint(equalToConstant: 0.0) ])
+            requestTop?.constant = 0.0
+            requestBottom?.constant = 0.0
         }
         sharePopout.clipsToBounds = true
         addressButton.setBackgroundImage(UIImage.imageForColor(.secondaryShadow), for: .highlighted)
