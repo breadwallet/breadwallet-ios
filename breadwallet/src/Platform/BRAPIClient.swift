@@ -142,7 +142,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
             return joinPath(path)
         }
     }
-    
+
     private func signRequest(_ request: URLRequest) -> URLRequest {
         var mutableRequest = request
         let dateHeader = mutableRequest.allHTTPHeaderFields?.get(lowercasedKey: "date")
