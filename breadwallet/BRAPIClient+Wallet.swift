@@ -107,7 +107,7 @@ extension BRAPIClient {
     }
 
     func publishBCashTransaction(_ txData: Data, callback: @escaping (String?) -> Void) {
-        var req = URLRequest(url: url("/bch/publish-transaction-test"))
+        var req = URLRequest(url: url("/bch/publish-transaction"))
         req.httpMethod = "POST"
         req.setValue("application/bcashdata", forHTTPHeaderField: "Content-Type")
         req.httpBody = txData
@@ -115,8 +115,8 @@ extension BRAPIClient {
             if let statusCode = resp?.statusCode {
                 if statusCode >= 200 && statusCode < 300 {
                     callback(nil)
-                } else if let error = er{
-                    callback(error.description)
+                } else if let data = dat, let errorString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
+                    callback(errorString as String)
                 } else {
                     callback("\(statusCode)")
                 }

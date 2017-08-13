@@ -596,7 +596,7 @@ class ModalPresenter : Subscriber {
             self.topViewController?.dismiss(animated: true, completion: {
                 let activity = BRActivityViewController(message: S.WipeWallet.wiping)
                 self.topViewController?.present(activity, animated: true, completion: nil)
-                DispatchQueue.walletQueue.sync {
+                DispatchQueue.walletQueue.async {
                     self.walletManager?.peerManager?.disconnect()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
                         activity.dismiss(animated: true, completion: {
