@@ -145,9 +145,9 @@ enum S {
         static let emptyMessage = NSLocalizedString("TransactionDetails.emptyMessage", value:"Your transactions will appear here.", comment: "Empty transaction list message.")
         static let more = NSLocalizedString("TransactionDetails.more", value:"More...", comment: "More button title")
         static let txHashHeader = NSLocalizedString("TransactionDetails.txHashHeader", value:"Bitcoin Transaction ID", comment: "Transaction ID header")
-        static let sendDescription = NSLocalizedString("TransactionDetails.sendDescription", value: "Sent <b>%1@</b> to %2@", comment: "Sent $5.00 to <address>")
-        static let receivedDescription = NSLocalizedString("TransactionDetails.receivedDescription", value: "Received <b>%1@</b> at %2@", comment: "Received $5.00 from <address>")
-        static let movedDescription = NSLocalizedString("TransactionDetails.movedDescription", value: "Moved <b>%2@</b> to %2@", comment: "Moved $5.00 to <address>")
+        static let sentAmountDescription = NSLocalizedString("TransactionDetails.sentAmountDescription", value: "Sent <b>%1@</b>", comment: "Sent $5.00")
+        static let receivedAmountDescription = NSLocalizedString("TransactionDetails.receivedAmountDescription", value: "Received <b>%1@</b>", comment: "Received $5.00")
+        static let movedAmountDescription = NSLocalizedString("TransactionDetails.movedAmountDescription", value: "Moved <b>%1@</b>", comment: "Moved $5.00")
         static let account = NSLocalizedString("TransactionDetails.account", value: "account", comment: "e.g. I received money from an account.")
         static let sent = NSLocalizedString("TransactionDetails.sent", value:"Sent %1$@", comment: "Sent $5.00 (sent title 1/2)")
         static let received = NSLocalizedString("TransactionDetails.received", value:"Received %1$@", comment: "Received $5.00 (received title 1/2)")
@@ -156,6 +156,8 @@ enum S {
         static let from = NSLocalizedString("TransactionDetails.from", value:"at %1$@", comment: "[received] at <address> (received title 2/2)")
         static let blockHeightLabel = NSLocalizedString("TransactionDetails.blockHeightLabel", value: "Confirmed in Block", comment: "Block height label")
         static let notConfirmedBlockHeightLabel = NSLocalizedString("TransactionDetails.notConfirmedBlockHeightLabel", value: "Not Confirmed", comment: "eg. Confirmed in Block: Not Confirmed")
+        static let toLiteral = NSLocalizedString("TransactionDetails.toLiteral", value: "to", comment: "To: <address>")
+        static let atLiteral = NSLocalizedString("TransactionDetails.atLiteral", value: "at", comment: "At: <address>")
     }
 
     enum SecurityCenter {
