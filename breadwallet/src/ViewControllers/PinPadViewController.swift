@@ -21,7 +21,8 @@ enum KeyboardType {
 let deleteKeyIdentifier = "del"
 
 class PinPadViewController : UICollectionViewController {
-    
+
+    let currencyDecimalSeparator = NumberFormatter().currencyDecimalSeparator ?? "."
     var isAppendingDisabled = false
     var ouputDidUpdate: ((String) -> Void)?
 
@@ -60,7 +61,7 @@ class PinPadViewController : UICollectionViewController {
 
         switch keyboardType {
         case .decimalPad:
-            items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", deleteKeyIdentifier]
+            items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", currencyDecimalSeparator, "0", deleteKeyIdentifier]
             layout.itemSize = CGSize(width: screenWidth/3.0 - 2.0/3.0, height: 48.0 - 1.0)
         case .pinPad:
             items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", deleteKeyIdentifier]
@@ -122,7 +123,7 @@ class PinPadViewController : UICollectionViewController {
         let item = items[indexPath.row]
         if item == "del" {
             if currentOutput.characters.count > 0 {
-                if currentOutput == "0." {
+                if currentOutput == ("0" + currencyDecimalSeparator) {
                     currentOutput = ""
                 } else {
                     currentOutput.remove(at: currentOutput.index(before: currentOutput.endIndex))
@@ -133,12 +134,12 @@ class PinPadViewController : UICollectionViewController {
                 currentOutput = currentOutput + item
             }
         }
+
         ouputDidUpdate?(currentOutput)
     }
 
     func shouldAppendChar(char: String) -> Bool {
-        let numberFormatter = NumberFormatter()
-        let decimalLocation = currentOutput.range(of: numberFormatter.currencyDecimalSeparator)?.lowerBound
+        let decimalLocation = currentOutput.range(of: currencyDecimalSeparator)?.lowerBound
 
         //Don't allow more that maxDigits decimal points
         if let location = decimalLocation {
@@ -149,14 +150,14 @@ class PinPadViewController : UICollectionViewController {
         }
 
         //Don't allow more than 2 decimal separators
-        if currentOutput.contains("\(numberFormatter.currencyDecimalSeparator)") && char == numberFormatter.currencyDecimalSeparator {
+        if currentOutput.contains("\(currencyDecimalSeparator)") && char == currencyDecimalSeparator {
             return false
         }
 
         if keyboardType == .decimalPad {
             if currentOutput == "0" {
                 //Append . to 0
-                if char == numberFormatter.currencyDecimalSeparator {
+                if char == currencyDecimalSeparator {
                     return true
 
                 //Dont append 0 to 0
@@ -171,7 +172,7 @@ class PinPadViewController : UICollectionViewController {
             }
         }
 
-        if char == numberFormatter.currencyDecimalSeparator {
+        if char == currencyDecimalSeparator {
             if decimalLocation == nil {
                 //Prepend a 0 if the first character is a decimal point
                 if currentOutput.characters.count == 0 {
