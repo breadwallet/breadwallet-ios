@@ -220,33 +220,32 @@ class AmountViewController : UIViewController {
     }
 
     private func handlePinPadUpdate(output: String) {
+        let currencyDecimalSeparator = NumberFormatter().currencyDecimalSeparator ?? "."
         placeholder.isHidden = output.utf8.count > 0 ? true : false
         minimumFractionDigits = 0 //set default
-        if let decimalLocation = output.range(of: NumberFormatter().currencyDecimalSeparator)?.upperBound {
+        if let decimalLocation = output.range(of: currencyDecimalSeparator)?.upperBound {
             let locationValue = output.distance(from: output.endIndex, to: decimalLocation)
             minimumFractionDigits = abs(locationValue)
         }
 
         //If trailing decimal, append the decimal to the output
         hasTrailingDecimal = false //set default
-        if let decimalLocation = output.range(of: NumberFormatter().currencyDecimalSeparator)?.upperBound {
+        if let decimalLocation = output.range(of: currencyDecimalSeparator)?.upperBound {
             if output.endIndex == decimalLocation {
                 hasTrailingDecimal = true
             }
         }
 
         var newAmount: Satoshis?
-        if let rate = selectedRate {
-            if let value = Double(output) {
-                newAmount = Satoshis(value: value, rate: rate)
-            }
-        } else {
-            if store.state.maxDigits == 2 {
-                if let bits = Bits(string: output) {
-                    newAmount = Satoshis(bits: bits)
-                }
+        if let outputAmount = NumberFormatter().number(from: output)?.doubleValue {
+            if let rate = selectedRate {
+                newAmount = Satoshis(value: outputAmount, rate: rate)
             } else {
-                if let bitcoin = Bitcoin(string: output) {
+                if store.state.maxDigits == 2 {
+                    let bits = Bits(rawValue: outputAmount)
+                    newAmount = Satoshis(bits: bits)
+                } else {
+                    let bitcoin = Bitcoin(rawValue: outputAmount)
                     newAmount = Satoshis(bitcoin: bitcoin)
                 }
             }
