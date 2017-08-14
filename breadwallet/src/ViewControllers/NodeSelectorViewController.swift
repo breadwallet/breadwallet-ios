@@ -85,6 +85,7 @@ class NodeSelectorViewController : UIViewController {
     }
 
     private func switchToAuto() {
+        guard UserDefaults.customNodeIP != nil else { return } //noop if custom node is already nil
         UserDefaults.customNodeIP = nil
         UserDefaults.customNodePort = nil
         button.title = "Switch to Manual Mode"
@@ -108,6 +109,7 @@ class NodeSelectorViewController : UIViewController {
                 DispatchQueue.walletQueue.async {
                     self.walletManager.peerManager?.connect()
                 }
+                self.button.title = "Switch to Automatic Mode"
             }
         })
         self.okAction = okAction
@@ -119,12 +121,11 @@ class NodeSelectorViewController : UIViewController {
             textField.addTarget(self, action: #selector(self.ipAddressDidChange(textField:)), for: .editingChanged)
         }
         alert.addTextField { textField in
-            textField.placeholder = "2000"
+            textField.placeholder = "8333"
             textField.keyboardType = .decimalPad
         }
         present(alert, animated: true, completion: nil)
         UserDefaults.customNodeIP = 10
-        button.title = "Switch to Automatic Mode"
     }
 
     private func setCustomNodeText() {
