@@ -117,7 +117,7 @@ extension WalletManager : WalletAuthenticator {
         do {
             let spendLimit: Int64 = try keychainItem(key: KeychainKey.spendLimit) ?? 0
             guard let wallet = wallet else { assert(false, "No wallet!"); return false }
-            return wallet.amountSentByTx(forTx) + wallet.totalSent <= UInt64(spendLimit)
+            return wallet.amountSentByTx(forTx) - wallet.amountReceivedFromTx(forTx) + wallet.totalSent <= UInt64(spendLimit)
         }
         catch { return false }
     }
