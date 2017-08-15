@@ -67,6 +67,15 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
             timer?.invalidate()
         }
         timestamp.isHidden = !transaction.isValid
+
+        let identity: CGAffineTransform = .identity
+        if transaction.direction == .received {
+            arrow.transform = identity.rotated(by: π/2.0)
+            arrow.tintColor = .green
+        } else {
+            arrow.transform = identity.rotated(by: 3.0*π/2.0)
+            arrow.tintColor = .red
+        }
     }
 
     let container = RoundedContainer()
@@ -85,6 +94,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     private var transaction: Transaction?
     private let availability = UILabel(font: .customBold(size: 13.0), color: .cameraGuidePositive)
     private var timer: Timer? = nil
+    private let arrow = UIImageView(image: #imageLiteral(resourceName: "CircleArrow").withRenderingMode(.alwaysTemplate))
 
     private func setupViews() {
         addSubviews()
@@ -97,6 +107,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         contentView.addSubview(container)
         container.addSubview(innerShadow)
         container.addSubview(transactionLabel)
+        container.addSubview(arrow)
         container.addSubview(addressPrefix)
         container.addSubview(address)
         container.addSubview(status)
@@ -111,8 +122,13 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         innerShadow.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         innerShadow.constrain([
             innerShadow.constraint(.height, constant: 1.0) ])
+        arrow.constrain([
+            arrow.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
+            arrow.centerYAnchor.constraint(equalTo: transactionLabel.centerYAnchor),
+            arrow.heightAnchor.constraint(equalToConstant: 14.0),
+            arrow.widthAnchor.constraint(equalToConstant: 14.0)])
         transactionLabel.constrain([
-            transactionLabel.constraint(.leading, toView: container, constant: C.padding[2]),
+            transactionLabel.leadingAnchor.constraint(equalTo: arrow.trailingAnchor, constant: 4.0),
             transactionLabel.constraint(.top, toView: container, constant: topPadding),
             transactionLabel.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1]) ])
         timestamp.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
@@ -121,7 +137,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
             timestamp.constraint(.top, toView: container, constant: topPadding) ])
 
         addressPrefix.constrain([
-            addressPrefix.leadingAnchor.constraint(equalTo: transactionLabel.leadingAnchor),
+            addressPrefix.leadingAnchor.constraint(equalTo: arrow.leadingAnchor),
             addressPrefix.topAnchor.constraint(equalTo: transactionLabel.bottomAnchor) ])
 
         address.constrain([
