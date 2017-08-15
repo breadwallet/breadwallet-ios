@@ -139,6 +139,10 @@ class Transaction {
         return metaData?.comment
     }
 
+    var hasKvStore: Bool {
+        return kvStore != nil
+    }
+
     var _metaData: TxMetaData?
     var metaData: TxMetaData? {
         if _metaData != nil {
@@ -294,5 +298,5 @@ private func makeStatus(_ txRef: BRTxRef, wallet: BRWallet, peerManager: BRPeerM
 extension Transaction : Equatable {}
 
 func ==(lhs: Transaction, rhs: Transaction) -> Bool {
-    return lhs.hash == rhs.hash && lhs.status == rhs.status && lhs.comment == rhs.comment
+    return lhs.hash == rhs.hash && lhs.status == rhs.status && lhs.comment == rhs.comment && lhs.hasKvStore == rhs.hasKvStore
 }
