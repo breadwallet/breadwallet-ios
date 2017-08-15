@@ -196,7 +196,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                 if address.isValidAddress {
                     self.addressCell.setContent(address)
                 } else {
-                    self.showError(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
+                    self.showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
                 }
                 self.addressCell.isEditable = true
             }
@@ -218,26 +218,26 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
     @objc private func sendTapped() {
         if sender.transaction == nil {
             guard let address = addressCell.address else {
-                return showError(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
+                return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             }
             guard address.isValidAddress else {
-                return showError(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
+                return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
             }
             guard let amount = amount else {
-                return showError(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
+                return showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
             }
             if let minOutput = walletManager.wallet?.minOutputAmount {
                 guard amount.rawValue >= minOutput else {
                     let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: store.state.maxDigits)
                     let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutputAmount.string(isBtcSwapped: store.state.isBtcSwapped))
-                    return showError(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
+                    return showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
                 }
             }
             guard !(walletManager.wallet?.containsAddress(address) ?? false) else {
-                return showError(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
+                return showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
             }
             guard sender.createTransaction(amount: amount.rawValue, to: address) else {
-                return showError(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
+                return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
             }
         }
 
@@ -309,10 +309,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                         myself.onPublishSuccess?()
                     })
                 case .creationError(let message):
-                    self?.showError(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
+                    self?.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
                 case .publishFailure(let error):
                     if case .posixError(let code, let description) = error {
-                        self?.showError(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
+                        self?.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
                     }
                 }
         })
@@ -327,7 +327,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         var isOutputTooSmall = false
 
         if let errorMessage = protoReq.errorMessage, errorMessage == S.PaymentProtocol.Errors.requestExpired, !isValid {
-            return showError(title: S.PaymentProtocol.Errors.badPaymentRequest, message: errorMessage, buttonLabel: S.Button.ok)
+            return showAlert(title: S.PaymentProtocol.Errors.badPaymentRequest, message: errorMessage, buttonLabel: S.Button.ok)
         }
 
         //TODO: check for duplicates of already paid requests
@@ -340,7 +340,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         }
 
         if wallet.containsAddress(address) {
-            return showError(title: S.Alert.warning, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
+            return showAlert(title: S.Alert.warning, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
         } else if wallet.addressIsUsed(address) && !didIgnoreUsedAddressWarning {
             let message = "\(S.Send.UsedAddress.title)\n\n\(S.Send.UsedAddress.firstLine)\n\n\(S.Send.UsedAddress.secondLine)"
             return showError(title: S.Alert.warning, message: message, ignore: { [weak self] in
@@ -355,11 +355,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         } else if requestAmount < wallet.minOutputAmount {
             let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: store.state.maxDigits)
             let message = String(format: S.PaymentProtocol.Errors.smallPayment, amount.bits)
-            return showError(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
+            return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         } else if isOutputTooSmall {
             let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: store.state.maxDigits)
             let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.bits)
-            return showError(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
+            return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         }
 
         if let name = protoReq.commonName {
@@ -374,7 +374,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
         if requestAmount == 0 {
             if let amount = amount {
                 guard sender.createTransaction(amount: amount.rawValue, to: address) else {
-                    return showError(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
+                    return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
                 }
             }
         } else {
