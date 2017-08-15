@@ -294,5 +294,5 @@ private func makeStatus(_ txRef: BRTxRef, wallet: BRWallet, peerManager: BRPeerM
 extension Transaction : Equatable {}
 
 func ==(lhs: Transaction, rhs: Transaction) -> Bool {
-    return lhs.hash == rhs.hash && lhs.status == rhs.status
+    return lhs.hash == rhs.hash && lhs.status == rhs.status && lhs.comment == rhs.comment
 }
