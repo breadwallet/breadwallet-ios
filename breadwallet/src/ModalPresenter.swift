@@ -421,7 +421,7 @@ class ModalPresenter : Subscriber {
                                 let nodeSelector = NodeSelectorViewController(walletManager: walletManager)
                                 settingsNav.pushViewController(nodeSelector, animated: true)
                             }),
-                            Setting(title: "Withdraw Bitcoin Cash", callback: {
+                            Setting(title: S.BCH.title, callback: {
                                 let bCash = BCashTransactionViewController(walletManager: walletManager, store: myself.store)
                                 settingsNav.pushViewController(bCash, animated: true)
                             })

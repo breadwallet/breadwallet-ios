@@ -27,7 +27,7 @@ extension WalletManager {
 
     func sweepBCash(toAddress: String, pin: String, callback: @escaping (String?) -> Void) {
         return autoreleasepool {
-            let genericError = "Something went wrong"
+            let genericError = S.BCH.genericError
             guard let bCashWallet = bCashWallet else { return callback(genericError) }
             bCashWallet.feePerKb = minFeePerKb
             let maxOutputAmount = bCashWallet.maxOutputAmount
