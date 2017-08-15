@@ -14,7 +14,7 @@ class BCashTransactionViewController : UIViewController {
     private let body = UILabel.wrapping(font: .customBody(size: 14.0), color: .darkText)
     private let topBorder = UIView(color: .secondaryShadow)
     private let addressCell = AddressCell()
-    private let send = ShadowButton(title: "Send", type: .primary)
+    private let send = ShadowButton(title: S.Send.sendLabel, type: .primary)
     private let walletManager: WalletManager
     private let store: Store
     private let txHash = UIButton(type: .system)
@@ -75,9 +75,9 @@ class BCashTransactionViewController : UIViewController {
 
     private func setInitialData() {
         view.backgroundColor = .whiteTint
-        titleLabel.text = "Withdraw Bitcoin Cash"
+        titleLabel.text = S.BCH.title
         let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), state: store.state, selectedRate: nil, minimumFractionDigits: 0)
-        body.text = "Send your entire BCash balance. You have \(amount.description) bCash"
+        body.text = String(format: S.BCH.body, amount.description)
         addressCell.paste.tap = strongify(self) { $0.pasteTapped() }
         addressCell.scan.tap = strongify(self) { $0.scanTapped() }
         send.tap = strongify(self) { $0.presentConfirm() }
@@ -88,7 +88,7 @@ class BCashTransactionViewController : UIViewController {
         txHash.tintColor = .darkText
         txHash.contentHorizontalAlignment = .left
         txHash.tap = { [weak self] in
-            self?.store.trigger(name: .lightWeightAlert("Tx Hash Copied"))
+            self?.store.trigger(name: .lightWeightAlert(S.BCH.hashCopiedMessage))
             UIPasteboard.general.string = self?.txHash.titleLabel?.text
         }
         setPreviousTx()
@@ -96,7 +96,7 @@ class BCashTransactionViewController : UIViewController {
 
     private func setPreviousTx() {
         if let previousHash = UserDefaults.standard.string(forKey: "bCashTxHashKey") {
-            txHashHeader.text = "Bitcoin Cash Transaction ID"
+            txHashHeader.text = S.BCH.txHashHeader
             txHash.setTitle(previousHash, for: .normal)
         }
     }
@@ -106,7 +106,7 @@ class BCashTransactionViewController : UIViewController {
             if address.isValidAddress {
                 addressCell.setContent(address)
             } else {
-                showError(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
+                showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
             }
         }
     }
@@ -132,15 +132,15 @@ class BCashTransactionViewController : UIViewController {
 
     private func handlePaymentRequest(_ request: PaymentRequest?) {
         guard let request = request else { return }
-        guard request.type == .local else { return showErrorMessage("Payment Protocol Requests are not supported for BCash transactions") }
+        guard request.type == .local else { return showErrorMessage(S.BCH.paymentProtocolError) }
         addressCell.setContent(request.toAddress)
     }
 
     private func presentConfirm() {
         let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), state: store.state, selectedRate: nil, minimumFractionDigits: 0)
-        guard let address = addressCell.address else { return showErrorMessage("Please enter an address") }
-        body.text = "Send your entire BCash balance. You have \(amount.description) bCash"
-        let alert = UIAlertController(title: "Confirmation", message: "Confirm sending \(amount.description) to \(address)", preferredStyle: .alert)
+        guard let address = addressCell.address else { return showErrorMessage(S.BCH.noAddressError) }
+        let message = String(format: S.BCH.confirmationMessage, amount.description, address)
+        let alert = UIAlertController(title: S.BCH.confirmationTitle, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: { _ in
             self.send(toAddress: address)
@@ -149,13 +149,13 @@ class BCashTransactionViewController : UIViewController {
     }
 
     private func send(toAddress: String) {
-        let verify = VerifyPinViewController(bodyText: "Authenticate this transaction", pinLength: walletManager.pinLength, callback: { [weak self] pin, vc in
+        let verify = VerifyPinViewController(bodyText: S.VerifyPin.authorize, pinLength: walletManager.pinLength, callback: { [weak self] pin, vc in
                 guard let myself = self else { return false }
                 if myself.walletManager.authenticate(pin: pin) {
                     vc.dismiss(animated: true, completion: {
                         myself.walletManager.sweepBCash(toAddress: toAddress, pin: pin, callback: { errorMessage in
                             guard let errorMessage = errorMessage else {
-                                return myself.showError(title: "BCash Sent", message: "BCash was successfull sent to \(toAddress)", buttonLabel: S.Button.ok)
+                                return myself.showAlert(title: S.Import.success, message: S.BCH.successMessage, buttonLabel: S.Button.ok)
                             }
                             myself.setPreviousTx()
                             return myself.showErrorMessage(errorMessage)
