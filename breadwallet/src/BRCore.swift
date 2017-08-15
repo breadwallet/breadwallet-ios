@@ -182,7 +182,7 @@ extension BRKey {
     // DER encoded public key
     mutating func pubKey() -> [UInt8]? {
         var pubKey = [UInt8](repeating: 0, count: BRKeyPubKey(&self, nil, 0))
-        guard BRKeyPubKey(&self, &pubKey, pubKey.count) == pubKey.count else { return nil }
+        guard pubKey.count > 0, BRKeyPubKey(&self, &pubKey, pubKey.count) == pubKey.count else { return nil }
         return pubKey
     }
     
