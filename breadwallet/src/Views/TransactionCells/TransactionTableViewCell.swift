@@ -143,7 +143,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         address.constrain([
             address.leadingAnchor.constraint(equalTo: addressPrefix.trailingAnchor),
             address.firstBaselineAnchor.constraint(equalTo: addressPrefix.firstBaselineAnchor),
-            address.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1])])
+            address.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[4])])
 
         address.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
 
