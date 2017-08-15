@@ -262,7 +262,7 @@ extension WalletManager : WalletAuthenticator {
     func signTransaction(_ tx: BRTxRef, touchIDPrompt: String, completion: @escaping (TouchIdResult) -> ()) {
         do {
             let spendLimit: Int64 = try keychainItem(key: KeychainKey.spendLimit) ?? 0
-            guard let wallet = wallet, wallet.amountSentByTx(tx) + wallet.totalSent <= UInt64(spendLimit) else {
+            guard let wallet = wallet, wallet.amountSentByTx(tx) - wallet.amountReceivedFromTx(tx) + wallet.totalSent <= UInt64(spendLimit) else {
                 return completion(.failure)
             }
         }
