@@ -62,6 +62,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     internal let store: Store
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
+    private var lock = pthread_mutex_t()
 
     var wallet: BRWallet? {
         guard self.masterPubKey != BRMasterPubKey() else { return nil }
@@ -151,6 +152,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                                     create: false).appendingPathComponent("BreadWallet.sqlite").path
         self.store = store
         // open sqlite database
+        pthread_mutex_lock(&lock)
+        defer { pthread_mutex_unlock(&lock) }
         if sqlite3_open(self.dbPath, &db) != SQLITE_OK {
             print(String(cString: sqlite3_errmsg(db)))
 
@@ -273,6 +276,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             guard BRTransactionSerialize(tx, &buf, buf.count) == buf.count else { return }
             buf.append(contentsOf: UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
                                                        count: MemoryLayout<UInt32>.size*2))
+            pthread_mutex_lock(&self.lock)
+            defer { pthread_mutex_unlock(&self.lock) }
             sqlite3_exec(self.db, "begin exclusive", nil, nil, nil)
 
             var sql: OpaquePointer? = nil
@@ -318,6 +323,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             let extra = [blockHeight.littleEndian, timestamp.littleEndian]
             let extraBuf = UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
                                                count: MemoryLayout<UInt32>.size*2)
+            pthread_mutex_lock(&self.lock)
+            defer { pthread_mutex_unlock(&self.lock) }
             var sql: OpaquePointer? = nil, sql2: OpaquePointer? = nil
             sqlite3_prepare_v2(self.db, "select ZTXHASH, ZBLOB from ZBRTXMETADATAENTITY where ZTYPE = 1 and " +
                 "ZTXHASH in (" + String(repeating: "?, ", count: txHashes.count - 1) + "?)", -1, &sql, nil)
@@ -351,6 +358,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     
     func txDeleted(_ txHash: UInt256, notifyUser: Bool, recommendRescan: Bool) {
         DispatchQueue.walletQueue.async {
+            pthread_mutex_lock(&self.lock)
+            defer { pthread_mutex_unlock(&self.lock) }
             var sql: OpaquePointer? = nil
             sqlite3_prepare_v2(self.db, "delete from ZBRTXMETADATAENTITY where ZTYPE = 1 and ZTXHASH = ?", -1, &sql, nil)
             defer { sqlite3_finalize(sql) }
@@ -399,6 +408,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     
     func saveBlocks(_ replace: Bool, _ blocks: [BRBlockRef?]) {
         DispatchQueue.walletQueue.async {
+            pthread_mutex_lock(&self.lock)
+            defer { pthread_mutex_unlock(&self.lock) }
             var pk: Int32 = 0
             sqlite3_exec(self.db, "begin exclusive", nil, nil, nil)
 
@@ -468,6 +479,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     
     func savePeers(_ replace: Bool, _ peers: [BRPeer]) {
         DispatchQueue.walletQueue.async {
+            pthread_mutex_lock(&self.lock)
+            defer { pthread_mutex_unlock(&self.lock) }
             var pk: Int32 = 0
             sqlite3_exec(self.db, "begin exclusive", nil, nil, nil)
 
@@ -533,6 +546,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     private func loadTransactions() -> [BRTxRef?] {
+        pthread_mutex_lock(&lock)
+        defer { pthread_mutex_unlock(&lock) }
         DispatchQueue.main.async { self.store.perform(action: LoadTransactions.set(true)) }
         var transactions = [BRTxRef?]()
         var sql: OpaquePointer? = nil
@@ -559,6 +574,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     private func loadBlocks() -> [BRBlockRef?] {
+        pthread_mutex_lock(&lock)
+        defer { pthread_mutex_unlock(&lock) }
         var blocks = [BRBlockRef?]()
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "select ZHEIGHT, ZNONCE, ZTARGET, ZTOTALTRANSACTIONS, ZVERSION, ZTIMESTAMP, " +
@@ -590,6 +607,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     private func loadPeers() -> [BRPeer] {
+        pthread_mutex_lock(&lock)
+        defer { pthread_mutex_unlock(&lock) }
         var peers = [BRPeer]()
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "select ZADDRESS, ZPORT, ZSERVICES, ZTIMESTAMP from ZBRPEERENTITY", -1, &sql, nil)
@@ -639,5 +658,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
 
     deinit {
         if db != nil { sqlite3_close(db) }
+        pthread_mutex_destroy(&lock)
     }
 }
