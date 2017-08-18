@@ -24,9 +24,9 @@ class NodeSelectorViewController : UIViewController {
     init(walletManager: WalletManager) {
         self.walletManager = walletManager
         if UserDefaults.customNodeIP == nil {
-            button = ShadowButton(title: "Switch to Manual Mode", type: .primary)
+            button = ShadowButton(title: S.NodeSelector.manualButton, type: .primary)
         } else {
-            button = ShadowButton(title: "Switch to Automatic Mode", type: .primary)
+            button = ShadowButton(title: S.NodeSelector.automaticButton, type: .primary)
         }
         super.init(nibName: nil, bundle: nil)
     }
@@ -61,9 +61,9 @@ class NodeSelectorViewController : UIViewController {
 
     private func setInitialData() {
         view.backgroundColor = .whiteTint
-        titleLabel.text = "Bitcoin Nodes"
-        nodeLabel.text = "Current Primary Node"
-        statusLabel.text = "Node Connection Status"
+        titleLabel.text = S.NodeSelector.title
+        nodeLabel.text = S.NodeSelector.nodeLabel
+        statusLabel.text = S.NodeSelector.statusLabel
         button.tap = strongify(self) { myself in
             if UserDefaults.customNodeIP == nil {
                 myself.switchToManual()
@@ -77,9 +77,7 @@ class NodeSelectorViewController : UIViewController {
 
     @objc private func setStatusText() {
         if let peerManager = walletManager.peerManager {
-            status.text = peerManager.isConnected ? "Connected" : "Not Connected"
-        } else {
-            print("No peer manager")
+            status.text = peerManager.isConnected ? S.NodeSelector.connected : S.NodeSelector.notConnected
         }
         node.text = walletManager.peerManager?.downloadPeerName
     }
@@ -88,14 +86,14 @@ class NodeSelectorViewController : UIViewController {
         guard UserDefaults.customNodeIP != nil else { return } //noop if custom node is already nil
         UserDefaults.customNodeIP = nil
         UserDefaults.customNodePort = nil
-        button.title = "Switch to Manual Mode"
+        button.title = S.NodeSelector.manualButton
         DispatchQueue.walletQueue.async {
             self.walletManager.peerManager?.connect()
         }
     }
 
     private func switchToManual() {
-        let alert = UIAlertController(title: "Enter Node", message: "Enter Node ip address and port", preferredStyle: .alert)
+        let alert = UIAlertController(title: S.NodeSelector.enterTitle, message: S.NodeSelector.enterBody, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         let okAction = UIAlertAction(title: S.Button.ok, style: .default, handler: { action in
             guard let ip = alert.textFields?.first, let port = alert.textFields?.last else { return }
@@ -109,7 +107,7 @@ class NodeSelectorViewController : UIViewController {
                 DispatchQueue.walletQueue.async {
                     self.walletManager.peerManager?.connect()
                 }
-                self.button.title = "Switch to Automatic Mode"
+                self.button.title = S.NodeSelector.automaticButton
             }
         })
         self.okAction = okAction
@@ -132,8 +130,6 @@ class NodeSelectorViewController : UIViewController {
         if var customNode = UserDefaults.customNodeIP {
             if let buf = addr2ascii(AF_INET, &customNode, Int32(MemoryLayout<in_addr_t>.size), nil) {
                 node.text = String(cString: buf)
-            } else {
-                node.text = "failed"
             }
         }
     }
