@@ -53,8 +53,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     func setTransaction(_ transaction: Transaction, isBtcSwapped: Bool, rate: Rate, maxDigits: Int, isSyncing: Bool) {
         self.transaction = transaction
         transactionLabel.attributedText = transaction.descriptionString(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits)
-        addressPrefix.text = transaction.direction.addressPrefix
-        address.text = " \(transaction.toAddress ?? "")"
+        address.text = String(format: transaction.direction.addressTextFormat, transaction.toAddress ?? "")
         status.text = transaction.status
         comment.text = transaction.comment
         availability.text = transaction.shouldDisplayAvailableToSpend ? S.Transaction.available : ""
@@ -82,7 +81,6 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
 
     //MARK: - Private
     private let transactionLabel = UILabel()
-    private let addressPrefix = UILabel(font: UIFont.customBody(size: 13.0))
     private let address = UILabel(font: UIFont.customBody(size: 13.0))
     private let status = UILabel(font: UIFont.customBody(size: 13.0))
     private let comment = UILabel.wrapping(font: UIFont.customBody(size: 13.0))
@@ -108,7 +106,6 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         container.addSubview(innerShadow)
         container.addSubview(transactionLabel)
         container.addSubview(arrow)
-        container.addSubview(addressPrefix)
         container.addSubview(address)
         container.addSubview(status)
         container.addSubview(comment)
@@ -136,20 +133,16 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
             timestamp.constraint(.trailing, toView: container, constant: -C.padding[2]),
             timestamp.constraint(.top, toView: container, constant: topPadding) ])
 
-        addressPrefix.constrain([
-            addressPrefix.leadingAnchor.constraint(equalTo: arrow.leadingAnchor),
-            addressPrefix.topAnchor.constraint(equalTo: transactionLabel.bottomAnchor) ])
-
         address.constrain([
-            address.leadingAnchor.constraint(equalTo: addressPrefix.trailingAnchor),
-            address.firstBaselineAnchor.constraint(equalTo: addressPrefix.firstBaselineAnchor),
+            address.leadingAnchor.constraint(equalTo: arrow.leadingAnchor),
+            address.topAnchor.constraint(equalTo: transactionLabel.bottomAnchor),
             address.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[4])])
 
         address.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
 
         comment.constrain([
             comment.constraint(.leading, toView: container, constant: C.padding[2]),
-            comment.constraint(toBottom: addressPrefix, constant: C.padding[1]),
+            comment.constraint(toBottom: address, constant: C.padding[1]),
             comment.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1]) ])
         status.constrain([
             status.constraint(.leading, toView: container, constant: C.padding[2]),
