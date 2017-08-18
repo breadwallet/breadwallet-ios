@@ -39,7 +39,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private let secondaryBalance: UpdatingLabel
     private let currencyTapView = UIView()
     private let store: Store
-    private let equals = UILabel(font: .customBody(size: smallFontSize), color: .darkText)
+    private let equals = UILabel(font: .customBody(size: smallFontSize), color: .whiteTint)
     private var regularConstraints: [NSLayoutConstraint] = []
     private var swappedConstraints: [NSLayoutConstraint] = []
     private var hasInitialized = false
@@ -105,10 +105,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         manage.tap = {
             self.store.perform(action: RootModalActions.Present(modal: .manageWallet))
         }
-        primaryBalance.textColor = .white
+        primaryBalance.textColor = .whiteTint
         primaryBalance.font = UIFont.customBody(size: largeFontSize)
 
-        secondaryBalance.textColor = .darkText
+        secondaryBalance.textColor = .whiteTint
         secondaryBalance.font = UIFont.customBody(size: largeFontSize)
 
         search.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
@@ -254,8 +254,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             let amount = Amount(amount: balance, rate: exchangeRate!, maxDigits: store.state.maxDigits)
             NSLayoutConstraint.deactivate(isBtcSwapped ? self.regularConstraints : self.swappedConstraints)
             NSLayoutConstraint.activate(isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
-            self.primaryBalance.textColor = isBtcSwapped ? .darkText : .white
-            self.secondaryBalance.textColor = isBtcSwapped ? .white : .darkText
             primaryBalance.setValue(amount.amountForBtcFormat)
             secondaryBalance.setValue(amount.localAmount)
             layoutIfNeeded()
@@ -327,8 +325,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     @objc private func currencySwitchTapped() {
         layoutIfNeeded()
-        self.primaryBalance.textColor = !isBtcSwapped ? .darkText : .white
-        self.secondaryBalance.textColor = !isBtcSwapped ? .white : .darkText
         UIView.spring(0.7, animations: {
             self.primaryBalance.transform = self.primaryBalance.transform.isIdentity ? self.transform(forView: self.primaryBalance) : .identity
             self.secondaryBalance.transform = self.secondaryBalance.transform.isIdentity ? self.transform(forView: self.secondaryBalance) : .identity

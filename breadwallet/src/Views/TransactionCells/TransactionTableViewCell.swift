@@ -90,7 +90,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     private let topPadding: CGFloat = 19.0
     private var style: TransactionCellStyle = .first
     private var transaction: Transaction?
-    private let availability = UILabel(font: .customBold(size: 13.0), color: .cameraGuidePositive)
+    private let availability = UILabel(font: .customBold(size: 13.0), color: .green)
     private var timer: Timer? = nil
     private let arrow = UIImageView(image: #imageLiteral(resourceName: "CircleArrow").withRenderingMode(.alwaysTemplate))
 

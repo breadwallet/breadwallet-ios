@@ -74,7 +74,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     private let moreContentView = UIView()
     private let txHash = UIButton(type: .system)
     private let txHashHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let availability = UILabel(font: .customBold(size: 13.0), color: .cameraGuidePositive)
+    private let availability = UILabel(font: .customBold(size: 13.0), color: .green)
     private let blockHeight = UILabel(font: .customBody(size: 13.0), color: .darkText)
 
     private func setup() {
