@@ -45,7 +45,7 @@ extension State {
                         recommendRescan: false,
                         isLoadingTransactions: false,
                         maxDigits: UserDefaults.maxDigits,
-                        isPushNotificationsEnabled: false,
+                        isPushNotificationsEnabled: UserDefaults.pushToken != nil,
                         isPromptingTouchId: false,
                         pinLength: 6,
                         fees: Fees.defaultFees )
