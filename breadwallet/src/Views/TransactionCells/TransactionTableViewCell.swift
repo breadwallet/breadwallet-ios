@@ -120,12 +120,12 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         innerShadow.constrain([
             innerShadow.constraint(.height, constant: 1.0) ])
         arrow.constrain([
-            arrow.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
-            arrow.centerYAnchor.constraint(equalTo: transactionLabel.centerYAnchor),
+            arrow.trailingAnchor.constraint(equalTo: timestamp.leadingAnchor, constant: -4.0),
+            arrow.centerYAnchor.constraint(equalTo: timestamp.centerYAnchor),
             arrow.heightAnchor.constraint(equalToConstant: 14.0),
             arrow.widthAnchor.constraint(equalToConstant: 14.0)])
         transactionLabel.constrain([
-            transactionLabel.leadingAnchor.constraint(equalTo: arrow.trailingAnchor, constant: 4.0),
+            transactionLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
             transactionLabel.constraint(.top, toView: container, constant: topPadding),
             transactionLabel.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1]) ])
         timestamp.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
@@ -134,10 +134,9 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
             timestamp.constraint(.top, toView: container, constant: topPadding) ])
 
         address.constrain([
-            address.leadingAnchor.constraint(equalTo: arrow.leadingAnchor),
+            address.leadingAnchor.constraint(equalTo: transactionLabel.leadingAnchor),
             address.topAnchor.constraint(equalTo: transactionLabel.bottomAnchor),
             address.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[4])])
-
         address.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
 
         comment.constrain([
