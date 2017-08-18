@@ -117,6 +117,7 @@ class WalletCoordinator : Subscriber {
 
         NotificationCenter.default.addObserver(forName: .WalletTxRejectedNotification, object: nil, queue: nil, using: {note in
             guard let recommendRescan = note.userInfo?["recommendRescan"] as? Bool else { return }
+            self.updateTransactions()
             if recommendRescan {
                 self.store.perform(action: RecommendRescan.set(recommendRescan))
             }
