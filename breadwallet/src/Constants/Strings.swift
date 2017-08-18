@@ -536,4 +536,16 @@ enum S {
         static let hashCopiedMessage = NSLocalizedString("BCH.hashCopiedMessage", value: "Transaction ID copied", comment: "Transaction ID copied message")
         static let genericError = NSLocalizedString("BCH.genericError", value: "Your account does not contain any BCH, or you received BCH after the fork.", comment: "Generic bch erorr message")
     }
+
+    enum NodeSelector {
+        static let manualButton = NSLocalizedString("NodeSelector.manualButton", value: "Switch to Manual Mode", comment: "Switch to manual mode button label")
+        static let automaticButton = NSLocalizedString("NodeSelector.automaticButton", value: "Switch to Automatic Mode", comment: "Switch to automatic mode button label")
+        static let title = NSLocalizedString("NodeSelector.title", value: "Bitcoin Nodes", comment: "Node Selector view title")
+        static let nodeLabel = NSLocalizedString("NodeSelector.nodeLabel", value: "Current Primary Node", comment: "Node address label")
+        static let statusLabel = NSLocalizedString("NodeSelector.statusLabel", value: "Node Connection Status", comment: "Node status label")
+        static let connected = NSLocalizedString("NodeSelector.connected", value: "Connected", comment: "Node is connected label")
+        static let notConnected = NSLocalizedString("NodeSelector.notConnected", value: "Not Connected", comment: "Node is not connected label")
+        static let enterTitle = NSLocalizedString("NodeSelector.enterTitle", value: "Enter Node", comment: "Enter Node ip address view title")
+        static let enterBody = NSLocalizedString("NodeSelector.enterBody", value: "Enter Node IP address and port (optional)", comment: "Enter node ip address view body")
+    }
 }
