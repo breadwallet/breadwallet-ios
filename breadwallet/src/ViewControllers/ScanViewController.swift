@@ -12,7 +12,7 @@ import AVFoundation
 typealias ScanCompletion = (PaymentRequest?) -> Void
 typealias KeyScanCompletion = (String) -> Void
 
-class ScanViewController : UIViewController {
+class ScanViewController : UIViewController, Trackable {
 
     static func presentCameraUnavailableAlert(fromRoot: UIViewController) {
         let alertController = UIAlertController(title: S.Send.cameraUnavailableTitle, message: S.Send.cameraUnavailableMessage, preferredStyle: .alert)
@@ -86,9 +86,10 @@ class ScanViewController : UIViewController {
             NSLayoutConstraint(item: guide, attribute: .width, relatedBy: .equal, toItem: guide, attribute: .height, multiplier: 1.0, constant: 0.0) ])
         guide.transform = CGAffineTransform(scaleX: 0.0, y: 0.0)
 
-        close.tap = {
-            self.dismiss(animated: true, completion: {
-                self.completion?(nil)
+        close.tap = { [weak self] in
+            self?.saveEvent("scan.dismiss")
+            self?.dismiss(animated: true, completion: {
+                self?.completion?(nil)
             })
         }
 
@@ -127,11 +128,16 @@ class ScanViewController : UIViewController {
         }
 
         if device.hasTorch {
-            flash.tap = {
+            flash.tap = { [weak self] in
                 do {
                     try device.lockForConfiguration()
                     device.torchMode = device.torchMode == .on ? .off : .on
                     device.unlockForConfiguration()
+                    if device.torchMode == .on {
+                        self?.saveEvent("scan.torchOn")
+                    } else {
+                        self?.saveEvent("scan.torchOn")
+                    }
                 } catch let error {
                     print("Camera Torch error: \(error)")
                 }
@@ -170,6 +176,7 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
         if self.currentUri != uri {
             self.currentUri = uri
             if let paymentRequest = PaymentRequest(string: uri) {
+                saveEvent("scan.bitcoinUri")
                 guide.state = .positive
                 //Add a small delay so the green guide will be seen
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
@@ -185,6 +192,7 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
 
     func handleKey(_ address: String) {
         if isValidURI(address) {
+            saveEvent("scan.privateKey")
             guide.state = .positive
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
                 self.dismiss(animated: true, completion: {

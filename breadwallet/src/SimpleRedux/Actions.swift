@@ -105,10 +105,11 @@ enum WalletChange {
             reduce = { $0.clone(walletName: name) }
         }
     }
-    struct setSyncingErrorMessage: Action {
+    struct setSyncingErrorMessage: Action, Trackable {
         let reduce: Reducer
         init(_ message: String?) {
             reduce = { $0.clone(walletSyncingErrorMessage: message) }
+            saveEvent("event.syncErrorMessage", attributes: ["message": message ?? "no message"])
         }
     }
     struct setWalletCreationDate: Action {
@@ -166,30 +167,33 @@ enum Alert {
 }
 
 enum TouchId {
-    struct setIsEnabled : Action {
+    struct setIsEnabled : Action, Trackable {
         let reduce: Reducer
         init(_ isTouchIdEnabled: Bool) {
             UserDefaults.isTouchIdEnabled = isTouchIdEnabled
             reduce = { $0.clone(isTouchIdEnabled: isTouchIdEnabled) }
+            saveEvent("event.enableTouchId", attributes: ["isEnabled": "\(isTouchIdEnabled)"])
         }
     }
 }
 
 enum DefaultCurrency {
-    struct setDefault : Action {
+    struct setDefault : Action, Trackable {
         let reduce: Reducer
         init(_ defaultCurrencyCode: String) {
             UserDefaults.defaultCurrencyCode = defaultCurrencyCode
             reduce = { $0.clone(defaultCurrencyCode: defaultCurrencyCode) }
+            saveEvent("event.setDefaultCurrency", attributes: ["code": defaultCurrencyCode])
         }
     }
 }
 
 enum RecommendRescan {
-    struct set : Action {
+    struct set : Action, Trackable {
         let reduce: Reducer
         init(_ recommendRescan: Bool) {
             reduce = { $0.clone(recommendRescan: recommendRescan) }
+            saveEvent("event.recommendRescan")
         }
     }
 }
@@ -204,11 +208,12 @@ enum LoadTransactions {
 }
 
 enum MaxDigits {
-    struct set : Action {
+    struct set : Action, Trackable {
         let reduce: Reducer
         init(_ maxDigits: Int) {
             UserDefaults.maxDigits = maxDigits
             reduce = { $0.clone(maxDigits: maxDigits)}
+            saveEvent("maxDigits.set", attributes: ["maxDigits": "\(maxDigits)"])
         }
     }
 }
