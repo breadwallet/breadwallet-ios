@@ -472,6 +472,7 @@ class ModalPresenter : Subscriber, Trackable {
     private func presentScan(parent: UIViewController) -> PresentScan {
         return { [weak parent] scanCompletion in
             guard ScanViewController.isCameraAllowed else {
+                self.saveEvent("scan.cameraDenied")
                 if let parent = parent {
                     ScanViewController.presentCameraUnavailableAlert(fromRoot: parent)
                 }
