@@ -15,7 +15,7 @@ typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
 
-class SendViewController : UIViewController, Subscriber, ModalPresentable {
+class SendViewController : UIViewController, Subscriber, ModalPresentable, Trackable {
 
     //MARK - Public
     var presentScan: PresentScan?
@@ -308,11 +308,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                         }
                         myself.onPublishSuccess?()
                     })
+                    self?.saveEvent("send.success")
                 case .creationError(let message):
                     self?.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
+                    self?.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
                 case .publishFailure(let error):
                     if case .posixError(let code, let description) = error {
                         self?.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
+                        self?.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(description) (\(code))"])
                     }
                 }
         })

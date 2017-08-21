@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ModalPresenter : Subscriber {
+class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Public
     var walletManager: WalletManager?
@@ -220,8 +220,8 @@ class ModalPresenter : Subscriber {
             guard let wallet = walletManager?.wallet else { return nil }
             let requestVc = RequestAmountViewController(wallet: wallet, store: store)
             requestVc.presentEmail = { [weak self] bitcoinURL, image in
-                    self?.messagePresenter.presenter = self?.topViewController
-                    self?.messagePresenter.presentMailCompose(bitcoinURL: bitcoinURL, image: image)
+                self?.messagePresenter.presenter = self?.topViewController
+                self?.messagePresenter.presentMailCompose(bitcoinURL: bitcoinURL, image: image)
             }
             requestVc.presentText = { [weak self] bitcoinURL, image in
                 self?.messagePresenter.presenter = self?.topViewController
