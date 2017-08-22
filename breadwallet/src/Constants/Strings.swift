@@ -500,6 +500,8 @@ enum S {
         static let failedTitle = NSLocalizedString("WipeWallet.failedTitle", value: "Failed", comment: "Failed wipe wallet alert title")
         static let failedMessage = NSLocalizedString("WipeWallet.failedMessage", value: "Failed to wipe wallet.", comment: "Failed wipe wallet alert message")
         static let instruction = NSLocalizedString("WipeWallet.instruction", value: "Enter this wallet's recovery phrase to wipe it and start or recover another. Your current balance remains on this phrase.", comment: "Enter phrase to wipe wallet instruction.")
+        static let startMessage = NSLocalizedString("WipeWallet.startMessage", value: "Starting or recovering another wallet allows you to access and manage a different Bread wallet on this device.", comment: "Start wipe wallet view message")
+        static let startWarning = NSLocalizedString("WipeWallet.startWaring", value: "You will no longer be able to access your current Bread wallet from this device. The balance will remain on the phrase.", comment: "Start wipe wallet view warning")
     }
 
     enum FeeSelector {
