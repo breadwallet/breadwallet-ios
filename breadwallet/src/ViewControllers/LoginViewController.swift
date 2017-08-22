@@ -342,7 +342,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
                 let disabledUntilDate = Date(timeIntervalSinceReferenceDate: disabledUntil)
                 let unlockInterval = disabledUntil - Date.timeIntervalSinceReferenceDate
                 let df = DateFormatter()
-                df.setLocalizedDateFormatFromTemplate(unlockInterval > C.secondsInDay ? "h:mm a MMM d, yyy" : "h:mm a")
+                df.setLocalizedDateFormatFromTemplate(unlockInterval > C.secondsInDay ? "h:mm:ss a MMM d, yyy" : "h:mm:ss a")
 
                 disabledView.setTimeLabel(string: String(format: S.UnlockScreen.disabled, df.string(from: disabledUntilDate)))
 
