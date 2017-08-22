@@ -101,11 +101,10 @@ class ShadowButton: UIControl {
     private func addShadowView() {
         addSubview(shadowView)
         shadowView.constrain([
-                NSLayoutConstraint(item: shadowView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0.5, constant: 0.0),
-                shadowView.constraint(.bottom, toView: self),
-                shadowView.constraint(.centerX, toView: self),
-                NSLayoutConstraint(item: shadowView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.8, constant: 0.0),
-            ])
+            NSLayoutConstraint(item: shadowView, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 0.5, constant: 0.0),
+            shadowView.constraint(.bottom, toView: self),
+            shadowView.constraint(.centerX, toView: self),
+            NSLayoutConstraint(item: shadowView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.8, constant: 0.0) ])
         shadowView.layer.cornerRadius = 4.0
         shadowView.layer.shadowOffset = CGSize(width: 0, height: 4)
         shadowView.backgroundColor = .white
@@ -118,15 +117,12 @@ class ShadowButton: UIControl {
         container.layer.cornerRadius = cornerRadius
         container.isUserInteractionEnabled = false
         container.constrain(toSuperviewEdges: nil)
-
         label.text = title
         label.textColor = .white
         label.textAlignment = .center
         label.isUserInteractionEnabled = false
         label.font = UIFont.customMedium(size: 16.0)
-
         configureContentType()
-
     }
 
     private func configureContentType() {
@@ -148,8 +144,7 @@ class ShadowButton: UIControl {
         iconImageView.constrainLeadingCorners()
         label.constrainTrailingCorners()
         iconImageView.constrain([
-                iconImageView.constraint(toLeading: label, constant: -C.padding[1])
-            ])
+            iconImageView.constraint(toLeading: label, constant: -C.padding[1]) ])
         imageView = iconImageView
     }
 
