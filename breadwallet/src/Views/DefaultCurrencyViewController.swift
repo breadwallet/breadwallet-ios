@@ -13,6 +13,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
         self.store = store
+        self.rates = store.state.rates.filter { $0.code != C.btcCurrencyCode }
         super.init(style: .plain)
     }
 
@@ -54,9 +55,6 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         store.subscribe(self, selector: { $0.maxDigits != $1.maxDigits }, callback: { _ in
             self.setExchangeRateLabel()
         })
-        walletManager.apiClient?.exchangeRates { [weak self] rates, error in
-            self?.rates = rates.filter { $0.code != C.btcCurrencyCode }
-        }
 
         tableView.sectionHeaderHeight = UITableViewAutomaticDimension
         tableView.estimatedSectionHeaderHeight = 140.0
@@ -150,7 +148,6 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
         bitcoinLabel.text = S.DefaultCurrency.bitcoinLabel
         rateLabelTitle.text = S.DefaultCurrency.rateLabel
-        rateLabel.textColor = .white
 
         self.header = header
         return header
