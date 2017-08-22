@@ -268,10 +268,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 descriptionCell.content = request.label
             }
         case .remote:
+            let loadingView = BRActivityViewController(message: S.Send.loadingRequest)
+            present(loadingView, animated: true, completion: nil)
             request.fetchRemoteRequest(completion: { [weak self] request in
-                if let paymentProtocolRequest = request?.paymentProtoclRequest {
-                    DispatchQueue.main.async {
+                DispatchQueue.main.async {
+                    loadingView.dismiss(animated: true, completion: nil)
+                    if let paymentProtocolRequest = request?.paymentProtoclRequest {
                         self?.confirmProtocolRequest(protoReq: paymentProtocolRequest)
+                    } else {
+                        self?.showErrorMessage(S.Send.remoteRequestError)
                     }
                 }
             })
