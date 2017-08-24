@@ -579,8 +579,6 @@ class BRPeerManager {
     func connect() {
         if let fixedAddress = UserDefaults.customNodeIP {
             setFixedPeer(address: fixedAddress, port: UserDefaults.customNodePort ?? C.standardPort)
-        } else {
-            setFixedPeer(address: 0, port: 0)
         }
         BRPeerManagerConnect(cPtr)
     }

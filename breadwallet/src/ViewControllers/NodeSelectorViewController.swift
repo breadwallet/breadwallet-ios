@@ -88,6 +88,7 @@ class NodeSelectorViewController : UIViewController {
         UserDefaults.customNodePort = nil
         button.title = S.NodeSelector.manualButton
         DispatchQueue.walletQueue.async {
+            self.walletManager.peerManager?.setFixedPeer(address: 0, port: 0)
             self.walletManager.peerManager?.connect()
         }
     }
