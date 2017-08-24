@@ -9,7 +9,7 @@
 import UIKit
 import BRCore
 
-class NodeSelectorViewController : UIViewController {
+class NodeSelectorViewController : UIViewController, Trackable {
 
     let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let nodeLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
@@ -84,6 +84,7 @@ class NodeSelectorViewController : UIViewController {
 
     private func switchToAuto() {
         guard UserDefaults.customNodeIP != nil else { return } //noop if custom node is already nil
+        saveEvent("nodeSelector.switchToAuto")
         UserDefaults.customNodeIP = nil
         UserDefaults.customNodePort = nil
         button.title = S.NodeSelector.manualButton
@@ -99,6 +100,7 @@ class NodeSelectorViewController : UIViewController {
         let okAction = UIAlertAction(title: S.Button.ok, style: .default, handler: { action in
             guard let ip = alert.textFields?.first, let port = alert.textFields?.last else { return }
             if let addressText = ip.text {
+                self.saveEvent("nodeSelector.switchToManual")
                 var address = in_addr()
                 ascii2addr(AF_INET, addressText, &address)
                 UserDefaults.customNodeIP = Int(address.s_addr)
