@@ -33,7 +33,7 @@ public protocol BRWebSocket {
     func send(_ text: String)
 }
 
-public protocol BRWebSocketClient {
+public protocol BRWebSocketClient: class {
     func socketDidConnect(_ socket: BRWebSocket)
     func socket(_ socket: BRWebSocket, didReceiveData data: Data)
     func socket(_ socket: BRWebSocket, didReceiveText text: String)
@@ -107,7 +107,7 @@ class BRWebSocketServer {
         log("adding socket \(socket.fd)")
         pthread_mutex_lock(mutex)
         sockets[socket.fd] = socket
-        socket.client.socketDidConnect(socket)
+        socket.client?.socketDidConnect(socket)
         pthread_cond_broadcast(waiter)
         pthread_mutex_unlock(mutex)
         log("done adding socket \(socket.fd)")
@@ -172,7 +172,7 @@ class BRWebSocketServer {
                         try readSock.handleRead()
                     } catch {
                         readSock.response.kill()
-                        readSock.client.socketDidDisconnect(readSock)
+                        readSock.client?.socketDidDisconnect(readSock)
                         sockets.removeValue(forKey: readSock.fd)
                     }
                 } else {
@@ -195,7 +195,7 @@ class BRWebSocketServer {
                             if opcode == .close {
                                 log("KILLING fd=\(writeSock.fd)")
                                 writeSock.response.kill()
-                                writeSock.client.socketDidDisconnect(writeSock)
+                                writeSock.client?.socketDidDisconnect(writeSock)
                                 sockets.removeValue(forKey: writeSock.fd)
                                 continue // go to the next select client
                             }
@@ -203,7 +203,7 @@ class BRWebSocketServer {
                     } catch {
                         // close...
                         writeSock.response.kill()
-                        writeSock.client.socketDidDisconnect(writeSock)
+                        writeSock.client?.socketDidDisconnect(writeSock)
                         sockets.removeValue(forKey: writeSock.fd)
                     }
                 } else {
@@ -215,7 +215,7 @@ class BRWebSocketServer {
             for i in 0..<resp.error_fd_len {
                 if let errSock = sockets[resp.error_fds[Int(i)]] {
                     errSock.response.kill()
-                    errSock.client.socketDidDisconnect(errSock)
+                    errSock.client?.socketDidDisconnect(errSock)
                     sockets.removeValue(forKey: errSock.fd)
                 }
             }
@@ -255,7 +255,7 @@ class BRWebSocketImpl: BRWebSocket {
     var request: BRHTTPRequest
     var response: BRHTTPResponse
     var match: BRHTTPRouteMatch
-    var client: BRWebSocketClient
+    weak var client: BRWebSocketClient?
     var fd: Int32
     var key: String!
     var version: String!
@@ -589,13 +589,13 @@ class BRWebSocketImpl: BRWebSocket {
                 }
                 if self.fragType == .text {
                     if let str = String(bytes: data, encoding: String.Encoding.utf8) {
-                        self.client.socket(self, didReceiveText: str)
+                        self.client?.socket(self, didReceiveText: str)
                     } else {
                         log("error decoding utf8 data")
                     }
                 } else {
                     let bin = Data(bytes: UnsafePointer<UInt8>(UnsafePointer(data)), count: data.count)
-                    self.client.socket(self, didReceiveData: bin)
+                    self.client?.socket(self, didReceiveData: bin)
                 }
                 fragType = .binary
                 fragStart = false
@@ -611,7 +611,7 @@ class BRWebSocketImpl: BRWebSocket {
                 }
                 if opcode == .text {
                     if let str = String(bytes: data, encoding: String.Encoding.utf8) {
-                        self.client.socket(self, didReceiveText: str)
+                        self.client?.socket(self, didReceiveText: str)
                     } else {
                         log("error decoding uft8 data")
                     }

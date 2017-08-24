@@ -12,7 +12,7 @@ import UIKit
 open class BRCameraPlugin: NSObject, BRHTTPRouterPlugin, UIImagePickerControllerDelegate,
 UINavigationControllerDelegate, CameraOverlayDelegate {
     
-    let controller: UIViewController
+    weak var controller: UIViewController?
     var response: BRHTTPResponse?
     var picker: UIImagePickerController?
     
@@ -72,7 +72,7 @@ UINavigationControllerDelegate, CameraOverlayDelegate {
                     }
                 }
                 self.picker = picker
-                self.controller.present(picker, animated: true, completion: nil)
+                self.controller?.present(picker, animated: true, completion: nil)
             }
             
             return response
