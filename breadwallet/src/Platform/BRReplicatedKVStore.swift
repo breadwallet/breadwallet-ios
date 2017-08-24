@@ -37,6 +37,7 @@ public enum BRReplicatedKVStoreError: Error {
     case notFound
     case invalidKey
     case unknown
+    case malformedData
 }
 
 public enum BRRemoteKVStoreError: Error {
@@ -749,7 +750,7 @@ open class BRReplicatedKVStore: NSObject {
     
     // decrypt some data using self.key
     fileprivate func decrypt(_ data: [UInt8]) throws -> [UInt8] {
-        return [UInt8](Data(data).chacha20Poly1305AEADDecrypt(key: key))
+        return try [UInt8](Data(data).chacha20Poly1305AEADDecrypt(key: key))
     }
     
     // generate a nonce using microseconds-since-epoch
