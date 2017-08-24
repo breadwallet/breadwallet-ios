@@ -126,7 +126,6 @@ class NodeSelectorViewController : UIViewController, Trackable {
             textField.keyboardType = .decimalPad
         }
         present(alert, animated: true, completion: nil)
-        UserDefaults.customNodeIP = 10
     }
 
     private func setCustomNodeText() {
