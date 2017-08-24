@@ -87,9 +87,10 @@ class BCashTransactionViewController : UIViewController {
         txHash.titleLabel?.lineBreakMode = .byCharWrapping
         txHash.tintColor = .darkText
         txHash.contentHorizontalAlignment = .left
-        txHash.tap = { [weak self] in
-            self?.store.trigger(name: .lightWeightAlert(S.BCH.hashCopiedMessage))
-            UIPasteboard.general.string = self?.txHash.titleLabel?.text
+        txHash.tap = strongify(self) { myself in
+            myself.txHash.tempDisable()
+            myself.store.trigger(name: .lightWeightAlert(S.BCH.hashCopiedMessage))
+            UIPasteboard.general.string = myself.txHash.titleLabel?.text
         }
         setPreviousTx()
     }

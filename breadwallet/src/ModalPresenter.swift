@@ -837,10 +837,10 @@ class ModalPresenter : Subscriber, Trackable {
             alert.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             alert.centerYAnchor.constraint(equalTo: view.centerYAnchor) ])
         alert.background.effect = nil
-        UIView.animate(withDuration: 0.7, animations: {
+        UIView.animate(withDuration: 0.6, animations: {
             alert.background.effect = alert.effect
         }, completion: { _ in
-            UIView.animate(withDuration: 0.7, delay: 2.0, options: [], animations: {
+            UIView.animate(withDuration: 0.6, delay: 1.0, options: [], animations: {
                 alert.background.effect = nil
             }, completion: { _ in
                 alert.removeFromSuperview()
