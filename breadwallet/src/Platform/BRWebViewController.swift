@@ -114,13 +114,17 @@ import WebKit
         view.addSubview(webView!)
         
         let center = NotificationCenter.default
-        center.addObserver(forName: .UIApplicationDidBecomeActive, object: nil, queue: .main) { (_) in
-            self.didAppear = true
-            self.sendToAllSockets(data: self.webViewInfo)
+        center.addObserver(forName: .UIApplicationDidBecomeActive, object: nil, queue: .main) { [weak self] (_) in
+            self?.didAppear = true
+            if let info = self?.webViewInfo {
+                self?.sendToAllSockets(data: info)
+            }
         }
-        center.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: .main) { (_) in
-            self.didAppear = false
-            self.sendToAllSockets(data: self.webViewInfo)
+        center.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: .main) { [weak self] (_) in
+            self?.didAppear = false
+            if let info = self?.webViewInfo {
+                self?.sendToAllSockets(data: info)
+            }
         }
     }
     
@@ -144,25 +148,26 @@ import WebKit
     // of the faulty webview
     fileprivate func beginDidLoadCountdown() {
         let timeout = DispatchTime.now() + .milliseconds(self.didLoadTimeout)
-        DispatchQueue.main.asyncAfter(deadline: timeout) {
-            if self.didAppear && !self.didLoad {
+        DispatchQueue.main.asyncAfter(deadline: timeout) { [weak self] in
+            guard let myself = self else { return }
+            if myself.didAppear && !myself.didLoad {
                 // if the webview did not load the first time lets refresh the bundle. occasionally the bundle
                 // update can fail, so this update should fetch an entirely new copy
                 let activity = BRActivityViewController(message: S.Webview.dismiss)
-                self.present(activity, animated: true, completion: nil)
-                guard let apiClient = self.walletManager.apiClient else { return }
+                myself.present(activity, animated: true, completion: nil)
+                guard let apiClient = self?.walletManager.apiClient else { return }
                 apiClient.updateBundles(completionHandler: { results in
                     results.forEach({ message, err in
                         if err != nil {
                             print("[BRWebViewController] error updating bundle: \(String(describing: err))")
                         }
                         // give the webview another chance to load
-                        self.refresh()
+                        self?.refresh()
                         // XXX(sam): log this event so we know how frequently it happens
                         DispatchQueue.main.asyncAfter(deadline: timeout) {
-                            self.store.trigger(name: .showStatusBar)
-                            self.dismiss(animated: true) {
-                                self.notifyUserOfLoadFailure()
+                            self?.store.trigger(name: .showStatusBar)
+                            self?.dismiss(animated: true) {
+                                self?.notifyUserOfLoadFailure()
                             }
                         }
                     })
@@ -178,8 +183,8 @@ import WebKit
                 message: S.Webview.errorMessage,
                 preferredStyle: .alert
             )
-            let action = UIAlertAction(title: S.Webview.dismiss, style: .default) { _ in
-                self.closeNow()
+            let action = UIAlertAction(title: S.Webview.dismiss, style: .default) { [weak self] _ in
+                self?.closeNow()
             }
             alert.addAction(action)
             self.present(alert, animated: true, completion: nil)
@@ -228,22 +233,22 @@ import WebKit
     // contains th string "webpack" and will set our debugEndpoint to whatever that 
     // resolves to. this allows us to debug bundles over the network without complicated setup
     fileprivate func setupBonjour() {
-        let _ = bonjourBrowser.findService("_http._tcp") { (services) in
+        let _ = bonjourBrowser.findService("_http._tcp") { [weak self] (services) in
             for svc in services {
                 if !svc.name.lowercased().contains("webpack") {
                     continue
                 }
-                self.debugNetService = svc
+                self?.debugNetService = svc
                 svc.resolve(withTimeout: 1.0)
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-                    guard let netService = self.debugNetService else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { [weak self] in
+                    guard let netService = self?.debugNetService else {
                         return
                     }
-                    self.debugEndpoint = "http://\(netService.hostName ?? ""):\(netService.port)"
-                    print("[BRWebViewController] discovered bonjour debugging service \(String(describing: self.debugEndpoint))")
-                    self.server.resetMiddleware()
-                    self.setupIntegrations()
-                    self.refresh()
+                    self?.debugEndpoint = "http://\(netService.hostName ?? ""):\(netService.port)"
+                    print("[BRWebViewController] discovered bonjour debugging service \(String(describing: self?.debugEndpoint))")
+                    self?.server.resetMiddleware()
+                    self?.setupIntegrations()
+                    self?.refresh()
                 }
                 break
             }
@@ -294,9 +299,9 @@ import WebKit
         router.plugin(BRKVStorePlugin(client: apiClient))
         
         // GET /_close closes the browser modal
-        router.get("/_close") { (request, match) -> BRHTTPResponse in
+        router.get("/_close") { [weak self] (request, match) -> BRHTTPResponse in
             DispatchQueue.main.async {
-                self.closeNow()
+                self?.closeNow()
             }
             return BRHTTPResponse(request: request, code: 204)
         }
@@ -305,10 +310,10 @@ import WebKit
         // Status codes:
         //   - 200: Presented email UI
         //   - 400: No address param provided
-        router.get("_email") { (request, match) -> BRHTTPResponse in
+        router.get("_email") { [weak self] (request, match) -> BRHTTPResponse in
             if let email = request.query["address"], email.count == 1 {
                 DispatchQueue.main.async {
-                    self.messageUIPresenter.presentMailCompose(emailAddress: email[0])
+                    self?.messageUIPresenter.presentMailCompose(emailAddress: email[0])
                 }
                 return BRHTTPResponse(request: request, code: 200)
             } else {
@@ -317,9 +322,9 @@ import WebKit
         }
         
         // GET /_didload signals to the presenter that the content successfully loaded
-        router.get("/_didload") { (request, _) -> BRHTTPResponse in
+        router.get("/_didload") { [weak self] (request, _) -> BRHTTPResponse in
             DispatchQueue.main.async {
-                self.webviewDidLoad()
+                self?.webviewDidLoad()
             }
             return BRHTTPResponse(request: request, code: 204)
         }

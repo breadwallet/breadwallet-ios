@@ -74,7 +74,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     private let moreContentView = UIView()
     private let txHash = UIButton(type: .system)
     private let txHashHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let availability = UILabel(font: .customBold(size: 13.0), color: .cameraGuidePositive)
+    private let availability = UILabel(font: .customBold(size: 13.0), color: .green)
     private let blockHeight = UILabel(font: .customBody(size: 13.0), color: .darkText)
 
     private func setup() {
@@ -225,9 +225,10 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         fullAddress.titleLabel?.numberOfLines = 0
         fullAddress.titleLabel?.lineBreakMode = .byCharWrapping
         fullAddress.tintColor = .darkText
-        fullAddress.tap = { [weak self] in
-            self?.store?.trigger(name: .lightWeightAlert(S.Receive.copied))
-            UIPasteboard.general.string = self?.fullAddress.titleLabel?.text
+        fullAddress.tap = strongify(self) { myself in
+            myself.fullAddress.tempDisable()
+            myself.store?.trigger(name: .lightWeightAlert(S.Receive.copied))
+            UIPasteboard.general.string = myself.fullAddress.titleLabel?.text
         }
         fullAddress.contentHorizontalAlignment = .left
 
@@ -236,9 +237,10 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         txHash.titleLabel?.lineBreakMode = .byCharWrapping
         txHash.tintColor = .darkText
         txHash.contentHorizontalAlignment = .left
-        txHash.tap = { [weak self] in
-            self?.store?.trigger(name: .lightWeightAlert(S.Receive.copied))
-            UIPasteboard.general.string = self?.txHash.titleLabel?.text
+        txHash.tap = strongify(self) { myself in
+            myself.txHash.tempDisable()
+            myself.store?.trigger(name: .lightWeightAlert(S.Receive.copied))
+            UIPasteboard.general.string = myself.txHash.titleLabel?.text
         }
     }
 

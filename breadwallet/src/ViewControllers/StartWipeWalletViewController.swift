@@ -20,7 +20,7 @@ class StartWipeWalletViewController : UIViewController {
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "RestoreIllustration"))
     private let message = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
     private let warning = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
-    private let button = ShadowButton(title: "Next", type: .primary)
+    private let button = ShadowButton(title: S.RecoverWallet.next, type: .primary)
     private let bullet = UIImageView(image: #imageLiteral(resourceName: "deletecircle"))
 
     override func viewDidLoad() {
@@ -70,8 +70,8 @@ class StartWipeWalletViewController : UIViewController {
     private func setInitialData() {
         view.backgroundColor = .white
         illustration.contentMode = .scaleAspectFill
-        message.text = "Starting or recovering another wallet allows you to access and manage a different Bread wallet on this device."
-        warning.text = "You will no longer be able to access your current Bread wallet from this device. The balance will remain on the phrase."
+        message.text = S.WipeWallet.startMessage
+        warning.text = S.WipeWallet.startWarning
         button.tap = { [weak self] in
             self?.didTapNext()
         }

@@ -16,7 +16,7 @@ private let largeSharePadding: CGFloat = 20.0
 
 typealias PresentShare = (String, UIImage) -> Void
 
-class ReceiveViewController : UIViewController, Subscriber {
+class ReceiveViewController : UIViewController, Subscriber, Trackable {
 
     //MARK - Public
     var presentEmail: PresentShare?
@@ -203,6 +203,7 @@ class ReceiveViewController : UIViewController, Subscriber {
 
     @objc private func addressTapped() {
         guard let text = address.text else { return }
+        saveEvent("receive.copiedAddress")
         UIPasteboard.general.string = text
         toggle(alertView: addressPopout, shouldAdjustPadding: false, shouldShrinkAfter: true)
         if sharePopout.isExpanded {

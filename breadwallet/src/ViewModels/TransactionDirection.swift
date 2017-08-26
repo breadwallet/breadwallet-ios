@@ -67,15 +67,4 @@ enum TransactionDirection : String {
             return S.TransactionDetails.to
         }
     }
-
-    var addressPrefix: String {
-        switch self {
-        case .sent:
-            return S.TransactionDetails.toLiteral
-        case .received:
-            return S.TransactionDetails.atLiteral
-        case .moved:
-            return S.TransactionDetails.toLiteral
-        }
-    }
 }

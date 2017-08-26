@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MenuViewController : UIViewController {
+class MenuViewController : UIViewController, Trackable {
 
     //MARK: - Public
     var didTapSecurity: (() -> Void)?
@@ -54,6 +54,10 @@ class MenuViewController : UIViewController {
             previousButton?.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
 
         view.backgroundColor = .white
+
+        if BRAPIClient.featureEnabled(.buyBitcoin) {
+            saveEvent("menu.buyBitcoinIsVisible")
+        }
     }
 
     @objc private func didTapButton(button: MenuButton) {
@@ -67,6 +71,7 @@ class MenuViewController : UIViewController {
         case .lock:
             didTapLock?()
         case .buy:
+            saveEvent("menu.didTapBuyBitcoin")
             didTapBuy?()
         }
     }
