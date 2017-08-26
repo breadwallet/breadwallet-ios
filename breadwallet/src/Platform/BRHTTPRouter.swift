@@ -162,10 +162,11 @@ open class BRHTTPRouter: BRHTTPMiddleware {
     }
     
     open func websocket(_ pattern: String, client: BRWebSocketClient) {
-        self.get(pattern) { (request, match) -> BRHTTPResponse in
+        self.get(pattern) { [weak client] (request, match) -> BRHTTPResponse in
+            guard let theClient = client else { return BRHTTPResponse(request: request, code: 500) }
             self.wsServer.serveForever()
             let resp = BRHTTPResponse(async: request)
-            let ws = BRWebSocketImpl(request: request, response: resp, match: match, client: client)
+            let ws = BRWebSocketImpl(request: request, response: resp, match: match, client: theClient)
             if !ws.handshake() {
                 print("[BRHTTPRouter] websocket - invalid handshake")
                 resp.provide(400, json: ["error": "invalid handshake"])

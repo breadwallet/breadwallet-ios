@@ -12,7 +12,7 @@ import LocalAuthentication
 private let touchIdSize: CGFloat = 32.0
 private let topControlHeight: CGFloat = 32.0
 
-class LoginViewController : UIViewController, Subscriber {
+class LoginViewController : UIViewController, Subscriber, Trackable {
 
     //MARK: - Public
     var walletManager: WalletManager? {
@@ -262,6 +262,7 @@ class LoginViewController : UIViewController, Subscriber {
     }
 
     private func authenticationSucceded() {
+        saveEvent("login.success")
         let label = UILabel(font: subheader.font)
         label.textColor = .white
         label.text = S.UnlockScreen.unlocked
@@ -299,6 +300,7 @@ class LoginViewController : UIViewController, Subscriber {
     }
 
     private func authenticationFailed() {
+        saveEvent("login.failed")
         guard let pinView = pinView else { return }
         pinPad.view.isUserInteractionEnabled = false
         pinView.shake { [weak self] in
@@ -336,11 +338,11 @@ class LoginViewController : UIViewController, Subscriber {
         if let disabledUntil = walletManager?.walletDisabledUntil {
             let now = Date.timeIntervalSinceReferenceDate
             if disabledUntil > now {
-
+                saveEvent("login.locked")
                 let disabledUntilDate = Date(timeIntervalSinceReferenceDate: disabledUntil)
                 let unlockInterval = disabledUntil - Date.timeIntervalSinceReferenceDate
                 let df = DateFormatter()
-                df.setLocalizedDateFormatFromTemplate(unlockInterval > C.secondsInDay ? "h:mm a MMM d, yyy" : "h:mm a")
+                df.setLocalizedDateFormatFromTemplate(unlockInterval > C.secondsInDay ? "h:mm:ss a MMM d, yyy" : "h:mm:ss a")
 
                 disabledView.setTimeLabel(string: String(format: S.UnlockScreen.disabled, df.string(from: disabledUntilDate)))
 
@@ -365,6 +367,7 @@ class LoginViewController : UIViewController, Subscriber {
     }
 
     @objc private func unlock() {
+        saveEvent("login.unlocked")
         subheader.pushNewText(S.UnlockScreen.subheader)
         pinPad.view.isUserInteractionEnabled = true
         unlockTimer = nil

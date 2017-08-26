@@ -15,7 +15,7 @@ typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
 
-class SendViewController : UIViewController, Subscriber, ModalPresentable {
+class SendViewController : UIViewController, Subscriber, ModalPresentable, Trackable {
 
     //MARK - Public
     var presentScan: PresentScan?
@@ -268,10 +268,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                 descriptionCell.content = request.label
             }
         case .remote:
+            let loadingView = BRActivityViewController(message: S.Send.loadingRequest)
+            present(loadingView, animated: true, completion: nil)
             request.fetchRemoteRequest(completion: { [weak self] request in
-                if let paymentProtocolRequest = request?.paymentProtoclRequest {
-                    DispatchQueue.main.async {
+                DispatchQueue.main.async {
+                    loadingView.dismiss(animated: true, completion: nil)
+                    if let paymentProtocolRequest = request?.paymentProtoclRequest {
                         self?.confirmProtocolRequest(protoReq: paymentProtocolRequest)
+                    } else {
+                        self?.showErrorMessage(S.Send.remoteRequestError)
                     }
                 }
             })
@@ -308,11 +313,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable {
                         }
                         myself.onPublishSuccess?()
                     })
+                    self?.saveEvent("send.success")
                 case .creationError(let message):
                     self?.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
+                    self?.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
                 case .publishFailure(let error):
                     if case .posixError(let code, let description) = error {
                         self?.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
+                        self?.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(description) (\(code))"])
                     }
                 }
         })

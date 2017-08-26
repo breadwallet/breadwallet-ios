@@ -359,8 +359,9 @@ public extension Data {
         }
     }
     
-    public func chacha20Poly1305AEADDecrypt(key: BRKey) -> Data {
+    public func chacha20Poly1305AEADDecrypt(key: BRKey) throws -> Data {
         let data = [UInt8](self)
+        guard data.count > 12 else { throw BRReplicatedKVStoreError.malformedData }
         let nonce = Array(data[data.startIndex...data.startIndex.advanced(by: 12)])
         let inData = Array(data[data.startIndex.advanced(by: 12)...(data.endIndex-1)])
         var null =  CChar(0)

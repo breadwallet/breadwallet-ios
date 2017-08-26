@@ -13,6 +13,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
         self.store = store
+        self.rates = store.state.rates.filter { $0.code != C.btcCurrencyCode }
         super.init(style: .plain)
     }
 
@@ -54,9 +55,6 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         store.subscribe(self, selector: { $0.maxDigits != $1.maxDigits }, callback: { _ in
             self.setExchangeRateLabel()
         })
-        walletManager.apiClient?.exchangeRates { rates, error in
-            self.rates = rates.filter { $0.code != C.btcCurrencyCode }
-        }
 
         tableView.sectionHeaderHeight = UITableViewAutomaticDimension
         tableView.estimatedSectionHeaderHeight = 140.0
@@ -139,18 +137,17 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
             bitcoinSwitch.selectedSegmentIndex = 0
         }
 
-        bitcoinSwitch.valueChanged = {
-            let newIndex = self.bitcoinSwitch.selectedSegmentIndex
+        bitcoinSwitch.valueChanged = strongify(self) { myself in
+            let newIndex = myself.bitcoinSwitch.selectedSegmentIndex
             if newIndex == 1 {
-                self.store.perform(action: MaxDigits.set(8))
+                myself.store.perform(action: MaxDigits.set(8))
             } else {
-                self.store.perform(action: MaxDigits.set(2))
+                myself.store.perform(action: MaxDigits.set(2))
             }
         }
 
         bitcoinLabel.text = S.DefaultCurrency.bitcoinLabel
         rateLabelTitle.text = S.DefaultCurrency.rateLabel
-        rateLabel.textColor = .white
 
         self.header = header
         return header
@@ -164,11 +161,5 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension DefaultCurrencyViewController : UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
     }
 }

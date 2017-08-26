@@ -59,7 +59,7 @@ class RecoverWalletIntroViewController : UIViewController {
         label.lineBreakMode = .byWordWrapping
         label.text = S.RecoverWallet.intro
         nextButton.tap = didTapNext
-        title = "Recover Wallet"
+        title = S.RecoverWallet.header
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

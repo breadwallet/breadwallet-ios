@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ModalPresenter : Subscriber {
+class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Public
     var walletManager: WalletManager?
@@ -220,8 +220,8 @@ class ModalPresenter : Subscriber {
             guard let wallet = walletManager?.wallet else { return nil }
             let requestVc = RequestAmountViewController(wallet: wallet, store: store)
             requestVc.presentEmail = { [weak self] bitcoinURL, image in
-                    self?.messagePresenter.presenter = self?.topViewController
-                    self?.messagePresenter.presentMailCompose(bitcoinURL: bitcoinURL, image: image)
+                self?.messagePresenter.presenter = self?.topViewController
+                self?.messagePresenter.presentMailCompose(bitcoinURL: bitcoinURL, image: image)
             }
             requestVc.presentText = { [weak self] bitcoinURL, image in
                 self?.messagePresenter.presenter = self?.topViewController
@@ -472,6 +472,7 @@ class ModalPresenter : Subscriber {
     private func presentScan(parent: UIViewController) -> PresentScan {
         return { [weak parent] scanCompletion in
             guard ScanViewController.isCameraAllowed else {
+                self.saveEvent("scan.cameraDenied")
                 if let parent = parent {
                     ScanViewController.presentCameraUnavailableAlert(fromRoot: parent)
                 }
@@ -836,10 +837,10 @@ class ModalPresenter : Subscriber {
             alert.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             alert.centerYAnchor.constraint(equalTo: view.centerYAnchor) ])
         alert.background.effect = nil
-        UIView.animate(withDuration: 0.7, animations: {
+        UIView.animate(withDuration: 0.6, animations: {
             alert.background.effect = alert.effect
         }, completion: { _ in
-            UIView.animate(withDuration: 0.7, delay: 2.0, options: [], animations: {
+            UIView.animate(withDuration: 0.6, delay: 1.0, options: [], animations: {
                 alert.background.effect = nil
             }, completion: { _ in
                 alert.removeFromSuperview()

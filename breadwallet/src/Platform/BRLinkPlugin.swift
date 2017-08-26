@@ -27,7 +27,7 @@ import Foundation
 import SafariServices
 
 class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate {
-    var controller: UIViewController
+    weak var controller: UIViewController?
     var hasBrowser = false
     
     init(fromViewController: UIViewController) {
@@ -88,7 +88,7 @@ class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate
                 browser.onDone = {
                     self.hasBrowser = false
                 }
-                self.controller.present(browser, animated: true, completion: nil)
+                self.controller?.present(browser, animated: true, completion: nil)
             }
             return BRHTTPResponse(request: request, code: 204)
         }
@@ -146,7 +146,7 @@ class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate
                 browser.onDone = {
                     self.hasBrowser = false
                 }
-                self.controller.present(browser, animated: true, completion: nil)
+                self.controller?.present(browser, animated: true, completion: nil)
             }
             return BRHTTPResponse(request: request, code: 204)
         }
