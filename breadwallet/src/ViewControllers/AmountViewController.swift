@@ -11,7 +11,7 @@ import UIKit
 private let currencyHeight: CGFloat = 80.0
 private let feeHeight: CGFloat = 130.0
 
-class AmountViewController : UIViewController {
+class AmountViewController : UIViewController, Trackable {
 
     init(store: Store, isPinPadExpandedAtLaunch: Bool, isRequesting: Bool = false) {
         self.store = store
@@ -207,6 +207,7 @@ class AmountViewController : UIViewController {
     }
 
     private func toggleCurrency() {
+        saveEvent("amount.swapCurrency")
         selectedRate = selectedRate == nil ? store.state.currentRate : nil
         updateCurrencyToggleTitle()
     }

@@ -80,6 +80,8 @@ enum S {
         static let noAddress = NSLocalizedString("Send.noAddress", value: "Please enter the recipient's address.", comment: "Empty address alert message")
         static let noAmount = NSLocalizedString("Send.noAmount", value: "Please enter an amount to send.", comment: "Emtpy amount alert message")
         static let isRescanning = NSLocalizedString("Send.isRescanning", value: "Sending is disabled during a full rescan.", comment: "Is rescanning error message")
+        static let remoteRequestError = NSLocalizedString("Send.remoteRequestError", value: "Could not load payment request", comment: "Could not load remote request error message")
+        static let loadingRequest = NSLocalizedString("Send.loadingRequest", value: "Loading Request", comment: "Loading request activity view message")
     }
 
     enum Receive {
@@ -156,8 +158,6 @@ enum S {
         static let from = NSLocalizedString("TransactionDetails.from", value:"at %1$@", comment: "[received] at <address> (received title 2/2)")
         static let blockHeightLabel = NSLocalizedString("TransactionDetails.blockHeightLabel", value: "Confirmed in Block", comment: "Block height label")
         static let notConfirmedBlockHeightLabel = NSLocalizedString("TransactionDetails.notConfirmedBlockHeightLabel", value: "Not Confirmed", comment: "eg. Confirmed in Block: Not Confirmed")
-        static let toLiteral = NSLocalizedString("TransactionDetails.toLiteral", value: "to", comment: "To: <address>")
-        static let atLiteral = NSLocalizedString("TransactionDetails.atLiteral", value: "at", comment: "At: <address>")
     }
 
     enum SecurityCenter {
@@ -480,7 +480,6 @@ enum S {
             static let highFees = NSLocalizedString("Import.Error.highFees", value: "Transaction fees would cost more than the funds available on this private key.", comment: "High fees error message")
             static let signing = NSLocalizedString("Import.Error.signing", value: "Error signing transaction", comment: "Import signing error message")
         }
-
     }
 
     enum BitID {
@@ -503,6 +502,8 @@ enum S {
         static let failedTitle = NSLocalizedString("WipeWallet.failedTitle", value: "Failed", comment: "Failed wipe wallet alert title")
         static let failedMessage = NSLocalizedString("WipeWallet.failedMessage", value: "Failed to wipe wallet.", comment: "Failed wipe wallet alert message")
         static let instruction = NSLocalizedString("WipeWallet.instruction", value: "Enter this wallet's recovery phrase to wipe it and start or recover another. Your current balance remains on this phrase.", comment: "Enter phrase to wipe wallet instruction.")
+        static let startMessage = NSLocalizedString("WipeWallet.startMessage", value: "Starting or recovering another wallet allows you to access and manage a different Bread wallet on this device.", comment: "Start wipe wallet view message")
+        static let startWarning = NSLocalizedString("WipeWallet.startWaring", value: "You will no longer be able to access your current Bread wallet from this device. The balance will remain on the phrase.", comment: "Start wipe wallet view warning")
     }
 
     enum FeeSelector {
@@ -535,5 +536,17 @@ enum S {
         static let successMessage = NSLocalizedString("BCH.successMessage", value: "BCH was successfully sent.", comment: "BCH successfully sent alert message")
         static let hashCopiedMessage = NSLocalizedString("BCH.hashCopiedMessage", value: "Transaction ID copied", comment: "Transaction ID copied message")
         static let genericError = NSLocalizedString("BCH.genericError", value: "Your account does not contain any BCH, or you received BCH after the fork.", comment: "Generic bch erorr message")
+    }
+
+    enum NodeSelector {
+        static let manualButton = NSLocalizedString("NodeSelector.manualButton", value: "Switch to Manual Mode", comment: "Switch to manual mode button label")
+        static let automaticButton = NSLocalizedString("NodeSelector.automaticButton", value: "Switch to Automatic Mode", comment: "Switch to automatic mode button label")
+        static let title = NSLocalizedString("NodeSelector.title", value: "Bitcoin Nodes", comment: "Node Selector view title")
+        static let nodeLabel = NSLocalizedString("NodeSelector.nodeLabel", value: "Current Primary Node", comment: "Node address label")
+        static let statusLabel = NSLocalizedString("NodeSelector.statusLabel", value: "Node Connection Status", comment: "Node status label")
+        static let connected = NSLocalizedString("NodeSelector.connected", value: "Connected", comment: "Node is connected label")
+        static let notConnected = NSLocalizedString("NodeSelector.notConnected", value: "Not Connected", comment: "Node is not connected label")
+        static let enterTitle = NSLocalizedString("NodeSelector.enterTitle", value: "Enter Node", comment: "Enter Node ip address view title")
+        static let enterBody = NSLocalizedString("NodeSelector.enterBody", value: "Enter Node IP address and port (optional)", comment: "Enter node ip address view body")
     }
 }

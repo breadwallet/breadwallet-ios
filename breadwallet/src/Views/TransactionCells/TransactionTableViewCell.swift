@@ -53,8 +53,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     func setTransaction(_ transaction: Transaction, isBtcSwapped: Bool, rate: Rate, maxDigits: Int, isSyncing: Bool) {
         self.transaction = transaction
         transactionLabel.attributedText = transaction.descriptionString(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits)
-        addressPrefix.text = transaction.direction.addressPrefix
-        address.text = " \(transaction.toAddress ?? "")"
+        address.text = String(format: transaction.direction.addressTextFormat, transaction.toAddress ?? "")
         status.text = transaction.status
         comment.text = transaction.comment
         availability.text = transaction.shouldDisplayAvailableToSpend ? S.Transaction.available : ""
@@ -71,10 +70,10 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         let identity: CGAffineTransform = .identity
         if transaction.direction == .received {
             arrow.transform = identity.rotated(by: π/2.0)
-            arrow.tintColor = .green
+            arrow.tintColor = UIColor(red: 0.4, green: 0.9, blue: 0.4, alpha: 1.0)
         } else {
             arrow.transform = identity.rotated(by: 3.0*π/2.0)
-            arrow.tintColor = .red
+            arrow.tintColor = .cameraGuideNegative
         }
     }
 
@@ -82,7 +81,6 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
 
     //MARK: - Private
     private let transactionLabel = UILabel()
-    private let addressPrefix = UILabel(font: UIFont.customBody(size: 13.0))
     private let address = UILabel(font: UIFont.customBody(size: 13.0))
     private let status = UILabel(font: UIFont.customBody(size: 13.0))
     private let comment = UILabel.wrapping(font: UIFont.customBody(size: 13.0))
@@ -92,7 +90,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     private let topPadding: CGFloat = 19.0
     private var style: TransactionCellStyle = .first
     private var transaction: Transaction?
-    private let availability = UILabel(font: .customBold(size: 13.0), color: .cameraGuidePositive)
+    private let availability = UILabel(font: .customBold(size: 13.0), color: .green)
     private var timer: Timer? = nil
     private let arrow = UIImageView(image: #imageLiteral(resourceName: "CircleArrow").withRenderingMode(.alwaysTemplate))
 
@@ -108,7 +106,6 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         container.addSubview(innerShadow)
         container.addSubview(transactionLabel)
         container.addSubview(arrow)
-        container.addSubview(addressPrefix)
         container.addSubview(address)
         container.addSubview(status)
         container.addSubview(comment)
@@ -123,12 +120,12 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         innerShadow.constrain([
             innerShadow.constraint(.height, constant: 1.0) ])
         arrow.constrain([
-            arrow.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
-            arrow.centerYAnchor.constraint(equalTo: transactionLabel.centerYAnchor),
+            arrow.trailingAnchor.constraint(equalTo: timestamp.leadingAnchor, constant: -4.0),
+            arrow.centerYAnchor.constraint(equalTo: timestamp.centerYAnchor),
             arrow.heightAnchor.constraint(equalToConstant: 14.0),
             arrow.widthAnchor.constraint(equalToConstant: 14.0)])
         transactionLabel.constrain([
-            transactionLabel.leadingAnchor.constraint(equalTo: arrow.trailingAnchor, constant: 4.0),
+            transactionLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
             transactionLabel.constraint(.top, toView: container, constant: topPadding),
             transactionLabel.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1]) ])
         timestamp.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
@@ -136,20 +133,15 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
             timestamp.constraint(.trailing, toView: container, constant: -C.padding[2]),
             timestamp.constraint(.top, toView: container, constant: topPadding) ])
 
-        addressPrefix.constrain([
-            addressPrefix.leadingAnchor.constraint(equalTo: arrow.leadingAnchor),
-            addressPrefix.topAnchor.constraint(equalTo: transactionLabel.bottomAnchor) ])
-
         address.constrain([
-            address.leadingAnchor.constraint(equalTo: addressPrefix.trailingAnchor),
-            address.firstBaselineAnchor.constraint(equalTo: addressPrefix.firstBaselineAnchor),
+            address.leadingAnchor.constraint(equalTo: transactionLabel.leadingAnchor),
+            address.topAnchor.constraint(equalTo: transactionLabel.bottomAnchor),
             address.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[4])])
-
         address.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
 
         comment.constrain([
             comment.constraint(.leading, toView: container, constant: C.padding[2]),
-            comment.constraint(toBottom: addressPrefix, constant: C.padding[1]),
+            comment.constraint(toBottom: address, constant: C.padding[1]),
             comment.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1]) ])
         status.constrain([
             status.constraint(.leading, toView: container, constant: C.padding[2]),

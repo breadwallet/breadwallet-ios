@@ -12,18 +12,20 @@ import AVFoundation
 
 private let lastBlockHeightKey = "LastBlockHeightKey"
 private let progressUpdateInterval: TimeInterval = 0.5
+private let updateDebounceInterval: TimeInterval = 0.4
 
 class WalletCoordinator : Subscriber {
 
     var kvStore: BRReplicatedKVStore? {
         didSet {
-            updateTransactions()
+            requestTxUpdate()
         }
     }
 
     private let walletManager: WalletManager
     private let store: Store
     private var progressTimer: Timer?
+    private var updateTimer: Timer?
     private let defaults = UserDefaults.standard
 
     init(walletManager: WalletManager, store: Store) {
@@ -79,7 +81,15 @@ class WalletCoordinator : Subscriber {
         endActivity()
     }
 
-    private func updateTransactions() {
+    private func requestTxUpdate() {
+        if updateTimer == nil {
+            updateTimer = Timer.scheduledTimer(timeInterval: updateDebounceInterval, target: self, selector: #selector(updateTransactions), userInfo: nil, repeats: false)
+        }
+    }
+
+    @objc private func updateTransactions() {
+        updateTimer?.invalidate()
+        updateTimer = nil
         DispatchQueue.walletQueue.async {
             guard let txRefs = self.walletManager.wallet?.transactions else { return }
             let transactions = self.makeTransactionViewModels(transactions: txRefs, walletManager: self.walletManager, kvStore: self.kvStore, rate: self.store.state.currentRate)
@@ -108,15 +118,16 @@ class WalletCoordinator : Subscriber {
     private func addWalletObservers() {
         NotificationCenter.default.addObserver(forName: .WalletBalanceChangedNotification, object: nil, queue: nil, using: { note in
             self.updateBalance()
-            self.updateTransactions()
+            self.requestTxUpdate()
         })
 
         NotificationCenter.default.addObserver(forName: .WalletTxStatusUpdateNotification, object: nil, queue: nil, using: {note in
-            self.updateTransactions()
+            self.requestTxUpdate()
         })
 
         NotificationCenter.default.addObserver(forName: .WalletTxRejectedNotification, object: nil, queue: nil, using: {note in
             guard let recommendRescan = note.userInfo?["recommendRescan"] as? Bool else { return }
+            self.requestTxUpdate()
             if recommendRescan {
                 self.store.perform(action: RecommendRescan.set(recommendRescan))
             }
