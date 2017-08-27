@@ -11,7 +11,7 @@ import UIKit
 enum PhraseEntryReason {
     case setSeed(EnterPhraseCallback)
     case validateForResettingPin(EnterPhraseCallback)
-    case validateForWipingWallet(EnterPhraseCallback)
+    case validateForWipingWallet(()->Void)
 }
 
 typealias EnterPhraseCallback = (String) -> Void
@@ -167,20 +167,18 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
 
         switch reason {
         case .setSeed(let callback):
-            if self.walletManager.setSeedPhrase(phrase) {
-                //Since we know that the user had their phrase at this point,
-                //this counts as a write date
-                UserDefaults.writePaperPhraseDate = Date()
-                return callback(phrase)
-            } else {
-                print("here")
-            }
+            guard self.walletManager.setSeedPhrase(phrase) else { errorLabel.isHidden = false; return }
+            //Since we know that the user had their phrase at this point,
+            //this counts as a write date
+            UserDefaults.writePaperPhraseDate = Date()
+            return callback(phrase)
         case .validateForResettingPin(let callback):
+            guard self.walletManager.authenticate(phrase: phrase) else { errorLabel.isHidden = false; return }
             UserDefaults.writePaperPhraseDate = Date()
             return callback(phrase)
         case .validateForWipingWallet(let callback):
-            //TODO - do actual phrase validation here
-            return callback(phrase)
+            guard self.walletManager.authenticate(phrase: phrase) else { errorLabel.isHidden = false; return }
+            return callback()
         }
     }
 

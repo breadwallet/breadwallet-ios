@@ -221,6 +221,24 @@ extension WalletManager : WalletAuthenticator {
         }
     }
 
+    //true if phrase is correct
+    func authenticate(phrase: String) -> Bool {
+        do {
+            var seed = UInt512()
+            guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString)
+                else { return false }
+            CFStringNormalize(nfkdPhrase, .KD)
+            BRBIP39DeriveKey(&seed, nfkdPhrase as String, nil)
+            let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
+            seed = UInt512() // clear seed
+            let mpkData: Data? = try keychainItem(key: KeychainKey.masterPubKey)
+            guard mpkData?.masterPubKey == mpk else { return false }
+            return true
+        } catch {
+            return false
+        }
+    }
+
     private func authenticationSuccess() throws {
         let limit = Int64(UserDefaults.standard.double(forKey: DefaultsKey.spendLimitAmount))
 
