@@ -15,6 +15,10 @@ class PaymentRequestTests : XCTestCase {
         XCTAssertNil(PaymentRequest(string: ""))
     }
 
+    func testInvalidAddress() {
+        XCTAssertNil(PaymentRequest(string: "notandaddress"), "Payment request should be nil for invalid addresses")
+    }
+
     func testBasicExample() {
         let uri = "bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu"
         let request = PaymentRequest(string: uri)

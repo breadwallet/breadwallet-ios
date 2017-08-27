@@ -54,7 +54,7 @@ struct PaymentRequest {
             }
         }
 
-        if string.utf8.count > 0 {
+        if string.isValidAddress {
             toAddress = string
             type = .local
             return
