@@ -135,10 +135,6 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
 class Store {
 
     //MARK: - Public
-    init() {
-        addPasteboardSubscriptions()
-    }
-
     func perform(action: Action) {
         state = action.reduce(state)
     }
@@ -200,14 +196,4 @@ class Store {
 
     private var subscriptions: [Int: [Subscription]] = [:]
     private var triggers: [Int: [Trigger]] = [:]
-
-    private func addPasteboardSubscriptions() {
-        NotificationCenter.default.addObserver(forName: .UIPasteboardChanged, object: nil, queue: nil, using: { note in
-            self.perform(action: Pasteboard.refresh())
-        })
-
-        NotificationCenter.default.addObserver(forName: .UIApplicationDidBecomeActive, object: nil, queue: OperationQueue(), using: { note in
-            self.perform(action: Pasteboard.refresh())
-        })
-    }
 }

@@ -103,7 +103,7 @@ class BCashTransactionViewController : UIViewController {
     }
 
     private func pasteTapped() {
-        if let address = store.state.pasteboard {
+        if let address = UIPasteboard.general.string {
             if address.isValidAddress {
                 addressCell.setContent(address)
             } else {
