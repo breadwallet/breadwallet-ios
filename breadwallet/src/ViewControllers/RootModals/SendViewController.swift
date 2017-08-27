@@ -191,19 +191,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     @objc private func pasteTapped() {
-        store.subscribe(self, selector: {$0.pasteboard != $1.pasteboard}, callback: {
-            if let address = $0.pasteboard {
-                if address.isValidAddress {
-                    self.addressCell.setContent(address)
-                } else {
-                    self.showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
-                }
-                self.addressCell.isEditable = true
+        if let address = UIPasteboard.general.string {
+            if address.isValidAddress {
+                self.addressCell.setContent(address)
+            } else {
+                self.showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
             }
-            //TODO - this should be a granular unsubscribe
-            //just for pasteboard
-            self.store.unsubscribe(self)
-        })
+            self.addressCell.isEditable = true
+        }
     }
 
     @objc private func scanTapped() {
