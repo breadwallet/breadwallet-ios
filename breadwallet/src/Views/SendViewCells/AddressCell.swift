@@ -20,6 +20,7 @@ class AddressCell : UIView {
     }
 
     var didBeginEditing: (() -> Void)?
+    var didReceivePaymentRequest: ((PaymentRequest) -> Void)?
 
     func setContent(_ content: String?) {
         contentLabel.text = content
@@ -137,5 +138,14 @@ extension AddressCell : UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
-   }
+    }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if let request = PaymentRequest(string: string) {
+            didReceivePaymentRequest?(request)
+            return false
+        } else {
+            return true
+        }
+    }
 }

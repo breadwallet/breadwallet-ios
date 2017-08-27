@@ -128,6 +128,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         addressCell.didBeginEditing = strongify(self) { myself in
             myself.amountView.closePinPad()
         }
+        addressCell.didReceivePaymentRequest = { [weak self] request in
+            self?.handleRequest(request)
+        }
         amountView.balanceTextForAmount = { [weak self] amount, rate in
             return self?.balanceTextForAmount(amount: amount, rate: rate)
         }
