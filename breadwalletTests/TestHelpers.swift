@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import XCTest
 
 func clearKeychain() {
     let classes = [kSecClassGenericPassword as String,
