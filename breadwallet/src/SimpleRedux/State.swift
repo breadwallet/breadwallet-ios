@@ -12,7 +12,6 @@ struct State {
     let isStartFlowVisible: Bool
     let isLoginRequired: Bool
     let rootModal: RootModal
-    let pasteboard: String?
     let walletState: WalletState
     let isBtcSwapped: Bool
     let currentRate: Rate?
@@ -34,7 +33,6 @@ extension State {
         return State(   isStartFlowVisible: false,
                         isLoginRequired: true,
                         rootModal: .none,
-                        pasteboard: UIPasteboard.general.string,
                         walletState: WalletState.initial,
                         isBtcSwapped: UserDefaults.isBtcSwapped,
                         currentRate: UserDefaults.currentRate,
@@ -82,5 +80,5 @@ struct WalletState {
 extension WalletState : Equatable {}
 
 func ==(lhs: WalletState, rhs: WalletState) -> Bool {
-    return lhs.isConnected == rhs.isConnected && lhs.syncProgress == rhs.syncProgress && lhs.isSyncing == rhs.isSyncing && lhs.balance == rhs.balance && lhs.transactions == rhs.transactions && lhs.name == rhs.name && lhs.syncErrorMessage == rhs.syncErrorMessage && lhs.creationDate == rhs.creationDate
+    return lhs.isConnected == rhs.isConnected && lhs.syncProgress == rhs.syncProgress && lhs.isSyncing == rhs.isSyncing && lhs.balance == rhs.balance && lhs.transactions == rhs.transactions && lhs.name == rhs.name && lhs.syncErrorMessage == rhs.syncErrorMessage && lhs.creationDate == rhs.creationDate && lhs.isRescanning == rhs.isRescanning
 }
