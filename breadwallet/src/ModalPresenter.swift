@@ -355,7 +355,7 @@ class ModalPresenter : Subscriber, Trackable {
                     nc.setWhiteStyle()
                     nc.delegate = myself.wipeNavigationDelegate
                     let start = StartWipeWalletViewController {
-                        let recover = EnterPhraseViewController(store: myself.store, walletManager: walletManager, reason: .validateForWipingWallet( { _ in
+                        let recover = EnterPhraseViewController(store: myself.store, walletManager: walletManager, reason: .validateForWipingWallet( {
                             myself.wipeWallet()
                         }))
                         nc.pushViewController(recover, animated: true)
