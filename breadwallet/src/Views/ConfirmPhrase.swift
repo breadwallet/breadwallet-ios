@@ -22,7 +22,7 @@ class ConfirmPhrase: UIView {
         setupSubviews()
     }
 
-    private let word: String
+    internal let word: String
     private let label = UILabel()
     private let separator = UIView()
     private let circle = DrawableCircle()
@@ -34,6 +34,9 @@ class ConfirmPhrase: UIView {
 
         textField.autocapitalizationType = .none
         textField.autocorrectionType = .no
+        textField.font = UIFont.customBody(size: 16.0)
+        textField.textColor = .darkText
+        textField.delegate = self
 
         addSubview(label)
         addSubview(textField)
@@ -63,7 +66,14 @@ class ConfirmPhrase: UIView {
         textField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
     }
 
+    func validate() {
+        if textField.text != word {
+            textField.textColor = .cameraGuideNegative
+        }
+    }
+
     @objc private func textFieldChanged() {
+        textField.textColor = .darkText
         if textField.text == word {
             circle.show()
             textField.isEnabled = false
@@ -73,5 +83,15 @@ class ConfirmPhrase: UIView {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension ConfirmPhrase : UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        validate()
+    }
+
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.textColor = .darkText
     }
 }

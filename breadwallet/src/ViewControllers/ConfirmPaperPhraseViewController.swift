@@ -117,6 +117,9 @@ class ConfirmPaperPhraseViewController : UIViewController {
             UserDefaults.writePaperPhraseDate = Date()
             store.trigger(name: .didWritePaperKey)
             callback()
+        } else {
+            confirmFirstPhrase.validate()
+            confirmSecondPhrase.validate()
         }
     }
 
