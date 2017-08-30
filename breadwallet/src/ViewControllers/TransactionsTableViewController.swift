@@ -124,6 +124,8 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         }, callback: {
             if let message = $0.walletState.syncErrorMessage {
                 self.syncingView.setError(message: message)
+            } else {
+                self.syncingView.resetAfterError()
             }
         })
 
