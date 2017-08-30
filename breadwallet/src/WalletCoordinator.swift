@@ -57,10 +57,10 @@ class WalletCoordinator : Subscriber {
 
     private func onSyncStart() {
         progressTimer = Timer.scheduledTimer(timeInterval: progressUpdateInterval, target: self, selector: #selector(WalletCoordinator.updateProgress), userInfo: nil, repeats: true)
+        store.perform(action: WalletChange.setSyncingErrorMessage(nil))
         store.perform(action: WalletChange.setIsSyncing(true))
         startActivity()
     }
-
 
     private func onSyncStop(notification: Notification) {
         if notification.userInfo != nil {
