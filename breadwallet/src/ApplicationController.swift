@@ -11,7 +11,7 @@ import UIKit
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
-class ApplicationController : Subscriber {
+class ApplicationController : Subscriber, Trackable {
 
     //Ideally the window would be private, but is unfortunately required
     //by the UIApplicationDelegate Protocol
@@ -33,6 +33,7 @@ class ApplicationController : Subscriber {
     private var defaultsUpdater: UserDefaultsUpdater?
     private var reachability = ReachabilityManager(host: "google.com")
     private let noAuthApiClient = BRAPIClient(authenticator: NoAuthAuthenticator())
+    private var fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)?
 
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
@@ -53,6 +54,7 @@ class ApplicationController : Subscriber {
 
     func launch(application: UIApplication, options: [UIApplicationLaunchOptionsKey: Any]?) {
         self.application = application
+        application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         setup()
         handleLaunchOptions(options)
         reachability.didChange = { isReachable in
@@ -132,8 +134,10 @@ class ApplicationController : Subscriber {
     }
 
     func didEnterBackground() {
+        DispatchQueue.walletQueue.async {
+            self.walletManager?.peerManager?.disconnect()
+        }
         //Save the backgrounding time if the user is logged in
-        //TODO - fix this
         if !store.state.isLoginRequired {
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
         }
@@ -141,23 +145,7 @@ class ApplicationController : Subscriber {
     }
 
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        Async.parallel(callbacks: [
-                { completion in
-                    self.exchangeUpdater?.refresh(completion: completion)
-                },
-                { completion in
-                    self.feeUpdater?.refresh(completion: completion)
-                },
-                { completion in
-                    self.walletManager?.apiClient?.events?.sync(completion: completion)
-                },
-                { completion in
-                    self.walletManager?.apiClient?.updateFeatureFlags()
-                    completion()
-                }
-            ], completion: {
-                completionHandler(.newData) //TODO - add a timeout for this
-        })
+        fetchCompletionHandler = completionHandler
     }
 
     func open(url: URL) -> Bool {
@@ -197,6 +185,9 @@ class ApplicationController : Subscriber {
                 self.watchSessionManager.walletManager = self.walletManager
                 self.watchSessionManager.rate = self.store.state.currentRate
             })
+            if fetchCompletionHandler != nil {
+                performBackgroundFetch()
+            }
         }
     }
 
@@ -296,6 +287,43 @@ class ApplicationController : Subscriber {
             } catch let error {
                 print("Could not open file at: \(url), error: \(error)")
             }
+        }
+    }
+
+    func performBackgroundFetch() {
+        saveEvent("appController.performBackgroundFetch")
+        let group = DispatchGroup()
+        if let peerManager = walletManager?.peerManager, peerManager.syncProgress(fromStartHeight: peerManager.lastBlockHeight) < 1.0 {
+            group.enter()
+            store.subscribe(self, selector: { $0.walletState.isSyncing != $1.walletState.isSyncing }, callback: { state in
+                if state.walletState.isSyncing == false {
+                    DispatchQueue.walletQueue.async {
+                        peerManager.disconnect()
+                        group.leave()
+                    }
+                }
+            })
+        }
+
+        group.enter()
+        Async.parallel(callbacks: [
+            { self.exchangeUpdater?.refresh(completion: $0) },
+            { self.feeUpdater?.refresh(completion: $0) },
+            { self.walletManager?.apiClient?.events?.sync(completion: $0) },
+            { self.walletManager?.apiClient?.updateFeatureFlags(); $0() }
+            ], completion: {
+                group.leave()
+        })
+
+        DispatchQueue.global(qos: .utility).async {
+            if group.wait(timeout: .now() + 25.0) == .timedOut {
+                self.saveEvent("appController.backgroundFetchFailed")
+                self.fetchCompletionHandler?(.failed)
+            } else {
+                self.saveEvent("appController.backgroundFetchNewData")
+                self.fetchCompletionHandler?(.newData)
+            }
+            self.fetchCompletionHandler = nil
         }
     }
 
