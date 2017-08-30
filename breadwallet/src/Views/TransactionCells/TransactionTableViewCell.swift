@@ -70,7 +70,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         let identity: CGAffineTransform = .identity
         if transaction.direction == .received {
             arrow.transform = identity.rotated(by: π/2.0)
-            arrow.tintColor = UIColor(red: 0.4, green: 0.9, blue: 0.4, alpha: 1.0)
+            arrow.tintColor = UIColor(red: 0.0, green: 169.0/255.0, blue: 157.0/255.0, alpha: 1.0)
         } else {
             arrow.transform = identity.rotated(by: 3.0*π/2.0)
             arrow.tintColor = .cameraGuideNegative
