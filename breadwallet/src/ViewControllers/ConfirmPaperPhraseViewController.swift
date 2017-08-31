@@ -16,7 +16,9 @@ class ConfirmPaperPhraseViewController : UIViewController {
         self.walletManager = walletManager
         self.callback = callback
         super.init(nibName: nil, bundle: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
+        if !E.isIPhone4 {
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
+        }
     }
 
     private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
@@ -101,6 +103,12 @@ class ConfirmPaperPhraseViewController : UIViewController {
         submit.addTarget(self, action: #selector(checkTextFields), for: .touchUpInside)
         confirmFirstPhrase.callback = { [weak self] in
             self?.confirmSecondPhrase.textField.becomeFirstResponder()
+        }
+        if E.isIPhone4 {
+            confirmSecondPhrase.textField.returnKeyType = .done
+            confirmSecondPhrase.doneCallback = strongify(self) { myself in
+                myself.checkTextFields()
+            }
         }
     }
 
