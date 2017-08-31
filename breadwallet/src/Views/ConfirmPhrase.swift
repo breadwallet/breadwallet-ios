@@ -14,6 +14,7 @@ class ConfirmPhrase: UIView {
 
     let textField = UITextField()
     var callback: (() -> Void)?
+    var doneCallback: (() -> Void)?
 
     init(text: String, word: String) {
         self.word = word
@@ -76,7 +77,9 @@ class ConfirmPhrase: UIView {
         textField.textColor = .darkText
         if textField.text == word {
             circle.show()
-            textField.isEnabled = false
+            if !E.isIPhone4 {
+                textField.isEnabled = false
+            }
             callback?()
         }
     }
@@ -93,5 +96,12 @@ extension ConfirmPhrase : UITextFieldDelegate {
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.textColor = .darkText
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if E.isIPhone4 {
+            doneCallback?()
+        }
+        return true
     }
 }
