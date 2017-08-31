@@ -134,9 +134,6 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     func didEnterBackground() {
-        DispatchQueue.walletQueue.async {
-            self.walletManager?.peerManager?.disconnect()
-        }
         //Save the backgrounding time if the user is logged in
         if !store.state.isLoginRequired {
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
