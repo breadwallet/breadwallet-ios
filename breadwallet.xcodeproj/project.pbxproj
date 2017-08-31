@@ -436,13 +436,6 @@
 			remoteGlobalIDString = 755CD9D01DAA197C0075898E;
 			remoteInfo = BRCore;
 		};
-		759DA0C31DAC72BB008CC49B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 75C735AE1DAA1C9F00251ECF;
-			remoteInfo = nettle;
-		};
 		759DA0DB1DAC86B5008CC49B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
@@ -505,13 +498,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 75A2A81B1DA5938500A983D8;
 			remoteInfo = NotificationServiceExtension;
-		};
-		75C735A81DAA1B8700251ECF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 755CD9C31DAA18420075898E;
-			remoteInfo = unbound;
 		};
 		CEA7E6801F09A9D2001F8C27 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -3291,9 +3277,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				759DA0C41DAC72BB008CC49B /* PBXTargetDependency */,
 				759DA0BD1DAC369C008CC49B /* PBXTargetDependency */,
-				75C735A91DAA1B8700251ECF /* PBXTargetDependency */,
 				75A2A7BB1DA5934300A983D8 /* PBXTargetDependency */,
 				75A2A8131DA5936F00A983D8 /* PBXTargetDependency */,
 				75A2A8221DA5938500A983D8 /* PBXTargetDependency */,
@@ -4195,11 +4179,6 @@
 			target = 755CD9D01DAA197C0075898E /* BRCore */;
 			targetProxy = 759DA0BC1DAC369C008CC49B /* PBXContainerItemProxy */;
 		};
-		759DA0C41DAC72BB008CC49B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 75C735AE1DAA1C9F00251ECF /* nettle */;
-			targetProxy = 759DA0C31DAC72BB008CC49B /* PBXContainerItemProxy */;
-		};
 		759DA0DC1DAC86B5008CC49B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 759DA0D71DAC8668008CC49B /* submodules */;
@@ -4244,11 +4223,6 @@
 			isa = PBXTargetDependency;
 			target = 75A2A81B1DA5938500A983D8 /* NotificationServiceExtension */;
 			targetProxy = 75A2A8211DA5938500A983D8 /* PBXContainerItemProxy */;
-		};
-		75C735A91DAA1B8700251ECF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 755CD9C31DAA18420075898E /* unbound */;
-			targetProxy = 75C735A81DAA1B8700251ECF /* PBXContainerItemProxy */;
 		};
 		CEA7E6811F09A9D2001F8C27 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

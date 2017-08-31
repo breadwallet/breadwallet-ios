@@ -27,7 +27,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/socket.h>
-#include <sys/select.h>
+#include <sys/time.h>
 #include <stdlib.h>
 
 int bw_nbioify(int fd) {
