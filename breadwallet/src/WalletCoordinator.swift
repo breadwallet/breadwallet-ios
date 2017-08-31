@@ -27,6 +27,7 @@ class WalletCoordinator : Subscriber {
     private var progressTimer: Timer?
     private var updateTimer: Timer?
     private let defaults = UserDefaults.standard
+    private var backgroundTaskId: UIBackgroundTaskIdentifier?
 
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
@@ -56,6 +57,8 @@ class WalletCoordinator : Subscriber {
     }
 
     private func onSyncStart() {
+        endBackgroundTask()
+        startBackgroundTask()
         progressTimer = Timer.scheduledTimer(timeInterval: progressUpdateInterval, target: self, selector: #selector(WalletCoordinator.updateProgress), userInfo: nil, repeats: true)
         store.perform(action: WalletChange.setSyncingErrorMessage(nil))
         store.perform(action: WalletChange.setIsSyncing(true))
@@ -63,6 +66,12 @@ class WalletCoordinator : Subscriber {
     }
 
     private func onSyncStop(notification: Notification) {
+        if UIApplication.shared.applicationState != .active {
+            DispatchQueue.walletQueue.async {
+                self.walletManager.peerManager?.disconnect()
+            }
+        }
+        endBackgroundTask()
         if notification.userInfo != nil {
             guard let code = notification.userInfo?["errorCode"] else { return }
             guard let message = notification.userInfo?["errorDescription"] else { return }
@@ -79,6 +88,21 @@ class WalletCoordinator : Subscriber {
         store.perform(action: WalletChange.setIsSyncing(false))
         store.perform(action: WalletChange.setIsRescanning(false))
         endActivity()
+    }
+
+    private func endBackgroundTask() {
+        if let taskId = backgroundTaskId {
+            UIApplication.shared.endBackgroundTask(taskId)
+            backgroundTaskId = nil
+        }
+    }
+
+    private func startBackgroundTask() {
+        backgroundTaskId = UIApplication.shared.beginBackgroundTask(expirationHandler: {
+            DispatchQueue.walletQueue.async {
+                self.walletManager.peerManager?.disconnect()
+            }
+        })
     }
 
     private func requestTxUpdate() {
