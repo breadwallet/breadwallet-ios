@@ -151,7 +151,9 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                                     create: false).appendingPathComponent("BreadWallet.sqlite").path
         self.store = store
         // open sqlite database
-        if sqlite3_open(self.dbPath, &db) != SQLITE_OK {
+        if sqlite3_open_v2( self.dbPath, &db,
+            SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, nil
+            ) != SQLITE_OK {
             print(String(cString: sqlite3_errmsg(db)))
 
             #if DEBUG
@@ -160,7 +162,9 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             #else
                 try FileManager.default.removeItem(atPath: self.dbPath)
                 
-                if sqlite3_open(self.dbPath, &db) != SQLITE_OK {
+                if sqlite3_open_v2( self.dbPath, &db,
+                                    SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, nil
+                    ) != SQLITE_OK {
                     throw WalletManagerError.sqliteError(errorCode: sqlite3_errcode(db),
                                                          description: String(cString: sqlite3_errmsg(db)))
                 }
