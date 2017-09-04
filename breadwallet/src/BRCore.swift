@@ -714,7 +714,7 @@ extension UInt256: Equatable {
         get {
             var u = self
             return withUnsafePointer(to: &u, { p in
-                return Data(bytes: p, count: MemoryLayout.size(ofValue: p)).hexString
+                return Data(bytes: p, count: MemoryLayout<UInt256>.stride).hexString
             })
         }
     }

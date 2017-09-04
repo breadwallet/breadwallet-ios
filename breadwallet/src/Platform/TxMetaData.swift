@@ -77,30 +77,16 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
         var del: Bool
         var bytes: [UInt8]
 
-        var shortKeyError: Any?
-        var longKeyError: Any?
         print("[BRTxMetadataObject] find \(txHash.txKey)")
-
         do {
             (ver, date, del, bytes) = try store.get(txHash.txKey)
             let bytesDat = Data(bytes: &bytes, count: bytes.count)
             super.init(key: txHash.txKey, version: ver, lastModified: date, deleted: del, data: bytesDat)
             return
         } catch let e {
-            longKeyError = e
+            print("[BRTxMetadataObject] Unable to initialize BRTxMetadataObject: \(String(describing: e))")
         }
 
-        let shortKey = txHash.txKey.substring(to: txHash.txKey.index(txHash.txKey.startIndex, offsetBy: 20))
-        do {
-            (ver, date, del, bytes) = try store.get(shortKey)
-            let bytesDat = Data(bytes: &bytes, count: bytes.count)
-            super.init(key: txHash.txKey, version: ver, lastModified: date, deleted: del, data: bytesDat)
-            return
-        } catch let e {
-            shortKeyError = e
-        }
-
-        print("[BRTxMetadataObject] Unable to initialize BRTxMetadataObject: \(String(describing: shortKeyError)) : \(String(describing: longKeyError))")
         return nil
     }
     
@@ -146,8 +132,8 @@ fileprivate extension UInt256 {
         get {
             var u = self
             return withUnsafePointer(to: &u) { p in
-                let bd = Data(bytes: p, count: MemoryLayout.size(ofValue: p)).sha256
-                return "txn-\(bd.hexString)"
+                let bd = Data(bytes: p, count: MemoryLayout<UInt256>.stride).sha256
+                return "txn2-\(bd.hexString)"
             }
         }
     }
