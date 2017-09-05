@@ -56,4 +56,9 @@ class WalletAuthenticationTests : XCTestCase {
         let disabledUntil = walletManager.walletDisabledUntil
         XCTAssert(disabledUntil > Date.timeIntervalSinceReferenceDate, "Wallet should be disabled until some time in the future. DisabledUntil: \(disabledUntil)")
     }
+
+    func testWalletNotDisabled() {
+        XCTAssert(walletManager.forceSetPin(newPin: pin), "Setting PIN should succeed")
+        XCTAssert(walletManager.walletDisabledUntil == 0, "Wallet should not be disabled after pin has been set")
+    }
 }
