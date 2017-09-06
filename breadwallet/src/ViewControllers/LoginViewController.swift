@@ -319,6 +319,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     }
 
     @objc func touchIdTapped() {
+        guard !isWalletDisabled else { return }
         walletManager?.authenticate(touchIDPrompt: S.UnlockScreen.touchIdPrompt, completion: { result in
             if result == .success {
                 self.authenticationSucceded()
@@ -364,6 +365,12 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
                 }
             }
         }
+    }
+
+    private var isWalletDisabled: Bool {
+        guard let walletManager = walletManager else { return false }
+        let now = Date.timeIntervalSinceReferenceDate
+        return walletManager.walletDisabledUntil > now
     }
 
     @objc private func unlock() {
