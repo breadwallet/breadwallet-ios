@@ -383,7 +383,7 @@ class ModalPresenter : Subscriber, Trackable {
                     let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: myself.store.state.maxDigits)
                     return amount.localCurrency
                 }, callback: {
-                    settingsNav.pushViewController(TouchIdSpendingLimitViewController(walletManager: walletManager, store: self.store), animated: true)
+                    self.pushTouchIdSpendingLimit(onNc: settingsNav)
                 }),
                 Setting(title: S.Settings.currency, accessoryText: {
                     let code = self.store.state.defaultCurrencyCode
@@ -501,12 +501,10 @@ class ModalPresenter : Subscriber, Trackable {
             let updatePin = UpdatePinViewController(store: myself.store, walletManager: walletManager, type: .update)
             nc.pushViewController(updatePin, animated: true)
         }
-        securityCenter.didTapTouchId = { [weak self] in
-            guard let myself = self else { return }
+        securityCenter.didTapTouchId = strongify(self) { myself in
             let touchIdSettings = TouchIdSettingsViewController(walletManager: walletManager, store: myself.store)
             touchIdSettings.presentSpendingLimit = {
-                let spendingLimit = TouchIdSpendingLimitViewController(walletManager: walletManager, store: myself.store)
-                nc.pushViewController(spendingLimit, animated: true)
+                myself.pushTouchIdSpendingLimit(onNc: nc)
             }
             nc.pushViewController(touchIdSettings, animated: true)
         }
@@ -515,6 +513,27 @@ class ModalPresenter : Subscriber, Trackable {
         }
 
         window.rootViewController?.present(nc, animated: true, completion: nil)
+    }
+
+    private func pushTouchIdSpendingLimit(onNc: UINavigationController) {
+        guard let walletManager = walletManager else { return }
+
+        let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: store.state.pinLength, callback: { [weak self] pin, vc in
+            guard let myself = self else { return false }
+            if walletManager.authenticate(pin: pin) {
+                vc.dismiss(animated: true, completion: {
+                    let spendingLimit = TouchIdSpendingLimitViewController(walletManager: walletManager, store: myself.store)
+                    onNc.pushViewController(spendingLimit, animated: true)
+                })
+                return true
+            } else {
+                return false
+            }
+        })
+        verify.transitioningDelegate = verifyPinTransitionDelegate
+        verify.modalPresentationStyle = .overFullScreen
+        verify.modalPresentationCapturesStatusBarAppearance = true
+        onNc.present(verify, animated: true, completion: nil)
     }
 
     private func presentWritePaperKey(fromViewController vc: UIViewController) {
@@ -622,13 +641,9 @@ class ModalPresenter : Subscriber, Trackable {
         let touchIdSettings = TouchIdSettingsViewController(walletManager: walletManager, store: store)
         touchIdSettings.addCloseNavigationItem(tintColor: .white)
         let nc = ModalNavigationController(rootViewController: touchIdSettings)
-
-        touchIdSettings.presentSpendingLimit = { [weak self] in
-            guard let myself = self else { return }
-            let spendingLimit = TouchIdSpendingLimitViewController(walletManager: walletManager, store: myself.store)
-            nc.pushViewController(spendingLimit, animated: true)
+        touchIdSettings.presentSpendingLimit = strongify(self) { myself in
+            myself.pushTouchIdSpendingLimit(onNc: nc)
         }
-
         nc.setDefaultStyle()
         nc.isNavigationBarHidden = true
         nc.delegate = securityCenterNavigationDelegate
