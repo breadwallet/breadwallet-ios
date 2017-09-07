@@ -213,6 +213,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     @objc private func sendTapped() {
+        if addressCell.textField.isFirstResponder {
+            addressCell.textField.resignFirstResponder()
+        }
+
         if sender.transaction == nil {
             guard let address = addressCell.address else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
