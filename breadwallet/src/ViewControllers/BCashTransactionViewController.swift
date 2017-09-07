@@ -125,7 +125,7 @@ class BCashTransactionViewController : UIViewController {
             myself.handlePaymentRequest(paymentRequest)
             myself.view.isFrameChangeBlocked = false
         }, isValidURI: { address in
-            return address.isValidAddress
+            return address.isValidBCHAddress
         })
         view.isFrameChangeBlocked = true
         present(vc, animated: true, completion: {})
@@ -138,8 +138,8 @@ class BCashTransactionViewController : UIViewController {
     }
 
     private func presentConfirm() {
+        guard let address = addressCell.address, address.isValidBCHAddress else { return showErrorMessage(S.Send.invalidAddressMessage) }
         let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), state: store.state, selectedRate: nil, minimumFractionDigits: 0)
-        guard let address = addressCell.address else { return showErrorMessage(S.BCH.noAddressError) }
         let message = String(format: S.BCH.confirmationMessage, amount.description, address)
         let alert = UIAlertController(title: S.BCH.confirmationTitle, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
