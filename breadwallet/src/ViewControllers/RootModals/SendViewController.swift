@@ -194,11 +194,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     @objc private func pasteTapped() {
-        if let pasteboard = UIPasteboard.general.string, let request = PaymentRequest(string: pasteboard) {
-            handleRequest(request)
-        } else {
-            self.showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
+        guard let pasteboard = UIPasteboard.general.string, pasteboard.utf8.count > 0 else {
+            return showAlert(title: S.Alert.error, message: S.Send.emptyPasteboard, buttonLabel: S.Button.ok)
         }
+        guard let request = PaymentRequest(string: pasteboard) else {
+            return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressOnPasteboard, buttonLabel: S.Button.ok)
+        }
+        handleRequest(request)
     }
 
     @objc private func scanTapped() {
