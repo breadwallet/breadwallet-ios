@@ -99,7 +99,7 @@ class AddressCell : UIView {
         label.textColor = .grayTextTint
         contentLabel.lineBreakMode = .byTruncatingMiddle
 
-        textField.valueChanged = strongify(self) { myself in
+        textField.editingChanged = strongify(self) { myself in
             myself.contentLabel.text = myself.textField.text
         }
 

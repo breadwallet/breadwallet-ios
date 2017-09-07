@@ -24,6 +24,7 @@ private class CallbackWrapper : NSObject, NSCopying {
 private struct AssociatedKeys {
     static var didTapCallback = "didTapCallback"
     static var valueChangedCallback = "valueChangedCallback"
+    static var valueEditingChangedCallback = "valueEditingChangedCallback"
 }
 
 extension UIControl {
@@ -55,7 +56,23 @@ extension UIControl {
         }
     }
 
+    var editingChanged: (() -> Void)? {
+        get {
+            guard let callbackWrapper = objc_getAssociatedObject(self, &AssociatedKeys.valueEditingChangedCallback) as? CallbackWrapper else { return nil }
+            return callbackWrapper.callback
+        }
+        set {
+            guard let newValue = newValue else { return }
+            addTarget(self, action: #selector(editingChange), for: .editingChanged)
+            objc_setAssociatedObject(self, &AssociatedKeys.valueEditingChangedCallback, CallbackWrapper(newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
     @objc private func valueDidChange() {
         valueChanged?()
+    }
+
+    @objc private func editingChange() {
+        editingChanged?()
     }
 }
