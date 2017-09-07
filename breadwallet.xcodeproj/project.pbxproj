@@ -171,6 +171,7 @@
 		755CD9E61DAA1A270075898E /* BRSet.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77C91DAA05B500932D9A /* BRSet.c */; };
 		755CD9E71DAA1A270075898E /* BRTransaction.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77CB1DAA05B500932D9A /* BRTransaction.c */; };
 		755CD9E81DAA1A270075898E /* BRWallet.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77CD1DAA05B500932D9A /* BRWallet.c */; };
+		75675A991F61DF32004F0F1A /* Geth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75675A981F61DF32004F0F1A /* Geth.framework */; };
 		759DA0A11DAB838D008CC49B /* view.c in Sources */ = {isa = PBXBuildFile; fileRef = 759DA09F1DAB838D008CC49B /* view.c */; };
 		759DA0A31DAC0D6B008CC49B /* dsa.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD7AC1DAA16810075898E /* dsa.c */; };
 		759DA0A41DAC0D84008CC49B /* ecc-point.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD7D71DAA16810075898E /* ecc-point.c */; };
@@ -501,6 +502,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 75A2A81B1DA5938500A983D8;
 			remoteInfo = NotificationServiceExtension;
+		};
+		75DA6C4F1F61E57700E48CAF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 759DA0D71DAC8668008CC49B;
+			remoteInfo = submodules;
+		};
+		75DA6C511F61E59100E48CAF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 75DA6C481F61E52200E48CAF;
+			remoteInfo = Geth;
 		};
 		CEA7E6801F09A9D2001F8C27 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1258,6 +1273,7 @@
 		755CD9BF1DAA16830075898E /* yarrow_key_event.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = yarrow_key_event.c; sourceTree = "<group>"; };
 		755CD9C41DAA18420075898E /* libunbound.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libunbound.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		755CD9D11DAA197C0075898E /* libBRCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBRCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		75675A981F61DF32004F0F1A /* Geth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Geth.framework; path = "Modules/go-ethereum/build/bin/Geth.framework"; sourceTree = "<group>"; };
 		759DA09F1DAB838D008CC49B /* view.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = view.c; sourceTree = "<group>"; };
 		759DA0A01DAB838D008CC49B /* view.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
 		75A2A7901DA5934300A983D8 /* breadwallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = breadwallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1637,6 +1653,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75675A991F61DF32004F0F1A /* Geth.framework in Frameworks */,
 				22A9A9661DF61FEE000F0016 /* WebKit.framework in Frameworks */,
 				22A9A9641DF61FE7000F0016 /* Security.framework in Frameworks */,
 				22A9A9621DF61FE0000F0016 /* SystemConfiguration.framework in Frameworks */,
@@ -2702,6 +2719,7 @@
 		75A2A7F11DA5935F00A983D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				75675A981F61DF32004F0F1A /* Geth.framework */,
 				22A9A9671DF61FF8000F0016 /* libbz2.tbd */,
 				22A9A9651DF61FEE000F0016 /* WebKit.framework */,
 				22A9A9631DF61FE7000F0016 /* Security.framework */,
@@ -2761,8 +2779,17 @@
 				755CD3831DAA0E3E0075898E /* unbound */,
 				755CD7031DAA16810075898E /* nettle */,
 				75FEFD1F1DAEE7A400203D3A /* sqlite3 */,
+				75DA6BA81F61E3FD00E48CAF /* go-ethereum */,
 			);
 			name = Modules;
+			sourceTree = "<group>";
+		};
+		75DA6BA81F61E3FD00E48CAF /* go-ethereum */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "go-ethereum";
+			path = "Modules/go-ethereum";
 			sourceTree = "<group>";
 		};
 		75DC77AB1DAA05B500932D9A /* breadwallet-core */ = {
@@ -3199,6 +3226,21 @@
 			passBuildSettingsInEnvironment = 1;
 			productName = submodules;
 		};
+		75DA6C481F61E52200E48CAF /* Geth */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = ios;
+			buildConfigurationList = 75DA6C491F61E52200E48CAF /* Build configuration list for PBXLegacyTarget "Geth" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "$(SRCROOT)/Modules/go-ethereum";
+			dependencies = (
+				75DA6C501F61E57700E48CAF /* PBXTargetDependency */,
+			);
+			name = Geth;
+			passBuildSettingsInEnvironment = 1;
+			productName = Geth;
+		};
 /* End PBXLegacyTarget section */
 
 /* Begin PBXNativeTarget section */
@@ -3289,6 +3331,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				75DA6C521F61E59100E48CAF /* PBXTargetDependency */,
 				759DA0BD1DAC369C008CC49B /* PBXTargetDependency */,
 				75A2A7BB1DA5934300A983D8 /* PBXTargetDependency */,
 				75A2A8131DA5936F00A983D8 /* PBXTargetDependency */,
@@ -3551,6 +3594,10 @@
 						CreatedOnToolsVersion = 8.0;
 						ProvisioningStyle = Automatic;
 					};
+					75DA6C481F61E52200E48CAF = {
+						CreatedOnToolsVersion = 8.3.3;
+						ProvisioningStyle = Automatic;
+					};
 					CEA7E67A1F09A9D2001F8C27 = {
 						CreatedOnToolsVersion = 8.3.3;
 						LastSwiftMigration = 0900;
@@ -3596,6 +3643,7 @@
 				755CD9D01DAA197C0075898E /* BRCore */,
 				75C735AE1DAA1C9F00251ECF /* nettle */,
 				759DA0D71DAC8668008CC49B /* submodules */,
+				75DA6C481F61E52200E48CAF /* Geth */,
 				22A9A9951DF63426000F0016 /* libbz2 */,
 				752FB0411DF8BE6B009086FB /* sqlite3 */,
 				CEA7E67A1F09A9D2001F8C27 /* Screenshots */,
@@ -4245,6 +4293,16 @@
 			target = 75A2A81B1DA5938500A983D8 /* NotificationServiceExtension */;
 			targetProxy = 75A2A8211DA5938500A983D8 /* PBXContainerItemProxy */;
 		};
+		75DA6C501F61E57700E48CAF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 759DA0D71DAC8668008CC49B /* submodules */;
+			targetProxy = 75DA6C4F1F61E57700E48CAF /* PBXContainerItemProxy */;
+		};
+		75DA6C521F61E59100E48CAF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 75DA6C481F61E52200E48CAF /* Geth */;
+			targetProxy = 75DA6C511F61E59100E48CAF /* PBXContainerItemProxy */;
+		};
 		CEA7E6811F09A9D2001F8C27 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 75A2A78F1DA5934300A983D8 /* breadwallet */;
@@ -4736,7 +4794,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/**";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/**",
+					"$(PROJECT_DIR)/Modules/go-ethereum/build/bin",
+				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-DDebug";
@@ -4756,7 +4817,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/**";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/**",
+					"$(PROJECT_DIR)/Modules/go-ethereum/build/bin",
+				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "";
@@ -4933,6 +4997,64 @@
 			};
 			name = Release;
 		};
+		75DA6C4A1F61E52200E48CAF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		75DA6C4B1F61E52200E48CAF /* Testnet */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Testnet;
+		};
+		75DA6C4C1F61E52200E48CAF /* Screenshots */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Screenshots;
+		};
+		75DA6C4D1F61E52200E48CAF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		75DA6C4E1F61E52200E48CAF /* Testflight */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Testflight;
+		};
 		CEA7E6821F09A9D2001F8C27 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -5047,7 +5169,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/**";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/**",
+					"$(PROJECT_DIR)/Modules/go-ethereum/build/bin",
+				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-DDebug -DScreenshots -DTestnet";
@@ -5349,7 +5474,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/**";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/**",
+					"$(PROJECT_DIR)/Modules/go-ethereum/build/bin",
+				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-DDebug -DTestnet";
@@ -5644,7 +5772,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/**";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/**",
+					"$(PROJECT_DIR)/Modules/go-ethereum/build/bin",
+				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-DTestflight -DDebug";
@@ -6035,6 +6166,18 @@
 				CEA7E6931F09AC6A001F8C27 /* Screenshots */,
 				75C735B71DAA1C9F00251ECF /* Release */,
 				CEE0EF5F1EBF8D7F0018DB36 /* Testflight */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		75DA6C491F61E52200E48CAF /* Build configuration list for PBXLegacyTarget "Geth" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				75DA6C4A1F61E52200E48CAF /* Debug */,
+				75DA6C4B1F61E52200E48CAF /* Testnet */,
+				75DA6C4C1F61E52200E48CAF /* Screenshots */,
+				75DA6C4D1F61E52200E48CAF /* Release */,
+				75DA6C4E1F61E52200E48CAF /* Testflight */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
