@@ -15,6 +15,12 @@ extension String {
         return BRAddressIsValid(self) != 0
     }
 
+    var isValidBCHAddress: Bool {
+        guard lengthOfBytes(using: .utf8) > 0 else { return false }
+        //TODO - implement valid BCHAddress
+        return contains("bitcoincash:")
+    }
+
     var sanitized: String {
         return applyingTransform(.toUnicodeName, reverse: false) ?? ""
     }
