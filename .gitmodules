@@ -7,3 +7,6 @@
 [submodule "Modules/nettle"]
 	path = Modules/nettle
 	url = https://github.com/breadwallet/nettle.git
+[submodule "Modules/go-ethereum"]
+	path = Modules/go-ethereum
+	url = https://github.com/ethereum/go-ethereum.git
