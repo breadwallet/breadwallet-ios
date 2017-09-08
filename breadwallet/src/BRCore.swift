@@ -34,15 +34,16 @@ private func secureAllocate(allocSize: CFIndex, hint: CFOptionFlags, info: Unsaf
 {
     guard let ptr = malloc(MemoryLayout<CFIndex>.stride + allocSize) else { return nil }
     // keep track of the size of the allocation so it can be cleansed before deallocation
-    ptr.assumingMemoryBound(to: CFIndex.self).pointee = MemoryLayout<CFIndex>.stride + allocSize
-    return ptr + MemoryLayout<CFIndex>.stride
+    ptr.storeBytes(of: allocSize, as: CFIndex.self)
+    return ptr.advanced(by: MemoryLayout<CFIndex>.stride)
 }
 
 private func secureDeallocate(ptr: UnsafeMutableRawPointer?, info: UnsafeMutableRawPointer?)
 {
-    guard let ptr = ptr?.advanced(by: -MemoryLayout<CFIndex>.stride) else { return }
-    memset(ptr, 0, ptr.assumingMemoryBound(to: CFIndex.self).pointee) // cleanse allocated memory
-    free(ptr)
+    guard let ptr = ptr else { return }
+    let allocSize = ptr.load(fromByteOffset: -MemoryLayout<CFIndex>.stride, as: CFIndex.self)
+    memset(ptr, 0, allocSize) // cleanse allocated memory
+    free(ptr.advanced(by: -MemoryLayout<CFIndex>.stride))
 }
 
 private func secureReallocate(ptr: UnsafeMutableRawPointer?, newsize: CFIndex, hint: CFOptionFlags,
@@ -52,8 +53,8 @@ private func secureReallocate(ptr: UnsafeMutableRawPointer?, newsize: CFIndex, h
     // than the old size, so just cleanse and deallocate every time
     guard let ptr = ptr else { return nil }
     let newptr = secureAllocate(allocSize: newsize, hint: hint, info: info)
-    let size = (ptr - MemoryLayout<CFIndex>.stride).assumingMemoryBound(to: CFIndex.self).pointee
-    if (newptr != nil) { memcpy(newptr, ptr, (size < newsize) ? size : newsize) }
+    let allocSize = ptr.load(fromByteOffset: -MemoryLayout<CFIndex>.stride, as: CFIndex.self)
+    if (newptr != nil) { memcpy(newptr, ptr, (allocSize < newsize) ? allocSize : newsize) }
     secureDeallocate(ptr: ptr, info: info)
     return newptr
 }
