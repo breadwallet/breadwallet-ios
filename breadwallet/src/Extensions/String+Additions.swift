@@ -16,9 +16,7 @@ extension String {
     }
 
     var isValidBCHAddress: Bool {
-        guard lengthOfBytes(using: .utf8) > 0 else { return false }
-        //TODO - implement valid BCHAddress
-        return contains("bitcoincash:")
+        return isValidAddress
     }
 
     var sanitized: String {
