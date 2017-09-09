@@ -435,6 +435,9 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                     return
                 }
 
+                let timestampResult = Int32.subtractWithOverflow(Int32(bitPattern: b.pointee.timestamp), Int32(NSTimeIntervalSince1970))
+                guard !timestampResult.1 else { print("skipped block with overflowed timestamp"); continue }
+
                 pk = pk + 1
                 sqlite3_bind_int(sql2, 1, pk)
                 sqlite3_bind_int(sql2, 2, Int32(bitPattern: b.pointee.height))
@@ -442,7 +445,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                 sqlite3_bind_int(sql2, 4, Int32(bitPattern: b.pointee.target))
                 sqlite3_bind_int(sql2, 5, Int32(bitPattern: b.pointee.totalTx))
                 sqlite3_bind_int(sql2, 6, Int32(bitPattern: b.pointee.version))
-                sqlite3_bind_int(sql2, 7, Int32(bitPattern: b.pointee.timestamp) - Int32(NSTimeIntervalSince1970))
+                sqlite3_bind_int(sql2, 7, timestampResult.0)
                 sqlite3_bind_blob(sql2, 8, [b.pointee.blockHash], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
                 sqlite3_bind_blob(sql2, 9, [b.pointee.flags], Int32(b.pointee.flagsLen), SQLITE_TRANSIENT)
                 sqlite3_bind_blob(sql2, 10, [b.pointee.hashes], Int32(MemoryLayout<UInt256>.size*b.pointee.hashesCount),
