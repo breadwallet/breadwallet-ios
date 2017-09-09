@@ -31,7 +31,7 @@ class ApplicationController : Subscriber, Trackable {
     private let watchSessionManager = PhoneWCSessionManager()
     private var urlController: URLController?
     private var defaultsUpdater: UserDefaultsUpdater?
-    private var reachability = ReachabilityManager(host: "google.com")
+    private var reachability = ReachabilityMonitor()
     private let noAuthApiClient = BRAPIClient(authenticator: NoAuthAuthenticator())
     private var fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)?
 

@@ -12,14 +12,14 @@ import SystemConfiguration
 
 private func callback(reachability:SCNetworkReachability, flags: SCNetworkReachabilityFlags, info: UnsafeMutableRawPointer?) {
     guard let info = info else { return }
-    let reachability = Unmanaged<ReachabilityManager>.fromOpaque(info).takeUnretainedValue()
+    let reachability = Unmanaged<ReachabilityMonitor>.fromOpaque(info).takeUnretainedValue()
     reachability.notify()
 }
 
-class ReachabilityManager : Trackable {
+class ReachabilityMonitor : Trackable {
 
-    init(host: String) {
-        networkReachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, host)
+    init() {
+        networkReachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "google.com")
         start()
     }
 
@@ -41,7 +41,7 @@ class ReachabilityManager : Trackable {
 
     private func start() {
         var context = SCNetworkReachabilityContext()
-        context.info = UnsafeMutableRawPointer(Unmanaged<ReachabilityManager>.passUnretained(self).toOpaque())
+        context.info = UnsafeMutableRawPointer(Unmanaged<ReachabilityMonitor>.passUnretained(self).toOpaque())
         guard let reachability = networkReachability else { return }
         SCNetworkReachabilitySetCallback(reachability, callback, &context)
         SCNetworkReachabilitySetDispatchQueue(reachability, reachabilitySerialQueue)
