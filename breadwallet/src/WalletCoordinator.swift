@@ -28,6 +28,7 @@ class WalletCoordinator : Subscriber {
     private var updateTimer: Timer?
     private let defaults = UserDefaults.standard
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
+    private var reachability = ReachabilityMonitor()
 
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
@@ -35,6 +36,9 @@ class WalletCoordinator : Subscriber {
         addWalletObservers()
         addSubscriptions()
         updateBalance()
+        reachability.didChange = { [weak self] isReachable in
+            self?.reachabilityDidChange(isReachable: isReachable)
+        }
     }
 
     private var lastBlockHeight: UInt32 {
@@ -217,6 +221,18 @@ class WalletCoordinator : Subscriber {
         notification.alertBody = message
         notification.soundName = "coinflip.aiff"
         UIApplication.shared.presentLocalNotificationNow(notification)
+    }
+
+    private func reachabilityDidChange(isReachable: Bool) {
+        if !isReachable {
+            DispatchQueue.walletQueue.async {
+                self.walletManager.peerManager?.disconnect()
+                DispatchQueue.main.async {
+                    self.store.perform(action: WalletChange.setSyncingErrorMessage(nil))
+                    self.store.perform(action: WalletChange.setIsSyncing(false))
+                }
+            }
+        }
     }
 
     private func addSubscriptions() {
