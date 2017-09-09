@@ -40,7 +40,7 @@ class ModalPresenter : Subscriber, Trackable {
         return SupportCenterContainer(walletManager: self.walletManager!, store: self.store, apiClient: self.noAuthApiClient)
     }()
     private var currentRequest: PaymentRequest?
-    private var reachability = ReachabilityManager(host: "google.com")
+    private var reachability = ReachabilityMonitor()
     private var notReachableAlert: InAppAlert?
     private let wipeNavigationDelegate: StartNavigationDelegate
 
