@@ -89,11 +89,13 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
 
     internal lazy var lazyPeerManager: BRPeerManager? = {
         guard let wallet = self.wallet else { return nil }
+        assert(!Thread.isMainThread, "should not be main")
         return BRPeerManager(wallet: wallet, earliestKeyTime: self.earliestKeyTime,
                              blocks: self.loadBlocks(), peers: self.loadPeers(), listener: self)
     }()
 
     internal lazy var lazyWallet: BRWallet? = {
+        assert(!Thread.isMainThread, "should not be main")
         return BRWallet(transactions: self.loadTransactions(), masterPubKey: self.masterPubKey,
                         listener: self)
     }()
