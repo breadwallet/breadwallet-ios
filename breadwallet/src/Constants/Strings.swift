@@ -282,8 +282,8 @@ enum S {
     }
 
     enum SyncingView {
-        static let header = NSLocalizedString("SyncingView.header", value:"Syncing", comment: "Syncing view header text")
-        static let retry = NSLocalizedString("SyncingView.retry", value:"Retry", comment: "Retry button label")
+        static let syncing = NSLocalizedString("SyncingView.syncing", value:"Syncing", comment: "Syncing view syncing state header text")
+        static let connecting = NSLocalizedString("SyncingView.connecting", value:"Connecting", comment: "Syncing view connectiong state header text")
     }
 
     enum ReScan {

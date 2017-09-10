@@ -146,9 +146,13 @@ class AccountViewController : UIViewController, Subscriber {
                             self.transactionsTableView.syncingView.timestamp = state.walletState.lastBlockTimestamp
         })
 
-        store.lazySubscribe(self, selector: { $0.walletState.isSyncing != $1.walletState.isSyncing },
+        store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState },
                             callback: { state in
-                                self.transactionsTableView.isSyncingViewVisible = state.walletState.isSyncing
+                                if state.walletState.syncState == .success {
+                                    self.transactionsTableView.isSyncingViewVisible = false
+                                } else {
+                                    self.transactionsTableView.isSyncingViewVisible = true
+                                }
         })
 
         store.subscribe(self, selector: { $0.isLoadingTransactions != $1.isLoadingTransactions }, callback: {
