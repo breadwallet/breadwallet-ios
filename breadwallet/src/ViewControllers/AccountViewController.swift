@@ -148,10 +148,13 @@ class AccountViewController : UIViewController, Subscriber {
 
         store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState },
                             callback: { state in
+                                guard let peerManager = self.walletManager?.peerManager else { return }
                                 if state.walletState.syncState == .success {
                                     self.transactionsTableView.isSyncingViewVisible = false
-                                } else {
+                                } else if peerManager.shouldShowSyncingView {
                                     self.transactionsTableView.isSyncingViewVisible = true
+                                } else {
+                                    self.transactionsTableView.isSyncingViewVisible = false
                                 }
         })
 
