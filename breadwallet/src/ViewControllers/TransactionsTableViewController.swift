@@ -120,19 +120,19 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             self.reload()
         })
 
-        store.subscribe(self, selector: { $0.walletState.syncErrorMessage != $1.walletState.syncErrorMessage
+        store.subscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState
         }, callback: {
-            if let message = $0.walletState.syncErrorMessage {
-                self.syncingView.setError(message: message)
-            } else {
-                self.syncingView.resetAfterError()
+            if $0.walletState.syncState == .syncing {
+                self.syncingView.reset()
+            } else if $0.walletState.syncState == .connecting {
+                self.syncingView.setIsConnecting()
             }
         })
 
         store.subscribe(self, selector: { $0.recommendRescan != $1.recommendRescan }, callback: { _ in
             self.attemptShowPrompt()
         })
-        store.subscribe(self, selector: { $0.walletState.isSyncing != $1.walletState.isSyncing }, callback: { _ in
+        store.subscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { _ in
             self.reload()
         })
         store.subscribe(self, name: .didUpgradePin, callback: { _ in
@@ -157,12 +157,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                 self.reload(txHash: txHash)
             }
         })
-
-        syncingView.retry.tap = { [weak self] in
-            self?.syncingView.resetAfterError()
-            self?.store.perform(action: WalletChange.setSyncingErrorMessage(nil))
-            self?.store.trigger(name: .retrySync)
-        }
 
         emptyMessage.textAlignment = .center
         emptyMessage.text = S.TransactionDetails.emptyMessage
@@ -235,7 +229,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
             if let transactionCell = cell as? TransactionTableViewCell, let rate = rate {
                 transactionCell.setStyle(style)
-                transactionCell.setTransaction(transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits, isSyncing: store.state.walletState.isSyncing)
+                transactionCell.setTransaction(transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits, isSyncing: store.state.walletState.syncState != .success)
             }
             return cell
         }

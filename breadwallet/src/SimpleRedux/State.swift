@@ -61,24 +61,29 @@ enum RootModal {
     case requestAmount
 }
 
+enum SyncState {
+    case syncing
+    case connecting
+    case success
+}
+
 struct WalletState {
     let isConnected: Bool
     let syncProgress: Double
-    let isSyncing: Bool
+    let syncState: SyncState
     let balance: UInt64?
     let transactions: [Transaction]
     let lastBlockTimestamp: UInt32
     let name: String
-    let syncErrorMessage: String?
     let creationDate: Date
     let isRescanning: Bool
     static var initial: WalletState {
-        return WalletState(isConnected: false, syncProgress: 0.0, isSyncing: false, balance: nil, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, syncErrorMessage: nil, creationDate: Date.zeroValue(), isRescanning: false)
+        return WalletState(isConnected: false, syncProgress: 0.0, syncState: .success, balance: nil, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, creationDate: Date.zeroValue(), isRescanning: false)
     }
 }
 
 extension WalletState : Equatable {}
 
 func ==(lhs: WalletState, rhs: WalletState) -> Bool {
-    return lhs.isConnected == rhs.isConnected && lhs.syncProgress == rhs.syncProgress && lhs.isSyncing == rhs.isSyncing && lhs.balance == rhs.balance && lhs.transactions == rhs.transactions && lhs.name == rhs.name && lhs.syncErrorMessage == rhs.syncErrorMessage && lhs.creationDate == rhs.creationDate && lhs.isRescanning == rhs.isRescanning
+    return lhs.isConnected == rhs.isConnected && lhs.syncProgress == rhs.syncProgress && lhs.syncState == rhs.syncState && lhs.balance == rhs.balance && lhs.transactions == rhs.transactions && lhs.name == rhs.name && lhs.creationDate == rhs.creationDate && lhs.isRescanning == rhs.isRescanning
 }
