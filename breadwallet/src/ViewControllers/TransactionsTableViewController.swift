@@ -163,6 +163,16 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         reload()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        DispatchQueue.main.asyncAfter(deadline: .now() + promptDelay, execute: { [weak self] in
+            guard let myself = self else { return }
+            if !myself.isSyncingViewVisible {
+                myself.attemptShowPrompt()
+            }
+        })
+    }
+
     private func reload(txHash: String) {
         self.transactions.enumerated().forEach { i, tx in
             if tx.hash == txHash {
