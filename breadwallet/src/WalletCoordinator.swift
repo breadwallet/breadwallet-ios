@@ -14,7 +14,7 @@ private let lastBlockHeightKey = "LastBlockHeightKey"
 private let progressUpdateInterval: TimeInterval = 0.5
 private let updateDebounceInterval: TimeInterval = 0.4
 
-class WalletCoordinator : Subscriber {
+class WalletCoordinator : Subscriber, Trackable {
 
     var kvStore: BRReplicatedKVStore? {
         didSet {
@@ -29,7 +29,8 @@ class WalletCoordinator : Subscriber {
     private let defaults = UserDefaults.standard
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     private var reachability = ReachabilityMonitor()
-
+    private var retryTimer: RetryTimer?
+    
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
         self.store = store
@@ -61,11 +62,12 @@ class WalletCoordinator : Subscriber {
     }
 
     private func onSyncStart() {
+        retryTimer?.stop()
+        retryTimer = nil
         endBackgroundTask()
         startBackgroundTask()
         progressTimer = Timer.scheduledTimer(timeInterval: progressUpdateInterval, target: self, selector: #selector(WalletCoordinator.updateProgress), userInfo: nil, repeats: true)
-        store.perform(action: WalletChange.setSyncingErrorMessage(nil))
-        store.perform(action: WalletChange.setIsSyncing(true))
+        store.perform(action: WalletChange.setSyncingState(.syncing))
         startActivity()
     }
 
@@ -79,8 +81,18 @@ class WalletCoordinator : Subscriber {
         if notification.userInfo != nil {
             guard let code = notification.userInfo?["errorCode"] else { return }
             guard let message = notification.userInfo?["errorDescription"] else { return }
-            store.perform(action: WalletChange.setSyncingErrorMessage("\(message) (\(code))"))
+            store.perform(action: WalletChange.setSyncingState(.connecting))
+            saveEvent("event.syncErrorMessage", attributes: ["message": "\(message) (\(code))"])
             endActivity()
+
+            if retryTimer == nil {
+                retryTimer = RetryTimer()
+                retryTimer?.callback = strongify(self) { myself in
+                    myself.store.trigger(name: .retrySync)
+                }
+                retryTimer?.start()
+            }
+
             return
         }
         
@@ -89,8 +101,7 @@ class WalletCoordinator : Subscriber {
         }
         progressTimer?.invalidate()
         progressTimer = nil
-        store.perform(action: WalletChange.setIsSyncing(false))
-        store.perform(action: WalletChange.setIsRescanning(false))
+        store.perform(action: WalletChange.setSyncingState(.success))
         endActivity()
     }
 
@@ -183,7 +194,7 @@ class WalletCoordinator : Subscriber {
     private func checkForReceived(newBalance: UInt64) {
         if let oldBalance = store.state.walletState.balance {
             if newBalance > oldBalance {
-                if !store.state.walletState.isSyncing {
+                if store.state.walletState.syncState == .success {
                     self.showReceived(amount: newBalance - oldBalance)
                 }
             }
@@ -228,8 +239,7 @@ class WalletCoordinator : Subscriber {
             DispatchQueue.walletQueue.async {
                 self.walletManager.peerManager?.disconnect()
                 DispatchQueue.main.async {
-                    self.store.perform(action: WalletChange.setSyncingErrorMessage(nil))
-                    self.store.perform(action: WalletChange.setIsSyncing(false))
+                    self.store.perform(action: WalletChange.setSyncingState(.connecting))
                 }
             }
         }

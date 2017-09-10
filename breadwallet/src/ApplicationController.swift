@@ -134,7 +134,7 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     func didEnterBackground() {
-        if !store.state.walletState.isSyncing {
+        if store.state.walletState.syncState == .success {
             DispatchQueue.walletQueue.async {
                 self.walletManager?.peerManager?.disconnect()
             }
@@ -297,8 +297,8 @@ class ApplicationController : Subscriber, Trackable {
         let group = DispatchGroup()
         if let peerManager = walletManager?.peerManager, peerManager.syncProgress(fromStartHeight: peerManager.lastBlockHeight) < 1.0 {
             group.enter()
-            store.subscribe(self, selector: { $0.walletState.isSyncing != $1.walletState.isSyncing }, callback: { state in
-                if state.walletState.isSyncing == false {
+            store.subscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { state in
+                if state.walletState.syncState == .success {
                     DispatchQueue.walletQueue.async {
                         peerManager.disconnect()
                         group.leave()
