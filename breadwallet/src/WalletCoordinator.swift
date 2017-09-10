@@ -62,8 +62,6 @@ class WalletCoordinator : Subscriber, Trackable {
     }
 
     private func onSyncStart() {
-        retryTimer?.stop()
-        retryTimer = nil
         endBackgroundTask()
         startBackgroundTask()
         progressTimer = Timer.scheduledTimer(timeInterval: progressUpdateInterval, target: self, selector: #selector(WalletCoordinator.updateProgress), userInfo: nil, repeats: true)
@@ -85,7 +83,7 @@ class WalletCoordinator : Subscriber, Trackable {
             saveEvent("event.syncErrorMessage", attributes: ["message": "\(message) (\(code))"])
             endActivity()
 
-            if retryTimer == nil {
+            if retryTimer == nil && reachability.isReachable {
                 retryTimer = RetryTimer()
                 retryTimer?.callback = strongify(self) { myself in
                     myself.store.trigger(name: .retrySync)
@@ -95,7 +93,8 @@ class WalletCoordinator : Subscriber, Trackable {
 
             return
         }
-        
+        retryTimer?.stop()
+        retryTimer = nil
         if let height = walletManager.peerManager?.lastBlockHeight {
             self.lastBlockHeight = height
         }
