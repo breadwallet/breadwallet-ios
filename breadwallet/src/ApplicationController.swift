@@ -168,6 +168,7 @@ class ApplicationController : Subscriber, Trackable {
 
         if UIApplication.shared.applicationState != .background {
             if walletManager.noWallet {
+                UserDefaults.hasShownWelcome = true
                 addWalletCreationListener()
                 store.perform(action: ShowStartFlow())
             } else {
