@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+
 struct Rate {
     let code: String
     let name: String
