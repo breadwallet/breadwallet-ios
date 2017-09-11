@@ -37,6 +37,7 @@ class AccountViewController : UIViewController, Subscriber {
                 loginView.shouldSelfDismiss = true
                 present(loginView, animated: false, completion: {
                     self.tempLoginView.remove()
+                    self.attemptShowWelcomeView()
                 })
             }
             transactionsTableView.walletManager = walletManager
@@ -66,6 +67,8 @@ class AccountViewController : UIViewController, Subscriber {
     private let loginView: LoginViewController
     private let tempLoginView: LoginViewController
     private let loginTransitionDelegate = LoginTransitionDelegate()
+    private let welcomeTransitingDelegate = PinTransitioningDelegate()
+
     private let searchHeaderview: SearchHeaderView = {
         let view = SearchHeaderView()
         view.isHidden = true
@@ -313,6 +316,18 @@ class AccountViewController : UIViewController, Subscriber {
             }))
         }
         present(alert, animated: true, completion: nil)
+    }
+
+    private func attemptShowWelcomeView() {
+//        if !UserDefaults.hasShownWelcome {
+//            let welcome = WelcomeViewController()
+//            welcome.transitioningDelegate = welcomeTransitingDelegate
+//            welcome.modalPresentationStyle = .overFullScreen
+//            welcome.modalPresentationCapturesStatusBarAppearance = true
+//            welcomeTransitingDelegate.shouldShowMaskView = false
+//            loginView.present(welcome, animated: true, completion: nil)
+//            UserDefaults.hasShownWelcome = true
+//        }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
