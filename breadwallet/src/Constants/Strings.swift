@@ -197,9 +197,9 @@ enum S {
         static let header = NSLocalizedString("RecoverWallet.header", value:"Recover Wallet", comment: "Recover wallet header")
         static let subheader = NSLocalizedString("RecoverWallet.subheader", value:"Enter the paper key for the wallet you want to recover.", comment: "Recover wallet sub-header")
 
-        static let headerResetPin = NSLocalizedString("RecoverWallet.header-reset-pin", value:"Reset PIN", comment: "Reset PIN with paper key: header")
-        static let subheaderResetPin = NSLocalizedString("RecoverWallet.subheader-reset-pin", value:"To reset your PIN, enter the words from your paper key into the boxes below.", comment: "Reset PIN with paper key: sub-header")
-        static let resetPinInfo = NSLocalizedString("RecoverWallet.reset-pin-more-info", value:"Tap here for more information.", comment: "Reset PIN with paper key: more information button.")
+        static let headerResetPin = NSLocalizedString("RecoverWallet.header_reset_pin", value:"Reset PIN", comment: "Reset PIN with paper key: header")
+        static let subheaderResetPin = NSLocalizedString("RecoverWallet.subheader_reset_pin", value:"To reset your PIN, enter the words from your paper key into the boxes below.", comment: "Reset PIN with paper key: sub-header")
+        static let resetPinInfo = NSLocalizedString("RecoverWallet.reset_pin_more_info", value:"Tap here for more information.", comment: "Reset PIN with paper key: more information button.")
         static let invalid = NSLocalizedString("RecoverWallet.invalid", value:"The paper key you entered is invalid. Please double-check each word and try again.", comment: "Invalid paper key message")
     }
 
