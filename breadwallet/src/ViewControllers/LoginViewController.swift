@@ -48,6 +48,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     private let isPresentedForLock: Bool
     private let disabledView: WalletDisabledView
     private let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+
     private var logo: UIImageView = {
         let image = UIImageView(image: #imageLiteral(resourceName: "Logo"))
         image.contentMode = .scaleAspectFit
