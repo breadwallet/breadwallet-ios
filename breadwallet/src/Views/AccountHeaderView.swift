@@ -197,6 +197,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     private func transform(forView: UIView) ->  CGAffineTransform {
+        forView.transform = .identity //Must reset the view's transform before we calculate the next transform
         let scaleFactor: CGFloat = smallFontSize/largeFontSize
         let deltaX = forView.frame.width * (1-scaleFactor)
         let deltaY = forView.frame.height * (1-scaleFactor)
@@ -256,7 +257,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             NSLayoutConstraint.activate(isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
             primaryBalance.setValue(amount.amountForBtcFormat)
             secondaryBalance.setValue(amount.localAmount)
-            layoutIfNeeded()
             if isBtcSwapped {
                 primaryBalance.transform = transform(forView: primaryBalance)
             } else {
@@ -275,27 +275,21 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
             primaryBalance.setValueAnimated(amount.amountForBtcFormat, completion: { [weak self] in
                 guard let myself = self else { return }
-                myself.layoutIfNeeded()
                 if !myself.isBtcSwapped {
                     myself.primaryBalance.transform = .identity
                 } else {
-                    if myself.primaryBalance.transform == .identity {
-                        myself.primaryBalance.transform = myself.transform(forView: myself.primaryBalance)
-                    }
+                    myself.primaryBalance.transform = myself.transform(forView: myself.primaryBalance)
                 }
-                self?.hideExtraViews()
+                myself.hideExtraViews()
             })
             secondaryBalance.setValueAnimated(amount.localAmount, completion: { [weak self] in
                 guard let myself = self else { return }
-                myself.layoutIfNeeded()
                 if myself.isBtcSwapped {
                     myself.secondaryBalance.transform = .identity
                 } else {
-                    if myself.secondaryBalance.transform == .identity {
-                        myself.secondaryBalance.transform = myself.transform(forView: myself.secondaryBalance)
-                    }
+                    myself.secondaryBalance.transform = myself.transform(forView: myself.secondaryBalance)
                 }
-                self?.hideExtraViews()
+                myself.hideExtraViews()
             })
         }
     }
@@ -315,7 +309,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         } else {
             primaryBalance.isHidden = false
         }
-
         equals.isHidden = didHide
     }
 
@@ -331,8 +324,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             NSLayoutConstraint.deactivate(!self.isBtcSwapped ? self.regularConstraints : self.swappedConstraints)
             NSLayoutConstraint.activate(!self.isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
             self.layoutIfNeeded()
-        }) { _ in
-        }
+        }) { _ in }
 
         self.store.perform(action: CurrencyChange.toggle())
     }
