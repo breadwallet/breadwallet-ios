@@ -17,7 +17,7 @@ class WelcomeViewController : UIViewController, ContentBoxPresenter {
     private let header = GradientView()
     private let titleLabel = UILabel.wrapping(font: .customBody(size: 26.0), color: .darkText)
     private let body = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
-    private let button = ShadowButton(title: "OK", type: .primary)
+    private let button = ShadowButton(title: S.Button.ok, type: .primary)
 
     override func viewDidLoad() {
         addSubviews()
@@ -38,7 +38,7 @@ class WelcomeViewController : UIViewController, ContentBoxPresenter {
             contentBox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             contentBox.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             contentBox.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -C.padding[6] ) ])
-        header.constrainTopCorners(height: 8.0)
+        header.constrainTopCorners(height: 44.0)
         titleLabel.constrain([
             titleLabel.leadingAnchor.constraint(equalTo: contentBox.leadingAnchor, constant: C.padding[2]),
             titleLabel.topAnchor.constraint(equalTo: header.bottomAnchor, constant: C.padding[2]),
@@ -46,7 +46,7 @@ class WelcomeViewController : UIViewController, ContentBoxPresenter {
 
         body.constrain([
             body.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            body.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            body.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: C.padding[2]),
             body.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]) ])
 
         button.constrain([
@@ -60,12 +60,24 @@ class WelcomeViewController : UIViewController, ContentBoxPresenter {
         view.backgroundColor = .clear
         contentBox.layer.cornerRadius = 6.0
         contentBox.layer.masksToBounds = true
-
-        titleLabel.text = "Welcome to the new Bread"
-        body.text = "•Narwhal ut activated charcoal bespoke, copper mug hell of kogi shoreditch lomo consectetur you probably haven't heard of them post-ironic.\n\n•Live-edge esse la croix photo booth, williamsburg raw denim YOLO laborum.\n\n•Poke gluten-free schlitz tofu et quinoa iceland fugiat trust fund typewriter tbh non 90's.\n\n•Man bun vice ad, beard selvage dreamcatcher tattooed ethical typewriter excepteur est in."
+        titleLabel.textAlignment = .center
+        titleLabel.text = S.Welcome.title
+        setBodyText()
         button.tap = strongify(self) { myself in
             myself.dismiss(animated: true, completion: nil)
         }
+    }
+
+    private func setBodyText() {
+        let bodyText = S.Welcome.body
+        let attributedString = NSMutableAttributedString(string: S.Welcome.body)
+        let icon = NSTextAttachment()
+        icon.image = #imageLiteral(resourceName: "Faq")
+        icon.bounds = CGRect(x: 0, y: -3.0, width: body.font.pointSize, height: body.font.pointSize)
+        let range = S.Welcome.body.range(of: "(?)")
+        let nsRange = bodyText.nsRange(from: range!)
+        attributedString.replaceCharacters(in: nsRange, with: NSAttributedString(attachment: icon))
+        body.attributedText = attributedString
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
