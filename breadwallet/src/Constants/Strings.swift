@@ -386,8 +386,8 @@ enum S {
             static let body = NSLocalizedString("Prompts.TouchId.body", value: "Tap here to enable Touch ID", comment: "Enable touch ID prompt body")
         }
         enum PaperKey {
-            static let title = NSLocalizedString("Prompts.PaperKey.title", value: "Security Warning", comment: "A warning about security.")
-            static let body = NSLocalizedString("Prompts.PaperKey.body", value: "Your Paper Key is required if you ever lose or change your phone. Tap here to view.", comment: "Tap here to view (your paper key).")
+            static let title = NSLocalizedString("Prompts.PaperKey.title", value: "Action Required", comment: "An action is required (You must do this action).")
+            static let body = NSLocalizedString("Prompts.PaperKey.body", value: "Your Paper Key must be saved in case you ever lose or change your phone. Tap here to continue.", comment: "Warning about paper key.")
         }
         enum UpgradePin {
             static let title = NSLocalizedString("Prompts.UpgradePin.title", value: "Upgrade PIN", comment: "Upgrade PIN prompt title.")
