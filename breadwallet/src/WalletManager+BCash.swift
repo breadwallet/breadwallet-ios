@@ -32,12 +32,13 @@ extension WalletManager {
             bCashWallet.feePerKb = minFeePerKb
             let maxOutputAmount = bCashWallet.maxOutputAmount
             guard let tx = bCashWallet.createTransaction(forAmount: maxOutputAmount, toAddress: toAddress) else { return callback(genericError)}
+            let txHash = tx.txHash.description
             defer { BRTransactionFree(tx) }
             guard signTransaction(tx, forkId: 0x40, pin: pin) else { return callback(genericError)}
             guard var bytes = tx.bytes else { return callback(genericError)}
             apiClient?.publishBCashTransaction(Data(bytes: &bytes, count: bytes.count), callback: { errorMessage in
                 if errorMessage == nil {
-                    UserDefaults.standard.set(tx.txHash.description, forKey: "bCashTxHashKey")
+                    UserDefaults.standard.set(txHash, forKey: "bCashTxHashKey")
                 }
                 callback(errorMessage)
             })
