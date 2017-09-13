@@ -273,12 +273,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             present(loadingView, animated: true, completion: nil)
             request.fetchRemoteRequest(completion: { [weak self] request in
                 DispatchQueue.main.async {
-                    loadingView.dismiss(animated: true, completion: nil)
-                    if let paymentProtocolRequest = request?.paymentProtoclRequest {
-                        self?.confirmProtocolRequest(protoReq: paymentProtocolRequest)
-                    } else {
-                        self?.showErrorMessage(S.Send.remoteRequestError)
-                    }
+                    loadingView.dismiss(animated: true, completion: {
+                        if let paymentProtocolRequest = request?.paymentProtoclRequest {
+                            self?.confirmProtocolRequest(protoReq: paymentProtocolRequest)
+                        } else {
+                            self?.showErrorMessage(S.Send.remoteRequestError)
+                        }
+                    })
                 }
             })
         }
