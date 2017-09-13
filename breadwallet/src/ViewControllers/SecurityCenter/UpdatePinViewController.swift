@@ -47,14 +47,16 @@ class UpdatePinViewController : UIViewController, Subscriber {
             switch step {
             case .verify:
                 instruction.text = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterCurrent
+                caption.isHidden = true
             case .new:
                 let instructionText = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterNew
                 if instruction.text != instructionText {
                     instruction.pushNewText(instructionText)
                 }
                 header.text = S.UpdatePin.createTitle
-                caption.text = S.UpdatePin.caption
+                caption.isHidden = false
             case .confirmNew:
+                caption.isHidden = true
                 if isCreatingPin {
                     header.text = S.UpdatePin.createTitleConfirm
                 } else {
@@ -98,14 +100,11 @@ class UpdatePinViewController : UIViewController, Subscriber {
         header.constrain([
             header.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2]),
             header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            header.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
+            header.trailingAnchor.constraint(equalTo: faq.leadingAnchor, constant: -C.padding[1]) ])
         instruction.constrain([
             instruction.leadingAnchor.constraint(equalTo: header.leadingAnchor),
             instruction.topAnchor.constraint(equalTo: header.bottomAnchor, constant: C.padding[2]),
             instruction.trailingAnchor.constraint(equalTo: header.trailingAnchor) ])
-        spacer.constrain([
-            spacer.topAnchor.constraint(equalTo: instruction.bottomAnchor),
-            spacer.bottomAnchor.constraint(equalTo: caption.topAnchor) ])
         pinView.constrain([
             pinView.centerYAnchor.constraint(equalTo: spacer.centerYAnchor),
             pinView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -115,8 +114,11 @@ class UpdatePinViewController : UIViewController, Subscriber {
             pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
             pinPad.view.constrain([pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height) ])
         })
+        spacer.constrain([
+            spacer.topAnchor.constraint(equalTo: instruction.bottomAnchor),
+            spacer.bottomAnchor.constraint(equalTo: caption.topAnchor) ])
         faq.constrain([
-            faq.centerYAnchor.constraint(equalTo: header.centerYAnchor),
+            faq.topAnchor.constraint(equalTo: header.topAnchor),
             faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             faq.constraint(.height, constant: 44.0),
             faq.constraint(.width, constant: 44.0)])
@@ -127,6 +129,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
     }
 
     private func setData() {
+        caption.text = S.UpdatePin.caption
         view.backgroundColor = .whiteTint
         header.text = isCreatingPin ? S.UpdatePin.createTitle : S.UpdatePin.updateTitle
         instruction.text = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterCurrent
@@ -144,6 +147,9 @@ class UpdatePinViewController : UIViewController, Subscriber {
 
         if isCreatingPin {
             step = .new
+            caption.isHidden = false
+        } else {
+            caption.isHidden = true
         }
 
         if !showsBackButton {
@@ -206,7 +212,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
         pinView = PinView(style: .create, length: newPinLength)
         view.addSubview(pinView)
         pinView.constrain([
-            pinView.topAnchor.constraint(equalTo: instruction.bottomAnchor, constant: C.padding[6]),
+            pinView.centerYAnchor.constraint(equalTo: spacer.centerYAnchor),
             pinView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.width),
             pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
