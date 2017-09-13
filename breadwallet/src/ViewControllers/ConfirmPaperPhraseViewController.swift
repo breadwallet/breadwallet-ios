@@ -128,6 +128,7 @@ class ConfirmPaperPhraseViewController : UIViewController {
         } else {
             confirmFirstPhrase.validate()
             confirmSecondPhrase.validate()
+            showErrorMessage(S.ConfirmPaperPhrase.error)
         }
     }
 
