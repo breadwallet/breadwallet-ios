@@ -101,7 +101,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                                 self.balance = balance
                             }
         })
-        sendButton.isEnabled = false
         walletManager.wallet?.feePerKb = store.state.fees.regular
     }
 
@@ -171,13 +170,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             let feeText = feeAmount.description
             feeOutput = String(format: S.Send.fee, feeText)
             if (balance >= fee) && amount.rawValue > (balance - fee) {
-                sendButton.isEnabled = false
                 color = .cameraGuideNegative
-            } else {
-                sendButton.isEnabled = true
             }
-        } else {
-            sendButton.isEnabled = false
         }
 
         let attributes: [String: Any] = [
@@ -236,6 +230,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             }
             guard !(walletManager.wallet?.containsAddress(address) ?? false) else {
                 return showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
+            }
+            guard amount.rawValue <= (walletManager.wallet?.maxOutputAmount ?? 0) else {
+                return showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
             }
             guard sender.createTransaction(amount: amount.rawValue, to: address) else {
                 return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
