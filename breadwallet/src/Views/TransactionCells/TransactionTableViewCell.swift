@@ -70,7 +70,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         let identity: CGAffineTransform = .identity
         if transaction.direction == .received {
             arrow.transform = identity.rotated(by: π/2.0)
-            arrow.tintColor = UIColor(red: 0.0, green: 169.0/255.0, blue: 157.0/255.0, alpha: 1.0)
+            arrow.tintColor = .txListGreen
         } else {
             arrow.transform = identity.rotated(by: 3.0*π/2.0)
             arrow.tintColor = .cameraGuideNegative
@@ -90,7 +90,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     private let topPadding: CGFloat = 19.0
     private var style: TransactionCellStyle = .first
     private var transaction: Transaction?
-    private let availability = UILabel(font: .customBold(size: 13.0), color: .green)
+    private let availability = UILabel(font: .customBold(size: 13.0), color: .txListGreen)
     private var timer: Timer? = nil
     private let arrow = UIImageView(image: #imageLiteral(resourceName: "CircleArrow").withRenderingMode(.alwaysTemplate))
 
