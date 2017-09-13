@@ -14,6 +14,12 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     func set(transaction: Transaction, isBtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) {
@@ -76,6 +82,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     private let txHashHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let availability = UILabel(font: .customBold(size: 13.0), color: .txListGreen)
     private let blockHeight = UILabel(font: .customBody(size: 13.0), color: .darkText)
+    private var scrollViewHeight: NSLayoutConstraint?
 
     private func setup() {
         addSubviews()
@@ -106,7 +113,12 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
 
     private func addConstraints() {
         header.constrainTopCorners(height: headerHeight)
-        scrollView.constrain(toSuperviewEdges: UIEdgeInsets(top: headerHeight, left: 0, bottom: 0, right: 0))
+        scrollViewHeight = scrollView.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -headerHeight)
+        scrollView.constrain([
+            scrollView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: headerHeight),
+            scrollView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            scrollViewHeight ])
         scrollViewContent.constrain([
             scrollViewContent.topAnchor.constraint(equalTo: scrollView.topAnchor),
             scrollViewContent.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
@@ -315,6 +327,21 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         if let tx = transaction {
             store?.trigger(name: .txMemoUpdated(tx.hash))
         }
+    }
+
+    //MARK: - Keyboard Notifications
+    @objc private func keyboardWillShow(notification: Notification) {
+        respondToKeyboardAnimation(notification: notification)
+    }
+
+    @objc private func keyboardWillHide(notification: Notification) {
+        respondToKeyboardAnimation(notification: notification)
+    }
+
+    private func respondToKeyboardAnimation(notification: Notification) {
+        guard let info = KeyboardNotificationInfo(notification.userInfo) else { return }
+        guard let height = scrollViewHeight else { return }
+        height.constant = height.constant + info.deltaY
     }
 
     required init?(coder aDecoder: NSCoder) {
