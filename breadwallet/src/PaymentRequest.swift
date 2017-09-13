@@ -92,6 +92,9 @@ struct PaymentRequest {
                     completion(PaymentRequest(string: line))
                     break
                 }
+                completion(nil)
+            } else {
+                completion(nil)
             }
         }.resume()
     }
