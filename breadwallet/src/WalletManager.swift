@@ -101,7 +101,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }()
 
     internal lazy var bCashWallet: BRWallet? = {
-        guard let wallet = self.wallet else { return nil}
+        guard let wallet = self.wallet else { return nil }
         let txns = wallet.transactions.flatMap { return $0} .filter { $0.pointee.blockHeight < bCashForkBlockHeight }
         return BRWallet(transactions: txns, masterPubKey: self.masterPubKey, listener: BadListener())
     }()
@@ -542,6 +542,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     private func loadTransactions() -> [BRTxRef?] {
+        assert(!Thread.isMainThread, "should not be main")
         DispatchQueue.main.async { self.store.perform(action: LoadTransactions.set(true)) }
         var transactions = [BRTxRef?]()
         var sql: OpaquePointer? = nil
@@ -568,6 +569,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     private func loadBlocks() -> [BRBlockRef?] {
+        assert(!Thread.isMainThread, "should not be main")
         var blocks = [BRBlockRef?]()
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "select ZHEIGHT, ZNONCE, ZTARGET, ZTOTALTRANSACTIONS, ZVERSION, ZTIMESTAMP, " +
@@ -599,6 +601,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     private func loadPeers() -> [BRPeer] {
+        assert(!Thread.isMainThread, "should not be main")
         var peers = [BRPeer]()
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "select ZADDRESS, ZPORT, ZSERVICES, ZTIMESTAMP from ZBRPEERENTITY", -1, &sql, nil)
