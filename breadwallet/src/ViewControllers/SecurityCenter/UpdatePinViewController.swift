@@ -227,41 +227,45 @@ class UpdatePinViewController : UIViewController, Subscriber {
     }
 
     private func didSetNewPin() {
-        guard let newPin = newPin else { return }
-        var success: Bool = false
-        if let seedPhrase = phrase {
-            success = walletManager.forceSetPin(newPin: newPin, seedPhrase: seedPhrase)
-        } else if let currentPin = currentPin {
-            success = walletManager.changePin(newPin: newPin, pin: currentPin)
-            store.trigger(name: .didUpgradePin)
-        } else if type == .creationNoPhrase {
-            success = walletManager.forceSetPin(newPin: newPin)
-        }
-
-        if success {
-            if resetFromDisabledSuccess != nil {
-                resetFromDisabledWillSucceed?()
-                store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
-                    self?.dismiss(animated: true, completion: {
-                        self?.resetFromDisabledSuccess?()
-                    })
-                })))
-            } else {
-                store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
-                    self?.setPinSuccess?(newPin)
-                    if self?.type != .creationNoPhrase {
-                        self?.parent?.dismiss(animated: true, completion: nil)
-                    }
-                })))
+        DispatchQueue.walletQueue.async { [weak self] in
+            guard let newPin = self?.newPin else { return }
+            var success: Bool? = false
+            if let seedPhrase = self?.phrase {
+                success = self?.walletManager.forceSetPin(newPin: newPin, seedPhrase: seedPhrase)
+            } else if let currentPin = self?.currentPin {
+                success = self?.walletManager.changePin(newPin: newPin, pin: currentPin)
+                DispatchQueue.main.async { self?.store.trigger(name: .didUpgradePin) }
+            } else if self?.type == .creationNoPhrase {
+                success = self?.walletManager.forceSetPin(newPin: newPin)
             }
 
-        } else {
-            let alert = UIAlertController(title: S.UpdatePin.updateTitle, message: S.UpdatePin.setPinError, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: { [weak self] _ in
-                self?.clearAfterFailure()
-                self?.pushNewStep(.new)
-            }))
-            present(alert, animated: true, completion: nil)
+            DispatchQueue.main.async {
+                if let success = success, success == true {
+                    if self?.resetFromDisabledSuccess != nil {
+                        self?.resetFromDisabledWillSucceed?()
+                        self?.store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
+                            self?.dismiss(animated: true, completion: {
+                                self?.resetFromDisabledSuccess?()
+                            })
+                        })))
+                    } else {
+                        self?.store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
+                            self?.setPinSuccess?(newPin)
+                            if self?.type != .creationNoPhrase {
+                                self?.parent?.dismiss(animated: true, completion: nil)
+                            }
+                        })))
+                    }
+
+                } else {
+                    let alert = UIAlertController(title: S.UpdatePin.updateTitle, message: S.UpdatePin.setPinError, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: { [weak self] _ in
+                        self?.clearAfterFailure()
+                        self?.pushNewStep(.new)
+                    }))
+                    self?.present(alert, animated: true, completion: nil)
+                }
+            }
         }
     }
 
