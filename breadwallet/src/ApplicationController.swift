@@ -181,16 +181,16 @@ class ApplicationController : Subscriber, Trackable {
 
         //For when watch app launches app in background
         } else {
-            DispatchQueue.walletQueue.async {
+            DispatchQueue.walletQueue.async { [weak self] in
                 walletManager.peerManager?.connect()
+                if self?.fetchCompletionHandler != nil {
+                    self?.performBackgroundFetch()
+                }
             }
             exchangeUpdater?.refresh(completion: {
                 self.watchSessionManager.walletManager = self.walletManager
                 self.watchSessionManager.rate = self.store.state.currentRate
             })
-            if fetchCompletionHandler != nil {
-                performBackgroundFetch()
-            }
         }
     }
 
@@ -299,10 +299,12 @@ class ApplicationController : Subscriber, Trackable {
         if let peerManager = walletManager?.peerManager, peerManager.syncProgress(fromStartHeight: peerManager.lastBlockHeight) < 1.0 {
             group.enter()
             store.subscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { state in
-                if state.walletState.syncState == .success {
-                    DispatchQueue.walletQueue.async {
-                        peerManager.disconnect()
-                        group.leave()
+                if self.fetchCompletionHandler != nil {
+                    if state.walletState.syncState == .success {
+                        DispatchQueue.walletQueue.async {
+                            peerManager.disconnect()
+                            group.leave()
+                        }
                     }
                 }
             })
