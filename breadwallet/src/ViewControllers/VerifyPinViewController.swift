@@ -26,6 +26,7 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
         super.init(nibName: nil, bundle: nil)
     }
 
+    var didCancel: (()->Void)?
     let blurView = UIVisualEffectView()
     let effect = UIBlurEffect(style: .dark)
     let contentBox = UIView()
@@ -115,6 +116,7 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
             }
         }
         cancel.tap = { [weak self] in
+            self?.didCancel?()
             self?.dismiss(animated: true, completion: nil)
         }
         cancel.setTitle(S.Button.cancel, for: .normal)
