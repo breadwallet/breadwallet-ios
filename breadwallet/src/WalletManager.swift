@@ -102,7 +102,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
 
     internal lazy var bCashWallet: BRWallet? = {
         guard let wallet = self.wallet else { return nil }
-        let txns = wallet.transactions.flatMap { return $0} .filter { $0.pointee.blockHeight < bCashForkBlockHeight }
+        let txns = wallet.transactions.flatMap { return $0 } .filter { $0.pointee.blockHeight < bCashForkBlockHeight }
         return BRWallet(transactions: txns, masterPubKey: self.masterPubKey, listener: BadListener())
     }()
 
