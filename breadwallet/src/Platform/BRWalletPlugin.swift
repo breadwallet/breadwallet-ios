@@ -26,12 +26,18 @@
 import Foundation
 import BRCore
 
+enum BitIdAuthResult {
+    case success
+    case cancelled
+    case failed
+}
 
 class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     var sockets = [String: BRWebSocket]()
     let walletManager: WalletManager
     let store: Store
     var tempBitIDKeys = [String: BRKey]() // this should only ever be mutated from the main thread
+    private var isPresentingAuth = false
 
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
@@ -119,6 +125,10 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             guard let cts = request.headers["content-type"] , cts.count == 1 && cts[0] == "application/json" else {
                 return BRHTTPResponse(request: request, code: 400)
             }
+            guard !self.isPresentingAuth else {
+                return BRHTTPResponse(request: request, code: 423)
+            }
+
             guard let data = request.body(),
                       let j = try? JSONSerialization.jsonObject(with: data, options: []),
                       let json = j as? [String: String],
@@ -137,14 +147,21 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                         self.sendBitIDResponse(stringToSign, usingKey: key, request: request, asyncResp: asyncResp)
                     } else {
                         let prompt = bitidUrl.host ?? bitidUrl.description
-                        self.store.trigger(name: .authenticateForBitId(prompt, {
-                            if let key = self.walletManager.buildBitIdKey(url: url, index: bitidIndex) {
-                                self.addKeyToCache(key, url: url)
-                                self.sendBitIDResponse(stringToSign, usingKey: key, request: request, asyncResp: asyncResp)
-                            } else {
-                                request.queue.async {
-                                    asyncResp.provide(401)
+                        self.isPresentingAuth = true
+                        self.store.trigger(name: .authenticateForBitId(prompt, { [weak self]result in
+                            self?.isPresentingAuth = false
+                            switch result {
+                            case .success:
+                                if let key = self?.walletManager.buildBitIdKey(url: url, index: bitidIndex) {
+                                    self?.addKeyToCache(key, url: url)
+                                    self?.sendBitIDResponse(stringToSign, usingKey: key, request: request, asyncResp: asyncResp)
+                                } else {
+                                    request.queue.async { asyncResp.provide(401) }
                                 }
+                            case .cancelled:
+                                request.queue.async { asyncResp.provide(403) }
+                            case .failed:
+                                request.queue.async { asyncResp.provide(401) }
                             }
                         }))
                     }

@@ -767,29 +767,38 @@ class ModalPresenter : Subscriber, Trackable {
         topViewController?.present(alert, animated: true, completion: nil)
     }
 
-    private func authenticateForBitId(prompt: String, callback: @escaping () -> Void) {
+    private func authenticateForBitId(prompt: String, callback: @escaping (BitIdAuthResult) -> Void) {
         if UserDefaults.isTouchIdEnabled {
             walletManager?.authenticate(touchIDPrompt: prompt, completion: { result in
-                guard result == .success else { self.verifyPinForBitId(prompt: prompt, callback: callback); return }
-                callback()
+                switch result {
+                case .success:
+                    return callback(.success)
+                case .cancel:
+                    return callback(.cancelled)
+                case .failure:
+                    self.verifyPinForBitId(prompt: prompt, callback: callback)
+                case .fallback:
+                    self.verifyPinForBitId(prompt: prompt, callback: callback)
+                }
             })
         } else {
             self.verifyPinForBitId(prompt: prompt, callback: callback)
         }
     }
 
-    private func verifyPinForBitId(prompt: String, callback: @escaping () -> Void) {
+    private func verifyPinForBitId(prompt: String, callback: @escaping (BitIdAuthResult) -> Void) {
         guard let walletManager = walletManager else { return }
         let verify = VerifyPinViewController(bodyText: prompt, pinLength: store.state.pinLength, callback: { pin, view in
             if walletManager.authenticate(pin: pin) {
                 view.dismiss(animated: true, completion: {
-                    callback()
+                    callback(.success)
                 })
                 return true
             } else {
                 return false
             }
         })
+        verify.didCancel = { callback(.cancelled) }
         verify.transitioningDelegate = verifyPinTransitionDelegate
         verify.modalPresentationStyle = .overFullScreen
         verify.modalPresentationCapturesStatusBarAppearance = true

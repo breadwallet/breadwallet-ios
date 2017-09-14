@@ -53,7 +53,7 @@ enum TriggerName {
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
     case copyWalletAddresses(String?, String?)
-    case authenticateForBitId(String, ()->Void)
+    case authenticateForBitId(String, (BitIdAuthResult)->Void)
     case hideStatusBar
     case showStatusBar
     case lightWeightAlert(String)
