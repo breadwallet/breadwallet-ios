@@ -53,6 +53,7 @@ class Transaction {
         if let rate = rate, confirms < 6 && direction == .received {
             attemptCreateMetaData(tx: tx, rate: rate)
         }
+
     }
 
     func amountDescription(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> String {
@@ -76,8 +77,13 @@ class Transaction {
         let feeAmount = Amount(amount: fee, rate: rate, maxDigits: maxDigits)
         let feeString = direction == .sent ? String(format: S.Transaction.fee, "\(feeAmount.string(isBtcSwapped: isBtcSwapped))") : ""
         let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)) \(feeString)"
-        let startingString = String(format: S.Transaction.starting, "\(Amount(amount: startingBalance, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped))")
-        let endingString = String(format: String(format: S.Transaction.ending, "\(Amount(amount: balanceAfter, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped))"))
+        var startingString = String(format: S.Transaction.starting, "\(Amount(amount: startingBalance, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped))")
+        var endingString = String(format: String(format: S.Transaction.ending, "\(Amount(amount: balanceAfter, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped))"))
+
+        if startingBalance > C.maxMoney {
+            startingString = ""
+            endingString = ""
+        }
 
         var exchangeRateInfo = ""
         if let metaData = metaData, let currentRate = rates.filter({ $0.code.lowercased() == metaData.exchangeRateCurrency.lowercased() }).first {
@@ -165,11 +171,11 @@ class Transaction {
     private lazy var startingBalance: UInt64 = {
         switch self.direction {
         case .received:
-            return self.balanceAfter - self.satoshis - self.fee
+            return UInt64.subtractWithOverflow(UInt64.subtractWithOverflow(self.balanceAfter, self.satoshis).0, self.fee).0
         case .sent:
-            return self.balanceAfter + self.satoshis + self.fee
+            return UInt64.addWithOverflow(UInt64.addWithOverflow(self.balanceAfter, self.satoshis).0, self.fee).0
         case .moved:
-            return self.balanceAfter + self.fee
+            return UInt64.addWithOverflow(self.balanceAfter, self.fee).0
         }
     }()
 
