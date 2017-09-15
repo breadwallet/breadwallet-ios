@@ -89,6 +89,26 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
 
         return nil
     }
+
+    /// Find metadata object based on the txKey
+    public init?(txKey: String, store: BRReplicatedKVStore) {
+        var ver: UInt64
+        var date: Date
+        var del: Bool
+        var bytes: [UInt8]
+
+        print("[BRTxMetadataObject] find \(txKey)")
+        do {
+            (ver, date, del, bytes) = try store.get(txKey)
+            let bytesDat = Data(bytes: &bytes, count: bytes.count)
+            super.init(key: txKey, version: ver, lastModified: date, deleted: del, data: bytesDat)
+            return
+        } catch let e {
+            print("[BRTxMetadataObject] Unable to initialize BRTxMetadataObject: \(String(describing: e))")
+        }
+
+        return nil
+    }
     
     /// Create new transaction metadata
     public init(transaction: BRTransaction, exchangeRate: Double, exchangeRateCurrency: String, feeRate: Double,
@@ -127,7 +147,7 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
 
 }
 
-fileprivate extension UInt256 {
+extension UInt256 {
     var txKey: String {
         get {
             var u = self

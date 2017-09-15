@@ -49,6 +49,7 @@ class Transaction {
         self.status = makeStatus(tx, wallet: wallet, peerManager: peerManager, confirms: confirms, direction: self.direction)
 
         self.hash = tx.pointee.txHash.description
+        self.metaDataKey = tx.pointee.txHash.txKey
 
         if let rate = rate, confirms < 6 && direction == .received {
             attemptCreateMetaData(tx: tx, rate: rate)
@@ -110,6 +111,7 @@ class Transaction {
     let isValid: Bool
     let blockHeight: String
     private let confirms: Int
+    private let metaDataKey: String
 
     //MARK: - Private
     private let tx: BRTxRef
@@ -155,7 +157,7 @@ class Transaction {
             return _metaData
         } else {
             guard let kvStore = self.kvStore else { return nil }
-            if let data = TxMetaData(txHash: self.tx.pointee.txHash, store: kvStore) {
+            if let data = TxMetaData(txKey: self.metaDataKey, store: kvStore) {
                 _metaData = data
                 return _metaData
             } else {
