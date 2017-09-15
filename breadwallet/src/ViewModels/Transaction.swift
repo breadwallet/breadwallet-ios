@@ -181,20 +181,33 @@ class Transaction {
 
     // return: (timestampString, shouldStartTimer)
     var timeSince: (String, Bool) {
-        guard timestamp > 0 else { return (S.Transaction.justNow, false) }
+        if let cached = timeSinceCache {
+            return cached
+        }
+
+        let result: (String, Bool)
+        guard timestamp > 0 else {
+            result = (S.Transaction.justNow, false)
+            timeSinceCache = result
+            return result
+        }
         let then = Date(timeIntervalSince1970: TimeInterval(timestamp))
         let now = Date()
 
         if !now.hasEqualYear(then) {
             let df = DateFormatter()
             df.setLocalizedDateFormatFromTemplate("dd/MM/yy")
-            return (df.string(from: then), false)
+            result = (df.string(from: then), false)
+            timeSinceCache = result
+            return result
         }
 
         if !now.hasEqualMonth(then) {
             let df = DateFormatter()
             df.setLocalizedDateFormatFromTemplate("MMM dd")
-            return (df.string(from: then), false)
+            result = (df.string(from: then), false)
+            timeSinceCache = result
+            return result
         }
 
         let difference = Int(Date().timeIntervalSince1970) - timestamp
@@ -203,19 +216,25 @@ class Transaction {
         let secondsInDay = 86400
         let secondsInWeek = secondsInDay * 7
         if (difference < secondsInMinute) {
-            return (String(format: S.TimeSince.seconds, "\(difference)"), true)
+            result = (String(format: S.TimeSince.seconds, "\(difference)"), true)
         } else if difference < secondsInHour {
-            return (String(format: S.TimeSince.minutes, "\(difference/secondsInMinute)"), true)
+            result = (String(format: S.TimeSince.minutes, "\(difference/secondsInMinute)"), true)
         } else if difference < secondsInDay {
-            return (String(format: S.TimeSince.hours, "\(difference/secondsInHour)"), false)
+            result = (String(format: S.TimeSince.hours, "\(difference/secondsInHour)"), false)
         } else if difference < secondsInWeek {
-            return (String(format: S.TimeSince.days, "\(difference/secondsInDay)"), false)
+            result = (String(format: S.TimeSince.days, "\(difference/secondsInDay)"), false)
         } else {
             let df = DateFormatter()
             df.setLocalizedDateFormatFromTemplate("MMM dd")
-            return (df.string(from: then), false)
+            result = (df.string(from: then), false)
         }
+        if result.1 == false {
+            timeSinceCache = result
+        }
+        return result
     }
+
+    private var timeSinceCache: (String, Bool)?
 
     var longTimestamp: String {
         guard timestamp > 0 else { return wallet.transactionIsValid(tx) ? S.Transaction.justNow : "" }
