@@ -682,6 +682,9 @@ open class BRReplicatedKVStore: NSObject {
                             let decryptedValue = self.encryptedReplication ? try self.decrypt(remoteData) : remoteData
                             let (newLocalVer, _) = try self._set(key, value: decryptedValue, localVer: localVer)
                             _ = try self.setRemoteVersion(key: key, localVer: newLocalVer, remoteVer: newRemoteVer)
+                        } catch BRReplicatedKVStoreError.malformedData {
+                            _ = try? self.del(key, localVer: localVer)
+                            return completionHandler(BRReplicatedKVStoreError.malformedData)
                         } catch let e where e is BRReplicatedKVStoreError {
                             return completionHandler((e as! BRReplicatedKVStoreError))
                         } catch {
