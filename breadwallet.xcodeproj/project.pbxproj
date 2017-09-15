@@ -221,6 +221,8 @@
 		CE03EC721EF193810038E3A8 /* String+Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC711EF193800038E3A8 /* String+Keys.swift */; };
 		CE03EC741EF256AC0038E3A8 /* SimpleUTXO.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */; };
 		CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */; };
+		CE0CE5F21F6BB956002FEC24 /* bread-buy-staging.tar in Resources */ = {isa = PBXBuildFile; fileRef = CE0CE5F01F6BB956002FEC24 /* bread-buy-staging.tar */; };
+		CE0CE5F31F6BB956002FEC24 /* bread-frontend-staging.tar in Resources */ = {isa = PBXBuildFile; fileRef = CE0CE5F11F6BB956002FEC24 /* bread-frontend-staging.tar */; };
 		CE124CF81E67A8E500DFA146 /* TransactionDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CF71E67A8E500DFA146 /* TransactionDirection.swift */; };
 		CE124CFC1E68932C00DFA146 /* FeeUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFB1E68932C00DFA146 /* FeeUpdater.swift */; };
 		CE124CFE1E68F57700DFA146 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFD1E68F57700DFA146 /* Async.swift */; };
@@ -1382,6 +1384,8 @@
 		CE03EC711EF193800038E3A8 /* String+Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Keys.swift"; path = "src/Extensions/String+Keys.swift"; sourceTree = "<group>"; };
 		CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleUTXO.swift; path = src/Models/SimpleUTXO.swift; sourceTree = "<group>"; };
 		CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = ModalPresenter.swift; path = src/ModalPresenter.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		CE0CE5F01F6BB956002FEC24 /* bread-buy-staging.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; name = "bread-buy-staging.tar"; path = "src/bread-buy-staging.tar"; sourceTree = "<group>"; };
+		CE0CE5F11F6BB956002FEC24 /* bread-frontend-staging.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; name = "bread-frontend-staging.tar"; path = "src/bread-frontend-staging.tar"; sourceTree = "<group>"; };
 		CE124CF71E67A8E500DFA146 /* TransactionDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransactionDirection.swift; path = src/ViewModels/TransactionDirection.swift; sourceTree = "<group>"; };
 		CE124CFB1E68932C00DFA146 /* FeeUpdater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeeUpdater.swift; path = src/FeeUpdater.swift; sourceTree = "<group>"; };
 		CE124CFD1E68F57700DFA146 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Async.swift; path = src/Extensions/Async.swift; sourceTree = "<group>"; };
@@ -2622,6 +2626,8 @@
 				CEAA9E9C1DC2F8270066731D /* Fonts */,
 				CE4C1CD21ED8BCC70063E184 /* BIP39Words.plist */,
 				2218BD781E8F6CBA0091D5E8 /* AssetBundles.plist */,
+				CE0CE5F01F6BB956002FEC24 /* bread-buy-staging.tar */,
+				CE0CE5F11F6BB956002FEC24 /* bread-frontend-staging.tar */,
 				75A2A79A1DA5934300A983D8 /* Assets.xcassets */,
 				CE5E6C991EB9135000A476DB /* Icon.xcassets */,
 				75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */,
@@ -3619,6 +3625,8 @@
 				CE473D7C1F042F1E00C0ACFD /* coinflip.aiff in Resources */,
 				CE5E6C9A1EB9135000A476DB /* Icon.xcassets in Resources */,
 				CE29901A1EFD6DE50093A0F2 /* Localizable.strings in Resources */,
+				CE0CE5F31F6BB956002FEC24 /* bread-frontend-staging.tar in Resources */,
+				CE0CE5F21F6BB956002FEC24 /* bread-buy-staging.tar in Resources */,
 				2218BD791E8F6CBA0091D5E8 /* AssetBundles.plist in Resources */,
 				CEAA9EA41DC2FC700066731D /* CircularPro-Medium.otf in Resources */,
 				CEAA9E9E1DC2F90C0066731D /* CircularPro-Bold.otf in Resources */,
