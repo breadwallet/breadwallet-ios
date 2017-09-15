@@ -158,11 +158,29 @@ var BZCompressionBufferSize: UInt32 = 1024
 var BZDefaultBlockSize: Int32 = 7
 var BZDefaultWorkFactor: Int32 = 100
 
+private struct AssociatedKeys {
+    static var hexString = "hexString"
+}
+
 public extension Data {
     var hexString: String {
-        return reduce("") {$0 + String(format: "%02x", $1)}
+        if let string = getCachedHexString() {
+            return string
+        } else {
+            let string = reduce("") {$0 + String(format: "%02x", $1)}
+            setHexString(string: string)
+            return string
+        }
     }
-    
+
+    private func setHexString(string: String) {
+        objc_setAssociatedObject(self, &AssociatedKeys.hexString, string, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    }
+
+    private func getCachedHexString() -> String? {
+        return objc_getAssociatedObject(self, &AssociatedKeys.hexString) as? String
+    }
+
     var bzCompressedData: Data? {
         get {
             if self.count == 0 {
