@@ -57,7 +57,13 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         status.text = transaction.status
         comment.text = transaction.comment
         availability.text = transaction.shouldDisplayAvailableToSpend ? S.Transaction.available : ""
-        status.isHidden = isSyncing
+
+        if transaction.status == S.Transaction.complete {
+            status.isHidden = false
+        } else {
+            status.isHidden = isSyncing
+        }
+
         let timestampInfo = transaction.timeSince
         timestamp.text = timestampInfo.0
         if timestampInfo.1 {
