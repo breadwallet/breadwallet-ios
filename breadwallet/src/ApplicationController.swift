@@ -34,6 +34,7 @@ class ApplicationController : Subscriber, Trackable {
     private var reachability = ReachabilityMonitor()
     private let noAuthApiClient = BRAPIClient(authenticator: NoAuthAuthenticator())
     private var fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)?
+    private var launchURL: URL?
 
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
@@ -151,7 +152,12 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     func open(url: URL) -> Bool {
-        return urlController?.handleUrl(url) ?? false
+        if let urlController = urlController {
+            return urlController.handleUrl(url)
+        } else {
+            launchURL = url
+            return false
+        }
     }
 
     private func didInitWallet() {
@@ -165,6 +171,10 @@ class ApplicationController : Subscriber, Trackable {
         accountViewController?.walletManager = walletManager
         defaultsUpdater = UserDefaultsUpdater(walletManager: walletManager)
         urlController = URLController(store: self.store, walletManager: walletManager)
+        if let url = launchURL {
+            _ = urlController?.handleUrl(url)
+            launchURL = nil
+        }
 
         if UIApplication.shared.applicationState != .background {
             if walletManager.noWallet {
