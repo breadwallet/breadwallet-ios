@@ -504,16 +504,16 @@ enum S {
         static let wiping = NSLocalizedString("WipeWallet.wiping", value: "Wiping...", comment: "Wiping activity message")
         static let failedTitle = NSLocalizedString("WipeWallet.failedTitle", value: "Failed", comment: "Failed wipe wallet alert title")
         static let failedMessage = NSLocalizedString("WipeWallet.failedMessage", value: "Failed to wipe wallet.", comment: "Failed wipe wallet alert message")
-        static let instruction = NSLocalizedString("WipeWallet.instruction", value: "Enter this wallet's recovery phrase to wipe it and start or recover another. Your current balance remains on this phrase.", comment: "Enter phrase to wipe wallet instruction.")
+        static let instruction = NSLocalizedString("WipeWallet.instruction", value: "To start a new wallet or restore an existing wallet, you must first erase the wallet that is currently installed. To continue, enter the current wallet's Paper Key.", comment: "Enter key to wipe wallet instruction.")
         static let startMessage = NSLocalizedString("WipeWallet.startMessage", value: "Starting or recovering another wallet allows you to access and manage a different Bread wallet on this device.", comment: "Start wipe wallet view message")
-        static let startWarning = NSLocalizedString("WipeWallet.startWaring", value: "You will no longer be able to access your current Bread wallet from this device. The balance will remain on the phrase.", comment: "Start wipe wallet view warning")
+        static let startWarning = NSLocalizedString("WipeWallet.startWarning", value: "Your current wallet will be removed from this device. If you wish to restore it in the future, you will need to enter your Paper Key.", comment: "Start wipe wallet view warning")
     }
 
     enum FeeSelector {
         static let title = NSLocalizedString("FeeSelector.title", value: "Processing Speed", comment: "Fee Selector title")
         static let regularLabel = NSLocalizedString("FeeSelector.regularLabel", value: "Estimated Delivery: 10-30 minutes", comment: "Fee Selector regular fee description")
         static let economyLabel = NSLocalizedString("FeeSelector.economyLabel", value: "Estimated Delivery: 60+ minutes", comment: "Fee Selector economly fee description")
-        static let economyWarning = NSLocalizedString("FeeSelector.economyWaring", value: "This option is not recommended for time-sensitive transactions.", comment: "Warning message for economy fee")
+        static let economyWarning = NSLocalizedString("FeeSelector.economyWarning", value: "This option is not recommended for time-sensitive transactions.", comment: "Warning message for economy fee")
         static let regular = NSLocalizedString("FeeSelector.regular", value: "Regular", comment: "Regular fee")
         static let economy = NSLocalizedString("FeeSelector.economy", value: "Economy", comment: "Economy fee")
     }
