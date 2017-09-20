@@ -44,6 +44,10 @@ class AccountFooterView: UIView {
         menu.tintColor = .grayTextTint
         menu.addTarget(self, action: #selector(AccountFooterView.menu), for: .touchUpInside)
 
+        if E.isScreenshots {
+            menu.accessibilityLabel = "MENU"
+        }
+
         addSubview(send)
         addSubview(receive)
         addSubview(menu)

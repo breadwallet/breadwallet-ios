@@ -27,7 +27,8 @@ extension UIButton {
     }
 
     static var close: UIButton {
-        return UIButton.icon(image: #imageLiteral(resourceName: "Close"), accessibilityLabel: S.AccessibilityLabels.close)
+        let accessibilityLabel = E.isScreenshots ? "Close" : S.AccessibilityLabels.close
+        return UIButton.icon(image: #imageLiteral(resourceName: "Close"), accessibilityLabel: accessibilityLabel)
     }
 
     static func buildFaqButton(store: Store, articleId: String) -> UIButton {
