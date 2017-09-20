@@ -17,10 +17,6 @@ class GethManager {
     var balance: UInt64 {
         return UInt64(bitPattern: try! ec.getBalanceAt(ctx, account: addr, number: -1).getInt64())
     }
-
-    var maxOutputAmount: UInt64 {
-        return balance
-    }
     
     var receiveAddress: String {
         return addr.getHex()
@@ -29,11 +25,16 @@ class GethManager {
     init(ethPubKey: [UInt8]) {
         ctx = GethContext()
         ec = GethEthereumClient("https://mainnet.infura.io")
+        //ec = GethEthereumClient("https://ropsten.infura.io") // testnet
         addr = GethAddress(fromBytes: GethHash(fromBytes: Data(bytes: ethPubKey)).getBytes())
         print("latest block:\(try! ec.getBlockByNumber(ctx, number: -1).getNumber())")
     }
-    
-    func createTransaction(forAmount: UInt64, toAddress: String) -> GethTransaction {
+
+    func maxOutputAmount(toAddress: String) -> UInt64 {
+        return balance
+    }
+
+    func createTx(forAmount: UInt64, toAddress: String) -> GethTransaction {
         let toAddr = GethAddress(fromHex: toAddress)
         return GethTransaction(1, toAddr, GethBigInt(Int64(bitPattern: forAmount)), GethBigInt(0), GethBigInt(0), nil)
     }
