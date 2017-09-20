@@ -35,6 +35,8 @@ class Screenshots: XCTestCase {
         // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
 
+        snapshot("1LockScreen")
+
         let app = XCUIApplication()
         let staticText = app.collectionViews.staticTexts["5"]
         staticText.tap()
@@ -45,28 +47,16 @@ class Screenshots: XCTestCase {
         staticText.tap()
         snapshot("0TxList")
 
-        app.buttons["SEND"].tap()
-        snapshot("1Send")
-        let closeButton = app.buttons["Close"]
-        closeButton.tap()
-
-
-        app.buttons["RECEIVE"].tap()
-        snapshot("2Receive")
-        let receiveClose = app.buttons["Close"]
-        receiveClose.tap()
-
-
         app.buttons["MENU"].tap()
         let scrollViewsQuery = app.scrollViews
         scrollViewsQuery.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element(boundBy: 0).tap()
-        snapshot("3Security")
+        snapshot("2Security")
         scrollViewsQuery.otherElements.buttons["Close"].tap()
 
         app.buttons["MENU"].tap()
         let scrollViewsQuery2 = app.scrollViews
         scrollViewsQuery2.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element(boundBy: 1).tap()
-        snapshot("4Support")
+        snapshot("3Support")
 
     }
     
