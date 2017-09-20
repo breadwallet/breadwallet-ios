@@ -479,6 +479,41 @@ extension WalletManager : WalletAuthenticator {
         }
     }
 
+    // key used for etherium wallet
+    var ethPrivKey: String? {
+        return autoreleasepool {
+            do {
+                if let ethKey: String? = try? keychainItem(key: KeychainKey.ethPrivKey) {
+                    if ethKey != nil { return ethKey }
+                }
+                var key = BRKey()
+                var seed = UInt512()
+                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
+                BRBIP39DeriveKey(&seed, phrase, nil)
+                BRBIP32APIAuthKey(&key, &seed, MemoryLayout<UInt512>.size)
+                seed = UInt512() // clear seed
+                let pkLen = BRKeyPrivKey(&key, nil, 0)
+                var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
+                pkData.count = pkLen
+                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0, pkLen) }) == pkLen else { return nil }
+                let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
+                                                                       CFStringBuiltInEncodings.UTF8.rawValue) as String
+                try setKeychainItem(key: KeychainKey.apiAuthKey, item: privKey)
+                return privKey
+            }
+            catch let error {
+                print("apiAuthKey error: \(error)")
+                return nil
+            }
+        }
+
+    }
+    
+    // public key for etherium wallet
+    var ethPubKey: [UInt8]? {
+        
+    }
+    
     // sensitive user information stored on the keychain
     var userAccount: Dictionary<AnyHashable, Any>? {
         get {
@@ -505,6 +540,7 @@ extension WalletManager : WalletAuthenticator {
         public static let pinFailCount = "pinfailcount"
         public static let pinFailTime = "pinfailheight"
         public static let apiAuthKey = "authprivkey"
+        public static let ethPrivKey = "ethprivkey"
         public static let userAccount = "https://api.breadwallet.com"
         public static let seed = "seed" // deprecated
     }
