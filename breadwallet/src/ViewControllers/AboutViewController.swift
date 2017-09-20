@@ -17,14 +17,7 @@ class AboutViewController : UIViewController {
     private let blog = AboutCell(text: S.About.blog)
     private let twitter = AboutCell(text: S.About.twitter)
     private let reddit = AboutCell(text: S.About.reddit)
-    private let terms = UIButton(type: .system)
     private let privacy = UIButton(type: .system)
-    private let separator: UILabel = {
-        let separator = UILabel(font: .customBody(size: 13.0), color: .secondaryGrayText)
-        separator.text = "|"
-        separator.textAlignment = .center
-        return separator
-    }()
     private let footer = UILabel(font: .customBody(size: 13.0), color: .secondaryGrayText)
     override func viewDidLoad() {
         addSubviews()
@@ -40,8 +33,6 @@ class AboutViewController : UIViewController {
         view.addSubview(blog)
         view.addSubview(twitter)
         view.addSubview(reddit)
-        view.addSubview(separator)
-        view.addSubview(terms)
         view.addSubview(privacy)
         view.addSubview(footer)
     }
@@ -68,26 +59,17 @@ class AboutViewController : UIViewController {
             reddit.topAnchor.constraint(equalTo: twitter.bottomAnchor, constant: C.padding[2]),
             reddit.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             reddit.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
-
-        separator.constrain([
-            separator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            separator.topAnchor.constraint(equalTo: reddit.bottomAnchor, constant: C.padding[2])])
-        terms.constrain([
-            terms.centerYAnchor.constraint(equalTo: separator.centerYAnchor),
-            terms.trailingAnchor.constraint(equalTo: separator.leadingAnchor, constant: -C.padding[1]) ])
         privacy.constrain([
-            privacy.centerYAnchor.constraint(equalTo: separator.centerYAnchor),
-            privacy.leadingAnchor.constraint(equalTo: separator.trailingAnchor, constant: C.padding[1]) ])
+            privacy.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            privacy.topAnchor.constraint(equalTo: reddit.bottomAnchor, constant: C.padding[2])])
         footer.constrain([
             footer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            footer.topAnchor.constraint(equalTo: separator.bottomAnchor) ])
+            footer.topAnchor.constraint(equalTo: privacy.bottomAnchor) ])
     }
 
     private func setData() {
         view.backgroundColor = .whiteTint
         titleLabel.text = S.About.title
-        terms.setTitle(S.About.terms, for: .normal)
-        terms.titleLabel?.font = UIFont.customBody(size: 13.0)
         privacy.setTitle(S.About.privacy, for: .normal)
         privacy.titleLabel?.font = UIFont.customBody(size: 13.0)
         footer.textAlignment = .center
@@ -97,21 +79,17 @@ class AboutViewController : UIViewController {
     }
 
     private func setActions() {
-        blog.button.tap = { [weak self] in
-            self?.presentURL(string: "https://breadwallet.com/blog/")
+        blog.button.tap = strongify(self) { myself in
+            myself.presentURL(string: "https://breadapp.com/blog/")
         }
-        twitter.button.tap = { [weak self] in
-            self?.presentURL(string: "https://twitter.com/breadwalletapp")
+        twitter.button.tap = strongify(self) { myself in
+            myself.presentURL(string: "https://twitter.com/breadapp")
         }
-        reddit.button.tap = { [weak self] in
-            self?.presentURL(string: "https://reddit.com/r/breadwallet/")
+        reddit.button.tap = strongify(self) { myself in
+            myself.presentURL(string: "https://reddit.com/r/breadwallet/")
         }
-        //TODO - find this link
-        terms.tap = { [weak self] in
-            self?.presentURL(string: "https://breadwallet.com/terms?")
-        }
-        privacy.tap = { [weak self] in
-            self?.presentURL(string: "https://breadwallet.com/privacy-policy")
+        privacy.tap = strongify(self) { myself in
+            myself.presentURL(string: "https://breadapp.com/privacy-policy")
         }
     }
 
