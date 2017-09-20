@@ -15,13 +15,17 @@ languages([
   "da",
   "de",
   "es",
+  "fa",
   "fr",
   "it",
   "ja",
+  "ko",
   "nl",
   "pt",
   "ru",
-  "sv-SE"
+  "sv",
+  "zh-Hans",
+  "zh-Hant"
 ])
 
 # The name of the scheme which contains the UI Tests
