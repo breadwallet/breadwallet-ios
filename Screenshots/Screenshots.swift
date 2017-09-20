@@ -47,11 +47,26 @@ class Screenshots: XCTestCase {
 
         app.buttons["SEND"].tap()
         snapshot("1Send")
-
         let closeButton = app.buttons["Close"]
         closeButton.tap()
+
+
         app.buttons["RECEIVE"].tap()
-        snapshot("1Receive")
+        snapshot("2Receive")
+        let receiveClose = app.buttons["Close"]
+        receiveClose.tap()
+
+
+        app.buttons["MENU"].tap()
+        let scrollViewsQuery = app.scrollViews
+        scrollViewsQuery.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element(boundBy: 0).tap()
+        snapshot("3Security")
+        scrollViewsQuery.otherElements.buttons["Close"].tap()
+
+        app.buttons["MENU"].tap()
+        let scrollViewsQuery2 = app.scrollViews
+        scrollViewsQuery2.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element(boundBy: 1).tap()
+        snapshot("4Support")
 
     }
     
