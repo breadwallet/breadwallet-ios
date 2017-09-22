@@ -118,8 +118,8 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             nc.viewControllers = [recover]
             nc.navigationBar.tintColor = .darkText
             nc.navigationBar.titleTextAttributes = [
-                NSForegroundColorAttributeName: UIColor.darkText,
-                NSFontAttributeName: UIFont.customBold(size: 17.0)
+                NSAttributedStringKey.foregroundColor: UIColor.darkText,
+                NSAttributedStringKey.font: UIFont.customBold(size: 17.0)
             ]
             nc.setClearNavbar()
             nc.navigationBar.isTranslucent = false

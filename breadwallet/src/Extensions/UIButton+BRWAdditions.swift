@@ -17,7 +17,7 @@ extension UIButton {
         if let imageSize = button.imageView?.image?.size,
             let font = button.titleLabel?.font {
             let spacing: CGFloat = C.padding[1]/2.0
-            let titleSize = NSString(string: title).size(attributes: [NSFontAttributeName : font])
+            let titleSize = NSString(string: title).size(withAttributes: [NSAttributedStringKey.font : font])
 
             //These edge insets place the image vertically above the title label
             button.titleEdgeInsets = UIEdgeInsetsMake(0.0, -imageSize.width, -(imageSize.height + spacing), 0.0)

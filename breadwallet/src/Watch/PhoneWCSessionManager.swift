@@ -16,7 +16,7 @@ class PhoneWCSessionManager : NSObject {
     var rate: Rate?
 
     override init() {
-        session = WCSession.default()
+        session = WCSession.default
         super.init()
         session.delegate = self
         session.activate()

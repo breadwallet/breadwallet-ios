@@ -26,7 +26,7 @@ class ScanViewController : UIViewController, Trackable {
     }
 
     static var isCameraAllowed: Bool {
-        return AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != .denied
+        return AVCaptureDevice.authorizationStatus(for: AVMediaType.video) != .denied
     }
 
     let completion: ScanCompletion?
@@ -104,10 +104,10 @@ class ScanViewController : UIViewController, Trackable {
     }
 
     private func addCameraPreview() {
-        guard let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) else { return }
+        guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return }
         guard let input = try? AVCaptureDeviceInput(device: device) else { return }
         session.addInput(input)
-        guard let previewLayer = AVCaptureVideoPreviewLayer(session: session) else { assert(false); return }
+        let previewLayer = AVCaptureVideoPreviewLayer(session: session)
         previewLayer.frame = view.bounds
         view.layer.insertSublayer(previewLayer, at: 0)
 
@@ -116,9 +116,9 @@ class ScanViewController : UIViewController, Trackable {
         session.addOutput(output)
 
         if output.availableMetadataObjectTypes.contains(where: { objectType in
-            return objectType as! String == AVMetadataObjectTypeQRCode
+            return objectType == AVMetadataObject.ObjectType.qr
         }) {
-            output.metadataObjectTypes = [AVMetadataObjectTypeQRCode]
+            output.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
         } else {
             print("no qr code support")
         }
@@ -155,7 +155,7 @@ class ScanViewController : UIViewController, Trackable {
 }
 
 extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+    func metadataOutput(captureOutput: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         if let data = metadataObjects as? [AVMetadataMachineReadableCodeObject] {
             if data.count == 0 {
                 guide.state = .normal

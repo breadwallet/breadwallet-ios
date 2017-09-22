@@ -77,7 +77,7 @@ class MessageUIPresenter: NSObject, Trackable {
         present(textView)
     }
 
-    fileprivate var originalTitleTextAttributes: [String: Any]?
+    fileprivate var originalTitleTextAttributes: [NSAttributedStringKey: Any]?
 
     private func present(_ viewController: UIViewController) {
         presenter?.view.isFrameChangeBlocked = true

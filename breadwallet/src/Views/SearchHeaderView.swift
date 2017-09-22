@@ -133,7 +133,7 @@ class SearchHeaderView : UIView {
 
     private func addConstraints() {
         cancel.setTitle(S.Button.cancel, for: .normal)
-        let titleSize = NSString(string: cancel.titleLabel!.text!).size(attributes: [NSFontAttributeName : cancel.titleLabel!.font])
+        let titleSize = NSString(string: cancel.titleLabel!.text!).size(withAttributes: [NSAttributedStringKey.font : cancel.titleLabel!.font])
         cancel.constrain([
             cancel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
             cancel.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),

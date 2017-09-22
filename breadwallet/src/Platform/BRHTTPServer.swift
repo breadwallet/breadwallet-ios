@@ -161,7 +161,7 @@ open class BRHTTPMiddlewareResponse {
         nc.removeObserver(self, name: .UIApplicationDidBecomeActive, object: nil)
     }
     
-    func suspend(_: Notification) {
+    @objc func suspend(_: Notification) {
         if isStarted {
             objc_sync_enter(self)
             defer { objc_sync_exit(self) }
@@ -186,7 +186,7 @@ open class BRHTTPMiddlewareResponse {
         }
     }
 
-    func resume(_: Notification) {
+    @objc func resume(_: Notification) {
         objc_sync_enter(self)
         defer { objc_sync_exit(self) }
         isShutdownCancelled = true
@@ -460,8 +460,8 @@ open class BRHTTPRequestImpl: BRHTTPRequest {
             , match.numberOfRanges == 3 else {
                 throw BRHTTPServerError.invalidRangeHeader
         }
-        let startStr = (rngHeader as NSString).substring(with: match.rangeAt(1))
-        let endStr = (rngHeader as NSString).substring(with: match.rangeAt(2))
+        let startStr = (rngHeader as NSString).substring(with: match.range(at: 1))
+        let endStr = (rngHeader as NSString).substring(with: match.range(at: 2))
         guard let start = Int(startStr), let end = Int(endStr) else {
             throw BRHTTPServerError.invalidRangeHeader
         }

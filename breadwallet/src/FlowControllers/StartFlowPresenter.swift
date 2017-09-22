@@ -160,8 +160,8 @@ class StartFlowPresenter : Subscriber {
         paperPhraseViewController.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
 
         navigationController?.navigationBar.titleTextAttributes = [
-            NSForegroundColorAttributeName: UIColor.white,
-            NSFontAttributeName: UIFont.customBold(size: 17.0)
+            NSAttributedStringKey.foregroundColor: UIColor.white,
+            NSAttributedStringKey.font: UIFont.customBold(size: 17.0)
         ]
         navigationController?.pushViewController(paperPhraseViewController, animated: true)
     }
