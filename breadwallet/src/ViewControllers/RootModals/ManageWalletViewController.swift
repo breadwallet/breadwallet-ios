@@ -108,7 +108,7 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
     func saveWalletName() {
         guard var name = textField.text else { return }
         if name.utf8.count > maxWalletNameLength {
-            name = name.substring(to: name.index(name.startIndex, offsetBy: maxWalletNameLength))
+            name = String(name[..<name.index(name.startIndex, offsetBy: maxWalletNameLength)])
         }
         store.perform(action: WalletChange.setWalletName(name))
     }

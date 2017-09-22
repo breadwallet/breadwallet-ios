@@ -51,7 +51,7 @@ open class BRHTTPRoutePair {
             path = "/" + path
         }
         if path.hasSuffix("/") {
-            path = path.substring(to: path.characters.index(path.endIndex, offsetBy: -1))
+            path = String(path[..<path.characters.index(path.endIndex, offsetBy: -1)])
         }
         let parts = path.components(separatedBy: "/")
         captureGroups = [Int: String]()
@@ -61,15 +61,15 @@ open class BRHTTPRoutePair {
             if part.hasPrefix("(") && part.hasSuffix(")") {
                 let w1 = part.characters.index(part.endIndex, offsetBy: -2)
                 let w2 = part.characters.index(part.endIndex, offsetBy: -1)
-                if part.substring(with: w1..<w2) == "*" { // a wild card capture (part*)
+                if String(part[w1..<w2]) == "*" { // a wild card capture (part*)
                     let i1 = part.characters.index(part.startIndex, offsetBy: 1)
                     let i2 = part.characters.index(part.endIndex, offsetBy: -2)
-                    captureGroups[i] = part.substring(with: i1..<i2)
+                    captureGroups[i] = String(part[i1..<i2])
                     reParts.append("(.*)")
                 } else {
                     let i1 = part.characters.index(part.startIndex, offsetBy: 1)
                     let i2 = part.characters.index(part.endIndex, offsetBy: -1)
-                    captureGroups[i] = part.substring(with: i1..<i2)
+                    captureGroups[i] = String(part[i1..<i2])
                     reParts.append("([^/]+)") // a capture (part)
                 }
                 i += 1
@@ -92,7 +92,7 @@ open class BRHTTPRoutePair {
         }
         var p = request.path // strip trailing slash
         if p.hasSuffix("/") {
-            p = request.path.substring(to: request.path.characters.index(request.path.endIndex, offsetBy: -1))
+            p = String(request.path[..<request.path.characters.index(request.path.endIndex, offsetBy: -1)])
         }
         if let m = regex.firstMatch(in: request.path, options: [], range: NSMakeRange(0, p.characters.count))
             , m.numberOfRanges - 1 == captureGroups.count {
