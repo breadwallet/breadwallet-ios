@@ -280,14 +280,14 @@ class Transaction {
 
 private extension String {
     var smallCondensed: String {
-        let start = substring(to: index(startIndex, offsetBy: 5))
-        let end = substring(from: index(endIndex, offsetBy: -5))
+        let start = String(self[..<index(startIndex, offsetBy: 5)])
+        let end = String(self[index(endIndex, offsetBy: -5)...])
         return start + "..." + end
     }
 
     var largeCondensed: String {
-        let start = substring(to: index(startIndex, offsetBy: 10))
-        let end = substring(from: index(endIndex, offsetBy: -10))
+        let start = String(self[..<index(startIndex, offsetBy: 10)])
+        let end = String(self[index(endIndex, offsetBy: -10)...])
         return start + "..." + end
     }
 }

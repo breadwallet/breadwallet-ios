@@ -44,7 +44,7 @@ class PinPadViewController : UICollectionViewController {
 
     func removeLast() {
         if currentOutput.utf8.count > 0 {
-            currentOutput = currentOutput.substring(to: currentOutput.index(currentOutput.startIndex, offsetBy: currentOutput.utf8.count - 1))
+            currentOutput = String(currentOutput[..<currentOutput.index(currentOutput.startIndex, offsetBy: currentOutput.utf8.count - 1)])
         }
     }
 

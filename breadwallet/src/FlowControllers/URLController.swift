@@ -33,7 +33,7 @@ class URLController : Trackable {
                     let pair = component.components(separatedBy: "+")
                     if pair.count < 2 { continue }
                     let key = pair[0]
-                    var value = component.substring(from: component.index(key.endIndex, offsetBy: 2))
+                    var value = String(component[component.index(key.endIndex, offsetBy: 2)...])
                     value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
                     switch key {
                     case "x-source":
