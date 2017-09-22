@@ -10,7 +10,7 @@ import UIKit
 import QuartzCore
 
 extension UIView {
-    convenience init(color: UIColor) {
+    @objc convenience init(color: UIColor) {
         self.init(frame: .zero)
         backgroundColor = color
     }

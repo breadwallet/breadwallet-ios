@@ -271,11 +271,11 @@ class IDCameraOverlay: UIView, CameraOverlay {
         fatalError("init(coder:) is not implemented")
     }
     
-    func doTakePhoto(_ target: UIControl) {
+    @objc func doTakePhoto(_ target: UIControl) {
         delegate?.takePhoto()
     }
     
-    func doCancelPhoto(_ target: UIControl) {
+    @objc func doCancelPhoto(_ target: UIControl) {
         delegate?.cancelPhoto()
     }
     
@@ -304,9 +304,9 @@ class IDCameraOverlay: UIView, CameraOverlay {
         let style = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
         style.alignment = .center
         let attr = [
-            NSParagraphStyleAttributeName: style,
-            NSFontAttributeName: UIFont.boldSystemFont(ofSize: 17),
-            NSForegroundColorAttributeName: UIColor.white
+            NSAttributedStringKey.paragraphStyle: style,
+            NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 17),
+            NSAttributedStringKey.foregroundColor: UIColor.white
         ]
         
         str.draw(in: CGRect(x: 0, y: cutout.maxY + 14.0, width: rect.width, height: 22), withAttributes: attr)

@@ -194,22 +194,22 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
         forwardButtonItem.isEnabled = webView.canGoForward
     }
     
-    func goBack() {
+    @objc func goBack() {
         print("[BRBrowserViewController] go back")
         webView.goBack()
     }
     
-    func goForward() {
+    @objc func goForward() {
         print("[BRBrowserViewController] go forward")
         webView.goForward()
     }
     
-    func refresh() {
+    @objc func refresh() {
         print("[BRBrowserViewController] go refresh")
         webView.reload()
     }
     
-    func stop() {
+    @objc func stop() {
         print("[BRBrowserViewController] stop loading")
         webView.stopLoading()
     }

@@ -35,7 +35,7 @@ public class Bonjour: NSObject, NetServiceBrowserDelegate {
         return false
     }
     
-    func noServicesFound() {
+    @objc func noServicesFound() {
         serviceFoundClosure(services)
         serviceBrowser.stop()
         isSearching = false

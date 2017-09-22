@@ -121,10 +121,10 @@ class ReScanViewController : UIViewController, Subscriber {
 
     private var bodyText: NSAttributedString {
         let body = NSMutableAttributedString()
-        let headerAttributes = [ NSFontAttributeName: UIFont.customBold(size: 16.0),
-                                 NSForegroundColorAttributeName: UIColor.darkText ]
-        let bodyAttributes = [ NSFontAttributeName: UIFont.customBody(size: 16.0),
-                               NSForegroundColorAttributeName: UIColor.darkText ]
+        let headerAttributes = [ NSAttributedStringKey.font: UIFont.customBold(size: 16.0),
+                                 NSAttributedStringKey.foregroundColor: UIColor.darkText ]
+        let bodyAttributes = [ NSAttributedStringKey.font: UIFont.customBody(size: 16.0),
+                               NSAttributedStringKey.foregroundColor: UIColor.darkText ]
 
         body.append(NSAttributedString(string: "\(S.ReScan.subheader1)\n", attributes: headerAttributes))
         body.append(NSAttributedString(string: "\(S.ReScan.body1)\n\n", attributes: bodyAttributes))

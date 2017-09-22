@@ -25,7 +25,7 @@ extension String {
 
     func ltrim(_ chars: Set<Character>) -> String {
         if let index = self.characters.index(where: {!chars.contains($0)}) {
-            return self[index..<self.endIndex]
+            return String(self[index..<self.endIndex])
         } else {
             return ""
         }
@@ -33,16 +33,16 @@ extension String {
     
     func rtrim(_ chars: Set<Character>) -> String {
         if let index = self.characters.reversed().index(where: {!chars.contains($0)}) {
-            return self[self.startIndex...self.characters.index(before: index.base)]
+            return String(self[self.startIndex...self.characters.index(before: index.base)])
         } else {
             return ""
         }
     }
 
     func nsRange(from range: Range<Index>) -> NSRange {
-        let lower = UTF16View.Index(range.lowerBound, within: utf16)
-        let upper = UTF16View.Index(range.upperBound, within: utf16)
-        return NSRange(location: utf16.startIndex.distance(to: lower), length: lower.distance(to: upper))
+        let location = utf16.distance(from: utf16.startIndex, to: range.lowerBound)
+        let length = utf16.distance(from: range.lowerBound, to: range.upperBound)
+        return NSRange(location: location, length: length)
     }
 }
 

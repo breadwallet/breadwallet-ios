@@ -21,8 +21,8 @@ class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
         if viewController is RecoverWalletIntroViewController {
             navigationController.navigationBar.tintColor = .white
             navigationController.navigationBar.titleTextAttributes = [
-                NSForegroundColorAttributeName: UIColor.white,
-                NSFontAttributeName: UIFont.customBold(size: 17.0)
+                NSAttributedStringKey.foregroundColor: UIColor.white,
+                NSAttributedStringKey.font: UIFont.customBold(size: 17.0)
             ]
             navigationController.setClearNavbar()
             navigationController.navigationBar.barTintColor = .clear
@@ -31,8 +31,8 @@ class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
         if viewController is EnterPhraseViewController {
             navigationController.navigationBar.tintColor = .darkText
             navigationController.navigationBar.titleTextAttributes = [
-                NSForegroundColorAttributeName: UIColor.darkText,
-                NSFontAttributeName: UIFont.customBold(size: 17.0)
+                NSAttributedStringKey.foregroundColor: UIColor.darkText,
+                NSAttributedStringKey.font: UIFont.customBold(size: 17.0)
             ]
             navigationController.setClearNavbar()
             navigationController.navigationBar.isTranslucent = false
@@ -42,8 +42,8 @@ class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
         if viewController is UpdatePinViewController {
             navigationController.navigationBar.tintColor = .darkText
             navigationController.navigationBar.titleTextAttributes = [
-                NSForegroundColorAttributeName: UIColor.darkText,
-                NSFontAttributeName: UIFont.customBold(size: 17.0)
+                NSAttributedStringKey.foregroundColor: UIColor.darkText,
+                NSAttributedStringKey.font: UIFont.customBold(size: 17.0)
             ]
             navigationController.setClearNavbar()
         }

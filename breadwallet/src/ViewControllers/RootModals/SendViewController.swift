@@ -174,14 +174,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             }
         }
 
-        let attributes: [String: Any] = [
-            NSFontAttributeName: UIFont.customBody(size: 14.0),
-            NSForegroundColorAttributeName: color
+        let attributes: [NSAttributedStringKey: Any] = [
+            NSAttributedStringKey.font: UIFont.customBody(size: 14.0),
+            NSAttributedStringKey.foregroundColor: color
         ]
 
-        let feeAttributes: [String: Any] = [
-            NSFontAttributeName: UIFont.customBody(size: 14.0),
-            NSForegroundColorAttributeName: UIColor.grayTextTint
+        let feeAttributes: [NSAttributedStringKey: Any] = [
+            NSAttributedStringKey.font: UIFont.customBody(size: 14.0),
+            NSAttributedStringKey.foregroundColor: UIColor.grayTextTint
         ]
 
         return (NSAttributedString(string: balanceOutput, attributes: attributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))

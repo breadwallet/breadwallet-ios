@@ -48,7 +48,10 @@
         [colorFilter setValue:invertFilter.outputImage forKey:@"inputImage"];
         [colorFilter setValue:color forKey:@"inputColor0"];
     }
-    else [maskFilter setValue:qrFilter.outputImage forKey:@"inputImage"], filter = maskFilter;
+    else {
+        [maskFilter setValue:qrFilter.outputImage forKey:@"inputImage"];
+        filter = maskFilter;
+    }
     
     @synchronized ([CIContext class]) {
         // force software rendering for security (GPU rendering causes image artifacts on iOS 7 and is generally crashy)

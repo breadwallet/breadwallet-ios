@@ -25,7 +25,7 @@ class WatchDataManager : NSObject {
 
     static let applicationContextDataFileName = "applicationContextDataV2.txt"
 
-    let session = WCSession.default()
+    let session = WCSession.default
     var data: WatchData?
     let timerFireInterval : TimeInterval = 1.0
 
@@ -62,7 +62,7 @@ class WatchDataManager : NSObject {
         }
     }
 
-    func requestAllData() {
+    @objc func requestAllData() {
         guard session.isReachable else { return }
 
         let message = [
@@ -109,7 +109,7 @@ class WatchDataManager : NSObject {
         let filemgr = FileManager.default
         let dirPaths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let docsDir = dirPaths[0] as String
-        return URL(fileURLWithPath: docsDir).appendingPathComponent(applicationContextDataFileName)
+        return URL(fileURLWithPath: docsDir).appendingPathComponent(WatchDataManager.applicationContextDataFileName)
     }()
 
 }

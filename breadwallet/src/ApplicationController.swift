@@ -218,7 +218,7 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func setupAppearance() {
-        UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: UIFont.header]
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.font: UIFont.header]
         //Hack to globally hide the back button text
         UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffsetMake(-500.0, -500.0), for: .default)
     }

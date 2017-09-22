@@ -217,7 +217,7 @@ class AmountViewController : UIViewController, Trackable {
             amountLabel.trailingAnchor.constraint(lessThanOrEqualTo: currencyToggle.leadingAnchor, constant: -C.padding[2]) ])
         amountLabel.minimumScaleFactor = 0.5
         amountLabel.adjustsFontSizeToFitWidth = true
-        amountLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
+        amountLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: .horizontal)
     }
 
     private func handlePinPadUpdate(output: String) {
