@@ -50,7 +50,7 @@ open class BRAPIProxy: BRHTTPMiddleware {
     init(mountAt: String, client: BRAPIClient) {
         mountPoint = mountAt
         if mountPoint.hasSuffix("/") {
-            mountPoint = mountPoint.substring(to: mountPoint.characters.index(mountPoint.endIndex, offsetBy: -1))
+            mountPoint = String(mountPoint[..<mountPoint.characters.index(mountPoint.endIndex, offsetBy: -1)])
         }
         apiInstance = client
     }
@@ -58,7 +58,7 @@ open class BRAPIProxy: BRHTTPMiddleware {
     open func handle(_ request: BRHTTPRequest, next: @escaping (BRHTTPMiddlewareResponse) -> Void) {
         if request.path.hasPrefix(mountPoint) {
             let idx = request.path.characters.index(request.path.startIndex, offsetBy: mountPoint.characters.count)
-            var path = request.path.substring(from: idx)
+            var path = String(request.path[idx...])
             if request.queryString.utf8.count > 0 {
                 path += "?\(request.queryString)"
             }
