@@ -134,7 +134,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
             transactionLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
             transactionLabel.constraint(.top, toView: container, constant: topPadding),
             transactionLabel.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[1]) ])
-        timestamp.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
+        timestamp.setContentCompressionResistancePriority(UILayoutPriority.required, for: .horizontal)
         timestamp.constrain([
             timestamp.constraint(.trailing, toView: container, constant: -C.padding[2]),
             timestamp.constraint(.top, toView: container, constant: topPadding) ])
@@ -143,7 +143,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
             address.leadingAnchor.constraint(equalTo: transactionLabel.leadingAnchor),
             address.topAnchor.constraint(equalTo: transactionLabel.bottomAnchor),
             address.trailingAnchor.constraint(lessThanOrEqualTo: timestamp.leadingAnchor, constant: -C.padding[4])])
-        address.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, for: .horizontal)
+        address.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: .horizontal)
 
         comment.constrain([
             comment.constraint(.leading, toView: container, constant: C.padding[2]),

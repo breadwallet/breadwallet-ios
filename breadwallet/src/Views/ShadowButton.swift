@@ -92,10 +92,10 @@ class ShadowButton: UIControl {
         addContent()
         setColors()
         addTarget(self, action: #selector(ShadowButton.touchUpInside), for: .touchUpInside)
-        setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
-        label.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
-        setContentHuggingPriority(UILayoutPriorityRequired, for: .horizontal)
-        label.setContentHuggingPriority(UILayoutPriorityRequired, for: .horizontal)
+        setContentCompressionResistancePriority(UILayoutPriority.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(UILayoutPriority.required, for: .horizontal)
+        setContentHuggingPriority(UILayoutPriority.required, for: .horizontal)
+        label.setContentHuggingPriority(UILayoutPriority.required, for: .horizontal)
     }
 
     private func addShadowView() {

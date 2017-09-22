@@ -173,11 +173,12 @@ class Transaction {
     private lazy var startingBalance: UInt64 = {
         switch self.direction {
         case .received:
-            return UInt64.subtractWithOverflow(UInt64.subtractWithOverflow(self.balanceAfter, self.satoshis).0, self.fee).0
+            return
+                self.balanceAfter.subtractingReportingOverflow(self.satoshis).0.subtractingReportingOverflow(self.fee).0
         case .sent:
-            return UInt64.addWithOverflow(UInt64.addWithOverflow(self.balanceAfter, self.satoshis).0, self.fee).0
+            return self.balanceAfter.addingReportingOverflow(self.satoshis).0.addingReportingOverflow(self.fee).0
         case .moved:
-            return UInt64.addWithOverflow(self.balanceAfter, self.fee).0
+            return self.balanceAfter.addingReportingOverflow(self.fee).0
         }
     }()
 

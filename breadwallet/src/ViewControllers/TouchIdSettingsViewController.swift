@@ -133,16 +133,16 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.bits, amount.localCurrency))\n\n\(String(format: S.TouchIdSettings.customizeText, S.TouchIdSettings.linkText))"
         let linkText = S.TouchIdSettings.linkText
         let attributedString = NSMutableAttributedString(string: string, attributes: [
-                NSFontAttributeName: UIFont.customBody(size: 13.0),
-                NSForegroundColorAttributeName: UIColor.darkText
+                NSAttributedStringKey.font: UIFont.customBody(size: 13.0),
+                NSAttributedStringKey.foregroundColor: UIColor.darkText
             ])
         let linkAttributes = [
-                NSFontAttributeName: UIFont.customMedium(size: 13.0),
-                NSLinkAttributeName: NSURL(string:"http://spending-limit")!]
+                NSAttributedStringKey.font: UIFont.customMedium(size: 13.0),
+                NSAttributedStringKey.link: NSURL(string:"http://spending-limit")!]
 
         if let range = string.range(of: linkText, options: [], range: nil, locale: nil) {
-            let from = range.lowerBound.samePosition(in: string.utf16)
-            let to = range.upperBound.samePosition(in: string.utf16)
+            let from = range.lowerBound.samePosition(in: string.utf16)!
+            let to = range.upperBound.samePosition(in: string.utf16)!
             attributedString.addAttributes(linkAttributes, range: NSRange(location: string.utf16.distance(from: string.utf16.startIndex, to: from),
                                                                           length: string.utf16.distance(from: from, to: to)))
         }

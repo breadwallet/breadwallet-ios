@@ -99,7 +99,7 @@ open class BRHTTPRoutePair {
                 var match = BRHTTPRouteMatch()
                 for i in 1..<m.numberOfRanges {
                     let key = captureGroups[i-1]!
-                    let captured = (p as NSString).substring(with: m.rangeAt(i))
+                    let captured = (p as NSString).substring(with: m.range(at: i))
                     if match[key] == nil {
                         match[key] = [captured]
                     } else {

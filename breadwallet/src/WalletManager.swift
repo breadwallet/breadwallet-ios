@@ -437,7 +437,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                     return
                 }
 
-                let timestampResult = Int32.subtractWithOverflow(Int32(bitPattern: b.pointee.timestamp), Int32(NSTimeIntervalSince1970))
+                let timestampResult = Int32(bitPattern: b.pointee.timestamp).subtractingReportingOverflow(Int32(NSTimeIntervalSince1970))
                 guard !timestampResult.1 else { print("skipped block with overflowed timestamp"); continue }
 
                 pk = pk + 1
@@ -611,10 +611,10 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             var p = BRPeer()
             p.address = UInt128(u32: (0, 0, UInt32(0xffff).bigEndian,
                                       UInt32(bitPattern: sqlite3_column_int(sql, 0)).bigEndian))
-            p.port = UInt16(truncatingBitPattern: sqlite3_column_int(sql, 1))
+            p.port = UInt16(truncatingIfNeeded: sqlite3_column_int(sql, 1))
             p.services = UInt64(bitPattern: sqlite3_column_int64(sql, 2))
 
-            let result = UInt64.addWithOverflow(UInt64(bitPattern: sqlite3_column_int64(sql, 3)), UInt64(NSTimeIntervalSince1970))
+            let result = UInt64(bitPattern: sqlite3_column_int64(sql, 3)).addingReportingOverflow(UInt64(NSTimeIntervalSince1970))
             if result.1 {
                 print("skipped overflowed timestamp: \(sqlite3_column_int64(sql, 3))")
                 continue
