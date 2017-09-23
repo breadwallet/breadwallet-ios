@@ -81,29 +81,30 @@ extension BRAddress: CustomStringConvertible, Hashable {
     
     init?(scriptPubKey: [UInt8]) {
         self.init()
-        let cStr = UnsafeMutableRawPointer(mutating: &self.s).assumingMemoryBound(to: CChar.self)
-        guard BRAddressFromScriptPubKey(cStr, MemoryLayout<BRAddress>.size, scriptPubKey, scriptPubKey.count) > 0
+        guard BRAddressFromScriptPubKey(UnsafeMutableRawPointer(mutating: &self.s).assumingMemoryBound(to: CChar.self),
+                                        MemoryLayout<BRAddress>.size, scriptPubKey, scriptPubKey.count) > 0
             else { return nil }
     }
 
     init?(scriptSig: [UInt8]) {
         self.init()
-        let cStr = UnsafeMutableRawPointer(mutating: &self.s).assumingMemoryBound(to: CChar.self)
-        guard BRAddressFromScriptSig(cStr, MemoryLayout<BRAddress>.size, scriptSig, scriptSig.count) > 0
-            else { return nil }
+        guard BRAddressFromScriptSig(UnsafeMutableRawPointer(mutating: &self.s).assumingMemoryBound(to: CChar.self),
+                                     MemoryLayout<BRAddress>.size, scriptSig, scriptSig.count) > 0 else { return nil }
     }
 
     var scriptPubKey: [UInt8]? {
-        let cStr = UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self)
-        var script = [UInt8](repeating: 0, count: BRAddressScriptPubKey(nil, 0, cStr))
-        guard BRAddressScriptPubKey(&script, script.count, cStr) > 0 else { return nil }
+        var script = [UInt8](repeating: 0, count: 25)
+        let count = BRAddressScriptPubKey(&script, script.count,
+                                        UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self))
+        guard count > 0 else { return nil }
+        if count < script.count { script.removeSubrange(count...) }
         return script
     }
     
     var hash160: UInt160? {
-        let cStr = UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self)
         var hash = UInt160()
-        guard BRAddressHash160(&hash, cStr) != 0 else { return nil }
+        guard BRAddressHash160(&hash, UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self)) != 0
+            else { return nil }
         return hash
     }
     
@@ -205,7 +206,7 @@ extension BRKey {
         var sig = [UInt8](repeating:0, count: 73)
         let count = BRKeySign(&self, &sig, sig.count, md)
         guard count > 0 else { return nil }
-        while count < sig.count { sig.remove(at: sig.count - 1) }
+        if count < sig.count { sig.removeSubrange(sig.count...) }
         return sig
     }
 

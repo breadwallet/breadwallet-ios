@@ -350,7 +350,7 @@ extension WalletManager : WalletAuthenticator {
         // we store the wallet creation time on the keychain because keychain data persists even when app is deleted
         do {
             try setKeychainItem(key: KeychainKey.creationTime,
-                                item: Data(buffer: UnsafeBufferPointer(start: [time], count: 1)))
+                                item: [time].withUnsafeBufferPointer() { Data(buffer: $0) })
             self.earliestKeyTime = time
         }
         catch { return nil }
@@ -574,7 +574,7 @@ private func setKeychainItem<T>(key: String, item: T?, authenticated: Bool = fal
                                                         CFStringBuiltInEncodings.UTF8.rawValue, 0) as Data
         case is Int64.Type:
             data = CFDataCreateMutable(secureAllocator, MemoryLayout<T>.stride) as Data
-            data?.append(UnsafeBufferPointer(start: [item], count: 1))
+            [item].withUnsafeBufferPointer() { data?.append($0) }
         case is Dictionary<AnyHashable, Any>.Type:
             data = NSKeyedArchiver.archivedData(withRootObject: item)
         default:
