@@ -402,9 +402,9 @@ public extension Data {
     }
 
     init(masterPubKey mpk: BRMasterPubKey) {
-        var data = Data(buffer: UnsafeBufferPointer(start: [mpk.fingerPrint], count: 1))
-        data.append(UnsafeBufferPointer(start: [mpk.chainCode], count: 1))
-        data.append(UnsafeBufferPointer(start: [mpk.pubKey], count: 1))
+        var data = [mpk.fingerPrint].withUnsafeBufferPointer() { Data(buffer: $0) }
+        [mpk.chainCode].withUnsafeBufferPointer() { data.append($0) }
+        [mpk.pubKey].withUnsafeBufferPointer() { data.append($0) }
         self.init(data)
     }
     
