@@ -28,7 +28,7 @@ struct PaymentRequest {
                         let pair = component.components(separatedBy: "=")
                         if pair.count < 2 { continue }
                         let key = pair[0]
-                        var value = String(component[component.index(key.endIndex, offsetBy: 2)...])
+                        var value = String(component[component.index(key.endIndex, offsetBy: 1)...])
                         value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
 
                         switch key {
