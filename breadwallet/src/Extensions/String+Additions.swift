@@ -44,6 +44,10 @@ extension String {
         let upper = UTF16View.Index(range.upperBound, within: utf16)
         return NSRange(location: utf16.startIndex.distance(to: lower), length: lower.distance(to: upper))
     }
+
+    func substringFromStart(to: Int) -> String {
+        return self.substring(to: self.index(self.startIndex, offsetBy: to))
+    }
 }
 
 private let startTag = "<b>"
