@@ -36,7 +36,8 @@ class GethManager {
 
     func createTx(forAmount: UInt64, toAddress: String) -> GethTransaction {
         let toAddr = GethAddress(fromHex: toAddress)
-        return GethTransaction(1, toAddr, GethBigInt(Int64(bitPattern: forAmount)), GethBigInt(0), GethBigInt(0), nil)
+        return GethTransaction(1, to: toAddr, amount: GethBigInt(Int64(bitPattern: forAmount)), gasLimit: GethBigInt(0),
+                               gasPrice: GethBigInt(0), data: nil)
     }
     
     func signTx(_ tx: GethTransaction, ethPrivKey: String) -> GethTransaction {

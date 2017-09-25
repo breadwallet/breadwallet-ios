@@ -490,7 +490,9 @@ extension WalletManager : WalletAuthenticator {
                 var seed = UInt512()
                 guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
                 BRBIP39DeriveKey(&seed, phrase, nil)
-                BRBIP32APIAuthKey(&key, &seed, MemoryLayout<UInt512>.size)
+                // BIP44 etherium path m/44H/60H/0H/0/0: https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
+                BRBIP32vPrivKeyPath(&key, &seed, MemoryLayout<UInt512>.size, 5,
+                                    getVaList([44 | BIP32_HARD, 60 | BIP32_HARD, 0 | BIP32_HARD, 0, 0]))
                 seed = UInt512() // clear seed
                 let pkLen = BRKeyPrivKey(&key, nil, 0)
                 var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
@@ -498,7 +500,7 @@ extension WalletManager : WalletAuthenticator {
                 guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0, pkLen) }) == pkLen else { return nil }
                 let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
                                                                        CFStringBuiltInEncodings.UTF8.rawValue) as String
-                try setKeychainItem(key: KeychainKey.apiAuthKey, item: privKey)
+                try setKeychainItem(key: KeychainKey.ethPrivKey, item: privKey)
                 return privKey
             }
             catch let error {
@@ -506,12 +508,12 @@ extension WalletManager : WalletAuthenticator {
                 return nil
             }
         }
-
     }
     
     // public key for etherium wallet
     var ethPubKey: [UInt8]? {
-        
+        var key = BRKey(privKey: ethPrivKey!)
+        return key?.pubKey()
     }
     
     // sensitive user information stored on the keychain
