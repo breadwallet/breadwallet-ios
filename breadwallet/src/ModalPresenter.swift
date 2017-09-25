@@ -12,8 +12,9 @@ class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Public
     var walletManager: WalletManager?
-    init(store: Store, walletManager: WalletManager, window: UIWindow, apiClient: BRAPIClient) {
+    init(store: Store, walletManager: WalletManager, window: UIWindow, apiClient: BRAPIClient, ethStore: Store) {
         self.store = store
+        self.ethStore = ethStore
         self.window = window
         self.walletManager = walletManager
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular, store: store)
@@ -24,6 +25,7 @@ class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Private
     private let store: Store
+    private let ethStore: Store
     private let window: UIWindow
     private let alertHeight: CGFloat = 260.0
     private let modalTransitionDelegate: ModalTransitionDelegate
@@ -46,6 +48,9 @@ class ModalPresenter : Subscriber, Trackable {
 
     private func addSubscriptions() {
         store.subscribe(self,
+                        selector: { $0.rootModal != $1.rootModal},
+                        callback: { self.presentModal($0.rootModal) })
+        ethStore.subscribe(self,
                         selector: { $0.rootModal != $1.rootModal},
                         callback: { self.presentModal($0.rootModal) })
         store.subscribe(self,
@@ -132,6 +137,7 @@ class ModalPresenter : Subscriber, Trackable {
         guard type != .loginScan else { return presentLoginScan() }
         guard let vc = rootModalViewController(type) else {
             self.store.perform(action: RootModalActions.Present(modal: .none))
+            self.ethStore.perform(action: RootModalActions.Present(modal: .none))
             return
         }
         vc.transitioningDelegate = modalTransitionDelegate
@@ -140,6 +146,7 @@ class ModalPresenter : Subscriber, Trackable {
         configuration?(vc)
         topViewController?.present(vc, animated: true, completion: {
             self.store.perform(action: RootModalActions.Present(modal: .none))
+            self.ethStore.perform(action: RootModalActions.Present(modal: .none))
             self.store.trigger(name: .hideStatusBar)
         })
     }
@@ -215,7 +222,7 @@ class ModalPresenter : Subscriber, Trackable {
         case .loginAddress:
             return receiveView(isRequestAmountVisible: false)
         case .manageWallet:
-            return ModalViewController(childViewController: ManageWalletViewController(store: store), store: store)
+            return ModalViewController(childViewController: CurrencyList(), store: store)
         case .requestAmount:
             guard let wallet = walletManager?.wallet else { return nil }
             let requestVc = RequestAmountViewController(wallet: wallet, store: store)

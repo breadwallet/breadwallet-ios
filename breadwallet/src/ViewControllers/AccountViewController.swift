@@ -259,6 +259,7 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func addTemporaryStartupViews() {
+        guard store.state.currency == .bitcoin else { return }
         guardProtected {
             if !WalletManager.staticNoWallet {
                 self.addChildViewController(self.tempLoginView, layout: {

@@ -511,7 +511,7 @@ extension WalletManager : WalletAuthenticator {
     
     // public key for etherium wallet
     var ethPubKey: [UInt8]? {
-        
+        return nil
     }
     
     // sensitive user information stored on the keychain

@@ -34,7 +34,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     //MARK: - Private
     private let name = UILabel(font: UIFont.boldSystemFont(ofSize: 17.0))
-    private let manage = UIButton(type: .system)
+    private let currencySwitch = UIButton(type: .system)
     private let primaryBalance: UpdatingLabel
     private let secondaryBalance: UpdatingLabel
     private let currencyTapView = UIView()
@@ -99,11 +99,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private func setData() {
         name.textColor = .white
 
-        manage.setTitle(S.AccountHeader.manageButtonName, for: .normal)
-        manage.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17.0)
-        manage.tintColor = .white
-        manage.tap = {
-            self.store.perform(action: RootModalActions.Present(modal: .manageWallet))
+        currencySwitch.setTitle("Switch Currency", for: .normal)
+        currencySwitch.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15.0)
+        currencySwitch.tintColor = .white
+        currencySwitch.tap = strongify(self) { myself in
+            myself.store.perform(action: RootModalActions.Present(modal: .manageWallet))
         }
         primaryBalance.textColor = .whiteTint
         primaryBalance.font = UIFont.customBody(size: largeFontSize)
@@ -120,14 +120,13 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
         equals.text = S.AccountHeader.equals
 
-        manage.isHidden = true
         name.isHidden = true
         modeLabel.isHidden = true
     }
 
     private func addSubviews() {
         addSubview(name)
-        addSubview(manage)
+        addSubview(currencySwitch)
         addSubview(primaryBalance)
         addSubview(secondaryBalance)
         addSubview(search)
@@ -141,9 +140,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         name.constrain([
             name.constraint(.leading, toView: self, constant: C.padding[2]),
             name.constraint(.top, toView: self, constant: 30.0) ])
-        if let manageTitleLabel = manage.titleLabel {
-            manage.constrain([
-                manage.constraint(.trailing, toView: self, constant: -C.padding[2]),
+        if let manageTitleLabel = currencySwitch.titleLabel {
+            currencySwitch.constrain([
+                currencySwitch.constraint(.trailing, toView: self, constant: -C.padding[2]),
                 manageTitleLabel.firstBaselineAnchor.constraint(equalTo: name.firstBaselineAnchor) ])
         }
         secondaryBalance.constrain([
@@ -179,7 +178,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
         currencyTapView.constrain([
             currencyTapView.leadingAnchor.constraint(equalTo: name.leadingAnchor, constant: -C.padding[1]),
-            currencyTapView.trailingAnchor.constraint(equalTo: manage.leadingAnchor, constant: C.padding[1]),
+            currencyTapView.trailingAnchor.constraint(equalTo: currencySwitch.leadingAnchor, constant: C.padding[1]),
             currencyTapView.topAnchor.constraint(equalTo: primaryBalance.topAnchor, constant: -C.padding[1]),
             currencyTapView.bottomAnchor.constraint(equalTo: primaryBalance.bottomAnchor, constant: C.padding[1]) ])
 
@@ -249,6 +248,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     private func setBalances() {
+        if store.state.currency == .ethereum {
+            print("here: \(balance), \(exchangeRate!)")
+        }
         guard let rate = exchangeRate else { return }
         let amount = Amount(amount: balance, rate: rate, maxDigits: store.state.maxDigits)
         if !hasInitialized {
@@ -295,6 +297,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     private func hideExtraViews() {
+        //TODO - fix
+        if store.state.currency == .ethereum { return }
         var didHide = false
         if secondaryBalance.frame.maxX > search.frame.minX {
             secondaryBalance.isHidden = true
@@ -313,7 +317,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     override func draw(_ rect: CGRect) {
-        drawGradient(rect)
+        if store.state.currency == .bitcoin {
+            drawGradient(rect)
+        } else {
+            drawEthGradient(rect)
+        }
     }
 
     @objc private func currencySwitchTapped() {
