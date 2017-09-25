@@ -89,13 +89,11 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
 
     internal lazy var lazyPeerManager: BRPeerManager? = {
         guard let wallet = self.wallet else { return nil }
-        assert(!Thread.isMainThread, "should not be main")
         return BRPeerManager(wallet: wallet, earliestKeyTime: self.earliestKeyTime,
                              blocks: self.loadBlocks(), peers: self.loadPeers(), listener: self)
     }()
 
     internal lazy var lazyWallet: BRWallet? = {
-        assert(!Thread.isMainThread, "should not be main")
         return BRWallet(transactions: self.loadTransactions(), masterPubKey: self.masterPubKey,
                         listener: self)
     }()
@@ -542,7 +540,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     private func loadTransactions() -> [BRTxRef?] {
-        assert(!Thread.isMainThread, "should not be main")
         DispatchQueue.main.async { self.store.perform(action: LoadTransactions.set(true)) }
         var transactions = [BRTxRef?]()
         var sql: OpaquePointer? = nil
@@ -569,7 +566,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     private func loadBlocks() -> [BRBlockRef?] {
-        assert(!Thread.isMainThread, "should not be main")
         var blocks = [BRBlockRef?]()
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "select ZHEIGHT, ZNONCE, ZTARGET, ZTOTALTRANSACTIONS, ZVERSION, ZTIMESTAMP, " +
@@ -601,7 +597,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
     
     private func loadPeers() -> [BRPeer] {
-        assert(!Thread.isMainThread, "should not be main")
         var peers = [BRPeer]()
         var sql: OpaquePointer? = nil
         sqlite3_prepare_v2(db, "select ZADDRESS, ZPORT, ZSERVICES, ZTIMESTAMP from ZBRPEERENTITY", -1, &sql, nil)
