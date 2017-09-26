@@ -45,5 +45,6 @@ class GethManager {
     }
 
     func publishTx(_ tx: GethTransaction) {
+        try? ec.sendTransaction(ctx, tx:tx)
     }
 }
