@@ -81,7 +81,7 @@ extension WalletManager : WalletAuthenticator {
         var earliestKeyTime = BIP39CreationTime
         if let creationTime: Data = try keychainItem(key: KeychainKey.creationTime),
             creationTime.count == MemoryLayout<TimeInterval>.stride {
-            creationTime.withUnsafeBytes({ earliestKeyTime = $0.pointee })
+            creationTime.withUnsafeBytes { earliestKeyTime = $0.pointee }
         }
         
         try self.init(masterPubKey: masterPubKey, earliestKeyTime: earliestKeyTime, dbPath: dbPath, store: store)
@@ -350,7 +350,7 @@ extension WalletManager : WalletAuthenticator {
         // we store the wallet creation time on the keychain because keychain data persists even when app is deleted
         do {
             try setKeychainItem(key: KeychainKey.creationTime,
-                                item: [time].withUnsafeBufferPointer() { Data(buffer: $0) })
+                                item: [time].withUnsafeBufferPointer { Data(buffer: $0) })
             self.earliestKeyTime = time
         }
         catch { return nil }
@@ -549,7 +549,7 @@ private func keychainItem<T>(key: String) throws -> T? {
                                                         CFStringBuiltInEncodings.UTF8.rawValue) as? T
     case is Int64.Type:
         guard data.count == MemoryLayout<T>.stride else { return nil }
-        return data.withUnsafeBytes({ $0.pointee })
+        return data.withUnsafeBytes { $0.pointee }
     case is Dictionary<AnyHashable, Any>.Type:
         return NSKeyedUnarchiver.unarchiveObject(with: data) as? T
     default:
@@ -574,7 +574,7 @@ private func setKeychainItem<T>(key: String, item: T?, authenticated: Bool = fal
                                                         CFStringBuiltInEncodings.UTF8.rawValue, 0) as Data
         case is Int64.Type:
             data = CFDataCreateMutable(secureAllocator, MemoryLayout<T>.stride) as Data
-            [item].withUnsafeBufferPointer() { data?.append($0) }
+            [item].withUnsafeBufferPointer { data?.append($0) }
         case is Dictionary<AnyHashable, Any>.Type:
             data = NSKeyedArchiver.archivedData(withRootObject: item)
         default:
