@@ -273,10 +273,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         DispatchQueue.walletQueue.async {
             var buf = [UInt8](repeating: 0, count: BRTransactionSerialize(tx, nil, 0))
             let timestamp = (tx.pointee.timestamp > UInt32(NSTimeIntervalSince1970)) ? tx.pointee.timestamp - UInt32(NSTimeIntervalSince1970) : 0
-            let extra = [tx.pointee.blockHeight.littleEndian, timestamp.littleEndian]
             guard BRTransactionSerialize(tx, &buf, buf.count) == buf.count else { return }
-            buf.append(contentsOf: UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
-                                                       count: MemoryLayout<UInt32>.size*2))
+            [tx.pointee.blockHeight.littleEndian, timestamp.littleEndian].withUnsafeBytes { buf.append(contentsOf: $0) }
             sqlite3_exec(self.db, "begin exclusive", nil, nil, nil)
 
             var sql: OpaquePointer? = nil
@@ -319,9 +317,6 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         DispatchQueue.walletQueue.async {
             guard txHashes.count > 0 else { return }
             let timestamp = (timestamp > UInt32(NSTimeIntervalSince1970)) ? timestamp - UInt32(NSTimeIntervalSince1970) : 0
-            let extra = [blockHeight.littleEndian, timestamp.littleEndian]
-            let extraBuf = UnsafeBufferPointer(start: UnsafeRawPointer(extra).assumingMemoryBound(to: UInt8.self),
-                                               count: MemoryLayout<UInt32>.size*2)
             var sql: OpaquePointer? = nil, sql2: OpaquePointer? = nil
             sqlite3_prepare_v2(self.db, "select ZTXHASH, ZBLOB from ZBRTXMETADATAENTITY where ZTYPE = 1 and " +
                 "ZTXHASH in (" + String(repeating: "?, ", count: txHashes.count - 1) + "?)", -1, &sql, nil)
@@ -340,12 +335,14 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
                 let buf = sqlite3_column_blob(sql, 1).assumingMemoryBound(to: UInt8.self)
                 var blob = [UInt8](UnsafeBufferPointer(start: buf, count: Int(sqlite3_column_bytes(sql, 1))))
 
-                if blob.count > extraBuf.count {
-                    blob.replaceSubrange(blob.count - extraBuf.count..<blob.count, with: extraBuf)
-                    sqlite3_bind_blob(sql2, 1, blob, Int32(blob.count), SQLITE_TRANSIENT)
-                    sqlite3_bind_blob(sql2, 2, hash, Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
-                    sqlite3_step(sql2)
-                    sqlite3_reset(sql2)
+                [blockHeight.littleEndian, timestamp.littleEndian].withUnsafeBytes {
+                    if blob.count > $0.count {
+                        blob.replaceSubrange(blob.count - $0.count..<blob.count, with: $0)
+                        sqlite3_bind_blob(sql2, 1, blob, Int32(blob.count), SQLITE_TRANSIENT)
+                        sqlite3_bind_blob(sql2, 2, hash, Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
+                        sqlite3_step(sql2)
+                        sqlite3_reset(sql2)
+                    }
                 }
             }
 
