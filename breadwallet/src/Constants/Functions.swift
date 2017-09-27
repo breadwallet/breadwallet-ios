@@ -8,14 +8,16 @@
 
 import UIKit
 
-func guardProtected(callback: @escaping () -> Void) {
+func guardProtected(queue: DispatchQueue, callback: @escaping () -> Void) {
     if UIApplication.shared.isProtectedDataAvailable {
         callback()
     } else {
         var observer: Any?
         observer = NotificationCenter.default.addObserver(forName: .UIApplicationProtectedDataDidBecomeAvailable, object: nil, queue: nil,
                                                           using: { note in
-                                                            callback()
+                                                            queue.async {
+                                                                callback()
+                                                            }
                                                             if let observer = observer {
                                                                 NotificationCenter.default.removeObserver(observer)
                                                             }

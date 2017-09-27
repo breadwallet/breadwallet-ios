@@ -259,7 +259,7 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func addTemporaryStartupViews() {
-        guardProtected {
+        guardProtected(queue: DispatchQueue.main) {
             if !WalletManager.staticNoWallet {
                 self.addChildViewController(self.tempLoginView, layout: {
                     self.tempLoginView.view.constrain(toSuperviewEdges: nil)
