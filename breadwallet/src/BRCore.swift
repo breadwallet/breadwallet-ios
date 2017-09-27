@@ -95,7 +95,7 @@ extension BRAddress: CustomStringConvertible, Hashable {
     var scriptPubKey: [UInt8]? {
         var script = [UInt8](repeating: 0, count: 25)
         let count = BRAddressScriptPubKey(&script, script.count,
-                                        UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self))
+                                          UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self))
         guard count > 0 else { return nil }
         if count < script.count { script.removeSubrange(count...) }
         return script

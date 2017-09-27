@@ -467,6 +467,7 @@ extension WalletManager : WalletAuthenticator {
                 var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
                 pkData.count = pkLen
                 guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0, pkLen) }) == pkLen else { return nil }
+                key.clean()
                 let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
                                                                        CFStringBuiltInEncodings.UTF8.rawValue) as String
                 try setKeychainItem(key: KeychainKey.apiAuthKey, item: privKey)
@@ -498,6 +499,7 @@ extension WalletManager : WalletAuthenticator {
                 var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
                 pkData.count = pkLen
                 guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0, pkLen) }) == pkLen else { return nil }
+                key.clean()
                 let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
                                                                        CFStringBuiltInEncodings.UTF8.rawValue) as String
                 try setKeychainItem(key: KeychainKey.ethPrivKey, item: privKey)
@@ -513,7 +515,9 @@ extension WalletManager : WalletAuthenticator {
     // public key for etherium wallet
     var ethPubKey: [UInt8]? {
         var key = BRKey(privKey: ethPrivKey!)
-        return key?.pubKey()
+        let pubKey = key?.pubKey()
+        key?.clean()
+        return pubKey
     }
     
     // sensitive user information stored on the keychain
