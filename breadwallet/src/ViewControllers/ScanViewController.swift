@@ -155,7 +155,7 @@ class ScanViewController : UIViewController, Trackable {
 }
 
 extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
-    func metadataOutput(captureOutput: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+    func metadataOutput(_ captureOutput: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         if let data = metadataObjects as? [AVMetadataMachineReadableCodeObject] {
             if data.count == 0 {
                 guide.state = .normal
