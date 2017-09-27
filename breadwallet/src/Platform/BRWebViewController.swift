@@ -111,6 +111,9 @@ import WebKit
         webView?.backgroundColor = UIColor(red:0.98, green:0.98, blue:0.98, alpha:1.0)
         _ = webView?.load(request)
         webView?.autoresizingMask = [UIViewAutoresizing.flexibleHeight, UIViewAutoresizing.flexibleWidth]
+        if #available(iOS 11, *) {
+            webView?.scrollView.contentInsetAdjustmentBehavior = .never
+        }
         view.addSubview(webView!)
         
         let center = NotificationCenter.default
