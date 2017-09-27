@@ -51,7 +51,7 @@ class StartFlowPresenter : Subscriber {
 
     private func handleStartFlowChange(state: State) {
         if state.isStartFlowVisible {
-            guardProtected { [weak self] in
+            guardProtected(queue: DispatchQueue.main) { [weak self] in
                 self?.presentStartFlow()
             }
         } else {
