@@ -53,7 +53,7 @@ class PinPadViewController : UICollectionViewController {
         self.keyboardType = keyboardType
         self.maxDigits = maxDigits
         let layout = UICollectionViewFlowLayout()
-        let screenWidth = UIScreen.main.bounds.width
+        let screenWidth = UIScreen.main.safeWidth
 
         layout.minimumLineSpacing = 1.0
         layout.minimumInteritemSpacing = 1.0
