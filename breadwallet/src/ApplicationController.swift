@@ -35,6 +35,7 @@ class ApplicationController : Subscriber, Trackable {
     private let noAuthApiClient = BRAPIClient(authenticator: NoAuthAuthenticator())
     private var fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)?
     private var launchURL: URL?
+    private var hasPerformedWalletDependentInitialization = false
 
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
@@ -49,7 +50,9 @@ class ApplicationController : Subscriber, Trackable {
         self.walletManager = try? WalletManager(store: self.store, dbPath: nil)
         let _ = self.walletManager?.wallet //attempt to initialize wallet
         DispatchQueue.main.async {
-            self.didInitWallet()
+            if !self.hasPerformedWalletDependentInitialization {
+                self.didInitWallet()
+            }
         }
     }
 
@@ -68,6 +71,9 @@ class ApplicationController : Subscriber, Trackable {
             }
         }
         updateAssetBundles()
+        if !hasPerformedWalletDependentInitialization && walletManager != nil {
+            didInitWallet()
+        }
     }
 
     private func setup() {
@@ -162,12 +168,14 @@ class ApplicationController : Subscriber, Trackable {
 
     private func didInitWallet() {
         guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
+        guard let rootViewController = window.rootViewController else { return }
+        hasPerformedWalletDependentInitialization = true
         store.perform(action: PinLength.set(walletManager.pinLength))
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
         modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient)
         exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
         feeUpdater = FeeUpdater(walletManager: walletManager, store: store)
-        startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: window.rootViewController!)
+        startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: rootViewController)
         accountViewController?.walletManager = walletManager
         defaultsUpdater = UserDefaultsUpdater(walletManager: walletManager)
         urlController = URLController(store: self.store, walletManager: walletManager)
