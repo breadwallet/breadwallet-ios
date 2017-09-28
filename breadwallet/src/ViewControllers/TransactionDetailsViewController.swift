@@ -18,7 +18,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         self.kvStore = kvStore
         self.isBtcSwapped = store.state.isBtcSwapped
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.width-C.padding[4], height: UIScreen.main.bounds.height - C.padding[1])
+        layout.itemSize = CGSize(width: UIScreen.main.safeWidth-C.padding[4], height: UIScreen.main.bounds.height - C.padding[1])
         layout.sectionInset = UIEdgeInsetsMake(C.padding[1], 0, 0, 0)
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = C.padding[1]
@@ -68,7 +68,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         //This scrollview needs to be off screen so that it doesn't block touches meant for the transaction details
         //card. We are just using this scrollview for its gesture recognizer, so that we can se a preview of the next card
         //and also have paging enabled for the scrollview.
-        secretScrollView.frame = CGRect(x: C.padding[2] - 4.0, y: -1000, width: UIScreen.main.bounds.width - C.padding[3], height: UIScreen.main.bounds.height - C.padding[1])
+        secretScrollView.frame = CGRect(x: C.padding[2] - 4.0, y: -1000, width: UIScreen.main.safeWidth - C.padding[3], height: UIScreen.main.bounds.height - C.padding[1])
         secretScrollView.showsHorizontalScrollIndicator = false
         secretScrollView.alwaysBounceHorizontal = true
         collectionView?.addGestureRecognizer(secretScrollView.panGestureRecognizer)

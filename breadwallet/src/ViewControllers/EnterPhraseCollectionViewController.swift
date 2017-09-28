@@ -21,7 +21,7 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
     init(walletManager: WalletManager) {
         self.walletManager = walletManager
         let layout = UICollectionViewFlowLayout()
-        let screenWidth = UIScreen.main.bounds.width
+        let screenWidth = UIScreen.main.safeWidth
         layout.itemSize = CGSize(width: (screenWidth - C.padding[4])/3.0, height: itemHeight)
         layout.minimumLineSpacing = 0.0
         layout.minimumInteritemSpacing = 0.0
