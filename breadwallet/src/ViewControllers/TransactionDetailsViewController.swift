@@ -157,6 +157,10 @@ extension TransactionDetailsViewController {
             }
         }
 
+        if let modalTransitioningDelegate = transitioningDelegate as? ModalTransitionDelegate {
+            transactionDetailCell.modalTransitioningDelegate = modalTransitioningDelegate
+        }
+
         return transactionDetailCell
     }
 }

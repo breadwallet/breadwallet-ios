@@ -46,6 +46,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
 
     var didBeginEditing: (() -> Void)?
     var didEndEditing: (() -> Void)?
+    var modalTransitioningDelegate: ModalTransitionDelegate?
 
     var kvStore: BRReplicatedKVStore?
     var transaction: Transaction?
@@ -331,10 +332,12 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
 
     //MARK: - Keyboard Notifications
     @objc private func keyboardWillShow(notification: Notification) {
+        modalTransitioningDelegate?.shouldDismissInteractively = false
         respondToKeyboardAnimation(notification: notification)
     }
 
     @objc private func keyboardWillHide(notification: Notification) {
+        modalTransitioningDelegate?.shouldDismissInteractively = true
         respondToKeyboardAnimation(notification: notification)
     }
 
