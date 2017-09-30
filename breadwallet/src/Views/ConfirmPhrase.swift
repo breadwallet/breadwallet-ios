@@ -75,6 +75,7 @@ class ConfirmPhrase: UIView {
 
     @objc private func textFieldChanged() {
         textField.textColor = .darkText
+        guard textField.markedTextRange == nil else { return }
         if textField.text == word {
             circle.show()
             if !E.isIPhone4 {
