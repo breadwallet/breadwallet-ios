@@ -280,7 +280,11 @@ class AccountViewController : UIViewController, Subscriber {
     private func addTransactionsView() {
         addChildViewController(transactionsTableView, layout: {
             transactionsTableView.view.constrain(toSuperviewEdges: nil)
-            transactionsTableView.tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight + C.padding[2], left: 0, bottom: footerHeight + C.padding[2], right: 0)
+            if #available(iOS 11, *) {
+                transactionsTableView.tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight, left: 0, bottom: footerHeight + C.padding[2], right: 0)
+            } else {
+                transactionsTableView.tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight + C.padding[2], left: 0, bottom: footerHeight + C.padding[2], right: 0)
+            }
             transactionsTableView.tableView.scrollIndicatorInsets = UIEdgeInsets(top: accountHeaderHeight, left: 0, bottom: footerHeight, right: 0)
         })
     }
