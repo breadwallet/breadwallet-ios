@@ -37,6 +37,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     let walletManager: WalletManager
     let store: Store
     var tempBitIDKeys = [String: BRKey]() // this should only ever be mutated from the main thread
+    private var tempBitIDResponses = [String: Int]()
     private var isPresentingAuth = false
 
     init(walletManager: WalletManager, store: Store) {
@@ -139,6 +140,9 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                       let bitidIndex = Int(bii) else {
                 return BRHTTPResponse(request: request, code: 400)
             }
+            if let response = self.tempBitIDResponses[stringToSign] {
+                return BRHTTPResponse(request: request, code: response)
+            }
             let asyncResp = BRHTTPResponse(async: request)
             DispatchQueue.main.sync {
                 CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
@@ -148,7 +152,10 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                     } else {
                         let prompt = bitidUrl.host ?? bitidUrl.description
                         self.isPresentingAuth = true
-                        self.store.trigger(name: .authenticateForBitId(prompt, { [weak self]result in
+                        if UserDefaults.isTouchIdEnabled {
+                            asyncResp.provide(200, json: ["error": "proxy-shutdown"])
+                        }
+                        self.store.trigger(name: .authenticateForBitId(prompt, { [weak self] result in
                             self?.isPresentingAuth = false
                             switch result {
                             case .success:
@@ -156,11 +163,14 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                                     self?.addKeyToCache(key, url: url)
                                     self?.sendBitIDResponse(stringToSign, usingKey: key, request: request, asyncResp: asyncResp)
                                 } else {
+                                    self?.tempBitIDResponses[stringToSign] = 401
                                     request.queue.async { asyncResp.provide(401) }
                                 }
                             case .cancelled:
+                                self?.tempBitIDResponses[stringToSign] = 403
                                 request.queue.async { asyncResp.provide(403) }
                             case .failed:
+                                self?.tempBitIDResponses[stringToSign] = 401
                                 request.queue.async { asyncResp.provide(401) }
                             }
                         }))
