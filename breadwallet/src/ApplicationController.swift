@@ -36,6 +36,7 @@ class ApplicationController : Subscriber, Trackable {
     private var fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)?
     private var launchURL: URL?
     private var hasPerformedWalletDependentInitialization = false
+    private var didInitWallet = false
 
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
@@ -50,8 +51,9 @@ class ApplicationController : Subscriber, Trackable {
         self.walletManager = try? WalletManager(store: self.store, dbPath: nil)
         let _ = self.walletManager?.wallet //attempt to initialize wallet
         DispatchQueue.main.async {
+            self.didInitWallet = true
             if !self.hasPerformedWalletDependentInitialization {
-                self.didInitWallet()
+                self.didInitWalletManager()
             }
         }
     }
@@ -71,9 +73,10 @@ class ApplicationController : Subscriber, Trackable {
             }
         }
         updateAssetBundles()
-        if !hasPerformedWalletDependentInitialization && walletManager != nil {
-            didInitWallet()
+        if !hasPerformedWalletDependentInitialization && didInitWallet {
+            didInitWalletManager()
         }
+
     }
 
     private func setup() {
@@ -98,7 +101,7 @@ class ApplicationController : Subscriber, Trackable {
                             assert(false, "Error creating new wallet: \(error)")
                         }
                         DispatchQueue.main.async {
-                            self.didInitWallet()
+                            self.didInitWalletManager()
                             callback()
                         }
                     }
@@ -166,7 +169,7 @@ class ApplicationController : Subscriber, Trackable {
         }
     }
 
-    private func didInitWallet() {
+    private func didInitWalletManager() {
         guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
         guard let rootViewController = window.rootViewController else { return }
         hasPerformedWalletDependentInitialization = true
