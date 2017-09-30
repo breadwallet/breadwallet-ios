@@ -163,15 +163,15 @@ class Sender {
 
         let request = NSMutableURLRequest(url: url, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: protocolPaymentTimeout)
 
-        request.setValue("application/bitcoin-payment", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/bitcoin-paymentack", forHTTPHeaderField: "Accept")
+        request.setValue("application/litecoin-payment", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/litecoin-paymentack", forHTTPHeaderField: "Accept")
         request.httpMethod = "POST"
         request.httpBody = Data(bytes: payment!.bytes)
 
         URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
             guard error == nil else { print("payment error: \(error!)"); return }
             guard let response = response, let data = data else { print("no response or data"); return }
-            if response.mimeType == "application/bitcoin-paymentack" && data.count <= 50000 {
+            if response.mimeType == "application/litecoin-paymentack" && data.count <= 50000 {
                 if let ack = PaymentProtocolACK(data: data) {
                     print("received ack: \(ack)") //TODO - show memo to user
                 } else {

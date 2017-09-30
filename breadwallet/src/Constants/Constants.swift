@@ -31,15 +31,15 @@ struct C {
     }()
     static let animationDuration: TimeInterval = 0.3
     static let secondsInDay: TimeInterval = 86400
-    static let maxMoney: UInt64 = 21000000*100000000
+    static let maxMoney: UInt64 = 84000000*100000000
     static let satoshis: UInt64 = 100000000
-    static let walletQueue = "com.breadwallet.walletqueue"
-    static let btcCurrencyCode = "BTC"
+    static let walletQueue = "com.litecoin.walletqueue"
+    static let btcCurrencyCode = "LTC"
     static let null = "(null)"
     static let maxMemoLength = 250
-    static let feedbackEmail = "feedback@breadwallet.com"
-    static let reviewLink = "https://itunes.apple.com/app/breadwallet-bitcoin-wallet/id885251393?action=write-review"
+    static let feedbackEmail = "contact@loafwallet.org"
+    static let reviewLink = "https://itunes.apple.com/app/loafwallet-litecoin-wallet/id1119332592?action=write-review"
     static var standardPort: Int {
-        return E.isTestnet ? 18333 : 8333
+        return E.isTestnet ? 19335 : 9333
     }
 }

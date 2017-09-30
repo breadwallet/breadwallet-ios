@@ -12,30 +12,30 @@
 			<key>CFBundleTypeIconFiles</key>
 			<array/>
 			<key>CFBundleTypeName</key>
-			<string>Bitcoin Payment Request</string>
+			<string>Litecoin Payment Request</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>bitcoin.paymentrequest</string>
+				<string>litecoin.paymentrequest</string>
 			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeIconFiles</key>
 			<array/>
 			<key>CFBundleTypeName</key>
-			<string>Bitcoin Payment</string>
+			<string>Litecoin Payment</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>bitcoin.payment</string>
+				<string>litecoin.payment</string>
 			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeIconFiles</key>
 			<array/>
 			<key>CFBundleTypeName</key>
-			<string>Bitcoin Payment ACK</string>
+			<string>Litecoin Payment ACK</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>bitcoin.paymentack</string>
+				<string>litecoin.paymentack</string>
 			</array>
 		</dict>
 	</array>
@@ -67,10 +67,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>org.voisine.bread</string>
+			<string>com.litecoin.loafwallet</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>bread</string>
+				<string>loaf</string>
 			</array>
 		</dict>
 		<dict>
@@ -143,13 +143,13 @@
 				<string>public.data</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Bitcoin Payment Request</string>
+			<string>Litecoin Payment Request</string>
 			<key>UTTypeIdentifier</key>
-			<string>bitcoin.paymentrequest</string>
+			<string>litecoin.paymentrequest</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.mime-type</key>
-				<string>application/bitcoin-paymentrequest</string>
+				<string>application/litecoin-paymentrequest</string>
 			</dict>
 		</dict>
 		<dict>
@@ -158,13 +158,13 @@
 				<string>public.data</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Bitcoin Payment</string>
+			<string>Litecoin Payment</string>
 			<key>UTTypeIdentifier</key>
-			<string>bitcoin.payment</string>
+			<string>litecoin.payment</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.mime-type</key>
-				<string>application/bitcoin-payment</string>
+				<string>application/litecoin-payment</string>
 			</dict>
 		</dict>
 		<dict>
@@ -173,13 +173,13 @@
 				<string>public.data</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Bitcoin Payment ACK</string>
+			<string>Litecoin Payment ACK</string>
 			<key>UTTypeIdentifier</key>
-			<string>bitcoin.paymentack</string>
+			<string>litecoin.paymentack</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.mime-type</key>
-				<string>application/bitcoin-paymentack</string>
+				<string>application/litecoin-paymentack</string>
 			</dict>
 		</dict>
 	</array>
