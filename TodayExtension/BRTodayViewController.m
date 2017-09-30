@@ -29,8 +29,8 @@
 #import "UIImage+Utils.h"
 #import <NotificationCenter/NotificationCenter.h>
 
-#define SCAN_URL @"bread://x-callback-url/scanqr"
-#define OPEN_URL @"bread://"
+#define SCAN_URL @"loaf://x-callback-url/scanqr"
+#define OPEN_URL @"loaf://"
 
 @interface BRTodayViewController () <NCWidgetProviding>
 
