@@ -38,8 +38,8 @@ class ApplicationController : Subscriber, Trackable {
 
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
-        DispatchQueue.walletQueue.async {
-            guardProtected {
+        guardProtected {
+            DispatchQueue.walletQueue.async {
                 self.initWallet()
             }
         }
