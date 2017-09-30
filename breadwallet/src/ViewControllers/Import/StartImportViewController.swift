@@ -9,9 +9,9 @@
 import UIKit
 import BRCore
 
-private let mainURL = "https://api.breadwallet.com/q/addrs/utxo"
-private let fallbackURL = "https://insight.bitpay.com/api/addrs/utxo"
-private let testnetURL = "https://test-insight.bitpay.com/api/addrs/utxo"
+private let mainURL = "https://insight.litecore.io/api/addrs/utxo"
+private let fallbackURL = "https://insight.litecore.io/api/addrs/utxo"
+private let testnetURL = "https://testnet.litecore.io/api/addrs/utxo"
 
 class StartImportViewController : UIViewController {
 
