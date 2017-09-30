@@ -31,6 +31,7 @@ class ModalTransitionDelegate : NSObject, Subscriber {
         store.trigger(name: .showStatusBar)
     }
 
+    var shouldDismissInteractively = true
     //MARK: - Private
     fileprivate let type: ModalType
     fileprivate let store: Store
@@ -45,6 +46,7 @@ class ModalTransitionDelegate : NSObject, Subscriber {
     private let progressThreshold: CGFloat = 0.5
 
     @objc fileprivate func didUpdate(gr: UIPanGestureRecognizer) {
+        guard shouldDismissInteractively else { return }
         switch gr.state {
         case .began:
             isInteractive = true
