@@ -338,11 +338,11 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
 
     private func lockIfNeeded() {
         if let disabledUntil = walletManager?.walletDisabledUntil {
-            let now = Date.timeIntervalSinceReferenceDate
+            let now = Date().timeIntervalSince1970
             if disabledUntil > now {
                 saveEvent("login.locked")
-                let disabledUntilDate = Date(timeIntervalSinceReferenceDate: disabledUntil)
-                let unlockInterval = disabledUntil - Date.timeIntervalSinceReferenceDate
+                let disabledUntilDate = Date(timeIntervalSince1970: disabledUntil)
+                let unlockInterval = disabledUntil - now
                 let df = DateFormatter()
                 df.setLocalizedDateFormatFromTemplate(unlockInterval > C.secondsInDay ? "h:mm:ss a MMM d, yyy" : "h:mm:ss a")
 
@@ -370,7 +370,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
 
     private var isWalletDisabled: Bool {
         guard let walletManager = walletManager else { return false }
-        let now = Date.timeIntervalSinceReferenceDate
+        let now = Date().timeIntervalSince1970
         return walletManager.walletDisabledUntil > now
     }
 

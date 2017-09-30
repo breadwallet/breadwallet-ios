@@ -180,7 +180,7 @@ extension WalletManager : WalletAuthenticator {
     // true if pin is correct
     func authenticate(pin: String) -> Bool {
         do {
-            let secureTime = Date.timeIntervalSinceReferenceDate // TODO: XXX use secure time from https request
+            let secureTime = Date().timeIntervalSince1970 // TODO: XXX use secure time from https request
             var failCount: Int64 = try keychainItem(key: KeychainKey.pinFailCount) ?? 0
 
             if failCount >= 3 {
