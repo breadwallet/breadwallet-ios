@@ -1759,7 +1759,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1BBAEBE51F80237B0047DEA8 /* loafwallet-core */ = {
+		1BBAEBE51F80237B0047DEA8 /* Modules/loafwallet-core */ = {
 			isa = PBXGroup;
 			children = (
 				1BBAEBE81F80237B0047DEA8 /* BRAddress.c */,
@@ -2971,7 +2971,7 @@
 		75B6F52F1DA71DCC0031A93F /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				1BBAEBE51F80237B0047DEA8 /* loafwallet-core */,
+				1BBAEBE51F80237B0047DEA8 /* Modules/loafwallet-core */,
 				22A9A9971DF63426000F0016 /* libbz2 */,
 				755CD3831DAA0E3E0075898E /* unbound */,
 				755CD7031DAA16810075898E /* nettle */,
@@ -4946,7 +4946,7 @@
 				DEVELOPMENT_TEAM = FAPFEJXE9S;
 				INFOPLIST_FILE = breadwalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.litecoin.loafwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
@@ -4961,7 +4961,7 @@
 				DEVELOPMENT_TEAM = FAPFEJXE9S;
 				INFOPLIST_FILE = breadwalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.litecoin.loafwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
@@ -5238,7 +5238,7 @@
 				DEVELOPMENT_TEAM = FAPFEJXE9S;
 				INFOPLIST_FILE = breadwalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.litecoin.loafwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
@@ -5540,7 +5540,7 @@
 				DEVELOPMENT_TEAM = FAPFEJXE9S;
 				INFOPLIST_FILE = breadwalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.litecoin.loafwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
@@ -5834,7 +5834,7 @@
 				DEVELOPMENT_TEAM = FAPFEJXE9S;
 				INFOPLIST_FILE = breadwalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.litecoin.loafwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
