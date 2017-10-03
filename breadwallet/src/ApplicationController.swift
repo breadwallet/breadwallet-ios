@@ -38,11 +38,6 @@ class ApplicationController : Subscriber, Trackable {
 
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
-        guardProtected {
-            DispatchQueue.walletQueue.async {
-                self.initWallet()
-            }
-        }
     }
 
     private func initWallet() {
@@ -70,10 +65,19 @@ class ApplicationController : Subscriber, Trackable {
         updateAssetBundles()
     }
 
+    private func setupWallet() {
+        guardProtected {
+            DispatchQueue.walletQueue.async {
+                self.initWallet()
+            }
+        }
+    }
+    
     private func setup() {
         setupDefaults()
         setupAppearance()
         setupRootViewController()
+        setupWallet()
         window.makeKeyAndVisible()
         listenForPushNotificationRequest()
         offMainInitialization()
