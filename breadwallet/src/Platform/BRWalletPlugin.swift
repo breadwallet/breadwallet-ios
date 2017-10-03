@@ -261,6 +261,12 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             }
             return BRHTTPResponse(request: req, code: 200)
         }
+        
+        router.get("/_wallet/version") { (req, m) -> BRHTTPResponse in
+            let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? ""
+            let build = Bundle.main.infoDictionary?["CFBundleVersion"] ?? ""
+            return try BRHTTPResponse(request: req, code: 200, json: ["version": version, "build": build])
+        }
     }
 
     private func addKeyToCache(_ key: BRKey, url: String) {
