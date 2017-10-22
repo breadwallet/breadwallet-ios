@@ -33,7 +33,8 @@ struct HideStartFlow : Action {
                      isPushNotificationsEnabled: state.isPushNotificationsEnabled,
                      isPromptingTouchId: state.isPromptingTouchId,
                      pinLength: state.pinLength,
-                     fees: state.fees)
+                     fees: state.fees,
+                     currency: state.currency)
     }
 }
 
@@ -239,6 +240,15 @@ enum UpdateFees {
     }
 }
 
+enum CurrencyActions {
+    struct set : Action {
+        let reduce: Reducer
+        init(_ currency: Currency) {
+            reduce = { $0.clone(currency: currency) }
+        }
+    }
+}
+
 
 //MARK: - State Creation Helpers
 extension State {
@@ -259,7 +269,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func rootModal(_ type: RootModal) -> State {
         return State(isStartFlowVisible: false,
@@ -278,7 +289,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(pasteboard: String?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -297,7 +309,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(walletSyncProgress: Double, timestamp: UInt32) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -316,7 +329,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(syncState: SyncState) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -335,7 +349,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(balance: UInt64) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -354,7 +369,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(transactions: [Transaction]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -373,7 +389,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(walletName: String) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -392,7 +409,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(walletSyncingErrorMessage: String?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -411,7 +429,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(walletCreationDate: Date) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -430,7 +449,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(isRescanning: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -449,7 +469,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(isBtcSwapped: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -468,7 +489,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(isLoginRequired: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -487,7 +509,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(currentRate: Rate, rates: [Rate]) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -506,7 +529,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(currentRate: Rate) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -525,7 +549,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(alert: AlertType?) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -544,7 +569,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(isTouchIdEnabled: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -563,7 +589,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(defaultCurrencyCode: String) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -582,7 +609,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(recommendRescan: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -601,7 +629,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(isLoadingTransactions: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -620,7 +649,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(maxDigits: Int) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -639,7 +669,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(isPushNotificationsEnabled: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -658,7 +689,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(isPromptingTouchId: Bool) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -677,7 +709,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(pinLength: Int) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -696,7 +729,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
     }
     func clone(fees: Fees) -> State {
         return State(isStartFlowVisible: isStartFlowVisible,
@@ -715,6 +749,27 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled,
                      isPromptingTouchId: isPromptingTouchId,
                      pinLength: pinLength,
-                     fees: fees)
+                     fees: fees,
+                     currency: currency)
+    }
+    func clone(currency: Currency) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible,
+                     isLoginRequired: isLoginRequired,
+                     rootModal: rootModal,
+                     walletState: walletState,
+                     isBtcSwapped: isBtcSwapped,
+                     currentRate: currentRate,
+                     rates: rates,
+                     alert: alert,
+                     isTouchIdEnabled: isTouchIdEnabled,
+                     defaultCurrencyCode: defaultCurrencyCode,
+                     recommendRescan: recommendRescan,
+                     isLoadingTransactions: isLoadingTransactions,
+                     maxDigits: maxDigits,
+                     isPushNotificationsEnabled: isPushNotificationsEnabled,
+                     isPromptingTouchId: isPromptingTouchId,
+                     pinLength: pinLength,
+                     fees: fees,
+                     currency: currency)
     }
 }
