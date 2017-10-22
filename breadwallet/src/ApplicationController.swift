@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCore
 
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
@@ -17,6 +18,7 @@ class ApplicationController : Subscriber, Trackable {
     //by the UIApplicationDelegate Protocol
     let window = UIWindow()
     fileprivate let store = Store()
+    fileprivate let ethStore = Store()
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
 
@@ -27,6 +29,8 @@ class ApplicationController : Subscriber, Trackable {
     private let transitionDelegate: ModalTransitionDelegate
     private var kvStoreCoordinator: KVStoreCoordinator?
     private var accountViewController: AccountViewController?
+    private var ethAccountViewController: AccountViewController?
+    private var containerViewController: AppContainerViewController?
     fileprivate var application: UIApplication?
     private let watchSessionManager = PhoneWCSessionManager()
     private var urlController: URLController?
@@ -37,9 +41,11 @@ class ApplicationController : Subscriber, Trackable {
     private var launchURL: URL?
     private var hasPerformedWalletDependentInitialization = false
     private var didInitWallet = false
-
+    
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
+        ethStore.perform(action: CurrencyActions.set(.ethereum))
+        ethStore.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 3456)))
         DispatchQueue.walletQueue.async {
             guardProtected(queue: DispatchQueue.walletQueue) {
                 self.initWallet()
@@ -175,7 +181,7 @@ class ApplicationController : Subscriber, Trackable {
         hasPerformedWalletDependentInitialization = true
         store.perform(action: PinLength.set(walletManager.pinLength))
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
-        modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient)
+        modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient, ethStore: ethStore)
         exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
         feeUpdater = FeeUpdater(walletManager: walletManager, store: store)
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: rootViewController)
@@ -213,6 +219,12 @@ class ApplicationController : Subscriber, Trackable {
                 self.watchSessionManager.rate = self.store.state.currentRate
             })
         }
+
+//        if let ethPrivKey = walletManager.ethPrivKey {
+//            let gethManager = GethManager(ethPrivKey: ethPrivKey, store: store)
+//            print("manager: \(gethManager)")
+//        }
+
     }
 
     private func shouldRequireLogin() -> Bool {
@@ -235,6 +247,8 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func setupRootViewController() {
+        let container = AppContainerViewController()
+
         let didSelectTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
             guard let kvStore = self.walletManager?.apiClient?.kv else { return }
             let transactionDetails = TransactionDetailsViewController(store: self.store, transactions: transactions, selectedIndex: selectedIndex, kvStore: kvStore)
@@ -247,7 +261,46 @@ class ApplicationController : Subscriber, Trackable {
         accountViewController?.sendCallback = { self.store.perform(action: RootModalActions.Present(modal: .send)) }
         accountViewController?.receiveCallback = { self.store.perform(action: RootModalActions.Present(modal: .receive)) }
         accountViewController?.menuCallback = { self.store.perform(action: RootModalActions.Present(modal: .menu)) }
-        window.rootViewController = accountViewController
+
+
+        ethAccountViewController = AccountViewController(store: ethStore, didSelectTransaction: {_,_ in } )
+
+        container.child = accountViewController
+        container.addChildViewController(accountViewController!, layout: {
+            accountViewController!.view.constrain(toSuperviewEdges: nil)
+        })
+        containerViewController = container
+        window.rootViewController = container
+
+        NotificationCenter.default.addObserver(forName: .SwitchCurrencyNotification, object: nil, queue: nil, using: { note in
+            if let info = note.userInfo {
+                if let currency = info["currency"] as? String {
+                    if currency == "btc" {
+                        self.showBTC()
+                    } else {
+                        self.showEth()
+                    }
+                }
+            }
+        })
+    }
+
+    private func showBTC() {
+        guard containerViewController?.child != accountViewController else { return }
+        ethAccountViewController?.removeFromParentViewController()
+        containerViewController?.child = accountViewController
+        containerViewController?.addChildViewController(accountViewController!, layout: {
+            accountViewController!.view.constrain(toSuperviewEdges: nil)
+        })
+    }
+
+    private func showEth() {
+        guard containerViewController?.child != ethAccountViewController else { return }
+        accountViewController?.removeFromParentViewController()
+        containerViewController?.child = ethAccountViewController
+        containerViewController?.addChildViewController(ethAccountViewController!, layout: {
+            ethAccountViewController!.view.constrain(toSuperviewEdges: nil)
+        })
     }
 
     private func startDataFetchers() {

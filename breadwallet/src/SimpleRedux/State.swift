@@ -26,6 +26,7 @@ struct State {
     let isPromptingTouchId: Bool
     let pinLength: Int
     let fees: Fees
+    let currency: Currency
 }
 
 extension State {
@@ -46,8 +47,14 @@ extension State {
                         isPushNotificationsEnabled: UserDefaults.pushToken != nil,
                         isPromptingTouchId: false,
                         pinLength: 6,
-                        fees: Fees.defaultFees )
+                        fees: Fees.defaultFees,
+                        currency: .bitcoin)
     }
+}
+
+enum Currency {
+    case bitcoin
+    case ethereum
 }
 
 enum RootModal {

@@ -14,6 +14,7 @@ class GethManager {
     let ctx: GethContext
     let ec: GethEthereumClient
     let addr: GethAddress
+    let store: Store
 
     var balance: UInt64 {
         return UInt64(bitPattern: try! ec.getBalanceAt(ctx, account: addr, number: -1).getInt64())
@@ -24,7 +25,8 @@ class GethManager {
     }
     
     //init(ethPubKey: [UInt8]) {
-    init(ethPrivKey: String) {
+    init(ethPrivKey: String, store: Store) {
+        self.store = store
         ctx = GethContext()
         ec = GethEthereumClient("https://mainnet.infura.io")
         //ec = GethEthereumClient("https://ropsten.infura.io") // testnet
@@ -45,7 +47,7 @@ class GethManager {
         
         print("latest block:\(try! ec.getBlockByNumber(ctx, number: -1).getNumber())")
     }
-    
+
     func maxOutputAmount(toAddress: String) -> UInt64 {
         return balance
     }

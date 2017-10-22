@@ -499,7 +499,6 @@ extension WalletManager : WalletAuthenticator {
                 var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
                 pkData.count = pkLen
                 guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0, pkLen) }) == pkLen else { return nil }
-                key.clean()
                 let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
                                                                        CFStringBuiltInEncodings.UTF8.rawValue) as String
                 try setKeychainItem(key: KeychainKey.ethPrivKey, item: privKey)
