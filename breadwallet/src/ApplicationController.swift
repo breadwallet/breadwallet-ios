@@ -264,6 +264,10 @@ class ApplicationController : Subscriber, Trackable {
 
 
         ethAccountViewController = AccountViewController(store: ethStore, didSelectTransaction: {_,_ in } )
+        ethAccountViewController?.sendCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .send)) }
+        ethAccountViewController?.receiveCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .receive)) }
+        ethAccountViewController?.menuCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .menu)) }
+
 
         container.child = accountViewController
         container.addChildViewController(accountViewController!, layout: {

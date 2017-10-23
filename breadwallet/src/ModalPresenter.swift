@@ -15,6 +15,7 @@ class ModalPresenter : Subscriber, Trackable {
     init(store: Store, walletManager: WalletManager, window: UIWindow, apiClient: BRAPIClient, ethStore: Store) {
         self.store = store
         self.ethStore = ethStore
+        self.stores = [store, ethStore]
         self.window = window
         self.walletManager = walletManager
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular, store: store)
@@ -26,6 +27,7 @@ class ModalPresenter : Subscriber, Trackable {
     //MARK: - Private
     private let store: Store
     private let ethStore: Store
+    private let stores: [Store]
     private let window: UIWindow
     private let alertHeight: CGFloat = 260.0
     private let modalTransitionDelegate: ModalTransitionDelegate
@@ -47,12 +49,13 @@ class ModalPresenter : Subscriber, Trackable {
     private let wipeNavigationDelegate: StartNavigationDelegate
 
     private func addSubscriptions() {
-        store.subscribe(self,
-                        selector: { $0.rootModal != $1.rootModal},
-                        callback: { self.presentModal($0.rootModal) })
-        ethStore.subscribe(self,
-                        selector: { $0.rootModal != $1.rootModal},
-                        callback: { self.presentModal($0.rootModal) })
+
+        stores.forEach {
+            $0.subscribe(self,
+                            selector: { $0.rootModal != $1.rootModal},
+                            callback: { self.presentModal($0.rootModal) })
+        }
+
         store.subscribe(self,
                         selector: { $0.alert != $1.alert && $1.alert != nil },
                         callback: { self.handleAlertChange($0.alert) })
