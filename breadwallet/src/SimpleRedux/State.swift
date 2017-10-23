@@ -50,6 +50,27 @@ extension State {
                         fees: Fees.defaultFees,
                         currency: .bitcoin)
     }
+
+    func mutate(   isStartFlowVisible: Bool? = nil,
+                   isLoginRequired: Bool? = nil,
+                   rootModal: RootModal? = nil,
+                   walletState: WalletState? = nil,
+                   isBtcSwapped: Bool? = nil,
+                   currentRate: Rate? = nil,
+                   rates: [Rate]? = nil,
+                   alert: AlertType? = nil,
+                   isTouchIdEnabled: Bool? = nil,
+                   defaultCurrencyCode: String? = nil,
+                   recommendRescan: Bool? = nil,
+                   isLoadingTransactions: Bool? = nil,
+                   maxDigits: Int? = nil,
+                   isPushNotificationsEnabled: Bool? = nil,
+                   isPromptingTouchId: Bool? = nil,
+                   pinLength: Int? = nil,
+                   fees: Fees? = nil,
+                   currency: Currency? = nil) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible, isLoginRequired: isLoginRequired ?? self.isLoginRequired, rootModal: rootModal ?? self.rootModal, walletState: walletState ?? self.walletState, isBtcSwapped: isBtcSwapped ?? self.isBtcSwapped, currentRate: currentRate ?? self.currentRate, rates: rates ?? self.rates, alert: alert ?? self.alert, isTouchIdEnabled: isTouchIdEnabled ?? self.isTouchIdEnabled, defaultCurrencyCode: defaultCurrencyCode ?? self.defaultCurrencyCode, recommendRescan: recommendRescan ?? self.recommendRescan, isLoadingTransactions: isLoadingTransactions ?? self.isLoadingTransactions, maxDigits: maxDigits ?? self.maxDigits, isPushNotificationsEnabled: isPushNotificationsEnabled ?? self.isPushNotificationsEnabled, isPromptingTouchId: isPromptingTouchId ?? self.isPromptingTouchId, pinLength: pinLength ?? self.pinLength, fees: fees ?? self.fees, currency: currency ?? self.currency)
+    }
 }
 
 enum Currency {
@@ -86,6 +107,18 @@ struct WalletState {
     let isRescanning: Bool
     static var initial: WalletState {
         return WalletState(isConnected: false, syncProgress: 0.0, syncState: .success, balance: nil, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, creationDate: Date.zeroValue(), isRescanning: false)
+    }
+
+    func mutate(    isConnected: Bool? = nil,
+                    syncProgress: Double? = nil,
+                    syncState: SyncState? = nil,
+                    balance: UInt64? = nil,
+                    transactions: [Transaction]? = nil,
+                    lastBlockTimestamp: UInt32? = nil,
+                    name: String? = nil,
+                    creationDate: Date? = nil,
+                    isRescanning: Bool? = nil) -> WalletState {
+        return WalletState(isConnected: isConnected ?? self.isConnected, syncProgress: syncProgress ?? self.syncProgress, syncState: syncState ?? self.syncState, balance: balance ?? self.balance, transactions: transactions ?? self.transactions, lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp, name: name ?? self.name, creationDate: creationDate ?? self.creationDate, isRescanning: isRescanning ?? self.isRescanning)
     }
 }
 
