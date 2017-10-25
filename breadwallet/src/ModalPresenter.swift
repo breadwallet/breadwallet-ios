@@ -50,10 +50,10 @@ class ModalPresenter : Subscriber, Trackable {
 
     private func addSubscriptions() {
 
-        stores.forEach {
-            $0.subscribe(self,
+        stores.forEach { store in
+            store.subscribe(self,
                             selector: { $0.rootModal != $1.rootModal},
-                            callback: { self.presentModal($0.rootModal) })
+                            callback: { self.presentModal($0.rootModal, store: store) })
         }
 
         store.subscribe(self,
@@ -136,11 +136,10 @@ class ModalPresenter : Subscriber, Trackable {
         })
     }
 
-    private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
-        guard type != .loginScan else { return presentLoginScan() }
-        guard let vc = rootModalViewController(type) else {
-            self.store.perform(action: RootModalActions.Present(modal: .none))
-            self.ethStore.perform(action: RootModalActions.Present(modal: .none))
+    private func presentModal(_ type: RootModal, store: Store, configuration: ((UIViewController) -> Void)? = nil) {
+        guard type != .loginScan else { return presentLoginScan(store: store) }
+        guard let vc = rootModalViewController(type, store: store) else {
+            stores.forEach { $0.perform(action: RootModalActions.Present(modal: .none)) }
             return
         }
         vc.transitioningDelegate = modalTransitionDelegate
@@ -148,8 +147,7 @@ class ModalPresenter : Subscriber, Trackable {
         vc.modalPresentationCapturesStatusBarAppearance = true
         configuration?(vc)
         topViewController?.present(vc, animated: true, completion: {
-            self.store.perform(action: RootModalActions.Present(modal: .none))
-            self.ethStore.perform(action: RootModalActions.Present(modal: .none))
+            self.stores.forEach{ $0.perform(action: RootModalActions.Present(modal: .none)) }
             self.store.trigger(name: .hideStatusBar)
         })
     }
@@ -210,20 +208,20 @@ class ModalPresenter : Subscriber, Trackable {
         topViewController?.present(supportCenter, animated: true, completion: {})
     }
 
-    private func rootModalViewController(_ type: RootModal) -> UIViewController? {
+    private func rootModalViewController(_ type: RootModal, store: Store) -> UIViewController? {
         switch type {
         case .none:
             return nil
         case .send:
-            return makeSendView()
+            return makeSendView(store: store)
         case .receive:
-            return receiveView(isRequestAmountVisible: true)
+            return receiveView(isRequestAmountVisible: true, store: store)
         case .menu:
             return menuViewController()
         case .loginScan:
             return nil //The scan view needs a custom presentation
         case .loginAddress:
-            return receiveView(isRequestAmountVisible: false)
+            return receiveView(isRequestAmountVisible: false, store: store)
         case .manageWallet:
             return ModalViewController(childViewController: CurrencyList(), store: store)
         case .requestAmount:
@@ -241,7 +239,7 @@ class ModalPresenter : Subscriber, Trackable {
         }
     }
 
-    private func makeSendView() -> UIViewController? {
+    private func makeSendView(store: Store) -> UIViewController? {
         guard !store.state.walletState.isRescanning else {
             let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
@@ -253,12 +251,13 @@ class ModalPresenter : Subscriber, Trackable {
         let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore, store: store), walletManager: walletManager, initialRequest: currentRequest)
         currentRequest = nil
 
+
         if store.state.isLoginRequired {
             sendVC.isPresentedFromLock = true
         }
 
         let root = ModalViewController(childViewController: sendVC, store: store)
-        sendVC.presentScan = presentScan(parent: root)
+        sendVC.presentScan = presentScan(parent: root, store: store)
         sendVC.presentVerifyPin = { [weak self, weak root] bodyText, callback in
             guard let myself = self else { return }
             let vc = VerifyPinViewController(bodyText: bodyText, pinLength: myself.store.state.pinLength, callback: callback)
@@ -274,9 +273,8 @@ class ModalPresenter : Subscriber, Trackable {
         return root
     }
 
-    private func receiveView(isRequestAmountVisible: Bool) -> UIViewController? {
-        guard let wallet = walletManager?.wallet else { return nil }
-        let receiveVC = ReceiveViewController(wallet: wallet, store: store, isRequestAmountVisible: isRequestAmountVisible)
+    private func receiveView(isRequestAmountVisible: Bool, store: Store) -> UIViewController? {
+        let receiveVC = ReceiveViewController(store: store, isRequestAmountVisible: isRequestAmountVisible)
         let root = ModalViewController(childViewController: receiveVC, store: store)
         receiveVC.presentEmail = { [weak self, weak root] address, image in
             guard let root = root else { return }
@@ -323,14 +321,14 @@ class ModalPresenter : Subscriber, Trackable {
         return root
     }
 
-    private func presentLoginScan() {
+    private func presentLoginScan(store: Store) {
         guard let top = topViewController else { return }
-        let present = presentScan(parent: top)
+        let present = presentScan(parent: top, store: store)
         store.perform(action: RootModalActions.Present(modal: .none))
         present({ paymentRequest in
             guard let request = paymentRequest else { return }
             self.currentRequest = request
-            self.presentModal(.send)
+            self.presentModal(.send, store: self.store)
         })
     }
 
@@ -479,7 +477,7 @@ class ModalPresenter : Subscriber, Trackable {
         top.present(settingsNav, animated: true, completion: nil)
     }
 
-    private func presentScan(parent: UIViewController) -> PresentScan {
+    private func presentScan(parent: UIViewController, store: Store) -> PresentScan {
         return { [weak parent] scanCompletion in
             guard ScanViewController.isCameraAllowed else {
                 self.saveEvent("scan.cameraDenied")
@@ -488,11 +486,11 @@ class ModalPresenter : Subscriber, Trackable {
                 }
                 return
             }
-            let vc = ScanViewController(completion: { paymentRequest in
+            let vc = ScanViewController(store: store, completion: { paymentRequest in
                 scanCompletion(paymentRequest)
                 parent?.view.isFrameChangeBlocked = false
             }, isValidURI: { address in
-                return address.isValidAddress
+                return store.state.currency.isValidAddress(address)
             })
             parent?.view.isFrameChangeBlocked = true
             parent?.present(vc, animated: true, completion: {})
@@ -722,28 +720,28 @@ class ModalPresenter : Subscriber, Trackable {
 
     private func handlePaymentRequest(request: PaymentRequest) {
         self.currentRequest = request
-        guard !store.state.isLoginRequired else { presentModal(.send); return }
+        guard !store.state.isLoginRequired else { presentModal(.send, store: store); return }
 
         if topViewController is AccountViewController {
-            presentModal(.send)
+            presentModal(.send, store: store)
         } else {
             if let presented = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
                 presented.dismiss(animated: true, completion: {
-                    self.presentModal(.send)
+                    self.presentModal(.send, store: self.store)
                 })
             }
         }
     }
 
     private func handleScanQrURL() {
-        guard !store.state.isLoginRequired else { presentLoginScan(); return }
+        guard !store.state.isLoginRequired else { presentLoginScan(store: store); return }
 
         if topViewController is AccountViewController || topViewController is LoginViewController {
-            presentLoginScan()
+            presentLoginScan(store: store)
         } else {
             if let presented = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
                 presented.dismiss(animated: true, completion: {
-                    self.presentLoginScan()
+                    self.presentLoginScan(store: self.store)
                 })
             }
         }

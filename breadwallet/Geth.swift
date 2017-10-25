@@ -39,10 +39,11 @@ class GethManager {
             var key = BRKey(privKey: ethPrivKey)
             data.withUnsafeMutableBytes({ $0.pointee = key!.secret })
             key!.clean()
-            let account = try! ks?.importECDSAKey(data, passphrase: ethPrivKey)
-            let address = account!.getAddress()
-            try? ks?.delete(account!, passphrase: ethPrivKey)
-            return address!
+//            let account = try! ks?.importECDSAKey(data, passphrase: ethPrivKey)
+//            let address = account!.getAddress()
+//            try? ks?.delete(account!, passphrase: ethPrivKey)
+//            return address!
+            return GethNewAddressFromHex("0x53Bb60807caDD27a656fC92Ff4E6733DFCbCb74D", nil)
         }
         
         print("latest block:\(try! ec.getBlockByNumber(ctx, number: -1).getNumber())")

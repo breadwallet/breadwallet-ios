@@ -19,6 +19,11 @@ extension String {
         return isValidAddress
     }
 
+    var isValidEthAddress: Bool {
+        let pattern = "^0[xX][0-9a-fA-F]{40}$"
+        return range(of: pattern, options: .regularExpression) != nil
+    }
+
     var sanitized: String {
         return applyingTransform(.toUnicodeName, reverse: false) ?? ""
     }

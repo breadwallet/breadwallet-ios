@@ -68,6 +68,11 @@ struct PaymentRequest {
         type = .local
     }
 
+    init(ethAddress: String) {
+        toAddress = ethAddress
+        type = .local
+    }
+
     func fetchRemoteRequest(completion: @escaping (PaymentRequest?) -> Void) {
 
         let request: NSMutableURLRequest

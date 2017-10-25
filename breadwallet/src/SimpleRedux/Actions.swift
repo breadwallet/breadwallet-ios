@@ -110,6 +110,12 @@ enum WalletChange {
             reduce = { $0.mutate(walletState: $0.walletState.mutate(isRescanning: isRescanning)) }
         }
     }
+    struct set : Action {
+        let reduce: Reducer
+        init(_ walletState: WalletState) {
+            reduce = { $0.mutate(walletState: walletState) }
+        }
+    }
 }
 
 //MARK: - Currency
