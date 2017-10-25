@@ -299,6 +299,7 @@
 		CE74F58D1E3BA85600ED5FA9 /* ExchangeUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE74F58C1E3BA85600ED5FA9 /* ExchangeUpdater.swift */; };
 		CE760EDC1E561DF900EFAC2B /* SecurityCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE760EDA1E561DF900EFAC2B /* SecurityCenterViewController.swift */; };
 		CE760EDD1E561DF900EFAC2B /* UpdatePinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE760EDB1E561DF900EFAC2B /* UpdatePinViewController.swift */; };
+		CE7B409A1FA03CC700BA4196 /* EthWalletCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7B40991FA03CC700BA4196 /* EthWalletCoordinator.swift */; };
 		CE83DE2A1E9EB7F600D07636 /* SendAmountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE83DE291E9EB7F600D07636 /* SendAmountCell.swift */; };
 		CE8644251F2C160200033129 /* ConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8644241F2C160200033129 /* ConfirmationViewController.swift */; };
 		CE8CD8DD1E2D9EF200785E02 /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8DC1E2D9EF200785E02 /* Sender.swift */; };
@@ -1496,6 +1497,7 @@
 		CE74F58C1E3BA85600ED5FA9 /* ExchangeUpdater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExchangeUpdater.swift; path = src/Wallet/ExchangeUpdater.swift; sourceTree = "<group>"; };
 		CE760EDA1E561DF900EFAC2B /* SecurityCenterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SecurityCenterViewController.swift; path = src/ViewControllers/SecurityCenter/SecurityCenterViewController.swift; sourceTree = "<group>"; };
 		CE760EDB1E561DF900EFAC2B /* UpdatePinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UpdatePinViewController.swift; path = src/ViewControllers/SecurityCenter/UpdatePinViewController.swift; sourceTree = "<group>"; };
+		CE7B40991FA03CC700BA4196 /* EthWalletCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EthWalletCoordinator.swift; path = src/Wallet/EthWalletCoordinator.swift; sourceTree = "<group>"; };
 		CE83DE291E9EB7F600D07636 /* SendAmountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SendAmountCell.swift; path = src/Views/SendAmountCell.swift; sourceTree = "<group>"; };
 		CE8644241F2C160200033129 /* ConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConfirmationViewController.swift; path = src/ViewControllers/ConfirmationViewController.swift; sourceTree = "<group>"; };
 		CE8CD8DC1E2D9EF200785E02 /* Sender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sender.swift; path = src/Sender.swift; sourceTree = "<group>"; };
@@ -2638,6 +2640,7 @@
 				CE4C1CC71ED88B600063E184 /* URLController.swift */,
 				CE916E321EDA800E00D641D6 /* UserDefaultsUpdater.swift */,
 				CE3D4C561EF5D5740016B1C8 /* ReachabilityMonitor.swift */,
+				CE7B40981FA03C9900BA4196 /* Wallet */,
 				CE473D7B1F042F1E00C0ACFD /* coinflip.aiff */,
 				CE2990171EFD6DAF0093A0F2 /* Strings */,
 				CE30F0E41EB27821004B8EE5 /* Watch */,
@@ -3092,6 +3095,14 @@
 				CE760EDB1E561DF900EFAC2B /* UpdatePinViewController.swift */,
 			);
 			name = SecurityCenter;
+			sourceTree = "<group>";
+		};
+		CE7B40981FA03C9900BA4196 /* Wallet */ = {
+			isa = PBXGroup;
+			children = (
+				CE7B40991FA03CC700BA4196 /* EthWalletCoordinator.swift */,
+			);
+			name = Wallet;
 			sourceTree = "<group>";
 		};
 		CEA7E67C1F09A9D2001F8C27 /* Screenshots */ = {
@@ -3947,6 +3958,7 @@
 				CE03EC741EF256AC0038E3A8 /* SimpleUTXO.swift in Sources */,
 				CEBF32F61DDCEAF900348FC6 /* TransactionsTableViewController.swift in Sources */,
 				CE124CFC1E68932C00DFA146 /* FeeUpdater.swift in Sources */,
+				CE7B409A1FA03CC700BA4196 /* EthWalletCoordinator.swift in Sources */,
 				CEE20C381EA5B4680086F724 /* Strings.swift in Sources */,
 				CE25BF8D1DF3B8A500BC67B6 /* InViewAlert.swift in Sources */,
 				22A9A9511DF61945000F0016 /* TxMetaData.swift in Sources */,
