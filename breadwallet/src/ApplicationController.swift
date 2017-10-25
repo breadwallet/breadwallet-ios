@@ -24,6 +24,7 @@ class ApplicationController : Subscriber, Trackable {
 
     fileprivate var walletManager: WalletManager?
     private var walletCoordinator: WalletCoordinator?
+    private var ethWalletCoordinator: EthWalletCoordinator?
     private var exchangeUpdater: ExchangeUpdater?
     private var feeUpdater: FeeUpdater?
     private let transitionDelegate: ModalTransitionDelegate
@@ -220,10 +221,10 @@ class ApplicationController : Subscriber, Trackable {
             })
         }
 
-//        if let ethPrivKey = walletManager.ethPrivKey {
-//            let gethManager = GethManager(ethPrivKey: ethPrivKey, store: store)
-//            print("manager: \(gethManager)")
-//        }
+        if let ethPrivKey = walletManager.ethPrivKey {
+            let gethManager = GethManager(ethPrivKey: ethPrivKey, store: store)
+            self.ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager)
+        }
 
     }
 

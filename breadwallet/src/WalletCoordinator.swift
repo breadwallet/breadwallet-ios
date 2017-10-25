@@ -40,6 +40,8 @@ class WalletCoordinator : Subscriber, Trackable {
         reachability.didChange = { [weak self] isReachable in
             self?.reachabilityDidChange(isReachable: isReachable)
         }
+        let walletState = store.state.walletState
+        store.perform(action: WalletChange.set(walletState.mutate(receiveAddress: walletManager.wallet?.receiveAddress)))
     }
 
     private var lastBlockHeight: UInt32 {
@@ -193,6 +195,8 @@ class WalletCoordinator : Subscriber, Trackable {
     private func checkForReceived(newBalance: UInt64) {
         if let oldBalance = store.state.walletState.balance {
             if newBalance > oldBalance {
+                let walletState = store.state.walletState
+                store.perform(action: WalletChange.set(walletState.mutate(receiveAddress: walletManager.wallet?.receiveAddress)))
                 if store.state.walletState.syncState == .success {
                     self.showReceived(amount: newBalance - oldBalance)
                 }

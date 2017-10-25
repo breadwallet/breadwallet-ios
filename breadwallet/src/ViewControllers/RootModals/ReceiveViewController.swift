@@ -22,8 +22,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     var presentEmail: PresentShare?
     var presentText: PresentShare?
 
-    init(wallet: BRWallet, store: Store, isRequestAmountVisible: Bool) {
-        self.wallet = wallet
+    init(store: Store, isRequestAmountVisible: Bool) {
         self.isRequestAmountVisible = isRequestAmountVisible
         self.store = store
         super.init(nibName: nil, bundle: nil)
@@ -39,17 +38,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     private let request = ShadowButton(title: S.Receive.request, type: .secondary)
     private let addressButton = UIButton(type: .system)
     private var topSharePopoutConstraint: NSLayoutConstraint?
-    private let wallet: BRWallet
     private let store: Store
-    private var balance: UInt64? = nil {
-        didSet {
-            if let newValue = balance, let oldValue = oldValue {
-                if newValue > oldValue {
-                    setReceiveAddress()
-                }
-            }
-        }
-    }
     fileprivate let isRequestAmountVisible: Bool
     private var requestTop: NSLayoutConstraint?
     private var requestBottom: NSLayoutConstraint?
@@ -61,8 +50,8 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
         addActions()
         setupCopiedMessage()
         setupShareButtons()
-        store.subscribe(self, selector: { $0.walletState.balance != $1.walletState.balance }, callback: {
-            self.balance = $0.walletState.balance
+        store.subscribe(self, selector: { $0.walletState.receiveAddress != $1.walletState.receiveAddress }, callback: { _ in
+            self.setReceiveAddress()
         })
     }
 
@@ -145,7 +134,8 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     }
 
     private func setReceiveAddress() {
-        address.text = wallet.receiveAddress
+        guard let addressText = store.state.walletState.receiveAddress else { return }
+        address.text = addressText
         qrCode.image = UIImage.qrCode(data: "\(address.text!)".data(using: .utf8)!, color: CIColor(color: .black))?
             .resize(CGSize(width: qrSize, height: qrSize))!
     }

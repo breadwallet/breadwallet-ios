@@ -76,6 +76,15 @@ extension State {
 enum Currency {
     case bitcoin
     case ethereum
+
+    func isValidAddress(_ string: String) -> Bool {
+        switch self {
+        case .bitcoin:
+            return string.isValidAddress
+        case .ethereum:
+            return string.isValidEthAddress
+        }
+    }
 }
 
 enum RootModal {
@@ -105,8 +114,9 @@ struct WalletState {
     let name: String
     let creationDate: Date
     let isRescanning: Bool
+    let receiveAddress: String?
     static var initial: WalletState {
-        return WalletState(isConnected: false, syncProgress: 0.0, syncState: .success, balance: nil, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, creationDate: Date.zeroValue(), isRescanning: false)
+        return WalletState(isConnected: false, syncProgress: 0.0, syncState: .success, balance: nil, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, creationDate: Date.zeroValue(), isRescanning: false, receiveAddress: nil)
     }
 
     func mutate(    isConnected: Bool? = nil,
@@ -117,8 +127,10 @@ struct WalletState {
                     lastBlockTimestamp: UInt32? = nil,
                     name: String? = nil,
                     creationDate: Date? = nil,
-                    isRescanning: Bool? = nil) -> WalletState {
-        return WalletState(isConnected: isConnected ?? self.isConnected, syncProgress: syncProgress ?? self.syncProgress, syncState: syncState ?? self.syncState, balance: balance ?? self.balance, transactions: transactions ?? self.transactions, lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp, name: name ?? self.name, creationDate: creationDate ?? self.creationDate, isRescanning: isRescanning ?? self.isRescanning)
+                    isRescanning: Bool? = nil,
+                    receiveAddress: String? = nil) -> WalletState {
+
+        return WalletState(isConnected: isConnected ?? self.isConnected, syncProgress: syncProgress ?? self.syncProgress, syncState: syncState ?? self.syncState, balance: balance ?? self.balance, transactions: transactions ?? self.transactions, lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp, name: name ?? self.name, creationDate: creationDate ?? self.creationDate, isRescanning: isRescanning ?? self.isRescanning, receiveAddress: receiveAddress ?? self.receiveAddress)
     }
 }
 

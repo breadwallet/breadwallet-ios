@@ -39,15 +39,18 @@ class ScanViewController : UIViewController, Trackable {
     private let close = UIButton.close
     private let flash = UIButton.icon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
     fileprivate var currentUri = ""
+    fileprivate var store: Store
 
-    init(completion: @escaping ScanCompletion, isValidURI: @escaping (String) -> Bool) {
+    init(store: Store, completion: @escaping ScanCompletion, isValidURI: @escaping (String) -> Bool) {
+        self.store = store
         self.completion = completion
         self.scanKeyCompletion = nil
         self.isValidURI = isValidURI
         super.init(nibName: nil, bundle: nil)
     }
 
-    init(scanKeyCompletion: @escaping KeyScanCompletion, isValidURI: @escaping (String) -> Bool) {
+    init(store: Store, scanKeyCompletion: @escaping KeyScanCompletion, isValidURI: @escaping (String) -> Bool) {
+        self.store = store
         self.scanKeyCompletion = scanKeyCompletion
         self.completion = nil
         self.isValidURI = isValidURI
@@ -175,19 +178,28 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
     func handleURI(_ uri: String) {
         if self.currentUri != uri {
             self.currentUri = uri
-            if let paymentRequest = PaymentRequest(string: uri) {
+
+            if store.state.currency == .ethereum && uri.isValidEthAddress {
+                let request = PaymentRequest(ethAddress: uri)
+                saveEvent("scan.ethAddress")
+                createPaymentRequestSuccess(request: request)
+            } else if let request = PaymentRequest(string: uri) {
                 saveEvent("scan.bitcoinUri")
-                guide.state = .positive
-                //Add a small delay so the green guide will be seen
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-                    self.dismiss(animated: true, completion: {
-                        self.completion?(paymentRequest)
-                    })
-                })
+                createPaymentRequestSuccess(request: request)
             } else {
                 guide.state = .negative
             }
         }
+    }
+
+    func createPaymentRequestSuccess(request: PaymentRequest) {
+        guide.state = .positive
+        //Add a small delay so the green guide will be seen
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+            self.dismiss(animated: true, completion: {
+                self.completion?(request)
+            })
+        })
     }
 
     func handleKey(_ address: String) {

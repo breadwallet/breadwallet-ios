@@ -120,7 +120,7 @@ class BCashTransactionViewController : UIViewController {
             }
             return
         }
-        let vc = ScanViewController(completion: { [weak self] paymentRequest in
+        let vc = ScanViewController(store: store, completion: { [weak self] paymentRequest in
             guard let myself = self else { return }
             myself.handlePaymentRequest(paymentRequest)
             myself.view.isFrameChangeBlocked = false

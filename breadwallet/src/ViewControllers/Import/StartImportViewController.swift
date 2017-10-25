@@ -99,13 +99,13 @@ class StartImportViewController : UIViewController {
         rightCaption.textAlignment = .center
         warning.text = S.Import.importWarning
 
-        button.tap = { [weak self] in
-            let scan = ScanViewController(scanKeyCompletion: { address in
-                self?.didReceiveAddress(address)
+        button.tap = strongify(self) { myself in
+            let scan = ScanViewController(store: myself.store, scanKeyCompletion: { address in
+                myself.didReceiveAddress(address)
             }, isValidURI: { (string) -> Bool in
                 return string.isValidPrivateKey || string.isValidBip38Key
             })
-            self?.parent?.present(scan, animated: true, completion: nil)
+            myself.parent?.present(scan, animated: true, completion: nil)
         }
     }
 
