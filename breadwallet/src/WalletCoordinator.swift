@@ -151,7 +151,7 @@ class WalletCoordinator : Subscriber, Trackable {
                     return $0.pointee.timestamp > $1.pointee.timestamp
                 }
             }.flatMap {
-                return Transaction($0, walletManager: walletManager, kvStore: kvStore, rate: rate)
+                return BtcTransaction($0, walletManager: walletManager, kvStore: kvStore, rate: rate)
         }
     }
 
