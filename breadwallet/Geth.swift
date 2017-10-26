@@ -23,13 +23,16 @@ class GethManager {
     var receiveAddress: String {
         return addr.getHex()
     }
-    
-    //init(ethPubKey: [UInt8]) {
+
     init(ethPrivKey: String, store: Store) {
         self.store = store
         ctx = GethContext()
-        ec = GethEthereumClient("https://mainnet.infura.io")
-        //ec = GethEthereumClient("https://ropsten.infura.io") // testnet
+
+        if E.isTestnet {
+            ec = GethEthereumClient("https://ropsten.infura.io")
+        } else {
+            ec = GethEthereumClient("https://mainnet.infura.io")
+        }
 
         //addr = GethAddress(fromBytes: GethHash(fromBytes: Data(bytes: ethPubKey)).getBytes())
         addr = autoreleasepool {

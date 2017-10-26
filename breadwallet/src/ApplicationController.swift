@@ -223,7 +223,7 @@ class ApplicationController : Subscriber, Trackable {
 
         if let ethPrivKey = walletManager.ethPrivKey {
             let gethManager = GethManager(ethPrivKey: ethPrivKey, store: store)
-            self.ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager)
+            self.ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient)
         }
 
     }

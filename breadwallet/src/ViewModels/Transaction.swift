@@ -9,18 +9,76 @@
 import UIKit
 import BRCore
 
-//Ideally this would be a struct, but it needs to be a class to allow
-//for lazy variables
 class Transaction {
+    var direction: TransactionDirection = .sent
+    var status: String = ""
+    var timestamp: Int = 0
+    var fee: UInt64 = 0
+    var hash: String = ""
+    var isValid: Bool = false
+    var blockHeight: String = ""
 
-    //MARK: - Public
+    static let longDateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.setLocalizedDateFormatFromTemplate("MMMM d, yyy h:mm a")
+        return df
+    }()
+
+    func amountDescription(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> String {
+        return ""
+    }
+
+    func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
+        return NSAttributedString()
+    }
+
+    var detailsAddressText: String {
+        return ""
+    }
+
+    func amountDetails(isBtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) -> String {
+        return ""
+    }
+
+    var toAddress: String? { return nil }
+    var exchangeRate: Double? { return nil }
+    var comment: String? { return nil }
+    var hasKvStore: Bool { return false }
+    var metaData: TxMetaData? { return nil }
+    var timeSince: (String, Bool) { return ("", false) }
+    var shouldDisplayAvailableToSpend: Bool { return false }
+    var longTimestamp: String { return "" }
+    var rawTransaction: BRTransaction? { return nil }
+    var isPending: Bool { return false }
+}
+
+class EthTransaction : Transaction {
+    init(tx: EthTx, address: String) {
+        self.wei = UInt64(tx.value) ?? 0
+        super.init()
+        self.direction = tx.to == address ? .received : .sent
+    }
+
+    override func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
+        let amount = Amount(amount: wei, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
+        let format = direction.amountDescriptionFormat
+        let string = String(format: format, amount)
+        return string.attributedStringForTags
+    }
+
+    private let wei: UInt64
+}
+
+class BtcTransaction : Transaction {
+
     init?(_ tx: BRTxRef, walletManager: WalletManager, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         guard let wallet = walletManager.wallet else { return nil }
-        guard let peerManager = walletManager.peerManager  else { return nil }
-
         self.tx = tx
         self.wallet = wallet
         self.kvStore = kvStore
+
+        super.init()
+        guard let peerManager = walletManager.peerManager  else { return nil }
 
         let fee = wallet.feeForTx(tx) ?? 0
         self.fee = fee
@@ -45,7 +103,7 @@ class Transaction {
         self.blockHeight = tx.pointee.blockHeight == UInt32(INT32_MAX) ? S.TransactionDetails.notConfirmedBlockHeightLabel : "\(tx.pointee.blockHeight)"
 
         let blockHeight = peerManager.lastBlockHeight
-        confirms = transactionBlockHeight > blockHeight ? 0 : Int(blockHeight - transactionBlockHeight) + 1
+        self.confirms = transactionBlockHeight > blockHeight ? 0 : Int(blockHeight - transactionBlockHeight) + 1
         self.status = makeStatus(tx, wallet: wallet, peerManager: peerManager, confirms: confirms, direction: self.direction)
 
         self.hash = tx.pointee.txHash.description
@@ -57,24 +115,24 @@ class Transaction {
 
     }
 
-    func amountDescription(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> String {
+    override func amountDescription(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> String {
         let amount = Amount(amount: satoshis, rate: rate, maxDigits: maxDigits)
         return isBtcSwapped ? amount.localCurrency : amount.bits
     }
 
-    func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
+    override func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
         let amount = Amount(amount: satoshis, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
         let format = direction.amountDescriptionFormat
         let string = String(format: format, amount)
         return string.attributedStringForTags
     }
 
-    var detailsAddressText: String {
+    override var detailsAddressText: String {
         let address = toAddress?.largeCondensed
         return String(format: direction.addressTextFormat, address ?? S.TransactionDetails.account)
     }
 
-    func amountDetails(isBtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) -> String {
+    override func amountDetails(isBtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) -> String {
         let feeAmount = Amount(amount: fee, rate: rate, maxDigits: maxDigits)
         let feeString = direction == .sent ? String(format: S.Transaction.fee, "\(feeAmount.string(isBtcSwapped: isBtcSwapped))") : ""
         let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)) \(feeString)"
@@ -103,23 +161,16 @@ class Transaction {
         return "\(amountString)\n\n\(startingString)\n\(endingString)\n\n\(exchangeRateInfo)"
     }
 
-    let direction: TransactionDirection
-    let status: String
-    let timestamp: Int
-    let fee: UInt64
-    let hash: String
-    let isValid: Bool
-    let blockHeight: String
-    private let confirms: Int
-    private let metaDataKey: String
+    private var confirms: Int = 0
+    private var metaDataKey: String = ""
 
     //MARK: - Private
-    private let tx: BRTxRef
-    private let wallet: BRWallet
-    fileprivate let satoshis: UInt64
+    private var tx: BRTxRef
+    private var wallet: BRWallet
+    fileprivate var satoshis: UInt64 = 0
     private var kvStore: BRReplicatedKVStore?
     
-    lazy var toAddress: String? = {
+    override lazy var toAddress: String? = {
         switch self.direction {
         case .sent:
             guard let output = self.tx.outputs.filter({ output in
@@ -139,20 +190,20 @@ class Transaction {
         }
     }()
 
-    var exchangeRate: Double? {
+    override var exchangeRate: Double? {
         return metaData?.exchangeRate
     }
 
-    var comment: String? {
+    override var comment: String? {
         return metaData?.comment
     }
 
-    var hasKvStore: Bool {
+    override var hasKvStore: Bool {
         return kvStore != nil
     }
 
     var _metaData: TxMetaData?
-    var metaData: TxMetaData? {
+    override var metaData: TxMetaData? {
         if _metaData != nil {
             return _metaData
         } else {
@@ -183,7 +234,7 @@ class Transaction {
     }()
 
     // return: (timestampString, shouldStartTimer)
-    var timeSince: (String, Bool) {
+    override var timeSince: (String, Bool) {
         if let cached = timeSinceCache {
             return cached
         }
@@ -239,25 +290,19 @@ class Transaction {
 
     private var timeSinceCache: (String, Bool)?
 
-    var longTimestamp: String {
+    override var longTimestamp: String {
         guard timestamp > 0 else { return wallet.transactionIsValid(tx) ? S.Transaction.justNow : "" }
         let date = Date(timeIntervalSince1970: Double(timestamp))
         return Transaction.longDateFormatter.string(from: date)
     }
 
-    var rawTransaction: BRTransaction {
+    override var rawTransaction: BRTransaction? {
         return tx.pointee
     }
 
-    var isPending: Bool {
+    override var isPending: Bool {
         return confirms < 6
     }
-
-    static let longDateFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.setLocalizedDateFormatFromTemplate("MMMM d, yyy h:mm a")
-        return df
-    }()
 
     private func attemptCreateMetaData(tx: BRTxRef, rate: Rate) {
         guard metaData == nil else { return }
@@ -273,7 +318,7 @@ class Transaction {
         }
     }
 
-    var shouldDisplayAvailableToSpend: Bool {
+    override var shouldDisplayAvailableToSpend: Bool {
         return confirms > 1 && confirms < 6 && direction == .received
     }
 }
@@ -324,7 +369,6 @@ private func makeStatus(_ txRef: BRTxRef, wallet: BRWallet, peerManager: BRPeerM
 }
 
 extension Transaction : Equatable {}
-
 func ==(lhs: Transaction, rhs: Transaction) -> Bool {
     return lhs.hash == rhs.hash && lhs.status == rhs.status && lhs.comment == rhs.comment && lhs.hasKvStore == rhs.hasKvStore
 }

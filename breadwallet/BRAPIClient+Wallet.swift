@@ -123,6 +123,28 @@ extension BRAPIClient {
             }
         }.resume()
     }
+
+    func ethTxList(address: String, callback: @escaping ([EthTx]?) -> Void) {
+        let host = E.isTestnet ? "ropsten.etherscan.io" : "api.etherscan.io"
+        let url = URL(string: "http://\(host)/api?module=account&action=txlist&address=\(address)&sort=asc")!
+        var req = URLRequest(url: url)
+        req.httpMethod = "GET"
+        let session = URLSession.shared
+
+        let task = session.dataTask(with: req, completionHandler: {data, response, error in
+            guard let json = data else { return }
+            let decoder = JSONDecoder()
+            do {
+                let response = try decoder.decode(EthTxList.self, from: json)
+                callback(response.result)
+                print("response: \(response)")
+            } catch let e {
+                print("error: \(e)")
+            }
+
+        })
+        task.resume()
+    }
 }
 
 private func pushNotificationEnvironment() -> String {
