@@ -49,7 +49,7 @@ class TouchIdSpendingLimitViewController : UITableViewController, Subscriber {
         //If the user has a limit that is not a current option, we display their limit
         if !limits.contains(walletManager.spendingLimit) {
             if let rate = store.state.currentRate {
-                let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: store.state.maxDigits)
+                let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: store.state.maxDigits, store: store)
                 setAmount(limitAmount: spendingLimit)
             }
         }
