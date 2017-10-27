@@ -15,8 +15,19 @@ class Transaction {
     var timestamp: Int = 0
     var fee: UInt64 = 0
     var hash: String = ""
-    var isValid: Bool = false
+    var isValid: Bool = true
     var blockHeight: String = ""
+    var isEth = false
+    var toAddress: String? { return nil }
+    var exchangeRate: Double? { return nil }
+    var comment: String? { return nil }
+    var hasKvStore: Bool { return false }
+    var metaData: TxMetaData? { return nil }
+    var shouldDisplayAvailableToSpend: Bool { return false }
+    var longTimestamp: String { return "" }
+    var rawTransaction: BRTransaction? { return nil }
+    var isPending: Bool { return false }
+    private var timeSinceCache: (String, Bool)?
 
     static let longDateFormatter: DateFormatter = {
         let df = DateFormatter()
@@ -40,24 +51,80 @@ class Transaction {
         return ""
     }
 
-    var toAddress: String? { return nil }
-    var exchangeRate: Double? { return nil }
-    var comment: String? { return nil }
-    var hasKvStore: Bool { return false }
-    var metaData: TxMetaData? { return nil }
-    var timeSince: (String, Bool) { return ("", false) }
-    var shouldDisplayAvailableToSpend: Bool { return false }
-    var longTimestamp: String { return "" }
-    var rawTransaction: BRTransaction? { return nil }
-    var isPending: Bool { return false }
+    // return: (timestampString, shouldStartTimer)
+    var timeSince: (String, Bool) {
+        if let cached = timeSinceCache {
+            return cached
+        }
+
+        let result: (String, Bool)
+        guard timestamp > 0 else {
+            result = (S.Transaction.justNow, false)
+            timeSinceCache = result
+            return result
+        }
+        let then = Date(timeIntervalSince1970: TimeInterval(timestamp))
+        let now = Date()
+
+        if !now.hasEqualYear(then) {
+            let df = DateFormatter()
+            df.setLocalizedDateFormatFromTemplate("dd/MM/yy")
+            result = (df.string(from: then), false)
+            timeSinceCache = result
+            return result
+        }
+
+        if !now.hasEqualMonth(then) {
+            let df = DateFormatter()
+            df.setLocalizedDateFormatFromTemplate("MMM dd")
+            result = (df.string(from: then), false)
+            timeSinceCache = result
+            return result
+        }
+
+        let difference = Int(Date().timeIntervalSince1970) - timestamp
+        let secondsInMinute = 60
+        let secondsInHour = 3600
+        let secondsInDay = 86400
+        let secondsInWeek = secondsInDay * 7
+        if (difference < secondsInMinute) {
+            result = (String(format: S.TimeSince.seconds, "\(difference)"), true)
+        } else if difference < secondsInHour {
+            result = (String(format: S.TimeSince.minutes, "\(difference/secondsInMinute)"), true)
+        } else if difference < secondsInDay {
+            result = (String(format: S.TimeSince.hours, "\(difference/secondsInHour)"), false)
+        } else if difference < secondsInWeek {
+            result = (String(format: S.TimeSince.days, "\(difference/secondsInDay)"), false)
+        } else {
+            let df = DateFormatter()
+            df.setLocalizedDateFormatFromTemplate("MMM dd")
+            result = (df.string(from: then), false)
+        }
+        if result.1 == false {
+            timeSinceCache = result
+        }
+        return result
+    }
 }
 
 class EthTransaction : Transaction {
     init(tx: EthTx, address: String, store: Store) {
         self.wei = UInt64(tx.value) ?? 0
         self.store = store
+        self.tx = tx
         super.init()
+        self.timestamp = Int(tx.timeStamp) ?? 0
         self.direction = tx.to.lowercased() == address.lowercased() ? .received : .sent
+        self.status = "\(tx.confirmations) confirmations"
+        self.isEth = true
+    }
+
+    override var toAddress: String {
+        if self.direction == .sent {
+            return tx.to
+        } else {
+            return tx.from
+        }
     }
 
     override func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
@@ -69,6 +136,7 @@ class EthTransaction : Transaction {
 
     private let wei: UInt64
     private let store: Store
+    private let tx: EthTx
 
 }
 
@@ -235,63 +303,6 @@ class BtcTransaction : Transaction {
             return self.balanceAfter.addingReportingOverflow(self.fee).0
         }
     }()
-
-    // return: (timestampString, shouldStartTimer)
-    override var timeSince: (String, Bool) {
-        if let cached = timeSinceCache {
-            return cached
-        }
-
-        let result: (String, Bool)
-        guard timestamp > 0 else {
-            result = (S.Transaction.justNow, false)
-            timeSinceCache = result
-            return result
-        }
-        let then = Date(timeIntervalSince1970: TimeInterval(timestamp))
-        let now = Date()
-
-        if !now.hasEqualYear(then) {
-            let df = DateFormatter()
-            df.setLocalizedDateFormatFromTemplate("dd/MM/yy")
-            result = (df.string(from: then), false)
-            timeSinceCache = result
-            return result
-        }
-
-        if !now.hasEqualMonth(then) {
-            let df = DateFormatter()
-            df.setLocalizedDateFormatFromTemplate("MMM dd")
-            result = (df.string(from: then), false)
-            timeSinceCache = result
-            return result
-        }
-
-        let difference = Int(Date().timeIntervalSince1970) - timestamp
-        let secondsInMinute = 60
-        let secondsInHour = 3600
-        let secondsInDay = 86400
-        let secondsInWeek = secondsInDay * 7
-        if (difference < secondsInMinute) {
-            result = (String(format: S.TimeSince.seconds, "\(difference)"), true)
-        } else if difference < secondsInHour {
-            result = (String(format: S.TimeSince.minutes, "\(difference/secondsInMinute)"), true)
-        } else if difference < secondsInDay {
-            result = (String(format: S.TimeSince.hours, "\(difference/secondsInHour)"), false)
-        } else if difference < secondsInWeek {
-            result = (String(format: S.TimeSince.days, "\(difference/secondsInDay)"), false)
-        } else {
-            let df = DateFormatter()
-            df.setLocalizedDateFormatFromTemplate("MMM dd")
-            result = (df.string(from: then), false)
-        }
-        if result.1 == false {
-            timeSinceCache = result
-        }
-        return result
-    }
-
-    private var timeSinceCache: (String, Bool)?
 
     override var longTimestamp: String {
         guard timestamp > 0 else { return wallet.transactionIsValid(tx) ? S.Transaction.justNow : "" }
