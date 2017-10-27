@@ -151,7 +151,7 @@ class WalletCoordinator : Subscriber, Trackable {
                     return $0.pointee.timestamp > $1.pointee.timestamp
                 }
             }.flatMap {
-                return BtcTransaction($0, walletManager: walletManager, kvStore: kvStore, rate: rate)
+                return BtcTransaction($0, walletManager: walletManager, kvStore: kvStore, rate: rate, store: store)
         }
     }
 
@@ -206,7 +206,7 @@ class WalletCoordinator : Subscriber, Trackable {
 
     private func showReceived(amount: UInt64) {
         if let rate = store.state.currentRate {
-            let amount = Amount(amount: amount, rate: rate, maxDigits: store.state.maxDigits)
+            let amount = Amount(amount: amount, rate: rate, maxDigits: store.state.maxDigits, store: store)
             let primary = store.state.isBtcSwapped ? amount.localCurrency : amount.bits
             let secondary = store.state.isBtcSwapped ? amount.bits : amount.localCurrency
             let message = String(format: S.TransactionDetails.received, "\(primary) (\(secondary))")

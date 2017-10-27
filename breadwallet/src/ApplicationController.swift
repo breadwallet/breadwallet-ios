@@ -46,7 +46,7 @@ class ApplicationController : Subscriber, Trackable {
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
         ethStore.perform(action: CurrencyActions.set(.ethereum))
-        ethStore.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 3456)))
+        ethStore.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 295.0)))
         DispatchQueue.walletQueue.async {
             guardProtected(queue: DispatchQueue.walletQueue) {
                 self.initWallet()
@@ -224,6 +224,12 @@ class ApplicationController : Subscriber, Trackable {
         if let ethPrivKey = walletManager.ethPrivKey {
             let gethManager = GethManager(ethPrivKey: ethPrivKey, store: store)
             self.ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient)
+
+//            var tx = gethManager.createTx(forAmount: 50000000000000000, toAddress: "0x53Bb60807caDD27a656fC92Ff4E6733DFCbCb74D")
+//            tx = gethManager.signTx(tx, ethPrivKey: ethPrivKey)
+//
+//            gethManager.publishTx(tx)
+
         }
 
     }

@@ -53,29 +53,33 @@ class Transaction {
 }
 
 class EthTransaction : Transaction {
-    init(tx: EthTx, address: String) {
+    init(tx: EthTx, address: String, store: Store) {
         self.wei = UInt64(tx.value) ?? 0
+        self.store = store
         super.init()
-        self.direction = tx.to == address ? .received : .sent
+        self.direction = tx.to.lowercased() == address.lowercased() ? .received : .sent
     }
 
     override func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
-        let amount = Amount(amount: wei, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
+        let amount = Amount(amount: wei, rate: rate, maxDigits: maxDigits, store: store).string(isBtcSwapped: isBtcSwapped)
         let format = direction.amountDescriptionFormat
         let string = String(format: format, amount)
         return string.attributedStringForTags
     }
 
     private let wei: UInt64
+    private let store: Store
+
 }
 
 class BtcTransaction : Transaction {
 
-    init?(_ tx: BRTxRef, walletManager: WalletManager, kvStore: BRReplicatedKVStore?, rate: Rate?) {
+    init?(_ tx: BRTxRef, walletManager: WalletManager, kvStore: BRReplicatedKVStore?, rate: Rate?, store: Store) {
         guard let wallet = walletManager.wallet else { return nil }
         self.tx = tx
         self.wallet = wallet
         self.kvStore = kvStore
+        self.store = store
 
         super.init()
         guard let peerManager = walletManager.peerManager  else { return nil }
@@ -116,12 +120,12 @@ class BtcTransaction : Transaction {
     }
 
     override func amountDescription(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> String {
-        let amount = Amount(amount: satoshis, rate: rate, maxDigits: maxDigits)
+        let amount = Amount(amount: satoshis, rate: rate, maxDigits: maxDigits, store: store)
         return isBtcSwapped ? amount.localCurrency : amount.bits
     }
 
     override func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
-        let amount = Amount(amount: satoshis, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
+        let amount = Amount(amount: satoshis, rate: rate, maxDigits: maxDigits, store: store).string(isBtcSwapped: isBtcSwapped)
         let format = direction.amountDescriptionFormat
         let string = String(format: format, amount)
         return string.attributedStringForTags
@@ -133,11 +137,11 @@ class BtcTransaction : Transaction {
     }
 
     override func amountDetails(isBtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) -> String {
-        let feeAmount = Amount(amount: fee, rate: rate, maxDigits: maxDigits)
+        let feeAmount = Amount(amount: fee, rate: rate, maxDigits: maxDigits, store: store)
         let feeString = direction == .sent ? String(format: S.Transaction.fee, "\(feeAmount.string(isBtcSwapped: isBtcSwapped))") : ""
-        let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)) \(feeString)"
-        var startingString = String(format: S.Transaction.starting, "\(Amount(amount: startingBalance, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped))")
-        var endingString = String(format: String(format: S.Transaction.ending, "\(Amount(amount: balanceAfter, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped))"))
+        let amountString = "\(direction.sign)\(Amount(amount: satoshis, rate: rate, maxDigits: maxDigits, store: store).string(isBtcSwapped: isBtcSwapped)) \(feeString)"
+        var startingString = String(format: S.Transaction.starting, "\(Amount(amount: startingBalance, rate: rate, maxDigits: maxDigits, store: store).string(isBtcSwapped: isBtcSwapped))")
+        var endingString = String(format: String(format: S.Transaction.ending, "\(Amount(amount: balanceAfter, rate: rate, maxDigits: maxDigits, store: store).string(isBtcSwapped: isBtcSwapped))"))
 
         if startingBalance > C.maxMoney {
             startingString = ""
@@ -163,8 +167,7 @@ class BtcTransaction : Transaction {
 
     private var confirms: Int = 0
     private var metaDataKey: String = ""
-
-    //MARK: - Private
+    private let store: Store
     private var tx: BRTxRef
     private var wallet: BRWallet
     fileprivate var satoshis: UInt64 = 0

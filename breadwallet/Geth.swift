@@ -29,12 +29,11 @@ class GethManager {
         ctx = GethContext()
 
         if E.isTestnet {
-            ec = GethEthereumClient("https://ropsten.infura.io")
+            ec = GethEthereumClient("https://ropsten.infura.io/QY7ejGXZ1RFGrdXfeXx2")
         } else {
             ec = GethEthereumClient("https://mainnet.infura.io")
         }
 
-        //addr = GethAddress(fromBytes: GethHash(fromBytes: Data(bytes: ethPubKey)).getBytes())
         addr = autoreleasepool {
             let ks = GethKeyStore(NSTemporaryDirectory(), scryptN:2, scryptP:1)
             var data = CFDataCreateMutable(secureAllocator, MemoryLayout<UInt256>.stride) as Data
@@ -42,12 +41,18 @@ class GethManager {
             var key = BRKey(privKey: ethPrivKey)
             data.withUnsafeMutableBytes({ $0.pointee = key!.secret })
             key!.clean()
-            let account = try! ks?.importECDSAKey(data, passphrase: ethPrivKey)
-            let address = account!.getAddress()
-            try? ks?.delete(account!, passphrase: ethPrivKey)
+
+            let account: GethAccount
+            do {
+                account = (try ks?.getAccounts().get(0))!
+            } catch {
+                account = (try! ks?.importECDSAKey(data, passphrase: ethPrivKey))!
+            }
+
+            let address = account.getAddress()
+            try? ks?.delete(account, passphrase: ethPrivKey)
             return address!
 
-//            return GethNewAddressFromHex("0x53Bb60807caDD27a656fC92Ff4E6733DFCbCb74D", nil)
         }
         
         print("receive address:\(addr.getHex())")
@@ -60,8 +65,9 @@ class GethManager {
 
     func createTx(forAmount: UInt64, toAddress: String) -> GethTransaction {
         let toAddr = GethAddress(fromHex: toAddress)
-        return GethTransaction(1, to: toAddr, amount: GethBigInt(Int64(bitPattern: forAmount)), gasLimit: GethBigInt(0),
-                               gasPrice: GethBigInt(0), data: nil)
+        let price = try! ec.suggestGasPrice(ctx)
+        return GethTransaction(0, to: toAddr, amount: GethBigInt(Int64(bitPattern: forAmount)), gasLimit: GethBigInt(21000),
+                               gasPrice: price, data: nil)
     }
     
     func signTx(_ tx: GethTransaction, ethPrivKey: String) -> GethTransaction {
@@ -73,13 +79,19 @@ class GethManager {
             data.withUnsafeMutableBytes({ $0.pointee = key!.secret })
             key!.clean()
             let account = try! ks?.importECDSAKey(data, passphrase: ethPrivKey)
-            let signedTx = try! ks?.signTx(account, tx: tx, chainID: GethBigInt(0))
+            try? ks?.unlock(account, passphrase: ethPrivKey)
+            let chainId = E.isTestnet ? GethBigInt(3) : GethBigInt(1)
+            let signedTx = try! ks?.signTx(account, tx: tx, chainID: chainId)
             try? ks?.delete(account, passphrase: ethPrivKey)
             return signedTx!
         }
     }
 
     func publishTx(_ tx: GethTransaction) {
-        try? ec.sendTransaction(ctx, tx:tx)
+        do {
+            try ec.sendTransaction(ctx, tx:tx)
+        } catch let e {
+            print("error: \(e)")
+        }
     }
 }

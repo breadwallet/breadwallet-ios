@@ -129,7 +129,7 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
 
     private var textViewText: NSAttributedString {
         guard let rate = rate else { return NSAttributedString(string: "") }
-        let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: store.state.maxDigits)
+        let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: store.state.maxDigits, store: store)
         let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.bits, amount.localCurrency))\n\n\(String(format: S.TouchIdSettings.customizeText, S.TouchIdSettings.linkText))"
         let linkText = S.TouchIdSettings.linkText
         let attributedString = NSMutableAttributedString(string: string, attributes: [

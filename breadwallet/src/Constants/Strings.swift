@@ -12,6 +12,7 @@ enum S {
 
     enum Symbols {
         static let bits = "ƀ"
+        static let eth = "Ξ"
         static var btc: String {
             if  #available(iOS 10, *) {
                 return "₿"
@@ -219,7 +220,7 @@ enum S {
 
     enum AccountHeader {
         static let defaultWalletName = NSLocalizedString("AccountHeader.defaultWalletName", value:"My Bread", comment: "Default wallet name")
-        //static let manageButtonName = NSLocalizedString("AccountHeader.manageButtonName", value:"MANAGE", comment: "Manage wallet button title")
+        static let switchCurrency = NSLocalizedString("AccoundHeader.switchCurrency", value: "Switch Currency", comment: "Switch currency button title")
         static let equals = NSLocalizedString("AccountHeader.equals", value:"=", comment: "Equals symbol")
     }
 

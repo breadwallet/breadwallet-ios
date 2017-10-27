@@ -23,7 +23,7 @@ class EthWalletCoordinator {
         store.perform(action: WalletChange.set(store.state.walletState.mutate(receiveAddress: gethManager.addr.getHex())))
 
         apiClient.ethTxList(address: gethManager.addr.getHex()) { transactions in
-            let viewModels = transactions?.map { EthTransaction(tx: $0, address: gethManager.addr.getHex()) }
+            let viewModels = transactions?.map { EthTransaction(tx: $0, address: gethManager.addr.getHex(), store: store) }
             store.perform(action: WalletChange.set(store.state.walletState.mutate(transactions: viewModels)))
         }
         store.perform(action: WalletChange.set(store.state.walletState.mutate(balance: gethManager.balance)))
