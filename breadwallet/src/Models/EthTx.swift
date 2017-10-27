@@ -20,4 +20,5 @@ struct EthTx : Codable {
     let value: String
     let from: String
     let to: String
+    let confirmations: String
 }

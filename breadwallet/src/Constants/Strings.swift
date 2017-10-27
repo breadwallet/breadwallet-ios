@@ -167,6 +167,7 @@ enum S {
         static let from = NSLocalizedString("TransactionDetails.from", value:"at %1$@", comment: "[received] at <address> (received title 2/2)")
         static let blockHeightLabel = NSLocalizedString("TransactionDetails.blockHeightLabel", value: "Confirmed in Block", comment: "Block height label")
         static let notConfirmedBlockHeightLabel = NSLocalizedString("TransactionDetails.notConfirmedBlockHeightLabel", value: "Not Confirmed", comment: "eg. Confirmed in Block: Not Confirmed")
+        static let ethFrom = NSLocalizedString("TransactionDetails.ethFrom", value: "from %1$@", comment: "[received ] from <address>")
     }
 
     enum SecurityCenter {

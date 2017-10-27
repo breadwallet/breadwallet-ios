@@ -67,4 +67,16 @@ enum TransactionDirection : String {
             return S.TransactionDetails.to
         }
     }
+
+    var ethAddressTextFormat: String {
+        switch self {
+        case .sent:
+            return S.TransactionDetails.to
+        case .received:
+            return S.TransactionDetails.ethFrom
+        case .moved:
+            return S.TransactionDetails.to
+        }
+    }
+
 }
