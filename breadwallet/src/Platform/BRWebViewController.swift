@@ -66,7 +66,17 @@ import WebKit
     }
     
     var indexUrl: URL {
-        return URL(string: "http://127.0.0.1:\(server.port)\(mountPoint)")!
+        switch mountPoint {
+        // MARK (losh11): - cleanup switch below
+            case "/buy":
+                return URL(string: "https://api.loafwallet.org/buy")!
+            case "/support":
+                return URL(string: "https://api.loafwallet.org/support")!
+            case "/ea":
+                return URL(string: "https://api.loafwallet.org/ea")!
+            default:
+                return URL(string: "http://127.0.0.1:\(server.port)\(mountPoint)")!
+        }
     }
     
     private let messageUIPresenter = MessageUIPresenter()
@@ -170,7 +180,7 @@ import WebKit
                         DispatchQueue.main.asyncAfter(deadline: timeout) {
                             self?.store.trigger(name: .showStatusBar)
                             self?.dismiss(animated: true) {
-                                self?.notifyUserOfLoadFailure()
+                            //    self?.notifyUserOfLoadFailure()
                             }
                         }
                     })
@@ -351,13 +361,25 @@ import WebKit
     
     open func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
                         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if let url = navigationAction.request.url, let host = url.host, let port = (url as NSURL).port {
-            if host == server.listenAddress || port.int32Value == Int32(server.port) {
-                return decisionHandler(.allow)
+        //if let url = navigationAction.request.url, let host = url.host, let port = (url as NSURL).port {
+        //    if host == server.listenAddress || port.int32Value == Int32(server.port) {
+        //        return decisionHandler(.allow)
+        //    }
+        //}
+        //print("[BRWebViewController disallowing navigation: \(navigationAction)")
+        //decisionHandler(.cancel)
+        
+        //MARK (losh11): - improve code which closes webView
+        if let url = navigationAction.request.url?.absoluteString{
+            let mutableurl = url
+            if mutableurl == "https://buy.loafwallet.org/close" {
+                DispatchQueue.main.async {
+                    self.closeNow()
+                }
             }
         }
-        print("[BRWebViewController disallowing navigation: \(navigationAction)")
-        decisionHandler(.cancel)
+        
+        return decisionHandler(.allow)
     }
     
     // MARK: - socket delegate
