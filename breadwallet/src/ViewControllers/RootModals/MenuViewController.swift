@@ -22,9 +22,9 @@ class MenuViewController : UIViewController, Trackable {
     fileprivate let buttons: [MenuButton] = {
         let types: [MenuButtonType] = [.security, .support, .settings, .lock, .buy]
         return types.flatMap {
-            if $0 == .buy && !BRAPIClient.featureEnabled(.buyBitcoin) {
-                return nil
-            }
+            //if $0 == .buy && !BRAPIClient.featureEnabled(.buyBitcoin) {
+            //    return nil
+            //}
             return MenuButton(type: $0)
         }
     }()
@@ -55,9 +55,9 @@ class MenuViewController : UIViewController, Trackable {
 
         view.backgroundColor = .white
 
-        if BRAPIClient.featureEnabled(.buyBitcoin) {
+        //if BRAPIClient.featureEnabled(.buyBitcoin) {
             saveEvent("menu.buyBitcoinIsVisible")
-        }
+        //}
     }
 
     @objc private func didTapButton(button: MenuButton) {
