@@ -554,6 +554,6 @@ enum S {
 
     enum Welcome {
         static let title = NSLocalizedString("Welcome.title", value: "Welcome to LoafWallet!", comment: "Welcome view title")
-        static let body = NSLocalizedString("Welcome.body", value: "LoafWallet now has a brand new look and some new features.\n\nIf you need help, look for the (?) in the top right of most screens.", comment: "Welcome view body text")
+        static let body = NSLocalizedString("Welcome.body", value: "LoafWallet now has a brand new look and some new features.\n\nIf you need help, look for the (?) in the top right of most screens. All coins are displayed in lites (ł). 1 Litecoin (Ł) = 1000 lites (ł).", comment: "Welcome view body text")
     }
 }
