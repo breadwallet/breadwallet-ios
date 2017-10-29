@@ -57,10 +57,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>bitcoin</string>
+			<string>litecoin</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>bitcoin</string>
+				<string>litecoin</string>
 			</array>
 		</dict>
 		<dict>
@@ -77,10 +77,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>bitid</string>
+			<string>liteid</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>bitid</string>
+				<string>liteid</string>
 			</array>
 		</dict>
 	</array>
