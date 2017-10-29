@@ -19,7 +19,7 @@ struct Amount {
     var amountForBtcFormat: Double {
         var decimal = Decimal(self.amount)
         var amount: Decimal = 0.0
-        if store.state.currency == .ethereum {
+        if store.isEth {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
         } else {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-maxDigits), .up)
@@ -28,7 +28,7 @@ struct Amount {
     }
 
     var localAmount: Double {
-        if store.state.currency == .ethereum {
+        if store.isEth {
             return Double(amount)/1000000000000000000.0*rate.rate
         } else {
             return Double(amount)/100000000.0*rate.rate
@@ -38,7 +38,7 @@ struct Amount {
     var bits: String {
         var decimal = Decimal(self.amount)
         var amount: Decimal = 0.0
-        if store.state.currency == .ethereum {
+        if store.isEth {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
         } else {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-maxDigits), .up)
@@ -69,7 +69,7 @@ struct Amount {
     }
 
     var btcFormat: NumberFormatter {
-        if store.state.currency == .ethereum {
+        if store.isEth {
             let format = NumberFormatter()
             format.isLenient = true
             format.numberStyle = .currency
@@ -123,6 +123,7 @@ struct DisplayAmount {
     let state: State
     let selectedRate: Rate?
     let minimumFractionDigits: Int?
+    let store: Store
 
     var description: String {
         return selectedRate != nil ? fiatDescription : bitcoinDescription
@@ -141,7 +142,11 @@ struct DisplayAmount {
     private var bitcoinDescription: String {
         var decimal = Decimal(self.amount.rawValue)
         var amount: Decimal = 0.0
-        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-state.maxDigits), .up)
+        if store.isEth {
+            NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
+        } else {
+            NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-state.maxDigits), .up)
+        }
         let number = NSDecimalNumber(decimal: amount)
         guard let string = btcFormat.string(from: number) else { return "" }
         return string
@@ -170,27 +175,32 @@ struct DisplayAmount {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencyCode = "XBT"
+        if store.isEth {
+            format.currencyCode = "ETH"
+            format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
+        } else {
+            format.currencyCode = "XBT"
+            switch state.maxDigits {
+            case 2:
+                format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+                format.maximum = (C.maxMoney/C.satoshis)*100000 as NSNumber
+            case 5:
+                format.currencySymbol = "m\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
+                format.maximum = (C.maxMoney/C.satoshis)*1000 as NSNumber
+            case 8:
+                format.currencySymbol = "\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
+                format.maximum = C.maxMoney/C.satoshis as NSNumber
+            default:
+                format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+            }
 
-        switch state.maxDigits {
-        case 2:
-            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
-            format.maximum = (C.maxMoney/C.satoshis)*100000 as NSNumber
-        case 5:
-            format.currencySymbol = "m\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
-            format.maximum = (C.maxMoney/C.satoshis)*1000 as NSNumber
-        case 8:
-            format.currencySymbol = "\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
-            format.maximum = C.maxMoney/C.satoshis as NSNumber
-        default:
-            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+            format.maximumFractionDigits = state.maxDigits
+            format.maximum = Decimal(C.maxMoney)/(pow(10.0, state.maxDigits)) as NSNumber
         }
 
-        format.maximumFractionDigits = state.maxDigits
         if let minimumFractionDigits = minimumFractionDigits {
             format.minimumFractionDigits = minimumFractionDigits
         }
-        format.maximum = Decimal(C.maxMoney)/(pow(10.0, state.maxDigits)) as NSNumber
 
         return format
     }

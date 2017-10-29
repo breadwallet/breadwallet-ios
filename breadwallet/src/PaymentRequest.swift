@@ -68,7 +68,8 @@ struct PaymentRequest {
         type = .local
     }
 
-    init(ethAddress: String) {
+    init?(ethAddress: String) {
+        guard ethAddress.isValidEthAddress else { return nil }
         toAddress = ethAddress
         type = .local
     }

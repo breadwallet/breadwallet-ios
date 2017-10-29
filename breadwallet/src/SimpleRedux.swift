@@ -134,6 +134,10 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
 
 class Store {
 
+    var isEth: Bool {
+        return state.currency == .ethereum
+    }
+
     //MARK: - Public
     func perform(action: Action) {
         state = action.reduce(state)

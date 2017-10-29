@@ -179,10 +179,14 @@ class ApplicationController : Subscriber, Trackable {
     private func didInitWalletManager() {
         guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
         guard let rootViewController = window.rootViewController else { return }
+
+        let gethManager = GethManager(ethPrivKey: walletManager.ethPrivKey!, store: store)
+        self.ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient)
+
         hasPerformedWalletDependentInitialization = true
         store.perform(action: PinLength.set(walletManager.pinLength))
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
-        modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient, ethStore: ethStore)
+        modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient, ethStore: ethStore, ethManager: gethManager)
         exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
         feeUpdater = FeeUpdater(walletManager: walletManager, store: store)
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: rootViewController)
@@ -220,18 +224,6 @@ class ApplicationController : Subscriber, Trackable {
                 self.watchSessionManager.rate = self.store.state.currentRate
             })
         }
-
-        if let ethPrivKey = walletManager.ethPrivKey {
-            let gethManager = GethManager(ethPrivKey: ethPrivKey, store: store)
-            self.ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient)
-
-//            var tx = gethManager.createTx(forAmount: 50000000000000000, toAddress: "0x53Bb60807caDD27a656fC92Ff4E6733DFCbCb74D")
-//            tx = gethManager.signTx(tx, ethPrivKey: ethPrivKey)
-//
-//            gethManager.publishTx(tx)
-
-        }
-
     }
 
     private func shouldRequireLogin() -> Bool {

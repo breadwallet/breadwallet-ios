@@ -12,7 +12,7 @@ class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Public
     var walletManager: WalletManager?
-    init(store: Store, walletManager: WalletManager, window: UIWindow, apiClient: BRAPIClient, ethStore: Store) {
+    init(store: Store, walletManager: WalletManager, window: UIWindow, apiClient: BRAPIClient, ethStore: Store, ethManager: GethManager) {
         self.store = store
         self.ethStore = ethStore
         self.stores = [store, ethStore]
@@ -21,6 +21,7 @@ class ModalPresenter : Subscriber, Trackable {
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular, store: store)
         self.wipeNavigationDelegate = StartNavigationDelegate(store: store)
         self.noAuthApiClient = apiClient
+        self.ethManager = ethManager
         addSubscriptions()
     }
 
@@ -35,6 +36,7 @@ class ModalPresenter : Subscriber, Trackable {
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
     private let verifyPinTransitionDelegate = PinTransitioningDelegate()
     private let noAuthApiClient: BRAPIClient
+    private let ethManager: GethManager
 
     var supportCenter: SupportCenterContainer? {
         guard walletManager != nil else { return nil }
@@ -248,9 +250,8 @@ class ModalPresenter : Subscriber, Trackable {
         }
         guard let walletManager = walletManager else { return nil }
         guard let kvStore = walletManager.apiClient?.kv else { return nil }
-        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore, store: store), walletManager: walletManager, initialRequest: currentRequest)
+        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore, store: store), walletManager: walletManager, initialRequest: currentRequest, ethManager: store.isEth ? ethManager : nil)
         currentRequest = nil
-
 
         if store.state.isLoginRequired {
             sendVC.isPresentedFromLock = true

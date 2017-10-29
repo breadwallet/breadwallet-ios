@@ -179,8 +179,7 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
         if self.currentUri != uri {
             self.currentUri = uri
 
-            if store.state.currency == .ethereum && uri.isValidEthAddress {
-                let request = PaymentRequest(ethAddress: uri)
+            if store.isEth && uri.isValidEthAddress, let request = PaymentRequest(ethAddress: uri)  {
                 saveEvent("scan.ethAddress")
                 createPaymentRequestSuccess(request: request)
             } else if let request = PaymentRequest(string: uri) {

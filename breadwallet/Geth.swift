@@ -63,11 +63,16 @@ class GethManager {
         return balance
     }
 
-    func createTx(forAmount: UInt64, toAddress: String) -> GethTransaction {
+    func createTx(forAmount: UInt64, toAddress: String, nonce: Int64) -> GethTransaction {
         let toAddr = GethAddress(fromHex: toAddress)
         let price = try! ec.suggestGasPrice(ctx)
-        return GethTransaction(0, to: toAddr, amount: GethBigInt(Int64(bitPattern: forAmount)), gasLimit: GethBigInt(21000),
+        return GethTransaction(nonce, to: toAddr, amount: GethBigInt(Int64(bitPattern: forAmount)), gasLimit: GethBigInt(21000),
                                gasPrice: price, data: nil)
+    }
+
+    var fee: GethBigInt {
+        let price = (try! ec.suggestGasPrice(ctx)).getInt64()
+        return GethBigInt(price * 21000)
     }
     
     func signTx(_ tx: GethTransaction, ethPrivKey: String) -> GethTransaction {
@@ -87,11 +92,12 @@ class GethManager {
         }
     }
 
-    func publishTx(_ tx: GethTransaction) {
+    func publishTx(_ tx: GethTransaction) -> Error? {
         do {
             try ec.sendTransaction(ctx, tx:tx)
+            return nil
         } catch let e {
-            print("error: \(e)")
+            return e
         }
     }
 }

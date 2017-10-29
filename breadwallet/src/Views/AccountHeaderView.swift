@@ -295,7 +295,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     private func hideExtraViews() {
         //TODO - fix
-        if store.state.currency == .ethereum { return }
+        if store.isEth { return }
         var didHide = false
         if secondaryBalance.frame.maxX > search.frame.minX {
             secondaryBalance.isHidden = true
