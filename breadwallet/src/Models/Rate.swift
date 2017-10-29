@@ -59,7 +59,7 @@ extension Rate {
         guard let dictionary = data as? [String: Any] else { return nil }
         guard let code = dictionary["code"] as? String else { return nil }
         //guard let name = dictionary["name"] as? String else { return nil }
-        guard let rate = dictionary["rate"] as? Double else { return nil }
+        guard let rate = dictionary["n"] as? Double else { return nil }
         //self.init(code: code, name: name, rate: rate)
         self.init(code: code, rate: rate)
     }
