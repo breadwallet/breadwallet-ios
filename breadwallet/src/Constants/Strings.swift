@@ -19,13 +19,13 @@ enum S {
         static func currencyButtonTitle(maxDigits: Int) -> String {
             switch maxDigits {
             case 2:
-                return "Bits\(S.Symbols.narrowSpace)(\(S.Symbols.bits))"
+                return "photons\(S.Symbols.narrowSpace)(m\(S.Symbols.bits))"
             case 5:
-                return "\(S.Symbols.narrowSpace)(m\(S.Symbols.btc))"
+                return "lites\(S.Symbols.narrowSpace)(\(S.Symbols.bits))"
             case 8:
-                return "BTC\(S.Symbols.narrowSpace)(\(S.Symbols.btc))"
+                return "LTC\(S.Symbols.narrowSpace)(\(S.Symbols.btc))"
             default:
-                return "\(S.Symbols.bits)"
+                return "lites\(S.Symbols.narrowSpace)(\(S.Symbols.bits))"
             }
         }
     }

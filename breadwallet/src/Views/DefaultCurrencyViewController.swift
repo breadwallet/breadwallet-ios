@@ -142,7 +142,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
             if newIndex == 1 {
                 myself.store.perform(action: MaxDigits.set(8))
             } else {
-                myself.store.perform(action: MaxDigits.set(2))
+                myself.store.perform(action: MaxDigits.set(5))
             }
         }
 
