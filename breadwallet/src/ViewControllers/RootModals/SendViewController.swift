@@ -25,13 +25,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     var initialAddress: String?
     var isPresentedFromLock = false
 
-    init(store: Store, sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil) {
+    init(store: Store, sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil, ethManager: GethManager? = nil) {
         self.store = store
         self.sender = sender
         self.walletManager = walletManager
         self.initialAddress = initialAddress
         self.initialRequest = initialRequest
         self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
+        self.ethManager = ethManager
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
 
         super.init(nibName: nil, bundle: nil)
@@ -45,7 +46,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         NotificationCenter.default.removeObserver(self)
     }
 
-    private let store: Store
+    fileprivate let store: Store
     private let sender: Sender
     private let walletManager: WalletManager
     private let amountView: AmountViewController
@@ -63,6 +64,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let initialRequest: PaymentRequest?
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private var feeType: Fee?
+    private let ethManager: GethManager?
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -159,14 +161,19 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
+        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), state: store.state, selectedRate: rate, minimumFractionDigits: 0, store: store)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
         var color: UIColor = .grayTextTint
         if let amount = amount, amount.rawValue > 0 {
-            let fee = sender.feeForTx(amount: amount.rawValue)
-            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
+            let fee: UInt64
+            if store.isEth {
+                fee = UInt64(ethManager!.fee.getInt64())
+            } else {
+                fee = sender.feeForTx(amount: amount.rawValue)
+            }
+            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0, store: store)
             let feeText = feeAmount.description
             feeOutput = String(format: S.Send.fee, feeText)
             if (balance >= fee) && amount.rawValue > (balance - fee) {
@@ -191,7 +198,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         guard let pasteboard = UIPasteboard.general.string, pasteboard.utf8.count > 0 else {
             return showAlert(title: S.Alert.error, message: S.Send.emptyPasteboard, buttonLabel: S.Button.ok)
         }
-        guard let request = PaymentRequest(string: pasteboard) else {
+
+        guard let request = store.isEth ? PaymentRequest(ethAddress: pasteboard) : PaymentRequest(string: pasteboard) else {
             return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressOnPasteboard, buttonLabel: S.Button.ok)
         }
         handleRequest(request)
@@ -207,6 +215,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     @objc private func sendTapped() {
+        guard store.state.currency != .ethereum else { confirmEth(); return }
         if addressCell.textField.isFirstResponder {
             addressCell.textField.resignFirstResponder()
         }
@@ -240,7 +249,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
 
         guard let amount = amount else { return }
-        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseTouchId)
+        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseTouchId, store: store)
         confirm.callback = {
             confirm.dismiss(animated: true, completion: {
                 self.send()
@@ -252,6 +261,56 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         confirm.modalPresentationCapturesStatusBarAppearance = true
         present(confirm, animated: true, completion: nil)
         return
+    }
+
+    private func confirmEth() {
+        guard let amount = amount else { return }
+        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseTouchId, store: store)
+        confirm.callback = {
+            confirm.dismiss(animated: true, completion: {
+                self.presentEthPin()
+            })
+        }
+        confirmTransitioningDelegate.shouldShowMaskView = false
+        confirm.transitioningDelegate = confirmTransitioningDelegate
+        confirm.modalPresentationStyle = .overFullScreen
+        confirm.modalPresentationCapturesStatusBarAppearance = true
+        present(confirm, animated: true, completion: nil)
+    }
+
+    private func presentEthPin() {
+        presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin, vc in
+            guard let myself = self else { return false }
+            if myself.walletManager.authenticate(pin: pin) {
+                vc.dismiss(animated: true, completion: {
+                    self?.parent?.view.isFrameChangeBlocked = false
+                    myself.sendEth()
+                })
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+
+    private func sendEth() {
+        guard let amount = amount?.rawValue else { return }
+        guard let address = addressCell.textField.text else { return }
+        guard let ethManager = ethManager else { return }
+
+        let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(store.state.walletState.transactions.count))
+        let signedTx = ethManager.signTx(tx, ethPrivKey: walletManager.ethPrivKey!)
+        if let error = ethManager.publishTx(signedTx) {
+            showErrorMessage(error.localizedDescription)
+        } else {
+            dismiss(animated: true, completion: {
+                self.store.trigger(name: .showStatusBar)
+                if self.isPresentedFromLock {
+                    self.store.trigger(name: .loginFromSend)
+                }
+                self.onPublishSuccess?()
+            })
+        }
     }
 
     private func handleRequest(_ request: PaymentRequest) {
@@ -428,6 +487,6 @@ extension SendViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        return S.Send.title
+        return store.isEth ? S.Send.ethTitle : S.Send.title
     }
 }
