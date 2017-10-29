@@ -297,8 +297,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         guard let amount = amount?.rawValue else { return }
         guard let address = addressCell.textField.text else { return }
         guard let ethManager = ethManager else { return }
-
-        let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(store.state.walletState.transactions.count))
+        let numSent = store.state.walletState.transactions.filter { $0.direction == .sent }.count
+        let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(numSent))
         let signedTx = ethManager.signTx(tx, ethPrivKey: walletManager.ethPrivKey!)
         if let error = ethManager.publishTx(signedTx) {
             showErrorMessage(error.localizedDescription)

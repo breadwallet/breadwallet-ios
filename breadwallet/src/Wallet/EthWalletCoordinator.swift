@@ -29,7 +29,9 @@ class EthWalletCoordinator {
     @objc private func refresh() {
         apiClient.ethTxList(address: gethManager.addr.getHex()) { transactions in
             let viewModels = transactions?.sorted { $0.timeStamp > $1.timeStamp }.map { EthTransaction(tx: $0, address: self.gethManager.addr.getHex(), store: self.store) }
-            self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: viewModels)))
+            DispatchQueue.main.async {
+                self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: viewModels)))
+            }
         }
         store.perform(action: WalletChange.set(store.state.walletState.mutate(balance: gethManager.balance)))
     }
