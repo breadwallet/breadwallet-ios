@@ -69,7 +69,8 @@ import WebKit
         switch mountPoint {
         // MARK (losh11): - cleanup switch below
             case "/buy":
-                return URL(string: "https://api.loafwallet.org/buy")!
+                let addr = "https://api.loafwallet.org/buy?address=" + (walletManager.wallet?.receiveAddress)!
+                return URL(string: addr)!
             case "/support":
                 return URL(string: "https://api.loafwallet.org/support")!
             case "/ea":
