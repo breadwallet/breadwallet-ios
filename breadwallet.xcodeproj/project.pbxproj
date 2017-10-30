@@ -1759,7 +1759,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1BBAEBE51F80237B0047DEA8 /* Modules/loafwallet-core */ = {
+		1BBAEBE51F80237B0047DEA8 /* loafwallet-core */ = {
 			isa = PBXGroup;
 			children = (
 				1BBAEBE81F80237B0047DEA8 /* BRAddress.c */,
@@ -1800,6 +1800,7 @@
 				1BBAEC0C1F80237B0047DEA8 /* secp256k1 */,
 				1BBAEC711F80237C0047DEA8 /* test.c */,
 			);
+			name = "loafwallet-core";
 			path = "Modules/loafwallet-core";
 			sourceTree = "<group>";
 		};
@@ -2971,7 +2972,7 @@
 		75B6F52F1DA71DCC0031A93F /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				1BBAEBE51F80237B0047DEA8 /* Modules/loafwallet-core */,
+				1BBAEBE51F80237B0047DEA8 /* loafwallet-core */,
 				22A9A9971DF63426000F0016 /* libbz2 */,
 				755CD3831DAA0E3E0075898E /* unbound */,
 				755CD7031DAA16810075898E /* nettle */,

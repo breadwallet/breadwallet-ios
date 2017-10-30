@@ -151,10 +151,10 @@ struct DisplayAmount {
 
         switch state.maxDigits {
         case 2:
-            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+            format.currencySymbol = "m\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
             format.maximum = (C.maxMoney/C.satoshis)*100000 as NSNumber
         case 5:
-            format.currencySymbol = "m\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
+            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
             format.maximum = (C.maxMoney/C.satoshis)*1000 as NSNumber
         case 8:
             format.currencySymbol = "\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
