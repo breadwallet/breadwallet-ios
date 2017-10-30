@@ -29,7 +29,7 @@ extension UserDefaults {
     static var isTouchIdEnabled: Bool {
         get {
             guard defaults.object(forKey: isTouchIdEnabledKey) != nil else {
-                return false
+                return true
             }
             return defaults.bool(forKey: isTouchIdEnabledKey)
         }
