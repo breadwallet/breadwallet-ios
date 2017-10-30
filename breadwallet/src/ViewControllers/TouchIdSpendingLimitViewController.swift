@@ -13,7 +13,7 @@ class TouchIdSpendingLimitViewController : UITableViewController, Subscriber {
     private let cellIdentifier = "CellIdentifier"
     private let store: Store
     private let walletManager: WalletManager
-    private let limits: [UInt64] = [0, 1000000, 10000000, 100000000, 1000000000]
+    private let limits: [UInt64] = [0, 10000000, 100000000, 1000000000, 10000000000]
     private var selectedLimit: UInt64?
     private var header: UIView?
     private let amount = UILabel(font: .customMedium(size: 26.0), color: .darkText)
