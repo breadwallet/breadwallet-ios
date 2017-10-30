@@ -115,8 +115,13 @@ class EthTransaction : Transaction {
         super.init()
         self.timestamp = Int(tx.timeStamp) ?? 0
         self.direction = tx.to.lowercased() == address.lowercased() ? .received : .sent
-        self.status = "\(tx.confirmations) confirmations"
+        if Int(tx.confirmations) == 0 {
+            self.status = S.Transaction.pending
+        } else {
+            self.status = S.Transaction.complete
+        }
         self.isEth = true
+        self.hash = tx.hash
     }
 
     override var toAddress: String {

@@ -173,7 +173,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             } else {
                 fee = sender.feeForTx(amount: amount.rawValue)
             }
-            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0, store: store)
+            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: store.isEth ? 8 : 0, store: store)
             let feeText = feeAmount.description
             feeOutput = String(format: S.Send.fee, feeText)
             if (balance >= fee) && amount.rawValue > (balance - fee) {
@@ -297,6 +297,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         guard let amount = amount?.rawValue else { return }
         guard let address = addressCell.textField.text else { return }
         guard let ethManager = ethManager else { return }
+
+        guard address.lowercased() != ethManager.address.getHex().lowercased() else {
+            return showErrorMessage(S.Send.ethSendSelf)
+        }
+
         let numSent = store.state.walletState.transactions.filter { $0.direction == .sent }.count
         let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(numSent))
         let signedTx = ethManager.signTx(tx, ethPrivKey: walletManager.ethPrivKey!)
@@ -309,6 +314,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                     self.store.trigger(name: .loginFromSend)
                 }
                 self.onPublishSuccess?()
+
+                //Add temporary transaction
+                let timestamp = String(Date().timeIntervalSince1970)
+                let tempTx = EthTx(blockNumber: "0", timeStamp: timestamp, value: String(amount), from: ethManager.address.getHex(), to: address, confirmations: "0", hash: signedTx.getHash().getHex())
+                let transactionViewModel = EthTransaction(tx: tempTx, address: ethManager.address.getHex(), store: self.store)
+                let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
+                self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))
             })
         }
     }

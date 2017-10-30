@@ -28,11 +28,7 @@ struct Amount {
     }
 
     var localAmount: Double {
-        if store.isEth {
-            return Double(amount)/1000000000000000000.0*rate.rate
-        } else {
-            return Double(amount)/100000000.0*rate.rate
-        }
+        return Double(amount)/store.state.currency.baseUnit*rate.rate
     }
 
     var bits: String {
@@ -49,7 +45,7 @@ struct Amount {
     }
 
     var localCurrency: String {
-        guard let string = localFormat.string(from: Double(amount)/100000000.0*rate.rate as NSNumber) else { return "" }
+        guard let string = localFormat.string(from: Double(amount)/store.state.currency.baseUnit*rate.rate as NSNumber) else { return "" }
         return string
     }
 
@@ -60,7 +56,7 @@ struct Amount {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        guard let string = format.string(from: Double(amount)/100000000.0*rate.rate as NSNumber) else { return "" }
+        guard let string = format.string(from: Double(amount)/store.state.currency.baseUnit*rate.rate as NSNumber) else { return "" }
         return string
     }
 
@@ -135,7 +131,7 @@ struct DisplayAmount {
 
     private var fiatDescription: String {
         guard let rate = selectedRate ?? state.currentRate else { return "" }
-        guard let string = localFormat.string(from: Double(amount.rawValue)/100000000.0*rate.rate as NSNumber) else { return "" }
+        guard let string = localFormat.string(from: Double(amount.rawValue)/store.state.currency.baseUnit*rate.rate as NSNumber) else { return "" }
         return string
     }
 

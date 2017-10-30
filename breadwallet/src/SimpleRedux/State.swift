@@ -85,6 +85,15 @@ enum Currency {
             return string.isValidEthAddress
         }
     }
+
+    var baseUnit: Double {
+        switch self {
+        case .bitcoin:
+            return 100000000.0
+        case .ethereum:
+            return 1000000000000000000.0
+        }
+    }
 }
 
 enum RootModal {

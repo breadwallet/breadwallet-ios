@@ -140,7 +140,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         payLabel.text = S.Confirmation.send
 
         let displayAmount = DisplayAmount(amount: amount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, store: store)
-        let displayFee = DisplayAmount(amount: feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, store: store)
+        let displayFee = DisplayAmount(amount: feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: store.isEth ? 8 : minimumFractionDigits, store: store)
         let displayTotal = DisplayAmount(amount: amount + feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, store: store)
 
         amountLabel.text = displayAmount.combinedDescription
@@ -148,9 +148,10 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         toLabel.text = S.Confirmation.to
         address.text = addressText
         address.lineBreakMode = .byTruncatingMiddle
+        let regularTime = store.isEth ? "5-10" : "10-30"
         switch feeType {
         case .regular:
-            processingTime.text = String(format: S.Confirmation.processingTime, "10-30")
+            processingTime.text = String(format: S.Confirmation.processingTime, regularTime)
         case .economy:
             processingTime.text = String(format: S.Confirmation.processingTime, "60+")
         }
