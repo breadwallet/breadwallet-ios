@@ -7,4 +7,3 @@
 [submodule "Modules/loafwallet-core"]
 	path = Modules/loafwallet-core
 	url = https://github.com/litecoin-foundation/loafwallet-core.git
-        branch = losh11/master
