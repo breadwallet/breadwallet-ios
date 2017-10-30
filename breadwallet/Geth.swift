@@ -11,30 +11,30 @@ import Geth
 import BRCore
 
 class GethManager {
-    let ctx: GethContext
-    let ec: GethEthereumClient
-    let addr: GethAddress
+    let context: GethContext
+    let client: GethEthereumClient
+    let address: GethAddress
     let store: Store
 
     var balance: UInt64 {
-        return UInt64(bitPattern: try! ec.getBalanceAt(ctx, account: addr, number: -1).getInt64())
+        return UInt64(bitPattern: try! client.getBalanceAt(context, account: address, number: -1).getInt64())
     }
     
     var receiveAddress: String {
-        return addr.getHex()
+        return address.getHex()
     }
 
     init(ethPrivKey: String, store: Store) {
         self.store = store
-        ctx = GethContext()
+        context = GethContext()
 
         if E.isTestnet {
-            ec = GethEthereumClient("https://ropsten.infura.io/QY7ejGXZ1RFGrdXfeXx2")
+            client = GethEthereumClient("https://ropsten.infura.io/")
         } else {
-            ec = GethEthereumClient("https://mainnet.infura.io")
+            client = GethEthereumClient("https://mainnet.infura.io")
         }
 
-        addr = autoreleasepool {
+        address = autoreleasepool {
             let ks = GethKeyStore(NSTemporaryDirectory(), scryptN:2, scryptP:1)
             var data = CFDataCreateMutable(secureAllocator, MemoryLayout<UInt256>.stride) as Data
             data.count = MemoryLayout<UInt256>.stride
@@ -55,8 +55,8 @@ class GethManager {
 
         }
         
-        print("receive address:\(addr.getHex())")
-        print("latest block:\(try! ec.getBlockByNumber(ctx, number: -1).getNumber())")
+        print("receive address:\(address.getHex())")
+        print("latest block:\(try! client.getBlockByNumber(context, number: -1).getNumber())")
     }
 
     func maxOutputAmount(toAddress: String) -> UInt64 {
@@ -65,13 +65,13 @@ class GethManager {
 
     func createTx(forAmount: UInt64, toAddress: String, nonce: Int64) -> GethTransaction {
         let toAddr = GethAddress(fromHex: toAddress)
-        let price = try! ec.suggestGasPrice(ctx)
+        let price = try! client.suggestGasPrice(context)
         return GethTransaction(nonce, to: toAddr, amount: GethBigInt(Int64(bitPattern: forAmount)), gasLimit: GethBigInt(21000),
                                gasPrice: price, data: nil)
     }
 
     var fee: GethBigInt {
-        let price = (try! ec.suggestGasPrice(ctx)).getInt64()
+        let price = (try! client.suggestGasPrice(context)).getInt64()
         return GethBigInt(price * 21000)
     }
     
@@ -94,7 +94,7 @@ class GethManager {
 
     func publishTx(_ tx: GethTransaction) -> Error? {
         do {
-            try ec.sendTransaction(ctx, tx:tx)
+            try client.sendTransaction(context, tx:tx)
             return nil
         } catch let e {
             return e

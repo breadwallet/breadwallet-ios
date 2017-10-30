@@ -316,7 +316,7 @@ class AmountViewController : UIViewController, Trackable {
         if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
             balanceLabel.attributedText = balance
             feeLabel.attributedText = fee
-            if let amount = amount, amount > 0, !isRequesting {
+            if let amount = amount, amount > 0, !isRequesting, !store.isEth {
                 editFee.isHidden = false
             } else {
                 editFee.isHidden = true
@@ -368,12 +368,12 @@ class AmountViewController : UIViewController, Trackable {
     private func updateBalanceAndFeeLabels() {
         if let amount = amount, amount.rawValue > 0 {
             balanceLabel.isHidden = false
-            if !isRequesting {
+            if !isRequesting && !store.isEth {
                 editFee.isHidden = false
             }
         } else {
             balanceLabel.isHidden = cursor.isHidden
-            if !isRequesting {
+            if !isRequesting && !store.isEth {
                 editFee.isHidden = true
             }
         }
