@@ -94,6 +94,15 @@ enum Currency {
             return 1000000000000000000.0
         }
     }
+
+    var symbol: String {
+        switch self {
+        case .bitcoin:
+            return "btc"
+        case .ethereum:
+            return "eth"
+        }
+    }
 }
 
 enum RootModal {

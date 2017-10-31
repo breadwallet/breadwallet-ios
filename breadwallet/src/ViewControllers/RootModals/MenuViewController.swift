@@ -19,21 +19,30 @@ class MenuViewController : UIViewController, Trackable {
 
     //MARK: - Private
     fileprivate let buttonHeight: CGFloat = 72.0
-    fileprivate let buttons: [MenuButton] = {
+    fileprivate func buttons() -> [MenuButton] {
         let types: [MenuButtonType] = [.security, .support, .settings, .lock, .buy]
         return types.flatMap {
             if $0 == .buy && !BRAPIClient.featureEnabled(.buyBitcoin) {
                 return nil
             }
+            if $0 == .buy && store.isEth {
+                return nil
+            }
             return MenuButton(type: $0)
         }
-    }()
+    }
     fileprivate let bottomPadding: CGFloat = 32.0
+    private let store: Store
+
+    init(store: Store) {
+        self.store = store
+        super.init(nibName: nil, bundle: nil)
+    }
 
     override func viewDidLoad() {
 
         var previousButton: UIView?
-        buttons.forEach { button in
+        buttons().forEach { button in
             button.addTarget(self, action: #selector(MenuViewController.didTapButton(button:)), for: .touchUpInside)
             view.addSubview(button)
             var topConstraint: NSLayoutConstraint?
@@ -74,6 +83,10 @@ class MenuViewController : UIViewController, Trackable {
             saveEvent("menu.didTapBuyBitcoin")
             didTapBuy?()
         }
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 

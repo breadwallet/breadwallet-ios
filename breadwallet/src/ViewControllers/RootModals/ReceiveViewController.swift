@@ -23,7 +23,11 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     var presentText: PresentShare?
 
     init(store: Store, isRequestAmountVisible: Bool) {
-        self.isRequestAmountVisible = isRequestAmountVisible
+        if store.isEth {
+            self.isRequestAmountVisible = false
+        } else {
+            self.isRequestAmountVisible = isRequestAmountVisible
+        }
         self.store = store
         super.init(nibName: nil, bundle: nil)
     }
