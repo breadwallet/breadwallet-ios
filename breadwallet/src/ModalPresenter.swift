@@ -61,12 +61,15 @@ class ModalPresenter : Subscriber, Trackable {
         store.subscribe(self,
                         selector: { $0.alert != $1.alert && $1.alert != nil },
                         callback: { self.handleAlertChange($0.alert) })
-        store.subscribe(self, name: .presentFaq(""), callback: {
-            guard let trigger = $0 else { return }
-            if case .presentFaq(let articleId) = trigger {
-                self.presentFaq(articleId: articleId)
-            }
-        })
+
+        stores.forEach { store in
+            store.subscribe(self, name: .presentFaq(""), callback: {
+                guard let trigger = $0 else { return }
+                if case .presentFaq(let articleId) = trigger {
+                    self.presentFaq(articleId: articleId, store: store)
+                }
+            })
+        }
 
         //Subscribe to prompt actions
         store.subscribe(self, name: .promptUpgradePin, callback: { _ in
@@ -200,12 +203,12 @@ class ModalPresenter : Subscriber, Trackable {
         })
     }
 
-    private func presentFaq(articleId: String? = nil) {
+    private func presentFaq(articleId: String? = nil, store: Store) {
         guard let supportCenter = supportCenter else { return }
         supportCenter.modalPresentationStyle = .overFullScreen
         supportCenter.modalPresentationCapturesStatusBarAppearance = true
         supportCenter.transitioningDelegate = supportCenter
-        let url = articleId == nil ? "/support" : "/support/article?slug=\(articleId!)"
+        let url = articleId == nil ? "/support?currency=\(store.state.currency.symbol)" : "/support/article?slug=\(articleId!)&currency=\(store.state.currency.symbol)"
         supportCenter.navigate(to: url)
         topViewController?.present(supportCenter, animated: true, completion: {})
     }
@@ -219,7 +222,7 @@ class ModalPresenter : Subscriber, Trackable {
         case .receive:
             return receiveView(isRequestAmountVisible: true, store: store)
         case .menu:
-            return menuViewController()
+            return menuViewController(store: store)
         case .loginScan:
             return nil //The scan view needs a custom presentation
         case .loginAddress:
@@ -290,8 +293,8 @@ class ModalPresenter : Subscriber, Trackable {
         return root
     }
 
-    private func menuViewController() -> UIViewController? {
-        let menu = MenuViewController()
+    private func menuViewController(store: Store) -> UIViewController? {
+        let menu = MenuViewController(store: store)
         let root = ModalViewController(childViewController: menu, store: store)
         menu.didTapSecurity = { [weak self, weak menu] in
             self?.modalTransitionDelegate.reset()
@@ -301,7 +304,7 @@ class ModalPresenter : Subscriber, Trackable {
         }
         menu.didTapSupport = { [weak self, weak menu] in
             menu?.dismiss(animated: true, completion: {
-                self?.presentFaq()
+                self?.presentFaq(store: store)
             })
         }
         menu.didTapLock = { [weak self, weak menu] in
