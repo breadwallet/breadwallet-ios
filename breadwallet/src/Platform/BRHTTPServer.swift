@@ -456,7 +456,7 @@ open class BRHTTPRequestImpl: BRHTTPRequest {
         }
         guard let rngHeader = headers["range"]?[0],
             let match = BRHTTPRequestImpl.rangeRe.matches(in: rngHeader, options: .anchored, range:
-                NSRange(location: 0, length: rngHeader.characters.count)).first
+                NSRange(location: 0, length: rngHeader.count)).first
             , match.numberOfRanges == 3 else {
                 throw BRHTTPServerError.invalidRangeHeader
         }
