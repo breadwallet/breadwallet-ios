@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Geth
 
 private let currencyHeight: CGFloat = 80.0
 private let feeHeight: CGFloat = 130.0
@@ -30,7 +31,18 @@ class AmountViewController : UIViewController, Trackable {
 
     var balanceTextForAmount: ((Satoshis?, Rate?) -> (NSAttributedString?, NSAttributedString?)?)?
     var didUpdateAmount: ((Satoshis?) -> Void)?
+    var didUpdateEth: ((GethBigInt?) -> Void)?
     var didChangeFirstResponder: ((Bool) -> Void)?
+
+    var ethOutput: GethBigInt {
+        var decimal = Decimal(string: currentOutput.replacingOccurrences(of: S.Symbols.eth, with: "")) ?? Decimal(0)
+        var result: Decimal = 0.0
+        NSDecimalMultiplyByPowerOf10(&result, &decimal, Int16(18), .up)
+        let wei = NSDecimalNumber(decimal: result)
+        let returnValue = GethBigInt(0)
+        returnValue?.setString(wei.description(withLocale: nil), base: 10)
+        return returnValue!
+    }
 
     var currentOutput: String {
         return amountLabel.text ?? ""
@@ -83,6 +95,14 @@ class AmountViewController : UIViewController, Trackable {
             updateAmountLabel()
             updateBalanceLabel()
             didUpdateAmount?(amount)
+        }
+    }
+
+    private var ethAmount: GethBigInt? {
+        didSet {
+            updateAmountLabel()
+            updateBalanceLabel()
+            didUpdateEth?(ethAmount)
         }
     }
 
@@ -234,28 +254,8 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func handleEthOutput(output: String) {
-        let currencyDecimalSeparator = NumberFormatter().currencyDecimalSeparator ?? "."
+        amountLabel.text = output.utf8.count > 0 ? "\(S.Symbols.eth)" + output : ""
         placeholder.isHidden = output.utf8.count > 0 ? true : false
-        minimumFractionDigits = 0 //set default
-        if let decimalLocation = output.range(of: currencyDecimalSeparator)?.upperBound {
-            let locationValue = output.distance(from: output.endIndex, to: decimalLocation)
-            minimumFractionDigits = abs(locationValue)
-        }
-
-        //If trailing decimal, append the decimal to the output
-        hasTrailingDecimal = false //set default
-        if let decimalLocation = output.range(of: currencyDecimalSeparator)?.upperBound {
-            if output.endIndex == decimalLocation {
-                hasTrailingDecimal = true
-            }
-        }
-
-        let newAmount = Wei(ethString: output)
-        if let newAmount = newAmount {
-            amount = Satoshis(rawValue: newAmount.rawValue)
-        } else {
-            amount = nil
-        }
     }
 
     private func handleBtcOutput(output: String) {
@@ -302,26 +302,33 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func updateAmountLabel() {
-        guard let amount = amount else { amountLabel.text = ""; return }
-        let displayAmount = DisplayAmount(amount: amount, state: store.state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, store: store)
-        var output = displayAmount.description
-        if hasTrailingDecimal {
-            output = output.appending(NumberFormatter().currencyDecimalSeparator)
+        if !store.isEth {
+            guard let amount = amount else { amountLabel.text = ""; return }
+            let displayAmount = DisplayAmount(amount: amount, state: store.state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, store: store)
+            var output = displayAmount.description
+            if hasTrailingDecimal {
+                output = output.appending(NumberFormatter().currencyDecimalSeparator)
+            }
+            amountLabel.text = output
+            placeholder.isHidden = output.utf8.count > 0 ? true : false
         }
-        amountLabel.text = output
-        placeholder.isHidden = output.utf8.count > 0 ? true : false
     }
 
     func updateBalanceLabel() {
-        if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
-            balanceLabel.attributedText = balance
-            feeLabel.attributedText = fee
-            if let amount = amount, amount > 0, !isRequesting, !store.isEth {
-                editFee.isHidden = false
-            } else {
-                editFee.isHidden = true
+        if store.isEth {
+            guard let balance = store.state.walletState.bigBalance else { return }
+            balanceLabel.text = DisplayAmount.ethString(value: balance, store: store)
+        } else {
+            if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
+                balanceLabel.attributedText = balance
+                feeLabel.attributedText = fee
+                if let amount = amount, amount > 0, !isRequesting, !store.isEth {
+                    editFee.isHidden = false
+                } else {
+                    editFee.isHidden = true
+                }
+                balanceLabel.isHidden = cursor.isHidden
             }
-            balanceLabel.isHidden = cursor.isHidden
         }
     }
 

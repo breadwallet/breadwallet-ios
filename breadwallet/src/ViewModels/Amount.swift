@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Geth
 
 struct Amount {
 
@@ -199,5 +200,24 @@ struct DisplayAmount {
         }
 
         return format
+    }
+
+    static func ethString(value: GethBigInt, store: Store) -> String {
+        let placeholderAmount = Amount(amount: 0, rate: store.state.currentRate!, maxDigits: 0, store: store)
+        var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
+        var amount: Decimal = 0.0
+        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
+        let eth = NSDecimalNumber(decimal: amount)
+        return placeholderAmount.btcFormat.string(from: eth) ?? ""
+    }
+
+    static func localEthString(value: GethBigInt, store: Store) -> String {
+        guard let rate = store.state.currentRate else { return "" }
+        let placeholderAmount = Amount(amount: 0, rate: store.state.currentRate!, maxDigits: 0, store: store)
+        var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
+        var amount: Decimal = 0.0
+        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
+        let eth = NSDecimalNumber(decimal: amount)
+        return placeholderAmount.localFormat.string(for: eth.doubleValue*rate.rate) ?? ""
     }
 }

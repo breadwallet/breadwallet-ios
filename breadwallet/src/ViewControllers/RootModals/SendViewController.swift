@@ -9,6 +9,7 @@
 import UIKit
 import LocalAuthentication
 import BRCore
+import Geth
 
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
@@ -59,6 +60,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private var pinPadHeightConstraint: NSLayoutConstraint?
     private var balance: UInt64 = 0
     private var amount: Satoshis?
+    private var ethAmount: GethBigInt?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
     private let initialRequest: PaymentRequest?
@@ -136,8 +138,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return self?.balanceTextForAmount(amount: amount, rate: rate)
         }
 
-        amountView.didUpdateAmount = { [weak self] amount in
-            self?.amount = amount
+        if store.isEth {
+            amountView.didUpdateEth = { [weak self] amount in
+                self?.ethAmount = amount
+            }
+        } else {
+            amountView.didUpdateAmount = { [weak self] amount in
+                self?.amount = amount
+            }
         }
         amountView.didUpdateFee = strongify(self) { myself, fee in
             guard let wallet = myself.walletManager.wallet else { return }
@@ -264,8 +272,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func confirmEth() {
-        guard let amount = amount else { return }
-        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseTouchId, store: store)
+        guard let ethManager = ethManager else { return }
+        let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee, feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseTouchId, store: store)
         confirm.callback = {
             confirm.dismiss(animated: true, completion: {
                 self.presentEthPin()
@@ -294,7 +302,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func sendEth() {
-        guard let amount = amount?.rawValue else { return }
+        let amount = amountView.ethOutput
         guard let address = addressCell.textField.text else { return }
         guard let ethManager = ethManager else { return }
 
@@ -317,7 +325,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
                 //Add temporary transaction
                 let timestamp = String(Date().timeIntervalSince1970)
-                let tempTx = EthTx(blockNumber: "0", timeStamp: timestamp, value: String(amount), from: ethManager.address.getHex(), to: address, confirmations: "0", hash: signedTx.getHash().getHex())
+                let tempTx = EthTx(blockNumber: "0", timeStamp: timestamp, value: amount.getString(10), from: ethManager.address.getHex(), to: address, confirmations: "0", hash: signedTx.getHash().getHex())
                 let transactionViewModel = EthTransaction(tx: tempTx, address: ethManager.address.getHex(), store: self.store)
                 let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
                 self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))

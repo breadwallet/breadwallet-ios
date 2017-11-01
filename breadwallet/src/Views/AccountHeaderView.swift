@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Geth
 
 private let largeFontSize: CGFloat = 26.0
 private let smallFontSize: CGFloat = 13.0
@@ -77,6 +78,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }()
     private var balance: UInt64 = 0 {
         didSet { setBalances() }
+    }
+    private var bigBalance: GethBigInt = GethBigInt(0) {
+        didSet { setEthBalance() }
     }
     private var isBtcSwapped: Bool {
         didSet { setBalances() }
@@ -183,7 +187,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             currencyTapView.bottomAnchor.constraint(equalTo: primaryBalance.bottomAnchor, constant: C.padding[1]) ])
 
         let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
-        currencyTapView.addGestureRecognizer(gr)
+        if !store.isEth { //FIXME - currency switching disabled for ethereum
+            currencyTapView.addGestureRecognizer(gr)
+        }
 
         logo.constrain([
             logo.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
@@ -193,6 +199,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         modeLabel.constrain([
             modeLabel.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: C.padding[1]/2.0),
             modeLabel.firstBaselineAnchor.constraint(equalTo: logo.bottomAnchor, constant: -2.0) ])
+        if store.isEth {
+            setEthBalance()
+        }
     }
 
     private func transform(forView: UIView) ->  CGAffineTransform {
@@ -239,12 +248,27 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         store.subscribe(self,
                         selector: { $0.walletState.name != $1.walletState.name },
                         callback: { self.name.text = $0.walletState.name })
-        store.subscribe(self,
-                        selector: {$0.walletState.balance != $1.walletState.balance },
-                        callback: { state in
-                            if let balance = state.walletState.balance {
-                                self.balance = balance
-                            } })
+        if store.isEth {
+            store.subscribe(self,
+                            selector: { $0.walletState.bigBalance != $1.walletState.bigBalance },
+                            callback: { state in
+                                if let bigBalance = state.walletState.bigBalance {
+                                    self.bigBalance = bigBalance
+                                } })
+        } else {
+            store.subscribe(self,
+                            selector: {$0.walletState.balance != $1.walletState.balance },
+                            callback: { state in
+                                if let balance = state.walletState.balance {
+                                    self.balance = balance
+                                } })
+        }
+    }
+
+    private func setEthBalance() {
+        primaryBalance.text = DisplayAmount.ethString(value: bigBalance, store: store)
+        secondaryBalance.text = DisplayAmount.localEthString(value: bigBalance, store: store)
+        secondaryBalance.transform = transform(forView: secondaryBalance)
     }
 
     private func setBalances() {

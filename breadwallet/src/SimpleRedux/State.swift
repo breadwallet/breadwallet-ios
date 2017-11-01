@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Geth
 
 struct State {
     let isStartFlowVisible: Bool
@@ -133,8 +134,9 @@ struct WalletState {
     let creationDate: Date
     let isRescanning: Bool
     let receiveAddress: String?
+    let bigBalance: GethBigInt?
     static var initial: WalletState {
-        return WalletState(isConnected: false, syncProgress: 0.0, syncState: .success, balance: nil, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, creationDate: Date.zeroValue(), isRescanning: false, receiveAddress: nil)
+        return WalletState(isConnected: false, syncProgress: 0.0, syncState: .success, balance: nil, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, creationDate: Date.zeroValue(), isRescanning: false, receiveAddress: nil, bigBalance: nil)
     }
 
     func mutate(    isConnected: Bool? = nil,
@@ -146,9 +148,10 @@ struct WalletState {
                     name: String? = nil,
                     creationDate: Date? = nil,
                     isRescanning: Bool? = nil,
-                    receiveAddress: String? = nil) -> WalletState {
+                    receiveAddress: String? = nil,
+                    bigBalance: GethBigInt? = nil) -> WalletState {
 
-        return WalletState(isConnected: isConnected ?? self.isConnected, syncProgress: syncProgress ?? self.syncProgress, syncState: syncState ?? self.syncState, balance: balance ?? self.balance, transactions: transactions ?? self.transactions, lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp, name: name ?? self.name, creationDate: creationDate ?? self.creationDate, isRescanning: isRescanning ?? self.isRescanning, receiveAddress: receiveAddress ?? self.receiveAddress)
+        return WalletState(isConnected: isConnected ?? self.isConnected, syncProgress: syncProgress ?? self.syncProgress, syncState: syncState ?? self.syncState, balance: balance ?? self.balance, transactions: transactions ?? self.transactions, lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp, name: name ?? self.name, creationDate: creationDate ?? self.creationDate, isRescanning: isRescanning ?? self.isRescanning, receiveAddress: receiveAddress ?? self.receiveAddress, bigBalance: bigBalance ?? self.bigBalance)
     }
 }
 

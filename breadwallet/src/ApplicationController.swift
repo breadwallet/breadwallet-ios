@@ -46,7 +46,7 @@ class ApplicationController : Subscriber, Trackable {
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
         ethStore.perform(action: CurrencyActions.set(.ethereum))
-        ethStore.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 295.0)))
+        ethStore.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 305.0)))
         DispatchQueue.walletQueue.async {
             guardProtected(queue: DispatchQueue.walletQueue) {
                 self.initWallet()
