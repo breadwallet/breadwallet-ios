@@ -262,6 +262,13 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if store.isEth {
+            let tx = transactions[indexPath.row]
+            store.trigger(name: .lightWeightAlert(S.Receive.copied))
+            UIPasteboard.general.string = tx.hash
+            return
+        }
+
         if isSyncingViewVisible && indexPath.section == 0 { return }
         if let currentPrompt = currentPrompt, indexPath.section == 0 {
             if let trigger = currentPrompt.type.trigger {

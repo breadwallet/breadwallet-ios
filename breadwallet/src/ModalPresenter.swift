@@ -125,12 +125,14 @@ class ModalPresenter : Subscriber, Trackable {
                 self.showNotReachable()
             }
         }
-        store.subscribe(self, name: .lightWeightAlert(""), callback: {
-            guard let trigger = $0 else { return }
-            if case let .lightWeightAlert(message) = trigger {
-                self.showLightWeightAlert(message: message)
-            }
-        })
+        stores.forEach {
+            $0.subscribe(self, name: .lightWeightAlert(""), callback: {
+                guard let trigger = $0 else { return }
+                if case let .lightWeightAlert(message) = trigger {
+                    self.showLightWeightAlert(message: message)
+                }
+            })
+        }
         store.subscribe(self, name: .showAlert(nil), callback: {
             guard let trigger = $0 else { return }
             if case let .showAlert(alert) = trigger {
