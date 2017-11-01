@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import Geth
+import BRCore
 
 //Responsible for coordinating the state and
 //gethManager
@@ -44,6 +46,6 @@ class EthWalletCoordinator {
                 self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: mergedViewModels)))
             }
         }
-        store.perform(action: WalletChange.set(store.state.walletState.mutate(balance: gethManager.balance)))
+        store.perform(action: WalletChange.set(store.state.walletState.mutate(bigBalance: gethManager.balance)))
     }
 }

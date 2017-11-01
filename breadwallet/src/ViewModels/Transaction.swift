@@ -8,6 +8,7 @@
 
 import UIKit
 import BRCore
+import Geth
 
 class Transaction {
     var direction: TransactionDirection = .sent
@@ -109,7 +110,9 @@ class Transaction {
 
 class EthTransaction : Transaction {
     init(tx: EthTx, address: String, store: Store) {
-        self.wei = UInt64(tx.value) ?? 0
+        let value = GethBigInt(0)!
+        value.setString(tx.value, base: 10)
+        self.wei = value
         self.store = store
         self.tx = tx
         super.init()
@@ -133,13 +136,13 @@ class EthTransaction : Transaction {
     }
 
     override func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
-        let amount = Amount(amount: wei, rate: rate, maxDigits: maxDigits, store: store).string(isBtcSwapped: isBtcSwapped)
+        let amount = DisplayAmount.ethString(value: wei, store: store)
         let format = direction.amountDescriptionFormat
         let string = String(format: format, amount)
         return string.attributedStringForTags
     }
 
-    private let wei: UInt64
+    private let wei: GethBigInt
     private let store: Store
     private let tx: EthTx
 

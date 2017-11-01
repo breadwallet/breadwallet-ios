@@ -16,8 +16,8 @@ class GethManager {
     let address: GethAddress
     let store: Store
 
-    var balance: UInt64 {
-        return UInt64(bitPattern: try! client.getBalanceAt(context, account: address, number: -1).getInt64())
+    var balance: GethBigInt {
+        return try! client.getBalanceAt(context, account: address, number: -1)
     }
     
     var receiveAddress: String {
@@ -59,14 +59,14 @@ class GethManager {
         print("latest block:\(try! client.getBlockByNumber(context, number: -1).getNumber())")
     }
 
-    func maxOutputAmount(toAddress: String) -> UInt64 {
+    func maxOutputAmount(toAddress: String) -> GethBigInt {
         return balance
     }
 
-    func createTx(forAmount: UInt64, toAddress: String, nonce: Int64) -> GethTransaction {
+    func createTx(forAmount: GethBigInt, toAddress: String, nonce: Int64) -> GethTransaction {
         let toAddr = GethAddress(fromHex: toAddress)
         let price = try! client.suggestGasPrice(context)
-        return GethTransaction(nonce, to: toAddr, amount: GethBigInt(Int64(bitPattern: forAmount)), gasLimit: GethBigInt(21000),
+        return GethTransaction(nonce, to: toAddr, amount: forAmount, gasLimit: GethBigInt(21000),
                                gasPrice: price, data: nil)
     }
 
