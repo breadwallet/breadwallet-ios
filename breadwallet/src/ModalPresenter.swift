@@ -12,10 +12,10 @@ class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Public
     var walletManager: WalletManager?
-    init(store: Store, walletManager: WalletManager, window: UIWindow, apiClient: BRAPIClient, ethStore: Store, ethManager: GethManager?) {
+    init(store: Store, walletManager: WalletManager, window: UIWindow, apiClient: BRAPIClient, ethStore: Store, ethManager: GethManager?, tokenStores: [Store]) {
         self.store = store
         self.ethStore = ethStore
-        self.stores = [store, ethStore]
+        self.stores = [store, ethStore] + tokenStores
         self.window = window
         self.walletManager = walletManager
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular, store: store)

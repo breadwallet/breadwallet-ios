@@ -13,6 +13,8 @@ import Geth
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
+let tokens = [tst, xjp, xjp2]
+
 class ApplicationController : Subscriber, Trackable {
 
     //Ideally the window would be private, but is unfortunately required
@@ -20,12 +22,22 @@ class ApplicationController : Subscriber, Trackable {
     let window = UIWindow()
     fileprivate let store = Store()
     fileprivate let ethStore = Store()
+    fileprivate let tokenStores: [Store] = {
+        tokens.map {
+            let store = Store()
+            store.perform(action: CurrencyActions.set(.token))
+            store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 305.0)))
+            store.perform(action: WalletChange.set(store.state.walletState.mutate(token: $0)))
+            return store
+        }
+    }()
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
 
     fileprivate var walletManager: WalletManager?
     private var walletCoordinator: WalletCoordinator?
     private var ethWalletCoordinator: EthWalletCoordinator?
+    private var tokenWalletCoordinators: [TokenWalletCoordinator]?
     private var exchangeUpdater: ExchangeUpdater?
     private var feeUpdater: FeeUpdater?
     private let transitionDelegate: ModalTransitionDelegate
@@ -43,11 +55,13 @@ class ApplicationController : Subscriber, Trackable {
     private var launchURL: URL?
     private var hasPerformedWalletDependentInitialization = false
     private var didInitWallet = false
-    
+    private var accountViewControllers: [AccountViewController]?
+
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
         ethStore.perform(action: CurrencyActions.set(.ethereum))
         ethStore.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 305.0)))
+
         DispatchQueue.walletQueue.async {
             guardProtected(queue: DispatchQueue.walletQueue) {
                 self.initWallet()
@@ -180,14 +194,13 @@ class ApplicationController : Subscriber, Trackable {
     private func didInitWalletManager() {
         guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
         guard let rootViewController = window.rootViewController else { return }
-
         let gethManager = GethManager(ethPrivKey: walletManager.ethPrivKey!, store: store)
-        self.ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient)
-
+        ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient)
+        tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: noAuthApiClient) }
         hasPerformedWalletDependentInitialization = true
         store.perform(action: PinLength.set(walletManager.pinLength))
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
-        modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient, ethStore: ethStore, ethManager: gethManager)
+        modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient, ethStore: ethStore, ethManager: gethManager, tokenStores: tokenStores)
         exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
         feeUpdater = FeeUpdater(walletManager: walletManager, store: store)
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: rootViewController)
@@ -225,8 +238,6 @@ class ApplicationController : Subscriber, Trackable {
                 self.watchSessionManager.rate = self.store.state.currentRate
             })
         }
-
-        gethManager.transfer(amount: GethBigInt(1000), toAddress: "0x6C0fe9f8f018e68E2F0bee94Ab41B75e71DF094d", privKey: walletManager.ethPrivKey!)
     }
 
     private func shouldRequireLogin() -> Bool {
@@ -264,12 +275,21 @@ class ApplicationController : Subscriber, Trackable {
         accountViewController?.receiveCallback = { self.store.perform(action: RootModalActions.Present(modal: .receive)) }
         accountViewController?.menuCallback = { self.store.perform(action: RootModalActions.Present(modal: .menu)) }
 
-
         ethAccountViewController = AccountViewController(store: ethStore, didSelectTransaction: {_,_ in } )
         ethAccountViewController?.sendCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .send)) }
         ethAccountViewController?.receiveCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .receive)) }
         ethAccountViewController?.menuCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .menu)) }
 
+
+        let tokenAccountViewControllers: [AccountViewController] = tokenStores.map { store in
+            let vc = AccountViewController(store: store, didSelectTransaction: {_,_ in } )
+            vc.sendCallback = { store.perform(action: RootModalActions.Present(modal: .send)) }
+            vc.receiveCallback = { store.perform(action: RootModalActions.Present(modal: .receive)) }
+            vc.menuCallback = { store.perform(action: RootModalActions.Present(modal: .menu)) }
+            return vc
+        }
+
+        accountViewControllers = [accountViewController!, ethAccountViewController!] + tokenAccountViewControllers
 
         container.child = accountViewController
         container.addChildViewController(accountViewController!, layout: {
@@ -282,30 +302,27 @@ class ApplicationController : Subscriber, Trackable {
             if let info = note.userInfo {
                 if let currency = info["currency"] as? String {
                     if currency == "btc" {
-                        self.showBTC()
+                        self.switchToAccount(vc: self.accountViewController!)
+                    } else if currency == "eth" {
+                        self.switchToAccount(vc: self.ethAccountViewController!)
                     } else {
-                        self.showEth()
+                        let vc = self.accountViewControllers?.filter{ $0.tokenSymbol == currency }
+                        self.switchToAccount(vc: vc!.first!)
                     }
                 }
             }
         })
     }
 
-    private func showBTC() {
-        guard containerViewController?.child != accountViewController else { return }
-        ethAccountViewController?.removeFromParentViewController()
-        containerViewController?.child = accountViewController
-        containerViewController?.addChildViewController(accountViewController!, layout: {
-            accountViewController!.view.constrain(toSuperviewEdges: nil)
-        })
-    }
-
-    private func showEth() {
-        guard containerViewController?.child != ethAccountViewController else { return }
-        accountViewController?.removeFromParentViewController()
-        containerViewController?.child = ethAccountViewController
-        containerViewController?.addChildViewController(ethAccountViewController!, layout: {
-            ethAccountViewController!.view.constrain(toSuperviewEdges: nil)
+    private func switchToAccount(vc: AccountViewController) {
+        guard containerViewController?.child != vc else { return }
+        guard let accountViewControllers = accountViewControllers else { return }
+        accountViewControllers.filter { $0 != vc }.forEach {
+            $0.removeFromParentViewController()
+        }
+        containerViewController?.child = vc
+        containerViewController?.addChildViewController(vc, layout: {
+            vc.view.constrain(toSuperviewEdges: nil)
         })
     }
 
@@ -445,3 +462,21 @@ extension ApplicationController {
         print("didFailToRegisterForRemoteNotification: \(error)")
     }
 }
+
+let tst = Token(name: "Test Standard Token",
+                 symbol: "tst",
+                 address: "0x722dd3F80BAC40c951b51BdD28Dd19d435762180",
+                 decimals: 18,
+                 abi: "[{\"constant\":true,\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_spender\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_from\",\"type\":\"address\"},{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"name\":\"balance\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"showMeTheMoney\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"},{\"name\":\"_spender\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"name\":\"remaining\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_owner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_spender\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"}]")
+
+let xjp = Token(name: "XJP Yen",
+                symbol: "xjp",
+                address: "0x722dd3F80BAC40c951b51BdD28Dd19d435762180",
+                decimals: 0,
+                abi: "[{\"constant\":true,\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_spender\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_from\",\"type\":\"address\"},{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"name\":\"balance\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"showMeTheMoney\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"},{\"name\":\"_spender\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"name\":\"remaining\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_owner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_spender\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"}]")
+
+let xjp2 = Token(name: "XJP Yen Clone",
+                symbol: "xjp",
+                address: "0x722dd3F80BAC40c951b51BdD28Dd19d435762180",
+                decimals: 0,
+                abi: "[{\"constant\":true,\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_spender\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_from\",\"type\":\"address\"},{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"name\":\"balance\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"showMeTheMoney\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"},{\"name\":\"_spender\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"name\":\"remaining\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_owner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_spender\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"}]")
