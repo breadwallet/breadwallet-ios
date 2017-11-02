@@ -12,7 +12,7 @@ class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Public
     var walletManager: WalletManager?
-    init(store: Store, walletManager: WalletManager, window: UIWindow, apiClient: BRAPIClient, ethStore: Store, ethManager: GethManager) {
+    init(store: Store, walletManager: WalletManager, window: UIWindow, apiClient: BRAPIClient, ethStore: Store, ethManager: GethManager?) {
         self.store = store
         self.ethStore = ethStore
         self.stores = [store, ethStore]
@@ -36,7 +36,7 @@ class ModalPresenter : Subscriber, Trackable {
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
     private let verifyPinTransitionDelegate = PinTransitioningDelegate()
     private let noAuthApiClient: BRAPIClient
-    private let ethManager: GethManager
+    private let ethManager: GethManager?
 
     var supportCenter: SupportCenterContainer? {
         guard walletManager != nil else { return nil }
