@@ -23,3 +23,17 @@ struct EthTx : Codable {
     let confirmations: String
     let hash: String
 }
+
+struct TokenBalance : Codable {
+    let status: String
+    let message: String
+    let result: String
+}
+
+struct Token {
+    let name: String
+    let symbol: String
+    let address: String
+    let decimals: Int
+    let abi: String
+}

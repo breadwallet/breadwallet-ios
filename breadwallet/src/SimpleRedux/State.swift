@@ -77,12 +77,15 @@ extension State {
 enum Currency {
     case bitcoin
     case ethereum
+    case token
 
     func isValidAddress(_ string: String) -> Bool {
         switch self {
         case .bitcoin:
             return string.isValidAddress
         case .ethereum:
+            return string.isValidEthAddress
+        case .token:
             return string.isValidEthAddress
         }
     }
@@ -93,6 +96,8 @@ enum Currency {
             return 100000000.0
         case .ethereum:
             return 1000000000000000000.0
+        case .token:
+            return 1000000000000000000.0
         }
     }
 
@@ -102,6 +107,23 @@ enum Currency {
             return "btc"
         case .ethereum:
             return "eth"
+        case .token:
+            return "xjp"
+        }
+    }
+
+    var gradientColours: (UIColor, UIColor) {
+        switch self {
+        case .bitcoin:
+            return (UIColor(), UIColor())
+        case .ethereum:
+            return (
+                UIColor(red: 73.0/255.0, green: 148.0/255.0, blue: 255.0/255.0, alpha: 1.0),
+                UIColor(red: 44.0/255.0, green: 84.0/255.0, blue: 240.0/255.0, alpha: 1.0))
+        case .token:
+            return (
+                UIColor(red:0.709804, green:0.772549, blue:0.580392, alpha:1.0),
+                UIColor(red:0.133333, green:0.662745, blue:0.615686, alpha:1.0))
         }
     }
 }
@@ -135,8 +157,9 @@ struct WalletState {
     let isRescanning: Bool
     let receiveAddress: String?
     let bigBalance: GethBigInt?
+    let token: Token?
     static var initial: WalletState {
-        return WalletState(isConnected: false, syncProgress: 0.0, syncState: .success, balance: nil, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, creationDate: Date.zeroValue(), isRescanning: false, receiveAddress: nil, bigBalance: nil)
+        return WalletState(isConnected: false, syncProgress: 0.0, syncState: .success, balance: nil, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, creationDate: Date.zeroValue(), isRescanning: false, receiveAddress: nil, bigBalance: nil, token: nil)
     }
 
     func mutate(    isConnected: Bool? = nil,
@@ -149,9 +172,10 @@ struct WalletState {
                     creationDate: Date? = nil,
                     isRescanning: Bool? = nil,
                     receiveAddress: String? = nil,
-                    bigBalance: GethBigInt? = nil) -> WalletState {
+                    bigBalance: GethBigInt? = nil,
+                    token: Token? = nil) -> WalletState {
 
-        return WalletState(isConnected: isConnected ?? self.isConnected, syncProgress: syncProgress ?? self.syncProgress, syncState: syncState ?? self.syncState, balance: balance ?? self.balance, transactions: transactions ?? self.transactions, lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp, name: name ?? self.name, creationDate: creationDate ?? self.creationDate, isRescanning: isRescanning ?? self.isRescanning, receiveAddress: receiveAddress ?? self.receiveAddress, bigBalance: bigBalance ?? self.bigBalance)
+        return WalletState(isConnected: isConnected ?? self.isConnected, syncProgress: syncProgress ?? self.syncProgress, syncState: syncState ?? self.syncState, balance: balance ?? self.balance, transactions: transactions ?? self.transactions, lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp, name: name ?? self.name, creationDate: creationDate ?? self.creationDate, isRescanning: isRescanning ?? self.isRescanning, receiveAddress: receiveAddress ?? self.receiveAddress, bigBalance: bigBalance ?? self.bigBalance, token: token ?? self.token)
     }
 }
 

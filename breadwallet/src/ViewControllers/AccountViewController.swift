@@ -54,6 +54,10 @@ class AccountViewController : UIViewController, Subscriber {
         super.init(nibName: nil, bundle: nil)
     }
 
+    var tokenSymbol: String? {
+        return store.state.walletState.token?.symbol
+    }
+
     //MARK: - Private
     private let store: Store
     private let headerView: AccountHeaderView

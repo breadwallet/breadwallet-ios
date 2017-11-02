@@ -224,6 +224,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
     @objc private func sendTapped() {
         guard store.state.currency != .ethereum else { confirmEth(); return }
+        guard store.state.currency != .token else { confirmToken(); return }
         if addressCell.textField.isFirstResponder {
             addressCell.textField.resignFirstResponder()
         }
@@ -286,13 +287,32 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         present(confirm, animated: true, completion: nil)
     }
 
+    private func confirmToken() {
+        guard let ethManager = ethManager else { return }
+        let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee, feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseTouchId, store: store)
+        confirm.callback = {
+            confirm.dismiss(animated: true, completion: {
+                self.presentEthPin()
+            })
+        }
+        confirmTransitioningDelegate.shouldShowMaskView = false
+        confirm.transitioningDelegate = confirmTransitioningDelegate
+        confirm.modalPresentationStyle = .overFullScreen
+        confirm.modalPresentationCapturesStatusBarAppearance = true
+        present(confirm, animated: true, completion: nil)
+    }
+
     private func presentEthPin() {
         presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin, vc in
             guard let myself = self else { return false }
             if myself.walletManager.authenticate(pin: pin) {
                 vc.dismiss(animated: true, completion: {
                     self?.parent?.view.isFrameChangeBlocked = false
-                    myself.sendEth()
+                    if myself.store.state.currency == .ethereum {
+                        myself.sendEth()
+                    } else {
+                        myself.sendToken()
+                    }
                 })
                 return true
             } else {
@@ -329,6 +349,27 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 let transactionViewModel = EthTransaction(tx: tempTx, address: ethManager.address.getHex(), store: self.store)
                 let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
                 self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))
+            })
+        }
+    }
+
+    private func sendToken() {
+        let amount = amountView.tokenOutput
+        guard let address = addressCell.textField.text else { return }
+        guard let ethManager = ethManager else { return }
+        guard let token = store.state.walletState.token else { return }
+
+        guard address.lowercased() != ethManager.address.getHex().lowercased() else {
+            return showErrorMessage(S.Send.ethSendSelf)
+        }
+
+        let numSent = store.state.walletState.transactions.filter { $0.direction == .sent }.count
+        if let error = ethManager.transfer(amount: amount, toAddress: address, privKey: walletManager.ethPrivKey!, token: token, nonce: numSent) {
+            showErrorMessage(error.localizedDescription)
+        } else {
+            dismiss(animated: true, completion: {
+                self.store.trigger(name: .showStatusBar)
+                self.onPublishSuccess?()
             })
         }
     }

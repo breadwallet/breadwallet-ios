@@ -26,11 +26,8 @@ extension UIView {
         context.drawLinearGradient(gradient, start: .zero, end: CGPoint(x: rect.width, y: 0.0), options: [])
     }
 
-    func drawEthGradient(_ rect: CGRect) {
+    func drawGradient(start: UIColor, end: UIColor, _ rect: CGRect) {
         let colorSpace = CGColorSpaceCreateDeviceRGB()
-
-        let start = UIColor(red: 73.0/255.0, green: 148.0/255.0, blue: 255.0/255.0, alpha: 1.0)
-        let end = UIColor(red: 44.0/255.0, green: 84.0/255.0, blue: 240.0/255.0, alpha: 1.0)
         let colors = [start.cgColor, end.cgColor] as CFArray
         let locations: [CGFloat] = [0.0, 1.0]
         guard let gradient = CGGradient(colorsSpace: colorSpace, colors: colors, locations: locations) else { return }

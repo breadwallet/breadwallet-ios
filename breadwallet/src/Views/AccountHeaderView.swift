@@ -266,9 +266,17 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     private func setEthBalance() {
-        primaryBalance.text = DisplayAmount.ethString(value: bigBalance, store: store)
-        secondaryBalance.text = DisplayAmount.localEthString(value: bigBalance, store: store)
-        secondaryBalance.transform = transform(forView: secondaryBalance)
+        if store.state.currency == .ethereum {
+            primaryBalance.text = DisplayAmount.ethString(value: bigBalance, store: store)
+            secondaryBalance.text = DisplayAmount.localEthString(value: bigBalance, store: store)
+            secondaryBalance.transform = transform(forView: secondaryBalance)
+        } else {
+            guard let token = store.state.walletState.token else { return }
+            primaryBalance.text = "\(token.symbol): " + bigBalance.getString(10)
+            secondaryBalance.text = ""
+            secondaryBalance.transform = transform(forView: secondaryBalance)
+            equals.text = ""
+        }
     }
 
     private func setBalances() {
@@ -341,7 +349,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         if store.state.currency == .bitcoin {
             drawGradient(rect)
         } else {
-            drawEthGradient(rect)
+            drawGradient(start: store.state.currency.gradientColours.0,
+                            end: store.state.currency.gradientColours.1,
+                            rect)
         }
     }
 

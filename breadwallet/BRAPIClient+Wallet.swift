@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Geth
 
 private let fallbackRatesURL = "https://bitpay.com/api/rates"
 
@@ -137,6 +138,29 @@ extension BRAPIClient {
             do {
                 let response = try decoder.decode(EthTxList.self, from: json)
                 callback(response.result)
+            } catch let e {
+                print("error: \(e)")
+            }
+
+        })
+        task.resume()
+    }
+
+    func tokenBalance(tokenAddress: String, address: String, callback: @escaping((GethBigInt) -> Void)) {
+        let host = E.isTestnet ? "ropsten.etherscan.io" : "api.etherscan.io"
+        let url = URL(string: "http://\(host)/api?module=account&action=tokenbalance&contractAddress=\(tokenAddress)&address=\(address)")!
+        var req = URLRequest(url: url)
+        req.httpMethod = "GET"
+        let session = URLSession.shared
+
+        let task = session.dataTask(with: req, completionHandler: {data, response, error in
+            guard let json = data else { return }
+            let decoder = JSONDecoder()
+            do {
+                let response = try decoder.decode(TokenBalance.self, from: json)
+                let balance = GethNewBigInt(0)
+                balance?.setString(response.result, base: 10)
+                callback(balance!)
             } catch let e {
                 print("error: \(e)")
             }

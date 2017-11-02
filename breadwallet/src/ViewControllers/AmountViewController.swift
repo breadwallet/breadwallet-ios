@@ -44,6 +44,13 @@ class AmountViewController : UIViewController, Trackable {
         return returnValue!
     }
 
+    var tokenOutput: GethBigInt {
+        let string = currentOutput.replacingOccurrences(of: S.Symbols.eth, with: "")
+        let output = GethBigInt(0)
+        output?.setString(string, base: 10)
+        return output!
+    }
+
     var currentOutput: String {
         return amountLabel.text ?? ""
     }
