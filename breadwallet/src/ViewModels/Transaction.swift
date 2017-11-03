@@ -148,6 +148,51 @@ class EthTransaction : Transaction {
 
 }
 
+class TokenTransaction : Transaction {
+    init(event: Event, address: String, store: Store) {
+        self.event = event
+        super.init()
+
+        let address0 = event.topics[1].replacingOccurrences(of: "000000000000000000000000", with: "")
+        let address1 = event.topics[2].replacingOccurrences(of: "000000000000000000000000", with: "")
+
+        if address.lowercased() == address0.lowercased() {
+            self.direction = .sent
+            to = address0
+            from = address1
+        } else {
+            self.direction = .received
+            to = address1
+            from = address0
+        }
+        self.isEth = true
+        let timestampWrapper = GethBigInt(0)
+        timestampWrapper?.setString(event.timeStamp.replacingOccurrences(of: "0x", with: ""), base: 16)
+        self.timestamp = Int(timestampWrapper!.getInt64())
+        self.hash = event.transactionHash
+    }
+
+    let event: Event
+    var to: String = ""
+    var from: String = ""
+
+    override var toAddress: String {
+        if self.direction == .sent {
+            return to
+        } else {
+            return from
+        }
+    }
+
+    override func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
+        let amount = GethBigInt(0)
+        amount?.setString(event.data.replacingOccurrences(of: "0x", with: ""), base: 16)
+        let format = direction.amountDescriptionFormat
+        let string = String(format: format, amount!.getString(10))
+        return string.attributedStringForTags
+    }
+}
+
 class BtcTransaction : Transaction {
 
     init?(_ tx: BRTxRef, walletManager: WalletManager, kvStore: BRReplicatedKVStore?, rate: Rate?, store: Store) {
