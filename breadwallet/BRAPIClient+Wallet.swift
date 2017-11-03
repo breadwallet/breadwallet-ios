@@ -168,6 +168,28 @@ extension BRAPIClient {
         })
         task.resume()
     }
+
+    func tokenHistory(tokenAddress: String, ethAddress: String, callback: @escaping(([Event]) -> Void)) {
+        let address = "0x000000000000000000000000\(ethAddress.replacingOccurrences(of: "0x", with: ""))"
+        let host = E.isTestnet ? "ropsten.etherscan.io" : "api.etherscan.io"
+        let string = "https://\(host)/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=\(tokenAddress)&topic1=\(address)&topic1_2_opr=or&topic2=\(address)"
+        let url = URL(string: string)!
+        var req = URLRequest(url: url)
+        req.httpMethod = "GET"
+        let session = URLSession.shared
+
+        let task = session.dataTask(with: req, completionHandler: {data, response, error in
+            guard let json = data else { return }
+            let decoder = JSONDecoder()
+            do {
+                let response = try decoder.decode(EventResponse.self, from: json)
+                callback(response.result)
+            } catch let e {
+                print("error: \(e)")
+            }
+        })
+        task.resume()
+    }
 }
 
 private func pushNotificationEnvironment() -> String {

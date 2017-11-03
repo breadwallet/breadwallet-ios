@@ -25,12 +25,23 @@ class TokenWalletCoordinator {
     }
 
     @objc private func refresh() {
-        guard let address = store.state.walletState.token?.address else { return }
-        apiClient.tokenBalance(tokenAddress: address, address: store.state.walletState.receiveAddress!, callback: { balance in
+        guard let tokenAddress = store.state.walletState.token?.address else { return }
+        guard let receiveAddress = store.state.walletState.receiveAddress else { return }
+
+        apiClient.tokenBalance(tokenAddress: tokenAddress, address: store.state.walletState.receiveAddress!, callback: { balance in
             DispatchQueue.main.async {
                 self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(bigBalance: balance)))
             }
         })
+
+        apiClient.tokenHistory(tokenAddress: tokenAddress, ethAddress: receiveAddress) { events in
+            let viewModels = events.sorted { $0.timeStamp > $1.timeStamp }.map {
+                TokenTransaction(event: $0, address: receiveAddress, store: self.store)
+            }
+            DispatchQueue.main.async {
+                self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: viewModels)))
+            }
+        }
     }
 
 }

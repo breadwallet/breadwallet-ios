@@ -37,3 +37,17 @@ struct Token {
     let decimals: Int
     let abi: String
 }
+
+struct EventResponse : Codable {
+    let status: String
+    let message: String
+    let result: [Event]
+}
+
+struct Event : Codable {
+    let address: String
+    let topics: [String]
+    let data: String
+    let timeStamp: String
+    let transactionHash: String
+}
