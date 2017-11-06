@@ -26,14 +26,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     var initialAddress: String?
     var isPresentedFromLock = false
 
-    init(store: Store, sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil, ethManager: GethManager? = nil) {
+    init(store: Store, sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil, gethManager: GethManager? = nil) {
         self.store = store
         self.sender = sender
         self.walletManager = walletManager
         self.initialAddress = initialAddress
         self.initialRequest = initialRequest
         self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
-        self.ethManager = ethManager
+        self.gethManager = gethManager
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
 
         super.init(nibName: nil, bundle: nil)
@@ -66,7 +66,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let initialRequest: PaymentRequest?
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private var feeType: Fee?
-    private let ethManager: GethManager?
+    private let gethManager: GethManager?
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -177,7 +177,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         if let amount = amount, amount.rawValue > 0 {
             let fee: UInt64
             if store.isEthLike {
-                fee = UInt64(ethManager!.fee.getInt64())
+                fee = UInt64(gethManager!.fee.getInt64())
             } else {
                 fee = sender.feeForTx(amount: amount.rawValue)
             }
@@ -273,7 +273,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func confirmEth() {
-        guard let ethManager = ethManager else { return }
+        guard let ethManager = gethManager else { return }
         let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee, feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseTouchId, store: store)
         confirm.callback = {
             confirm.dismiss(animated: true, completion: {
@@ -288,7 +288,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func confirmToken() {
-        guard let ethManager = ethManager else { return }
+        guard let ethManager = gethManager else { return }
         let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee, feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseTouchId, store: store)
         confirm.callback = {
             confirm.dismiss(animated: true, completion: {
@@ -324,7 +324,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private func sendEth() {
         let amount = amountView.ethOutput
         guard let address = addressCell.textField.text else { return }
-        guard let ethManager = ethManager else { return }
+        guard let ethManager = gethManager else { return }
 
         guard address.lowercased() != ethManager.address.getHex().lowercased() else {
             return showErrorMessage(S.Send.ethSendSelf)
@@ -356,7 +356,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private func sendToken() {
         let amount = amountView.tokenOutput
         guard let address = addressCell.textField.text else { return }
-        guard let ethManager = ethManager else { return }
+        guard let ethManager = gethManager else { return }
         guard let token = store.state.walletState.token else { return }
 
         guard address.lowercased() != ethManager.address.getHex().lowercased() else {
