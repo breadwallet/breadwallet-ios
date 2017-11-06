@@ -12,7 +12,8 @@ class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Public
     var walletManager: WalletManager?
-    init(store: Store, walletManager: WalletManager, window: UIWindow, apiClient: BRAPIClient, ethStore: Store, ethManager: GethManager?, tokenStores: [Store]) {
+    var gethManager: GethManager?
+    init(store: Store, walletManager: WalletManager, window: UIWindow, apiClient: BRAPIClient, ethStore: Store, gethManager: GethManager?, tokenStores: [Store]) {
         self.store = store
         self.ethStore = ethStore
         self.stores = [store, ethStore] + tokenStores
@@ -21,7 +22,7 @@ class ModalPresenter : Subscriber, Trackable {
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular, store: store)
         self.wipeNavigationDelegate = StartNavigationDelegate(store: store)
         self.noAuthApiClient = apiClient
-        self.ethManager = ethManager
+        self.gethManager = gethManager
         addSubscriptions()
     }
 
@@ -36,7 +37,6 @@ class ModalPresenter : Subscriber, Trackable {
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
     private let verifyPinTransitionDelegate = PinTransitioningDelegate()
     private let noAuthApiClient: BRAPIClient
-    private let ethManager: GethManager?
 
     var supportCenter: SupportCenterContainer? {
         guard walletManager != nil else { return nil }
@@ -255,7 +255,7 @@ class ModalPresenter : Subscriber, Trackable {
         }
         guard let walletManager = walletManager else { return nil }
         guard let kvStore = walletManager.apiClient?.kv else { return nil }
-        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore, store: store), walletManager: walletManager, initialRequest: currentRequest, ethManager: store.isEthLike ? ethManager : nil)
+        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore, store: store), walletManager: walletManager, initialRequest: currentRequest, gethManager: store.isEthLike ? gethManager : nil)
         currentRequest = nil
 
         if store.state.isLoginRequired {

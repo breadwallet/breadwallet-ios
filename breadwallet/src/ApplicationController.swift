@@ -194,13 +194,10 @@ class ApplicationController : Subscriber, Trackable {
     private func didInitWalletManager() {
         guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
         guard let rootViewController = window.rootViewController else { return }
-        let gethManager = GethManager(ethPrivKey: walletManager.ethPrivKey!, store: store)
-        ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient)
-        tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: noAuthApiClient) }
         hasPerformedWalletDependentInitialization = true
         store.perform(action: PinLength.set(walletManager.pinLength))
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
-        modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient, ethStore: ethStore, ethManager: gethManager, tokenStores: tokenStores)
+        modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient, ethStore: ethStore, gethManager: nil, tokenStores: tokenStores)
         exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
         feeUpdater = FeeUpdater(walletManager: walletManager, store: store)
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: rootViewController)
@@ -219,6 +216,10 @@ class ApplicationController : Subscriber, Trackable {
                 store.perform(action: ShowStartFlow())
             } else {
                 modalPresenter?.walletManager = walletManager
+                let gethManager = GethManager(ethPrivKey: walletManager.ethPrivKey!, store: store)
+                ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient)
+                tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: noAuthApiClient) }
+                modalPresenter?.gethManager = gethManager
                 DispatchQueue.walletQueue.async {
                     walletManager.peerManager?.connect()
                 }
@@ -341,8 +342,13 @@ class ApplicationController : Subscriber, Trackable {
 
     private func addWalletCreationListener() {
         store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
+            guard let walletManager = self.walletManager else { return }
             self.modalPresenter?.walletManager = self.walletManager
             self.startDataFetchers()
+            let gethManager = GethManager(ethPrivKey: walletManager.ethPrivKey!, store: self.store)
+            self.modalPresenter?.gethManager = gethManager
+            self.ethWalletCoordinator = EthWalletCoordinator(store: self.ethStore, gethManager: gethManager, apiClient: self.noAuthApiClient)
+            self.tokenWalletCoordinators = self.tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: self.noAuthApiClient) }
         })
     }
     
