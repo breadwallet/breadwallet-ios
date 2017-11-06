@@ -138,7 +138,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return self?.balanceTextForAmount(amount: amount, rate: rate)
         }
 
-        if store.isEth {
+        if store.isEthLike {
             amountView.didUpdateEth = { [weak self] amount in
                 self?.ethAmount = amount
             }
@@ -176,12 +176,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         var color: UIColor = .grayTextTint
         if let amount = amount, amount.rawValue > 0 {
             let fee: UInt64
-            if store.isEth {
+            if store.isEthLike {
                 fee = UInt64(ethManager!.fee.getInt64())
             } else {
                 fee = sender.feeForTx(amount: amount.rawValue)
             }
-            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: store.isEth ? 8 : 0, store: store)
+            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: store.isEthLike ? 8 : 0, store: store)
             let feeText = feeAmount.description
             feeOutput = String(format: S.Send.fee, feeText)
             if (balance >= fee) && amount.rawValue > (balance - fee) {
@@ -207,7 +207,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return showAlert(title: S.Alert.error, message: S.Send.emptyPasteboard, buttonLabel: S.Button.ok)
         }
 
-        guard let request = store.isEth ? PaymentRequest(ethAddress: pasteboard) : PaymentRequest(string: pasteboard) else {
+        guard let request = store.isEthLike ? PaymentRequest(ethAddress: pasteboard) : PaymentRequest(string: pasteboard) else {
             return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressOnPasteboard, buttonLabel: S.Button.ok)
         }
         handleRequest(request)
@@ -548,6 +548,6 @@ extension SendViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        return store.isEth ? S.Send.ethTitle : S.Send.title
+        return store.isEthLike ? S.Send.ethTitle : S.Send.title
     }
 }

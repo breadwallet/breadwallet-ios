@@ -25,7 +25,7 @@ class MenuViewController : UIViewController, Trackable {
             if $0 == .buy && !BRAPIClient.featureEnabled(.buyBitcoin) {
                 return nil
             }
-            if $0 == .buy && store.isEth {
+            if $0 == .buy && store.isEthLike {
                 return nil
             }
             return MenuButton(type: $0)

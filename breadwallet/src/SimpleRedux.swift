@@ -134,7 +134,7 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
 
 class Store {
 
-    var isEth: Bool {
+    var isEthLike: Bool {
         return state.currency == .ethereum || state.currency == .token
     }
 
