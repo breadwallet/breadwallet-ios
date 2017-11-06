@@ -79,7 +79,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private var balance: UInt64 = 0 {
         didSet { setBalances() }
     }
-    private var bigBalance: GethBigInt = GethBigInt(0) {
+    private var bigBalance: GethBigInt? {
         didSet { setEthBalance() }
     }
     private var isBtcSwapped: Bool {
@@ -266,10 +266,13 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     private func setEthBalance() {
+        guard let bigBalance = bigBalance else { return }
         if store.state.currency == .ethereum {
             primaryBalance.text = DisplayAmount.ethString(value: bigBalance, store: store)
             secondaryBalance.text = DisplayAmount.localEthString(value: bigBalance, store: store)
-            secondaryBalance.transform = transform(forView: secondaryBalance)
+            DispatchQueue.main.async {
+                self.secondaryBalance.transform = self.transform(forView: self.secondaryBalance) //this needs to be in the next run-loop for some reason
+            }
         } else {
             guard let token = store.state.walletState.token else { return }
             primaryBalance.text = "\(token.symbol): " + bigBalance.getString(10)
