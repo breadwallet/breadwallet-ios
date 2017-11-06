@@ -25,6 +25,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     
     var isSyncingViewVisible = false {
         didSet {
+            guard !store.isEthLike else { return }
             guard oldValue != isSyncingViewVisible else { return } //We only care about changes
             if isSyncingViewVisible {
                 tableView.beginUpdates()
@@ -79,6 +80,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     private let emptyMessage = UILabel.wrapping(font: .customBody(size: 16.0), color: .grayTextTint)
     private var currentPrompt: Prompt? {
         didSet {
+            guard !store.isEthLike else { return }
             if currentPrompt != nil && oldValue == nil {
                 tableView.beginUpdates()
                 tableView.insertSections(IndexSet(integer: 0), with: .automatic)
@@ -103,12 +105,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         tableView.estimatedRowHeight = 100.0
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.backgroundColor = .whiteTint
-        
-        store.subscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions },
-                        callback: { state in
-                            self.allTransactions = state.walletState.transactions
-                            self.reload()
-        })
 
         store.subscribe(self,
                         selector: { $0.isBtcSwapped != $1.isBtcSwapped },
@@ -160,7 +156,14 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
         emptyMessage.textAlignment = .center
         emptyMessage.text = S.TransactionDetails.emptyMessage
-        reload()
+
+        setContentInset()
+
+        store.subscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions },
+                        callback: { state in
+                            self.allTransactions = state.walletState.transactions
+                            self.reload()
+        })
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -171,6 +174,15 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                 myself.attemptShowPrompt()
             }
         })
+    }
+
+    private func setContentInset() {
+        if #available(iOS 11, *) {
+            tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight, left: 0, bottom: accountFooterHeight + C.padding[2], right: 0)
+        } else {
+            tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight + C.padding[2], left: 0, bottom: accountFooterHeight + C.padding[2], right: 0)
+        }
+        tableView.scrollIndicatorInsets = UIEdgeInsets(top: accountHeaderHeight, left: 0, bottom: accountFooterHeight, right: 0)
     }
 
     private func reload(txHash: String) {
@@ -262,7 +274,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if store.isEth {
+        if store.isEthLike {
             let tx = transactions[indexPath.row]
             store.trigger(name: .lightWeightAlert(S.Receive.copied))
             UIPasteboard.general.string = tx.hash

@@ -21,11 +21,11 @@ class AmountViewController : UIViewController, Trackable {
         if let rate = store.state.currentRate, store.state.isBtcSwapped {
             self.currencyToggle = ShadowButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
-            let title = store.isEth ? S.Symbols.eth : S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
+            let title = store.isEthLike ? S.Symbols.eth : S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
             self.currencyToggle = ShadowButton(title: title, type: .tertiary)
         }
         self.feeSelector = FeeSelector(store: store)
-        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: store.isEth ? 8 : store.state.maxDigits)
+        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: store.isEthLike ? 8 : store.state.maxDigits)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -205,7 +205,7 @@ class AmountViewController : UIViewController, Trackable {
         amountLabel.text = ""
         placeholder.text = S.Send.amountLabel
         bottomBorder.isHidden = true
-        if store.state.isBtcSwapped && !store.isEth {
+        if store.state.isBtcSwapped && !store.isEthLike {
             if let rate = store.state.currentRate {
                 selectedRate = rate
             }
@@ -232,7 +232,7 @@ class AmountViewController : UIViewController, Trackable {
         editFee.imageEdgeInsets = UIEdgeInsetsMake(15.0, 15.0, 15.0, 15.0)
         editFee.tintColor = .grayTextTint
         editFee.isHidden = true
-        if store.isEth {
+        if store.isEthLike {
             currencyToggle.isHidden = true
             editFee.isHidden = true
         }
@@ -253,7 +253,7 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func handlePinPadUpdate(output: String) {
-        if store.isEth {
+        if store.isEthLike {
             handleEthOutput(output: output)
         } else {
             handleBtcOutput(output: output)
@@ -309,7 +309,7 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func updateAmountLabel() {
-        if !store.isEth {
+        if !store.isEthLike {
             guard let amount = amount else { amountLabel.text = ""; return }
             let displayAmount = DisplayAmount(amount: amount, state: store.state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, store: store)
             var output = displayAmount.description
@@ -322,14 +322,14 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     func updateBalanceLabel() {
-        if store.isEth {
+        if store.isEthLike {
             guard let balance = store.state.walletState.bigBalance else { return }
             balanceLabel.text = DisplayAmount.ethString(value: balance, store: store)
         } else {
             if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
                 balanceLabel.attributedText = balance
                 feeLabel.attributedText = fee
-                if let amount = amount, amount > 0, !isRequesting, !store.isEth {
+                if let amount = amount, amount > 0, !isRequesting, !store.isEthLike {
                     editFee.isHidden = false
                 } else {
                     editFee.isHidden = true
@@ -382,12 +382,12 @@ class AmountViewController : UIViewController, Trackable {
     private func updateBalanceAndFeeLabels() {
         if let amount = amount, amount.rawValue > 0 {
             balanceLabel.isHidden = false
-            if !isRequesting && !store.isEth {
+            if !isRequesting && !store.isEthLike {
                 editFee.isHidden = false
             }
         } else {
             balanceLabel.isHidden = cursor.isHidden
-            if !isRequesting && !store.isEth {
+            if !isRequesting && !store.isEthLike {
                 editFee.isHidden = true
             }
         }
@@ -410,7 +410,7 @@ class AmountViewController : UIViewController, Trackable {
         if let rate = selectedRate {
             self.currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
         } else {
-            let title = store.isEth ? S.Symbols.eth : S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
+            let title = store.isEthLike ? S.Symbols.eth : S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
             self.currencyToggle.title = title
         }
     }

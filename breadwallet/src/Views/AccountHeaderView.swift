@@ -187,7 +187,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             currencyTapView.bottomAnchor.constraint(equalTo: primaryBalance.bottomAnchor, constant: C.padding[1]) ])
 
         let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
-        if !store.isEth { //FIXME - currency switching disabled for ethereum
+        if !store.isEthLike { //FIXME - currency switching disabled for ethereum
             currencyTapView.addGestureRecognizer(gr)
         }
 
@@ -199,7 +199,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         modeLabel.constrain([
             modeLabel.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: C.padding[1]/2.0),
             modeLabel.firstBaselineAnchor.constraint(equalTo: logo.bottomAnchor, constant: -2.0) ])
-        if store.isEth {
+        if store.isEthLike {
             setEthBalance()
         }
     }
@@ -248,7 +248,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         store.subscribe(self,
                         selector: { $0.walletState.name != $1.walletState.name },
                         callback: { self.name.text = $0.walletState.name })
-        if store.isEth {
+        if store.isEthLike {
             store.subscribe(self,
                             selector: { $0.walletState.bigBalance != $1.walletState.bigBalance },
                             callback: { state in
@@ -327,7 +327,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     private func hideExtraViews() {
         //TODO - fix
-        if store.isEth { return }
+        if store.isEthLike { return }
         var didHide = false
         if secondaryBalance.frame.maxX > search.frame.minX {
             secondaryBalance.isHidden = true

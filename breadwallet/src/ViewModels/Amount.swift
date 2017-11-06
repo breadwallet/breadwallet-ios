@@ -20,7 +20,7 @@ struct Amount {
     var amountForBtcFormat: Double {
         var decimal = Decimal(self.amount)
         var amount: Decimal = 0.0
-        if store.isEth {
+        if store.isEthLike {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
         } else {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-maxDigits), .up)
@@ -35,7 +35,7 @@ struct Amount {
     var bits: String {
         var decimal = Decimal(self.amount)
         var amount: Decimal = 0.0
-        if store.isEth {
+        if store.isEthLike {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
         } else {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-maxDigits), .up)
@@ -66,7 +66,7 @@ struct Amount {
     }
 
     var btcFormat: NumberFormatter {
-        if store.isEth {
+        if store.isEthLike {
             let format = NumberFormatter()
             format.isLenient = true
             format.numberStyle = .currency
@@ -139,7 +139,7 @@ struct DisplayAmount {
     private var bitcoinDescription: String {
         var decimal = Decimal(self.amount.rawValue)
         var amount: Decimal = 0.0
-        if store.isEth {
+        if store.isEthLike {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
         } else {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-state.maxDigits), .up)
@@ -172,7 +172,7 @@ struct DisplayAmount {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        if store.isEth {
+        if store.isEthLike {
             format.currencyCode = "ETH"
             format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
         } else {

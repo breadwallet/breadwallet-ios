@@ -11,6 +11,7 @@ import BRCore
 import MachO
 
 let accountHeaderHeight: CGFloat = 136.0
+let accountFooterHeight: CGFloat = 56.0
 private let transactionsLoadingViewHeightConstant: CGFloat = 48.0
 
 class AccountViewController : UIViewController, Subscriber {
@@ -64,7 +65,6 @@ class AccountViewController : UIViewController, Subscriber {
     private let footerView = AccountFooterView()
     private let transactionsLoadingView = LoadingProgressView()
     private let transactionsTableView: TransactionsTableViewController
-    private let footerHeight: CGFloat = 56.0
     private var transactionsLoadingViewTop: NSLayoutConstraint?
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var isLoginRequired = false
@@ -142,7 +142,7 @@ class AccountViewController : UIViewController, Subscriber {
 
         footerView.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         footerView.constrain([
-            footerView.constraint(.height, constant: footerHeight) ])
+            footerView.constraint(.height, constant: accountFooterHeight) ])
         searchHeaderview.constrain(toSuperviewEdges: nil)
     }
 
@@ -220,6 +220,7 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func showLoadingView() {
+        guard !store.isEthLike else { return }
         view.insertSubview(transactionsLoadingView, belowSubview: headerContainer)
         transactionsLoadingViewTop = transactionsLoadingView.topAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -transactionsLoadingViewHeightConstant)
         transactionsLoadingView.constrain([
@@ -241,6 +242,7 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func hideLoadingView() {
+        guard !store.isEthLike else { return }
         didEndLoading = true
         guard self.transactionsLoadingViewTop?.constant == 0.0 else { return } //Should skip hide if it's not shown
         loadingTimer?.invalidate()
@@ -285,12 +287,6 @@ class AccountViewController : UIViewController, Subscriber {
     private func addTransactionsView() {
         addChildViewController(transactionsTableView, layout: {
             transactionsTableView.view.constrain(toSuperviewEdges: nil)
-            if #available(iOS 11, *) {
-                transactionsTableView.tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight, left: 0, bottom: footerHeight + C.padding[2], right: 0)
-            } else {
-                transactionsTableView.tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight + C.padding[2], left: 0, bottom: footerHeight + C.padding[2], right: 0)
-            }
-            transactionsTableView.tableView.scrollIndicatorInsets = UIEdgeInsets(top: accountHeaderHeight, left: 0, bottom: footerHeight, right: 0)
         })
     }
 
