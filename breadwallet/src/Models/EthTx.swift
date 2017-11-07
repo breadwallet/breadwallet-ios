@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Geth
 
 struct EthTxList : Codable {
     let status: String
@@ -50,4 +51,26 @@ struct Event : Codable {
     let data: String
     let timeStamp: String
     let transactionHash: String
+    var isComplete = true
+
+    private enum CodingKeys: String, CodingKey {
+        case address
+        case topics
+        case data
+        case timeStamp
+        case transactionHash
+    }
+}
+
+extension Event {
+    init(timestamp: String, from: String, to: String, amount: String) {
+        let topics = ["",to,from]
+        let timestampNumber = GethBigInt(0)
+        timestampNumber?.setString(timestamp, base: 10)
+
+        let amountNumber = GethBigInt(0)
+        amountNumber?.setString(amount, base: 10)
+        self.init(address: "", topics: topics, data: amountNumber!.getString(16), timeStamp: timestampNumber!.getString(16), transactionHash: "", isComplete: false)
+        self.isComplete = false
+    }
 }

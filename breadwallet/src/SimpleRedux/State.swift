@@ -158,8 +158,9 @@ struct WalletState {
     let receiveAddress: String?
     let bigBalance: GethBigInt?
     let token: Token?
+    let numSent: Int
     static var initial: WalletState {
-        return WalletState(isConnected: false, syncProgress: 0.0, syncState: .success, balance: nil, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, creationDate: Date.zeroValue(), isRescanning: false, receiveAddress: nil, bigBalance: nil, token: nil)
+        return WalletState(isConnected: false, syncProgress: 0.0, syncState: .success, balance: nil, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, creationDate: Date.zeroValue(), isRescanning: false, receiveAddress: nil, bigBalance: nil, token: nil, numSent: 0)
     }
 
     func mutate(    isConnected: Bool? = nil,
@@ -173,14 +174,15 @@ struct WalletState {
                     isRescanning: Bool? = nil,
                     receiveAddress: String? = nil,
                     bigBalance: GethBigInt? = nil,
-                    token: Token? = nil) -> WalletState {
+                    token: Token? = nil,
+                    numSent: Int? = nil) -> WalletState {
 
-        return WalletState(isConnected: isConnected ?? self.isConnected, syncProgress: syncProgress ?? self.syncProgress, syncState: syncState ?? self.syncState, balance: balance ?? self.balance, transactions: transactions ?? self.transactions, lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp, name: name ?? self.name, creationDate: creationDate ?? self.creationDate, isRescanning: isRescanning ?? self.isRescanning, receiveAddress: receiveAddress ?? self.receiveAddress, bigBalance: bigBalance ?? self.bigBalance, token: token ?? self.token)
+        return WalletState(isConnected: isConnected ?? self.isConnected, syncProgress: syncProgress ?? self.syncProgress, syncState: syncState ?? self.syncState, balance: balance ?? self.balance, transactions: transactions ?? self.transactions, lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp, name: name ?? self.name, creationDate: creationDate ?? self.creationDate, isRescanning: isRescanning ?? self.isRescanning, receiveAddress: receiveAddress ?? self.receiveAddress, bigBalance: bigBalance ?? self.bigBalance, token: token ?? self.token, numSent: numSent ?? self.numSent)
     }
 }
 
 extension WalletState : Equatable {}
 
 func ==(lhs: WalletState, rhs: WalletState) -> Bool {
-    return lhs.isConnected == rhs.isConnected && lhs.syncProgress == rhs.syncProgress && lhs.syncState == rhs.syncState && lhs.balance == rhs.balance && lhs.transactions == rhs.transactions && lhs.name == rhs.name && lhs.creationDate == rhs.creationDate && lhs.isRescanning == rhs.isRescanning
+    return lhs.isConnected == rhs.isConnected && lhs.syncProgress == rhs.syncProgress && lhs.syncState == rhs.syncState && lhs.balance == rhs.balance && lhs.transactions == rhs.transactions && lhs.name == rhs.name && lhs.creationDate == rhs.creationDate && lhs.isRescanning == rhs.isRescanning && lhs.numSent == rhs.numSent
 }

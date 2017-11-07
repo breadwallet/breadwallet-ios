@@ -170,6 +170,12 @@ class TokenTransaction : Transaction {
         timestampWrapper?.setString(event.timeStamp.replacingOccurrences(of: "0x", with: ""), base: 16)
         self.timestamp = Int(timestampWrapper!.getInt64())
         self.hash = event.transactionHash
+
+        if event.isComplete {
+            self.status = S.Transaction.complete
+        } else {
+            self.status = S.Transaction.pending
+        }
     }
 
     let event: Event
