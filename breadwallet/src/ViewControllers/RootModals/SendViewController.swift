@@ -323,15 +323,18 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
     private func sendEth() {
         let amount = amountView.ethOutput
-        guard let address = addressCell.textField.text else { return }
+        guard let address = addressCell.textField.text?.lowercased() else { return }
         guard let ethManager = gethManager else { return }
 
-        guard address.lowercased() != ethManager.address.getHex().lowercased() else {
+        guard address.isValidEthAddress else {
+            return showErrorMessage(S.Send.invalidAddressMessage)
+        }
+
+        guard address != ethManager.address.getHex().lowercased() else {
             return showErrorMessage(S.Send.ethSendSelf)
         }
 
-        let numSent = store.state.walletState.transactions.filter { $0.direction == .sent }.count
-        let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(numSent))
+        let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(store.state.walletState.numSent))
         let signedTx = ethManager.signTx(tx, ethPrivKey: walletManager.ethPrivKey!)
         if let error = ethManager.publishTx(signedTx) {
             showErrorMessage(error.localizedDescription)
@@ -355,21 +358,31 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
     private func sendToken() {
         let amount = amountView.tokenOutput
-        guard let address = addressCell.textField.text else { return }
+        guard let address = addressCell.textField.text?.lowercased() else { return }
         guard let ethManager = gethManager else { return }
         guard let token = store.state.walletState.token else { return }
+
+        guard address.isValidEthAddress else {
+            return showErrorMessage(S.Send.invalidAddressMessage)
+        }
 
         guard address.lowercased() != ethManager.address.getHex().lowercased() else {
             return showErrorMessage(S.Send.ethSendSelf)
         }
 
-        let numSent = store.state.walletState.transactions.filter { $0.direction == .sent }.count
-        if let error = ethManager.transfer(amount: amount, toAddress: address, privKey: walletManager.ethPrivKey!, token: token, nonce: numSent) {
+        if let error = ethManager.transfer(amount: amount, toAddress: address, privKey: walletManager.ethPrivKey!, token: token, nonce: store.state.walletState.numSent) {
             showErrorMessage(error.localizedDescription)
         } else {
             dismiss(animated: true, completion: {
                 self.store.trigger(name: .showStatusBar)
                 self.onPublishSuccess?()
+
+                //Add temporary transaction
+                let timestamp = String(Date().timeIntervalSince1970)
+                let tempEvent = Event(timestamp: timestamp, from: ethManager.address.getHex(), to: address, amount: amount.getString(10))
+                let transactionViewModel = TokenTransaction(event: tempEvent, address: ethManager.address.getHex(), store: self.store)
+                let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
+                self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))
             })
         }
     }
@@ -548,6 +561,11 @@ extension SendViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        return store.isEthLike ? S.Send.ethTitle : S.Send.title
+        if let token = store.state.walletState.token {
+            return "Send \(token.symbol)"
+        } else {
+            return store.isEthLike ? S.Send.ethTitle : S.Send.title
+        }
+
     }
 }

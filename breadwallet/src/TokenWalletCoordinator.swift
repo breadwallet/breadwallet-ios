@@ -35,11 +35,23 @@ class TokenWalletCoordinator {
         })
 
         apiClient.tokenHistory(tokenAddress: tokenAddress, ethAddress: receiveAddress) { events in
-            let viewModels = events.sorted { $0.timeStamp > $1.timeStamp }.map {
+            let newViewModels = events.sorted { $0.timeStamp > $1.timeStamp }.map {
                 TokenTransaction(event: $0, address: receiveAddress, store: self.store)
             }
+
+            let oldViewModels = self.store.state.walletState.transactions
+
+            let filteredOldViewModels = oldViewModels.filter { tx in
+                if tx.status == "Pending" && !newViewModels.contains(where: { $0.hash == tx.hash }) {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            let mergedViewModels: [Transaction] = filteredOldViewModels + newViewModels
+
             DispatchQueue.main.async {
-                self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: viewModels)))
+                self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: mergedViewModels)))
             }
         }
     }
