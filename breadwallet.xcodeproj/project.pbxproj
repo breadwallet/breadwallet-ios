@@ -4761,6 +4761,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = "breadwallet WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp.watchkitextension;
@@ -4778,6 +4779,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = "breadwallet WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp.watchkitextension;
@@ -4796,6 +4798,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_BITCODE = YES;
 				IBSC_MODULE = breadwallet_WatchKit_Extension;
 				INFOPLIST_FILE = "breadwallet WatchKit App/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp;
@@ -4813,6 +4816,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_BITCODE = YES;
 				IBSC_MODULE = breadwallet_WatchKit_Extension;
 				INFOPLIST_FILE = "breadwallet WatchKit App/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp;
@@ -5258,6 +5262,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_BITCODE = YES;
 				IBSC_MODULE = breadwallet_WatchKit_Extension;
 				INFOPLIST_FILE = "breadwallet WatchKit App/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp;
@@ -5274,6 +5279,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = "breadwallet WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp.watchkitextension;
@@ -5564,6 +5570,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_BITCODE = YES;
 				IBSC_MODULE = breadwallet_WatchKit_Extension;
 				INFOPLIST_FILE = "breadwallet WatchKit App/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp;
@@ -5580,6 +5587,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = "breadwallet WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp.watchkitextension;
@@ -5862,6 +5870,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_BITCODE = YES;
 				IBSC_MODULE = breadwallet_WatchKit_Extension;
 				INFOPLIST_FILE = "breadwallet WatchKit App/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp;
@@ -5878,6 +5887,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = "breadwallet WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.watchkitapp.watchkitextension;
