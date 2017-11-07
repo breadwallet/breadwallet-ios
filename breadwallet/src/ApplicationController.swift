@@ -248,16 +248,14 @@ class ApplicationController : Subscriber, Trackable {
 
     private func addNumSentListeners() {
         let ethLikeStores = [ethStore] + tokenStores
-        ethLikeStores.forEach {
-            $0.subscribe(self,
-                         selector: { $0.walletState.transactions != $1.walletState.transactions },
-                         callback: { (state) in
-                            let numSent = ethLikeStores.map { $0.state.walletState.transactions.filter { $0.direction == .sent }.count }.reduce(0, +)
-                            ethLikeStores.forEach { store in
-                                store.perform(action: WalletChange.set(store.state.walletState.mutate(numSent: numSent)))
-                            }
-                        })
-        }
+        ethStore.subscribe(self,
+                     selector: { $0.walletState.transactions != $1.walletState.transactions },
+                     callback: { state in
+                        let numSent = state.walletState.transactions.filter { $0.direction == .sent }.count
+                        ethLikeStores.forEach { store in
+                            store.perform(action: WalletChange.set(store.state.walletState.mutate(numSent: numSent)))
+                        }
+        })
     }
 
     private func shouldRequireLogin() -> Bool {
