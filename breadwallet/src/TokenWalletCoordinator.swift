@@ -40,15 +40,20 @@ class TokenWalletCoordinator {
             }
 
             let oldViewModels = self.store.state.walletState.transactions
+            let oldCompleteViewModels = oldViewModels.filter { $0.status != S.Transaction.pending }
+            let oldPendingViewModels = oldViewModels.filter { $0.status == S.Transaction.pending }
 
-            let filteredOldViewModels = oldViewModels.filter { tx in
-                if tx.status == "Pending" && !newViewModels.contains(where: { $0.hash == tx.hash }) {
-                    return true
+            let mergedViewModels: [Transaction]
+            if oldPendingViewModels.count > 0 {
+                if (oldPendingViewModels.count + oldCompleteViewModels.count) == newViewModels.count {
+                    mergedViewModels = newViewModels
                 } else {
-                    return false
+                    mergedViewModels = oldPendingViewModels + newViewModels
                 }
+            } else {
+                mergedViewModels = newViewModels
             }
-            let mergedViewModels: [Transaction] = filteredOldViewModels + newViewModels
+
 
             DispatchQueue.main.async {
                 self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: mergedViewModels)))

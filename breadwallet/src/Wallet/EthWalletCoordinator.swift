@@ -35,7 +35,7 @@ class EthWalletCoordinator {
             let oldViewModels = self.store.state.walletState.transactions
 
             let filteredOldViewModels = oldViewModels.filter { tx in
-                if tx.status == "Pending" && !newViewModels.contains(where: { $0.hash == tx.hash }) {
+                if tx.status == S.Transaction.pending && !newViewModels.contains(where: { $0.hash == tx.hash }) {
                     return true
                 } else {
                     return false

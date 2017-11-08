@@ -158,8 +158,8 @@ class TokenTransaction : Transaction {
 
         if address.lowercased() == address0.lowercased() {
             self.direction = .sent
-            to = address0
-            from = address1
+            to = address1
+            from = address0
         } else {
             self.direction = .received
             to = address1
