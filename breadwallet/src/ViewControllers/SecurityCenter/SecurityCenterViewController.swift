@@ -130,7 +130,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         headerBackground.constrain([headerBackgroundHeight])
         header.constrain([
             header.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            header.topAnchor.constraint(equalTo: headerBackground.topAnchor, constant: 20.0),
+            header.topAnchor.constraint(equalTo: headerBackground.topAnchor, constant: E.isIPhoneX ? 30.0 : 20.0),
             header.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             header.heightAnchor.constraint(equalToConstant: C.Sizes.headerHeight)])
         shield.constrain([
