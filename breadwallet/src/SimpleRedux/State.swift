@@ -122,8 +122,8 @@ enum Currency {
                 UIColor(red: 44.0/255.0, green: 84.0/255.0, blue: 240.0/255.0, alpha: 1.0))
         case .token:
             return (
-                UIColor(red:0.709804, green:0.772549, blue:0.580392, alpha:1.0),
-                UIColor(red:0.133333, green:0.662745, blue:0.615686, alpha:1.0))
+                UIColor(red:0.95, green:0.65, blue:0.00, alpha:1.0),
+                UIColor(red:0.95, green:0.35, blue:0.13, alpha:1.0))
         }
     }
 }
