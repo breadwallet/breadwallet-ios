@@ -64,7 +64,7 @@ struct Event : Codable {
 
 extension Event {
     init(timestamp: String, from: String, to: String, amount: String) {
-        let topics = ["",to,from]
+        let topics = ["",from,to]
         let timestampNumber = GethBigInt(0)
         timestampNumber?.setString(timestamp, base: 10)
 
