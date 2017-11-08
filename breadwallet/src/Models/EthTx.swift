@@ -33,6 +33,7 @@ struct TokenBalance : Codable {
 
 struct Token {
     let name: String
+    let code: String
     let symbol: String
     let address: String
     let decimals: Int

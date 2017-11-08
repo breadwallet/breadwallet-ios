@@ -322,8 +322,17 @@ class EthConfirmationViewController : UIViewController, ContentBoxPresenter {
     private func setInitialData() {
         view.backgroundColor = .clear
         payLabel.text = S.Confirmation.send
-        let displayAmount = DisplayAmount.ethString(value: amount, store: store)
-        let displayFee = DisplayAmount.ethString(value: feeAmount, store: store)
+
+        let displayAmount: String
+        let displayFee: String
+        if store.state.currency == .ethereum {
+            displayAmount = DisplayAmount.ethString(value: amount, store: store)
+            displayFee = DisplayAmount.ethString(value: feeAmount, store: store)
+        } else {
+            displayAmount = store.state.walletState.token!.symbol + S.Symbols.narrowSpace + amount.getString(10)
+            displayFee = DisplayAmount.ethString(value: feeAmount, store: store)
+        }
+
         let displayTotal = ""//DisplayAmount.ethString(value: amount + fee, store: store)
 
         amountLabel.text = displayAmount//.combinedDercription
