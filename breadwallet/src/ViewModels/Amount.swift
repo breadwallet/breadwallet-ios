@@ -73,7 +73,11 @@ struct Amount {
             format.generatesDecimalNumbers = true
             format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
             format.currencyCode = "ETH"
-            format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
+            if store.state.currency == .ethereum {
+                format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
+            } else {
+                format.currencySymbol = "\(store.state.walletState.token!.symbol)\(S.Symbols.narrowSpace)"
+            }
             return format
         }
         let format = NumberFormatter()
@@ -173,8 +177,13 @@ struct DisplayAmount {
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         if store.isEthLike {
-            format.currencyCode = "ETH"
-            format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
+            if store.state.currency == .ethereum {
+                format.currencyCode = "ETH"
+                format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
+            } else {
+                format.currencyCode = store.state.walletState.token!.code
+                format.currencySymbol = "\(store.state.walletState.token!.symbol)\(S.Symbols.narrowSpace)"
+            }
         } else {
             format.currencyCode = "XBT"
             switch state.maxDigits {
@@ -208,6 +217,13 @@ struct DisplayAmount {
         var amount: Decimal = 0.0
         NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
         let eth = NSDecimalNumber(decimal: amount)
+        return placeholderAmount.btcFormat.string(from: eth) ?? ""
+    }
+
+    static func tokenString(value: GethBigInt, store: Store) -> String {
+        let placeholderAmount = Amount(amount: 0, rate: store.state.currentRate!, maxDigits: 0, store: store)
+        let decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
+        let eth = NSDecimalNumber(decimal: decimal)
         return placeholderAmount.btcFormat.string(from: eth) ?? ""
     }
 

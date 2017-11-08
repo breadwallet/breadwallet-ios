@@ -45,7 +45,8 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     var tokenOutput: GethBigInt {
-        let string = currentOutput.replacingOccurrences(of: S.Symbols.eth, with: "")
+        let symbol = store.state.walletState.token!.symbol
+        let string = currentOutput.replacingOccurrences(of: symbol, with: "")
         let output = GethBigInt(0)
         output?.setString(string, base: 10)
         return output!
@@ -261,7 +262,8 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func handleEthOutput(output: String) {
-        amountLabel.text = output.utf8.count > 0 ? "\(S.Symbols.eth)" + output : ""
+        let symbol = store.state.currency == .ethereum ? S.Symbols.eth : store.state.walletState.token!.symbol
+        amountLabel.text = output.utf8.count > 0 ? "\(symbol)" + output : ""
         placeholder.isHidden = output.utf8.count > 0 ? true : false
     }
 
@@ -324,7 +326,11 @@ class AmountViewController : UIViewController, Trackable {
     func updateBalanceLabel() {
         if store.isEthLike {
             guard let balance = store.state.walletState.bigBalance else { return }
-            balanceLabel.text = DisplayAmount.ethString(value: balance, store: store)
+            if store.state.currency == .ethereum {
+                balanceLabel.text = DisplayAmount.ethString(value: balance, store: store)
+            } else {
+                balanceLabel.text = DisplayAmount.tokenString(value: balance, store: store)
+            }
         } else {
             if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
                 balanceLabel.attributedText = balance

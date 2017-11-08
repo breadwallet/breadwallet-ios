@@ -289,7 +289,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
     private func confirmToken() {
         guard let ethManager = gethManager else { return }
-        let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee, feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseTouchId, store: store)
+        let confirm = EthConfirmationViewController(amount: amountView.tokenOutput, fee: ethManager.fee, feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseTouchId, store: store)
         confirm.callback = {
             confirm.dismiss(animated: true, completion: {
                 self.presentEthPin()
@@ -562,7 +562,7 @@ extension SendViewController : ModalDisplayable {
 
     var modalTitle: String {
         if let token = store.state.walletState.token {
-            return "Send \(token.symbol)"
+            return "Send \(token.code)"
         } else {
             return store.isEthLike ? S.Send.ethTitle : S.Send.title
         }
