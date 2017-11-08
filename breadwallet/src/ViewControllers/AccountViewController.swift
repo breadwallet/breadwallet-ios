@@ -132,13 +132,12 @@ class AccountViewController : UIViewController, Subscriber {
 
     private func addConstraints() {
         headerContainer.constrainTopCorners(sidePadding: 0, topPadding: 0)
-        headerContainer.constrain([
-            headerContainer.constraint(.height, constant: accountHeaderHeight) ])
+        headerContainer.constrain([ headerContainer.constraint(.height, constant: E.isIPhoneX ? accountHeaderHeight + 14.0 : accountHeaderHeight) ])
         headerView.constrain(toSuperviewEdges: nil)
 
         footerView.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         footerView.constrain([
-            footerView.constraint(.height, constant: footerHeight) ])
+            footerView.constraint(.height, constant: E.isIPhoneX ? footerHeight + 19.0 : footerHeight) ])
         searchHeaderview.constrain(toSuperviewEdges: nil)
     }
 
@@ -281,11 +280,23 @@ class AccountViewController : UIViewController, Subscriber {
         addChildViewController(transactionsTableView, layout: {
             transactionsTableView.view.constrain(toSuperviewEdges: nil)
             if #available(iOS 11, *) {
-                transactionsTableView.tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight, left: 0, bottom: footerHeight + C.padding[2], right: 0)
+                transactionsTableView.tableView.contentInset =
+                    UIEdgeInsets(top: E.isIPhoneX ? accountHeaderHeight + 14 : accountHeaderHeight + C.padding[2],
+                                 left: 0,
+                                 bottom: E.isIPhoneX ? footerHeight + C.padding[2] + 19 : footerHeight + C.padding[2],
+                                 right: 0)
             } else {
-                transactionsTableView.tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight + C.padding[2], left: 0, bottom: footerHeight + C.padding[2], right: 0)
+                transactionsTableView.tableView.contentInset =
+                    UIEdgeInsets(top: E.isIPhoneX ? accountHeaderHeight + C.padding[2] + 14 : accountHeaderHeight + C.padding[2],
+                                 left: 0,
+                                 bottom: E.isIPhoneX ? footerHeight + C.padding[2] + 19 : footerHeight + C.padding[2],
+                                 right: 0)
             }
-            transactionsTableView.tableView.scrollIndicatorInsets = UIEdgeInsets(top: accountHeaderHeight, left: 0, bottom: footerHeight, right: 0)
+            transactionsTableView.tableView.scrollIndicatorInsets =
+                UIEdgeInsets(top: E.isIPhoneX ? accountHeaderHeight + 14 : accountHeaderHeight,
+                             left: 0,
+                             bottom: E.isIPhoneX ? footerHeight + 19 : footerHeight,
+                             right: 0)
         })
     }
 
