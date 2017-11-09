@@ -263,6 +263,10 @@ extension ReceiveViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        return S.Receive.title
+        if let token = store.state.walletState.token {
+            return "Receive \(token.code)"
+        } else {
+            return S.Receive.title
+        }
     }
 }
