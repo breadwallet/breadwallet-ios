@@ -6,16 +6,18 @@
 //  Copyright © 2017 breadwallet LLC. All rights reserved.
 //
 import UIKit
+import LocalAuthentication
 
 class SettingsViewController : UITableViewController, CustomTitleView {
 
     init(sections: [String], rows: [String: [Setting]], optionalTitle: String? = nil) {
         self.sections = sections
-        if UserDefaults.isTouchIdEnabled {
+        if UserDefaults.isBiometricsEnabled {
             self.rows = rows
         } else {
             var tempRows = rows
-            tempRows["Manage"] = tempRows["Manage"]?.filter { $0.title != S.Settings.touchIdLimit }
+            let biometricsLimit = LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit
+            tempRows["Manage"] = tempRows["Manage"]?.filter { $0.title != biometricsLimit }
             self.rows = tempRows
         }
         customTitle = optionalTitle ?? S.Settings.title

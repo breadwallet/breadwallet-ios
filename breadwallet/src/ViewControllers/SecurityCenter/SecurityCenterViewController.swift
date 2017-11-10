@@ -24,8 +24,8 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     var didTapPin: (() -> Void)? {
         didSet { pinCell.tap = didTapPin }
     }
-    var didTapTouchId: (() -> Void)? {
-        didSet { touchIdCell.tap = didTapTouchId }
+    var didTapBiometrics: (() -> Void)? {
+        didSet { biometricsCell.tap = didTapBiometrics }
     }
     var didTapPaperKey: (() -> Void)? {
         didSet { paperKeyCell.tap = didTapPaperKey }
@@ -45,7 +45,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     private let scrollView = UIScrollView()
     private let info = UILabel(font: .customBody(size: 16.0))
     private let pinCell = SecurityCenterCell(title: S.SecurityCenter.Cells.pinTitle, descriptionText: S.SecurityCenter.Cells.pinDescription)
-    private let touchIdCell = SecurityCenterCell(title: S.SecurityCenter.Cells.touchIdTitle, descriptionText: S.SecurityCenter.Cells.touchIdDescription)
+    private let biometricsCell = SecurityCenterCell(title: LAContext.biometricType() == .face ? S.SecurityCenter.Cells.faceIdTitle : S.SecurityCenter.Cells.touchIdTitle, descriptionText: S.SecurityCenter.Cells.touchIdDescription)
     private let paperKeyCell = SecurityCenterCell(title: S.SecurityCenter.Cells.paperKeyTitle, descriptionText: S.SecurityCenter.Cells.paperKeyDescription)
     private let separator = UIView(color: .secondaryShadow)
     private let store: Store
@@ -96,8 +96,8 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         header.backgroundColor = .clear
 
         setPinAndPhraseChecks()
-        store.subscribe(self, selector: { $0.isTouchIdEnabled != $1.isTouchIdEnabled }, callback: {
-            self.touchIdCell.isCheckHighlighted = $0.isTouchIdEnabled
+        store.subscribe(self, selector: { $0.isBiometricsEnabled != $1.isBiometricsEnabled }, callback: {
+            self.biometricsCell.isCheckHighlighted = $0.isBiometricsEnabled
         })
         store.subscribe(self, selector: { $1.alert == .paperKeySet(callback: {})
         }, callback: { _ in
@@ -111,7 +111,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         headerBackground.addSubview(header)
         headerBackground.addSubview(shield)
         scrollView.addSubview(pinCell)
-        scrollView.addSubview(touchIdCell)
+        scrollView.addSubview(biometricsCell)
         scrollView.addSubview(paperKeyCell)
         scrollView.addSubview(info)
     }
@@ -150,18 +150,18 @@ class SecurityCenterViewController : UIViewController, Subscriber {
             pinCell.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             pinCell.topAnchor.constraint(equalTo: separator.bottomAnchor),
             pinCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor) ])
-        touchIdCell.constrain([
-            touchIdCell.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            touchIdCell.topAnchor.constraint(equalTo: pinCell.bottomAnchor),
-            touchIdCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor) ])
+        biometricsCell.constrain([
+            biometricsCell.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            biometricsCell.topAnchor.constraint(equalTo: pinCell.bottomAnchor),
+            biometricsCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor) ])
         paperKeyCell.constrain([
             paperKeyCell.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            paperKeyCell.topAnchor.constraint(equalTo: touchIdCell.bottomAnchor),
+            paperKeyCell.topAnchor.constraint(equalTo: biometricsCell.bottomAnchor),
             paperKeyCell.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             paperKeyCell.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -C.padding[2]) ])
 
-        if !LAContext.isTouchIdAvailable {
-            touchIdCell.constrain([touchIdCell.heightAnchor.constraint(equalToConstant: 0.0)])
+        if !LAContext.isBiometricsAvailable {
+            biometricsCell.constrain([biometricsCell.heightAnchor.constraint(equalToConstant: 0.0)])
         }
     }
 
