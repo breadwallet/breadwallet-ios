@@ -42,7 +42,7 @@ enum TriggerName {
     case retrySync
     case rescan
     case lock
-    case promptTouchId
+    case promptBiometrics
     case promptPaperKey
     case promptUpgradePin
     case loginFromSend
@@ -81,7 +81,7 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.lock, .lock):
         return true
-    case (.promptTouchId, .promptTouchId):
+    case (.promptBiometrics, .promptBiometrics):
         return true
     case (.promptPaperKey, .promptPaperKey):
         return true
