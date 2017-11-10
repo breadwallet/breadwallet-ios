@@ -76,7 +76,7 @@ struct Amount {
             if store.state.currency == .ethereum {
                 format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
             } else {
-                format.currencySymbol = "\(store.state.walletState.token!.symbol)\(S.Symbols.narrowSpace)"
+                format.currencySymbol = "\(store.state.walletState.token!.code) "
             }
             return format
         }
@@ -182,7 +182,7 @@ struct DisplayAmount {
                 format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
             } else {
                 format.currencyCode = store.state.walletState.token!.code
-                format.currencySymbol = "\(store.state.walletState.token!.symbol)\(S.Symbols.narrowSpace)"
+                format.currencySymbol = "\(store.state.walletState.token!.code) "
             }
         } else {
             format.currencyCode = "XBT"
