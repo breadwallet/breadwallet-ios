@@ -10,7 +10,7 @@ import UIKit
 import LocalAuthentication
 
 enum PromptType {
-    case touchId
+    case biometrics
     case paperKey
     case upgradePin
     case recommendRescan
@@ -18,12 +18,13 @@ enum PromptType {
     case shareData
 
     static var defaultOrder: [PromptType] = {
-        return [.recommendRescan, .upgradePin, .paperKey, .noPasscode, .touchId, .shareData]
+        return [.recommendRescan, .upgradePin, .paperKey, .noPasscode, .biometrics, .shareData]
     }()
+    
 
     var title: String {
         switch self {
-        case .touchId: return S.Prompts.TouchId.title
+        case .biometrics: return LAContext.biometricType() == .face ? S.Prompts.FaceId.title : S.Prompts.TouchId.title
         case .paperKey: return S.Prompts.PaperKey.title
         case .upgradePin: return S.Prompts.UpgradePin.title
         case .recommendRescan: return S.Prompts.RecommendRescan.title
@@ -34,7 +35,7 @@ enum PromptType {
     
     var name: String {
         switch self {
-        case .touchId: return "touchIdPrompt"
+        case .biometrics: return "biometricsPrompt"
         case .paperKey: return "paperKeyPrompt"
         case .upgradePin: return "upgradePinPrompt"
         case .recommendRescan: return "recommendRescanPrompt"
@@ -45,7 +46,7 @@ enum PromptType {
 
     var body: String {
         switch self {
-        case .touchId: return S.Prompts.TouchId.body
+        case .biometrics: return LAContext.biometricType() == .face ? S.Prompts.FaceId.body : S.Prompts.TouchId.body
         case .paperKey: return S.Prompts.PaperKey.body
         case .upgradePin: return S.Prompts.UpgradePin.body
         case .recommendRescan: return S.Prompts.RecommendRescan.body
@@ -57,7 +58,7 @@ enum PromptType {
     //This is the trigger that happens when the prompt is tapped
     var trigger: TriggerName? {
         switch self {
-        case .touchId: return .promptTouchId
+        case .biometrics: return .promptBiometrics
         case .paperKey: return .promptPaperKey
         case .upgradePin: return .promptUpgradePin
         case .recommendRescan: return .recommendRescan
@@ -68,8 +69,8 @@ enum PromptType {
 
     func shouldPrompt(walletManager: WalletManager, state: State) -> Bool {
         switch self {
-        case .touchId:
-            return !UserDefaults.hasPromptedTouchId && LAContext.canUseTouchID && !UserDefaults.isTouchIdEnabled
+        case .biometrics:
+            return !UserDefaults.hasPromptedBiometrics && LAContext.canUseBiometrics && !UserDefaults.isBiometricsEnabled
         case .paperKey:
             return UserDefaults.walletRequiresBackup
         case .upgradePin:
