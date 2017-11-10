@@ -48,12 +48,15 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func initWallet() {
-        self.walletManager = try? WalletManager(store: self.store, dbPath: nil)
-        let _ = self.walletManager?.wallet //attempt to initialize wallet
-        DispatchQueue.main.async {
-            self.didInitWallet = true
-            if !self.hasPerformedWalletDependentInitialization {
-                self.didInitWalletManager()
+        walletManager = try? WalletManager(store: self.store, dbPath: nil)
+        walletManager?.initWallet { success in
+            self.walletManager?.initPeerManager {
+                DispatchQueue.main.async {
+                    self.didInitWallet = true
+                    if !self.hasPerformedWalletDependentInitialization {
+                        self.didInitWalletManager()
+                    }
+                }
             }
         }
     }
