@@ -45,7 +45,7 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     var tokenOutput: GethBigInt {
-        let symbol = store.state.walletState.token!.symbol
+        let symbol = store.state.walletState.token!.code
         let string = currentOutput.replacingOccurrences(of: symbol, with: "")
         let output = GethBigInt(0)
         output?.setString(string, base: 10)
@@ -262,7 +262,7 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func handleEthOutput(output: String) {
-        let symbol = store.state.currency == .ethereum ? S.Symbols.eth : store.state.walletState.token!.symbol
+        let symbol = store.state.currency == .ethereum ? S.Symbols.eth : store.state.walletState.token!.code
         amountLabel.text = output.utf8.count > 0 ? "\(symbol)" + output : ""
         placeholder.isHidden = output.utf8.count > 0 ? true : false
     }

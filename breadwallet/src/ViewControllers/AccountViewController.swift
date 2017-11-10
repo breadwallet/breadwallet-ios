@@ -56,7 +56,7 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     var tokenSymbol: String? {
-        return store.state.walletState.token?.symbol
+        return store.state.walletState.token?.code
     }
 
     //MARK: - Private

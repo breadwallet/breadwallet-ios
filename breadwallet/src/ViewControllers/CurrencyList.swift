@@ -18,7 +18,7 @@ class CurrencyList : UITableViewController {
 
     let currencies: [(String, String)] = {
         return [("Bitcoin", "btc"), ("Ethereum", "eth")] + tokens.map {
-            return ($0.name, $0.symbol)
+            return ($0.name, $0.code)
         }
     }()
 
