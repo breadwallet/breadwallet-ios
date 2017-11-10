@@ -9,7 +9,7 @@
 import UIKit
 import LocalAuthentication
 
-private let touchIdSize: CGFloat = 32.0
+private let biometricsSize: CGFloat = 32.0
 private let topControlHeight: CGFloat = 32.0
 
 class LoginViewController : UIViewController, Subscriber, Trackable {
@@ -55,15 +55,15 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         return image
     }()
 
-    private let touchId: UIButton = {
+    private let biometrics: UIButton = {
         let button = UIButton(type: .system)
         button.tintColor = .white
-        button.setImage(#imageLiteral(resourceName: "TouchId"), for: .normal)
+        button.setImage(LAContext.biometricType() == .face ? #imageLiteral(resourceName: "FaceId") : #imageLiteral(resourceName: "TouchId"), for: .normal)
         button.layer.borderColor = UIColor.white.cgColor
         button.layer.borderWidth = 1.0
-        button.layer.cornerRadius = touchIdSize/2.0
+        button.layer.cornerRadius = biometricsSize/2.0
         button.layer.masksToBounds = true
-        button.accessibilityLabel = S.UnlockScreen.touchIdText
+        button.accessibilityLabel = LAContext.biometricType() == .face ? S.UnlockScreen.faceIdText : S.UnlockScreen.touchIdText
         return button
     }()
     private let subheader = UILabel(font: .customBody(size: 16.0), color: .darkText)
@@ -87,14 +87,14 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             separator.widthAnchor.constraint(equalToConstant: 1.0) ])
         return view
     }()
-    private var hasAttemptedToShowTouchId = false
+    private var hasAttemptedToShowBiometrics = false
     private let lockedOverlay = UIVisualEffectView()
     private var isResetting = false
 
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
-        addTouchIdButton()
+        addBiometricsButton()
         addPinPadCallback()
         if pinView != nil {
             addPinView()
@@ -135,9 +135,9 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard UIApplication.shared.applicationState != .background else { return }
-        if shouldUseTouchId && !hasAttemptedToShowTouchId && !isPresentedForLock && UserDefaults.hasShownWelcome {
-            hasAttemptedToShowTouchId = true
-            touchIdTapped()
+        if shouldUseBiometrics && !hasAttemptedToShowBiometrics && !isPresentedForLock && UserDefaults.hasShownWelcome {
+            hasAttemptedToShowBiometrics = true
+            biometricsTapped()
         }
         if !isResetting {
             lockIfNeeded()
@@ -231,15 +231,15 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         scanButton.addTarget(self, action: #selector(scanTapped), for: .touchUpInside)
     }
 
-    private func addTouchIdButton() {
-        guard shouldUseTouchId else { return }
-        view.addSubview(touchId)
-        touchId.addTarget(self, action: #selector(touchIdTapped), for: .touchUpInside)
-        touchId.constrain([
-            touchId.widthAnchor.constraint(equalToConstant: touchIdSize),
-            touchId.heightAnchor.constraint(equalToConstant: touchIdSize),
-            touchId.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            touchId.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[2]) ])
+    private func addBiometricsButton() {
+        guard shouldUseBiometrics else { return }
+        view.addSubview(biometrics)
+        biometrics.addTarget(self, action: #selector(biometricsTapped), for: .touchUpInside)
+        biometrics.constrain([
+            biometrics.widthAnchor.constraint(equalToConstant: biometricsSize),
+            biometrics.heightAnchor.constraint(equalToConstant: biometricsSize),
+            biometrics.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+            biometrics.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[2]) ])
     }
 
     private func addPinPadCallback() {
@@ -314,14 +314,14 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         }
     }
 
-    private var shouldUseTouchId: Bool {
+    private var shouldUseBiometrics: Bool {
         guard let walletManager = self.walletManager else { return false }
-        return LAContext.canUseTouchID && !walletManager.pinLoginRequired && store.state.isTouchIdEnabled
+        return LAContext.canUseBiometrics && !walletManager.pinLoginRequired && store.state.isBiometricsEnabled
     }
 
-    @objc func touchIdTapped() {
+    @objc func biometricsTapped() {
         guard !isWalletDisabled else { return }
-        walletManager?.authenticate(touchIDPrompt: S.UnlockScreen.touchIdPrompt, completion: { result in
+        walletManager?.authenticate(biometricsPrompt: S.UnlockScreen.touchIdPrompt, completion: { result in
             if result == .success {
                 self.authenticationSucceded()
             }

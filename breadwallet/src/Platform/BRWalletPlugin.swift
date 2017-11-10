@@ -43,7 +43,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         self.walletManager = walletManager
         self.store = store
     }
-    
+
     func announce(_ json: [String: Any]) {
         if let jsonData = try? JSONSerialization.data(withJSONObject: json, options: []),
             let jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue) {
@@ -54,10 +54,10 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             print("[BRWalletPlugin] announce() could not encode payload: \(json)")
         }
     }
- 
+
     func hook(_ router: BRHTTPRouter) {
         router.websocket("/_wallet/_socket", client: self)
-        
+
         let noteCenter = NotificationCenter.default
         noteCenter.addObserver(forName: NSNotification.Name.WalletSyncStartedNotification,
                                object: nil, queue: nil) { (note) in
@@ -81,11 +81,11 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 self.announce(["type": "balance_changed", "balance": Int(wallet.balance)])
             }
         }
- 
+
         router.get("/_wallet/info") { (request, match) -> BRHTTPResponse in
             return try BRHTTPResponse(request: request, code: 200, json: self.walletInfo())
         }
- 
+
         router.get("/_wallet/format") { (request, match) -> BRHTTPResponse in
             if let amounts = request.query["amount"] , amounts.count > 0 {
                 let amount = amounts[0]
@@ -104,7 +104,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 return BRHTTPResponse(request: request, code: 400)
             }
         }
-        
+
         // POST /_wallet/sign_bitid
         //
         // Sign a message using the user's BitID private key. Calling this WILL trigger authentication
@@ -148,7 +148,10 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                     } else {
                         let prompt = bitidUrl.host ?? bitidUrl.description
                         self.isPresentingAuth = true
-                        self.store.trigger(name: .authenticateForBitId(prompt, { [weak self]result in
+                        if UserDefaults.isBiometricsEnabled {
+                            asyncResp.provide(200, json: ["error": "proxy-shutdown"])
+                        }
+                        self.store.trigger(name: .authenticateForBitId(prompt, { [weak self] result in
                             self?.isPresentingAuth = false
                             switch result {
                             case .success:
@@ -169,7 +172,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             }
             return asyncResp
         }
-        
+
         router.post("/_event/(name)") { (req, m) -> BRHTTPResponse in
             guard let nameArray = m["name"], nameArray.count == 1 else {
                 return BRHTTPResponse(request: req, code: 400)
@@ -219,7 +222,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         d["local_currency_code"] = store.state.defaultCurrencyCode
         return d
     }
-    
+
     func currencyFormat(_ amount: Int64) -> [String: Any] {
         var d = [String: Any]()
         if let rate = store.state.currentRate {
@@ -229,7 +232,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         }
         return d
     }
-    
+
     // MARK: - socket handlers
     func sendWalletInfo(_ socket: BRWebSocket) {
         var d = self.walletInfo()
@@ -239,23 +242,23 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             socket.send(String(jstring))
         }
     }
-    
+
     func socketDidConnect(_ socket: BRWebSocket) {
         print("WALLET CONNECT \(socket.id)")
         sockets[socket.id] = socket
         sendWalletInfo(socket)
     }
-    
+
     func socketDidDisconnect(_ socket: BRWebSocket) {
         print("WALLET DISCONNECT \(socket.id)")
         sockets.removeValue(forKey: socket.id)
     }
-    
+
     func socket(_ socket: BRWebSocket, didReceiveText text: String) {
         print("WALLET RECV \(text)")
         socket.send(text)
     }
-    
+
     public func socket(_ socket: BRWebSocket, didReceiveData data: Data) {
         // nothing to do here
     }

@@ -9,12 +9,12 @@
 import Foundation
 
 private let defaults = UserDefaults.standard
-private let isTouchIdEnabledKey = "istouchidenabled"
+private let isBiometricsEnabledKey = "isbiometricsenabled"
 private let defaultCurrencyCodeKey = "defaultcurrency"
 private let hasAquiredShareDataPermissionKey = "has_acquired_permission"
 private let legacyWalletNeedsBackupKey = "WALLET_NEEDS_BACKUP"
 private let writePaperPhraseDateKey = "writepaperphrasedatekey"
-private let hasPromptedTouchIdKey = "haspromptedtouched"
+private let hasPromptedBiometricsKey = "haspromptedtouched"
 private let isBtcSwappedKey = "isBtcSwappedKey"
 private let maxDigitsKey = "SETTINGS_MAX_DIGITS"
 private let pushTokenKey = "pushTokenKey"
@@ -26,14 +26,14 @@ private let hasShownWelcomeKey = "hasShownWelcomeKey"
 
 extension UserDefaults {
 
-    static var isTouchIdEnabled: Bool {
+    static var isBiometricsEnabled: Bool {
         get {
-            guard defaults.object(forKey: isTouchIdEnabledKey) != nil else {
-                return true
+            guard defaults.object(forKey: isBiometricsEnabledKey) != nil else {
+                return false
             }
-            return defaults.bool(forKey: isTouchIdEnabledKey)
+            return defaults.bool(forKey: isBiometricsEnabledKey)
         }
-        set { defaults.set(newValue, forKey: isTouchIdEnabledKey) }
+        set { defaults.set(newValue, forKey: isBiometricsEnabledKey) }
     }
 
     static var defaultCurrencyCode: String {
@@ -45,11 +45,11 @@ extension UserDefaults {
                 currencyCode = defaults.string(forKey: defaultCurrencyCodeKey)!
             }
             let acceptedCurrencyCodes = ["USD","EUR","JPY","BGN","CZK","DKK","GBP","HUF","PLN","RON","SEK","CHF","NOK","HRK","RUB","TRY","AUD","BRL","CAD","CNY","HKD","IDR","ILS","INR","KRW","MXN","MYR","NZD","PHP","SDG","THB","ZAR"]
-            
+
             if !(acceptedCurrencyCodes.contains(currencyCode)) {
                 return "USD";
             }
-            
+
             return currencyCode;
         }
         set { defaults.set(newValue, forKey: defaultCurrencyCodeKey) }
@@ -132,8 +132,8 @@ extension UserDefaults {
     }
 
     static var hasPromptedShareData: Bool {
-        get { return defaults.bool(forKey: hasPromptedTouchIdKey) }
-        set { defaults.set(newValue, forKey: hasPromptedTouchIdKey) }
+        get { return defaults.bool(forKey: hasPromptedBiometricsKey) }
+        set { defaults.set(newValue, forKey: hasPromptedBiometricsKey) }
     }
 
     static var hasShownWelcome: Bool {
@@ -176,8 +176,8 @@ extension UserDefaults {
 
 //MARK: - Prompts
 extension UserDefaults {
-    static var hasPromptedTouchId: Bool {
-        get { return defaults.bool(forKey: hasPromptedTouchIdKey) }
-        set { defaults.set(newValue, forKey: hasPromptedTouchIdKey) }
+    static var hasPromptedBiometrics: Bool {
+        get { return defaults.bool(forKey: hasPromptedBiometricsKey) }
+        set { defaults.set(newValue, forKey: hasPromptedBiometricsKey) }
     }
 }
