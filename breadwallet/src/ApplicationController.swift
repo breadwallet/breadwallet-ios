@@ -50,8 +50,17 @@ class ApplicationController : Subscriber, Trackable {
     private func initWallet() {
         walletManager = try? WalletManager(store: self.store, dbPath: nil)
         walletManager?.initWallet { success in
-            self.walletManager?.initPeerManager { }
+            if success {
+                self.walletManager?.initPeerManager {
+                    self.didAttemptInitWallet()
+                }
+            } else {
+                self.didAttemptInitWallet()
+            }
         }
+    }
+
+    private func didAttemptInitWallet() {
         DispatchQueue.main.async {
             self.didInitWallet = true
             if !self.hasPerformedWalletDependentInitialization {
