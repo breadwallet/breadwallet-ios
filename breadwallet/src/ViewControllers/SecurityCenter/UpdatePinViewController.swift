@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 enum UpdatePinType {
     case creationNoPhrase
@@ -110,10 +111,18 @@ class UpdatePinViewController : UIViewController, Subscriber {
             pinView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.width),
             pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
-        addChildViewController(pinPad, layout: {
-            pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
-            pinPad.view.constrain([pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height) ])
-        })
+        if E.isIPhoneX {
+            addChildViewController(pinPad, layout: {
+                pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
+                pinPad.view.constrain([pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height),
+                                       pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[3])])
+            })
+        } else {
+            addChildViewController(pinPad, layout: {
+                pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
+                pinPad.view.constrain([pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height)])
+            })
+        }
         spacer.constrain([
             spacer.topAnchor.constraint(equalTo: instruction.bottomAnchor),
             spacer.bottomAnchor.constraint(equalTo: caption.topAnchor) ])
