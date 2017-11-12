@@ -50,13 +50,12 @@ class ApplicationController : Subscriber, Trackable {
     private func initWallet() {
         walletManager = try? WalletManager(store: self.store, dbPath: nil)
         walletManager?.initWallet { success in
-            self.walletManager?.initPeerManager {
-                DispatchQueue.main.async {
-                    self.didInitWallet = true
-                    if !self.hasPerformedWalletDependentInitialization {
-                        self.didInitWalletManager()
-                    }
-                }
+            self.walletManager?.initPeerManager { }
+        }
+        DispatchQueue.main.async {
+            self.didInitWallet = true
+            if !self.hasPerformedWalletDependentInitialization {
+                self.didInitWalletManager()
             }
         }
     }
@@ -267,8 +266,15 @@ class ApplicationController : Subscriber, Trackable {
 
     private func addWalletCreationListener() {
         store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
-            self.modalPresenter?.walletManager = self.walletManager
-            self.startDataFetchers()
+            DispatchQueue.walletQueue.async {
+                self.walletManager?.initWallet { _ in
+                    self.walletManager?.initPeerManager {
+                        self.walletManager?.peerManager?.connect()
+                        self.modalPresenter?.walletManager = self.walletManager
+                        self.startDataFetchers()
+                    }
+                }
+            }
         })
     }
     
