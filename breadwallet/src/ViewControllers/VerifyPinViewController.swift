@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 typealias VerifyPinCallback = (String, UIViewController) -> Bool
 
@@ -57,7 +58,7 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
         addChildViewController(pinPad, layout: {
             pinPad.view.constrain([
                 pinPad.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: LAContext.biometricType() == .face ? -C.padding[3] : 0.0),
                 pinPad.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height) ])
         })
