@@ -265,13 +265,13 @@ class AccountViewController : UIViewController, Subscriber {
                     self.tempLoginView.view.constrain(toSuperviewEdges: nil)
                 })
             } else {
-                let startView = StartViewController(store: self.store, didTapCreate: {}, didTapRecover: {})
-                self.addChildViewController(startView, layout: {
-                    startView.view.constrain(toSuperviewEdges: nil)
-                    startView.view.isUserInteractionEnabled = false
+                let tempStartView = StartViewController(store: self.store, didTapCreate: {}, didTapRecover: {})
+                self.addChildViewController(tempStartView, layout: {
+                    tempStartView.view.constrain(toSuperviewEdges: nil)
+                    tempStartView.view.isUserInteractionEnabled = false
                 })
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                    startView.remove()
+                    tempStartView.remove()
                 })
             }
         }

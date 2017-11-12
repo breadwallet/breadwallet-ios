@@ -64,7 +64,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     func initPeerManager(callback: @escaping () -> Void) {
         db?.loadBlocks { blocks in
             self.db?.loadPeers { peers in
-                self.peerManager = BRPeerManager(wallet: self.wallet!, earliestKeyTime: self.earliestKeyTime,
+                guard let wallet = self.wallet else { return }
+                self.peerManager = BRPeerManager(wallet: wallet, earliestKeyTime: self.earliestKeyTime,
                                                  blocks: blocks, peers: peers, listener: self)
                 callback()
             }
