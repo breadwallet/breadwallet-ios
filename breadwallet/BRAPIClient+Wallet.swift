@@ -8,7 +8,8 @@
 
 import Foundation
 
-private let fallbackRatesURL = "https://litecoin.com/api/v1/rates"
+private let ratesURL = "https://litecoin.com/api/v1/rates"
+private let fallbackRatesURL = "https://api.loshan.co.uk/api/v1/rates"
 
 extension BRAPIClient {
     func feePerKb(_ handler: @escaping (_ fees: Fees, _ error: String?) -> Void) {
@@ -41,7 +42,7 @@ extension BRAPIClient {
     }
     
     func exchangeRates(isFallback: Bool = false, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
-        let request = isFallback ? URLRequest(url: URL(string: fallbackRatesURL)!) : URLRequest(url: url("/rates"))
+        let request = isFallback ? URLRequest(url: URL(string: fallbackRatesURL)!) : URLRequest(url: URL(string: ratesURL)!)
         let task = dataTaskWithRequest(request) { (data, response, error) in
             if error == nil, let data = data,
                 let parsedData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) {
@@ -51,9 +52,8 @@ extension BRAPIClient {
                     }
                     handler(array.flatMap { Rate(data: $0) }, nil)
                 } else {
-                    guard let dict = parsedData as? [String: Any],
-                        let array = dict["body"] as? [Any] else {
-                            return self.exchangeRates(isFallback: true, handler)
+                    guard let array = parsedData as? [Any] else {
+                        return handler([], "/rates didn't return an array")
                     }
                     handler(array.flatMap { Rate(data: $0) }, nil)
                 }

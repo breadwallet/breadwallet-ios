@@ -11,7 +11,7 @@ import UIKit
 
 struct Rate {
     let code: String
-    //let name: String
+    let name: String
     let rate: Double
 
     var currencySymbol: String {
@@ -49,8 +49,7 @@ struct Rate {
     }
 
     static var empty: Rate {
-        //return Rate(code: "", name: "", rate: 0.0)
-        return Rate(code: "", rate: 0.0)
+        return Rate(code: "", name: "", rate: 0.0)
     }
 }
 
@@ -58,16 +57,15 @@ extension Rate {
     init?(data: Any) {
         guard let dictionary = data as? [String: Any] else { return nil }
         guard let code = dictionary["code"] as? String else { return nil }
-        //guard let name = dictionary["name"] as? String else { return nil }
+        guard let name = dictionary["name"] as? String else { return nil }
         guard let rate = dictionary["n"] as? Double else { return nil }
-        //self.init(code: code, name: name, rate: rate)
-        self.init(code: code, rate: rate)
+        self.init(code: code, name: name, rate: rate)
     }
 
     var dictionary: [String: Any] {
         return [
             "code": code,
-            //"name": name,
+            "name": name,
             "n": rate
         ]
     }
@@ -76,6 +74,5 @@ extension Rate {
 extension Rate : Equatable {}
 
 func ==(lhs: Rate, rhs: Rate) -> Bool {
-    //return lhs.code == rhs.code && lhs.name == rhs.name && lhs.rate == rhs.rate
-    return lhs.code == rhs.code && lhs.rate == rhs.rate
+    return lhs.code == rhs.code && lhs.name == rhs.name && lhs.rate == rhs.rate
 }
