@@ -151,6 +151,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
 
     func syncStarted() {
         DispatchQueue.main.async() {
+            self.db?.setDBFileAttributes()
             NotificationCenter.default.post(name: .WalletSyncStartedNotification, object: nil)
         }
     }

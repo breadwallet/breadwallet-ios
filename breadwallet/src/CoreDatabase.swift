@@ -205,6 +205,22 @@ class CoreDatabase {
             }
 
             sqlite3_exec(self.db, "commit", nil, nil, nil)
+            self.setDBFileAttributes()
+        }
+    }
+
+    func setDBFileAttributes() {
+        queue.async {
+            let files = [self.dbPath, self.dbPath + "-shm", self.dbPath + "-wal"]
+            files.forEach {
+                if FileManager.default.fileExists(atPath: $0) {
+                    do {
+                        try FileManager.default.setAttributes([FileAttributeKey.protectionKey: FileProtectionType.none], ofItemAtPath: $0)
+                    } catch let e {
+                        print("Set db attributes error: \(e)")
+                    }
+                }
+            }
         }
     }
 
