@@ -52,7 +52,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         db?.loadTransactions { txns in
             guard self.masterPubKey != BRMasterPubKey() else {
                 #if !Debug
-                    do { try FileManager.default.removeItem(atPath: self.dbPath) } catch { }
+                    self.db?.delete()
                 #endif
                 return callback(false)
             }
