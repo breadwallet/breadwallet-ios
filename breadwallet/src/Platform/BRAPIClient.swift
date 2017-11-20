@@ -73,7 +73,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
     
     // host is the server(s) on which the API is hosted
     #if Testflight || Debug
-    var host = "stage.breadwallet.com"
+    var host = "stage2.breadwallet.com"
     #else
     var host = "api.breadwallet.com"
     #endif
