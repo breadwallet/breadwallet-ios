@@ -78,6 +78,7 @@ struct Amount {
             } else {
                 format.currencySymbol = "\(store.state.walletState.token!.code) "
             }
+            format.minimumFractionDigits = 4
             return format
         }
         let format = NumberFormatter()
