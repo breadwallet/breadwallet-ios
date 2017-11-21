@@ -222,6 +222,7 @@
 		75DF48391F62328400FC2DD3 /* Geth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DF48381F62328400FC2DD3 /* Geth.swift */; };
 		CE03EC721EF193810038E3A8 /* String+Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC711EF193800038E3A8 /* String+Keys.swift */; };
 		CE03EC741EF256AC0038E3A8 /* SimpleUTXO.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */; };
+		CE0A68211FB651DA00EF31CD /* CoreDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0A68201FB651DA00EF31CD /* CoreDatabase.swift */; };
 		CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */; };
 		CE124CF81E67A8E500DFA146 /* TransactionDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CF71E67A8E500DFA146 /* TransactionDirection.swift */; };
 		CE124CFC1E68932C00DFA146 /* FeeUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFB1E68932C00DFA146 /* FeeUpdater.swift */; };
@@ -1406,6 +1407,7 @@
 		75FEFD1B1DAED56E00203D3A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		CE03EC711EF193800038E3A8 /* String+Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Keys.swift"; path = "src/Extensions/String+Keys.swift"; sourceTree = "<group>"; };
 		CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleUTXO.swift; path = src/Models/SimpleUTXO.swift; sourceTree = "<group>"; };
+		CE0A68201FB651DA00EF31CD /* CoreDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CoreDatabase.swift; path = src/CoreDatabase.swift; sourceTree = "<group>"; };
 		CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = ModalPresenter.swift; path = src/ModalPresenter.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CE0FC0F81F72417200E7C626 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE0FC0F91F72417500E7C626 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2646,6 +2648,7 @@
 				CE3D4C561EF5D5740016B1C8 /* ReachabilityMonitor.swift */,
 				CE68DCD81FAB75BE00A3AA40 /* TokenWalletCoordinator.swift */,
 				CE7B40981FA03C9900BA4196 /* Wallet */,
+				CE0A68201FB651DA00EF31CD /* CoreDatabase.swift */,
 				CE473D7B1F042F1E00C0ACFD /* coinflip.aiff */,
 				CE2990171EFD6DAF0093A0F2 /* Strings */,
 				CE30F0E41EB27821004B8EE5 /* Watch */,
@@ -3917,6 +3920,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE0A68211FB651DA00EF31CD /* CoreDatabase.swift in Sources */,
 				CEBF29301EF9D76F005C330A /* Environment.swift in Sources */,
 				CEC6AA4D1DF0741100EE5AFD /* ModalDisplayable.swift in Sources */,
 				CED811E11EB302DA003A8D1E /* WatchData.swift in Sources */,

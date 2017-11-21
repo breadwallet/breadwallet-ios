@@ -417,9 +417,10 @@ extension WalletManager : WalletAuthenticator {
         guard pin == "forceWipe" || authenticate(pin: pin) else { return false }
 
         do {
-            lazyWallet = nil
-            lazyPeerManager = nil
-            if db != nil { sqlite3_close(db) }
+            wallet = nil
+            peerManager = nil
+            db?.close()
+            db?.delete()
             db = nil
             masterPubKey = BRMasterPubKey()
             didInitWallet = false
@@ -428,7 +429,6 @@ extension WalletManager : WalletAuthenticator {
                 UserDefaults.standard.removePersistentDomain(forName: bundleId)
             }
             try BRAPIClient(authenticator: self).kv?.rmdb()
-            try? FileManager.default.removeItem(atPath: dbPath)
             try? FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
             try setKeychainItem(key: KeychainKey.apiAuthKey, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.spendLimit, item: nil as Int64?)

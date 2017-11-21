@@ -102,11 +102,8 @@ class StartFlowPresenter : Subscriber {
             guard let myself = self else { return }
             let pinCreationView = UpdatePinViewController(store: myself.store, walletManager: myself.walletManager, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
             pinCreationView.setPinSuccess = { [weak self] _ in
-                DispatchQueue.walletQueue.async {
-                    self?.walletManager.peerManager?.connect()
-                    DispatchQueue.main.async {
-                        self?.store.trigger(name: .didCreateOrRecoverWallet)
-                    }
+                DispatchQueue.main.async {
+                    self?.store.trigger(name: .didCreateOrRecoverWallet)
                 }
             }
             myself.navigationController?.pushViewController(pinCreationView, animated: true)
@@ -125,12 +122,9 @@ class StartFlowPresenter : Subscriber {
             autoreleasepool {
                 guard self?.walletManager.setRandomSeedPhrase() != nil else { self?.handleWalletCreationError(); return }
                 self?.store.perform(action: WalletChange.setWalletCreationDate(Date()))
-                DispatchQueue.walletQueue.async {
-                    self?.walletManager.peerManager?.connect()
-                    DispatchQueue.main.async {
-                        self?.pushStartPaperPhraseCreationViewController(pin: pin)
-                        self?.store.trigger(name: .didCreateOrRecoverWallet)
-                    }
+                DispatchQueue.main.async {
+                    self?.pushStartPaperPhraseCreationViewController(pin: pin)
+                    self?.store.trigger(name: .didCreateOrRecoverWallet)
                 }
             }
         }
