@@ -144,11 +144,18 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         name.constrain([
             name.constraint(.leading, toView: self, constant: C.padding[2]),
             name.constraint(.top, toView: self, constant: 30.0) ])
-        if let manageTitleLabel = currencySwitch.titleLabel {
-            currencySwitch.constrain([
-                currencySwitch.constraint(.trailing, toView: self, constant: -C.padding[2]),
-                manageTitleLabel.firstBaselineAnchor.constraint(equalTo: name.firstBaselineAnchor) ])
-        }
+
+            if #available(iOS 11.0, *) {
+                currencySwitch.constrain([
+                    currencySwitch.constraint(.trailing, toView: self, constant: -C.padding[2]),
+                    currencySwitch.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0.0) ])
+            } else {
+                if let manageTitleLabel = currencySwitch.titleLabel {
+                    currencySwitch.constrain([
+                        currencySwitch.constraint(.trailing, toView: self, constant: -C.padding[2]),
+                        manageTitleLabel.firstBaselineAnchor.constraint(equalTo: name.firstBaselineAnchor) ])
+                }
+            }
         secondaryBalance.constrain([
             secondaryBalance.constraint(.firstBaseline, toView: primaryBalance, constant: 0.0) ])
 
@@ -175,7 +182,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
         search.constrain([
             search.constraint(.trailing, toView: self, constant: -C.padding[2]),
-            search.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[4]),
+            search.topAnchor.constraint(equalTo: currencySwitch.bottomAnchor, constant: C.padding[1]),
             search.constraint(.width, constant: 44.0),
             search.constraint(.height, constant: 44.0) ])
         search.imageEdgeInsets = UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0)
