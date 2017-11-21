@@ -126,6 +126,13 @@ enum CurrencyChange {
             return $0.mutate(isBtcSwapped: !$0.isBtcSwapped)
         }
     }
+
+    struct setIsSwapped: Action {
+        let reduce: Reducer
+        init(_ isBtcSwapped: Bool) {
+            reduce = { $0.mutate(isBtcSwapped: isBtcSwapped) }
+        }
+    }
 }
 
 //MARK: - Exchange Rates
