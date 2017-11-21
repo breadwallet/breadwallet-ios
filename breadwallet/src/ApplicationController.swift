@@ -14,8 +14,9 @@ private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
 
-let tokens = {
-    return E.isTestnet ? [tst] : [xjp]
+let tokens: [Token] = {
+    return []
+    //return E.isTestnet ? [tst] : [xjp]
 }()
 
 class ApplicationController : Subscriber, Trackable {
@@ -73,8 +74,19 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func initWallet() {
-        self.walletManager = try? WalletManager(store: self.store, dbPath: nil)
-        let _ = self.walletManager?.wallet //attempt to initialize wallet
+        walletManager = try? WalletManager(store: self.store, dbPath: nil)
+        walletManager?.initWallet { success in
+            if success {
+                self.walletManager?.initPeerManager {
+                    self.didAttemptInitWallet()
+                }
+            } else {
+                self.didAttemptInitWallet()
+            }
+        }
+    }
+
+    private func didAttemptInitWallet() {
         DispatchQueue.main.async {
             self.didInitWallet = true
             if !self.hasPerformedWalletDependentInitialization {
@@ -358,14 +370,20 @@ class ApplicationController : Subscriber, Trackable {
 
     private func addWalletCreationListener() {
         store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
-            guard let walletManager = self.walletManager else { return }
-            self.modalPresenter?.walletManager = self.walletManager
-            self.startDataFetchers()
-            let gethManager = GethManager(ethPrivKey: walletManager.ethPrivKey!, store: self.store)
-            self.modalPresenter?.gethManager = gethManager
-            self.ethWalletCoordinator = EthWalletCoordinator(store: self.ethStore, gethManager: gethManager, apiClient: self.noAuthApiClient)
-            self.tokenWalletCoordinators = self.tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: self.noAuthApiClient) }
-            self.addNumSentListeners()
+            DispatchQueue.walletQueue.async {
+                self.walletManager?.initWallet { _ in
+                    self.walletManager?.initPeerManager {
+                        self.walletManager?.peerManager?.connect()
+                        self.modalPresenter?.walletManager = self.walletManager
+                        self.startDataFetchers()
+                        let gethManager = GethManager(ethPrivKey: self.walletManager!.ethPrivKey!, store: self.store)
+                        self.modalPresenter?.gethManager = gethManager
+                        self.ethWalletCoordinator = EthWalletCoordinator(store: self.ethStore, gethManager: gethManager, apiClient: self.noAuthApiClient)
+                        self.tokenWalletCoordinators = self.tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: self.noAuthApiClient) }
+                        self.addNumSentListeners()
+                    }
+                }
+            }
         })
     }
     

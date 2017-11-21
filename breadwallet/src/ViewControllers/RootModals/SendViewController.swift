@@ -259,9 +259,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
         guard let amount = amount else { return }
         let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseTouchId, store: store)
-        confirm.callback = {
+        confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
                 self.send()
+            })
+        }
+        confirm.cancelCallback = {
+            confirm.dismiss(animated: true, completion: {
+                self.sender.transaction = nil
             })
         }
         confirmTransitioningDelegate.shouldShowMaskView = false
