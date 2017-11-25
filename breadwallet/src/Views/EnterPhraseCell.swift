@@ -144,7 +144,7 @@ extension EnterPhraseCell : UITextFieldDelegate {
 
     @objc func textChanged(textField: UITextField) {
         if let text = textField.text {
-            if text.characters.last == " " {
+            if text.last == " " {
                 textField.text = text.replacingOccurrences(of: " ", with: "")
                 didEnterSpace?()
             }

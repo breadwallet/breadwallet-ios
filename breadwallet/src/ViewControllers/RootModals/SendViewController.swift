@@ -93,7 +93,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             sendButton.constraint(.trailing, toView: view, constant: -C.padding[2]),
             sendButton.constraint(toBottom: descriptionCell, constant: verticalButtonPadding),
             sendButton.constraint(.height, constant: C.Sizes.buttonHeight),
-            sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
+            sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[5] : -C.padding[2]) ])
         addButtonActions()
         store.subscribe(self, selector: { $0.walletState.balance != $1.walletState.balance },
                         callback: {
@@ -240,7 +240,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
 
         guard let amount = amount else { return }
-        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseTouchId)
+        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingBiometrics: sender.canUseBiometrics)
         confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
                 self.send()
@@ -291,7 +291,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         guard let rate = store.state.currentRate else { return }
         guard let feePerKb = walletManager.wallet?.feePerKb else { return }
 
-        sender.send(touchIdMessage: S.VerifyPin.touchIdMessage,
+        sender.send(biometricsMessage: S.VerifyPin.touchIdMessage,
                     rate: rate,
                     comment: descriptionCell.textView.text,
                     feePerKb: feePerKb,

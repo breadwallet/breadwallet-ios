@@ -17,13 +17,13 @@ struct State {
     let currentRate: Rate?
     let rates: [Rate]
     let alert: AlertType?
-    let isTouchIdEnabled: Bool
+    let isBiometricsEnabled: Bool
     let defaultCurrencyCode: String
     let recommendRescan: Bool
     let isLoadingTransactions: Bool
     let maxDigits: Int
     let isPushNotificationsEnabled: Bool
-    let isPromptingTouchId: Bool
+    let isPromptingBiometrics: Bool
     let pinLength: Int
     let fees: Fees
 }
@@ -38,13 +38,13 @@ extension State {
                         currentRate: UserDefaults.currentRate,
                         rates: [],
                         alert: nil,
-                        isTouchIdEnabled: UserDefaults.isTouchIdEnabled,
+                        isBiometricsEnabled: UserDefaults.isBiometricsEnabled,
                         defaultCurrencyCode: UserDefaults.defaultCurrencyCode,
                         recommendRescan: false,
                         isLoadingTransactions: false,
                         maxDigits: UserDefaults.maxDigits,
                         isPushNotificationsEnabled: UserDefaults.pushToken != nil,
-                        isPromptingTouchId: false,
+                        isPromptingBiometrics: false,
                         pinLength: 6,
                         fees: Fees.defaultFees )
     }
