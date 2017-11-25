@@ -51,7 +51,7 @@ open class BRHTTPRoutePair {
             path = "/" + path
         }
         if path.hasSuffix("/") {
-            path = String(path[..<path.characters.index(path.endIndex, offsetBy: -1)])
+            path = String(path[..<path.index(path.endIndex, offsetBy: -1)])
         }
         let parts = path.components(separatedBy: "/")
         captureGroups = [Int: String]()
@@ -59,16 +59,16 @@ open class BRHTTPRoutePair {
         var i = 0
         for part in parts {
             if part.hasPrefix("(") && part.hasSuffix(")") {
-                let w1 = part.characters.index(part.endIndex, offsetBy: -2)
-                let w2 = part.characters.index(part.endIndex, offsetBy: -1)
+                let w1 = part.index(part.endIndex, offsetBy: -2)
+                let w2 = part.index(part.endIndex, offsetBy: -1)
                 if String(part[w1..<w2]) == "*" { // a wild card capture (part*)
-                    let i1 = part.characters.index(part.startIndex, offsetBy: 1)
-                    let i2 = part.characters.index(part.endIndex, offsetBy: -2)
+                    let i1 = part.index(part.startIndex, offsetBy: 1)
+                    let i2 = part.index(part.endIndex, offsetBy: -2)
                     captureGroups[i] = String(part[i1..<i2])
                     reParts.append("(.*)")
                 } else {
-                    let i1 = part.characters.index(part.startIndex, offsetBy: 1)
-                    let i2 = part.characters.index(part.endIndex, offsetBy: -1)
+                    let i1 = part.index(part.startIndex, offsetBy: 1)
+                    let i2 = part.index(part.endIndex, offsetBy: -1)
                     captureGroups[i] = String(part[i1..<i2])
                     reParts.append("([^/]+)") // a capture (part)
                 }
@@ -92,9 +92,9 @@ open class BRHTTPRoutePair {
         }
         var p = request.path // strip trailing slash
         if p.hasSuffix("/") {
-            p = String(request.path[..<request.path.characters.index(request.path.endIndex, offsetBy: -1)])
+            p = String(request.path[..<request.path.index(request.path.endIndex, offsetBy: -1)])
         }
-        if let m = regex.firstMatch(in: request.path, options: [], range: NSMakeRange(0, p.characters.count))
+        if let m = regex.firstMatch(in: request.path, options: [], range: NSMakeRange(0, p.count))
             , m.numberOfRanges - 1 == captureGroups.count {
                 var match = BRHTTPRouteMatch()
                 for i in 1..<m.numberOfRanges {

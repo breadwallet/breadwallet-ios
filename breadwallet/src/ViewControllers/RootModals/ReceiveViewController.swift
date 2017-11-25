@@ -110,7 +110,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
             border.constraint(.centerX, toView: view),
             border.constraint(.height, constant: 1.0) ])
         requestTop = request.constraint(toBottom: border, constant: C.padding[3])
-        requestBottom = request.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2])
+        requestBottom = request.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[5] : -C.padding[2])
         request.constrain([
             requestTop,
             request.constraint(.leading, toView: view, constant: C.padding[2]),
