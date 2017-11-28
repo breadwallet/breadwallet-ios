@@ -11,11 +11,11 @@ import LocalAuthentication
 
 extension LAContext {
 
-    static var canUseTouchID: Bool {
+    static var canUseBiometrics: Bool {
         return LAContext().canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
     }
 
-    static var isTouchIdAvailable: Bool {
+    static var isBiometricsAvailable: Bool {
         var error: NSError? = nil
         if LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
             return true
@@ -30,6 +30,29 @@ extension LAContext {
 
     static var isPasscodeEnabled: Bool {
         return LAContext().canEvaluatePolicy(.deviceOwnerAuthentication, error: nil)
+    }
+    
+    static func biometricType() -> BiometricType {
+        let context = LAContext()
+        if #available(iOS 11, *) {
+            let _ = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+            switch(context.biometryType) {
+            case .none:
+                return .none
+            case .typeTouchID:
+                return .touch
+            case .typeFaceID:
+                return .face
+            }
+        } else {
+            return context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) ? .touch : .none
+        }
+    }
+    
+    enum BiometricType {
+        case none
+        case touch
+        case face
     }
 
 }

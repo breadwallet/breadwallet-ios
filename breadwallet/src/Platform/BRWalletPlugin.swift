@@ -154,7 +154,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                     } else {
                         let prompt = bitidUrl.host ?? bitidUrl.description
                         self.isPresentingAuth = true
-                        if UserDefaults.isTouchIdEnabled {
+                        if UserDefaults.isBiometricsEnabled {
                             asyncResp.provide(200, json: ["error": "proxy-shutdown"])
                         }
                         self.store.trigger(name: .authenticateForBitId(prompt, { [weak self] result in
@@ -222,7 +222,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                         asyncResp.provide(200, json: ["authenticated": true])
                     } else {
                         self.isPresentingAuth = true
-                        if UserDefaults.isTouchIdEnabled {
+                        if UserDefaults.isBiometricsEnabled {
                             asyncResp.provide(200, json: ["error": "proxy-shutdown"])
                         }
                         self.store.trigger(name: .authenticateForBitId(prompt, { [weak self] result in

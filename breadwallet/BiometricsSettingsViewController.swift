@@ -1,5 +1,5 @@
 //
-//  TouchIdSettingsViewController.swift
+//  BiometricsSettingsViewController.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-03-27.
@@ -9,7 +9,7 @@
 import UIKit
 import LocalAuthentication
 
-class TouchIdSettingsViewController : UIViewController, Subscriber {
+class BiometricsSettingsViewController : UIViewController, Subscriber {
 
     var presentSpendingLimit: (() -> Void)?
 
@@ -20,7 +20,7 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
     }
 
     private let header = RadialGradientView(backgroundColor: .darkPurple)
-    private let illustration = UIImageView(image: #imageLiteral(resourceName: "TouchId-Large"))
+    private let illustration = LAContext.biometricType() == .face ? UIImageView(image: #imageLiteral(resourceName: "FaceId-Large")) : UIImageView(image: #imageLiteral(resourceName: "TouchId-Large"))
     private let label = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
     private let switchLabel = UILabel(font: .customBold(size: 14.0), color: .darkText)
     private let toggle = GradientSwitch()
@@ -65,7 +65,7 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         header.constrain([header.heightAnchor.constraint(equalToConstant: C.Sizes.largeHeaderHeight)])
         illustration.constrain([
             illustration.centerXAnchor.constraint(equalTo: header.centerXAnchor),
-            illustration.centerYAnchor.constraint(equalTo: header.centerYAnchor, constant: C.padding[2]) ])
+            illustration.centerYAnchor.constraint(equalTo: header.centerYAnchor, constant: E.isIPhoneX ? C.padding[4] : C.padding[2]) ])
         label.constrain([
             label.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: C.padding[2]),
             label.topAnchor.constraint(equalTo: header.bottomAnchor, constant: C.padding[2]),
@@ -89,10 +89,11 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
     }
 
     private func setData() {
+        
         view.backgroundColor = .white
-        title = S.TouchIdSettings.title
-        label.text = S.TouchIdSettings.label
-        switchLabel.text = S.TouchIdSettings.switchLabel
+        title = LAContext.biometricType() == .face ? S.FaceIDSettings.title : S.TouchIdSettings.title
+        label.text = LAContext.biometricType() == .face ? S.FaceIDSettings.label : S.TouchIdSettings.label
+        switchLabel.text = LAContext.biometricType() == .face ? S.FaceIDSettings.switchLabel : S.TouchIdSettings.switchLabel
         textView.isEditable = false
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0.0
@@ -101,19 +102,20 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         textView.tintColor = .primaryButton
         addFaqButton()
         let hasSetToggleInitialValue = false
-        store.subscribe(self, selector: { $0.isTouchIdEnabled != $1.isTouchIdEnabled }, callback: {
-            self.toggle.isOn = $0.isTouchIdEnabled
+        store.subscribe(self, selector: { $0.isBiometricsEnabled != $1.isBiometricsEnabled }, callback: {
+            self.toggle.isOn = $0.isBiometricsEnabled
             if !hasSetToggleInitialValue {
                 self.toggle.sendActions(for: .valueChanged) //This event is needed because the gradient background gets set on valueChanged events
             }
         })
         toggle.valueChanged = { [weak self] in
             guard let myself = self else { return }
-            if LAContext.canUseTouchID {
-                myself.store.perform(action: TouchId.setIsEnabled(myself.toggle.isOn))
+            
+            if LAContext.canUseBiometrics {
+                myself.store.perform(action: Biometrics.setIsEnabled(myself.toggle.isOn))
                 myself.textView.attributedText = myself.textViewText
             } else {
-                myself.presentCantUseTouchIdAlert()
+                myself.presentCantUseBiometricsAlert()
                 myself.toggle.isOn = false
             }
         }
@@ -130,8 +132,9 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
     private var textViewText: NSAttributedString {
         guard let rate = rate else { return NSAttributedString(string: "") }
         let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: store.state.maxDigits, store: store)
-        let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.bits, amount.localCurrency))\n\n\(String(format: S.TouchIdSettings.customizeText, S.TouchIdSettings.linkText))"
-        let linkText = S.TouchIdSettings.linkText
+        let customizeText = LAContext.biometricType() == .face ? S.FaceIDSettings.customizeText : S.TouchIdSettings.customizeText
+        let linkText = LAContext.biometricType() == .face ? S.FaceIDSettings.linkText : S.TouchIdSettings.linkText
+        let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.bits, amount.localCurrency))\n\n\(String(format: customizeText, linkText))"
         let attributedString = NSMutableAttributedString(string: string, attributes: [
                 NSAttributedStringKey.font: UIFont.customBody(size: 13.0),
                 NSAttributedStringKey.foregroundColor: UIColor.darkText
@@ -150,8 +153,10 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
         return attributedString
     }
 
-    fileprivate func presentCantUseTouchIdAlert() {
-        let alert = UIAlertController(title: S.TouchIdSettings.unavailableAlertTitle, message: S.TouchIdSettings.unavailableAlertMessage, preferredStyle: .alert)
+    fileprivate func presentCantUseBiometricsAlert() {
+        let unavailableAlertTitle = LAContext.biometricType() == .face ? S.FaceIDSettings.unavailableAlertTitle : S.TouchIdSettings.unavailableAlertTitle
+        let unavailableAlertMessage = LAContext.biometricType() == .face ? S.FaceIDSettings.unavailableAlertMessage : S.TouchIdSettings.unavailableAlertMessage
+        let alert = UIAlertController(title: unavailableAlertTitle, message: unavailableAlertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
@@ -165,14 +170,14 @@ class TouchIdSettingsViewController : UIViewController, Subscriber {
     }
 }
 
-extension TouchIdSettingsViewController : UITextViewDelegate {
+extension BiometricsSettingsViewController : UITextViewDelegate {
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
-        if LAContext.canUseTouchID {
+        if LAContext.canUseBiometrics {
             guard !didTapSpendingLimit else { return false }
             didTapSpendingLimit = true
             presentSpendingLimit?()
         } else {
-            presentCantUseTouchIdAlert()
+            presentCantUseBiometricsAlert()
         }
         return false
     }

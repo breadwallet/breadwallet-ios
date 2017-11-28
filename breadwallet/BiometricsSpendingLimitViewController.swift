@@ -1,5 +1,5 @@
 //
-//  TouchIdSpendingLimitViewController.swift
+//  BiometricsSpendingLimitViewController.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-03-28.
@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import LocalAuthentication
 
-class TouchIdSpendingLimitViewController : UITableViewController, Subscriber {
+class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
 
     private let cellIdentifier = "CellIdentifier"
     private let store: Store
@@ -36,7 +37,8 @@ class TouchIdSpendingLimitViewController : UITableViewController, Subscriber {
         tableView.separatorStyle = .none
 
         let titleLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
-        titleLabel.text = S.TouchIdSpendingLimit.title
+        let biometricsTitle = LAContext.biometricType() == .face ? S.FaceIdSpendingLimit.title : S.TouchIdSpendingLimit.title
+        titleLabel.text = biometricsTitle
         titleLabel.sizeToFit()
         navigationItem.titleView = titleLabel
 

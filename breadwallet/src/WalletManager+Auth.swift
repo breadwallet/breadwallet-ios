@@ -45,7 +45,7 @@ struct NoAuthAuthenticator : WalletAuthenticator {
     var userAccount: Dictionary<AnyHashable, Any>? = nil
 }
 
-enum TouchIdResult {
+enum BiometricsResult {
     case success
     case cancel
     case fallback
@@ -110,9 +110,9 @@ extension WalletManager : WalletAuthenticator {
         return now - pinUnlockTime > secondsInWeek
     }
     
-    // true if the given transaction can be signed with touch ID authentication
-    func canUseTouchID(forTx: BRTxRef) -> Bool {
-        guard LAContext.canUseTouchID else { return false }
+    // true if the given transaction can be signed with biometric authentication
+    func canUseBiometrics(forTx: BRTxRef) -> Bool {
+        guard LAContext.canUseBiometrics else { return false }
         
         do {
             let spendLimit: Int64 = try keychainItem(key: KeychainKey.spendLimit) ?? 0
@@ -253,10 +253,10 @@ extension WalletManager : WalletAuthenticator {
         }
     }
 
-    // show touch ID dialog and call completion block with success or failure
-    func authenticate(touchIDPrompt: String, completion: @escaping (TouchIdResult) -> ()) {
+    // show biometric dialog and call completion block with success or failure
+    func authenticate(biometricsPrompt: String, completion: @escaping (BiometricsResult) -> ()) {
         let policy = LAPolicy.deviceOwnerAuthenticationWithBiometrics
-        LAContext().evaluatePolicy(policy, localizedReason: touchIDPrompt,
+        LAContext().evaluatePolicy(policy, localizedReason: biometricsPrompt,
                                    reply: { success, error in
                                     DispatchQueue.main.async {
                                         if success { return completion(.success) }
@@ -276,8 +276,8 @@ extension WalletManager : WalletAuthenticator {
         return signTx(tx, forkId: forkId)
     }
     
-    // sign the given transaction using touch ID authentication
-    func signTransaction(_ tx: BRTxRef, touchIDPrompt: String, completion: @escaping (TouchIdResult) -> ()) {
+    // sign the given transaction using biometric authentication
+    func signTransaction(_ tx: BRTxRef, biometricsPrompt: String, completion: @escaping (BiometricsResult) -> ()) {
         do {
             let spendLimit: Int64 = try keychainItem(key: KeychainKey.spendLimit) ?? 0
             guard let wallet = wallet, wallet.amountSentByTx(tx) - wallet.amountReceivedFromTx(tx) + wallet.totalSent <= UInt64(spendLimit) else {
@@ -285,9 +285,9 @@ extension WalletManager : WalletAuthenticator {
             }
         }
         catch { return completion(.failure) }
-        store.perform(action: TouchIdActions.setIsPrompting(true))
-        authenticate(touchIDPrompt: touchIDPrompt) { result in
-            self.store.perform(action: TouchIdActions.setIsPrompting(false))
+        store.perform(action: biometricsActions.setIsPrompting(true))
+        authenticate(biometricsPrompt: biometricsPrompt) { result in
+            self.store.perform(action: biometricsActions.setIsPrompting(false))
             guard result == .success else { return completion(result) }
             completion(self.signTx(tx) == true ? .success : .failure)
         }
