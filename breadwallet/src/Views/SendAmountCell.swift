@@ -30,7 +30,7 @@ class SendAmountCell : SendCell {
         didSet {
             textField.text = content
             textField.sendActions(for: .editingChanged)
-            guard let count = content?.characters.count else { return }
+            guard let count = content?.count else { return }
             textField.font = count > 0 ? textFieldFont : placeholderFont
         }
     }

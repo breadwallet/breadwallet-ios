@@ -65,3 +65,5 @@ fastlane/screenshots
 fastlane/test_output
 Screenshots/shots
 .DS_Store
+
+breadwallet/Icon.xcassets/AppIcon-Internal.appiconset

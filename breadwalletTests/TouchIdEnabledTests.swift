@@ -12,32 +12,32 @@ import XCTest
 class TouchIdEnabledTests : XCTestCase {
 
     override func setUp() {
-        UserDefaults.standard.removeObject(forKey: "istouchidenabled")
+        UserDefaults.standard.removeObject(forKey: "isbiometricsenabled")
     }
 
     func testUserDefaultsStorage() {
-        XCTAssertFalse(UserDefaults.isTouchIdEnabled, "Default value is false")
-        UserDefaults.isTouchIdEnabled = true
-        XCTAssertTrue(UserDefaults.isTouchIdEnabled, "Should be true after being set to true")
-        UserDefaults.isTouchIdEnabled = false
-        XCTAssertFalse(UserDefaults.isTouchIdEnabled, "Should be false after being set to false")
+        XCTAssertFalse(UserDefaults.isBiometricsEnabled, "Default value is false")
+        UserDefaults.isBiometricsEnabled = true
+        XCTAssertTrue(UserDefaults.isBiometricsEnabled, "Should be true after being set to true")
+        UserDefaults.isBiometricsEnabled = false
+        XCTAssertFalse(UserDefaults.isBiometricsEnabled, "Should be false after being set to false")
     }
 
     func testInitialState() {
-        UserDefaults.isTouchIdEnabled = true
+        UserDefaults.isBiometricsEnabled = true
         let state = State.initial
-        XCTAssertTrue(state.isTouchIdEnabled, "Initial state should be same as stored value")
+        XCTAssertTrue(state.isBiometricsEnabled, "Initial state should be same as stored value")
 
-        UserDefaults.isTouchIdEnabled = false
+        UserDefaults.isBiometricsEnabled = false
         let state2 = State.initial
-        XCTAssertFalse(state2.isTouchIdEnabled, "Initial state should be same as stored value")
+        XCTAssertFalse(state2.isBiometricsEnabled, "Initial state should be same as stored value")
     }
 
     func testTouchIdAction() {
-        UserDefaults.isTouchIdEnabled = true
+        UserDefaults.isBiometricsEnabled = true
         let store = Store()
         store.perform(action: TouchId.setIsEnabled(false))
-        XCTAssertFalse(UserDefaults.isTouchIdEnabled, "Actions should persist new value")
+        XCTAssertFalse(UserDefaults.isBiometricsEnabled, "Actions should persist new value")
     }
 
 }

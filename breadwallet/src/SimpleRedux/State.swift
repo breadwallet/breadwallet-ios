@@ -18,13 +18,13 @@ struct State {
     let currentRate: Rate?
     let rates: [Rate]
     let alert: AlertType?
-    let isTouchIdEnabled: Bool
+    let isBiometricsEnabled: Bool
     let defaultCurrencyCode: String
     let recommendRescan: Bool
     let isLoadingTransactions: Bool
     let maxDigits: Int
     let isPushNotificationsEnabled: Bool
-    let isPromptingTouchId: Bool
+    let isPromptingBiometrics: Bool
     let pinLength: Int
     let fees: Fees
     let currency: Currency
@@ -40,13 +40,13 @@ extension State {
                         currentRate: UserDefaults.currentRate,
                         rates: [],
                         alert: nil,
-                        isTouchIdEnabled: UserDefaults.isTouchIdEnabled,
+                        isBiometricsEnabled: UserDefaults.isBiometricsEnabled,
                         defaultCurrencyCode: UserDefaults.defaultCurrencyCode,
                         recommendRescan: false,
                         isLoadingTransactions: false,
                         maxDigits: UserDefaults.maxDigits,
                         isPushNotificationsEnabled: UserDefaults.pushToken != nil,
-                        isPromptingTouchId: false,
+                        isPromptingBiometrics: false,
                         pinLength: 6,
                         fees: Fees.defaultFees,
                         currency: .bitcoin)
@@ -60,17 +60,17 @@ extension State {
                    currentRate: Rate? = nil,
                    rates: [Rate]? = nil,
                    alert: AlertType? = nil,
-                   isTouchIdEnabled: Bool? = nil,
+                   isBiometricsEnabled: Bool? = nil,
                    defaultCurrencyCode: String? = nil,
                    recommendRescan: Bool? = nil,
                    isLoadingTransactions: Bool? = nil,
                    maxDigits: Int? = nil,
                    isPushNotificationsEnabled: Bool? = nil,
-                   isPromptingTouchId: Bool? = nil,
+                   isPromptingBiometrics: Bool? = nil,
                    pinLength: Int? = nil,
                    fees: Fees? = nil,
                    currency: Currency? = nil) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible, isLoginRequired: isLoginRequired ?? self.isLoginRequired, rootModal: rootModal ?? self.rootModal, walletState: walletState ?? self.walletState, isBtcSwapped: isBtcSwapped ?? self.isBtcSwapped, currentRate: currentRate ?? self.currentRate, rates: rates ?? self.rates, alert: alert ?? self.alert, isTouchIdEnabled: isTouchIdEnabled ?? self.isTouchIdEnabled, defaultCurrencyCode: defaultCurrencyCode ?? self.defaultCurrencyCode, recommendRescan: recommendRescan ?? self.recommendRescan, isLoadingTransactions: isLoadingTransactions ?? self.isLoadingTransactions, maxDigits: maxDigits ?? self.maxDigits, isPushNotificationsEnabled: isPushNotificationsEnabled ?? self.isPushNotificationsEnabled, isPromptingTouchId: isPromptingTouchId ?? self.isPromptingTouchId, pinLength: pinLength ?? self.pinLength, fees: fees ?? self.fees, currency: currency ?? self.currency)
+        return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible, isLoginRequired: isLoginRequired ?? self.isLoginRequired, rootModal: rootModal ?? self.rootModal, walletState: walletState ?? self.walletState, isBtcSwapped: isBtcSwapped ?? self.isBtcSwapped, currentRate: currentRate ?? self.currentRate, rates: rates ?? self.rates, alert: alert ?? self.alert, isBiometricsEnabled: isBiometricsEnabled ?? self.isBiometricsEnabled, defaultCurrencyCode: defaultCurrencyCode ?? self.defaultCurrencyCode, recommendRescan: recommendRescan ?? self.recommendRescan, isLoadingTransactions: isLoadingTransactions ?? self.isLoadingTransactions, maxDigits: maxDigits ?? self.maxDigits, isPushNotificationsEnabled: isPushNotificationsEnabled ?? self.isPushNotificationsEnabled, isPromptingBiometrics: isPromptingBiometrics ?? self.isPromptingBiometrics, pinLength: pinLength ?? self.pinLength, fees: fees ?? self.fees, currency: currency ?? self.currency)
     }
 }
 

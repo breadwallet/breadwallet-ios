@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class ModalPresenter : Subscriber, Trackable {
 
@@ -78,8 +79,8 @@ class ModalPresenter : Subscriber, Trackable {
         store.subscribe(self, name: .promptPaperKey, callback: { _ in
             self.presentWritePaperKey()
         })
-        store.subscribe(self, name: .promptTouchId, callback: { _ in
-            self.presentTouchIdSetting()
+        store.subscribe(self, name: .promptBiometrics, callback: { _ in
+            self.presentBiometricsSetting()
         })
         store.subscribe(self, name: .promptShareData, callback: { _ in
             self.promptShareData()
@@ -391,13 +392,13 @@ class ModalPresenter : Subscriber, Trackable {
                 }, callback: {
                     settingsNav.pushViewController(PushNotificationsViewController(store: self.store), animated: true)
                 }),
-                Setting(title: S.Settings.touchIdLimit, accessoryText: { [weak self] in
+                Setting(title: LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit, accessoryText: { [weak self] in
                     guard let myself = self else { return "" }
                     guard let rate = myself.store.state.currentRate else { return "" }
                     let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: myself.store.state.maxDigits, store: myself.store)
                     return amount.localCurrency
                 }, callback: {
-                    self.pushTouchIdSpendingLimit(onNc: settingsNav)
+                    self.pushBiometricsSpendingLimit(onNc: settingsNav)
                 }),
                 Setting(title: S.Settings.currency, accessoryText: {
                     let code = self.store.state.defaultCurrencyCode
@@ -515,12 +516,12 @@ class ModalPresenter : Subscriber, Trackable {
             let updatePin = UpdatePinViewController(store: myself.store, walletManager: walletManager, type: .update)
             nc.pushViewController(updatePin, animated: true)
         }
-        securityCenter.didTapTouchId = strongify(self) { myself in
-            let touchIdSettings = TouchIdSettingsViewController(walletManager: walletManager, store: myself.store)
-            touchIdSettings.presentSpendingLimit = {
-                myself.pushTouchIdSpendingLimit(onNc: nc)
+        securityCenter.didTapBiometrics = strongify(self) { myself in
+            let biometricsSettings = BiometricsSettingsViewController(walletManager: walletManager, store: myself.store)
+            biometricsSettings.presentSpendingLimit = {
+                myself.pushBiometricsSpendingLimit(onNc: nc)
             }
-            nc.pushViewController(touchIdSettings, animated: true)
+            nc.pushViewController(biometricsSettings, animated: true)
         }
         securityCenter.didTapPaperKey = { [weak self] in
             self?.presentWritePaperKey(fromViewController: nc)
@@ -529,14 +530,14 @@ class ModalPresenter : Subscriber, Trackable {
         window.rootViewController?.present(nc, animated: true, completion: nil)
     }
 
-    private func pushTouchIdSpendingLimit(onNc: UINavigationController) {
+    private func pushBiometricsSpendingLimit(onNc: UINavigationController) {
         guard let walletManager = walletManager else { return }
 
         let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: store.state.pinLength, callback: { [weak self] pin, vc in
             guard let myself = self else { return false }
             if walletManager.authenticate(pin: pin) {
                 vc.dismiss(animated: true, completion: {
-                    let spendingLimit = TouchIdSpendingLimitViewController(walletManager: walletManager, store: myself.store)
+                    let spendingLimit = BiometricsSpendingLimitViewController(walletManager: walletManager, store: myself.store)
                     onNc.pushViewController(spendingLimit, animated: true)
                 })
                 return true
@@ -650,13 +651,13 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     //MARK: - Prompts
-    func presentTouchIdSetting() {
+    func presentBiometricsSetting() {
         guard let walletManager = walletManager else { return }
-        let touchIdSettings = TouchIdSettingsViewController(walletManager: walletManager, store: store)
-        touchIdSettings.addCloseNavigationItem(tintColor: .white)
-        let nc = ModalNavigationController(rootViewController: touchIdSettings)
-        touchIdSettings.presentSpendingLimit = strongify(self) { myself in
-            myself.pushTouchIdSpendingLimit(onNc: nc)
+        let biometricsSettings = BiometricsSettingsViewController(walletManager: walletManager, store: store)
+        biometricsSettings.addCloseNavigationItem(tintColor: .white)
+        let nc = ModalNavigationController(rootViewController: biometricsSettings)
+        biometricsSettings.presentSpendingLimit = strongify(self) { myself in
+            myself.pushBiometricsSpendingLimit(onNc: nc)
         }
         nc.setDefaultStyle()
         nc.isNavigationBarHidden = true
@@ -782,8 +783,8 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func authenticateForBitId(prompt: String, callback: @escaping (BitIdAuthResult) -> Void) {
-        if UserDefaults.isTouchIdEnabled {
-            walletManager?.authenticate(touchIDPrompt: prompt, completion: { result in
+        if UserDefaults.isBiometricsEnabled {
+            walletManager?.authenticate(biometricsPrompt: prompt, completion: { result in
                 switch result {
                 case .success:
                     return callback(.success)
@@ -913,7 +914,7 @@ class SecurityCenterNavigationDelegate : NSObject, UINavigationControllerDelegat
             navigationController.isNavigationBarHidden = false
         }
 
-        if viewController is TouchIdSettingsViewController {
+        if viewController is BiometricsSettingsViewController {
             navigationController.setWhiteStyle()
         } else {
             navigationController.setDefaultStyle()

@@ -136,13 +136,12 @@ class AccountViewController : UIViewController, Subscriber {
 
     private func addConstraints() {
         headerContainer.constrainTopCorners(sidePadding: 0, topPadding: 0)
-        headerContainer.constrain([
-            headerContainer.constraint(.height, constant: accountHeaderHeight) ])
+        headerContainer.constrain([ headerContainer.constraint(.height, constant: E.isIPhoneX ? accountHeaderHeight + 14.0 : accountHeaderHeight) ])
         headerView.constrain(toSuperviewEdges: nil)
 
         footerView.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         footerView.constrain([
-            footerView.constraint(.height, constant: accountFooterHeight) ])
+            footerView.constraint(.height, constant: E.isIPhoneX ? accountFooterHeight + 19.0 : accountFooterHeight) ])
         searchHeaderview.constrain(toSuperviewEdges: nil)
     }
 
@@ -287,6 +286,24 @@ class AccountViewController : UIViewController, Subscriber {
     private func addTransactionsView() {
         addChildViewController(transactionsTableView, layout: {
             transactionsTableView.view.constrain(toSuperviewEdges: nil)
+            if #available(iOS 11, *) {
+                transactionsTableView.tableView.contentInset =
+                    UIEdgeInsets(top: E.isIPhoneX ? accountHeaderHeight + 14 : accountHeaderHeight + C.padding[2],
+                                 left: 0,
+                                 bottom: E.isIPhoneX ? accountFooterHeight + C.padding[2] + 19 : accountFooterHeight + C.padding[2],
+                                 right: 0)
+            } else {
+                transactionsTableView.tableView.contentInset =
+                    UIEdgeInsets(top: E.isIPhoneX ? accountHeaderHeight + C.padding[2] + 14 : accountHeaderHeight + C.padding[2],
+                                 left: 0,
+                                 bottom: E.isIPhoneX ? accountFooterHeight + C.padding[2] + 19 : accountFooterHeight + C.padding[2],
+                                 right: 0)
+            }
+            transactionsTableView.tableView.scrollIndicatorInsets =
+                UIEdgeInsets(top: E.isIPhoneX ? accountHeaderHeight + 14 : accountHeaderHeight,
+                             left: 0,
+                             bottom: E.isIPhoneX ? accountFooterHeight + 19 : accountFooterHeight,
+                             right: 0)
         })
     }
 
@@ -299,7 +316,7 @@ class AccountViewController : UIViewController, Subscriber {
             })
         }
         NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { note in
-            if !self.isLoginRequired && !self.store.state.isPromptingTouchId {
+            if !self.isLoginRequired && !self.store.state.isPromptingBiometrics {
                 self.blurView.alpha = 1.0
                 self.view.addSubview(self.blurView)
                 self.blurView.constrain(toSuperviewEdges: nil)

@@ -25,13 +25,13 @@ struct HideStartFlow : Action {
                      currentRate: state.currentRate,
                      rates: state.rates,
                      alert: state.alert,
-                     isTouchIdEnabled: state.isTouchIdEnabled,
+                     isBiometricsEnabled: state.isBiometricsEnabled,
                      defaultCurrencyCode: state.defaultCurrencyCode,
                      recommendRescan: state.recommendRescan,
                      isLoadingTransactions: state.isLoadingTransactions,
                      maxDigits: state.maxDigits,
                      isPushNotificationsEnabled: state.isPushNotificationsEnabled,
-                     isPromptingTouchId: state.isPromptingTouchId,
+                     isPromptingBiometrics: state.isPromptingBiometrics,
                      pinLength: state.pinLength,
                      fees: state.fees,
                      currency: state.currency)
@@ -165,13 +165,13 @@ enum Alert {
     }
 }
 
-enum TouchId {
+enum Biometrics {
     struct setIsEnabled : Action, Trackable {
         let reduce: Reducer
-        init(_ isTouchIdEnabled: Bool) {
-            UserDefaults.isTouchIdEnabled = isTouchIdEnabled
-            reduce = { $0.mutate(isTouchIdEnabled: isTouchIdEnabled) }
-            saveEvent("event.enableTouchId", attributes: ["isEnabled": "\(isTouchIdEnabled)"])
+        init(_ isBiometricsEnabled: Bool) {
+            UserDefaults.isBiometricsEnabled = isBiometricsEnabled
+            reduce = { $0.mutate(isBiometricsEnabled: isBiometricsEnabled) }
+            saveEvent("event.enableBiometrics", attributes: ["isEnabled": "\(isBiometricsEnabled)"])
         }
     }
 }
@@ -226,11 +226,11 @@ enum PushNotifications {
     }
 }
 
-enum TouchIdActions {
+enum biometricsActions {
     struct setIsPrompting : Action {
         let reduce: Reducer
         init(_ isPrompting: Bool) {
-            reduce = { $0.mutate(isPromptingTouchId: isPrompting) }
+            reduce = { $0.mutate(isPromptingBiometrics: isPrompting) }
         }
     }
 }

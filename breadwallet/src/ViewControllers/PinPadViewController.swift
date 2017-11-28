@@ -122,7 +122,7 @@ class PinPadViewController : UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = items[indexPath.row]
         if item == "del" {
-            if currentOutput.characters.count > 0 {
+            if currentOutput.count > 0 {
                 if currentOutput == ("0" + currencyDecimalSeparator) {
                     currentOutput = ""
                 } else {
@@ -175,7 +175,7 @@ class PinPadViewController : UICollectionViewController {
         if char == currencyDecimalSeparator {
             if decimalLocation == nil {
                 //Prepend a 0 if the first character is a decimal point
-                if currentOutput.characters.count == 0 {
+                if currentOutput.count == 0 {
                     currentOutput = "0"
                 }
                 return true

@@ -319,8 +319,8 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                 self?.saveEvent("prompt.\(type.name).dismissed")
                 self?.currentPrompt = nil
             }
-            if type == .touchId {
-                UserDefaults.hasPromptedTouchId = true
+            if type == .biometrics {
+                UserDefaults.hasPromptedBiometrics = true
             }
             if type == .shareData {
                 UserDefaults.hasPromptedShareData = true
