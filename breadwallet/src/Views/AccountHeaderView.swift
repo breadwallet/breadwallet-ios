@@ -209,6 +209,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         if store.isEthLike {
             setEthBalance()
         }
+        logo.isHidden = true
+        currencySwitch.isHidden = true
     }
 
     private func transform(forView: UIView) ->  CGAffineTransform {
