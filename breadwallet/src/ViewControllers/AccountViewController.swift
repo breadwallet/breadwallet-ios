@@ -72,7 +72,11 @@ class AccountViewController : UIViewController, Subscriber {
     private let tempLoginView: LoginViewController
     private let loginTransitionDelegate = LoginTransitionDelegate()
     private let welcomeTransitingDelegate = PinTransitioningDelegate()
-
+    private let back: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("back", for: .normal)
+        return button
+    }()
     private let searchHeaderview: SearchHeaderView = {
         let view = SearchHeaderView()
         view.isHidden = true
@@ -116,6 +120,17 @@ class AccountViewController : UIViewController, Subscriber {
         addAppLifecycleNotificationEvents()
         addTemporaryStartupViews()
         setInitialData()
+
+
+        headerView.addSubview(back)
+        back.tintColor = .white
+        back.constrain([
+            back.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: C.padding[2]),
+            back.topAnchor.constraint(equalTo: headerView.topAnchor, constant: C.padding[4]) ])
+        back.tap = {
+            self.navigationController?.popViewController(animated: true)
+        }
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -267,18 +282,18 @@ class AccountViewController : UIViewController, Subscriber {
         guard store.state.currency == .bitcoin else { return }
         guardProtected(queue: DispatchQueue.main) {
             if !WalletManager.staticNoWallet {
-                self.addChildViewController(self.tempLoginView, layout: {
-                    self.tempLoginView.view.constrain(toSuperviewEdges: nil)
-                })
+//                self.addChildViewController(self.tempLoginView, layout: {
+//                    self.tempLoginView.view.constrain(toSuperviewEdges: nil)
+//                })
             } else {
-                let tempStartView = StartViewController(store: self.store, didTapCreate: {}, didTapRecover: {})
-                self.addChildViewController(tempStartView, layout: {
-                    tempStartView.view.constrain(toSuperviewEdges: nil)
-                    tempStartView.view.isUserInteractionEnabled = false
-                })
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                    tempStartView.remove()
-                })
+//                let tempStartView = StartViewController(store: self.store, didTapCreate: {}, didTapRecover: {})
+//                self.addChildViewController(tempStartView, layout: {
+//                    tempStartView.view.constrain(toSuperviewEdges: nil)
+//                    tempStartView.view.isUserInteractionEnabled = false
+//                })
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+//                    tempStartView.remove()
+//                })
             }
         }
     }

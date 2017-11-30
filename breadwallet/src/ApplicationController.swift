@@ -15,8 +15,8 @@ private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
 
 let tokens: [Token] = {
-    return []
-    //return E.isTestnet ? [tst] : [xjp]
+    //return []
+    return E.isTestnet ? [tst] : [xjp]
 }()
 
 class ApplicationController : Subscriber, Trackable {
@@ -30,7 +30,7 @@ class ApplicationController : Subscriber, Trackable {
         tokens.map {
             let store = Store()
             store.perform(action: CurrencyActions.set(.token))
-            store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 305.0)))
+            store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 600.0)))
             store.perform(action: WalletChange.set(store.state.walletState.mutate(token: $0)))
             return store
         }
@@ -48,7 +48,6 @@ class ApplicationController : Subscriber, Trackable {
     private var kvStoreCoordinator: KVStoreCoordinator?
     private var accountViewController: AccountViewController?
     private var ethAccountViewController: AccountViewController?
-    private var containerViewController: AppContainerViewController?
     fileprivate var application: UIApplication?
     private let watchSessionManager = PhoneWCSessionManager()
     private var urlController: URLController?
@@ -290,7 +289,22 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func setupRootViewController() {
-        let container = AppContainerViewController()
+
+        let home = HomeScreenViewController(stores: [store, ethStore] + tokenStores)
+        let nc = UINavigationController(rootViewController: home)
+        nc.delegate = home
+        home.didSelectCurrency = { code in
+            if code == "btc" {
+                nc.pushViewController(self.accountViewController!, animated: true)
+            } else if code == "eth" {
+                nc.pushViewController(self.ethAccountViewController!, animated: true)
+            } else {
+                nc.pushViewController(self.accountViewControllers![2], animated: true)
+            }
+        }
+
+
+        window.rootViewController = nc
 
         let didSelectTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
             guard let kvStore = self.walletManager?.apiClient?.kv else { return }
@@ -320,40 +334,6 @@ class ApplicationController : Subscriber, Trackable {
         }
 
         accountViewControllers = [accountViewController!, ethAccountViewController!] + tokenAccountViewControllers
-
-        container.child = accountViewController
-        container.addChildViewController(accountViewController!, layout: {
-            accountViewController!.view.constrain(toSuperviewEdges: nil)
-        })
-        containerViewController = container
-        window.rootViewController = container
-
-        NotificationCenter.default.addObserver(forName: .SwitchCurrencyNotification, object: nil, queue: nil, using: { note in
-            if let info = note.userInfo {
-                if let currency = info["currency"] as? String {
-                    if currency == "btc" {
-                        self.switchToAccount(vc: self.accountViewController!)
-                    } else if currency == "eth" {
-                        self.switchToAccount(vc: self.ethAccountViewController!)
-                    } else {
-                        let vc = self.accountViewControllers?.filter{ $0.tokenSymbol == currency }
-                        self.switchToAccount(vc: vc!.first!)
-                    }
-                }
-            }
-        })
-    }
-
-    private func switchToAccount(vc: AccountViewController) {
-        guard containerViewController?.child != vc else { return }
-        guard let accountViewControllers = accountViewControllers else { return }
-        accountViewControllers.filter { $0 != vc }.forEach {
-            $0.removeFromParentViewController()
-        }
-        containerViewController?.child = vc
-        containerViewController?.addChildViewController(vc, layout: {
-            vc.view.constrain(toSuperviewEdges: nil)
-        })
     }
 
     private func startDataFetchers() {
