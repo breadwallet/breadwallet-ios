@@ -284,7 +284,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             }
         } else {
             guard let token = store.state.walletState.token else { return }
-            primaryBalance.text = bigBalance.getString(10) + " \(token.code)"
+            primaryBalance.text = DisplayAmount.tokenString(value: bigBalance, store: store)
             secondaryBalance.text = ""
             secondaryBalance.transform = transform(forView: secondaryBalance)
             equals.text = ""

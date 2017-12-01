@@ -153,8 +153,13 @@ class TokenTransaction : Transaction {
         self.event = event
         super.init()
 
-        let address0 = event.topics[1].replacingOccurrences(of: "000000000000000000000000", with: "")
-        let address1 = event.topics[2].replacingOccurrences(of: "000000000000000000000000", with: "")
+        //FIXME
+        var address0: String = ""
+        var address1: String = ""
+        if event.topics.count >= 3 {
+            address0 = event.topics[1].replacingOccurrences(of: "000000000000000000000000", with: "")
+            address1 = event.topics[2].replacingOccurrences(of: "000000000000000000000000", with: "")
+        }
 
         if address.lowercased() == address0.lowercased() {
             self.direction = .sent

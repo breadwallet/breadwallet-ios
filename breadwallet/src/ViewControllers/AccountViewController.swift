@@ -74,7 +74,8 @@ class AccountViewController : UIViewController, Subscriber {
     private let welcomeTransitingDelegate = PinTransitioningDelegate()
     private let back: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("back", for: .normal)
+        button.setImage(#imageLiteral(resourceName: "backChevron"), for: .normal)
+        button.tintColor = .white
         return button
     }()
     private let searchHeaderview: SearchHeaderView = {
@@ -121,7 +122,6 @@ class AccountViewController : UIViewController, Subscriber {
         addTemporaryStartupViews()
         setInitialData()
 
-
         headerView.addSubview(back)
         back.tintColor = .white
         back.constrain([
@@ -131,6 +131,11 @@ class AccountViewController : UIViewController, Subscriber {
             self.navigationController?.popViewController(animated: true)
         }
 
+        if let endTime = store.state.walletState.crowdsale?.endTime {
+            if Date() < endTime {
+                footerView.isHidden = true
+            }
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
