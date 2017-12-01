@@ -55,8 +55,8 @@ class GethManager {
 
         }
         
-        print("receive address:\(address.getHex())")
-        print("latest block:\(try! client.getBlockByNumber(context, number: -1).getNumber())")
+        //print("receive address:\(address.getHex())")
+        //print("latest block:\(try! client.getBlockByNumber(context, number: -1).getNumber())")
     }
 
     func maxOutputAmount(toAddress: String) -> GethBigInt {
@@ -66,13 +66,13 @@ class GethManager {
     func createTx(forAmount: GethBigInt, toAddress: String, nonce: Int64) -> GethTransaction {
         let toAddr = GethAddress(fromHex: toAddress)
         let price = try! client.suggestGasPrice(context)
-        return GethTransaction(nonce, to: toAddr, amount: forAmount, gasLimit: GethBigInt(21000),
+        return GethTransaction(nonce, to: toAddr, amount: forAmount, gasLimit: GethBigInt(300000),
                                gasPrice: price, data: nil)
     }
 
     var fee: GethBigInt {
         let price = (try! client.suggestGasPrice(context)).getInt64()
-        return GethBigInt(price * 21000)
+        return GethBigInt(price * 300000)
     }
     
     func signTx(_ tx: GethTransaction, ethPrivKey: String) -> GethTransaction {
@@ -131,6 +131,75 @@ class GethManager {
             return nil
         } catch let e {
             return e
+        }
+    }
+}
+
+extension GethManager {
+
+    func getStartTime() -> Date? {
+        guard let startTime = callBigInt(method: "startTime")?.getString(10) else { return nil }
+        guard let timestamp = TimeInterval(startTime) else { return nil }
+        return Date(timeIntervalSince1970: timestamp)
+    }
+
+    func getEndTime() -> Date? {
+        guard let startTime = callBigInt(method: "endTime")?.getString(10) else { return nil }
+        guard let timestamp = TimeInterval(startTime) else { return nil }
+        return Date(timeIntervalSince1970: timestamp)
+    }
+
+    func callBigInt(method: String) -> GethBigInt? {
+        let address = GethAddress(fromHex: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7")
+        var error: NSError? = nil
+        let contract = GethBindContract(address, crowdSaleABI, client, &error)
+
+        let opts = GethNewCallOpts()
+        let out = GethNewInterfaces(1)
+        let args = GethNewInterfaces(0)
+
+        let result0 = GethNewInterface()
+        result0?.setBigInt(GethNewBigInt(0))
+        try! out?.set(0, object: result0)
+
+        do {
+            try contract?.call(opts, out_: out, method: method, args: args)
+            return result0?.getBigInt()
+        } catch let e {
+            print("e2: \(e)")
+            return nil
+        }
+    }
+
+    func getBalance() {
+
+        let address = GethAddress(fromHex: "0xab6e259770002a88ff37b23755ddd3743e8a98a2")
+        var error: NSError? = nil
+        let contract = GethBindContract(address, xjp.abi, client, &error)
+
+        if let e = error {
+            print("e: \(e)")
+            print("")
+        }
+
+        let opts = GethNewCallOpts()
+        let out = GethNewInterfaces(1)
+        let args = GethNewInterfaces(1)
+
+        let arg0 = GethNewInterface()
+        arg0?.setAddress(GethAddress(fromHex: "0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508"))
+        try! args?.set(0, object: arg0)
+
+        let result0 = GethNewInterface()
+        result0?.setBigInt(GethNewBigInt(0))
+        try! out?.set(0, object: result0)
+
+        do {
+            try contract?.call(opts, out_: out, method: "balanceOf", args: args)
+
+            print("balanceOf: \(result0?.getBigInt().getString(10))")
+        } catch let e {
+            print("e2: \(e)")
         }
     }
 }

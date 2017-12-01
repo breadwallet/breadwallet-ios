@@ -61,6 +61,8 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     private let store: Store
     private let headerCellIdentifier = "HeaderCellIdentifier"
     private let transactionCellIdentifier = "TransactionCellIdentifier"
+    private let blankCellIdentifier = "BlankCellIdentifier"
+    private let crowdsaleView: CrowdsaleView? = nil
     private var transactions: [Transaction] = []
     private var allTransactions: [Transaction] = [] {
         didSet {
@@ -93,7 +95,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         }
     }
     private var hasExtraSection: Bool {
-        return isSyncingViewVisible || (currentPrompt != nil)
+        return isSyncingViewVisible || (currentPrompt != nil) || (store.state.walletState.crowdsale != nil)
     }
 
     override func viewDidLoad() {
@@ -101,6 +103,8 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
         tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: transactionCellIdentifier)
         tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: headerCellIdentifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: blankCellIdentifier)
+
         tableView.separatorStyle = .none
         tableView.estimatedRowHeight = 100.0
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -212,27 +216,37 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if hasExtraSection && indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath)
-            if let transactionCell = cell as? TransactionTableViewCell {
-                transactionCell.setStyle(.single)
-                transactionCell.container.subviews.forEach {
-                    $0.removeFromSuperview()
+            if store.state.walletState.crowdsale != nil {
+                let cell = tableView.dequeueReusableCell(withIdentifier: blankCellIdentifier, for: indexPath)
+                if cell.contentView.subviews.count == 0 {
+                    let newCrowdsaleView = crowdsaleView ?? CrowdsaleView(store: store)
+                    cell.contentView.addSubview(newCrowdsaleView)
+                    newCrowdsaleView.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[1], C.padding[1], C.padding[1], C.padding[1]))
                 }
-                if let prompt = currentPrompt {
-                    transactionCell.container.addSubview(prompt)
-                    prompt.constrain(toSuperviewEdges: nil)
-                    prompt.constrain([
-                        prompt.heightAnchor.constraint(equalToConstant: 88.0) ])
-                    transactionCell.selectionStyle = .default
-                } else {
-                    transactionCell.container.addSubview(syncingView)
-                    syncingView.constrain(toSuperviewEdges: nil)
-                    syncingView.constrain([
-                        syncingView.heightAnchor.constraint(equalToConstant: 88.0) ])
-                    transactionCell.selectionStyle = .none
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath)
+                if let transactionCell = cell as? TransactionTableViewCell {
+                    transactionCell.setStyle(.single)
+                    transactionCell.container.subviews.forEach {
+                        $0.removeFromSuperview()
+                    }
+                    if let prompt = currentPrompt {
+                        transactionCell.container.addSubview(prompt)
+                        prompt.constrain(toSuperviewEdges: nil)
+                        prompt.constrain([
+                            prompt.heightAnchor.constraint(equalToConstant: 88.0) ])
+                        transactionCell.selectionStyle = .default
+                    } else {
+                        transactionCell.container.addSubview(syncingView)
+                        syncingView.constrain(toSuperviewEdges: nil)
+                        syncingView.constrain([
+                            syncingView.heightAnchor.constraint(equalToConstant: 88.0) ])
+                        transactionCell.selectionStyle = .none
+                    }
                 }
+                return cell
             }
-            return cell
         } else {
             let numRows = tableView.numberOfRows(inSection: indexPath.section)
             var style: TransactionCellStyle = .middle

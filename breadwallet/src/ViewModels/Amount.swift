@@ -223,8 +223,10 @@ struct DisplayAmount {
 
     static func tokenString(value: GethBigInt, store: Store) -> String {
         let placeholderAmount = Amount(amount: 0, rate: store.state.currentRate!, maxDigits: 0, store: store)
-        let decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
-        let eth = NSDecimalNumber(decimal: decimal)
+        var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
+        var amount: Decimal = 0.0
+        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
+        let eth = NSDecimalNumber(decimal: amount)
         return placeholderAmount.btcFormat.string(from: eth) ?? ""
     }
 

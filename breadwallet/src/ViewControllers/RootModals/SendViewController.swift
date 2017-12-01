@@ -106,6 +106,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                             }
         })
         walletManager.wallet?.feePerKb = store.state.fees.regular
+
+        attemptSetupCrowdsale()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -115,6 +117,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             amountView.expandPinPad()
         } else if let initialRequest = initialRequest {
             handleRequest(initialRequest)
+        }
+        if store.state.walletState.crowdsale != nil {
+            amountView.expandPinPad()
+        }
+    }
+
+    private func attemptSetupCrowdsale() {
+        if store.state.walletState.crowdsale != nil {
+            addressCell.setContent("Bread Crowdsale")
         }
     }
 
@@ -223,6 +234,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     @objc private func sendTapped() {
+        guard store.state.walletState.crowdsale == nil else { confirmCrowdsale(); return }
         guard store.state.currency != .ethereum else { confirmEth(); return }
         guard store.state.currency != .token else { confirmToken(); return }
         if addressCell.textField.isFirstResponder {
@@ -277,6 +289,22 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         return
     }
 
+    private func confirmCrowdsale() {
+        guard let ethManager = gethManager else { return }
+        guard let crowdsale = store.state.walletState.crowdsale else { return }
+        let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee, feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: crowdsale.contract.address, isUsingTouchId: sender.canUseBiometrics, store: store)
+        confirm.callback = {
+            confirm.dismiss(animated: true, completion: {
+                self.presentEthPin()
+            })
+        }
+        confirmTransitioningDelegate.shouldShowMaskView = false
+        confirm.transitioningDelegate = confirmTransitioningDelegate
+        confirm.modalPresentationStyle = .overFullScreen
+        confirm.modalPresentationCapturesStatusBarAppearance = true
+        present(confirm, animated: true, completion: nil)
+    }
+
     private func confirmEth() {
         guard let ethManager = gethManager else { return }
         let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee, feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseBiometrics, store: store)
@@ -313,7 +341,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             if myself.walletManager.authenticate(pin: pin) {
                 vc.dismiss(animated: true, completion: {
                     self?.parent?.view.isFrameChangeBlocked = false
-                    if myself.store.state.currency == .ethereum {
+
+                    if myself.store.state.walletState.crowdsale != nil {
+                        myself.sendCrowdsale()
+                    } else if myself.store.state.currency == .ethereum {
                         myself.sendEth()
                     } else {
                         myself.sendToken()
@@ -386,6 +417,33 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 let timestamp = String(Date().timeIntervalSince1970)
                 let tempEvent = Event(timestamp: timestamp, from: ethManager.address.getHex(), to: address, amount: amount.getString(10))
                 let transactionViewModel = TokenTransaction(event: tempEvent, address: ethManager.address.getHex(), store: self.store)
+                let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
+                self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))
+            })
+        }
+    }
+
+    private func sendCrowdsale() {
+        guard let crowdSale = store.state.walletState.crowdsale else { return }
+        let amount = amountView.ethOutput
+        guard let ethManager = gethManager else { return }
+
+        let tx = ethManager.createTx(forAmount: amount, toAddress: crowdSale.contract.address, nonce: Int64(store.state.walletState.numSent))
+        let signedTx = ethManager.signTx(tx, ethPrivKey: walletManager.ethPrivKey!)
+        if let error = ethManager.publishTx(signedTx) {
+            showErrorMessage(error.localizedDescription)
+        } else {
+            dismiss(animated: true, completion: {
+                self.store.trigger(name: .showStatusBar)
+                if self.isPresentedFromLock {
+                    self.store.trigger(name: .loginFromSend)
+                }
+                self.onPublishSuccess?()
+
+                //Add temporary transaction
+                let timestamp = String(Date().timeIntervalSince1970)
+                let tempTx = EthTx(blockNumber: "0", timeStamp: timestamp, value: amount.getString(10), from: ethManager.address.getHex(), to: crowdSale.contract.address, confirmations: "0", hash: signedTx.getHash().getHex())
+                let transactionViewModel = EthTransaction(tx: tempTx, address: ethManager.address.getHex(), store: self.store)
                 let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
                 self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))
             })
@@ -566,7 +624,9 @@ extension SendViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        if let token = store.state.walletState.token {
+        if store.state.walletState.crowdsale != nil {
+            return "Buy Tokens With Ethereum"
+        } else if let token = store.state.walletState.token {
             return "Send \(token.code)"
         } else {
             return store.isEthLike ? S.Send.ethTitle : S.Send.title

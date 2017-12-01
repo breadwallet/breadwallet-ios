@@ -59,6 +59,13 @@ class TokenWalletCoordinator {
                 self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: mergedViewModels)))
             }
         }
+
+        if store.state.walletState.crowdsale != nil {
+            if let start = gethManager.getStartTime(), let end = gethManager.getEndTime() {
+                let newCrowdsale = Crowdsale(startTime: start, endTime: end)
+                store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
+            }
+        }
     }
 
 }
