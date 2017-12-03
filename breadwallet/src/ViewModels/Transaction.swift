@@ -150,6 +150,7 @@ class EthTransaction : Transaction {
 
 class TokenTransaction : Transaction {
     init(event: Event, address: String, store: Store) {
+        self.store = store
         self.event = event
         super.init()
 
@@ -186,6 +187,7 @@ class TokenTransaction : Transaction {
     let event: Event
     var to: String = ""
     var from: String = ""
+    let store: Store
 
     override var toAddress: String {
         if self.direction == .sent {
@@ -198,8 +200,9 @@ class TokenTransaction : Transaction {
     override func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
         let amount = GethBigInt(0)
         amount?.setString(event.data.replacingOccurrences(of: "0x", with: ""), base: 16)
+        let x = DisplayAmount.tokenString(value: amount!, store: store)
         let format = direction.amountDescriptionFormat
-        let string = String(format: format, amount!.getString(10))
+        let string = String(format: format, x)
         return string.attributedStringForTags
     }
 }
