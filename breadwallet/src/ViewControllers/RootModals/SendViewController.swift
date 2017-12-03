@@ -52,7 +52,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let walletManager: WalletManager
     private let amountView: AmountViewController
     private let addressCell = AddressCell()
-    private let descriptionCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
+    private let memoCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary)
     private let currency: ShadowButton
     private let currencyBorder = UIView(color: .secondaryShadow)
@@ -71,7 +71,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     override func viewDidLoad() {
         view.backgroundColor = .white
         view.addSubview(addressCell)
-        view.addSubview(descriptionCell)
+        view.addSubview(memoCell)
         view.addSubview(sendButton)
 
         addressCell.constrainTopCorners(height: SendCell.defaultHeight)
@@ -83,19 +83,19 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 amountView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         })
 
-        descriptionCell.constrain([
-            descriptionCell.widthAnchor.constraint(equalTo: amountView.view.widthAnchor),
-            descriptionCell.topAnchor.constraint(equalTo: amountView.view.bottomAnchor),
-            descriptionCell.leadingAnchor.constraint(equalTo: amountView.view.leadingAnchor),
-            descriptionCell.heightAnchor.constraint(equalTo: descriptionCell.textView.heightAnchor, constant: C.padding[4]) ])
+        memoCell.constrain([
+            memoCell.widthAnchor.constraint(equalTo: amountView.view.widthAnchor),
+            memoCell.topAnchor.constraint(equalTo: amountView.view.bottomAnchor),
+            memoCell.leadingAnchor.constraint(equalTo: amountView.view.leadingAnchor),
+            memoCell.heightAnchor.constraint(equalTo: memoCell.textView.heightAnchor, constant: C.padding[4]) ])
 
-        descriptionCell.accessoryView.constrain([
-                descriptionCell.accessoryView.constraint(.width, constant: 0.0) ])
+        memoCell.accessoryView.constrain([
+                memoCell.accessoryView.constraint(.width, constant: 0.0) ])
 
         sendButton.constrain([
             sendButton.constraint(.leading, toView: view, constant: C.padding[2]),
             sendButton.constraint(.trailing, toView: view, constant: -C.padding[2]),
-            sendButton.constraint(toBottom: descriptionCell, constant: verticalButtonPadding),
+            sendButton.constraint(toBottom: memoCell, constant: verticalButtonPadding),
             sendButton.constraint(.height, constant: C.Sizes.buttonHeight),
             sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[5] : -C.padding[2]) ])
         addButtonActions()
@@ -126,6 +126,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private func attemptSetupCrowdsale() {
         if store.state.walletState.crowdsale != nil {
             addressCell.setContent("Bread Crowdsale")
+            addressCell.paste.isHidden = true
+            addressCell.scan.isHidden = true
+            memoCell.isHidden = true
         }
     }
 
@@ -133,10 +136,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         addressCell.paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         addressCell.scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
         sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
-        descriptionCell.didReturn = { textView in
+        memoCell.didReturn = { textView in
             textView.resignFirstResponder()
         }
-        descriptionCell.didBeginEditing = { [weak self] in
+        memoCell.didBeginEditing = { [weak self] in
             self?.amountView.closePinPad()
         }
         addressCell.didBeginEditing = strongify(self) { myself in
@@ -173,7 +176,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
         amountView.didChangeFirstResponder = { [weak self] isFirstResponder in
             if isFirstResponder {
-                self?.descriptionCell.textView.resignFirstResponder()
+                self?.memoCell.textView.resignFirstResponder()
                 self?.addressCell.textField.resignFirstResponder()
             }
         }
@@ -225,7 +228,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     @objc private func scanTapped() {
-        descriptionCell.textView.resignFirstResponder()
+        memoCell.textView.resignFirstResponder()
         addressCell.textField.resignFirstResponder()
         presentScan? { [weak self] paymentRequest in
             guard let request = paymentRequest else { return }
@@ -459,7 +462,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 amountView.forceUpdateAmount(amount: amount)
             }
             if request.label != nil {
-                descriptionCell.content = request.label
+                memoCell.content = request.label
             }
         case .remote:
             let loadingView = BRActivityViewController(message: S.Send.loadingRequest)
@@ -484,7 +487,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
         sender.send(biometricsMessage: S.VerifyPin.touchIdMessage,
                     rate: rate,
-                    comment: descriptionCell.textView.text,
+                    comment: memoCell.textView.text,
                     feePerKb: feePerKb,
                     verifyPinFunction: { [weak self] pinValidationCallback in
                         self?.presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin, vc in
@@ -572,7 +575,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         if requestAmount > 0 {
             amountView.forceUpdateAmount(amount: requestAmount)
         }
-        descriptionCell.content = protoReq.details.memo
+        memoCell.content = protoReq.details.memo
 
         if requestAmount == 0 {
             if let amount = amount {

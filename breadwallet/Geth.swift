@@ -23,7 +23,7 @@ class GethManager {
     var receiveAddress: String {
         return address.getHex()
     }
-
+    private let gasLimit: Int64 = 300000
     init(ethPrivKey: String, store: Store) {
         self.store = store
         context = GethContext()
@@ -66,13 +66,13 @@ class GethManager {
     func createTx(forAmount: GethBigInt, toAddress: String, nonce: Int64) -> GethTransaction {
         let toAddr = GethAddress(fromHex: toAddress)
         let price = try! client.suggestGasPrice(context)
-        return GethTransaction(nonce, to: toAddr, amount: forAmount, gasLimit: GethBigInt(300000),
+        return GethTransaction(nonce, to: toAddr, amount: forAmount, gasLimit: GethBigInt(gasLimit),
                                gasPrice: price, data: nil)
     }
 
     var fee: GethBigInt {
         let price = (try! client.suggestGasPrice(context)).getInt64()
-        return GethBigInt(price * 300000)
+        return GethBigInt(price * gasLimit)
     }
     
     func signTx(_ tx: GethTransaction, ethPrivKey: String) -> GethTransaction {
@@ -144,8 +144,8 @@ extension GethManager {
     }
 
     func getEndTime() -> Date? {
-        guard let startTime = callBigInt(method: "endTime")?.getString(10) else { return nil }
-        guard let timestamp = TimeInterval(startTime) else { return nil }
+        guard let endTime = callBigInt(method: "endTime")?.getString(10) else { return nil }
+        guard let timestamp = TimeInterval(endTime) else { return nil }
         return Date(timeIntervalSince1970: timestamp)
     }
 
