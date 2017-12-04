@@ -14,7 +14,7 @@ private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
 let tokens: [Token] = {
-    return E.isTestnet ? [tst, brd] : [xjp]
+    return E.isTestnet ? [tst, brd, brd2] : [xjp]
 }()
 
 class ApplicationController : Subscriber, Trackable {
@@ -25,14 +25,17 @@ class ApplicationController : Subscriber, Trackable {
     fileprivate let store = Store()
     fileprivate let ethStore = Store()
     fileprivate let tokenStores: [Store] = {
-        tokens.map {
+        return tokens.map {
             let store = Store()
             store.perform(action: CurrencyActions.set(.token))
             store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 600.0)))
             store.perform(action: WalletChange.set(store.state.walletState.mutate(token: $0)))
 
             if $0.code == "BRD" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil)
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, contract: Contract(address: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7", abi: crowdSaleABI))
+                store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
+            } else if $0.code == "BRD2" {
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, contract: Contract(address: "0x29e8382c5bb8da6e8abf58cf88e58ec7b57c75d4", abi: crowdSaleABI))
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             }
 
@@ -236,7 +239,7 @@ class ApplicationController : Subscriber, Trackable {
                 modalPresenter?.walletManager = walletManager
                 let gethManager = GethManager(ethPrivKey: walletManager.ethPrivKey!, store: store)
                 ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient)
-                tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: noAuthApiClient) }
+                tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: GethManager(ethPrivKey: walletManager.ethPrivKey!, store: $0), apiClient: noAuthApiClient) }
                 modalPresenter?.gethManager = gethManager
                 DispatchQueue.walletQueue.async {
                     walletManager.peerManager?.connect()
@@ -301,10 +304,10 @@ class ApplicationController : Subscriber, Trackable {
                 nc.pushViewController(self.accountViewController!, animated: true)
             } else if code == "eth" {
                 nc.pushViewController(self.ethAccountViewController!, animated: true)
-            } else if code == "TST" {
-                nc.pushViewController(self.accountViewControllers![2], animated: true)
-            } else if code == "BRD" {
-                nc.pushViewController(self.accountViewControllers![3], animated: true)
+            } else {
+                if let vc = self.accountViewControllers?.first(where: { $0.tokenSymbol == code }) {
+                    nc.pushViewController(vc, animated: true)
+                }
             }
         }
 
@@ -506,6 +509,12 @@ let xjp = Token(name: "XJP Token",
 
 let brd = Token(name: "Bread Token",
                 code: "BRD",
+                symbol: "🍞",
+                address: "0xab6e259770002a88ff37b23755ddd3743e8a98a2",
+                decimals: 18,
+                abi: "[{\"constant\":true,\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_spender\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_from\",\"type\":\"address\"},{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"name\":\"balance\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"showMeTheMoney\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"},{\"name\":\"_spender\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"name\":\"remaining\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_owner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_spender\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"}]")
+let brd2 = Token(name: "Bread Token 2",
+                code: "BRD2",
                 symbol: "🍞",
                 address: "0xab6e259770002a88ff37b23755ddd3743e8a98a2",
                 decimals: 18,

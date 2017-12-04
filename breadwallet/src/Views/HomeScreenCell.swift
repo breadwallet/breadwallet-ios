@@ -22,7 +22,7 @@ class Background : UIView, GradientDrawable {
     override func draw(_ rect: CGRect) {
         guard let store = store else { return }
 
-        if store.state.walletState.token?.code == "BRD" {
+        if store.state.walletState.crowdsale != nil {
             drawGradient(start: .lightGray,
                          end: .darkGray,
                          rect)

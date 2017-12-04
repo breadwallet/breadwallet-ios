@@ -43,7 +43,7 @@ struct Token {
 struct Crowdsale {
     let startTime: Date?
     let endTime: Date?
-    let contract = Contract(address: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7", abi: crowdSaleABI)
+    let contract: Contract
 }
 
 struct Contract {

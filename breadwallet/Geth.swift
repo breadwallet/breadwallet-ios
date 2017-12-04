@@ -150,7 +150,8 @@ extension GethManager {
     }
 
     func callBigInt(method: String) -> GethBigInt? {
-        let address = GethAddress(fromHex: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7")
+        guard let addressString = store.state.walletState.crowdsale?.contract.address else { return nil }
+        let address = GethAddress(fromHex: addressString)
         var error: NSError? = nil
         let contract = GethBindContract(address, crowdSaleABI, client, &error)
 

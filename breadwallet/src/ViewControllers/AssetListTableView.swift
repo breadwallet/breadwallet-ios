@@ -72,7 +72,7 @@ class AssetListTableView : UITableViewController, Subscriber {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let store = stores[indexPath.row]
-        if store.state.walletState.token?.code == "BRD" {
+        if store.state.walletState.crowdsale != nil {
             let cell = tableView.dequeueReusableCell(withIdentifier: crowdSaleCellIdentifier, for: indexPath) as! CrowsaleCell
             if let rate = store.state.currentRate {
                 let price = "$\(rate.rate)"
