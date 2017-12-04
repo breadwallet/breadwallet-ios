@@ -172,6 +172,29 @@ extension GethManager {
         }
     }
 
+    func getToken() -> GethAddress? {
+        guard let addressString = store.state.walletState.crowdsale?.contract.address else { return nil }
+        let address = GethAddress(fromHex: addressString)
+        var error: NSError? = nil
+        let contract = GethBindContract(address, crowdSaleABI, client, &error)
+
+        let opts = GethNewCallOpts()
+        let out = GethNewInterfaces(1)
+        let args = GethNewInterfaces(0)
+
+        let result0 = GethNewInterface()
+        result0?.setAddress(GethAddress(fromHex: "0x0000000000000000000000000000000000000000"))
+        try! out?.set(0, object: result0)
+
+        do {
+            try contract?.call(opts, out_: out, method: "token", args: args)
+            return result0?.getAddress()
+        } catch let e {
+            print("e2: \(e)")
+            return nil
+        }
+    }
+
     func getBalance() {
 
         let address = GethAddress(fromHex: "0xab6e259770002a88ff37b23755ddd3743e8a98a2")
