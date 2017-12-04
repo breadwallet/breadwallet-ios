@@ -47,7 +47,6 @@ class CrowdsaleView : UIView {
     }
 
     private func setInitialData() {
-        header.text = "Crowdsale is now live"
         header.textAlignment = .center
         footer.textAlignment = .center
         button.tap = strongify(self) { myself in
@@ -58,26 +57,40 @@ class CrowdsaleView : UIView {
             self.endTime = endTime
             let now = Date()
             if now < startTime {
-//                setPreLiveStatusLabel()
-//                if timer == nil {
-//                    timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(setPreLiveStatusLabel), userInfo: nil, repeats: true)
-//                }
+                setPreLiveStatusLabel()
+                if timer == nil {
+                    timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(setPreLiveStatusLabel), userInfo: nil, repeats: true)
+                }
             } else if now > startTime && now < endTime {
                 setLiveStatusLabel()
                 if timer == nil {
                     timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(setLiveStatusLabel), userInfo: nil, repeats: true)
                 }
             } else if now > endTime {
-                //setFinishedStatusLabel()
+                setFinishedStatusLabel()
             }
         }
+    }
+
+    @objc private func setPreLiveStatusLabel() {
+        guard let startTime = startTime else { return }
+        let now = Date()
+        let diff = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: now, to: startTime)
+        header.text = "Crowdsale is now live"
+        footer.text = "Crowdsale starts in \(diff.day!)d \(diff.hour!)h \(diff.minute!)m \(diff.second!)s"
     }
 
     @objc private func setLiveStatusLabel() {
         guard let endTime = endTime else { return }
         let now = Date()
         let diff = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: now, to: endTime)
+        header.text = "Crowdsale is now live"
         footer.text = "Ends in \(diff.day!)d \(diff.hour!)h \(diff.minute!)m \(diff.second!)s"
+    }
+
+    private func setFinishedStatusLabel() {
+        header.text = "Crowdsale is Finished"
+        footer.text = ""
     }
 
     required init?(coder aDecoder: NSCoder) {
