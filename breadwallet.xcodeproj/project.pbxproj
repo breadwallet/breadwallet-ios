@@ -263,6 +263,7 @@
 		CE36454C1E7B42850079D0CF /* WhiteDecimalPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE36454B1E7B42850079D0CF /* WhiteDecimalPad.swift */; };
 		CE3754AD1DDE6E080045B0CB /* MaskedShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3754AC1DDE6E080045B0CB /* MaskedShadow.swift */; };
 		CE3754AF1DDE6E2E0045B0CB /* RoundedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3754AE1DDE6E2E0045B0CB /* RoundedContainer.swift */; };
+		CE3840E81FD590BD00437C31 /* AssetListTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3840E71FD590BD00437C31 /* AssetListTableView.swift */; };
 		CE3D4C571EF5D5740016B1C8 /* ReachabilityMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D4C561EF5D5740016B1C8 /* ReachabilityMonitor.swift */; };
 		CE3D4C591EF743EF0016B1C8 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D4C581EF743EF0016B1C8 /* Functions.swift */; };
 		CE44BA1B1F33BFC500392A1A /* NodeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE44BA1A1F33BFC500392A1A /* NodeSelectorViewController.swift */; };
@@ -1463,6 +1464,7 @@
 		CE36454B1E7B42850079D0CF /* WhiteDecimalPad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WhiteDecimalPad.swift; path = src/Views/PinPadCells/WhiteDecimalPad.swift; sourceTree = "<group>"; };
 		CE3754AC1DDE6E080045B0CB /* MaskedShadow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MaskedShadow.swift; path = src/Views/TransactionCells/MaskedShadow.swift; sourceTree = "<group>"; };
 		CE3754AE1DDE6E2E0045B0CB /* RoundedContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoundedContainer.swift; path = src/Views/TransactionCells/RoundedContainer.swift; sourceTree = "<group>"; };
+		CE3840E71FD590BD00437C31 /* AssetListTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AssetListTableView.swift; path = src/ViewControllers/AssetListTableView.swift; sourceTree = "<group>"; };
 		CE3D4C561EF5D5740016B1C8 /* ReachabilityMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReachabilityMonitor.swift; path = src/ReachabilityMonitor.swift; sourceTree = "<group>"; };
 		CE3D4C581EF743EF0016B1C8 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Functions.swift; path = src/Constants/Functions.swift; sourceTree = "<group>"; };
 		CE44BA1A1F33BFC500392A1A /* NodeSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NodeSelectorViewController.swift; path = src/ViewControllers/NodeSelectorViewController.swift; sourceTree = "<group>"; };
@@ -2892,6 +2894,7 @@
 				CE760ED71E55F9E000EFAC2B /* SecurityCenter */,
 				CEBF32EF1DDCD30600348FC6 /* AccountViewController.swift */,
 				CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */,
+				CE3840E71FD590BD00437C31 /* AssetListTableView.swift */,
 				CE30EC741F79556500FC9887 /* CurrencyList.swift */,
 				CE20C9061DBC587200C8397A /* StartViewController.swift */,
 				CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */,
@@ -3255,11 +3258,11 @@
 /* Begin PBXLegacyTarget section */
 		759DA0D71DAC8668008CC49B /* submodules */ = {
 			isa = PBXLegacyTarget;
-            buildArgumentsString = "-c 'git submodule init && git submodule update && git -C Modules/breadwallet-core submodule init && git -C Modules/breadwallet-core submodule update'";
+			buildArgumentsString = "-c 'git submodule init && git submodule update && git -C Modules/breadwallet-core submodule init && git -C Modules/breadwallet-core submodule update'";
 			buildConfigurationList = 759DA0DA1DAC8668008CC49B /* Build configuration list for PBXLegacyTarget "submodules" */;
 			buildPhases = (
 			);
-            buildToolPath = /bin/sh;
+			buildToolPath = /bin/sh;
 			buildWorkingDirectory = "";
 			dependencies = (
 			);
@@ -4080,6 +4083,7 @@
 				CEEC708A1E945E3B00EF788E /* UnEditableTextView.swift in Sources */,
 				CE3645481E7B424D0079D0CF /* WhiteNumberPad.swift in Sources */,
 				CEAA9E991DC262800066731D /* ConfirmPaperPhraseViewController.swift in Sources */,
+				CE3840E81FD590BD00437C31 /* AssetListTableView.swift in Sources */,
 				22A9A9591DF61945000F0016 /* Extensions.swift in Sources */,
 				22A9A94C1DF61945000F0016 /* BRGeoLocationPlugin.swift in Sources */,
 				CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */,

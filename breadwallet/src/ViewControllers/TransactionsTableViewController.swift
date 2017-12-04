@@ -182,11 +182,11 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
     private func setContentInset() {
         if #available(iOS 11, *) {
-            tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight, left: 0, bottom: accountFooterHeight + C.padding[2], right: 0)
+            tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight - 44.0, left: 0, bottom: accountFooterHeight + C.padding[2], right: 0)
         } else {
             tableView.contentInset = UIEdgeInsets(top: accountHeaderHeight + C.padding[2], left: 0, bottom: accountFooterHeight + C.padding[2], right: 0)
         }
-        tableView.scrollIndicatorInsets = UIEdgeInsets(top: accountHeaderHeight, left: 0, bottom: accountFooterHeight, right: 0)
+        tableView.scrollIndicatorInsets = UIEdgeInsets(top: accountHeaderHeight - 44.0, left: 0, bottom: accountFooterHeight, right: 0)
     }
 
     private func reload(txHash: String) {

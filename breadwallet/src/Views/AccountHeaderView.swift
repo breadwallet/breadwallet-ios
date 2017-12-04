@@ -35,7 +35,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     //MARK: - Private
     private let name = UILabel(font: UIFont.boldSystemFont(ofSize: 17.0))
-    private let currencySwitch = UIButton(type: .system)
     private let primaryBalance: UpdatingLabel
     private let secondaryBalance: UpdatingLabel
     private let currencyTapView = UIView()
@@ -102,13 +101,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     private func setData() {
         name.textColor = .white
-
-        currencySwitch.setTitle(S.AccountHeader.switchCurrency, for: .normal)
-        currencySwitch.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15.0)
-        currencySwitch.tintColor = .white
-        currencySwitch.tap = strongify(self) { myself in
-            myself.store.perform(action: RootModalActions.Present(modal: .manageWallet))
-        }
         primaryBalance.textColor = .whiteTint
         primaryBalance.font = UIFont.customBody(size: largeFontSize)
 
@@ -130,7 +122,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     private func addSubviews() {
         addSubview(name)
-        addSubview(currencySwitch)
         addSubview(primaryBalance)
         addSubview(secondaryBalance)
         addSubview(search)
@@ -144,18 +135,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         name.constrain([
             name.constraint(.leading, toView: self, constant: C.padding[2]),
             name.constraint(.top, toView: self, constant: 30.0) ])
-
-            if #available(iOS 11.0, *) {
-                currencySwitch.constrain([
-                    currencySwitch.constraint(.trailing, toView: self, constant: -C.padding[2]),
-                    currencySwitch.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0.0) ])
-            } else {
-                if let manageTitleLabel = currencySwitch.titleLabel {
-                    currencySwitch.constrain([
-                        currencySwitch.constraint(.trailing, toView: self, constant: -C.padding[2]),
-                        manageTitleLabel.firstBaselineAnchor.constraint(equalTo: name.firstBaselineAnchor) ])
-                }
-            }
         secondaryBalance.constrain([
             secondaryBalance.constraint(.firstBaseline, toView: primaryBalance, constant: 0.0) ])
 
@@ -182,14 +161,14 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
         search.constrain([
             search.constraint(.trailing, toView: self, constant: -C.padding[2]),
-            search.topAnchor.constraint(equalTo: currencySwitch.bottomAnchor, constant: C.padding[1]),
+            search.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[4]),
             search.constraint(.width, constant: 44.0),
             search.constraint(.height, constant: 44.0) ])
         search.imageEdgeInsets = UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0)
 
         currencyTapView.constrain([
             currencyTapView.leadingAnchor.constraint(equalTo: name.leadingAnchor, constant: -C.padding[1]),
-            currencyTapView.trailingAnchor.constraint(equalTo: currencySwitch.leadingAnchor, constant: C.padding[1]),
+            currencyTapView.trailingAnchor.constraint(equalTo: search.leadingAnchor, constant: C.padding[1]),
             currencyTapView.topAnchor.constraint(equalTo: primaryBalance.topAnchor, constant: -C.padding[1]),
             currencyTapView.bottomAnchor.constraint(equalTo: primaryBalance.bottomAnchor, constant: C.padding[1]) ])
 
@@ -210,7 +189,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             setEthBalance()
         }
         logo.isHidden = true
-        currencySwitch.isHidden = true
     }
 
     private func transform(forView: UIView) ->  CGAffineTransform {
@@ -283,7 +261,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                 self.secondaryBalance.transform = self.transform(forView: self.secondaryBalance) //this needs to be in the next run-loop for some reason
             }
         } else {
-            guard let token = store.state.walletState.token else { return }
             primaryBalance.text = DisplayAmount.tokenString(value: bigBalance, store: store)
             secondaryBalance.text = ""
             secondaryBalance.transform = transform(forView: secondaryBalance)

@@ -13,7 +13,6 @@ import Geth
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
-
 let tokens: [Token] = {
     return E.isTestnet ? [tst, brd] : [xjp]
 }()
@@ -289,15 +288,14 @@ class ApplicationController : Subscriber, Trackable {
 
     private func setupAppearance() {
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.font: UIFont.header]
-        //Hack to globally hide the back button text
-        UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffsetMake(-500.0, -500.0), for: .default)
     }
 
     private func setupRootViewController() {
 
         let home = HomeScreenViewController(stores: [store, ethStore] + tokenStores)
         let nc = UINavigationController(rootViewController: home)
-        nc.delegate = home
+        nc.navigationBar.isTranslucent = false
+        nc.navigationBar.tintColor = .white
         home.didSelectCurrency = { code in
             if code == "btc" {
                 nc.pushViewController(self.accountViewController!, animated: true)
@@ -309,7 +307,6 @@ class ApplicationController : Subscriber, Trackable {
                 nc.pushViewController(self.accountViewControllers![3], animated: true)
             }
         }
-
 
         window.rootViewController = nc
 

@@ -72,12 +72,6 @@ class AccountViewController : UIViewController, Subscriber {
     private let tempLoginView: LoginViewController
     private let loginTransitionDelegate = LoginTransitionDelegate()
     private let welcomeTransitingDelegate = PinTransitioningDelegate()
-    private let back: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "backChevron"), for: .normal)
-        button.tintColor = .white
-        return button
-    }()
     private let searchHeaderview: SearchHeaderView = {
         let view = SearchHeaderView()
         view.isHidden = true
@@ -121,15 +115,6 @@ class AccountViewController : UIViewController, Subscriber {
         addAppLifecycleNotificationEvents()
         addTemporaryStartupViews()
         setInitialData()
-
-        headerView.addSubview(back)
-        back.tintColor = .white
-        back.constrain([
-            back.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: C.padding[2]),
-            back.topAnchor.constraint(equalTo: headerView.topAnchor, constant: C.padding[4]) ])
-        back.tap = {
-            self.navigationController?.popViewController(animated: true)
-        }
 
         if let endTime = store.state.walletState.crowdsale?.endTime {
             if Date() < endTime {
@@ -306,24 +291,6 @@ class AccountViewController : UIViewController, Subscriber {
     private func addTransactionsView() {
         addChildViewController(transactionsTableView, layout: {
             transactionsTableView.view.constrain(toSuperviewEdges: nil)
-            if #available(iOS 11, *) {
-                transactionsTableView.tableView.contentInset =
-                    UIEdgeInsets(top: E.isIPhoneX ? accountHeaderHeight + 14 : accountHeaderHeight + C.padding[2],
-                                 left: 0,
-                                 bottom: E.isIPhoneX ? accountFooterHeight + C.padding[2] + 19 : accountFooterHeight + C.padding[2],
-                                 right: 0)
-            } else {
-                transactionsTableView.tableView.contentInset =
-                    UIEdgeInsets(top: E.isIPhoneX ? accountHeaderHeight + C.padding[2] + 14 : accountHeaderHeight + C.padding[2],
-                                 left: 0,
-                                 bottom: E.isIPhoneX ? accountFooterHeight + C.padding[2] + 19 : accountFooterHeight + C.padding[2],
-                                 right: 0)
-            }
-            transactionsTableView.tableView.scrollIndicatorInsets =
-                UIEdgeInsets(top: E.isIPhoneX ? accountHeaderHeight + 14 : accountHeaderHeight,
-                             left: 0,
-                             bottom: E.isIPhoneX ? accountFooterHeight + 19 : accountFooterHeight,
-                             right: 0)
         })
     }
 
