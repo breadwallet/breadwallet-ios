@@ -60,7 +60,7 @@ class TokenWalletCoordinator {
             }
         }
 
-        if let crowdsale =  store.state.walletState.crowdsale {
+        if let crowdsale = store.state.walletState.crowdsale {
             if let start = gethManager.getStartTime(), let end = gethManager.getEndTime() {
                 let newCrowdsale = Crowdsale(startTime: start, endTime: end, contract: crowdsale.contract)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
