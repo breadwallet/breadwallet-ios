@@ -11,14 +11,16 @@ import Foundation
 class TokenWalletCoordinator {
 
     private let store: Store
+    private let btcStore: Store
     private let gethManager: GethManager
     private var timer: Timer? = nil
     private let apiClient: BRAPIClient
 
-    init(store: Store, gethManager: GethManager, apiClient: BRAPIClient) {
+    init(store: Store, gethManager: GethManager, apiClient: BRAPIClient, btcStore: Store) {
         self.store = store
         self.gethManager = gethManager
         self.apiClient = apiClient
+        self.btcStore = btcStore
         store.perform(action: WalletChange.set(store.state.walletState.mutate(receiveAddress: gethManager.address.getHex())))
         self.refresh()
         self.timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(refresh), userInfo: nil, repeats: true)
@@ -62,18 +64,39 @@ class TokenWalletCoordinator {
         if let crowdsale = store.state.walletState.crowdsale {
             if crowdsale.startTime == nil || crowdsale.endTime == nil {
                 if let start = gethManager.getStartTime(forContractAddress: crowdsale.contract.address), let end = gethManager.getEndTime(forContractAddress: crowdsale.contract.address) {
-                    let newCrowdsale = Crowdsale(startTime: start, endTime: end, minContribution: crowdsale.minContribution, maxContribution: crowdsale.maxContribution, contract: crowdsale.contract)
+                    let newCrowdsale = Crowdsale(startTime: start, endTime: end, minContribution: crowdsale.minContribution, maxContribution: crowdsale.maxContribution, contract: crowdsale.contract, rate: crowdsale.rate)
                     store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
                 }
             }
 
             if crowdsale.minContribution == nil || crowdsale.maxContribution == nil {
                 if let minContribution = gethManager.getMinContribution(forContractAddress: crowdsale.contract.address), let maxContribution = gethManager.getMaxContribution(forContractAddress: crowdsale.contract.address) {
-                    let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: minContribution, maxContribution: maxContribution, contract: crowdsale.contract)
+                    let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: minContribution, maxContribution: maxContribution, contract: crowdsale.contract, rate: crowdsale.rate)
                     store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
                 }
             }
+
+            if crowdsale.rate == nil {
+                if let rate = gethManager.getRate(forContractAddress: crowdsale.contract.address) {
+                    let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: crowdsale.minContribution, maxContribution: crowdsale.maxContribution, contract: crowdsale.contract, rate: rate)
+                    store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
+                }
+            } else if store.state.rates.count == 0 {
+                apiClient.ethExchangeRate { ethRate in
+                    if let ethBtcRate = Double(ethRate.ethbtc), let crowdsaleRate = crowdsale.rate {
+                        let rateValue = (Decimal(string: crowdsaleRate.stringValue)! as NSDecimalNumber).doubleValue
+                        let ethRates = self.btcStore.state.rates.map { btcRate in
+                            return Rate(code: btcRate.code, name: btcRate.name, rate: btcRate.rate*ethBtcRate/rateValue)
+                        }
+                        DispatchQueue.main.async {
+                            guard let currentRate = ethRates.first( where: { $0.code == self.store.state.defaultCurrencyCode }) else { return }
+                            self.store.perform(action: ExchangeRates.setRates(currentRate: currentRate, rates: ethRates))
+                        }
+                    }
+                }
+            }
         }
+
     }
 
 }

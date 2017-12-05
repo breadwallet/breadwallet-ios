@@ -58,6 +58,12 @@ class AssetListTableView : UITableViewController, Subscriber {
                     self.tableView.endUpdates()
                 })
             }
+
+            $0.lazySubscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: { _ in
+                self.tableView.beginUpdates()
+                self.tableView.reloadRows(at: [IndexPath(row: j, section: 0)], with: .automatic)
+                self.tableView.endUpdates()
+            })
             i = i + 1
         }
     }

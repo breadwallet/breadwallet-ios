@@ -190,6 +190,36 @@ extension BRAPIClient {
         })
         task.resume()
     }
+
+    func ethExchangeRate(callback: @escaping((EthRate) -> Void)) {
+        let string = "https://api.etherscan.io/api?module=stats&action=ethprice"
+        let url = URL(string: string)!
+        var req = URLRequest(url: url)
+        req.httpMethod = "GET"
+        let session = URLSession.shared
+
+        let task = session.dataTask(with: req, completionHandler: {data, response, error in
+            guard let json = data else { return }
+            let decoder = JSONDecoder()
+            do {
+                let response = try decoder.decode(ExchangeRateResponse.self, from: json)
+                callback(response.result)
+            } catch let e {
+                print("error: \(e)")
+            }
+        })
+        task.resume()
+    }
+}
+
+struct ExchangeRateResponse : Codable {
+    let status: String
+    let message: String
+    let result: EthRate
+}
+
+struct EthRate : Codable {
+    let ethbtc: String
 }
 
 private func pushNotificationEnvironment() -> String {

@@ -28,21 +28,22 @@ class ApplicationController : Subscriber, Trackable {
         return tokens.map {
             let store = Store()
             store.perform(action: CurrencyActions.set(.token))
-            store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 600.0)))
             store.perform(action: WalletChange.set(store.state.walletState.mutate(token: $0)))
 
             if $0.code == "BRD" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil, contract: Contract(address: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7", abi: crowdSaleABI))
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil, contract: Contract(address: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7", abi: crowdSaleABI), rate: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else if $0.code == "BRD2" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x29e8382c5bb8da6e8abf58cf88e58ec7b57c75d4", abi: crowdSaleABI))
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x29e8382c5bb8da6e8abf58cf88e58ec7b57c75d4", abi: crowdSaleABI), rate: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else if $0.code == "BRD3" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x8B329840DCb8148F2D197DaDb96D813535731824", abi: crowdSaleABI))
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x8B329840DCb8148F2D197DaDb96D813535731824", abi: crowdSaleABI), rate: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else if $0.code == "BRD4" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x3ACaCa20173dAb62804898a99047485D6e536Fe4", abi: crowdSaleABI))
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x3ACaCa20173dAb62804898a99047485D6e536Fe4", abi: crowdSaleABI), rate: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
+            } else {
+                store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 1.0)))
             }
 
             return store
@@ -76,7 +77,6 @@ class ApplicationController : Subscriber, Trackable {
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
         ethStore.perform(action: CurrencyActions.set(.ethereum))
-        ethStore.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 305.0)))
         ethStore.perform(action: CurrencyChange.setIsSwapped(false))
         DispatchQueue.walletQueue.async {
             guardProtected(queue: DispatchQueue.walletQueue) {
@@ -244,8 +244,8 @@ class ApplicationController : Subscriber, Trackable {
             } else {
                 modalPresenter?.walletManager = walletManager
                 let gethManager = GethManager(ethPrivKey: walletManager.ethPrivKey!, store: store)
-                ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient)
-                tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: noAuthApiClient) }
+                ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient, btcStore: store)
+                tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: noAuthApiClient, btcStore: store) }
                 modalPresenter?.gethManager = gethManager
                 DispatchQueue.walletQueue.async {
                     walletManager.peerManager?.connect()
@@ -376,8 +376,8 @@ class ApplicationController : Subscriber, Trackable {
                         self.startDataFetchers()
                         let gethManager = GethManager(ethPrivKey: self.walletManager!.ethPrivKey!, store: self.store)
                         self.modalPresenter?.gethManager = gethManager
-                        self.ethWalletCoordinator = EthWalletCoordinator(store: self.ethStore, gethManager: gethManager, apiClient: self.noAuthApiClient)
-                        self.tokenWalletCoordinators = self.tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: self.noAuthApiClient) }
+                        self.ethWalletCoordinator = EthWalletCoordinator(store: self.ethStore, gethManager: gethManager, apiClient: self.noAuthApiClient, btcStore: self.store)
+                        self.tokenWalletCoordinators = self.tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: self.noAuthApiClient, btcStore: self.store) }
                         self.addNumSentListeners()
 
                     }

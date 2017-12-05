@@ -157,6 +157,10 @@ extension GethManager {
         return callBigInt(method: "maxContribution", contractAddress: forContractAddress)
     }
 
+    func getRate(forContractAddress: String) -> GethBigInt? {
+        return callBigInt(method: "rate", contractAddress: forContractAddress)
+    }
+
     func callBigInt(method: String, contractAddress: String) -> GethBigInt? {
         let address = GethAddress(fromHex: contractAddress)
         var error: NSError? = nil

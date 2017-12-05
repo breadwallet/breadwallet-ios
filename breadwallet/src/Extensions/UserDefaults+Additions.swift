@@ -87,23 +87,22 @@ extension UserDefaults {
         set { defaults.set(newValue, forKey: pushTokenKey) }
     }
 
-    static var currentRate: Rate? {
-        get {
-            guard let data = defaults.object(forKey: currentRateKey) as? [String: Any] else {
-                return nil
-            }
-            return Rate(data: data)
+    static func currentRate(forCode: String) -> Rate? {
+        guard let data = defaults.object(forKey: currentRateKey + forCode) as? [String: Any] else {
+            return nil
         }
+        return Rate(data: data)
     }
 
-    static var currentRateData: [String: Any]? {
-        get {
-            guard let data = defaults.object(forKey: currentRateKey) as? [String: Any] else {
-                return nil
-            }
-            return data
+    static func currentRateData(forCode: String) -> [String: Any]? {
+        guard let data = defaults.object(forKey: currentRateKey + forCode) as? [String: Any] else {
+            return nil
         }
-        set { defaults.set(newValue, forKey: currentRateKey) }
+        return data
+    }
+
+    static func setCurrentRateData(newValue: [String: Any], forCode: String) {
+        defaults.set(newValue, forKey: currentRateKey + forCode)
     }
 
     static var customNodeIP: Int? {
