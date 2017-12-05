@@ -37,7 +37,7 @@ extension State {
                         rootModal: .none,
                         walletState: WalletState.initial,
                         isBtcSwapped: UserDefaults.isBtcSwapped,
-                        currentRate: UserDefaults.currentRate,
+                        currentRate: nil,
                         rates: [],
                         alert: nil,
                         isBiometricsEnabled: UserDefaults.isBiometricsEnabled,

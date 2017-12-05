@@ -15,14 +15,16 @@ import BRCore
 class EthWalletCoordinator {
 
     private let store: Store
+    private let btcStore: Store
     private let gethManager: GethManager
     private let apiClient: BRAPIClient
     private var timer: Timer? = nil
 
-    init(store: Store, gethManager: GethManager, apiClient: BRAPIClient) {
+    init(store: Store, gethManager: GethManager, apiClient: BRAPIClient, btcStore: Store) {
         self.store = store
         self.gethManager = gethManager
         self.apiClient = apiClient
+        self.btcStore = btcStore
         store.perform(action: WalletChange.set(store.state.walletState.mutate(receiveAddress: gethManager.address.getHex())))
         self.refresh()
         self.timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(refresh), userInfo: nil, repeats: true)
@@ -47,5 +49,17 @@ class EthWalletCoordinator {
             }
         }
         store.perform(action: WalletChange.set(store.state.walletState.mutate(bigBalance: gethManager.balance)))
+
+        apiClient.ethExchangeRate { ethRate in
+            if let ethBtcRate = Double(ethRate.ethbtc) {
+                let ethRates = self.btcStore.state.rates.map { btcRate in
+                    return Rate(code: btcRate.code, name: btcRate.name, rate: btcRate.rate*ethBtcRate)
+                }
+                DispatchQueue.main.async {
+                    guard let currentRate = ethRates.first( where: { $0.code == self.store.state.defaultCurrencyCode }) else { return }
+                    self.store.perform(action: ExchangeRates.setRates(currentRate: currentRate, rates: ethRates))
+                }
+            }
+        }
     }
 }

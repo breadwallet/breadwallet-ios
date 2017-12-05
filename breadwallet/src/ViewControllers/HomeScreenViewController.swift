@@ -70,6 +70,12 @@ class HomeScreenViewController : UIViewController, Subscriber {
             })
         }
 
+        stores.forEach {
+            $0.lazySubscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: { _ in
+                self.updateTotalAssets()
+            })
+        }
+
         addSubviews()
         addConstraints()
         setInitialData()
@@ -96,11 +102,13 @@ class HomeScreenViewController : UIViewController, Subscriber {
         total.text = "$0"
         title = "Assets"
         navigationItem.titleView = UIView()
+        updateTotalAssets()
     }
 
     private func updateTotalAssets() {
         guard let bitcoinBalance = stores[0].state.walletState.balance else { return }
-        let bitcoinAmount = Amount(amount: bitcoinBalance, rate: stores[0].state.currentRate!, maxDigits: stores[0].state.maxDigits, store: stores[0]).localAmount
+        guard let bitcoinRate = stores[0].state.currentRate else { return }
+        let bitcoinAmount = Amount(amount: bitcoinBalance, rate: bitcoinRate, maxDigits: stores[0].state.maxDigits, store: stores[0]).localAmount
 
         guard let ethBalance = stores[1].state.walletState.bigBalance else { return }
         guard let ethRate = stores[1].state.currentRate else { return }

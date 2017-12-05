@@ -47,6 +47,7 @@ struct Crowdsale {
     let minContribution: GethBigInt?
     let maxContribution: GethBigInt?
     let contract: Contract
+    let rate: GethBigInt?
     var hasEnded: Bool {
         guard let endTime = endTime else { return false }
         return Date() > endTime
