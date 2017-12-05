@@ -18,6 +18,7 @@ class CrowsaleCell : UITableViewCell {
     private var timer: Timer? = nil
     private var startTime: Date? = nil
     private var endTime: Date? = nil
+    private var store: Store? = nil
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -30,40 +31,54 @@ class CrowsaleCell : UITableViewCell {
         self.balance.text = balance
         self.container.store = store
         self.container.setNeedsDisplay()
+        self.store = store
+        setStatusLabel()
+        if timer == nil {
+            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(setStatusLabel), userInfo: nil, repeats: true)
+        }
+    }
 
-        if let startTime = store.state.walletState.crowdsale?.startTime, let endTime = store.state.walletState.crowdsale?.endTime {
+    @objc private func setStatusLabel() {
+        if let startTime = store?.state.walletState.crowdsale?.startTime, let endTime = store?.state.walletState.crowdsale?.endTime {
             self.startTime = startTime
             self.endTime = endTime
             let now = Date()
             if now < startTime {
                 setPreLiveStatusLabel()
-                if timer == nil {
-                    timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(setPreLiveStatusLabel), userInfo: nil, repeats: true)
-                }
             } else if now > startTime && now < endTime {
                 setLiveStatusLabel()
-                if timer == nil {
-                    timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(setLiveStatusLabel), userInfo: nil, repeats: true)
-                }
             } else if now > endTime {
                 setFinishedStatusLabel()
             }
         }
-
     }
 
-    @objc private func setPreLiveStatusLabel() {
+    private func setPreLiveStatusLabel() {
         guard let startTime = startTime else { return }
         let now = Date()
         let diff = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: now, to: startTime)
-        self.status.text = "Crowdsale starts in \(diff.day!)d \(diff.hour!)h \(diff.minute!)m \(diff.second!)s"
+        guard let day = diff.day, let hour = diff.hour, let minute = diff.minute, let second = diff.second else { return }
+        if day > 0 {
+            self.status.text = "Crowdsale starts in \(day)d \(hour)h \(minute)m \(second)s"
+        } else if hour > 0 {
+            self.status.text = "Crowdsale starts in \(hour)h \(minute)m \(second)s"
+        } else {
+            self.status.text = "Crowdsale starts in \(minute)m \(second)s"
+        }
     }
 
-    @objc private func setLiveStatusLabel() {
+    private func setLiveStatusLabel() {
         guard let endTime = endTime else { return }
         let now = Date()
         let diff = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: now, to: endTime)
-        status.text = "Crowdsale is live now\nEnds in \(diff.day!)d \(diff.hour!)h \(diff.minute!)m \(diff.second!)s"
+        guard let day = diff.day, let hour = diff.hour, let minute = diff.minute, let second = diff.second else { return }
+        if day > 0 {
+            status.text = "Crowdsale is live now\nEnds in \(day)d \(hour)h \(minute)m \(second)s"
+        } else if hour > 0 {
+            status.text = "Crowdsale is live now\nEnds in \(hour)h \(minute)m \(second)s"
+        } else {
+            status.text = "Crowdsale is live now\nEnds in \(minute)m \(second)s"
+        }
     }
 
     private func setFinishedStatusLabel() {
