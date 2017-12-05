@@ -242,7 +242,7 @@ class ApplicationController : Subscriber, Trackable {
                 modalPresenter?.walletManager = walletManager
                 let gethManager = GethManager(ethPrivKey: walletManager.ethPrivKey!, store: store)
                 ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient)
-                tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: GethManager(ethPrivKey: walletManager.ethPrivKey!, store: $0), apiClient: noAuthApiClient) }
+                tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: noAuthApiClient) }
                 modalPresenter?.gethManager = gethManager
                 DispatchQueue.walletQueue.async {
                     walletManager.peerManager?.connect()

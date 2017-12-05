@@ -137,21 +137,20 @@ class GethManager {
 
 extension GethManager {
 
-    func getStartTime() -> Date? {
-        guard let startTime = callBigInt(method: "startTime")?.getString(10) else { return nil }
+    func getStartTime(forContractAddress: String) -> Date? {
+        guard let startTime = callBigInt(method: "startTime", contractAddress: forContractAddress)?.getString(10) else { return nil }
         guard let timestamp = TimeInterval(startTime) else { return nil }
         return Date(timeIntervalSince1970: timestamp)
     }
 
-    func getEndTime() -> Date? {
-        guard let endTime = callBigInt(method: "endTime")?.getString(10) else { return nil }
+    func getEndTime(forContractAddress: String) -> Date? {
+        guard let endTime = callBigInt(method: "endTime", contractAddress: forContractAddress)?.getString(10) else { return nil }
         guard let timestamp = TimeInterval(endTime) else { return nil }
         return Date(timeIntervalSince1970: timestamp)
     }
 
-    func callBigInt(method: String) -> GethBigInt? {
-        guard let addressString = store.state.walletState.crowdsale?.contract.address else { return nil }
-        let address = GethAddress(fromHex: addressString)
+    func callBigInt(method: String, contractAddress: String) -> GethBigInt? {
+        let address = GethAddress(fromHex: contractAddress)
         var error: NSError? = nil
         let contract = GethBindContract(address, crowdSaleABI, client, &error)
 
@@ -172,9 +171,8 @@ extension GethManager {
         }
     }
 
-    func getToken() -> GethAddress? {
-        guard let addressString = store.state.walletState.crowdsale?.contract.address else { return nil }
-        let address = GethAddress(fromHex: addressString)
+    func getToken(forContractAddress: String) -> GethAddress? {
+        let address = GethAddress(fromHex: forContractAddress)
         var error: NSError? = nil
         let contract = GethBindContract(address, crowdSaleABI, client, &error)
 
@@ -196,7 +194,6 @@ extension GethManager {
     }
 
     func getBalance() {
-
         let address = GethAddress(fromHex: "0xab6e259770002a88ff37b23755ddd3743e8a98a2")
         var error: NSError? = nil
         let contract = GethBindContract(address, xjp.abi, client, &error)
