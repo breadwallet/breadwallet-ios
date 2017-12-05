@@ -13,7 +13,7 @@ struct Rate {
     let code: String
     let name: String
     let rate: Double
-
+    let reciprocalCode: String
     var currencySymbol: String {
         if let symbol = Rate.symbolMap[code] {
             return symbol
@@ -49,7 +49,7 @@ struct Rate {
     }
 
     static var empty: Rate {
-        return Rate(code: "", name: "", rate: 0.0)
+        return Rate(code: "", name: "", rate: 0.0, reciprocalCode: "")
     }
 }
 
@@ -59,14 +59,24 @@ extension Rate {
         guard let code = dictionary["code"] as? String else { return nil }
         guard let name = dictionary["name"] as? String else { return nil }
         guard let rate = dictionary["rate"] as? Double else { return nil }
-        self.init(code: code, name: name, rate: rate)
+        self.init(code: code, name: name, rate: rate, reciprocalCode: "btc")
+    }
+
+    init?(dictionary: Any) {
+        guard let dictionary = dictionary as? [String: Any] else { return nil }
+        guard let code = dictionary["code"] as? String else { return nil }
+        guard let name = dictionary["name"] as? String else { return nil }
+        guard let rate = dictionary["rate"] as? Double else { return nil }
+        guard let reciprocalCode = dictionary["reciprocalCode"] as? String else { return nil }
+        self.init(code: code, name: name, rate: rate, reciprocalCode: reciprocalCode)
     }
 
     var dictionary: [String: Any] {
         return [
             "code": code,
             "name": name,
-            "rate": rate
+            "rate": rate,
+            "reciprocalCode": reciprocalCode
         ]
     }
 }
@@ -74,5 +84,5 @@ extension Rate {
 extension Rate : Equatable {}
 
 func ==(lhs: Rate, rhs: Rate) -> Bool {
-    return lhs.code == rhs.code && lhs.name == rhs.name && lhs.rate == rhs.rate
+    return lhs.code == rhs.code && lhs.name == rhs.name && lhs.rate == rhs.rate && lhs.reciprocalCode == rhs.reciprocalCode
 }

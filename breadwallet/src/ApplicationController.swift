@@ -22,14 +22,28 @@ class ApplicationController : Subscriber, Trackable {
     //Ideally the window would be private, but is unfortunately required
     //by the UIApplicationDelegate Protocol
     let window = UIWindow()
-    fileprivate let store = Store()
-    fileprivate let ethStore = Store()
+    fileprivate let store: Store = {
+        let store = Store()
+        if let currentRate = UserDefaults.currentRate(forCode: "btc") {
+            store.perform(action: ExchangeRates.setRate(currentRate))
+        }
+        return store
+    }()
+    fileprivate let ethStore: Store = {
+        let store = Store()
+        if let currentRate = UserDefaults.currentRate(forCode: "eth") {
+            store.perform(action: ExchangeRates.setRate(currentRate))
+        }
+        return store
+    }()
     fileprivate let tokenStores: [Store] = {
         return tokens.map {
             let store = Store()
             store.perform(action: CurrencyActions.set(.token))
             store.perform(action: WalletChange.set(store.state.walletState.mutate(token: $0)))
-
+            if let currentRate = UserDefaults.currentRate(forCode: $0.code) {
+                store.perform(action: ExchangeRates.setRate(currentRate))
+            }
             if $0.code == "BRD" {
                 let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil, contract: Contract(address: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7", abi: crowdSaleABI), rate: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
@@ -43,7 +57,7 @@ class ApplicationController : Subscriber, Trackable {
                 let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x3ACaCa20173dAb62804898a99047485D6e536Fe4", abi: crowdSaleABI), rate: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else {
-                store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 1.0)))
+                store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 1.0, reciprocalCode: $0.code)))
             }
 
             return store

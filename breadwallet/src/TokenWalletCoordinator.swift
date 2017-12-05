@@ -86,7 +86,7 @@ class TokenWalletCoordinator {
                     if let ethBtcRate = Double(ethRate.ethbtc), let crowdsaleRate = crowdsale.rate {
                         let rateValue = (Decimal(string: crowdsaleRate.stringValue)! as NSDecimalNumber).doubleValue
                         let ethRates = self.btcStore.state.rates.map { btcRate in
-                            return Rate(code: btcRate.code, name: btcRate.name, rate: btcRate.rate*ethBtcRate/rateValue)
+                            return Rate(code: btcRate.code, name: btcRate.name, rate: btcRate.rate*ethBtcRate/rateValue, reciprocalCode: self.store.state.walletState.token!.code)
                         }
                         DispatchQueue.main.async {
                             guard let currentRate = ethRates.first( where: { $0.code == self.store.state.defaultCurrencyCode }) else { return }

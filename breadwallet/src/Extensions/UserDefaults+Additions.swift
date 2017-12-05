@@ -91,7 +91,7 @@ extension UserDefaults {
         guard let data = defaults.object(forKey: currentRateKey + forCode) as? [String: Any] else {
             return nil
         }
-        return Rate(data: data)
+        return Rate(dictionary: data)
     }
 
     static func currentRateData(forCode: String) -> [String: Any]? {
