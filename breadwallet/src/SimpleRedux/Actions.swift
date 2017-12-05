@@ -140,8 +140,7 @@ enum ExchangeRates {
     struct setRates : Action {
         let reduce: Reducer
         init(currentRate: Rate, rates: [Rate] ) {
-            //ERF
-            //UserDefaults.currentRateData = currentRate.dictionary
+            UserDefaults.setCurrentRateData(newValue: currentRate.dictionary, forCode: currentRate.reciprocalCode)
             reduce = { $0.mutate(currentRate: currentRate, rates: rates) }
         }
     }

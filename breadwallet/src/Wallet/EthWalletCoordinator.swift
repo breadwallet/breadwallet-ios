@@ -53,7 +53,7 @@ class EthWalletCoordinator {
         apiClient.ethExchangeRate { ethRate in
             if let ethBtcRate = Double(ethRate.ethbtc) {
                 let ethRates = self.btcStore.state.rates.map { btcRate in
-                    return Rate(code: btcRate.code, name: btcRate.name, rate: btcRate.rate*ethBtcRate)
+                    return Rate(code: btcRate.code, name: btcRate.name, rate: btcRate.rate*ethBtcRate, reciprocalCode: "eth")
                 }
                 DispatchQueue.main.async {
                     guard let currentRate = ethRates.first( where: { $0.code == self.store.state.defaultCurrencyCode }) else { return }
