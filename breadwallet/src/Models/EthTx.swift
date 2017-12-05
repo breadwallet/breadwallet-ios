@@ -23,6 +23,7 @@ struct EthTx : Codable {
     let to: String
     let confirmations: String
     let hash: String
+    let isError: String
 }
 
 struct TokenBalance : Codable {
