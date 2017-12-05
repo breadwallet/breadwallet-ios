@@ -73,7 +73,9 @@ struct Amount {
             format.generatesDecimalNumbers = true
             format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
             format.currencyCode = "ETH"
-            if store.state.currency == .ethereum {
+            if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded {
+                format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
+            } else if store.state.currency == .ethereum {
                 format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
             } else {
                 format.currencySymbol = "\(store.state.walletState.token!.code) "

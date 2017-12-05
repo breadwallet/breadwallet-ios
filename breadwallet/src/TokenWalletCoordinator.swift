@@ -54,16 +54,24 @@ class TokenWalletCoordinator {
                 mergedViewModels = newViewModels
             }
 
-
             DispatchQueue.main.async {
                 self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: mergedViewModels)))
             }
         }
 
         if let crowdsale = store.state.walletState.crowdsale {
-            if let start = gethManager.getStartTime(forContractAddress: crowdsale.contract.address), let end = gethManager.getEndTime(forContractAddress: crowdsale.contract.address) {
-                let newCrowdsale = Crowdsale(startTime: start, endTime: end, contract: crowdsale.contract)
-                store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
+            if crowdsale.startTime == nil || crowdsale.endTime == nil {
+                if let start = gethManager.getStartTime(forContractAddress: crowdsale.contract.address), let end = gethManager.getEndTime(forContractAddress: crowdsale.contract.address) {
+                    let newCrowdsale = Crowdsale(startTime: start, endTime: end, minContribution: crowdsale.minContribution, maxContribution: crowdsale.maxContribution, contract: crowdsale.contract)
+                    store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
+                }
+            }
+
+            if crowdsale.minContribution == nil || crowdsale.maxContribution == nil {
+                if let minContribution = gethManager.getMinContribution(forContractAddress: crowdsale.contract.address), let maxContribution = gethManager.getMaxContribution(forContractAddress: crowdsale.contract.address) {
+                    let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: minContribution, maxContribution: maxContribution, contract: crowdsale.contract)
+                    store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
+                }
             }
         }
     }
