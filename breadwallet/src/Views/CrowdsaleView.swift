@@ -52,20 +52,21 @@ class CrowdsaleView : UIView {
         button.tap = strongify(self) { myself in
             myself.store.perform(action: RootModalActions.Present(modal: .send))
         }
+        setStatusLabel()
+        if timer == nil {
+            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(setStatusLabel), userInfo: nil, repeats: true)
+        }
+    }
+
+    @objc private func setStatusLabel() {
         if let startTime = store.state.walletState.crowdsale?.startTime, let endTime = store.state.walletState.crowdsale?.endTime {
             self.startTime = startTime
             self.endTime = endTime
             let now = Date()
             if now < startTime {
                 setPreLiveStatusLabel()
-                if timer == nil {
-                    timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(setPreLiveStatusLabel), userInfo: nil, repeats: true)
-                }
             } else if now > startTime && now < endTime {
                 setLiveStatusLabel()
-                if timer == nil {
-                    timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(setLiveStatusLabel), userInfo: nil, repeats: true)
-                }
             } else if now > endTime {
                 setFinishedStatusLabel()
             }
