@@ -253,9 +253,10 @@ class ApplicationController : Subscriber, Trackable {
                 startDataFetchers()
                 addNumSentListeners()
 
-                walletManager.apiClient?.kycStatus(contractAddress: "0xab6e259770002a88ff37b23755ddd3743e8a98a2", ethAddress: gethManager.address.getHex(), handler: { (status, error) in
-                    print("status: \(status)")
-                } )
+                //FIXME
+//                walletManager.apiClient?.kycStatus(contractAddress: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7", ethAddress: gethManager.address.getHex(), handler: {status, error in
+//
+//                })
             }
 
         //For when watch app launches app in background

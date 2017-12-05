@@ -20,7 +20,7 @@ extension BRAPIClient {
     func kycStatus(contractAddress: String, ethAddress: String, handler: (_ status: KYCStatus, _ error: String?) -> Void) {
         let network = E.isTestnet ? "ropsten" : "mainnet"
         let req = URLRequest(url: url("/crowdsale/\(contractAddress)/kyc/status?eth_address=\(contractAddress)&network=\(network)"))
-        let task = self.dataTaskWithRequest(req) { (data, response, err) in
+        let task = self.dataTaskWithRequest(req, authenticated: true) { (data, response, err) in
             if err == nil {
                 do {
                     let parsedObject: Any? = try JSONSerialization.jsonObject(
