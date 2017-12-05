@@ -44,7 +44,13 @@ struct Token {
 struct Crowdsale {
     let startTime: Date?
     let endTime: Date?
+    let minContribution: GethBigInt?
+    let maxContribution: GethBigInt?
     let contract: Contract
+    var hasEnded: Bool {
+        guard let endTime = endTime else { return false }
+        return Date() > endTime
+    }
 }
 
 struct Contract {

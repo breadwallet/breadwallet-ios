@@ -149,6 +149,14 @@ extension GethManager {
         return Date(timeIntervalSince1970: timestamp)
     }
 
+    func getMinContribution(forContractAddress: String) -> GethBigInt? {
+        return callBigInt(method: "minContribution", contractAddress: forContractAddress)
+    }
+
+    func getMaxContribution(forContractAddress: String) -> GethBigInt? {
+        return callBigInt(method: "maxContribution", contractAddress: forContractAddress)
+    }
+
     func callBigInt(method: String, contractAddress: String) -> GethBigInt? {
         let address = GethAddress(fromHex: contractAddress)
         var error: NSError? = nil
@@ -217,7 +225,6 @@ extension GethManager {
 
         do {
             try contract?.call(opts, out_: out, method: "balanceOf", args: args)
-
             print("balanceOf: \(result0?.getBigInt().getString(10))")
         } catch let e {
             print("e2: \(e)")
@@ -246,4 +253,44 @@ class Signer : NSObject, GethSignerProtocol {
         try? ks?.delete(account, passphrase: ethPrivKey)
         return signedTx!
     }
+}
+
+extension GethBigInt : Comparable {}
+
+extension GethBigInt {
+    var stringValue: String {
+        return getString(10)
+    }
+}
+
+public func >(lhs: GethBigInt, rhs: GethBigInt) -> Bool {
+    guard let lhsDecimal = Decimal(string: lhs.stringValue) else { return false }
+    guard let rhsDecimal = Decimal(string: rhs.stringValue) else { return false }
+    return lhsDecimal > rhsDecimal
+}
+
+public func <(lhs: GethBigInt, rhs: GethBigInt) -> Bool {
+    guard let lhsDecimal = Decimal(string: lhs.stringValue) else { return false }
+    guard let rhsDecimal = Decimal(string: rhs.stringValue) else { return false }
+    return lhsDecimal < rhsDecimal
+}
+
+public func >=(lhs: GethBigInt, rhs: GethBigInt) -> Bool {
+    guard let lhsDecimal = Decimal(string: lhs.stringValue) else { return false }
+    guard let rhsDecimal = Decimal(string: rhs.stringValue) else { return false }
+    return lhsDecimal >= rhsDecimal
+}
+
+public func <=(lhs: GethBigInt, rhs: GethBigInt) -> Bool {
+    guard let lhsDecimal = Decimal(string: lhs.stringValue) else { return false }
+    guard let rhsDecimal = Decimal(string: rhs.stringValue) else { return false }
+    return lhsDecimal <= rhsDecimal
+}
+
+public func -(lhs: GethBigInt, rhs: GethBigInt) -> GethBigInt {
+    let lhsDecimal = Decimal(string: lhs.stringValue)!
+    let rhsDecimal = Decimal(string: rhs.stringValue)!
+    let result = GethBigInt(0)
+    result?.setString((lhsDecimal - rhsDecimal).description, base: 10)
+    return result!
 }

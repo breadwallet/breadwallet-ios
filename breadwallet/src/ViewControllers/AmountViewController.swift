@@ -324,7 +324,14 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     func updateBalanceLabel() {
-        if store.isEthLike {
+        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded {
+            guard let min = crowdsale.minContribution, let max = crowdsale.maxContribution else { return }
+            let minText = DisplayAmount.ethString(value: min, store: store)
+            let maxText = DisplayAmount.ethString(value: max, store: store)
+
+            balanceLabel.text = "Min: \(minText), Max: \(maxText)"
+
+        } else if store.isEthLike {
             guard let balance = store.state.walletState.bigBalance else { return }
             if store.state.currency == .ethereum || store.state.walletState.crowdsale != nil {
                 balanceLabel.text = DisplayAmount.ethString(value: balance, store: store)

@@ -118,13 +118,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         } else if let initialRequest = initialRequest {
             handleRequest(initialRequest)
         }
-        if store.state.walletState.crowdsale != nil {
+        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded{
             amountView.expandPinPad()
         }
     }
 
     private func attemptSetupCrowdsale() {
-        if store.state.walletState.crowdsale != nil {
+        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded{
             addressCell.setContent("Bread Crowdsale")
             addressCell.paste.isHidden = true
             addressCell.scan.isHidden = true
@@ -295,6 +295,18 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private func confirmCrowdsale() {
         guard let ethManager = gethManager else { return }
         guard let crowdsale = store.state.walletState.crowdsale else { return }
+        guard let minContribution = crowdsale.minContribution, let maxContribution = crowdsale.maxContribution else { return }
+        guard let bigBalance = store.state.walletState.bigBalance else { return }
+        let maxBuy = maxContribution - bigBalance
+
+        guard amountView.ethOutput >= minContribution else {
+            let min = DisplayAmount.ethString(value: minContribution, store: store)
+            return showErrorMessage("Please enter an amount greater than the min contribution amount of \(min)")
+        }
+        guard amountView.ethOutput <= maxBuy else {
+            let max = DisplayAmount.ethString(value: maxBuy, store: store)
+            return showErrorMessage("Please enter an amount less than the max contribution amount of \(max)")
+        }
         let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee, feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: crowdsale.contract.address, isUsingTouchId: sender.canUseBiometrics, store: store)
         confirm.callback = {
             confirm.dismiss(animated: true, completion: {
@@ -344,8 +356,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             if myself.walletManager.authenticate(pin: pin) {
                 vc.dismiss(animated: true, completion: {
                     self?.parent?.view.isFrameChangeBlocked = false
-
-                    if myself.store.state.walletState.crowdsale != nil {
+                    if let crowdsale = myself.store.state.walletState.crowdsale, !crowdsale.hasEnded {
                         myself.sendCrowdsale()
                     } else if myself.store.state.currency == .ethereum {
                         myself.sendEth()
@@ -427,11 +438,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func sendCrowdsale() {
-        guard let crowdSale = store.state.walletState.crowdsale else { return }
+        guard let crowdsale = store.state.walletState.crowdsale else { return }
         let amount = amountView.ethOutput
         guard let ethManager = gethManager else { return }
 
-        let tx = ethManager.createTx(forAmount: amount, toAddress: crowdSale.contract.address, nonce: Int64(store.state.walletState.numSent))
+        let tx = ethManager.createTx(forAmount: amount, toAddress: crowdsale.contract.address, nonce: Int64(store.state.walletState.numSent))
         let signedTx = ethManager.signTx(tx, ethPrivKey: walletManager.ethPrivKey!)
         if let error = ethManager.publishTx(signedTx) {
             showErrorMessage(error.localizedDescription)
@@ -445,7 +456,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
                 //Add temporary transaction
                 let timestamp = String(Date().timeIntervalSince1970)
-                let tempTx = EthTx(blockNumber: "0", timeStamp: timestamp, value: amount.getString(10), from: ethManager.address.getHex(), to: crowdSale.contract.address, confirmations: "0", hash: signedTx.getHash().getHex(), isError: "0")
+                let tempTx = EthTx(blockNumber: "0", timeStamp: timestamp, value: amount.getString(10), from: ethManager.address.getHex(), to: crowdsale.contract.address, confirmations: "0", hash: signedTx.getHash().getHex(), isError: "0")
                 let transactionViewModel = EthTransaction(tx: tempTx, address: ethManager.address.getHex(), store: self.store)
                 let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
                 self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))
@@ -627,7 +638,7 @@ extension SendViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        if store.state.walletState.crowdsale != nil {
+        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded {
             return "Buy Tokens With Ethereum"
         } else if let token = store.state.walletState.token {
             return "Send \(token.code)"

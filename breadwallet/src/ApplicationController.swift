@@ -32,16 +32,16 @@ class ApplicationController : Subscriber, Trackable {
             store.perform(action: WalletChange.set(store.state.walletState.mutate(token: $0)))
 
             if $0.code == "BRD" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, contract: Contract(address: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7", abi: crowdSaleABI))
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil, contract: Contract(address: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7", abi: crowdSaleABI))
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else if $0.code == "BRD2" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, contract: Contract(address: "0x29e8382c5bb8da6e8abf58cf88e58ec7b57c75d4", abi: crowdSaleABI))
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x29e8382c5bb8da6e8abf58cf88e58ec7b57c75d4", abi: crowdSaleABI))
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else if $0.code == "BRD3" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, contract: Contract(address: "0x8B329840DCb8148F2D197DaDb96D813535731824", abi: crowdSaleABI))
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x8B329840DCb8148F2D197DaDb96D813535731824", abi: crowdSaleABI))
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else if $0.code == "BRD4" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, contract: Contract(address: "0x3ACaCa20173dAb62804898a99047485D6e536Fe4", abi: crowdSaleABI))
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x3ACaCa20173dAb62804898a99047485D6e536Fe4", abi: crowdSaleABI))
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             }
 
