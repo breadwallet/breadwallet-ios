@@ -139,7 +139,6 @@ class ApplicationController : Subscriber, Trackable {
         if !hasPerformedWalletDependentInitialization && didInitWallet {
             didInitWalletManager()
         }
-
     }
 
     private func setup() {
@@ -234,7 +233,7 @@ class ApplicationController : Subscriber, Trackable {
 
     private func didInitWalletManager() {
         guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
-        guard let rootViewController = window.rootViewController else { return }
+        guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
         hasPerformedWalletDependentInitialization = true
         store.perform(action: PinLength.set(walletManager.pinLength))
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
@@ -242,6 +241,7 @@ class ApplicationController : Subscriber, Trackable {
         exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
         feeUpdater = FeeUpdater(walletManager: walletManager, store: store)
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: rootViewController)
+        rootViewController.removeTempLoginView()
         accountViewController?.walletManager = walletManager
         defaultsUpdater = UserDefaultsUpdater(walletManager: walletManager)
         urlController = URLController(store: self.store, walletManager: walletManager)
@@ -319,9 +319,8 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func setupRootViewController() {
-
         let home = HomeScreenViewController(stores: [store, ethStore] + tokenStores)
-        let nc = UINavigationController(rootViewController: home)
+        let nc = RootNavigationController(store: store, rootViewController: home)
         nc.navigationBar.isTranslucent = false
         nc.navigationBar.tintColor = .white
         home.didSelectCurrency = { code in

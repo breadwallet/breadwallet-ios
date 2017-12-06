@@ -30,17 +30,6 @@ class AccountViewController : UIViewController, Subscriber {
     var walletManager: WalletManager? {
         didSet {
             guard let walletManager = walletManager else { return }
-            if !walletManager.noWallet {
-                loginView.walletManager = walletManager
-                loginView.transitioningDelegate = loginTransitionDelegate
-                loginView.modalPresentationStyle = .overFullScreen
-                loginView.modalPresentationCapturesStatusBarAppearance = true
-                loginView.shouldSelfDismiss = true
-                present(loginView, animated: false, completion: {
-                    self.tempLoginView.remove()
-                    self.attemptShowWelcomeView()
-                })
-            }
             transactionsTableView.walletManager = walletManager
             headerView.isWatchOnly = walletManager.isWatchOnly
         }
@@ -50,8 +39,6 @@ class AccountViewController : UIViewController, Subscriber {
         self.store = store
         self.transactionsTableView = TransactionsTableViewController(store: store, didSelectTransaction: didSelectTransaction)
         self.headerView = AccountHeaderView(store: store)
-        self.loginView = LoginViewController(store: store, isPresentedForLock: false)
-        self.tempLoginView = LoginViewController(store: store, isPresentedForLock: false)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -68,10 +55,6 @@ class AccountViewController : UIViewController, Subscriber {
     private var transactionsLoadingViewTop: NSLayoutConstraint?
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var isLoginRequired = false
-    private let loginView: LoginViewController
-    private let tempLoginView: LoginViewController
-    private let loginTransitionDelegate = LoginTransitionDelegate()
-    private let welcomeTransitingDelegate = PinTransitioningDelegate()
     private let searchHeaderview: SearchHeaderView = {
         let view = SearchHeaderView()
         view.isHidden = true
@@ -113,7 +96,6 @@ class AccountViewController : UIViewController, Subscriber {
         addConstraints()
         addSubscriptions()
         addAppLifecycleNotificationEvents()
-        addTemporaryStartupViews()
         setInitialData()
 
         if let endTime = store.state.walletState.crowdsale?.endTime {
@@ -268,26 +250,6 @@ class AccountViewController : UIViewController, Subscriber {
         transactionsLoadingView.progress = transactionsLoadingView.progress + (1.0 - transactionsLoadingView.progress)/8.0
     }
 
-    private func addTemporaryStartupViews() {
-        guard store.state.currency == .bitcoin else { return }
-        guardProtected(queue: DispatchQueue.main) {
-            if !WalletManager.staticNoWallet {
-//                self.addChildViewController(self.tempLoginView, layout: {
-//                    self.tempLoginView.view.constrain(toSuperviewEdges: nil)
-//                })
-            } else {
-//                let tempStartView = StartViewController(store: self.store, didTapCreate: {}, didTapRecover: {})
-//                self.addChildViewController(tempStartView, layout: {
-//                    tempStartView.view.constrain(toSuperviewEdges: nil)
-//                    tempStartView.view.isUserInteractionEnabled = false
-//                })
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-//                    tempStartView.remove()
-//                })
-            }
-        }
-    }
-
     private func addTransactionsView() {
         addChildViewController(transactionsTableView, layout: {
             transactionsTableView.view.constrain(toSuperviewEdges: nil)
@@ -325,18 +287,6 @@ class AccountViewController : UIViewController, Subscriber {
             }))
         }
         present(alert, animated: true, completion: nil)
-    }
-
-    private func attemptShowWelcomeView() {
-        if !UserDefaults.hasShownWelcome {
-            let welcome = WelcomeViewController()
-            welcome.transitioningDelegate = welcomeTransitingDelegate
-            welcome.modalPresentationStyle = .overFullScreen
-            welcome.modalPresentationCapturesStatusBarAppearance = true
-            welcomeTransitingDelegate.shouldShowMaskView = false
-            loginView.present(welcome, animated: true, completion: nil)
-            UserDefaults.hasShownWelcome = true
-        }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

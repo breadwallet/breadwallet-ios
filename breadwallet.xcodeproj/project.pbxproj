@@ -251,6 +251,7 @@
 		CE25BF8D1DF3B8A500BC67B6 /* InViewAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25BF8C1DF3B8A500BC67B6 /* InViewAlert.swift */; };
 		CE25BF911DF9ADE700BC67B6 /* UIImage+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25BF901DF9ADE700BC67B6 /* UIImage+Utils.swift */; };
 		CE25BF931DFDA7A600BC67B6 /* MessageUIPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25BF921DFDA7A500BC67B6 /* MessageUIPresenter.swift */; };
+		CE274A611FD7C902000A4E62 /* RootNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE274A601FD7C902000A4E62 /* RootNavigationController.swift */; };
 		CE27F9591E2C8EA300F7F7F2 /* Amount.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE27F9581E2C8EA300F7F7F2 /* Amount.swift */; };
 		CE29901A1EFD6DE50093A0F2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE29901C1EFD6DE50093A0F2 /* Localizable.strings */; };
 		CE2DC1391EBC36EE000FE727 /* Prompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2DC1381EBC36EE000FE727 /* Prompt.swift */; };
@@ -1447,6 +1448,7 @@
 		CE27074C1F016B6D00431BBC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE27074D1F016B7000431BBC /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE27074E1F016D2400431BBC /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE274A601FD7C902000A4E62 /* RootNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RootNavigationController.swift; path = src/ViewControllers/RootNavigationController.swift; sourceTree = "<group>"; };
 		CE27F9581E2C8EA300F7F7F2 /* Amount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Amount.swift; path = src/ViewModels/Amount.swift; sourceTree = "<group>"; };
 		CE29901B1EFD6DE50093A0F2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE29901F1EFD6E060093A0F2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2897,6 +2899,7 @@
 				CE760ED71E55F9E000EFAC2B /* SecurityCenter */,
 				CEBF32EF1DDCD30600348FC6 /* AccountViewController.swift */,
 				CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */,
+				CE274A601FD7C902000A4E62 /* RootNavigationController.swift */,
 				CE3840E71FD590BD00437C31 /* AssetListTableView.swift */,
 				CE30EC741F79556500FC9887 /* CurrencyList.swift */,
 				CE20C9061DBC587200C8397A /* StartViewController.swift */,
@@ -4000,6 +4003,7 @@
 				CEC6AA401DEFC87300EE5AFD /* SendViewController.swift in Sources */,
 				CEAA9E8F1DC074410066731D /* StartPaperPhraseViewController.swift in Sources */,
 				CEC6F8451E886723000795B8 /* PaymentRequest.swift in Sources */,
+				CE274A611FD7C902000A4E62 /* RootNavigationController.swift in Sources */,
 				CE4C1CC81ED88B600063E184 /* URLController.swift in Sources */,
 				CE20C9171DBE6F2A00C8397A /* UIButton+BRWAdditions.swift in Sources */,
 				CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */,
