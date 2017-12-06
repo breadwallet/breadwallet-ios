@@ -3261,7 +3261,7 @@
 /* Begin PBXLegacyTarget section */
 		759DA0D71DAC8668008CC49B /* submodules */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = "-c 'git submodule init && git submodule update && git -C Modules/breadwallet-core submodule init && git -C Modules/breadwallet-core submodule update'";
+			buildArgumentsString = "";
 			buildConfigurationList = 759DA0DA1DAC8668008CC49B /* Build configuration list for PBXLegacyTarget "submodules" */;
 			buildPhases = (
 			);
@@ -3275,11 +3275,11 @@
 		};
 		75DA6C481F61E52200E48CAF /* Geth */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = ios;
+			buildArgumentsString = "";
 			buildConfigurationList = 75DA6C491F61E52200E48CAF /* Build configuration list for PBXLegacyTarget "Geth" */;
 			buildPhases = (
 			);
-			buildToolPath = /usr/bin/make;
+			buildToolPath = ls;
 			buildWorkingDirectory = "$(SRCROOT)/Modules/go-ethereum";
 			dependencies = (
 				75DA6C501F61E57700E48CAF /* PBXTargetDependency */,

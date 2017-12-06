@@ -191,7 +191,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         if let amount = amount, amount.rawValue > 0 {
             let fee: UInt64
             if store.isEthLike {
-                fee = UInt64(gethManager!.fee.getInt64())
+                fee = UInt64(gethManager!.fee(isCrowdsale: false).getInt64())
             } else {
                 fee = sender.feeForTx(amount: amount.rawValue)
             }
@@ -307,7 +307,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             let max = DisplayAmount.ethString(value: maxBuy, store: store)
             return showErrorMessage("Please enter an amount less than the max contribution amount of \(max)")
         }
-        let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee, feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: crowdsale.contract.address, isUsingTouchId: sender.canUseBiometrics, store: store)
+        let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee(isCrowdsale: true), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: crowdsale.contract.address, isUsingTouchId: sender.canUseBiometrics, store: store)
         confirm.callback = {
             confirm.dismiss(animated: true, completion: {
                 self.presentEthPin()
@@ -322,7 +322,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
     private func confirmEth() {
         guard let ethManager = gethManager else { return }
-        let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee, feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseBiometrics, store: store)
+        let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee(isCrowdsale: false), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseBiometrics, store: store)
         confirm.callback = {
             confirm.dismiss(animated: true, completion: {
                 self.presentEthPin()
@@ -337,7 +337,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
     private func confirmToken() {
         guard let ethManager = gethManager else { return }
-        let confirm = EthConfirmationViewController(amount: amountView.tokenOutput, fee: ethManager.fee, feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseBiometrics, store: store)
+        //TODO - calculate erc20 token transfer fees correctly
+        let confirm = EthConfirmationViewController(amount: amountView.tokenOutput, fee: ethManager.fee(isCrowdsale: false), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseBiometrics, store: store)
         confirm.callback = {
             confirm.dismiss(animated: true, completion: {
                 self.presentEthPin()
@@ -384,7 +385,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return showErrorMessage(S.Send.ethSendSelf)
         }
 
-        let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(store.state.walletState.numSent))
+        let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(store.state.walletState.numSent), isCrowdsale: false)
         let signedTx = ethManager.signTx(tx, ethPrivKey: walletManager.ethPrivKey!)
         if let error = ethManager.publishTx(signedTx) {
             showErrorMessage(error.localizedDescription)
@@ -442,7 +443,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         let amount = amountView.ethOutput
         guard let ethManager = gethManager else { return }
 
-        let tx = ethManager.createTx(forAmount: amount, toAddress: crowdsale.contract.address, nonce: Int64(store.state.walletState.numSent))
+        let tx = ethManager.createTx(forAmount: amount, toAddress: crowdsale.contract.address, nonce: Int64(store.state.walletState.numSent), isCrowdsale: true)
         let signedTx = ethManager.signTx(tx, ethPrivKey: walletManager.ethPrivKey!)
         if let error = ethManager.publishTx(signedTx) {
             showErrorMessage(error.localizedDescription)
