@@ -23,7 +23,9 @@ class GethManager {
     var receiveAddress: String {
         return address.getHex()
     }
-    private let gasLimit: Int64 = 300000
+    private let gasLimit: Int64 = 21000
+    private let crowdsaleGasLimit: Int64 = 300000
+
     init(ethPrivKey: String, store: Store) {
         self.store = store
         context = GethContext()
@@ -63,16 +65,16 @@ class GethManager {
         return balance
     }
 
-    func createTx(forAmount: GethBigInt, toAddress: String, nonce: Int64) -> GethTransaction {
+    func createTx(forAmount: GethBigInt, toAddress: String, nonce: Int64, isCrowdsale: Bool) -> GethTransaction {
         let toAddr = GethAddress(fromHex: toAddress)
         let price = try! client.suggestGasPrice(context)
-        return GethTransaction(nonce, to: toAddr, amount: forAmount, gasLimit: GethBigInt(gasLimit),
+        return GethTransaction(nonce, to: toAddr, amount: forAmount, gasLimit: GethBigInt((isCrowdsale ? crowdsaleGasLimit : gasLimit)),
                                gasPrice: price, data: nil)
     }
 
-    var fee: GethBigInt {
+    func fee(isCrowdsale: Bool) -> GethBigInt {
         let price = (try! client.suggestGasPrice(context)).getInt64()
-        return GethBigInt(price * gasLimit)
+        return GethBigInt(price * (isCrowdsale ? crowdsaleGasLimit : gasLimit))
     }
     
     func signTx(_ tx: GethTransaction, ethPrivKey: String) -> GethTransaction {
