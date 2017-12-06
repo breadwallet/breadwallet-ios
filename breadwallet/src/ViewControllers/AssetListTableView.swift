@@ -102,7 +102,7 @@ class AssetListTableView : UITableViewController, Subscriber {
         } else {
             guard let bigBalance = store.state.walletState.bigBalance else { return "" }
             if store.state.currency == .ethereum {
-                return DisplayAmount.ethString(value: bigBalance, store: store) + " " + DisplayAmount.localEthString(value: bigBalance, store: store)
+                return DisplayAmount.ethString(value: bigBalance, store: store) + " " + "(\(DisplayAmount.localEthString(value: bigBalance, store: store)))"
             } else {
                 guard let token = store.state.walletState.token else { return "" }
                 var decimal = Decimal(string: bigBalance.getString(10)) ?? Decimal(0)
