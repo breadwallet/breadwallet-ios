@@ -190,7 +190,11 @@ class StartFlowPresenter : Subscriber {
         loginView.modalPresentationStyle = .overFullScreen
         loginView.modalPresentationCapturesStatusBarAppearance = true
         loginViewController = loginView
-        rootViewController.present(loginView, animated: false, completion: nil)
+        if let rootNavigationController = rootViewController as? RootNavigationController {
+            rootViewController.present(loginView, animated: false, completion: {
+                rootNavigationController.removeTempLoginView()
+            })
+        }
     }
 
     private func dismissLoginFlow() {
