@@ -290,8 +290,12 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if store.isEthLike {
             let tx = transactions[indexPath.row]
-            store.trigger(name: .lightWeightAlert(S.Receive.copied))
-            UIPasteboard.general.string = tx.hash
+            if tx.hash.utf8.count > 0 {
+                store.trigger(name: .lightWeightAlert(S.Receive.copied))
+                UIPasteboard.general.string = tx.hash
+            } else {
+                store.trigger(name: .lightWeightAlert("txHash doesn't exist yet"))
+            }
             return
         }
 
