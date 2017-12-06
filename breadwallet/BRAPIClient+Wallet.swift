@@ -171,8 +171,9 @@ extension BRAPIClient {
 
     func tokenHistory(tokenAddress: String, ethAddress: String, callback: @escaping(([Event]) -> Void)) {
         let address = "0x000000000000000000000000\(ethAddress.replacingOccurrences(of: "0x", with: ""))"
+        let transferSig = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
         let host = E.isTestnet ? "ropsten.etherscan.io" : "api.etherscan.io"
-        let string = "https://\(host)/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=\(tokenAddress)&topic1=\(address)&topic1_2_opr=or&topic2=\(address)"
+        let string = "https://\(host)/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=\(tokenAddress)&topic1=\(address)&topic1_2_opr=or&topic2=\(address)&topic0=\(transferSig)"
         let url = URL(string: string)!
         var req = URLRequest(url: url)
         req.httpMethod = "GET"
