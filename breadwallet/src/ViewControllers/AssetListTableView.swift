@@ -31,6 +31,8 @@ class AssetListTableView : UITableViewController, Subscriber {
         tableView.register(HomeScreenCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.register(CrowsaleCell.self, forCellReuseIdentifier: crowdSaleCellIdentifier)
         tableView.separatorStyle = .none
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 140
         NSLayoutConstraint.activate([
             view.heightAnchor.constraint(equalToConstant: 200.0) ])
 
