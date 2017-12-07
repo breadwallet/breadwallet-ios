@@ -267,6 +267,8 @@
 		CE3840E81FD590BD00437C31 /* AssetListTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3840E71FD590BD00437C31 /* AssetListTableView.swift */; };
 		CE3D4C571EF5D5740016B1C8 /* ReachabilityMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D4C561EF5D5740016B1C8 /* ReachabilityMonitor.swift */; };
 		CE3D4C591EF743EF0016B1C8 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D4C581EF743EF0016B1C8 /* Functions.swift */; };
+		CE42AA3C1FD8F3CE002C024C /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE42AA3B1FD8F3CE002C024C /* WebViewController.swift */; };
+		CE42AA3F1FD996E3002C024C /* CrowdsaleRegister.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE42AA3E1FD996E3002C024C /* CrowdsaleRegister.swift */; };
 		CE44BA1B1F33BFC500392A1A /* NodeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE44BA1A1F33BFC500392A1A /* NodeSelectorViewController.swift */; };
 		CE44BA1D1F35102D00392A1A /* BCashTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE44BA1C1F35102D00392A1A /* BCashTransactionViewController.swift */; };
 		CE44BA1F1F353AB200392A1A /* WalletManager+BCash.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE44BA1E1F353AB200392A1A /* WalletManager+BCash.swift */; };
@@ -1470,6 +1472,8 @@
 		CE3840E71FD590BD00437C31 /* AssetListTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AssetListTableView.swift; path = src/ViewControllers/AssetListTableView.swift; sourceTree = "<group>"; };
 		CE3D4C561EF5D5740016B1C8 /* ReachabilityMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReachabilityMonitor.swift; path = src/ReachabilityMonitor.swift; sourceTree = "<group>"; };
 		CE3D4C581EF743EF0016B1C8 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Functions.swift; path = src/Constants/Functions.swift; sourceTree = "<group>"; };
+		CE42AA3B1FD8F3CE002C024C /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebViewController.swift; path = src/ViewControllers/WebViewController.swift; sourceTree = "<group>"; };
+		CE42AA3E1FD996E3002C024C /* CrowdsaleRegister.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CrowdsaleRegister.swift; path = src/Wallet/Crowdsale/CrowdsaleRegister.swift; sourceTree = "<group>"; };
 		CE44BA1A1F33BFC500392A1A /* NodeSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NodeSelectorViewController.swift; path = src/ViewControllers/NodeSelectorViewController.swift; sourceTree = "<group>"; };
 		CE44BA1C1F35102D00392A1A /* BCashTransactionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BCashTransactionViewController.swift; path = src/ViewControllers/BCashTransactionViewController.swift; sourceTree = "<group>"; };
 		CE44BA1E1F353AB200392A1A /* WalletManager+BCash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WalletManager+BCash.swift"; path = "src/WalletManager+BCash.swift"; sourceTree = "<group>"; };
@@ -2898,6 +2902,7 @@
 				CE6D0F951DE8B6B600BD4BCF /* ViewControllerTransitions */,
 				CE760ED71E55F9E000EFAC2B /* SecurityCenter */,
 				CEBF32EF1DDCD30600348FC6 /* AccountViewController.swift */,
+				CE42AA3B1FD8F3CE002C024C /* WebViewController.swift */,
 				CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */,
 				CE274A601FD7C902000A4E62 /* RootNavigationController.swift */,
 				CE3840E71FD590BD00437C31 /* AssetListTableView.swift */,
@@ -3073,6 +3078,14 @@
 			name = PinPadCells;
 			sourceTree = "<group>";
 		};
+		CE42AA3D1FD996C5002C024C /* Crowdsale */ = {
+			isa = PBXGroup;
+			children = (
+				CE42AA3E1FD996E3002C024C /* CrowdsaleRegister.swift */,
+			);
+			name = Crowdsale;
+			sourceTree = "<group>";
+		};
 		CE4CA7B81EE0C89F00373F11 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
@@ -3127,6 +3140,7 @@
 		CE7B40981FA03C9900BA4196 /* Wallet */ = {
 			isa = PBXGroup;
 			children = (
+				CE42AA3D1FD996C5002C024C /* Crowdsale */,
 				CE7B40991FA03CC700BA4196 /* EthWalletCoordinator.swift */,
 			);
 			name = Wallet;
@@ -3264,7 +3278,7 @@
 /* Begin PBXLegacyTarget section */
 		759DA0D71DAC8668008CC49B /* submodules */ = {
 			isa = PBXLegacyTarget;
-            buildArgumentsString = "-c 'git submodule init && git submodule update && git -C Modules/breadwallet-core submodule init && git -C Modules/breadwallet-core submodule update'";
+			buildArgumentsString = "-c 'git submodule init && git submodule update && git -C Modules/breadwallet-core submodule init && git -C Modules/breadwallet-core submodule update'";
 			buildConfigurationList = 759DA0DA1DAC8668008CC49B /* Build configuration list for PBXLegacyTarget "submodules" */;
 			buildPhases = (
 			);
@@ -3282,7 +3296,7 @@
 			buildConfigurationList = 75DA6C491F61E52200E48CAF /* Build configuration list for PBXLegacyTarget "Geth" */;
 			buildPhases = (
 			);
-            buildToolPath = /usr/bin/make;
+			buildToolPath = /urs/bin/make;
 			buildWorkingDirectory = "$(SRCROOT)/Modules/go-ethereum";
 			dependencies = (
 				75DA6C501F61E57700E48CAF /* PBXTargetDependency */,
@@ -3953,6 +3967,7 @@
 				CE90571A1DFF18B2006BA848 /* ScanViewController.swift in Sources */,
 				CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */,
 				222319B01F27985A00008F20 /* BRBrowserViewController.swift in Sources */,
+				CE42AA3F1FD996E3002C024C /* CrowdsaleRegister.swift in Sources */,
 				CE74F58D1E3BA85600ED5FA9 /* ExchangeUpdater.swift in Sources */,
 				CE6DCC251E6001E50044257B /* UIControl+Callback.swift in Sources */,
 				CE0822641FCD1BD100EF371D /* HomeScreenViewController.swift in Sources */,
@@ -4029,6 +4044,7 @@
 				CEB909F71E5FE654001804DC /* EnterPhraseCollectionViewController.swift in Sources */,
 				CEF3D2DD1E8CBA790070178E /* LAContext+Extensions.swift in Sources */,
 				CECCE5AE1E04AD6300D99448 /* AddressCell.swift in Sources */,
+				CE42AA3C1FD8F3CE002C024C /* WebViewController.swift in Sources */,
 				CE53F45B1FD619BB00EC8DCA /* BRAPIClient+Crowdsale.swift in Sources */,
 				CE6BCF5D1EE9E89A0029849C /* CustomTitleView.swift in Sources */,
 				CE68DCD91FAB75BE00A3AA40 /* TokenWalletCoordinator.swift in Sources */,

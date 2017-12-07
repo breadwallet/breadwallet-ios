@@ -22,7 +22,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
     let didSelectTransaction: ([Transaction], Int) -> Void
     let syncingView = SyncingView()
-    
+    var presentKyc: (()->Void)?
     var isSyncingViewVisible = false {
         didSet {
             guard !store.isEthLike else { return }
@@ -220,6 +220,13 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                 let cell = tableView.dequeueReusableCell(withIdentifier: blankCellIdentifier, for: indexPath)
                 if cell.contentView.subviews.count == 0 {
                     let newCrowdsaleView = crowdsaleView ?? CrowdsaleView(store: store)
+
+                    if newCrowdsaleView.didTapKyc == nil {
+                        newCrowdsaleView.didTapKyc = strongify(self) { myself in
+                            myself.presentKyc?()
+                        }
+                    }
+
                     cell.contentView.addSubview(newCrowdsaleView)
                     newCrowdsaleView.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[1], C.padding[1], C.padding[1], C.padding[1]))
                 }

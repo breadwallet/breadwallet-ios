@@ -103,6 +103,24 @@ class AccountViewController : UIViewController, Subscriber {
                 footerView.isHidden = true
             }
         }
+
+        transactionsTableView.presentKyc = strongify(self) { myself in
+
+
+            let register = CrowdsaleRegister()
+            register.register(firstName: "Mark", lastName: "Abma", email: "abma@gnarmail.com", countryCode: "cdn") { url in
+                DispatchQueue.main.async {
+                    if let url = url {
+                        let webView = WebViewController(url: url)
+                        let nc = UINavigationController(rootViewController: webView)
+                        self.present(nc, animated: true, completion: nil)
+                    } else {
+                        print("no url")
+                    }
+                }
+            }
+
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
