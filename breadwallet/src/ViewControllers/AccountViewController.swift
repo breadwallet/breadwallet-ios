@@ -112,6 +112,7 @@ class AccountViewController : UIViewController, Subscriber {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        headerView.setBalances()
     }
 
     private func addSubviews() {
