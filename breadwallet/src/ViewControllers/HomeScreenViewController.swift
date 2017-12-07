@@ -34,6 +34,12 @@ class HomeScreenViewController : UIViewController, Subscriber {
                 subHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
                 subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 subHeaderView.heightAnchor.constraint(equalToConstant: height) ])
+        } else {
+            subHeaderView.constrain([
+                subHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                subHeaderView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 0.0),
+                subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                subHeaderView.heightAnchor.constraint(equalToConstant: height) ])
         }
 
         subHeaderView.backgroundColor = .white
