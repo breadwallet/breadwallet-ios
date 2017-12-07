@@ -171,6 +171,7 @@ class AccountViewController : UIViewController, Subscriber {
     private func setInitialData() {
         headerView.search.tap = { [weak self] in
             guard let myself = self else { return }
+            myself.navigationController?.setNavigationBarHidden(true, animated: false)
             UIView.transition(from: myself.headerView,
                               to: myself.searchHeaderview,
                               duration: C.animationDuration,
@@ -178,17 +179,22 @@ class AccountViewController : UIViewController, Subscriber {
                               completion: { _ in
                                 myself.searchHeaderview.triggerUpdate()
                                 myself.setNeedsStatusBarAppearanceUpdate()
+                                let contentInset = myself.transactionsTableView.tableView.contentInset
+                                myself.transactionsTableView.tableView.contentInset = UIEdgeInsetsMake(contentInset.top + 64.0, contentInset.left, contentInset.bottom, contentInset.right)
             })
         }
 
         searchHeaderview.didCancel = { [weak self] in
             guard let myself = self else { return }
+            myself.navigationController?.setNavigationBarHidden(false, animated: false)
             UIView.transition(from: myself.searchHeaderview,
                               to: myself.headerView,
                               duration: C.animationDuration,
                               options: [.transitionFlipFromTop, .showHideTransitionViews, .curveEaseOut],
                               completion: { _ in
                                 myself.setNeedsStatusBarAppearanceUpdate()
+                                let contentInset = myself.transactionsTableView.tableView.contentInset
+                                myself.transactionsTableView.tableView.contentInset = UIEdgeInsetsMake(contentInset.top - 64.0, contentInset.left, contentInset.bottom, contentInset.right)
             })
         }
 
