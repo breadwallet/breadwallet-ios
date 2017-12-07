@@ -18,6 +18,8 @@ class CrowdsaleView : UIView {
     private var startTime: Date? = nil
     private var endTime: Date? = nil
 
+    var didTapKyc: (() -> Void)?
+
     init(store: Store) {
         self.store = store
         super.init(frame: .zero)
@@ -50,7 +52,8 @@ class CrowdsaleView : UIView {
         header.textAlignment = .center
         footer.textAlignment = .center
         button.tap = strongify(self) { myself in
-            myself.store.perform(action: RootModalActions.Present(modal: .send))
+            myself.didTapKyc?()
+            //myself.store.perform(action: RootModalActions.Present(modal: .send))
         }
         setStatusLabel()
         if timer == nil {
