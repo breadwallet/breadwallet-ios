@@ -268,7 +268,6 @@
 		CE3D4C571EF5D5740016B1C8 /* ReachabilityMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D4C561EF5D5740016B1C8 /* ReachabilityMonitor.swift */; };
 		CE3D4C591EF743EF0016B1C8 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D4C581EF743EF0016B1C8 /* Functions.swift */; };
 		CE42AA3C1FD8F3CE002C024C /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE42AA3B1FD8F3CE002C024C /* WebViewController.swift */; };
-		CE42AA3F1FD996E3002C024C /* CrowdsaleRegister.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE42AA3E1FD996E3002C024C /* CrowdsaleRegister.swift */; };
 		CE44BA1B1F33BFC500392A1A /* NodeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE44BA1A1F33BFC500392A1A /* NodeSelectorViewController.swift */; };
 		CE44BA1D1F35102D00392A1A /* BCashTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE44BA1C1F35102D00392A1A /* BCashTransactionViewController.swift */; };
 		CE44BA1F1F353AB200392A1A /* WalletManager+BCash.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE44BA1E1F353AB200392A1A /* WalletManager+BCash.swift */; };
@@ -336,6 +335,7 @@
 		CEA7E6761F057D77001F8C27 /* WalletInfoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7E6751F057D77001F8C27 /* WalletInfoTest.swift */; };
 		CEA7E67E1F09A9D2001F8C27 /* Screenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7E67D1F09A9D2001F8C27 /* Screenshots.swift */; };
 		CEA7E6871F09AB00001F8C27 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7E6861F09AB00001F8C27 /* SnapshotHelper.swift */; };
+		CEAA53AF1FDC523100BBF478 /* VerifyIdentityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA53AE1FDC523100BBF478 /* VerifyIdentityView.swift */; };
 		CEAA9E8F1DC074410066731D /* StartPaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */; };
 		CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */; };
 		CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */; };
@@ -1473,7 +1473,6 @@
 		CE3D4C561EF5D5740016B1C8 /* ReachabilityMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReachabilityMonitor.swift; path = src/ReachabilityMonitor.swift; sourceTree = "<group>"; };
 		CE3D4C581EF743EF0016B1C8 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Functions.swift; path = src/Constants/Functions.swift; sourceTree = "<group>"; };
 		CE42AA3B1FD8F3CE002C024C /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebViewController.swift; path = src/ViewControllers/WebViewController.swift; sourceTree = "<group>"; };
-		CE42AA3E1FD996E3002C024C /* CrowdsaleRegister.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CrowdsaleRegister.swift; path = src/Wallet/Crowdsale/CrowdsaleRegister.swift; sourceTree = "<group>"; };
 		CE44BA1A1F33BFC500392A1A /* NodeSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NodeSelectorViewController.swift; path = src/ViewControllers/NodeSelectorViewController.swift; sourceTree = "<group>"; };
 		CE44BA1C1F35102D00392A1A /* BCashTransactionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BCashTransactionViewController.swift; path = src/ViewControllers/BCashTransactionViewController.swift; sourceTree = "<group>"; };
 		CE44BA1E1F353AB200392A1A /* WalletManager+BCash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WalletManager+BCash.swift"; path = "src/WalletManager+BCash.swift"; sourceTree = "<group>"; };
@@ -1552,6 +1551,7 @@
 		CEA7E67D1F09A9D2001F8C27 /* Screenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screenshots.swift; sourceTree = "<group>"; };
 		CEA7E67F1F09A9D2001F8C27 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CEA7E6861F09AB00001F8C27 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
+		CEAA53AE1FDC523100BBF478 /* VerifyIdentityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VerifyIdentityView.swift; path = src/Views/VerifyIdentityView.swift; sourceTree = "<group>"; };
 		CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartPaperPhraseViewController.swift; path = src/ViewControllers/StartPaperPhraseViewController.swift; sourceTree = "<group>"; };
 		CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewPropertyAnimator+BRWAdditions.swift"; path = "src/Extensions/UIViewPropertyAnimator+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WritePaperPhraseViewController.swift; path = src/ViewControllers/WritePaperPhraseViewController.swift; sourceTree = "<group>"; };
@@ -3045,6 +3045,7 @@
 				CE0822651FCE059A00EF371D /* HomeScreenCell.swift */,
 				CE6D49831FD0618A00B7C539 /* CrowdsaleCell.swift */,
 				CE83095C1FD1067300B20A50 /* CrowdsaleView.swift */,
+				CEAA53AE1FDC523100BBF478 /* VerifyIdentityView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -3081,7 +3082,6 @@
 		CE42AA3D1FD996C5002C024C /* Crowdsale */ = {
 			isa = PBXGroup;
 			children = (
-				CE42AA3E1FD996E3002C024C /* CrowdsaleRegister.swift */,
 			);
 			name = Crowdsale;
 			sourceTree = "<group>";
@@ -3296,7 +3296,7 @@
 			buildConfigurationList = 75DA6C491F61E52200E48CAF /* Build configuration list for PBXLegacyTarget "Geth" */;
 			buildPhases = (
 			);
-			buildToolPath = /urs/bin/make;
+			buildToolPath = /usr/bin/make;
 			buildWorkingDirectory = "$(SRCROOT)/Modules/go-ethereum";
 			dependencies = (
 				75DA6C501F61E57700E48CAF /* PBXTargetDependency */,
@@ -3967,7 +3967,6 @@
 				CE90571A1DFF18B2006BA848 /* ScanViewController.swift in Sources */,
 				CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */,
 				222319B01F27985A00008F20 /* BRBrowserViewController.swift in Sources */,
-				CE42AA3F1FD996E3002C024C /* CrowdsaleRegister.swift in Sources */,
 				CE74F58D1E3BA85600ED5FA9 /* ExchangeUpdater.swift in Sources */,
 				CE6DCC251E6001E50044257B /* UIControl+Callback.swift in Sources */,
 				CE0822641FCD1BD100EF371D /* HomeScreenViewController.swift in Sources */,
@@ -4053,6 +4052,7 @@
 				22A9A9521DF61945000F0016 /* BRKVStorePlugin.swift in Sources */,
 				CEAFC8611E5D5B0500E4FD06 /* SegmentedButton.swift in Sources */,
 				CE30F0E61EB27844004B8EE5 /* PhoneWCSessionManager.swift in Sources */,
+				CEAA53AF1FDC523100BBF478 /* VerifyIdentityView.swift in Sources */,
 				7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */,
 				22A9A9581DF61945000F0016 /* BRWebViewController.swift in Sources */,
 				CEC4CF091F0C84AB00E5C82E /* UIViewController+Alerts.swift in Sources */,
