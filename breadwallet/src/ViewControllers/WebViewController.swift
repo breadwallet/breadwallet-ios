@@ -11,6 +11,7 @@ import WebKit
 
 class WebViewController : UIViewController {
 
+    var didComplete: (() -> Void)?
     private var webView: WKWebView
     private var url: URL
 
@@ -35,7 +36,6 @@ class WebViewController : UIViewController {
     }
 
     @objc private func cancel() {
-        //TODO - add are you sure?
         dismiss(animated: true, completion: nil)
     }
 
@@ -47,11 +47,9 @@ class WebViewController : UIViewController {
 extension WebViewController : WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if let url = navigationAction.request.url {
-            let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-            if let token = components?.queryItems?.filter({ $0.name == "token" }).first {
-                //c2b7cf0a-847c-4562-aa5e-5061733b3622
-                print("token: \(token.value)")
+        if let url = navigationAction.request.url?.description {
+            if url.contains("kyc-success") {
+                didComplete?()
                 return dismiss(animated: true, completion: {
                     decisionHandler(.cancel)
                 })

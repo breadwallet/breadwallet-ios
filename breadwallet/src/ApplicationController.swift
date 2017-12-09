@@ -15,7 +15,7 @@ private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
 let tokens: [Token] = {
     //return []
-    return E.isTestnet ? [tst, brd, brd2, brd3] : [xjp]
+    return E.isTestnet ? [brd3, brd2, brd, tst] : [xjp]
 }()
 
 class ApplicationController : Subscriber, Trackable {
@@ -48,11 +48,11 @@ class ApplicationController : Subscriber, Trackable {
             if $0.code == "BRD" {
                 let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil, contract: Contract(address: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7", abi: crowdSaleABI), rate: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
-            } else if $0.code == "BRD2" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x62218f00553569046A6755fc9A23c98620456F5f", abi: crowdSaleABI), rate: nil)
+            } else if $0.code == "BRd" {
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x3cc1878208d286bf53994686bc763c6a0b7d9844", abi: crowdSaleABI), rate: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
-            } else if $0.code == "BRD3" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x0d2B159BaD912E70cD2EaF06715c48274e4478A7", abi: crowdSaleABI), rate: nil)
+            } else if $0.code == "brd" {
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x5df1ff920917e76eaf954cf397a7e2e3856918cd", abi: crowdSaleABI), rate: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else {
                 store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 1.0, reciprocalCode: $0.code)))
@@ -240,6 +240,11 @@ class ApplicationController : Subscriber, Trackable {
         feeUpdater = FeeUpdater(walletManager: walletManager, store: store)
         startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: rootViewController)
         accountViewController?.walletManager = walletManager
+
+        accountViewControllers?.forEach {
+            $0.walletManager = walletManager
+        }
+
         defaultsUpdater = UserDefaultsUpdater(walletManager: walletManager)
         urlController = URLController(store: self.store, walletManager: walletManager)
         if let url = launchURL {
@@ -263,11 +268,6 @@ class ApplicationController : Subscriber, Trackable {
                 }
                 startDataFetchers()
                 addNumSentListeners()
-
-                //FIXME
-//                walletManager.apiClient?.kycStatus(contractAddress: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7", ethAddress: gethManager.address.getHex(), handler: {status, error in
-//
-//                })
             }
 
         //For when watch app launches app in background
@@ -534,15 +534,15 @@ let brd = Token(name: "Bread Token",
                 address: "0xab6e259770002a88ff37b23755ddd3743e8a98a2",
                 decimals: 18,
                 abi: "[{\"constant\":true,\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_spender\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_from\",\"type\":\"address\"},{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"name\":\"balance\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"showMeTheMoney\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"},{\"name\":\"_spender\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"name\":\"remaining\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_owner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_spender\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"}]")
-let brd2 = Token(name: "Bread Token 2",
-                 code: "BRD2",
+let brd2 = Token(name: "Bread Token",
+                 code: "BRd",
                  symbol: "🍞",
-                 address: "0x182c6583e8ccc0a5a12f15aac3c722ee9232da17",
+                 address: "0xb99cb14bca36d1a1b9fd293ab51076331ab61cab",
                  decimals: 18,
                  abi: "[{\"constant\":true,\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_spender\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_from\",\"type\":\"address\"},{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"name\":\"balance\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"showMeTheMoney\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"},{\"name\":\"_spender\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"name\":\"remaining\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_owner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_spender\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"}]")
-let brd3 = Token(name: "Bread Token 3",
-                 code: "BRD3",
+let brd3 = Token(name: "Bread Token",
+                 code: "brd",
                  symbol: "🍞",
-                 address: "0x0b980f24cE0a3bC17d46D9CE7B0c80F96331E0aC",
+                 address: "0xb99cb14bca36d1a1b9fd293ab51076331ab61cab",
                  decimals: 18,
                  abi: "[{\"constant\":true,\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_spender\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_from\",\"type\":\"address\"},{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"name\":\"balance\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"showMeTheMoney\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"},{\"name\":\"_spender\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"name\":\"remaining\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_owner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_spender\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"}]")
