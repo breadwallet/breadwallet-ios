@@ -232,6 +232,7 @@ class ApplicationController : Subscriber, Trackable {
     private func didInitWalletManager() {
         guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
+        rootViewController.walletManager = walletManager
         hasPerformedWalletDependentInitialization = true
         store.perform(action: PinLength.set(walletManager.pinLength))
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
