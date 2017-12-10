@@ -131,6 +131,7 @@ class AccountViewController : UIViewController, Subscriber {
     @objc private func updateKycStatus() {
         if let contractAddress = store.state.walletState.crowdsale?.contract.address, let ethAddress = store.state.walletState.receiveAddress {
             walletManager?.apiClient?.kycStatus(contractAddress: contractAddress, ethAddress: ethAddress, callback: { [weak self] status in
+                guard let status = status else { return }
                 DispatchQueue.main.async {
                     if status != .complete {
                         if self?.kycStatusTimer == nil {
@@ -151,6 +152,7 @@ class AccountViewController : UIViewController, Subscriber {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         headerView.setBalances()
+        kycStatusTimer?.invalidate()
         kycStatusTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(self.updateKycStatus), userInfo: nil, repeats: true)
     }
 

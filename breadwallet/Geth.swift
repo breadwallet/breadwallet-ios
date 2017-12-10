@@ -21,7 +21,7 @@ class GethManager {
             let result = try client.getBalanceAt(context, account: address, number: -1)
             return result
         } catch let e {
-            print("erorr: \(e)")
+            print("error: \(e)")
             return GethBigInt(0)
         }
     }

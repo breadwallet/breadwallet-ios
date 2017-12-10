@@ -64,32 +64,35 @@ extension BRAPIClient {
             } else {
                 print("error: \(error)")
             }
-
             return callback(nil)
         })
         task.resume()
     }
 
-    func kycStatus(contractAddress: String, ethAddress: String, callback: @escaping (_ status: KYCStatus) -> Void) {
+    func kycStatus(contractAddress: String, ethAddress: String, callback: @escaping (_ status: KYCStatus?) -> Void) {
         let network = E.isTestnet ? "ropsten" : "mainnet"
         let req = URLRequest(url: url("/kyc?contract_address=\(contractAddress)&ethereum_address=\(ethAddress)&network=\(network)"))
         let task = dataTaskWithRequest(req, authenticated: true) { (data, response, err) in
             if err == nil, let data = data {
                 do {
-                    if let status = try? JSONDecoder().decode(KYCStatusResponse.self, from: data) {
-                        if status.status == "complete" {
-                            return callback(.complete)
-                        } else if status.status == "pending" {
-                            return callback(.pending)
-                        } else if status.status == "failed" {
-                            return callback(.failed)
-                        }
+                    let status = try JSONDecoder().decode(KYCStatusResponse.self, from: data)
+                    if status.status == "complete" {
+                        return callback(.complete)
+                    } else if status.status == "pending" {
+                        return callback(.pending)
+                    } else if status.status == "failed" {
+                        return callback(.failed)
+                    } else if status.status == "none" {
+                        return callback(.none)
                     }
                 } catch (let e) {
-                    self.log("kycStatus: error parsing json \(e)")
+                    print("/kyc json parsing error: \(e)")
+                    if let string = String(data: data, encoding: .utf8), string == "", response?.statusCode == 500 {
+                        return callback(.none)
+                    }
                 }
             }
-            return callback(.none)
+            return callback(nil)
         }
         task.resume()
     }
