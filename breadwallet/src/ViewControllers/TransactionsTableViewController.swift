@@ -61,6 +61,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
     var walletManager: WalletManager?
     var didCollectRegistrationParams: ((RegistrationParams) -> Void)?
+    var shouldResumeIdentityVerification: (() -> Void)?
     var kycStatus: KYCStatus = .none {
         didSet {
             if oldValue != kycStatus {
@@ -257,6 +258,12 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                     if cell.contentView.subviews.count == 0 {
                         let newCrowdsaleView = crowdsaleView ?? CrowdsaleView(store: store)
                         newCrowdsaleView.kycStatus = kycStatus
+                        newCrowdsaleView.shouldRetry = { [weak self] in
+                            self?.deleteKycStatus()
+                        }
+                        newCrowdsaleView.shouldResumeIdentityVerification = { [weak self] in
+                            self?.shouldResumeIdentityVerification?()
+                        }
                         cell.contentView.addSubview(newCrowdsaleView)
                         newCrowdsaleView.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[1], C.padding[1], C.padding[1], C.padding[1]))
                     }
@@ -348,6 +355,15 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             return
         }
         didSelectTransaction(transactions, indexPath.row)
+    }
+
+    private func deleteKycStatus() {
+        if let contractAddress = store.state.walletState.crowdsale?.contract.address, let ethAddress = store.state.walletState.receiveAddress {
+            walletManager?.apiClient?.deleteKycStatus(contractAddress: contractAddress, ethAddress: ethAddress, callback: { success in
+                print("delete kyc status success: \(success)")
+                print("here")
+            })
+        }
     }
 
     private func reload() {

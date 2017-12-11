@@ -15,8 +15,10 @@ class CrowdsaleView : UIView {
             setStatusLabel()
         }
     }
+    var shouldRetry: (() -> Void)?
+    var shouldResumeIdentityVerification: (() -> Void)?
     private let header = UILabel.wrapping(font: .customBody(size: 16.0))
-    private let button = ShadowButton(title: "Buy Tokens", type: .primary)
+    private let button = ShadowButton(title: S.Crowdsale.buyButton, type: .primary)
     private let footer = UILabel.wrapping(font: .customBody(size: 16.0))
     private let store: Store
     private var timer: Timer? = nil
@@ -55,7 +57,13 @@ class CrowdsaleView : UIView {
         header.textAlignment = .center
         footer.textAlignment = .center
         button.tap = strongify(self) { myself in
-            myself.store.perform(action: RootModalActions.Present(modal: .send))
+            if myself.kycStatus == .complete {
+                myself.store.perform(action: RootModalActions.Present(modal: .send))
+            } else if myself.kycStatus == .failed {
+                myself.shouldRetry?()
+            } else if myself.kycStatus == .incomplete {
+                myself.shouldResumeIdentityVerification?()
+            }
         }
         setStatusLabel()
         if timer == nil {
@@ -64,18 +72,35 @@ class CrowdsaleView : UIView {
     }
 
     @objc private func setStatusLabel() {
-        if let startTime = store.state.walletState.crowdsale?.startTime, let endTime = store.state.walletState.crowdsale?.endTime {
-            self.startTime = startTime
-            self.endTime = endTime
-            let now = Date()
-            if now < startTime {
-                setPreLiveStatusLabel()
-            } else if now > startTime && now < endTime {
-                setLiveStatusLabel()
-            } else if now > endTime {
-                setFinishedStatusLabel()
-            }
+        guard let startTime = store.state.walletState.crowdsale?.startTime, let endTime = store.state.walletState.crowdsale?.endTime else { return }
+        self.startTime = startTime
+        self.endTime = endTime
+        let now = Date()
+        if now < startTime {
+            setPreLiveStatusLabel()
+        } else if now > startTime && now < endTime {
+            setLiveStatusLabel()
+        } else if now > endTime {
+            setFinishedStatusLabel()
         }
+        if kycStatus == .failed {
+            button.title = S.Crowdsale.retry
+        } else if kycStatus == .incomplete {
+            button.title = S.Crowdsale.resume
+        } else {
+            button.title = S.Crowdsale.buyButton
+        }
+
+        if now > startTime && now < endTime && kycStatus == .complete {
+            button.isHidden = false
+        } else if kycStatus == .failed && now < endTime {
+            button.isHidden = false
+        } else if kycStatus == .incomplete && now < endTime {
+            button.isHidden = false
+        } else {
+            button.isHidden = true
+        }
+
     }
 
     @objc private func setPreLiveStatusLabel() {
@@ -84,7 +109,6 @@ class CrowdsaleView : UIView {
         let diff = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: now, to: startTime)
         header.text = "\(kycStatus.description)"
         footer.text = "Crowdsale starts in \(diff.day!)d \(diff.hour!)h \(diff.minute!)m \(diff.second!)s"
-        button.isHidden = true
     }
 
     @objc private func setLiveStatusLabel() {
@@ -93,7 +117,6 @@ class CrowdsaleView : UIView {
         let diff = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: now, to: endTime)
         header.text = "Crowdsale is now live. \(kycStatus.description)"
         footer.text = "Ends in \(diff.day!)d \(diff.hour!)h \(diff.minute!)m \(diff.second!)s"
-        button.isHidden = false
     }
 
     private func setFinishedStatusLabel() {

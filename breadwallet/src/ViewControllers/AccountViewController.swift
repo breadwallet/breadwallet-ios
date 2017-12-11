@@ -107,30 +107,42 @@ class AccountViewController : UIViewController, Subscriber {
 
         updateKycStatus()
 
-
         transactionsTableView.didCollectRegistrationParams = { [weak self] params in
             self?.walletManager?.apiClient?.register(params: params, callback: { url in
                 if let url = url {
-                    let webView = WebViewController(url: url)
-                    webView.didComplete = {
-                        self?.updateKycStatus()
-                        if self?.kycStatusTimer == nil {
-                            self?.kycStatusTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self!, selector: #selector(self!.updateKycStatus), userInfo: nil, repeats: true)
-                        }
-                    }
-                    let nc = UINavigationController(rootViewController: webView)
-                    self?.present(nc, animated: true, completion: nil)
-
+                    self?.presentWebView(forUrl: url)
                 } else {
                     self?.showErrorMessage("Registration Error")
                 }
             })
         }
+
+        transactionsTableView.shouldResumeIdentityVerification = { [weak self] in
+            if let contractAddress = self?.store.state.walletState.crowdsale?.contract.address, let ethAddress = self?.store.state.walletState.receiveAddress {
+                self?.walletManager?.apiClient?.kycStatus(contractAddress: contractAddress, ethAddress: ethAddress, callback: { status, uri in
+                    guard let uri = uri else { return }
+                    guard let url = URL(string: uri) else { return }
+                    self?.presentWebView(forUrl: url)
+                })
+            }
+        }
+    }
+
+    private func presentWebView(forUrl: URL) {
+        let webView = WebViewController(url: forUrl)
+        webView.didComplete = { [weak self] in
+            self?.updateKycStatus()
+            if self?.kycStatusTimer == nil {
+                self?.kycStatusTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self!, selector: #selector(self!.updateKycStatus), userInfo: nil, repeats: true)
+            }
+        }
+        let nc = UINavigationController(rootViewController: webView)
+        self.present(nc, animated: true, completion: nil)
     }
 
     @objc private func updateKycStatus() {
         if let contractAddress = store.state.walletState.crowdsale?.contract.address, let ethAddress = store.state.walletState.receiveAddress {
-            walletManager?.apiClient?.kycStatus(contractAddress: contractAddress, ethAddress: ethAddress, callback: { [weak self] status in
+            walletManager?.apiClient?.kycStatus(contractAddress: contractAddress, ethAddress: ethAddress, callback: { [weak self] status, _ in
                 guard let status = status else { return }
                 DispatchQueue.main.async {
                     if status != .complete {
