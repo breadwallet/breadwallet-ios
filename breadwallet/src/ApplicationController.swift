@@ -46,13 +46,13 @@ class ApplicationController : Subscriber, Trackable {
                 store.perform(action: ExchangeRates.setRate(currentRate))
             }
             if $0.code == "BRD" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil, contract: Contract(address: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7", abi: crowdSaleABI), rate: nil)
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil, contract: Contract(address: "0x4B0B6b8E05dCF1D1bFD3C19e2ea8707b35D03cD7", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else if $0.code == "BRd" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x3cc1878208d286bf53994686bc763c6a0b7d9844", abi: crowdSaleABI), rate: nil)
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x3cc1878208d286bf53994686bc763c6a0b7d9844", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else if $0.code == "brd" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x5df1ff920917e76eaf954cf397a7e2e3856918cd", abi: crowdSaleABI), rate: nil)
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x5df1ff920917e76eaf954cf397a7e2e3856918cd", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else {
                 store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 1.0, reciprocalCode: $0.code)))

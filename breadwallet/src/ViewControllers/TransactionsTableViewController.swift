@@ -240,9 +240,12 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                     let cell = tableView.dequeueReusableCell(withIdentifier: registrationCellIdentifier, for: indexPath)
                     cell.selectionStyle = .none
                     if cell.contentView.subviews.count == 0 {
-                        let newVerifyView = verifyIdentify ?? VerifyIdentityView()
+                        let newVerifyView = verifyIdentify ?? VerifyIdentityView(store: store)
                         newVerifyView.didTapVerify = { [weak self] params in
                             self?.didCollectRegistrationParams?(params)
+                        }
+                        newVerifyView.showError = { [weak self] errorMessage in
+                            self?.showErrorMessage(errorMessage)
                         }
                         cell.contentView.addSubview(newVerifyView)
                         newVerifyView.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[1], C.padding[1], C.padding[1], C.padding[1]))

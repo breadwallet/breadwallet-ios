@@ -10,7 +10,8 @@ import UIKit
 
 class VerifyIdentityView : UIView {
 
-
+    var didTapVerify: ((RegistrationParams) -> Void)?
+    var showError: ((String) -> Void)?
     private let title = UILabel(font: .customBold(size: 18.0))
     private let subheader = UILabel.wrapping(font: .customBody(size: 16.0))
     private let firstName = UITextField()
@@ -18,11 +19,10 @@ class VerifyIdentityView : UIView {
     private let email = UITextField()
     private let country = ShadowButton(title: "Country", type: .secondary)
     private let verify = ShadowButton(title: "Verify", type: .primary)
+    private let store: Store
 
-    var didTapVerify: ((RegistrationParams) -> Void)?
-    var showError: ((String) -> Void)?
-
-    init() {
+    init(store: Store) {
+        self.store = store
         super.init(frame: .zero)
         setupViews()
     }
@@ -86,8 +86,15 @@ class VerifyIdentityView : UIView {
             guard let firstName = myself.firstName.text else { myself.showError?("No First Name"); return }
             guard let lastName = myself.lastName.text else { myself.showError?("No Last Name"); return }
             guard let email = myself.email.text else { myself.showError?("No Email"); return }
-            let params = RegistrationParams(first_name: firstName, last_name: lastName, email: email, redirect_uri: "http://google.ca", country: "USA")
+            guard let country = myself.store.state.walletState.crowdsale?.verificationCountryCode else {
+                myself.showError?("Select a country"); return
+            }
+            let params = RegistrationParams(first_name: firstName, last_name: lastName, email: email, redirect_uri: "http://google.ca", country: country)
             myself.didTapVerify?(params)
+        }
+
+        country.tap = strongify(self) { myself in
+            myself.store.perform(action: RootModalActions.Present(modal: .countryPicker))
         }
     }
 

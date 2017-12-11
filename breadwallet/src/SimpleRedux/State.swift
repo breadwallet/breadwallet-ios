@@ -137,6 +137,7 @@ enum RootModal {
     case loginScan
     case manageWallet
     case requestAmount
+    case countryPicker
 }
 
 enum SyncState {
