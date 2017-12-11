@@ -237,11 +237,11 @@ class ModalPresenter : Subscriber, Trackable {
             let requestVc = RequestAmountViewController(wallet: wallet, store: store)
             requestVc.presentEmail = { [weak self] bitcoinURL, image in
                 self?.messagePresenter.presenter = self?.topViewController
-                self?.messagePresenter.presentMailCompose(bitcoinURL: bitcoinURL, image: image)
+                self?.messagePresenter.presentMailCompose(bitcoinURL: bitcoinURL, image: image, store: store)
             }
             requestVc.presentText = { [weak self] bitcoinURL, image in
                 self?.messagePresenter.presenter = self?.topViewController
-                self?.messagePresenter.presentMessageCompose(bitcoinURL: bitcoinURL, image: image)
+                self?.messagePresenter.presentMessageCompose(bitcoinURL: bitcoinURL, image: image, store: store)
             }
             return ModalViewController(childViewController: requestVc, store: store)
         case .countryPicker:
@@ -293,12 +293,12 @@ class ModalPresenter : Subscriber, Trackable {
         receiveVC.presentEmail = { [weak self, weak root] address, image in
             guard let root = root else { return }
             self?.messagePresenter.presenter = root
-            self?.messagePresenter.presentMailCompose(bitcoinAddress: address, image: image)
+            self?.messagePresenter.presentMailCompose(bitcoinAddress: address, image: image, store: store)
         }
         receiveVC.presentText = { [weak self, weak root] address, image in
             guard let root = root else { return }
             self?.messagePresenter.presenter = root
-            self?.messagePresenter.presentMessageCompose(address: address, image: image)
+            self?.messagePresenter.presentMessageCompose(address: address, image: image, store: store)
         }
         return root
     }
