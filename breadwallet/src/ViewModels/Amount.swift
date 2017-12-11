@@ -73,7 +73,8 @@ struct Amount {
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         format.currencyCode = "store.state.walletState.token!.code"
         format.currencySymbol = "\(store.state.walletState.token!.code)"
-        format.minimumFractionDigits = 4
+        format.maximumFractionDigits = 8
+        format.minimumFractionDigits = 0
         return format
     }
 
@@ -85,7 +86,8 @@ struct Amount {
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         format.currencyCode = "ETH"
         format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
-        format.minimumFractionDigits = 4
+        format.maximumFractionDigits = 8
+        format.minimumFractionDigits = 0
         return format
     }
 
@@ -104,7 +106,8 @@ struct Amount {
             } else {
                 format.currencySymbol = "\(store.state.walletState.token!.code) "
             }
-            format.minimumFractionDigits = 4
+            format.maximumFractionDigits = 8
+            format.minimumFractionDigits = 0
             return format
         }
         let format = NumberFormatter()
