@@ -35,7 +35,8 @@ class AmountViewController : UIViewController, Trackable {
     var didChangeFirstResponder: ((Bool) -> Void)?
 
     var ethOutput: GethBigInt {
-        var decimal = Decimal(string: currentOutput.replacingOccurrences(of: S.Symbols.eth, with: "")) ?? Decimal(0)
+        let decimalSeparator = NumberFormatter().currencyDecimalSeparator
+        var decimal = Decimal(string: currentOutput.replacingOccurrences(of: S.Symbols.eth, with: "").replacingOccurrences(of: decimalSeparator!, with: ".")) ?? Decimal(0)
         var result: Decimal = 0.0
         NSDecimalMultiplyByPowerOf10(&result, &decimal, Int16(18), .up)
         let wei = NSDecimalNumber(decimal: result)
@@ -45,8 +46,9 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     var tokenOutput: GethBigInt {
+        let decimalSeparator = NumberFormatter().currencyDecimalSeparator
         let symbol = store.state.walletState.token!.code
-        let string = currentOutput.replacingOccurrences(of: symbol, with: "")
+        let string = currentOutput.replacingOccurrences(of: symbol, with: "").replacingOccurrences(of: decimalSeparator!, with: ".")
         let output = GethBigInt(0)
         output?.setString(string, base: 10)
         return output!
