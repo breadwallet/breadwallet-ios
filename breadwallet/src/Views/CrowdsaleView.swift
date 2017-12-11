@@ -10,6 +10,11 @@ import UIKit
 
 class CrowdsaleView : UIView {
 
+    var kycStatus: KYCStatus = .none {
+        didSet {
+            setStatusLabel()
+        }
+    }
     private let header = UILabel.wrapping(font: .customBody(size: 16.0))
     private let button = ShadowButton(title: "Buy Tokens", type: .primary)
     private let footer = UILabel.wrapping(font: .customBody(size: 16.0))
@@ -77,20 +82,23 @@ class CrowdsaleView : UIView {
         guard let startTime = startTime else { return }
         let now = Date()
         let diff = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: now, to: startTime)
-        header.text = "Crowdsale is now live"
+        header.text = "\(kycStatus.description)"
         footer.text = "Crowdsale starts in \(diff.day!)d \(diff.hour!)h \(diff.minute!)m \(diff.second!)s"
+        button.isHidden = true
     }
 
     @objc private func setLiveStatusLabel() {
         guard let endTime = endTime else { return }
         let now = Date()
         let diff = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: now, to: endTime)
-        header.text = "Crowdsale is now live"
+        header.text = "Crowdsale is now live. \(kycStatus.description)"
         footer.text = "Ends in \(diff.day!)d \(diff.hour!)h \(diff.minute!)m \(diff.second!)s"
+        button.isHidden = false
     }
 
     private func setFinishedStatusLabel() {
-        header.text = "Crowdsale is Finished"
+        button.isHidden = true
+        header.text = "Crowdsale is Finished. \(kycStatus.description)"
         footer.text = ""
     }
 

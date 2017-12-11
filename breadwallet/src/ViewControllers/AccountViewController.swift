@@ -72,6 +72,7 @@ class AccountViewController : UIViewController, Subscriber {
         }
     }
     private var didEndLoading = false
+    private var kycStatusTimer: Timer? = nil
 
     override func viewDidLoad() {
         // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
@@ -103,6 +104,44 @@ class AccountViewController : UIViewController, Subscriber {
                 footerView.isHidden = true
             }
         }
+
+        updateKycStatus()
+
+
+        transactionsTableView.didCollectRegistrationParams = { [weak self] params in
+            self?.walletManager?.apiClient?.register(params: params, callback: { url in
+                if let url = url {
+                    let webView = WebViewController(url: url)
+                    webView.didComplete = {
+                        self?.updateKycStatus()
+                        if self?.kycStatusTimer == nil {
+                            self?.kycStatusTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self!, selector: #selector(self!.updateKycStatus), userInfo: nil, repeats: true)
+                        }
+                    }
+                    let nc = UINavigationController(rootViewController: webView)
+                    self?.present(nc, animated: true, completion: nil)
+
+                } else {
+                    self?.showErrorMessage("Registration Error")
+                }
+            })
+        }
+    }
+
+    @objc private func updateKycStatus() {
+        if let contractAddress = store.state.walletState.crowdsale?.contract.address, let ethAddress = store.state.walletState.receiveAddress {
+            walletManager?.apiClient?.kycStatus(contractAddress: contractAddress, ethAddress: ethAddress, callback: { [weak self] status in
+                guard let status = status else { return }
+                DispatchQueue.main.async {
+                    if status != .complete {
+                        if self?.kycStatusTimer == nil {
+                            self?.kycStatusTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self!, selector: #selector(self!.updateKycStatus), userInfo: nil, repeats: true)
+                        }
+                    }
+                    self?.transactionsTableView.kycStatus = status
+                }
+            })
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -113,6 +152,13 @@ class AccountViewController : UIViewController, Subscriber {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         headerView.setBalances()
+        kycStatusTimer?.invalidate()
+        kycStatusTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(self.updateKycStatus), userInfo: nil, repeats: true)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        kycStatusTimer?.invalidate()
     }
 
     private func addSubviews() {

@@ -10,6 +10,11 @@ import UIKit
 
 private let promptDelay: TimeInterval = 0.6
 
+enum CrowdsaleViewType {
+    case verify
+    case status
+}
+
 class TransactionsTableViewController : UITableViewController, Subscriber, Trackable {
 
     //MARK: - Public
@@ -22,7 +27,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
     let didSelectTransaction: ([Transaction], Int) -> Void
     let syncingView = SyncingView()
-    
     var isSyncingViewVisible = false {
         didSet {
             guard !store.isEthLike else { return }
@@ -56,13 +60,25 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 
     var walletManager: WalletManager?
+    var didCollectRegistrationParams: ((RegistrationParams) -> Void)?
+    var kycStatus: KYCStatus = .none {
+        didSet {
+            if oldValue != kycStatus {
+                tableView.beginUpdates()
+                tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                tableView.endUpdates()
+            }
+        }
+    }
 
     //MARK: - Private
     private let store: Store
     private let headerCellIdentifier = "HeaderCellIdentifier"
     private let transactionCellIdentifier = "TransactionCellIdentifier"
-    private let blankCellIdentifier = "BlankCellIdentifier"
+    private let crowdsaleCellIdentifier = "CrowdsaleCellIdentifier"
+    private let registrationCellIdentifier = "RegistrationCellIdentifier"
     private let crowdsaleView: CrowdsaleView? = nil
+    private let verifyIdentify: VerifyIdentityView? = nil
     private var transactions: [Transaction] = []
     private var allTransactions: [Transaction] = [] {
         didSet {
@@ -103,7 +119,8 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
         tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: transactionCellIdentifier)
         tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: headerCellIdentifier)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: blankCellIdentifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: crowdsaleCellIdentifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: registrationCellIdentifier)
 
         tableView.separatorStyle = .none
         tableView.estimatedRowHeight = 100.0
@@ -158,8 +175,10 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             }
         })
 
-        emptyMessage.textAlignment = .center
-        emptyMessage.text = S.TransactionDetails.emptyMessage
+        if store.state.walletState.crowdsale == nil {
+            emptyMessage.textAlignment = .center
+            emptyMessage.text = S.TransactionDetails.emptyMessage
+        }
 
         setContentInset()
 
@@ -217,13 +236,32 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if hasExtraSection && indexPath.section == 0 {
             if store.state.walletState.crowdsale != nil {
-                let cell = tableView.dequeueReusableCell(withIdentifier: blankCellIdentifier, for: indexPath)
-                if cell.contentView.subviews.count == 0 {
-                    let newCrowdsaleView = crowdsaleView ?? CrowdsaleView(store: store)
-                    cell.contentView.addSubview(newCrowdsaleView)
-                    newCrowdsaleView.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[1], C.padding[1], C.padding[1], C.padding[1]))
+                if kycStatus == .none {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: registrationCellIdentifier, for: indexPath)
+                    cell.selectionStyle = .none
+                    if cell.contentView.subviews.count == 0 {
+                        let newVerifyView = verifyIdentify ?? VerifyIdentityView(store: store)
+                        newVerifyView.didTapVerify = { [weak self] params in
+                            self?.didCollectRegistrationParams?(params)
+                        }
+                        newVerifyView.showError = { [weak self] errorMessage in
+                            self?.showErrorMessage(errorMessage)
+                        }
+                        cell.contentView.addSubview(newVerifyView)
+                        newVerifyView.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[1], C.padding[1], C.padding[1], C.padding[1]))
+                    }
+                    return cell
+                } else {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: crowdsaleCellIdentifier, for: indexPath)
+                    cell.selectionStyle = .none
+                    if cell.contentView.subviews.count == 0 {
+                        let newCrowdsaleView = crowdsaleView ?? CrowdsaleView(store: store)
+                        newCrowdsaleView.kycStatus = kycStatus
+                        cell.contentView.addSubview(newCrowdsaleView)
+                        newCrowdsaleView.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[1], C.padding[1], C.padding[1], C.padding[1]))
+                    }
+                    return cell
                 }
-                return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath)
                 if let transactionCell = cell as? TransactionTableViewCell {
@@ -288,6 +326,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if store.state.walletState.crowdsale != nil && indexPath.section == 0 { return }
         if store.isEthLike {
             let tx = transactions[indexPath.row]
             if tx.hash.utf8.count > 0 {

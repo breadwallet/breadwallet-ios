@@ -17,7 +17,13 @@ class GethManager {
     let store: Store
 
     var balance: GethBigInt {
-        return try! client.getBalanceAt(context, account: address, number: -1)
+        do {
+            let result = try client.getBalanceAt(context, account: address, number: -1)
+            return result
+        } catch let e {
+            print("error: \(e)")
+            return GethBigInt(0)
+        }
     }
     
     var receiveAddress: String {
@@ -231,7 +237,7 @@ extension GethManager {
 
         do {
             try contract?.call(opts, out_: out, method: "balanceOf", args: args)
-            print("balanceOf: \(result0?.getBigInt().getString(10))")
+            //print("balanceOf: \(result0?.getBigInt().getString(10))")
         } catch let e {
             print("e2: \(e)")
         }

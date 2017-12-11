@@ -26,13 +26,27 @@ class RootNavigationController : UINavigationController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func removeTempLoginView() {
-        tempLoginView.remove()
+    var walletManager: WalletManager? {
+        didSet {
+            guard let walletManager = walletManager else { return }
+            if !walletManager.noWallet {
+                let loginView = LoginViewController(store: store, isPresentedForLock: false, walletManager: walletManager)
+                loginView.transitioningDelegate = loginTransitionDelegate
+                loginView.modalPresentationStyle = .overFullScreen
+                loginView.modalPresentationCapturesStatusBarAppearance = true
+                loginView.shouldSelfDismiss = true
+                present(loginView, animated: false, completion: {
+                    self.tempLoginView.remove()
+                    //todo - attempt show welcome here
+                })
+            }
+        }
     }
 
     private let tempLoginView: LoginViewController
     private let store: Store
     private let welcomeTransitingDelegate = PinTransitioningDelegate()
+    private let loginTransitionDelegate = LoginTransitionDelegate()
 
     override func viewDidLoad() {
         guardProtected(queue: DispatchQueue.main) {

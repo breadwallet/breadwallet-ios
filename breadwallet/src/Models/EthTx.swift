@@ -48,6 +48,7 @@ struct Crowdsale {
     let maxContribution: GethBigInt?
     let contract: Contract
     let rate: GethBigInt?
+    let verificationCountryCode: String?
     var hasEnded: Bool {
         guard let endTime = endTime else { return false }
         return Date() > endTime
