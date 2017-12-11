@@ -244,7 +244,14 @@ class ModalPresenter : Subscriber, Trackable {
                 self?.messagePresenter.presentMessageCompose(bitcoinURL: bitcoinURL, image: image)
             }
             return ModalViewController(childViewController: requestVc, store: store)
+        case .countryPicker:
+            return makeCountryPicker(store: store)
         }
+    }
+
+    private func makeCountryPicker(store: Store) -> UIViewController? {
+        let root = ModalViewController(childViewController: CountryPickerViewController(store: store), store: store)
+        return root
     }
 
     private func makeSendView(store: Store) -> UIViewController? {
