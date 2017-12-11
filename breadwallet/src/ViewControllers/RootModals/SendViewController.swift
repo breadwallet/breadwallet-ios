@@ -296,9 +296,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         guard let ethManager = gethManager else { return }
         guard let crowdsale = store.state.walletState.crowdsale else { return }
         guard let minContribution = crowdsale.minContribution, let maxContribution = crowdsale.maxContribution else { return }
-        guard let bigBalance = store.state.walletState.bigBalance else { return }
-        let maxBuy = maxContribution - bigBalance
-
+        guard let ethBalance = gethManager?.balance else { return }
+        let maxBuy = maxContribution - ethBalance
         guard amountView.ethOutput >= minContribution else {
             let min = DisplayAmount.ethString(value: minContribution, store: store)
             return showErrorMessage("Please enter an amount greater than the min contribution amount of \(min)")
