@@ -9,7 +9,9 @@
 import Foundation
 
 enum KYCStatus {
+
     case none
+    case incomplete
     case pending
     case failed
     case complete
@@ -18,12 +20,27 @@ enum KYCStatus {
         switch self {
         case .none:
             return "Verification not complete"
+        case .incomplete:
+            return "Registration form not complete"
         case .pending:
             return "Pending Verification"
         case .failed:
             return "Failed Verification"
         case .complete:
             return "Verification succeeded"
+        }
+    }
+}
+
+extension KYCStatus {
+    init?(string: String) {
+        switch string.lowercased() {
+        case "none": self = .none
+        case "incomplete": self = .incomplete
+        case "pending": self = .pending
+        case "failed": self = .failed
+        case "complete": self = .complete
+        default: return nil
         }
     }
 }
@@ -69,30 +86,40 @@ extension BRAPIClient {
         task.resume()
     }
 
-    func kycStatus(contractAddress: String, ethAddress: String, callback: @escaping (_ status: KYCStatus?) -> Void) {
+    func kycStatus(contractAddress: String, ethAddress: String, callback: @escaping (_ status: KYCStatus?, _ uri: String?) -> Void) {
         let network = E.isTestnet ? "ropsten" : "mainnet"
         let req = URLRequest(url: url("/kyc?contract_address=\(contractAddress)&ethereum_address=\(ethAddress)&network=\(network)"))
         let task = dataTaskWithRequest(req, authenticated: true) { (data, response, err) in
             if err == nil, let data = data {
                 do {
-                    let status = try JSONDecoder().decode(KYCStatusResponse.self, from: data)
-                    if status.status == "complete" {
-                        return callback(.complete)
-                    } else if status.status == "pending" {
-                        return callback(.pending)
-                    } else if status.status == "failed" {
-                        return callback(.failed)
-                    } else if status.status == "none" {
-                        return callback(.none)
+                    let statusResponse = try JSONDecoder().decode(KYCStatusResponse.self, from: data)
+                    if let status = KYCStatus(string: statusResponse.status) {
+                        callback(status, statusResponse.form_uri)
                     }
                 } catch (let e) {
                     print("/kyc json parsing error: \(e)")
                     if let string = String(data: data, encoding: .utf8), string == "", response?.statusCode == 500 {
-                        return callback(.none)
+                        return callback(.none, nil)
                     }
                 }
             }
-            return callback(nil)
+            return callback(nil, nil)
+        }
+        task.resume()
+    }
+
+    func deleteKycStatus(contractAddress: String, ethAddress: String, callback: @escaping (_ success: Bool) -> Void) {
+        let network = E.isTestnet ? "ropsten" : "mainnet"
+        var req = URLRequest(url: url("/kyc?contract_address=\(contractAddress)&ethereum_address=\(ethAddress)&network=\(network)"))
+        req.httpMethod = "DELETE"
+        let task = dataTaskWithRequest(req, authenticated: true) { (data, response, err) in
+            if err == nil, let data = data {
+                if let string = String(data: data, encoding: .utf8) {
+                    print("string: \(string)")
+                    return callback(true)
+                }
+            }
+            return callback(false)
         }
         task.resume()
     }
@@ -101,4 +128,5 @@ extension BRAPIClient {
 
 fileprivate struct KYCStatusResponse : Codable {
     let status: String
+    let form_uri: String
 }

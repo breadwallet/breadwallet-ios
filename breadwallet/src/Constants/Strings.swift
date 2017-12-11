@@ -589,4 +589,10 @@ enum S {
         static let title = NSLocalizedString("Welcome.title", value: "Welcome to Bread!", comment: "Welcome view title")
         static let body = NSLocalizedString("Welcome.body", value: "Breadwallet has changed its name to Bread, with a brand new look and some new features.\n\nIf you need help, look for the (?) in the top right of most screens.", comment: "Welcome view body text")
     }
+
+    enum Crowdsale {
+        static let buyButton = NSLocalizedString("Crowdsale.buyButton", value: "Buy Tokens", comment: "Buy crowdsale tokens button")
+        static let resume = NSLocalizedString("Crowdsale.resume", value: "Resume Verification", comment: "Resume Idnetify verification button")
+        static let retry = NSLocalizedString("Crowdsale.retry", value: "Retry", comment: "Retry Identity verification button")
+    }
 }
