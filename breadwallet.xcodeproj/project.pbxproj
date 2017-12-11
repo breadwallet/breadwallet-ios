@@ -393,6 +393,8 @@
 		CED811E31EB302E2003A8D1E /* WatchTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED811A51EB29692003A8D1E /* WatchTransaction.swift */; };
 		CED811E51EB30846003A8D1E /* ReceiveInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED811E41EB30846003A8D1E /* ReceiveInterfaceController.swift */; };
 		CED82D4E1E575A5500507A9B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED82D4D1E575A5500507A9B /* main.swift */; };
+		CEDA9EDC1FDE0C56005E8D1B /* countries.plist in Resources */ = {isa = PBXBuildFile; fileRef = CEDA9EDB1FDE0C56005E8D1B /* countries.plist */; };
+		CEDA9EDE1FDE1316005E8D1B /* CountryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDA9EDD1FDE1316005E8D1B /* CountryPickerViewController.swift */; };
 		CEDD8F101E575DD4007A4123 /* WalletAuthenticationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */; };
 		CEE0EF521EBD14B60018DB36 /* PinTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE0EF511EBD14B60018DB36 /* PinTransitioningDelegate.swift */; };
 		CEE1F5631DF13E5A00D733AD /* ModalHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */; };
@@ -1605,6 +1607,8 @@
 		CED811AB1EB2BCDE003A8D1E /* BRAWWeakTimerTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAWWeakTimerTarget.swift; sourceTree = "<group>"; };
 		CED811E41EB30846003A8D1E /* ReceiveInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiveInterfaceController.swift; sourceTree = "<group>"; };
 		CED82D4D1E575A5500507A9B /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = src/main.swift; sourceTree = "<group>"; };
+		CEDA9EDB1FDE0C56005E8D1B /* countries.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = countries.plist; sourceTree = "<group>"; };
+		CEDA9EDD1FDE1316005E8D1B /* CountryPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CountryPickerViewController.swift; path = src/ViewControllers/CountryPickerViewController.swift; sourceTree = "<group>"; };
 		CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletAuthenticationTests.swift; sourceTree = "<group>"; };
 		CEE0EF511EBD14B60018DB36 /* PinTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinTransitioningDelegate.swift; path = src/ViewControllers/ViewControllerTransitions/PinTransitioningDelegate.swift; sourceTree = "<group>"; };
 		CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalHeaderView.swift; path = src/Views/ModalHeaderView.swift; sourceTree = "<group>"; };
@@ -2685,6 +2689,7 @@
 				CE5E6C991EB9135000A476DB /* Icon.xcassets */,
 				75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */,
 				75A2A79F1DA5934300A983D8 /* Info.plist */,
+				CEDA9EDB1FDE0C56005E8D1B /* countries.plist */,
 			);
 			path = breadwallet;
 			sourceTree = "<group>";
@@ -2935,6 +2940,7 @@
 				CEE659E81F664C73001FF29D /* WelcomeViewController.swift */,
 				1B1AFF9E1FB7EF7C00E61908 /* BiometricsSettingsViewController.swift */,
 				1B1AFF9F1FB7EF7C00E61908 /* BiometricsSpendingLimitViewController.swift */,
+				CEDA9EDD1FDE1316005E8D1B /* CountryPickerViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -3734,6 +3740,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEDA9EDC1FDE0C56005E8D1B /* countries.plist in Resources */,
 				CE4C1CD01ED8BCC70063E184 /* BIP39Words.plist in Resources */,
 				75A2A79E1DA5934300A983D8 /* LaunchScreen.storyboard in Resources */,
 				CEAA9EA31DC2FC700066731D /* CircularPro-Book.otf in Resources */,
@@ -4167,6 +4174,7 @@
 				CE6D0F971DE8B73A00BD4BCF /* ModalTransitionDelegate.swift in Sources */,
 				1B1AFFA01FB7EF7C00E61908 /* BiometricsSettingsViewController.swift in Sources */,
 				1B1AFFA11FB7EF7C00E61908 /* BiometricsSpendingLimitViewController.swift in Sources */,
+				CEDA9EDE1FDE1316005E8D1B /* CountryPickerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
