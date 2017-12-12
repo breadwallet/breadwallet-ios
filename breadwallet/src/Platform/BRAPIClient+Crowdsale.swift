@@ -51,6 +51,7 @@ struct RegistrationParams : Codable {
     let email: String
     let redirect_uri: String
     let country: String
+    let network: String = E.isTestnet ? "ropsten" : "mainnet"
 }
 
 fileprivate struct KycResponse : Codable {
@@ -128,5 +129,5 @@ extension BRAPIClient {
 
 fileprivate struct KYCStatusResponse : Codable {
     let status: String
-    let form_uri: String
+    let form_uri: String?
 }
