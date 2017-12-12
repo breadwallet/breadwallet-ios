@@ -269,6 +269,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     func setBalances() {
+        guard !store.isEthLike else { return }
         guard let rate = exchangeRate else { return }
         let amount = Amount(amount: balance, rate: rate, maxDigits: store.state.maxDigits, store: store)
         if !hasInitialized {
