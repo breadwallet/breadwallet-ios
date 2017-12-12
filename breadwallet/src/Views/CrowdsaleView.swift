@@ -98,7 +98,7 @@ class CrowdsaleView : UIView {
 
         if now > startTime && now < endTime && kycStatus == .complete {
             button.isHidden = false
-        } else if kycStatus == .failed && now < endTime {
+        } else if kycStatus == .retry && now < endTime {
             button.isHidden = false
         } else if kycStatus == .incomplete && now < endTime {
             button.isHidden = false
