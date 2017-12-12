@@ -331,7 +331,7 @@ class EthConfirmationViewController : UIViewController, ContentBoxPresenter {
             displayAmount = DisplayAmount.ethString(value: amount, store: store)
             displayFee = DisplayAmount.ethString(value: feeAmount, store: store)
         } else {
-            displayAmount = store.state.walletState.token!.code + S.Symbols.narrowSpace + amount.getString(10)
+            displayAmount = DisplayAmount.tokenString(value: amount, store: store)
             displayFee = DisplayAmount.ethString(value: feeAmount, store: store)
         }
 

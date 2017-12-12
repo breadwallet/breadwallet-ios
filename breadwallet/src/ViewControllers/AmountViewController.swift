@@ -46,11 +46,12 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     var tokenOutput: GethBigInt {
+        guard let token = store.state.walletState.token else { return GethBigInt(0) }
         let decimalSeparator = NumberFormatter().currencyDecimalSeparator
-        let symbol = store.state.walletState.token!.code
-        let string = currentOutput.replacingOccurrences(of: symbol, with: "").replacingOccurrences(of: decimalSeparator!, with: ".")
+        let string = currentOutput.replacingOccurrences(of: token.code, with: "").replacingOccurrences(of: decimalSeparator!, with: ".")
         let output = GethBigInt(0)
-        output?.setString(string, base: 10)
+        let zeroes = [String](repeating: "0", count: token.decimals).reduce("", +)
+        output?.setString(string + zeroes, base: 10)
         return output!
     }
 
