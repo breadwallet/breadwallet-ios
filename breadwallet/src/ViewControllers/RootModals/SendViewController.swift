@@ -387,7 +387,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(store.state.walletState.numSent), isCrowdsale: false)
         let signedTx = ethManager.signTx(tx, ethPrivKey: walletManager.ethPrivKey!)
         if let error = ethManager.publishTx(signedTx) {
-
             let balance = DisplayAmount.ethString(value: ethManager.balance, store: store)
             let sendAmount = DisplayAmount.ethString(value: amount, store: store)
             let fee = DisplayAmount.ethString(value: ethManager.fee(isCrowdsale: false), store: store)
@@ -425,7 +424,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
 
         if let error = ethManager.transfer(amount: amount, toAddress: address, privKey: walletManager.ethPrivKey!, token: token, nonce: store.state.walletState.numSent) {
-            showErrorMessage(error.localizedDescription)
+            let balance = DisplayAmount.ethString(value: ethManager.balance, store: store)
+            let sendAmount = DisplayAmount.ethString(value: amount, store: store)
+            let fee = DisplayAmount.ethString(value: ethManager.fee(isCrowdsale: false), store: store)
+            showErrorMessage(error.localizedDescription + "\nSending: \(sendAmount) from wallet with balance: \(balance) with fee: \(fee)")
         } else {
             dismiss(animated: true, completion: {
                 self.store.trigger(name: .showStatusBar)

@@ -30,6 +30,7 @@ class GethManager {
         return address.getHex()
     }
     private let gasLimit: Int64 = 21000
+    private let transferGasLimit: Int64 = 300000
     private let crowdsaleGasLimit: Int64 = 300000
 
     init(ethPrivKey: String, store: Store) {
@@ -114,7 +115,7 @@ class GethManager {
         let contract = GethBindContract(address, token.abi, client, nil)
 
         let opts = GethTransactOpts()
-        opts?.setGasLimit(210000)
+        opts?.setGasLimit(transferGasLimit)
         opts?.setContext(context)
         opts?.setNonce(Int64(nonce))
         opts?.setGasPrice(try! client.suggestGasPrice(context))
