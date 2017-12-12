@@ -13,6 +13,7 @@ enum KYCStatus {
     case none
     case incomplete
     case pending
+    case retry
     case failed
     case complete
 
@@ -24,6 +25,8 @@ enum KYCStatus {
             return "Registration form not complete"
         case .pending:
             return "Pending Verification"
+        case .retry:
+            return "Failed Verification. Please Retry"
         case .failed:
             return "Failed Verification"
         case .complete:
@@ -38,6 +41,7 @@ extension KYCStatus {
         case "none": self = .none
         case "incomplete": self = .incomplete
         case "pending": self = .pending
+        case "retry": self = .retry
         case "failed": self = .failed
         case "complete": self = .complete
         default: return nil
