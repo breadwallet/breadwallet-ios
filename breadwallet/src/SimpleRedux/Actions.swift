@@ -8,6 +8,13 @@
 
 import UIKit
 
+struct StateChange : Action {
+    let reduce: Reducer
+    init(_ state: State) {
+        reduce = { _ in return state }
+    }
+}
+
 //MARK: - Startup Modals
 struct ShowStartFlow : Action {
     let reduce: Reducer = {
@@ -34,7 +41,8 @@ struct HideStartFlow : Action {
                      isPromptingBiometrics: state.isPromptingBiometrics,
                      pinLength: state.pinLength,
                      fees: state.fees,
-                     currency: state.currency)
+                     currency: state.currency,
+                     colours: state.colours)
     }
 }
 

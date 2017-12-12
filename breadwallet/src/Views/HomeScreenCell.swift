@@ -21,18 +21,7 @@ class Background : UIView, GradientDrawable {
 
     override func draw(_ rect: CGRect) {
         guard let store = store else { return }
-
-        if store.state.walletState.crowdsale != nil {
-            drawGradient(start: .lightGray,
-                         end: .darkGray,
-                         rect)
-        } else if store.state.currency == .bitcoin {
-            drawGradient(rect)
-        } else {
-            drawGradient(start: store.state.currency.gradientColours.0,
-                         end: store.state.currency.gradientColours.1,
-                         rect)
-        }
+        drawGradient(start: store.state.colours.0, end: store.state.colours.1, rect)
     }
 }
 

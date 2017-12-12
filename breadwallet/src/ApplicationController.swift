@@ -101,6 +101,7 @@ class ApplicationController : Subscriber, Trackable {
                 self.initWallet()
             }
         }
+        self.setColors()
     }
 
     private func initWallet() {
@@ -491,6 +492,18 @@ class ApplicationController : Subscriber, Trackable {
         guard !store.state.isPushNotificationsEnabled else { return }
         guard let pushToken = UserDefaults.pushToken else { return }
         walletManager?.apiClient?.deletePushNotificationToken(pushToken)
+    }
+
+    private func setColors() {
+        store.perform(action: StateChange(store.state.mutate(colours: (UIColor(red:0.972549, green:0.623529, blue:0.200000, alpha:1.0), UIColor(red:0.898039, green:0.505882, blue:0.031373, alpha:1.0)))))
+        ethStore.perform(action: StateChange(ethStore.state.mutate(colours: (UIColor(red:0.407843, green:0.529412, blue:0.654902, alpha:1.0), UIColor(red:0.180392, green:0.278431, blue:0.376471, alpha:1.0)))))
+        tokenStores.forEach {
+            if $0.state.walletState.crowdsale != nil {
+                $0.perform(action: StateChange($0.state.mutate(colours: (UIColor(red:0.976471, green:0.647059, blue:0.219608, alpha:1.0), UIColor(red:1.000000, green:0.309804, blue:0.580392, alpha:1.0)))))
+            } else {
+                $0.perform(action: StateChange($0.state.mutate(colours: (UIColor(red:0.95, green:0.65, blue:0.00, alpha:1.0), UIColor(red:0.95, green:0.35, blue:0.13, alpha:1.0)))))
+            }
+        }
     }
 }
 
