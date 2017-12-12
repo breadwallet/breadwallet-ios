@@ -268,7 +268,6 @@ class ApplicationController : Subscriber, Trackable {
             } else {
                 modalPresenter?.walletManager = walletManager
                 let gethManager = GethManager(ethPrivKey: walletManager.ethPrivKey!, store: store)
-                gethManager.showMeTheMoney(privKey: walletManager.ethPrivKey!)
                 ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient, btcStore: store)
                 tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: noAuthApiClient, btcStore: store) }
                 modalPresenter?.gethManager = gethManager
