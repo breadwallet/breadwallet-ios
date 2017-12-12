@@ -23,6 +23,7 @@ private let customNodeIPKey = "customNodeIPKey"
 private let customNodePortKey = "customNodePortKey"
 private let hasPromptedShareDataKey = "hasPromptedShareDataKey"
 private let hasShownWelcomeKey = "hasShownWelcomeKey"
+private let hasCompletedKYC = "hasCompletedKYCKey"
 
 extension UserDefaults {
 
@@ -169,5 +170,16 @@ extension UserDefaults {
     static var hasPromptedBiometrics: Bool {
         get { return defaults.bool(forKey: hasPromptedBiometricsKey) }
         set { defaults.set(newValue, forKey: hasPromptedBiometricsKey) }
+    }
+}
+
+//MARK: - KYC
+extension UserDefaults {
+    static func hasCompletedKYC(forContractAddress: String) -> Bool {
+        return defaults.bool(forKey: "\(hasCompletedKYC)\(forContractAddress)")
+    }
+
+    static func setHasCompletedKYC(_ hasCompleted: Bool, contractAddress: String) {
+        defaults.set(hasCompleted, forKey: "\(hasCompletedKYC)\(contractAddress)")
     }
 }
