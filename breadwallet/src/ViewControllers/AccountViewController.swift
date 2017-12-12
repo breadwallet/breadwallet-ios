@@ -133,7 +133,7 @@ class AccountViewController : UIViewController, Subscriber {
         webView.didComplete = { [weak self] in
             self?.updateKycStatus()
             if self?.kycStatusTimer == nil {
-                self?.kycStatusTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self!, selector: #selector(self!.updateKycStatus), userInfo: nil, repeats: true)
+                self?.kycStatusTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self!, selector: #selector(self!.updateKycStatus), userInfo: nil, repeats: true)
             }
         }
         let nc = UINavigationController(rootViewController: webView)
@@ -147,7 +147,7 @@ class AccountViewController : UIViewController, Subscriber {
                 DispatchQueue.main.async {
                     if status != .complete {
                         if self?.kycStatusTimer == nil {
-                            self?.kycStatusTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self!, selector: #selector(self!.updateKycStatus), userInfo: nil, repeats: true)
+                            self?.kycStatusTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self!, selector: #selector(self!.updateKycStatus), userInfo: nil, repeats: true)
                         }
                     }
                     self?.transactionsTableView.kycStatus = status

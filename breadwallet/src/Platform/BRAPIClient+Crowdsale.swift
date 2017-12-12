@@ -95,13 +95,18 @@ extension BRAPIClient {
                 do {
                     let statusResponse = try JSONDecoder().decode(KYCStatusResponse.self, from: data)
                     if let status = KYCStatus(string: statusResponse.status) {
+                        if status == .complete {
+                            UserDefaults.setHasCompletedKYC(true, contractAddress: contractAddress)
+                        } else {
+                            UserDefaults.setHasCompletedKYC(false, contractAddress: contractAddress)
+                        }
                         callback(status, statusResponse.form_uri)
                     }
                 } catch (let e) {
                     print("/kyc json parsing error: \(e)")
-                    if let string = String(data: data, encoding: .utf8), string == "", response?.statusCode == 500 {
-                        return callback(.none, nil)
-                    }
+//                    if let string = String(data: data, encoding: .utf8), string == "", response?.statusCode == 500 {
+//                        return callback(.none, nil)
+//                    }
                 }
             }
             return callback(nil, nil)

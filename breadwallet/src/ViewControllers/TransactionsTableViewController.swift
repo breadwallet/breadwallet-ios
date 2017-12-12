@@ -62,6 +62,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     var walletManager: WalletManager?
     var didCollectRegistrationParams: ((RegistrationParams) -> Void)?
     var shouldResumeIdentityVerification: (() -> Void)?
+
     var kycStatus: KYCStatus = .none {
         didSet {
             if oldValue != kycStatus {
@@ -188,6 +189,12 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                             self.allTransactions = state.walletState.transactions
                             self.reload()
         })
+
+        if let crowdsale = store.state.walletState.crowdsale {
+            if UserDefaults.hasCompletedKYC(forContractAddress: crowdsale.contract.address) {
+                kycStatus = .complete
+            }
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {

@@ -54,6 +54,11 @@ class CrowdsaleView : UIView {
     }
 
     private func setInitialData() {
+        if let crowdsale = store.state.walletState.crowdsale {
+            if UserDefaults.hasCompletedKYC(forContractAddress: crowdsale.contract.address) {
+                kycStatus = .complete
+            }
+        }
         header.textAlignment = .center
         footer.textAlignment = .center
         button.tap = strongify(self) { myself in
