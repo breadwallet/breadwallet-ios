@@ -8,7 +8,7 @@
 
 import UIKit
 
-class VerifyIdentityView : UIView {
+class VerifyIdentityView : UIView, Subscriber {
 
     var didTapVerify: ((RegistrationParams) -> Void)?
     var showError: ((String) -> Void)?
@@ -17,7 +17,7 @@ class VerifyIdentityView : UIView {
     private let firstName = UITextField()
     private let lastName = UITextField()
     private let email = UITextField()
-    private let country = ShadowButton(title: "Country", type: .secondary)
+    private let country = ShadowButton(title: "Select Country", type: .secondary)
     private let verify = ShadowButton(title: "Verify", type: .primary)
     private let store: Store
 
@@ -74,7 +74,7 @@ class VerifyIdentityView : UIView {
     private func setInitialData() {
         title.textAlignment = .center
         title.text = "Verify Identity"
-        subheader.text = "Identity verifcation is required for crowdsale participation"
+        subheader.text = "Identity verification is required for crowdsale participation"
         firstName.placeholder = "First Name"
         firstName.borderStyle = .roundedRect
         lastName.placeholder = "Last Name"
@@ -96,6 +96,11 @@ class VerifyIdentityView : UIView {
         country.tap = strongify(self) { myself in
             myself.store.perform(action: RootModalActions.Present(modal: .countryPicker))
         }
+        store.subscribe(self, selector: { $0.walletState.crowdsale?.verificationCountryCode != $1.walletState.crowdsale?.verificationCountryCode }, callback: { state in
+            if let code = state.walletState.crowdsale?.verificationCountryCode {
+                self.country.title = "Country: \(code)"
+            }
+        })
     }
 
     required init?(coder aDecoder: NSCoder) {
