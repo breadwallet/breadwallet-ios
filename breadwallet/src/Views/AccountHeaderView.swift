@@ -336,13 +336,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     override func draw(_ rect: CGRect) {
-        if store.state.currency == .bitcoin {
-            drawGradient(rect)
-        } else {
-            drawGradient(start: store.state.currency.gradientColours.0,
-                            end: store.state.currency.gradientColours.1,
-                            rect)
-        }
+        drawGradient(start: store.state.colours.0, end: store.state.colours.1, rect)
     }
 
     @objc private func currencySwitchTapped() {

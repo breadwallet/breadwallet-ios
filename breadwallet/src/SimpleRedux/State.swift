@@ -28,6 +28,7 @@ struct State {
     let pinLength: Int
     let fees: Fees
     let currency: Currency
+    let colours: (UIColor, UIColor)
 }
 
 extension State {
@@ -49,7 +50,8 @@ extension State {
                         isPromptingBiometrics: false,
                         pinLength: 6,
                         fees: Fees.defaultFees,
-                        currency: .bitcoin)
+                        currency: .bitcoin,
+                        colours: (UIColor(), UIColor()))
     }
 
     func mutate(   isStartFlowVisible: Bool? = nil,
@@ -69,8 +71,9 @@ extension State {
                    isPromptingBiometrics: Bool? = nil,
                    pinLength: Int? = nil,
                    fees: Fees? = nil,
-                   currency: Currency? = nil) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible, isLoginRequired: isLoginRequired ?? self.isLoginRequired, rootModal: rootModal ?? self.rootModal, walletState: walletState ?? self.walletState, isBtcSwapped: isBtcSwapped ?? self.isBtcSwapped, currentRate: currentRate ?? self.currentRate, rates: rates ?? self.rates, alert: alert ?? self.alert, isBiometricsEnabled: isBiometricsEnabled ?? self.isBiometricsEnabled, defaultCurrencyCode: defaultCurrencyCode ?? self.defaultCurrencyCode, recommendRescan: recommendRescan ?? self.recommendRescan, isLoadingTransactions: isLoadingTransactions ?? self.isLoadingTransactions, maxDigits: maxDigits ?? self.maxDigits, isPushNotificationsEnabled: isPushNotificationsEnabled ?? self.isPushNotificationsEnabled, isPromptingBiometrics: isPromptingBiometrics ?? self.isPromptingBiometrics, pinLength: pinLength ?? self.pinLength, fees: fees ?? self.fees, currency: currency ?? self.currency)
+                   currency: Currency? = nil,
+                   colours: (UIColor, UIColor)? = nil) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible, isLoginRequired: isLoginRequired ?? self.isLoginRequired, rootModal: rootModal ?? self.rootModal, walletState: walletState ?? self.walletState, isBtcSwapped: isBtcSwapped ?? self.isBtcSwapped, currentRate: currentRate ?? self.currentRate, rates: rates ?? self.rates, alert: alert ?? self.alert, isBiometricsEnabled: isBiometricsEnabled ?? self.isBiometricsEnabled, defaultCurrencyCode: defaultCurrencyCode ?? self.defaultCurrencyCode, recommendRescan: recommendRescan ?? self.recommendRescan, isLoadingTransactions: isLoadingTransactions ?? self.isLoadingTransactions, maxDigits: maxDigits ?? self.maxDigits, isPushNotificationsEnabled: isPushNotificationsEnabled ?? self.isPushNotificationsEnabled, isPromptingBiometrics: isPromptingBiometrics ?? self.isPromptingBiometrics, pinLength: pinLength ?? self.pinLength, fees: fees ?? self.fees, currency: currency ?? self.currency, colours: colours ?? self.colours)
     }
 }
 
@@ -109,21 +112,6 @@ enum Currency {
             return "eth"
         case .token:
             return "xjp"
-        }
-    }
-
-    var gradientColours: (UIColor, UIColor) {
-        switch self {
-        case .bitcoin:
-            return (UIColor(), UIColor())
-        case .ethereum:
-            return (
-                UIColor(red: 73.0/255.0, green: 148.0/255.0, blue: 255.0/255.0, alpha: 1.0),
-                UIColor(red: 44.0/255.0, green: 84.0/255.0, blue: 240.0/255.0, alpha: 1.0))
-        case .token:
-            return (
-                UIColor(red:0.95, green:0.65, blue:0.00, alpha:1.0),
-                UIColor(red:0.95, green:0.35, blue:0.13, alpha:1.0))
         }
     }
 }
