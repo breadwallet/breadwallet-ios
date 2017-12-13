@@ -55,6 +55,7 @@ struct RegistrationParams : Codable {
     let email: String
     let redirect_uri: String
     let country: String
+    let contract_address: String
     let network: String = E.isTestnet ? "ropsten" : "mainnet"
 }
 

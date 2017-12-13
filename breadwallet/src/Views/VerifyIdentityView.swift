@@ -90,7 +90,8 @@ class VerifyIdentityView : UIView, Subscriber {
             guard let country = myself.store.state.walletState.crowdsale?.verificationCountryCode else {
                 myself.showError?("Select a country"); return
             }
-            let params = RegistrationParams(first_name: firstName, last_name: lastName, email: email, redirect_uri: "http://google.ca", country: country)
+            guard let contractAddress = myself.store.state.walletState.crowdsale?.contract.address else { return }
+            let params = RegistrationParams(first_name: firstName, last_name: lastName, email: email, redirect_uri: "http://google.ca", country: country, contract_address: contractAddress)
             myself.didTapVerify?(params)
         }
 
