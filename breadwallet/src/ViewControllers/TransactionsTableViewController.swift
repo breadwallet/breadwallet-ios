@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 
 private let promptDelay: TimeInterval = 0.6
 
@@ -344,8 +345,11 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         if store.isEthLike {
             let tx = transactions[indexPath.row]
             if tx.hash.utf8.count > 0 {
-                store.trigger(name: .lightWeightAlert(S.Receive.copied))
-                UIPasteboard.general.string = tx.hash
+                let string = "https://\(E.isTestnet ? "ropsten." : "")etherscan.io/tx/\(tx.hash)"
+                if let url = URL(string: string) {
+                    let webview = SFSafariViewController(url: url)
+                    present(webview, animated: true, completion: nil)
+                }
             } else {
                 store.trigger(name: .lightWeightAlert("txHash doesn't exist yet"))
             }
