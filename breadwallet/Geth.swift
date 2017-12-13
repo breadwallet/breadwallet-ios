@@ -19,12 +19,19 @@ class GethManager {
     var balance: GethBigInt {
         do {
             let result = try client.getBalanceAt(context, account: address, number: -1)
+            balanceCache = result
             return result
         } catch let e {
             print("error: \(e)")
-            return GethBigInt(0)
+            if let balanceCache = balanceCache {
+                return balanceCache
+            } else {
+                return GethBigInt(0)
+            }
         }
     }
+
+    private var balanceCache: GethBigInt? = nil
     
     var receiveAddress: String {
         return address.getHex()
