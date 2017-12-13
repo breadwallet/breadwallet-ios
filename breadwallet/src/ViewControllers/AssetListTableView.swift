@@ -83,14 +83,16 @@ class AssetListTableView : UITableViewController, Subscriber {
         if store.state.walletState.crowdsale != nil {
             let cell = tableView.dequeueReusableCell(withIdentifier: crowdSaleCellIdentifier, for: indexPath) as! CrowsaleCell
             if let rate = store.state.currentRate {
-                let price = "$\(rate.rate)"
+                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 2, store: store)
+                let price = placeholderAmount.localFormat.string(from: NSNumber(value: rate.rate)) ?? ""
                 cell.setData(currencyName: currencies[indexPath.row].0, price: price, balance: balanceString(forStore: store), store: store)
             }
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! HomeScreenCell
             if let rate = store.state.currentRate {
-                let price = "$\(rate.rate)"
+                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 2, store: store)
+                let price = placeholderAmount.localFormat.string(from: NSNumber(value: rate.rate)) ?? ""
                 cell.setData(currencyName: currencies[indexPath.row].0, price: price, balance: balanceString(forStore: store), store: store)
             }
 
