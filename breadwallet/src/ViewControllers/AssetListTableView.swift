@@ -96,8 +96,12 @@ class AssetListTableView : UITableViewController, Subscriber {
                 cell.setData(currencyName: currencies[indexPath.row].0, price: price, balance: balanceString(forStore: store), store: store)
             }
 
-            if store.state.walletState.token != nil, let balance = store.state.walletState.bigBalance, let value = Decimal(string: balance.getString(10)) {
-                cell.isHidden = value == 0
+            if let token = store.state.walletState.token, token.code == "TST" {
+                if let balance = store.state.walletState.bigBalance, let value = Decimal(string: balance.getString(10)), value > 0 {
+                    cell.isHidden = false
+                } else {
+                    cell.isHidden = true
+                }
             } else {
                 cell.isHidden = false
             }
