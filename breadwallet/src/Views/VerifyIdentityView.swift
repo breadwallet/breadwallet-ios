@@ -81,7 +81,7 @@ class VerifyIdentityView : UIView, Subscriber {
         lastName.borderStyle = .roundedRect
         email.placeholder = "Email"
         email.borderStyle = .roundedRect
-
+        email.keyboardType = .emailAddress
         verify.tap = strongify(self) { myself in
             guard let firstName = myself.firstName.text else { myself.showError?("No First Name"); return }
             guard let lastName = myself.lastName.text else { myself.showError?("No Last Name"); return }
