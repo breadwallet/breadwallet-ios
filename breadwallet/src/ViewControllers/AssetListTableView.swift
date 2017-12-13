@@ -94,7 +94,7 @@ class AssetListTableView : UITableViewController, Subscriber {
                 cell.setData(currencyName: currencies[indexPath.row].0, price: price, balance: balanceString(forStore: store), store: store)
             }
 
-            if let token = store.state.walletState.token, let balance = store.state.walletState.bigBalance, let value = Decimal(string: balance.getString(10)) {
+            if store.state.walletState.token != nil, let balance = store.state.walletState.bigBalance, let value = Decimal(string: balance.getString(10)) {
                 cell.isHidden = value == 0
             } else {
                 cell.isHidden = false

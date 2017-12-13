@@ -84,7 +84,9 @@ extension BRAPIClient {
                     }
                 }
             } else {
-                print("error: \(error)")
+                if let error = error {
+                    print("Registration Error: \(error)")
+                }
             }
             return callback(nil)
         })
