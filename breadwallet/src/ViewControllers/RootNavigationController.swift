@@ -78,4 +78,12 @@ class RootNavigationController : UINavigationController {
             UserDefaults.hasShownWelcome = true
         }
     }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        if topViewController is HomeScreenViewController {
+            return .default
+        } else {
+            return .lightContent
+        }
+    }
 }
