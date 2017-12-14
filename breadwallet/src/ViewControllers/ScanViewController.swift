@@ -192,9 +192,12 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
     }
 
     func handleURI(_ uri: String) {
+        var uri = uri
+        if store.isEthLike {
+            uri = uri.replacingOccurrences(of: "ethereum:", with: "")
+        }
         if self.currentUri != uri {
             self.currentUri = uri
-
             if store.isEthLike && uri.isValidEthAddress, let request = PaymentRequest(ethAddress: uri)  {
                 saveEvent("scan.ethAddress")
                 createPaymentRequestSuccess(request: request)
