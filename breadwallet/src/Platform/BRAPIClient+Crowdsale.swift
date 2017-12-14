@@ -56,12 +56,8 @@ struct RegistrationParams : Codable {
     let redirect_uri: String
     let country: String
     let contract_address: String
+    let ethereum_address: String
     let network: String = E.isTestnet ? "ropsten" : "mainnet"
-}
-
-fileprivate struct KycResponse : Codable {
-    let status: String
-    let form_url: String
 }
 
 extension BRAPIClient {
@@ -69,7 +65,7 @@ extension BRAPIClient {
     func register(params: RegistrationParams, callback: @escaping ((URL?) -> Void)) {
 
         let encodedData = try? JSONEncoder().encode(params)
-        var req = URLRequest(url: url("/kyc"))
+        var req = URLRequest(url: url("/kyc/networks/\(params.network)/contracts/\(params.contract_address)"))
         req.httpMethod = "POST"
         req.httpBody = encodedData
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -78,8 +74,8 @@ extension BRAPIClient {
         let task = dataTaskWithRequest(req, authenticated: true, retryCount: 0, handler: { (data, response, error) in
             if error == nil {
                 if let data = data {
-                    if let responseObject = try? JSONDecoder().decode(KycResponse.self, from: data) {
-                        if let url = URL(string: responseObject.form_url) {
+                    if let responseObject = try? JSONDecoder().decode(KYCStatusResponse.self, from: data) {
+                        if let urlString = responseObject.form_url, let url = URL(string: urlString) {
                             return callback(url)
                         }
                     }
@@ -95,8 +91,7 @@ extension BRAPIClient {
     }
 
     func kycStatus(contractAddress: String, ethAddress: String, callback: @escaping (_ status: KYCStatus?, _ uri: String?) -> Void) {
-        let network = E.isTestnet ? "ropsten" : "mainnet"
-        let req = URLRequest(url: url("/kyc?contract_address=\(contractAddress)&ethereum_address=\(ethAddress)&network=\(network)"))
+        let req = URLRequest(url: url("/kyc/networks/\(network)/contracts/\(contractAddress)?ethereum_address=\(ethAddress)"))
         let task = dataTaskWithRequest(req, authenticated: true) { (data, response, err) in
             if err == nil, let data = data {
                 do {
@@ -107,13 +102,10 @@ extension BRAPIClient {
                         } else {
                             UserDefaults.setHasCompletedKYC(false, contractAddress: contractAddress)
                         }
-                        callback(status, statusResponse.form_uri)
+                        callback(status, statusResponse.form_url)
                     }
                 } catch (let e) {
                     print("/kyc json parsing error: \(e)")
-//                    if let string = String(data: data, encoding: .utf8), string == "", response?.statusCode == 500 {
-//                        return callback(.none, nil)
-//                    }
                 }
             }
             return callback(nil, nil)
@@ -122,8 +114,7 @@ extension BRAPIClient {
     }
 
     func deleteKycStatus(contractAddress: String, ethAddress: String, callback: @escaping (_ success: Bool) -> Void) {
-        let network = E.isTestnet ? "ropsten" : "mainnet"
-        var req = URLRequest(url: url("/kyc?contract_address=\(contractAddress)&ethereum_address=\(ethAddress)&network=\(network)"))
+        var req = URLRequest(url: url("/kyc/networks/\(network)/contracts/\(contractAddress)?ethereum_address=\(ethAddress)"))
         req.httpMethod = "DELETE"
         let task = dataTaskWithRequest(req, authenticated: true) { (data, response, err) in
             if err == nil, let data = data {
@@ -137,9 +128,13 @@ extension BRAPIClient {
         task.resume()
     }
 
+    private var network: String {
+        return E.isTestnet ? "ropsten" : "mainnet"
+    }
+
 }
 
 fileprivate struct KYCStatusResponse : Codable {
     let status: String
-    let form_uri: String?
+    let form_url: String?
 }
