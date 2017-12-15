@@ -131,7 +131,8 @@ class ApplicationController : Subscriber, Trackable {
 
     func launch(application: UIApplication, options: [UIApplicationLaunchOptionsKey: Any]?) {
         self.application = application
-        application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+        //application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
+        application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalNever)
         setup()
         handleLaunchOptions(options)
         reachability.didChange = { isReachable in
@@ -453,42 +454,42 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     func performBackgroundFetch() {
-        saveEvent("appController.performBackgroundFetch")
-        let group = DispatchGroup()
-        if let peerManager = walletManager?.peerManager, peerManager.syncProgress(fromStartHeight: peerManager.lastBlockHeight) < 1.0 {
-            group.enter()
-            store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { state in
-                if self.fetchCompletionHandler != nil {
-                    if state.walletState.syncState == .success {
-                        DispatchQueue.walletQueue.async {
-                            peerManager.disconnect()
-                            group.leave()
-                        }
-                    }
-                }
-            })
-        }
-
-        group.enter()
-        Async.parallel(callbacks: [
-            { self.exchangeUpdater?.refresh(completion: $0) },
-            { self.feeUpdater?.refresh(completion: $0) },
-            { self.walletManager?.apiClient?.events?.sync(completion: $0) },
-            { self.walletManager?.apiClient?.updateFeatureFlags(); $0() }
-            ], completion: {
-                group.leave()
-        })
-
-        DispatchQueue.global(qos: .utility).async {
-            if group.wait(timeout: .now() + 25.0) == .timedOut {
-                self.saveEvent("appController.backgroundFetchFailed")
-                self.fetchCompletionHandler?(.failed)
-            } else {
-                self.saveEvent("appController.backgroundFetchNewData")
-                self.fetchCompletionHandler?(.newData)
-            }
-            self.fetchCompletionHandler = nil
-        }
+//        saveEvent("appController.performBackgroundFetch")
+//        let group = DispatchGroup()
+//        if let peerManager = walletManager?.peerManager, peerManager.syncProgress(fromStartHeight: peerManager.lastBlockHeight) < 1.0 {
+//            group.enter()
+//            store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { state in
+//                if self.fetchCompletionHandler != nil {
+//                    if state.walletState.syncState == .success {
+//                        DispatchQueue.walletQueue.async {
+//                            peerManager.disconnect()
+//                            group.leave()
+//                        }
+//                    }
+//                }
+//            })
+//        }
+//
+//        group.enter()
+//        Async.parallel(callbacks: [
+//            { self.exchangeUpdater?.refresh(completion: $0) },
+//            { self.feeUpdater?.refresh(completion: $0) },
+//            { self.walletManager?.apiClient?.events?.sync(completion: $0) },
+//            { self.walletManager?.apiClient?.updateFeatureFlags(); $0() }
+//            ], completion: {
+//                group.leave()
+//        })
+//
+//        DispatchQueue.global(qos: .utility).async {
+//            if group.wait(timeout: .now() + 25.0) == .timedOut {
+//                self.saveEvent("appController.backgroundFetchFailed")
+//                self.fetchCompletionHandler?(.failed)
+//            } else {
+//                self.saveEvent("appController.backgroundFetchNewData")
+//                self.fetchCompletionHandler?(.newData)
+//            }
+//            self.fetchCompletionHandler = nil
+//        }
     }
 
     func willResignActive() {
