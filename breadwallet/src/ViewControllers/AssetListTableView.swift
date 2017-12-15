@@ -29,7 +29,7 @@ class AssetListTableView : UITableViewController, Subscriber {
     override func viewDidLoad() {
         tableView.backgroundColor = UIColor(red:0.960784, green:0.968627, blue:0.980392, alpha:1.0)
         tableView.register(HomeScreenCell.self, forCellReuseIdentifier: cellIdentifier)
-        tableView.register(CrowsaleCell.self, forCellReuseIdentifier: crowdSaleCellIdentifier)
+        tableView.register(CrowsaleHomeCell.self, forCellReuseIdentifier: crowdSaleCellIdentifier)
         tableView.separatorStyle = .none
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 140
@@ -81,7 +81,7 @@ class AssetListTableView : UITableViewController, Subscriber {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let store = stores[indexPath.row]
         if store.state.walletState.crowdsale != nil {
-            let cell = tableView.dequeueReusableCell(withIdentifier: crowdSaleCellIdentifier, for: indexPath) as! CrowsaleCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: crowdSaleCellIdentifier, for: indexPath) as! CrowsaleHomeCell
             if let rate = store.state.currentRate {
                 let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 2, store: store)
                 let price = placeholderAmount.localFormat.string(from: NSNumber(value: rate.rate)) ?? ""

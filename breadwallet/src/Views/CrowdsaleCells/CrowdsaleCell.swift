@@ -1,60 +1,60 @@
 //
-//  CrowdsaleView.swift
+//  CrowdsaleCell.swift
 //  breadwallet
 //
-//  Created by Adrian Corscadden on 2017-11-28.
+//  Created by Adrian Corscadden on 2017-12-14.
 //  Copyright © 2017 breadwallet LLC. All rights reserved.
 //
 
 import UIKit
 
-class CrowdsaleView : UIView {
+class CrowdsaleCell : UITableViewCell {
 
-    var kycStatus: KYCStatus = .none {
-        didSet {
-            setStatusLabel()
-        }
-    }
     var shouldRetry: (() -> Void)?
     var shouldResumeIdentityVerification: (() -> Void)?
     var shouldPresentLegal: (() -> Void)?
     private let header = UILabel.wrapping(font: .customBody(size: 16.0))
     private let button = ShadowButton(title: S.Crowdsale.buyButton, type: .primary)
     private let footer = UILabel.wrapping(font: .customBody(size: 16.0))
-    private let store: Store
     private var timer: Timer? = nil
     private var startTime: Date? = nil
     private var endTime: Date? = nil
+    private var kycStatus: KYCStatus?
+    private var store: Store?
+    private var buttonHeight: NSLayoutConstraint?
 
-    init(store: Store) {
-        self.store = store
-        super.init(frame: .zero)
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
 
     private func setupViews() {
+        selectionStyle = .none
         addSubviews()
         addConstraints()
-        setInitialData()
     }
 
     private func addSubviews() {
-        addSubview(header)
-        addSubview(button)
-        addSubview(footer)
+        contentView.addSubview(header)
+        contentView.addSubview(button)
+        contentView.addSubview(footer)
     }
 
     private func addConstraints() {
         header.constrainTopCorners(sidePadding: C.padding[2], topPadding: C.padding[2])
+        buttonHeight = button.heightAnchor.constraint(equalToConstant: 44.0)
         button.constrain([
             button.topAnchor.constraint(equalTo: header.bottomAnchor, constant: C.padding[2]),
-            button.centerXAnchor.constraint(equalTo: centerXAnchor)])
+            button.centerXAnchor.constraint(equalTo: centerXAnchor),
+            buttonHeight])
         footer.constrain([
             footer.topAnchor.constraint(equalTo: button.bottomAnchor, constant: C.padding[2]) ])
         footer.constrainBottomCorners(sidePadding: C.padding[2], bottomPadding: C.padding[2])
     }
 
-    private func setInitialData() {
+    func setData(store: Store, status: KYCStatus) {
+        self.store = store
+        self.kycStatus = status
         if let crowdsale = store.state.walletState.crowdsale {
             if UserDefaults.hasCompletedKYC(forContractAddress: crowdsale.contract.address) {
                 kycStatus = .complete
@@ -67,7 +67,7 @@ class CrowdsaleView : UIView {
                 if !UserDefaults.hasAgreedToCrowdsaleTerms {
                     myself.shouldPresentLegal?()
                 } else {
-                    myself.store.perform(action: RootModalActions.Present(modal: .send))
+                    store.perform(action: RootModalActions.Present(modal: .send))
                 }
             } else if myself.kycStatus == .failed {
                 myself.shouldRetry?()
@@ -82,6 +82,7 @@ class CrowdsaleView : UIView {
     }
 
     @objc private func setStatusLabel() {
+        guard let store = store else { return }
         guard let startTime = store.state.walletState.crowdsale?.startTime, let endTime = store.state.walletState.crowdsale?.endTime else { return }
         self.startTime = startTime
         self.endTime = endTime
@@ -102,19 +103,19 @@ class CrowdsaleView : UIView {
         }
 
         if now > startTime && now < endTime && kycStatus == .complete {
-            button.isHidden = false
+            buttonHeight?.constant = 44.0
         } else if kycStatus == .retry && now < endTime {
-            button.isHidden = false
+            buttonHeight?.constant = 44.0
         } else if kycStatus == .incomplete && now < endTime {
-            button.isHidden = false
+            buttonHeight?.constant = 44.0
         } else {
-            button.isHidden = true
+            buttonHeight?.constant = 0.0
         }
-
     }
 
     @objc private func setPreLiveStatusLabel() {
         guard let startTime = startTime else { return }
+        guard let kycStatus = kycStatus else { return }
         let now = Date()
         let diff = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: now, to: startTime)
         header.text = "\(kycStatus.description)"
@@ -123,6 +124,7 @@ class CrowdsaleView : UIView {
 
     @objc private func setLiveStatusLabel() {
         guard let endTime = endTime else { return }
+        guard let kycStatus = kycStatus else { return }
         let now = Date()
         let diff = Calendar.current.dateComponents([.day, .hour, .minute, .second], from: now, to: endTime)
         header.text = "Crowdsale is now live. \(kycStatus.description)"
@@ -130,12 +132,13 @@ class CrowdsaleView : UIView {
     }
 
     private func setFinishedStatusLabel() {
-        button.isHidden = true
-        header.text = "Crowdsale is Finished. \(kycStatus.description)"
+        buttonHeight?.constant = 0.0
+        header.text = "Crowdsale is Finished"
         footer.text = ""
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
 }

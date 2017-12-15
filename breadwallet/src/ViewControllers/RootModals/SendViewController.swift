@@ -300,11 +300,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         let maxBuy = maxContribution - brdBalance
         guard amountView.ethOutput >= minContribution else {
             let min = DisplayAmount.ethString(value: minContribution, store: store)
-            return showErrorMessage("Please enter an amount greater than the min contribution amount of \(min)")
+            return showErrorMessage("Please enter an amount greater than the minimum contribution amount of \(min)")
         }
         guard amountView.ethOutput <= maxBuy else {
             let max = DisplayAmount.ethString(value: maxBuy, store: store)
-            return showErrorMessage("Please enter an amount less than the max contribution amount of \(max)")
+            return showErrorMessage("Please enter an amount less than the maximum contribution amount of \(max)")
         }
         let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee(isCrowdsale: true), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: crowdsale.contract.address, isUsingTouchId: sender.canUseBiometrics, store: store)
         confirm.callback = {

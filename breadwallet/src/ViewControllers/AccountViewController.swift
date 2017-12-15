@@ -13,7 +13,7 @@ import MachO
 let accountHeaderHeight: CGFloat = 136.0
 let accountFooterHeight: CGFloat = 56.0
 private let transactionsLoadingViewHeightConstant: CGFloat = 48.0
-
+private let kycPollInterval = 2.0
 class AccountViewController : UIViewController, Subscriber {
 
     //MARK: - Public
@@ -163,8 +163,10 @@ class AccountViewController : UIViewController, Subscriber {
                 DispatchQueue.main.async {
                     if status != .complete {
                         if self?.kycStatusTimer == nil {
-                            self?.kycStatusTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self!, selector: #selector(self!.updateKycStatus), userInfo: nil, repeats: true)
+                            self?.kycStatusTimer = Timer.scheduledTimer(timeInterval: kycPollInterval, target: self!, selector: #selector(self!.updateKycStatus), userInfo: nil, repeats: true)
                         }
+                    } else {
+                        self?.kycStatusTimer?.invalidate()
                     }
                     self?.transactionsTableView.kycStatus = status
                 }
@@ -181,7 +183,7 @@ class AccountViewController : UIViewController, Subscriber {
         super.viewDidAppear(animated)
         headerView.setBalances()
         kycStatusTimer?.invalidate()
-        kycStatusTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(self.updateKycStatus), userInfo: nil, repeats: true)
+        kycStatusTimer = Timer.scheduledTimer(timeInterval: kycPollInterval, target: self, selector: #selector(self.updateKycStatus), userInfo: nil, repeats: true)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
