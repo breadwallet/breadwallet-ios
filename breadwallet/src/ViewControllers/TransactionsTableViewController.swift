@@ -315,6 +315,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 
     private func attemptShowPrompt() {
+        guard !store.isEthLike else { return }
         guard let walletManager = walletManager else { return }
         guard !isSyncingViewVisible else { return }
         let types = PromptType.defaultOrder
