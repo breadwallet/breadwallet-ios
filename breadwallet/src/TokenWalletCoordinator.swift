@@ -26,18 +26,20 @@ class TokenWalletCoordinator {
         self.refresh()
         self.longRefresh()
         self.timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(refresh), userInfo: nil, repeats: true)
-        self.timer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(refresh), userInfo: nil, repeats: true)
+        self.longTimer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(refresh), userInfo: nil, repeats: true)
     }
 
     @objc private func longRefresh() {
-        if let crowdsale = store.state.walletState.crowdsale {
-            if let weiRaised = gethManager.getWeiRaised(forContractAddress: crowdsale.contract.address), let cap = gethManager.getCap(forContractAddress: crowdsale.contract.address) {
-                let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: crowdsale.minContribution, maxContribution: crowdsale.maxContribution, contract: crowdsale.contract, rate: crowdsale.rate, verificationCountryCode: crowdsale.verificationCountryCode, weiRaised: weiRaised, cap: cap)
-                store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
-            }
-            if let minContribution = gethManager.getMinContribution(forContractAddress: crowdsale.contract.address), let maxContribution = gethManager.getMaxContribution(forContractAddress: crowdsale.contract.address) {
-                let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: minContribution, maxContribution: maxContribution, contract: crowdsale.contract, rate: crowdsale.rate, verificationCountryCode: crowdsale.verificationCountryCode, weiRaised: crowdsale.weiRaised, cap: crowdsale.cap)
-                store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
+        if let address = store.state.walletState.crowdsale?.contract.address {
+            DispatchQueue.global(qos: .utility).async {
+                if let weiRaised = self.gethManager.getWeiRaised(forContractAddress: address), let cap = self.gethManager.getCap(forContractAddress: address), let minContribution = self.gethManager.getMinContribution(forContractAddress: address), let maxContribution = self.gethManager.getMaxContribution(forContractAddress: address){
+                    DispatchQueue.main.async {
+                        if let crowdsale = self.store.state.walletState.crowdsale {
+                            let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: minContribution, maxContribution: maxContribution, contract: crowdsale.contract, rate: crowdsale.rate, verificationCountryCode: crowdsale.verificationCountryCode, weiRaised: weiRaised, cap: cap)
+                            self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(crowdSale: newCrowdsale)))
+                        }
+                    }
+                }
             }
         }
     }
