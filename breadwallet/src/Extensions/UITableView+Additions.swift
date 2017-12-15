@@ -8,10 +8,10 @@
 
 import UIKit
 
-extension UIScrollView {
-    func verticallyOffsetContent(_ deltaY: CGFloat) {
-        contentOffset = CGPoint(x: contentOffset.x, y: contentOffset.y - deltaY)
-        contentInset = UIEdgeInsetsMake(contentInset.top + deltaY, contentInset.left, contentInset.bottom, contentInset.right)
-        scrollIndicatorInsets = contentInset
+extension UITableView {
+    func reload(row: Int, section: Int) {
+        beginUpdates()
+        reloadRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+        endUpdates()
     }
 }

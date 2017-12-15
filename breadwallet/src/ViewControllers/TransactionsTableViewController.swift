@@ -67,9 +67,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     var kycStatus: KYCStatus = .none {
         didSet {
             if oldValue != kycStatus {
-                tableView.beginUpdates()
-                tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-                tableView.endUpdates()
+                tableView.reload(row: 0, section: 0)
             }
         }
     }
@@ -80,8 +78,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     private let transactionCellIdentifier = "TransactionCellIdentifier"
     private let crowdsaleCellIdentifier = "CrowdsaleCellIdentifier"
     private let registrationCellIdentifier = "RegistrationCellIdentifier"
-    private let crowdsaleView: CrowdsaleView? = nil
-    private let verifyIdentify: VerifyIdentityView? = nil
     private var transactions: [Transaction] = []
     private var allTransactions: [Transaction] = [] {
         didSet {
@@ -122,8 +118,8 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
         tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: transactionCellIdentifier)
         tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: headerCellIdentifier)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: crowdsaleCellIdentifier)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: registrationCellIdentifier)
+        tableView.register(CrowdsaleCell.self, forCellReuseIdentifier: crowdsaleCellIdentifier)
+        tableView.register(RegistrationCell.self, forCellReuseIdentifier: registrationCellIdentifier)
 
         tableView.separatorStyle = .none
         tableView.estimatedRowHeight = 100.0
@@ -221,9 +217,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         self.transactions.enumerated().forEach { i, tx in
             if tx.hash == txHash {
                 DispatchQueue.main.async {
-                    self.tableView.beginUpdates()
-                    self.tableView.reloadRows(at: [IndexPath(row: i, section: self.hasExtraSection ? 1 : 0)], with: .automatic)
-                    self.tableView.endUpdates()
+                    self.tableView.reload(row: i, section: self.hasExtraSection ? 1 : 0)
                 }
             }
         }
@@ -246,84 +240,15 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         if hasExtraSection && indexPath.section == 0 {
             if store.state.walletState.crowdsale != nil {
                 if kycStatus == .none {
-                    let cell = tableView.dequeueReusableCell(withIdentifier: registrationCellIdentifier, for: indexPath)
-                    cell.selectionStyle = .none
-                    if cell.contentView.subviews.count == 0 {
-                        let newVerifyView = verifyIdentify ?? VerifyIdentityView(store: store)
-                        newVerifyView.didTapVerify = { [weak self] params in
-                            self?.didCollectRegistrationParams?(params)
-                        }
-                        newVerifyView.showError = { [weak self] errorMessage in
-                            self?.showErrorMessage(errorMessage)
-                        }
-                        cell.contentView.addSubview(newVerifyView)
-                        newVerifyView.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[1], C.padding[1], C.padding[1], C.padding[1]))
-                    }
-                    return cell
+                    return registrationCell(tableView: tableView, indexPath: indexPath)
                 } else {
-                    let cell = tableView.dequeueReusableCell(withIdentifier: crowdsaleCellIdentifier, for: indexPath)
-                    cell.selectionStyle = .none
-                    if cell.contentView.subviews.count == 0 {
-                        let newCrowdsaleView = crowdsaleView ?? CrowdsaleView(store: store)
-                        newCrowdsaleView.kycStatus = kycStatus
-                        newCrowdsaleView.shouldRetry = { [weak self] in
-                            self?.deleteKycStatus()
-                        }
-                        newCrowdsaleView.shouldResumeIdentityVerification = { [weak self] in
-                            self?.shouldResumeIdentityVerification?()
-                        }
-                        newCrowdsaleView.shouldPresentLegal = { [weak self] in
-                            self?.shouldPresentLegal?()
-                        }
-                        cell.contentView.addSubview(newCrowdsaleView)
-                        newCrowdsaleView.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[1], C.padding[1], C.padding[1], C.padding[1]))
-                    }
-                    return cell
+                    return crowdsaleCell(tableView: tableView, indexPath: indexPath)
                 }
             } else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath)
-                if let transactionCell = cell as? TransactionTableViewCell {
-                    transactionCell.setStyle(.single)
-                    transactionCell.container.subviews.forEach {
-                        $0.removeFromSuperview()
-                    }
-                    if let prompt = currentPrompt {
-                        transactionCell.container.addSubview(prompt)
-                        prompt.constrain(toSuperviewEdges: nil)
-                        prompt.constrain([
-                            prompt.heightAnchor.constraint(equalToConstant: 88.0) ])
-                        transactionCell.selectionStyle = .default
-                    } else {
-                        transactionCell.container.addSubview(syncingView)
-                        syncingView.constrain(toSuperviewEdges: nil)
-                        syncingView.constrain([
-                            syncingView.heightAnchor.constraint(equalToConstant: 88.0) ])
-                        transactionCell.selectionStyle = .none
-                    }
-                }
-                return cell
+                return headerCell(tableView: tableView, indexPath: indexPath)
             }
         } else {
-            let numRows = tableView.numberOfRows(inSection: indexPath.section)
-            var style: TransactionCellStyle = .middle
-            if numRows == 1 {
-                style = .single
-            }
-            if numRows > 1 {
-                if indexPath.row == 0 {
-                    style = .first
-                }
-                if indexPath.row == numRows - 1 {
-                    style = .last
-                }
-            }
-
-            let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
-            if let transactionCell = cell as? TransactionTableViewCell, let rate = rate {
-                transactionCell.setStyle(style)
-                transactionCell.setTransaction(transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits, isSyncing: store.state.walletState.syncState != .success)
-            }
-            return cell
+            return transactionCell(tableView: tableView, indexPath: indexPath)
         }
     }
 
@@ -375,7 +300,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         if let contractAddress = store.state.walletState.crowdsale?.contract.address, let ethAddress = store.state.walletState.receiveAddress {
             walletManager?.apiClient?.deleteKycStatus(contractAddress: contractAddress, ethAddress: ethAddress, callback: { success in
                 print("delete kyc status success: \(success)")
-                print("here")
             })
         }
     }
@@ -419,5 +343,85 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+//MARK: - Cell Builders
+extension TransactionsTableViewController {
+    private func registrationCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: registrationCellIdentifier, for: indexPath)
+        if let registrationCell = cell as? RegistrationCell {
+            registrationCell.didTapVerify = { [weak self] params in
+                self?.didCollectRegistrationParams?(params)
+            }
+            registrationCell.showError = { [weak self] errorMessage in
+                self?.showErrorMessage(errorMessage)
+            }
+            registrationCell.setData(store: store)
+        }
+        return cell
+    }
+
+    private func crowdsaleCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: crowdsaleCellIdentifier, for: indexPath)
+        if let crowdCell = cell as? CrowdsaleCell {
+            crowdCell.shouldRetry = { [weak self] in
+                self?.deleteKycStatus()
+            }
+            crowdCell.shouldResumeIdentityVerification = { [weak self] in
+                self?.shouldResumeIdentityVerification?()
+            }
+            crowdCell.shouldPresentLegal = { [weak self] in
+                self?.shouldPresentLegal?()
+            }
+            crowdCell.setData(store: store, status: kycStatus)
+        }
+        return cell
+    }
+
+    private func headerCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath)
+        if let transactionCell = cell as? TransactionTableViewCell {
+            transactionCell.setStyle(.single)
+            transactionCell.container.subviews.forEach {
+                $0.removeFromSuperview()
+            }
+            if let prompt = currentPrompt {
+                transactionCell.container.addSubview(prompt)
+                prompt.constrain(toSuperviewEdges: nil)
+                prompt.constrain([
+                    prompt.heightAnchor.constraint(equalToConstant: 88.0) ])
+                transactionCell.selectionStyle = .default
+            } else {
+                transactionCell.container.addSubview(syncingView)
+                syncingView.constrain(toSuperviewEdges: nil)
+                syncingView.constrain([
+                    syncingView.heightAnchor.constraint(equalToConstant: 88.0) ])
+                transactionCell.selectionStyle = .none
+            }
+        }
+        return cell
+    }
+
+    private func transactionCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        let numRows = tableView.numberOfRows(inSection: indexPath.section)
+        var style: TransactionCellStyle = .middle
+        if numRows == 1 {
+            style = .single
+        }
+        if numRows > 1 {
+            if indexPath.row == 0 {
+                style = .first
+            }
+            if indexPath.row == numRows - 1 {
+                style = .last
+            }
+        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
+        if let transactionCell = cell as? TransactionTableViewCell, let rate = rate {
+            transactionCell.setStyle(style)
+            transactionCell.setTransaction(transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits, isSyncing: store.state.walletState.syncState != .success)
+        }
+        return cell
     }
 }

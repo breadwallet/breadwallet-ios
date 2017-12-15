@@ -296,11 +296,14 @@
 		CE6314831E08E5BB00D4AFE0 /* UIView+InitAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6314821E08E5BB00D4AFE0 /* UIView+InitAdditions.swift */; };
 		CE68DCD91FAB75BE00A3AA40 /* TokenWalletCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE68DCD81FAB75BE00A3AA40 /* TokenWalletCoordinator.swift */; };
 		CE6B6B4A1E54C0CB00B31405 /* SecurityCenterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6B6B491E54C0CA00B31405 /* SecurityCenterCell.swift */; };
+		CE6B82941FE39CA5007A41B9 /* RegistrationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6B82931FE39CA5007A41B9 /* RegistrationCell.swift */; };
+		CE6B82981FE3A418007A41B9 /* CrowdsaleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6B82971FE3A418007A41B9 /* CrowdsaleCell.swift */; };
+		CE6B829A1FE3A7B6007A41B9 /* UIScrollView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6B82991FE3A7B6007A41B9 /* UIScrollView+Additions.swift */; };
 		CE6BCF5D1EE9E89A0029849C /* CustomTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6BCF5C1EE9E89A0029849C /* CustomTitleView.swift */; };
 		CE6D0E5C1E14BFA700137DF1 /* KeyboardNotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0E5B1E14BFA600137DF1 /* KeyboardNotificationInfo.swift */; };
 		CE6D0F971DE8B73A00BD4BCF /* ModalTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0F961DE8B73A00BD4BCF /* ModalTransitionDelegate.swift */; };
 		CE6D0F991DE8B75900BD4BCF /* DismissModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */; };
-		CE6D49841FD0618A00B7C539 /* CrowdsaleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D49831FD0618A00B7C539 /* CrowdsaleCell.swift */; };
+		CE6D49841FD0618A00B7C539 /* CrowsaleHomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D49831FD0618A00B7C539 /* CrowsaleHomeCell.swift */; };
 		CE6DCC251E6001E50044257B /* UIControl+Callback.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DCC241E6001E50044257B /* UIControl+Callback.swift */; };
 		CE6DCC271E6108D50044257B /* EnterPhraseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DCC261E6108D50044257B /* EnterPhraseCell.swift */; };
 		CE6DCC291E63D0280044257B /* PhraseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DCC281E63D0280044257B /* PhraseTests.swift */; };
@@ -311,7 +314,6 @@
 		CE760EDC1E561DF900EFAC2B /* SecurityCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE760EDA1E561DF900EFAC2B /* SecurityCenterViewController.swift */; };
 		CE760EDD1E561DF900EFAC2B /* UpdatePinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE760EDB1E561DF900EFAC2B /* UpdatePinViewController.swift */; };
 		CE7B409A1FA03CC700BA4196 /* EthWalletCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7B40991FA03CC700BA4196 /* EthWalletCoordinator.swift */; };
-		CE83095D1FD1067300B20A50 /* CrowdsaleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE83095C1FD1067300B20A50 /* CrowdsaleView.swift */; };
 		CE83DE2A1E9EB7F600D07636 /* SendAmountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE83DE291E9EB7F600D07636 /* SendAmountCell.swift */; };
 		CE8644251F2C160200033129 /* ConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8644241F2C160200033129 /* ConfirmationViewController.swift */; };
 		CE8CD8DD1E2D9EF200785E02 /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8CD8DC1E2D9EF200785E02 /* Sender.swift */; };
@@ -335,7 +337,6 @@
 		CEA7E6761F057D77001F8C27 /* WalletInfoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7E6751F057D77001F8C27 /* WalletInfoTest.swift */; };
 		CEA7E67E1F09A9D2001F8C27 /* Screenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7E67D1F09A9D2001F8C27 /* Screenshots.swift */; };
 		CEA7E6871F09AB00001F8C27 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7E6861F09AB00001F8C27 /* SnapshotHelper.swift */; };
-		CEAA53AF1FDC523100BBF478 /* VerifyIdentityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA53AE1FDC523100BBF478 /* VerifyIdentityView.swift */; };
 		CEAA9E8F1DC074410066731D /* StartPaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */; };
 		CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */; };
 		CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */; };
@@ -1507,11 +1508,14 @@
 		CE6314821E08E5BB00D4AFE0 /* UIView+InitAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+InitAdditions.swift"; path = "src/Extensions/UIView+InitAdditions.swift"; sourceTree = "<group>"; };
 		CE68DCD81FAB75BE00A3AA40 /* TokenWalletCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TokenWalletCoordinator.swift; path = src/TokenWalletCoordinator.swift; sourceTree = "<group>"; };
 		CE6B6B491E54C0CA00B31405 /* SecurityCenterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SecurityCenterCell.swift; path = src/Views/SecurityCenterCell.swift; sourceTree = "<group>"; };
+		CE6B82931FE39CA5007A41B9 /* RegistrationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RegistrationCell.swift; path = src/Views/CrowdsaleCells/RegistrationCell.swift; sourceTree = "<group>"; };
+		CE6B82971FE3A418007A41B9 /* CrowdsaleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CrowdsaleCell.swift; path = src/Views/CrowdsaleCells/CrowdsaleCell.swift; sourceTree = "<group>"; };
+		CE6B82991FE3A7B6007A41B9 /* UIScrollView+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIScrollView+Additions.swift"; path = "src/Extensions/UIScrollView+Additions.swift"; sourceTree = "<group>"; };
 		CE6BCF5C1EE9E89A0029849C /* CustomTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomTitleView.swift; path = src/Extensions/CustomTitleView.swift; sourceTree = "<group>"; };
 		CE6D0E5B1E14BFA600137DF1 /* KeyboardNotificationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeyboardNotificationInfo.swift; path = src/Models/KeyboardNotificationInfo.swift; sourceTree = "<group>"; };
 		CE6D0F961DE8B73A00BD4BCF /* ModalTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalTransitionDelegate.swift; path = src/ViewControllers/ViewControllerTransitions/ModalTransitionDelegate.swift; sourceTree = "<group>"; };
 		CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DismissModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/DismissModalAnimator.swift; sourceTree = "<group>"; };
-		CE6D49831FD0618A00B7C539 /* CrowdsaleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CrowdsaleCell.swift; path = src/Views/CrowdsaleCell.swift; sourceTree = "<group>"; };
+		CE6D49831FD0618A00B7C539 /* CrowsaleHomeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CrowsaleHomeCell.swift; path = src/Views/CrowsaleHomeCell.swift; sourceTree = "<group>"; };
 		CE6DCC241E6001E50044257B /* UIControl+Callback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIControl+Callback.swift"; path = "src/Extensions/UIControl+Callback.swift"; sourceTree = "<group>"; };
 		CE6DCC261E6108D50044257B /* EnterPhraseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterPhraseCell.swift; path = src/Views/EnterPhraseCell.swift; sourceTree = "<group>"; };
 		CE6DCC281E63D0280044257B /* PhraseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhraseTests.swift; sourceTree = "<group>"; };
@@ -1522,7 +1526,6 @@
 		CE760EDA1E561DF900EFAC2B /* SecurityCenterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SecurityCenterViewController.swift; path = src/ViewControllers/SecurityCenter/SecurityCenterViewController.swift; sourceTree = "<group>"; };
 		CE760EDB1E561DF900EFAC2B /* UpdatePinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UpdatePinViewController.swift; path = src/ViewControllers/SecurityCenter/UpdatePinViewController.swift; sourceTree = "<group>"; };
 		CE7B40991FA03CC700BA4196 /* EthWalletCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EthWalletCoordinator.swift; path = src/Wallet/EthWalletCoordinator.swift; sourceTree = "<group>"; };
-		CE83095C1FD1067300B20A50 /* CrowdsaleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CrowdsaleView.swift; path = src/Views/CrowdsaleView.swift; sourceTree = "<group>"; };
 		CE83DE291E9EB7F600D07636 /* SendAmountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SendAmountCell.swift; path = src/Views/SendAmountCell.swift; sourceTree = "<group>"; };
 		CE8644241F2C160200033129 /* ConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConfirmationViewController.swift; path = src/ViewControllers/ConfirmationViewController.swift; sourceTree = "<group>"; };
 		CE8CD8DC1E2D9EF200785E02 /* Sender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sender.swift; path = src/Sender.swift; sourceTree = "<group>"; };
@@ -1553,7 +1556,6 @@
 		CEA7E67D1F09A9D2001F8C27 /* Screenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screenshots.swift; sourceTree = "<group>"; };
 		CEA7E67F1F09A9D2001F8C27 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CEA7E6861F09AB00001F8C27 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
-		CEAA53AE1FDC523100BBF478 /* VerifyIdentityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VerifyIdentityView.swift; path = src/Views/VerifyIdentityView.swift; sourceTree = "<group>"; };
 		CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartPaperPhraseViewController.swift; path = src/ViewControllers/StartPaperPhraseViewController.swift; sourceTree = "<group>"; };
 		CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewPropertyAnimator+BRWAdditions.swift"; path = "src/Extensions/UIViewPropertyAnimator+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WritePaperPhraseViewController.swift; path = src/ViewControllers/WritePaperPhraseViewController.swift; sourceTree = "<group>"; };
@@ -2978,6 +2980,7 @@
 				CE03EC711EF193800038E3A8 /* String+Keys.swift */,
 				CEC4CF081F0C84AB00E5C82E /* UIViewController+Alerts.swift */,
 				CE47A8DF1F7DA54000FF35BA /* UIScreen+Additions.swift */,
+				CE6B82991FE3A7B6007A41B9 /* UIScrollView+Additions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -3049,9 +3052,8 @@
 				CE4C1CC51ED65D830063E184 /* DrawableCircle.swift */,
 				CEBF292D1EF99E55005C330A /* LightWeightAlert.swift */,
 				CE0822651FCE059A00EF371D /* HomeScreenCell.swift */,
-				CE6D49831FD0618A00B7C539 /* CrowdsaleCell.swift */,
-				CE83095C1FD1067300B20A50 /* CrowdsaleView.swift */,
-				CEAA53AE1FDC523100BBF478 /* VerifyIdentityView.swift */,
+				CE6D49831FD0618A00B7C539 /* CrowsaleHomeCell.swift */,
+				CE6B82921FE39C5F007A41B9 /* Crowdsale */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -3105,6 +3107,15 @@
 				CE4CA7B91EE0C8D900373F11 /* BitIdTests.swift */,
 			);
 			name = Platform;
+			sourceTree = "<group>";
+		};
+		CE6B82921FE39C5F007A41B9 /* Crowdsale */ = {
+			isa = PBXGroup;
+			children = (
+				CE6B82931FE39CA5007A41B9 /* RegistrationCell.swift */,
+				CE6B82971FE3A418007A41B9 /* CrowdsaleCell.swift */,
+			);
+			name = Crowdsale;
 			sourceTree = "<group>";
 		};
 		CE6D0E5A1E14BF8400137DF1 /* Models */ = {
@@ -4028,7 +4039,7 @@
 				CE4C1CC81ED88B600063E184 /* URLController.swift in Sources */,
 				CE20C9171DBE6F2A00C8397A /* UIButton+BRWAdditions.swift in Sources */,
 				CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */,
-				CE6D49841FD0618A00B7C539 /* CrowdsaleCell.swift in Sources */,
+				CE6D49841FD0618A00B7C539 /* CrowsaleHomeCell.swift in Sources */,
 				CE92F9F41DED59E80046B516 /* UIView+AnimationAdditions.swift in Sources */,
 				CEEC70941E96A24F00EF788E /* DefaultCurrencyViewController.swift in Sources */,
 				CECB9DB61E4985CE0081A172 /* LoginBackgroundView.swift in Sources */,
@@ -4059,7 +4070,6 @@
 				22A9A9521DF61945000F0016 /* BRKVStorePlugin.swift in Sources */,
 				CEAFC8611E5D5B0500E4FD06 /* SegmentedButton.swift in Sources */,
 				CE30F0E61EB27844004B8EE5 /* PhoneWCSessionManager.swift in Sources */,
-				CEAA53AF1FDC523100BBF478 /* VerifyIdentityView.swift in Sources */,
 				7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */,
 				22A9A9581DF61945000F0016 /* BRWebViewController.swift in Sources */,
 				CEC4CF091F0C84AB00E5C82E /* UIViewController+Alerts.swift in Sources */,
@@ -4073,6 +4083,7 @@
 				CEEC70901E95D5C100EF788E /* PushNotificationsViewController.swift in Sources */,
 				222C42501E90492800078EB5 /* BRAPIClient+KV.swift in Sources */,
 				CE5E6C941EB7964900A476DB /* WalletDisabledView.swift in Sources */,
+				CE6B82941FE39CA5007A41B9 /* RegistrationCell.swift in Sources */,
 				CEF3E8341DE57166007C0A9E /* AnimatableIcon.swift in Sources */,
 				CEF61B161ED2056D00C7EA6A /* NumberFormatter+Additions.swift in Sources */,
 				CEF3E8321DE55540007C0A9E /* CheckView.swift in Sources */,
@@ -4084,7 +4095,6 @@
 				CEE20C2D1EA288FA0086F724 /* UpdatingLabel.swift in Sources */,
 				CE3D4C591EF743EF0016B1C8 /* Functions.swift in Sources */,
 				CEE20C341EA5B4550086F724 /* ArticleIds.swift in Sources */,
-				CE83095D1FD1067300B20A50 /* CrowdsaleView.swift in Sources */,
 				CEE65DF01E39056F0002994D /* Rate.swift in Sources */,
 				CEE20C361EA5B4620086F724 /* Constants.swift in Sources */,
 				CE3754AF1DDE6E2E0045B0CB /* RoundedContainer.swift in Sources */,
@@ -4120,12 +4130,14 @@
 				CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */,
 				22A9A94B1DF61945000F0016 /* BRCoding.swift in Sources */,
 				22A9A9561DF61945000F0016 /* BRWalletPlugin.swift in Sources */,
+				CE6B829A1FE3A7B6007A41B9 /* UIScrollView+Additions.swift in Sources */,
 				CEF3E8361DE60222007C0A9E /* ModalNavigationController.swift in Sources */,
 				CED811E21EB302DD003A8D1E /* WatchTransaction.swift in Sources */,
 				CEB909FA1E5FF242001804DC /* RecoverWalletIntroViewController.swift in Sources */,
 				CE25BF911DF9ADE700BC67B6 /* UIImage+Utils.swift in Sources */,
 				CE4D49F61FA04A3A00DBFFAF /* EthTx.swift in Sources */,
 				CEBF33041DDE17A600348FC6 /* Transaction.swift in Sources */,
+				CE6B82981FE3A418007A41B9 /* CrowdsaleCell.swift in Sources */,
 				CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */,
 				22E773041EE7813000397E0E /* Bonjour.swift in Sources */,
 				CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */,

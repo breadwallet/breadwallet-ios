@@ -1,14 +1,14 @@
 //
-//  VerifyIdentityView.swift
+//  RegistrationCell.swift
 //  breadwallet
 //
-//  Created by Adrian Corscadden on 2017-12-09.
+//  Created by Adrian Corscadden on 2017-12-14.
 //  Copyright © 2017 breadwallet LLC. All rights reserved.
 //
 
 import UIKit
 
-class VerifyIdentityView : UIView, Subscriber {
+class RegistrationCell : UITableViewCell, Subscriber {
 
     var didTapVerify: ((RegistrationParams) -> Void)?
     var showError: ((String) -> Void)?
@@ -19,36 +19,34 @@ class VerifyIdentityView : UIView, Subscriber {
     private let email = UITextField()
     private let country = ShadowButton(title: "Select Country", type: .secondary)
     private let verify = ShadowButton(title: "Verify", type: .primary)
-    private let store: Store
 
-    init(store: Store) {
-        self.store = store
-        super.init(frame: .zero)
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
 
     private func setupViews() {
+        selectionStyle = .none
         addSubviews()
         addConstraints()
-        setInitialData()
     }
 
     private func addSubviews() {
-        addSubview(title)
-        addSubview(subheader)
-        addSubview(firstName)
-        addSubview(lastName)
-        addSubview(email)
-        addSubview(country)
-        addSubview(verify)
+        contentView.addSubview(title)
+        contentView.addSubview(subheader)
+        contentView.addSubview(firstName)
+        contentView.addSubview(lastName)
+        contentView.addSubview(email)
+        contentView.addSubview(country)
+        contentView.addSubview(verify)
     }
 
     private func addConstraints() {
         title.constrainTopCorners(sidePadding: C.padding[2], topPadding: C.padding[2])
         subheader.constrain([
-            subheader.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
+            subheader.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[2]),
             subheader.topAnchor.constraint(equalTo: title.bottomAnchor, constant: C.padding[1]),
-            subheader.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]) ])
+            subheader.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -C.padding[2]) ])
         firstName.constrain([
             firstName.leadingAnchor.constraint(equalTo: subheader.leadingAnchor),
             firstName.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: C.padding[1]),
@@ -67,11 +65,11 @@ class VerifyIdentityView : UIView, Subscriber {
             country.trailingAnchor.constraint(equalTo: subheader.trailingAnchor)])
         verify.constrain([
             verify.topAnchor.constraint(equalTo: country.bottomAnchor, constant: C.padding[2]),
-            verify.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
-            verify.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[2])])
+            verify.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -C.padding[2]),
+            verify.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -C.padding[2])])
     }
 
-    private func setInitialData() {
+    func setData(store: Store) {
         title.textAlignment = .center
         title.text = "Verify Identity"
         subheader.text = "Identity verification is required for crowdsale participation"
@@ -87,17 +85,17 @@ class VerifyIdentityView : UIView, Subscriber {
             guard let firstName = myself.firstName.text else { myself.showError?("No First Name"); return }
             guard let lastName = myself.lastName.text else { myself.showError?("No Last Name"); return }
             guard let email = myself.email.text else { myself.showError?("No Email"); return }
-            guard let country = myself.store.state.walletState.crowdsale?.verificationCountryCode else {
+            guard let country = store.state.walletState.crowdsale?.verificationCountryCode else {
                 myself.showError?("Select a country"); return
             }
-            guard let contractAddress = myself.store.state.walletState.crowdsale?.contract.address else { return }
-            guard let ethAddress = myself.store.state.walletState.receiveAddress else { return }
+            guard let contractAddress = store.state.walletState.crowdsale?.contract.address else { return }
+            guard let ethAddress = store.state.walletState.receiveAddress else { return }
             let params = RegistrationParams(first_name: firstName, last_name: lastName, email: email, redirect_uri: "http://google.ca", country: country, contract_address: contractAddress, ethereum_address: ethAddress)
             myself.didTapVerify?(params)
         }
 
         country.tap = strongify(self) { myself in
-            myself.store.perform(action: RootModalActions.Present(modal: .countryPicker))
+            store.perform(action: RootModalActions.Present(modal: .countryPicker))
         }
         store.subscribe(self, selector: { $0.walletState.crowdsale?.verificationCountryCode != $1.walletState.crowdsale?.verificationCountryCode }, callback: { state in
             if let code = state.walletState.crowdsale?.verificationCountryCode {

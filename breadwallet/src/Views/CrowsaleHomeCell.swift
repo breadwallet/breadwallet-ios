@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CrowsaleCell : UITableViewCell {
+class CrowsaleHomeCell : UITableViewCell {
 
     private let currencyName = UILabel(font: .customBody(size: 16.0), color: .white)
     private let balance = UILabel(font: .customBody(size: 16.0), color: .white)
