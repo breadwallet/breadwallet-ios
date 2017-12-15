@@ -237,7 +237,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     @objc private func sendTapped() {
-        guard store.state.walletState.crowdsale == nil else { confirmCrowdsale(); return }
+        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded {
+            confirmCrowdsale(); return
+        }
         guard store.state.currency != .ethereum else { confirmEth(); return }
         guard store.state.currency != .token else { confirmToken(); return }
         if addressCell.textField.isFirstResponder {
@@ -297,7 +299,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         guard let crowdsale = store.state.walletState.crowdsale else { return }
         guard let minContribution = crowdsale.minContribution, let maxContribution = crowdsale.maxContribution else { return }
         guard let brdBalance = store.state.walletState.bigBalance else { return }
-        let maxBuy = maxContribution - brdBalance
+        guard let rate = store.state.walletState.crowdsale?.rate else { return }
+        let maxBuy = self.maxBuy(maxContribution: maxContribution, brdBalance: brdBalance, rate: rate)
         guard amountView.ethOutput >= minContribution else {
             let min = DisplayAmount.ethString(value: minContribution, store: store)
             return showErrorMessage("Please enter an amount greater than the minimum contribution amount of \(min)")
@@ -317,6 +320,16 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         confirm.modalPresentationStyle = .overFullScreen
         confirm.modalPresentationCapturesStatusBarAppearance = true
         present(confirm, animated: true, completion: nil)
+    }
+
+    private func maxBuy(maxContribution: GethBigInt, brdBalance: GethBigInt, rate: GethBigInt) -> GethBigInt {
+        guard let maxContribution = Decimal(string: maxContribution.stringValue) else { return GethBigInt(0) }
+        guard let brdBalance = Decimal(string: brdBalance.stringValue) else { return GethBigInt(0) }
+        guard let rate = Decimal(string: rate.stringValue) else { return GethBigInt(0) }
+        let maxBuy = maxContribution - (brdBalance/rate)
+        let result = GethBigInt(0)!
+        result.setString(maxBuy.description, base: 10)
+        return result
     }
 
     private func confirmEth() {

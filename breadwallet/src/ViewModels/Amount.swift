@@ -251,10 +251,11 @@ struct DisplayAmount {
     }
 
     static func tokenString(value: GethBigInt, store: Store) -> String {
+        guard let token = store.state.walletState.token else { return "" }
         let placeholderAmount = Amount(amount: 0, rate: store.state.currentRate!, maxDigits: 0, store: store)
         var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
         var amount: Decimal = 0.0
-        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
+        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-token.decimals), .up)
         let eth = NSDecimalNumber(decimal: amount)
         return placeholderAmount.tokenFormat.string(from: eth) ?? ""
     }

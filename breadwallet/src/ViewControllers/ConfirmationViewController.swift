@@ -327,7 +327,10 @@ class EthConfirmationViewController : UIViewController, ContentBoxPresenter {
 
         let displayAmount: String
         let displayFee: String
-        if store.state.currency == .ethereum || store.state.walletState.crowdsale != nil {
+        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded {
+            displayAmount = DisplayAmount.ethString(value: amount, store: store)
+            displayFee = DisplayAmount.ethString(value: feeAmount, store: store)
+        } else if store.state.currency == .ethereum {
             displayAmount = DisplayAmount.ethString(value: amount, store: store)
             displayFee = DisplayAmount.ethString(value: feeAmount, store: store)
         } else {

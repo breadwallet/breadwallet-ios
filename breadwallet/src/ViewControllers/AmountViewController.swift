@@ -265,7 +265,15 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func handleEthOutput(output: String) {
-        let symbol = store.state.currency == .ethereum || store.state.walletState.crowdsale != nil ? S.Symbols.eth : store.state.walletState.token!.code
+
+        let symbol: String
+        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded {
+            symbol = S.Symbols.eth
+        } else if store.state.currency == .ethereum {
+            symbol = S.Symbols.eth
+        } else {
+            symbol = store.state.walletState.token!.code
+        }
         amountLabel.text = output.utf8.count > 0 ? "\(symbol)" + output : ""
         placeholder.isHidden = output.utf8.count > 0 ? true : false
     }
