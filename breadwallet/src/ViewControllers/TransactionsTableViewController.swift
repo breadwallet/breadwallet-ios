@@ -11,11 +11,6 @@ import SafariServices
 
 private let promptDelay: TimeInterval = 0.6
 
-enum CrowdsaleViewType {
-    case verify
-    case status
-}
-
 class TransactionsTableViewController : UITableViewController, Subscriber, Trackable {
 
     //MARK: - Public
