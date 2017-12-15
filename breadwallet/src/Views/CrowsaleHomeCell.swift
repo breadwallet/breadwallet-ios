@@ -39,7 +39,9 @@ class CrowsaleHomeCell : UITableViewCell {
     }
 
     @objc private func setStatusLabel() {
-        if let startTime = store?.state.walletState.crowdsale?.startTime, let endTime = store?.state.walletState.crowdsale?.endTime {
+        if let isSoldOut = store?.state.walletState.crowdsale?.isSoldOut, isSoldOut == true {
+            self.status.text = "Sold Out!"
+        } else if let startTime = store?.state.walletState.crowdsale?.startTime, let endTime = store?.state.walletState.crowdsale?.endTime {
             self.startTime = startTime
             self.endTime = endTime
             let now = Date()

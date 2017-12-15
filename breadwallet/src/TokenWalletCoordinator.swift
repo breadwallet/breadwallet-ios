@@ -14,6 +14,7 @@ class TokenWalletCoordinator {
     private let btcStore: Store
     private let gethManager: GethManager
     private var timer: Timer? = nil
+    private var longTimer: Timer? = nil
     private let apiClient: BRAPIClient
 
     init(store: Store, gethManager: GethManager, apiClient: BRAPIClient, btcStore: Store) {
@@ -23,7 +24,18 @@ class TokenWalletCoordinator {
         self.btcStore = btcStore
         store.perform(action: WalletChange.set(store.state.walletState.mutate(receiveAddress: gethManager.address.getHex())))
         self.refresh()
+        self.longRefresh()
         self.timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(refresh), userInfo: nil, repeats: true)
+        self.timer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(refresh), userInfo: nil, repeats: true)
+    }
+
+    @objc private func longRefresh() {
+        if let crowdsale = store.state.walletState.crowdsale {
+            if let weiRaised = gethManager.getWeiRaised(forContractAddress: crowdsale.contract.address), let cap = gethManager.getCap(forContractAddress: crowdsale.contract.address) {
+                let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: crowdsale.minContribution, maxContribution: crowdsale.maxContribution, contract: crowdsale.contract, rate: crowdsale.rate, verificationCountryCode: crowdsale.verificationCountryCode, weiRaised: weiRaised, cap: cap)
+                store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
+            }
+        }
     }
 
     @objc private func refresh() {
@@ -64,21 +76,21 @@ class TokenWalletCoordinator {
         if let crowdsale = store.state.walletState.crowdsale {
             if crowdsale.startTime == nil || crowdsale.endTime == nil {
                 if let start = gethManager.getStartTime(forContractAddress: crowdsale.contract.address), let end = gethManager.getEndTime(forContractAddress: crowdsale.contract.address) {
-                    let newCrowdsale = Crowdsale(startTime: start, endTime: end, minContribution: crowdsale.minContribution, maxContribution: crowdsale.maxContribution, contract: crowdsale.contract, rate: crowdsale.rate, verificationCountryCode: crowdsale.verificationCountryCode)
+                    let newCrowdsale = Crowdsale(startTime: start, endTime: end, minContribution: crowdsale.minContribution, maxContribution: crowdsale.maxContribution, contract: crowdsale.contract, rate: crowdsale.rate, verificationCountryCode: crowdsale.verificationCountryCode, weiRaised: crowdsale.weiRaised, cap: crowdsale.cap)
                     store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
                 }
             }
 
             if crowdsale.minContribution == nil || crowdsale.maxContribution == nil {
                 if let minContribution = gethManager.getMinContribution(forContractAddress: crowdsale.contract.address), let maxContribution = gethManager.getMaxContribution(forContractAddress: crowdsale.contract.address) {
-                    let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: minContribution, maxContribution: maxContribution, contract: crowdsale.contract, rate: crowdsale.rate, verificationCountryCode: crowdsale.verificationCountryCode)
+                    let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: minContribution, maxContribution: maxContribution, contract: crowdsale.contract, rate: crowdsale.rate, verificationCountryCode: crowdsale.verificationCountryCode, weiRaised: crowdsale.weiRaised, cap: crowdsale.cap)
                     store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
                 }
             }
 
             if crowdsale.rate == nil {
                 if let rate = gethManager.getRate(forContractAddress: crowdsale.contract.address) {
-                    let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: crowdsale.minContribution, maxContribution: crowdsale.maxContribution, contract: crowdsale.contract, rate: rate, verificationCountryCode: crowdsale.verificationCountryCode)
+                    let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: crowdsale.minContribution, maxContribution: crowdsale.maxContribution, contract: crowdsale.contract, rate: rate, verificationCountryCode: crowdsale.verificationCountryCode, weiRaised: crowdsale.weiRaised, cap: crowdsale.cap)
                     store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
                 }
             } else if store.state.rates.count == 0 {
