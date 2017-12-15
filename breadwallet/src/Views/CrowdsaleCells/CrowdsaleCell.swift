@@ -83,6 +83,13 @@ class CrowdsaleCell : UITableViewCell {
 
     @objc private func setStatusLabel() {
         guard let store = store else { return }
+        if let isSoldOut = store.state.walletState.crowdsale?.isSoldOut, isSoldOut == true {
+            header.text = "Sold Out!"
+            footer.text = ""
+            buttonHeight?.constant = 0.0
+            return
+        }
+
         guard let startTime = store.state.walletState.crowdsale?.startTime, let endTime = store.state.walletState.crowdsale?.endTime else { return }
         self.startTime = startTime
         self.endTime = endTime

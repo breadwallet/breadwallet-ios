@@ -46,22 +46,22 @@ class ApplicationController : Subscriber, Trackable {
                 store.perform(action: ExchangeRates.setRate(currentRate))
             }
             if $0.code == "TBRD" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil, contract: Contract(address: "0x5c7bd19cf9ffa676f0c9352d23f4b8fdf05b845b", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil)
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil, contract: Contract(address: "0x5c7bd19cf9ffa676f0c9352d23f4b8fdf05b845b", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil, weiRaised: nil, cap: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else if $0.code == "BRD" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0xce2c1941dc92f12d6c06ce6645c0466090540dcd", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil)
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0xce2c1941dc92f12d6c06ce6645c0466090540dcd", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil, weiRaised: nil, cap: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             }  else if $0.code == "BRd" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x3cc1878208d286bf53994686bc763c6a0b7d9844", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil)
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x3cc1878208d286bf53994686bc763c6a0b7d9844", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil, weiRaised: nil, cap: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else if $0.code == "brd" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x5df1ff920917e76eaf954cf397a7e2e3856918cd", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil)
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x5df1ff920917e76eaf954cf397a7e2e3856918cd", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil, weiRaised: nil, cap: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else if $0.code == "1brd" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x08f93d3f3a187731d92f36a8c8bfa1b961efa835", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil)
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0x08f93d3f3a187731d92f36a8c8bfa1b961efa835", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil, weiRaised: nil, cap: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else if $0.code == "2brd" {
-                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0xae186e731d1176c5f8fda532c9ab0de146a6e8b9", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil)
+                let crowdSale = Crowdsale(startTime: nil, endTime: nil, minContribution: nil, maxContribution: nil,contract: Contract(address: "0xae186e731d1176c5f8fda532c9ab0de146a6e8b9", abi: crowdSaleABI), rate: nil, verificationCountryCode: nil, weiRaised: nil, cap: nil)
                 store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: crowdSale)))
             } else {
                 store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 1.0, reciprocalCode: $0.code)))

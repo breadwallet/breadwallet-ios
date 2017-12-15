@@ -49,6 +49,12 @@ struct Crowdsale {
     let contract: Contract
     let rate: GethBigInt?
     let verificationCountryCode: String?
+    let weiRaised: GethBigInt?
+    let cap: GethBigInt?
+    var isSoldOut: Bool {
+        guard let weiRaised = weiRaised, let cap = cap else { return false }
+        return weiRaised >= cap
+    }
     var hasEnded: Bool {
         guard let endTime = endTime else { return false }
         return Date() > endTime

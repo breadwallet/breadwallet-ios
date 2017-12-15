@@ -44,7 +44,7 @@ class CountryPickerViewController : UIViewController, ModalPresentable {
         super.viewWillDisappear(animated)
         let code = countries[picker.selectedRow(inComponent: 0)].alpha3Code
         if let crowdsale = store.state.walletState.crowdsale {
-            let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: crowdsale.minContribution, maxContribution: crowdsale.maxContribution, contract: crowdsale.contract, rate: crowdsale.rate, verificationCountryCode: code)
+            let newCrowdsale = Crowdsale(startTime: crowdsale.startTime, endTime: crowdsale.endTime, minContribution: crowdsale.minContribution, maxContribution: crowdsale.maxContribution, contract: crowdsale.contract, rate: crowdsale.rate, verificationCountryCode: code, weiRaised: crowdsale.weiRaised, cap: crowdsale.cap)
             store.perform(action: WalletChange.set(store.state.walletState.mutate(crowdSale: newCrowdsale)))
         }
     }

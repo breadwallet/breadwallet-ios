@@ -177,6 +177,14 @@ extension GethManager {
         return callBigInt(method: "rate", contractAddress: forContractAddress)
     }
 
+    func getCap(forContractAddress: String) -> GethBigInt? {
+        return callBigInt(method: "cap", contractAddress: forContractAddress)
+    }
+
+    func getWeiRaised(forContractAddress: String) -> GethBigInt? {
+        return callBigInt(method: "weiRaised", contractAddress: forContractAddress)
+    }
+
     func callBigInt(method: String, contractAddress: String) -> GethBigInt? {
         let address = GethAddress(fromHex: contractAddress)
         var error: NSError? = nil
