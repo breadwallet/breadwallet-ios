@@ -17,6 +17,7 @@ class CrowdsaleView : UIView {
     }
     var shouldRetry: (() -> Void)?
     var shouldResumeIdentityVerification: (() -> Void)?
+    var shouldPresentLegal: (() -> Void)?
     private let header = UILabel.wrapping(font: .customBody(size: 16.0))
     private let button = ShadowButton(title: S.Crowdsale.buyButton, type: .primary)
     private let footer = UILabel.wrapping(font: .customBody(size: 16.0))
@@ -63,7 +64,11 @@ class CrowdsaleView : UIView {
         footer.textAlignment = .center
         button.tap = strongify(self) { myself in
             if myself.kycStatus == .complete {
-                myself.store.perform(action: RootModalActions.Present(modal: .send))
+                if !UserDefaults.hasAgreedToCrowdsaleTerms {
+                    myself.shouldPresentLegal?()
+                } else {
+                    myself.store.perform(action: RootModalActions.Present(modal: .send))
+                }
             } else if myself.kycStatus == .failed {
                 myself.shouldRetry?()
             } else if myself.kycStatus == .incomplete {
