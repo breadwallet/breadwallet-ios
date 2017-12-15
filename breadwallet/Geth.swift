@@ -37,8 +37,8 @@ class GethManager {
         return address.getHex()
     }
     private let gasLimit: Int64 = 21000
-    private let transferGasLimit: Int64 = 300000
-    private let crowdsaleGasLimit: Int64 = 300000
+    private let transferGasLimit: Int64 = 150000
+    private let crowdsaleGasLimit: Int64 = 150000
 
     init(ethPrivKey: String, store: Store) {
         self.store = store
