@@ -594,5 +594,7 @@ enum S {
         static let buyButton = NSLocalizedString("Crowdsale.buyButton", value: "Buy Tokens", comment: "Buy crowdsale tokens button")
         static let resume = NSLocalizedString("Crowdsale.resume", value: "Resume Verification", comment: "Resume Idnetify verification button")
         static let retry = NSLocalizedString("Crowdsale.retry", value: "Retry", comment: "Retry Identity verification button")
+        static let agree = NSLocalizedString("Crowdsale.agree", value: "Agree", comment: "Agree to legal terms button")
+        static let decline = NSLocalizedString("Crowdsale.decline", value: "Decline", comment: "Decline to legal terms button")
     }
 }

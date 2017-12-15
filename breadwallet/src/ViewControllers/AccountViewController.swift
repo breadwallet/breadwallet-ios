@@ -126,15 +126,31 @@ class AccountViewController : UIViewController, Subscriber {
                 })
             }
         }
+
+        transactionsTableView.shouldPresentLegal = { [weak self] in
+            self?.presentLegalWebview()
+        }
     }
 
     private func presentWebView(forUrl: URL) {
-        let webView = WebViewController(url: forUrl)
+        let webView = WebViewController(url: forUrl, style: .regular)
         webView.didComplete = { [weak self] in
             self?.updateKycStatus()
             if self?.kycStatusTimer == nil {
                 self?.kycStatusTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self!, selector: #selector(self!.updateKycStatus), userInfo: nil, repeats: true)
             }
+        }
+        let nc = UINavigationController(rootViewController: webView)
+        self.present(nc, animated: true, completion: nil)
+    }
+
+    private func presentLegalWebview() {
+        let webView = WebViewController(url: URL(string: C.crowdsaleLegalUrl)!, style: .legal)
+        webView.didComplete = { [weak self] in
+            webView.dismiss(animated: true, completion: {
+                UserDefaults.hasAgreedToCrowdsaleTerms = true
+                self?.store.perform(action: RootModalActions.Present(modal: .send))
+            })
         }
         let nc = UINavigationController(rootViewController: webView)
         self.present(nc, animated: true, completion: nil)

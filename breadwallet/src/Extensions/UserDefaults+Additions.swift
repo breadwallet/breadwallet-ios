@@ -24,6 +24,7 @@ private let customNodePortKey = "customNodePortKey"
 private let hasPromptedShareDataKey = "hasPromptedShareDataKey"
 private let hasShownWelcomeKey = "hasShownWelcomeKey"
 private let hasCompletedKYC = "hasCompletedKYCKey"
+private let hasAgreedToCrowdsaleTermsKey = "hasAgreedToCrowdsaleTermsKey"
 
 extension UserDefaults {
 
@@ -181,5 +182,10 @@ extension UserDefaults {
 
     static func setHasCompletedKYC(_ hasCompleted: Bool, contractAddress: String) {
         defaults.set(hasCompleted, forKey: "\(hasCompletedKYC)\(contractAddress)")
+    }
+
+    static var hasAgreedToCrowdsaleTerms: Bool {
+        get { return defaults.bool(forKey: hasAgreedToCrowdsaleTermsKey) }
+        set { defaults.set(newValue, forKey: hasAgreedToCrowdsaleTermsKey) }
     }
 }

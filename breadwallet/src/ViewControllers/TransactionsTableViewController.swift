@@ -63,7 +63,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     var walletManager: WalletManager?
     var didCollectRegistrationParams: ((RegistrationParams) -> Void)?
     var shouldResumeIdentityVerification: (() -> Void)?
-
+    var shouldPresentLegal: (() -> Void)?
     var kycStatus: KYCStatus = .none {
         didSet {
             if oldValue != kycStatus {
@@ -271,6 +271,9 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                         }
                         newCrowdsaleView.shouldResumeIdentityVerification = { [weak self] in
                             self?.shouldResumeIdentityVerification?()
+                        }
+                        newCrowdsaleView.shouldPresentLegal = { [weak self] in
+                            self?.shouldPresentLegal?()
                         }
                         cell.contentView.addSubview(newCrowdsaleView)
                         newCrowdsaleView.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[1], C.padding[1], C.padding[1], C.padding[1]))
