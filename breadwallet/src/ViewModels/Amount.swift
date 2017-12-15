@@ -73,7 +73,7 @@ struct Amount {
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         format.currencyCode = "store.state.walletState.token!.code"
         format.currencySymbol = "\(store.state.walletState.token!.code)"
-        format.maximumFractionDigits = 8
+        format.maximumFractionDigits = 4
         format.minimumFractionDigits = 0
         return format
     }

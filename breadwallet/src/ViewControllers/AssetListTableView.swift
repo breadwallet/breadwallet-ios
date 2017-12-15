@@ -119,12 +119,7 @@ class AssetListTableView : UITableViewController, Subscriber {
             if store.state.currency == .ethereum {
                 return DisplayAmount.ethString(value: bigBalance, store: store) + " " + "(\(DisplayAmount.localEthString(value: bigBalance, store: store)))"
             } else {
-                guard let token = store.state.walletState.token else { return "" }
-                var decimal = Decimal(string: bigBalance.getString(10)) ?? Decimal(0)
-                var amount: Decimal = 0.0
-                NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-1*token.decimals), .up)
-                let value = NSDecimalNumber(decimal: amount)
-                return String(describing: value) + " \(token.code)"
+                return DisplayAmount.tokenString(value: bigBalance, store: store)
             }
         }
     }
