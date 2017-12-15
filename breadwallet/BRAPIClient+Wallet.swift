@@ -12,6 +12,17 @@ import Geth
 private let fallbackRatesURL = "https://bitpay.com/api/rates"
 
 extension BRAPIClient {
+
+    func me() {
+        let req = URLRequest(url: url("/me"))
+        let task = dataTaskWithRequest(req, authenticated: true, handler: { data, response, err in
+            if let data = data {
+                print("me: \(String(data: data, encoding: .utf8))")
+            }
+        })
+        task.resume()
+    }
+
     func feePerKb(_ handler: @escaping (_ fees: Fees, _ error: String?) -> Void) {
         let req = URLRequest(url: url("/fee-per-kb"))
         let task = self.dataTaskWithRequest(req) { (data, response, err) -> Void in
