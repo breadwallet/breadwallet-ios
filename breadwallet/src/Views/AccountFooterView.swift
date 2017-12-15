@@ -14,6 +14,8 @@ class AccountFooterView: UIView {
     var receiveCallback: (() -> Void)?
     var menuCallback: (() -> Void)?
 
+    let menuButton = UIButton.vertical(title: S.Button.menu.uppercased(), image: #imageLiteral(resourceName: "MenuButtonIcon"))
+
     init() {
         super.init(frame: .zero)
     }
@@ -40,17 +42,16 @@ class AccountFooterView: UIView {
         receive.tintColor = .grayTextTint
         receive.addTarget(self, action: #selector(AccountFooterView.receive), for: .touchUpInside)
 
-        let menu = UIButton.vertical(title: S.Button.menu.uppercased(), image: #imageLiteral(resourceName: "MenuButtonIcon"))
-        menu.tintColor = .grayTextTint
-        menu.addTarget(self, action: #selector(AccountFooterView.menu), for: .touchUpInside)
+        menuButton.tintColor = .grayTextTint
+        menuButton.addTarget(self, action: #selector(AccountFooterView.menu), for: .touchUpInside)
 
         if E.isScreenshots {
-            menu.accessibilityLabel = "MENU"
+            menuButton.accessibilityLabel = "MENU"
         }
 
         addSubview(send)
         addSubview(receive)
-        addSubview(menu)
+        addSubview(menuButton)
 
         send.constrain([
                 send.constraint(.leading, toView: self, constant: 0.0),
@@ -62,10 +63,10 @@ class AccountFooterView: UIView {
                 receive.constraint(.top, toView: self, constant: C.padding[2]),
                 NSLayoutConstraint(item: receive, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/3.0, constant: 1.0)
             ])
-        menu.constrain([
-                NSLayoutConstraint(item: menu, attribute: .leading, relatedBy: .equal, toItem: receive, attribute: .trailing, multiplier: 1.0, constant: 1.0),
-                menu.constraint(.top, toView: self, constant: C.padding[2]),
-                NSLayoutConstraint(item: menu, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/3.0, constant: 1.0)
+        menuButton.constrain([
+                NSLayoutConstraint(item: menuButton, attribute: .leading, relatedBy: .equal, toItem: receive, attribute: .trailing, multiplier: 1.0, constant: 1.0),
+                menuButton.constraint(.top, toView: self, constant: C.padding[2]),
+                NSLayoutConstraint(item: menuButton, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/3.0, constant: 1.0)
             ])
     }
 

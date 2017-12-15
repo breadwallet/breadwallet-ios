@@ -105,6 +105,10 @@ class AccountViewController : UIViewController, Subscriber {
             }
         }
 
+        if store.isEthLike {
+            footerView.menuButton.isHidden = true
+        }
+
         updateKycStatus()
 
         transactionsTableView.didCollectRegistrationParams = { [weak self] params in
