@@ -15,7 +15,7 @@ private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
 let tokens: [Token] = {
     //return []
-    return E.isTestnet ? [brd5, brd4, brd3, brd2, tst] : [brdMain, brdMainTest, mainTst]
+    return E.isTestnet ? [brd5, brd4, brd3, brd2, tst] : [brdMain, mainTst]
 }()
 
 class ApplicationController : Subscriber, Trackable {

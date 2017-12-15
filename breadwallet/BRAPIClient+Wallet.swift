@@ -17,7 +17,7 @@ extension BRAPIClient {
         let req = URLRequest(url: url("/me"))
         let task = dataTaskWithRequest(req, authenticated: true, handler: { data, response, err in
             if let data = data {
-                print("me: \(String(data: data, encoding: .utf8))")
+                print("me: \(String(describing: String(data: data, encoding: .utf8)))")
             }
         })
         task.resume()
