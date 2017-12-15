@@ -42,5 +42,5 @@ struct C {
     static var standardPort: Int {
         return E.isTestnet ? 18333 : 8333
     }
-    static let crowdsaleLegalUrl = "http://token.breadapp.com/en/crowdsale/legal"
+    static let crowdsaleLegalUrl = "http://token.breadapp.com/en/crowdsale/legal?swag=420&headshot=360"
 }
