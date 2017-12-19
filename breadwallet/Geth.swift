@@ -36,7 +36,7 @@ class GethManager {
     var receiveAddress: String {
         return address.getHex()
     }
-    private let gasLimit: Int64 = 21000
+    private let gasLimit: Int64 = 36000
     private let transferGasLimit: Int64 = 150000
     private let crowdsaleGasLimit: Int64 = 150000
 
