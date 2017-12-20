@@ -396,6 +396,8 @@
 		CED82D4E1E575A5500507A9B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED82D4D1E575A5500507A9B /* main.swift */; };
 		CEDA9EDC1FDE0C56005E8D1B /* countries.plist in Resources */ = {isa = PBXBuildFile; fileRef = CEDA9EDB1FDE0C56005E8D1B /* countries.plist */; };
 		CEDA9EDE1FDE1316005E8D1B /* CountryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDA9EDD1FDE1316005E8D1B /* CountryPickerViewController.swift */; };
+		CEDB09311FEAA1CE001AF56A /* TxDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB09301FEAA1CE001AF56A /* TxDetailCollectionViewCell.swift */; };
+		CEDB09331FEAA21C001AF56A /* TxDetailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB09321FEAA21C001AF56A /* TxDetailInfo.swift */; };
 		CEDD8F101E575DD4007A4123 /* WalletAuthenticationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */; };
 		CEE0EF521EBD14B60018DB36 /* PinTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE0EF511EBD14B60018DB36 /* PinTransitioningDelegate.swift */; };
 		CEE1F5631DF13E5A00D733AD /* ModalHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */; };
@@ -1611,6 +1613,8 @@
 		CED82D4D1E575A5500507A9B /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = src/main.swift; sourceTree = "<group>"; };
 		CEDA9EDB1FDE0C56005E8D1B /* countries.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = countries.plist; sourceTree = "<group>"; };
 		CEDA9EDD1FDE1316005E8D1B /* CountryPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CountryPickerViewController.swift; path = src/ViewControllers/CountryPickerViewController.swift; sourceTree = "<group>"; };
+		CEDB09301FEAA1CE001AF56A /* TxDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailCollectionViewCell.swift; path = src/Views/TransactionCells/TxDetailCollectionViewCell.swift; sourceTree = "<group>"; };
+		CEDB09321FEAA21C001AF56A /* TxDetailInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailInfo.swift; path = src/Models/TxDetailInfo.swift; sourceTree = "<group>"; };
 		CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletAuthenticationTests.swift; sourceTree = "<group>"; };
 		CEE0EF511EBD14B60018DB36 /* PinTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinTransitioningDelegate.swift; path = src/ViewControllers/ViewControllerTransitions/PinTransitioningDelegate.swift; sourceTree = "<group>"; };
 		CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalHeaderView.swift; path = src/Views/ModalHeaderView.swift; sourceTree = "<group>"; };
@@ -3034,6 +3038,7 @@
 				CE8CD8E21E31978100785E02 /* LoginBackgroundTriangle.swift */,
 				CECB9DB51E4985CE0081A172 /* LoginBackgroundView.swift */,
 				CE14E40A1E4D881500AEA83A /* TransactionDetailCollectionViewCell.swift */,
+				CEDB09301FEAA1CE001AF56A /* TxDetailCollectionViewCell.swift */,
 				CE6B6B491E54C0CA00B31405 /* SecurityCenterCell.swift */,
 				CE6DCC261E6108D50044257B /* EnterPhraseCell.swift */,
 				CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */,
@@ -3128,6 +3133,7 @@
 				CEF61B131ED0D10000C7EA6A /* Types.swift */,
 				CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */,
 				CE4D49F51FA04A3A00DBFFAF /* EthTx.swift */,
+				CEDB09321FEAA21C001AF56A /* TxDetailInfo.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -4004,6 +4010,7 @@
 				CEE659E91F664C73001FF29D /* WelcomeViewController.swift in Sources */,
 				2228734F1E916FC30044BA15 /* BRAPIClient+Wallet.swift in Sources */,
 				CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */,
+				CEDB09311FEAA1CE001AF56A /* TxDetailCollectionViewCell.swift in Sources */,
 				CE1D84B61EAEB2F4002A5D7B /* UIBarButtonItem+Additions.swift in Sources */,
 				CE5E6C961EB8CCF500A476DB /* SupportCenterContainer.swift in Sources */,
 				CE4B6C1A1E219CA600CF935B /* WalletCoordinator.swift in Sources */,
@@ -4096,6 +4103,7 @@
 				CE3D4C591EF743EF0016B1C8 /* Functions.swift in Sources */,
 				CEE20C341EA5B4550086F724 /* ArticleIds.swift in Sources */,
 				CEE65DF01E39056F0002994D /* Rate.swift in Sources */,
+				CEDB09331FEAA21C001AF56A /* TxDetailInfo.swift in Sources */,
 				CEE20C361EA5B4620086F724 /* Constants.swift in Sources */,
 				CE3754AF1DDE6E2E0045B0CB /* RoundedContainer.swift in Sources */,
 				CEC6AA461DEFCE9200EE5AFD /* MenuViewController.swift in Sources */,

@@ -74,7 +74,6 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     private let amountDetails = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
     private let addressHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let fullAddress = UIButton(type: .system)
-    private let headerHeight: CGFloat = 48.0
     private let scrollViewContent = UIView()
     private let scrollView = UIScrollView()
     private let moreButton = UIButton(type: .system)
@@ -113,10 +112,10 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     }
 
     private func addConstraints() {
-        header.constrainTopCorners(height: headerHeight)
-        scrollViewHeight = scrollView.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -headerHeight)
+        header.constrainTopCorners(height: C.Sizes.headerHeight)
+        scrollViewHeight = scrollView.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -C.Sizes.headerHeight)
         scrollView.constrain([
-            scrollView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: headerHeight),
+            scrollView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: C.Sizes.headerHeight),
             scrollView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             scrollViewHeight ])
