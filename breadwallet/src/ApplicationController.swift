@@ -354,12 +354,22 @@ class ApplicationController : Subscriber, Trackable {
             transactionDetails.modalPresentationCapturesStatusBarAppearance = true
             self.window.rootViewController?.present(transactionDetails, animated: true, completion: nil)
         }
+
+        let didSelectEthTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
+            guard let kvStore = self.walletManager?.apiClient?.kv else { return }
+            let transactionDetails = TransactionDetailsViewController(store: self.ethStore, transactions: transactions, selectedIndex: selectedIndex, kvStore: kvStore)
+            transactionDetails.modalPresentationStyle = .overFullScreen
+            transactionDetails.transitioningDelegate = self.transitionDelegate
+            transactionDetails.modalPresentationCapturesStatusBarAppearance = true
+            self.window.rootViewController?.present(transactionDetails, animated: true, completion: nil)
+        }
+
         accountViewController = AccountViewController(store: store, didSelectTransaction: didSelectTransaction)
         accountViewController?.sendCallback = { self.store.perform(action: RootModalActions.Present(modal: .send)) }
         accountViewController?.receiveCallback = { self.store.perform(action: RootModalActions.Present(modal: .receive)) }
         accountViewController?.menuCallback = { self.store.perform(action: RootModalActions.Present(modal: .menu)) }
 
-        ethAccountViewController = AccountViewController(store: ethStore, didSelectTransaction: {_,_ in } )
+        ethAccountViewController = AccountViewController(store: ethStore, didSelectTransaction: didSelectEthTransaction )
         ethAccountViewController?.sendCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .send)) }
         ethAccountViewController?.receiveCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .receive)) }
         ethAccountViewController?.menuCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .menu)) }

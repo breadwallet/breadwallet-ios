@@ -265,20 +265,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if store.state.walletState.crowdsale != nil && indexPath.section == 0 { return }
-        if store.isEthLike {
-            let tx = transactions[indexPath.row]
-            if tx.hash.utf8.count > 0 {
-                let string = "https://\(E.isTestnet ? "ropsten." : "")etherscan.io/tx/\(tx.hash)"
-                if let url = URL(string: string) {
-                    let webview = SFSafariViewController(url: url)
-                    present(webview, animated: true, completion: nil)
-                }
-            } else {
-                store.trigger(name: .lightWeightAlert("txHash doesn't exist yet"))
-            }
-            return
-        }
-
         if isSyncingViewVisible && indexPath.section == 0 { return }
         if let currentPrompt = currentPrompt, indexPath.section == 0 {
             if let trigger = currentPrompt.type.trigger {

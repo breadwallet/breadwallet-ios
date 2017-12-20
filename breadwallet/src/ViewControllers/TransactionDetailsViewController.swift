@@ -47,7 +47,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
     }
 
     override func viewDidLoad() {
-        collectionView?.register(TransactionDetailCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        collectionView?.register(TxDetailCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView?.delegate = self
         collectionView?.dataSource = self
         collectionView?.backgroundColor = .clear
@@ -131,36 +131,51 @@ extension TransactionDetailsViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        guard let transactionDetailCell = item as? TransactionDetailCollectionViewCell else { return item }
-        guard let rate = rate else { return item }
-        transactionDetailCell.set(transaction: transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, rates: store.state.rates, maxDigits: store.state.maxDigits)
+        guard let transactionDetailCell = item as? TxDetailCollectionViewCell else { return item }
+        let tx = transactions[indexPath.row]
+        let info = TxDetailInfo(tx: tx, state: store.state)
+        transactionDetailCell.set(info: info)
         transactionDetailCell.closeCallback = { [weak self] in
             if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
                 delegate.reset()
             }
             self?.dismiss(animated: true, completion: nil)
         }
-        transactionDetailCell.kvStore = kvStore
-        transactionDetailCell.store = store
-
-        if transactionDetailCell.didBeginEditing == nil {
-            transactionDetailCell.didBeginEditing = { [weak self] in
-                self?.secretScrollView.isScrollEnabled = false
-                self?.collectionView?.isScrollEnabled = false
-            }
-        }
-
-        if transactionDetailCell.didEndEditing == nil {
-            transactionDetailCell.didEndEditing = { [weak self] in
-                self?.secretScrollView.isScrollEnabled = true
-                self?.collectionView?.isScrollEnabled = true
-            }
-        }
-
-        if let modalTransitioningDelegate = transitioningDelegate as? ModalTransitionDelegate {
-            transactionDetailCell.modalTransitioningDelegate = modalTransitioningDelegate
-        }
-
         return transactionDetailCell
     }
+
+//    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
+//        guard let transactionDetailCell = item as? TxDetailCollectionViewCell else { return item }
+//        guard let rate = rate else { return item }
+//        transactionDetailCell.set(transaction: transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, rates: store.state.rates, maxDigits: store.state.maxDigits)
+//        transactionDetailCell.closeCallback = { [weak self] in
+//            if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
+//                delegate.reset()
+//            }
+//            self?.dismiss(animated: true, completion: nil)
+//        }
+//        transactionDetailCell.kvStore = kvStore
+//        transactionDetailCell.store = store
+//
+//        if transactionDetailCell.didBeginEditing == nil {
+//            transactionDetailCell.didBeginEditing = { [weak self] in
+//                self?.secretScrollView.isScrollEnabled = false
+//                self?.collectionView?.isScrollEnabled = false
+//            }
+//        }
+//
+//        if transactionDetailCell.didEndEditing == nil {
+//            transactionDetailCell.didEndEditing = { [weak self] in
+//                self?.secretScrollView.isScrollEnabled = true
+//                self?.collectionView?.isScrollEnabled = true
+//            }
+//        }
+//
+//        if let modalTransitioningDelegate = transitioningDelegate as? ModalTransitionDelegate {
+//            transactionDetailCell.modalTransitioningDelegate = modalTransitioningDelegate
+//        }
+//
+//        return transactionDetailCell
+//    }
 }
