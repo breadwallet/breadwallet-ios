@@ -174,6 +174,7 @@ enum S {
         static let ethFrom = NSLocalizedString("TransactionDetails.ethFrom", value: "from %1$@", comment: "[received ] from <address>")
         
         static let timestampHeader = NSLocalizedString("TransactionDetails.timestampHeader", value:"Time", comment: "Timestamp section header")
+        static let addressHeader = NSLocalizedString("TransactionDetails.addressHeader", value:"Address", comment: "Address section header")
         static let startingBalanceHeader = NSLocalizedString("TransactionDetails.startingBalanceHeader", value:"Starting Balance", comment: "Starting balance section header")
         static let endingBalanceHeader = NSLocalizedString("TransactionDetails.endingBalanceHeader", value:"Ending Balance", comment: "Ending balance section header")
         static let exchangeRateHeader = NSLocalizedString("TransactionDetails.exchangeRateHeader", value:"Exchange Rate", comment: "Exchange rate section header")

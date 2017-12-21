@@ -226,7 +226,7 @@
 		7C6ACCB41FEB34470028ABFA /* TxLabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */; };
 		7C6ACCB61FEB345E0028ABFA /* TxStatusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */; };
 		7C6ACCB81FEB34730028ABFA /* TxAddressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB71FEB34730028ABFA /* TxAddressCell.swift */; };
-		7CCD9F6C1FEC1FA300175E64 /* TxDetailHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD9F6B1FEC1FA300175E64 /* TxDetailHeaderCell.swift */; };
+		7CCD9F6C1FEC1FA300175E64 /* TxAmountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */; };
 		7CE940E61FEB8A5F005A2B53 /* TxDetailRowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */; };
 		CE03EC721EF193810038E3A8 /* String+Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC711EF193800038E3A8 /* String+Keys.swift */; };
 		CE03EC741EF256AC0038E3A8 /* SimpleUTXO.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */; };
@@ -1430,7 +1430,7 @@
 		7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxLabelCell.swift; path = src/Views/TransactionCells/TxLabelCell.swift; sourceTree = "<group>"; };
 		7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TxStatusCell.swift; sourceTree = "<group>"; };
 		7C6ACCB71FEB34730028ABFA /* TxAddressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TxAddressCell.swift; sourceTree = "<group>"; };
-		7CCD9F6B1FEC1FA300175E64 /* TxDetailHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TxDetailHeaderCell.swift; sourceTree = "<group>"; };
+		7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TxAmountCell.swift; sourceTree = "<group>"; };
 		7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailRowCell.swift; path = src/Views/TransactionCells/TxDetailRowCell.swift; sourceTree = "<group>"; };
 		CE03EC711EF193800038E3A8 /* String+Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Keys.swift"; path = "src/Extensions/String+Keys.swift"; sourceTree = "<group>"; };
 		CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleUTXO.swift; path = src/Models/SimpleUTXO.swift; sourceTree = "<group>"; };
@@ -3213,15 +3213,15 @@
 		CEBF32F71DDD191300348FC6 /* TransactionCells */ = {
 			isa = PBXGroup;
 			children = (
-				CEBF32F81DDD193500348FC6 /* TransactionTableViewCell.swift */,
 				CE3754AC1DDE6E080045B0CB /* MaskedShadow.swift */,
 				CE3754AE1DDE6E2E0045B0CB /* RoundedContainer.swift */,
+				CEBF32F81DDD193500348FC6 /* TransactionTableViewCell.swift */,
+				7C6ACCB71FEB34730028ABFA /* TxAddressCell.swift */,
+				7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */,
 				CEDB09301FEAA1CE001AF56A /* TxDetailCollectionViewCell.swift */,
+				7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */,
 				7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */,
 				7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */,
-				7C6ACCB71FEB34730028ABFA /* TxAddressCell.swift */,
-				7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */,
-				7CCD9F6B1FEC1FA300175E64 /* TxDetailHeaderCell.swift */,
 			);
 			name = TransactionCells;
 			sourceTree = "<group>";
@@ -4017,7 +4017,7 @@
 				CEF3E82D1DE528BF007C0A9E /* AlertView.swift in Sources */,
 				CEBF32F91DDD193500348FC6 /* TransactionTableViewCell.swift in Sources */,
 				CEF3E82B1DE51612007C0A9E /* GradientCircle.swift in Sources */,
-				7CCD9F6C1FEC1FA300175E64 /* TxDetailHeaderCell.swift in Sources */,
+				7CCD9F6C1FEC1FA300175E64 /* TxAmountCell.swift in Sources */,
 				CE124CFE1E68F57700DFA146 /* Async.swift in Sources */,
 				2218BD771E8F55430091D5E8 /* BRAPIClient+Assets.swift in Sources */,
 				2228734D1E916F7C0044BA15 /* BRAPIClient+Features.swift in Sources */,
