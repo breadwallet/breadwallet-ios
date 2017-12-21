@@ -28,8 +28,9 @@ class TxStatusCell: TxDetailRowCell {
         statusLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: .horizontal)
         statusLabel.constrain([
             titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: statusLabel.leadingAnchor, constant: -C.padding[1]),
-            statusLabel.constraint(.trailing, toView: container, constant: -C.padding[2]),
-            statusLabel.constraint(.top, toView: container, constant: C.padding[2])
+            statusLabel.constraint(.trailing, toView: container),
+            statusLabel.constraint(.top, toView: container),
+            statusLabel.constraint(.bottom, toView: container)
             ])
     }
     

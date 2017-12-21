@@ -49,14 +49,19 @@ class TxDetailCollectionViewCell : UICollectionViewCell {
 
     private func addConstraints() {
         header.constrainTopCorners(height: C.Sizes.headerHeight)
-        let tableHeight = (UIScreen.main.bounds.height - C.padding[1]) - C.Sizes.headerHeight
-        tableView.pinTo(viewAbove: header, height: tableHeight)
+        tableView.constrain([
+            tableView.topAnchor.constraint(equalTo: header.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            ])
     }
 
     private func setInitialData() {
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
         tableView.backgroundColor = .whiteTint
+        tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableViewAutomaticDimension
     }
 

@@ -1,5 +1,5 @@
 //
-//  TxDetailHeaderCell.swift
+//  TxAmountCell.swift
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2017-12-21.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TxDetailHeaderCell: UITableViewCell {
+class TxAmountCell: UITableViewCell {
     
     // MARK: - Accessors
     
@@ -33,7 +33,7 @@ class TxDetailHeaderCell: UITableViewCell {
     // MARK: - Views
     
     internal let container = UIView()
-    internal let fiatAmountLabel = UILabel(font: UIFont.customBold(size: 15.0))
+    internal let fiatAmountLabel = UILabel(font: UIFont.customBold(size: 26.0))
     internal let tokenAmountLabel = UILabel(font: UIFont.customMedium(size: 13.0))
     internal let separator = UIView(color: .secondaryShadow)
     
@@ -52,15 +52,27 @@ class TxDetailHeaderCell: UITableViewCell {
     
     internal func addSubviews() {
         contentView.addSubview(container)
+        contentView.addSubview(separator)
         container.addSubview(fiatAmountLabel)
         container.addSubview(tokenAmountLabel)
-        container.addSubview(separator)
     }
     
     internal func addConstraints() {
-        container.constrain(toSuperviewEdges: UIEdgeInsets.zero)
-        fiatAmountLabel.constrainTopCorners(sidePadding: C.padding[2], topPadding: C.padding[4])
-        tokenAmountLabel.pinTo(viewAbove: fiatAmountLabel, padding: C.padding[1])
+        container.constrain(toSuperviewEdges: UIEdgeInsets(top: C.padding[2],
+                                                           left: C.padding[2],
+                                                           bottom: -C.padding[2],
+                                                           right: -C.padding[2]))
+        fiatAmountLabel.constrain([
+            fiatAmountLabel.constraint(.top, toView: container),
+            fiatAmountLabel.constraint(.leading, toView: container),
+            fiatAmountLabel.constraint(.trailing, toView: container)
+            ])
+        tokenAmountLabel.constrain([
+            tokenAmountLabel.constraint(toBottom: fiatAmountLabel, constant: 0.0),
+            tokenAmountLabel.constraint(.leading, toView: container),
+            tokenAmountLabel.constraint(.trailing, toView: container),
+            tokenAmountLabel.constraint(.bottom, toView: container)
+            ])
         separator.constrainBottomCorners(height: 0.5)
     }
     

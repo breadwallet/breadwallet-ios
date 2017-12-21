@@ -35,12 +35,11 @@ class TxLabelCell: TxDetailRowCell {
     override func addConstraints() {
         super.addConstraints()
         
-        valueLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: .horizontal)
         valueLabel.constrain([
             valueLabel.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: C.padding[1]),
-            //titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: valueLabel.leadingAnchor, constant: -C.padding[1]),
-            valueLabel.constraint(.trailing, toView: container, constant: -C.padding[2]),
-            valueLabel.constraint(.top, toView: container, constant: C.padding[2])
+            valueLabel.constraint(.trailing, toView: container),
+            valueLabel.constraint(.top, toView: container),
+            valueLabel.constraint(.bottom, toView: container)
             ])
     }
     

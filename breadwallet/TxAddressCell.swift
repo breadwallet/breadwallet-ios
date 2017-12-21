@@ -35,12 +35,11 @@ class TxAddressCell: TxDetailRowCell {
     override func addConstraints() {
         super.addConstraints()
         
-        addressLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: .horizontal)
         addressLabel.constrain([
             addressLabel.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: C.padding[1]),
-            //titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: addressLabel.leadingAnchor, constant: -C.padding[1]),
-            addressLabel.constraint(.trailing, toView: container, constant: -C.padding[2]),
-            addressLabel.constraint(.top, toView: container, constant: C.padding[2])
+            addressLabel.constraint(.trailing, toView: container),
+            addressLabel.constraint(.top, toView: container),
+            addressLabel.constraint(.bottom, toView: container)
             ])
     }
     

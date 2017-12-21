@@ -31,7 +31,7 @@ struct TxDetailInfo {
 extension TxDetailInfo {
     init(tx: Transaction, state: State) {
         amount = tx.amountDescription(isBtcSwapped: false, rate: state.currentRate!, maxDigits: state.maxDigits)
-        fiatAmount = tx.amountDescription(isBtcSwapped: false, rate: state.currentRate!, maxDigits: state.maxDigits)
+        fiatAmount = tx.amountDescription(isBtcSwapped: true, rate: state.currentRate!, maxDigits: state.maxDigits)
         status = .networkReceived
         memo = tx.comment
         timestamp = tx.longTimestamp

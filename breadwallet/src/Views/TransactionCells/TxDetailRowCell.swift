@@ -42,16 +42,21 @@ class TxDetailRowCell: UITableViewCell {
     
     internal func addSubviews() {
         contentView.addSubview(container)
+        contentView.addSubview(separator)
         container.addSubview(titleLabel)
-        container.addSubview(separator)
     }
     
     internal func addConstraints() {
-        container.constrain(toSuperviewEdges: UIEdgeInsets.zero)
+        container.constrain(toSuperviewEdges: UIEdgeInsets(top: C.padding[1],
+                                                           left: C.padding[2],
+                                                           bottom: -C.padding[1],
+                                                           right: -C.padding[2]))
+        
+        titleLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         titleLabel.constrain([
-            titleLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor,
-                                                constant: C.padding[2]),
-            titleLabel.constraint(.top, toView: container, constant: C.padding[2])
+            titleLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            titleLabel.constraint(.top, toView: container),
+            titleLabel.constraint(.bottom, toView: container)
             ])
         separator.constrainBottomCorners(height: 0.5)
     }

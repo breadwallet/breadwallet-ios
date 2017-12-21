@@ -32,6 +32,8 @@ class TxDetailDataSource: NSObject {
                 return S.TransactionDetails.commentsHeader
             case .timestamp:
                 return S.TransactionDetails.timestampHeader
+            case .address:
+                return S.TransactionDetails.addressHeader
             case .startingBalance:
                 return S.TransactionDetails.startingBalanceHeader
             case .endingBalance:
@@ -51,7 +53,7 @@ class TxDetailDataSource: NSObject {
         var cellType: UITableViewCell.Type {
             switch self {
             case .amount:
-                return TxDetailHeaderCell.self
+                return TxAmountCell.self
             case .status:
                 return TxStatusCell.self
             case .memo:
@@ -121,7 +123,7 @@ extension TxDetailDataSource: UITableViewDataSource {
 
         switch field {
         case .amount:
-            let amountCell = cell as! TxDetailHeaderCell
+            let amountCell = cell as! TxAmountCell
             amountCell.fiatAmount = info.fiatAmount
             amountCell.tokenAmount = info.amount
             break
@@ -132,7 +134,7 @@ extension TxDetailDataSource: UITableViewDataSource {
             
         case .memo:
             let memoCell = cell as! TxMemoCell
-            memoCell.value = "This is a test memo. It is very long on purpose to test the label bounds. Okay I think that's enough."
+            memoCell.value = info.memo ?? ""
             
         case .timestamp:
             let labelCell = cell as! TxLabelCell
