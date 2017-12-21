@@ -172,6 +172,11 @@ enum S {
         static let blockHeightLabel = NSLocalizedString("TransactionDetails.blockHeightLabel", value: "Confirmed in Block", comment: "Block height label")
         static let notConfirmedBlockHeightLabel = NSLocalizedString("TransactionDetails.notConfirmedBlockHeightLabel", value: "Not Confirmed", comment: "eg. Confirmed in Block: Not Confirmed")
         static let ethFrom = NSLocalizedString("TransactionDetails.ethFrom", value: "from %1$@", comment: "[received ] from <address>")
+        
+        static let timestampHeader = NSLocalizedString("TransactionDetails.timestampHeader", value:"Time", comment: "Timestamp section header")
+        static let startingBalanceHeader = NSLocalizedString("TransactionDetails.startingBalanceHeader", value:"Starting Balance", comment: "Starting balance section header")
+        static let endingBalanceHeader = NSLocalizedString("TransactionDetails.endingBalanceHeader", value:"Ending Balance", comment: "Ending balance section header")
+        static let exchangeRateHeader = NSLocalizedString("TransactionDetails.exchangeRateHeader", value:"Exchange Rate", comment: "Exchange rate section header")
     }
 
     enum SecurityCenter {

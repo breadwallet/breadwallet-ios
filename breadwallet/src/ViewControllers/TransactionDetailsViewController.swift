@@ -47,6 +47,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
     }
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         collectionView?.register(TxDetailCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView?.delegate = self
         collectionView?.dataSource = self

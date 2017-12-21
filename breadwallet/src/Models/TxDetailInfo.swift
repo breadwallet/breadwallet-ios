@@ -24,6 +24,8 @@ struct TxDetailInfo {
     let startingBalance: String
     let endingBalance: String
     let exchangeRate: String
+    let transactionId: String
+    let blockHeight: String
 }
 
 extension TxDetailInfo {
@@ -32,10 +34,13 @@ extension TxDetailInfo {
         fiatAmount = tx.amountDescription(isBtcSwapped: false, rate: state.currentRate!, maxDigits: state.maxDigits)
         status = .networkReceived
         memo = tx.comment
-        timestamp = "Jan 1st 1999"
+        timestamp = tx.longTimestamp
         address = tx.toAddress ?? ""
+        // TODO: populate balance, exchange rate fields
         startingBalance = "$5000"
         endingBalance = "$6000"
-        exchangeRate = "$16000 +14.5%"
+        exchangeRate = tx.exchangeRate == nil ? "$16000 +14.5%" : String(tx.exchangeRate!)
+        transactionId = tx.hash
+        blockHeight = tx.blockHeight
     }
 }
