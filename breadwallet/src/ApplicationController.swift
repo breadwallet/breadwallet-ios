@@ -271,7 +271,7 @@ class ApplicationController : Subscriber, Trackable {
                 store.perform(action: ShowStartFlow())
             } else {
                 modalPresenter?.walletManager = walletManager
-                let gethManager = GethManager(ethPrivKey: walletManager.ethPrivKey!, store: store)
+                let gethManager = GethManager(ethPubKey: walletManager.ethPubKey!, store: store)
                 ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient, btcStore: store)
                 tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: noAuthApiClient, btcStore: store) }
                 modalPresenter?.gethManager = gethManager
@@ -396,7 +396,7 @@ class ApplicationController : Subscriber, Trackable {
                         self.walletManager?.peerManager?.connect()
                         self.modalPresenter?.walletManager = self.walletManager
                         self.startDataFetchers()
-                        let gethManager = GethManager(ethPrivKey: self.walletManager!.ethPrivKey!, store: self.store)
+                        let gethManager = GethManager(ethPubKey: self.walletManager!.ethPubKey!, store: self.store)
                         self.modalPresenter?.gethManager = gethManager
                         self.ethWalletCoordinator = EthWalletCoordinator(store: self.ethStore, gethManager: gethManager, apiClient: self.noAuthApiClient, btcStore: self.store)
                         self.tokenWalletCoordinators = self.tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: self.noAuthApiClient, btcStore: self.store) }
