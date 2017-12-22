@@ -448,7 +448,7 @@ class BRWallet {
     }
     
     // returns an unsigned transaction that satisifes the given transaction outputs
-    func createTxForOutputs(_ outputs: [BRTxOutput]) -> BRTxRef {
+    func createTxForOutputs(_ outputs: [BRTxOutput]) -> BRTxRef? {
         return BRWalletCreateTxForOutputs(cPtr, outputs, outputs.count)
     }
     
