@@ -184,6 +184,7 @@ class StartImportViewController : UIViewController {
         }
 
         let pubKeyLength = key.pubKey()?.count ?? 0
+        walletManager.wallet?.feePerKb = store.state.fees.regular
         let fee = wallet.feeForTxSize(tx.size + 34 + (pubKeyLength - 34)*tx.inputs.count)
         balanceActivity.dismiss(animated: true, completion: {
             guard outputs.count > 0 && balance > 0 else {
@@ -214,7 +215,6 @@ class StartImportViewController : UIViewController {
             tx.addOutput(amount: balance - fee, script: script)
             var keys = [key]
             let _ = tx.sign(keys: &keys)
-
                 guard tx.isSigned else {
                     self.importingActivity.dismiss(animated: true, completion: {
                         self.showErrorMessage(S.Import.Error.signing)
