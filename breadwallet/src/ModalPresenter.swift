@@ -591,14 +591,14 @@ class ModalPresenter : Subscriber, Trackable {
     private func presentBuyController(_ mountPoint: String) {
         guard let walletManager = self.walletManager else { return }
         let vc: BRWebViewController
+        
         #if Debug || Testflight
             vc = BRWebViewController(bundleName: "bread-frontend-staging", mountPoint: mountPoint, walletManager: walletManager, store: store)
         #else
             vc = BRWebViewController(bundleName: "bread-frontend", mountPoint: mountPoint, walletManager: walletManager, store: store)
         #endif
-        vc.startServer()
-        vc.preload()
-        self.topViewController?.present(vc, animated: true, completion: nil)
+
+        topViewController?.present(vc, animated: true, completion: nil)
     }
 
     private func presentRescan() {
