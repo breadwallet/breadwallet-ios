@@ -144,7 +144,7 @@ import WebKit
     
     override open func viewWillAppear(_ animated: Bool) {
         edgesForExtendedLayout = .all
-        self.beginDidLoadCountdown()
+//        self.beginDidLoadCountdown()
     }
     
     override open func viewDidAppear(_ animated: Bool) {
@@ -181,7 +181,7 @@ import WebKit
                         DispatchQueue.main.asyncAfter(deadline: timeout) {
                             self?.store.trigger(name: .showStatusBar)
                             self?.dismiss(animated: true) {
-                            //    self?.notifyUserOfLoadFailure()
+                                self?.notifyUserOfLoadFailure()
                             }
                         }
                     })
