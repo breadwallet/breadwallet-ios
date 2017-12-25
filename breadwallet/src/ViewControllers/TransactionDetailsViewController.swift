@@ -135,7 +135,7 @@ extension TransactionDetailsViewController {
         guard let transactionDetailCell = item as? TxDetailCollectionViewCell else { return item }
         let tx = transactions[indexPath.row]
         let info = TxDetailInfo(tx: tx, state: store.state)
-        transactionDetailCell.set(info: info)
+        transactionDetailCell.set(info: info, store: store)
         transactionDetailCell.closeCallback = { [weak self] in
             if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
                 delegate.reset()

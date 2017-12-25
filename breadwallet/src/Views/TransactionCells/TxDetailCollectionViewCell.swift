@@ -21,7 +21,7 @@ class TxDetailCollectionViewCell : UICollectionViewCell {
     var closeCallback: (() -> Void)? {
         didSet { header.closeCallback = closeCallback }
     }
-
+    
     // MARK: - Init
     
     override init(frame: CGRect) {
@@ -29,8 +29,8 @@ class TxDetailCollectionViewCell : UICollectionViewCell {
         setup()
     }
 
-    func set(info: TxDetailInfo) {
-        dataSource = TxDetailDataSource(info: info)
+    func set(info: TxDetailInfo, store: Store) {
+        dataSource = TxDetailDataSource(info: info, store: store)
         dataSource.registerCells(forTableView: tableView)
         tableView.dataSource = dataSource
         tableView.reloadData()
@@ -63,6 +63,7 @@ class TxDetailCollectionViewCell : UICollectionViewCell {
         tableView.backgroundColor = .whiteTint
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.allowsSelection = false
     }
 
     required init?(coder aDecoder: NSCoder) {

@@ -74,11 +74,13 @@ class TxDetailDataSource: NSObject {
     
     fileprivate var fields: [Field]
     fileprivate let info: TxDetailInfo
+    fileprivate let store: Store
     
     // MARK: - Init
     
-    init(info: TxDetailInfo) {
+    init(info: TxDetailInfo, store: Store) {
         self.info = info
+        self.store = store
         
         // define visible rows and order
         fields = [
@@ -126,6 +128,7 @@ extension TxDetailDataSource: UITableViewDataSource {
             let amountCell = cell as! TxAmountCell
             amountCell.fiatAmount = info.fiatAmount
             amountCell.tokenAmount = info.amount
+            amountCell.store = store
             break
     
         case .status:
