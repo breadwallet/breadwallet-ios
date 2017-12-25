@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum TxConfirmationStatus {
+enum TxConfirmationStatus: Int {
     case networkReceived
     case confirmedFirstBlock
     case complete

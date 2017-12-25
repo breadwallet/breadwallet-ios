@@ -13,13 +13,14 @@ class TxStatusCell: TxDetailRowCell {
     // MARK: - Views
     
     private let statusLabel = UILabel(font: UIFont.customMedium(size: 13.0))
-    // TODO: animated status indicator
+    private let statusIndicator = TxStatusIndicator()
     
     // MARK: - Init
     
     override func addSubviews() {
         super.addSubviews()
         container.addSubview(statusLabel)
+        container.addSubview(statusIndicator)
     }
     
     override func addConstraints() {
@@ -32,6 +33,13 @@ class TxStatusCell: TxDetailRowCell {
             statusLabel.constraint(.top, toView: container),
             statusLabel.constraint(.bottom, toView: container)
             ])
+        
+        statusIndicator.constrain([
+            statusIndicator.constraint(toLeading: statusLabel, constant: -C.padding[1]),
+            statusIndicator.constraint(.centerY, toView: container),
+            statusIndicator.widthAnchor.constraint(equalToConstant: statusIndicator.width),
+            statusIndicator.heightAnchor.constraint(equalToConstant: statusIndicator.size)
+            ])
     }
     
     override func setupStyle() {
@@ -42,13 +50,14 @@ class TxStatusCell: TxDetailRowCell {
     // MARK: -
     
     func set(status: TxConfirmationStatus) {
+        statusIndicator.status = status
         switch status {
         case .complete:
             statusLabel.text = "complete"
         case .confirmedFirstBlock:
             statusLabel.text = "firstBlock"
         case .networkReceived:
-            statusLabel.text = "unconfirmed"
+            statusLabel.text = "pending"
         }
     }
 
