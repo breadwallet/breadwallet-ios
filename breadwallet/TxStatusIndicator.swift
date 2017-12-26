@@ -70,7 +70,7 @@ class TxStatusIndicator: UIView {
     // MARK: -
     
     func updateStatus() {
-        let activeIndex = status.rawValue
+        let activeIndex = status.rawValue + 1 // first circle always on
         circles.enumerated().forEach { index, circle in
             if index == activeIndex {
                 circle.state = .flashing

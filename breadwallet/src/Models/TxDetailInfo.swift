@@ -32,7 +32,7 @@ extension TxDetailInfo {
     init(tx: Transaction, state: State) {
         amount = tx.amountDescription(isBtcSwapped: false, rate: state.currentRate!, maxDigits: state.maxDigits)
         fiatAmount = tx.amountDescription(isBtcSwapped: true, rate: state.currentRate!, maxDigits: state.maxDigits)
-        status = .networkReceived
+        status = tx.confirmationStatus
         memo = tx.comment
         timestamp = tx.longTimestamp
         address = tx.toAddress ?? ""
@@ -42,5 +42,20 @@ extension TxDetailInfo {
         exchangeRate = tx.exchangeRate == nil ? "$16000 +14.5%" : String(tx.exchangeRate!)
         transactionId = tx.hash
         blockHeight = tx.blockHeight
+    }
+}
+
+extension Transaction {
+    /// Confirmation status based on transaction status string
+    var confirmationStatus: TxConfirmationStatus {
+        switch status {
+        // TODO: temporary hack, this should be part of Transaction model
+        case S.Transaction.pending:
+            return .networkReceived
+        case S.Transaction.complete:
+            return .complete
+        default:
+            return .confirmedFirstBlock
+        }
     }
 }

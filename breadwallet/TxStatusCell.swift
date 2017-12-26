@@ -52,12 +52,12 @@ class TxStatusCell: TxDetailRowCell {
     func set(status: TxConfirmationStatus) {
         statusIndicator.status = status
         switch status {
-        case .complete:
-            statusLabel.text = "complete"
-        case .confirmedFirstBlock:
-            statusLabel.text = "firstBlock"
         case .networkReceived:
-            statusLabel.text = "pending"
+            statusLabel.text = S.Transaction.pending
+        case .confirmedFirstBlock:
+            statusLabel.text = S.Transaction.confirming
+        case .complete:
+            statusLabel.text = S.Transaction.complete
         }
     }
 
