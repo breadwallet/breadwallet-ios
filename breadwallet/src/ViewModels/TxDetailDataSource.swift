@@ -126,9 +126,7 @@ extension TxDetailDataSource: UITableViewDataSource {
         switch field {
         case .amount:
             let amountCell = cell as! TxAmountCell
-            amountCell.fiatAmount = info.fiatAmount
-            amountCell.tokenAmount = info.amount
-            amountCell.store = store
+            amountCell.set(fiatAmount: info.fiatAmount, tokenAmount: info.amount, store: store)
             break
     
         case .status:
