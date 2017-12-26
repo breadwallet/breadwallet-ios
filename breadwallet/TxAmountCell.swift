@@ -10,45 +10,16 @@ import UIKit
 
 class TxAmountCell: UITableViewCell, Subscriber {
     
-    // MARK: - Accessors
+    // MARK: - Vars
     
-    public var fiatAmount: String {
-        get {
-            return fiatAmountLabel.text ?? ""
-        }
-        set {
-            fiatAmountLabel.text = newValue
-        }
-    }
-    
-    public var tokenAmount: String {
-        get {
-            return tokenAmountLabel.text ?? ""
-        }
-        set {
-            tokenAmountLabel.text = newValue
-        }
-    }
-    
-    public var isBtcSwapped: Bool = false {
+    private var isBtcSwapped: Bool = false {
         didSet {
             swapCurrencyLabels(animated: true)
         }
     }
     
-    public var store: Store? {
-        didSet {
-            if let store = store, !store.isEthLike { //FIXME - currency switching disabled for ethereum
-                isBtcSwapped = store.state.isBtcSwapped
-                let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
-                container.addGestureRecognizer(gr)
-                addSubscriptions()
-            }
-        }
-    }
+    private var store: Store?
 
-    // MARK: - Views
-    
     private let largeFontSize: CGFloat = 26.0
     private let smallFontSize: CGFloat = 13.0
     
@@ -139,6 +110,19 @@ class TxAmountCell: UITableViewCell, Subscriber {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func set(fiatAmount: String, tokenAmount: String, store: Store) {
+        fiatAmountLabel.text = fiatAmount
+        tokenAmountLabel.text = tokenAmount
+        self.store = store
+        
+        if !store.isEthLike { //FIXME - currency switching disabled for ethereum
+            isBtcSwapped = store.state.isBtcSwapped
+            let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
+            container.addGestureRecognizer(gr)
+            addSubscriptions()
+        }
     }
     
     // MARK: Currency Switch
