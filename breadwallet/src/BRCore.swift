@@ -571,6 +571,10 @@ class BRPeerManager {
         },
         nil) // threadCleanup
     }
+
+    func clearCallbacks() {
+        BRPeerManagerSetCallbacks(cPtr, nil, nil, nil, nil, nil, nil, nil, nil)
+    }
     
     // true if currently connected to at least one peer
     var isConnected: Bool {
