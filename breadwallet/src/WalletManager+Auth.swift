@@ -417,6 +417,7 @@ extension WalletManager : WalletAuthenticator {
         guard pin == "forceWipe" || authenticate(pin: pin) else { return false }
 
         do {
+            peerManager?.clearCallbacks()
             wallet = nil
             peerManager = nil
             db?.close()
