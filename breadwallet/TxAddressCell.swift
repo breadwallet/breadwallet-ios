@@ -10,44 +10,49 @@ import UIKit
 
 class TxAddressCell: TxDetailRowCell {
 
-    // MARK: - Accessors
+    // MARK: - Vars
     
-    public var address: String {
-        get {
-            return addressLabel.text ?? ""
-        }
-        set {
-            addressLabel.text = newValue
-        }
-    }
+    private var store: Store?
     
-    // MARK: - Views
+    // MARK: Views
     
-    private let addressLabel = UILabel(font: UIFont.customMedium(size: 13.0))
+    private let addressButton = UIButton(type: .system)
     
     // MARK: - Init
     
     override func addSubviews() {
         super.addSubviews()
-        container.addSubview(addressLabel)
+        container.addSubview(addressButton)
     }
     
     override func addConstraints() {
         super.addConstraints()
         
-        addressLabel.constrain([
-            addressLabel.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: C.padding[1]),
-            addressLabel.constraint(.trailing, toView: container),
-            addressLabel.constraint(.top, toView: container),
-            addressLabel.constraint(.bottom, toView: container)
+        addressButton.constrain([
+            addressButton.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: C.padding[1]),
+            addressButton.constraint(.trailing, toView: container),
+            addressButton.constraint(.top, toView: container),
+            addressButton.constraint(.bottom, toView: container)
             ])
     }
     
     override func setupStyle() {
         super.setupStyle()
-        addressLabel.textColor = .darkText
-        addressLabel.lineBreakMode = .byTruncatingMiddle
-        addressLabel.textAlignment = .right
+        addressButton.titleLabel?.font = .customBody(size: 13.0)
+        addressButton.titleLabel?.lineBreakMode = .byTruncatingMiddle
+        addressButton.titleLabel?.textAlignment = .right
+        addressButton.tintColor = .darkText
+        
+        addressButton.tap = strongify(self) { myself in
+            myself.addressButton.tempDisable()
+            myself.store?.trigger(name: .lightWeightAlert(S.Receive.copied))
+            UIPasteboard.general.string = myself.addressButton.titleLabel?.text
+        }
+    }
+    
+    func set(address: String, store: Store) {
+        addressButton.setTitle(address, for: .normal)
+        self.store = store
     }
 
 }
