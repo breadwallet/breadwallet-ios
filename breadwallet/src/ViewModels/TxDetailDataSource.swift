@@ -143,7 +143,7 @@ extension TxDetailDataSource: UITableViewDataSource {
             
         case .address:
             let addressCell = cell as! TxAddressCell
-            addressCell.address = info.address
+            addressCell.set(address: info.address, store: store)
             
         case .startingBalance:
             let labelCell = cell as! TxLabelCell
@@ -163,8 +163,7 @@ extension TxDetailDataSource: UITableViewDataSource {
             
         case .transactionId:
             let addressCell = cell as! TxAddressCell
-            addressCell.address = info.transactionId
-            
+            addressCell.set(address: info.transactionId, store: store)
         }
         
         return cell
