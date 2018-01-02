@@ -571,12 +571,17 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         
         while sqlite3_step(sql) == SQLITE_ROW {
             guard let b = BRMerkleBlockNew() else { return blocks }
+            let maxTime:UInt32 = 0xC5B03780
             b.pointee.height = UInt32(bitPattern: sqlite3_column_int(sql, 0))
             b.pointee.nonce = UInt32(bitPattern: sqlite3_column_int(sql, 1))
             b.pointee.target = UInt32(bitPattern: sqlite3_column_int(sql, 2))
             b.pointee.totalTx = UInt32(bitPattern: sqlite3_column_int(sql, 3))
             b.pointee.version = UInt32(bitPattern: sqlite3_column_int(sql, 4))
-            b.pointee.timestamp = UInt32(bitPattern: sqlite3_column_int(sql, 5)) + UInt32(NSTimeIntervalSince1970)
+            if (UInt32(bitPattern: sqlite3_column_int(sql, 5)) >= maxTime) {
+                b.pointee.timestamp = UInt32(NSTimeIntervalSince1970)
+            } else {
+                b.pointee.timestamp = UInt32(bitPattern: sqlite3_column_int(sql, 5)) + UInt32(NSTimeIntervalSince1970)
+            }
             b.pointee.blockHash = sqlite3_column_blob(sql, 6).assumingMemoryBound(to: UInt256.self).pointee
 
             let flags: UnsafePointer<UInt8>? = SafeSqlite3ColumnBlob(statement: sql!, iCol: 7)
