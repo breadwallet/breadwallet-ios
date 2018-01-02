@@ -514,9 +514,10 @@ extension WalletManager : WalletAuthenticator {
     // public key for etherium wallet
     var ethPubKey: [UInt8]? {
         var key = BRKey(privKey: ethPrivKey!)
-        let pubKey = key?.pubKey()
-        key?.clean()
-        return pubKey
+        defer { key?.clean() }
+        key?.compressed = 0
+        guard let pubKey = key?.pubKey(), pubKey.count == 65 else { return nil }
+        return [UInt8](pubKey[1...])
     }
     
     // sensitive user information stored on the keychain

@@ -3339,11 +3339,11 @@
 		};
 		75DA6C481F61E52200E48CAF /* Geth */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = "";
+			buildArgumentsString = ios;
 			buildConfigurationList = 75DA6C491F61E52200E48CAF /* Build configuration list for PBXLegacyTarget "Geth" */;
 			buildPhases = (
 			);
-			buildToolPath = ls;
+			buildToolPath = /usr/bin/make;
 			buildWorkingDirectory = "$(SRCROOT)/Modules/go-ethereum";
 			dependencies = (
 				75DA6C501F61E57700E48CAF /* PBXTargetDependency */,
