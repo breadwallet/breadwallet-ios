@@ -61,7 +61,7 @@ class FeeUpdater : Trackable {
     private lazy var minFeePerKB: UInt64 = {
         return ((self.txFeePerKb*1000 + 190)/191) // minimum relay fee on a 191byte tx
     }()
-    private let maxFeePerKB: UInt64 = ((100100*1000 + 190)/191) // slightly higher than a 1000bit fee on a 191byte tx
+    private let maxFeePerKB: UInt64 = ((400000*1000 + 190)/191) // slightly higher than a 1000bit fee on a 191byte tx
     private var timer: Timer?
     private let feeUpdateInterval: TimeInterval = 15
 
