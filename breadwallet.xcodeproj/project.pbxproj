@@ -3339,17 +3339,17 @@
 		};
 		75DA6C481F61E52200E48CAF /* Geth */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = ios;
+			buildArgumentsString = "$(ACTION)";
 			buildConfigurationList = 75DA6C491F61E52200E48CAF /* Build configuration list for PBXLegacyTarget "Geth" */;
 			buildPhases = (
 			);
-			buildToolPath = /usr/bin/make;
+			buildToolPath = "$(SRCROOT)/scripts/build_geth.sh";
 			buildWorkingDirectory = "$(SRCROOT)/Modules/go-ethereum";
 			dependencies = (
 				75DA6C501F61E57700E48CAF /* PBXTargetDependency */,
 			);
 			name = Geth;
-			passBuildSettingsInEnvironment = 1;
+			passBuildSettingsInEnvironment = 0;
 			productName = Geth;
 		};
 /* End PBXLegacyTarget section */
