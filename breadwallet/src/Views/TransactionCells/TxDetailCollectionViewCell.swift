@@ -60,7 +60,6 @@ class TxDetailCollectionViewCell : UICollectionViewCell {
     private func setInitialData() {
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
-        tableView.backgroundColor = .whiteTint
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.allowsSelection = false
