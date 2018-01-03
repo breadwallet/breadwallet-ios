@@ -129,6 +129,7 @@ class EthTransaction : Transaction {
         }
         self.isEth = true
         self.hash = tx.hash
+        self.blockHeight = tx.blockNumber
     }
 
     override var toAddress: String {
@@ -138,12 +139,26 @@ class EthTransaction : Transaction {
             return tx.from
         }
     }
+    
+    override var longTimestamp: String {
+        guard timestamp > 0 else { return tx.isError == "0" ? S.Transaction.justNow : "" }
+        let date = Date(timeIntervalSince1970: Double(timestamp))
+        return Transaction.longDateFormatter.string(from: date)
+    }
 
     override func descriptionString(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
         let amount = DisplayAmount.ethString(value: wei, store: store)
         let format = direction.amountDescriptionFormat
         let string = String(format: format, amount)
         return string.attributedStringForTags
+    }
+    
+    override func amountDescription(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> String {
+        if isBtcSwapped {
+            return DisplayAmount.localEthString(value: wei, store: store)
+        } else {
+            return DisplayAmount.ethString(value: wei, store: store)
+        }
     }
 
     private let wei: GethBigInt
