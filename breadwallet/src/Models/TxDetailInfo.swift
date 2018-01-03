@@ -26,6 +26,8 @@ struct TxDetailInfo {
     let exchangeRate: String
     let transactionId: String
     let blockHeight: String
+    // TODO: refactor to remove this dependency
+    let transaction: Transaction
 }
 
 extension TxDetailInfo {
@@ -42,6 +44,7 @@ extension TxDetailInfo {
         exchangeRate = tx.exchangeRate == nil ? "$16000 +14.5%" : String(tx.exchangeRate!)
         transactionId = tx.hash
         blockHeight = tx.blockHeight
+        transaction = tx
     }
 }
 

@@ -230,6 +230,7 @@
 		7C9724661FF07B9A004248C4 /* StatusCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9724651FF07B9A004248C4 /* StatusCircle.swift */; };
 		7CCD9F6C1FEC1FA300175E64 /* TxAmountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */; };
 		7CE940E61FEB8A5F005A2B53 /* TxDetailRowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */; };
+		7CF913BE1FFC7DC30085CB70 /* TxMemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF913BD1FFC7DC30085CB70 /* TxMemoCell.swift */; };
 		CE03EC721EF193810038E3A8 /* String+Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC711EF193800038E3A8 /* String+Keys.swift */; };
 		CE03EC741EF256AC0038E3A8 /* SimpleUTXO.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */; };
 		CE0822641FCD1BD100EF371D /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */; };
@@ -1436,6 +1437,7 @@
 		7C9724651FF07B9A004248C4 /* StatusCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StatusCircle.swift; path = src/Views/StatusCircle.swift; sourceTree = "<group>"; };
 		7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TxAmountCell.swift; sourceTree = "<group>"; };
 		7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailRowCell.swift; path = src/Views/TransactionCells/TxDetailRowCell.swift; sourceTree = "<group>"; };
+		7CF913BD1FFC7DC30085CB70 /* TxMemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxMemoCell.swift; path = src/Views/TransactionCells/TxMemoCell.swift; sourceTree = "<group>"; };
 		CE03EC711EF193800038E3A8 /* String+Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Keys.swift"; path = "src/Extensions/String+Keys.swift"; sourceTree = "<group>"; };
 		CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleUTXO.swift; path = src/Models/SimpleUTXO.swift; sourceTree = "<group>"; };
 		CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenViewController.swift; path = src/ViewControllers/HomeScreenViewController.swift; sourceTree = "<group>"; };
@@ -3228,6 +3230,7 @@
 				7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */,
 				7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */,
 				7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */,
+				7CF913BD1FFC7DC30085CB70 /* TxMemoCell.swift */,
 			);
 			name = TransactionCells;
 			sourceTree = "<group>";
@@ -4185,6 +4188,7 @@
 				CECCE5B21E04B00D00D99448 /* SendCell.swift in Sources */,
 				CE6DCC301E6666470044257B /* NonScrollingCollectionView.swift in Sources */,
 				7C6ACCB81FEB34730028ABFA /* TxAddressCell.swift in Sources */,
+				7CF913BE1FFC7DC30085CB70 /* TxMemoCell.swift in Sources */,
 				22A9A9471DF61945000F0016 /* BRAPIProxy.swift in Sources */,
 				CE20C9011DBBFFF800C8397A /* Actions.swift in Sources */,
 				CE20C9191DBE7B8200C8397A /* State.swift in Sources */,

@@ -75,12 +75,14 @@ class TxDetailDataSource: NSObject {
     fileprivate var fields: [Field]
     fileprivate let info: TxDetailInfo
     fileprivate let store: Store
+    fileprivate let kvStore: BRReplicatedKVStore
     
     // MARK: - Init
     
-    init(info: TxDetailInfo, store: Store) {
+    init(info: TxDetailInfo, store: Store, kvStore: BRReplicatedKVStore) {
         self.info = info
         self.store = store
+        self.kvStore = kvStore
         
         // define visible rows and order
         fields = [
@@ -135,7 +137,7 @@ extension TxDetailDataSource: UITableViewDataSource {
             
         case .memo:
             let memoCell = cell as! TxMemoCell
-            memoCell.value = info.memo ?? ""
+            memoCell.set(txInfo: info, store: store, kvStore: kvStore)
             
         case .timestamp:
             let labelCell = cell as! TxLabelCell
