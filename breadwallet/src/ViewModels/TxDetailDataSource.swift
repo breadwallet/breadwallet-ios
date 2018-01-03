@@ -106,7 +106,7 @@ class TxDetailDataSource: NSObject {
     }
 }
 
-    // MARK: -
+// MARK: -
 extension TxDetailDataSource: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -131,7 +131,7 @@ extension TxDetailDataSource: UITableViewDataSource {
     
         case .status:
             let statusCell = cell as! TxStatusCell
-            statusCell.set(status: info.status)
+            statusCell.set(txInfo: info, store: store)
             
         case .memo:
             let memoCell = cell as! TxMemoCell
