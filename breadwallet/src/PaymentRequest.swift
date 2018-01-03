@@ -45,6 +45,13 @@ struct PaymentRequest {
                             print("Key not found: \(key)")
                         }
                     }
+                    //Payment request must have either an r value or an address
+                    if r == nil {
+                        if toAddress == nil {
+                            return nil
+                        }
+                    }
+
                     type = r == nil ? .local : .remote
                     return
                 }
