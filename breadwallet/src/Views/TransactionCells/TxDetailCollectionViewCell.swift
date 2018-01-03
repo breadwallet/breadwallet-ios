@@ -29,8 +29,8 @@ class TxDetailCollectionViewCell : UICollectionViewCell {
         setup()
     }
 
-    func set(info: TxDetailInfo, store: Store) {
-        dataSource = TxDetailDataSource(info: info, store: store)
+    func set(info: TxDetailInfo, store: Store, kvStore: BRReplicatedKVStore) {
+        dataSource = TxDetailDataSource(info: info, store: store, kvStore: kvStore)
         dataSource.registerCells(forTableView: tableView)
         tableView.dataSource = dataSource
         tableView.reloadData()

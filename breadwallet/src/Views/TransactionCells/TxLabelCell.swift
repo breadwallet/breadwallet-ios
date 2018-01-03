@@ -49,13 +49,3 @@ class TxLabelCell: TxDetailRowCell {
         valueLabel.textAlignment = .right
     }
 }
-
-
-class TxMemoCell: TxLabelCell {
-    
-    override func setupStyle() {
-        super.setupStyle()
-        valueLabel.numberOfLines = 0
-        valueLabel.lineBreakMode = .byWordWrapping
-    }
-}
