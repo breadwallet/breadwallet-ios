@@ -69,4 +69,12 @@ class TxDetailCollectionViewCell : UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = UIBezierPath(roundedRect: bounds,
+                                      byRoundingCorners: [.topLeft, .topRight],
+                                      cornerRadii: CGSize(width: C.Sizes.roundedCornerRadius, height: C.Sizes.roundedCornerRadius)).cgPath
+        layer.mask = maskLayer
+    }
 }
