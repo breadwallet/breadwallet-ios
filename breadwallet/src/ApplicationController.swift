@@ -14,8 +14,7 @@ private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
 let tokens: [Token] = {
-    //return []
-    return E.isTestnet ? [brd5, brd4, brd3, brd2, tst] : [brdMain, mainTst]
+    return E.isTestnet ? [brd5, brd4, brd3, brd2, tst] : [brdMain, mainTst, xjp]
 }()
 
 class ApplicationController : Subscriber, Trackable {
