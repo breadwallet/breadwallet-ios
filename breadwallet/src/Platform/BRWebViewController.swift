@@ -129,6 +129,7 @@ import WebKit
                 self?.sendToAllSockets(data: info)
             }
         }
+        self.messageUIPresenter.presenter = self
     }
     
     override open func viewWillAppear(_ animated: Bool) {

@@ -49,7 +49,7 @@ class MessageUIPresenter: NSObject, Trackable {
         originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
         UINavigationBar.appearance().titleTextAttributes = nil
         let emailView = MFMailComposeViewController()
-        emailView.setToRecipients([emailAddress])
+        emailView.setToRecipients([emailAddress.replacingOccurrences(of: "%40", with: "@")])
         emailView.mailComposeDelegate = self
         saveEvent("receive.presentMailCompose")
         present(emailView)
