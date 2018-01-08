@@ -42,4 +42,5 @@ struct C {
     static var standardPort: Int {
         return E.isTestnet ? 18333 : 8333
     }
+    static let feeCacheTimeout: TimeInterval = C.secondsInDay*3
 }

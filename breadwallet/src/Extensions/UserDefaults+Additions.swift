@@ -23,6 +23,7 @@ private let customNodeIPKey = "customNodeIPKey"
 private let customNodePortKey = "customNodePortKey"
 private let hasPromptedShareDataKey = "hasPromptedShareDataKey"
 private let hasShownWelcomeKey = "hasShownWelcomeKey"
+private let feesKey = "feesKey"
 
 extension UserDefaults {
 
@@ -130,6 +131,22 @@ extension UserDefaults {
     static var hasShownWelcome: Bool {
         get { return defaults.bool(forKey: hasShownWelcomeKey) }
         set { defaults.set(newValue, forKey: hasShownWelcomeKey) }
+    }
+
+    static var fees: Fees? {
+        //Returns nil if feeCacheTimeout exceeded
+        get {
+            if let feeData = defaults.data(forKey: feesKey), let fees = try? JSONDecoder().decode(Fees.self, from: feeData){
+                return (Date().timeIntervalSince1970 - fees.timestamp) <= C.feeCacheTimeout ? fees : nil
+            } else {
+                return nil
+            }
+        }
+        set {
+            if let fees = newValue, let data = try? JSONEncoder().encode(fees){
+                defaults.set(data, forKey: feesKey)
+            }
+        }
     }
 }
 
