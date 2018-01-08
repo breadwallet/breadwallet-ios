@@ -8,9 +8,10 @@
 
 import Foundation
 
-struct Fees {
+struct Fees : Codable {
     let regular: UInt64
     let economy: UInt64
+    let timestamp: TimeInterval
 }
 
 class FeeUpdater : Trackable {
@@ -28,6 +29,7 @@ class FeeUpdater : Trackable {
                 self.saveEvent("wallet.didUseDefaultFeePerKB")
                 return
             }
+            UserDefaults.fees = newFees
             self.store.perform(action: UpdateFees.set(newFees))
             completion()
         }
