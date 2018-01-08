@@ -164,13 +164,18 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
         var color: UIColor = .grayTextTint
+        var feeColor: UIColor = .grayTextTint
         if let amount = amount, amount.rawValue > 0 {
-            let fee = sender.feeForTx(amount: amount.rawValue)
-            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
-            let feeText = feeAmount.description
-            feeOutput = String(format: S.Send.fee, feeText)
-            if (balance >= fee) && amount.rawValue > (balance - fee) {
-                color = .cameraGuideNegative
+            if let fee = sender.feeForTx(amount: amount.rawValue) {
+                let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
+                let feeText = feeAmount.description
+                feeOutput = String(format: S.Send.fee, feeText)
+                if (balance >= fee) && amount.rawValue > (balance - fee) {
+                    color = .cameraGuideNegative
+                }
+            } else {
+                feeOutput = S.Send.nilFeeError
+                feeColor = .cameraGuideNegative
             }
         }
 
@@ -181,7 +186,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
         let feeAttributes: [NSAttributedStringKey: Any] = [
             NSAttributedStringKey.font: UIFont.customBody(size: 14.0),
-            NSAttributedStringKey.foregroundColor: UIColor.grayTextTint
+            NSAttributedStringKey.foregroundColor: feeColor
         ]
 
         return (NSAttributedString(string: balanceOutput, attributes: attributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))

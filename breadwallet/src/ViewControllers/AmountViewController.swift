@@ -141,7 +141,8 @@ class AmountViewController : UIViewController, Trackable {
             balanceLabel.topAnchor.constraint(equalTo: cursor.bottomAnchor) ])
         feeLabel.constrain([
             feeLabel.leadingAnchor.constraint(equalTo: balanceLabel.leadingAnchor),
-            feeLabel.topAnchor.constraint(equalTo: balanceLabel.bottomAnchor) ])
+            feeLabel.topAnchor.constraint(equalTo: balanceLabel.bottomAnchor),
+            feeLabel.trailingAnchor.constraint(equalTo: editFee.leadingAnchor, constant: -C.padding[1]) ])
         pinPadHeight = pinPad.view.heightAnchor.constraint(equalToConstant: 0.0)
         addChildViewController(pinPad, layout: {
             pinPad.view.constrain([
@@ -155,7 +156,8 @@ class AmountViewController : UIViewController, Trackable {
             editFee.leadingAnchor.constraint(equalTo: feeLabel.trailingAnchor, constant: -8.0),
             editFee.centerYAnchor.constraint(equalTo: feeLabel.centerYAnchor, constant: -1.0),
             editFee.widthAnchor.constraint(equalToConstant: 44.0),
-            editFee.heightAnchor.constraint(equalToConstant: 44.0) ])
+            editFee.heightAnchor.constraint(equalToConstant: 44.0),
+            editFee.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
         bottomBorder.constrain([
             bottomBorder.topAnchor.constraint(greaterThanOrEqualTo: currencyToggle.bottomAnchor, constant: C.padding[2]),
             bottomBorder.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -204,6 +206,8 @@ class AmountViewController : UIViewController, Trackable {
         editFee.imageEdgeInsets = UIEdgeInsetsMake(15.0, 15.0, 15.0, 15.0)
         editFee.tintColor = .grayTextTint
         editFee.isHidden = true
+        feeLabel.numberOfLines = 0
+        feeLabel.lineBreakMode = .byWordWrapping
     }
 
     private func toggleCurrency() {
