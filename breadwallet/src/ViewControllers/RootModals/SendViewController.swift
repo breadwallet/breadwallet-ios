@@ -101,7 +101,20 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                                 self.balance = balance
                             }
         })
-        walletManager.wallet?.feePerKb = store.state.fees.regular
+        store.subscribe(self, selector: { $0.fees != $1.fees }, callback: {
+            if let fees = $0.fees {
+                if let feeType = self.feeType {
+                    switch feeType {
+                    case .regular :
+                        self.walletManager.wallet?.feePerKb = fees.regular
+                    case .economy:
+                        self.walletManager.wallet?.feePerKb = fees.economy
+                    }
+                } else {
+                    self.walletManager.wallet?.feePerKb = fees.regular
+                }
+            }
+        })
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -140,12 +153,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         amountView.didUpdateFee = strongify(self) { myself, fee in
             guard let wallet = myself.walletManager.wallet else { return }
             myself.feeType = fee
-            let fees = myself.store.state.fees
-            switch fee {
-            case .regular:
-                wallet.feePerKb = fees.regular
-            case .economy:
-                wallet.feePerKb = fees.economy
+            if let fees = myself.store.state.fees {
+                switch fee {
+                case .regular:
+                    wallet.feePerKb = fees.regular
+                case .economy:
+                    wallet.feePerKb = fees.economy
+                }
             }
             myself.amountView.updateBalanceLabel()
         }
@@ -219,6 +233,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         if sender.transaction == nil {
             guard let address = addressCell.address else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
+            }
+            guard store.state.fees != nil else {
+                return showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
             }
 //            guard address.isValidAddress else {
 //                return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
