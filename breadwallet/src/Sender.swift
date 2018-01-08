@@ -55,8 +55,9 @@ class Sender {
         return walletManager.canUseBiometrics(forTx: tx)
     }
 
-    func feeForTx(amount: UInt64) -> UInt64 {
-        return walletManager.wallet?.feeForTx(amount:amount) ?? 0
+    func feeForTx(amount: UInt64) -> UInt64? {
+        let fee = walletManager.wallet?.feeForTx(amount:amount)
+        return fee == 0 ? nil : fee
     }
 
     //Amount in bits
