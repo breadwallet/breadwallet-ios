@@ -25,7 +25,7 @@ struct State {
     let isPushNotificationsEnabled: Bool
     let isPromptingBiometrics: Bool
     let pinLength: Int
-    let fees: Fees
+    let fees: Fees?
 }
 
 extension State {
@@ -46,7 +46,7 @@ extension State {
                         isPushNotificationsEnabled: UserDefaults.pushToken != nil,
                         isPromptingBiometrics: false,
                         pinLength: 6,
-                        fees: Fees.defaultFees )
+                        fees: nil )
     }
 }
 

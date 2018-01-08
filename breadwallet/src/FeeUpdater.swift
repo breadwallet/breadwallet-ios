@@ -13,14 +13,6 @@ struct Fees {
     let economy: UInt64
 }
 
-extension Fees {
-    static var defaultFees: Fees {
-        return Fees(regular: defaultFeePerKB, economy: defaultFeePerKB)
-    }
-}
-
-private let defaultFeePerKB: UInt64 = (5000*1000 + 99)/100 // bitcoind 0.11 min relay fee on 100bytes
-
 class FeeUpdater : Trackable {
 
     //MARK: - Public

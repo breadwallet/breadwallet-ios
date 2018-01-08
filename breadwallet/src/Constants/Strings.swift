@@ -91,6 +91,7 @@ enum S {
         static let loadingRequest = NSLocalizedString("Send.loadingRequest", value: "Loading Request", comment: "Loading request activity view message")
         static let insufficientFunds = NSLocalizedString("Send.insufficientFunds", value: "Insufficient Funds", comment: "Insufficient funds error")
         static let nilFeeError = NSLocalizedString("Send.nilFeeError", value: "Insufficient funds to cover the transaction fee.", comment: "Transaction fee could not be be caluculated error.")
+        static let noFeesError = NSLocalizedString("Send.noFeesError", value: "Network Fee conditions are being downloaded. Please try again.", comment: "No Fees error")
     }
 
     enum Receive {

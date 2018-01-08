@@ -174,6 +174,7 @@ class StartImportViewController : UIViewController {
         guard let tx = UnsafeMutablePointer<BRTransaction>() else { return }
         guard let wallet = walletManager.wallet else { return }
         guard let address = key.address() else { return }
+        guard let fees = store.state.fees else { return }
         guard !wallet.containsAddress(address) else {
             return showErrorMessage(S.Import.Error.duplicate)
         }
@@ -184,7 +185,7 @@ class StartImportViewController : UIViewController {
         }
 
         let pubKeyLength = key.pubKey()?.count ?? 0
-        walletManager.wallet?.feePerKb = store.state.fees.regular
+        walletManager.wallet?.feePerKb = fees.regular
         let fee = wallet.feeForTxSize(tx.size + 34 + (pubKeyLength - 34)*tx.inputs.count)
         balanceActivity.dismiss(animated: true, completion: {
             guard outputs.count > 0 && balance > 0 else {
