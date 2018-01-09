@@ -14,8 +14,7 @@ private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
 let tokens: [Token] = {
-    //return []
-    return E.isTestnet ? [brd5, brd4, brd3, brd2, tst] : [brdMain, mainTst]
+    return E.isTestnet ? [brd5, brd4, brd3, brd2, tst] : [brdMain, mainTst, xjp]
 }()
 
 class ApplicationController : Subscriber, Trackable {
@@ -222,9 +221,9 @@ class ApplicationController : Subscriber, Trackable {
     private func didInitWalletManager() {
         guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
+        store.perform(action: PinLength.set(walletManager.pinLength))
         rootViewController.walletManager = walletManager
         hasPerformedWalletDependentInitialization = true
-        store.perform(action: PinLength.set(walletManager.pinLength))
         walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
         modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient, ethStore: ethStore, gethManager: nil, tokenStores: tokenStores)
         exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
@@ -308,9 +307,11 @@ class ApplicationController : Subscriber, Trackable {
 
     private func setupRootViewController() {
         let home = HomeScreenViewController(stores: [store, ethStore] + tokenStores)
-        let nc = RootNavigationController(store: store, rootViewController: home)
+        let nc = RootNavigationController()
+        nc.store = store
         nc.navigationBar.isTranslucent = false
         nc.navigationBar.tintColor = .white
+        nc.pushViewController(home, animated: false)
         home.didSelectCurrency = { code in
             if code == "btc" {
                 nc.pushViewController(self.accountViewController!, animated: true)
