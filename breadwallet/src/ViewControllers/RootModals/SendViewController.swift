@@ -413,8 +413,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 self.onPublishSuccess?()
 
                 //Add temporary transaction
-                let timestamp = String(Date().timeIntervalSince1970)
-                let tempTx = EthTx(blockNumber: "0", timeStamp: timestamp, value: amount.getString(10), from: ethManager.address.getHex(), to: address, confirmations: "0", hash: signedTx.getHash().getHex(), isError: "0")
+                let timestamp = Date().timeIntervalSince1970
+                let tempTx = EthTx(blockNumber: 0, timeStamp: timestamp, value: amount, from: ethManager.address.getHex(), to: address, confirmations: 0, hash: signedTx.getHash().getHex(), isError: false)
                 let transactionViewModel = EthTransaction(tx: tempTx, address: ethManager.address.getHex(), store: self.store)
                 let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
                 self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))
@@ -474,8 +474,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 self.onPublishSuccess?()
 
                 //Add temporary transaction
-                let timestamp = String(Date().timeIntervalSince1970)
-                let tempTx = EthTx(blockNumber: "0", timeStamp: timestamp, value: amount.getString(10), from: ethManager.address.getHex(), to: crowdsale.contract.address, confirmations: "0", hash: signedTx.getHash().getHex(), isError: "0")
+                let timestamp = Date().timeIntervalSince1970
+                let tempTx = EthTx(blockNumber: 0, timeStamp: timestamp, value: amount, from: ethManager.address.getHex(), to: crowdsale.contract.address, confirmations: 0, hash: signedTx.getHash().getHex(), isError: false)
                 let transactionViewModel = EthTransaction(tx: tempTx, address: ethManager.address.getHex(), store: self.store)
                 let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
                 self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))

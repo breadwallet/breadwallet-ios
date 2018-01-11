@@ -110,15 +110,13 @@ class Transaction {
 
 class EthTransaction : Transaction {
     init(tx: EthTx, address: String, store: Store) {
-        let value = GethBigInt(0)!
-        value.setString(tx.value, base: 10)
-        self.wei = value
+        self.wei = tx.value
         self.store = store
         self.tx = tx
         super.init()
-        self.timestamp = Int(tx.timeStamp) ?? 0
+        self.timestamp = Int(tx.timeStamp)
         self.direction = tx.to.lowercased() == address.lowercased() ? .received : .sent
-        if tx.isError == "0" {
+        if !tx.isError {
             if Int(tx.confirmations) == 0 {
                 self.status = S.Transaction.pending
             } else {
@@ -129,7 +127,7 @@ class EthTransaction : Transaction {
         }
         self.isEth = true
         self.hash = tx.hash
-        self.blockHeight = tx.blockNumber
+        self.blockHeight = String(tx.blockNumber)
     }
 
     override var toAddress: String {
@@ -141,7 +139,7 @@ class EthTransaction : Transaction {
     }
     
     override var longTimestamp: String {
-        guard timestamp > 0 else { return tx.isError == "0" ? S.Transaction.justNow : "" }
+        guard timestamp > 0 else { return tx.isError ? "" : S.Transaction.justNow }
         let date = Date(timeIntervalSince1970: Double(timestamp))
         return Transaction.longDateFormatter.string(from: date)
     }
