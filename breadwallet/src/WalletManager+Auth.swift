@@ -148,7 +148,12 @@ extension WalletManager : WalletAuthenticator {
         }
         catch { return -1 }
     }
-    
+
+    var walletIsDisabled: Bool {
+        let now = Date().timeIntervalSince1970
+        return walletDisabledUntil > now
+    }
+
     // after 3 or more failed pin attempts, authentication is disabled until this time (interval since reference date)
     var walletDisabledUntil: TimeInterval {
         do {

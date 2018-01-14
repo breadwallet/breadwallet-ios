@@ -253,7 +253,7 @@ class ModalPresenter : Subscriber, Trackable {
         sendVC.presentVerifyPin = { [weak self, weak root] bodyText, success in
             guard let myself = self else { return }
             guard let walletManager = myself.walletManager else { return }
-            let vc = VerifyPinViewController(bodyText: bodyText, pinLength: myself.store.state.pinLength, walletManager: walletManager, success: success)
+            let vc = VerifyPinViewController(bodyText: bodyText, pinLength: myself.store.state.pinLength, walletManager: walletManager, store: myself.store, success: success)
             vc.transitioningDelegate = self?.verifyPinTransitionDelegate
             vc.modalPresentationStyle = .overFullScreen
             vc.modalPresentationCapturesStatusBarAppearance = true
@@ -519,7 +519,7 @@ class ModalPresenter : Subscriber, Trackable {
 
     private func pushBiometricsSpendingLimit(onNc: UINavigationController) {
         guard let walletManager = walletManager else { return }
-        let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: store.state.pinLength, walletManager: walletManager, success: { [weak self] pin in
+        let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: store.state.pinLength, walletManager: walletManager, store: store, success: { [weak self] pin in
             guard let myself = self else { return }
             let spendingLimit = BiometricsSpendingLimitViewController(walletManager: walletManager, store: myself.store)
             onNc.pushViewController(spendingLimit, animated: true)
@@ -538,7 +538,7 @@ class ModalPresenter : Subscriber, Trackable {
         paperPhraseNavigationController.modalPresentationStyle = .overFullScreen
         let start = StartPaperPhraseViewController(store: store, callback: { [weak self] in
             guard let myself = self else { return }
-            let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: myself.store.state.pinLength, walletManager: walletManager, success: { pin in
+            let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: myself.store.state.pinLength, walletManager: walletManager, store: myself.store, success: { pin in
                 myself.pushWritePaperPhrase(navigationController: paperPhraseNavigationController, pin: pin)
             })
             verify.transitioningDelegate = self?.verifyPinTransitionDelegate
@@ -736,19 +736,12 @@ class ModalPresenter : Subscriber, Trackable {
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: S.URLHandling.copy, style: .default, handler: { [weak self] _ in
             guard let myself = self else { return }
-            let verify = VerifyPinViewController(bodyText: S.URLHandling.addressListVerifyPrompt, pinLength: myself.store.state.pinLength, walletManager: walletManager, success: { [weak self] pin in
-                //if walletManager.authenticate(pin: pin) {
-                    self?.copyAllAddressesToClipboard()
-                    //view.dismiss(animated: true, completion: {
-                        self?.store.perform(action: Alert.Show(.addressesCopied))
-                        if let success = success, let url = URL(string: success) {
-                            UIApplication.shared.openURL(url)
-                        }
-                  //  })
-//                    return true
-//                } else {
-//                    return false
-//                }
+            let verify = VerifyPinViewController(bodyText: S.URLHandling.addressListVerifyPrompt, pinLength: myself.store.state.pinLength, walletManager: walletManager, store: myself.store, success: { [weak self] pin in
+                self?.copyAllAddressesToClipboard()
+                self?.store.perform(action: Alert.Show(.addressesCopied))
+                if let success = success, let url = URL(string: success) {
+                    UIApplication.shared.openURL(url)
+                }
             })
             verify.transitioningDelegate = self?.verifyPinTransitionDelegate
             verify.modalPresentationStyle = .overFullScreen
@@ -779,7 +772,7 @@ class ModalPresenter : Subscriber, Trackable {
 
     private func verifyPinForBitId(prompt: String, callback: @escaping (BitIdAuthResult) -> Void) {
         guard let walletManager = walletManager else { return }
-        let verify = VerifyPinViewController(bodyText: prompt, pinLength: store.state.pinLength, walletManager: walletManager, success: { pin in
+        let verify = VerifyPinViewController(bodyText: prompt, pinLength: store.state.pinLength, walletManager: walletManager, store: store, success: { pin in
                 callback(.success)
         })
         verify.didCancel = { callback(.cancelled) }

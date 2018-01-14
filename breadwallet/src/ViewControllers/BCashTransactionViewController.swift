@@ -150,7 +150,7 @@ class BCashTransactionViewController : UIViewController {
     }
 
     private func send(toAddress: String) {
-        let verify = VerifyPinViewController(bodyText: S.VerifyPin.authorize, pinLength: walletManager.pinLength, walletManager: walletManager, success: { [weak self] pin in
+        let verify = VerifyPinViewController(bodyText: S.VerifyPin.authorize, pinLength: walletManager.pinLength, walletManager: walletManager, store: store, success: { [weak self] pin in
                 guard let myself = self else { return }
                 myself.walletManager.sweepBCash(toAddress: toAddress, pin: pin, callback: { errorMessage in
                     if let errorMessage = errorMessage {
