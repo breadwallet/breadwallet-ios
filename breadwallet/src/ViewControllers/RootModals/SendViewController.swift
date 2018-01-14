@@ -19,7 +19,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
     //MARK - Public
     var presentScan: PresentScan?
-    var presentVerifyPin: ((String, @escaping VerifyPinCallback)->Void)?
+    var presentVerifyPin: ((String, @escaping ((String) -> Void))->Void)?
     var onPublishSuccess: (()->Void)?
     var parentView: UIView? //ModalPresentable
     var initialAddress: String?
@@ -318,15 +318,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                     comment: descriptionCell.textView.text,
                     feePerKb: feePerKb,
                     verifyPinFunction: { [weak self] pinValidationCallback in
-                        self?.presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin, vc in
-                            if pinValidationCallback(pin) {
-                                vc.dismiss(animated: true, completion: {
-                                    self?.parent?.view.isFrameChangeBlocked = false
-                                })
-                                return true
-                            } else {
-                                return false
-                            }
+                        self?.presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin in
+                            self?.parent?.view.isFrameChangeBlocked = false
+                            pinValidationCallback(pin)
                         }
             }, completion: { [weak self] result in
                 switch result {
