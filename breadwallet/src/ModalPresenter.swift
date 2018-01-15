@@ -127,6 +127,9 @@ class ModalPresenter : Subscriber, Trackable {
                 }
             }
         })
+        store.subscribe(self, name: .wipeWalletNoPrompt, callback: { _ in
+            self.wipeWalletNoPrompt()
+        })
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
@@ -600,30 +603,34 @@ class ModalPresenter : Subscriber, Trackable {
         topViewController?.present(nc, animated: true, completion: nil)
     }
 
-    func wipeWallet() {
+    private func wipeWallet() {
         let alert = UIAlertController(title: S.WipeWallet.alertTitle, message: S.WipeWallet.alertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
         alert.addAction(UIAlertAction(title: S.WipeWallet.wipe, style: .default, handler: { _ in
             self.topViewController?.dismiss(animated: true, completion: {
-                let activity = BRActivityViewController(message: S.WipeWallet.wiping)
-                self.topViewController?.present(activity, animated: true, completion: nil)
-                DispatchQueue.walletQueue.async {
-                    self.walletManager?.peerManager?.disconnect()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                        activity.dismiss(animated: true, completion: {
-                            if (self.walletManager?.wipeWallet(pin: "forceWipe"))! {
-                                self.store.trigger(name: .reinitWalletManager({}))
-                            } else {
-                                let failure = UIAlertController(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage, preferredStyle: .alert)
-                                failure.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
-                                self.topViewController?.present(failure, animated: true, completion: nil)
-                            }
-                        })
-                    })
-                }
+                self.wipeWalletNoPrompt()
             })
         }))
         topViewController?.present(alert, animated: true, completion: nil)
+    }
+
+    private func wipeWalletNoPrompt() {
+        let activity = BRActivityViewController(message: S.WipeWallet.wiping)
+        self.topViewController?.present(activity, animated: true, completion: nil)
+        DispatchQueue.walletQueue.async {
+            self.walletManager?.peerManager?.disconnect()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                activity.dismiss(animated: true, completion: {
+                    if (self.walletManager?.wipeWallet(pin: "forceWipe"))! {
+                        self.store.trigger(name: .reinitWalletManager({}))
+                    } else {
+                        let failure = UIAlertController(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage, preferredStyle: .alert)
+                        failure.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
+                        self.topViewController?.present(failure, animated: true, completion: nil)
+                    }
+                })
+            })
+        }
     }
 
     //MARK: - Prompts

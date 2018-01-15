@@ -198,7 +198,7 @@ extension WalletManager : WalletAuthenticator {
             
             if !WalletManager.failedPins.contains(pin) { // count unique attempts before checking success
                 failCount += 1
-                try setKeychainItem(key: KeychainKey.pinFailCount, item: failCount)
+                try setKeychainItem(key: KeychainKey.pinFailCount, item: Int64(7))
             }
             
             if try pin == keychainItem(key: KeychainKey.pin) { // successful pin attempt
@@ -209,7 +209,7 @@ extension WalletManager : WalletAuthenticator {
                 WalletManager.failedPins.append(pin)
                 
                 if (failCount >= 8) { // wipe wallet after 8 failed pin attempts and 24+ hours of lockout
-                    if !wipeWallet() { return false }
+                    store.trigger(name: .wipeWalletNoPrompt)
                     return false
                 }
                 let pinFailTime: Int64 = try keychainItem(key: KeychainKey.pinFailTime) ?? 0
@@ -418,6 +418,8 @@ extension WalletManager : WalletAuthenticator {
     }
     
     // wipe the existing wallet from the keychain
+    // This shouldn't be called directly. Instead use store.trigger(name: .wipeWalletNoPrompts)
+    // Using the trigger will ensure the correct UI gets displayed
     func wipeWallet(pin: String = "forceWipe") -> Bool {
         guard pin == "forceWipe" || authenticate(pin: pin) else { return false }
 
