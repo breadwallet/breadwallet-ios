@@ -20,6 +20,7 @@ class NodeSelectorViewController : UIViewController, Trackable {
     private let walletManager: WalletManager
     private var okAction: UIAlertAction?
     private var timer: Timer?
+    private let decimalSeparator = NumberFormatter().decimalSeparator ?? "."
 
     init(walletManager: WalletManager) {
         self.walletManager = walletManager
@@ -97,10 +98,11 @@ class NodeSelectorViewController : UIViewController, Trackable {
     private func switchToManual() {
         let alert = UIAlertController(title: S.NodeSelector.enterTitle, message: S.NodeSelector.enterBody, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
-        let okAction = UIAlertAction(title: S.Button.ok, style: .default, handler: { action in
+        let okAction = UIAlertAction(title: S.Button.ok, style: .default, handler: { [weak self] action in
+            guard let myself = self else { return }
             guard let ip = alert.textFields?.first, let port = alert.textFields?.last else { return }
-            if let addressText = ip.text {
-                self.saveEvent("nodeSelector.switchToManual")
+            if let addressText = ip.text?.replacingOccurrences(of: myself.decimalSeparator, with: ".") {
+                myself.saveEvent("nodeSelector.switchToManual")
                 var address = in_addr()
                 ascii2addr(AF_INET, addressText, &address)
                 UserDefaults.customNodeIP = Int(address.s_addr)
@@ -108,9 +110,9 @@ class NodeSelectorViewController : UIViewController, Trackable {
                     UserDefaults.customNodePort = Int(portText)
                 }
                 DispatchQueue.walletQueue.async {
-                    self.walletManager.peerManager?.connect()
+                    myself.walletManager.peerManager?.connect()
                 }
-                self.button.title = S.NodeSelector.automaticButton
+                myself.button.title = S.NodeSelector.automaticButton
             }
         })
         self.okAction = okAction
@@ -137,7 +139,7 @@ class NodeSelectorViewController : UIViewController, Trackable {
     }
 
     @objc private func ipAddressDidChange(textField: UITextField) {
-        if let text = textField.text {
+        if let text = textField.text?.replacingOccurrences(of: decimalSeparator, with: ".") {
             if text.components(separatedBy: ".").count == 4 && ascii2addr(AF_INET, text, nil) > 0 {
                 self.okAction?.isEnabled = true
                 return
