@@ -87,7 +87,6 @@ class ApplicationController : Subscriber, Trackable {
         if !hasPerformedWalletDependentInitialization && didInitWallet {
             didInitWalletManager()
         }
-
     }
 
     private func setup() {
