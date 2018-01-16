@@ -17,8 +17,12 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         self.selectedIndex = selectedIndex
         self.isBtcSwapped = store.state.isBtcSwapped
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: UIScreen.main.safeWidth-C.padding[4], height: UIScreen.main.bounds.height - C.padding[1])
-        layout.sectionInset = UIEdgeInsetsMake(C.padding[1], 0, 0, 0)
+        layout.itemSize = CGSize(width: UIScreen.main.safeWidth-C.padding[4],
+                                 height: UIScreen.main.bounds.height - C.padding[2])
+        layout.sectionInset = UIEdgeInsetsMake(C.padding[5], 0, 0, 0)
+        if #available(iOS 11.0, *) {
+            layout.sectionInsetReference = .fromSafeArea
+        }
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = C.padding[1]
         
