@@ -100,20 +100,11 @@ class Sender {
             }
             let result = group.wait(timeout: .now() + 4.0)
             if result == .timedOut {
-                let alert = UIAlertController(title: "Error", message: "Did not sign tx within timeout", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                self.topViewController?.present(alert, animated: true, completion: nil)
+                SentryClient.shared.sendMessage("send-tx-timeout", completion: {
+                    fatalError("send-tx-timeout")
+                })
             }
         })
-    }
-
-    //TODO - remove this -- only temporary for testing
-    private var topViewController: UIViewController? {
-        var viewController = UIApplication.shared.keyWindow?.rootViewController
-        while viewController?.presentedViewController != nil {
-            viewController = viewController?.presentedViewController
-        }
-        return viewController
     }
 
     private func publish(completion: @escaping (SendResult) -> Void) {
