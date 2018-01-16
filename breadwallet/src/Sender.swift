@@ -55,12 +55,13 @@ class Sender {
         return walletManager.canUseBiometrics(forTx: tx)
     }
 
-    func feeForTx(amount: UInt64) -> UInt64 {
-        return walletManager.wallet?.feeForTx(amount:amount) ?? 0
+    func feeForTx(amount: UInt64) -> UInt64? {
+        let fee = walletManager.wallet?.feeForTx(amount:amount)
+        return fee == 0 ? nil : fee
     }
 
     //Amount in bits
-    func send(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
+    func send(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Void) -> Void, completion:@escaping (SendResult) -> Void) {
         guard let tx = transaction else { return completion(.creationError(S.Send.createTransactionError)) }
 
         self.rate = rate
@@ -75,46 +76,35 @@ class Sender {
                         myself.publish(completion: completion)
                     } else {
                         if result == .failure || result == .fallback {
-                            myself.verifyPin(tx: tx, withFunction: verifyPinFunction, completion: completion)
+                            myself.verifyPin(tx: tx, verifyPinFunction: verifyPinFunction, completion: completion)
                         }
                     }
                 })
             }
         } else {
-            self.verifyPin(tx: tx, withFunction: verifyPinFunction, completion: completion)
+            self.verifyPin(tx: tx, verifyPinFunction: verifyPinFunction, completion: completion)
         }
     }
 
-    private func verifyPin(tx: BRTxRef, withFunction: (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
-        withFunction({ pin in
-            var success = false
+    private func verifyPin(tx: BRTxRef,
+                           verifyPinFunction: (@escaping(String) -> Void) -> Void,
+                           completion:@escaping (SendResult) -> Void) {
+        verifyPinFunction({ pin in
             let group = DispatchGroup()
             group.enter()
             DispatchQueue.walletQueue.async {
                 if self.walletManager.signTransaction(tx, pin: pin) {
                     self.publish(completion: completion)
-                    success = true
                 }
                 group.leave()
             }
             let result = group.wait(timeout: .now() + 4.0)
             if result == .timedOut {
-                let alert = UIAlertController(title: "Error", message: "Did not sign tx within timeout", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                self.topViewController?.present(alert, animated: true, completion: nil)
-                return false
+                SentryClient.shared.sendMessage("send-tx-timeout", completion: {
+                    fatalError("send-tx-timeout")
+                })
             }
-            return success
         })
-    }
-
-    //TODO - remove this -- only temporary for testing
-    private var topViewController: UIViewController? {
-        var viewController = UIApplication.shared.keyWindow?.rootViewController
-        while viewController?.presentedViewController != nil {
-            viewController = viewController?.presentedViewController
-        }
-        return viewController
     }
 
     private func publish(completion: @escaping (SendResult) -> Void) {

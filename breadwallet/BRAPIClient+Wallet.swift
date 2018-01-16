@@ -47,7 +47,7 @@ extension BRAPIClient {
                 self.log("fee-per-kb network error: \(String(describing: err))")
                 errStr = "bad network connection"
             }
-            handler(Fees(regular: regularFeePerKb, economy: economyFeePerKb), errStr)
+            handler(Fees(regular: regularFeePerKb, economy: economyFeePerKb, timestamp: Date().timeIntervalSince1970), errStr)
         }
         task.resume()
     }

@@ -103,7 +103,7 @@ class WritePaperPhraseViewController: UIViewController {
             let xConstraint = NSLayoutConstraint(item: phraseView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: constant)
             phraseView.xConstraint = xConstraint
             phraseView.constrain([
-                    phraseView.constraint(.width, constant: PhraseView.defaultSize.width),
+                phraseView.widthAnchor.constraint(greaterThanOrEqualToConstant: PhraseView.defaultSize.width),
                     phraseView.constraint(.height, constant: PhraseView.defaultSize.height),
                     phraseView.constraint(.centerY, toView: view, constant: 0.0),
                     xConstraint

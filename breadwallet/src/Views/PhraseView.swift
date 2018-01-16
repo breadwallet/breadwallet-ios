@@ -25,10 +25,11 @@ class PhraseView: UIView {
 
     private func setupSubviews() {
         addSubview(label)
-        label.constrainToCenter()
+        label.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[1], C.padding[2], -C.padding[1], -C.padding[2]))
         label.textColor = .white
         label.text = phrase
         label.font = UIFont.customBold(size: 16.0)
+        label.textAlignment = .center
         backgroundColor = .pink
         layer.cornerRadius = 10.0
     }
