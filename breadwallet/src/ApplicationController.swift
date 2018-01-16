@@ -327,8 +327,7 @@ class ApplicationController : Subscriber, Trackable {
         window.rootViewController = nc
 
         let didSelectTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
-            guard let kvStore = self.walletManager?.apiClient?.kv else { return }
-            let transactionDetails = TransactionDetailsViewController(store: self.store, transactions: transactions, selectedIndex: selectedIndex, kvStore: kvStore)
+            let transactionDetails = TransactionDetailsViewController(store: self.store, transactions: transactions, selectedIndex: selectedIndex)
             transactionDetails.modalPresentationStyle = .overFullScreen
             transactionDetails.transitioningDelegate = self.transitionDelegate
             transactionDetails.modalPresentationCapturesStatusBarAppearance = true
@@ -336,8 +335,7 @@ class ApplicationController : Subscriber, Trackable {
         }
 
         let didSelectEthTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
-            guard let kvStore = self.walletManager?.apiClient?.kv else { return }
-            let transactionDetails = TransactionDetailsViewController(store: self.ethStore, transactions: transactions, selectedIndex: selectedIndex, kvStore: kvStore)
+            let transactionDetails = TransactionDetailsViewController(store: self.ethStore, transactions: transactions, selectedIndex: selectedIndex)
             transactionDetails.modalPresentationStyle = .overFullScreen
             transactionDetails.transitioningDelegate = self.transitionDelegate
             transactionDetails.modalPresentationCapturesStatusBarAppearance = true

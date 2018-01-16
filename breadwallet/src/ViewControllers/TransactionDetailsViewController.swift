@@ -11,11 +11,10 @@ import UIKit
 class TransactionDetailsViewController : UICollectionViewController, Subscriber {
 
     //MARK: - Public
-    init(store: Store, transactions: [Transaction], selectedIndex: Int, kvStore: BRReplicatedKVStore) {
+    init(store: Store, transactions: [Transaction], selectedIndex: Int) {
         self.store = store
         self.transactions = transactions
         self.selectedIndex = selectedIndex
-        self.kvStore = kvStore
         self.isBtcSwapped = store.state.isBtcSwapped
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: UIScreen.main.safeWidth-C.padding[4], height: UIScreen.main.bounds.height - C.padding[1])
@@ -32,7 +31,6 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
     fileprivate let store: Store
     fileprivate var transactions: [Transaction]
     fileprivate let selectedIndex: Int
-    fileprivate let kvStore: BRReplicatedKVStore
     fileprivate let cellIdentifier = "CellIdentifier"
     fileprivate var isBtcSwapped: Bool
     fileprivate var rate: Rate?
@@ -138,8 +136,8 @@ extension TransactionDetailsViewController {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
         guard let transactionDetailCell = item as? TxDetailCollectionViewCell else { return item }
         let tx = transactions[indexPath.row]
-        let info = TxDetailInfo(tx: tx, state: store.state)
-        transactionDetailCell.set(info: info, store: store, kvStore: kvStore)
+        let viewModel = TxDetailViewModel(tx: tx, store: store)
+        transactionDetailCell.set(viewModel: viewModel, store: store)
         transactionDetailCell.closeCallback = { [weak self] in
             if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
                 delegate.reset()

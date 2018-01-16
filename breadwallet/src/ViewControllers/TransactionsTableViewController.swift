@@ -400,9 +400,12 @@ extension TransactionsTableViewController {
             }
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
-        if let transactionCell = cell as? TransactionTableViewCell, let rate = rate {
+        if let transactionCell = cell as? TransactionTableViewCell,
+            let rate = rate,
+            let walletManager = walletManager {
+            let viewModel = TxListViewModel(tx: transactions[indexPath.row], walletManager: walletManager)
             transactionCell.setStyle(style)
-            transactionCell.setTransaction(transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits, isSyncing: store.state.walletState.syncState != .success)
+            transactionCell.setTransaction(viewModel, isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits, isSyncing: store.state.walletState.syncState != .success, store: store)
         }
         return cell
     }

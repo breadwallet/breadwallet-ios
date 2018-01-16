@@ -78,15 +78,6 @@ struct TokenBalance : Codable {
     let result: String
 }
 
-struct Token {
-    let name: String
-    let code: String
-    let symbol: String
-    let address: String
-    let decimals: Int
-    let abi: String
-}
-
 struct Crowdsale {
     let startTime: Date?
     let endTime: Date?
