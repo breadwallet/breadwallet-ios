@@ -129,6 +129,7 @@ import WebKit
                 self?.sendToAllSockets(data: info)
             }
         }
+        self.messageUIPresenter.presenter = self
     }
     
     override open func viewWillAppear(_ animated: Bool) {
@@ -165,7 +166,9 @@ import WebKit
                             print("[BRWebViewController] error updating bundle: \(String(describing: err))")
                         }
                         // give the webview another chance to load
-                        self?.refresh()
+                        DispatchQueue.main.async {
+                            self?.refresh()
+                        }
                         // XXX(sam): log this event so we know how frequently it happens
                         DispatchQueue.main.asyncAfter(deadline: timeout) {
                             self?.store.trigger(name: .showStatusBar)

@@ -150,23 +150,16 @@ class BCashTransactionViewController : UIViewController {
     }
 
     private func send(toAddress: String) {
-        let verify = VerifyPinViewController(bodyText: S.VerifyPin.authorize, pinLength: walletManager.pinLength, callback: { [weak self] pin, vc in
-                guard let myself = self else { return false }
-                if myself.walletManager.authenticate(pin: pin) {
-                    vc.dismiss(animated: true, completion: {
-                        myself.walletManager.sweepBCash(toAddress: toAddress, pin: pin, callback: { errorMessage in
-                            if let errorMessage = errorMessage {
-                                myself.showErrorMessage(errorMessage)
-                            } else {
-                                myself.setPreviousTx()
-                                myself.showAlert(title: S.Import.success, message: S.BCH.successMessage, buttonLabel: S.Button.ok)
-                            }
-                        })
-                    })
-                    return true
-                } else {
-                    return false
-                }
+        let verify = VerifyPinViewController(bodyText: S.VerifyPin.authorize, pinLength: walletManager.pinLength, walletManager: walletManager, store: store, success: { [weak self] pin in
+                guard let myself = self else { return }
+                myself.walletManager.sweepBCash(toAddress: toAddress, pin: pin, callback: { errorMessage in
+                    if let errorMessage = errorMessage {
+                        myself.showErrorMessage(errorMessage)
+                    } else {
+                        myself.setPreviousTx()
+                        myself.showAlert(title: S.Import.success, message: S.BCH.successMessage, buttonLabel: S.Button.ok)
+                    }
+                })
         })
         verify.transitioningDelegate = verifyPinTransitionDelegate
         verify.modalPresentationStyle = .overFullScreen

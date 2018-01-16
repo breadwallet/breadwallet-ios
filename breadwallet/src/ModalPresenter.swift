@@ -142,6 +142,9 @@ class ModalPresenter : Subscriber, Trackable {
                 }
             }
         })
+        store.subscribe(self, name: .wipeWalletNoPrompt, callback: { _ in
+            self.wipeWalletNoPrompt()
+        })
     }
 
     private func presentModal(_ type: RootModal, store: Store, configuration: ((UIViewController) -> Void)? = nil) {
@@ -272,9 +275,10 @@ class ModalPresenter : Subscriber, Trackable {
 
         let root = ModalViewController(childViewController: sendVC, store: store)
         sendVC.presentScan = presentScan(parent: root, store: store)
-        sendVC.presentVerifyPin = { [weak self, weak root] bodyText, callback in
+        sendVC.presentVerifyPin = { [weak self, weak root] bodyText, success in
             guard let myself = self else { return }
-            let vc = VerifyPinViewController(bodyText: bodyText, pinLength: myself.store.state.pinLength, callback: callback)
+            guard let walletManager = myself.walletManager else { return }
+            let vc = VerifyPinViewController(bodyText: bodyText, pinLength: myself.store.state.pinLength, walletManager: walletManager, store: myself.store, success: success)
             vc.transitioningDelegate = self?.verifyPinTransitionDelegate
             vc.modalPresentationStyle = .overFullScreen
             vc.modalPresentationCapturesStatusBarAppearance = true
@@ -539,18 +543,10 @@ class ModalPresenter : Subscriber, Trackable {
 
     private func pushBiometricsSpendingLimit(onNc: UINavigationController) {
         guard let walletManager = walletManager else { return }
-
-        let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: store.state.pinLength, callback: { [weak self] pin, vc in
-            guard let myself = self else { return false }
-            if walletManager.authenticate(pin: pin) {
-                vc.dismiss(animated: true, completion: {
-                    let spendingLimit = BiometricsSpendingLimitViewController(walletManager: walletManager, store: myself.store)
-                    onNc.pushViewController(spendingLimit, animated: true)
-                })
-                return true
-            } else {
-                return false
-            }
+        let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: store.state.pinLength, walletManager: walletManager, store: store, success: { [weak self] pin in
+            guard let myself = self else { return }
+            let spendingLimit = BiometricsSpendingLimitViewController(walletManager: walletManager, store: myself.store)
+            onNc.pushViewController(spendingLimit, animated: true)
         })
         verify.transitioningDelegate = verifyPinTransitionDelegate
         verify.modalPresentationStyle = .overFullScreen
@@ -566,35 +562,8 @@ class ModalPresenter : Subscriber, Trackable {
         paperPhraseNavigationController.modalPresentationStyle = .overFullScreen
         let start = StartPaperPhraseViewController(store: store, callback: { [weak self] in
             guard let myself = self else { return }
-            let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: myself.store.state.pinLength, callback: { pin, vc in
-                if walletManager.authenticate(pin: pin) {
-                    var write: WritePaperPhraseViewController?
-                    write = WritePaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin, callback: { [weak self] in
-                        guard let myself = self else { return }
-                        var confirm: ConfirmPaperPhraseViewController?
-                        confirm = ConfirmPaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin, callback: {
-                                confirm?.dismiss(animated: true, completion: {
-                                    myself.store.perform(action: Alert.Show(.paperKeySet(callback: {
-                                        myself.store.perform(action: HideStartFlow())
-                                    })))
-                            })
-                        })
-                        write?.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-                        if let confirm = confirm {
-                            paperPhraseNavigationController.pushViewController(confirm, animated: true)
-                        }
-                    })
-                    write?.addCloseNavigationItem(tintColor: .white)
-                    write?.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-
-                    vc.dismiss(animated: true, completion: {
-                        guard let write = write else { return }
-                        paperPhraseNavigationController.pushViewController(write, animated: true)
-                    })
-                    return true
-                } else {
-                    return false
-                }
+            let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: myself.store.state.pinLength, walletManager: walletManager, store: myself.store, success: { pin in
+                myself.pushWritePaperPhrase(navigationController: paperPhraseNavigationController, pin: pin)
             })
             verify.transitioningDelegate = self?.verifyPinTransitionDelegate
             verify.modalPresentationStyle = .overFullScreen
@@ -608,6 +577,30 @@ class ModalPresenter : Subscriber, Trackable {
         start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
         paperPhraseNavigationController.viewControllers = [start]
         vc.present(paperPhraseNavigationController, animated: true, completion: nil)
+    }
+
+    private func pushWritePaperPhrase(navigationController: UINavigationController, pin: String) {
+        guard let walletManager = walletManager else { return }
+        var writeViewController: WritePaperPhraseViewController?
+        writeViewController = WritePaperPhraseViewController(store: store, walletManager: walletManager, pin: pin, callback: { [weak self] in
+            guard let myself = self else { return }
+            var confirm: ConfirmPaperPhraseViewController?
+            confirm = ConfirmPaperPhraseViewController(store: myself.store, walletManager: walletManager, pin: pin, callback: {
+                confirm?.dismiss(animated: true, completion: {
+                    myself.store.perform(action: Alert.Show(.paperKeySet(callback: {
+                        myself.store.perform(action: HideStartFlow())
+                    })))
+                })
+            })
+            writeViewController?.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
+            if let confirm = confirm {
+                navigationController.pushViewController(confirm, animated: true)
+            }
+        })
+        writeViewController?.addCloseNavigationItem(tintColor: .white)
+        writeViewController?.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
+        guard let writeVC = writeViewController else { return }
+        navigationController.pushViewController(writeVC, animated: true)
     }
 
     private func presentBuyController(_ mountPoint: String) {
@@ -631,30 +624,34 @@ class ModalPresenter : Subscriber, Trackable {
         topViewController?.present(nc, animated: true, completion: nil)
     }
 
-    func wipeWallet() {
+    private func wipeWallet() {
         let alert = UIAlertController(title: S.WipeWallet.alertTitle, message: S.WipeWallet.alertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
         alert.addAction(UIAlertAction(title: S.WipeWallet.wipe, style: .default, handler: { _ in
             self.topViewController?.dismiss(animated: true, completion: {
-                let activity = BRActivityViewController(message: S.WipeWallet.wiping)
-                self.topViewController?.present(activity, animated: true, completion: nil)
-                DispatchQueue.walletQueue.async {
-                    self.walletManager?.peerManager?.disconnect()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                        activity.dismiss(animated: true, completion: {
-                            if (self.walletManager?.wipeWallet(pin: "forceWipe"))! {
-                                self.store.trigger(name: .reinitWalletManager({}))
-                            } else {
-                                let failure = UIAlertController(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage, preferredStyle: .alert)
-                                failure.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
-                                self.topViewController?.present(failure, animated: true, completion: nil)
-                            }
-                        })
-                    })
-                }
+                self.wipeWalletNoPrompt()
             })
         }))
         topViewController?.present(alert, animated: true, completion: nil)
+    }
+
+    private func wipeWalletNoPrompt() {
+        let activity = BRActivityViewController(message: S.WipeWallet.wiping)
+        self.topViewController?.present(activity, animated: true, completion: nil)
+        DispatchQueue.walletQueue.async {
+            self.walletManager?.peerManager?.disconnect()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                activity.dismiss(animated: true, completion: {
+                    if (self.walletManager?.wipeWallet(pin: "forceWipe"))! {
+                        self.store.trigger(name: .reinitWalletManager({}))
+                    } else {
+                        let failure = UIAlertController(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage, preferredStyle: .alert)
+                        failure.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
+                        self.topViewController?.present(failure, animated: true, completion: nil)
+                    }
+                })
+            })
+        }
     }
 
     //MARK: - Prompts
@@ -767,18 +764,11 @@ class ModalPresenter : Subscriber, Trackable {
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: S.URLHandling.copy, style: .default, handler: { [weak self] _ in
             guard let myself = self else { return }
-            let verify = VerifyPinViewController(bodyText: S.URLHandling.addressListVerifyPrompt, pinLength: myself.store.state.pinLength, callback: { [weak self] pin, view in
-                if walletManager.authenticate(pin: pin) {
-                    self?.copyAllAddressesToClipboard()
-                    view.dismiss(animated: true, completion: {
-                        self?.store.perform(action: Alert.Show(.addressesCopied))
-                        if let success = success, let url = URL(string: success) {
-                            UIApplication.shared.openURL(url)
-                        }
-                    })
-                    return true
-                } else {
-                    return false
+            let verify = VerifyPinViewController(bodyText: S.URLHandling.addressListVerifyPrompt, pinLength: myself.store.state.pinLength, walletManager: walletManager, store: myself.store, success: { [weak self] pin in
+                self?.copyAllAddressesToClipboard()
+                self?.store.perform(action: Alert.Show(.addressesCopied))
+                if let success = success, let url = URL(string: success) {
+                    UIApplication.shared.openURL(url)
                 }
             })
             verify.transitioningDelegate = self?.verifyPinTransitionDelegate
@@ -810,15 +800,8 @@ class ModalPresenter : Subscriber, Trackable {
 
     private func verifyPinForBitId(prompt: String, callback: @escaping (BitIdAuthResult) -> Void) {
         guard let walletManager = walletManager else { return }
-        let verify = VerifyPinViewController(bodyText: prompt, pinLength: store.state.pinLength, callback: { pin, view in
-            if walletManager.authenticate(pin: pin) {
-                view.dismiss(animated: true, completion: {
-                    callback(.success)
-                })
-                return true
-            } else {
-                return false
-            }
+        let verify = VerifyPinViewController(bodyText: prompt, pinLength: store.state.pinLength, walletManager: walletManager, store: store, success: { pin in
+                callback(.success)
         })
         verify.didCancel = { callback(.cancelled) }
         verify.transitioningDelegate = verifyPinTransitionDelegate

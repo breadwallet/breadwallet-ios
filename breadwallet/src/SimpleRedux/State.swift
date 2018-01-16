@@ -26,7 +26,7 @@ struct State {
     let isPushNotificationsEnabled: Bool
     let isPromptingBiometrics: Bool
     let pinLength: Int
-    let fees: Fees
+    let fees: Fees?
     let currency: Currency
     let colours: (UIColor, UIColor)
 }
@@ -49,7 +49,7 @@ extension State {
                         isPushNotificationsEnabled: UserDefaults.pushToken != nil,
                         isPromptingBiometrics: false,
                         pinLength: 6,
-                        fees: Fees.defaultFees,
+                        fees: nil,
                         currency: .bitcoin,
                         colours: (UIColor(), UIColor()))
     }
