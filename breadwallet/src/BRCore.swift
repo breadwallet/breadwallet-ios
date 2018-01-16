@@ -448,7 +448,7 @@ class BRWallet {
     }
     
     // returns an unsigned transaction that satisifes the given transaction outputs
-    func createTxForOutputs(_ outputs: [BRTxOutput]) -> BRTxRef {
+    func createTxForOutputs(_ outputs: [BRTxOutput]) -> BRTxRef? {
         return BRWalletCreateTxForOutputs(cPtr, outputs, outputs.count)
     }
     
@@ -570,6 +570,10 @@ class BRPeerManager {
             return Unmanaged<BRPeerManager>.fromOpaque(info).takeUnretainedValue().listener.networkIsReachable() ? 1 : 0
         },
         nil) // threadCleanup
+    }
+
+    func clearCallbacks() {
+        BRPeerManagerSetCallbacks(cPtr, nil, nil, nil, nil, nil, nil, nil, nil)
     }
     
     // true if currently connected to at least one peer

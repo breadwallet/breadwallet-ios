@@ -8,18 +8,11 @@
 
 import Foundation
 
-struct Fees {
+struct Fees : Codable {
     let regular: UInt64
     let economy: UInt64
+    let timestamp: TimeInterval
 }
-
-extension Fees {
-    static var defaultFees: Fees {
-        return Fees(regular: defaultFeePerKB, economy: defaultFeePerKB)
-    }
-}
-
-private let defaultFeePerKB: UInt64 = (5000*1000 + 99)/100 // bitcoind 0.11 min relay fee on 100bytes
 
 class FeeUpdater : Trackable {
 
@@ -36,6 +29,7 @@ class FeeUpdater : Trackable {
                 self.saveEvent("wallet.didUseDefaultFeePerKB")
                 return
             }
+            UserDefaults.fees = newFees
             self.store.perform(action: UpdateFees.set(newFees))
             completion()
         }

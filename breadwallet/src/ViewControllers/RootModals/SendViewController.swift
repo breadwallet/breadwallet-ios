@@ -20,7 +20,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
     //MARK - Public
     var presentScan: PresentScan?
-    var presentVerifyPin: ((String, @escaping VerifyPinCallback)->Void)?
+    var presentVerifyPin: ((String, @escaping ((String) -> Void))->Void)?
     var onPublishSuccess: (()->Void)?
     var parentView: UIView? //ModalPresentable
     var initialAddress: String?
@@ -105,9 +105,21 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                                 self.balance = balance
                             }
         })
-        walletManager.wallet?.feePerKb = store.state.fees.regular
-
         attemptSetupCrowdsale()
+        store.subscribe(self, selector: { $0.fees != $1.fees }, callback: {
+            if let fees = $0.fees {
+                if let feeType = self.feeType {
+                    switch feeType {
+                    case .regular :
+                        self.walletManager.wallet?.feePerKb = fees.regular
+                    case .economy:
+                        self.walletManager.wallet?.feePerKb = fees.economy
+                    }
+                } else {
+                    self.walletManager.wallet?.feePerKb = fees.regular
+                }
+            }
+        })
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -164,12 +176,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         amountView.didUpdateFee = strongify(self) { myself, fee in
             guard let wallet = myself.walletManager.wallet else { return }
             myself.feeType = fee
-            let fees = myself.store.state.fees
-            switch fee {
-            case .regular:
-                wallet.feePerKb = fees.regular
-            case .economy:
-                wallet.feePerKb = fees.economy
+            if let fees = myself.store.state.fees {
+                switch fee {
+                case .regular:
+                    wallet.feePerKb = fees.regular
+                case .economy:
+                    wallet.feePerKb = fees.economy
+                }
             }
             myself.amountView.updateBalanceLabel()
         }
@@ -188,18 +201,21 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
         var color: UIColor = .grayTextTint
+        var feeColor: UIColor = .grayTextTint
         if let amount = amount, amount.rawValue > 0 {
             let fee: UInt64
             if store.isEthLike {
                 fee = UInt64(gethManager!.fee(isCrowdsale: false).getInt64())
+            } else if let fee = sender.feeForTx(amount: amount.rawValue) {
+                let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0, store: store)
+                let feeText = feeAmount.description
+                feeOutput = String(format: S.Send.fee, feeText)
+                if (balance >= fee) && amount.rawValue > (balance - fee) {
+                    color = .cameraGuideNegative
+                }
             } else {
-                fee = sender.feeForTx(amount: amount.rawValue)
-            }
-            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: store.isEthLike ? 8 : 0, store: store)
-            let feeText = feeAmount.description
-            feeOutput = String(format: S.Send.fee, feeText)
-            if (balance >= fee) && amount.rawValue > (balance - fee) {
-                color = .cameraGuideNegative
+                feeOutput = S.Send.nilFeeError
+                feeColor = .cameraGuideNegative
             }
         }
 
@@ -210,7 +226,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
         let feeAttributes: [NSAttributedStringKey: Any] = [
             NSAttributedStringKey.font: UIFont.customBody(size: 14.0),
-            NSAttributedStringKey.foregroundColor: UIColor.grayTextTint
+            NSAttributedStringKey.foregroundColor: feeColor
         ]
 
         return (NSAttributedString(string: balanceOutput, attributes: attributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))
@@ -250,9 +266,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             guard let address = addressCell.address else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             }
-            guard address.isValidAddress else {
-                return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
+            guard store.state.fees != nil else {
+                return showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
             }
+//            guard address.isValidAddress else {
+//                return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
+//            }
             guard let amount = amount else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
             }
@@ -364,22 +383,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func presentEthPin() {
-        presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin, vc in
-            guard let myself = self else { return false }
-            if myself.walletManager.authenticate(pin: pin) {
-                vc.dismiss(animated: true, completion: {
-                    self?.parent?.view.isFrameChangeBlocked = false
-                    if let crowdsale = myself.store.state.walletState.crowdsale, !crowdsale.hasEnded {
-                        myself.sendCrowdsale()
-                    } else if myself.store.state.currency == .ethereum {
-                        myself.sendEth()
-                    } else {
-                        myself.sendToken()
-                    }
-                })
-                return true
+        presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin in
+            guard let myself = self else { return }
+            myself.parent?.view.isFrameChangeBlocked = false
+            if let crowdsale = myself.store.state.walletState.crowdsale, !crowdsale.hasEnded {
+                myself.sendCrowdsale()
+            } else if myself.store.state.currency == .ethereum {
+                myself.sendEth()
             } else {
-                return false
+                myself.sendToken()
             }
         }
     }
@@ -520,15 +532,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                     comment: memoCell.textView.text,
                     feePerKb: feePerKb,
                     verifyPinFunction: { [weak self] pinValidationCallback in
-                        self?.presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin, vc in
-                            if pinValidationCallback(pin) {
-                                vc.dismiss(animated: true, completion: {
-                                    self?.parent?.view.isFrameChangeBlocked = false
-                                })
-                                return true
-                            } else {
-                                return false
-                            }
+                        self?.presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin in
+                            self?.parent?.view.isFrameChangeBlocked = false
+                            pinValidationCallback(pin)
                         }
             }, completion: { [weak self] result in
                 switch result {

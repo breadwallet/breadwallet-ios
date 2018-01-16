@@ -9,8 +9,6 @@
 import UIKit
 import LocalAuthentication
 
-typealias VerifyPinCallback = (String, UIViewController) -> Bool
-
 protocol ContentBoxPresenter {
     var contentBox : UIView { get }
     var blurView: UIVisualEffectView { get }
@@ -19,11 +17,13 @@ protocol ContentBoxPresenter {
 
 class VerifyPinViewController : UIViewController, ContentBoxPresenter {
 
-    init(bodyText: String, pinLength: Int, callback: @escaping VerifyPinCallback) {
+    init(bodyText: String, pinLength: Int, walletManager: WalletManager, store: Store, success: @escaping (String) -> Void) {
         self.bodyText = bodyText
-        self.callback = callback
+        self.success = success
         self.pinLength = pinLength
         self.pinView = PinView(style: .create, length: pinLength)
+        self.walletManager = walletManager
+        self.store = store
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -31,7 +31,7 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
     let blurView = UIVisualEffectView()
     let effect = UIBlurEffect(style: .dark)
     let contentBox = UIView()
-    private let callback: VerifyPinCallback
+    private let success: (String) -> Void
     private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad, maxDigits: 0)
     private let titleLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
     private let body = UILabel(font: .customBody(size: 14.0), color: .darkText)
@@ -40,6 +40,8 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
     private let cancel = UIButton(type: .system)
     private let bodyText: String
     private let pinLength: Int
+    private let walletManager: WalletManager
+    private let store: Store
 
     override func viewDidLoad() {
         addSubviews()
@@ -111,9 +113,13 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
             myself.pinView.fill(attemptLength)
             myself.pinPad.isAppendingDisabled = attemptLength < myself.pinLength ? false : true
             if attemptLength == myself.pinLength {
-                if !myself.callback(output, myself) {
+                if myself.walletManager.authenticate(pin: output) {
+                    myself.dismiss(animated: true, completion: {
+                        myself.success(output)
+                    })
+                } else {
                     myself.authenticationFailed()
-                } 
+                }
             }
         }
         cancel.tap = { [weak self] in
@@ -129,8 +135,16 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
         pinView.shake { [weak self] in
             self?.pinPad.view.isUserInteractionEnabled = true
             self?.pinView.fill(0)
+            self?.lockIfNeeded()
         }
         pinPad.clear()
+    }
+
+    private func lockIfNeeded() {
+        guard walletManager.walletIsDisabled else { return }
+        dismiss(animated: true, completion: {
+            self.store.perform(action: RequireLogin())
+        })
     }
 
     override var prefersStatusBarHidden: Bool {

@@ -337,34 +337,33 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     }
 
     private func lockIfNeeded() {
-        if let disabledUntil = walletManager?.walletDisabledUntil {
-            let now = Date().timeIntervalSince1970
-            if disabledUntil > now {
-                saveEvent("login.locked")
-                let disabledUntilDate = Date(timeIntervalSince1970: disabledUntil)
-                let unlockInterval = disabledUntil - now
-                let df = DateFormatter()
-                df.setLocalizedDateFormatFromTemplate(unlockInterval > C.secondsInDay ? "h:mm:ss a MMM d, yyy" : "h:mm:ss a")
-
-                disabledView.setTimeLabel(string: String(format: S.UnlockScreen.disabled, df.string(from: disabledUntilDate)))
-
-                pinPad.view.isUserInteractionEnabled = false
-                unlockTimer?.invalidate()
-                unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)
-
-                if disabledView.superview == nil {
-                    view.addSubview(disabledView)
-                    setNeedsStatusBarAppearanceUpdate()
-                    disabledView.constrain(toSuperviewEdges: nil)
-                    disabledView.show()
-                }
-            } else {
-                pinPad.view.isUserInteractionEnabled = true
-                disabledView.hide { [weak self] in
-                    self?.disabledView.removeFromSuperview()
-                    self?.setNeedsStatusBarAppearanceUpdate()
-                }
+        guard let walletManager = walletManager else { return }
+        guard walletManager.walletIsDisabled else {
+            pinPad.view.isUserInteractionEnabled = true
+            disabledView.hide { [weak self] in
+                self?.disabledView.removeFromSuperview()
+                self?.setNeedsStatusBarAppearanceUpdate()
             }
+            return
+        }
+        saveEvent("login.locked")
+        let disabledUntil = walletManager.walletDisabledUntil
+        let disabledUntilDate = Date(timeIntervalSince1970: disabledUntil)
+        let unlockInterval = disabledUntil - Date().timeIntervalSince1970
+        let df = DateFormatter()
+        df.setLocalizedDateFormatFromTemplate(unlockInterval > C.secondsInDay ? "h:mm:ss a MMM d, yyy" : "h:mm:ss a")
+
+        disabledView.setTimeLabel(string: String(format: S.UnlockScreen.disabled, df.string(from: disabledUntilDate)))
+
+        pinPad.view.isUserInteractionEnabled = false
+        unlockTimer?.invalidate()
+        unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)
+
+        if disabledView.superview == nil {
+            view.addSubview(disabledView)
+            setNeedsStatusBarAppearanceUpdate()
+            disabledView.constrain(toSuperviewEdges: nil)
+            disabledView.show()
         }
     }
 
