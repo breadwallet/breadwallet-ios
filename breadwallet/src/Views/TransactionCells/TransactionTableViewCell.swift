@@ -31,6 +31,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     }
 
     //MARK: - Public
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -50,26 +51,21 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         }
     }
 
-    func setTransaction(_ transaction: Transaction, isBtcSwapped: Bool, rate: Rate, maxDigits: Int, isSyncing: Bool) {
+    func setTransaction(_ transaction: TxListViewModel, isBtcSwapped: Bool, rate: Rate, maxDigits: Int, isSyncing: Bool, store: Store) {
         self.transaction = transaction
-        transactionLabel.attributedText = transaction.descriptionString(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits)
-
-        if transaction.isEth {
-            address.text = String(format: transaction.direction.ethAddressTextFormat, transaction.toAddress ?? "")
-        } else {
-            address.text = String(format: transaction.direction.addressTextFormat, transaction.toAddress ?? "")
-        }
-        status.text = transaction.status
+        transactionLabel.attributedText = transaction.description(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits, store: store)
+        address.text = transaction.address
+        status.text = transaction.statusText
         comment.text = transaction.comment
         availability.text = transaction.shouldDisplayAvailableToSpend ? S.Transaction.available : ""
 
-        if transaction.status == S.Transaction.complete {
+        if transaction.status == .complete {
             status.isHidden = false
         } else {
             status.isHidden = isSyncing
         }
 
-        let timestampInfo = transaction.timeSince
+        let timestampInfo = self.transaction!.timeSince
         timestamp.text = timestampInfo.0
         if timestampInfo.1 {
             timer = Timer.scheduledTimer(timeInterval: timestampRefreshRate, target: TransactionTableViewCellWrapper(target: self), selector: NSSelectorFromString("timerDidFire"), userInfo: nil, repeats: true)
@@ -91,6 +87,12 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     let container = RoundedContainer()
 
     //MARK: - Private
+    
+    private var transaction: TxListViewModel?
+    private let topPadding: CGFloat = 19.0
+    private var style: TransactionCellStyle = .first
+    private var timer: Timer? = nil
+    
     private let transactionLabel = UILabel()
     private let address = UILabel(font: UIFont.customBody(size: 13.0))
     private let status = UILabel(font: UIFont.customBody(size: 13.0))
@@ -98,11 +100,7 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
     private let timestamp = UILabel(font: UIFont.customMedium(size: 13.0))
     private let shadowView = MaskedShadow()
     private let innerShadow = UIView()
-    private let topPadding: CGFloat = 19.0
-    private var style: TransactionCellStyle = .first
-    private var transaction: Transaction?
     private let availability = UILabel(font: .customBold(size: 13.0), color: .txListGreen)
-    private var timer: Timer? = nil
     private let arrow = UIImageView(image: #imageLiteral(resourceName: "CircleArrow").withRenderingMode(.alwaysTemplate))
 
     private func setupViews() {
@@ -187,14 +185,16 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
 
     }
 
-    func updateTimestamp() {
-        guard let tx = transaction else { return }
+    private func updateTimestamp() {
+        guard var tx = transaction else { return }
         let timestampInfo = tx.timeSince
         timestamp.text = timestampInfo.0
         if !timestampInfo.1 {
             timer?.invalidate()
         }
     }
+    
+    // MARK: -
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         //intentional noop for now

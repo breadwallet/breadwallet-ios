@@ -10,7 +10,7 @@ import UIKit
 
 class TxStatusIndicator: UIView {
 
-    var status: TxConfirmationStatus = .networkReceived {
+    var status: TransactionStatus = .pending {
         didSet {
             updateStatus()
         }
@@ -70,7 +70,7 @@ class TxStatusIndicator: UIView {
     // MARK: -
     
     func updateStatus() {
-        let activeIndex = status.rawValue + 1 // first circle always on
+        let activeIndex = circleCount(forStatus: status)
         circles.enumerated().forEach { index, circle in
             if index == activeIndex {
                 circle.state = .flashing
@@ -79,6 +79,19 @@ class TxStatusIndicator: UIView {
             } else {
                 circle.state = .off
             }
+        }
+    }
+    
+    private func circleCount(forStatus status: TransactionStatus) -> Int {
+        switch status {
+        case .pending:
+            return 1
+        case .confirmed:
+            return 2
+        case .complete:
+            return 3
+        default:
+            return -1
         }
     }
 }

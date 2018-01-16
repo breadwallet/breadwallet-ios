@@ -53,15 +53,15 @@ class TxStatusCell: TxDetailRowCell, Subscriber {
     
     // MARK: -
     
-    func set(txInfo: TxDetailInfo, store: Store) {
+    func set(txInfo: TxDetailViewModel, store: Store) {
         self.store = store
         store.lazySubscribe(self,
                             selector: { $0.walletState.transactions != $1.walletState.transactions },
                             callback: { [weak self] state in
                                 guard let `self` = self,
-                                    let updatedTx = state.walletState.transactions.filter({ $0.hash == txInfo.transactionId }).first else { return }
+                                    let updatedTx = state.walletState.transactions.filter({ $0.hash == txInfo.transactionHash }).first else { return }
                                 DispatchQueue.main.async {
-                                    let updatedInfo = TxDetailInfo(tx: updatedTx, state: state)
+                                    let updatedInfo = TxDetailViewModel(tx: updatedTx, store: store)
                                     self.update(status: updatedInfo.status)
                                 }
         })
@@ -69,15 +69,17 @@ class TxStatusCell: TxDetailRowCell, Subscriber {
         update(status: txInfo.status)
     }
     
-    private func update(status: TxConfirmationStatus) {
+    private func update(status: TransactionStatus) {
         statusIndicator.status = status
         switch status {
-        case .networkReceived:
+        case .pending:
             statusLabel.text = S.Transaction.pending
-        case .confirmedFirstBlock:
+        case .confirmed:
             statusLabel.text = S.Transaction.confirming
         case .complete:
             statusLabel.text = S.Transaction.complete
+        case .invalid:
+            statusLabel.text = S.Transaction.invalid
         }
     }
     

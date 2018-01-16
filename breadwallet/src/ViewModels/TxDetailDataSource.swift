@@ -73,16 +73,14 @@ class TxDetailDataSource: NSObject {
     // MARK: - Vars
     
     fileprivate var fields: [Field]
-    fileprivate let info: TxDetailInfo
+    fileprivate let viewModel: TxDetailViewModel
     fileprivate let store: Store
-    fileprivate let kvStore: BRReplicatedKVStore
     
     // MARK: - Init
     
-    init(info: TxDetailInfo, store: Store, kvStore: BRReplicatedKVStore) {
-        self.info = info
+    init(viewModel: TxDetailViewModel, store: Store) {
+        self.viewModel = viewModel
         self.store = store
-        self.kvStore = kvStore
         
         // define visible rows and order
         fields = [
@@ -98,7 +96,7 @@ class TxDetailDataSource: NSObject {
             .transactionId
         ]
         
-        if info.memo != nil {
+        if viewModel.comment != nil {
             fields.insert(.memo, at: 2)
         }
     }
@@ -128,44 +126,44 @@ extension TxDetailDataSource: UITableViewDataSource {
         switch field {
         case .amount:
             let amountCell = cell as! TxAmountCell
-            amountCell.set(fiatAmount: info.fiatAmount, tokenAmount: info.amount, store: store)
+            amountCell.set(fiatAmount: viewModel.fiatAmount, tokenAmount: viewModel.amount, store: store)
             break
     
         case .status:
             let statusCell = cell as! TxStatusCell
-            statusCell.set(txInfo: info, store: store)
+            statusCell.set(txInfo: viewModel, store: store)
             
         case .memo:
             let memoCell = cell as! TxMemoCell
-            memoCell.set(txInfo: info, store: store, kvStore: kvStore)
+            memoCell.set(viewModel: viewModel, store: store)
             
         case .timestamp:
             let labelCell = cell as! TxLabelCell
-            labelCell.value = info.timestamp
+            labelCell.value = viewModel.longTimestamp
             
         case .address:
             let addressCell = cell as! TxAddressCell
-            addressCell.set(address: info.address, store: store)
+            addressCell.set(address: viewModel.displayAddress, store: store)
             
         case .startingBalance:
             let labelCell = cell as! TxLabelCell
-            labelCell.value = info.startingBalance
+            labelCell.value = viewModel.startingBalance
             
         case .endingBalance:
             let labelCell = cell as! TxLabelCell
-            labelCell.value = info.endingBalance
+            labelCell.value = viewModel.endingBalance
             
         case .exchangeRate:
             let labelCell = cell as! TxLabelCell
-            labelCell.value = info.exchangeRate
+            labelCell.value = viewModel.exchangeRate
             
         case .blockHeight:
             let labelCell = cell as! TxLabelCell
-            labelCell.value = info.blockHeight
+            labelCell.value = viewModel.blockHeight
             
         case .transactionId:
             let addressCell = cell as! TxAddressCell
-            addressCell.set(address: info.transactionId, store: store)
+            addressCell.set(address: viewModel.transactionHash, store: store)
         }
         
         return cell

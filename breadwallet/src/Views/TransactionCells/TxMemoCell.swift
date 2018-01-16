@@ -17,8 +17,7 @@ class TxMemoCell: TxDetailRowCell {
     // MARK: - Vars
     
     var store: Store?
-    var kvStore: BRReplicatedKVStore?
-    var txInfo: TxDetailInfo?
+    var viewModel: TxDetailViewModel!
     
     // MARK: - Init
     
@@ -31,7 +30,7 @@ class TxMemoCell: TxDetailRowCell {
         super.addConstraints()
         
         textView.constrain([
-            textView.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: C.padding[1]),
+            textView.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: C.padding[2]),
             textView.constraint(.trailing, toView: container),
             textView.constraint(.top, toView: container),
             textView.constraint(.bottom, toView: container)
@@ -43,6 +42,7 @@ class TxMemoCell: TxDetailRowCell {
         
         textView.font = .customBody(size: 13.0)
         textView.textColor = .darkText
+        textView.textAlignment = .right
         textView.isScrollEnabled = false
         textView.returnKeyType = .done
         textView.delegate = self
@@ -50,37 +50,19 @@ class TxMemoCell: TxDetailRowCell {
     
     // MARK: -
     
-    func set(txInfo: TxDetailInfo, store: Store, kvStore: BRReplicatedKVStore) {
-        self.txInfo = txInfo
+    func set(viewModel: TxDetailViewModel, store: Store) {
+        self.viewModel = viewModel
         self.store = store
-        self.kvStore = kvStore
-        textView.text = txInfo.memo
+        textView.text = viewModel.comment
     }
     
     fileprivate func saveComment(comment: String) {
-        guard let kvStore = self.kvStore,
-            let transaction = txInfo?.transaction else { return }
+        guard let tx = viewModel.tx as? BtcTransaction,
+            let rate = store?.state.currentRate else { return }
         
-        if let metaData = txInfo?.transaction.metaData {
-            metaData.comment = comment
-            do {
-                let _ = try kvStore.set(metaData)
-            } catch let error {
-                print("could not update metadata: \(error)")
-            }
-        } else {
-            guard let rate = store?.state.currentRate, // TODO: use original rate
-                let rawTx = transaction.rawTransaction else { return }
-            let newMetaData = TxMetaData(transaction: rawTx, exchangeRate: rate.rate, exchangeRateCurrency: rate.code, feeRate: 0.0, deviceId: UserDefaults.standard.deviceID)
-            newMetaData.comment = comment
-            do {
-                let _ = try kvStore.set(newMetaData)
-            } catch let error {
-                print("could not update metadata: \(error)")
-            }
-        }
+        tx.saveComment(comment: comment, rate: rate)
         
-        store?.trigger(name: .txMemoUpdated(transaction.hash))
+        store?.trigger(name: .txMemoUpdated(tx.hash))
     }
 }
 
