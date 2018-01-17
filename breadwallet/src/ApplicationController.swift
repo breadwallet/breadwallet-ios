@@ -8,7 +8,6 @@
 
 import UIKit
 import BRCore
-import Geth
 
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"

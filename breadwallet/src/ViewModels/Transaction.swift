@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Geth
 
 /// Transacton status
 enum TransactionStatus {

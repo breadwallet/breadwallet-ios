@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Geth
 
 private let largeFontSize: CGFloat = 26.0
 private let smallFontSize: CGFloat = 13.0

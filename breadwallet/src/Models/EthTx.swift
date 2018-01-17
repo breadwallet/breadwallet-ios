@@ -7,8 +7,6 @@
 //
 
 import Foundation
-import Geth
-
 
 struct EthTxList : Codable {
     let status: String
@@ -46,7 +44,7 @@ extension EthTx: Decodable {
         confirmations = try container.decodeFromString(UInt64.self, forKey: .confirmations)
         timeStamp = try container.decodeFromString(TimeInterval.self, forKey: .timeStamp)
         let valueString = try container.decode(String.self, forKey: .value)
-        let value = GethBigInt(0)!
+        let value = GethBigInt(0)
         value.setString(valueString, base: 10)
         self.value = value
         from = try container.decode(String.self, forKey: .from)
@@ -130,11 +128,11 @@ extension Event {
     init(timestamp: String, from: String, to: String, amount: String) {
         let topics = ["",from,to]
         let timestampNumber = GethBigInt(0)
-        timestampNumber?.setString(timestamp, base: 10)
+        timestampNumber.setString(timestamp, base: 10)
 
         let amountNumber = GethBigInt(0)
-        amountNumber?.setString(amount, base: 10)
-        self.init(address: "", topics: topics, data: amountNumber!.getString(16), timeStamp: timestampNumber!.getString(16), transactionHash: "", isComplete: false)
+        amountNumber.setString(amount, base: 10)
+        self.init(address: "", topics: topics, data: amountNumber.getString(16), timeStamp: timestampNumber.getString(16), transactionHash: "", isComplete: false)
         self.isComplete = false
     }
 }

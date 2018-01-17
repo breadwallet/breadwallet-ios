@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Geth
 import BRCore
 
 // MARK: - Protocols

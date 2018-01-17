@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Geth
 import LocalAuthentication
 
 class ConfirmationViewController : UIViewController, ContentBoxPresenter {

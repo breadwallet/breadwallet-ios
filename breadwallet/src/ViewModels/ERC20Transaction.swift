@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Geth
 
 struct ERC20Transaction: EthLikeTransaction {
     
@@ -55,12 +54,12 @@ struct ERC20Transaction: EthLikeTransaction {
             self.toAddress = address1
             self.fromAddress = address0
         }
-        let timestampWrapper = GethBigInt(0)!
+        let timestampWrapper = GethBigInt(0)
         timestampWrapper.setString(event.timeStamp.replacingOccurrences(of: "0x", with: ""), base: 16)
         self.timestamp = TimeInterval(timestampWrapper.getInt64())
         self.hash = event.transactionHash
         
-        let amount = GethBigInt(0)!
+        let amount = GethBigInt(0)
         amount.setString(event.data.replacingOccurrences(of: "0x", with: ""), base: 16)
         self.amount = amount
         

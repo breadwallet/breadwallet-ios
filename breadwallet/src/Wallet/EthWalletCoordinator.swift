@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Geth
 import BRCore
 
 //Responsible for coordinating the state and

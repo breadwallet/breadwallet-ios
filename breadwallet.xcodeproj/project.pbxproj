@@ -173,7 +173,6 @@
 		755CD9E61DAA1A270075898E /* BRSet.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77C91DAA05B500932D9A /* BRSet.c */; };
 		755CD9E71DAA1A270075898E /* BRTransaction.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77CB1DAA05B500932D9A /* BRTransaction.c */; };
 		755CD9E81DAA1A270075898E /* BRWallet.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77CD1DAA05B500932D9A /* BRWallet.c */; };
-		75675A991F61DF32004F0F1A /* Geth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75675A981F61DF32004F0F1A /* Geth.framework */; };
 		759DA0A11DAB838D008CC49B /* view.c in Sources */ = {isa = PBXBuildFile; fileRef = 759DA09F1DAB838D008CC49B /* view.c */; };
 		759DA0A31DAC0D6B008CC49B /* dsa.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD7AC1DAA16810075898E /* dsa.c */; };
 		759DA0A41DAC0D84008CC49B /* ecc-point.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD7D71DAA16810075898E /* ecc-point.c */; };
@@ -292,6 +291,7 @@
 		CE45C1FD1E7650F5002C3847 /* KVStoreCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45C1FC1E7650F5002C3847 /* KVStoreCoordinator.swift */; };
 		CE473D7C1F042F1E00C0ACFD /* coinflip.aiff in Resources */ = {isa = PBXBuildFile; fileRef = CE473D7B1F042F1E00C0ACFD /* coinflip.aiff */; };
 		CE47A8E01F7DA54000FF35BA /* UIScreen+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47A8DF1F7DA54000FF35BA /* UIScreen+Additions.swift */; };
+		CE490C69200F0DEA00E3F657 /* GethPlaceholders.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE490C68200F0DEA00E3F657 /* GethPlaceholders.swift */; };
 		CE4B6C1A1E219CA600CF935B /* WalletCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4B6C191E219CA600CF935B /* WalletCoordinator.swift */; };
 		CE4B6C1C1E21A96D00CF935B /* LoadingProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4B6C1B1E21A96D00CF935B /* LoadingProgressView.swift */; };
 		CE4B6C201E233C2C00CF935B /* UITableView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4B6C1F1E233C2C00CF935B /* UITableView+Additions.swift */; };
@@ -539,20 +539,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 75A2A81B1DA5938500A983D8;
 			remoteInfo = NotificationServiceExtension;
-		};
-		75DA6C4F1F61E57700E48CAF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 759DA0D71DAC8668008CC49B;
-			remoteInfo = submodules;
-		};
-		75DA6C511F61E59100E48CAF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 75DA6C481F61E52200E48CAF;
-			remoteInfo = Geth;
 		};
 		CEA7E6801F09A9D2001F8C27 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1312,7 +1298,6 @@
 		755CD9BF1DAA16830075898E /* yarrow_key_event.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = yarrow_key_event.c; sourceTree = "<group>"; };
 		755CD9C41DAA18420075898E /* libunbound.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libunbound.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		755CD9D11DAA197C0075898E /* libBRCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBRCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		75675A981F61DF32004F0F1A /* Geth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Geth.framework; path = "Modules/go-ethereum/build/bin/Geth.framework"; sourceTree = "<group>"; };
 		759DA09F1DAB838D008CC49B /* view.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = view.c; sourceTree = "<group>"; };
 		759DA0A01DAB838D008CC49B /* view.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
 		75A2A7901DA5934300A983D8 /* breadwallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = breadwallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1518,6 +1503,7 @@
 		CE45C1FC1E7650F5002C3847 /* KVStoreCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KVStoreCoordinator.swift; path = src/KVStoreCoordinator.swift; sourceTree = "<group>"; };
 		CE473D7B1F042F1E00C0ACFD /* coinflip.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = coinflip.aiff; sourceTree = "<group>"; };
 		CE47A8DF1F7DA54000FF35BA /* UIScreen+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIScreen+Additions.swift"; path = "src/Extensions/UIScreen+Additions.swift"; sourceTree = "<group>"; };
+		CE490C68200F0DEA00E3F657 /* GethPlaceholders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GethPlaceholders.swift; sourceTree = "<group>"; };
 		CE4B6C191E219CA600CF935B /* WalletCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletCoordinator.swift; sourceTree = "<group>"; };
 		CE4B6C1B1E21A96D00CF935B /* LoadingProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoadingProgressView.swift; path = src/Views/LoadingProgressView.swift; sourceTree = "<group>"; };
 		CE4B6C1F1E233C2C00CF935B /* UITableView+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UITableView+Additions.swift"; path = "src/Extensions/UITableView+Additions.swift"; sourceTree = "<group>"; };
@@ -1727,7 +1713,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75675A991F61DF32004F0F1A /* Geth.framework in Frameworks */,
 				22A9A9661DF61FEE000F0016 /* WebKit.framework in Frameworks */,
 				22A9A9641DF61FE7000F0016 /* Security.framework in Frameworks */,
 				22A9A9621DF61FE0000F0016 /* SystemConfiguration.framework in Frameworks */,
@@ -2796,7 +2781,6 @@
 		75A2A7F11DA5935F00A983D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				75675A981F61DF32004F0F1A /* Geth.framework */,
 				22A9A9671DF61FF8000F0016 /* libbz2.tbd */,
 				22A9A9651DF61FEE000F0016 /* WebKit.framework */,
 				22A9A9631DF61FE7000F0016 /* Security.framework */,
@@ -3191,6 +3175,7 @@
 				75519F331DC7D20500EDF66C /* WalletManager.swift */,
 				7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */,
 				CE44BA1E1F353AB200392A1A /* WalletManager+BCash.swift */,
+				CE490C68200F0DEA00E3F657 /* GethPlaceholders.swift */,
 			);
 			name = Wallet;
 			path = src/Wallet;
@@ -3355,21 +3340,6 @@
 			passBuildSettingsInEnvironment = 1;
 			productName = submodules;
 		};
-		75DA6C481F61E52200E48CAF /* Geth */ = {
-			isa = PBXLegacyTarget;
-			buildArgumentsString = "$(ACTION)";
-			buildConfigurationList = 75DA6C491F61E52200E48CAF /* Build configuration list for PBXLegacyTarget "Geth" */;
-			buildPhases = (
-			);
-			buildToolPath = "$(SRCROOT)/scripts/build_geth.sh";
-			buildWorkingDirectory = "$(SRCROOT)/Modules/go-ethereum";
-			dependencies = (
-				75DA6C501F61E57700E48CAF /* PBXTargetDependency */,
-			);
-			name = Geth;
-			passBuildSettingsInEnvironment = 0;
-			productName = Geth;
-		};
 /* End PBXLegacyTarget section */
 
 /* Begin PBXNativeTarget section */
@@ -3460,7 +3430,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				75DA6C521F61E59100E48CAF /* PBXTargetDependency */,
 				759DA0BD1DAC369C008CC49B /* PBXTargetDependency */,
 				75A2A7BB1DA5934300A983D8 /* PBXTargetDependency */,
 				75A2A8131DA5936F00A983D8 /* PBXTargetDependency */,
@@ -3723,10 +3692,6 @@
 						CreatedOnToolsVersion = 8.0;
 						ProvisioningStyle = Automatic;
 					};
-					75DA6C481F61E52200E48CAF = {
-						CreatedOnToolsVersion = 8.3.3;
-						ProvisioningStyle = Automatic;
-					};
 					CEA7E67A1F09A9D2001F8C27 = {
 						CreatedOnToolsVersion = 8.3.3;
 						LastSwiftMigration = 0900;
@@ -3772,7 +3737,6 @@
 				755CD9D01DAA197C0075898E /* BRCore */,
 				75C735AE1DAA1C9F00251ECF /* nettle */,
 				759DA0D71DAC8668008CC49B /* submodules */,
-				75DA6C481F61E52200E48CAF /* Geth */,
 				22A9A9951DF63426000F0016 /* libbz2 */,
 				752FB0411DF8BE6B009086FB /* sqlite3 */,
 				CEA7E67A1F09A9D2001F8C27 /* Screenshots */,
@@ -4149,6 +4113,7 @@
 				CEC6AA421DEFC88F00EE5AFD /* ReceiveViewController.swift in Sources */,
 				CEE20C2D1EA288FA0086F724 /* UpdatingLabel.swift in Sources */,
 				CE3D4C591EF743EF0016B1C8 /* Functions.swift in Sources */,
+				CE490C69200F0DEA00E3F657 /* GethPlaceholders.swift in Sources */,
 				CEE20C341EA5B4550086F724 /* ArticleIds.swift in Sources */,
 				CEE65DF01E39056F0002994D /* Rate.swift in Sources */,
 				CEDB09331FEAA21C001AF56A /* TxDetailViewModel.swift in Sources */,
@@ -4458,16 +4423,6 @@
 			isa = PBXTargetDependency;
 			target = 75A2A81B1DA5938500A983D8 /* NotificationServiceExtension */;
 			targetProxy = 75A2A8211DA5938500A983D8 /* PBXContainerItemProxy */;
-		};
-		75DA6C501F61E57700E48CAF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 759DA0D71DAC8668008CC49B /* submodules */;
-			targetProxy = 75DA6C4F1F61E57700E48CAF /* PBXContainerItemProxy */;
-		};
-		75DA6C521F61E59100E48CAF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 75DA6C481F61E52200E48CAF /* Geth */;
-			targetProxy = 75DA6C511F61E59100E48CAF /* PBXContainerItemProxy */;
 		};
 		CEA7E6811F09A9D2001F8C27 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5168,64 +5123,6 @@
 				USE_HEADERMAP = NO;
 			};
 			name = Release;
-		};
-		75DA6C4A1F61E52200E48CAF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				DEBUGGING_SYMBOLS = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		75DA6C4B1F61E52200E48CAF /* Testnet */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Testnet;
-		};
-		75DA6C4C1F61E52200E48CAF /* Screenshots */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Screenshots;
-		};
-		75DA6C4D1F61E52200E48CAF /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		75DA6C4E1F61E52200E48CAF /* Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Testflight;
 		};
 		CEA7E6821F09A9D2001F8C27 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -6347,18 +6244,6 @@
 				CEA7E6931F09AC6A001F8C27 /* Screenshots */,
 				75C735B71DAA1C9F00251ECF /* Release */,
 				CEE0EF5F1EBF8D7F0018DB36 /* Testflight */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		75DA6C491F61E52200E48CAF /* Build configuration list for PBXLegacyTarget "Geth" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				75DA6C4A1F61E52200E48CAF /* Debug */,
-				75DA6C4B1F61E52200E48CAF /* Testnet */,
-				75DA6C4C1F61E52200E48CAF /* Screenshots */,
-				75DA6C4D1F61E52200E48CAF /* Release */,
-				75DA6C4E1F61E52200E48CAF /* Testflight */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

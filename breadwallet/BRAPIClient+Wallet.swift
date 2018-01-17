@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Geth
 
 private let fallbackRatesURL = "https://bitpay.com/api/rates"
 
@@ -169,9 +168,9 @@ extension BRAPIClient {
             let decoder = JSONDecoder()
             do {
                 let response = try decoder.decode(TokenBalance.self, from: json)
-                let balance = GethNewBigInt(0)
-                balance?.setString(response.result, base: 10)
-                callback(balance!)
+                let balance = GethBigInt(0)
+                balance.setString(response.result, base: 10)
+                callback(balance)
             } catch let e {
                 print("error: \(e)")
             }

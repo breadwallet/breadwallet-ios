@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Geth
 
 struct EthTransaction: EthLikeTransaction {
     
