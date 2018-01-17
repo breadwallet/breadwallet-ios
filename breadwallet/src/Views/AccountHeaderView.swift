@@ -272,17 +272,12 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         guard !store.isEthLike else { return }
         guard let rate = exchangeRate else { return }
         let amount = Amount(amount: balance, rate: rate, maxDigits: store.state.maxDigits, store: store)
+        
         if !hasInitialized {
             let amount = Amount(amount: balance, rate: exchangeRate!, maxDigits: store.state.maxDigits, store: store)
-            NSLayoutConstraint.deactivate(isBtcSwapped ? regularConstraints : swappedConstraints)
-            NSLayoutConstraint.activate(isBtcSwapped ? swappedConstraints : regularConstraints)
             primaryBalance.setValue(amount.amountForBtcFormat)
             secondaryBalance.setValue(amount.localAmount)
-            if isBtcSwapped {
-                primaryBalance.transform = transform(forView: primaryBalance)
-            } else {
-                secondaryBalance.transform = transform(forView: secondaryBalance)
-            }
+            swapLabels()
             hasInitialized = true
             hideExtraViews()
         } else {
@@ -293,26 +288,27 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             if secondaryBalance.isHidden {
                 secondaryBalance.isHidden = false
             }
-
+            
             primaryBalance.setValueAnimated(amount.amountForBtcFormat, completion: { [weak self] in
-                guard let myself = self else { return }
-                if !myself.isBtcSwapped {
-                    myself.primaryBalance.transform = .identity
-                } else {
-                    myself.primaryBalance.transform = myself.transform(forView: myself.primaryBalance)
-                }
-                myself.hideExtraViews()
+                self?.swapLabels()
             })
             secondaryBalance.setValueAnimated(amount.localAmount, completion: { [weak self] in
-                guard let myself = self else { return }
-                if myself.isBtcSwapped {
-                    myself.secondaryBalance.transform = .identity
-                } else {
-                    myself.secondaryBalance.transform = myself.transform(forView: myself.secondaryBalance)
-                }
-                myself.hideExtraViews()
+                self?.swapLabels()
             })
         }
+    }
+    
+    private func swapLabels() {
+        NSLayoutConstraint.deactivate(isBtcSwapped ? regularConstraints : swappedConstraints)
+        NSLayoutConstraint.activate(isBtcSwapped ? swappedConstraints : regularConstraints)
+        if isBtcSwapped {
+            primaryBalance.transform = transform(forView: primaryBalance)
+            secondaryBalance.transform = .identity
+        } else {
+            secondaryBalance.transform = transform(forView: secondaryBalance)
+            primaryBalance.transform = .identity
+        }
+        hideExtraViews()
     }
 
     private func hideExtraViews() {
