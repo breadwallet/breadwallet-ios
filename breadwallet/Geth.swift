@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Geth
 import BRCore
 
 class GethManager {
@@ -17,24 +16,13 @@ class GethManager {
     let store: Store
 
     var balance: GethBigInt {
-        do {
-            let result = try client.getBalanceAt(context, account: address, number: -1)
-            balanceCache = result
-            return result
-        } catch let e {
-            print("error: \(e)")
-            if let balanceCache = balanceCache {
-                return balanceCache
-            } else {
-                return GethBigInt(0)
-            }
-        }
+        return GethBigInt(0)
     }
 
     private var balanceCache: GethBigInt? = nil
     
     var receiveAddress: String {
-        return address.getHex()
+        return ""
     }
     private let gasLimit: Int64 = 36000
     private let transferGasLimit: Int64 = 150000
@@ -64,14 +52,14 @@ class GethManager {
 
     func createTx(forAmount: GethBigInt, toAddress: String, nonce: Int64, isCrowdsale: Bool) -> GethTransaction {
         let toAddr = GethAddress(fromHex: toAddress)
-        let price = try! client.suggestGasPrice(context)
+        let price = client.suggestGasPrice()
         return GethTransaction(nonce, to: toAddr, amount: forAmount, gasLimit: GethBigInt((isCrowdsale ? crowdsaleGasLimit : gasLimit)),
                                gasPrice: price, data: nil)
     }
 
     func fee(isCrowdsale: Bool) -> GethBigInt {
-        let price = (try! client.suggestGasPrice(context)).getInt64()
-        return GethBigInt(price * (isCrowdsale ? crowdsaleGasLimit : gasLimit))
+        let price = (client.suggestGasPrice()).getInt64()
+        return GethBigInt(Int(price * (isCrowdsale ? crowdsaleGasLimit : gasLimit)))
     }
     
     func signTx(_ tx: GethTransaction, ethPrivKey: String) -> GethTransaction {
@@ -82,55 +70,20 @@ class GethManager {
             var key = BRKey(privKey: ethPrivKey)
             data.withUnsafeMutableBytes({ $0.pointee = key!.secret })
             key!.clean()
-            let account = try! ks?.importECDSAKey(data, passphrase: ethPrivKey)
-            try? ks?.unlock(account, passphrase: ethPrivKey)
+            let account = ks.importECDSAKey(data, passphrase: ethPrivKey)
             let chainId = E.isTestnet ? GethBigInt(3) : GethBigInt(1)
-            let signedTx = try! ks?.signTx(account, tx: tx, chainID: chainId)
-            try? ks?.delete(account, passphrase: ethPrivKey)
-            return signedTx!
+            let signedTx = ks.signTx(account, tx: tx, chainID: chainId)
+            return signedTx
         }
     }
 
     func publishTx(_ tx: GethTransaction) -> Error? {
-        do {
-            try client.sendTransaction(context, tx:tx)
-            return nil
-        } catch let e {
-            return e
-        }
+        client.sendTransaction(tx:tx)
+        return nil
     }
 
     func transfer(amount: GethBigInt, toAddress: String, privKey: String, token: Token, nonce: Int) -> Error? {
-        let address = GethAddress(fromHex: token.address)
-        let contract = GethBindContract(address, token.abi, client, nil)
-
-        let opts = GethTransactOpts()
-        opts?.setGasLimit(transferGasLimit)
-        opts?.setContext(context)
-        opts?.setNonce(Int64(nonce))
-        opts?.setGasPrice(try! client.suggestGasPrice(context))
-        let signer = Signer(ethPrivKey: privKey)
-        opts?.setSigner(signer)
-
-        let boolResult = GethNewInterface()
-        boolResult?.setBool(false)
-        let result = GethNewInterfaces(1)
-        try! result?.set(0, object: boolResult)
-
-        let arg0 = GethNewInterface()
-        arg0?.setAddress(GethAddress(fromHex: toAddress))
-        let arg1 = GethNewInterface()
-        arg1?.setBigInt(amount)
-        let args = GethNewInterfaces(2)
-        try! args?.set(0, object: arg0)
-        try! args?.set(1, object: arg1)
-
-        do {
-            try contract?.transact(opts, method: "transfer", args: args)
-            return nil
-        } catch let e {
-            return e
-        }
+        return nil
     }
 }
 
@@ -169,81 +122,15 @@ extension GethManager {
     }
 
     func callBigInt(method: String, contractAddress: String) -> GethBigInt? {
-        let address = GethAddress(fromHex: contractAddress)
-        var error: NSError? = nil
-        let contract = GethBindContract(address, crowdSaleABI, client, &error)
-
-        let opts = GethNewCallOpts()
-        let out = GethNewInterfaces(1)
-        let args = GethNewInterfaces(0)
-
-        let result0 = GethNewInterface()
-        result0?.setBigInt(GethNewBigInt(0))
-        try! out?.set(0, object: result0)
-
-        do {
-            try contract?.call(opts, out_: out, method: method, args: args)
-            return result0?.getBigInt()
-        } catch let e {
-            print("e2: \(e)")
-            return nil
-        }
+        return nil
     }
 
     func getToken(forContractAddress: String) -> GethAddress? {
-        let address = GethAddress(fromHex: forContractAddress)
-        var error: NSError? = nil
-        let contract = GethBindContract(address, crowdSaleABI, client, &error)
-
-        let opts = GethNewCallOpts()
-        let out = GethNewInterfaces(1)
-        let args = GethNewInterfaces(0)
-
-        let result0 = GethNewInterface()
-        result0?.setAddress(GethAddress(fromHex: "0x0000000000000000000000000000000000000000"))
-        try! out?.set(0, object: result0)
-
-        do {
-            try contract?.call(opts, out_: out, method: "token", args: args)
-            return result0?.getAddress()
-        } catch let e {
-            print("e2: \(e)")
-            return nil
-        }
-    }
-
-    func getBalance() {
-        let address = GethAddress(fromHex: "0xab6e259770002a88ff37b23755ddd3743e8a98a2")
-        var error: NSError? = nil
-        let contract = GethBindContract(address, xjp.abi, client, &error)
-
-        if let e = error {
-            print("e: \(e)")
-            print("")
-        }
-
-        let opts = GethNewCallOpts()
-        let out = GethNewInterfaces(1)
-        let args = GethNewInterfaces(1)
-
-        let arg0 = GethNewInterface()
-        arg0?.setAddress(GethAddress(fromHex: "0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508"))
-        try! args?.set(0, object: arg0)
-
-        let result0 = GethNewInterface()
-        result0?.setBigInt(GethNewBigInt(0))
-        try! out?.set(0, object: result0)
-
-        do {
-            try contract?.call(opts, out_: out, method: "balanceOf", args: args)
-            //print("balanceOf: \(result0?.getBigInt().getString(10))")
-        } catch let e {
-            print("e2: \(e)")
-        }
+        return nil
     }
 }
 
-class Signer : NSObject, GethSignerProtocol {
+class Signer : NSObject {
 
     init(ethPrivKey: String) {
         self.ethPrivKey = ethPrivKey
@@ -257,12 +144,10 @@ class Signer : NSObject, GethSignerProtocol {
         var key = BRKey(privKey: ethPrivKey)
         data.withUnsafeMutableBytes({ $0.pointee = key!.secret })
         key!.clean()
-        let account = try! ks?.importECDSAKey(data, passphrase: ethPrivKey)
-        try? ks?.unlock(account, passphrase: ethPrivKey)
+        let account = ks.importECDSAKey(data, passphrase: ethPrivKey)
         let chainId = E.isTestnet ? GethBigInt(3) : GethBigInt(1)
-        let signedTx = try! ks?.signTx(account, tx: p1, chainID: chainId)
-        try? ks?.delete(account, passphrase: ethPrivKey)
-        return signedTx!
+        let signedTx = ks.signTx(account, tx: p1, chainID: chainId)
+        return signedTx
     }
 }
 
@@ -272,6 +157,10 @@ extension GethBigInt {
     var stringValue: String {
         return getString(10)
     }
+}
+
+public func ==(lhs: GethBigInt, rhs: GethBigInt) -> Bool {
+    return true
 }
 
 public func >(lhs: GethBigInt, rhs: GethBigInt) -> Bool {
@@ -302,6 +191,6 @@ public func -(lhs: GethBigInt, rhs: GethBigInt) -> GethBigInt {
     let lhsDecimal = Decimal(string: lhs.stringValue)!
     let rhsDecimal = Decimal(string: rhs.stringValue)!
     let result = GethBigInt(0)
-    result?.setString((lhsDecimal - rhsDecimal).description, base: 10)
-    return result!
+    result.setString((lhsDecimal - rhsDecimal).description, base: 10)
+    return result
 }

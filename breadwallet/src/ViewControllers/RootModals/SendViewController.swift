@@ -9,7 +9,6 @@
 import UIKit
 import LocalAuthentication
 import BRCore
-import Geth
 
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
@@ -346,7 +345,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         guard let brdBalance = Decimal(string: brdBalance.stringValue) else { return GethBigInt(0) }
         guard let rate = Decimal(string: rate.stringValue) else { return GethBigInt(0) }
         let maxBuy = maxContribution - (brdBalance/rate)
-        let result = GethBigInt(0)!
+        let result = GethBigInt(0)
         result.setString(maxBuy.description, base: 10)
         return result
     }
@@ -426,7 +425,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
                 //Add temporary transaction
                 let timestamp = Date().timeIntervalSince1970
-                let tempTx = EthTx(blockNumber: 0, timeStamp: timestamp, value: amount, from: ethManager.address.getHex(), to: address, confirmations: 0, hash: signedTx.getHash().getHex(), isError: false)
+                let tempTx = EthTx(blockNumber: 0, timeStamp: timestamp, value: amount, from: ethManager.address.getHex(), to: address, confirmations: 0, hash: signedTx.getHash(), isError: false)
                 let transactionViewModel = EthTransaction(tx: tempTx, address: ethManager.address.getHex())
                 let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
                 self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))
@@ -487,7 +486,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
                 //Add temporary transaction
                 let timestamp = Date().timeIntervalSince1970
-                let tempTx = EthTx(blockNumber: 0, timeStamp: timestamp, value: amount, from: ethManager.address.getHex(), to: crowdsale.contract.address, confirmations: 0, hash: signedTx.getHash().getHex(), isError: false)
+                let tempTx = EthTx(blockNumber: 0, timeStamp: timestamp, value: amount, from: ethManager.address.getHex(), to: crowdsale.contract.address, confirmations: 0, hash: signedTx.getHash(), isError: false)
                 let transactionViewModel = EthTransaction(tx: tempTx, address: ethManager.address.getHex())
                 let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
                 self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))

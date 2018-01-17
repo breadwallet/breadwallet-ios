@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Geth
 
 private let currencyHeight: CGFloat = 80.0
 private let feeHeight: CGFloat = 130.0
@@ -41,8 +40,8 @@ class AmountViewController : UIViewController, Trackable {
         NSDecimalMultiplyByPowerOf10(&result, &decimal, Int16(18), .up)
         let wei = NSDecimalNumber(decimal: result)
         let returnValue = GethBigInt(0)
-        returnValue?.setString(wei.description(withLocale: nil), base: 10)
-        return returnValue!
+        returnValue.setString(wei.description(withLocale: nil), base: 10)
+        return returnValue
     }
 
     var tokenOutput: GethBigInt {
@@ -51,8 +50,8 @@ class AmountViewController : UIViewController, Trackable {
         let string = currentOutput.replacingOccurrences(of: token.code, with: "").replacingOccurrences(of: decimalSeparator!, with: ".")
         let output = GethBigInt(0)
         let zeroes = [String](repeating: "0", count: token.decimals).reduce("", +)
-        output?.setString(string + zeroes, base: 10)
-        return output!
+        output.setString(string + zeroes, base: 10)
+        return output
     }
 
     var currentOutput: String {

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Geth
 
 struct State {
     let isStartFlowVisible: Bool
