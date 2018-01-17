@@ -265,20 +265,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if store.state.walletState.crowdsale != nil && indexPath.section == 0 { return }
-        if store.isEthLike {
-            let tx = transactions[indexPath.row]
-            if tx.hash.utf8.count > 0 {
-                let string = "https://\(E.isTestnet ? "ropsten." : "")etherscan.io/tx/\(tx.hash)"
-                if let url = URL(string: string) {
-                    let webview = SFSafariViewController(url: url)
-                    present(webview, animated: true, completion: nil)
-                }
-            } else {
-                store.trigger(name: .lightWeightAlert("txHash doesn't exist yet"))
-            }
-            return
-        }
-
         if isSyncingViewVisible && indexPath.section == 0 { return }
         if let currentPrompt = currentPrompt, indexPath.section == 0 {
             if let trigger = currentPrompt.type.trigger {
@@ -414,9 +400,12 @@ extension TransactionsTableViewController {
             }
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
-        if let transactionCell = cell as? TransactionTableViewCell, let rate = rate {
+        if let transactionCell = cell as? TransactionTableViewCell,
+            let rate = rate,
+            let walletManager = walletManager {
+            let viewModel = TxListViewModel(tx: transactions[indexPath.row], walletManager: walletManager)
             transactionCell.setStyle(style)
-            transactionCell.setTransaction(transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits, isSyncing: store.state.walletState.syncState != .success)
+            transactionCell.setTransaction(viewModel, isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits, isSyncing: store.state.walletState.syncState != .success, store: store)
         }
         return cell
     }

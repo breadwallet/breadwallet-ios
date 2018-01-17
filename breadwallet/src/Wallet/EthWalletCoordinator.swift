@@ -32,12 +32,12 @@ class EthWalletCoordinator {
 
     @objc private func refresh() {
         apiClient.ethTxList(address: gethManager.address.getHex()) { transactions in
-            let viewModels = transactions?.sorted { $0.timeStamp > $1.timeStamp }.map { EthTransaction(tx: $0, address: self.gethManager.address.getHex(), store: self.store) }
+            let viewModels = transactions?.sorted { $0.timeStamp > $1.timeStamp }.map { EthTransaction(tx: $0, address: self.gethManager.address.getHex()) }
             guard let newViewModels = viewModels else { return }
             let oldViewModels = self.store.state.walletState.transactions
 
             let filteredOldViewModels = oldViewModels.filter { tx in
-                if tx.status == S.Transaction.pending && !newViewModels.contains(where: { $0.hash == tx.hash }) {
+                if tx.status == .pending && !newViewModels.contains(where: { $0.hash == tx.hash }) {
                     return true
                 } else {
                     return false

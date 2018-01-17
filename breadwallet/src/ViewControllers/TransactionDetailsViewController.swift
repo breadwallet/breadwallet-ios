@@ -11,25 +11,30 @@ import UIKit
 class TransactionDetailsViewController : UICollectionViewController, Subscriber {
 
     //MARK: - Public
-    init(store: Store, transactions: [Transaction], selectedIndex: Int, kvStore: BRReplicatedKVStore) {
+    init(store: Store, transactions: [Transaction], selectedIndex: Int) {
         self.store = store
         self.transactions = transactions
         self.selectedIndex = selectedIndex
-        self.kvStore = kvStore
         self.isBtcSwapped = store.state.isBtcSwapped
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: UIScreen.main.safeWidth-C.padding[4], height: UIScreen.main.bounds.height - C.padding[1])
-        layout.sectionInset = UIEdgeInsetsMake(C.padding[1], 0, 0, 0)
+        layout.itemSize = CGSize(width: UIScreen.main.safeWidth-C.padding[4],
+                                 height: UIScreen.main.bounds.height - C.padding[2])
+        layout.sectionInset = UIEdgeInsetsMake(C.padding[5], 0, 0, 0)
+        if #available(iOS 11.0, *) {
+            layout.sectionInsetReference = .fromSafeArea
+        }
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = C.padding[1]
+        
         super.init(collectionViewLayout: layout)
+        
+        registerForKeyboardNotifications()
     }
 
     //MARK: - Private
     fileprivate let store: Store
     fileprivate var transactions: [Transaction]
     fileprivate let selectedIndex: Int
-    fileprivate let kvStore: BRReplicatedKVStore
     fileprivate let cellIdentifier = "CellIdentifier"
     fileprivate var isBtcSwapped: Bool
     fileprivate var rate: Rate?
@@ -44,10 +49,12 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
 
     deinit {
         store.unsubscribe(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
     override func viewDidLoad() {
-        collectionView?.register(TransactionDetailCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        super.viewDidLoad()
+        collectionView?.register(TxDetailCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView?.delegate = self
         collectionView?.dataSource = self
         collectionView?.backgroundColor = .clear
@@ -131,36 +138,40 @@ extension TransactionDetailsViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        guard let transactionDetailCell = item as? TransactionDetailCollectionViewCell else { return item }
-        guard let rate = rate else { return item }
-        transactionDetailCell.set(transaction: transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, rates: store.state.rates, maxDigits: store.state.maxDigits)
+        guard let transactionDetailCell = item as? TxDetailCollectionViewCell else { return item }
+        let tx = transactions[indexPath.row]
+        let viewModel = TxDetailViewModel(tx: tx, store: store)
+        transactionDetailCell.set(viewModel: viewModel, store: store)
         transactionDetailCell.closeCallback = { [weak self] in
             if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
                 delegate.reset()
             }
             self?.dismiss(animated: true, completion: nil)
         }
-        transactionDetailCell.kvStore = kvStore
-        transactionDetailCell.store = store
-
-        if transactionDetailCell.didBeginEditing == nil {
-            transactionDetailCell.didBeginEditing = { [weak self] in
-                self?.secretScrollView.isScrollEnabled = false
-                self?.collectionView?.isScrollEnabled = false
-            }
-        }
-
-        if transactionDetailCell.didEndEditing == nil {
-            transactionDetailCell.didEndEditing = { [weak self] in
-                self?.secretScrollView.isScrollEnabled = true
-                self?.collectionView?.isScrollEnabled = true
-            }
-        }
-
-        if let modalTransitioningDelegate = transitioningDelegate as? ModalTransitionDelegate {
-            transactionDetailCell.modalTransitioningDelegate = modalTransitioningDelegate
-        }
-
         return transactionDetailCell
+    }
+}
+
+//MARK: - Keyboard Handler
+extension TransactionDetailsViewController {
+    fileprivate func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    @objc fileprivate func keyboardWillShow(notification: NSNotification) {
+        secretScrollView.isScrollEnabled = false
+        collectionView?.isScrollEnabled = false
+        if let delegate = transitioningDelegate as? ModalTransitionDelegate {
+            delegate.shouldDismissInteractively = false
+        }
+    }
+    
+    @objc fileprivate func keyboardWillHide(notification: NSNotification) {
+        secretScrollView.isScrollEnabled = true
+        collectionView?.isScrollEnabled = true
+        if let delegate = transitioningDelegate as? ModalTransitionDelegate {
+            delegate.shouldDismissInteractively = true
+        }
     }
 }

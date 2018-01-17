@@ -152,6 +152,7 @@ enum S {
         static let sendingStatus = NSLocalizedString("Transaction.sendingStatus", value: "In progress: %1$@", comment: "Send status text: 'In progress: 20%'")
         static let available = NSLocalizedString("Transaction.available", value: "Available to Spend", comment: "Availability status text")
         static let pending = NSLocalizedString("Transaction.pending", value: "Pending", comment: "Transaction is pending status text")
+        static let confirming = NSLocalizedString("Transaction.confirming", value: "In Progress", comment: "Transaction is confirming status text")
     }
 
     enum TransactionDetails {
@@ -174,6 +175,12 @@ enum S {
         static let blockHeightLabel = NSLocalizedString("TransactionDetails.blockHeightLabel", value: "Confirmed in Block", comment: "Block height label")
         static let notConfirmedBlockHeightLabel = NSLocalizedString("TransactionDetails.notConfirmedBlockHeightLabel", value: "Not Confirmed", comment: "eg. Confirmed in Block: Not Confirmed")
         static let ethFrom = NSLocalizedString("TransactionDetails.ethFrom", value: "from %1$@", comment: "[received ] from <address>")
+        
+        static let timestampHeader = NSLocalizedString("TransactionDetails.timestampHeader", value:"Time", comment: "Timestamp section header")
+        static let addressHeader = NSLocalizedString("TransactionDetails.addressHeader", value:"Address", comment: "Address section header")
+        static let startingBalanceHeader = NSLocalizedString("TransactionDetails.startingBalanceHeader", value:"Starting Balance", comment: "Starting balance section header")
+        static let endingBalanceHeader = NSLocalizedString("TransactionDetails.endingBalanceHeader", value:"Ending Balance", comment: "Ending balance section header")
+        static let exchangeRateHeader = NSLocalizedString("TransactionDetails.exchangeRateHeader", value:"Exchange Rate", comment: "Exchange rate section header")
     }
 
     enum SecurityCenter {
