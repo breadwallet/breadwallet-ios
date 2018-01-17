@@ -16,23 +16,9 @@ struct SentryEvent : Codable {
     let message: String
 }
 
-struct SentryConfig : Codable {
-    let sentryPubKey: String
-    let sentrySecret: String
-    let sentryUrl: String
-}
-
 class SentryClient {
 
     static let shared = SentryClient()
-
-    private var config: SentryConfig {
-        guard let file = Bundle.main.path(forResource: "Config", ofType: "plist"),
-            let data = FileManager.default.contents(atPath: file),
-            let config = try? PropertyListDecoder().decode(SentryConfig.self, from: data) else {
-                return SentryConfig(sentryPubKey: "", sentrySecret: "", sentryUrl: "") }
-        return config
-    }
 
     func sendMessage(_ message: String, completion: @escaping()->Void) {
         sendEvent(SentryEvent(message: message), completion: completion)

@@ -100,9 +100,7 @@ class Sender {
             }
             let result = group.wait(timeout: .now() + 4.0)
             if result == .timedOut {
-                SentryClient.shared.sendMessage("send-tx-timeout", completion: {
-                    fatalError("send-tx-timeout")
-                })
+                fatalError("send-tx-timeout")
             }
         })
     }
