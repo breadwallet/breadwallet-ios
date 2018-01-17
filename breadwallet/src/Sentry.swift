@@ -46,7 +46,7 @@ class SentryClient {
     }
 
     private var sentryRequest: URLRequest {
-        let request = NSMutableURLRequest(url: URL(string: config.sentryUrl)!)
+        let request = NSMutableURLRequest(url: URL(string: "")!) //TODO - add url
         request.httpMethod = "POST"
         request.setValue(authHeader(), forHTTPHeaderField: "X-Sentry-Auth")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -59,8 +59,8 @@ class SentryClient {
         header.append("sentry_version=7,")
         header.append("sentry_client=breadwallet_ios/\(Bundle.main.infoDictionary?["CFBundleVersion"] ?? "1.0"),")
         header.append("sentry_timestamp=\(Date().timeIntervalSince1970),")
-        header.append("sentry_key=\(config.sentryPubKey),")
-        header.append("sentry_secret=\(config.sentrySecret)")
+        header.append("sentry_key=,")
+        header.append("sentry_secret=")
         return header
     }
 }
