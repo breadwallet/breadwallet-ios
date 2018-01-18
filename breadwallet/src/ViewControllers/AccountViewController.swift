@@ -10,7 +10,7 @@ import UIKit
 import BRCore
 import MachO
 
-let accountHeaderHeight: CGFloat = 136.0
+let accountHeaderHeight: CGFloat = 152.0
 let accountFooterHeight: CGFloat = 56.0
 private let transactionsLoadingViewHeightConstant: CGFloat = 48.0
 class AccountViewController : UIViewController, Subscriber {
@@ -22,8 +22,8 @@ class AccountViewController : UIViewController, Subscriber {
     var receiveCallback: (() -> Void)? {
         didSet { footerView.receiveCallback = receiveCallback }
     }
-    var menuCallback: (() -> Void)? {
-        didSet { footerView.menuCallback = menuCallback }
+    var buyCallback: (() -> Void)? {
+        didSet { footerView.buyCallback = buyCallback }
     }
 
     var walletManager: WalletManager? {
@@ -120,8 +120,11 @@ class AccountViewController : UIViewController, Subscriber {
 
         footerView.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         footerView.constrain([
-            footerView.constraint(.height, constant: E.isIPhoneX ? accountFooterHeight + 19.0 : accountFooterHeight) ])
+            footerView.constraint(.height, constant: E.isIPhoneX ? accountFooterHeight + 20.0 : accountFooterHeight) ])
         searchHeaderview.constrain(toSuperviewEdges: nil)
+        searchHeaderview.constrain([
+            searchHeaderview.constraint(.height, toView: headerContainer)
+            ])
     }
 
     private func addSubscriptions() {
@@ -160,7 +163,7 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func setInitialData() {
-        headerView.search.tap = { [weak self] in
+        headerView.searchButton.tap = { [weak self] in
             guard let myself = self else { return }
             myself.navigationController?.setNavigationBarHidden(true, animated: false)
             UIView.transition(from: myself.headerView,

@@ -45,9 +45,9 @@ enum S {
         static let ignore = NSLocalizedString("Button.ignore", value:"Ignore", comment: "Ignore button label")
         static let yes = NSLocalizedString("Button.yes", value: "Yes", comment: "Yes button")
         static let no = NSLocalizedString("Button.no", value: "No", comment: "No button")
-        static let send = NSLocalizedString("Button.send", value: "send", comment: "send button")
-        static let receive = NSLocalizedString("Button.receive", value: "receive", comment: "receive button")
-        static let menu = NSLocalizedString("Button.menu", value: "menu", comment: "menu button")
+        static let send = NSLocalizedString("Button.send", value: "Send", comment: "send button")
+        static let receive = NSLocalizedString("Button.receive", value: "Receive", comment: "receive button")
+        static let buy = NSLocalizedString("Button.buy", value: "Buy", comment: "buy button")
     }
 
     enum Alert {
@@ -108,6 +108,7 @@ enum S {
 
     enum Account {
         static let loadingMessage = NSLocalizedString("Account.loadingMessage", value:"Loading Wallet", comment: "Loading Wallet Message")
+        static let balance = NSLocalizedString("Account.balance", value:"Balance", comment: "Account header balance label")
     }
 
     enum JailbreakWarnings {

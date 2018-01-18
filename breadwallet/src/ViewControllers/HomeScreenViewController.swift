@@ -104,7 +104,7 @@ class HomeScreenViewController : UIViewController, Subscriber {
         totalHeader.textAlignment = .left
         total.textAlignment = .left
         total.text = "$0"
-        title = "Assets"
+        title = ""
         navigationItem.titleView = UIView()
         updateTotalAssets()
     }
