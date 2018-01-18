@@ -8,71 +8,100 @@
 
 import UIKit
 
-class AccountFooterView: UIView {
+class AccountFooterView: UIView, Trackable {
 
     var sendCallback: (() -> Void)?
     var receiveCallback: (() -> Void)?
-    var menuCallback: (() -> Void)?
-
-    let menuButton = UIButton.vertical(title: S.Button.menu.uppercased(), image: #imageLiteral(resourceName: "MenuButtonIcon"))
+    var buyCallback: (() -> Void)?
+    
+    private var hasSetup = false
 
     init() {
         super.init(frame: .zero)
     }
 
-    var hasSetup = false
-
     override func layoutSubviews() {
         guard !hasSetup else { return }
-        setupSubViews()
+        setup()
         hasSetup = true
     }
 
-    func setupSubViews(){
-
-        let backgroundView = UITabBar()
-        addSubview(backgroundView)
-        backgroundView.constrain(toSuperviewEdges: nil)
-
-        let send = UIButton.vertical(title: S.Button.send.uppercased(), image: #imageLiteral(resourceName: "SendButtonIcon"))
-        send.tintColor = .grayTextTint
+    private func setup() {
+        let toolbar = UIToolbar()
+        let separator = UIView(color: .secondaryShadow)
+        
+        let send = UIButton.rounded(title: S.Button.send)
+        send.tintColor = .white
+        send.backgroundColor = .orange
         send.addTarget(self, action: #selector(AccountFooterView.send), for: .touchUpInside)
 
-        let receive = UIButton.vertical(title: S.Button.receive.uppercased(), image: #imageLiteral(resourceName: "ReceiveButtonIcon"))
-        receive.tintColor = .grayTextTint
+        let receive = UIButton.rounded(title: S.Button.receive)
+        receive.tintColor = .white
+        receive.backgroundColor = .orange
         receive.addTarget(self, action: #selector(AccountFooterView.receive), for: .touchUpInside)
 
-        menuButton.tintColor = .grayTextTint
-        menuButton.addTarget(self, action: #selector(AccountFooterView.menu), for: .touchUpInside)
-
-        if E.isScreenshots {
-            menuButton.accessibilityLabel = "MENU"
+        let buy = UIButton.rounded(title: S.Button.buy)
+        buy.tintColor = .white
+        buy.backgroundColor = .orange
+        buy.addTarget(self, action: #selector(AccountFooterView.buy), for: .touchUpInside)
+        
+        let padding = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        padding.width = C.padding[1]
+        
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        let sendItem = UIBarButtonItem(customView: send)
+        let receiveItem = UIBarButtonItem(customView: receive)
+        let buyItem = UIBarButtonItem(customView: buy)
+        
+        var buttonCount: Int
+        
+        if BRAPIClient.featureEnabled(.buyBitcoin) {
+            toolbar.items = [
+                flexibleSpace,
+                sendItem,
+                padding,
+                receiveItem,
+                padding,
+                buyItem,
+                flexibleSpace,
+            ]
+            buttonCount = 3
+        } else {
+            toolbar.items = [
+                flexibleSpace,
+                sendItem,
+                padding,
+                receiveItem,
+                flexibleSpace,
+            ]
+            buttonCount = 2
         }
-
-        addSubview(send)
-        addSubview(receive)
-        addSubview(menuButton)
-
-        send.constrain([
-                send.constraint(.leading, toView: self, constant: 0.0),
-                send.constraint(.top, toView: self, constant: C.padding[2]),
-                NSLayoutConstraint(item: send, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/3.0, constant: 0.0)
-            ])
-        receive.constrain([
-                NSLayoutConstraint(item: receive, attribute: .leading, relatedBy: .equal, toItem: send, attribute: .trailing, multiplier: 1.0, constant: 0.0),
-                receive.constraint(.top, toView: self, constant: C.padding[2]),
-                NSLayoutConstraint(item: receive, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/3.0, constant: 1.0)
-            ])
-        menuButton.constrain([
-                NSLayoutConstraint(item: menuButton, attribute: .leading, relatedBy: .equal, toItem: receive, attribute: .trailing, multiplier: 1.0, constant: 1.0),
-                menuButton.constraint(.top, toView: self, constant: C.padding[2]),
-                NSLayoutConstraint(item: menuButton, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/3.0, constant: 1.0)
-            ])
+        
+        addSubview(toolbar)
+        addSubview(separator)
+        
+        // constraints
+        toolbar.constrain(toSuperviewEdges: nil)
+        
+        let buttonWidth: CGFloat = self.frame.width / CGFloat(buttonCount) - (padding.width * 2.0)
+        
+        let constraints = [
+            sendItem.customView?.widthAnchor.constraint(equalToConstant: buttonWidth),
+            receiveItem.customView?.widthAnchor.constraint(equalToConstant: buttonWidth),
+            buyItem.customView?.widthAnchor.constraint(equalToConstant: buttonWidth)
+            ]
+        NSLayoutConstraint.activate(constraints.flatMap{ $0 })
+        
+        separator.constrainTopCorners(height: 1.0)
     }
 
     @objc private func send() { sendCallback?() }
     @objc private func receive() { receiveCallback?() }
-    @objc private func menu() { menuCallback?() }
+    @objc private func buy() {
+        saveEvent("menu.didTapBuyBitcoin")
+        buyCallback?()
+    }
 
     required init(coder aDecoder: NSCoder) {
         fatalError("This class does not support NSCoding")
