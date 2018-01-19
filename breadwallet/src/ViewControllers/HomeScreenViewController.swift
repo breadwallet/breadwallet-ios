@@ -9,13 +9,11 @@
 import UIKit
 
 class HomeScreenViewController : UIViewController, Subscriber {
-    init(stores: [Store]) {
-        self.stores = stores
-        self.currencyList = AssetListTableView(stores: stores)
+    init() {
+        self.currencyList = AssetListTableView()
         super.init(nibName: nil, bundle: nil)
     }
 
-    private let stores: [Store]
     private let currencyList: AssetListTableView
     private let subHeaderView = UIView()
     private let logo = UIImageView(image:#imageLiteral(resourceName: "LogoGradient"))
@@ -66,21 +64,21 @@ class HomeScreenViewController : UIViewController, Subscriber {
         navigationController?.navigationBar.shadowImage = #imageLiteral(resourceName: "TransparentPixel")
         navigationController?.navigationBar.setBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .default)
 
-        stores[0].lazySubscribe(self, selector: { $0.walletState.balance != $1.walletState.balance }, callback: { _ in
-            self.updateTotalAssets()
-        })
-
-        stores.forEach {
-            $0.lazySubscribe(self, selector: { $0.walletState.bigBalance?.getString(10) != $1.walletState.bigBalance?.getString(10) }, callback: { _ in
-                self.updateTotalAssets()
-            })
-        }
-
-        stores.forEach {
-            $0.lazySubscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: { _ in
-                self.updateTotalAssets()
-            })
-        }
+//        stores[0].lazySubscribe(self, selector: { $0.walletState.balance != $1.walletState.balance }, callback: { _ in
+//            self.updateTotalAssets()
+//        })
+//
+//        stores.forEach {
+//            $0.lazySubscribe(self, selector: { $0.walletState.bigBalance?.getString(10) != $1.walletState.bigBalance?.getString(10) }, callback: { _ in
+//                self.updateTotalAssets()
+//            })
+//        }
+//
+//        stores.forEach {
+//            $0.lazySubscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: { _ in
+//                self.updateTotalAssets()
+//            })
+//        }
 
         addSubviews()
         addConstraints()
@@ -112,27 +110,27 @@ class HomeScreenViewController : UIViewController, Subscriber {
     }
 
     private func updateTotalAssets() {
-        guard let bitcoinBalance = stores[0].state.walletState.balance else { return }
-        guard let bitcoinRate = stores[0].state.currentRate else { return }
-        let bitcoinAmount = Amount(amount: bitcoinBalance, rate: bitcoinRate, maxDigits: stores[0].state.maxDigits, store: stores[0]).localAmount
-
-        guard let ethBalance = stores[1].state.walletState.bigBalance else { return }
-        guard let ethRate = stores[1].state.currentRate else { return }
-        var decimal = Decimal(string: ethBalance.getString(10)) ?? Decimal(0)
-        var amount: Decimal = 0.0
-        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
-        let eth = NSDecimalNumber(decimal: amount)
-        let ethValue = eth.doubleValue*ethRate.rate
-
-        let total = bitcoinAmount + ethValue
-
-        let format = NumberFormatter()
-        format.isLenient = true
-        format.numberStyle = .currency
-        format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencySymbol = stores[0].state.currentRate!.currencySymbol
-        self.total.text = format.string(from: NSNumber(value: total))
+//        guard let bitcoinBalance = stores[0].state.walletState.balance else { return }
+//        guard let bitcoinRate = stores[0].state.currentRate else { return }
+//        let bitcoinAmount = Amount(amount: bitcoinBalance, rate: bitcoinRate, maxDigits: stores[0].state.maxDigits, store: stores[0]).localAmount
+//
+//        guard let ethBalance = stores[1].state.walletState.bigBalance else { return }
+//        guard let ethRate = stores[1].state.currentRate else { return }
+//        var decimal = Decimal(string: ethBalance.getString(10)) ?? Decimal(0)
+//        var amount: Decimal = 0.0
+//        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
+//        let eth = NSDecimalNumber(decimal: amount)
+//        let ethValue = eth.doubleValue*ethRate.rate
+//
+//        let total = bitcoinAmount + ethValue
+//
+//        let format = NumberFormatter()
+//        format.isLenient = true
+//        format.numberStyle = .currency
+//        format.generatesDecimalNumbers = true
+//        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+//        format.currencySymbol = stores[0].state.currentRate!.currencySymbol
+//        self.total.text = format.string(from: NSNumber(value: total))
     }
 
     required init?(coder aDecoder: NSCoder) {

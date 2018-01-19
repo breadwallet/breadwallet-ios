@@ -11,15 +11,13 @@ import LocalAuthentication
 
 class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
-    init(amount: Satoshis, fee: Satoshis, feeType: Fee, state: State, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool, store: Store) {
+    init(amount: Satoshis, fee: Satoshis, feeType: Fee, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool) {
         self.amount = amount
         self.feeAmount = fee
         self.feeType = feeType
-        self.state = state
         self.selectedRate = selectedRate
         self.minimumFractionDigits = minimumFractionDigits
         self.addressText = address
-        self.store = store
         self.isUsingBiometrics = isUsingBiometrics
         super.init(nibName: nil, bundle: nil)
     }
@@ -27,11 +25,9 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private let amount: Satoshis
     private let feeAmount: Satoshis
     private let feeType: Fee
-    private let state: State
     private let selectedRate: Rate?
     private let minimumFractionDigits: Int?
     private let addressText: String
-    private let store: Store
     private let isUsingBiometrics: Bool
 
     //ContentBoxPresenter
@@ -141,16 +137,16 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         view.backgroundColor = .clear
         payLabel.text = S.Confirmation.send
 
-        let displayAmount = DisplayAmount(amount: amount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, store: store)
-        let displayFee = DisplayAmount(amount: feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: store.isEthLike ? 8 : minimumFractionDigits, store: store)
-        let displayTotal = DisplayAmount(amount: amount + feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, store: store)
+        let displayAmount = DisplayAmount(amount: amount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+        let displayFee = DisplayAmount(amount: feeAmount, selectedRate: selectedRate, minimumFractionDigits: Store.isEthLike ? 8 : minimumFractionDigits)
+        let displayTotal = DisplayAmount(amount: amount + feeAmount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
 
         amountLabel.text = displayAmount.combinedDescription
 
         toLabel.text = S.Confirmation.to
         address.text = addressText
         address.lineBreakMode = .byTruncatingMiddle
-        let regularTime = store.isEthLike ? "5-10" : "10-30"
+        let regularTime = Store.isEthLike ? "5-10" : "10-30"
         switch feeType {
         case .regular:
             processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.regularTime)
@@ -195,28 +191,24 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
 class EthConfirmationViewController : UIViewController, ContentBoxPresenter {
 
-    init(amount: GethBigInt, fee: GethBigInt, feeType: Fee, state: State, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingTouchId: Bool, store: Store) {
+    init(amount: GethBigInt, fee: GethBigInt, feeType: Fee, state: State, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingTouchId: Bool) {
         self.amount = amount
         self.feeAmount = fee
         self.feeType = feeType
-        self.state = state
         self.selectedRate = selectedRate
         self.minimumFractionDigits = minimumFractionDigits
         self.addressText = address
         self.isUsingTouchId = isUsingTouchId
-        self.store = store
         super.init(nibName: nil, bundle: nil)
     }
 
     private let amount: GethBigInt
     private let feeAmount: GethBigInt
     private let feeType: Fee
-    private let state: State
     private let selectedRate: Rate?
     private let minimumFractionDigits: Int?
     private let addressText: String
     private let isUsingTouchId: Bool
-    private let store: Store
 
     //ContentBoxPresenter
     let contentBox = UIView(color: .white)
@@ -326,15 +318,12 @@ class EthConfirmationViewController : UIViewController, ContentBoxPresenter {
 
         let displayAmount: String
         let displayFee: String
-        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded {
-            displayAmount = DisplayAmount.ethString(value: amount, store: store)
-            displayFee = DisplayAmount.ethString(value: feeAmount, store: store)
-        } else if store.state.currency == .ethereum {
-            displayAmount = DisplayAmount.ethString(value: amount, store: store)
-            displayFee = DisplayAmount.ethString(value: feeAmount, store: store)
+        if Store.state.currency == .ethereum {
+            displayAmount = DisplayAmount.ethString(value: amount)
+            displayFee = DisplayAmount.ethString(value: feeAmount)
         } else {
-            displayAmount = DisplayAmount.tokenString(value: amount, store: store)
-            displayFee = DisplayAmount.ethString(value: feeAmount, store: store)
+            displayAmount = DisplayAmount.tokenString(value: amount)
+            displayFee = DisplayAmount.ethString(value: feeAmount)
         }
 
         let displayTotal = ""//DisplayAmount.ethString(value: amount + fee, store: store)
@@ -344,7 +333,7 @@ class EthConfirmationViewController : UIViewController, ContentBoxPresenter {
         toLabel.text = S.Confirmation.to
         address.text = addressText
         address.lineBreakMode = .byTruncatingMiddle
-        let regularTime = store.isEthLike ? "5-10" : "10-30"
+        let regularTime = Store.isEthLike ? "5-10" : "10-30"
         switch feeType {
         case .regular:
             processingTime.text = String(format: S.Confirmation.processingTime, regularTime)

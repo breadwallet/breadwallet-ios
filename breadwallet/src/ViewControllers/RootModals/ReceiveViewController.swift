@@ -22,13 +22,12 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     var presentEmail: PresentShare?
     var presentText: PresentShare?
 
-    init(store: Store, isRequestAmountVisible: Bool) {
-        if store.isEthLike {
+    init(isRequestAmountVisible: Bool) {
+        if Store.isEthLike {
             self.isRequestAmountVisible = false
         } else {
             self.isRequestAmountVisible = isRequestAmountVisible
         }
-        self.store = store
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -42,7 +41,6 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     private let request = ShadowButton(title: S.Receive.request, type: .secondary)
     private let addressButton = UIButton(type: .system)
     private var topSharePopoutConstraint: NSLayoutConstraint?
-    private let store: Store
     fileprivate let isRequestAmountVisible: Bool
     private var requestTop: NSLayoutConstraint?
     private var requestBottom: NSLayoutConstraint?
@@ -54,7 +52,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
         addActions()
         setupCopiedMessage()
         setupShareButtons()
-        store.subscribe(self, selector: { $0.walletState.receiveAddress != $1.walletState.receiveAddress }, callback: { _ in
+        Store.subscribe(self, selector: { $0.walletState.receiveAddress != $1.walletState.receiveAddress }, callback: { _ in
             self.setReceiveAddress()
         })
     }
@@ -138,7 +136,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     }
 
     private func setReceiveAddress() {
-        guard let addressText = store.state.walletState.receiveAddress else { return }
+        guard let addressText = Store.state.walletState.receiveAddress else { return }
         address.text = addressText
         qrCode.image = UIImage.qrCode(data: "\(address.text!)".data(using: .utf8)!, color: CIColor(color: .black))?
             .resize(CGSize(width: qrSize, height: qrSize))!
@@ -152,7 +150,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
             guard let modalTransitionDelegate = self?.parent?.transitioningDelegate as? ModalTransitionDelegate else { return }
             modalTransitionDelegate.reset()
             self?.dismiss(animated: true, completion: {
-                self?.store.perform(action: RootModalActions.Present(modal: .requestAmount))
+                Store.perform(action: RootModalActions.Present(modal: .requestAmount))
             })
         }
         share.addTarget(self, action: #selector(ReceiveViewController.shareTapped), for: .touchUpInside)
@@ -263,7 +261,7 @@ extension ReceiveViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        if let token = store.state.walletState.token {
+        if let token = Store.state.walletState.token {
             return "Receive \(token.code)"
         } else {
             return S.Receive.title

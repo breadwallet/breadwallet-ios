@@ -50,9 +50,8 @@ class TxMemoCell: TxDetailRowCell {
     
     // MARK: -
     
-    func set(viewModel: TxDetailViewModel, store: Store) {
+    func set(viewModel: TxDetailViewModel) {
         self.viewModel = viewModel
-        self.store = store
         textView.text = viewModel.comment
     }
     

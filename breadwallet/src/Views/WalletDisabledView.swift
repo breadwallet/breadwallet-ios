@@ -14,9 +14,8 @@ class WalletDisabledView : UIView {
         label.text = string
     }
 
-    init(store: Store) {
-        self.store = store
-        self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.walletDisabled)
+    init() {
+        self.faq = UIButton.buildFaqButton(articleId: ArticleIds.walletDisabled)
         blur = UIVisualEffectView()
         super.init(frame: .zero)
         setup()
@@ -43,7 +42,6 @@ class WalletDisabledView : UIView {
     }
 
     private let label = UILabel(font: .customBold(size: 20.0), color: .darkText)
-    private let store: Store
     private let faq: UIButton
     private let blur: UIVisualEffectView
     private let reset = ShadowButton(title: S.UnlockScreen.resetPin, type: .blackTransparent)

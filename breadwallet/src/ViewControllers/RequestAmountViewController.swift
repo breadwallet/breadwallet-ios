@@ -19,9 +19,9 @@ class RequestAmountViewController : UIViewController {
     var presentEmail: PresentShare?
     var presentText: PresentShare?
 
-    init(wallet: BRWallet, store: Store) {
+    init(wallet: BRWallet) {
         self.wallet = wallet
-        amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: true, isRequesting: true)
+        amountView = AmountViewController(isPinPadExpandedAtLaunch: true, isRequesting: true)
         super.init(nibName: nil, bundle: nil)
     }
 

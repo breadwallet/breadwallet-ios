@@ -17,13 +17,12 @@ protocol ContentBoxPresenter {
 
 class VerifyPinViewController : UIViewController, ContentBoxPresenter {
 
-    init(bodyText: String, pinLength: Int, walletManager: WalletManager, store: Store, success: @escaping (String) -> Void) {
+    init(bodyText: String, pinLength: Int, walletManager: WalletManager, success: @escaping (String) -> Void) {
         self.bodyText = bodyText
         self.success = success
         self.pinLength = pinLength
         self.pinView = PinView(style: .create, length: pinLength)
         self.walletManager = walletManager
-        self.store = store
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -41,7 +40,6 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
     private let bodyText: String
     private let pinLength: Int
     private let walletManager: WalletManager
-    private let store: Store
 
     override func viewDidLoad() {
         addSubviews()
@@ -143,7 +141,7 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
     private func lockIfNeeded() {
         guard walletManager.walletIsDisabled else { return }
         dismiss(animated: true, completion: {
-            self.store.perform(action: RequireLogin())
+            Store.perform(action: RequireLogin())
         })
     }
 

@@ -35,16 +35,14 @@ enum BitIdAuthResult {
 class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     var sockets = [String: BRWebSocket]()
     let walletManager: WalletManager
-    let store: Store
     var tempBitIDKeys = [String: BRKey]() // this should only ever be mutated from the main thread
     private var tempBitIDResponses = [String: Int]()
     private var tempAuthResponses = [String: Int]()
     private var tempAuthResults = [String: Bool]()
     private var isPresentingAuth = false
 
-    init(walletManager: WalletManager, store: Store) {
+    init(walletManager: WalletManager) {
         self.walletManager = walletManager
-        self.store = store
     }
     
     func announce(_ json: [String: Any]) {
@@ -157,7 +155,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                         if UserDefaults.isBiometricsEnabled {
                             asyncResp.provide(200, json: ["error": "proxy-shutdown"])
                         }
-                        self.store.trigger(name: .authenticateForBitId(prompt, { [weak self] result in
+                        Store.trigger(name: .authenticateForBitId(prompt, { [weak self] result in
                             self?.isPresentingAuth = false
                             switch result {
                             case .success:
@@ -225,7 +223,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                         if UserDefaults.isBiometricsEnabled {
                             asyncResp.provide(200, json: ["error": "proxy-shutdown"])
                         }
-                        self.store.trigger(name: .authenticateForBitId(prompt, { [weak self] result in
+                        Store.trigger(name: .authenticateForBitId(prompt, { [weak self] result in
                             self?.isPresentingAuth = false
                             switch result {
                             case .success:
@@ -296,15 +294,15 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             d["receive_address"] = wallet.receiveAddress
             //d["watch_only"] = TODO - add watch only
         }
-        d["btc_denomination_digits"] = store.state.maxDigits
-        d["local_currency_code"] = store.state.defaultCurrencyCode
+        d["btc_denomination_digits"] = Store.state.maxDigits
+        d["local_currency_code"] = Store.state.defaultCurrencyCode
         return d
     }
     
     func currencyFormat(_ amount: Int64) -> [String: Any] {
         var d = [String: Any]()
-        if let rate = store.state.currentRate {
-            let amount = Amount(amount: UInt64(amount), rate: rate, maxDigits: store.state.maxDigits, store: store)
+        if let rate = Store.state.currentRate {
+            let amount = Amount(amount: UInt64(amount), rate: rate, maxDigits: Store.state.maxDigits)
             d["local_currency_amount"] = amount.localCurrency
             d["currency_amount"] = amount.bits
         }

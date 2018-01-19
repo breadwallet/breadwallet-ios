@@ -25,19 +25,13 @@ class MenuViewController : UIViewController, Trackable {
             if $0 == .buy && !BRAPIClient.featureEnabled(.buyBitcoin) {
                 return nil
             }
-            if $0 == .buy && store.isEthLike {
+            if $0 == .buy && Store.isEthLike {
                 return nil
             }
             return MenuButton(type: $0)
         }
     }
     fileprivate let bottomPadding: CGFloat = 32.0
-    private let store: Store
-
-    init(store: Store) {
-        self.store = store
-        super.init(nibName: nil, bundle: nil)
-    }
 
     override func viewDidLoad() {
 
@@ -83,10 +77,6 @@ class MenuViewController : UIViewController, Trackable {
             saveEvent("menu.didTapBuyBitcoin")
             didTapBuy?()
         }
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 

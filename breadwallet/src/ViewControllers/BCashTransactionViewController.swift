@@ -16,14 +16,12 @@ class BCashTransactionViewController : UIViewController {
     private let addressCell = AddressCell()
     private let send = ShadowButton(title: S.Send.sendLabel, type: .primary)
     private let walletManager: WalletManager
-    private let store: Store
     private let txHash = UIButton(type: .system)
     private let txHashHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let verifyPinTransitionDelegate = PinTransitioningDelegate()
 
-    init(walletManager: WalletManager, store: Store) {
+    init(walletManager: WalletManager) {
         self.walletManager = walletManager
-        self.store = store
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -76,7 +74,7 @@ class BCashTransactionViewController : UIViewController {
     private func setInitialData() {
         view.backgroundColor = .whiteTint
         titleLabel.text = S.BCH.title
-        let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), state: store.state, selectedRate: nil, minimumFractionDigits: 0, store: store)
+        let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), selectedRate: nil, minimumFractionDigits: 0)
         body.text = String(format: S.BCH.body, amount.description)
         addressCell.paste.tap = strongify(self) { $0.pasteTapped() }
         addressCell.scan.tap = strongify(self) { $0.scanTapped() }
@@ -89,7 +87,7 @@ class BCashTransactionViewController : UIViewController {
         txHash.contentHorizontalAlignment = .left
         txHash.tap = strongify(self) { myself in
             myself.txHash.tempDisable()
-            myself.store.trigger(name: .lightWeightAlert(S.BCH.hashCopiedMessage))
+            Store.trigger(name: .lightWeightAlert(S.BCH.hashCopiedMessage))
             UIPasteboard.general.string = myself.txHash.titleLabel?.text
         }
         setPreviousTx()
@@ -120,7 +118,7 @@ class BCashTransactionViewController : UIViewController {
             }
             return
         }
-        let vc = ScanViewController(store: store, completion: { [weak self] paymentRequest in
+        let vc = ScanViewController(completion: { [weak self] paymentRequest in
             guard let myself = self else { return }
             myself.handlePaymentRequest(paymentRequest)
             myself.view.isFrameChangeBlocked = false
@@ -139,7 +137,7 @@ class BCashTransactionViewController : UIViewController {
 
     private func presentConfirm() {
         guard let address = addressCell.address, address.isValidBCHAddress else { return showErrorMessage(S.Send.invalidAddressMessage) }
-        let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), state: store.state, selectedRate: nil, minimumFractionDigits: 0, store: store)
+        let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), selectedRate: nil, minimumFractionDigits: 0)
         let message = String(format: S.BCH.confirmationMessage, amount.description, address)
         let alert = UIAlertController(title: S.BCH.confirmationTitle, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
@@ -150,7 +148,7 @@ class BCashTransactionViewController : UIViewController {
     }
 
     private func send(toAddress: String) {
-        let verify = VerifyPinViewController(bodyText: S.VerifyPin.authorize, pinLength: walletManager.pinLength, walletManager: walletManager, store: store, success: { [weak self] pin in
+        let verify = VerifyPinViewController(bodyText: S.VerifyPin.authorize, pinLength: walletManager.pinLength, walletManager: walletManager, success: { [weak self] pin in
                 guard let myself = self else { return }
                 myself.walletManager.sweepBCash(toAddress: toAddress, pin: pin, callback: { errorMessage in
                     if let errorMessage = errorMessage {

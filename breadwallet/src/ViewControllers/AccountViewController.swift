@@ -13,7 +13,6 @@ import MachO
 let accountHeaderHeight: CGFloat = 136.0
 let accountFooterHeight: CGFloat = 56.0
 private let transactionsLoadingViewHeightConstant: CGFloat = 48.0
-private let kycPollInterval = 2.0
 class AccountViewController : UIViewController, Subscriber {
 
     //MARK: - Public
@@ -35,19 +34,17 @@ class AccountViewController : UIViewController, Subscriber {
         }
     }
 
-    init(store: Store, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
-        self.store = store
-        self.transactionsTableView = TransactionsTableViewController(store: store, didSelectTransaction: didSelectTransaction)
-        self.headerView = AccountHeaderView(store: store)
+    init(didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
+        self.transactionsTableView = TransactionsTableViewController(didSelectTransaction: didSelectTransaction)
+        self.headerView = AccountHeaderView()
         super.init(nibName: nil, bundle: nil)
     }
 
     var tokenSymbol: String? {
-        return store.state.walletState.token?.code
+        return Store.state.walletState.token?.code
     }
 
     //MARK: - Private
-    private let store: Store
     private let headerView: AccountHeaderView
     private let footerView = AccountFooterView()
     private let transactionsLoadingView = LoadingProgressView()
@@ -72,7 +69,6 @@ class AccountViewController : UIViewController, Subscriber {
         }
     }
     private var didEndLoading = false
-    private var kycStatusTimer: Timer? = nil
 
     override func viewDidLoad() {
         // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
@@ -99,82 +95,8 @@ class AccountViewController : UIViewController, Subscriber {
         addAppLifecycleNotificationEvents()
         setInitialData()
 
-        if let endTime = store.state.walletState.crowdsale?.endTime {
-            if Date() < endTime {
-                footerView.isHidden = true
-            }
-        }
-
-        if store.isEthLike {
+        if Store.isEthLike {
             footerView.menuButton.isHidden = true
-        }
-
-        updateKycStatus()
-
-        transactionsTableView.didCollectRegistrationParams = { [weak self] params in
-            self?.walletManager?.apiClient?.register(params: params, callback: { url in
-                if let url = url {
-                    self?.presentWebView(forUrl: url)
-                } else {
-                    self?.showErrorMessage("Registration Error")
-                }
-            })
-        }
-
-        transactionsTableView.shouldResumeIdentityVerification = { [weak self] in
-            if let contractAddress = self?.store.state.walletState.crowdsale?.contract.address, let ethAddress = self?.store.state.walletState.receiveAddress {
-                self?.walletManager?.apiClient?.kycStatus(contractAddress: contractAddress, ethAddress: ethAddress, callback: { status, uri in
-                    guard let uri = uri else { return }
-                    guard let url = URL(string: uri) else { return }
-                    self?.presentWebView(forUrl: url)
-                })
-            }
-        }
-
-        transactionsTableView.shouldPresentLegal = { [weak self] in
-            self?.presentLegalWebview()
-        }
-    }
-
-    private func presentWebView(forUrl: URL) {
-        let webView = WebViewController(url: forUrl, style: .regular)
-        webView.didComplete = { [weak self] in
-            self?.updateKycStatus()
-            if self?.kycStatusTimer == nil {
-                self?.kycStatusTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self!, selector: #selector(self!.updateKycStatus), userInfo: nil, repeats: true)
-            }
-        }
-        let nc = UINavigationController(rootViewController: webView)
-        self.present(nc, animated: true, completion: nil)
-    }
-
-    private func presentLegalWebview() {
-        let webView = WebViewController(url: URL(string: C.crowdsaleLegalUrl)!, style: .legal)
-        webView.didComplete = { [weak self] in
-            webView.dismiss(animated: true, completion: {
-                UserDefaults.hasAgreedToCrowdsaleTerms = true
-                self?.store.perform(action: RootModalActions.Present(modal: .send))
-            })
-        }
-        let nc = UINavigationController(rootViewController: webView)
-        self.present(nc, animated: true, completion: nil)
-    }
-
-    @objc private func updateKycStatus() {
-        if let contractAddress = store.state.walletState.crowdsale?.contract.address, let ethAddress = store.state.walletState.receiveAddress {
-            walletManager?.apiClient?.kycStatus(contractAddress: contractAddress, ethAddress: ethAddress, callback: { [weak self] status, _ in
-                guard let status = status else { return }
-                DispatchQueue.main.async {
-                    if status != .complete {
-                        if self?.kycStatusTimer == nil {
-                            self?.kycStatusTimer = Timer.scheduledTimer(timeInterval: kycPollInterval, target: self!, selector: #selector(self!.updateKycStatus), userInfo: nil, repeats: true)
-                        }
-                    } else {
-                        self?.kycStatusTimer?.invalidate()
-                    }
-                    self?.transactionsTableView.kycStatus = status
-                }
-            })
         }
     }
 
@@ -186,13 +108,6 @@ class AccountViewController : UIViewController, Subscriber {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         headerView.setBalances()
-        kycStatusTimer?.invalidate()
-        kycStatusTimer = Timer.scheduledTimer(timeInterval: kycPollInterval, target: self, selector: #selector(self.updateKycStatus), userInfo: nil, repeats: true)
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        kycStatusTimer?.invalidate()
     }
 
     private func addSubviews() {
@@ -214,13 +129,13 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func addSubscriptions() {
-        store.subscribe(self, selector: { $0.walletState.syncProgress != $1.walletState.syncProgress },
+        Store.subscribe(self, selector: { $0.walletState.syncProgress != $1.walletState.syncProgress },
                         callback: { state in
                             self.transactionsTableView.syncingView.progress = CGFloat(state.walletState.syncProgress)
                             self.transactionsTableView.syncingView.timestamp = state.walletState.lastBlockTimestamp
         })
 
-        store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState },
+        Store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState },
                             callback: { state in
                                 guard let peerManager = self.walletManager?.peerManager else { return }
                                 if state.walletState.syncState == .success {
@@ -232,18 +147,18 @@ class AccountViewController : UIViewController, Subscriber {
                                 }
         })
 
-        store.subscribe(self, selector: { $0.isLoadingTransactions != $1.isLoadingTransactions }, callback: {
+        Store.subscribe(self, selector: { $0.isLoadingTransactions != $1.isLoadingTransactions }, callback: {
             if $0.isLoadingTransactions {
                 self.loadingDidStart()
             } else {
                 self.hideLoadingView()
             }
         })
-        store.subscribe(self, selector: { $0.isLoginRequired != $1.isLoginRequired }, callback: { self.isLoginRequired = $0.isLoginRequired })
-        store.subscribe(self, name: .showStatusBar, callback: { _ in
+        Store.subscribe(self, selector: { $0.isLoginRequired != $1.isLoginRequired }, callback: { self.isLoginRequired = $0.isLoginRequired })
+        Store.subscribe(self, name: .showStatusBar, callback: { _ in
             self.shouldShowStatusBar = true
         })
-        store.subscribe(self, name: .hideStatusBar, callback: { _ in
+        Store.subscribe(self, name: .hideStatusBar, callback: { _ in
             self.shouldShowStatusBar = false
         })
     }
@@ -293,7 +208,7 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func showLoadingView() {
-        guard !store.isEthLike else { return }
+        guard !Store.isEthLike else { return }
         view.insertSubview(transactionsLoadingView, belowSubview: headerContainer)
         transactionsLoadingViewTop = transactionsLoadingView.topAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -transactionsLoadingViewHeightConstant)
         transactionsLoadingView.constrain([
@@ -315,7 +230,7 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func hideLoadingView() {
-        guard !store.isEthLike else { return }
+        guard !Store.isEthLike else { return }
         didEndLoading = true
         guard self.transactionsLoadingViewTop?.constant == 0.0 else { return } //Should skip hide if it's not shown
         loadingTimer?.invalidate()
@@ -352,7 +267,7 @@ class AccountViewController : UIViewController, Subscriber {
             })
         }
         NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { note in
-            if !self.isLoginRequired && !self.store.state.isPromptingBiometrics {
+            if !self.isLoginRequired && !Store.state.isPromptingBiometrics {
                 self.blurView.alpha = 1.0
                 self.view.addSubview(self.blurView)
                 self.blurView.constrain(toSuperviewEdges: nil)

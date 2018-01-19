@@ -15,14 +15,12 @@ private let testnetURL = "https://test-insight.bitpay.com/api/addrs/utxo"
 
 class StartImportViewController : UIViewController {
 
-    init(walletManager: WalletManager, store: Store) {
+    init(walletManager: WalletManager) {
         self.walletManager = walletManager
-        self.store = store
         super.init(nibName: nil, bundle: nil)
     }
 
     private let walletManager: WalletManager
-    private let store: Store
     private let header = RadialGradientView(backgroundColor: .blue, offset: 64.0)
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "ImportIllustration"))
     private let message = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
@@ -100,7 +98,7 @@ class StartImportViewController : UIViewController {
         warning.text = S.Import.importWarning
 
         button.tap = strongify(self) { myself in
-            let scan = ScanViewController(store: myself.store, scanKeyCompletion: { address in
+            let scan = ScanViewController(scanKeyCompletion: { address in
                 myself.didReceiveAddress(address)
             }, isValidURI: { (string) -> Bool in
                 return string.isValidPrivateKey || string.isValidBip38Key
@@ -174,7 +172,7 @@ class StartImportViewController : UIViewController {
         guard let tx = UnsafeMutablePointer<BRTransaction>() else { return }
         guard let wallet = walletManager.wallet else { return }
         guard let address = key.address() else { return }
-        guard let fees = store.state.fees else { return }
+        guard let fees = Store.state.fees else { return }
         guard !wallet.containsAddress(address) else {
             return showErrorMessage(S.Import.Error.duplicate)
         }
@@ -194,11 +192,11 @@ class StartImportViewController : UIViewController {
             guard fee + wallet.minOutputAmount <= balance else {
                 return self.showErrorMessage(S.Import.Error.highFees)
             }
-            guard let rate = self.store.state.currentRate else { return }
-            let balanceAmount = Amount(amount: balance, rate: rate, maxDigits: self.store.state.maxDigits, store: self.store)
-            let feeAmount = Amount(amount: fee, rate: rate, maxDigits: self.store.state.maxDigits, store: self.store)
-            let balanceText = self.store.state.isBtcSwapped ? balanceAmount.localCurrency : balanceAmount.bits
-            let feeText = self.store.state.isBtcSwapped ? feeAmount.localCurrency : feeAmount.bits
+            guard let rate = Store.state.currentRate else { return }
+            let balanceAmount = Amount(amount: balance, rate: rate, maxDigits: Store.state.maxDigits)
+            let feeAmount = Amount(amount: fee, rate: rate, maxDigits: Store.state.maxDigits)
+            let balanceText = Store.state.isBtcSwapped ? balanceAmount.localCurrency : balanceAmount.bits
+            let feeText = Store.state.isBtcSwapped ? feeAmount.localCurrency : feeAmount.bits
             let message = String(format: S.Import.confirm, balanceText, feeText)
             let alert = UIAlertController(title: S.Import.title, message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
@@ -238,7 +236,7 @@ class StartImportViewController : UIViewController {
     }
 
     private func showSuccess() {
-        store.perform(action: Alert.Show(.sweepSuccess(callback: { [weak self] in
+        Store.perform(action: Alert.Show(.sweepSuccess(callback: { [weak self] in
             guard let myself = self else { return }
             myself.dismiss(animated: true, completion: nil)
         })))

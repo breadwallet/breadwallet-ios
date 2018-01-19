@@ -25,15 +25,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     var initialAddress: String?
     var isPresentedFromLock = false
 
-    init(store: Store, sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil, gethManager: GethManager? = nil) {
-        self.store = store
+    init(sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil, gethManager: GethManager? = nil) {
         self.sender = sender
         self.walletManager = walletManager
         self.initialAddress = initialAddress
         self.initialRequest = initialRequest
-        self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
+        self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: Store.state.maxDigits), type: .tertiary)
         self.gethManager = gethManager
-        amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
+        amountView = AmountViewController(isPinPadExpandedAtLaunch: false)
 
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
@@ -42,11 +41,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
     //MARK - Private
     deinit {
-        store.unsubscribe(self)
+        Store.unsubscribe(self)
         NotificationCenter.default.removeObserver(self)
     }
 
-    fileprivate let store: Store
     private let sender: Sender
     private let walletManager: WalletManager
     private let amountView: AmountViewController
@@ -98,14 +96,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             sendButton.constraint(.height, constant: C.Sizes.buttonHeight),
             sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[5] : -C.padding[2]) ])
         addButtonActions()
-        store.subscribe(self, selector: { $0.walletState.balance != $1.walletState.balance },
+        Store.subscribe(self, selector: { $0.walletState.balance != $1.walletState.balance },
                         callback: {
                             if let balance = $0.walletState.balance {
                                 self.balance = balance
                             }
         })
-        attemptSetupCrowdsale()
-        store.subscribe(self, selector: { $0.fees != $1.fees }, callback: {
+        Store.subscribe(self, selector: { $0.fees != $1.fees }, callback: {
             if let fees = $0.fees {
                 if let feeType = self.feeType {
                     switch feeType {
@@ -129,18 +126,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         } else if let initialRequest = initialRequest {
             handleRequest(initialRequest)
         }
-        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded{
-            amountView.expandPinPad()
-        }
-    }
-
-    private func attemptSetupCrowdsale() {
-        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded{
-            addressCell.setContent("Bread Crowdsale")
-            addressCell.paste.isHidden = true
-            addressCell.scan.isHidden = true
-            memoCell.isHidden = true
-        }
     }
 
     private func addButtonActions() {
@@ -163,7 +148,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return self?.balanceTextForAmount(amount: amount, rate: rate)
         }
 
-        if store.isEthLike {
+        if Store.isEthLike {
             amountView.didUpdateEth = { [weak self] amount in
                 self?.ethAmount = amount
             }
@@ -175,7 +160,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         amountView.didUpdateFee = strongify(self) { myself, fee in
             guard let wallet = myself.walletManager.wallet else { return }
             myself.feeType = fee
-            if let fees = myself.store.state.fees {
+            if let fees = Store.state.fees {
                 switch fee {
                 case .regular:
                     wallet.feePerKb = fees.regular
@@ -195,7 +180,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), state: store.state, selectedRate: rate, minimumFractionDigits: 0, store: store)
+        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), selectedRate: rate, minimumFractionDigits: 0)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
@@ -203,10 +188,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         var feeColor: UIColor = .grayTextTint
         if let amount = amount, amount.rawValue > 0 {
             let fee: UInt64
-            if store.isEthLike {
+            if Store.isEthLike {
                 fee = UInt64(gethManager!.fee(isCrowdsale: false).getInt64())
             } else if let fee = sender.feeForTx(amount: amount.rawValue) {
-                let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0, store: store)
+                let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), selectedRate: rate, minimumFractionDigits: 0)
                 let feeText = feeAmount.description
                 feeOutput = String(format: S.Send.fee, feeText)
                 if (balance >= fee) && amount.rawValue > (balance - fee) {
@@ -236,7 +221,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return showAlert(title: S.Alert.error, message: S.Send.emptyPasteboard, buttonLabel: S.Button.ok)
         }
 
-        guard let request = store.isEthLike ? PaymentRequest(ethAddress: pasteboard) : PaymentRequest(string: pasteboard) else {
+        guard let request = Store.isEthLike ? PaymentRequest(ethAddress: pasteboard) : PaymentRequest(string: pasteboard) else {
             return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressOnPasteboard, buttonLabel: S.Button.ok)
         }
         handleRequest(request)
@@ -252,11 +237,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     @objc private func sendTapped() {
-        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded {
-            confirmCrowdsale(); return
-        }
-        guard store.state.currency != .ethereum else { confirmEth(); return }
-        guard store.state.currency != .token else { confirmToken(); return }
+        guard Store.state.currency != .ethereum else { confirmEth(); return }
+        guard Store.state.currency != .token else { confirmToken(); return }
         if addressCell.textField.isFirstResponder {
             addressCell.textField.resignFirstResponder()
         }
@@ -265,7 +247,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             guard let address = addressCell.address else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             }
-            guard store.state.fees != nil else {
+            guard Store.state.fees != nil else {
                 return showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
             }
 //            guard address.isValidAddress else {
@@ -276,8 +258,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             }
             if let minOutput = walletManager.wallet?.minOutputAmount {
                 guard amount.rawValue >= minOutput else {
-                    let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: store.state.maxDigits, store: store)
-                    let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutputAmount.string(isBtcSwapped: store.state.isBtcSwapped))
+                    let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: Store.state.maxDigits)
+                    let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutputAmount.string(isBtcSwapped: Store.state.isBtcSwapped))
                     return showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
                 }
             }
@@ -293,7 +275,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
 
         guard let amount = amount else { return }
-        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingBiometrics: sender.canUseBiometrics, store: store)
+        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingBiometrics: sender.canUseBiometrics)
         confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
                 self.send()
@@ -312,82 +294,42 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         return
     }
 
-    private func confirmCrowdsale() {
-        guard let ethManager = gethManager else { return }
-        guard let crowdsale = store.state.walletState.crowdsale else { return }
-        guard let minContribution = crowdsale.minContribution, let maxContribution = crowdsale.maxContribution else { return }
-        guard let brdBalance = store.state.walletState.bigBalance else { return }
-        guard let rate = store.state.walletState.crowdsale?.rate else { return }
-        let maxBuy = self.maxBuy(maxContribution: maxContribution, brdBalance: brdBalance, rate: rate)
-        guard amountView.ethOutput >= minContribution else {
-            let min = DisplayAmount.ethString(value: minContribution, store: store)
-            return showErrorMessage("Please enter an amount greater than the minimum contribution amount of \(min)")
-        }
-        guard amountView.ethOutput <= maxBuy else {
-            let max = DisplayAmount.ethString(value: maxBuy, store: store)
-            return showErrorMessage("Please enter an amount less than the maximum contribution amount of \(max)")
-        }
-        let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee(isCrowdsale: true), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: crowdsale.contract.address, isUsingTouchId: sender.canUseBiometrics, store: store)
-        confirm.callback = {
-            confirm.dismiss(animated: true, completion: {
-                self.presentEthPin()
-            })
-        }
-        confirmTransitioningDelegate.shouldShowMaskView = false
-        confirm.transitioningDelegate = confirmTransitioningDelegate
-        confirm.modalPresentationStyle = .overFullScreen
-        confirm.modalPresentationCapturesStatusBarAppearance = true
-        present(confirm, animated: true, completion: nil)
-    }
-
-    private func maxBuy(maxContribution: GethBigInt, brdBalance: GethBigInt, rate: GethBigInt) -> GethBigInt {
-        guard let maxContribution = Decimal(string: maxContribution.stringValue) else { return GethBigInt(0) }
-        guard let brdBalance = Decimal(string: brdBalance.stringValue) else { return GethBigInt(0) }
-        guard let rate = Decimal(string: rate.stringValue) else { return GethBigInt(0) }
-        let maxBuy = maxContribution - (brdBalance/rate)
-        let result = GethBigInt(0)
-        result.setString(maxBuy.description, base: 10)
-        return result
-    }
-
     private func confirmEth() {
-        guard let ethManager = gethManager else { return }
-        let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee(isCrowdsale: false), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseBiometrics, store: store)
-        confirm.callback = {
-            confirm.dismiss(animated: true, completion: {
-                self.presentEthPin()
-            })
-        }
-        confirmTransitioningDelegate.shouldShowMaskView = false
-        confirm.transitioningDelegate = confirmTransitioningDelegate
-        confirm.modalPresentationStyle = .overFullScreen
-        confirm.modalPresentationCapturesStatusBarAppearance = true
-        present(confirm, animated: true, completion: nil)
+//        guard let ethManager = gethManager else { return }
+//        let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee(isCrowdsale: false), feeType: feeType ?? .regular, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseBiometrics, store: store)
+//        confirm.callback = {
+//            confirm.dismiss(animated: true, completion: {
+//                self.presentEthPin()
+//            })
+//        }
+//        confirmTransitioningDelegate.shouldShowMaskView = false
+//        confirm.transitioningDelegate = confirmTransitioningDelegate
+//        confirm.modalPresentationStyle = .overFullScreen
+//        confirm.modalPresentationCapturesStatusBarAppearance = true
+//        present(confirm, animated: true, completion: nil)
     }
 
     private func confirmToken() {
-        guard let ethManager = gethManager else { return }
-        //TODO - calculate erc20 token transfer fees correctly
-        let confirm = EthConfirmationViewController(amount: amountView.tokenOutput, fee: ethManager.fee(isCrowdsale: false), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseBiometrics, store: store)
-        confirm.callback = {
-            confirm.dismiss(animated: true, completion: {
-                self.presentEthPin()
-            })
-        }
-        confirmTransitioningDelegate.shouldShowMaskView = false
-        confirm.transitioningDelegate = confirmTransitioningDelegate
-        confirm.modalPresentationStyle = .overFullScreen
-        confirm.modalPresentationCapturesStatusBarAppearance = true
-        present(confirm, animated: true, completion: nil)
+//        guard let ethManager = gethManager else { return }
+//        //TODO - calculate erc20 token transfer fees correctly
+//        let confirm = EthConfirmationViewController(amount: amountView.tokenOutput, fee: ethManager.fee(isCrowdsale: false), feeType: feeType ?? .regular, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseBiometrics)
+//        confirm.callback = {
+//            confirm.dismiss(animated: true, completion: {
+//                self.presentEthPin()
+//            })
+//        }
+//        confirmTransitioningDelegate.shouldShowMaskView = false
+//        confirm.transitioningDelegate = confirmTransitioningDelegate
+//        confirm.modalPresentationStyle = .overFullScreen
+//        confirm.modalPresentationCapturesStatusBarAppearance = true
+//        present(confirm, animated: true, completion: nil)
     }
 
     private func presentEthPin() {
         presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin in
             guard let myself = self else { return }
             myself.parent?.view.isFrameChangeBlocked = false
-            if let crowdsale = myself.store.state.walletState.crowdsale, !crowdsale.hasEnded {
-                myself.sendCrowdsale()
-            } else if myself.store.state.currency == .ethereum {
+            if Store.state.currency == .ethereum {
                 myself.sendEth()
             } else {
                 myself.sendToken()
@@ -408,18 +350,18 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return showErrorMessage(S.Send.ethSendSelf)
         }
 
-        let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(store.state.walletState.numSent), isCrowdsale: false)
+        let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(Store.state.walletState.numSent), isCrowdsale: false)
         let signedTx = ethManager.signTx(tx, ethPrivKey: walletManager.ethPrivKey!)
         if let error = ethManager.publishTx(signedTx) {
-            let balance = DisplayAmount.ethString(value: ethManager.balance, store: store)
-            let sendAmount = DisplayAmount.ethString(value: amount, store: store)
-            let fee = DisplayAmount.ethString(value: ethManager.fee(isCrowdsale: false), store: store)
+            let balance = DisplayAmount.ethString(value: ethManager.balance)
+            let sendAmount = DisplayAmount.ethString(value: amount)
+            let fee = DisplayAmount.ethString(value: ethManager.fee(isCrowdsale: false))
             showErrorMessage(error.localizedDescription + "\nSending: \(sendAmount) from wallet with balance: \(balance) with fee: \(fee)")
         } else {
             dismiss(animated: true, completion: {
-                self.store.trigger(name: .showStatusBar)
+                Store.trigger(name: .showStatusBar)
                 if self.isPresentedFromLock {
-                    self.store.trigger(name: .loginFromSend)
+                    Store.trigger(name: .loginFromSend)
                 }
                 self.onPublishSuccess?()
 
@@ -427,8 +369,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 let timestamp = Date().timeIntervalSince1970
                 let tempTx = EthTx(blockNumber: 0, timeStamp: timestamp, value: amount, from: ethManager.address.getHex(), to: address, confirmations: 0, hash: signedTx.getHash(), isError: false)
                 let transactionViewModel = EthTransaction(tx: tempTx, address: ethManager.address.getHex())
-                let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
-                self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))
+                let newTransactions = [transactionViewModel] + Store.state.walletState.transactions
+                Store.perform(action: WalletChange.set(Store.state.walletState.mutate(transactions: newTransactions)))
             })
         }
     }
@@ -437,7 +379,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         let amount = amountView.tokenOutput
         guard let address = addressCell.textField.text?.lowercased() else { return }
         guard let ethManager = gethManager else { return }
-        guard let token = store.state.walletState.token else { return }
+        guard let token = Store.state.walletState.token else { return }
 
         guard address.isValidEthAddress else {
             return showErrorMessage(S.Send.invalidAddressMessage)
@@ -447,49 +389,22 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return showErrorMessage(S.Send.ethSendSelf)
         }
 
-        if let error = ethManager.transfer(amount: amount, toAddress: address, privKey: walletManager.ethPrivKey!, token: token, nonce: store.state.walletState.numSent) {
-            let balance = DisplayAmount.ethString(value: ethManager.balance, store: store)
-            let sendAmount = DisplayAmount.ethString(value: amount, store: store)
-            let fee = DisplayAmount.ethString(value: ethManager.fee(isCrowdsale: false), store: store)
+        if let error = ethManager.transfer(amount: amount, toAddress: address, privKey: walletManager.ethPrivKey!, token: token, nonce: Store.state.walletState.numSent) {
+            let balance = DisplayAmount.ethString(value: ethManager.balance)
+            let sendAmount = DisplayAmount.ethString(value: amount)
+            let fee = DisplayAmount.ethString(value: ethManager.fee(isCrowdsale: false))
             showErrorMessage(error.localizedDescription + "\nSending: \(sendAmount) from wallet with balance: \(balance) with fee: \(fee)")
         } else {
             dismiss(animated: true, completion: {
-                self.store.trigger(name: .showStatusBar)
+                Store.trigger(name: .showStatusBar)
                 self.onPublishSuccess?()
 
                 //Add temporary transaction
                 let timestamp = String(Date().timeIntervalSince1970)
                 let tempEvent = Event(timestamp: timestamp, from: ethManager.address.getHex(), to: address, amount: amount.getString(10))
                 let transactionViewModel = ERC20Transaction(event: tempEvent, address: ethManager.address.getHex(), token: token)
-                let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
-                self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))
-            })
-        }
-    }
-
-    private func sendCrowdsale() {
-        guard let crowdsale = store.state.walletState.crowdsale else { return }
-        let amount = amountView.ethOutput
-        guard let ethManager = gethManager else { return }
-
-        let tx = ethManager.createTx(forAmount: amount, toAddress: crowdsale.contract.address, nonce: Int64(store.state.walletState.numSent), isCrowdsale: true)
-        let signedTx = ethManager.signTx(tx, ethPrivKey: walletManager.ethPrivKey!)
-        if let error = ethManager.publishTx(signedTx) {
-            showErrorMessage(error.localizedDescription)
-        } else {
-            dismiss(animated: true, completion: {
-                self.store.trigger(name: .showStatusBar)
-                if self.isPresentedFromLock {
-                    self.store.trigger(name: .loginFromSend)
-                }
-                self.onPublishSuccess?()
-
-                //Add temporary transaction
-                let timestamp = Date().timeIntervalSince1970
-                let tempTx = EthTx(blockNumber: 0, timeStamp: timestamp, value: amount, from: ethManager.address.getHex(), to: crowdsale.contract.address, confirmations: 0, hash: signedTx.getHash(), isError: false)
-                let transactionViewModel = EthTransaction(tx: tempTx, address: ethManager.address.getHex())
-                let newTransactions = [transactionViewModel] + self.store.state.walletState.transactions
-                self.store.perform(action: WalletChange.set(self.store.state.walletState.mutate(transactions: newTransactions)))
+                let newTransactions = [transactionViewModel] + Store.state.walletState.transactions
+                Store.perform(action: WalletChange.set(Store.state.walletState.mutate(transactions: newTransactions)))
             })
         }
     }
@@ -523,7 +438,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func send() {
-        guard let rate = store.state.currentRate else { return }
+        guard let rate = Store.state.currentRate else { return }
         guard let feePerKb = walletManager.wallet?.feePerKb else { return }
 
         sender.send(biometricsMessage: S.VerifyPin.touchIdMessage,
@@ -540,9 +455,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 case .success:
                     self?.dismiss(animated: true, completion: {
                         guard let myself = self else { return }
-                        myself.store.trigger(name: .showStatusBar)
+                        Store.trigger(name: .showStatusBar)
                         if myself.isPresentedFromLock {
-                            myself.store.trigger(name: .loginFromSend)
+                            Store.trigger(name: .loginFromSend)
                         }
                         myself.onPublishSuccess?()
                     })
@@ -594,11 +509,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 self?.confirmProtocolRequest(protoReq: protoReq)
             })
         } else if requestAmount < wallet.minOutputAmount {
-            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: store.state.maxDigits, store: store)
+            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: Store.state.maxDigits)
             let message = String(format: S.PaymentProtocol.Errors.smallPayment, amount.bits)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         } else if isOutputTooSmall {
-            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: store.state.maxDigits, store: store)
+            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: Store.state.maxDigits)
             let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.bits)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         }
@@ -662,12 +577,10 @@ extension SendViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded {
-            return "Buy Tokens With Ethereum"
-        } else if let token = store.state.walletState.token {
+        if let token = Store.state.walletState.token {
             return "Send \(token.code)"
         } else {
-            return store.isEthLike ? S.Send.ethTitle : S.Send.title
+            return Store.isEthLike ? S.Send.ethTitle : S.Send.title
         }
 
     }

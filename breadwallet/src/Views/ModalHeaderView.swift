@@ -20,12 +20,12 @@ class ModalHeaderView : UIView {
         didSet { close.tap = closeCallback }
     }
 
-    init(title: String, style: ModalHeaderViewStyle, faqInfo: (Store, String)? = nil) {
+    init(title: String, style: ModalHeaderViewStyle, faqInfo: String? = nil) {
         self.title.text = title
         self.style = style
 
         if let faqInfo = faqInfo {
-            self.faq = UIButton.buildFaqButton(store: faqInfo.0, articleId: faqInfo.1)
+            self.faq = UIButton.buildFaqButton(articleId: faqInfo)
         }
 
         super.init(frame: .zero)
@@ -33,11 +33,11 @@ class ModalHeaderView : UIView {
         addFaqButton()
     }
 
-    var faqInfo: (Store, String)? {
+    var faqInfo: String? {
         didSet {
             if oldValue == nil {
                 guard let faqInfo = faqInfo else { return }
-                faq = UIButton.buildFaqButton(store: faqInfo.0, articleId: faqInfo.1)
+                faq = UIButton.buildFaqButton(articleId: faqInfo)
                 addFaqButton()
             }
         }

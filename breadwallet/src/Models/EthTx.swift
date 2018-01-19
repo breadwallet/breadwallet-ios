@@ -76,26 +76,6 @@ struct TokenBalance : Codable {
     let result: String
 }
 
-struct Crowdsale {
-    let startTime: Date?
-    let endTime: Date?
-    let minContribution: GethBigInt?
-    let maxContribution: GethBigInt?
-    let contract: Contract
-    let rate: GethBigInt?
-    let verificationCountryCode: String?
-    let weiRaised: GethBigInt?
-    let cap: GethBigInt?
-    var isSoldOut: Bool {
-        guard let weiRaised = weiRaised, let cap = cap else { return false }
-        return weiRaised >= cap
-    }
-    var hasEnded: Bool {
-        guard let endTime = endTime else { return false }
-        return Date() > endTime
-    }
-}
-
 struct Contract {
     let address: String
     let abi: String
@@ -136,13 +116,3 @@ extension Event {
         self.isComplete = false
     }
 }
-
-extension Crowdsale : Equatable { }
-
-func == (lhs: Crowdsale, rhs: Crowdsale) -> Bool {
-    return lhs.startTime == rhs.startTime && lhs.endTime == rhs.endTime
-}
-
-let crowdSaleABI = """
-[{"constant":true,"inputs":[],"name":"lockup","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"rate","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"endTime","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"cap","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"weiRaised","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"finalize","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"wallet","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"startTime","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"maxContribution","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"isFinalized","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"ownerShare","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"minContribution","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"authorizer","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_amount","type":"uint256"}],"name":"lockupTokens","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"beneficiary","type":"address"}],"name":"buyTokens","outputs":[],"payable":true,"type":"function"},{"constant":true,"inputs":[],"name":"hasEnded","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"unlockTokens","outputs":[{"name":"_didIssueRewards","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"token","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"inputs":[{"name":"_cap","type":"uint256"},{"name":"_minWei","type":"uint256"},{"name":"_maxWei","type":"uint256"},{"name":"_startTime","type":"uint256"},{"name":"_endTime","type":"uint256"},{"name":"_rate","type":"uint256"},{"name":"_ownerShare","type":"uint256"},{"name":"_wallet","type":"address"},{"name":"_authorizer","type":"address"},{"name":"_numUnlockIntervals","type":"uint256"},{"name":"_unlockIntervalDuration","type":"uint256"}],"payable":false,"type":"constructor"},{"payable":true,"type":"fallback"},{"anonymous":false,"inputs":[],"name":"Finalized","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"purchaser","type":"address"},{"indexed":true,"name":"beneficiary","type":"address"},{"indexed":false,"name":"value","type":"uint256"},{"indexed":false,"name":"amount","type":"uint256"}],"name":"TokenPurchase","type":"event"}]
-"""

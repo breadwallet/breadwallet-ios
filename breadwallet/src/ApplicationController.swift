@@ -21,32 +21,32 @@ class ApplicationController : Subscriber, Trackable {
     //Ideally the window would be private, but is unfortunately required
     //by the UIApplicationDelegate Protocol
     let window = UIWindow()
-    fileprivate let store: Store = {
-        let store = Store()
-        if let currentRate = UserDefaults.currentRate(forCode: "btc") {
-            store.perform(action: ExchangeRates.setRate(currentRate))
-        }
-        return store
-    }()
-    fileprivate let ethStore: Store = {
-        let store = Store()
-        if let currentRate = UserDefaults.currentRate(forCode: "eth") {
-            store.perform(action: ExchangeRates.setRate(currentRate))
-        }
-        return store
-    }()
-    fileprivate let tokenStores: [Store] = {
-        return tokens.map {
-            let store = Store()
-            store.perform(action: CurrencyActions.set(.token))
-            store.perform(action: WalletChange.set(store.state.walletState.mutate(token: $0)))
-            if let currentRate = UserDefaults.currentRate(forCode: $0.code) {
-                store.perform(action: ExchangeRates.setRate(currentRate))
-            }
-            store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 1.0, reciprocalCode: $0.code)))
-            return store
-        }
-    }()
+//    fileprivate let store: Store = {
+//        let store = Store()
+//        if let currentRate = UserDefaults.currentRate(forCode: "btc") {
+//            store.perform(action: ExchangeRates.setRate(currentRate))
+//        }
+//        return store
+//    }()
+//    fileprivate let ethStore: Store = {
+//        let store = Store()
+//        if let currentRate = UserDefaults.currentRate(forCode: "eth") {
+//            store.perform(action: ExchangeRates.setRate(currentRate))
+//        }
+//        return store
+//    }()
+//    fileprivate let tokenStores: [Store] = {
+//        return tokens.map {
+//            let store = Store()
+//            store.perform(action: CurrencyActions.set(.token))
+//            store.perform(action: WalletChange.set(store.state.walletState.mutate(token: $0)))
+//            if let currentRate = UserDefaults.currentRate(forCode: $0.code) {
+//                store.perform(action: ExchangeRates.setRate(currentRate))
+//            }
+//            store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 1.0, reciprocalCode: $0.code)))
+//            return store
+//        }
+//    }()
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
 
@@ -73,9 +73,9 @@ class ApplicationController : Subscriber, Trackable {
     private var accountViewControllers: [AccountViewController]?
 
     init() {
-        transitionDelegate = ModalTransitionDelegate(type: .transactionDetail, store: store)
-        ethStore.perform(action: CurrencyActions.set(.ethereum))
-        ethStore.perform(action: CurrencyChange.setIsSwapped(false))
+        transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
+//        ethStore.perform(action: CurrencyActions.set(.ethereum))
+//        ethStore.perform(action: CurrencyChange.setIsSwapped(false))
         DispatchQueue.walletQueue.async {
             guardProtected(queue: DispatchQueue.walletQueue) {
                 self.initWallet()
@@ -85,7 +85,7 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func initWallet() {
-        walletManager = try? WalletManager(store: self.store, dbPath: nil)
+        walletManager = try? WalletManager(dbPath: nil)
         walletManager?.initWallet { success in
             if success {
                 self.walletManager?.initPeerManager {
@@ -134,16 +134,16 @@ class ApplicationController : Subscriber, Trackable {
         window.makeKeyAndVisible()
         listenForPushNotificationRequest()
         offMainInitialization()
-        store.subscribe(self, name: .reinitWalletManager(nil), callback: {
+        Store.subscribe(self, name: .reinitWalletManager(nil), callback: {
             guard let trigger = $0 else { return }
             if case .reinitWalletManager(let callback) = trigger {
                 if let callback = callback {
-                    self.store.removeAllSubscriptions()
-                    self.store.perform(action: Reset())
+                    Store.removeAllSubscriptions()
+                    Store.perform(action: Reset())
                     self.setup()
                     DispatchQueue.walletQueue.async {
                         do {
-                            self.walletManager = try WalletManager(store: self.store, dbPath: nil)
+                            self.walletManager = try WalletManager(dbPath: nil)
                             let _ = self.walletManager?.wallet //attempt to initialize wallet
                         } catch let error {
                             assert(false, "Error creating new wallet: \(error)")
@@ -162,7 +162,7 @@ class ApplicationController : Subscriber, Trackable {
         guard let walletManager = walletManager else { return }
         guard !walletManager.noWallet else { return }
         if shouldRequireLogin() {
-            store.perform(action: RequireLogin())
+            Store.perform(action: RequireLogin())
         }
         DispatchQueue.walletQueue.async {
             walletManager.peerManager?.connect()
@@ -192,13 +192,13 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     func didEnterBackground() {
-        if store.state.walletState.syncState == .success {
+        if Store.state.walletState.syncState == .success {
             DispatchQueue.walletQueue.async {
                 self.walletManager?.peerManager?.disconnect()
             }
         }
         //Save the backgrounding time if the user is logged in
-        if !store.state.isLoginRequired {
+        if !Store.state.isLoginRequired {
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
         }
         walletManager?.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
@@ -220,14 +220,14 @@ class ApplicationController : Subscriber, Trackable {
     private func didInitWalletManager() {
         guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
-        store.perform(action: PinLength.set(walletManager.pinLength))
+        Store.perform(action: PinLength.set(walletManager.pinLength))
         rootViewController.walletManager = walletManager
         hasPerformedWalletDependentInitialization = true
-        walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
-        modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient, ethStore: ethStore, gethManager: nil, tokenStores: tokenStores)
-        exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
-        feeUpdater = FeeUpdater(walletManager: walletManager, store: store)
-        startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: rootViewController)
+        walletCoordinator = WalletCoordinator(walletManager: walletManager)
+        modalPresenter = ModalPresenter(walletManager: walletManager, window: window, apiClient: noAuthApiClient, gethManager: nil)
+        exchangeUpdater = ExchangeUpdater(walletManager: walletManager)
+        feeUpdater = FeeUpdater(walletManager: walletManager)
+        startFlowController = StartFlowPresenter(walletManager: walletManager, rootViewController: rootViewController)
         accountViewController?.walletManager = walletManager
 
         accountViewControllers?.forEach {
@@ -235,7 +235,7 @@ class ApplicationController : Subscriber, Trackable {
         }
 
         defaultsUpdater = UserDefaultsUpdater(walletManager: walletManager)
-        urlController = URLController(store: self.store, walletManager: walletManager)
+        urlController = URLController(walletManager: walletManager)
         if let url = launchURL {
             _ = urlController?.handleUrl(url)
             launchURL = nil
@@ -245,12 +245,12 @@ class ApplicationController : Subscriber, Trackable {
             if walletManager.noWallet {
                 UserDefaults.hasShownWelcome = true
                 addWalletCreationListener()
-                store.perform(action: ShowStartFlow())
+                Store.perform(action: ShowStartFlow())
             } else {
                 modalPresenter?.walletManager = walletManager
-                let gethManager = GethManager(ethPubKey: walletManager.ethPubKey!, store: store)
-                ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient, btcStore: store)
-                tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: noAuthApiClient, btcStore: store) }
+                let gethManager = GethManager(ethPubKey: walletManager.ethPubKey!)
+//                ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient, btcStore: store)
+//                tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: noAuthApiClient, btcStore: store) }
                 modalPresenter?.gethManager = gethManager
                 DispatchQueue.walletQueue.async {
                     walletManager.peerManager?.connect()
@@ -269,22 +269,22 @@ class ApplicationController : Subscriber, Trackable {
             }
             exchangeUpdater?.refresh(completion: {
                 self.watchSessionManager.walletManager = self.walletManager
-                self.watchSessionManager.rate = self.store.state.currentRate
+                self.watchSessionManager.rate = Store.state.currentRate
             })
         }
 
     }
 
     private func addNumSentListeners() {
-        let ethLikeStores = [ethStore] + tokenStores
-        ethStore.subscribe(self,
-                     selector: { $0.walletState.transactions != $1.walletState.transactions },
-                     callback: { state in
-                        let numSent = state.walletState.transactions.filter { $0.direction == .sent }.count
-                        ethLikeStores.forEach { store in
-                            store.perform(action: WalletChange.set(store.state.walletState.mutate(numSent: numSent)))
-                        }
-        })
+//        let ethLikeStores = [ethStore] + tokenStores
+//        ethStore.subscribe(self,
+//                     selector: { $0.walletState.transactions != $1.walletState.transactions },
+//                     callback: { state in
+//                        let numSent = state.walletState.transactions.filter { $0.direction == .sent }.count
+//                        ethLikeStores.forEach { store in
+//                            store.perform(action: WalletChange.set(store.state.walletState.mutate(numSent: numSent)))
+//                        }
+//        })
     }
 
     private func shouldRequireLogin() -> Bool {
@@ -305,9 +305,8 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func setupRootViewController() {
-        let home = HomeScreenViewController(stores: [store, ethStore] + tokenStores)
+        let home = HomeScreenViewController()
         let nc = RootNavigationController()
-        nc.store = store
         nc.navigationBar.isTranslucent = false
         nc.navigationBar.tintColor = .white
         nc.pushViewController(home, animated: false)
@@ -326,7 +325,7 @@ class ApplicationController : Subscriber, Trackable {
         window.rootViewController = nc
 
         let didSelectTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
-            let transactionDetails = TransactionDetailsViewController(store: self.store, transactions: transactions, selectedIndex: selectedIndex)
+            let transactionDetails = TransactionDetailsViewController(transactions: transactions, selectedIndex: selectedIndex)
             transactionDetails.modalPresentationStyle = .overFullScreen
             transactionDetails.transitioningDelegate = self.transitionDelegate
             transactionDetails.modalPresentationCapturesStatusBarAppearance = true
@@ -334,33 +333,33 @@ class ApplicationController : Subscriber, Trackable {
         }
 
         let didSelectEthTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
-            let transactionDetails = TransactionDetailsViewController(store: self.ethStore, transactions: transactions, selectedIndex: selectedIndex)
+            let transactionDetails = TransactionDetailsViewController(transactions: transactions, selectedIndex: selectedIndex)
             transactionDetails.modalPresentationStyle = .overFullScreen
             transactionDetails.transitioningDelegate = self.transitionDelegate
             transactionDetails.modalPresentationCapturesStatusBarAppearance = true
             self.window.rootViewController?.present(transactionDetails, animated: true, completion: nil)
         }
 
-        accountViewController = AccountViewController(store: store, didSelectTransaction: didSelectTransaction)
-        accountViewController?.sendCallback = { self.store.perform(action: RootModalActions.Present(modal: .send)) }
-        accountViewController?.receiveCallback = { self.store.perform(action: RootModalActions.Present(modal: .receive)) }
-        accountViewController?.menuCallback = { self.store.perform(action: RootModalActions.Present(modal: .menu)) }
+        accountViewController = AccountViewController(didSelectTransaction: didSelectTransaction)
+//        accountViewController?.sendCallback = { self.store.perform(action: RootModalActions.Present(modal: .send)) }
+//        accountViewController?.receiveCallback = { self.store.perform(action: RootModalActions.Present(modal: .receive)) }
+//        accountViewController?.menuCallback = { self.store.perform(action: RootModalActions.Present(modal: .menu)) }
 
-        ethAccountViewController = AccountViewController(store: ethStore, didSelectTransaction: didSelectEthTransaction )
-        ethAccountViewController?.sendCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .send)) }
-        ethAccountViewController?.receiveCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .receive)) }
-        ethAccountViewController?.menuCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .menu)) }
+        ethAccountViewController = AccountViewController(didSelectTransaction: didSelectEthTransaction )
+//        ethAccountViewController?.sendCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .send)) }
+//        ethAccountViewController?.receiveCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .receive)) }
+//        ethAccountViewController?.menuCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .menu)) }
 
 
-        let tokenAccountViewControllers: [AccountViewController] = tokenStores.map { store in
-            let vc = AccountViewController(store: store, didSelectTransaction: {_,_ in } )
-            vc.sendCallback = { store.perform(action: RootModalActions.Present(modal: .send)) }
-            vc.receiveCallback = { store.perform(action: RootModalActions.Present(modal: .receive)) }
-            vc.menuCallback = { store.perform(action: RootModalActions.Present(modal: .menu)) }
-            return vc
-        }
+//        let tokenAccountViewControllers: [AccountViewController] = tokenStores.map { store in
+//            let vc = AccountViewController(store: store, didSelectTransaction: {_,_ in } )
+//            vc.sendCallback = { store.perform(action: RootModalActions.Present(modal: .send)) }
+//            vc.receiveCallback = { store.perform(action: RootModalActions.Present(modal: .receive)) }
+//            vc.menuCallback = { store.perform(action: RootModalActions.Present(modal: .menu)) }
+//            return vc
+//        }
 
-        accountViewControllers = [accountViewController!, ethAccountViewController!] + tokenAccountViewControllers
+        accountViewControllers = [accountViewController!, ethAccountViewController!]// + tokenAccountViewControllers
     }
 
     private func startDataFetchers() {
@@ -371,22 +370,22 @@ class ApplicationController : Subscriber, Trackable {
         walletManager?.apiClient?.events?.up()
         exchangeUpdater?.refresh(completion: {
             self.watchSessionManager.walletManager = self.walletManager
-            self.watchSessionManager.rate = self.store.state.currentRate
+            self.watchSessionManager.rate = Store.state.currentRate
         })
     }
 
     private func addWalletCreationListener() {
-        store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
+        Store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
             DispatchQueue.walletQueue.async {
                 self.walletManager?.initWallet { _ in
                     self.walletManager?.initPeerManager {
                         self.walletManager?.peerManager?.connect()
                         self.modalPresenter?.walletManager = self.walletManager
                         self.startDataFetchers()
-                        let gethManager = GethManager(ethPubKey: self.walletManager!.ethPubKey!, store: self.store)
-                        self.modalPresenter?.gethManager = gethManager
-                        self.ethWalletCoordinator = EthWalletCoordinator(store: self.ethStore, gethManager: gethManager, apiClient: self.noAuthApiClient, btcStore: self.store)
-                        self.tokenWalletCoordinators = self.tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: self.noAuthApiClient, btcStore: self.store) }
+                        //let gethManager = GethManager(ethPubKey: self.walletManager!.ethPubKey!, store: self.store)
+                        //self.modalPresenter?.gethManager = gethManager
+//                        self.ethWalletCoordinator = EthWalletCoordinator(store: self.ethStore, gethManager: gethManager, apiClient: self.noAuthApiClient, btcStore: self.store)
+//                        self.tokenWalletCoordinators = self.tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: self.noAuthApiClient, btcStore: self.store) }
                         self.addNumSentListeners()
 
                     }
@@ -415,7 +414,7 @@ class ApplicationController : Subscriber, Trackable {
         kvStore.syncAllKeys { error in
             print("KV finished syncing. err: \(String(describing: error))")
             self.walletCoordinator?.kvStore = kvStore
-            self.kvStoreCoordinator = KVStoreCoordinator(store: self.store, kvStore: kvStore)
+            self.kvStoreCoordinator = KVStoreCoordinator(kvStore: kvStore)
             self.kvStoreCoordinator?.retreiveStoredWalletInfo()
             self.kvStoreCoordinator?.listenForWalletChanges()
         }
@@ -432,7 +431,7 @@ class ApplicationController : Subscriber, Trackable {
             do {
                 let file = try Data(contentsOf: url)
                 if file.count > 0 {
-                    store.trigger(name: .openFile(file))
+                    Store.trigger(name: .openFile(file))
                 }
             } catch let error {
                 print("Could not open file at: \(url), error: \(error)")
@@ -480,28 +479,28 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     func willResignActive() {
-        guard !store.state.isPushNotificationsEnabled else { return }
+        guard !Store.state.isPushNotificationsEnabled else { return }
         guard let pushToken = UserDefaults.pushToken else { return }
         walletManager?.apiClient?.deletePushNotificationToken(pushToken)
     }
 
     private func setColors() {
-        store.perform(action: StateChange(store.state.mutate(colours: (UIColor(red:0.972549, green:0.623529, blue:0.200000, alpha:1.0), UIColor(red:0.898039, green:0.505882, blue:0.031373, alpha:1.0)))))
-        ethStore.perform(action: StateChange(ethStore.state.mutate(colours: (UIColor(red:0.407843, green:0.529412, blue:0.654902, alpha:1.0), UIColor(red:0.180392, green:0.278431, blue:0.376471, alpha:1.0)))))
-        tokenStores.forEach {
-            if $0.state.walletState.crowdsale != nil {
-                $0.perform(action: StateChange($0.state.mutate(colours: (UIColor(red:0.976471, green:0.647059, blue:0.219608, alpha:1.0), UIColor(red:1.000000, green:0.309804, blue:0.580392, alpha:1.0)))))
-            } else {
-                $0.perform(action: StateChange($0.state.mutate(colours: (UIColor(red:0.95, green:0.65, blue:0.00, alpha:1.0), UIColor(red:0.95, green:0.35, blue:0.13, alpha:1.0)))))
-            }
-        }
+        Store.perform(action: StateChange(Store.state.mutate(colours: (UIColor(red:0.972549, green:0.623529, blue:0.200000, alpha:1.0), UIColor(red:0.898039, green:0.505882, blue:0.031373, alpha:1.0)))))
+//        ethStore.perform(action: StateChange(ethStore.state.mutate(colours: (UIColor(red:0.407843, green:0.529412, blue:0.654902, alpha:1.0), UIColor(red:0.180392, green:0.278431, blue:0.376471, alpha:1.0)))))
+//        tokenStores.forEach {
+//            if $0.state.walletState.crowdsale != nil {
+//                $0.perform(action: StateChange($0.state.mutate(colours: (UIColor(red:0.976471, green:0.647059, blue:0.219608, alpha:1.0), UIColor(red:1.000000, green:0.309804, blue:0.580392, alpha:1.0)))))
+//            } else {
+//                $0.perform(action: StateChange($0.state.mutate(colours: (UIColor(red:0.95, green:0.65, blue:0.00, alpha:1.0), UIColor(red:0.95, green:0.35, blue:0.13, alpha:1.0)))))
+//            }
+//        }
     }
 }
 
 //MARK: - Push notifications
 extension ApplicationController {
     func listenForPushNotificationRequest() {
-        store.subscribe(self, name: .registerForPushNotificationToken, callback: { _ in 
+        Store.subscribe(self, name: .registerForPushNotificationToken, callback: { _ in
             let settings = UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil)
             self.application?.registerUserNotificationSettings(settings)
         })

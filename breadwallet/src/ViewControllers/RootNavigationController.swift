@@ -13,9 +13,8 @@ class RootNavigationController : UINavigationController {
     var walletManager: WalletManager? {
         didSet {
             guard let walletManager = walletManager else { return }
-            guard let store = store else { return }
             if !walletManager.noWallet {
-                let loginView = LoginViewController(store: store, isPresentedForLock: false, walletManager: walletManager)
+                let loginView = LoginViewController(isPresentedForLock: false, walletManager: walletManager)
                 loginView.transitioningDelegate = loginTransitionDelegate
                 loginView.modalPresentationStyle = .overFullScreen
                 loginView.modalPresentationCapturesStatusBarAppearance = true
@@ -28,12 +27,12 @@ class RootNavigationController : UINavigationController {
         }
     }
 
-    var store: Store? {
-        didSet {
-            guard let store = store else { return }
-            self.tempLoginView = LoginViewController(store: store, isPresentedForLock: false)
-        }
-    }
+//    var store: Store? {
+//        didSet {
+//            guard let store = store else { return }
+//            self.tempLoginView = LoginViewController(store: store, isPresentedForLock: false)
+//        }
+//    }
     private var tempLoginView: LoginViewController?
     private let welcomeTransitingDelegate = PinTransitioningDelegate()
     private let loginTransitionDelegate = LoginTransitionDelegate()
@@ -47,8 +46,7 @@ class RootNavigationController : UINavigationController {
                     })
                 }
             } else {
-                guard let store = self.store else { return }
-                let tempStartView = StartViewController(store: store, didTapCreate: {}, didTapRecover: {})
+                let tempStartView = StartViewController(didTapCreate: {}, didTapRecover: {})
                 self.addChildViewController(tempStartView, layout: {
                     tempStartView.view.constrain(toSuperviewEdges: nil)
                     tempStartView.view.isUserInteractionEnabled = false

@@ -14,10 +14,9 @@ private let promptDelay: TimeInterval = 0.6
 class TransactionsTableViewController : UITableViewController, Subscriber, Trackable {
 
     //MARK: - Public
-    init(store: Store, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
-        self.store = store
+    init(didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
         self.didSelectTransaction = didSelectTransaction
-        self.isBtcSwapped = store.state.isBtcSwapped
+        self.isBtcSwapped = Store.state.isBtcSwapped
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -25,7 +24,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     let syncingView = SyncingView()
     var isSyncingViewVisible = false {
         didSet {
-            guard !store.isEthLike else { return }
+            guard !Store.isEthLike else { return }
             guard oldValue != isSyncingViewVisible else { return } //We only care about changes
             if isSyncingViewVisible {
                 tableView.beginUpdates()
@@ -56,23 +55,10 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 
     var walletManager: WalletManager?
-    var didCollectRegistrationParams: ((RegistrationParams) -> Void)?
-    var shouldResumeIdentityVerification: (() -> Void)?
-    var shouldPresentLegal: (() -> Void)?
-    var kycStatus: KYCStatus = .none {
-        didSet {
-            if oldValue != kycStatus {
-                tableView.reload(row: 0, section: 0)
-            }
-        }
-    }
 
     //MARK: - Private
-    private let store: Store
     private let headerCellIdentifier = "HeaderCellIdentifier"
     private let transactionCellIdentifier = "TransactionCellIdentifier"
-    private let crowdsaleCellIdentifier = "CrowdsaleCellIdentifier"
-    private let registrationCellIdentifier = "RegistrationCellIdentifier"
     private var transactions: [Transaction] = []
     private var allTransactions: [Transaction] = [] {
         didSet {
@@ -92,7 +78,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     private let emptyMessage = UILabel.wrapping(font: .customBody(size: 16.0), color: .grayTextTint)
     private var currentPrompt: Prompt? {
         didSet {
-            guard !store.isEthLike else { return }
+            guard !Store.isEthLike else { return }
             if currentPrompt != nil && oldValue == nil {
                 tableView.beginUpdates()
                 tableView.insertSections(IndexSet(integer: 0), with: .automatic)
@@ -105,7 +91,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         }
     }
     private var hasExtraSection: Bool {
-        return isSyncingViewVisible || (currentPrompt != nil) || (store.state.walletState.crowdsale != nil)
+        return isSyncingViewVisible || (currentPrompt != nil)
     }
 
     override func viewDidLoad() {
@@ -113,25 +99,23 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
         tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: transactionCellIdentifier)
         tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: headerCellIdentifier)
-        tableView.register(CrowdsaleCell.self, forCellReuseIdentifier: crowdsaleCellIdentifier)
-        tableView.register(RegistrationCell.self, forCellReuseIdentifier: registrationCellIdentifier)
 
         tableView.separatorStyle = .none
         tableView.estimatedRowHeight = 100.0
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.backgroundColor = .whiteTint
 
-        store.subscribe(self,
+        Store.subscribe(self,
                         selector: { $0.isBtcSwapped != $1.isBtcSwapped },
                         callback: { self.isBtcSwapped = $0.isBtcSwapped })
-        store.subscribe(self,
+        Store.subscribe(self,
                         selector: { $0.currentRate != $1.currentRate},
                         callback: { self.rate = $0.currentRate })
-        store.subscribe(self, selector: { $0.maxDigits != $1.maxDigits }, callback: {_ in 
+        Store.subscribe(self, selector: { $0.maxDigits != $1.maxDigits }, callback: {_ in
             self.reload()
         })
 
-        store.subscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState
+        Store.subscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState
         }, callback: {
             if $0.walletState.syncState == .syncing {
                 self.syncingView.reset()
@@ -140,53 +124,43 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             }
         })
 
-        store.subscribe(self, selector: { $0.recommendRescan != $1.recommendRescan }, callback: { _ in
+        Store.subscribe(self, selector: { $0.recommendRescan != $1.recommendRescan }, callback: { _ in
             self.attemptShowPrompt()
         })
-        store.subscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { _ in
+        Store.subscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { _ in
             self.reload()
         })
-        store.subscribe(self, name: .didUpgradePin, callback: { _ in
+        Store.subscribe(self, name: .didUpgradePin, callback: { _ in
             if self.currentPrompt?.type == .upgradePin {
                 self.currentPrompt = nil
             }
         })
-        store.subscribe(self, name: .didEnableShareData, callback: { _ in
+        Store.subscribe(self, name: .didEnableShareData, callback: { _ in
             if self.currentPrompt?.type == .shareData {
                 self.currentPrompt = nil
             }
         })
-        store.subscribe(self, name: .didWritePaperKey, callback: { _ in
+        Store.subscribe(self, name: .didWritePaperKey, callback: { _ in
             if self.currentPrompt?.type == .paperKey {
                 self.currentPrompt = nil
             }
         })
 
-        store.subscribe(self, name: .txMemoUpdated(""), callback: {
+        Store.subscribe(self, name: .txMemoUpdated(""), callback: {
             guard let trigger = $0 else { return }
             if case .txMemoUpdated(let txHash) = trigger {
                 self.reload(txHash: txHash)
             }
         })
 
-        if store.state.walletState.crowdsale == nil {
-            emptyMessage.textAlignment = .center
-            emptyMessage.text = S.TransactionDetails.emptyMessage
-        }
-
         setContentInset()
 
-        store.subscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions },
+        Store.subscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions },
                         callback: { state in
                             self.allTransactions = state.walletState.transactions
                             self.reload()
         })
 
-        if let crowdsale = store.state.walletState.crowdsale {
-            if UserDefaults.hasCompletedKYC(forContractAddress: crowdsale.contract.address) {
-                kycStatus = .complete
-            }
-        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -233,15 +207,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if hasExtraSection && indexPath.section == 0 {
-            if store.state.walletState.crowdsale != nil {
-                if kycStatus == .none {
-                    return registrationCell(tableView: tableView, indexPath: indexPath)
-                } else {
-                    return crowdsaleCell(tableView: tableView, indexPath: indexPath)
-                }
-            } else {
-                return headerCell(tableView: tableView, indexPath: indexPath)
-            }
+            return headerCell(tableView: tableView, indexPath: indexPath)
         } else {
             return transactionCell(tableView: tableView, indexPath: indexPath)
         }
@@ -264,25 +230,16 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if store.state.walletState.crowdsale != nil && indexPath.section == 0 { return }
         if isSyncingViewVisible && indexPath.section == 0 { return }
         if let currentPrompt = currentPrompt, indexPath.section == 0 {
             if let trigger = currentPrompt.type.trigger {
-                store.trigger(name: trigger)
+                Store.trigger(name: trigger)
             }
             saveEvent("prompt.\(currentPrompt.type.name).trigger")
             self.currentPrompt = nil
             return
         }
         didSelectTransaction(transactions, indexPath.row)
-    }
-
-    private func deleteKycStatus() {
-        if let contractAddress = store.state.walletState.crowdsale?.contract.address, let ethAddress = store.state.walletState.receiveAddress {
-            walletManager?.apiClient?.deleteKycStatus(contractAddress: contractAddress, ethAddress: ethAddress, callback: { success in
-                print("delete kyc status success: \(success)")
-            })
-        }
     }
 
     private func reload() {
@@ -301,11 +258,11 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 
     private func attemptShowPrompt() {
-        guard !store.isEthLike else { return }
+        guard !Store.isEthLike else { return }
         guard let walletManager = walletManager else { return }
         guard !isSyncingViewVisible else { return }
         let types = PromptType.defaultOrder
-        if let type = types.first(where: { $0.shouldPrompt(walletManager: walletManager, state: store.state) }) {
+        if let type = types.first(where: { $0.shouldPrompt(walletManager: walletManager, state: Store.state) }) {
             self.saveEvent("prompt.\(type.name).displayed")
             currentPrompt = Prompt(type: type)
             currentPrompt?.close.tap = { [weak self] in
@@ -330,36 +287,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
 //MARK: - Cell Builders
 extension TransactionsTableViewController {
-    private func registrationCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: registrationCellIdentifier, for: indexPath)
-        if let registrationCell = cell as? RegistrationCell {
-            registrationCell.didTapVerify = { [weak self] params in
-                self?.didCollectRegistrationParams?(params)
-            }
-            registrationCell.showError = { [weak self] errorMessage in
-                self?.showErrorMessage(errorMessage)
-            }
-            registrationCell.setData(store: store)
-        }
-        return cell
-    }
-
-    private func crowdsaleCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: crowdsaleCellIdentifier, for: indexPath)
-        if let crowdCell = cell as? CrowdsaleCell {
-            crowdCell.shouldRetry = { [weak self] in
-                self?.deleteKycStatus()
-            }
-            crowdCell.shouldResumeIdentityVerification = { [weak self] in
-                self?.shouldResumeIdentityVerification?()
-            }
-            crowdCell.shouldPresentLegal = { [weak self] in
-                self?.shouldPresentLegal?()
-            }
-            crowdCell.setData(store: store, status: kycStatus)
-        }
-        return cell
-    }
 
     private func headerCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath)
@@ -405,7 +332,7 @@ extension TransactionsTableViewController {
             let walletManager = walletManager {
             let viewModel = TxListViewModel(tx: transactions[indexPath.row], walletManager: walletManager)
             transactionCell.setStyle(style)
-            transactionCell.setTransaction(viewModel, isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits, isSyncing: store.state.walletState.syncState != .success, store: store)
+            transactionCell.setTransaction(viewModel, isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: Store.state.maxDigits, isSyncing: Store.state.walletState.syncState != .success)
         }
         return cell
     }

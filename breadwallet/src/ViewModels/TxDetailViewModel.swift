@@ -23,51 +23,49 @@ struct TxDetailViewModel: TxViewModel {
 }
 
 extension TxDetailViewModel {
-    init(tx: Transaction, store: Store) {
-        amount = TxDetailViewModel.amountDescription(tx: tx, isBtcSwapped: false, store: store)
-        fiatAmount = TxDetailViewModel.amountDescription(tx: tx, isBtcSwapped: true, store: store)
+    init(tx: Transaction) {
+        amount = TxDetailViewModel.amountDescription(tx: tx, isBtcSwapped: false)
+        fiatAmount = TxDetailViewModel.amountDescription(tx: tx, isBtcSwapped: true)
         
         // TODO:ER update balances when isBtcSwapped switches
-        let balances = TxDetailViewModel.balances(tx: tx, isBtcSwapped: store.state.isBtcSwapped, store: store)
+        let balances = TxDetailViewModel.balances(tx: tx, isBtcSwapped: Store.state.isBtcSwapped)
         
         startingBalance = balances.0
         endingBalance = balances.1
-        exchangeRate = TxDetailViewModel.exchangeRate(tx: tx, rates: store.state.rates) ?? ""
+        exchangeRate = TxDetailViewModel.exchangeRate(tx: tx, rates: Store.state.rates) ?? ""
         transactionHash = tx.hash
         self.tx = tx
     }
     
-    private static func amountDescription(tx: Transaction, isBtcSwapped: Bool, store: Store) -> String {
-        guard let rate = store.state.currentRate else { return  "" }
-        let maxDigits = store.state.maxDigits
+    private static func amountDescription(tx: Transaction, isBtcSwapped: Bool) -> String {
+        guard let rate = Store.state.currentRate else { return  "" }
+        let maxDigits = Store.state.maxDigits
         
         if let tx = tx as? EthTransaction {
             if isBtcSwapped {
-                return DisplayAmount.localEthString(value: tx.amount, store: store)
+                return DisplayAmount.localEthString(value: tx.amount)
             } else {
-                return DisplayAmount.ethString(value: tx.amount, store: store)
+                return DisplayAmount.ethString(value: tx.amount)
             }
         } else if let tx = tx as? BtcTransaction {
-            let amount = Amount(amount: tx.amount, rate: rate, maxDigits: maxDigits, store: store)
+            let amount = Amount(amount: tx.amount, rate: rate, maxDigits: maxDigits)
             return isBtcSwapped ? amount.localCurrency : amount.bits
         } else {
             return ""
         }
     }
     
-    private static func balances(tx: Transaction, isBtcSwapped: Bool, store: Store) -> (String, String) {
+    private static func balances(tx: Transaction, isBtcSwapped: Bool) -> (String, String) {
         guard let tx = tx as? BtcTransaction,
-            let rate = store.state.currentRate else { return ("", "") }
-        let maxDigits = store.state.maxDigits
+            let rate = Store.state.currentRate else { return ("", "") }
+        let maxDigits = Store.state.maxDigits
         
         var startingString = Amount(amount: tx.startingBalance,
                                     rate: rate,
-                                    maxDigits: maxDigits,
-                                    store: store).string(isBtcSwapped: isBtcSwapped)
+                                    maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
         var endingString = Amount(amount: tx.endingBalance,
                                   rate: rate,
-                                  maxDigits: maxDigits,
-                                  store: store).string(isBtcSwapped: isBtcSwapped)
+                                  maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
         
         if tx.startingBalance > C.maxMoney {
             startingString = ""

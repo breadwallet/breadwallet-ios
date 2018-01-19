@@ -10,8 +10,7 @@ import UIKit
 
 class ConfirmPaperPhraseViewController : UIViewController {
 
-    init(store: Store, walletManager: WalletManager, pin: String, callback: @escaping () -> Void) {
-        self.store = store
+    init(walletManager: WalletManager, pin: String, callback: @escaping () -> Void) {
         self.pin = pin
         self.walletManager = walletManager
         self.callback = callback
@@ -27,7 +26,6 @@ class ConfirmPaperPhraseViewController : UIViewController {
     lazy private var confirmSecondPhrase: ConfirmPhrase = { ConfirmPhrase(text: String(format:S.ConfirmPaperPhrase.word, "\(self.indices.1 + 1)"), word: self.words[self.indices.1]) }()
     private let submit = ShadowButton(title: S.Button.submit, type: .primary)
     private let header = RadialGradientView(backgroundColor: .pink)
-    private let store: Store
     private let pin: String
     private let walletManager: WalletManager
     private let callback: () -> Void
@@ -67,7 +65,7 @@ class ConfirmPaperPhraseViewController : UIViewController {
             self?.dismiss(animated: true, completion: nil)
         }
 
-        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.confirmPhrase)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.confirmPhrase)
         faqButton.tintColor = .white
         navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
     }
@@ -123,7 +121,7 @@ class ConfirmPaperPhraseViewController : UIViewController {
     @objc private func checkTextFields() {
         if confirmFirstPhrase.textField.text == words[indices.0] && confirmSecondPhrase.textField.text == words[indices.1] {
             UserDefaults.writePaperPhraseDate = Date()
-            store.trigger(name: .didWritePaperKey)
+            Store.trigger(name: .didWritePaperKey)
             callback()
         } else {
             confirmFirstPhrase.validate()

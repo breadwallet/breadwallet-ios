@@ -13,18 +13,17 @@ private let feeHeight: CGFloat = 130.0
 
 class AmountViewController : UIViewController, Trackable {
 
-    init(store: Store, isPinPadExpandedAtLaunch: Bool, isRequesting: Bool = false) {
-        self.store = store
+    init(isPinPadExpandedAtLaunch: Bool, isRequesting: Bool = false) {
         self.isPinPadExpandedAtLaunch = isPinPadExpandedAtLaunch
         self.isRequesting = isRequesting
-        if let rate = store.state.currentRate, store.state.isBtcSwapped {
+        if let rate = Store.state.currentRate, Store.state.isBtcSwapped {
             self.currencyToggle = ShadowButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
-            let title = store.isEthLike ? S.Symbols.eth : S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
+            let title = Store.isEthLike ? S.Symbols.eth : S.Symbols.currencyButtonTitle(maxDigits: Store.state.maxDigits)
             self.currencyToggle = ShadowButton(title: title, type: .tertiary)
         }
-        self.feeSelector = FeeSelector(store: store)
-        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: store.isEthLike ? 8 : store.state.maxDigits)
+        self.feeSelector = FeeSelector()
+        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: Store.isEthLike ? 8 : Store.state.maxDigits)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -45,7 +44,7 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     var tokenOutput: GethBigInt {
-        guard let token = store.state.walletState.token else { return GethBigInt(0) }
+        guard let token = Store.state.walletState.token else { return GethBigInt(0) }
         let decimalSeparator = NumberFormatter().currencyDecimalSeparator
         let string = currentOutput.replacingOccurrences(of: token.code, with: "").replacingOccurrences(of: decimalSeparator!, with: ".")
         let output = GethBigInt(0)
@@ -78,7 +77,6 @@ class AmountViewController : UIViewController, Trackable {
         }
     }
 
-    private let store: Store
     private let isPinPadExpandedAtLaunch: Bool
     private let isRequesting: Bool
     var minimumFractionDigits = 0
@@ -210,8 +208,8 @@ class AmountViewController : UIViewController, Trackable {
         amountLabel.text = ""
         placeholder.text = S.Send.amountLabel
         bottomBorder.isHidden = true
-        if store.state.isBtcSwapped && !store.isEthLike {
-            if let rate = store.state.currentRate {
+        if Store.state.isBtcSwapped && !Store.isEthLike {
+            if let rate = Store.state.currentRate {
                 selectedRate = rate
             }
         }
@@ -237,7 +235,7 @@ class AmountViewController : UIViewController, Trackable {
         editFee.imageEdgeInsets = UIEdgeInsetsMake(15.0, 15.0, 15.0, 15.0)
         editFee.tintColor = .grayTextTint
         editFee.isHidden = true
-        if store.isEthLike {
+        if Store.isEthLike {
             currencyToggle.isHidden = true
             editFee.isHidden = true
         }
@@ -247,7 +245,7 @@ class AmountViewController : UIViewController, Trackable {
 
     private func toggleCurrency() {
         saveEvent("amount.swapCurrency")
-        selectedRate = selectedRate == nil ? store.state.currentRate : nil
+        selectedRate = selectedRate == nil ? Store.state.currentRate : nil
         updateCurrencyToggleTitle()
     }
 
@@ -260,7 +258,7 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func handlePinPadUpdate(output: String) {
-        if store.isEthLike {
+        if Store.isEthLike {
             handleEthOutput(output: output)
         } else {
             handleBtcOutput(output: output)
@@ -268,14 +266,11 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func handleEthOutput(output: String) {
-
         let symbol: String
-        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded {
-            symbol = S.Symbols.eth
-        } else if store.state.currency == .ethereum {
+        if Store.state.currency == .ethereum {
             symbol = S.Symbols.eth
         } else {
-            symbol = store.state.walletState.token!.code
+            symbol = Store.state.walletState.token!.code
         }
         amountLabel.text = output.utf8.count > 0 ? "\(symbol)" + output : ""
         placeholder.isHidden = output.utf8.count > 0 ? true : false
@@ -303,7 +298,7 @@ class AmountViewController : UIViewController, Trackable {
             if let rate = selectedRate {
                 newAmount = Satoshis(value: outputAmount, rate: rate)
             } else {
-                if store.state.maxDigits == 2 {
+                if Store.state.maxDigits == 2 {
                     let bits = Bits(rawValue: outputAmount)
                     newAmount = Satoshis(bits: bits)
                 } else {
@@ -325,9 +320,9 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func updateAmountLabel() {
-        if !store.isEthLike {
+        if !Store.isEthLike {
             guard let amount = amount else { amountLabel.text = ""; return }
-            let displayAmount = DisplayAmount(amount: amount, state: store.state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, store: store)
+            let displayAmount = DisplayAmount(amount: amount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
             var output = displayAmount.description
             if hasTrailingDecimal {
                 output = output.appending(NumberFormatter().currencyDecimalSeparator)
@@ -338,25 +333,14 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     func updateBalanceLabel() {
-        if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded {
-            guard let min = crowdsale.minContribution, let max = crowdsale.maxContribution else { return }
-            let minText = DisplayAmount.ethString(value: min, store: store)
-            let maxText = DisplayAmount.ethString(value: max, store: store)
-
-            balanceLabel.text = "Min: \(minText), Max: \(maxText)"
-
-        } else if store.isEthLike {
-            guard let balance = store.state.walletState.bigBalance else { return }
-            if store.state.currency == .ethereum || store.state.walletState.crowdsale != nil {
-                balanceLabel.text = DisplayAmount.ethString(value: balance, store: store)
-            } else {
-                balanceLabel.text = DisplayAmount.tokenString(value: balance, store: store)
-            }
+        if Store.isEthLike {
+            guard let balance = Store.state.walletState.bigBalance else { return }
+            balanceLabel.text = DisplayAmount.tokenString(value: balance)
         } else {
             if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
                 balanceLabel.attributedText = balance
                 feeLabel.attributedText = fee
-                if let amount = amount, amount > 0, !isRequesting, !store.isEthLike {
+                if let amount = amount, amount > 0, !isRequesting, !Store.isEthLike {
                     editFee.isHidden = false
                 } else {
                     editFee.isHidden = true
@@ -409,12 +393,12 @@ class AmountViewController : UIViewController, Trackable {
     private func updateBalanceAndFeeLabels() {
         if let amount = amount, amount.rawValue > 0 {
             balanceLabel.isHidden = false
-            if !isRequesting && !store.isEthLike {
+            if !isRequesting && !Store.isEthLike {
                 editFee.isHidden = false
             }
         } else {
             balanceLabel.isHidden = cursor.isHidden
-            if !isRequesting && !store.isEthLike {
+            if !isRequesting && !Store.isEthLike {
                 editFee.isHidden = true
             }
         }
@@ -437,7 +421,7 @@ class AmountViewController : UIViewController, Trackable {
         if let rate = selectedRate {
             self.currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
         } else {
-            let title = store.isEthLike ? S.Symbols.eth : S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
+            let title = Store.isEthLike ? S.Symbols.eth : S.Symbols.currencyButtonTitle(maxDigits: Store.state.maxDigits)
             self.currencyToggle.title = title
         }
     }

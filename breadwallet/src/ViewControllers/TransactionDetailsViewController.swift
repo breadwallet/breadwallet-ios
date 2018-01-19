@@ -11,11 +11,10 @@ import UIKit
 class TransactionDetailsViewController : UICollectionViewController, Subscriber {
 
     //MARK: - Public
-    init(store: Store, transactions: [Transaction], selectedIndex: Int) {
-        self.store = store
+    init(transactions: [Transaction], selectedIndex: Int) {
         self.transactions = transactions
         self.selectedIndex = selectedIndex
-        self.isBtcSwapped = store.state.isBtcSwapped
+        self.isBtcSwapped = Store.state.isBtcSwapped
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: UIScreen.main.safeWidth-C.padding[4],
                                  height: UIScreen.main.bounds.height - C.padding[2])
@@ -32,7 +31,6 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
     }
 
     //MARK: - Private
-    fileprivate let store: Store
     fileprivate var transactions: [Transaction]
     fileprivate let selectedIndex: Int
     fileprivate let cellIdentifier = "CellIdentifier"
@@ -48,7 +46,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
     private var hasShownInitialIndex = false
 
     deinit {
-        store.unsubscribe(self)
+        Store.unsubscribe(self)
         NotificationCenter.default.removeObserver(self)
     }
 
@@ -60,9 +58,9 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         collectionView?.backgroundColor = .clear
         collectionView?.contentInset = UIEdgeInsetsMake(C.padding[2], C.padding[2], C.padding[2], C.padding[2])
         setupScrolling()
-        store.subscribe(self, selector: { $0.isBtcSwapped != $1.isBtcSwapped }, callback: { self.isBtcSwapped = $0.isBtcSwapped })
-        store.subscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: { self.rate = $0.currentRate })
-        store.lazySubscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions }, callback: {
+        Store.subscribe(self, selector: { $0.isBtcSwapped != $1.isBtcSwapped }, callback: { self.isBtcSwapped = $0.isBtcSwapped })
+        Store.subscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: { self.rate = $0.currentRate })
+        Store.lazySubscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions }, callback: {
             self.transactions = $0.walletState.transactions
             self.collectionView?.reloadData()
         })
@@ -140,8 +138,8 @@ extension TransactionDetailsViewController {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
         guard let transactionDetailCell = item as? TxDetailCollectionViewCell else { return item }
         let tx = transactions[indexPath.row]
-        let viewModel = TxDetailViewModel(tx: tx, store: store)
-        transactionDetailCell.set(viewModel: viewModel, store: store)
+        let viewModel = TxDetailViewModel(tx: tx)
+        transactionDetailCell.set(viewModel: viewModel)
         transactionDetailCell.closeCallback = { [weak self] in
             if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
                 delegate.reset()

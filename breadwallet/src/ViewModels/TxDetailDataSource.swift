@@ -74,13 +74,11 @@ class TxDetailDataSource: NSObject {
     
     fileprivate var fields: [Field]
     fileprivate let viewModel: TxDetailViewModel
-    fileprivate let store: Store
     
     // MARK: - Init
     
-    init(viewModel: TxDetailViewModel, store: Store) {
+    init(viewModel: TxDetailViewModel) {
         self.viewModel = viewModel
-        self.store = store
         
         // define visible rows and order
         fields = [
@@ -126,16 +124,16 @@ extension TxDetailDataSource: UITableViewDataSource {
         switch field {
         case .amount:
             let amountCell = cell as! TxAmountCell
-            amountCell.set(fiatAmount: viewModel.fiatAmount, tokenAmount: viewModel.amount, store: store)
+            amountCell.set(fiatAmount: viewModel.fiatAmount, tokenAmount: viewModel.amount)
             break
     
         case .status:
             let statusCell = cell as! TxStatusCell
-            statusCell.set(txInfo: viewModel, store: store)
+            statusCell.set(txInfo: viewModel)
             
         case .memo:
             let memoCell = cell as! TxMemoCell
-            memoCell.set(viewModel: viewModel, store: store)
+            memoCell.set(viewModel: viewModel)
             
         case .timestamp:
             let labelCell = cell as! TxLabelCell
@@ -143,7 +141,7 @@ extension TxDetailDataSource: UITableViewDataSource {
             
         case .address:
             let addressCell = cell as! TxAddressCell
-            addressCell.set(address: viewModel.displayAddress, store: store)
+            addressCell.set(address: viewModel.displayAddress)
             
         case .startingBalance:
             let labelCell = cell as! TxLabelCell
@@ -163,7 +161,7 @@ extension TxDetailDataSource: UITableViewDataSource {
             
         case .transactionId:
             let addressCell = cell as! TxAddressCell
-            addressCell.set(address: viewModel.transactionHash, store: store)
+            addressCell.set(address: viewModel.transactionHash)
         }
         
         return cell

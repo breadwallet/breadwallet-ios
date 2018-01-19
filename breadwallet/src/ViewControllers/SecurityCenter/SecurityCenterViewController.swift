@@ -31,10 +31,9 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         didSet { paperKeyCell.tap = didTapPaperKey }
     }
 
-    init(store: Store, walletManager: WalletManager) {
-        self.store = store
+    init(walletManager: WalletManager) {
         self.walletManager = walletManager
-        self.header = ModalHeaderView(title: S.SecurityCenter.title, style: .light, faqInfo: (store, ArticleIds.securityCenter))
+        self.header = ModalHeaderView(title: S.SecurityCenter.title, style: .light, faqInfo: (ArticleIds.securityCenter))
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -48,12 +47,11 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     private let biometricsCell = SecurityCenterCell(title: LAContext.biometricType() == .face ? S.SecurityCenter.Cells.faceIdTitle : S.SecurityCenter.Cells.touchIdTitle, descriptionText: S.SecurityCenter.Cells.touchIdDescription)
     private let paperKeyCell = SecurityCenterCell(title: S.SecurityCenter.Cells.paperKeyTitle, descriptionText: S.SecurityCenter.Cells.paperKeyDescription)
     private let separator = UIView(color: .secondaryShadow)
-    private let store: Store
     private let walletManager: WalletManager
     fileprivate var didViewAppear = false
 
     deinit {
-        store.unsubscribe(self)
+        Store.unsubscribe(self)
     }
 
     override func viewDidLoad() {
@@ -96,10 +94,10 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         header.backgroundColor = .clear
 
         setPinAndPhraseChecks()
-        store.subscribe(self, selector: { $0.isBiometricsEnabled != $1.isBiometricsEnabled }, callback: {
+        Store.subscribe(self, selector: { $0.isBiometricsEnabled != $1.isBiometricsEnabled }, callback: {
             self.biometricsCell.isCheckHighlighted = $0.isBiometricsEnabled
         })
-        store.subscribe(self, selector: { $1.alert == .paperKeySet(callback: {})
+        Store.subscribe(self, selector: { $1.alert == .paperKeySet(callback: {})
         }, callback: { _ in
             self.setPinAndPhraseChecks() //When paper phrase is confirmed, we need to update the check mark status
         })
@@ -166,7 +164,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     }
 
     private func setPinAndPhraseChecks() {
-        pinCell.isCheckHighlighted = store.state.pinLength == 6
+        pinCell.isCheckHighlighted = Store.state.pinLength == 6
         paperKeyCell.isCheckHighlighted = !UserDefaults.walletRequiresBackup
     }
 
