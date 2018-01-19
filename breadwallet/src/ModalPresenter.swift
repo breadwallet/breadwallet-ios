@@ -317,6 +317,7 @@ class ModalPresenter : Subscriber, Trackable {
                 self?.presentSettings()
             }
         }
+        // TODO:ER remove
         menu.didTapBuy = { [weak self, weak menu] in
             menu?.dismiss(animated: true, completion: {
                 self?.presentBuyController("/buy")
@@ -587,7 +588,8 @@ class ModalPresenter : Subscriber, Trackable {
         navigationController.pushViewController(writeVC, animated: true)
     }
 
-    private func presentBuyController(_ mountPoint: String) {
+    //TODO:ER made this public to access from account vc. refactor?
+    func presentBuyController(_ mountPoint: String) {
         guard let walletManager = self.walletManager else { return }
         let vc: BRWebViewController
         #if Debug || Testflight
