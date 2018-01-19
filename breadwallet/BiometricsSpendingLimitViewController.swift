@@ -12,7 +12,6 @@ import LocalAuthentication
 class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
 
     private let cellIdentifier = "CellIdentifier"
-    private let store: Store
     private let walletManager: WalletManager
     private let limits: [UInt64] = [0, 1000000, 10000000, 100000000, 1000000000]
     private var selectedLimit: UInt64?
@@ -20,9 +19,8 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
     private let amount = UILabel(font: .customMedium(size: 26.0), color: .darkText)
     private let body = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
     
-    init(walletManager: WalletManager, store: Store) {
+    init(walletManager: WalletManager) {
         self.walletManager = walletManager
-        self.store = store
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -42,7 +40,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
         titleLabel.sizeToFit()
         navigationItem.titleView = titleLabel
 
-        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.touchIdSpendingLimit)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.touchIdSpendingLimit)
         faqButton.tintColor = .darkText
         navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
 
@@ -50,8 +48,8 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
 
         //If the user has a limit that is not a current option, we display their limit
         if !limits.contains(walletManager.spendingLimit) {
-            if let rate = store.state.currentRate {
-                let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: store.state.maxDigits, store: store)
+            if let rate = Store.state.currentRate {
+                let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Store.state.maxDigits)
                 setAmount(limitAmount: spendingLimit)
             }
         }
@@ -71,7 +69,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
         if limit == 0 {
             cell.textLabel?.text = S.TouchIdSpendingLimit.requirePasscode
         } else {
-            let displayAmount = DisplayAmount(amount: Satoshis(rawValue: limit), state: store.state, selectedRate: nil, minimumFractionDigits: 0, store: store)
+            let displayAmount = DisplayAmount(amount: Satoshis(rawValue: limit), selectedRate: nil, minimumFractionDigits: 0)
             cell.textLabel?.text = displayAmount.combinedDescription
         }
         if limits[indexPath.row] == selectedLimit {

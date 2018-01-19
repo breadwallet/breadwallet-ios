@@ -137,14 +137,54 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
 
 class Store {
 
+    private static let shared = Store()
+
+    //MARK: - Public
+    static func perform(action: Action) {
+        Store.shared.perform(action: action)
+    }
+
+    static func trigger(name: TriggerName) {
+        Store.shared.trigger(name: name)
+    }
+
+    static var state: State {
+        return shared.state
+    }
+
+    static func subscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> Void) {
+        Store.shared.subscribe(subscriber, selector: selector, callback: callback)
+    }
+
+    static func subscribe(_ subscriber: Subscriber, name: TriggerName, callback: @escaping (TriggerName?) -> Void) {
+        Store.shared.subscribe(subscriber, name: name, callback: callback)
+    }
+
+    static func lazySubscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> Void) {
+        Store.shared.lazySubscribe(subscriber, selector: selector, callback: callback)
+    }
+
+    static func unsubscribe(_ subscriber: Subscriber) {
+        Store.shared.unsubscribe(subscriber)
+    }
+
+    static var isEthLike: Bool {
+        return Store.shared.isEthLike
+    }
+
+    static func removeAllSubscriptions() {
+        Store.shared.removeAllSubscriptions()
+    }
+
+    //MARK: - Private
     var isEthLike: Bool {
         return state.currency == .ethereum || state.currency == .token
     }
 
-    //MARK: - Public
     func perform(action: Action) {
         state = action.reduce(state)
     }
+
 
     func trigger(name: TriggerName) {
         triggers

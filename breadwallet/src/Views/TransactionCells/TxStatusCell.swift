@@ -9,10 +9,6 @@
 import UIKit
 
 class TxStatusCell: TxDetailRowCell, Subscriber {
-    
-    // MARK: - Vars
-    
-    private var store: Store?
 
     // MARK: - Views
     
@@ -53,15 +49,14 @@ class TxStatusCell: TxDetailRowCell, Subscriber {
     
     // MARK: -
     
-    func set(txInfo: TxDetailViewModel, store: Store) {
-        self.store = store
-        store.lazySubscribe(self,
+    func set(txInfo: TxDetailViewModel) {
+        Store.lazySubscribe(self,
                             selector: { $0.walletState.transactions != $1.walletState.transactions },
                             callback: { [weak self] state in
                                 guard let `self` = self,
                                     let updatedTx = state.walletState.transactions.filter({ $0.hash == txInfo.transactionHash }).first else { return }
                                 DispatchQueue.main.async {
-                                    let updatedInfo = TxDetailViewModel(tx: updatedTx, store: store)
+                                    let updatedInfo = TxDetailViewModel(tx: updatedTx)
                                     self.update(status: updatedInfo.status)
                                 }
         })
@@ -84,6 +79,6 @@ class TxStatusCell: TxDetailRowCell, Subscriber {
     }
     
     deinit {
-        store?.unsubscribe(self)
+        Store.unsubscribe(self)
     }
 }

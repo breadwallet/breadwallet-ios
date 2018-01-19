@@ -100,7 +100,7 @@ open class BRBitID : NSObject {
         return nonce
     }
     
-    func runCallback(store: Store, _ completionHandler: @escaping (Data?, URLResponse?, NSError?) -> Void) {
+    func runCallback(_ completionHandler: @escaping (Data?, URLResponse?, NSError?) -> Void) {
         guard !walletManager.noWallet else {
             DispatchQueue.main.async {
                 completionHandler(nil, nil, NSError(domain: "", code: -1001, userInfo:
@@ -109,7 +109,7 @@ open class BRBitID : NSObject {
             return
         }
         let prompt = url.host ?? url.description
-        store.trigger(name: .authenticateForBitId(prompt, {_ in
+        Store.trigger(name: .authenticateForBitId(prompt, {_ in
             self.run(completionHandler)
         }))
     }

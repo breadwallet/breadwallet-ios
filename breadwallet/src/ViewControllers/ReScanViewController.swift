@@ -10,9 +10,8 @@ import UIKit
 
 class ReScanViewController : UIViewController, Subscriber {
 
-    init(store: Store) {
-        self.store = store
-        self.faq = .buildFaqButton(store: store, articleId: ArticleIds.reScan)
+    init() {
+        self.faq = .buildFaqButton(articleId: ArticleIds.reScan)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -20,11 +19,10 @@ class ReScanViewController : UIViewController, Subscriber {
     private let body = UILabel.wrapping(font: .systemFont(ofSize: 15.0))
     private let button = ShadowButton(title: S.ReScan.buttonTitle, type: .primary)
     private let footer = UILabel.wrapping(font: .customBody(size: 16.0), color: .secondaryGrayText)
-    private let store: Store
     private let faq: UIButton
 
     deinit {
-        store.unsubscribe(self)
+        Store.unsubscribe(self)
     }
 
     override func viewDidLoad() {
@@ -79,7 +77,7 @@ class ReScanViewController : UIViewController, Subscriber {
         let alert = UIAlertController(title: S.ReScan.alertTitle, message: S.ReScan.alertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
         alert.addAction(UIAlertAction(title: S.ReScan.alertAction, style: .default, handler: { _ in
-            self.store.trigger(name: .rescan)
+            Store.trigger(name: .rescan)
             self.showSyncView()
         }))
         present(alert, animated: true, completion: nil)
@@ -97,7 +95,7 @@ class ReScanViewController : UIViewController, Subscriber {
         syncView.layer.cornerRadius = 4.0
         syncView.layer.masksToBounds = true
 
-        store.subscribe(self, selector: { $0.walletState.syncProgress != $1.walletState.syncProgress },
+        Store.subscribe(self, selector: { $0.walletState.syncProgress != $1.walletState.syncProgress },
                         callback: { state in
                             syncView.timestamp = state.walletState.lastBlockTimestamp
                             syncView.progress = CGFloat(state.walletState.syncProgress)

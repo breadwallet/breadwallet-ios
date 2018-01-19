@@ -16,9 +16,8 @@ enum ModalType {
 class ModalTransitionDelegate : NSObject, Subscriber {
 
     //MARK: - Public
-    init(type: ModalType, store: Store) {
+    init(type: ModalType) {
         self.type = type
-        self.store = store
         super.init()
     }
 
@@ -28,13 +27,12 @@ class ModalTransitionDelegate : NSObject, Subscriber {
         if let panGr = panGestureRecognizer {
             UIApplication.shared.keyWindow?.removeGestureRecognizer(panGr)
         }
-        store.trigger(name: .showStatusBar)
+        Store.trigger(name: .showStatusBar)
     }
 
     var shouldDismissInteractively = true
     //MARK: - Private
     fileprivate let type: ModalType
-    fileprivate let store: Store
     fileprivate var isInteractive: Bool = false
     fileprivate let interactiveTransition = UIPercentDrivenInteractiveTransition()
     fileprivate var presentedViewController: UIViewController?

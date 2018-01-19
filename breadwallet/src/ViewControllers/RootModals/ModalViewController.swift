@@ -13,12 +13,11 @@ class ModalViewController : UIViewController, Subscriber {
     //MARK: - Public
     var childViewController: UIViewController
 
-    init<T: UIViewController>(childViewController: T, store: Store) where T: ModalDisplayable {
+    init<T: UIViewController>(childViewController: T) where T: ModalDisplayable {
         self.childViewController = childViewController
         self.modalInfo = childViewController
-        self.store = store
         if let articleId = childViewController.faqArticleId {
-            self.header = ModalHeaderView(title: modalInfo.modalTitle, style: .dark, faqInfo: (store, articleId))
+            self.header = ModalHeaderView(title: modalInfo.modalTitle, style: .dark, faqInfo: articleId)
         } else {
             self.header = ModalHeaderView(title: modalInfo.modalTitle, style: .dark)
         }
@@ -31,12 +30,11 @@ class ModalViewController : UIViewController, Subscriber {
     private let headerHeight: CGFloat = 49.0
     fileprivate let header: ModalHeaderView
     private let tapGestureRecognizer = UITapGestureRecognizer()
-    private let store: Store
     private let scrollView = UIScrollView()
     private let scrollViewContent = UIView()
 
     deinit {
-        store.unsubscribe(self)
+        Store.unsubscribe(self)
     }
 
     override func viewDidLoad() {
@@ -101,11 +99,11 @@ class ModalViewController : UIViewController, Subscriber {
         tapGestureRecognizer.delegate = self
         tapGestureRecognizer.addTarget(self, action: #selector(didTap))
         view.addGestureRecognizer(tapGestureRecognizer)
-        store.subscribe(self, name: .blockModalDismissal, callback: { _ in
+        Store.subscribe(self, name: .blockModalDismissal, callback: { _ in
             self.tapGestureRecognizer.isEnabled = false
         })
 
-        store.subscribe(self, name: .unblockModalDismissal, callback: { _ in
+        Store.subscribe(self, name: .unblockModalDismissal, callback: { _ in
             self.tapGestureRecognizer.isEnabled = true
         })
         addTopCorners()

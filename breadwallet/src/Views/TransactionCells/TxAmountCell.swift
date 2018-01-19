@@ -17,8 +17,6 @@ class TxAmountCell: UITableViewCell, Subscriber {
             swapCurrencyLabels(animated: true)
         }
     }
-    
-    private var store: Store?
 
     private let largeFontSize: CGFloat = 26.0
     private let smallFontSize: CGFloat = 13.0
@@ -99,26 +97,25 @@ class TxAmountCell: UITableViewCell, Subscriber {
     }
     
     private func addSubscriptions() {
-        store?.lazySubscribe(self,
+        Store.lazySubscribe(self,
                              selector: { $0.isBtcSwapped != $1.isBtcSwapped },
                              callback: { self.isBtcSwapped = $0.isBtcSwapped })
     }
     
     deinit {
-        store?.unsubscribe(self)
+        Store.unsubscribe(self)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func set(fiatAmount: String, tokenAmount: String, store: Store) {
+    func set(fiatAmount: String, tokenAmount: String) {
         fiatAmountLabel.text = fiatAmount
         tokenAmountLabel.text = tokenAmount
-        self.store = store
         
-        if !store.isEthLike { //FIXME - currency switching disabled for ethereum
-            isBtcSwapped = store.state.isBtcSwapped
+        if !Store.isEthLike { //FIXME - currency switching disabled for ethereum
+            isBtcSwapped = Store.state.isBtcSwapped
             let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
             container.addGestureRecognizer(gr)
             addSubscriptions()
@@ -137,7 +134,7 @@ class TxAmountCell: UITableViewCell, Subscriber {
     }
     
     @objc private func currencySwitchTapped() {
-        store?.perform(action: CurrencyChange.toggle())
+        Store.perform(action: CurrencyChange.toggle())
     }
     
     private func swapCurrencyLabels(animated: Bool) {

@@ -10,12 +10,10 @@ import UIKit
 
 class URLController : Trackable {
 
-    init(store: Store, walletManager: WalletManager) {
-        self.store = store
+    init(walletManager: WalletManager) {
         self.walletManager = walletManager
     }
 
-    private let store: Store
     private let walletManager: WalletManager
     private var xSource, xSuccess, xError, uri: String?
 
@@ -51,9 +49,9 @@ class URLController : Trackable {
             }
 
             if url.host == "scanqr" || url.path == "/scanqr" {
-                store.trigger(name: .scanQr)
+                Store.trigger(name: .scanQr)
             } else if url.host == "addresslist" || url.path == "/addresslist" {
-                store.trigger(name: .copyWalletAddresses(xSuccess, xError))
+                Store.trigger(name: .copyWalletAddresses(xSuccess, xError))
             } else if url.path == "/address" {
                 if let success = xSuccess {
                     copyAddress(callback: success)
@@ -96,7 +94,7 @@ class URLController : Trackable {
 
     private func handleBitcoinUri(_ uri: URL) -> Bool {
         if let request = PaymentRequest(string: uri.absoluteString) {
-            store.trigger(name: .receivedPaymentRequest(request))
+            Store.trigger(name: .receivedPaymentRequest(request))
             return true
         } else {
             return false
@@ -109,7 +107,7 @@ class URLController : Trackable {
         let alert = UIAlertController(title: S.BitID.title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.BitID.deny, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: S.BitID.approve, style: .default, handler: { _ in
-            bitid.runCallback(store: self.store) { data, response, error in
+            bitid.runCallback() { data, response, error in
                 if let resp = response as? HTTPURLResponse, error == nil && resp.statusCode >= 200 && resp.statusCode < 300 {
                     let alert = UIAlertController(title: S.BitID.success, message: nil, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
@@ -125,6 +123,6 @@ class URLController : Trackable {
     }
 
     private func present(alert: UIAlertController) {
-        store.trigger(name: .showAlert(alert))
+        Store.trigger(name: .showAlert(alert))
     }
 }

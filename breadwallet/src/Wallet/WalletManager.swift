@@ -41,7 +41,6 @@ extension NSNotification.Name {
 
 class WalletManager : BRWalletListener, BRPeerManagerListener {
     internal var didInitWallet = false
-    internal let store: Store
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
 
@@ -124,10 +123,9 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         return wordList.map({ $0.utf8String })
     }
 
-    init(masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil, store: Store) throws {
+    init(masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
         self.masterPubKey = masterPubKey
         self.earliestKeyTime = earliestKeyTime
-        self.store = store
     }
     
     func balanceChanged(_ balance: UInt64) {

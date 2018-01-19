@@ -124,7 +124,6 @@ enum RootModal {
     case loginScan
     case manageWallet
     case requestAmount
-    case countryPicker
 }
 
 enum SyncState {
@@ -147,9 +146,8 @@ struct WalletState {
     let bigBalance: GethBigInt?
     let token: Token?
     let numSent: Int
-    let crowdsale: Crowdsale?
     static var initial: WalletState {
-        return WalletState(isConnected: false, syncProgress: 0.0, syncState: .success, balance: nil, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, creationDate: Date.zeroValue(), isRescanning: false, receiveAddress: nil, bigBalance: nil, token: nil, numSent: 0, crowdsale: nil)
+        return WalletState(isConnected: false, syncProgress: 0.0, syncState: .success, balance: nil, transactions: [], lastBlockTimestamp: 0, name: S.AccountHeader.defaultWalletName, creationDate: Date.zeroValue(), isRescanning: false, receiveAddress: nil, bigBalance: nil, token: nil, numSent: 0)
     }
 
     func mutate(    isConnected: Bool? = nil,
@@ -164,10 +162,9 @@ struct WalletState {
                     receiveAddress: String? = nil,
                     bigBalance: GethBigInt? = nil,
                     token: Token? = nil,
-                    numSent: Int? = nil,
-                    crowdSale: Crowdsale? = nil) -> WalletState {
+                    numSent: Int? = nil) -> WalletState {
 
-        return WalletState(isConnected: isConnected ?? self.isConnected, syncProgress: syncProgress ?? self.syncProgress, syncState: syncState ?? self.syncState, balance: balance ?? self.balance, transactions: transactions ?? self.transactions, lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp, name: name ?? self.name, creationDate: creationDate ?? self.creationDate, isRescanning: isRescanning ?? self.isRescanning, receiveAddress: receiveAddress ?? self.receiveAddress, bigBalance: bigBalance ?? self.bigBalance, token: token ?? self.token, numSent: numSent ?? self.numSent, crowdsale: crowdSale ?? self.crowdsale)
+        return WalletState(isConnected: isConnected ?? self.isConnected, syncProgress: syncProgress ?? self.syncProgress, syncState: syncState ?? self.syncState, balance: balance ?? self.balance, transactions: transactions ?? self.transactions, lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp, name: name ?? self.name, creationDate: creationDate ?? self.creationDate, isRescanning: isRescanning ?? self.isRescanning, receiveAddress: receiveAddress ?? self.receiveAddress, bigBalance: bigBalance ?? self.bigBalance, token: token ?? self.token, numSent: numSent ?? self.numSent)
     }
 }
 

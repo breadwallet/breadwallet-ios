@@ -17,9 +17,8 @@ struct Fees : Codable {
 class FeeUpdater : Trackable {
 
     //MARK: - Public
-    init(walletManager: WalletManager, store: Store) {
+    init(walletManager: WalletManager) {
         self.walletManager = walletManager
-        self.store = store
     }
 
     func refresh(completion: @escaping () -> Void) {
@@ -30,7 +29,7 @@ class FeeUpdater : Trackable {
                 return
             }
             UserDefaults.fees = newFees
-            self.store.perform(action: UpdateFees.set(newFees))
+            Store.perform(action: UpdateFees.set(newFees))
             completion()
         }
 
@@ -49,7 +48,6 @@ class FeeUpdater : Trackable {
 
     //MARK: - Private
     private let walletManager: WalletManager
-    private let store: Store
     private let feeKey = "FEE_PER_KB"
     private let txFeePerKb: UInt64 = 1000
     private lazy var minFeePerKB: UInt64 = {

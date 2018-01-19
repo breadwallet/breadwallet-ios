@@ -9,10 +9,6 @@
 import UIKit
 
 class TxAddressCell: TxDetailRowCell {
-
-    // MARK: - Vars
-    
-    private var store: Store?
     
     // MARK: Views
     
@@ -45,14 +41,13 @@ class TxAddressCell: TxDetailRowCell {
         
         addressButton.tap = strongify(self) { myself in
             myself.addressButton.tempDisable()
-            myself.store?.trigger(name: .lightWeightAlert(S.Receive.copied))
+            Store.trigger(name: .lightWeightAlert(S.Receive.copied))
             UIPasteboard.general.string = myself.addressButton.titleLabel?.text
         }
     }
     
-    func set(address: String, store: Store) {
+    func set(address: String) {
         addressButton.setTitle(address, for: .normal)
-        self.store = store
     }
 
 }

@@ -55,7 +55,7 @@ enum BiometricsResult {
 extension WalletManager : WalletAuthenticator {
     static private var failedPins = [String]()
     
-    convenience init(store: Store, dbPath: String? = nil) throws {
+    convenience init(dbPath: String? = nil) throws {
         if !UIApplication.shared.isProtectedDataAvailable {
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(errSecNotAvailable))
         }
@@ -74,7 +74,7 @@ extension WalletManager : WalletAuthenticator {
 
         let mpkData: Data? = try keychainItem(key: KeychainKey.masterPubKey)
         guard let masterPubKey = mpkData?.masterPubKey else {
-            try self.init(masterPubKey: BRMasterPubKey(), earliestKeyTime: 0, dbPath: dbPath, store: store)
+            try self.init(masterPubKey: BRMasterPubKey(), earliestKeyTime: 0, dbPath: dbPath)
             return
         }
         
@@ -84,7 +84,7 @@ extension WalletManager : WalletAuthenticator {
             creationTime.withUnsafeBytes { earliestKeyTime = $0.pointee }
         }
         
-        try self.init(masterPubKey: masterPubKey, earliestKeyTime: earliestKeyTime, dbPath: dbPath, store: store)
+        try self.init(masterPubKey: masterPubKey, earliestKeyTime: earliestKeyTime, dbPath: dbPath)
     }
     
     // true if keychain is available and we know that no wallet exists on it
@@ -209,7 +209,7 @@ extension WalletManager : WalletAuthenticator {
                 WalletManager.failedPins.append(pin)
                 
                 if (failCount >= 8) { // wipe wallet after 8 failed pin attempts and 24+ hours of lockout
-                    store.trigger(name: .wipeWalletNoPrompt)
+                    Store.trigger(name: .wipeWalletNoPrompt)
                     return false
                 }
                 let pinFailTime: Int64 = try keychainItem(key: KeychainKey.pinFailTime) ?? 0
@@ -290,9 +290,9 @@ extension WalletManager : WalletAuthenticator {
             }
         }
         catch { return completion(.failure) }
-        store.perform(action: biometricsActions.setIsPrompting(true))
+        Store.perform(action: biometricsActions.setIsPrompting(true))
         authenticate(biometricsPrompt: biometricsPrompt) { result in
-            self.store.perform(action: biometricsActions.setIsPrompting(false))
+            Store.perform(action: biometricsActions.setIsPrompting(false))
             guard result == .success else { return completion(result) }
             completion(self.signTx(tx) == true ? .success : .failure)
         }
@@ -384,7 +384,7 @@ extension WalletManager : WalletAuthenticator {
     func changePin(newPin: String, pin: String) -> Bool {
         guard authenticate(pin: pin) else { return false }
         do {
-            store.perform(action: PinLength.set(newPin.utf8.count))
+            Store.perform(action: PinLength.set(newPin.utf8.count))
             try setKeychainItem(key: KeychainKey.pin, item: newPin)
             return true
         }
@@ -409,7 +409,7 @@ extension WalletManager : WalletAuthenticator {
             else if try keychainItem(key: KeychainKey.pin) as String? != nil {
                 return authenticate(pin: newPin)
             }
-            store.perform(action: PinLength.set(newPin.utf8.count))
+            Store.perform(action: PinLength.set(newPin.utf8.count))
             try setKeychainItem(key: KeychainKey.pin, item: newPin)
             try authenticationSuccess()
             return true

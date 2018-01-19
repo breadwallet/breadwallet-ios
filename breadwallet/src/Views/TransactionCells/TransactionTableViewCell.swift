@@ -51,9 +51,9 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         }
     }
 
-    func setTransaction(_ transaction: TxListViewModel, isBtcSwapped: Bool, rate: Rate, maxDigits: Int, isSyncing: Bool, store: Store) {
+    func setTransaction(_ transaction: TxListViewModel, isBtcSwapped: Bool, rate: Rate, maxDigits: Int, isSyncing: Bool) {
         self.transaction = transaction
-        transactionLabel.attributedText = transaction.description(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits, store: store)
+        transactionLabel.attributedText = transaction.description(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits)
         address.text = transaction.address
         status.text = transaction.statusText
         comment.text = transaction.comment

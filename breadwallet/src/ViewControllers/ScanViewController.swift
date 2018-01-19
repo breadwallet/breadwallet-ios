@@ -39,18 +39,15 @@ class ScanViewController : UIViewController, Trackable {
     private let close = UIButton.close
     private let flash = UIButton.icon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
     fileprivate var currentUri = ""
-    fileprivate var store: Store
 
-    init(store: Store, completion: @escaping ScanCompletion, isValidURI: @escaping (String) -> Bool) {
-        self.store = store
+    init(completion: @escaping ScanCompletion, isValidURI: @escaping (String) -> Bool) {
         self.completion = completion
         self.scanKeyCompletion = nil
         self.isValidURI = isValidURI
         super.init(nibName: nil, bundle: nil)
     }
 
-    init(store: Store, scanKeyCompletion: @escaping KeyScanCompletion, isValidURI: @escaping (String) -> Bool) {
-        self.store = store
+    init(scanKeyCompletion: @escaping KeyScanCompletion, isValidURI: @escaping (String) -> Bool) {
         self.scanKeyCompletion = scanKeyCompletion
         self.completion = nil
         self.isValidURI = isValidURI
@@ -193,12 +190,12 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
 
     func handleURI(_ uri: String) {
         var uri = uri
-        if store.isEthLike {
+        if Store.isEthLike {
             uri = uri.replacingOccurrences(of: "ethereum:", with: "")
         }
         if self.currentUri != uri {
             self.currentUri = uri
-            if store.isEthLike && uri.isValidEthAddress, let request = PaymentRequest(ethAddress: uri)  {
+            if Store.isEthLike && uri.isValidEthAddress, let request = PaymentRequest(ethAddress: uri)  {
                 saveEvent("scan.ethAddress")
                 createPaymentRequestSuccess(request: request)
             } else if let request = PaymentRequest(string: uri) {

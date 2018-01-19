@@ -14,12 +14,11 @@ struct Amount {
     let amount: UInt64 //amount in satoshis
     let rate: Rate
     let maxDigits: Int
-    let store: Store
     
     var amountForBtcFormat: Double {
         var decimal = Decimal(self.amount)
         var amount: Decimal = 0.0
-        if store.isEthLike {
+        if Store.isEthLike {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
         } else {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-maxDigits), .up)
@@ -28,13 +27,13 @@ struct Amount {
     }
 
     var localAmount: Double {
-        return Double(amount)/store.state.currency.baseUnit*rate.rate
+        return Double(amount)/Store.state.currency.baseUnit*rate.rate
     }
 
     var bits: String {
         var decimal = Decimal(self.amount)
         var amount: Decimal = 0.0
-        if store.isEthLike {
+        if Store.isEthLike {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
         } else {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-maxDigits), .up)
@@ -45,7 +44,7 @@ struct Amount {
     }
 
     var localCurrency: String {
-        guard let string = localFormat.string(from: Double(amount)/store.state.currency.baseUnit*rate.rate as NSNumber) else { return "" }
+        guard let string = localFormat.string(from: Double(amount)/Store.state.currency.baseUnit*rate.rate as NSNumber) else { return "" }
         return string
     }
 
@@ -56,7 +55,7 @@ struct Amount {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        guard let string = format.string(from: Double(amount)/store.state.currency.baseUnit*rate.rate as NSNumber) else { return "" }
+        guard let string = format.string(from: Double(amount)/Store.state.currency.baseUnit*rate.rate as NSNumber) else { return "" }
         return string
     }
 
@@ -71,7 +70,7 @@ struct Amount {
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         format.currencyCode = "store.state.walletState.token!.code"
-        format.currencySymbol = "\(store.state.walletState.token!.code)"
+        format.currencySymbol = "\(Store.state.walletState.token!.code)"
         format.maximumFractionDigits = 4
         format.minimumFractionDigits = 0
         return format
@@ -91,19 +90,17 @@ struct Amount {
     }
 
     var btcFormat: NumberFormatter {
-        if store.isEthLike {
+        if Store.isEthLike {
             let format = NumberFormatter()
             format.isLenient = true
             format.numberStyle = .currency
             format.generatesDecimalNumbers = true
             format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
             format.currencyCode = "ETH"
-            if let crowdsale = store.state.walletState.crowdsale, !crowdsale.hasEnded {
-                format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
-            } else if store.state.currency == .ethereum {
+            if Store.state.currency == .ethereum {
                 format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
             } else {
-                format.currencySymbol = "\(store.state.walletState.token!.code) "
+                format.currencySymbol = "\(Store.state.walletState.token!.code) "
             }
             format.maximumFractionDigits = 8
             format.minimumFractionDigits = 0
@@ -150,32 +147,30 @@ struct Amount {
 
 struct DisplayAmount {
     let amount: Satoshis
-    let state: State
     let selectedRate: Rate?
     let minimumFractionDigits: Int?
-    let store: Store
 
     var description: String {
         return selectedRate != nil ? fiatDescription : bitcoinDescription
     }
 
     var combinedDescription: String {
-        return state.isBtcSwapped ? "\(fiatDescription) (\(bitcoinDescription))" : "\(bitcoinDescription) (\(fiatDescription))"
+        return Store.state.isBtcSwapped ? "\(fiatDescription) (\(bitcoinDescription))" : "\(bitcoinDescription) (\(fiatDescription))"
     }
 
     private var fiatDescription: String {
-        guard let rate = selectedRate ?? state.currentRate else { return "" }
-        guard let string = localFormat.string(from: Double(amount.rawValue)/store.state.currency.baseUnit*rate.rate as NSNumber) else { return "" }
+        guard let rate = selectedRate ?? Store.state.currentRate else { return "" }
+        guard let string = localFormat.string(from: Double(amount.rawValue)/Store.state.currency.baseUnit*rate.rate as NSNumber) else { return "" }
         return string
     }
 
     private var bitcoinDescription: String {
         var decimal = Decimal(self.amount.rawValue)
         var amount: Decimal = 0.0
-        if store.isEthLike {
+        if Store.isEthLike {
             NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
         } else {
-            NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-state.maxDigits), .up)
+            NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-Store.state.maxDigits), .up)
         }
         let number = NSDecimalNumber(decimal: amount)
         guard let string = btcFormat.string(from: number) else { return "" }
@@ -190,7 +185,7 @@ struct DisplayAmount {
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         if let rate = selectedRate {
             format.currencySymbol = rate.currencySymbol
-        } else if let rate = state.currentRate {
+        } else if let rate = Store.state.currentRate {
             format.currencySymbol = rate.currencySymbol
         }
         if let minimumFractionDigits = minimumFractionDigits {
@@ -205,17 +200,17 @@ struct DisplayAmount {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        if store.isEthLike {
-            if store.state.currency == .ethereum {
+        if Store.isEthLike {
+            if Store.state.currency == .ethereum {
                 format.currencyCode = "ETH"
                 format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
             } else {
-                format.currencyCode = store.state.walletState.token!.code
-                format.currencySymbol = "\(store.state.walletState.token!.code) "
+                format.currencyCode = Store.state.walletState.token!.code
+                format.currencySymbol = "\(Store.state.walletState.token!.code) "
             }
         } else {
             format.currencyCode = "XBT"
-            switch state.maxDigits {
+            switch Store.state.maxDigits {
             case 2:
                 format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
                 format.maximum = (C.maxMoney/C.satoshis)*100000 as NSNumber
@@ -229,8 +224,8 @@ struct DisplayAmount {
                 format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
             }
 
-            format.maximumFractionDigits = state.maxDigits
-            format.maximum = Decimal(C.maxMoney)/(pow(10.0, state.maxDigits)) as NSNumber
+            format.maximumFractionDigits = Store.state.maxDigits
+            format.maximum = Decimal(C.maxMoney)/(pow(10.0, Store.state.maxDigits)) as NSNumber
         }
 
         if let minimumFractionDigits = minimumFractionDigits {
@@ -240,8 +235,8 @@ struct DisplayAmount {
         return format
     }
 
-    static func ethString(value: GethBigInt, store: Store) -> String {
-        let placeholderAmount = Amount(amount: 0, rate: store.state.currentRate!, maxDigits: 0, store: store)
+    static func ethString(value: GethBigInt) -> String {
+        let placeholderAmount = Amount(amount: 0, rate: Store.state.currentRate!, maxDigits: 0)
         var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
         var amount: Decimal = 0.0
         NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
@@ -249,9 +244,9 @@ struct DisplayAmount {
         return placeholderAmount.ethFormat.string(from: eth) ?? ""
     }
 
-    static func tokenString(value: GethBigInt, store: Store) -> String {
-        guard let token = store.state.walletState.token else { return "" }
-        let placeholderAmount = Amount(amount: 0, rate: store.state.currentRate!, maxDigits: 0, store: store)
+    static func tokenString(value: GethBigInt) -> String {
+        guard let token = Store.state.walletState.token else { return "" }
+        let placeholderAmount = Amount(amount: 0, rate: Store.state.currentRate!, maxDigits: 0)
         var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
         var amount: Decimal = 0.0
         NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-token.decimals), .up)
@@ -259,9 +254,9 @@ struct DisplayAmount {
         return placeholderAmount.tokenFormat.string(from: eth) ?? ""
     }
 
-    static func localEthString(value: GethBigInt, store: Store) -> String {
-        guard let rate = store.state.currentRate else { return "" }
-        let placeholderAmount = Amount(amount: 0, rate: store.state.currentRate!, maxDigits: 0, store: store)
+    static func localEthString(value: GethBigInt) -> String {
+        guard let rate = Store.state.currentRate else { return "" }
+        let placeholderAmount = Amount(amount: 0, rate: Store.state.currentRate!, maxDigits: 0)
         var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
         var amount: Decimal = 0.0
         NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)

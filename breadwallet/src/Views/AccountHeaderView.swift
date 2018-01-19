@@ -15,12 +15,11 @@ private let logoWidth: CGFloat = 0.22 //percentage of width
 class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     //MARK: - Public
-    init(store: Store) {
-        self.store = store
-        self.isBtcSwapped = store.state.isBtcSwapped
-        if let rate = store.state.currentRate {
+    init() {
+        self.isBtcSwapped = Store.state.isBtcSwapped
+        if let rate = Store.state.currentRate {
             self.exchangeRate = rate
-            let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: store.state.maxDigits, store: store)
+            let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: Store.state.maxDigits)
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
             self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.btcFormat)
         } else {
@@ -37,7 +36,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private let primaryBalance: UpdatingLabel
     private let secondaryBalance: UpdatingLabel
     private let currencyTapView = UIView()
-    private let store: Store
     private let equals = UILabel(font: .customBody(size: smallFontSize), color: .whiteTint)
     private var regularConstraints: [NSLayoutConstraint] = []
     private var swappedConstraints: [NSLayoutConstraint] = []
@@ -172,7 +170,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             currencyTapView.bottomAnchor.constraint(equalTo: primaryBalance.bottomAnchor, constant: C.padding[1]) ])
 
         let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
-        if !store.isEthLike { //FIXME - currency switching disabled for ethereum
+        if !Store.isEthLike { //FIXME - currency switching disabled for ethereum
             currencyTapView.addGestureRecognizer(gr)
         }
 
@@ -184,7 +182,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         modeLabel.constrain([
             modeLabel.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: C.padding[1]/2.0),
             modeLabel.firstBaselineAnchor.constraint(equalTo: logo.bottomAnchor, constant: -2.0) ])
-        if store.isEthLike {
+        if Store.isEthLike {
             setEthBalance()
         }
         logo.isHidden = true
@@ -207,42 +205,42 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     private func addSubscriptions() {
-        store.lazySubscribe(self,
+        Store.lazySubscribe(self,
                         selector: { $0.isBtcSwapped != $1.isBtcSwapped },
                         callback: { self.isBtcSwapped = $0.isBtcSwapped })
-        store.lazySubscribe(self,
+        Store.lazySubscribe(self,
                         selector: { $0.currentRate != $1.currentRate},
                         callback: {
                             if let rate = $0.currentRate {
-                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits, store: self.store)
+                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits)
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.btcFormat
                             }
                             self.exchangeRate = $0.currentRate
                         })
         
-        store.lazySubscribe(self,
+        Store.lazySubscribe(self,
                         selector: { $0.maxDigits != $1.maxDigits},
                         callback: {
                             if let rate = $0.currentRate {
-                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits, store: self.store)
+                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits)
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.btcFormat
                                 self.setBalances()
                             }
         })
-        store.subscribe(self,
+        Store.subscribe(self,
                         selector: { $0.walletState.name != $1.walletState.name },
                         callback: { self.name.text = $0.walletState.name })
-        if store.isEthLike {
-            store.subscribe(self,
+        if Store.isEthLike {
+            Store.subscribe(self,
                             selector: { $0.walletState.bigBalance != $1.walletState.bigBalance },
                             callback: { state in
                                 if let bigBalance = state.walletState.bigBalance {
                                     self.bigBalance = bigBalance
                                 } })
         } else {
-            store.subscribe(self,
+            Store.subscribe(self,
                             selector: {$0.walletState.balance != $1.walletState.balance },
                             callback: { state in
                                 if let balance = state.walletState.balance {
@@ -253,14 +251,14 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     private func setEthBalance() {
         guard let bigBalance = bigBalance else { return }
-        if store.state.currency == .ethereum {
-            primaryBalance.text = DisplayAmount.ethString(value: bigBalance, store: store)
-            secondaryBalance.text = DisplayAmount.localEthString(value: bigBalance, store: store)
+        if Store.state.currency == .ethereum {
+            primaryBalance.text = DisplayAmount.ethString(value: bigBalance)
+            secondaryBalance.text = DisplayAmount.localEthString(value: bigBalance)
             DispatchQueue.main.async {
                 self.secondaryBalance.transform = self.transform(forView: self.secondaryBalance) //this needs to be in the next run-loop for some reason
             }
         } else {
-            primaryBalance.text = DisplayAmount.tokenString(value: bigBalance, store: store)
+            primaryBalance.text = DisplayAmount.tokenString(value: bigBalance)
             secondaryBalance.text = ""
             secondaryBalance.transform = transform(forView: secondaryBalance)
             equals.text = ""
@@ -268,12 +266,12 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     func setBalances() {
-        guard !store.isEthLike else { return }
+        guard !Store.isEthLike else { return }
         guard let rate = exchangeRate else { return }
-        let amount = Amount(amount: balance, rate: rate, maxDigits: store.state.maxDigits, store: store)
+        let amount = Amount(amount: balance, rate: rate, maxDigits: Store.state.maxDigits)
         
         if !hasInitialized {
-            let amount = Amount(amount: balance, rate: exchangeRate!, maxDigits: store.state.maxDigits, store: store)
+            let amount = Amount(amount: balance, rate: exchangeRate!, maxDigits: Store.state.maxDigits)
             primaryBalance.setValue(amount.amountForBtcFormat)
             secondaryBalance.setValue(amount.localAmount)
             swapLabels()
@@ -312,7 +310,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     private func hideExtraViews() {
         //TODO - fix
-        if store.isEthLike { return }
+        if Store.isEthLike { return }
         var didHide = false
         if secondaryBalance.frame.maxX > search.frame.minX {
             secondaryBalance.isHidden = true
@@ -331,7 +329,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     override func draw(_ rect: CGRect) {
-        drawGradient(start: store.state.colours.0, end: store.state.colours.1, rect)
+        drawGradient(start: Store.state.colours.0, end: Store.state.colours.1, rect)
     }
 
     @objc private func currencySwitchTapped() {
@@ -344,7 +342,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             self.layoutIfNeeded()
         }) { _ in }
 
-        self.store.perform(action: CurrencyChange.toggle())
+        Store.perform(action: CurrencyChange.toggle())
     }
 
     required init?(coder aDecoder: NSCoder) {

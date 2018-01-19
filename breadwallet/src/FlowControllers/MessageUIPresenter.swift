@@ -13,17 +13,17 @@ class MessageUIPresenter: NSObject, Trackable {
 
     weak var presenter: UIViewController?
 
-    func presentMailCompose(bitcoinAddress: String, image: UIImage, store: Store) {
-        if let token = store.state.walletState.token?.name {
+    func presentMailCompose(bitcoinAddress: String, image: UIImage) {
+        if let token = Store.state.walletState.token?.name {
             presentMailCompose(string: "\(token): \(bitcoinAddress)", image: image)
-        } else if store.isEthLike {
+        } else if Store.isEthLike {
             presentMailCompose(string: "ethereum: \(bitcoinAddress)", image: image)
         } else {
             presentMailCompose(string: "bitcoin: \(bitcoinAddress)", image: image)
         }
     }
 
-    func presentMailCompose(bitcoinURL: String, image: UIImage, store: Store) {
+    func presentMailCompose(bitcoinURL: String, image: UIImage) {
         presentMailCompose(string: bitcoinURL, image: image)
     }
 
@@ -61,17 +61,17 @@ class MessageUIPresenter: NSObject, Trackable {
         present(emailView)
     }
 
-    func presentMessageCompose(address: String, image: UIImage, store: Store) {
-        if let token = store.state.walletState.token?.name {
+    func presentMessageCompose(address: String, image: UIImage) {
+        if let token = Store.state.walletState.token?.name {
             presentMessage(string: "\(token): \(address)", image: image)
-        } else if store.isEthLike {
+        } else if Store.isEthLike {
             presentMessage(string: "ethereum: \(address)", image: image)
         } else {
             presentMessage(string: "bitcoin: \(address)", image: image)
         }
     }
 
-    func presentMessageCompose(bitcoinURL: String, image: UIImage, store: Store) {
+    func presentMessageCompose(bitcoinURL: String, image: UIImage) {
         presentMessage(string: bitcoinURL, image: image)
     }
 

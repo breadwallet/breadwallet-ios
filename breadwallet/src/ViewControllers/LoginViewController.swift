@@ -18,27 +18,25 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     var walletManager: WalletManager? {
         didSet {
             guard walletManager != nil else { return }
-            pinView = PinView(style: .login, length: store.state.pinLength)
+            pinView = PinView(style: .login, length: Store.state.pinLength)
         }
     }
     var shouldSelfDismiss = false
-    init(store: Store, isPresentedForLock: Bool, walletManager: WalletManager? = nil) {
-        self.store = store
+    init(isPresentedForLock: Bool, walletManager: WalletManager? = nil) {
         self.walletManager = walletManager
         self.isPresentedForLock = isPresentedForLock
-        self.disabledView = WalletDisabledView(store: store)
+        self.disabledView = WalletDisabledView()
         if walletManager != nil {
-            self.pinView = PinView(style: .login, length: store.state.pinLength)
+            self.pinView = PinView(style: .login, length: Store.state.pinLength)
         }
         super.init(nibName: nil, bundle: nil)
     }
 
     deinit {
-        store.unsubscribe(self)
+        Store.unsubscribe(self)
     }
 
     //MARK: - Private
-    private let store: Store
     private let backgroundView = LoginBackgroundView()
     private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0)
     private let pinViewContainer = UIView()
@@ -100,12 +98,11 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             addPinView()
         }
         disabledView.didTapReset = { [weak self] in
-            guard let store = self?.store else { return }
             guard let walletManager = self?.walletManager else { return }
             self?.isResetting = true
             let nc = UINavigationController()
-            let recover = EnterPhraseViewController(store: store, walletManager: walletManager, reason: .validateForResettingPin({ phrase in
-                let updatePin = UpdatePinViewController(store: store, walletManager: walletManager, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
+            let recover = EnterPhraseViewController(walletManager: walletManager, reason: .validateForResettingPin({ phrase in
+                let updatePin = UpdatePinViewController(walletManager: walletManager, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
                 nc.pushViewController(updatePin, animated: true)
                 updatePin.resetFromDisabledWillSucceed = {
                     self?.disabledView.isHidden = true
@@ -127,7 +124,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             nc.viewControllers = [recover]
             self?.present(nc, animated: true, completion: nil)
         }
-        store.subscribe(self, name: .loginFromSend, callback: {_ in 
+        Store.subscribe(self, name: .loginFromSend, callback: {_ in
             self.authenticationSucceded()
         })
     }
@@ -244,12 +241,11 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
 
     private func addPinPadCallback() {
         pinPad.ouputDidUpdate = { [weak self] pin in
-            guard let myself = self else { return }
             guard let pinView = self?.pinView else { return }
             let attemptLength = pin.utf8.count
             pinView.fill(attemptLength)
-            self?.pinPad.isAppendingDisabled = attemptLength < myself.store.state.pinLength ? false : true
-            if attemptLength == myself.store.state.pinLength {
+            self?.pinPad.isAppendingDisabled = attemptLength < Store.state.pinLength ? false : true
+            if attemptLength == Store.state.pinLength {
                 self?.authenticate(pin: pin)
             }
         }
@@ -295,8 +291,8 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             if self.shouldSelfDismiss {
                 self.dismiss(animated: true, completion: nil)
             }
-            self.store.perform(action: LoginSuccess())
-            self.store.trigger(name: .showStatusBar)
+            Store.perform(action: LoginSuccess())
+            Store.trigger(name: .showStatusBar)
         }
     }
 
@@ -316,7 +312,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
 
     private var shouldUseBiometrics: Bool {
         guard let walletManager = self.walletManager else { return false }
-        return LAContext.canUseBiometrics && !walletManager.pinLoginRequired && store.state.isBiometricsEnabled
+        return LAContext.canUseBiometrics && !walletManager.pinLoginRequired && Store.state.isBiometricsEnabled
     }
 
     @objc func biometricsTapped() {
@@ -329,11 +325,11 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     }
 
     @objc func addressTapped() {
-        store.perform(action: RootModalActions.Present(modal: .loginAddress))
+        Store.perform(action: RootModalActions.Present(modal: .loginAddress))
     }
 
     @objc func scanTapped() {
-        store.perform(action: RootModalActions.Present(modal: .loginScan))
+        Store.perform(action: RootModalActions.Present(modal: .loginScan))
     }
 
     private func lockIfNeeded() {

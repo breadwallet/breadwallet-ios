@@ -29,8 +29,8 @@ class TxDetailCollectionViewCell : UICollectionViewCell {
         setup()
     }
 
-    func set(viewModel: TxDetailViewModel, store: Store) {
-        dataSource = TxDetailDataSource(viewModel: viewModel, store: store)
+    func set(viewModel: TxDetailViewModel) {
+        dataSource = TxDetailDataSource(viewModel: viewModel)
         dataSource.registerCells(forTableView: tableView)
         tableView.dataSource = dataSource
         tableView.reloadData()

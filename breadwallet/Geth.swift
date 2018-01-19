@@ -13,7 +13,6 @@ class GethManager {
     let context: GethContext
     let client: GethEthereumClient
     let address: GethAddress
-    let store: Store
 
     var balance: GethBigInt {
         return GethBigInt(0)
@@ -28,8 +27,7 @@ class GethManager {
     private let transferGasLimit: Int64 = 150000
     private let crowdsaleGasLimit: Int64 = 150000
 
-    init(ethPubKey: [UInt8], store: Store) {
-        self.store = store
+    init(ethPubKey: [UInt8]) {
         self.context = GethContext()
 
         if E.isTestnet {

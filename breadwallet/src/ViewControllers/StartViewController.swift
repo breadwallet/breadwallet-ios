@@ -11,11 +11,10 @@ import UIKit
 class StartViewController : UIViewController {
 
     //MARK: - Public
-    init(store: Store, didTapCreate: @escaping () -> Void, didTapRecover: @escaping () -> Void) {
-        self.store = store
+    init(didTapCreate: @escaping () -> Void, didTapRecover: @escaping () -> Void) {
         self.didTapRecover = didTapRecover
         self.didTapCreate = didTapCreate
-        self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.startView)
+        self.faq = UIButton.buildFaqButton(articleId: ArticleIds.startView)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -23,7 +22,6 @@ class StartViewController : UIViewController {
     private let message = UILabel(font: .customMedium(size: 18.0), color: .whiteTint)
     private let create = ShadowButton(title: S.StartViewController.createButton, type: .primary)
     private let recover = ShadowButton(title: S.StartViewController.recoverButton, type: .secondary)
-    private let store: Store
     private let didTapRecover: () -> Void
     private let didTapCreate: () -> Void
     private let background = LoginBackgroundView()

@@ -31,16 +31,16 @@ struct TxListViewModel: TxViewModel {
     
     // MARK: -
     
-    func description(isBtcSwapped: Bool, rate: Rate, maxDigits: Int, store: Store) -> NSAttributedString {
+    func description(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
         var amount = ""
         
         // TODO:ER move this logic into Amount/DisplayAmount?
         if let tx = tx as? BtcTransaction {
-            amount = Amount(amount: tx.amount, rate: rate, maxDigits: maxDigits, store: store).string(isBtcSwapped: isBtcSwapped)
+            amount = Amount(amount: tx.amount, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
         } else if let tx = tx as? EthTransaction {
-            amount = DisplayAmount.ethString(value: tx.amount, store: store)
+            amount = DisplayAmount.ethString(value: tx.amount)
         } else if let tx = tx as? ERC20Transaction {
-            amount = DisplayAmount.tokenString(value: tx.amount, store: store)
+            amount = DisplayAmount.tokenString(value: tx.amount)
         } else {
             assertionFailure("unknown currency type")
         }
