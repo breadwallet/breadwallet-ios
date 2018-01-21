@@ -12,41 +12,11 @@ import BRCore
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
-let tokens: [Token] = {
-    return E.isTestnet ? [brd5, brd4, brd3, brd2, tst] : [brdMain, mainTst, xjp]
-}()
-
 class ApplicationController : Subscriber, Trackable {
 
     //Ideally the window would be private, but is unfortunately required
     //by the UIApplicationDelegate Protocol
     let window = UIWindow()
-//    fileprivate let store: Store = {
-//        let store = Store()
-//        if let currentRate = UserDefaults.currentRate(forCode: "btc") {
-//            store.perform(action: ExchangeRates.setRate(currentRate))
-//        }
-//        return store
-//    }()
-//    fileprivate let ethStore: Store = {
-//        let store = Store()
-//        if let currentRate = UserDefaults.currentRate(forCode: "eth") {
-//            store.perform(action: ExchangeRates.setRate(currentRate))
-//        }
-//        return store
-//    }()
-//    fileprivate let tokenStores: [Store] = {
-//        return tokens.map {
-//            let store = Store()
-//            store.perform(action: CurrencyActions.set(.token))
-//            store.perform(action: WalletChange.set(store.state.walletState.mutate(token: $0)))
-//            if let currentRate = UserDefaults.currentRate(forCode: $0.code) {
-//                store.perform(action: ExchangeRates.setRate(currentRate))
-//            }
-//            store.perform(action: ExchangeRates.setRate(Rate(code: "USD", name: "USD", rate: 1.0, reciprocalCode: $0.code)))
-//            return store
-//        }
-//    }()
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
 
@@ -74,8 +44,6 @@ class ApplicationController : Subscriber, Trackable {
 
     init() {
         transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
-//        ethStore.perform(action: CurrencyActions.set(.ethereum))
-//        ethStore.perform(action: CurrencyChange.setIsSwapped(false))
         DispatchQueue.walletQueue.async {
             guardProtected(queue: DispatchQueue.walletQueue) {
                 self.initWallet()
@@ -249,14 +217,11 @@ class ApplicationController : Subscriber, Trackable {
             } else {
                 modalPresenter?.walletManager = walletManager
                 let gethManager = GethManager(ethPubKey: walletManager.ethPubKey!)
-//                ethWalletCoordinator = EthWalletCoordinator(store: ethStore, gethManager: gethManager, apiClient: noAuthApiClient, btcStore: store)
-//                tokenWalletCoordinators = tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: noAuthApiClient, btcStore: store) }
                 modalPresenter?.gethManager = gethManager
                 DispatchQueue.walletQueue.async {
                     walletManager.peerManager?.connect()
                 }
                 startDataFetchers()
-                addNumSentListeners()
             }
 
         //For when watch app launches app in background
@@ -273,18 +238,6 @@ class ApplicationController : Subscriber, Trackable {
             })
         }
 
-    }
-
-    private func addNumSentListeners() {
-//        let ethLikeStores = [ethStore] + tokenStores
-//        ethStore.subscribe(self,
-//                     selector: { $0.walletState.transactions != $1.walletState.transactions },
-//                     callback: { state in
-//                        let numSent = state.walletState.transactions.filter { $0.direction == .sent }.count
-//                        ethLikeStores.forEach { store in
-//                            store.perform(action: WalletChange.set(store.state.walletState.mutate(numSent: numSent)))
-//                        }
-//        })
     }
 
     private func shouldRequireLogin() -> Bool {
@@ -310,16 +263,8 @@ class ApplicationController : Subscriber, Trackable {
         nc.navigationBar.isTranslucent = false
         nc.navigationBar.tintColor = .white
         nc.pushViewController(home, animated: false)
-        home.didSelectCurrency = { code in
-            if code == "btc" {
-                nc.pushViewController(self.accountViewController!, animated: true)
-            } else if code == "eth" {
-                nc.pushViewController(self.ethAccountViewController!, animated: true)
-            } else {
-                if let vc = self.accountViewControllers?.first(where: { $0.tokenSymbol == code }) {
-                    nc.pushViewController(vc, animated: true)
-                }
-            }
+        home.didSelectCurrency = { [weak self] currency in
+            nc.pushViewController(self!.accountViewController!, animated: true)
         }
 
         window.rootViewController = nc
@@ -341,25 +286,7 @@ class ApplicationController : Subscriber, Trackable {
         }
 
         accountViewController = AccountViewController(didSelectTransaction: didSelectTransaction)
-//        accountViewController?.sendCallback = { self.store.perform(action: RootModalActions.Present(modal: .send)) }
-//        accountViewController?.receiveCallback = { self.store.perform(action: RootModalActions.Present(modal: .receive)) }
-//        accountViewController?.menuCallback = { self.store.perform(action: RootModalActions.Present(modal: .menu)) }
-
-        ethAccountViewController = AccountViewController(didSelectTransaction: didSelectEthTransaction )
-//        ethAccountViewController?.sendCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .send)) }
-//        ethAccountViewController?.receiveCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .receive)) }
-//        ethAccountViewController?.menuCallback = { self.ethStore.perform(action: RootModalActions.Present(modal: .menu)) }
-
-
-//        let tokenAccountViewControllers: [AccountViewController] = tokenStores.map { store in
-//            let vc = AccountViewController(store: store, didSelectTransaction: {_,_ in } )
-//            vc.sendCallback = { store.perform(action: RootModalActions.Present(modal: .send)) }
-//            vc.receiveCallback = { store.perform(action: RootModalActions.Present(modal: .receive)) }
-//            vc.menuCallback = { store.perform(action: RootModalActions.Present(modal: .menu)) }
-//            return vc
-//        }
-
-        accountViewControllers = [accountViewController!, ethAccountViewController!]// + tokenAccountViewControllers
+        accountViewControllers = [accountViewController!, accountViewController!]
     }
 
     private func startDataFetchers() {
@@ -382,11 +309,6 @@ class ApplicationController : Subscriber, Trackable {
                         self.walletManager?.peerManager?.connect()
                         self.modalPresenter?.walletManager = self.walletManager
                         self.startDataFetchers()
-                        //let gethManager = GethManager(ethPubKey: self.walletManager!.ethPubKey!, store: self.store)
-                        //self.modalPresenter?.gethManager = gethManager
-//                        self.ethWalletCoordinator = EthWalletCoordinator(store: self.ethStore, gethManager: gethManager, apiClient: self.noAuthApiClient, btcStore: self.store)
-//                        self.tokenWalletCoordinators = self.tokenStores.map { return TokenWalletCoordinator(store: $0, gethManager: gethManager, apiClient: self.noAuthApiClient, btcStore: self.store) }
-                        self.addNumSentListeners()
 
                     }
                 }
@@ -523,62 +445,3 @@ extension ApplicationController {
         print("didFailToRegisterForRemoteNotification: \(error)")
     }
 }
-
-let erc20ABI = "[{\"constant\":true,\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_spender\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_from\",\"type\":\"address\"},{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"name\":\"balance\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"showMeTheMoney\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_to\",\"type\":\"address\"},{\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"name\":\"success\",\"type\":\"bool\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_owner\",\"type\":\"address\"},{\"name\":\"_spender\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"name\":\"remaining\",\"type\":\"uint256\"}],\"payable\":false,\"type\":\"function\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"_owner\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"_spender\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"}]"
-
-let tst = Token(name: "Test Standard Token",
-                code: "TST",
-                 symbol: "t$",
-                 address: "0x722dd3F80BAC40c951b51BdD28Dd19d435762180",
-                 decimals: 0,
-                 abi: erc20ABI)
-let mainTst = Token(name: "Test Standard Token",
-                code: "TST",
-                symbol: "t$",
-                address: "0x3eFd578b271d034a69499E4A2d933C631D44B9aD",
-                decimals: 18,
-                abi: erc20ABI)
-
-let xjp = Token(name: "XJP Token",
-                code: "XJP",
-                symbol: "x¥",
-                address: "0x39689fE671C01fcE173395f6BC45D4C332026666",
-                decimals: 0,
-                abi: erc20ABI)
-let brdMain = Token(name: "Bread Token",
-                    code: "BRD",
-                    symbol: "🍞",
-                    address: "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6",
-                    decimals: 18,
-                    abi: erc20ABI)
-let brdMainTest = Token(name: "Test Bread Token",
-                code: "TBRD",
-                symbol: "🍞",
-                address: "0x6bd5c60f601f926ce24f315dad6c83fd5143e31c",
-                decimals: 18,
-                abi: erc20ABI)
-
-let brd2 = Token(name: "Bread Token",
-                 code: "BRd",
-                 symbol: "🍞",
-                 address: "0xb99cb14bca36d1a1b9fd293ab51076331ab61cab",
-                 decimals: 18,
-                 abi: erc20ABI)
-let brd3 = Token(name: "Bread Token",
-                 code: "brd",
-                 symbol: "🍞",
-                 address: "0x4f51037ff62148528112fb53c4733bd805a1b335",
-                 decimals: 18,
-                 abi: erc20ABI)
-let brd4 = Token(name: "Bread Token",
-                 code: "1brd",
-                 symbol: "🍞",
-                 address: "0xbcf50b1E603C44d75De12A2865aD90865E49df94",
-                 decimals: 18,
-                 abi: erc20ABI)
-let brd5 = Token(name: "Bread Token",
-                 code: "2brd",
-                 symbol: "🍞",
-                 address: "0x7108ca7c4718efa810457f228305c9c71390931a",
-                 decimals: 18,
-                 abi: erc20ABI)

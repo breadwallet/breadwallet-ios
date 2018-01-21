@@ -49,7 +49,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
         //If the user has a limit that is not a current option, we display their limit
         if !limits.contains(walletManager.spendingLimit) {
             if let rate = Store.state.currentRate {
-                let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Store.state.maxDigits)
+                let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
                 setAmount(limitAmount: spendingLimit)
             }
         }
@@ -69,7 +69,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
         if limit == 0 {
             cell.textLabel?.text = S.TouchIdSpendingLimit.requirePasscode
         } else {
-            let displayAmount = DisplayAmount(amount: Satoshis(rawValue: limit), selectedRate: nil, minimumFractionDigits: 0)
+            let displayAmount = DisplayAmount(amount: Satoshis(rawValue: limit), selectedRate: nil, minimumFractionDigits: 0, currency: Currencies.btc)
             cell.textLabel?.text = displayAmount.combinedDescription
         }
         if limits[indexPath.row] == selectedLimit {

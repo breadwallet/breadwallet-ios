@@ -113,13 +113,10 @@ class TxAmountCell: UITableViewCell, Subscriber {
     func set(fiatAmount: String, tokenAmount: String) {
         fiatAmountLabel.text = fiatAmount
         tokenAmountLabel.text = tokenAmount
-        
-        if !Store.isEthLike { //FIXME - currency switching disabled for ethereum
-            isBtcSwapped = Store.state.isBtcSwapped
-            let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
-            container.addGestureRecognizer(gr)
-            addSubscriptions()
-        }
+        isBtcSwapped = Store.state.isBtcSwapped
+        let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
+        container.addGestureRecognizer(gr)
+        addSubscriptions()
     }
     
     // MARK: Currency Switch

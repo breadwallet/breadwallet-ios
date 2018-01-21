@@ -129,7 +129,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
 
     private var textViewText: NSAttributedString {
         guard let rate = rate else { return NSAttributedString(string: "") }
-        let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Store.state.maxDigits)
+        let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
         let customizeText = LAContext.biometricType() == .face ? S.FaceIDSettings.customizeText : S.TouchIdSettings.customizeText
         let linkText = LAContext.biometricType() == .face ? S.FaceIDSettings.linkText : S.TouchIdSettings.linkText
         let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.bits, amount.localCurrency))\n\n\(String(format: customizeText, linkText))"

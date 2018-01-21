@@ -270,7 +270,6 @@
 		CE27F9591E2C8EA300F7F7F2 /* Amount.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE27F9581E2C8EA300F7F7F2 /* Amount.swift */; };
 		CE29901A1EFD6DE50093A0F2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE29901C1EFD6DE50093A0F2 /* Localizable.strings */; };
 		CE2DC1391EBC36EE000FE727 /* Prompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2DC1381EBC36EE000FE727 /* Prompt.swift */; };
-		CE30EC751F79556500FC9887 /* CurrencyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30EC741F79556500FC9887 /* CurrencyList.swift */; };
 		CE30F0E61EB27844004B8EE5 /* PhoneWCSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30F0E51EB27844004B8EE5 /* PhoneWCSessionManager.swift */; };
 		CE30F0E81EB27FA2004B8EE5 /* WatchDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30F0E71EB27FA2004B8EE5 /* WatchDataManager.swift */; };
 		CE30F0EA1EB282C8004B8EE5 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30F0E91EB282C8004B8EE5 /* SharedConstants.swift */; };
@@ -1475,7 +1474,6 @@
 		CE2990221EFD6F500093A0F2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE2990231EFD6F5D0093A0F2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE2DC1381EBC36EE000FE727 /* Prompt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Prompt.swift; path = src/Views/Prompt.swift; sourceTree = "<group>"; };
-		CE30EC741F79556500FC9887 /* CurrencyList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CurrencyList.swift; path = src/ViewControllers/CurrencyList.swift; sourceTree = "<group>"; };
 		CE30F0E51EB27844004B8EE5 /* PhoneWCSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = PhoneWCSessionManager.swift; path = src/Watch/PhoneWCSessionManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CE30F0E71EB27FA2004B8EE5 /* WatchDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchDataManager.swift; sourceTree = "<group>"; };
 		CE30F0E91EB282C8004B8EE5 /* SharedConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedConstants.swift; sourceTree = "<group>"; };
@@ -2916,7 +2914,6 @@
 				CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */,
 				CE274A601FD7C902000A4E62 /* RootNavigationController.swift */,
 				CE3840E71FD590BD00437C31 /* AssetListTableView.swift */,
-				CE30EC741F79556500FC9887 /* CurrencyList.swift */,
 				CE20C9061DBC587200C8397A /* StartViewController.swift */,
 				CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */,
 				CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */,
@@ -4159,7 +4156,6 @@
 				CE4DFB2E1E9C26DA0014009E /* ShareDataViewController.swift in Sources */,
 				CE1E5F261EF083A600BD0F72 /* StartImportViewController.swift in Sources */,
 				CE25BF931DFDA7A600BC67B6 /* MessageUIPresenter.swift in Sources */,
-				CE30EC751F79556500FC9887 /* CurrencyList.swift in Sources */,
 				CE20C90C1DBC59E600C8397A /* StartFlowPresenter.swift in Sources */,
 				CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */,
 				CEA3626A1E01150D0061FC0E /* CGContext+Additions.swift in Sources */,

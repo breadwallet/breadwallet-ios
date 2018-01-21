@@ -94,10 +94,6 @@ class AccountViewController : UIViewController, Subscriber {
         addSubscriptions()
         addAppLifecycleNotificationEvents()
         setInitialData()
-
-        if Store.isEthLike {
-            footerView.menuButton.isHidden = true
-        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -208,7 +204,6 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func showLoadingView() {
-        guard !Store.isEthLike else { return }
         view.insertSubview(transactionsLoadingView, belowSubview: headerContainer)
         transactionsLoadingViewTop = transactionsLoadingView.topAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -transactionsLoadingViewHeightConstant)
         transactionsLoadingView.constrain([
@@ -230,7 +225,6 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func hideLoadingView() {
-        guard !Store.isEthLike else { return }
         didEndLoading = true
         guard self.transactionsLoadingViewTop?.constant == 0.0 else { return } //Should skip hide if it's not shown
         loadingTimer?.invalidate()

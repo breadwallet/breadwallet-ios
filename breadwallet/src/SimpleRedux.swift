@@ -168,19 +168,11 @@ class Store {
         Store.shared.unsubscribe(subscriber)
     }
 
-    static var isEthLike: Bool {
-        return Store.shared.isEthLike
-    }
-
     static func removeAllSubscriptions() {
         Store.shared.removeAllSubscriptions()
     }
 
     //MARK: - Private
-    var isEthLike: Bool {
-        return state.currency == .ethereum || state.currency == .token
-    }
-
     func perform(action: Action) {
         state = action.reduce(state)
     }

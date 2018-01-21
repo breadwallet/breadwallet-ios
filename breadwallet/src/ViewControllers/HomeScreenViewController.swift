@@ -20,7 +20,7 @@ class HomeScreenViewController : UIViewController, Subscriber {
     private let total = UILabel(font: .customMedium(size: 18.0), color: .darkText)
     private let totalHeader = UILabel(font: .customMedium(size: 14.0))
 
-    var didSelectCurrency : ((String) -> Void)?
+    var didSelectCurrency : ((CurrencyDef) -> Void)?
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -49,8 +49,8 @@ class HomeScreenViewController : UIViewController, Subscriber {
                 currencyList.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 currencyList.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
         })
-        currencyList.didSelectCurrency = {
-            self.didSelectCurrency?($0)
+        currencyList.didSelectCurrency = { [weak self] currency in
+            self?.didSelectCurrency?(currency)
         }
         subHeaderView.clipsToBounds = false
         subHeaderView.addSubview(logo)

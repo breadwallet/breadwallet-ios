@@ -208,7 +208,8 @@ class ModalPresenter : Subscriber, Trackable {
         supportCenter.modalPresentationStyle = .overFullScreen
         supportCenter.modalPresentationCapturesStatusBarAppearance = true
         supportCenter.transitioningDelegate = supportCenter
-        let url = articleId == nil ? "/support?currency=\(Store.state.currency.symbol)" : "/support/article?slug=\(articleId!)&currency=\(Store.state.currency.symbol)"
+        //TODO:AC - add currency
+        let url = articleId == nil ? "/support?" : "/support/article?slug=\(articleId!)"
         supportCenter.navigate(to: url)
         topViewController?.present(supportCenter, animated: true, completion: {})
     }
@@ -227,8 +228,6 @@ class ModalPresenter : Subscriber, Trackable {
             return nil //The scan view needs a custom presentation
         case .loginAddress:
             return receiveView(isRequestAmountVisible: false)
-        case .manageWallet:
-            return ModalViewController(childViewController: CurrencyList())
         case .requestAmount:
             guard let wallet = walletManager?.wallet else { return nil }
             let requestVc = RequestAmountViewController(wallet: wallet)
@@ -253,7 +252,7 @@ class ModalPresenter : Subscriber, Trackable {
         }
         guard let walletManager = walletManager else { return nil }
         guard let kvStore = walletManager.apiClient?.kv else { return nil }
-        let sendVC = SendViewController(sender: Sender(walletManager: walletManager, kvStore: kvStore), walletManager: walletManager, initialRequest: currentRequest, gethManager: Store.isEthLike ? gethManager : nil)
+        let sendVC = SendViewController(sender: Sender(walletManager: walletManager, kvStore: kvStore), walletManager: walletManager, initialRequest: currentRequest, gethManager: nil, currency: Currencies.btc)
         currentRequest = nil
 
         if Store.state.isLoginRequired {
@@ -390,10 +389,9 @@ class ModalPresenter : Subscriber, Trackable {
                 }, callback: {
                     settingsNav.pushViewController(PushNotificationsViewController(), animated: true)
                 }),
-                Setting(title: LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit, accessoryText: { [weak self] in
-                    guard let myself = self else { return "" }
+                Setting(title: LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit, accessoryText: {
                     guard let rate = Store.state.currentRate else { return "" }
-                    let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Store.state.maxDigits)
+                    let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
                     return amount.localCurrency
                 }, callback: {
                     self.pushBiometricsSpendingLimit(onNc: settingsNav)
@@ -495,7 +493,9 @@ class ModalPresenter : Subscriber, Trackable {
                 scanCompletion(paymentRequest)
                 parent?.view.isFrameChangeBlocked = false
             }, isValidURI: { address in
-                return Store.state.currency.isValidAddress(address)
+                //TODO:AC - add isValidAddress
+                return true
+                //return Store.state.currency.isValidAddress(address)
             })
             parent?.view.isFrameChangeBlocked = true
             parent?.present(vc, animated: true, completion: {})
@@ -509,8 +509,7 @@ class ModalPresenter : Subscriber, Trackable {
         nc.setDefaultStyle()
         nc.isNavigationBarHidden = true
         nc.delegate = securityCenterNavigationDelegate
-        securityCenter.didTapPin = { [weak self] in
-            guard let myself = self else { return }
+        securityCenter.didTapPin = {
             let updatePin = UpdatePinViewController(walletManager: walletManager, type: .update)
             nc.pushViewController(updatePin, animated: true)
         }
@@ -530,8 +529,7 @@ class ModalPresenter : Subscriber, Trackable {
 
     private func pushBiometricsSpendingLimit(onNc: UINavigationController) {
         guard let walletManager = walletManager else { return }
-        let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: Store.state.pinLength, walletManager: walletManager, success: { [weak self] pin in
-            guard let myself = self else { return }
+        let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: Store.state.pinLength, walletManager: walletManager, success: { pin in
             let spendingLimit = BiometricsSpendingLimitViewController(walletManager: walletManager)
             onNc.pushViewController(spendingLimit, animated: true)
         })
@@ -569,8 +567,7 @@ class ModalPresenter : Subscriber, Trackable {
     private func pushWritePaperPhrase(navigationController: UINavigationController, pin: String) {
         guard let walletManager = walletManager else { return }
         var writeViewController: WritePaperPhraseViewController?
-        writeViewController = WritePaperPhraseViewController(walletManager: walletManager, pin: pin, callback: { [weak self] in
-            guard let myself = self else { return }
+        writeViewController = WritePaperPhraseViewController(walletManager: walletManager, pin: pin, callback: {
             var confirm: ConfirmPaperPhraseViewController?
             confirm = ConfirmPaperPhraseViewController(walletManager: walletManager, pin: pin, callback: {
                 confirm?.dismiss(animated: true, completion: {
@@ -749,7 +746,6 @@ class ModalPresenter : Subscriber, Trackable {
         let alert = UIAlertController(title: S.URLHandling.addressListAlertTitle, message: S.URLHandling.addressListAlertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: S.URLHandling.copy, style: .default, handler: { [weak self] _ in
-            guard let myself = self else { return }
             let verify = VerifyPinViewController(bodyText: S.URLHandling.addressListVerifyPrompt, pinLength: Store.state.pinLength, walletManager: walletManager, success: { [weak self] pin in
                 self?.copyAllAddressesToClipboard()
                 Store.perform(action: Alert.Show(.addressesCopied))

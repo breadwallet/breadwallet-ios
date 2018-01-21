@@ -24,7 +24,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     let syncingView = SyncingView()
     var isSyncingViewVisible = false {
         didSet {
-            guard !Store.isEthLike else { return }
             guard oldValue != isSyncingViewVisible else { return } //We only care about changes
             if isSyncingViewVisible {
                 tableView.beginUpdates()
@@ -78,7 +77,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     private let emptyMessage = UILabel.wrapping(font: .customBody(size: 16.0), color: .grayTextTint)
     private var currentPrompt: Prompt? {
         didSet {
-            guard !Store.isEthLike else { return }
             if currentPrompt != nil && oldValue == nil {
                 tableView.beginUpdates()
                 tableView.insertSections(IndexSet(integer: 0), with: .automatic)
@@ -258,7 +256,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 
     private func attemptShowPrompt() {
-        guard !Store.isEthLike else { return }
         guard let walletManager = walletManager else { return }
         guard !isSyncingViewVisible else { return }
         let types = PromptType.defaultOrder

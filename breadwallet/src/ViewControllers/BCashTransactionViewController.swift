@@ -74,7 +74,7 @@ class BCashTransactionViewController : UIViewController {
     private func setInitialData() {
         view.backgroundColor = .whiteTint
         titleLabel.text = S.BCH.title
-        let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), selectedRate: nil, minimumFractionDigits: 0)
+        let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), selectedRate: nil, minimumFractionDigits: 0, currency: Currencies.btc)
         body.text = String(format: S.BCH.body, amount.description)
         addressCell.paste.tap = strongify(self) { $0.pasteTapped() }
         addressCell.scan.tap = strongify(self) { $0.scanTapped() }
@@ -137,7 +137,7 @@ class BCashTransactionViewController : UIViewController {
 
     private func presentConfirm() {
         guard let address = addressCell.address, address.isValidBCHAddress else { return showErrorMessage(S.Send.invalidAddressMessage) }
-        let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), selectedRate: nil, minimumFractionDigits: 0)
+        let amount = DisplayAmount(amount: Satoshis(rawValue: walletManager.bCashBalance), selectedRate: nil, minimumFractionDigits: 0, currency: Currencies.btc)
         let message = String(format: S.BCH.confirmationMessage, amount.description, address)
         let alert = UIAlertController(title: S.BCH.confirmationTitle, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
