@@ -19,7 +19,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         self.isBtcSwapped = Store.state.isBtcSwapped
         if let rate = Store.state.currentRate {
             self.exchangeRate = rate
-            let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: Store.state.maxDigits)
+            let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
             self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.btcFormat)
         } else {
@@ -75,9 +75,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private var balance: UInt64 = 0 {
         didSet { setBalances() }
     }
-    private var bigBalance: GethBigInt? {
-        didSet { setEthBalance() }
-    }
+    private var bigBalance: GethBigInt?
     private var isBtcSwapped: Bool {
         didSet { setBalances() }
     }
@@ -170,10 +168,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             currencyTapView.bottomAnchor.constraint(equalTo: primaryBalance.bottomAnchor, constant: C.padding[1]) ])
 
         let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
-        if !Store.isEthLike { //FIXME - currency switching disabled for ethereum
-            currencyTapView.addGestureRecognizer(gr)
-        }
-
+        currencyTapView.addGestureRecognizer(gr)
+        
         logo.constrain([
             logo.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
             logo.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[10]),
@@ -182,9 +178,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         modeLabel.constrain([
             modeLabel.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: C.padding[1]/2.0),
             modeLabel.firstBaselineAnchor.constraint(equalTo: logo.bottomAnchor, constant: -2.0) ])
-        if Store.isEthLike {
-            setEthBalance()
-        }
         logo.isHidden = true
     }
 
@@ -212,7 +205,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                         selector: { $0.currentRate != $1.currentRate},
                         callback: {
                             if let rate = $0.currentRate {
-                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits)
+                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits, currency: Currencies.btc)
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.btcFormat
                             }
@@ -223,7 +216,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                         selector: { $0.maxDigits != $1.maxDigits},
                         callback: {
                             if let rate = $0.currentRate {
-                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits)
+                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits, currency: Currencies.btc)
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.btcFormat
                                 self.setBalances()
@@ -232,46 +225,20 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         Store.subscribe(self,
                         selector: { $0.walletState.name != $1.walletState.name },
                         callback: { self.name.text = $0.walletState.name })
-        if Store.isEthLike {
-            Store.subscribe(self,
-                            selector: { $0.walletState.bigBalance != $1.walletState.bigBalance },
-                            callback: { state in
-                                if let bigBalance = state.walletState.bigBalance {
-                                    self.bigBalance = bigBalance
-                                } })
-        } else {
-            Store.subscribe(self,
-                            selector: {$0.walletState.balance != $1.walletState.balance },
-                            callback: { state in
-                                if let balance = state.walletState.balance {
-                                    self.balance = balance
-                                } })
-        }
-    }
-
-    private func setEthBalance() {
-        guard let bigBalance = bigBalance else { return }
-        if Store.state.currency == .ethereum {
-            primaryBalance.text = DisplayAmount.ethString(value: bigBalance)
-            secondaryBalance.text = DisplayAmount.localEthString(value: bigBalance)
-            DispatchQueue.main.async {
-                self.secondaryBalance.transform = self.transform(forView: self.secondaryBalance) //this needs to be in the next run-loop for some reason
-            }
-        } else {
-            primaryBalance.text = DisplayAmount.tokenString(value: bigBalance)
-            secondaryBalance.text = ""
-            secondaryBalance.transform = transform(forView: secondaryBalance)
-            equals.text = ""
-        }
+        Store.subscribe(self,
+                        selector: {$0.walletState.balance != $1.walletState.balance },
+                        callback: { state in
+                            if let balance = state.walletState.balance {
+                                self.balance = balance
+                            } })
     }
 
     func setBalances() {
-        guard !Store.isEthLike else { return }
         guard let rate = exchangeRate else { return }
-        let amount = Amount(amount: balance, rate: rate, maxDigits: Store.state.maxDigits)
+        let amount = Amount(amount: balance, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
         
         if !hasInitialized {
-            let amount = Amount(amount: balance, rate: exchangeRate!, maxDigits: Store.state.maxDigits)
+            let amount = Amount(amount: balance, rate: exchangeRate!, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
             primaryBalance.setValue(amount.amountForBtcFormat)
             secondaryBalance.setValue(amount.localAmount)
             swapLabels()
@@ -309,8 +276,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     private func hideExtraViews() {
-        //TODO - fix
-        if Store.isEthLike { return }
         var didHide = false
         if secondaryBalance.frame.maxX > search.frame.minX {
             secondaryBalance.isHidden = true

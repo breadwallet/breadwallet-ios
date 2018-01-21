@@ -48,7 +48,7 @@ extension TxDetailViewModel {
                 return DisplayAmount.ethString(value: tx.amount)
             }
         } else if let tx = tx as? BtcTransaction {
-            let amount = Amount(amount: tx.amount, rate: rate, maxDigits: maxDigits)
+            let amount = Amount(amount: tx.amount, rate: rate, maxDigits: maxDigits, currency: Currencies.btc)
             return isBtcSwapped ? amount.localCurrency : amount.bits
         } else {
             return ""
@@ -62,10 +62,12 @@ extension TxDetailViewModel {
         
         var startingString = Amount(amount: tx.startingBalance,
                                     rate: rate,
-                                    maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
+                                    maxDigits: maxDigits,
+                                    currency: Currencies.btc).string(isBtcSwapped: isBtcSwapped)
         var endingString = Amount(amount: tx.endingBalance,
                                   rate: rate,
-                                  maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
+                                  maxDigits: maxDigits,
+                                  currency: Currencies.btc).string(isBtcSwapped: isBtcSwapped)
         
         if tx.startingBalance > C.maxMoney {
             startingString = ""

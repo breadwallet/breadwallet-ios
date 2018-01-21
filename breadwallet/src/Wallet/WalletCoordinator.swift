@@ -203,7 +203,7 @@ class WalletCoordinator : Subscriber, Trackable {
 
     private func showReceived(amount: UInt64) {
         if let rate = Store.state.currentRate {
-            let amount = Amount(amount: amount, rate: rate, maxDigits: Store.state.maxDigits)
+            let amount = Amount(amount: amount, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
             let primary = Store.state.isBtcSwapped ? amount.localCurrency : amount.bits
             let secondary = Store.state.isBtcSwapped ? amount.bits : amount.localCurrency
             let message = String(format: S.TransactionDetails.received, "\(primary) (\(secondary))")

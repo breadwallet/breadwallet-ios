@@ -24,25 +24,7 @@ struct ShowStartFlow : Action {
 
 struct HideStartFlow : Action {
     let reduce: Reducer = { state in
-        return State(isStartFlowVisible: false,
-                     isLoginRequired: state.isLoginRequired,
-                     rootModal: .none,
-                     walletState: state.walletState,
-                     isBtcSwapped: state.isBtcSwapped,
-                     currentRate: state.currentRate,
-                     rates: state.rates,
-                     alert: state.alert,
-                     isBiometricsEnabled: state.isBiometricsEnabled,
-                     defaultCurrencyCode: state.defaultCurrencyCode,
-                     recommendRescan: state.recommendRescan,
-                     isLoadingTransactions: state.isLoadingTransactions,
-                     maxDigits: state.maxDigits,
-                     isPushNotificationsEnabled: state.isPushNotificationsEnabled,
-                     isPromptingBiometrics: state.isPromptingBiometrics,
-                     pinLength: state.pinLength,
-                     fees: state.fees,
-                     currency: state.currency,
-                     colours: state.colours)
+        return state.mutate(isStartFlowVisible: false, rootModal: .none)
     }
 }
 
@@ -149,7 +131,13 @@ enum ExchangeRates {
         let reduce: Reducer
         init(currentRate: Rate, rates: [Rate] ) {
             UserDefaults.setCurrentRateData(newValue: currentRate.dictionary, forCode: currentRate.reciprocalCode)
-            reduce = { $0.mutate(currentRate: currentRate, rates: rates) }
+            reduce = {
+                let currencies = $0.currencies.map { currencyDef -> CurrencyDef in
+                    let state = currencyDef.state
+                    return currencyDef.mutate(state: CurrencyState(rate: currentRate, fees: state.fees, balance: state.balance))
+                }
+                return $0.mutate(currencies: currencies)
+            }
         }
     }
     struct setRate: Action {
@@ -257,15 +245,6 @@ enum UpdateFees {
         let reduce: Reducer
         init(_ fees: Fees) {
             reduce = { $0.mutate(fees: fees) }
-        }
-    }
-}
-
-enum CurrencyActions {
-    struct set : Action {
-        let reduce: Reducer
-        init(_ currency: Currency) {
-            reduce = { $0.mutate(currency: currency) }
         }
     }
 }

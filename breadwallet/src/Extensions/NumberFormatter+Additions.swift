@@ -10,7 +10,7 @@ import Foundation
 
 extension NumberFormatter {
     static func formattedString(amount: Satoshis, rate: Rate?, minimumFractionDigits: Int?, maxDigits: Int) -> String {
-        let displayAmount = Amount(amount: amount.rawValue, rate: rate ?? Rate.empty, maxDigits: maxDigits)
+        let displayAmount = Amount(amount: amount.rawValue, rate: rate ?? Rate.empty, maxDigits: maxDigits, currency: Currencies.btc)
         var formatter: NumberFormatter
         var output = ""
         if let rate = rate {

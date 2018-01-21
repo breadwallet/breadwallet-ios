@@ -140,7 +140,7 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
             subheader.text = S.RecoverWallet.subheaderResetPin
             instruction.isHidden = true
             moreInfoButton.setTitle(S.RecoverWallet.resetPinInfo, for: .normal)
-            moreInfoButton.tap = { [weak self] in
+            moreInfoButton.tap = {
                 Store.trigger(name: .presentFaq(ArticleIds.resetPinWithPaperKey))
             }
             faq.isHidden = true

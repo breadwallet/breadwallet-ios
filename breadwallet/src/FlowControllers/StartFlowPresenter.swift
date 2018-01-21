@@ -99,7 +99,7 @@ class StartFlowPresenter : Subscriber {
         return { [weak self] phrase in
             guard let myself = self else { return }
             let pinCreationView = UpdatePinViewController(walletManager: myself.walletManager, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
-            pinCreationView.setPinSuccess = { [weak self] _ in
+            pinCreationView.setPinSuccess = { _ in
                 DispatchQueue.main.async {
                     Store.trigger(name: .didCreateOrRecoverWallet)
                 }

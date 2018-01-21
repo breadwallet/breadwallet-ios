@@ -36,11 +36,9 @@ struct TxListViewModel: TxViewModel {
         
         // TODO:ER move this logic into Amount/DisplayAmount?
         if let tx = tx as? BtcTransaction {
-            amount = Amount(amount: tx.amount, rate: rate, maxDigits: maxDigits).string(isBtcSwapped: isBtcSwapped)
+            amount = Amount(amount: tx.amount, rate: rate, maxDigits: maxDigits, currency: Currencies.btc).string(isBtcSwapped: isBtcSwapped)
         } else if let tx = tx as? EthTransaction {
             amount = DisplayAmount.ethString(value: tx.amount)
-        } else if let tx = tx as? ERC20Transaction {
-            amount = DisplayAmount.tokenString(value: tx.amount)
         } else {
             assertionFailure("unknown currency type")
         }

@@ -25,12 +25,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     var initialAddress: String?
     var isPresentedFromLock = false
 
-    init(sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil, gethManager: GethManager? = nil) {
+    init(sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil, gethManager: GethManager? = nil, currency: CurrencyDef) {
         self.sender = sender
         self.walletManager = walletManager
         self.initialAddress = initialAddress
         self.initialRequest = initialRequest
-        self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: Store.state.maxDigits), type: .tertiary)
+        self.currencyButton = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: Store.state.maxDigits), type: .tertiary)
         self.gethManager = gethManager
         amountView = AmountViewController(isPinPadExpandedAtLaunch: false)
 
@@ -51,7 +51,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let addressCell = AddressCell()
     private let memoCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary)
-    private let currency: ShadowButton
+    private let currencyButton: ShadowButton
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
@@ -64,6 +64,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private var feeType: Fee?
     private let gethManager: GethManager?
+    private let currency: CurrencyDef = Currencies.btc
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -147,15 +148,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         amountView.balanceTextForAmount = { [weak self] amount, rate in
             return self?.balanceTextForAmount(amount: amount, rate: rate)
         }
-
-        if Store.isEthLike {
-            amountView.didUpdateEth = { [weak self] amount in
-                self?.ethAmount = amount
-            }
-        } else {
-            amountView.didUpdateAmount = { [weak self] amount in
-                self?.amount = amount
-            }
+        amountView.didUpdateAmount = { [weak self] amount in
+            self?.amount = amount
         }
         amountView.didUpdateFee = strongify(self) { myself, fee in
             guard let wallet = myself.walletManager.wallet else { return }
@@ -180,18 +174,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), selectedRate: rate, minimumFractionDigits: 0)
+        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), selectedRate: rate, minimumFractionDigits: 0, currency: Currencies.btc)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
         var color: UIColor = .grayTextTint
         var feeColor: UIColor = .grayTextTint
         if let amount = amount, amount.rawValue > 0 {
-            let fee: UInt64
-            if Store.isEthLike {
-                fee = UInt64(gethManager!.fee(isCrowdsale: false).getInt64())
-            } else if let fee = sender.feeForTx(amount: amount.rawValue) {
-                let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), selectedRate: rate, minimumFractionDigits: 0)
+            if let fee = sender.feeForTx(amount: amount.rawValue) {
+                let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), selectedRate: rate, minimumFractionDigits: 0, currency: Currencies.btc)
                 let feeText = feeAmount.description
                 feeOutput = String(format: S.Send.fee, feeText)
                 if (balance >= fee) && amount.rawValue > (balance - fee) {
@@ -221,7 +212,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return showAlert(title: S.Alert.error, message: S.Send.emptyPasteboard, buttonLabel: S.Button.ok)
         }
 
-        guard let request = Store.isEthLike ? PaymentRequest(ethAddress: pasteboard) : PaymentRequest(string: pasteboard) else {
+        guard let request = PaymentRequest(string: pasteboard) else {
             return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressOnPasteboard, buttonLabel: S.Button.ok)
         }
         handleRequest(request)
@@ -237,8 +228,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     @objc private func sendTapped() {
-        guard Store.state.currency != .ethereum else { confirmEth(); return }
-        guard Store.state.currency != .token else { confirmToken(); return }
         if addressCell.textField.isFirstResponder {
             addressCell.textField.resignFirstResponder()
         }
@@ -258,7 +247,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             }
             if let minOutput = walletManager.wallet?.minOutputAmount {
                 guard amount.rawValue >= minOutput else {
-                    let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: Store.state.maxDigits)
+                    let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
                     let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutputAmount.string(isBtcSwapped: Store.state.isBtcSwapped))
                     return showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
                 }
@@ -329,11 +318,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin in
             guard let myself = self else { return }
             myself.parent?.view.isFrameChangeBlocked = false
-            if Store.state.currency == .ethereum {
-                myself.sendEth()
-            } else {
-                myself.sendToken()
-            }
+            myself.sendEth()
         }
     }
 
@@ -509,11 +494,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 self?.confirmProtocolRequest(protoReq: protoReq)
             })
         } else if requestAmount < wallet.minOutputAmount {
-            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: Store.state.maxDigits)
+            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
             let message = String(format: S.PaymentProtocol.Errors.smallPayment, amount.bits)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         } else if isOutputTooSmall {
-            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: Store.state.maxDigits)
+            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
             let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.bits)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         }
@@ -577,11 +562,6 @@ extension SendViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        if let token = Store.state.walletState.token {
-            return "Send \(token.code)"
-        } else {
-            return Store.isEthLike ? S.Send.ethTitle : S.Send.title
-        }
-
+        return "Send \(currency.name)"
     }
 }

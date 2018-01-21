@@ -10,7 +10,7 @@ import UIKit
 
 class Background : UIView, GradientDrawable {
 
-    var store: Store?
+    var currency: CurrencyDef?
 
     override func layoutSubviews() {
         let maskLayer = CAShapeLayer()
@@ -20,8 +20,8 @@ class Background : UIView, GradientDrawable {
     }
 
     override func draw(_ rect: CGRect) {
-        guard let store = store else { return }
-        drawGradient(start: store.state.colours.0, end: store.state.colours.1, rect)
+        guard let currency = currency else { return }
+        drawGradient(start: currency.colors.0, end: currency.colors.1, rect)
     }
 }
 
@@ -37,11 +37,11 @@ class HomeScreenCell : UITableViewCell {
         setupViews()
     }
 
-    func setData(currencyName: String, price: String, balance: String, store: Store) {
-        self.currencyName.text = currencyName
+    func setData(price: String, balance: String, currency: CurrencyDef) {
+        self.container.currency = currency
+        self.currencyName.text = currency.name
         self.price.text = price
         self.balance.text = balance
-        self.container.store = store
         self.container.setNeedsDisplay()
     }
 

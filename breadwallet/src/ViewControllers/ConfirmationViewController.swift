@@ -137,16 +137,15 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         view.backgroundColor = .clear
         payLabel.text = S.Confirmation.send
 
-        let displayAmount = DisplayAmount(amount: amount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
-        let displayFee = DisplayAmount(amount: feeAmount, selectedRate: selectedRate, minimumFractionDigits: Store.isEthLike ? 8 : minimumFractionDigits)
-        let displayTotal = DisplayAmount(amount: amount + feeAmount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+        let displayAmount = DisplayAmount(amount: amount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, currency: Currencies.btc)
+        let displayFee = DisplayAmount(amount: feeAmount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, currency: Currencies.btc)
+        let displayTotal = DisplayAmount(amount: amount + feeAmount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, currency: Currencies.btc)
 
         amountLabel.text = displayAmount.combinedDescription
 
         toLabel.text = S.Confirmation.to
         address.text = addressText
         address.lineBreakMode = .byTruncatingMiddle
-        let regularTime = Store.isEthLike ? "5-10" : "10-30"
         switch feeType {
         case .regular:
             processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.regularTime)
@@ -316,15 +315,8 @@ class EthConfirmationViewController : UIViewController, ContentBoxPresenter {
         view.backgroundColor = .clear
         payLabel.text = S.Confirmation.send
 
-        let displayAmount: String
-        let displayFee: String
-        if Store.state.currency == .ethereum {
-            displayAmount = DisplayAmount.ethString(value: amount)
-            displayFee = DisplayAmount.ethString(value: feeAmount)
-        } else {
-            displayAmount = DisplayAmount.tokenString(value: amount)
-            displayFee = DisplayAmount.ethString(value: feeAmount)
-        }
+        let displayAmount = DisplayAmount.ethString(value: amount)
+        let displayFee = DisplayAmount.ethString(value: feeAmount)
 
         let displayTotal = ""//DisplayAmount.ethString(value: amount + fee, store: store)
 
@@ -333,7 +325,7 @@ class EthConfirmationViewController : UIViewController, ContentBoxPresenter {
         toLabel.text = S.Confirmation.to
         address.text = addressText
         address.lineBreakMode = .byTruncatingMiddle
-        let regularTime = Store.isEthLike ? "5-10" : "10-30"
+        let regularTime = "10-30"
         switch feeType {
         case .regular:
             processingTime.text = String(format: S.Confirmation.processingTime, regularTime)

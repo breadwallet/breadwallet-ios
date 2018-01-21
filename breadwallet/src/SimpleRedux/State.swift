@@ -13,21 +13,21 @@ struct State {
     let isLoginRequired: Bool
     let rootModal: RootModal
     let walletState: WalletState
-    let isBtcSwapped: Bool
-    let currentRate: Rate?
-    let rates: [Rate]
+    let isBtcSwapped: Bool //move to CurrencyState
+    let currentRate: Rate? //move to CurrencyState
+    let rates: [Rate] //move to CurrencyState
     let alert: AlertType?
     let isBiometricsEnabled: Bool
     let defaultCurrencyCode: String
     let recommendRescan: Bool
     let isLoadingTransactions: Bool
-    let maxDigits: Int
+    let maxDigits: Int //move to CurrencyState - (this is bits vs bitcoin setting)
     let isPushNotificationsEnabled: Bool
     let isPromptingBiometrics: Bool
     let pinLength: Int
-    let fees: Fees?
-    let currency: Currency
-    let colours: (UIColor, UIColor)
+    let fees: Fees? //move to CurrencyState
+    let colours: (UIColor, UIColor) //moved to CurrencyDef
+    let currencies: [CurrencyDef]
 }
 
 extension State {
@@ -49,8 +49,8 @@ extension State {
                         isPromptingBiometrics: false,
                         pinLength: 6,
                         fees: nil,
-                        currency: .bitcoin,
-                        colours: (UIColor(), UIColor()))
+                        colours: (UIColor(), UIColor()),
+                        currencies: [Currencies.btc, Currencies.bch])
     }
 
     func mutate(   isStartFlowVisible: Bool? = nil,
@@ -70,48 +70,9 @@ extension State {
                    isPromptingBiometrics: Bool? = nil,
                    pinLength: Int? = nil,
                    fees: Fees? = nil,
-                   currency: Currency? = nil,
-                   colours: (UIColor, UIColor)? = nil) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible, isLoginRequired: isLoginRequired ?? self.isLoginRequired, rootModal: rootModal ?? self.rootModal, walletState: walletState ?? self.walletState, isBtcSwapped: isBtcSwapped ?? self.isBtcSwapped, currentRate: currentRate ?? self.currentRate, rates: rates ?? self.rates, alert: alert ?? self.alert, isBiometricsEnabled: isBiometricsEnabled ?? self.isBiometricsEnabled, defaultCurrencyCode: defaultCurrencyCode ?? self.defaultCurrencyCode, recommendRescan: recommendRescan ?? self.recommendRescan, isLoadingTransactions: isLoadingTransactions ?? self.isLoadingTransactions, maxDigits: maxDigits ?? self.maxDigits, isPushNotificationsEnabled: isPushNotificationsEnabled ?? self.isPushNotificationsEnabled, isPromptingBiometrics: isPromptingBiometrics ?? self.isPromptingBiometrics, pinLength: pinLength ?? self.pinLength, fees: fees ?? self.fees, currency: currency ?? self.currency, colours: colours ?? self.colours)
-    }
-}
-
-enum Currency {
-    case bitcoin
-    case ethereum
-    case token
-
-    func isValidAddress(_ string: String) -> Bool {
-        switch self {
-        case .bitcoin:
-            return string.isValidAddress
-        case .ethereum:
-            return string.isValidEthAddress
-        case .token:
-            return string.isValidEthAddress
-        }
-    }
-
-    var baseUnit: Double {
-        switch self {
-        case .bitcoin:
-            return 100000000.0
-        case .ethereum:
-            return 1000000000000000000.0
-        case .token:
-            return 1000000000000000000.0
-        }
-    }
-
-    var symbol: String {
-        switch self {
-        case .bitcoin:
-            return "btc"
-        case .ethereum:
-            return "eth"
-        case .token:
-            return "xjp"
-        }
+                   colours: (UIColor, UIColor)? = nil,
+                   currencies: [CurrencyDef]? = nil) -> State {
+        return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible, isLoginRequired: isLoginRequired ?? self.isLoginRequired, rootModal: rootModal ?? self.rootModal, walletState: walletState ?? self.walletState, isBtcSwapped: isBtcSwapped ?? self.isBtcSwapped, currentRate: currentRate ?? self.currentRate, rates: rates ?? self.rates, alert: alert ?? self.alert, isBiometricsEnabled: isBiometricsEnabled ?? self.isBiometricsEnabled, defaultCurrencyCode: defaultCurrencyCode ?? self.defaultCurrencyCode, recommendRescan: recommendRescan ?? self.recommendRescan, isLoadingTransactions: isLoadingTransactions ?? self.isLoadingTransactions, maxDigits: maxDigits ?? self.maxDigits, isPushNotificationsEnabled: isPushNotificationsEnabled ?? self.isPushNotificationsEnabled, isPromptingBiometrics: isPromptingBiometrics ?? self.isPromptingBiometrics, pinLength: pinLength ?? self.pinLength, fees: fees ?? self.fees, colours: colours ?? self.colours, currencies: currencies ?? self.currencies)
     }
 }
 
@@ -122,7 +83,6 @@ enum RootModal {
     case menu
     case loginAddress
     case loginScan
-    case manageWallet
     case requestAmount
 }
 

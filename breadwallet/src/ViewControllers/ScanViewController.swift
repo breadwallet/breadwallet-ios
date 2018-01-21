@@ -39,6 +39,7 @@ class ScanViewController : UIViewController, Trackable {
     private let close = UIButton.close
     private let flash = UIButton.icon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
     fileprivate var currentUri = ""
+    private let currency: CurrencyDef = Currencies.btc
 
     init(completion: @escaping ScanCompletion, isValidURI: @escaping (String) -> Bool) {
         self.completion = completion
@@ -189,13 +190,9 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
     }
 
     func handleURI(_ uri: String) {
-        var uri = uri
-        if Store.isEthLike {
-            uri = uri.replacingOccurrences(of: "ethereum:", with: "")
-        }
         if self.currentUri != uri {
             self.currentUri = uri
-            if Store.isEthLike && uri.isValidEthAddress, let request = PaymentRequest(ethAddress: uri)  {
+            if uri.isValidEthAddress, let request = PaymentRequest(ethAddress: uri)  {
                 saveEvent("scan.ethAddress")
                 createPaymentRequestSuccess(request: request)
             } else if let request = PaymentRequest(string: uri) {
