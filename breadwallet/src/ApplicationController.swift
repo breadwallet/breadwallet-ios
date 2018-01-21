@@ -270,16 +270,8 @@ class ApplicationController : Subscriber, Trackable {
         window.rootViewController = nc
 
         let didSelectTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
-            let transactionDetails = TransactionDetailsViewController(transactions: transactions, selectedIndex: selectedIndex)
-            transactionDetails.modalPresentationStyle = .overFullScreen
-            transactionDetails.transitioningDelegate = self.transitionDelegate
-            transactionDetails.modalPresentationCapturesStatusBarAppearance = true
-            self.window.rootViewController?.present(transactionDetails, animated: true, completion: nil)
-        }
-
-        let didSelectEthTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
-            let transactionDetails = TransactionDetailsViewController(transactions: transactions, selectedIndex: selectedIndex)
-            transactionDetails.modalPresentationStyle = .overFullScreen
+            let transactionDetails = TxDetailViewController(transaction: transactions[selectedIndex])
+            transactionDetails.modalPresentationStyle = .overCurrentContext
             transactionDetails.transitioningDelegate = self.transitionDelegate
             transactionDetails.modalPresentationCapturesStatusBarAppearance = true
             self.window.rootViewController?.present(transactionDetails, animated: true, completion: nil)

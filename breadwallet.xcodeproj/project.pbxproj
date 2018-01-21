@@ -232,6 +232,7 @@
 		7C6ACCB61FEB345E0028ABFA /* TxStatusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */; };
 		7C7F18ED1FED9A3B0030230E /* TxStatusIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7F18EC1FED9A3B0030230E /* TxStatusIndicator.swift */; };
 		7C9724661FF07B9A004248C4 /* StatusCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9724651FF07B9A004248C4 /* StatusCircle.swift */; };
+		7CA238142011A97C00A4A59D /* TxDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA238132011A97C00A4A59D /* TxDetailViewController.swift */; };
 		7CA3BC302006864C00517BF7 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA3BC2F2006864C00517BF7 /* Currency.swift */; };
 		7CBF4B6420081BCE00E003AA /* KeyedDecodingContainer+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBF4B6320081BCE00E003AA /* KeyedDecodingContainer+Additions.swift */; };
 		7CBF4B6B2008899100E003AA /* TxAddressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBF4B6A2008899100E003AA /* TxAddressCell.swift */; };
@@ -1422,6 +1423,7 @@
 		7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxStatusCell.swift; path = src/Views/TransactionCells/TxStatusCell.swift; sourceTree = "<group>"; };
 		7C7F18EC1FED9A3B0030230E /* TxStatusIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxStatusIndicator.swift; path = src/Views/TxStatusIndicator.swift; sourceTree = "<group>"; };
 		7C9724651FF07B9A004248C4 /* StatusCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StatusCircle.swift; path = src/Views/StatusCircle.swift; sourceTree = "<group>"; };
+		7CA238132011A97C00A4A59D /* TxDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailViewController.swift; path = src/ViewControllers/TxDetailViewController.swift; sourceTree = "<group>"; };
 		7CA3BC2F2006864C00517BF7 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Currency.swift; path = src/Models/Currency.swift; sourceTree = "<group>"; };
 		7CBF4B5B2007DB5300E003AA /* EthTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthTransaction.swift; sourceTree = "<group>"; };
 		7CBF4B5F2007DB8000E003AA /* ERC20Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ERC20Transaction.swift; sourceTree = "<group>"; };
@@ -2942,6 +2944,7 @@
 				CEE659E81F664C73001FF29D /* WelcomeViewController.swift */,
 				1B1AFF9E1FB7EF7C00E61908 /* BiometricsSettingsViewController.swift */,
 				1B1AFF9F1FB7EF7C00E61908 /* BiometricsSpendingLimitViewController.swift */,
+				7CA238132011A97C00A4A59D /* TxDetailViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -4091,6 +4094,7 @@
 				CEEE92F11EBA7CBA00B7AC9C /* RequestAmountViewController.swift in Sources */,
 				CE8CD8DF1E2E825100785E02 /* VerifyPinViewController.swift in Sources */,
 				CE916E331EDA800E00D641D6 /* UserDefaultsUpdater.swift in Sources */,
+				7CA238142011A97C00A4A59D /* TxDetailViewController.swift in Sources */,
 				CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */,
 				CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */,
 				223DB2151DF654940076A151 /* WalletManager.swift in Sources */,

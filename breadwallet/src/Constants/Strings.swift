@@ -157,13 +157,31 @@ enum S {
     }
 
     enum TransactionDetails {
-        static let title = NSLocalizedString("TransactionDetails.title", value:"Transaction Details", comment: "Transaction Details Title")
+        static let titleSent = NSLocalizedString("TransactionDetails.titleSent", value:"Sent", comment: "Transaction Details Title - Sent")
+        static let titleSending = NSLocalizedString("TransactionDetails.titleSending", value:"Sending", comment: "Transaction Details Title - Sending")
+        static let titleReceived = NSLocalizedString("TransactionDetails.titleReceived", value:"Received", comment: "Transaction Details Title - Received")
+        static let titleReceiving = NSLocalizedString("TransactionDetails.titleReceiving", value:"Receiving", comment: "Transaction Details Title - Receiving")
+        static let titleInternal = NSLocalizedString("TransactionDetails.titleInternal", value:"Internal", comment: "Transaction Details Title - Internal")
+        static let titleFailed = NSLocalizedString("TransactionDetails.titleFailed", value:"Failed", comment: "Transaction Details Title - Failed")
+        
+        static let showDetails = NSLocalizedString("TransactionDetails.showDetails", value:"Show Details", comment: "Show Details button")
+        static let hideDetails = NSLocalizedString("TransactionDetails.titleFailed", value:"Hide Details", comment: "Hide Details button")
+        
         static let statusHeader = NSLocalizedString("TransactionDetails.statusHeader", value:"Status", comment: "Status section header")
         static let commentsHeader = NSLocalizedString("TransactionDetails.commentsHeader", value:"Memo", comment: "Memo section header")
         static let amountHeader = NSLocalizedString("TransactionDetails.amountHeader", value:"Amount", comment: "Amount section header")
+        static let txHashHeader = NSLocalizedString("TransactionDetails.txHashHeader", value:"Transaction ID", comment: "Transaction ID header")
+        
+        static let startingBalanceHeader = NSLocalizedString("TransactionDetails.startingBalanceHeader", value:"Starting Balance", comment: "Starting balance section header")
+        static let endingBalanceHeader = NSLocalizedString("TransactionDetails.endingBalanceHeader", value:"Ending Balance", comment: "Ending balance section header")
+        static let exchangeRateHeader = NSLocalizedString("TransactionDetails.exchangeRateHeader", value:"Exchange Rate", comment: "Exchange rate section header")
+        
+        // OLD
+        static let title = NSLocalizedString("TransactionDetails.title", value:"Transaction Details", comment: "Transaction Details Title")
+        
         static let emptyMessage = NSLocalizedString("TransactionDetails.emptyMessage", value:"Your transactions will appear here.", comment: "Empty transaction list message.")
         static let more = NSLocalizedString("TransactionDetails.more", value:"More...", comment: "More button title")
-        static let txHashHeader = NSLocalizedString("TransactionDetails.txHashHeader", value:"Bitcoin Transaction ID", comment: "Transaction ID header")
+        
         static let sentAmountDescription = NSLocalizedString("TransactionDetails.sentAmountDescription", value: "Sent <b>%1$@</b>", comment: "Sent $5.00")
         static let receivedAmountDescription = NSLocalizedString("TransactionDetails.receivedAmountDescription", value: "Received <b>%1$@</b>", comment: "Received $5.00")
         static let movedAmountDescription = NSLocalizedString("TransactionDetails.movedAmountDescription", value: "Moved <b>%1$@</b>", comment: "Moved $5.00")
@@ -179,9 +197,7 @@ enum S {
         
         static let timestampHeader = NSLocalizedString("TransactionDetails.timestampHeader", value:"Time", comment: "Timestamp section header")
         static let addressHeader = NSLocalizedString("TransactionDetails.addressHeader", value:"Address", comment: "Address section header")
-        static let startingBalanceHeader = NSLocalizedString("TransactionDetails.startingBalanceHeader", value:"Starting Balance", comment: "Starting balance section header")
-        static let endingBalanceHeader = NSLocalizedString("TransactionDetails.endingBalanceHeader", value:"Ending Balance", comment: "Ending balance section header")
-        static let exchangeRateHeader = NSLocalizedString("TransactionDetails.exchangeRateHeader", value:"Exchange Rate", comment: "Exchange rate section header")
+        
     }
 
     enum SecurityCenter {
