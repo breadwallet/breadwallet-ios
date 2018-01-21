@@ -127,4 +127,24 @@ extension UIColor {
     static var txListGreen: UIColor {
         return UIColor(red: 0.0, green: 169.0/255.0, blue: 157.0/255.0, alpha: 1.0)
     }
+    
+    static var blueButtonText: UIColor {
+        return UIColor(red: 127.0/255.0, green: 181.0/255.0, blue: 255.0/255.0, alpha: 1.0)
+    }
+    
+    static var darkGray: UIColor {
+        return UIColor(red: 84.0/255.0, green: 104.0/255.0, blue: 117.0/255.0, alpha: 1.0)
+    }
+    
+    static var lightGray: UIColor {
+        return UIColor(red: 179.0/255.0, green: 192.0/255.0, blue: 200.0/255.0, alpha: 1.0)
+    }
+    
+    static var mediumGray: UIColor {
+        return UIColor(red: 120.0/255.0, green: 143.0/255.0, blue: 158.0/255.0, alpha: 1.0)
+    }
+    
+    static var receivedGreen: UIColor {
+        return UIColor(red: 155.0/255.0, green: 213.0/255.0, blue: 85.0/255.0, alpha: 1.0)
+    }
 }

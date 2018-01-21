@@ -20,6 +20,18 @@ struct TxDetailViewModel: TxViewModel {
     let exchangeRate: String
     let transactionHash: String
     let tx: Transaction
+    
+    var title: String {
+        guard status != .invalid else { return S.TransactionDetails.titleFailed }
+        switch direction {
+        case .moved:
+            return S.TransactionDetails.titleInternal
+        case .received:
+            return status == .complete ? S.TransactionDetails.titleReceived : S.TransactionDetails.titleReceiving
+        case .sent:
+            return status == .complete ? S.TransactionDetails.titleSent : S.TransactionDetails.titleSending
+        }
+    }
 }
 
 extension TxDetailViewModel {
