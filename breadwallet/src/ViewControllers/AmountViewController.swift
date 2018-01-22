@@ -142,7 +142,7 @@ class AmountViewController : UIViewController, Trackable {
         feeLabel.constrain([
             feeLabel.leadingAnchor.constraint(equalTo: balanceLabel.leadingAnchor),
             feeLabel.topAnchor.constraint(equalTo: balanceLabel.bottomAnchor),
-            feeLabel.trailingAnchor.constraint(equalTo: editFee.leadingAnchor, constant: -C.padding[1]) ])
+            feeLabel.trailingAnchor.constraint(equalTo: editFee.leadingAnchor, constant: C.padding[1]) ])
         pinPadHeight = pinPad.view.heightAnchor.constraint(equalToConstant: 0.0)
         addChildViewController(pinPad, layout: {
             pinPad.view.constrain([
@@ -153,11 +153,9 @@ class AmountViewController : UIViewController, Trackable {
                 pinPadHeight ])
         })
         editFee.constrain([
-            editFee.leadingAnchor.constraint(equalTo: feeLabel.trailingAnchor, constant: -8.0),
             editFee.centerYAnchor.constraint(equalTo: feeLabel.centerYAnchor, constant: -1.0),
             editFee.widthAnchor.constraint(equalToConstant: 44.0),
-            editFee.heightAnchor.constraint(equalToConstant: 44.0),
-            editFee.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
+            editFee.heightAnchor.constraint(equalToConstant: 44.0) ])
         bottomBorder.constrain([
             bottomBorder.topAnchor.constraint(greaterThanOrEqualTo: currencyToggle.bottomAnchor, constant: C.padding[2]),
             bottomBorder.leadingAnchor.constraint(equalTo: view.leadingAnchor),
