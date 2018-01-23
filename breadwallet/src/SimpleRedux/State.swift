@@ -84,6 +84,7 @@ enum RootModal {
     case loginAddress
     case loginScan
     case requestAmount
+    case buy
 }
 
 enum SyncState {

@@ -22,14 +22,9 @@ class ApplicationController : Subscriber, Trackable {
 
     fileprivate var walletManager: WalletManager?
     private var walletCoordinator: WalletCoordinator?
-    private var ethWalletCoordinator: EthWalletCoordinator?
-    private var tokenWalletCoordinators: [TokenWalletCoordinator]?
     private var exchangeUpdater: ExchangeUpdater?
     private var feeUpdater: FeeUpdater?
-    private let transitionDelegate: ModalTransitionDelegate
     private var kvStoreCoordinator: KVStoreCoordinator?
-    private var accountViewController: AccountViewController?
-    private var ethAccountViewController: AccountViewController?
     fileprivate var application: UIApplication?
     private let watchSessionManager = PhoneWCSessionManager()
     private var urlController: URLController?
@@ -40,10 +35,12 @@ class ApplicationController : Subscriber, Trackable {
     private var launchURL: URL?
     private var hasPerformedWalletDependentInitialization = false
     private var didInitWallet = false
-    private var accountViewControllers: [AccountViewController]?
+    private var accountViewControllers: [String: AccountViewController] = [:]
+    
+    
+    // MARK: -
 
     init() {
-        transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
         DispatchQueue.walletQueue.async {
             guardProtected(queue: DispatchQueue.walletQueue) {
                 self.initWallet()
@@ -196,9 +193,8 @@ class ApplicationController : Subscriber, Trackable {
         exchangeUpdater = ExchangeUpdater(walletManager: walletManager)
         feeUpdater = FeeUpdater(walletManager: walletManager)
         startFlowController = StartFlowPresenter(walletManager: walletManager, rootViewController: rootViewController)
-        accountViewController?.walletManager = walletManager
-
-        accountViewControllers?.forEach {
+        
+        accountViewControllers.values.forEach {
             $0.walletManager = walletManager
         }
 
@@ -263,22 +259,13 @@ class ApplicationController : Subscriber, Trackable {
         nc.navigationBar.isTranslucent = false
         nc.navigationBar.tintColor = .white
         nc.pushViewController(home, animated: false)
-        home.didSelectCurrency = { [weak self] currency in
-            nc.pushViewController(self!.accountViewController!, animated: true)
+        home.didSelectCurrency = { [unowned self] currency in
+            guard let accountViewController = self.accountViewControllers[currency.code] else { return }
+            nc.pushViewController(accountViewController, animated: true)
         }
-
+        
+        accountViewControllers = Dictionary(uniqueKeysWithValues: Store.state.currencies.map { ($0.code, AccountViewController(currency: $0)) })
         window.rootViewController = nc
-
-        let didSelectTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
-            let transactionDetails = TxDetailViewController(transaction: transactions[selectedIndex])
-            transactionDetails.modalPresentationStyle = .overCurrentContext
-            transactionDetails.transitioningDelegate = self.transitionDelegate
-            transactionDetails.modalPresentationCapturesStatusBarAppearance = true
-            self.window.rootViewController?.present(transactionDetails, animated: true, completion: nil)
-        }
-
-        accountViewController = AccountViewController(didSelectTransaction: didSelectTransaction)
-        accountViewControllers = [accountViewController!, accountViewController!]
     }
 
     private func startDataFetchers() {
