@@ -49,9 +49,7 @@ class HomeScreenViewController : UIViewController, Subscriber {
                 currencyList.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 currencyList.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
         })
-        currencyList.didSelectCurrency = { [weak self] currency in
-            self?.didSelectCurrency?(currency)
-        }
+        currencyList.didSelectCurrency = didSelectCurrency
         subHeaderView.clipsToBounds = false
         subHeaderView.addSubview(logo)
         logo.constrain([

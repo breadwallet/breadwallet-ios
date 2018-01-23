@@ -47,24 +47,20 @@ class ModalPresenter : Subscriber, Trackable {
 
     private func addSubscriptions() {
 
-//        stores.forEach { store in
-//            store.subscribe(self,
-//                            selector: { $0.rootModal != $1.rootModal},
-//                            callback: { self.presentModal($0.rootModal, store: store) })
-//        }
-//
-//        store.subscribe(self,
-//                        selector: { $0.alert != $1.alert && $1.alert != nil },
-//                        callback: { self.handleAlertChange($0.alert) })
-//
-//        stores.forEach { store in
-//            store.subscribe(self, name: .presentFaq(""), callback: {
-//                guard let trigger = $0 else { return }
-//                if case .presentFaq(let articleId) = trigger {
-//                    self.presentFaq(articleId: articleId, store: store)
-//                }
-//            })
-//        }
+        Store.subscribe(self,
+                        selector: { $0.rootModal != $1.rootModal},
+                        callback: { self.presentModal($0.rootModal) })
+        
+        Store.subscribe(self,
+                        selector: { $0.alert != $1.alert && $1.alert != nil },
+                        callback: { self.handleAlertChange($0.alert) })
+        
+        Store.subscribe(self, name: .presentFaq(""), callback: {
+            guard let trigger = $0 else { return }
+            if case .presentFaq(let articleId) = trigger {
+                self.presentFaq(articleId: articleId)
+            }
+        })
 
         //Subscribe to prompt actions
         Store.subscribe(self, name: .promptUpgradePin, callback: { _ in
@@ -240,7 +236,11 @@ class ModalPresenter : Subscriber, Trackable {
                 self?.messagePresenter.presentMessageCompose(bitcoinURL: bitcoinURL, image: image)
             }
             return ModalViewController(childViewController: requestVc)
+        case .buy:
+            presentBuyController("/buy")
+            return nil
         }
+        
     }
 
     private func makeSendView() -> UIViewController? {
@@ -317,7 +317,7 @@ class ModalPresenter : Subscriber, Trackable {
                 self?.presentSettings()
             }
         }
-        // TODO:ER remove
+        // TODO:BCH remove
         menu.didTapBuy = { [weak self, weak menu] in
             menu?.dismiss(animated: true, completion: {
                 self?.presentBuyController("/buy")
@@ -588,8 +588,7 @@ class ModalPresenter : Subscriber, Trackable {
         navigationController.pushViewController(writeVC, animated: true)
     }
 
-    //TODO:ER made this public to access from account vc. refactor?
-    func presentBuyController(_ mountPoint: String) {
+    private func presentBuyController(_ mountPoint: String) {
         guard let walletManager = self.walletManager else { return }
         let vc: BRWebViewController
         #if Debug || Testflight

@@ -13,18 +13,8 @@ import MachO
 let accountHeaderHeight: CGFloat = 152.0
 let accountFooterHeight: CGFloat = 56.0
 private let transactionsLoadingViewHeightConstant: CGFloat = 48.0
-class AccountViewController : UIViewController, Subscriber {
 
-    //MARK: - Public
-    var sendCallback: (() -> Void)? {
-        didSet { footerView.sendCallback = sendCallback }
-    }
-    var receiveCallback: (() -> Void)? {
-        didSet { footerView.receiveCallback = receiveCallback }
-    }
-    var buyCallback: (() -> Void)? {
-        didSet { footerView.buyCallback = buyCallback }
-    }
+class AccountViewController : UIViewController, Subscriber {
 
     var walletManager: WalletManager? {
         didSet {
@@ -34,21 +24,23 @@ class AccountViewController : UIViewController, Subscriber {
         }
     }
 
-    init(didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
-        self.transactionsTableView = TransactionsTableViewController(didSelectTransaction: didSelectTransaction)
-        self.headerView = AccountHeaderView()
+    init(currency: CurrencyDef) {
+        self.headerView = AccountHeaderView(currency: currency)
         super.init(nibName: nil, bundle: nil)
-    }
-
-    var tokenSymbol: String? {
-        return Store.state.walletState.token?.code
+        self.transactionsTableView = TransactionsTableViewController(didSelectTransaction: didSelectTransaction)
+        
+        //TODO:BCH these actions should be currency-specific
+        footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send)) }
+        footerView.receiveCallback = { Store.perform(action: RootModalActions.Present(modal: .receive)) }
+        footerView.buyCallback = { Store.perform(action: RootModalActions.Present(modal: .buy)) }
     }
 
     //MARK: - Private
     private let headerView: AccountHeaderView
     private let footerView = AccountFooterView()
+    private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
     private let transactionsLoadingView = LoadingProgressView()
-    private let transactionsTableView: TransactionsTableViewController
+    private var transactionsTableView: TransactionsTableViewController!
     private var transactionsLoadingViewTop: NSLayoutConstraint?
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var isLoginRequired = false
@@ -71,6 +63,7 @@ class AccountViewController : UIViewController, Subscriber {
     private var didEndLoading = false
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
         if !E.isSimulator {
             var s = stat()
@@ -253,6 +246,14 @@ class AccountViewController : UIViewController, Subscriber {
         addChildViewController(transactionsTableView, layout: {
             transactionsTableView.view.constrain(toSuperviewEdges: nil)
         })
+    }
+    
+    private func didSelectTransaction(transactions: [Transaction], selectedIndex: Int) -> Void {
+        let transactionDetails = TxDetailViewController(transaction: transactions[selectedIndex])
+        transactionDetails.modalPresentationStyle = .overCurrentContext
+        transactionDetails.transitioningDelegate = transitionDelegate
+        transactionDetails.modalPresentationCapturesStatusBarAppearance = true
+        present(transactionDetails, animated: true, completion: nil)
     }
 
     private func addAppLifecycleNotificationEvents() {

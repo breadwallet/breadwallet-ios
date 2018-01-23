@@ -50,29 +50,30 @@ class AccountFooterView: UIView, Trackable {
         
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         
-        let sendItem = UIBarButtonItem(customView: send)
-        let receiveItem = UIBarButtonItem(customView: receive)
-        let buyItem = UIBarButtonItem(customView: buy)
+        let sendButton = UIBarButtonItem(customView: send)
+        let receiveButton = UIBarButtonItem(customView: receive)
+        let buyButton = UIBarButtonItem(customView: buy)
         
         var buttonCount: Int
         
+        // TODO: multi-currency support
         if BRAPIClient.featureEnabled(.buyBitcoin) {
             toolbar.items = [
                 flexibleSpace,
-                sendItem,
+                sendButton,
                 padding,
-                receiveItem,
+                receiveButton,
                 padding,
-                buyItem,
+                buyButton,
                 flexibleSpace,
             ]
             buttonCount = 3
         } else {
             toolbar.items = [
                 flexibleSpace,
-                sendItem,
+                sendButton,
                 padding,
-                receiveItem,
+                receiveButton,
                 flexibleSpace,
             ]
             buttonCount = 2
@@ -84,12 +85,12 @@ class AccountFooterView: UIView, Trackable {
         // constraints
         toolbar.constrain(toSuperviewEdges: nil)
         
-        let buttonWidth: CGFloat = self.frame.width / CGFloat(buttonCount) - (padding.width * 2.0)
+        let buttonWidth = self.frame.width / CGFloat(buttonCount) - (padding.width * CGFloat(buttonCount+1))
         
         let constraints = [
-            sendItem.customView?.widthAnchor.constraint(equalToConstant: buttonWidth),
-            receiveItem.customView?.widthAnchor.constraint(equalToConstant: buttonWidth),
-            buyItem.customView?.widthAnchor.constraint(equalToConstant: buttonWidth)
+            sendButton.customView?.widthAnchor.constraint(equalToConstant: buttonWidth),
+            receiveButton.customView?.widthAnchor.constraint(equalToConstant: buttonWidth),
+            buyButton.customView?.widthAnchor.constraint(equalToConstant: buttonWidth)
             ]
         NSLayoutConstraint.activate(constraints.flatMap{ $0 })
         
@@ -99,6 +100,7 @@ class AccountFooterView: UIView, Trackable {
     @objc private func send() { sendCallback?() }
     @objc private func receive() { receiveCallback?() }
     @objc private func buy() {
+        //TODO:BCH event name
         saveEvent("menu.didTapBuyBitcoin")
         buyCallback?()
     }

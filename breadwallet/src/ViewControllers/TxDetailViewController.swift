@@ -21,7 +21,7 @@ class TxDetailViewController: UIViewController, Subscriber {
     private let container = UIView()
     private let header = ModalHeaderView(title: S.TransactionDetails.title, style: .transaction)
     private let footer = UIView()
-    private let footerSeparator = UIView()
+    private let separator = UIView()
     private let detailsButton = UIButton(type: .custom)
     private let tableView = UITableView()
     
@@ -68,7 +68,7 @@ class TxDetailViewController: UIViewController, Subscriber {
         container.addSubview(header)
         container.addSubview(tableView)
         container.addSubview(footer)
-        container.addSubview(footerSeparator)
+        container.addSubview(separator)
         footer.addSubview(detailsButton)
     }
     
@@ -93,7 +93,11 @@ class TxDetailViewController: UIViewController, Subscriber {
             ])
         
         footer.constrainBottomCorners(height: C.detailsButtonHeight)
-        footerSeparator.constrainTopCorners(height: 1.0)
+        separator.constrain([
+            separator.leadingAnchor.constraint(equalTo: footer.leadingAnchor),
+            separator.topAnchor.constraint(equalTo: footer.topAnchor, constant: 1.0),
+            separator.trailingAnchor.constraint(equalTo: footer.trailingAnchor),
+            separator.heightAnchor.constraint(equalToConstant: 1.0) ])
         detailsButton.constrain(toSuperviewEdges: .zero)
     }
     
@@ -102,7 +106,7 @@ class TxDetailViewController: UIViewController, Subscriber {
         container.layer.masksToBounds = true
         
         footer.backgroundColor = .white
-        footerSeparator.backgroundColor = .separatorGray
+        separator.backgroundColor = .separatorGray
         detailsButton.setTitleColor(.blueButtonText, for: .normal)
         detailsButton.setTitleColor(.blueButtonText, for: .selected)
         detailsButton.titleLabel?.font = .customBody(size: 16.0)

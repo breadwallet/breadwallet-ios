@@ -10,7 +10,6 @@ import UIKit
 
 private let largeFontSize: CGFloat = 28.0
 private let smallFontSize: CGFloat = 14.0
-private let logoWidth: CGFloat = 0.22 //percentage of width
 
 class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
@@ -31,6 +30,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private var swappedConstraints: [NSLayoutConstraint] = []
     
     // MARK: Properties
+    private let currency: CurrencyDef
     private var hasInitialized = false
     private var hasSetup = false
 
@@ -68,14 +68,16 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     // MARK: -
     
-    init() {
+    init(currency: CurrencyDef) {
+        self.currency = currency
         self.isBtcSwapped = Store.state.isBtcSwapped
-        if let rate = Store.state.currentRate {
+        if let rate = currency.state.rate {
             self.exchangeRate = rate
-            let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
+            let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: Store.state.maxDigits, currency: currency)
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
             self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.btcFormat)
         } else {
+            //TODO: is this a valid state?
             self.secondaryBalance = UpdatingLabel(formatter: NumberFormatter())
             self.primaryBalance = UpdatingLabel(formatter: NumberFormatter())
         }
@@ -97,11 +99,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private func setData() {
         currencyName.textColor = .white
         currencyName.textAlignment = .center
-        currencyName.text = "Bitcoin" // TODO:ER placeholder
+        currencyName.text = currency.name
         
         exchangeRateLabel.textColor = .transparentWhiteText
         exchangeRateLabel.textAlignment = .center
-        exchangeRateLabel.text = "$16904.34 per BTC" // TODO:ER placeholder
+        exchangeRateLabel.text = "$16904.34 per BTC" // TODO:BCH placeholder
         
         balanceLabel.textColor = .transparentWhiteText
         balanceLabel.text = S.Account.balance
@@ -302,7 +304,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     override func draw(_ rect: CGRect) {
-        drawGradient(start: Store.state.colours.0, end: Store.state.colours.1, rect)
+        drawGradient(start: currency.colors.0, end: currency.colors.1, rect)
     }
 
     @objc private func currencySwitchTapped() {
