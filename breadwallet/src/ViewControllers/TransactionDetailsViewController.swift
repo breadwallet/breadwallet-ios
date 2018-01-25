@@ -11,7 +11,7 @@ import UIKit
 class TransactionDetailsViewController : UICollectionViewController, Subscriber {
 
     //MARK: - Public
-    init(transactions: [Transaction], selectedIndex: Int) {
+    init(currency: CurrencyDef, transactions: [Transaction], selectedIndex: Int) {
         self.transactions = transactions
         self.selectedIndex = selectedIndex
         self.isBtcSwapped = Store.state.isBtcSwapped

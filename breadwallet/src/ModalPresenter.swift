@@ -391,7 +391,7 @@ class ModalPresenter : Subscriber, Trackable {
                     settingsNav.pushViewController(PushNotificationsViewController(), animated: true)
                 }),
                 Setting(title: LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit, accessoryText: {
-                    guard let rate = Store.state.currentRate else { return "" }
+                    guard let rate = Store.state[Currencies.btc]?.currentRate else { return "" }
                     let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
                     return amount.localCurrency
                 }, callback: {

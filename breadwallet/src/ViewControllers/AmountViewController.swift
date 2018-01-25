@@ -12,11 +12,14 @@ private let currencyHeight: CGFloat = 80.0
 private let feeHeight: CGFloat = 130.0
 
 class AmountViewController : UIViewController, Trackable {
+    
+    private let currency: CurrencyDef
 
-    init(isPinPadExpandedAtLaunch: Bool, isRequesting: Bool = false) {
+    init(currency: CurrencyDef, isPinPadExpandedAtLaunch: Bool, isRequesting: Bool = false) {
+        self.currency = currency
         self.isPinPadExpandedAtLaunch = isPinPadExpandedAtLaunch
         self.isRequesting = isRequesting
-        if let rate = Store.state.currentRate, Store.state.isBtcSwapped {
+        if let rate = Store.state[currency]?.currentRate, Store.state.isBtcSwapped {
             self.currencyToggle = ShadowButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
             let title = S.Symbols.currencyButtonTitle(maxDigits: Store.state.maxDigits)
@@ -209,7 +212,7 @@ class AmountViewController : UIViewController, Trackable {
         placeholder.text = S.Send.amountLabel
         bottomBorder.isHidden = true
         if Store.state.isBtcSwapped {
-            if let rate = Store.state.currentRate {
+            if let rate = Store.state[currency]?.currentRate {
                 selectedRate = rate
             }
         }
@@ -241,7 +244,7 @@ class AmountViewController : UIViewController, Trackable {
 
     private func toggleCurrency() {
         saveEvent("amount.swapCurrency")
-        selectedRate = selectedRate == nil ? Store.state.currentRate : nil
+        selectedRate = selectedRate == nil ? Store.state[currency]?.currentRate : nil
         updateCurrencyToggleTitle()
     }
 

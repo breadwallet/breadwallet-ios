@@ -192,7 +192,7 @@ class StartImportViewController : UIViewController {
             guard fee + wallet.minOutputAmount <= balance else {
                 return self.showErrorMessage(S.Import.Error.highFees)
             }
-            guard let rate = Store.state.currentRate else { return }
+            guard let rate = Store.state[Currencies.btc]?.currentRate else { return }
             let balanceAmount = Amount(amount: balance, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
             let feeAmount = Amount(amount: fee, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
             let balanceText = Store.state.isBtcSwapped ? balanceAmount.localCurrency : balanceAmount.bits

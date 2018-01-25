@@ -15,6 +15,8 @@ private let progressUpdateInterval: TimeInterval = 0.5
 private let updateDebounceInterval: TimeInterval = 0.4
 
 class WalletCoordinator : Subscriber, Trackable {
+    
+    let currency: CurrencyDef = Currencies.btc
 
     var kvStore: BRReplicatedKVStore? {
         didSet {
@@ -129,7 +131,10 @@ class WalletCoordinator : Subscriber, Trackable {
         updateTimer = nil
         DispatchQueue.walletQueue.async {
             guard let txRefs = self.walletManager.wallet?.transactions else { return }
-            let transactions = self.makeTransactionViewModels(transactions: txRefs, walletManager: self.walletManager, kvStore: self.kvStore, rate: Store.state.currentRate)
+            let transactions = self.makeTransactionViewModels(transactions: txRefs,
+                                                              walletManager: self.walletManager,
+                                                              kvStore: self.kvStore,
+                                                              rate: Store.state[self.currency]?.currentRate)
             if transactions.count > 0 {
                 DispatchQueue.main.async {
                     Store.perform(action: WalletChange.setTransactions(transactions))
@@ -202,7 +207,7 @@ class WalletCoordinator : Subscriber, Trackable {
     }
 
     private func showReceived(amount: UInt64) {
-        if let rate = Store.state.currentRate {
+        if let rate = Store.state[currency]?.currentRate {
             let amount = Amount(amount: amount, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
             let primary = Store.state.isBtcSwapped ? amount.localCurrency : amount.bits
             let secondary = Store.state.isBtcSwapped ? amount.bits : amount.localCurrency

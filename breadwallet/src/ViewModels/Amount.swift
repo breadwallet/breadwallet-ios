@@ -109,6 +109,7 @@ struct Amount {
     }
 }
 
+// TODO:BCH conslidate DisplayAmount + Amount
 struct DisplayAmount {
     let amount: Satoshis
     let selectedRate: Rate?
@@ -124,7 +125,7 @@ struct DisplayAmount {
     }
 
     private var fiatDescription: String {
-        guard let rate = selectedRate ?? Store.state.currentRate else { return "" }
+        guard let rate = selectedRate ?? Store.state[currency]?.currentRate else { return "" }
         guard let string = localFormat.string(from: Double(amount.rawValue)/currency.baseUnit*rate.rate as NSNumber) else { return "" }
         return string
     }
@@ -146,7 +147,7 @@ struct DisplayAmount {
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         if let rate = selectedRate {
             format.currencySymbol = rate.currencySymbol
-        } else if let rate = Store.state.currentRate {
+        } else if let rate = Store.state[currency]?.currentRate {
             format.currencySymbol = rate.currencySymbol
         }
         if let minimumFractionDigits = minimumFractionDigits {
@@ -186,8 +187,10 @@ struct DisplayAmount {
         return format
     }
 
+    // TODO:BCH cleanup
     static func ethString(value: GethBigInt) -> String {
-        let placeholderAmount = Amount(amount: 0, rate: Store.state.currentRate!, maxDigits: 0, currency: Currencies.btc)
+        guard let rate = Store.state[Currencies.eth]?.currentRate else { return "" }
+        let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 0, currency: Currencies.eth)
         var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
         var amount: Decimal = 0.0
         NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
@@ -196,8 +199,8 @@ struct DisplayAmount {
     }
 
     static func localEthString(value: GethBigInt) -> String {
-        guard let rate = Store.state.currentRate else { return "" }
-        let placeholderAmount = Amount(amount: 0, rate: Store.state.currentRate!, maxDigits: 0, currency: Currencies.btc)
+        guard let rate = Store.state[Currencies.eth]?.currentRate else { return "" }
+        let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 0, currency: Currencies.eth)
         var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
         var amount: Decimal = 0.0
         NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)

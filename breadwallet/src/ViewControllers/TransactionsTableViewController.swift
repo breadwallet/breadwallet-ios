@@ -13,8 +13,11 @@ private let promptDelay: TimeInterval = 0.6
 
 class TransactionsTableViewController : UITableViewController, Subscriber, Trackable {
 
+    let currency: CurrencyDef
+    
     //MARK: - Public
-    init(didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
+    init(currency: CurrencyDef, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
+        self.currency = currency
         self.didSelectTransaction = didSelectTransaction
         self.isBtcSwapped = Store.state.isBtcSwapped
         super.init(nibName: nil, bundle: nil)
@@ -107,8 +110,11 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                         selector: { $0.isBtcSwapped != $1.isBtcSwapped },
                         callback: { self.isBtcSwapped = $0.isBtcSwapped })
         Store.subscribe(self,
-                        selector: { $0.currentRate != $1.currentRate},
-                        callback: { self.rate = $0.currentRate })
+                        selector: { $0[self.currency]?.currentRate != $1[self.currency]?.currentRate},
+                        callback: {
+                            self.rate = $0[self.currency]?.currentRate
+                            self.reload()
+        })
         Store.subscribe(self, selector: { $0.maxDigits != $1.maxDigits }, callback: {_ in
             self.reload()
         })
@@ -158,7 +164,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                             self.allTransactions = state.walletState.transactions
                             self.reload()
         })
-
     }
 
     override func viewDidAppear(_ animated: Bool) {

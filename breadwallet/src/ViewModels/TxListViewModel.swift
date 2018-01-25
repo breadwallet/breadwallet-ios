@@ -34,7 +34,7 @@ struct TxListViewModel: TxViewModel {
     func description(isBtcSwapped: Bool, rate: Rate, maxDigits: Int) -> NSAttributedString {
         var amount = ""
         
-        // TODO:ER move this logic into Amount/DisplayAmount?
+        // TODO:BCH move this logic into Amount/DisplayAmount?
         if let tx = tx as? BtcTransaction {
             amount = Amount(amount: tx.amount, rate: rate, maxDigits: maxDigits, currency: Currencies.btc).string(isBtcSwapped: isBtcSwapped)
         } else if let tx = tx as? EthTransaction {
@@ -123,7 +123,7 @@ struct TxListViewModel: TxViewModel {
             case .confirmed, .complete:
                 statusText = S.Transaction.complete
             default:
-                statusText = "Failed" // TODO:ER reference string
+                statusText = S.Transaction.failed
             }
         }
     }

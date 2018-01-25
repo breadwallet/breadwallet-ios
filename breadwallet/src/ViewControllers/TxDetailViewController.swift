@@ -82,8 +82,6 @@ class TxDetailViewController: UIViewController, Subscriber {
         containerHeightConstraint = container.heightAnchor.constraint(equalToConstant: C.compactContainerHeight)
         containerHeightConstraint.isActive = true
         
-        //NSLayoutConstraint.activate(compactConstraints)
-        
         header.constrainTopCorners(height: C.Sizes.headerHeight)
         tableView.constrain([
             tableView.topAnchor.constraint(equalTo: header.bottomAnchor),

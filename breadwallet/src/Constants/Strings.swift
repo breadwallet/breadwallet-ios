@@ -154,6 +154,7 @@ enum S {
         static let available = NSLocalizedString("Transaction.available", value: "Available to Spend", comment: "Availability status text")
         static let pending = NSLocalizedString("Transaction.pending", value: "Pending", comment: "Transaction is pending status text")
         static let confirming = NSLocalizedString("Transaction.confirming", value: "In Progress", comment: "Transaction is confirming status text")
+        static let failed = NSLocalizedString("Transaction.failed", value: "Failed", comment: "Transaction failed status text")
     }
 
     enum TransactionDetails {
@@ -175,6 +176,9 @@ enum S {
         static let startingBalanceHeader = NSLocalizedString("TransactionDetails.startingBalanceHeader", value:"Starting Balance", comment: "Starting balance section header")
         static let endingBalanceHeader = NSLocalizedString("TransactionDetails.endingBalanceHeader", value:"Ending Balance", comment: "Ending balance section header")
         static let exchangeRateHeader = NSLocalizedString("TransactionDetails.exchangeRateHeader", value:"Exchange Rate", comment: "Exchange rate section header")
+        
+        static let amountWhenReceived = NSLocalizedString("TransactionDetails.amountWhenReceived", value: "%1$@ when received %2$@ now", comment: "$100 when received $200 now")
+        static let amountWhenSent = NSLocalizedString("TransactionDetails.amountWhenReceived", value: "%1$@ when sent %2$@ now", comment: "$100 when sent $200 now")
         
         // OLD
         static let title = NSLocalizedString("TransactionDetails.title", value:"Transaction Details", comment: "Transaction Details Title")

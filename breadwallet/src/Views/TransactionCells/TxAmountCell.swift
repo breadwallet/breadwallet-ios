@@ -12,26 +12,10 @@ class TxAmountCell: UITableViewCell, Subscriber {
     
     // MARK: - Vars
     
-    private var isBtcSwapped: Bool = false {
-        didSet {
-            swapCurrencyLabels(animated: true)
-        }
-    }
-
-    private let largeFontSize: CGFloat = 26.0
-    private let smallFontSize: CGFloat = 13.0
-    
     private let container = UIView()
-    private lazy var fiatAmountLabel = {
-        UILabel(font: UIFont.customBold(size: largeFontSize))
-    }()
-    private lazy var tokenAmountLabel = {
-        UILabel(font: UIFont.customMedium(size: largeFontSize))
-    }()
+    private lazy var tokenAmountLabel = UILabel(font: UIFont.customBody(size: 26.0))
+    private lazy var fiatAmountLabel = UILabel(font: UIFont.customBody(size: 14.0))
     private let separator = UIView(color: .secondaryShadow)
-    
-    private var regularConstraints = [NSLayoutConstraint]()
-    private var swappedConstraints = [NSLayoutConstraint]()
     
     // MARK: - Init
     
@@ -59,100 +43,75 @@ class TxAmountCell: UITableViewCell, Subscriber {
                                                            bottom: -C.padding[2],
                                                            right: -C.padding[2]))
         
-        fiatAmountLabel.translatesAutoresizingMaskIntoConstraints = false
-        tokenAmountLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        // regular = token on top
-        regularConstraints = [
+        tokenAmountLabel.constrain([
             tokenAmountLabel.constraint(.top, toView: container),
             tokenAmountLabel.constraint(.leading, toView: container),
             tokenAmountLabel.constraint(.trailing, toView: container),
-            fiatAmountLabel.constraint(toBottom: tokenAmountLabel, constant: -C.padding[1]),
+            ])
+        fiatAmountLabel.constrain([
+            fiatAmountLabel.constraint(toBottom: tokenAmountLabel, constant: 0),
             fiatAmountLabel.constraint(.leading, toView: container),
             fiatAmountLabel.constraint(.trailing, toView: container),
             fiatAmountLabel.constraint(.bottom, toView: container)
-            ].flatMap { $0 }
-        
-        // swapped = fiat on top
-        swappedConstraints = [
-            fiatAmountLabel.constraint(.top, toView: container),
-            fiatAmountLabel.constraint(.leading, toView: container),
-            fiatAmountLabel.constraint(.trailing, toView: container),
-            tokenAmountLabel.constraint(toBottom: fiatAmountLabel, constant: -C.padding[1]),
-            tokenAmountLabel.constraint(.leading, toView: container),
-            tokenAmountLabel.constraint(.trailing, toView: container),
-            tokenAmountLabel.constraint(.bottom, toView: container)
-            ].flatMap { $0 }
-        
-        swapCurrencyLabels(animated: false)
+            ])
         
         separator.constrainBottomCorners(height: 0.5)
     }
     
     private func setupStyle() {
-        fiatAmountLabel.textColor = .txListGreen
         fiatAmountLabel.textAlignment = .center
-        tokenAmountLabel.textColor = .grayText
         tokenAmountLabel.textAlignment = .center
-    }
-    
-    private func addSubscriptions() {
-        Store.lazySubscribe(self,
-                             selector: { $0.isBtcSwapped != $1.isBtcSwapped },
-                             callback: { self.isBtcSwapped = $0.isBtcSwapped })
-    }
-    
-    deinit {
-        Store.unsubscribe(self)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func set(fiatAmount: String, tokenAmount: String) {
-        fiatAmountLabel.text = fiatAmount
-        tokenAmountLabel.text = tokenAmount
-        isBtcSwapped = Store.state.isBtcSwapped
-        let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
-        container.addGestureRecognizer(gr)
-        addSubscriptions()
-    }
-    
-    // MARK: Currency Switch
-    
-    private func shrink(view: UIView) {
-        view.transform = .identity // must reset the view's transform before we calculate the next transform
-        let scaleFactor: CGFloat = smallFontSize/largeFontSize
-        let center = view.center
-        let scale = CGAffineTransform(scaleX: scaleFactor, y: scaleFactor)
-        view.transform = scale
-        view.center = center
-    }
-    
-    @objc private func currencySwitchTapped() {
-        Store.perform(action: CurrencyChange.toggle())
-    }
-    
-    private func swapCurrencyLabels(animated: Bool) {
-        layoutIfNeeded()
-        UIView.spring(animated ? 0.7 : 0.0, animations: {
-            if self.isBtcSwapped {
-                self.fiatAmountLabel.transform = .identity
-                self.fiatAmountLabel.textColor = .txListGreen
-                self.tokenAmountLabel.textColor = .grayText
-                self.shrink(view: self.tokenAmountLabel)
-                NSLayoutConstraint.deactivate(self.regularConstraints)
-                NSLayoutConstraint.activate(self.swappedConstraints)
-            } else {
-                self.tokenAmountLabel.transform = .identity
-                self.tokenAmountLabel.textColor = .txListGreen
-                self.fiatAmountLabel.textColor = .grayText
-                self.shrink(view: self.fiatAmountLabel)
-                NSLayoutConstraint.deactivate(self.swappedConstraints)
-                NSLayoutConstraint.activate(self.regularConstraints)
-            }
-            self.layoutIfNeeded()
-        }) { _ in }
+    func set(viewModel: TxDetailViewModel) {
+        
+        let largeFont = UIFont.customBody(size: 26.0)
+        let smallFont = UIFont.customBody(size: 14.0)
+        let fiatColor = UIColor.mediumGray
+        let textColor = UIColor.lightGray
+        var tokenColor = UIColor.darkGray
+        var prefix = ""
+        
+        if viewModel.direction == .received {
+            tokenColor = .receivedGreen
+        } else if viewModel.direction == .sent {
+            prefix = "-"
+        }
+        
+        let amountText = NSMutableAttributedString(string: prefix + viewModel.amount,
+                                                        attributes: [.font: largeFont,
+                                                                     .foregroundColor: tokenColor])
+        // TODO:BCH custom font for currency code?
+        //        amountText.append(NSAttributedString(string: " " + viewModel.currency.symbol.uppercased(),
+//                                                  attributes: [.font: smallFont,
+//                                                               .foregroundColor: tokenColor]))
+        tokenAmountLabel.attributedText = amountText
+        
+        
+        // fiat amount label
+        
+        let currentAmount = viewModel.fiatAmount
+        let originalAmount = viewModel.originalFiatAmount
+        
+        if viewModel.status != .complete || originalAmount == nil {
+            fiatAmountLabel.attributedText = NSAttributedString(string: viewModel.fiatAmount,
+                                                attributes: [.font: smallFont,
+                                                             .foregroundColor: fiatColor])
+        } else {
+            let format = (viewModel.direction == .sent) ? S.TransactionDetails.amountWhenSent : S.TransactionDetails.amountWhenReceived
+            
+            let attributedText = NSMutableAttributedString(string: String(format: format, currentAmount, originalAmount!),
+                                                           attributes: [.font: smallFont,
+                                                                        .foregroundColor: textColor])
+            
+            attributedText.set(attributes: [.foregroundColor: fiatColor], forText: currentAmount)
+            attributedText.set(attributes: [.foregroundColor: fiatColor], forText: originalAmount!)
+            
+            fiatAmountLabel.attributedText = attributedText
+        }
     }
 }

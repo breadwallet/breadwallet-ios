@@ -34,8 +34,8 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
     }
 
     override func viewDidLoad() {
-        Store.subscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: {
-            self.rate = $0.currentRate
+        Store.subscribe(self, selector: { $0[Currencies.btc]?.currentRate != $1[Currencies.btc]?.currentRate }, callback: {
+            self.rate = $0[Currencies.btc]?.currentRate
         })
         addSubviews()
         addConstraints()

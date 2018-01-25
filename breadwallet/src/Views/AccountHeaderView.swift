@@ -71,7 +71,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     init(currency: CurrencyDef) {
         self.currency = currency
         self.isBtcSwapped = Store.state.isBtcSwapped
-        if let rate = currency.state.rate {
+        if let rate = Store.state[currency]?.currentRate {//currency.state.rate {
             self.exchangeRate = rate
             let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: Store.state.maxDigits, currency: currency)
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
@@ -117,9 +117,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         searchButton.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
         searchButton.tintColor = .white
 
-        if E.isTestnet {
-            currencyName.textColor = .red
-        }
+//        if E.isTestnet {
+//            currencyName.textColor = .red
+//        }
 
         conversionSymbol.text = S.AccountHeader.equals
 
@@ -215,20 +215,20 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                         selector: { $0.isBtcSwapped != $1.isBtcSwapped },
                         callback: { self.isBtcSwapped = $0.isBtcSwapped })
         Store.lazySubscribe(self,
-                        selector: { $0.currentRate != $1.currentRate},
+                        selector: { $0[self.currency]?.currentRate != $1[self.currency]?.currentRate},
                         callback: {
-                            if let rate = $0.currentRate {
+                            if let rate = $0[self.currency]?.currentRate {
                                 let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits, currency: Currencies.btc)
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.btcFormat
                             }
-                            self.exchangeRate = $0.currentRate
+                            self.exchangeRate = $0[self.currency]?.currentRate
                         })
         
         Store.lazySubscribe(self,
                         selector: { $0.maxDigits != $1.maxDigits},
                         callback: {
-                            if let rate = $0.currentRate {
+                            if let rate = $0[self.currency]?.currentRate {
                                 let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits, currency: Currencies.btc)
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.btcFormat
