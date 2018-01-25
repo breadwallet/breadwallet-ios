@@ -130,14 +130,17 @@ enum ExchangeRates {
     struct setRates : Action {
         let reduce: Reducer
         init(currentRate: Rate, rates: [Rate] ) {
+            //TODO:BCH what is this used for, does it make sense to only store one currency's rate?
             UserDefaults.setCurrentRateData(newValue: currentRate.dictionary, forCode: currentRate.reciprocalCode)
-            reduce = {
-                let currencies = $0.currencies.map { currencyDef -> CurrencyDef in
-                    let state = currencyDef.state
-                    return currencyDef.mutate(state: CurrencyState(rate: currentRate, fees: state.fees, balance: state.balance))
-                }
-                return $0.mutate(currencies: currencies)
-            }
+            //TODO:BCH this should not alter the global state, just the currency state
+//            reduce = {
+//                let currencies = $0.currencies.map { currencyDef -> CurrencyDef in
+//                    let state = currencyDef.state
+//                    return currencyDef.mutate(state: CurrencyState(rate: currentRate, fees: state.fees))
+//                }
+//                return $0.mutate(currencies: currencies)
+//            }
+            reduce = { $0.mutate(currentRate: currentRate, rates: rates) }
         }
     }
     struct setRate: Action {

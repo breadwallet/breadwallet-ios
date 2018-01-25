@@ -15,6 +15,7 @@ struct TxDetailViewModel: TxViewModel {
     
     let amount: String
     let fiatAmount: String
+    let originalFiatAmount: String?
     let startingBalance: String
     let endingBalance: String
     let exchangeRate: String
@@ -36,50 +37,35 @@ struct TxDetailViewModel: TxViewModel {
 
 extension TxDetailViewModel {
     init(tx: Transaction) {
-        amount = TxDetailViewModel.amountDescription(tx: tx, isBtcSwapped: false)
-        fiatAmount = TxDetailViewModel.amountDescription(tx: tx, isBtcSwapped: true)
+        let rate = Store.state[tx.currency]?.currentRate ?? Rate.empty
+        amount = TxDetailViewModel.tokenAmount(tx: tx) ?? ""
         
-        // TODO:ER update balances when isBtcSwapped switches
-        let balances = TxDetailViewModel.balances(tx: tx, isBtcSwapped: Store.state.isBtcSwapped)
+        let fiatAmounts = TxDetailViewModel.fiatAmounts(tx: tx, currentRate: rate)
+        fiatAmount = fiatAmounts.0
+        originalFiatAmount = fiatAmounts.1
+        
+        let balances = TxDetailViewModel.balances(tx: tx, showFiatAmount: Store.state.isBtcSwapped)
         
         startingBalance = balances.0
         endingBalance = balances.1
-        exchangeRate = TxDetailViewModel.exchangeRate(tx: tx, rates: Store.state.rates) ?? ""
+        exchangeRate = TxDetailViewModel.exchangeRateText(tx: tx) ?? ""
         transactionHash = tx.hash
         self.tx = tx
     }
     
-    private static func amountDescription(tx: Transaction, isBtcSwapped: Bool) -> String {
-        guard let rate = Store.state.currentRate else { return  "" }
-        let maxDigits = Store.state.maxDigits
-        
-        if let tx = tx as? EthTransaction {
-            if isBtcSwapped {
-                return DisplayAmount.localEthString(value: tx.amount)
-            } else {
-                return DisplayAmount.ethString(value: tx.amount)
-            }
-        } else if let tx = tx as? BtcTransaction {
-            let amount = Amount(amount: tx.amount, rate: rate, maxDigits: maxDigits, currency: Currencies.btc)
-            return isBtcSwapped ? amount.localCurrency : amount.bits
-        } else {
-            return ""
-        }
-    }
-    
-    private static func balances(tx: Transaction, isBtcSwapped: Bool) -> (String, String) {
+    private static func balances(tx: Transaction, showFiatAmount: Bool) -> (String, String) {
         guard let tx = tx as? BtcTransaction,
-            let rate = Store.state.currentRate else { return ("", "") }
+            let rate = Store.state[tx.currency]?.currentRate else { return ("", "") }
         let maxDigits = Store.state.maxDigits
         
         var startingString = Amount(amount: tx.startingBalance,
                                     rate: rate,
                                     maxDigits: maxDigits,
-                                    currency: Currencies.btc).string(isBtcSwapped: isBtcSwapped)
+                                    currency: Currencies.btc).string(isBtcSwapped: showFiatAmount)
         var endingString = Amount(amount: tx.endingBalance,
                                   rate: rate,
                                   maxDigits: maxDigits,
-                                  currency: Currencies.btc).string(isBtcSwapped: isBtcSwapped)
+                                  currency: Currencies.btc).string(isBtcSwapped: showFiatAmount)
         
         if tx.startingBalance > C.maxMoney {
             startingString = ""
@@ -89,29 +75,53 @@ extension TxDetailViewModel {
         return (startingString, endingString)
     }
     
-    private static func exchangeRate(tx: Transaction, rates: [Rate]) -> String? {
+    /// The fiat exchange rate at the time of transaction
+    /// Assumes fiat currency does not change
+    private static func exchangeRateText(tx: Transaction) -> String? {
+        guard let tx = tx as? BtcTransaction,
+            let rate = tx.metaData?.exchangeRate else { return nil }
+        
+        let nf = NumberFormatter()
+        nf.currencySymbol = tx.currency.symbol // TODO: this should be the fiat symbol, where do I get that?
+        nf.numberStyle = .currency
+        return nf.string(from: rate as NSNumber) ?? nil
+    }
+    
+    private static func tokenAmount(tx: Transaction) -> String? {
         guard let tx = tx as? BtcTransaction else { return nil }
-        
-        var exchangeRateInfo = ""
-        if let metaData = tx.metaData,
-            let currentRate = rates.filter({ $0.code.lowercased() == metaData.exchangeRateCurrency.lowercased() }).first {
-            let difference = (currentRate.rate - metaData.exchangeRate) / metaData.exchangeRate
+        let amount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
+                                   selectedRate: nil,
+                                   minimumFractionDigits: nil,
+                                   currency: tx.currency)
+        return amount.description
+    }
+    
+    /// Fiat amount at current exchange rate and at original rate at time of transaction (if available)
+    /// Returns (currentFiatAmount, originalFiatAmount)
+    private static func fiatAmounts(tx: Transaction, currentRate: Rate) -> (String, String?) {
+        guard let tx = tx as? BtcTransaction else { return ("", nil) }
+        if let txRate = tx.metaData?.exchangeRate {
+            let originalRate = Rate(code: currentRate.code,
+                                    name: currentRate.name,
+                                    rate: txRate,
+                                    reciprocalCode: currentRate.reciprocalCode)
+            let currentAmount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
+                                              selectedRate: currentRate,
+                                              minimumFractionDigits: nil,
+                                              currency: tx.currency).description
+            let originalAmount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
+                                               selectedRate: originalRate,
+                                               minimumFractionDigits: nil,
+                                               currency: tx.currency).description
+            return (currentAmount, originalAmount)
             
-            let nf = NumberFormatter()
-            nf.currencySymbol = currentRate.currencySymbol
-            nf.numberStyle = .currency
-            
-            let diffFormat = NumberFormatter()
-            diffFormat.positivePrefix = "+"
-            diffFormat.numberStyle = .percent
-            diffFormat.minimumFractionDigits = 1
-            
-            if let rateString = nf.string(from: metaData.exchangeRate as NSNumber),
-                let diffString = diffFormat.string(from: difference as NSNumber) {
-                exchangeRateInfo = "\(rateString)/\(tx.currency.code) \(diffString)"
-            }
+        } else {
+            // no tx-time rate
+            let currentAmount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
+                                              selectedRate: currentRate,
+                                              minimumFractionDigits: nil,
+                                              currency: tx.currency)
+            return (currentAmount.description, nil)
         }
-        
-        return exchangeRateInfo
     }
 }

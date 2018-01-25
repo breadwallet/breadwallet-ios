@@ -21,7 +21,8 @@ class RequestAmountViewController : UIViewController {
 
     init(wallet: BRWallet) {
         self.wallet = wallet
-        amountView = AmountViewController(isPinPadExpandedAtLaunch: true, isRequesting: true)
+        // TODO:BCH support multi-currency
+        amountView = AmountViewController(currency: Currencies.btc, isPinPadExpandedAtLaunch: true, isRequesting: true)
         super.init(nibName: nil, bundle: nil)
     }
 

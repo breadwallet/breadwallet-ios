@@ -35,7 +35,7 @@ class ApplicationController : Subscriber, Trackable {
     private var launchURL: URL?
     private var hasPerformedWalletDependentInitialization = false
     private var didInitWallet = false
-    private var accountViewControllers: [String: AccountViewController] = [:]
+//    private var accountViewControllers: [String: AccountViewController] = [:]
     
     
     // MARK: -
@@ -194,9 +194,9 @@ class ApplicationController : Subscriber, Trackable {
         feeUpdater = FeeUpdater(walletManager: walletManager)
         startFlowController = StartFlowPresenter(walletManager: walletManager, rootViewController: rootViewController)
         
-        accountViewControllers.values.forEach {
-            $0.walletManager = walletManager
-        }
+//        accountViewControllers.values.forEach {
+//            $0.walletManager = walletManager
+//        }
 
         defaultsUpdater = UserDefaultsUpdater(walletManager: walletManager)
         urlController = URLController(walletManager: walletManager)
@@ -230,7 +230,7 @@ class ApplicationController : Subscriber, Trackable {
             }
             exchangeUpdater?.refresh(completion: {
                 self.watchSessionManager.walletManager = self.walletManager
-                self.watchSessionManager.rate = Store.state.currentRate
+                self.watchSessionManager.rate = Store.state[Currencies.btc]?.currentRate
             })
         }
 
@@ -259,12 +259,13 @@ class ApplicationController : Subscriber, Trackable {
         nc.navigationBar.isTranslucent = false
         nc.navigationBar.tintColor = .white
         nc.pushViewController(home, animated: false)
-        home.didSelectCurrency = { [unowned self] currency in
-            guard let accountViewController = self.accountViewControllers[currency.code] else { return }
+        home.didSelectCurrency = { currency in
+            //guard let accountViewController = self.accountViewControllers[currency.code] else { return }
+            let accountViewController = AccountViewController(currency: currency)
             nc.pushViewController(accountViewController, animated: true)
         }
         
-        accountViewControllers = Dictionary(uniqueKeysWithValues: Store.state.currencies.map { ($0.code, AccountViewController(currency: $0)) })
+        //accountViewControllers = Dictionary(uniqueKeysWithValues: Store.state.currencies.map { ($0.code, AccountViewController(currency: $0)) })
         window.rootViewController = nc
     }
 
@@ -276,7 +277,7 @@ class ApplicationController : Subscriber, Trackable {
         walletManager?.apiClient?.events?.up()
         exchangeUpdater?.refresh(completion: {
             self.watchSessionManager.walletManager = self.walletManager
-            self.watchSessionManager.rate = Store.state.currentRate
+            self.watchSessionManager.rate = Store.state[Currencies.btc]?.currentRate
         })
     }
 

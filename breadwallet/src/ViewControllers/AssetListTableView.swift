@@ -25,9 +25,7 @@ class AssetListTableView : UITableViewController, Subscriber {
         tableView.reloadData()
 
         Store.subscribe(self, selector: {
-            let old = $0.currencies.first
-            let new = $1.currencies.first
-            return old?.state.rate != new?.state.rate
+            return $0[Currencies.btc]?.currentRate != $1[Currencies.btc]?.currentRate
         }, callback: { _ in
             self.tableView.reloadData()
         })
@@ -44,7 +42,7 @@ class AssetListTableView : UITableViewController, Subscriber {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let currency = Store.state.currencies[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! HomeScreenCell
-        if let rate = currency.state.rate {
+        if let rate = Store.state[currency]?.currentRate {
             let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 2, currency: currency)
             let price = placeholderAmount.localFormat.string(from: NSNumber(value: rate.rate)) ?? ""
             cell.setData(price: price, balance: balanceString(), currency: currency)

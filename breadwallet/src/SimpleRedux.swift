@@ -214,10 +214,10 @@ class Store {
     }
 
     func unsubscribe(_ subscriber: Subscriber) {
-        DispatchQueue.main.async {
+        //DispatchQueue.main.async {
             self.subscriptions.removeValue(forKey: subscriber.hashValue)
             self.triggers.removeValue(forKey: subscriber.hashValue)
-        }
+        //}
     }
 
     //MARK: - Private
