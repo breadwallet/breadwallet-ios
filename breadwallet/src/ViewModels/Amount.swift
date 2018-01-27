@@ -125,7 +125,7 @@ struct DisplayAmount {
     }
 
     private var fiatDescription: String {
-        guard let rate = selectedRate ?? Store.state[currency]?.currentRate else { return "" }
+        guard let rate = selectedRate ?? currency.state.currentRate else { return "" }
         guard let string = localFormat.string(from: Double(amount.rawValue)/currency.baseUnit*rate.rate as NSNumber) else { return "" }
         return string
     }
@@ -133,7 +133,7 @@ struct DisplayAmount {
     private var bitcoinDescription: String {
         var decimal = Decimal(self.amount.rawValue)
         var amount: Decimal = 0.0
-        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-Store.state.maxDigits), .up)
+        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-currency.state.maxDigits), .up)
         let number = NSDecimalNumber(decimal: amount)
         guard let string = btcFormat.string(from: number) else { return "" }
         return string
@@ -147,7 +147,7 @@ struct DisplayAmount {
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         if let rate = selectedRate {
             format.currencySymbol = rate.currencySymbol
-        } else if let rate = Store.state[currency]?.currentRate {
+        } else if let rate = currency.state.currentRate {
             format.currencySymbol = rate.currencySymbol
         }
         if let minimumFractionDigits = minimumFractionDigits {
@@ -163,7 +163,7 @@ struct DisplayAmount {
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         format.currencyCode = "XBT"
-        switch Store.state.maxDigits {
+        switch currency.state.maxDigits {
         case 2:
             format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
             format.maximum = (C.maxMoney/C.satoshis)*100000 as NSNumber
@@ -177,8 +177,8 @@ struct DisplayAmount {
             format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
         }
 
-        format.maximumFractionDigits = Store.state.maxDigits
-        format.maximum = Decimal(C.maxMoney)/(pow(10.0, Store.state.maxDigits)) as NSNumber
+        format.maximumFractionDigits = currency.state.maxDigits
+        format.maximum = Decimal(C.maxMoney)/(pow(10.0, currency.state.maxDigits)) as NSNumber
 
         if let minimumFractionDigits = minimumFractionDigits {
             format.minimumFractionDigits = minimumFractionDigits
@@ -189,7 +189,7 @@ struct DisplayAmount {
 
     // TODO:BCH cleanup
     static func ethString(value: GethBigInt) -> String {
-        guard let rate = Store.state[Currencies.eth]?.currentRate else { return "" }
+        guard let rate = Currencies.eth.state.currentRate else { return "" }
         let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 0, currency: Currencies.eth)
         var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
         var amount: Decimal = 0.0
@@ -199,7 +199,7 @@ struct DisplayAmount {
     }
 
     static func localEthString(value: GethBigInt) -> String {
-        guard let rate = Store.state[Currencies.eth]?.currentRate else { return "" }
+        guard let rate = Currencies.eth.state.currentRate else { return "" }
         let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 0, currency: Currencies.eth)
         var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
         var amount: Decimal = 0.0

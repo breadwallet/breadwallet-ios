@@ -57,7 +57,7 @@ class TxMemoCell: TxDetailRowCell {
     
     fileprivate func saveComment(comment: String) {
         guard let tx = viewModel.tx as? BtcTransaction,
-            let rate = store?.state[tx.currency]?.currentRate else { return }
+            let rate = store?.state[tx.currency].currentRate else { return }
         
         tx.saveComment(comment: comment, rate: rate)
         

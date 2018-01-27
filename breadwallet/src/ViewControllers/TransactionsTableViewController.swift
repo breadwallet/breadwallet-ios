@@ -110,28 +110,28 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                         selector: { $0.isBtcSwapped != $1.isBtcSwapped },
                         callback: { self.isBtcSwapped = $0.isBtcSwapped })
         Store.subscribe(self,
-                        selector: { $0[self.currency]?.currentRate != $1[self.currency]?.currentRate},
+                        selector: { $0[self.currency].currentRate != $1[self.currency].currentRate},
                         callback: {
-                            self.rate = $0[self.currency]?.currentRate
+                            self.rate = $0[self.currency].currentRate
                             self.reload()
         })
-        Store.subscribe(self, selector: { $0.maxDigits != $1.maxDigits }, callback: {_ in
+        Store.subscribe(self, selector: { $0[self.currency].maxDigits != $1[self.currency].maxDigits }, callback: {_ in
             self.reload()
         })
 
-        Store.subscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState
+        Store.subscribe(self, selector: { $0[self.currency].syncState != $1[self.currency].syncState
         }, callback: {
-            if $0.walletState.syncState == .syncing {
+            if $0[self.currency].syncState == .syncing {
                 self.syncingView.reset()
-            } else if $0.walletState.syncState == .connecting {
+            } else if $0[self.currency].syncState == .connecting {
                 self.syncingView.setIsConnecting()
             }
         })
 
-        Store.subscribe(self, selector: { $0.recommendRescan != $1.recommendRescan }, callback: { _ in
+        Store.subscribe(self, selector: { $0[self.currency].recommendRescan != $1[self.currency].recommendRescan }, callback: { _ in
             self.attemptShowPrompt()
         })
-        Store.subscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { _ in
+        Store.subscribe(self, selector: { $0[self.currency].syncState != $1[self.currency].syncState }, callback: { _ in
             self.reload()
         })
         Store.subscribe(self, name: .didUpgradePin, callback: { _ in
@@ -159,9 +159,9 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
         setContentInset()
 
-        Store.subscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions },
+        Store.subscribe(self, selector: { $0[self.currency].transactions != $1[self.currency].transactions },
                         callback: { state in
-                            self.allTransactions = state.walletState.transactions
+                            self.allTransactions = state[self.currency].transactions
                             self.reload()
         })
     }
@@ -334,7 +334,7 @@ extension TransactionsTableViewController {
             let walletManager = walletManager {
             let viewModel = TxListViewModel(tx: transactions[indexPath.row], walletManager: walletManager)
             transactionCell.setStyle(style)
-            transactionCell.setTransaction(viewModel, isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: Store.state.maxDigits, isSyncing: Store.state.walletState.syncState != .success)
+            transactionCell.setTransaction(viewModel, isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: currency.state.maxDigits, isSyncing: currency.state.syncState != .success)
         }
         return cell
     }

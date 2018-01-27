@@ -71,8 +71,9 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
         textFieldLabel.text = S.ManageWallet.textFieldLabel
         textField.delegate = self
 
-        self.textField.text = Store.state.walletState.name
-        let creationDate = Store.state.walletState.creationDate
+        // TODO:BCH
+        self.textField.text = Currencies.btc.state.name
+        let creationDate = Currencies.btc.state.creationDate
         if creationDate.timeIntervalSince1970 > 0 {
             let df = DateFormatter()
             df.dateFormat = "MMMM d, yyyy"
@@ -104,7 +105,8 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
         if name.utf8.count > maxWalletNameLength {
             name = String(name[..<name.index(name.startIndex, offsetBy: maxWalletNameLength)])
         }
-        Store.perform(action: WalletChange.setWalletName(name))
+        //TODO:BCH multi-currency support
+        Store.perform(action: WalletChange(Currencies.btc).setWalletName(name))
     }
 
     required init?(coder aDecoder: NSCoder) {

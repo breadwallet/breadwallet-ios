@@ -25,7 +25,7 @@ class AssetListTableView : UITableViewController, Subscriber {
         tableView.reloadData()
 
         Store.subscribe(self, selector: {
-            return $0[Currencies.btc]?.currentRate != $1[Currencies.btc]?.currentRate
+            return $0[Currencies.btc].currentRate != $1[Currencies.btc].currentRate
         }, callback: { _ in
             self.tableView.reloadData()
         })
@@ -36,23 +36,22 @@ class AssetListTableView : UITableViewController, Subscriber {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Store.state.currencies.count
+        return Store.state.wallets.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let currency = Store.state.currencies[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! HomeScreenCell
-        if let rate = Store.state[currency]?.currentRate {
-            let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 2, currency: currency)
-            let price = placeholderAmount.localFormat.string(from: NSNumber(value: rate.rate)) ?? ""
-            cell.setData(price: price, balance: balanceString(), currency: currency)
-        }
+        let rate = currency.state.currentRate ?? Rate.empty
+        let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 2, currency: currency)
+        let price = placeholderAmount.localFormat.string(from: NSNumber(value: rate.rate)) ?? ""
+        cell.setData(price: price, balance: balanceString(currency: currency), currency: currency)
         return cell
     }
 
-    private func balanceString() -> String {
-        guard let balance = Store.state.walletState.balance else { return "" }
-        return DisplayAmount(amount: Satoshis(rawValue: balance), selectedRate: nil, minimumFractionDigits: Store.state.maxDigits, currency: Currencies.btc).combinedDescription
+    private func balanceString(currency: CurrencyDef) -> String {
+        guard let balance = currency.state.balance else { return "" }
+        return DisplayAmount(amount: Satoshis(rawValue: balance), selectedRate: nil, minimumFractionDigits: currency.state.maxDigits, currency: Currencies.btc).combinedDescription
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

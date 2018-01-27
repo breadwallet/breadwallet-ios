@@ -16,6 +16,7 @@ private let updateDebounceInterval: TimeInterval = 0.4
 
 class WalletCoordinator : Subscriber, Trackable {
     
+    //TODO:BCH multi-currency support
     let currency: CurrencyDef = Currencies.btc
 
     var kvStore: BRReplicatedKVStore? {
@@ -40,7 +41,7 @@ class WalletCoordinator : Subscriber, Trackable {
         reachability.didChange = { [weak self] isReachable in
             self?.reachabilityDidChange(isReachable: isReachable)
         }
-        Store.perform(action: WalletChange.set(Store.state.walletState.mutate(receiveAddress: walletManager.wallet?.receiveAddress)))
+        Store.perform(action: WalletChange(currency).set(currency.state.mutate(receiveAddress: walletManager.wallet?.receiveAddress)))
     }
 
     private var lastBlockHeight: UInt32 {
@@ -56,7 +57,7 @@ class WalletCoordinator : Subscriber, Trackable {
         DispatchQueue.walletQueue.async {
             guard let progress = self.walletManager.peerManager?.syncProgress(fromStartHeight: self.lastBlockHeight), let timestamp = self.walletManager.peerManager?.lastBlockTimestamp else { return }
             DispatchQueue.main.async {
-                Store.perform(action: WalletChange.setProgress(progress: progress, timestamp: timestamp))
+                Store.perform(action: WalletChange(self.currency).setProgress(progress: progress, timestamp: timestamp))
             }
         }
         self.updateBalance()
@@ -66,7 +67,7 @@ class WalletCoordinator : Subscriber, Trackable {
         endBackgroundTask()
         startBackgroundTask()
         progressTimer = Timer.scheduledTimer(timeInterval: progressUpdateInterval, target: self, selector: #selector(WalletCoordinator.updateProgress), userInfo: nil, repeats: true)
-        Store.perform(action: WalletChange.setSyncingState(.syncing))
+        Store.perform(action: WalletChange(currency).setSyncingState(.syncing))
         startActivity()
     }
 
@@ -80,7 +81,7 @@ class WalletCoordinator : Subscriber, Trackable {
         if notification.userInfo != nil {
             guard let code = notification.userInfo?["errorCode"] else { return }
             guard let message = notification.userInfo?["errorDescription"] else { return }
-            Store.perform(action: WalletChange.setSyncingState(.connecting))
+            Store.perform(action: WalletChange(currency).setSyncingState(.connecting))
             saveEvent("event.syncErrorMessage", attributes: ["message": "\(message) (\(code))"])
             endActivity()
 
@@ -101,7 +102,7 @@ class WalletCoordinator : Subscriber, Trackable {
         }
         progressTimer?.invalidate()
         progressTimer = nil
-        Store.perform(action: WalletChange.setSyncingState(.success))
+        Store.perform(action: WalletChange(currency).setSyncingState(.success))
         endActivity()
     }
 
@@ -134,10 +135,10 @@ class WalletCoordinator : Subscriber, Trackable {
             let transactions = self.makeTransactionViewModels(transactions: txRefs,
                                                               walletManager: self.walletManager,
                                                               kvStore: self.kvStore,
-                                                              rate: Store.state[self.currency]?.currentRate)
+                                                              rate: self.currency.state.currentRate)
             if transactions.count > 0 {
                 DispatchQueue.main.async {
-                    Store.perform(action: WalletChange.setTransactions(transactions))
+                    Store.perform(action: WalletChange(self.currency).setTransactions(transactions))
                 }
             }
         }
@@ -171,7 +172,7 @@ class WalletCoordinator : Subscriber, Trackable {
             guard let recommendRescan = note.userInfo?["recommendRescan"] as? Bool else { return }
             self.requestTxUpdate()
             if recommendRescan {
-                Store.perform(action: RecommendRescan.set(recommendRescan))
+                Store.perform(action: WalletChange(self.currency).setRecommendScan(recommendRescan))
             }
         })
 
@@ -189,17 +190,17 @@ class WalletCoordinator : Subscriber, Trackable {
             guard let newBalance = self.walletManager.wallet?.balance else { return }
             DispatchQueue.main.async {
                 self.checkForReceived(newBalance: newBalance)
-                Store.perform(action: WalletChange.setBalance(newBalance))
+                Store.perform(action: WalletChange(self.currency).setBalance(newBalance))
             }
         }
     }
 
     private func checkForReceived(newBalance: UInt64) {
-        if let oldBalance = Store.state.walletState.balance {
+        if let oldBalance = currency.state.balance {
             if newBalance > oldBalance {
-                let walletState = Store.state.walletState
-                Store.perform(action: WalletChange.set(walletState.mutate(receiveAddress: walletManager.wallet?.receiveAddress)))
-                if Store.state.walletState.syncState == .success {
+                let walletState = currency.state
+                Store.perform(action: WalletChange(currency).set(walletState.mutate(receiveAddress: walletManager.wallet?.receiveAddress)))
+                if currency.state.syncState == .success {
                     self.showReceived(amount: newBalance - oldBalance)
                 }
             }
@@ -207,8 +208,9 @@ class WalletCoordinator : Subscriber, Trackable {
     }
 
     private func showReceived(amount: UInt64) {
-        if let rate = Store.state[currency]?.currentRate {
-            let amount = Amount(amount: amount, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
+        if let rate = currency.state.currentRate {
+            let maxDigits = currency.state.maxDigits
+            let amount = Amount(amount: amount, rate: rate, maxDigits: maxDigits, currency: currency)
             let primary = Store.state.isBtcSwapped ? amount.localCurrency : amount.bits
             let secondary = Store.state.isBtcSwapped ? amount.bits : amount.localCurrency
             let message = String(format: S.TransactionDetails.received, "\(primary) (\(secondary))")
@@ -244,7 +246,7 @@ class WalletCoordinator : Subscriber, Trackable {
             DispatchQueue.walletQueue.async {
                 self.walletManager.peerManager?.disconnect()
                 DispatchQueue.main.async {
-                    Store.perform(action: WalletChange.setSyncingState(.connecting))
+                    Store.perform(action: WalletChange(self.currency).setSyncingState(.connecting))
                 }
             }
         }
@@ -258,17 +260,17 @@ class WalletCoordinator : Subscriber, Trackable {
         })
 
         Store.subscribe(self, name: .rescan, callback: { _ in
-            Store.perform(action: RecommendRescan.set(false))
+            Store.perform(action: WalletChange(self.currency).setRecommendScan(false))
             //In case rescan is called while a sync is in progess
             //we need to make sure it's false before a rescan starts
-            //self.store.perform(action: WalletChange.setIsSyncing(false))
+            //self.store.perform(action: WalletChange(currency).setIsSyncing(false))
             DispatchQueue.walletQueue.async {
                 self.walletManager.peerManager?.rescan()
             }
         })
 
         Store.subscribe(self, name: .rescan, callback: { _ in
-            Store.perform(action: WalletChange.setIsRescanning(true))
+            Store.perform(action: WalletChange(self.currency).setIsRescanning(true))
         })
     }
 

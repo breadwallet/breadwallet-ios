@@ -37,7 +37,7 @@ struct TxDetailViewModel: TxViewModel {
 
 extension TxDetailViewModel {
     init(tx: Transaction) {
-        let rate = Store.state[tx.currency]?.currentRate ?? Rate.empty
+        let rate = tx.currency.state.currentRate ?? Rate.empty
         amount = TxDetailViewModel.tokenAmount(tx: tx) ?? ""
         
         let fiatAmounts = TxDetailViewModel.fiatAmounts(tx: tx, currentRate: rate)
@@ -55,8 +55,8 @@ extension TxDetailViewModel {
     
     private static func balances(tx: Transaction, showFiatAmount: Bool) -> (String, String) {
         guard let tx = tx as? BtcTransaction,
-            let rate = Store.state[tx.currency]?.currentRate else { return ("", "") }
-        let maxDigits = Store.state.maxDigits
+            let rate = tx.currency.state.currentRate else { return ("", "") }
+        let maxDigits = tx.currency.state.maxDigits
         
         var startingString = Amount(amount: tx.startingBalance,
                                     rate: rate,

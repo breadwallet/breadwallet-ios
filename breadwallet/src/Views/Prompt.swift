@@ -76,7 +76,7 @@ enum PromptType {
         case .upgradePin:
             return walletManager.pinLength != 6
         case .recommendRescan:
-            return state.recommendRescan
+            return state[Currencies.btc].recommendRescan
         case .noPasscode:
             return !LAContext.isPasscodeEnabled
         case .shareData:
