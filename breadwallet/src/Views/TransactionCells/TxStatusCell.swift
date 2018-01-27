@@ -51,10 +51,10 @@ class TxStatusCell: TxDetailRowCell, Subscriber {
     
     func set(txInfo: TxDetailViewModel) {
         Store.lazySubscribe(self,
-                            selector: { $0.walletState.transactions != $1.walletState.transactions },
+                            selector: { $0[txInfo.currency].transactions != $1[txInfo.currency].transactions },
                             callback: { [weak self] state in
                                 guard let `self` = self,
-                                    let updatedTx = state.walletState.transactions.filter({ $0.hash == txInfo.transactionHash }).first else { return }
+                                    let updatedTx = state[txInfo.currency].transactions.filter({ $0.hash == txInfo.transactionHash }).first else { return }
                                 DispatchQueue.main.async {
                                     let updatedInfo = TxDetailViewModel(tx: updatedTx)
                                     self.update(status: updatedInfo.status)

@@ -31,7 +31,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         self.walletManager = walletManager
         self.initialAddress = initialAddress
         self.initialRequest = initialRequest
-        self.currencyButton = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: Store.state.maxDigits), type: .tertiary)
+        self.currencyButton = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: currency.state.maxDigits), type: .tertiary)
         self.gethManager = gethManager
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
 
@@ -98,14 +98,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             sendButton.constraint(.height, constant: C.Sizes.buttonHeight),
             sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[5] : -C.padding[2]) ])
         addButtonActions()
-        Store.subscribe(self, selector: { $0.walletState.balance != $1.walletState.balance },
+        Store.subscribe(self, selector: { $0[self.currency].balance != $1[self.currency].balance },
                         callback: {
-                            if let balance = $0.walletState.balance {
+                            if let balance = $0[self.currency].balance {
                                 self.balance = balance
                             }
         })
-        Store.subscribe(self, selector: { $0.fees != $1.fees }, callback: {
-            if let fees = $0.fees {
+        Store.subscribe(self, selector: { $0[self.currency].fees != $1[self.currency].fees }, callback: {
+            if let fees = $0[self.currency].fees {
                 if let feeType = self.feeType {
                     switch feeType {
                     case .regular :
@@ -155,7 +155,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         amountView.didUpdateFee = strongify(self) { myself, fee in
             guard let wallet = myself.walletManager.wallet else { return }
             myself.feeType = fee
-            if let fees = Store.state.fees {
+            if let fees = self.currency.state.fees {
                 switch fee {
                 case .regular:
                     wallet.feePerKb = fees.regular
@@ -237,7 +237,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             guard let address = addressCell.address else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             }
-            guard Store.state.fees != nil else {
+            guard currency.state.fees != nil else {
                 return showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
             }
 //            guard address.isValidAddress else {
@@ -248,7 +248,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             }
             if let minOutput = walletManager.wallet?.minOutputAmount {
                 guard amount.rawValue >= minOutput else {
-                    let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: Store.state.maxDigits, currency: currency)
+                    let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: currency.state.maxDigits, currency: currency)
                     let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutputAmount.string(isBtcSwapped: Store.state.isBtcSwapped))
                     return showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
                 }
@@ -336,7 +336,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return showErrorMessage(S.Send.ethSendSelf)
         }
 
-        let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(Store.state.walletState.numSent), isCrowdsale: false)
+        let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(currency.state.numSent), isCrowdsale: false)
         let signedTx = ethManager.signTx(tx, ethPrivKey: walletManager.ethPrivKey!)
         if let error = ethManager.publishTx(signedTx) {
             let balance = DisplayAmount.ethString(value: ethManager.balance)
@@ -355,8 +355,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 let timestamp = Date().timeIntervalSince1970
                 let tempTx = EthTx(blockNumber: 0, timeStamp: timestamp, value: amount, from: ethManager.address.getHex(), to: address, confirmations: 0, hash: signedTx.getHash(), isError: false)
                 let transactionViewModel = EthTransaction(tx: tempTx, address: ethManager.address.getHex())
-                let newTransactions = [transactionViewModel] + Store.state.walletState.transactions
-                Store.perform(action: WalletChange.set(Store.state.walletState.mutate(transactions: newTransactions)))
+                let newTransactions = [transactionViewModel] + self.currency.state.transactions
+                Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(transactions: newTransactions)))
             })
         }
     }
@@ -365,7 +365,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         let amount = amountView.tokenOutput
         guard let address = addressCell.textField.text?.lowercased() else { return }
         guard let ethManager = gethManager else { return }
-        guard let token = Store.state.walletState.token else { return }
+        guard let token = currency.state.token else { return }
 
         guard address.isValidEthAddress else {
             return showErrorMessage(S.Send.invalidAddressMessage)
@@ -375,7 +375,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return showErrorMessage(S.Send.ethSendSelf)
         }
 
-        if let error = ethManager.transfer(amount: amount, toAddress: address, privKey: walletManager.ethPrivKey!, token: token, nonce: Store.state.walletState.numSent) {
+        if let error = ethManager.transfer(amount: amount, toAddress: address, privKey: walletManager.ethPrivKey!, token: token, nonce: currency.state.numSent) {
             let balance = DisplayAmount.ethString(value: ethManager.balance)
             let sendAmount = DisplayAmount.ethString(value: amount)
             let fee = DisplayAmount.ethString(value: ethManager.fee(isCrowdsale: false))
@@ -389,8 +389,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 let timestamp = String(Date().timeIntervalSince1970)
                 let tempEvent = Event(timestamp: timestamp, from: ethManager.address.getHex(), to: address, amount: amount.getString(10))
                 let transactionViewModel = ERC20Transaction(event: tempEvent, address: ethManager.address.getHex(), token: token)
-                let newTransactions = [transactionViewModel] + Store.state.walletState.transactions
-                Store.perform(action: WalletChange.set(Store.state.walletState.mutate(transactions: newTransactions)))
+                let newTransactions = [transactionViewModel] + self.currency.state.transactions
+                Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(transactions: newTransactions)))
             })
         }
     }
@@ -424,7 +424,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func send() {
-        guard let rate = Store.state[currency]?.currentRate else { return }
+        guard let rate = currency.state.currentRate else { return }
         guard let feePerKb = walletManager.wallet?.feePerKb else { return }
 
         sender.send(biometricsMessage: S.VerifyPin.touchIdMessage,
@@ -495,11 +495,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 self?.confirmProtocolRequest(protoReq: protoReq)
             })
         } else if requestAmount < wallet.minOutputAmount {
-            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: Store.state.maxDigits, currency: currency)
+            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: currency.state.maxDigits, currency: currency)
             let message = String(format: S.PaymentProtocol.Errors.smallPayment, amount.bits)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         } else if isOutputTooSmall {
-            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: Store.state.maxDigits, currency: currency)
+            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: currency.state.maxDigits, currency: currency)
             let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.bits)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         }

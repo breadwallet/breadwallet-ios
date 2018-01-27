@@ -244,7 +244,8 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func makeSendView() -> UIViewController? {
-        guard !Store.state.walletState.isRescanning else {
+        //TODO:BCH
+        guard !Currencies.btc.state.isRescanning else {
             let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
             topViewController?.present(alert, animated: true, completion: nil)
@@ -391,8 +392,8 @@ class ModalPresenter : Subscriber, Trackable {
                     settingsNav.pushViewController(PushNotificationsViewController(), animated: true)
                 }),
                 Setting(title: LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit, accessoryText: {
-                    guard let rate = Store.state[Currencies.btc]?.currentRate else { return "" }
-                    let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
+                    guard let rate = Currencies.btc.state.currentRate else { return "" }
+                    let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
                     return amount.localCurrency
                 }, callback: {
                     self.pushBiometricsSpendingLimit(onNc: settingsNav)

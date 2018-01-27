@@ -19,14 +19,14 @@ class AmountViewController : UIViewController, Trackable {
         self.currency = currency
         self.isPinPadExpandedAtLaunch = isPinPadExpandedAtLaunch
         self.isRequesting = isRequesting
-        if let rate = Store.state[currency]?.currentRate, Store.state.isBtcSwapped {
+        if let rate = currency.state.currentRate, Store.state.isBtcSwapped {
             self.currencyToggle = ShadowButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
-            let title = S.Symbols.currencyButtonTitle(maxDigits: Store.state.maxDigits)
+            let title = S.Symbols.currencyButtonTitle(maxDigits: currency.state.maxDigits)
             self.currencyToggle = ShadowButton(title: title, type: .tertiary)
         }
         self.feeSelector = FeeSelector()
-        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: Store.state.maxDigits)
+        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: currency.state.maxDigits)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -47,7 +47,7 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     var tokenOutput: GethBigInt {
-        guard let token = Store.state.walletState.token else { return GethBigInt(0) }
+        guard let token = currency.state.token else { return GethBigInt(0) }
         let decimalSeparator = NumberFormatter().currencyDecimalSeparator
         let string = currentOutput.replacingOccurrences(of: token.code, with: "").replacingOccurrences(of: decimalSeparator!, with: ".")
         let output = GethBigInt(0)
@@ -212,7 +212,7 @@ class AmountViewController : UIViewController, Trackable {
         placeholder.text = S.Send.amountLabel
         bottomBorder.isHidden = true
         if Store.state.isBtcSwapped {
-            if let rate = Store.state[currency]?.currentRate {
+            if let rate = currency.state.currentRate {
                 selectedRate = rate
             }
         }
@@ -244,7 +244,7 @@ class AmountViewController : UIViewController, Trackable {
 
     private func toggleCurrency() {
         saveEvent("amount.swapCurrency")
-        selectedRate = selectedRate == nil ? Store.state[currency]?.currentRate : nil
+        selectedRate = selectedRate == nil ? currency.state.currentRate : nil
         updateCurrencyToggleTitle()
     }
 
@@ -286,7 +286,7 @@ class AmountViewController : UIViewController, Trackable {
             if let rate = selectedRate {
                 newAmount = Satoshis(value: outputAmount, rate: rate)
             } else {
-                if Store.state.maxDigits == 2 {
+                if currency.state.maxDigits == 2 {
                     let bits = Bits(rawValue: outputAmount)
                     newAmount = Satoshis(bits: bits)
                 } else {
@@ -402,7 +402,7 @@ class AmountViewController : UIViewController, Trackable {
         if let rate = selectedRate {
             self.currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
         } else {
-            let title = S.Symbols.currencyButtonTitle(maxDigits: Store.state.maxDigits)
+            let title = S.Symbols.currencyButtonTitle(maxDigits: currency.state.maxDigits)
             self.currencyToggle.title = title
         }
     }

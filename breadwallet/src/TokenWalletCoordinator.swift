@@ -10,6 +10,7 @@ import Foundation
 
 class TokenWalletCoordinator {
 
+    private let currency: CurrencyDef = Currencies.brd
     private let gethManager: GethManager
     private var timer: Timer? = nil
     private let apiClient: BRAPIClient
@@ -17,19 +18,19 @@ class TokenWalletCoordinator {
     init(gethManager: GethManager, apiClient: BRAPIClient) {
         self.gethManager = gethManager
         self.apiClient = apiClient
-        Store.perform(action: WalletChange.set(Store.state.walletState.mutate(receiveAddress: gethManager.address.getHex())))
+        Store.perform(action: WalletChange(currency).set(currency.state.mutate(receiveAddress: gethManager.address.getHex())))
         self.refresh()
         self.timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(refresh), userInfo: nil, repeats: true)
     }
 
     @objc private func refresh() {
-        guard let token = Store.state.walletState.token,
-            let receiveAddress = Store.state.walletState.receiveAddress else { return }
+        guard let token = currency.state.token,
+            let receiveAddress = currency.state.receiveAddress else { return }
         let tokenAddress = token.address
 
-        apiClient.tokenBalance(tokenAddress: tokenAddress, address: Store.state.walletState.receiveAddress!, callback: { balance in
+        apiClient.tokenBalance(tokenAddress: tokenAddress, address: self.currency.state.receiveAddress!, callback: { balance in
             DispatchQueue.main.async {
-                Store.perform(action: WalletChange.set(Store.state.walletState.mutate(bigBalance: balance)))
+                Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(bigBalance: balance)))
             }
         })
 
@@ -38,7 +39,7 @@ class TokenWalletCoordinator {
                 ERC20Transaction(event: $0, address: receiveAddress, token: token)
             }
 
-            let oldViewModels = Store.state.walletState.transactions
+            let oldViewModels = self.currency.state.transactions
             let oldCompleteViewModels = oldViewModels.filter { $0.status != .pending }
             let oldPendingViewModels = oldViewModels.filter { $0.status == .pending }
 
@@ -54,7 +55,7 @@ class TokenWalletCoordinator {
             }
 
             DispatchQueue.main.async {
-                Store.perform(action: WalletChange.set(Store.state.walletState.mutate(transactions: mergedViewModels)))
+                Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(transactions: mergedViewModels)))
             }
         }
     }

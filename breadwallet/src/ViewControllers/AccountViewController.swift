@@ -25,6 +25,7 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     init(currency: CurrencyDef) {
+        self.currency = currency
         self.headerView = AccountHeaderView(currency: currency)
         super.init(nibName: nil, bundle: nil)
         self.transactionsTableView = TransactionsTableViewController(currency: currency, didSelectTransaction: didSelectTransaction)
@@ -36,6 +37,8 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     //MARK: - Private
+    private let currency: CurrencyDef
+    
     private let headerView: AccountHeaderView
     private let footerView = AccountFooterView()
     private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
@@ -121,31 +124,32 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func addSubscriptions() {
-        Store.subscribe(self, selector: { $0.walletState.syncProgress != $1.walletState.syncProgress },
+        Store.subscribe(self, selector: { $0[self.currency].syncProgress != $1[self.currency].syncProgress },
                         callback: { state in
-                            self.transactionsTableView.syncingView.progress = CGFloat(state.walletState.syncProgress)
-                            self.transactionsTableView.syncingView.timestamp = state.walletState.lastBlockTimestamp
+                            self.transactionsTableView.syncingView.progress = CGFloat(state[self.currency].syncProgress)
+                            self.transactionsTableView.syncingView.timestamp = state[self.currency].lastBlockTimestamp
         })
 
-        Store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState },
-                            callback: { state in
-                                guard let peerManager = self.walletManager?.peerManager else { return }
-                                if state.walletState.syncState == .success {
-                                    self.transactionsTableView.isSyncingViewVisible = false
-                                } else if peerManager.shouldShowSyncingView {
-                                    self.transactionsTableView.isSyncingViewVisible = true
-                                } else {
-                                    self.transactionsTableView.isSyncingViewVisible = false
-                                }
+        Store.subscribe(self, selector: { $0[self.currency].syncState != $1[self.currency].syncState },
+                        callback: { state in
+                            guard let peerManager = self.walletManager?.peerManager else { return }
+                            if state[self.currency].syncState == .success {
+                                self.transactionsTableView.isSyncingViewVisible = false
+                            } else if peerManager.shouldShowSyncingView {
+                                self.transactionsTableView.isSyncingViewVisible = true
+                            } else {
+                                self.transactionsTableView.isSyncingViewVisible = false
+                            }
         })
 
-        Store.subscribe(self, selector: { $0.isLoadingTransactions != $1.isLoadingTransactions }, callback: {
-            if $0.isLoadingTransactions {
-                self.loadingDidStart()
-            } else {
-                self.hideLoadingView()
-            }
-        })
+        //TODO:BCH this was never being set
+//        Store.subscribe(self, selector: { $0.isLoadingTransactions != $1.isLoadingTransactions }, callback: {
+//            if $0.isLoadingTransactions {
+//                self.loadingDidStart()
+//            } else {
+//                self.hideLoadingView()
+//            }
+//        })
         Store.subscribe(self, selector: { $0.isLoginRequired != $1.isLoginRequired }, callback: { self.isLoginRequired = $0.isLoginRequired })
         Store.subscribe(self, name: .showStatusBar, callback: { _ in
             self.shouldShowStatusBar = true

@@ -119,7 +119,8 @@ class StartFlowPresenter : Subscriber {
         pinCreationViewController.setPinSuccess = { [weak self] pin in
             autoreleasepool {
                 guard self?.walletManager.setRandomSeedPhrase() != nil else { self?.handleWalletCreationError(); return }
-                Store.perform(action: WalletChange.setWalletCreationDate(Date()))
+                //TODO:BCH multi-currency support
+                Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(Date()))
                 DispatchQueue.main.async {
                     self?.pushStartPaperPhraseCreationViewController(pin: pin)
                     Store.trigger(name: .didCreateOrRecoverWallet)

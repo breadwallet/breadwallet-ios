@@ -71,9 +71,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     init(currency: CurrencyDef) {
         self.currency = currency
         self.isBtcSwapped = Store.state.isBtcSwapped
-        if let rate = Store.state[currency]?.currentRate {//currency.state.rate {
+        if let rate = currency.state.currentRate {
+            let maxDigits = currency.state.maxDigits
+            let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: maxDigits, currency: currency)
             self.exchangeRate = rate
-            let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: Store.state.maxDigits, currency: currency)
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
             self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.btcFormat)
         } else {
@@ -215,40 +216,43 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                         selector: { $0.isBtcSwapped != $1.isBtcSwapped },
                         callback: { self.isBtcSwapped = $0.isBtcSwapped })
         Store.lazySubscribe(self,
-                        selector: { $0[self.currency]?.currentRate != $1[self.currency]?.currentRate},
+                        selector: { $0[self.currency].currentRate != $1[self.currency].currentRate},
                         callback: {
-                            if let rate = $0[self.currency]?.currentRate {
-                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits, currency: Currencies.btc)
+                            if let rate = $0[self.currency].currentRate {
+                                let maxDigits = $0[self.currency].maxDigits
+                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: maxDigits, currency: self.currency)
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.btcFormat
                             }
-                            self.exchangeRate = $0[self.currency]?.currentRate
+                            self.exchangeRate = $0[self.currency].currentRate
                         })
         
         Store.lazySubscribe(self,
-                        selector: { $0.maxDigits != $1.maxDigits},
+                        selector: { $0[self.currency].maxDigits != $1[self.currency].maxDigits},
                         callback: {
-                            if let rate = $0[self.currency]?.currentRate {
-                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits, currency: Currencies.btc)
+                            if let rate = $0[self.currency].currentRate {
+                                let maxDigits = $0[self.currency].maxDigits
+                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: maxDigits, currency: self.currency)
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.btcFormat
                                 self.setBalances()
                             }
         })
         Store.subscribe(self,
-                            selector: {$0.walletState.balance != $1.walletState.balance },
+                            selector: {$0[self.currency].balance != $1[self.currency].balance },
                             callback: { state in
-                                if let balance = state.walletState.balance {
+                                if let balance = state[self.currency].balance {
                                     self.balance = balance
                                 } })
     }
 
     func setBalances() {
         guard let rate = exchangeRate else { return }
-        let amount = Amount(amount: balance, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
+        
+        let maxDigits = self.currency.state.maxDigits
+        let amount = Amount(amount: balance, rate: rate, maxDigits: maxDigits, currency: self.currency)
         
         if !hasInitialized {
-            let amount = Amount(amount: balance, rate: exchangeRate!, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
             primaryBalance.setValue(amount.amountForBtcFormat)
             secondaryBalance.setValue(amount.localAmount)
             swapLabels()

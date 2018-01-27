@@ -17,8 +17,9 @@ class KVStoreCoordinator : Subscriber {
     func retreiveStoredWalletInfo() {
         guard !hasRetreivedInitialWalletInfo else { return }
         if let walletInfo = WalletInfo(kvStore: kvStore) {
-            Store.perform(action: WalletChange.setWalletName(walletInfo.name))
-            Store.perform(action: WalletChange.setWalletCreationDate(walletInfo.creationDate))
+            //TODO:BCH
+            Store.perform(action: WalletChange(Currencies.btc).setWalletName(walletInfo.name))
+            Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(walletInfo.creationDate))
         } else {
             print("no wallet info found")
         }
@@ -27,13 +28,13 @@ class KVStoreCoordinator : Subscriber {
 
     func listenForWalletChanges() {
         Store.subscribe(self,
-                            selector: { $0.walletState.creationDate != $1.walletState.creationDate },
+                            selector: { $0[Currencies.btc].creationDate != $1[Currencies.btc].creationDate },
                             callback: {
                                 if let existingInfo = WalletInfo(kvStore: self.kvStore) {
-                                    Store.perform(action: WalletChange.setWalletCreationDate(existingInfo.creationDate))
+                                    Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(existingInfo.creationDate))
                                 } else {
-                                    let newInfo = WalletInfo(name: $0.walletState.name)
-                                    newInfo.creationDate = $0.walletState.creationDate
+                                    let newInfo = WalletInfo(name: $0[Currencies.btc].name)
+                                    newInfo.creationDate = $0[Currencies.btc].creationDate
                                     self.set(newInfo)
                                 }
         })

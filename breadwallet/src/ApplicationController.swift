@@ -46,7 +46,6 @@ class ApplicationController : Subscriber, Trackable {
                 self.initWallet()
             }
         }
-        self.setColors()
     }
 
     private func initWallet() {
@@ -157,7 +156,8 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     func didEnterBackground() {
-        if Store.state.walletState.syncState == .success {
+        // TODO:BCH
+        if Currencies.btc.state.syncState == .success {
             DispatchQueue.walletQueue.async {
                 self.walletManager?.peerManager?.disconnect()
             }
@@ -193,10 +193,6 @@ class ApplicationController : Subscriber, Trackable {
         exchangeUpdater = ExchangeUpdater(walletManager: walletManager)
         feeUpdater = FeeUpdater(walletManager: walletManager)
         startFlowController = StartFlowPresenter(walletManager: walletManager, rootViewController: rootViewController)
-        
-//        accountViewControllers.values.forEach {
-//            $0.walletManager = walletManager
-//        }
 
         defaultsUpdater = UserDefaultsUpdater(walletManager: walletManager)
         urlController = URLController(walletManager: walletManager)
@@ -230,7 +226,7 @@ class ApplicationController : Subscriber, Trackable {
             }
             exchangeUpdater?.refresh(completion: {
                 self.watchSessionManager.walletManager = self.walletManager
-                self.watchSessionManager.rate = Store.state[Currencies.btc]?.currentRate
+                self.watchSessionManager.rate = Currencies.btc.state.currentRate
             })
         }
 
@@ -262,6 +258,7 @@ class ApplicationController : Subscriber, Trackable {
         home.didSelectCurrency = { currency in
             //guard let accountViewController = self.accountViewControllers[currency.code] else { return }
             let accountViewController = AccountViewController(currency: currency)
+            accountViewController.walletManager = self.walletManager
             nc.pushViewController(accountViewController, animated: true)
         }
         
@@ -277,7 +274,7 @@ class ApplicationController : Subscriber, Trackable {
         walletManager?.apiClient?.events?.up()
         exchangeUpdater?.refresh(completion: {
             self.watchSessionManager.walletManager = self.walletManager
-            self.watchSessionManager.rate = Store.state[Currencies.btc]?.currentRate
+            self.watchSessionManager.rate = Currencies.btc.state.currentRate
         })
     }
 
@@ -384,18 +381,6 @@ class ApplicationController : Subscriber, Trackable {
         guard !Store.state.isPushNotificationsEnabled else { return }
         guard let pushToken = UserDefaults.pushToken else { return }
         walletManager?.apiClient?.deletePushNotificationToken(pushToken)
-    }
-
-    private func setColors() {
-        Store.perform(action: StateChange(Store.state.mutate(colours: (UIColor(red:0.972549, green:0.623529, blue:0.200000, alpha:1.0), UIColor(red:0.898039, green:0.505882, blue:0.031373, alpha:1.0)))))
-//        ethStore.perform(action: StateChange(ethStore.state.mutate(colours: (UIColor(red:0.407843, green:0.529412, blue:0.654902, alpha:1.0), UIColor(red:0.180392, green:0.278431, blue:0.376471, alpha:1.0)))))
-//        tokenStores.forEach {
-//            if $0.state.walletState.crowdsale != nil {
-//                $0.perform(action: StateChange($0.state.mutate(colours: (UIColor(red:0.976471, green:0.647059, blue:0.219608, alpha:1.0), UIColor(red:1.000000, green:0.309804, blue:0.580392, alpha:1.0)))))
-//            } else {
-//                $0.perform(action: StateChange($0.state.mutate(colours: (UIColor(red:0.95, green:0.65, blue:0.00, alpha:1.0), UIColor(red:0.95, green:0.35, blue:0.13, alpha:1.0)))))
-//            }
-//        }
     }
 }
 

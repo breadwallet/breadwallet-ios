@@ -294,7 +294,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             d["receive_address"] = wallet.receiveAddress
             //d["watch_only"] = TODO - add watch only
         }
-        d["btc_denomination_digits"] = Store.state.maxDigits
+        d["btc_denomination_digits"] = Currencies.btc.state.maxDigits
         d["local_currency_code"] = Store.state.defaultCurrencyCode
         return d
     }
@@ -302,8 +302,8 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     func currencyFormat(_ amount: Int64) -> [String: Any] {
         var d = [String: Any]()
         //TODO:BCH make currency-agnostic?
-        if let rate = Store.state[Currencies.btc]?.currentRate {
-            let amount = Amount(amount: UInt64(amount), rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
+        if let rate = Currencies.btc.state.currentRate {
+            let amount = Amount(amount: UInt64(amount), rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
             d["local_currency_amount"] = amount.localCurrency
             d["currency_amount"] = amount.bits
         }

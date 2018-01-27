@@ -15,6 +15,9 @@ struct Fees : Codable {
 }
 
 class FeeUpdater : Trackable {
+    
+    //TODO:BCH multi-currency support
+    let currency: CurrencyDef = Currencies.btc
 
     //MARK: - Public
     init(walletManager: WalletManager) {
@@ -29,7 +32,7 @@ class FeeUpdater : Trackable {
                 return
             }
             UserDefaults.fees = newFees
-            Store.perform(action: UpdateFees.set(newFees))
+            Store.perform(action: WalletChange(self.currency).setFees(newFees))
             completion()
         }
 

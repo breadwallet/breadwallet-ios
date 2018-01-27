@@ -12,7 +12,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
     init(walletManager: WalletManager) {
         self.walletManager = walletManager
-        self.rates = Store.state.rates.filter { $0.code != C.btcCurrencyCode }
+        self.rates = Currencies.btc.state.rates.filter { $0.code != C.btcCurrencyCode }
         super.init(style: .plain)
     }
 
@@ -50,7 +50,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         Store.subscribe(self, selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode }, callback: {
             self.defaultCurrencyCode = $0.defaultCurrencyCode
         })
-        Store.subscribe(self, selector: { $0.maxDigits != $1.maxDigits }, callback: { _ in
+        Store.subscribe(self, selector: { $0[Currencies.btc].maxDigits != $1[Currencies.btc].maxDigits }, callback: { _ in
             self.setExchangeRateLabel()
         })
 
@@ -71,8 +71,8 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
     private func setExchangeRateLabel() {
         if let currentRate = rates.filter({ $0.code == defaultCurrencyCode }).first {
-            let amount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
-            let bitsAmount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
+            let amount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
+            let bitsAmount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
             rateLabel.textColor = .darkText
             rateLabel.text = "\(bitsAmount.bits) = \(amount.string(forLocal: currentRate.locale))"
         }
@@ -129,7 +129,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
             bitcoinSwitch.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -C.padding[2]),
             bitcoinSwitch.widthAnchor.constraint(equalTo: header.widthAnchor, constant: -C.padding[4]) ])
 
-        if Store.state.maxDigits == 8 {
+        if Currencies.btc.state.maxDigits == 8 {
             bitcoinSwitch.selectedSegmentIndex = 1
         } else {
             bitcoinSwitch.selectedSegmentIndex = 0
@@ -138,9 +138,10 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         bitcoinSwitch.valueChanged = strongify(self) { myself in
             let newIndex = myself.bitcoinSwitch.selectedSegmentIndex
             if newIndex == 1 {
-                Store.perform(action: MaxDigits.set(8))
+                //TODO:BCH multi-currency support?
+                Store.perform(action: WalletChange(Currencies.btc).setMaxDigits(8))
             } else {
-                Store.perform(action: MaxDigits.set(2))
+                Store.perform(action: WalletChange(Currencies.btc).setMaxDigits(2))
             }
         }
 

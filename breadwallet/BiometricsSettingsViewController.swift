@@ -34,8 +34,8 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
     }
 
     override func viewDidLoad() {
-        Store.subscribe(self, selector: { $0[Currencies.btc]?.currentRate != $1[Currencies.btc]?.currentRate }, callback: {
-            self.rate = $0[Currencies.btc]?.currentRate
+        Store.subscribe(self, selector: { $0[Currencies.btc].currentRate != $1[Currencies.btc].currentRate }, callback: {
+            self.rate = $0[Currencies.btc].currentRate
         })
         addSubviews()
         addConstraints()
@@ -129,7 +129,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
 
     private var textViewText: NSAttributedString {
         guard let rate = rate else { return NSAttributedString(string: "") }
-        let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Store.state.maxDigits, currency: Currencies.btc)
+        let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
         let customizeText = LAContext.biometricType() == .face ? S.FaceIDSettings.customizeText : S.TouchIdSettings.customizeText
         let linkText = LAContext.biometricType() == .face ? S.FaceIDSettings.linkText : S.TouchIdSettings.linkText
         let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.bits, amount.localCurrency))\n\n\(String(format: customizeText, linkText))"

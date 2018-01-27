@@ -28,6 +28,8 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     }
 
     //MARK - Private
+    private let currency: CurrencyDef = Currencies.btc //TODO:BCH
+    
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 14.0))
     private let addressPopout = InViewAlert(type: .primary)
@@ -48,7 +50,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
         addActions()
         setupCopiedMessage()
         setupShareButtons()
-        Store.subscribe(self, selector: { $0.walletState.receiveAddress != $1.walletState.receiveAddress }, callback: { _ in
+        Store.subscribe(self, selector: { $0[self.currency].receiveAddress != $1[self.currency].receiveAddress }, callback: { _ in
             self.setReceiveAddress()
         })
     }
@@ -132,7 +134,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     }
 
     private func setReceiveAddress() {
-        guard let addressText = Store.state.walletState.receiveAddress else { return }
+        guard let addressText = currency.state.receiveAddress else { return }
         address.text = addressText
         qrCode.image = UIImage.qrCode(data: "\(address.text!)".data(using: .utf8)!, color: CIColor(color: .black))?
             .resize(CGSize(width: qrSize, height: qrSize))!
@@ -257,7 +259,7 @@ extension ReceiveViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        if let token = Store.state.walletState.token {
+        if let token = currency.state.token {
             return "Receive \(token.code)"
         } else {
             return S.Receive.title

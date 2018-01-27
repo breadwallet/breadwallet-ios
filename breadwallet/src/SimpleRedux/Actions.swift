@@ -57,54 +57,72 @@ struct RootModalActions {
 }
 
 //MARK: - Wallet State
-enum WalletChange {
-    struct setProgress: Action {
+struct WalletChange: Trackable {
+    struct WalletAction: Action {
         let reduce: Reducer
-        init(progress: Double, timestamp: UInt32) {
-            reduce = { $0.mutate(walletState: $0.walletState.mutate(syncProgress: progress, lastBlockTimestamp: timestamp)) }
-        }
     }
-    struct setSyncingState: Action {
-        let reduce: Reducer
-        init(_ syncState: SyncState) {
-            reduce = { $0.mutate(walletState: $0.walletState.mutate(syncState: syncState)) }
-        }
+    
+    let currency: CurrencyDef
+    
+    init(_ currency: CurrencyDef) {
+        self.currency = currency
     }
-    struct setBalance: Action {
-        let reduce: Reducer
-        init(_ balance: UInt64) {
-            reduce = { $0.mutate(walletState: $0.walletState.mutate(balance: balance)) }
-        }
+    
+    func setProgress(progress: Double, timestamp: UInt32) -> WalletAction {
+        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(syncProgress: progress, lastBlockTimestamp: timestamp)) })
     }
-    struct setTransactions: Action {
-        let reduce: Reducer
-        init(_ transactions: [Transaction]) {
-            reduce = { $0.mutate(walletState: $0.walletState.mutate(transactions: transactions)) }
-        }
+    func setSyncingState(_ syncState: SyncState) -> WalletAction {
+        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(syncState: syncState)) })
     }
-    struct setWalletName: Action {
-        let reduce: Reducer
-        init(_ name: String) {
-            reduce = { $0.mutate(walletState: $0.walletState.mutate(name: name)) }
-        }
+    func setBalance(_ balance: UInt64) -> WalletAction {
+        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(balance: balance)) })
     }
-    struct setWalletCreationDate: Action {
-        let reduce: Reducer
-        init(_ date: Date) {
-            reduce = { $0.mutate(walletState: $0.walletState.mutate(creationDate: date)) }
-        }
+    func setTransactions(_ transactions: [Transaction]) -> WalletAction {
+        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(transactions: transactions)) })
     }
-    struct setIsRescanning: Action {
-        let reduce: Reducer
-        init(_ isRescanning: Bool) {
-            reduce = { $0.mutate(walletState: $0.walletState.mutate(isRescanning: isRescanning)) }
-        }
+    func setWalletName(_ name: String) -> WalletAction {
+        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(name: name)) })
     }
-    struct set : Action {
-        let reduce: Reducer
-        init(_ walletState: WalletState) {
-            reduce = { $0.mutate(walletState: walletState) }
-        }
+    func setWalletCreationDate(_ date: Date) -> WalletAction {
+        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(creationDate: date)) })
+    }
+    func setIsRescanning(_ isRescanning: Bool) -> WalletAction {
+        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(isRescanning: isRescanning)) })
+    }
+    
+    func setExchangeRates(currentRate: Rate, rates: [Rate]) -> WalletAction {
+        //TODO:BCH what is this used for, does it make sense to only store one currency's rate?
+        UserDefaults.setCurrentRateData(newValue: currentRate.dictionary, forCode: currentRate.reciprocalCode)
+
+        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(currentRate: currentRate, rates: rates)) })
+    }
+    
+    func setExchangeRate(_ currentRate: Rate) -> WalletAction {
+        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(currentRate: currentRate)) })
+    }
+    
+    func setFees(_ fees: Fees) -> WalletAction {
+        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(fees: fees)) })
+    }
+    
+    func setRecommendScan(_ recommendRescan: Bool) -> WalletAction {
+        saveEvent("event.recommendRescan")
+        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(recommendRescan: recommendRescan)) })
+    }
+
+    //TODO:BCH this action and associated property is never used
+//    func setLoadingTransactions(_ isLoadingTransactions: Bool) -> WalletAction {
+//        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(isLoadingTransactions: isLoadingTransactions)) })
+//    }
+
+    func setMaxDigits(_ maxDigits: Int) -> WalletAction {
+        UserDefaults.maxDigits = maxDigits
+        saveEvent("maxDigits.set", attributes: ["maxDigits": "\(maxDigits)"])
+        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(maxDigits: maxDigits)) })
+    }
+    
+    func set(_ walletState: WalletState) -> WalletAction {
+        return WalletAction(reduce: { $0.mutate(walletState: walletState)})
     }
 }
 
@@ -126,30 +144,30 @@ enum CurrencyChange {
 }
 
 //MARK: - Exchange Rates
-enum ExchangeRates {
-    struct setRates : Action {
-        let reduce: Reducer
-        init(currentRate: Rate, rates: [Rate] ) {
-            //TODO:BCH what is this used for, does it make sense to only store one currency's rate?
-            UserDefaults.setCurrentRateData(newValue: currentRate.dictionary, forCode: currentRate.reciprocalCode)
-            //TODO:BCH this should not alter the global state, just the currency state
-//            reduce = {
-//                let currencies = $0.currencies.map { currencyDef -> CurrencyDef in
-//                    let state = currencyDef.state
-//                    return currencyDef.mutate(state: CurrencyState(rate: currentRate, fees: state.fees))
-//                }
-//                return $0.mutate(currencies: currencies)
-//            }
-            reduce = { $0.mutate(currentRate: currentRate, rates: rates) }
-        }
-    }
-    struct setRate: Action {
-        let reduce: Reducer
-        init(_ currentRate: Rate) {
-            reduce = { $0.mutate(currentRate: currentRate) }
-        }
-    }
-}
+//enum ExchangeRates {
+//    struct setRates : Action {
+//        let reduce: Reducer
+//        init(currentRate: Rate, rates: [Rate] ) {
+//            //TODO:BCH what is this used for, does it make sense to only store one currency's rate?
+//            UserDefaults.setCurrentRateData(newValue: currentRate.dictionary, forCode: currentRate.reciprocalCode)
+//            //TODO:BCH this should not alter the global state, just the currency state
+////            reduce = {
+////                let currencies = $0.currencies.map { currencyDef -> CurrencyDef in
+////                    let state = currencyDef.state
+////                    return currencyDef.mutate(state: CurrencyState(rate: currentRate, fees: state.fees))
+////                }
+////                return $0.mutate(currencies: currencies)
+////            }
+//            reduce = { $0.mutate(walletState: $0.walletState.mutate(currentRate: currentRate, rates: rates)) }
+//        }
+//    }
+//    struct setRate: Action {
+//        let reduce: Reducer
+//        init(_ currentRate: Rate) {
+//            reduce = { $0.mutate(walletState: $0.walletState.mutate(currentRate: currentRate)) }
+//        }
+//    }
+//}
 
 //MARK: - Alerts
 enum Alert {
@@ -186,35 +204,35 @@ enum DefaultCurrency {
     }
 }
 
-enum RecommendRescan {
-    struct set : Action, Trackable {
-        let reduce: Reducer
-        init(_ recommendRescan: Bool) {
-            reduce = { $0.mutate(recommendRescan: recommendRescan) }
-            saveEvent("event.recommendRescan")
-        }
-    }
-}
-
-enum LoadTransactions {
-    struct set : Action {
-        let reduce: Reducer
-        init(_ isLoadingTransactions: Bool) {
-            reduce = { $0.mutate(isLoadingTransactions: isLoadingTransactions) }
-        }
-    }
-}
-
-enum MaxDigits {
-    struct set : Action, Trackable {
-        let reduce: Reducer
-        init(_ maxDigits: Int) {
-            UserDefaults.maxDigits = maxDigits
-            reduce = { $0.mutate(maxDigits: maxDigits)}
-            saveEvent("maxDigits.set", attributes: ["maxDigits": "\(maxDigits)"])
-        }
-    }
-}
+//enum RecommendRescan {
+//    struct set : Action, Trackable {
+//        let reduce: Reducer
+//        init(_ recommendRescan: Bool) {
+//            reduce = { $0.mutate(recommendRescan: recommendRescan) }
+//            saveEvent("event.recommendRescan")
+//        }
+//    }
+//}
+//
+//enum LoadTransactions {
+//    struct set : Action {
+//        let reduce: Reducer
+//        init(_ isLoadingTransactions: Bool) {
+//            reduce = { $0.mutate(isLoadingTransactions: isLoadingTransactions) }
+//        }
+//    }
+//}
+//
+//enum MaxDigits {
+//    struct set : Action, Trackable {
+//        let reduce: Reducer
+//        init(_ maxDigits: Int) {
+//            UserDefaults.maxDigits = maxDigits
+//            reduce = { $0.mutate(maxDigits: maxDigits)}
+//            saveEvent("maxDigits.set", attributes: ["maxDigits": "\(maxDigits)"])
+//        }
+//    }
+//}
 
 enum PushNotifications {
     struct setIsEnabled : Action {
@@ -243,11 +261,12 @@ enum PinLength {
     }
 }
 
-enum UpdateFees {
-    struct set : Action {
-        let reduce: Reducer
-        init(_ fees: Fees) {
-            reduce = { $0.mutate(fees: fees) }
-        }
-    }
-}
+//enum UpdateFees {
+//    struct set : Action {
+//        let reduce: Reducer
+//        init(_ fees: Fees) {
+//            reduce = { $0.mutate(fees: fees) }
+//        }
+//    }
+//}
+

@@ -95,10 +95,11 @@ class ReScanViewController : UIViewController, Subscriber {
         syncView.layer.cornerRadius = 4.0
         syncView.layer.masksToBounds = true
 
-        Store.subscribe(self, selector: { $0.walletState.syncProgress != $1.walletState.syncProgress },
+        //TODO:BCH
+        Store.subscribe(self, selector: { $0[Currencies.btc].syncProgress != $1[Currencies.btc].syncProgress },
                         callback: { state in
-                            syncView.timestamp = state.walletState.lastBlockTimestamp
-                            syncView.progress = CGFloat(state.walletState.syncProgress)
+                            syncView.timestamp = state[Currencies.btc].lastBlockTimestamp
+                            syncView.progress = CGFloat(state[Currencies.btc].syncProgress)
         })
         mask.addSubview(syncView)
         syncView.constrain([
