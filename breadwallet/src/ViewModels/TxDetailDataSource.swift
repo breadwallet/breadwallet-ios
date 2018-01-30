@@ -24,32 +24,6 @@ class TxDetailDataSource: NSObject {
         case blockHeight
         case transactionId
         
-        var title: String {
-            switch self {
-            case .status:
-                return S.TransactionDetails.statusHeader
-            case .memo:
-                return S.TransactionDetails.commentsHeader
-            case .timestamp:
-                return S.TransactionDetails.timestampHeader
-            case .address:
-                return S.TransactionDetails.addressHeader
-            case .startingBalance:
-                return S.TransactionDetails.startingBalanceHeader
-            case .endingBalance:
-                return S.TransactionDetails.endingBalanceHeader
-            case .exchangeRate:
-                return S.TransactionDetails.exchangeRateHeader
-            case .blockHeight:
-                return S.TransactionDetails.blockHeightLabel
-            case .transactionId:
-                return S.TransactionDetails.txHashHeader
-                
-            default:
-                return ""
-            }
-        }
-        
         var cellType: UITableViewCell.Type {
             switch self {
             case .amount:
@@ -84,9 +58,9 @@ class TxDetailDataSource: NSObject {
         fields = [
             .amount,
             .status,
-            //.memo, optional
             .timestamp,
             .address,
+            .memo,
             .startingBalance,
             .endingBalance,
             .exchangeRate,
@@ -94,13 +68,43 @@ class TxDetailDataSource: NSObject {
             .transactionId
         ]
         
-        if viewModel.comment != nil {
-            fields.insert(.memo, at: 2)
+        if viewModel.status == .complete, let index = fields.index(of: .status) {
+            fields.remove(at: index)
+        }
+        
+        if viewModel.comment == nil, let index = fields.index(of: .memo) {
+            fields.remove(at: index)
         }
     }
     
     func registerCells(forTableView tableView: UITableView) {
         fields.forEach { $0.registerCell(forTableView: tableView) }
+    }
+    
+    fileprivate func title(forField field: Field) -> String {
+        switch field {
+        case .status:
+            return S.TransactionDetails.statusHeader
+        case .memo:
+            return S.TransactionDetails.commentsHeader
+        case .timestamp:
+            return viewModel.timestampHeader
+        case .address:
+            return viewModel.addressHeader
+        case .startingBalance:
+            return S.TransactionDetails.startingBalanceHeader
+        case .endingBalance:
+            return S.TransactionDetails.endingBalanceHeader
+        case .exchangeRate:
+            return S.TransactionDetails.exchangeRateHeader
+        case .blockHeight:
+            return S.TransactionDetails.blockHeightLabel
+        case .transactionId:
+            return S.TransactionDetails.txHashHeader
+            
+        default:
+            return ""
+        }
     }
 }
 
@@ -118,7 +122,7 @@ extension TxDetailDataSource: UITableViewDataSource {
                                                  for: indexPath)
         
         if let rowCell = cell as? TxDetailRowCell {
-            rowCell.title = field.title
+            rowCell.title = title(forField: field)
         }
 
         switch field {

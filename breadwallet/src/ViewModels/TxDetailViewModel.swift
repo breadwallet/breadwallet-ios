@@ -33,6 +33,22 @@ struct TxDetailViewModel: TxViewModel {
             return status == .complete ? S.TransactionDetails.titleSent : S.TransactionDetails.titleSending
         }
     }
+    
+    var timestampHeader: String {
+        return (status == .complete) ? S.TransactionDetails.completeTimestampHeader : S.TransactionDetails.initializedTimestampHeader
+    }
+    
+    var addressHeader: String {
+        if direction == .sent {
+            return S.TransactionDetails.addressToHeader
+        } else {
+            if tx is BtcTransaction {
+                return S.TransactionDetails.addressViaHeader
+            } else {
+                return S.TransactionDetails.addressFromHeader
+            }
+        }
+    }
 }
 
 extension TxDetailViewModel {
@@ -79,10 +95,11 @@ extension TxDetailViewModel {
     /// Assumes fiat currency does not change
     private static func exchangeRateText(tx: Transaction) -> String? {
         guard let tx = tx as? BtcTransaction,
-            let rate = tx.metaData?.exchangeRate else { return nil }
+            let rate = tx.metaData?.exchangeRate,
+            let symbol = tx.currency.state.currentRate?.currencySymbol else { return nil }
         
         let nf = NumberFormatter()
-        nf.currencySymbol = tx.currency.symbol // TODO: this should be the fiat symbol, where do I get that?
+        nf.currencySymbol = symbol
         nf.numberStyle = .currency
         return nf.string(from: rate as NSNumber) ?? nil
     }

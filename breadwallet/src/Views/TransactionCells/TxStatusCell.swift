@@ -8,43 +8,58 @@
 
 import UIKit
 
-class TxStatusCell: TxDetailRowCell, Subscriber {
+class TxStatusCell: UITableViewCell, Subscriber {
 
     // MARK: - Views
     
-    private let statusLabel = UILabel(font: UIFont.customMedium(size: 13.0))
+    private let container = UIView()
+    private lazy var statusLabel: UILabel = {
+        let label = UILabel(font: UIFont.customBody(size: 14.0))
+        label.textColor = .darkGray
+        label.textAlignment = .center
+        return label
+    }()
     private let statusIndicator = TxStatusIndicator()
     
     // MARK: - Init
     
-    override func addSubviews() {
-        super.addSubviews()
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupViews()
+    }
+    
+    private func setupViews() {
+        addSubviews()
+        addConstraints()
+    }
+    
+    private func addSubviews() {
+        contentView.addSubview(container)
         container.addSubview(statusLabel)
         container.addSubview(statusIndicator)
     }
     
-    override func addConstraints() {
-        super.addConstraints()
+    private func addConstraints() {
+
+        container.constrain(toSuperviewEdges: UIEdgeInsets(top: C.padding[1],
+                                                           left: C.padding[1],
+                                                           bottom: -C.padding[2],
+                                                           right: -C.padding[1]))
         
-        statusLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: .horizontal)
-        statusLabel.constrain([
-            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: statusLabel.leadingAnchor, constant: -C.padding[1]),
-            statusLabel.constraint(.trailing, toView: container),
-            statusLabel.constraint(.top, toView: container),
-            statusLabel.constraint(.bottom, toView: container)
-            ])
         
         statusIndicator.constrain([
-            statusIndicator.constraint(toLeading: statusLabel, constant: -C.padding[1]),
-            statusIndicator.constraint(.centerY, toView: container),
+            statusIndicator.topAnchor.constraint(equalTo: container.topAnchor),
+            statusIndicator.centerXAnchor.constraint(equalTo: container.centerXAnchor),
             statusIndicator.widthAnchor.constraint(equalToConstant: statusIndicator.width),
-            statusIndicator.heightAnchor.constraint(equalToConstant: statusIndicator.size)
+            statusIndicator.heightAnchor.constraint(equalToConstant: statusIndicator.height)
             ])
-    }
-    
-    override func setupStyle() {
-        super.setupStyle()
-        statusLabel.textColor = .darkText
+        
+        statusLabel.constrain([
+            statusLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            statusLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            statusLabel.topAnchor.constraint(equalTo: statusIndicator.bottomAnchor),
+            statusLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+            ])
     }
     
     // MARK: -
@@ -80,5 +95,9 @@ class TxStatusCell: TxDetailRowCell, Subscriber {
     
     deinit {
         Store.unsubscribe(self)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

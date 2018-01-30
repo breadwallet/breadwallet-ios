@@ -13,9 +13,17 @@ class TxAmountCell: UITableViewCell, Subscriber {
     // MARK: - Vars
     
     private let container = UIView()
-    private lazy var tokenAmountLabel = UILabel(font: UIFont.customBody(size: 26.0))
-    private lazy var fiatAmountLabel = UILabel(font: UIFont.customBody(size: 14.0))
-    private let separator = UIView(color: .secondaryShadow)
+    private lazy var tokenAmountLabel: UILabel = {
+        let label = UILabel(font: UIFont.customBody(size: 26.0))
+        label.textAlignment = .center
+        return label
+    }()
+    private lazy var fiatAmountLabel: UILabel = {
+        let label = UILabel(font: UIFont.customBody(size: 14.0))
+        label.textAlignment = .center
+        return label
+    }()
+    private let separator = UIView(color: .clear)
     
     // MARK: - Init
     
@@ -27,7 +35,6 @@ class TxAmountCell: UITableViewCell, Subscriber {
     private func setupViews() {
         addSubviews()
         addConstraints()
-        setupStyle()
     }
     
     private func addSubviews() {
@@ -38,7 +45,7 @@ class TxAmountCell: UITableViewCell, Subscriber {
     }
     
     private func addConstraints() {
-        container.constrain(toSuperviewEdges: UIEdgeInsets(top: C.padding[2],
+        container.constrain(toSuperviewEdges: UIEdgeInsets(top: C.padding[1],
                                                            left: C.padding[2],
                                                            bottom: -C.padding[2],
                                                            right: -C.padding[2]))
@@ -56,11 +63,6 @@ class TxAmountCell: UITableViewCell, Subscriber {
             ])
         
         separator.constrainBottomCorners(height: 0.5)
-    }
-    
-    private func setupStyle() {
-        fiatAmountLabel.textAlignment = .center
-        tokenAmountLabel.textAlignment = .center
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -104,7 +106,7 @@ class TxAmountCell: UITableViewCell, Subscriber {
         } else {
             let format = (viewModel.direction == .sent) ? S.TransactionDetails.amountWhenSent : S.TransactionDetails.amountWhenReceived
             
-            let attributedText = NSMutableAttributedString(string: String(format: format, currentAmount, originalAmount!),
+            let attributedText = NSMutableAttributedString(string: String(format: format, originalAmount!, currentAmount),
                                                            attributes: [.font: smallFont,
                                                                         .foregroundColor: textColor])
             

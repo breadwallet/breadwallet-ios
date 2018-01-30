@@ -15,8 +15,7 @@ class TxMemoCell: TxDetailRowCell {
     fileprivate let textView = UITextView()
     
     // MARK: - Vars
-    
-    var store: Store?
+
     var viewModel: TxDetailViewModel!
     
     // MARK: - Init
@@ -40,8 +39,8 @@ class TxMemoCell: TxDetailRowCell {
     override func setupStyle() {
         super.setupStyle()
         
-        textView.font = .customBody(size: 13.0)
-        textView.textColor = .darkText
+        textView.font = .customBody(size: 14.0)
+        textView.textColor = .darkGray
         textView.textAlignment = .right
         textView.isScrollEnabled = false
         textView.returnKeyType = .done
@@ -57,11 +56,11 @@ class TxMemoCell: TxDetailRowCell {
     
     fileprivate func saveComment(comment: String) {
         guard let tx = viewModel.tx as? BtcTransaction,
-            let rate = store?.state[tx.currency].currentRate else { return }
+            let rate = Store.state[tx.currency].currentRate else { return }
         
         tx.saveComment(comment: comment, rate: rate)
         
-        store?.trigger(name: .txMemoUpdated(tx.hash))
+        Store.trigger(name: .txMemoUpdated(tx.hash))
     }
 }
 

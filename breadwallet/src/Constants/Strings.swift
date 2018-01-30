@@ -199,8 +199,11 @@ enum S {
         static let notConfirmedBlockHeightLabel = NSLocalizedString("TransactionDetails.notConfirmedBlockHeightLabel", value: "Not Confirmed", comment: "eg. Confirmed in Block: Not Confirmed")
         static let ethFrom = NSLocalizedString("TransactionDetails.ethFrom", value: "from %1$@", comment: "[received ] from <address>")
         
-        static let timestampHeader = NSLocalizedString("TransactionDetails.timestampHeader", value:"Time", comment: "Timestamp section header")
-        static let addressHeader = NSLocalizedString("TransactionDetails.addressHeader", value:"Address", comment: "Address section header")
+        static let initializedTimestampHeader = NSLocalizedString("TransactionDetails.initializedTimestampHeader", value:"Initialized", comment: "Timestamp section header for incomplete tx")
+        static let completeTimestampHeader = NSLocalizedString("TransactionDetails.completeTimestampHeader", value:"Complete", comment: "Timestamp section header for complete tx")
+        static let addressToHeader = NSLocalizedString("TransactionDetails.addressToHeader", value:"To", comment: "Address sent to header")
+        static let addressViaHeader = NSLocalizedString("TransactionDetails.addressViaHeader", value:"Via", comment: "Address received at header")
+        static let addressFromHeader = NSLocalizedString("TransactionDetails.addressFromHeader", value:"From", comment: "Address received from header")
         
     }
 

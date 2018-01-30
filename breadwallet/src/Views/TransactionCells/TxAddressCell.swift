@@ -34,10 +34,10 @@ class TxAddressCell: TxDetailRowCell {
     
     override func setupStyle() {
         super.setupStyle()
-        addressButton.titleLabel?.font = .customBody(size: 13.0)
+        addressButton.titleLabel?.font = .customBody(size: 14.0)
         addressButton.titleLabel?.lineBreakMode = .byTruncatingMiddle
         addressButton.titleLabel?.textAlignment = .right
-        addressButton.tintColor = .darkText
+        addressButton.tintColor = .darkGray
         
         addressButton.tap = strongify(self) { myself in
             myself.addressButton.tempDisable()
