@@ -54,7 +54,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private var exchangeRate: Rate? {
         didSet {
             setBalances()
-            // TODO: set exchange rate header text
         }
     }
     
@@ -104,7 +103,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         
         exchangeRateLabel.textColor = .transparentWhiteText
         exchangeRateLabel.textAlignment = .center
-        exchangeRateLabel.text = "$16904.34 per BTC" // TODO:BCH placeholder
         
         balanceLabel.textColor = .transparentWhiteText
         balanceLabel.text = S.Account.balance
@@ -249,8 +247,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     func setBalances() {
         guard let rate = exchangeRate else { return }
         
-        let maxDigits = self.currency.state.maxDigits
-        let amount = Amount(amount: balance, rate: rate, maxDigits: maxDigits, currency: self.currency)
+        let maxDigits = currency.state.maxDigits
+        let amount = Amount(amount: balance, rate: rate, maxDigits: maxDigits, currency: currency)
         
         if !hasInitialized {
             primaryBalance.setValue(amount.amountForBtcFormat)
@@ -274,6 +272,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                 self?.swapLabels()
             })
         }
+        
+        exchangeRateLabel.text = "\(rate.localString)\(S.AccountHeader.exchangeRateSeparator)\(currency.code)"
     }
     
     private func swapLabels() {

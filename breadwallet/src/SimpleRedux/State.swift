@@ -124,7 +124,7 @@ struct WalletState {
     let isRescanning: Bool
     let receiveAddress: String?
     let bigBalance: GethBigInt? // ??
-    let token: Token? // ??
+    let token: ERC20Token? // ??
     let numSent: Int // ??
     
     let rates: [Rate]
@@ -172,7 +172,7 @@ struct WalletState {
                     isRescanning: Bool? = nil,
                     receiveAddress: String? = nil,
                     bigBalance: GethBigInt? = nil,
-                    token: Token? = nil,
+                    token: ERC20Token? = nil,
                     numSent: Int? = nil,
                     currentRate: Rate? = nil,
                     rates: [Rate]? = nil,

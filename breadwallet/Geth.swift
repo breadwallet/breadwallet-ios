@@ -80,7 +80,7 @@ class GethManager {
         return nil
     }
 
-    func transfer(amount: GethBigInt, toAddress: String, privKey: String, token: Token, nonce: Int) -> Error? {
+    func transfer(amount: GethBigInt, toAddress: String, privKey: String, token: ERC20Token, nonce: Int) -> Error? {
         return nil
     }
 }

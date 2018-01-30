@@ -47,6 +47,13 @@ struct Rate {
         let identifier = Locale.identifier(fromComponents: components)
         return Locale(identifier: identifier)
     }
+    
+    var localString: String {
+        let format = NumberFormatter()
+        format.numberStyle = .currency
+        format.currencySymbol = currencySymbol
+        return format.string(from: rate as NSNumber) ?? ""
+    }
 
     static var empty: Rate {
         return Rate(code: "", name: "", rate: 0.0, reciprocalCode: "")
