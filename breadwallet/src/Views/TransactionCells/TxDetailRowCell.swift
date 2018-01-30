@@ -24,7 +24,7 @@ class TxDetailRowCell: UITableViewCell {
     // MARK: - Views
     
     internal let container = UIView()
-    internal let titleLabel = UILabel(font: UIFont.customMedium(size: 13.0))
+    internal let titleLabel = UILabel(font: UIFont.customBody(size: 14.0))
     internal let separator = UIView(color: .secondaryShadow)
     
     // MARK: - Init
@@ -51,6 +51,7 @@ class TxDetailRowCell: UITableViewCell {
                                                            left: C.padding[2],
                                                            bottom: -C.padding[1],
                                                            right: -C.padding[2]))
+        container.constrain([container.heightAnchor.constraint(equalToConstant: 29.0)])
         
         titleLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         titleLabel.constrain([
@@ -58,11 +59,11 @@ class TxDetailRowCell: UITableViewCell {
             titleLabel.constraint(.top, toView: container),
             titleLabel.constraint(.bottom, toView: container)
             ])
-        separator.constrainBottomCorners(height: 0.5)
+        separator.constrainTopCorners(height: 0.5)
     }
     
     internal func setupStyle() {
-        titleLabel.textColor = .grayTextTint
+        titleLabel.textColor = .lightGray
     }
     
     required init?(coder aDecoder: NSCoder) {

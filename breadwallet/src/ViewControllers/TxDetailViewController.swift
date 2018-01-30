@@ -9,8 +9,9 @@
 import UIKit
 
 private extension C {
-    static let compactContainerHeight: CGFloat = 300.0
-    static let expandedContainerHeight: CGFloat = 464.0
+    static let statusRowHeight: CGFloat = 48.0
+    static let compactContainerHeight: CGFloat = 322.0
+    static let expandedContainerHeight: CGFloat = 546.0
     static let detailsButtonHeight: CGFloat = 65.0
 }
 
@@ -30,6 +31,14 @@ class TxDetailViewController: UIViewController, Subscriber {
     private let viewModel: TxDetailViewModel
     private var dataSource: TxDetailDataSource
     private var isExpanded: Bool = false
+    
+    private var compactContainerHeight: CGFloat {
+        return viewModel.status == .complete ? C.compactContainerHeight : C.compactContainerHeight + C.statusRowHeight
+    }
+    
+    private var expandedContainerHeight: CGFloat {
+        return viewModel.status == .complete ? C.expandedContainerHeight : C.expandedContainerHeight + C.statusRowHeight
+    }
     
     // MARK: - Init
     
@@ -79,7 +88,7 @@ class TxDetailViewController: UIViewController, Subscriber {
             container.centerYAnchor.constraint(equalTo: view.centerYAnchor)
             ])
         
-        containerHeightConstraint = container.heightAnchor.constraint(equalToConstant: C.compactContainerHeight)
+        containerHeightConstraint = container.heightAnchor.constraint(equalToConstant: compactContainerHeight)
         containerHeightConstraint.isActive = true
         
         header.constrainTopCorners(height: C.Sizes.headerHeight)
@@ -95,7 +104,7 @@ class TxDetailViewController: UIViewController, Subscriber {
             separator.leadingAnchor.constraint(equalTo: footer.leadingAnchor),
             separator.topAnchor.constraint(equalTo: footer.topAnchor, constant: 1.0),
             separator.trailingAnchor.constraint(equalTo: footer.trailingAnchor),
-            separator.heightAnchor.constraint(equalToConstant: 1.0) ])
+            separator.heightAnchor.constraint(equalToConstant: 0.5) ])
         detailsButton.constrain(toSuperviewEdges: .zero)
     }
     
@@ -104,14 +113,14 @@ class TxDetailViewController: UIViewController, Subscriber {
         container.layer.masksToBounds = true
         
         footer.backgroundColor = .white
-        separator.backgroundColor = .separatorGray
+        separator.backgroundColor = .secondaryShadow
         detailsButton.setTitleColor(.blueButtonText, for: .normal)
         detailsButton.setTitleColor(.blueButtonText, for: .selected)
         detailsButton.titleLabel?.font = .customBody(size: 16.0)
         
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
-        tableView.estimatedRowHeight = 41.0
+        tableView.estimatedRowHeight = 45.0
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.allowsSelection = false
         tableView.isScrollEnabled = false
@@ -146,9 +155,9 @@ class TxDetailViewController: UIViewController, Subscriber {
         
         UIView.spring(0.7, animations: {
             if self.isExpanded {
-                self.containerHeightConstraint.constant = C.expandedContainerHeight
+                self.containerHeightConstraint.constant = self.expandedContainerHeight
             } else {
-                self.containerHeightConstraint.constant = C.compactContainerHeight
+                self.containerHeightConstraint.constant = self.compactContainerHeight
             }
             self.view.layoutIfNeeded()
         }) { _ in }

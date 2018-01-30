@@ -16,14 +16,14 @@ class TxStatusIndicator: UIView {
         }
     }
     
-    let size: CGFloat = 6.0
-    private let padding: CGFloat = 4.0
-    
+    let height: CGFloat = 7.0
+    private let padding: CGFloat = -7.0
+    let pipWidth: CGFloat = 84.0
     var width: CGFloat {
-        return (size + padding) * 3
+        return (pipWidth * 3) + (padding * 2)
     }
     
-    private var circles = [StatusCircle]()
+    private var pips = [StatusPip]()
     
     // MARK: Init
     
@@ -33,32 +33,39 @@ class TxStatusIndicator: UIView {
     }
     
     private func setup() {
+        layer.cornerRadius = height / 2.0
+        layer.masksToBounds = true
+        backgroundColor = .statusIndicatorInactive
+        
         for _ in 0..<3 {
-            circles.append(StatusCircle(color: .blue))
+            pips.append(StatusPip())
         }
         
-        addCircleContraints()
+        pips.reversed().forEach { pip in
+            addSubview(pip)
+        }
+        
+        setupContraints()
     }
     
-    private func addCircleContraints() {
-        circles.enumerated().forEach { index, circle in
-            addSubview(circle)
+    private func setupContraints() {
+        pips.enumerated().forEach { index, pip in
             let leadingConstraint: NSLayoutConstraint?
             if index == 0 {
-                leadingConstraint = circle.constraint(.leading, toView: self, constant: 0.0)
+                leadingConstraint = pip.constraint(.leading, toView: self, constant: 0.0)
             } else {
-                leadingConstraint = NSLayoutConstraint(item: circle,
+                leadingConstraint = NSLayoutConstraint(item: pip,
                                                        attribute: .leading,
                                                        relatedBy: .equal,
-                                                       toItem: circles[index - 1],
+                                                       toItem: pips[index - 1],
                                                        attribute: .trailing,
                                                        multiplier: 1.0,
                                                        constant: padding)
             }
-            circle.constrain([
-                circle.constraint(.width, constant: size),
-                circle.constraint(.height, constant: size),
-                circle.constraint(.centerY, toView: self, constant: nil),
+            pip.constrain([
+                pip.constraint(.width, constant: pipWidth),
+                pip.constraint(.height, constant: height),
+                pip.constraint(.centerY, toView: self, constant: nil),
                 leadingConstraint ])
         }
     }
@@ -70,19 +77,19 @@ class TxStatusIndicator: UIView {
     // MARK: -
     
     func updateStatus() {
-        let activeIndex = circleCount(forStatus: status)
-        circles.enumerated().forEach { index, circle in
+        let activeIndex = pipCount(forStatus: status)
+        pips.enumerated().forEach { index, pip in
             if index == activeIndex {
-                circle.state = .flashing
+                pip.state = .flashing
             } else if index < activeIndex {
-                circle.state = .on
+                pip.state = .on
             } else {
-                circle.state = .off
+                pip.state = .off
             }
         }
     }
     
-    private func circleCount(forStatus status: TransactionStatus) -> Int {
+    private func pipCount(forStatus status: TransactionStatus) -> Int {
         switch status {
         case .pending:
             return 1

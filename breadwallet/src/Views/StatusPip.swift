@@ -1,5 +1,5 @@
 //
-//  StatusCircle.swift
+//  StatusPip.swift
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2017-12-22.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StatusCircle: UIView {
+class StatusPip: UIView {
     
     // MARK: Vars
     
@@ -20,47 +20,50 @@ class StatusCircle: UIView {
     
     var state: State {
         didSet {
-            let alpha: CGFloat = (state == .off) ? 0.25 : 1.0
-            circleLayer.fillColor = color.withAlphaComponent(alpha).cgColor
+            let color: UIColor = (state == .off) ? offColor : tintColor
+            pipLayer.fillColor = color.cgColor
             
             if state == .flashing {
-                circleLayer.add(flashingAnimation, forKey: flashingAnimationKey)
+                pipLayer.add(flashingAnimation, forKey: flashingAnimationKey)
             } else {
-                circleLayer.removeAnimation(forKey: flashingAnimationKey)
+                pipLayer.removeAnimation(forKey: flashingAnimationKey)
             }
         }
     }
 
-    private var color: UIColor
-    private let circleLayer = CAShapeLayer()
+    private let pipLayer = CAShapeLayer()
     
     private let flashingAnimationKey = "flashing"
     private var flashingAnimation: CABasicAnimation {
-        let animation = CABasicAnimation(keyPath: "opacity")
+        let animation = CABasicAnimation(keyPath: "fillColor")
         
-        animation.fromValue = 1.0
-        animation.toValue = 0.25
+        animation.fromValue = tintColor.withAlphaComponent(0.05).cgColor
+        animation.toValue = tintColor.withAlphaComponent(0.4).cgColor
         animation.duration = 1.0
+        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
         animation.repeatCount = Float.greatestFiniteMagnitude
         animation.autoreverses = true
         
         return animation
     }
     
+    private let offColor: UIColor
+    
     // MARK: Init
 
-    init(color: UIColor) {
-        self.color = color
+    init(onColor: UIColor = .statusIndicatorActive, offColor: UIColor = .statusIndicatorInactive) {
         self.state = .off
+        self.offColor = offColor
         super.init(frame: .zero)
+        self.tintColor = onColor
         setup()
     }
     
     private func setup() {
-        circleLayer.frame = bounds
-        circleLayer.fillColor = color.cgColor
-        circleLayer.lineWidth = 0.0
-        layer.addSublayer(circleLayer)
+        pipLayer.frame = bounds
+        pipLayer.fillColor = offColor.cgColor
+        pipLayer.lineWidth = 0.0
+        layer.addSublayer(pipLayer)
         backgroundColor = .clear
     }
     
@@ -76,7 +79,7 @@ class StatusCircle: UIView {
     }
     
     private func updateShapeLayer() {
-        circleLayer.frame = bounds
-        circleLayer.path = UIBezierPath(ovalIn: circleLayer.frame).cgPath
+        pipLayer.frame = bounds
+        pipLayer.path = UIBezierPath(roundedRect: pipLayer.frame, cornerRadius: pipLayer.frame.height / 2.0).cgPath
     }
 }
