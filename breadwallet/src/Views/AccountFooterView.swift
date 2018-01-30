@@ -15,12 +15,15 @@ class AccountFooterView: UIView, Trackable {
     var buyCallback: (() -> Void)?
     
     private var hasSetup = false
+    private let currency: CurrencyDef
 
-    init() {
+    init(currency: CurrencyDef) {
+        self.currency = currency
         super.init(frame: .zero)
     }
 
     override func layoutSubviews() {
+        super.layoutSubviews()
         guard !hasSetup else { return }
         setup()
         hasSetup = true
@@ -32,21 +35,20 @@ class AccountFooterView: UIView, Trackable {
         
         let send = UIButton.rounded(title: S.Button.send)
         send.tintColor = .white
-        send.backgroundColor = .orange
+        send.backgroundColor = currency.colors.0
         send.addTarget(self, action: #selector(AccountFooterView.send), for: .touchUpInside)
 
         let receive = UIButton.rounded(title: S.Button.receive)
         receive.tintColor = .white
-        receive.backgroundColor = .orange
+        receive.backgroundColor = currency.colors.0
         receive.addTarget(self, action: #selector(AccountFooterView.receive), for: .touchUpInside)
 
         let buy = UIButton.rounded(title: S.Button.buy)
         buy.tintColor = .white
-        buy.backgroundColor = .orange
+        buy.backgroundColor = currency.colors.0
         buy.addTarget(self, action: #selector(AccountFooterView.buy), for: .touchUpInside)
         
-        let padding = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        padding.width = C.padding[1]
+        let paddingWidth = C.padding[2]
         
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         
@@ -56,14 +58,13 @@ class AccountFooterView: UIView, Trackable {
         
         var buttonCount: Int
         
-        // TODO: multi-currency support
-        if BRAPIClient.featureEnabled(.buyBitcoin) {
+        if currency.matches(Currencies.btc) && BRAPIClient.featureEnabled(.buyBitcoin) {
             toolbar.items = [
                 flexibleSpace,
                 sendButton,
-                padding,
+                flexibleSpace,
                 receiveButton,
-                padding,
+                flexibleSpace,
                 buyButton,
                 flexibleSpace,
             ]
@@ -72,7 +73,7 @@ class AccountFooterView: UIView, Trackable {
             toolbar.items = [
                 flexibleSpace,
                 sendButton,
-                padding,
+                flexibleSpace,
                 receiveButton,
                 flexibleSpace,
             ]
@@ -85,14 +86,13 @@ class AccountFooterView: UIView, Trackable {
         // constraints
         toolbar.constrain(toSuperviewEdges: nil)
         
-        let buttonWidth = self.frame.width / CGFloat(buttonCount) - (padding.width * CGFloat(buttonCount+1))
+        let buttonWidth = (self.bounds.width - (paddingWidth * CGFloat(buttonCount+1))) / CGFloat(buttonCount)
+        let buttonHeight = CGFloat(44.0)
         
-        let constraints = [
-            sendButton.customView?.widthAnchor.constraint(equalToConstant: buttonWidth),
-            receiveButton.customView?.widthAnchor.constraint(equalToConstant: buttonWidth),
-            buyButton.customView?.widthAnchor.constraint(equalToConstant: buttonWidth)
-            ]
-        NSLayoutConstraint.activate(constraints.flatMap{ $0 })
+        let buttons = [sendButton, receiveButton, buyButton]
+        let constraints = buttons.flatMap { $0.customView?.widthAnchor.constraint(equalToConstant: buttonWidth) } +
+            buttons.flatMap { $0.customView?.heightAnchor.constraint(equalToConstant: buttonHeight) }
+        NSLayoutConstraint.activate(constraints)
         
         separator.constrainTopCorners(height: 1.0)
     }
@@ -100,7 +100,6 @@ class AccountFooterView: UIView, Trackable {
     @objc private func send() { sendCallback?() }
     @objc private func receive() { receiveCallback?() }
     @objc private func buy() {
-        //TODO:BCH event name
         saveEvent("menu.didTapBuyBitcoin")
         buyCallback?()
     }

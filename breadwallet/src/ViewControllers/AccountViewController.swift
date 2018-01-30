@@ -11,7 +11,7 @@ import BRCore
 import MachO
 
 let accountHeaderHeight: CGFloat = 152.0
-let accountFooterHeight: CGFloat = 56.0
+let accountFooterHeight: CGFloat = 67.0
 private let transactionsLoadingViewHeightConstant: CGFloat = 48.0
 
 class AccountViewController : UIViewController, Subscriber {
@@ -27,6 +27,7 @@ class AccountViewController : UIViewController, Subscriber {
     init(currency: CurrencyDef) {
         self.currency = currency
         self.headerView = AccountHeaderView(currency: currency)
+        self.footerView = AccountFooterView(currency: currency)
         super.init(nibName: nil, bundle: nil)
         self.transactionsTableView = TransactionsTableViewController(currency: currency, didSelectTransaction: didSelectTransaction)
         
@@ -40,7 +41,7 @@ class AccountViewController : UIViewController, Subscriber {
     private let currency: CurrencyDef
     
     private let headerView: AccountHeaderView
-    private let footerView = AccountFooterView()
+    private let footerView: AccountFooterView
     private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
     private let transactionsLoadingView = LoadingProgressView()
     private var transactionsTableView: TransactionsTableViewController!
@@ -114,7 +115,7 @@ class AccountViewController : UIViewController, Subscriber {
         headerContainer.constrain([ headerContainer.constraint(.height, constant: E.isIPhoneX ? accountHeaderHeight + 14.0 : accountHeaderHeight) ])
         headerView.constrain(toSuperviewEdges: nil)
 
-        footerView.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
+        footerView.constrainBottomCorners(sidePadding: -C.padding[1], bottomPadding: 0)
         footerView.constrain([
             footerView.constraint(.height, constant: E.isIPhoneX ? accountFooterHeight + 20.0 : accountFooterHeight) ])
         searchHeaderview.constrain(toSuperviewEdges: nil)
