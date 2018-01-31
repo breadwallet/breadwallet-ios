@@ -21,7 +21,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private let balanceLabel = UILabel(font: .customBody(size: 14.0))
     private let primaryBalance: UpdatingLabel
     private let secondaryBalance: UpdatingLabel
-    private let conversionSymbol = UILabel(font: .customBody(size: smallFontSize), color: .whiteTint)
+    private let conversionSymbol = UIImageView(image: #imageLiteral(resourceName: "conversion"))
     private let currencyTapView = UIView()
     /// debug info
     private let modeLabel = UILabel(font: .customBody(size: 12.0))
@@ -107,11 +107,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         balanceLabel.textColor = .transparentWhiteText
         balanceLabel.text = S.Account.balance
         
-        primaryBalance.textColor = .whiteTint
-        primaryBalance.font = UIFont.customBold(size: largeFontSize)
-
-        secondaryBalance.textColor = .whiteTint
-        secondaryBalance.font = UIFont.customBold(size: largeFontSize)
+        swapLabels()
 
         searchButton.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
         searchButton.tintColor = .white
@@ -120,7 +116,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 //            currencyName.textColor = .red
 //        }
 
-        conversionSymbol.text = S.AccountHeader.equals
+        conversionSymbol.tintColor = .whiteTint
 
         modeLabel.textAlignment = .right
         modeLabel.isHidden = true
@@ -143,7 +139,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         currencyName.constrain([
             currencyName.constraint(.leading, toView: self, constant: C.padding[2]),
             currencyName.constraint(.trailing, toView: self, constant: -C.padding[2]),
-            currencyName.constraint(.top, toView: self, constant: C.padding[6])
+            currencyName.constraint(.top, toView: self, constant: E.isIPhoneX ? C.padding[5] : C.padding[3])
             ])
         
         exchangeRateLabel.pinTo(viewAbove: currencyName)
@@ -155,24 +151,28 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         secondaryBalance.constrain([
             secondaryBalance.constraint(.firstBaseline, toView: primaryBalance, constant: 0.0) ])
 
-        conversionSymbol.translatesAutoresizingMaskIntoConstraints = false
         primaryBalance.translatesAutoresizingMaskIntoConstraints = false
+        
+        conversionSymbol.constrain([
+            conversionSymbol.heightAnchor.constraint(equalTo: conversionSymbol.widthAnchor),
+            conversionSymbol.heightAnchor.constraint(equalToConstant: 12.0)
+            ])
 
         regularConstraints = [
             primaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[2]),
             primaryBalance.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
-            conversionSymbol.firstBaselineAnchor.constraint(equalTo: primaryBalance.firstBaselineAnchor),
-            conversionSymbol.leadingAnchor.constraint(equalTo: primaryBalance.trailingAnchor, constant: C.padding[1]/2.0),
-            secondaryBalance.leadingAnchor.constraint(equalTo: conversionSymbol.trailingAnchor, constant: C.padding[1]/2.0),
+            conversionSymbol.bottomAnchor.constraint(equalTo: primaryBalance.firstBaselineAnchor),
+            conversionSymbol.leadingAnchor.constraint(equalTo: primaryBalance.trailingAnchor, constant: C.padding[1]),
+            secondaryBalance.leadingAnchor.constraint(equalTo: conversionSymbol.trailingAnchor, constant: C.padding[1]),
             balanceLabel.bottomAnchor.constraint(equalTo: primaryBalance.topAnchor, constant: 0.0)
         ]
 
         swappedConstraints = [
             secondaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[2]),
             secondaryBalance.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
-            conversionSymbol.firstBaselineAnchor.constraint(equalTo: secondaryBalance.firstBaselineAnchor),
-            conversionSymbol.leadingAnchor.constraint(equalTo: secondaryBalance.trailingAnchor, constant: C.padding[1]/2.0),
-            primaryBalance.leadingAnchor.constraint(equalTo: conversionSymbol.trailingAnchor, constant: C.padding[1]/2.0),
+            conversionSymbol.bottomAnchor.constraint(equalTo: secondaryBalance.firstBaselineAnchor),
+            conversionSymbol.leadingAnchor.constraint(equalTo: secondaryBalance.trailingAnchor, constant: C.padding[1]),
+            primaryBalance.leadingAnchor.constraint(equalTo: conversionSymbol.trailingAnchor, constant: C.padding[1]),
             balanceLabel.bottomAnchor.constraint(equalTo: secondaryBalance.topAnchor, constant: 0.0)
         ]
 
@@ -181,13 +181,14 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         searchButton.constrain([
             searchButton.constraint(.trailing, toView: self, constant: -C.padding[1]),
             searchButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0.0),
-            searchButton.constraint(.width, constant: 36.0),
-            searchButton.constraint(.height, constant: 36.0) ])
-        searchButton.imageEdgeInsets = UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0)
+            searchButton.constraint(.width, constant: 40.0),
+            searchButton.constraint(.height, constant: 40.0) ])
+        let inset: CGFloat = 12.0
+        searchButton.imageEdgeInsets = UIEdgeInsetsMake(inset, inset, inset, inset)
 
         currencyTapView.constrain([
-            currencyTapView.leadingAnchor.constraint(equalTo: currencyName.leadingAnchor, constant: -C.padding[1]),
-            currencyTapView.trailingAnchor.constraint(equalTo: searchButton.leadingAnchor, constant: C.padding[1]),
+            currencyTapView.leadingAnchor.constraint(equalTo: balanceLabel.leadingAnchor, constant: -C.padding[1]),
+            currencyTapView.trailingAnchor.constraint(greaterThanOrEqualTo: searchButton.leadingAnchor, constant: C.padding[1]),
             currencyTapView.topAnchor.constraint(equalTo: primaryBalance.topAnchor, constant: -C.padding[1]),
             currencyTapView.bottomAnchor.constraint(equalTo: primaryBalance.bottomAnchor, constant: C.padding[1]) ])
 
@@ -226,15 +227,15 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                         })
         
         Store.lazySubscribe(self,
-                        selector: { $0[self.currency].maxDigits != $1[self.currency].maxDigits},
-                        callback: {
-                            if let rate = $0[self.currency].currentRate {
-                                let maxDigits = $0[self.currency].maxDigits
-                                let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: maxDigits, currency: self.currency)
-                                self.secondaryBalance.formatter = placeholderAmount.localFormat
-                                self.primaryBalance.formatter = placeholderAmount.btcFormat
-                                self.setBalances()
-                            }
+                            selector: { $0[self.currency].maxDigits != $1[self.currency].maxDigits},
+                            callback: {
+                                if let rate = $0[self.currency].currentRate {
+                                    let maxDigits = $0[self.currency].maxDigits
+                                    let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: maxDigits, currency: self.currency)
+                                    self.secondaryBalance.formatter = placeholderAmount.localFormat
+                                    self.primaryBalance.formatter = placeholderAmount.btcFormat
+                                    self.setBalances()
+                                }
         })
         Store.subscribe(self,
                             selector: {$0[self.currency].balance != $1[self.currency].balance },
@@ -247,6 +248,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     func setBalances() {
         guard let rate = exchangeRate else { return }
         
+        exchangeRateLabel.text = "\(rate.localString)\(S.AccountHeader.exchangeRateSeparator)\(currency.code)"
+        
         let maxDigits = currency.state.maxDigits
         let amount = Amount(amount: balance, rate: rate, maxDigits: maxDigits, currency: currency)
         
@@ -255,7 +258,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             secondaryBalance.setValue(amount.localAmount)
             swapLabels()
             hasInitialized = true
-            hideExtraViews()
         } else {
             if primaryBalance.isHidden {
                 primaryBalance.isHidden = false
@@ -272,8 +274,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                 self?.swapLabels()
             })
         }
-        
-        exchangeRateLabel.text = "\(rate.localString)\(S.AccountHeader.exchangeRateSeparator)\(currency.code)"
     }
     
     private func swapLabels() {
