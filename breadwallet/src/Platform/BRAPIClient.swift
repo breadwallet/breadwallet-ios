@@ -166,7 +166,6 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
         actualRequest.setValue("\(E.isTestnet ? 1 : 0)", forHTTPHeaderField: "X-Bitcoin-Testnet")
         actualRequest.setValue("\((E.isTestFlight || E.isDebug) ? 1 : 0)", forHTTPHeaderField: "X-Testflight")
         actualRequest.setValue(Locale.current.identifier, forHTTPHeaderField: "Accept-Language")
-        actualRequest.setValue("\(E.isTestFlight ? 1 : 0)", forHTTPHeaderField: "X-Is-Internal")
         return actualRequest
     }
     
