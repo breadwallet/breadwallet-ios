@@ -87,8 +87,6 @@ class TxDetailDataSource: NSObject {
             return S.TransactionDetails.statusHeader
         case .memo:
             return S.TransactionDetails.commentsHeader
-        case .timestamp:
-            return viewModel.timestampHeader
         case .address:
             return viewModel.addressHeader
         case .startingBalance:
@@ -141,6 +139,7 @@ extension TxDetailDataSource: UITableViewDataSource {
             
         case .timestamp:
             let labelCell = cell as! TxLabelCell
+            labelCell.titleLabel.attributedText = viewModel.timestampHeader
             labelCell.value = viewModel.longTimestamp
             
         case .address:

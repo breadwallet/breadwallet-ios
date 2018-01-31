@@ -6,7 +6,7 @@
 //  Copyright © 2017 breadwallet LLC. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 /// View model of a transaction in detail view
 struct TxDetailViewModel: TxViewModel {
@@ -34,8 +34,23 @@ struct TxDetailViewModel: TxViewModel {
         }
     }
     
-    var timestampHeader: String {
-        return (status == .complete) ? S.TransactionDetails.completeTimestampHeader : S.TransactionDetails.initializedTimestampHeader
+    var timestampHeader: NSAttributedString {
+        if status == .complete {
+            let text = " " + S.TransactionDetails.completeTimestampHeader
+            let attributedString = NSMutableAttributedString(string: text)
+            let icon = NSTextAttachment()
+            icon.image = #imageLiteral(resourceName: "CircleCheckSolid").withRenderingMode(.alwaysTemplate)
+            icon.bounds = CGRect(x: 0, y: -2.0, width: 14.0, height: 14.0)
+            let iconString = NSMutableAttributedString(string: " ") // space required before an attachment to apply template color (UIKit bug)
+            iconString.append(NSAttributedString(attachment: icon))
+            attributedString.insert(iconString, at: 0)
+            attributedString.addAttributes([.foregroundColor: UIColor.receivedGreen,
+                                            .font: UIFont.customBody(size: 0.0)],
+                                           range: NSMakeRange(0, iconString.length))
+            return attributedString
+        } else {
+            return NSAttributedString(string: S.TransactionDetails.initializedTimestampHeader)
+        }
     }
     
     var addressHeader: String {
