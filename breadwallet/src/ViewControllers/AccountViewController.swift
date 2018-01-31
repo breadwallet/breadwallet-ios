@@ -112,7 +112,7 @@ class AccountViewController : UIViewController, Subscriber {
 
     private func addConstraints() {
         headerContainer.constrainTopCorners(sidePadding: 0, topPadding: 0)
-        headerContainer.constrain([ headerContainer.constraint(.height, constant: E.isIPhoneX ? accountHeaderHeight + 14.0 : accountHeaderHeight) ])
+        headerContainer.constrain([ headerContainer.constraint(.height, constant: accountHeaderHeight) ])
         headerView.constrain(toSuperviewEdges: nil)
 
         footerView.constrainBottomCorners(sidePadding: -C.padding[1], bottomPadding: 0)
