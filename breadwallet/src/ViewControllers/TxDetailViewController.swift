@@ -20,6 +20,7 @@ class TxDetailViewController: UIViewController, Subscriber {
     // MARK: - Private Vars
     
     private let container = UIView()
+    private let tapView = UIView()
     private let header = ModalHeaderView(title: S.TransactionDetails.title, style: .transaction)
     private let footer = UIView()
     private let separator = UIView()
@@ -49,10 +50,7 @@ class TxDetailViewController: UIViewController, Subscriber {
         super.init(nibName: nil, bundle: nil)
         
         header.closeCallback = { [weak self] in
-            if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
-                delegate.reset()
-            }
-            self?.dismiss(animated: true, completion: nil)
+            self?.close()
         }
         
         setup()
@@ -69,10 +67,12 @@ class TxDetailViewController: UIViewController, Subscriber {
     private func setup() {
         addSubViews()
         addConstraints()
+        setupActions()
         setInitialData()
     }
     
     private func addSubViews() {
+        view.addSubview(tapView)
         view.addSubview(container)
         container.addSubview(header)
         container.addSubview(tableView)
@@ -82,6 +82,7 @@ class TxDetailViewController: UIViewController, Subscriber {
     }
     
     private func addConstraints() {
+        tapView.constrain(toSuperviewEdges: nil)
         container.constrain([
             container.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             container.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
@@ -106,6 +107,12 @@ class TxDetailViewController: UIViewController, Subscriber {
             separator.trailingAnchor.constraint(equalTo: footer.trailingAnchor),
             separator.heightAnchor.constraint(equalToConstant: 0.5) ])
         detailsButton.constrain(toSuperviewEdges: .zero)
+    }
+    
+    private func setupActions() {
+        let gr = UITapGestureRecognizer(target: self, action: #selector(close))
+        tapView.addGestureRecognizer(gr)
+        tapView.isUserInteractionEnabled = true
     }
     
     private func setInitialData() {
@@ -136,11 +143,6 @@ class TxDetailViewController: UIViewController, Subscriber {
         detailsButton.addTarget(self, action: #selector(onToggleDetails), for: .touchUpInside)
         
         header.title = viewModel.title
-        
-    }
-    
-    private func setupTransaction() {
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -161,5 +163,12 @@ class TxDetailViewController: UIViewController, Subscriber {
             }
             self.view.layoutIfNeeded()
         }) { _ in }
+    }
+    
+    @objc private func close() {
+        if let delegate = transitioningDelegate as? ModalTransitionDelegate {
+            delegate.reset()
+        }
+        dismiss(animated: true, completion: nil)
     }
 }
