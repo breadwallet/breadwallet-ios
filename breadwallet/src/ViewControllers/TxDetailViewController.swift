@@ -29,7 +29,12 @@ class TxDetailViewController: UIViewController, Subscriber {
     
     private var containerHeightConstraint: NSLayoutConstraint!
     
-    private let viewModel: TxDetailViewModel
+    private var transaction: Transaction {
+        didSet {
+            reload()
+        }
+    }
+    private var viewModel: TxDetailViewModel
     private var dataSource: TxDetailDataSource
     private var isExpanded: Bool = false
     
@@ -38,14 +43,18 @@ class TxDetailViewController: UIViewController, Subscriber {
     }
     
     private var expandedContainerHeight: CGFloat {
-        return viewModel.status == .complete ? C.expandedContainerHeight : C.expandedContainerHeight + C.statusRowHeight
+        let maxHeight = view.frame.height - C.padding[4]
+        let contentHeight = header.frame.height + tableView.contentSize.height + footer.frame.height + separator.frame.height
+        tableView.isScrollEnabled = contentHeight > maxHeight
+        return min(maxHeight, contentHeight)
     }
     
     // MARK: - Init
     
     init(transaction: Transaction) {
-        viewModel = TxDetailViewModel(tx: transaction)
-        dataSource = TxDetailDataSource(viewModel: viewModel)
+        self.transaction = transaction
+        self.viewModel = TxDetailViewModel(tx: transaction)
+        self.dataSource = TxDetailDataSource(viewModel: viewModel)
         
         super.init(nibName: nil, bundle: nil)
         
@@ -56,12 +65,18 @@ class TxDetailViewController: UIViewController, Subscriber {
         setup()
     }
     
-    deinit {
-        
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        registerForKeyboardNotifications()
+        
+        // refresh if rate changes
+        Store.lazySubscribe(self, selector: { $0[self.viewModel.currency].currentRate != $1[self.viewModel.currency].currentRate }, callback: { _ in self.reload() })
+        // refresh if tx state changes
+        Store.lazySubscribe(self, selector: { $0[self.viewModel.currency].transactions != $1[self.viewModel.currency].transactions }, callback: { [unowned self] in
+            guard let tx = $0[self.viewModel.currency].transactions.first(where: { $0.hash == self.viewModel.transactionHash }) else { return }
+            self.transaction = tx
+        })
     }
     
     private func setup() {
@@ -97,7 +112,7 @@ class TxDetailViewController: UIViewController, Subscriber {
             tableView.topAnchor.constraint(equalTo: header.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: footer.topAnchor)
             ])
         
         footer.constrainBottomCorners(height: C.detailsButtonHeight)
@@ -145,6 +160,18 @@ class TxDetailViewController: UIViewController, Subscriber {
         header.title = viewModel.title
     }
     
+    private func reload() {
+        viewModel = TxDetailViewModel(tx: transaction)
+        dataSource = TxDetailDataSource(viewModel: viewModel)
+        tableView.dataSource = dataSource
+        tableView.reloadData()
+    }
+    
+    deinit {
+        Store.unsubscribe(self)
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -170,5 +197,35 @@ class TxDetailViewController: UIViewController, Subscriber {
             delegate.reset()
         }
         dismiss(animated: true, completion: nil)
+    }
+}
+
+//MARK: - Keyboard Handler
+extension TxDetailViewController {
+    fileprivate func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    @objc fileprivate func keyboardWillShow(notification: NSNotification) {
+        if let delegate = transitioningDelegate as? ModalTransitionDelegate {
+            delegate.shouldDismissInteractively = false
+        }
+        if !isExpanded {
+            onToggleDetails()
+        }
+        if let keyboardHeight = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
+            tableView.contentInset = UIEdgeInsetsMake(0, 0, keyboardHeight, 0)
+        }
+    }
+    
+    @objc fileprivate func keyboardWillHide(notification: NSNotification) {
+        if let delegate = transitioningDelegate as? ModalTransitionDelegate {
+            delegate.shouldDismissInteractively = true
+        }
+        UIView.animate(withDuration: 0.2, animations: {
+            // adding inset in keyboardWillShow is animated by itself but removing is not
+            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        })
     }
 }

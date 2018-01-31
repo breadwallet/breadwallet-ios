@@ -17,6 +17,7 @@ class TxMemoCell: TxDetailRowCell {
     // MARK: - Vars
 
     var viewModel: TxDetailViewModel!
+    weak var tableView: UITableView!
     
     // MARK: - Init
     
@@ -30,15 +31,15 @@ class TxMemoCell: TxDetailRowCell {
         
         textView.constrain([
             textView.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: C.padding[2]),
-            textView.constraint(.trailing, toView: container),
-            textView.constraint(.top, toView: container),
-            textView.constraint(.bottom, toView: container)
+            textView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            textView.topAnchor.constraint(equalTo: container.topAnchor),
+            textView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
             ])
     }
     
     override func setupStyle() {
         super.setupStyle()
-        
+
         textView.font = .customBody(size: 14.0)
         textView.textColor = .darkGray
         textView.textAlignment = .right
@@ -49,7 +50,8 @@ class TxMemoCell: TxDetailRowCell {
     
     // MARK: -
     
-    func set(viewModel: TxDetailViewModel) {
+    func set(viewModel: TxDetailViewModel, tableView: UITableView) {
+        self.tableView = tableView
         self.viewModel = viewModel
         textView.text = viewModel.comment
     }
@@ -82,5 +84,11 @@ extension TxMemoCell: UITextViewDelegate {
         } else {
             return true
         }
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        // trigger cell resize
+        tableView.beginUpdates()
+        tableView.endUpdates()
     }
 }

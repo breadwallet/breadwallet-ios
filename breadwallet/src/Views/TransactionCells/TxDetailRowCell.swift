@@ -51,13 +51,12 @@ class TxDetailRowCell: UITableViewCell {
                                                            left: C.padding[2],
                                                            bottom: -C.padding[1],
                                                            right: -C.padding[2]))
-        container.constrain([container.heightAnchor.constraint(equalToConstant: 29.0)])
+        container.constrain([container.heightAnchor.constraint(greaterThanOrEqualToConstant: 29.0)])
         
         titleLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         titleLabel.constrain([
             titleLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-            titleLabel.constraint(.top, toView: container),
-            titleLabel.constraint(.bottom, toView: container)
+            titleLabel.constraint(toTop: container, constant: C.padding[3])
             ])
         separator.constrainTopCorners(height: 0.5)
     }
