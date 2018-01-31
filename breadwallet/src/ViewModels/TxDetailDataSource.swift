@@ -135,7 +135,7 @@ extension TxDetailDataSource: UITableViewDataSource {
             
         case .memo:
             let memoCell = cell as! TxMemoCell
-            memoCell.set(viewModel: viewModel)
+            memoCell.set(viewModel: viewModel, tableView: tableView)
             
         case .timestamp:
             let labelCell = cell as! TxLabelCell
