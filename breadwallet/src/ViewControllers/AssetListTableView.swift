@@ -25,7 +25,19 @@ class AssetListTableView : UITableViewController, Subscriber {
         tableView.reloadData()
 
         Store.subscribe(self, selector: {
-            return $0[Currencies.btc].currentRate != $1[Currencies.btc].currentRate
+            var result = false
+            let oldState = $0
+            let newState = $1
+            $0.currencies.forEach { currency in
+                if oldState[currency].balance != newState[currency].balance {
+                    result = true
+                }
+
+                if oldState[currency].currentRate?.rate != newState[currency].currentRate?.rate {
+                    result = true
+                }
+            }
+            return result
         }, callback: { _ in
             self.tableView.reloadData()
         })
@@ -51,7 +63,7 @@ class AssetListTableView : UITableViewController, Subscriber {
 
     private func balanceString(currency: CurrencyDef) -> String {
         guard let balance = currency.state.balance else { return "" }
-        return DisplayAmount(amount: Satoshis(rawValue: balance), selectedRate: nil, minimumFractionDigits: currency.state.maxDigits, currency: Currencies.btc).combinedDescription
+        return DisplayAmount(amount: Satoshis(rawValue: balance), selectedRate: nil, minimumFractionDigits: currency.state.maxDigits, currency: currency).combinedDescription
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

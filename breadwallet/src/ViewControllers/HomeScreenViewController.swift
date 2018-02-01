@@ -70,6 +70,10 @@ class HomeScreenViewController : UIViewController, Subscriber {
                 if oldState[currency].balance != newState[currency].balance {
                     result = true
                 }
+
+                if oldState[currency].currentRate?.rate != newState[currency].currentRate?.rate {
+                    result = true
+                }
             }
             return result
                 },
@@ -100,41 +104,25 @@ class HomeScreenViewController : UIViewController, Subscriber {
         totalHeader.text = "total assets"
         totalHeader.textAlignment = .left
         total.textAlignment = .left
-        total.text = "$0"
+        total.text = "$0" //TODO - currency symbol
         title = ""
         navigationItem.titleView = UIView()
         updateTotalAssets()
     }
 
     private func updateTotalAssets() {
-        guard let bitcoinBalance = Store.state.currencies[0].state.balance else { return }
-        //guard let bitcoinRate = Store.state.currencies[0].state.currentRate else { return }
-        guard let bchBalance = Store.state.currencies[1].state.balance else { return }
-        //guard let bchRate = Store.state.currencies[1].state.currentRate else { return }
-
-        self.total.text = "btc: \(Double(bitcoinBalance)/100000000.0) bch: \(Double(bchBalance)/100000000.0)"
-
-//        guard let bitcoinBalance = stores[0].state.walletState.balance else { return }
-//        guard let bitcoinRate = stores[0].state.currentRate else { return }
-        //let bitcoinAmount = Amount(amount: bitcoinBalance, rate: bitcoinRate, maxDigits: stores[0].state.maxDigits, store: stores[0]).localAmount
-//
-//        guard let ethBalance = stores[1].state.walletState.bigBalance else { return }
-//        guard let ethRate = stores[1].state.currentRate else { return }
-//        var decimal = Decimal(string: ethBalance.getString(10)) ?? Decimal(0)
-//        var amount: Decimal = 0.0
-//        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
-//        let eth = NSDecimalNumber(decimal: amount)
-//        let ethValue = eth.doubleValue*ethRate.rate
-//
-//        let total = bitcoinAmount + ethValue
-//
-//        let format = NumberFormatter()
-//        format.isLenient = true
-//        format.numberStyle = .currency
-//        format.generatesDecimalNumbers = true
-//        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-//        format.currencySymbol = stores[0].state.currentRate!.currencySymbol
-//        self.total.text = format.string(from: NSNumber(value: total))
+        let fiatTotal = Store.state.currencies.map {
+            let balance = Store.state[$0].balance ?? 0
+            let rate = Store.state[$0].currentRate?.rate ?? 0
+            return Double(balance)/$0.baseUnit * rate
+        }.reduce(0.0, +)
+        let format = NumberFormatter()
+        format.isLenient = true
+        format.numberStyle = .currency
+        format.generatesDecimalNumbers = true
+        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+        format.currencySymbol = "$" //TODO - currency symbol
+        self.total.text = format.string(from: NSNumber(value: fiatTotal))
     }
 
     required init?(coder aDecoder: NSCoder) {
