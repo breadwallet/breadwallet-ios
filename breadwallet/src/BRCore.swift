@@ -532,11 +532,13 @@ protocol BRPeerManagerListener {
 class BRPeerManager {
     let cPtr: OpaquePointer
     let listener: BRPeerManagerListener
-    
-    init?(wallet: BRWallet, earliestKeyTime: TimeInterval, blocks: [BRBlockRef?], peers: [BRPeer],
+    let mainNetParams = [BRMainNetParams]
+    let bcashParams = [BRBCashParams]
+
+    init?(currency: CurrencyDef, wallet: BRWallet, earliestKeyTime: TimeInterval, blocks: [BRBlockRef?], peers: [BRPeer],
           listener: BRPeerManagerListener) {
         var blockRefs = blocks
-        guard let cPtr = BRPeerManagerNew(wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
+        guard let cPtr = BRPeerManagerNew(currency.code == "BTC" ? mainNetParams : bcashParams, wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
                                           &blockRefs, blockRefs.count, peers, peers.count) else { return nil }
         self.listener = listener
         self.cPtr = cPtr
@@ -577,8 +579,9 @@ class BRPeerManager {
     }
     
     // true if currently connected to at least one peer
+    // TODO - this should return an enum
     var isConnected: Bool {
-        return BRPeerManagerIsConnected(cPtr) != 0
+        return BRPeerManagerConnectStatus(cPtr) == BRPeerStatusConnected
     }
     
     // connect to bitcoin peer-to-peer network (also call this whenever networkIsReachable() status changes)
@@ -681,6 +684,13 @@ class BRPeerManager {
             self.completion = completion
         }
     }
+
+    //hack to keep the swift compiler happy
+    let a = BRBCashCheckpoints
+    let b = BRBCashDNSSeeds
+    let c = BRBCashVerifyDifficulty
+    let d = BRMainNetDNSSeeds
+    let e = BRMainNetCheckpoints
 }
 
 extension UInt256 : CustomStringConvertible {

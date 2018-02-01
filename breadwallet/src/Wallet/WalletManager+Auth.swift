@@ -55,7 +55,7 @@ enum BiometricsResult {
 extension WalletManager : WalletAuthenticator {
     static private var failedPins = [String]()
     
-    convenience init(dbPath: String? = nil) throws {
+    convenience init(currency: CurrencyDef, dbPath: String? = nil) throws {
         if !UIApplication.shared.isProtectedDataAvailable {
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(errSecNotAvailable))
         }
@@ -74,7 +74,7 @@ extension WalletManager : WalletAuthenticator {
 
         let mpkData: Data? = try keychainItem(key: KeychainKey.masterPubKey)
         guard let masterPubKey = mpkData?.masterPubKey else {
-            try self.init(masterPubKey: BRMasterPubKey(), earliestKeyTime: 0, dbPath: dbPath)
+            try self.init(currency: currency, masterPubKey: BRMasterPubKey(), earliestKeyTime: 0, dbPath: dbPath)
             return
         }
         
@@ -84,7 +84,7 @@ extension WalletManager : WalletAuthenticator {
             creationTime.withUnsafeBytes { earliestKeyTime = $0.pointee }
         }
         
-        try self.init(masterPubKey: masterPubKey, earliestKeyTime: earliestKeyTime, dbPath: dbPath)
+        try self.init(currency: currency, masterPubKey: masterPubKey, earliestKeyTime: earliestKeyTime, dbPath: dbPath)
     }
     
     // true if keychain is available and we know that no wallet exists on it

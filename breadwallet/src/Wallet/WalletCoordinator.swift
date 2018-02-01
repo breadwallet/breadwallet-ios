@@ -15,9 +15,6 @@ private let progressUpdateInterval: TimeInterval = 0.5
 private let updateDebounceInterval: TimeInterval = 0.4
 
 class WalletCoordinator : Subscriber, Trackable {
-    
-    //TODO:BCH multi-currency support
-    let currency: CurrencyDef = Currencies.btc
 
     var kvStore: BRReplicatedKVStore? {
         didSet {
@@ -25,6 +22,7 @@ class WalletCoordinator : Subscriber, Trackable {
         }
     }
 
+    private let currency: CurrencyDef
     private let walletManager: WalletManager
     private var progressTimer: Timer?
     private var updateTimer: Timer?
@@ -33,7 +31,8 @@ class WalletCoordinator : Subscriber, Trackable {
     private var reachability = ReachabilityMonitor()
     private var retryTimer: RetryTimer?
     
-    init(walletManager: WalletManager) {
+    init(walletManager: WalletManager, currency: CurrencyDef) {
+        self.currency = currency
         self.walletManager = walletManager
         addWalletObservers()
         addSubscriptions()

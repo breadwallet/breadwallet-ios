@@ -31,9 +31,9 @@ class CoreDatabase {
     private var peerEnt: Int32 = 0
     private let queue = DispatchQueue(label: "com.breadwallet.corecbqueue")
 
-    init() {
+    init(dbPath: String = "BreadWallet.sqlite") {
         self.dbPath = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
-                                    create: false).appendingPathComponent("BreadWallet.sqlite").path
+                                    create: false).appendingPathComponent(dbPath).path
         queue.async {
             try? self.openDatabase()
         }

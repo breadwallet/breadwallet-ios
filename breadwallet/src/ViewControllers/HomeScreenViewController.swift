@@ -62,21 +62,20 @@ class HomeScreenViewController : UIViewController, Subscriber {
         navigationController?.navigationBar.shadowImage = #imageLiteral(resourceName: "TransparentPixel")
         navigationController?.navigationBar.setBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .default)
 
-//        stores[0].lazySubscribe(self, selector: { $0.walletState.balance != $1.walletState.balance }, callback: { _ in
-//            self.updateTotalAssets()
-//        })
-//
-//        stores.forEach {
-//            $0.lazySubscribe(self, selector: { $0.walletState.bigBalance?.getString(10) != $1.walletState.bigBalance?.getString(10) }, callback: { _ in
-//                self.updateTotalAssets()
-//            })
-//        }
-//
-//        stores.forEach {
-//            $0.lazySubscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: { _ in
-//                self.updateTotalAssets()
-//            })
-//        }
+        Store.subscribe(self, selector: {
+            var result = false
+            let oldState = $0
+            let newState = $1
+            $0.currencies.forEach { currency in
+                if oldState[currency].balance != newState[currency].balance {
+                    result = true
+                }
+            }
+            return result
+                },
+                        callback: { _ in
+            self.updateTotalAssets()
+        })
 
         addSubviews()
         addConstraints()
@@ -108,9 +107,16 @@ class HomeScreenViewController : UIViewController, Subscriber {
     }
 
     private func updateTotalAssets() {
+        guard let bitcoinBalance = Store.state.currencies[0].state.balance else { return }
+        //guard let bitcoinRate = Store.state.currencies[0].state.currentRate else { return }
+        guard let bchBalance = Store.state.currencies[1].state.balance else { return }
+        //guard let bchRate = Store.state.currencies[1].state.currentRate else { return }
+
+        self.total.text = "btc: \(Double(bitcoinBalance)/100000000.0) bch: \(Double(bchBalance)/100000000.0)"
+
 //        guard let bitcoinBalance = stores[0].state.walletState.balance else { return }
 //        guard let bitcoinRate = stores[0].state.currentRate else { return }
-//        let bitcoinAmount = Amount(amount: bitcoinBalance, rate: bitcoinRate, maxDigits: stores[0].state.maxDigits, store: stores[0]).localAmount
+        //let bitcoinAmount = Amount(amount: bitcoinBalance, rate: bitcoinRate, maxDigits: stores[0].state.maxDigits, store: stores[0]).localAmount
 //
 //        guard let ethBalance = stores[1].state.walletState.bigBalance else { return }
 //        guard let ethRate = stores[1].state.currentRate else { return }
