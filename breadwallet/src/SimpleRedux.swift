@@ -177,7 +177,6 @@ class Store {
         state = action.reduce(state)
     }
 
-
     func trigger(name: TriggerName) {
         triggers
             .flatMap { $0.value }
