@@ -197,7 +197,7 @@ class ModalPresenter : Subscriber, Trackable {
         })
     }
 
-    private func presentFaq(articleId: String? = nil) {
+    func presentFaq(articleId: String? = nil) {
         guard let supportCenter = supportCenter else { return }
         supportCenter.modalPresentationStyle = .overFullScreen
         supportCenter.modalPresentationCapturesStatusBarAppearance = true
@@ -336,7 +336,7 @@ class ModalPresenter : Subscriber, Trackable {
         })
     }
 
-    private func presentSettings() {
+    func presentSettings() {
         guard let top = topViewController else { return }
         guard let walletManager = self.walletManager else { return }
         let settingsNav = UINavigationController()
@@ -502,7 +502,7 @@ class ModalPresenter : Subscriber, Trackable {
         }
     }
 
-    private func presentSecurityCenter() {
+    func presentSecurityCenter() {
         guard let walletManager = walletManager else { return }
         let securityCenter = SecurityCenterViewController(walletManager: walletManager)
         let nc = ModalNavigationController(rootViewController: securityCenter)

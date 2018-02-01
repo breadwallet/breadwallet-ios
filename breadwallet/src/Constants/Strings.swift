@@ -416,6 +416,12 @@ enum S {
         static let lock = NSLocalizedString("MenuButton.lock", value:"Lock Wallet", comment: "Menu button title")
         static let buy = NSLocalizedString("MenuButton.buy", value:"Buy Bitcoin", comment: "Buy bitcoin title")
     }
+    
+    enum HomeScreen {
+        static let totalAssets = NSLocalizedString("HomeScreen.totalAssets", value: "total assets", comment: "header")
+        static let portfolio = NSLocalizedString("HomeScreen.portfolio", value: "Portfolio", comment: "Section header")
+        static let admin = NSLocalizedString("HomeScreen.admin", value: "Admin", comment: "Section header")
+    }
 
     enum MenuViewController {
         static let modalTitle = NSLocalizedString("MenuViewController.modalTitle", value:"Menu", comment: "Menu modal title")

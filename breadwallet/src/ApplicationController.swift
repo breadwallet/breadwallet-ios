@@ -251,13 +251,24 @@ class ApplicationController : Subscriber, Trackable {
         nc.navigationBar.tintColor = .white
         nc.pushViewController(home, animated: false)
         home.didSelectCurrency = { currency in
-            //guard let accountViewController = self.accountViewControllers[currency.code] else { return }
             let accountViewController = AccountViewController(currency: currency)
             accountViewController.walletManager = self.walletManagers[0]
             nc.pushViewController(accountViewController, animated: true)
         }
         
-        //accountViewControllers = Dictionary(uniqueKeysWithValues: Store.state.currencies.map { ($0.code, AccountViewController(currency: $0)) })
+        home.didTapSupport = {
+            self.modalPresenter?.presentFaq()
+        }
+        
+        home.didTapSecurity = {
+            self.modalPresenter?.presentSecurityCenter()
+        }
+        
+        home.didTapSettings = {
+            // TODO:BCH new settings
+            self.modalPresenter?.presentSettings()
+        }
+        
         window.rootViewController = nc
     }
 
