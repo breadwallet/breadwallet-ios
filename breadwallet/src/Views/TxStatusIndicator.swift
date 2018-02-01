@@ -35,7 +35,7 @@ class TxStatusIndicator: UIView {
     private func setup() {
         layer.cornerRadius = height / 2.0
         layer.masksToBounds = true
-        backgroundColor = .statusIndicatorInactive
+        backgroundColor = .grayBackground
         
         for _ in 0..<3 {
             pips.append(StatusPip())

@@ -9,55 +9,34 @@
 import UIKit
 
 class HomeScreenViewController : UIViewController, Subscriber {
+    
+    private let currencyList = AssetListTableView()
+    private let subHeaderView = UIView()
+    private let logo = UIImageView(image:#imageLiteral(resourceName: "LogoGradient"))
+    private let total = UILabel(font: .customBold(size: 28.0), color: .darkGray)
+    private let totalHeader = UILabel(font: .customMedium(size: 16.0), color: .mediumGray)
+
+    var didSelectCurrency : ((CurrencyDef) -> Void)?
+    var didTapSecurity: (() -> Void)?
+    var didTapSupport: (() -> Void)?
+    var didTapSettings: (() -> Void)?
+    
+    // MARK: -
+    
     init() {
-        self.currencyList = AssetListTableView()
         super.init(nibName: nil, bundle: nil)
     }
 
-    private let currencyList: AssetListTableView
-    private let subHeaderView = UIView()
-    private let logo = UIImageView(image:#imageLiteral(resourceName: "LogoGradient"))
-    private let total = UILabel(font: .customMedium(size: 18.0), color: .darkText)
-    private let totalHeader = UILabel(font: .customMedium(size: 14.0))
-
-    var didSelectCurrency : ((CurrencyDef) -> Void)?
-
     override func viewDidLoad() {
-        view.backgroundColor = .white
-        view.addSubview(subHeaderView)
-        let height: CGFloat = 46.0
-        if #available(iOS 11.0, *) {
-            subHeaderView.constrain([
-                subHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                subHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
-                subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                subHeaderView.heightAnchor.constraint(equalToConstant: height) ])
-        } else {
-            subHeaderView.constrain([
-                subHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                subHeaderView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 0.0),
-                subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                subHeaderView.heightAnchor.constraint(equalToConstant: height) ])
-        }
-
-        subHeaderView.backgroundColor = .white
-
-        addChildViewController(currencyList, layout: {
-            currencyList.view.constrain([
-                currencyList.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                currencyList.view.topAnchor.constraint(equalTo: subHeaderView.bottomAnchor),
-                currencyList.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                currencyList.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
-        })
         currencyList.didSelectCurrency = didSelectCurrency
+        currencyList.didTapSecurity = didTapSecurity
+        currencyList.didTapSupport = didTapSupport
+        currencyList.didTapSettings = didTapSettings
+        
+        view.backgroundColor = .whiteBackground
+        subHeaderView.backgroundColor = .white
         subHeaderView.clipsToBounds = false
-        subHeaderView.addSubview(logo)
-        logo.constrain([
-            logo.leadingAnchor.constraint(equalTo: subHeaderView.leadingAnchor, constant: C.padding[2]),
-            logo.bottomAnchor.constraint(equalTo: subHeaderView.bottomAnchor, constant: -C.padding[2]),
-            logo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.25),
-            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: 230.0/772.0)])
-
+        
         navigationController?.navigationBar.isTranslucent = true
         navigationController?.navigationBar.shadowImage = #imageLiteral(resourceName: "TransparentPixel")
         navigationController?.navigationBar.setBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .default)
@@ -87,21 +66,52 @@ class HomeScreenViewController : UIViewController, Subscriber {
     }
 
     private func addSubviews() {
+        view.addSubview(subHeaderView)
         subHeaderView.addSubview(totalHeader)
         subHeaderView.addSubview(total)
+        subHeaderView.addSubview(logo)
     }
 
     private func addConstraints() {
+        let height: CGFloat = 46.0
+        if #available(iOS 11.0, *) {
+            subHeaderView.constrain([
+                subHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                subHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
+                subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                subHeaderView.heightAnchor.constraint(equalToConstant: height) ])
+        } else {
+            subHeaderView.constrain([
+                subHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                subHeaderView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 0.0),
+                subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                subHeaderView.heightAnchor.constraint(equalToConstant: height) ])
+        }
+        
+        logo.constrain([
+            logo.leadingAnchor.constraint(equalTo: subHeaderView.leadingAnchor, constant: C.padding[2]),
+            logo.bottomAnchor.constraint(equalTo: subHeaderView.bottomAnchor, constant: -C.padding[2]),
+            logo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.25),
+            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: 230.0/772.0)])
+        
         total.constrain([
             total.trailingAnchor.constraint(equalTo: subHeaderView.trailingAnchor, constant: -C.padding[2]),
             total.bottomAnchor.constraint(equalTo: subHeaderView.bottomAnchor, constant: -C.padding[2]) ])
         totalHeader.constrain([
             totalHeader.trailingAnchor.constraint(equalTo: total.trailingAnchor),
             totalHeader.bottomAnchor.constraint(equalTo: total.topAnchor, constant: 0.0) ])
+        
+        addChildViewController(currencyList, layout: {
+            currencyList.view.constrain([
+                currencyList.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                currencyList.view.topAnchor.constraint(equalTo: subHeaderView.bottomAnchor),
+                currencyList.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                currencyList.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
+        })
     }
 
     private func setInitialData() {
-        totalHeader.text = "total assets"
+        totalHeader.text = S.HomeScreen.totalAssets
         totalHeader.textAlignment = .left
         total.textAlignment = .left
         total.text = "$0" //TODO - currency symbol

@@ -31,7 +31,6 @@ class AccountFooterView: UIView, Trackable {
 
     private func setup() {
         let toolbar = UIToolbar()
-        let separator = UIView(color: .secondaryShadow)
         
         let send = UIButton.rounded(title: S.Button.send)
         send.tintColor = .white
@@ -81,7 +80,6 @@ class AccountFooterView: UIView, Trackable {
         }
         
         addSubview(toolbar)
-        addSubview(separator)
         
         // constraints
         toolbar.constrain(toSuperviewEdges: nil)
@@ -93,8 +91,6 @@ class AccountFooterView: UIView, Trackable {
         let constraints = buttons.flatMap { $0.customView?.widthAnchor.constraint(equalToConstant: buttonWidth) } +
             buttons.flatMap { $0.customView?.heightAnchor.constraint(equalToConstant: buttonHeight) }
         NSLayoutConstraint.activate(constraints)
-        
-        separator.constrainTopCorners(height: 1.0)
     }
 
     @objc private func send() { sendCallback?() }
