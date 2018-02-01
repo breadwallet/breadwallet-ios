@@ -538,7 +538,7 @@ class BRPeerManager {
     init?(currency: CurrencyDef, wallet: BRWallet, earliestKeyTime: TimeInterval, blocks: [BRBlockRef?], peers: [BRPeer],
           listener: BRPeerManagerListener) {
         var blockRefs = blocks
-        guard let cPtr = BRPeerManagerNew(currency.code == "BTC" ? mainNetParams : bcashParams, wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
+        guard let cPtr = BRPeerManagerNew(currency.code == Currencies.btc.code ? mainNetParams : bcashParams, wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
                                           &blockRefs, blockRefs.count, peers, peers.count) else { return nil }
         self.listener = listener
         self.cPtr = cPtr

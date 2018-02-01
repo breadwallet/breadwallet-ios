@@ -51,8 +51,9 @@ extension BRAPIClient {
         task.resume()
     }
     
-    func exchangeRates(isFallback: Bool = false, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
-        let request = isFallback ? URLRequest(url: URL(string: fallbackRatesURL)!) : URLRequest(url: url("/rates"))
+    func exchangeRates(code: String, isFallback: Bool = false, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
+        let param = code == Currencies.bch.code ? "?currency=bch" : ""
+        let request = isFallback ? URLRequest(url: URL(string: fallbackRatesURL)!) : URLRequest(url: url("/rates\(param)"))
         let task = dataTaskWithRequest(request) { (data, response, error) in
             if error == nil, let data = data,
                 let parsedData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) {
@@ -64,7 +65,7 @@ extension BRAPIClient {
                 } else {
                     guard let dict = parsedData as? [String: Any],
                         let array = dict["body"] as? [Any] else {
-                            return self.exchangeRates(isFallback: true, handler)
+                            return self.exchangeRates(code: code, isFallback: true, handler)
                     }
                     handler(array.flatMap { Rate(data: $0) }, nil)
                 }
@@ -72,7 +73,7 @@ extension BRAPIClient {
                 if isFallback {
                     handler([], "Error fetching from fallback url")
                 } else {
-                    self.exchangeRates(isFallback: true, handler)
+                    self.exchangeRates(code: code, isFallback: true, handler)
                 }
             }
         }
