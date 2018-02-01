@@ -52,10 +52,10 @@ class ApplicationController : Subscriber, Trackable {
             dispatchGroup.enter()
             guard let currency = currency as? Bitcoin else { return }
             guard let walletManager = try? WalletManager(currency: currency, dbPath: currency.dbPath) else { return }
-            walletCoordinators.append(WalletCoordinator(walletManager: walletManager, currency: currency))
-            exchangeUpdaters.append(ExchangeUpdater(currency: currency, walletManager: walletManager))
             walletManagers.append(walletManager)
             walletManager.initWallet { success in
+                self.walletCoordinators.append(WalletCoordinator(walletManager: walletManager, currency: currency))
+                self.exchangeUpdaters.append(ExchangeUpdater(currency: currency, walletManager: walletManager))
                 walletManager.initPeerManager {
                     dispatchGroup.leave()
                 }
