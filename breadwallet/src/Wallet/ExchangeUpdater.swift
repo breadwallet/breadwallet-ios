@@ -10,12 +10,11 @@ import Foundation
 
 class ExchangeUpdater : Subscriber {
 
-    //TODO:BCH multi-currency support
-    let currency: CurrencyDef = Currencies.btc
+    let currency: CurrencyDef
     
     //MARK: - Public
-    init(walletManager: WalletManager) {
-        
+    init(currency: CurrencyDef, walletManager: WalletManager) {
+        self.currency = currency
         self.walletManager = walletManager
         Store.subscribe(self,
                         selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode },

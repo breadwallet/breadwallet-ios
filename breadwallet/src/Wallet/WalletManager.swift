@@ -40,11 +40,11 @@ extension NSNotification.Name {
 // After instantiating a WalletManager object, call myWalletManager.peerManager.connect() to begin syncing.
 
 class WalletManager : BRWalletListener, BRPeerManagerListener {
+    private let currency: CurrencyDef
     internal var didInitWallet = false
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
-
-    var db: CoreDatabase? = CoreDatabase()
+    var db: CoreDatabase?
     var wallet: BRWallet?
 
     func initWallet(callback: @escaping (Bool) -> Void) {
@@ -61,11 +61,12 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     }
 
     func initPeerManager(callback: @escaping () -> Void) {
-        db?.loadBlocks { blocks in
-            self.db?.loadPeers { peers in
-                guard let wallet = self.wallet else { return }
-                self.peerManager = BRPeerManager(wallet: wallet, earliestKeyTime: self.earliestKeyTime,
-                                                 blocks: blocks, peers: peers, listener: self)
+        db?.loadBlocks { [weak self] blocks in
+            guard let myself = self else { return }
+            myself.db?.loadPeers { peers in
+                guard let wallet = myself.wallet else { return }
+                myself.peerManager = BRPeerManager(currency: myself.currency, wallet: wallet, earliestKeyTime: myself.earliestKeyTime,
+                                                 blocks: blocks, peers: peers, listener: myself)
                 callback()
             }
         }
@@ -123,9 +124,15 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
         return wordList.map({ $0.utf8String })
     }
 
-    init(masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
+    init(currency: CurrencyDef, masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
+        self.currency = currency
         self.masterPubKey = masterPubKey
         self.earliestKeyTime = earliestKeyTime
+        if let path = dbPath {
+            self.db = CoreDatabase(dbPath: path)
+        } else {
+            self.db = CoreDatabase()
+        }
     }
     
     func balanceChanged(_ balance: UInt64) {
