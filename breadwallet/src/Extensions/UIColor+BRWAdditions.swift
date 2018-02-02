@@ -159,4 +159,8 @@ extension UIColor {
     static var whiteBackground: UIColor {
         return UIColor(red: 249.0/255.0, green: 251.0/255.0, blue: 254.0/255.0, alpha: 1.0)
     }
+    
+    static var separator: UIColor {
+        return UIColor(red: 236.0/255.0, green: 236.0/255.0, blue: 236.0/255.0, alpha: 1.0)
+    }
 }

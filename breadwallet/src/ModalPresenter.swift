@@ -340,25 +340,45 @@ class ModalPresenter : Subscriber, Trackable {
         guard let top = topViewController else { return }
         guard let walletManager = self.walletManager else { return }
         let settingsNav = UINavigationController()
-        let sections = ["Wallet", "Manage", "Bread", "Advanced"]
-        var rows = [
-            "Wallet": [Setting(title: S.Settings.importTile, callback: { [weak self] in
-                    guard let myself = self else { return }
-                    guard let walletManager = myself.walletManager else { return }
-                    let importNav = ModalNavigationController()
-                    importNav.setClearNavbar()
-                    importNav.setWhiteStyle()
-                    let start = StartImportViewController(walletManager: walletManager)
-                    start.addCloseNavigationItem(tintColor: .white)
-                    start.navigationItem.title = S.Import.title
-                    let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet)
-                    faqButton.tintColor = .white
-                    start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
-                    importNav.viewControllers = [start]
-                    settingsNav.dismiss(animated: true, completion: {
-                        myself.topViewController?.present(importNav, animated: true, completion: nil)
-                    })
-                }),
+        let sections = ["Wallet", "Manage", "Currencies", "Other"]
+        
+        let currencySettings: [Setting]  = Store.state.currencies.map { (currency) -> Setting in
+            return Setting(title: currency.name, callback: { [weak self] in
+                guard let `self` = self else { return }
+                let sections = ["Currency"]
+                let currencySettings = [
+                    "Currency": [
+                        Setting(title: S.Settings.importTile, callback: { [weak self] in
+                            guard let myself = self else { return }
+                            guard let walletManager = myself.walletManager else { return }
+                            let importNav = ModalNavigationController()
+                            importNav.setClearNavbar()
+                            importNav.setWhiteStyle()
+                            let start = StartImportViewController(walletManager: walletManager)
+                            start.addCloseNavigationItem(tintColor: .white)
+                            start.navigationItem.title = S.Import.title
+                            let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet)
+                            faqButton.tintColor = .white
+                            start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
+                            importNav.viewControllers = [start]
+                            settingsNav.dismiss(animated: true, completion: {
+                                myself.topViewController?.present(importNav, animated: true, completion: nil)
+                            })
+                        }),
+                        Setting(title: S.Settings.sync, callback: {
+                            settingsNav.pushViewController(ReScanViewController(), animated: true)
+                        }),
+                    ]
+                ]
+                
+                let pageTitle = String(format: S.Settings.currencyPageTitle, currency.name)
+                let currencySettingsVC = SettingsViewController(sections: sections, rows: currencySettings, optionalTitle: pageTitle)
+                settingsNav.pushViewController(currencySettingsVC, animated: true)
+            })
+        }
+        
+        let rows = [
+            "Wallet": [
                Setting(title: S.Settings.wipe, callback: { [weak self] in
                     guard let myself = self else { return }
                     guard let walletManager = myself.walletManager else { return }
@@ -384,17 +404,21 @@ class ModalPresenter : Subscriber, Trackable {
                })
             ],
             "Manage": [
-                Setting(title: S.Settings.notifications, accessoryText: {
-                    return Store.state.isPushNotificationsEnabled ? S.PushNotifications.on : S.PushNotifications.off
-                }, callback: {
-                    settingsNav.pushViewController(PushNotificationsViewController(), animated: true)
-                }),
+//                Setting(title: S.Settings.notifications, accessoryText: {
+//                    return Store.state.isPushNotificationsEnabled ? S.PushNotifications.on : S.PushNotifications.off
+//                }, callback: {
+//                    settingsNav.pushViewController(PushNotificationsViewController(), animated: true)
+//                }),
                 Setting(title: LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit, accessoryText: {
                     guard let rate = Currencies.btc.state.currentRate else { return "" }
                     let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
                     return amount.localCurrency
                 }, callback: {
                     self.pushBiometricsSpendingLimit(onNc: settingsNav)
+                }),
+                Setting(title: S.UpdatePin.updateTitle, callback: strongify(self) { myself in
+                    let updatePin = UpdatePinViewController(walletManager: walletManager, type: .update)
+                    settingsNav.pushViewController(updatePin, animated: true)
                 }),
                 Setting(title: S.Settings.currency, accessoryText: {
                     let code = Store.state.defaultCurrencyCode
@@ -405,24 +429,30 @@ class ModalPresenter : Subscriber, Trackable {
                     guard let wm = self.walletManager else { print("NO WALLET MANAGER!"); return }
                     settingsNav.pushViewController(DefaultCurrencyViewController(walletManager: wm), animated: true)
                 }),
-                Setting(title: S.Settings.sync, callback: {
-                    settingsNav.pushViewController(ReScanViewController(), animated: true)
-                }),
-                Setting(title: S.UpdatePin.updateTitle, callback: strongify(self) { myself in
-                    let updatePin = UpdatePinViewController(walletManager: walletManager, type: .update)
-                    settingsNav.pushViewController(updatePin, animated: true)
-                })
             ],
-            "Bread": [
+            "Currencies": currencySettings,
+            "Other": [
                 Setting(title: S.Settings.shareData, callback: {
                     settingsNav.pushViewController(ShareDataViewController(), animated: true)
+                }),
+                Setting(title: S.Settings.review, callback: { [weak self] in
+                    guard let `self` = self else { return }
+                    let alert = UIAlertController(title: S.Settings.review, message: S.Settings.enjoying, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: S.Button.no, style: .default, handler: { _ in
+                        self.messagePresenter.presenter = self.topViewController
+                        self.messagePresenter.presentFeedbackCompose()
+                    }))
+                    alert.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
+                        if let url = URL(string: C.reviewLink) {
+                            UIApplication.shared.openURL(url)
+                        }
+                    }))
+                    self.topViewController?.present(alert, animated: true, completion: nil)
                 }),
                 Setting(title: S.Settings.about, callback: {
                     settingsNav.pushViewController(AboutViewController(), animated: true)
                 }),
-            ],
-            "Advanced": [
-                Setting(title: "Advanced", callback: { [weak self] in
+                Setting(title: S.Settings.advanced, callback: { [weak self] in
                     guard let myself = self else { return }
                     guard let walletManager = myself.walletManager else { return }
                     let sections = ["Network"]
@@ -432,51 +462,34 @@ class ModalPresenter : Subscriber, Trackable {
                                 let nodeSelector = NodeSelectorViewController(walletManager: walletManager)
                                 settingsNav.pushViewController(nodeSelector, animated: true)
                             }),
-                            Setting(title: S.BCH.title, callback: {
-                                let bCash = BCashTransactionViewController(walletManager: walletManager)
-                                settingsNav.pushViewController(bCash, animated: true)
-                            })
                         ]
                     ]
-
+                    
                     let advancedSettingsVC = SettingsViewController(sections: sections, rows: advancedSettings, optionalTitle: S.Settings.advancedTitle)
                     settingsNav.pushViewController(advancedSettingsVC, animated: true)
                 })
             ]
         ]
 
-        if BRAPIClient.featureEnabled(.earlyAccess) {
-            rows["Bread"]?.insert(Setting(title: S.Settings.earlyAccess, callback: {
-                settingsNav.dismiss(animated: true, completion: {
-                    self.presentBuyController("/ea")
-                })
-            }), at: 1)
-        }
-
-        rows["Bread"]?.append( Setting(title: S.Settings.review, callback: {
-                let alert = UIAlertController(title: S.Settings.review, message: S.Settings.enjoying, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: S.Button.no, style: .default, handler: { _ in
-                    self.messagePresenter.presenter = self.topViewController
-                    self.messagePresenter.presentFeedbackCompose()
-                }))
-                alert.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
-                    if let url = URL(string: C.reviewLink) {
-                        UIApplication.shared.openURL(url)
-                    }
-                }))
-                self.topViewController?.present(alert, animated: true, completion: nil)
-            })
-        )
+//        if BRAPIClient.featureEnabled(.earlyAccess) {
+//            rows["Bread"]?.insert(Setting(title: S.Settings.earlyAccess, callback: {
+//                settingsNav.dismiss(animated: true, completion: {
+//                    self.presentBuyController("/ea")
+//                })
+//            }), at: 1)
+//        }
 
         let settings = SettingsViewController(sections: sections, rows: rows)
-        settings.addCloseNavigationItem()
+        settings.addCloseNavigationItem(tintColor: .mediumGray)
         settingsNav.viewControllers = [settings]
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-        view.backgroundColor = .whiteTint
+        view.backgroundColor = .whiteBackground
         settingsNav.navigationBar.setBackgroundImage(view.imageRepresentation, for: .default)
         settingsNav.navigationBar.shadowImage = UIImage()
         settingsNav.navigationBar.isTranslucent = false
         settingsNav.setBlackBackArrow()
+//        let nc = top as! UINavigationController
+//        nc.pushViewController(settings, animated: true)
         top.present(settingsNav, animated: true, completion: nil)
     }
 
