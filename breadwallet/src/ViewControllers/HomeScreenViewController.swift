@@ -34,7 +34,7 @@ class HomeScreenViewController : UIViewController, Subscriber {
         currencyList.didTapSettings = didTapSettings
         
         view.backgroundColor = .whiteBackground
-        subHeaderView.backgroundColor = .white
+        subHeaderView.backgroundColor = .whiteBackground
         subHeaderView.clipsToBounds = false
         
         navigationController?.navigationBar.isTranslucent = true

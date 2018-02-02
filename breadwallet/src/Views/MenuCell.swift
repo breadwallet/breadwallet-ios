@@ -71,6 +71,7 @@ class MenuCell : UITableViewCell {
         container.layer.cornerRadius = C.Sizes.roundedCornerRadius
         container.clipsToBounds = true
         
+        contentView.backgroundColor = .whiteBackground
         iconView.tintColor = .darkGray
         arrow.tintColor = .darkGray
     }
