@@ -427,13 +427,9 @@ enum S {
         static let admin = NSLocalizedString("HomeScreen.admin", value: "Admin", comment: "Section header")
     }
 
-    enum MenuViewController {
-        static let modalTitle = NSLocalizedString("MenuViewController.modalTitle", value:"Menu", comment: "Menu modal title")
-    }
-
     enum StartViewController {
-        static let createButton = NSLocalizedString("MenuViewController.createButton", value:"Create New Wallet", comment: "button label")
-        static let recoverButton = NSLocalizedString("MenuViewController.recoverButton", value:"Recover Wallet", comment: "button label")
+        static let createButton = NSLocalizedString("StartViewController.createButton", value:"Create New Wallet", comment: "button label")
+        static let recoverButton = NSLocalizedString("StartViewController.recoverButton", value:"Recover Wallet", comment: "button label")
         static let message = NSLocalizedString("StartViewController.message", value: "The easy and secure way to use bitcoin.", comment: "Start view message")
     }
 

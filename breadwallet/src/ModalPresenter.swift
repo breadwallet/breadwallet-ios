@@ -12,11 +12,15 @@ import LocalAuthentication
 class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Public
+    // TODO:BCH: this is the primary wallet manager (BTC)
     var walletManager: WalletManager?
+    var walletManagers = [String: WalletManager]()
     var gethManager: GethManager?
-    init(walletManager: WalletManager, window: UIWindow, apiClient: BRAPIClient, gethManager: GethManager?) {
+    
+    init(walletManagers: [String: WalletManager], window: UIWindow, apiClient: BRAPIClient, gethManager: GethManager?) {
         self.window = window
-        self.walletManager = walletManager
+        self.walletManagers = walletManagers
+        self.walletManager = walletManagers[Currencies.btc.code]
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular)
         self.wipeNavigationDelegate = StartNavigationDelegate()
         self.noAuthApiClient = apiClient
@@ -82,6 +86,7 @@ class ModalPresenter : Subscriber, Trackable {
             }
         })
         Store.subscribe(self, name: .recommendRescan, callback: { _ in
+            //TODO:BCH make currency-specific
             self.presentRescan()
         })
 
@@ -216,8 +221,6 @@ class ModalPresenter : Subscriber, Trackable {
             return makeSendView()
         case .receive:
             return receiveView(isRequestAmountVisible: true)
-        case .menu:
-            return menuViewController()
         case .loginScan:
             return nil //The scan view needs a custom presentation
         case .loginAddress:
@@ -292,39 +295,6 @@ class ModalPresenter : Subscriber, Trackable {
         return root
     }
 
-    private func menuViewController() -> UIViewController? {
-        let menu = MenuViewController()
-        let root = ModalViewController(childViewController: menu)
-        menu.didTapSecurity = { [weak self, weak menu] in
-            self?.modalTransitionDelegate.reset()
-            menu?.dismiss(animated: true) {
-                self?.presentSecurityCenter()
-            }
-        }
-        menu.didTapSupport = { [weak self, weak menu] in
-            menu?.dismiss(animated: true, completion: {
-                self?.presentFaq()
-            })
-        }
-        menu.didTapLock = { [weak menu] in
-            menu?.dismiss(animated: true) {
-                Store.trigger(name: .lock)
-            }
-        }
-        menu.didTapSettings = { [weak self, weak menu] in
-            menu?.dismiss(animated: true) {
-                self?.presentSettings()
-            }
-        }
-        // TODO:BCH remove
-        menu.didTapBuy = { [weak self, weak menu] in
-            menu?.dismiss(animated: true, completion: {
-                self?.presentBuyController("/buy")
-            })
-        }
-        return root
-    }
-
     private func presentLoginScan() {
         guard let top = topViewController else { return }
         let present = presentScan(parent: top)
@@ -335,38 +305,28 @@ class ModalPresenter : Subscriber, Trackable {
             self.presentModal(.send)
         })
     }
-
+    
     func presentSettings() {
-        guard let top = topViewController else { return }
-        guard let walletManager = self.walletManager else { return }
+        guard let top = topViewController,
+            let walletManager = self.walletManager else { return }
         let settingsNav = UINavigationController()
-        let sections = ["Wallet", "Manage", "Currencies", "Other"]
+        settingsNav.setGrayStyle()
+        let sections: [SettingsSections] = [.wallet, .preferences, .currencies, .other]
         
-        let currencySettings: [Setting]  = Store.state.currencies.map { (currency) -> Setting in
+        let currencySettings: [Setting]  = Store.state.currencies.flatMap { (currency) -> Setting? in
+            guard let walletManager = walletManagers[currency.code] else { return nil }
             return Setting(title: currency.name, callback: { [weak self] in
                 guard let `self` = self else { return }
-                let sections = ["Currency"]
+                let sections = [SettingsSections.currency]
                 let currencySettings = [
-                    "Currency": [
-                        Setting(title: S.Settings.importTile, callback: { [weak self] in
-                            guard let myself = self else { return }
-                            guard let walletManager = myself.walletManager else { return }
-                            let importNav = ModalNavigationController()
-                            importNav.setClearNavbar()
-                            importNav.setWhiteStyle()
-                            let start = StartImportViewController(walletManager: walletManager)
-                            start.addCloseNavigationItem(tintColor: .white)
-                            start.navigationItem.title = S.Import.title
-                            let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet)
-                            faqButton.tintColor = .white
-                            start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
-                            importNav.viewControllers = [start]
+                    SettingsSections.currency: [
+                        Setting(title: S.Settings.importTile, callback: {
                             settingsNav.dismiss(animated: true, completion: {
-                                myself.topViewController?.present(importNav, animated: true, completion: nil)
+                                self.presentKeyImport(walletManager: walletManager)
                             })
                         }),
                         Setting(title: S.Settings.sync, callback: {
-                            settingsNav.pushViewController(ReScanViewController(), animated: true)
+                            settingsNav.pushViewController(ReScanViewController(currency: currency), animated: true)
                         }),
                     ]
                 ]
@@ -378,17 +338,16 @@ class ModalPresenter : Subscriber, Trackable {
         }
         
         let rows = [
-            "Wallet": [
-               Setting(title: S.Settings.wipe, callback: { [weak self] in
-                    guard let myself = self else { return }
-                    guard let walletManager = myself.walletManager else { return }
+            SettingsSections.wallet: [
+                Setting(title: S.Settings.wipe, callback: { [weak self] in
+                    guard let `self` = self else { return }
                     let nc = ModalNavigationController()
                     nc.setClearNavbar()
                     nc.setWhiteStyle()
-                    nc.delegate = myself.wipeNavigationDelegate
+                    nc.delegate = self.wipeNavigationDelegate
                     let start = StartWipeWalletViewController {
                         let recover = EnterPhraseViewController(walletManager: walletManager, reason: .validateForWipingWallet( {
-                            myself.wipeWallet()
+                            self.wipeWallet()
                         }))
                         nc.pushViewController(recover, animated: true)
                     }
@@ -399,16 +358,16 @@ class ModalPresenter : Subscriber, Trackable {
                     start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
                     nc.viewControllers = [start]
                     settingsNav.dismiss(animated: true, completion: {
-                        myself.topViewController?.present(nc, animated: true, completion: nil)
+                        self.topViewController?.present(nc, animated: true, completion: nil)
                     })
-               })
+                })
             ],
-            "Manage": [
-//                Setting(title: S.Settings.notifications, accessoryText: {
-//                    return Store.state.isPushNotificationsEnabled ? S.PushNotifications.on : S.PushNotifications.off
-//                }, callback: {
-//                    settingsNav.pushViewController(PushNotificationsViewController(), animated: true)
-//                }),
+            SettingsSections.preferences: [
+                //                Setting(title: S.Settings.notifications, accessoryText: {
+                //                    return Store.state.isPushNotificationsEnabled ? S.PushNotifications.on : S.PushNotifications.off
+                //                }, callback: {
+                //                    settingsNav.pushViewController(PushNotificationsViewController(), animated: true)
+                //                }),
                 Setting(title: LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit, accessoryText: {
                     guard let rate = Currencies.btc.state.currentRate else { return "" }
                     let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
@@ -426,12 +385,11 @@ class ModalPresenter : Subscriber, Trackable {
                     let identifier = Locale.identifier(fromComponents: components)
                     return Locale(identifier: identifier).currencyCode ?? ""
                 }, callback: {
-                    guard let wm = self.walletManager else { print("NO WALLET MANAGER!"); return }
-                    settingsNav.pushViewController(DefaultCurrencyViewController(walletManager: wm), animated: true)
+                    settingsNav.pushViewController(DefaultCurrencyViewController(walletManager: walletManager), animated: true)
                 }),
             ],
-            "Currencies": currencySettings,
-            "Other": [
+            SettingsSections.currencies: currencySettings,
+            SettingsSections.other: [
                 Setting(title: S.Settings.shareData, callback: {
                     settingsNav.pushViewController(ShareDataViewController(), animated: true)
                 }),
@@ -452,12 +410,10 @@ class ModalPresenter : Subscriber, Trackable {
                 Setting(title: S.Settings.about, callback: {
                     settingsNav.pushViewController(AboutViewController(), animated: true)
                 }),
-                Setting(title: S.Settings.advanced, callback: { [weak self] in
-                    guard let myself = self else { return }
-                    guard let walletManager = myself.walletManager else { return }
-                    let sections = ["Network"]
+                Setting(title: S.Settings.advanced, callback: {
+                    let sections = [SettingsSections.network]
                     let advancedSettings = [
-                        "Network": [
+                        SettingsSections.network: [
                             Setting(title: "Bitcoin Nodes", callback: {
                                 let nodeSelector = NodeSelectorViewController(walletManager: walletManager)
                                 settingsNav.pushViewController(nodeSelector, animated: true)
@@ -470,29 +426,21 @@ class ModalPresenter : Subscriber, Trackable {
                 })
             ]
         ]
-
-//        if BRAPIClient.featureEnabled(.earlyAccess) {
-//            rows["Bread"]?.insert(Setting(title: S.Settings.earlyAccess, callback: {
-//                settingsNav.dismiss(animated: true, completion: {
-//                    self.presentBuyController("/ea")
-//                })
-//            }), at: 1)
-//        }
-
+        
+        //        if BRAPIClient.featureEnabled(.earlyAccess) {
+        //            rows["Bread"]?.insert(Setting(title: S.Settings.earlyAccess, callback: {
+        //                settingsNav.dismiss(animated: true, completion: {
+        //                    self.presentBuyController("/ea")
+        //                })
+        //            }), at: 1)
+        //        }
+        
         let settings = SettingsViewController(sections: sections, rows: rows)
         settings.addCloseNavigationItem(tintColor: .mediumGray)
         settingsNav.viewControllers = [settings]
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-        view.backgroundColor = .whiteBackground
-        settingsNav.navigationBar.setBackgroundImage(view.imageRepresentation, for: .default)
-        settingsNav.navigationBar.shadowImage = UIImage()
-        settingsNav.navigationBar.isTranslucent = false
-        settingsNav.setBlackBackArrow()
-//        let nc = top as! UINavigationController
-//        nc.pushViewController(settings, animated: true)
         top.present(settingsNav, animated: true, completion: nil)
     }
-
+        
     private func presentScan(parent: UIViewController) -> PresentScan {
         return { [weak parent] scanCompletion in
             guard ScanViewController.isCameraAllowed else {
@@ -614,7 +562,7 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func presentRescan() {
-        let vc = ReScanViewController()
+        let vc = ReScanViewController(currency: Currencies.btc)
         let nc = UINavigationController(rootViewController: vc)
         nc.setClearNavbar()
         vc.addCloseNavigationItem()
@@ -649,6 +597,20 @@ class ModalPresenter : Subscriber, Trackable {
                 })
             })
         }
+    }
+    
+    private func presentKeyImport(walletManager: WalletManager) {
+        let nc = ModalNavigationController()
+        nc.setClearNavbar()
+        nc.setWhiteStyle()
+        let start = StartImportViewController(walletManager: walletManager)
+        start.addCloseNavigationItem(tintColor: .white)
+        start.navigationItem.title = S.Import.title
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet)
+        faqButton.tintColor = .white
+        start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
+        nc.viewControllers = [start]
+        topViewController?.present(nc, animated: true, completion: nil)
     }
 
     //MARK: - Prompts

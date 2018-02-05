@@ -95,7 +95,6 @@ enum RootModal {
     case none
     case send
     case receive
-    case menu
     case loginAddress
     case loginScan
     case requestAmount

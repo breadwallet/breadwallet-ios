@@ -10,11 +10,13 @@ import UIKit
 
 class ReScanViewController : UIViewController, Subscriber {
 
-    init() {
+    init(currency: CurrencyDef) {
+        self.currency = currency
         self.faq = .buildFaqButton(articleId: ArticleIds.reScan)
         super.init(nibName: nil, bundle: nil)
     }
 
+    private let currency: CurrencyDef
     private let header = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let body = UILabel.wrapping(font: .systemFont(ofSize: 15.0))
     private let button = ShadowButton(title: S.ReScan.buttonTitle, type: .primary)
@@ -96,10 +98,10 @@ class ReScanViewController : UIViewController, Subscriber {
         syncView.layer.masksToBounds = true
 
         //TODO:BCH
-        Store.subscribe(self, selector: { $0[Currencies.btc].syncProgress != $1[Currencies.btc].syncProgress },
+        Store.subscribe(self, selector: { $0[self.currency].syncProgress != $1[self.currency].syncProgress },
                         callback: { state in
-                            syncView.timestamp = state[Currencies.btc].lastBlockTimestamp
-                            syncView.progress = CGFloat(state[Currencies.btc].syncProgress)
+                            syncView.timestamp = state[self.currency].lastBlockTimestamp
+                            syncView.progress = CGFloat(state[self.currency].syncProgress)
         })
         mask.addSubview(syncView)
         syncView.constrain([
