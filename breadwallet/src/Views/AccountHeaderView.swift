@@ -53,16 +53,26 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
     private var exchangeRate: Rate? {
         didSet {
-            setBalances()
+            DispatchQueue.main.async {
+                self.setBalances()
+            }
         }
     }
     
     private var balance: UInt64 = 0 {
-        didSet { setBalances() }
+        didSet {
+            DispatchQueue.main.async {
+                self.setBalances()
+            }
+        }
     }
     
     private var isBtcSwapped: Bool {
-        didSet { setBalances() }
+        didSet {
+            DispatchQueue.main.async {
+                self.setBalances()
+            }
+        }
     }
 
     // MARK: -
