@@ -534,11 +534,14 @@ class BRPeerManager {
     let listener: BRPeerManagerListener
     let mainNetParams = [BRMainNetParams]
     let bcashParams = [BRBCashParams]
+    let testNetParams = [BRTestNetParams]
+    let bcashTestNetParams = [BRBCashTestNetParams]
 
     init?(currency: CurrencyDef, wallet: BRWallet, earliestKeyTime: TimeInterval, blocks: [BRBlockRef?], peers: [BRPeer],
           listener: BRPeerManagerListener) {
         var blockRefs = blocks
-        guard let cPtr = BRPeerManagerNew(currency.code == Currencies.btc.code ? mainNetParams : bcashParams, wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
+        guard let cPtr = BRPeerManagerNew(currency.code == Currencies.btc.code ? (E.isTestnet ? testNetParams: mainNetParams) : (E.isTestnet ? bcashTestNetParams : bcashParams),
+                                          wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
                                           &blockRefs, blockRefs.count, peers, peers.count) else { return nil }
         self.listener = listener
         self.cPtr = cPtr
@@ -689,8 +692,14 @@ class BRPeerManager {
     let a = BRBCashCheckpoints
     let b = BRBCashDNSSeeds
     let c = BRBCashVerifyDifficulty
-    let d = BRMainNetDNSSeeds
-    let e = BRMainNetCheckpoints
+    let d = BRBCashTestNetCheckpoints
+    let e = BRBCashTestNetDNSSeeds
+    let f = BRBCashTestNetVerifyDifficulty
+    let g = BRMainNetDNSSeeds
+    let h = BRMainNetCheckpoints
+    let i = BRTestNetDNSSeeds
+    let j = BRTestNetCheckpoints
+    let k = BRTestNetVerifyDifficulty
 }
 
 extension UInt256 : CustomStringConvertible {
