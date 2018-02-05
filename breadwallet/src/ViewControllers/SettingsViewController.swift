@@ -8,16 +8,40 @@
 import UIKit
 import LocalAuthentication
 
-class SettingsViewController : UITableViewController, CustomTitleView {
+enum SettingsSections: String {
+    case wallet
+    case preferences
+    case currencies
+    case other
+    case currency
+    case network
+    
+    var title: String {
+        switch self {
+        case .wallet:
+            return S.Settings.wallet
+        case .preferences:
+            return S.Settings.preferences
+        case .currencies:
+            return S.Settings.currencySettings
+        case .other:
+            return S.Settings.other
+        default:
+            return ""
+        }
+    }
+}
 
-    init(sections: [String], rows: [String: [Setting]], optionalTitle: String? = nil) {
+class SettingsViewController : UITableViewController, CustomTitleView {
+    
+    init(sections: [SettingsSections], rows: [SettingsSections: [Setting]], optionalTitle: String? = nil) {
         self.sections = sections
         if UserDefaults.isBiometricsEnabled {
             self.rows = rows
         } else {
             var tempRows = rows
             let biometricsLimit = LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit
-            tempRows["Manage"] = tempRows["Manage"]?.filter { $0.title != biometricsLimit }
+            tempRows[.preferences] = tempRows[.preferences]?.filter { $0.title != biometricsLimit }
             self.rows = tempRows
         }
         customTitle = optionalTitle ?? S.Settings.title
@@ -25,13 +49,16 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         super.init(style: .plain)
     }
 
-    private let sections: [String]
-    private let rows: [String: [Setting]]
+    private let sections: [SettingsSections]
+    private let rows: [SettingsSections: [Setting]]
     private let cellIdentifier = "CellIdentifier"
     let titleLabel = UILabel(font: .customBold(size: 28.0), color: .darkGray)
     let customTitle: String
 
     override func viewDidLoad() {
+        //navigationItem.backBarButtonItem?.title = (navigationController?.viewControllers.count ?? 0) > 1 ? "" : "Home"
+        self.title = ""
+        
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 48.0))
         headerView.backgroundColor = .whiteBackground
         headerView.addSubview(titleLabel)
@@ -89,18 +116,7 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         view.backgroundColor = .whiteBackground
         let label = UILabel(font: .customMedium(size: 12.0), color: .mediumGray)
         view.addSubview(label)
-        switch sections[section] {
-        case "Wallet":
-            label.text = S.Settings.wallet
-        case "Manage":
-            label.text = S.Settings.preferences
-        case "Currencies":
-            label.text = S.Settings.currencySettings
-        case "Other":
-            label.text = S.Settings.other
-        default:
-            label.text = ""
-        }
+        label.text = sections[section].title
         let separator = UIView()
         separator.backgroundColor = .separator
         view.addSubview(separator)
