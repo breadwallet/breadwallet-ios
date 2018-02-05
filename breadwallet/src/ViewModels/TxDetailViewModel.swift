@@ -41,7 +41,7 @@ struct TxDetailViewModel: TxViewModel {
             let icon = NSTextAttachment()
             icon.image = #imageLiteral(resourceName: "CircleCheckSolid").withRenderingMode(.alwaysTemplate)
             icon.bounds = CGRect(x: 0, y: -2.0, width: 14.0, height: 14.0)
-            let iconString = NSMutableAttributedString(string: " ") // space required before an attachment to apply template color (UIKit bug)
+            let iconString = NSMutableAttributedString(string: S.Symbols.narrowSpace) // space required before an attachment to apply template color (UIKit bug)
             iconString.append(NSAttributedString(attachment: icon))
             attributedString.insert(iconString, at: 0)
             attributedString.addAttributes([.foregroundColor: UIColor.receivedGreen,

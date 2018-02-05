@@ -409,7 +409,6 @@
 		CED811E51EB30846003A8D1E /* ReceiveInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED811E41EB30846003A8D1E /* ReceiveInterfaceController.swift */; };
 		CED82D4E1E575A5500507A9B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED82D4D1E575A5500507A9B /* main.swift */; };
 		CEDA9EDC1FDE0C56005E8D1B /* countries.plist in Resources */ = {isa = PBXBuildFile; fileRef = CEDA9EDB1FDE0C56005E8D1B /* countries.plist */; };
-		CEDB09311FEAA1CE001AF56A /* TxDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB09301FEAA1CE001AF56A /* TxDetailCollectionViewCell.swift */; };
 		CEDB09331FEAA21C001AF56A /* TxDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB09321FEAA21C001AF56A /* TxDetailViewModel.swift */; };
 		CEDD8F101E575DD4007A4123 /* WalletAuthenticationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */; };
 		CEE0EF521EBD14B60018DB36 /* PinTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE0EF511EBD14B60018DB36 /* PinTransitioningDelegate.swift */; };
@@ -1452,7 +1451,6 @@
 		CE124CFD1E68F57700DFA146 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Async.swift; path = src/Extensions/Async.swift; sourceTree = "<group>"; };
 		CE124CFF1E69170900DFA146 /* SyncingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SyncingView.swift; path = src/Views/SyncingView.swift; sourceTree = "<group>"; };
 		CE1280F51EEA855C00D27649 /* Date+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Date+Additions.swift"; path = "src/Extensions/Date+Additions.swift"; sourceTree = "<group>"; };
-		CE14E4081E4D506000AEA83A /* TransactionDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransactionDetailsViewController.swift; path = src/ViewControllers/TransactionDetailsViewController.swift; sourceTree = "<group>"; };
 		CE1B66E520222E3E003B4692 /* BRChainParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRChainParams.h; sourceTree = "<group>"; };
 		CE1D84B51EAEB2F4002A5D7B /* UIBarButtonItem+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIBarButtonItem+Additions.swift"; path = "src/Extensions/UIBarButtonItem+Additions.swift"; sourceTree = "<group>"; };
 		CE1E5F251EF083A600BD0F72 /* StartImportViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartImportViewController.swift; path = src/ViewControllers/Import/StartImportViewController.swift; sourceTree = "<group>"; };
@@ -1626,7 +1624,6 @@
 		CED811E41EB30846003A8D1E /* ReceiveInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReceiveInterfaceController.swift; sourceTree = "<group>"; };
 		CED82D4D1E575A5500507A9B /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = src/main.swift; sourceTree = "<group>"; };
 		CEDA9EDB1FDE0C56005E8D1B /* countries.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = countries.plist; sourceTree = "<group>"; };
-		CEDB09301FEAA1CE001AF56A /* TxDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailCollectionViewCell.swift; path = src/Views/TransactionCells/TxDetailCollectionViewCell.swift; sourceTree = "<group>"; };
 		CEDB09321FEAA21C001AF56A /* TxDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TxDetailViewModel.swift; sourceTree = "<group>"; };
 		CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletAuthenticationTests.swift; sourceTree = "<group>"; };
 		CEE0EF511EBD14B60018DB36 /* PinTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinTransitioningDelegate.swift; path = src/ViewControllers/ViewControllerTransitions/PinTransitioningDelegate.swift; sourceTree = "<group>"; };
@@ -2926,7 +2923,6 @@
 				CECCE5A81E0378FB00D99448 /* PinPadViewController.swift */,
 				CE8CD8DE1E2E825000785E02 /* VerifyPinViewController.swift */,
 				CE8CD8E01E31976800785E02 /* LoginViewController.swift */,
-				CE14E4081E4D506000AEA83A /* TransactionDetailsViewController.swift */,
 				CE45C1F81E74B400002C3847 /* ManageWalletViewController.swift */,
 				CEEC708B1E95461A00EF788E /* AboutViewController.swift */,
 				CEEC708F1E95D5C100EF788E /* PushNotificationsViewController.swift */,
@@ -3195,7 +3191,6 @@
 				CEBF32F81DDD193500348FC6 /* TransactionTableViewCell.swift */,
 				7CBF4B6A2008899100E003AA /* TxAddressCell.swift */,
 				7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */,
-				CEDB09301FEAA1CE001AF56A /* TxDetailCollectionViewCell.swift */,
 				7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */,
 				7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */,
 				7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */,
@@ -3997,7 +3992,6 @@
 				CEE659E91F664C73001FF29D /* WelcomeViewController.swift in Sources */,
 				2228734F1E916FC30044BA15 /* BRAPIClient+Wallet.swift in Sources */,
 				CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */,
-				CEDB09311FEAA1CE001AF56A /* TxDetailCollectionViewCell.swift in Sources */,
 				CE1D84B61EAEB2F4002A5D7B /* UIBarButtonItem+Additions.swift in Sources */,
 				CE5E6C961EB8CCF500A476DB /* SupportCenterContainer.swift in Sources */,
 				CE4B6C1A1E219CA600CF935B /* WalletCoordinator.swift in Sources */,

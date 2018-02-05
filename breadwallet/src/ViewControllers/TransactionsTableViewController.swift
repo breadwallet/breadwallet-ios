@@ -156,6 +156,9 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                 self.reload(txHash: txHash)
             }
         })
+        
+        emptyMessage.textAlignment = .center
+        emptyMessage.text = S.TransactionDetails.emptyMessage
 
         setContentInset()
 
