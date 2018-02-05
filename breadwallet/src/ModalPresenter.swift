@@ -143,17 +143,17 @@ class ModalPresenter : Subscriber, Trackable {
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
         guard type != .loginScan else { return presentLoginScan() }
         guard let vc = rootModalViewController(type) else {
-            //stores.forEach { $0.perform(action: RootModalActions.Present(modal: .none)) }
+            Store.perform(action: RootModalActions.Present(modal: .none))
             return
         }
         vc.transitioningDelegate = modalTransitionDelegate
         vc.modalPresentationStyle = .overFullScreen
         vc.modalPresentationCapturesStatusBarAppearance = true
         configuration?(vc)
-        topViewController?.present(vc, animated: true, completion: {
-//            self.stores.forEach{ $0.perform(action: RootModalActions.Present(modal: .none)) }
-//            self.store.trigger(name: .hideStatusBar)
-        })
+        topViewController?.present(vc, animated: true) {
+            Store.perform(action: RootModalActions.Present(modal: .none))
+            Store.trigger(name: .hideStatusBar)
+        }
     }
 
     private func handleAlertChange(_ type: AlertType?) {
@@ -414,7 +414,7 @@ class ModalPresenter : Subscriber, Trackable {
                     let sections = [SettingsSections.network]
                     let advancedSettings = [
                         SettingsSections.network: [
-                            Setting(title: "Bitcoin Nodes", callback: {
+                            Setting(title: S.NodeSelector.title, callback: {
                                 let nodeSelector = NodeSelectorViewController(walletManager: walletManager)
                                 settingsNav.pushViewController(nodeSelector, animated: true)
                             }),
