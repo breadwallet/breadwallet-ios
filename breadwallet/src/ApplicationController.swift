@@ -205,8 +205,6 @@ class ApplicationController : Subscriber, Trackable {
                 Store.perform(action: ShowStartFlow())
             } else {
                 modalPresenter?.walletManager = walletManager
-                let gethManager = GethManager(ethPubKey: walletManager.ethPubKey!)
-                modalPresenter?.gethManager = gethManager
                 DispatchQueue.walletQueue.async { [weak self] in
                     self?.walletManagers.values.forEach { $0.peerManager?.connect() }
                 }
