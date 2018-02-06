@@ -213,10 +213,8 @@ class Store {
     }
 
     func unsubscribe(_ subscriber: Subscriber) {
-        //DispatchQueue.main.async {
-            self.subscriptions.removeValue(forKey: subscriber.hashValue)
-            self.triggers.removeValue(forKey: subscriber.hashValue)
-        //}
+        self.subscriptions.removeValue(forKey: subscriber.hashValue)
+        self.triggers.removeValue(forKey: subscriber.hashValue)
     }
 
     //MARK: - Private
@@ -225,7 +223,11 @@ class Store {
             subscriptions
                 .flatMap { $0.value } //Retreive all subscriptions (subscriptions is a dictionary)
                 .filter { $0.selector(oldValue, state) }
-                .forEach { $0.callback(state) }
+                .forEach { subscription in
+                    DispatchQueue.main.async {
+                        subscription.callback(self.state)
+                    }
+            }
         }
     }
 
