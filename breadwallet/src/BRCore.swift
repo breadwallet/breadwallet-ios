@@ -532,11 +532,14 @@ protocol BRPeerManagerListener {
 class BRPeerManager {
     let cPtr: OpaquePointer
     let listener: BRPeerManagerListener
-    
+    let mainNetParams = [BRMainNetParams]
+    let testNetParams = [BRTestNetParams]
+
     init?(wallet: BRWallet, earliestKeyTime: TimeInterval, blocks: [BRBlockRef?], peers: [BRPeer],
           listener: BRPeerManagerListener) {
         var blockRefs = blocks
-        guard let cPtr = BRPeerManagerNew(wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
+        guard let cPtr = BRPeerManagerNew(E.isTestnet ? testNetParams: mainNetParams,
+                                          wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
                                           &blockRefs, blockRefs.count, peers, peers.count) else { return nil }
         self.listener = listener
         self.cPtr = cPtr
@@ -578,7 +581,7 @@ class BRPeerManager {
     
     // true if currently connected to at least one peer
     var isConnected: Bool {
-        return BRPeerManagerIsConnected(cPtr) != 0
+        return BRPeerManagerConnectStatus(cPtr) != BRPeerStatusDisconnected
     }
     
     // connect to bitcoin peer-to-peer network (also call this whenever networkIsReachable() status changes)
@@ -681,6 +684,13 @@ class BRPeerManager {
             self.completion = completion
         }
     }
+    
+    //hack to keep the swift compiler happy
+    let g = BRMainNetDNSSeeds
+    let h = BRMainNetCheckpoints
+    let i = BRTestNetDNSSeeds
+    let j = BRTestNetCheckpoints
+    let k = BRTestNetVerifyDifficulty
 }
 
 extension UInt256 : CustomStringConvertible {
