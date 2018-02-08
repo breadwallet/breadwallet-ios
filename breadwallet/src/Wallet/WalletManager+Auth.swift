@@ -83,7 +83,7 @@ extension WalletManager : WalletAuthenticator {
             creationTime.count == MemoryLayout<TimeInterval>.stride {
             creationTime.withUnsafeBytes { earliestKeyTime = $0.pointee }
         }
-        
+
         try self.init(currency: currency, masterPubKey: masterPubKey, earliestKeyTime: earliestKeyTime, dbPath: dbPath)
     }
     
@@ -198,7 +198,7 @@ extension WalletManager : WalletAuthenticator {
             
             if !WalletManager.failedPins.contains(pin) { // count unique attempts before checking success
                 failCount += 1
-                try setKeychainItem(key: KeychainKey.pinFailCount, item: Int64(7))
+                try setKeychainItem(key: KeychainKey.pinFailCount, item: Int64(failCount))
             }
             
             if try pin == keychainItem(key: KeychainKey.pin) { // successful pin attempt
