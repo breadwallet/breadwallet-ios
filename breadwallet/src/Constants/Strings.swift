@@ -48,6 +48,8 @@ enum S {
         static let send = NSLocalizedString("Button.send", value: "Send", comment: "send button")
         static let receive = NSLocalizedString("Button.receive", value: "Receive", comment: "receive button")
         static let buy = NSLocalizedString("Button.buy", value: "Buy", comment: "buy button")
+        static let continueAction = NSLocalizedString("Button.continueAction", value: "Continue", comment: "prompt continue button")
+        static let dismiss = NSLocalizedString("Button.dismiss", value: "Dismiss", comment: "prompt dismiss button")
     }
 
     enum Alert {
@@ -452,15 +454,15 @@ enum S {
     enum Prompts {
         enum TouchId {
             static let title = NSLocalizedString("Prompts.TouchId.title", value: "Enable Touch ID", comment: "Enable touch ID prompt title")
-            static let body = NSLocalizedString("Prompts.TouchId.body", value: "Tap here to enable Touch ID", comment: "Enable touch ID prompt body")
+            static let body = NSLocalizedString("Prompts.TouchId.body", value: "Tap Continue to enable Touch ID", comment: "Enable touch ID prompt body")
         }
         enum PaperKey {
             static let title = NSLocalizedString("Prompts.PaperKey.title", value: "Action Required", comment: "An action is required (You must do this action).")
-            static let body = NSLocalizedString("Prompts.PaperKey.body", value: "Your Paper Key must be saved in case you ever lose or change your phone. Tap here to continue.", comment: "Warning about paper key.")
+            static let body = NSLocalizedString("Prompts.PaperKey.body", value: "Your Paper Key must be saved in case you ever lose or change your phone.", comment: "Warning about paper key.")
         }
         enum UpgradePin {
             static let title = NSLocalizedString("Prompts.UpgradePin.title", value: "Upgrade PIN", comment: "Upgrade PIN prompt title.")
-            static let body = NSLocalizedString("Prompts.UpgradePin.body", value: "Bread has upgraded to using a 6-digit PIN. Tap here to upgrade.", comment: "Upgrade PIN prompt body.")
+            static let body = NSLocalizedString("Prompts.UpgradePin.body", value: "Bread has upgraded to using a 6-digit PIN. Tap Continue to upgrade.", comment: "Upgrade PIN prompt body.")
         }
         enum RecommendRescan {
             static let title = NSLocalizedString("Prompts.RecommendRescan.title", value: "Transaction Rejected", comment: "Transaction rejected prompt title")
@@ -476,7 +478,7 @@ enum S {
         }
         enum FaceId {
             static let title = NSLocalizedString("Prompts.FaceId.title", value: "Enable Face ID", comment: "Enable face ID prompt title")
-            static let body = NSLocalizedString("Prompts.FaceId.body", value: "Tap here to enable Face ID", comment: "Enable face ID prompt body")
+            static let body = NSLocalizedString("Prompts.FaceId.body", value: "Tap Continue to enable Face ID", comment: "Enable face ID prompt body")
         }
     }
 
