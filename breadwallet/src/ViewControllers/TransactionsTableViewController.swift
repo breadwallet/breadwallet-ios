@@ -24,8 +24,8 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 
     let didSelectTransaction: ([Transaction], Int) -> Void
-    let syncingView = SyncingView()
-    var isSyncingViewVisible = false {
+    private let syncingView = SyncingView()
+    private var isSyncingViewVisible = false {
         didSet {
             guard oldValue != isSyncingViewVisible else { return } //We only care about changes
             if isSyncingViewVisible {
@@ -63,19 +63,13 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     private let transactionCellIdentifier = "TransactionCellIdentifier"
     private var transactions: [Transaction] = []
     private var allTransactions: [Transaction] = [] {
-        didSet {
-            transactions = allTransactions
-        }
+        didSet { transactions = allTransactions }
     }
     private var isBtcSwapped: Bool {
-        didSet {
-            reload()
-        }
+        didSet { reload() }
     }
     private var rate: Rate? {
-        didSet {
-            reload()
-        }
+        didSet { reload() }
     }
     private let emptyMessage = UILabel.wrapping(font: .customBody(size: 16.0), color: .grayTextTint)
     private var currentPrompt: Prompt? {
@@ -119,13 +113,29 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             self.reload()
         })
 
-        Store.subscribe(self, selector: { $0[self.currency].syncState != $1[self.currency].syncState
-        }, callback: {
-            if $0[self.currency].syncState == .syncing {
-                self.syncingView.reset()
-            } else if $0[self.currency].syncState == .connecting {
-                self.syncingView.setIsConnecting()
-            }
+        Store.subscribe(self, selector: { $0[self.currency].syncState != $1[self.currency].syncState },
+                        callback: { state in
+                            guard let peerManager = self.walletManager?.peerManager else { return }
+                            if state[self.currency].syncState == .syncing {
+                                self.syncingView.reset()
+                            } else if state[self.currency].syncState == .connecting {
+                                self.syncingView.setIsConnecting()
+                            }
+
+                            if state[self.currency].syncState == .success {
+                                self.isSyncingViewVisible = false
+                            } else if peerManager.shouldShowSyncingView {
+                                self.isSyncingViewVisible = true
+                            } else {
+                                self.isSyncingViewVisible = false
+                            }
+        })
+
+        Store.subscribe(self, selector: {
+            return $0[self.currency].lastBlockTimestamp != $1[self.currency].lastBlockTimestamp },
+                        callback: { state in
+                            self.syncingView.progress = CGFloat(state[self.currency].syncProgress)
+                            self.syncingView.timestamp = state[self.currency].lastBlockTimestamp
         })
 
         Store.subscribe(self, selector: { $0[self.currency].recommendRescan != $1[self.currency].recommendRescan }, callback: { _ in
