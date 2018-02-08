@@ -93,26 +93,49 @@ class Prompt : UIView {
         setup()
     }
 
-    let close = UIButton.close
+    let dismissButton = UIButton.rounded(title: S.Button.dismiss)
+    let continueButton = UIButton.rounded(title: S.Button.continueAction)
     let type: PromptType
-    private let title = UILabel(font: .customBold(size: 14.0), color: .darkText)
-    private let body = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
+    
+    private let title = UILabel(font: .customBold(size: 16.0), color: .darkGray)
+    private let body = UILabel.wrapping(font: .customBody(size: 14.0), color: .darkGray)
 
     private func setup() {
         addSubview(title)
         addSubview(body)
-        addSubview(close)
+        addSubview(dismissButton)
+        addSubview(continueButton)
+        
         title.constrain([
             title.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
-            title.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[2]) ])
+            title.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
+            title.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[2])
+            ])
         body.constrain([
             body.leadingAnchor.constraint(equalTo: title.leadingAnchor),
-            body.topAnchor.constraint(equalTo: title.bottomAnchor),
-            body.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]) ])
-        close.constrain([
-            close.topAnchor.constraint(equalTo: topAnchor),
-            close.trailingAnchor.constraint(equalTo: trailingAnchor) ])
-        close.pin(toSize: CGSize(width: 44.0, height: 44.0))
+            body.topAnchor.constraint(equalTo: title.bottomAnchor, constant: C.padding[1]),
+            body.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2])
+            ])
+        dismissButton.constrain([
+            dismissButton.topAnchor.constraint(equalTo: body.bottomAnchor, constant: C.padding[2]),
+            dismissButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
+            dismissButton.heightAnchor.constraint(equalToConstant: 44.0),
+            dismissButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1])
+            ])
+        continueButton.constrain([
+            continueButton.topAnchor.constraint(equalTo: dismissButton.topAnchor),
+            continueButton.leadingAnchor.constraint(equalTo: dismissButton.trailingAnchor, constant: C.padding[1]),
+            continueButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
+            continueButton.heightAnchor.constraint(equalTo: dismissButton.heightAnchor),
+            continueButton.widthAnchor.constraint(equalTo: dismissButton.widthAnchor),
+            continueButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1])
+            ])
+        
+        dismissButton.backgroundColor = .lightGray
+        dismissButton.setTitleColor(.white, for: .normal)
+        continueButton.backgroundColor = .statusIndicatorActive
+        continueButton.setTitleColor(.white, for: .normal)
+        
         title.text = type.title
         body.text = type.body
     }

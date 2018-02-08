@@ -246,15 +246,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if isSyncingViewVisible && indexPath.section == 0 { return }
-        if let currentPrompt = currentPrompt, indexPath.section == 0 {
-            if let trigger = currentPrompt.type.trigger {
-                Store.trigger(name: trigger)
-            }
-            saveEvent("prompt.\(currentPrompt.type.name).trigger")
-            self.currentPrompt = nil
-            return
-        }
+        if hasExtraSection && indexPath.section == 0 { return }
         didSelectTransaction(transactions, indexPath.row)
     }
 
@@ -280,9 +272,16 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         if let type = types.first(where: { $0.shouldPrompt(walletManager: walletManager, state: Store.state) }) {
             self.saveEvent("prompt.\(type.name).displayed")
             currentPrompt = Prompt(type: type)
-            currentPrompt?.close.tap = { [weak self] in
-                self?.saveEvent("prompt.\(type.name).dismissed")
-                self?.currentPrompt = nil
+            currentPrompt!.dismissButton.tap = { [unowned self] in
+                self.saveEvent("prompt.\(type.name).dismissed")
+                self.currentPrompt = nil
+            }
+            currentPrompt!.continueButton.tap = { [unowned self] in
+                if let trigger = type.trigger {
+                    Store.trigger(name: trigger)
+                }
+                self.saveEvent("prompt.\(type.name).trigger")
+                self.currentPrompt = nil
             }
             if type == .biometrics {
                 UserDefaults.hasPromptedBiometrics = true
@@ -307,21 +306,18 @@ extension TransactionsTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath)
         if let transactionCell = cell as? TransactionTableViewCell {
             transactionCell.setStyle(.single)
+            transactionCell.selectionStyle = .none
             transactionCell.container.subviews.forEach {
                 $0.removeFromSuperview()
             }
             if let prompt = currentPrompt {
                 transactionCell.container.addSubview(prompt)
                 prompt.constrain(toSuperviewEdges: nil)
-                prompt.constrain([
-                    prompt.heightAnchor.constraint(equalToConstant: 88.0) ])
-                transactionCell.selectionStyle = .default
             } else {
                 transactionCell.container.addSubview(syncingView)
                 syncingView.constrain(toSuperviewEdges: nil)
                 syncingView.constrain([
                     syncingView.heightAnchor.constraint(equalToConstant: 88.0) ])
-                transactionCell.selectionStyle = .none
             }
         }
         return cell
