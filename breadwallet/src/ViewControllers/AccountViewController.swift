@@ -125,23 +125,6 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func addSubscriptions() {
-        Store.subscribe(self, selector: { $0[self.currency].syncProgress != $1[self.currency].syncProgress },
-                        callback: { state in
-                            self.transactionsTableView.syncingView.progress = CGFloat(state[self.currency].syncProgress)
-                            self.transactionsTableView.syncingView.timestamp = state[self.currency].lastBlockTimestamp
-        })
-
-        Store.subscribe(self, selector: { $0[self.currency].syncState != $1[self.currency].syncState },
-                        callback: { state in
-                            guard let peerManager = self.walletManager?.peerManager else { return }
-                            if state[self.currency].syncState == .success {
-                                self.transactionsTableView.isSyncingViewVisible = false
-                            } else if peerManager.shouldShowSyncingView {
-                                self.transactionsTableView.isSyncingViewVisible = true
-                            } else {
-                                self.transactionsTableView.isSyncingViewVisible = false
-                            }
-        })
 
         //TODO:BCH this was never being set
 //        Store.subscribe(self, selector: { $0.isLoadingTransactions != $1.isLoadingTransactions }, callback: {

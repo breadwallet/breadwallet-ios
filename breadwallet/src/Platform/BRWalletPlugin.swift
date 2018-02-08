@@ -58,31 +58,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
  
     func hook(_ router: BRHTTPRouter) {
         router.websocket("/_wallet/_socket", client: self)
-        
-        let noteCenter = NotificationCenter.default
-        noteCenter.addObserver(forName: NSNotification.Name.WalletSyncStartedNotification,
-                               object: nil, queue: nil) { (note) in
-            self.announce(["type": "sync_started"])
-        }
-        noteCenter.addObserver(forName: NSNotification.Name.WalletSyncStoppedNotification,
-                               object: nil, queue: nil) { (note) in
-            self.announce(["type": "sync_stopped"])
-        }
-        noteCenter.addObserver(forName: NSNotification.Name.WalletTxStatusUpdateNotification,
-                               object: nil, queue: nil) { (note) in
-            self.announce(["type": "tx_status"])
-        }
-        noteCenter.addObserver(forName: NSNotification.Name.WalletTxRejectedNotification,
-                               object: nil, queue: nil) { (note) in
-            self.announce(["type": "tx_status"])
-        }
-        noteCenter.addObserver(forName: NSNotification.Name.WalletBalanceChangedNotification,
-                               object: nil, queue: nil) { (note) in
-            if let wallet = self.walletManager.wallet {
-                self.announce(["type": "balance_changed", "balance": Int(wallet.balance)])
-            }
-        }
- 
+
         router.get("/_wallet/info") { (request, match) -> BRHTTPResponse in
             return try BRHTTPResponse(request: request, code: 200, json: self.walletInfo())
         }
