@@ -181,7 +181,11 @@ class Store {
         triggers
             .flatMap { $0.value }
             .filter { $0.name == name }
-            .forEach { $0.callback(name) }
+            .forEach { trigger in
+                DispatchQueue.main.async {
+                    trigger.callback(name)
+                }
+        }
     }
 
     //Subscription callback is immediately called with current State value on subscription
