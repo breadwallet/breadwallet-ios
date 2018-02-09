@@ -76,6 +76,26 @@ class WalletManager {
         }
     }
 
+    func initWallet(transactions: [BRTxRef]) {
+        guard self.masterPubKey != BRMasterPubKey() else {
+            #if !Debug
+                self.db?.delete()
+            #endif
+            return
+        }
+        self.wallet = BRWallet(transactions: transactions, masterPubKey: self.masterPubKey, listener: self)
+        if let wallet = self.wallet {
+            Store.perform(action: WalletChange(self.currency).setBalance(wallet.balance))
+            Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(receiveAddress: wallet.receiveAddress)))
+        }
+    }
+
+    func initPeerManager(blocks: [BRBlockRef?]) {
+        guard let wallet = self.wallet else { return }
+        self.peerManager = BRPeerManager(currency: currency, wallet: wallet, earliestKeyTime: earliestKeyTime,
+                                          blocks: blocks, peers: [], listener: self)
+    }
+
     func initPeerManager(callback: @escaping () -> Void) {
         db?.loadBlocks { [weak self] blocks in
             guard let myself = self else { return }

@@ -8,8 +8,8 @@
 
 import Foundation
 import BRCore
-
-let bCashForkBlockHeight: UInt32 = E.isTestnet ? 1155744 : 478559 //Testnet is just a guess
+let bCashForkBlockHeight: UInt32 = E.isTestnet ? 1155876 : 478559
+let bCashForkTimeStamp: TimeInterval = E.isTestnet ? (1501597117 - NSTimeIntervalSince1970) : (1501568580 - NSTimeIntervalSince1970)
 private let minFeePerKb: UInt64 = ((1000*1000 + 190)/191)
 
 class BadListener : BRWalletListener {
