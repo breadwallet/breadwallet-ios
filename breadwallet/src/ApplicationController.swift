@@ -43,15 +43,13 @@ class ApplicationController : Subscriber, Trackable {
     // MARK: -
 
     init() {
-        DispatchQueue.walletQueue.async {
-            guardProtected(queue: DispatchQueue.walletQueue) {
-                let path = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
-                                                        create: false).appendingPathComponent(Currencies.bch.dbPath).path
-                if FileManager.default.fileExists(atPath: path) {
-                    self.initWallet()
-                } else {
-                    self.initWalletWithMigration()
-                }
+        guardProtected(queue: DispatchQueue.walletQueue) {
+            let path = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
+            create: false).appendingPathComponent(Currencies.bch.dbPath).path
+            if FileManager.default.fileExists(atPath: path) {
+                self.initWallet()
+            } else {
+                self.initWalletWithMigration()
             }
         }
     }
@@ -95,6 +93,11 @@ class ApplicationController : Subscriber, Trackable {
             guard let walletManager = try? WalletManager(currency: currency, dbPath: currency.dbPath) else { return }
             walletManagers[currency.code] = walletManager
             walletManager.initWallet { success in
+                guard success else {
+                    print("Wallet init failed!")
+                    dispatchGroup.leave()
+                    return
+                }
                 self.walletCoordinators[currency.code] = WalletCoordinator(walletManager: walletManager, currency: currency)
                 self.exchangeUpdaters[currency.code] = ExchangeUpdater(currency: currency, walletManager: walletManager)
                 walletManager.initPeerManager {
