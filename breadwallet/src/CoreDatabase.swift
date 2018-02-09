@@ -443,12 +443,6 @@ class CoreDatabase {
             while sqlite3_step(sql) == SQLITE_ROW {
                 guard let b = BRMerkleBlockNew() else { return DispatchQueue.main.async { callback(blocks) }}
                 b.pointee.height = UInt32(bitPattern: sqlite3_column_int(sql, 0))
-
-                if b.pointee.height == Int32.max {
-                    print("bad")
-                    continue
-                }
-
                 b.pointee.nonce = UInt32(bitPattern: sqlite3_column_int(sql, 1))
                 b.pointee.target = UInt32(bitPattern: sqlite3_column_int(sql, 2))
                 b.pointee.totalTx = UInt32(bitPattern: sqlite3_column_int(sql, 3))

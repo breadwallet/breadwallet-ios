@@ -45,7 +45,44 @@ class ApplicationController : Subscriber, Trackable {
     init() {
         DispatchQueue.walletQueue.async {
             guardProtected(queue: DispatchQueue.walletQueue) {
-                self.initWallet()
+                let path = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
+                                                        create: false).appendingPathComponent(Currencies.bch.dbPath).path
+                if FileManager.default.fileExists(atPath: path) {
+                    self.initWallet()
+                } else {
+                    self.initWalletWithMigration()
+                }
+            }
+        }
+    }
+
+    private func initWalletWithMigration() {
+        let btc = Currencies.btc
+        let bch = Currencies.bch
+        guard let btcWalletManager = try? WalletManager(currency: btc, dbPath: btc.dbPath) else { return }
+        walletManagers[btc.code] = btcWalletManager
+        btcWalletManager.initWallet { [weak self] success in
+            self?.walletCoordinators[btc.code] = WalletCoordinator(walletManager: btcWalletManager, currency: btc)
+            self?.exchangeUpdaters[btc.code] = ExchangeUpdater(currency: btc, walletManager: btcWalletManager)
+            btcWalletManager.initPeerManager {
+                btcWalletManager.db?.loadTransactions { txns in
+                    btcWalletManager.db?.loadBlocks { blocks in
+                        let preForkTransactions = txns.flatMap{$0}.filter { $0.pointee.blockHeight < bCashForkBlockHeight }
+                        let preForkBlocks = blocks.flatMap{$0}.filter { $0.pointee.height < bCashForkBlockHeight }
+                        var bchWalletManager: WalletManager?
+                        if preForkBlocks.count > 0 || blocks.count == 0 {
+                            bchWalletManager = try? WalletManager(currency: bch, dbPath: bch.dbPath)
+                        } else {
+                            bchWalletManager = try? WalletManager(currency: bch, dbPath: bch.dbPath, earliestKeyTimeOverride: bCashForkTimeStamp)
+                        }
+                        self?.walletManagers[bch.code] = bchWalletManager
+                        bchWalletManager?.initWallet(transactions: preForkTransactions)
+                        self?.walletCoordinators[bch.code] = WalletCoordinator(walletManager: bchWalletManager!, currency: bch)
+                        self?.exchangeUpdaters[bch.code] = ExchangeUpdater(currency: bch, walletManager: bchWalletManager!)
+                        bchWalletManager?.initPeerManager(blocks: preForkBlocks)
+                        self?.didAttemptInitWallet()
+                    }
+                }
             }
         }
     }
