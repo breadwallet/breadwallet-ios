@@ -217,8 +217,8 @@ class ModalPresenter : Subscriber, Trackable {
         switch type {
         case .none:
             return nil
-        case .send:
-            return makeSendView()
+        case .send(let currency):
+            return makeSendView(currency: currency)
         case .receive:
             return receiveView(isRequestAmountVisible: true)
         case .loginScan:
@@ -244,7 +244,7 @@ class ModalPresenter : Subscriber, Trackable {
         
     }
 
-    private func makeSendView() -> UIViewController? {
+    private func makeSendView(currency: CurrencyDef) -> UIViewController? {
         //TODO:BCH
         guard !Currencies.btc.state.isRescanning else {
             let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
@@ -252,9 +252,9 @@ class ModalPresenter : Subscriber, Trackable {
             topViewController?.present(alert, animated: true, completion: nil)
             return nil
         }
-        guard let walletManager = walletManager else { return nil }
+        guard let walletManager = walletManagers[currency.code] else { return nil }
         guard let kvStore = walletManager.apiClient?.kv else { return nil }
-        let sendVC = SendViewController(sender: Sender(walletManager: walletManager, kvStore: kvStore), walletManager: walletManager, initialRequest: currentRequest, gethManager: nil, currency: Currencies.btc)
+        let sendVC = SendViewController(sender: Sender(walletManager: walletManager, kvStore: kvStore, currency: currency), walletManager: walletManager, initialRequest: currentRequest, gethManager: nil, currency: currency)
         currentRequest = nil
 
         if Store.state.isLoginRequired {
@@ -302,7 +302,8 @@ class ModalPresenter : Subscriber, Trackable {
         present({ paymentRequest in
             guard let request = paymentRequest else { return }
             self.currentRequest = request
-            self.presentModal(.send)
+            //TODO:BCH
+            //self.presentModal(.send)
         })
     }
     
@@ -667,7 +668,8 @@ class ModalPresenter : Subscriber, Trackable {
                 if !attemptConfirmRequest() {
                     modalTransitionDelegate.reset()
                     topVC.dismiss(animated: true, completion: {
-                        Store.perform(action: RootModalActions.Present(modal: .send))
+                        //TODO:BCH
+                        //Store.perform(action: RootModalActions.Present(modal: .send))
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { //This is a hack because present has no callback
                             let _ = attemptConfirmRequest()
                         })
@@ -690,14 +692,17 @@ class ModalPresenter : Subscriber, Trackable {
 
     private func handlePaymentRequest(request: PaymentRequest) {
         self.currentRequest = request
-        guard !Store.state.isLoginRequired else { presentModal(.send); return }
+        //TODO:BCH
+        //guard !Store.state.isLoginRequired else { presentModal(.send); return }
 
         if topViewController is AccountViewController {
-            presentModal(.send)
+            //TODO:BCH
+            //presentModal(.send)
         } else {
             if let presented = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
                 presented.dismiss(animated: true, completion: {
-                    self.presentModal(.send)
+                    //TODO:BCH
+                    //self.presentModal(.send)
                 })
             }
         }

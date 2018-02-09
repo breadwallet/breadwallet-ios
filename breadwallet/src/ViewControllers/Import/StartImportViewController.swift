@@ -213,7 +213,8 @@ class StartImportViewController : UIViewController {
             guard let script = BRAddress(string: wallet.receiveAddress)?.scriptPubKey else { return }
             tx.addOutput(amount: balance - fee, script: script)
             var keys = [key]
-            let _ = tx.sign(keys: &keys)
+            //TODO:BCH - forkId
+            let _ = tx.sign(forkId: 0, keys: &keys)
                 guard tx.isSigned else {
                     self.importingActivity.dismiss(animated: true, completion: {
                         self.showErrorMessage(S.Import.Error.signing)

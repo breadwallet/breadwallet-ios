@@ -33,6 +33,8 @@ class FeeUpdater : Trackable {
             }
             UserDefaults.fees = newFees
             Store.perform(action: WalletChange(self.currency).setFees(newFees))
+            //TODO:BCH
+            Store.perform(action: WalletChange(Currencies.bch).setFees(Fees(regular: 21000, economy: 21000, timestamp: Date().timeIntervalSince1970)))
             completion()
         }
 

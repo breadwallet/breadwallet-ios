@@ -340,7 +340,7 @@ extension UnsafeMutablePointer where Pointee == BRTransaction {
     // adds signatures to any inputs with NULL signatures that can be signed with any keys
     // forkId is 0 for bitcoin, 0x40 for b-cash
     // returns true if tx is signed
-    func sign(forkId: Int = 0, keys: inout [BRKey]) -> Bool {
+    func sign(forkId: Int, keys: inout [BRKey]) -> Bool {
         return BRTransactionSign(self, Int32(forkId), &keys, keys.count) != 0
     }
     
@@ -456,7 +456,7 @@ class BRWallet {
     // forkId is 0 for bitcoin, 0x40 for b-cash
     // seed is the master private key (wallet seed) corresponding to the master public key given when wallet was created
     // returns true if all inputs were signed, or false if there was an error or not all inputs were able to be signed
-    func signTransaction(_ tx: BRTxRef, forkId: Int = 0, seed: inout UInt512) -> Bool {
+    func signTransaction(_ tx: BRTxRef, forkId: Int, seed: inout UInt512) -> Bool {
         return BRWalletSignTransaction(cPtr, tx, Int32(forkId), &seed, MemoryLayout<UInt512>.stride) != 0
     }
     

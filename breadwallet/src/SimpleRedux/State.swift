@@ -93,7 +93,7 @@ extension State {
 
 enum RootModal {
     case none
-    case send
+    case send(currency: CurrencyDef)
     case receive
     case loginAddress
     case loginScan
@@ -224,6 +224,29 @@ func ==(lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.recommendRescan == rhs.recommendRescan &&
 //        lhs.isLoadingTransactions == rhs.isLoadingTransactions &&
         lhs.maxDigits == rhs.maxDigits
+}
+
+extension RootModal : Equatable {}
+
+func ==(lhs: RootModal, rhs: RootModal) -> Bool {
+    switch(lhs, rhs) {
+    case (.none, .none):
+        return true
+    case (.send(let lhsCurrency), .send(let rhsCurrency)):
+        return lhsCurrency.code == rhsCurrency.code
+    case (.receive, .receive):
+        return true
+    case (.loginAddress, .loginAddress):
+        return true
+    case (.loginScan, .loginScan):
+        return true
+    case (.requestAmount, .requestAmount):
+        return true
+    case (.buy, .buy):
+        return true
+    default:
+        return false
+    }
 }
 
 

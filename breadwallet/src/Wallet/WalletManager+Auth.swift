@@ -277,13 +277,13 @@ extension WalletManager : WalletAuthenticator {
     }
     
     // sign the given transaction using pin authentication
-    func signTransaction(_ tx: BRTxRef, forkId: Int = 0, pin: String) -> Bool {
+    func signTransaction(_ tx: BRTxRef, forkId: Int, pin: String) -> Bool {
         guard authenticate(pin: pin) else { return false }
         return signTx(tx, forkId: forkId)
     }
     
     // sign the given transaction using biometric authentication
-    func signTransaction(_ tx: BRTxRef, biometricsPrompt: String, completion: @escaping (BiometricsResult) -> ()) {
+    func signTransaction(_ tx: BRTxRef, forkId: Int, biometricsPrompt: String, completion: @escaping (BiometricsResult) -> ()) {
         do {
             let spendLimit: Int64 = try keychainItem(key: KeychainKey.spendLimit) ?? 0
             guard let wallet = wallet, wallet.amountSentByTx(tx) - wallet.amountReceivedFromTx(tx) + wallet.totalSent <= UInt64(spendLimit) else {
@@ -295,7 +295,7 @@ extension WalletManager : WalletAuthenticator {
         authenticate(biometricsPrompt: biometricsPrompt) { result in
             Store.perform(action: biometricsActions.setIsPrompting(false))
             guard result == .success else { return completion(result) }
-            completion(self.signTx(tx) == true ? .success : .failure)
+            completion(self.signTx(tx, forkId: forkId) == true ? .success : .failure)
         }
     }
 
@@ -565,7 +565,7 @@ extension WalletManager : WalletAuthenticator {
         public static let pinUnlockTime = "PIN_UNLOCK_TIME"
     }
     
-    private func signTx(_ tx: BRTxRef, forkId: Int = 0) -> Bool {
+    private func signTx(_ tx: BRTxRef, forkId: Int) -> Bool {
         return autoreleasepool {
             do {
                 var seed = UInt512()
