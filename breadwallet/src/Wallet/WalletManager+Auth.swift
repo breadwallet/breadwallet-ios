@@ -56,7 +56,8 @@ extension WalletManager : WalletAuthenticator {
     static private var failedPins = [String]()
     
     convenience init(currency: CurrencyDef, dbPath: String? = nil, earliestKeyTimeOverride: TimeInterval? = nil) throws {
-        if !UIApplication.shared.isProtectedDataAvailable {
+        // caller must ensure isProtectedDataAvailable is true before initializing WalletManager if this is done on another (non-main) thread
+        if Thread.isMainThread && !UIApplication.shared.isProtectedDataAvailable {
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(errSecNotAvailable))
         }
 
