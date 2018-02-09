@@ -32,7 +32,7 @@ class AccountViewController : UIViewController, Subscriber {
         self.transactionsTableView = TransactionsTableViewController(currency: currency, didSelectTransaction: didSelectTransaction)
         
         //TODO:BCH these actions should be currency-specific
-        footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send)) }
+        footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send(currency: currency))) }
         footerView.receiveCallback = { Store.perform(action: RootModalActions.Present(modal: .receive)) }
         footerView.buyCallback = { Store.perform(action: RootModalActions.Present(modal: .buy)) }
     }

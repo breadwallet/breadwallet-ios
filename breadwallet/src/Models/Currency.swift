@@ -43,6 +43,7 @@ struct Bitcoin: CurrencyDef {
     let symbol: String
     let colors: (UIColor, UIColor)
     let dbPath: String
+    let forkId: Int
 }
 
 /// Ethereum-compatible currency type
@@ -73,12 +74,14 @@ struct Currencies {
                              code: "BTC",
                              symbol: S.Symbols.btc,
                              colors: (UIColor(red:0.972549, green:0.623529, blue:0.200000, alpha:1.0), UIColor(red:0.898039, green:0.505882, blue:0.031373, alpha:1.0)),
-                             dbPath: "BreadWallet.sqlite")
+                             dbPath: "BreadWallet.sqlite",
+                             forkId: 0)
     static let bch = Bitcoin(name: "Bitcoin Cash",
                              code: "BCH",
                              symbol: S.Symbols.btc,
                              colors: (UIColor(red:0.278431, green:0.521569, blue:0.349020, alpha:1.0), UIColor(red:0.278431, green:0.521569, blue:0.349020, alpha:1.0)),
-                             dbPath: "BreadWallet-bch.sqlite")
+                             dbPath: "BreadWallet-bch.sqlite",
+                             forkId: 0x40)
     static let eth = Ethereum(name: "Ethereum",
                               code: "ETH",
                               symbol: S.Symbols.eth,

@@ -317,7 +317,7 @@ class ApplicationController : Subscriber, Trackable {
     private func startDataFetchers() {
 //        walletManager?.apiClient?.updateFeatureFlags()
         initKVStoreCoordinator()
-//        feeUpdater?.refresh()
+        feeUpdater?.refresh()
 //        defaultsUpdater?.refresh()
 //        walletManager?.apiClient?.events?.up()
         exchangeUpdaters.values.forEach {
