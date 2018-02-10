@@ -84,12 +84,12 @@ let BRBCashTestNetCheckpoints =
      BRCheckPoint(1108800, "00000000000288d9a219419d0607fb67cc324d4b6d2945ca81eaa5e739fab81e", 1490751239, 0x1b09ecf0)]
 
 public let BRBCashParams =
-    BRChainParams(dnsSeeds: BRBCashDNSSeeds, standardPort: 8333, magicNumber: 0xe8f3e1e3, services: 0,
-                  verifyDifficulty: BRTestNetVerifyDifficulty,
+    BRChainParams(dnsSeeds: BRBCashDNSSeeds, standardPort: 8333, magicNumber: 0xe8f3e1e3,
+                  services: UInt64(SERVICES_NODE_BCASH), verifyDifficulty: BRTestNetVerifyDifficulty,
                   checkpoints: BRBCashCheckpoints, checkpointsCount: BRBCashCheckpoints.count)
 
 public let BRBCashTestNetParams =
-    BRChainParams(dnsSeeds: BRBCashTestNetDNSSeeds, standardPort: 18333, magicNumber: 0xf4f3e5f4, services: 0,
-                  verifyDifficulty: BRTestNetVerifyDifficulty,
+    BRChainParams(dnsSeeds: BRBCashTestNetDNSSeeds, standardPort: 18333, magicNumber: 0xf4f3e5f4,
+                  services: UInt64(SERVICES_NODE_BCASH), verifyDifficulty: BRTestNetVerifyDifficulty,
                   checkpoints: BRBCashTestNetCheckpoints, checkpointsCount: BRBCashTestNetCheckpoints.count)
 
