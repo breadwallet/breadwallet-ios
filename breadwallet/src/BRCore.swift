@@ -690,12 +690,12 @@ class BRPeerManager {
     }
 
     //hack to keep the swift compiler happy
-    let a = BRBCashCheckpoints
-    let b = BRBCashDNSSeeds
-    let c = BRBCashVerifyDifficulty
-    let d = BRBCashTestNetCheckpoints
-    let e = BRBCashTestNetDNSSeeds
-    let f = BRBCashTestNetVerifyDifficulty
+    //let a = BRBCashCheckpoints
+    //let b = BRBCashDNSSeeds
+    //let c = BRBCashVerifyDifficulty
+    //let d = BRBCashTestNetCheckpoints
+    //let e = BRBCashTestNetDNSSeeds
+    //let f = BRBCashTestNetVerifyDifficulty
     let g = BRMainNetDNSSeeds
     let h = BRMainNetCheckpoints
     let i = BRTestNetDNSSeeds
@@ -704,6 +704,33 @@ class BRPeerManager {
 }
 
 extension UInt256 : CustomStringConvertible {
+    private func _hexu(_ c: CChar) -> UInt8? {
+        if (c >= CChar("0")! && c <= CChar("9")!) { return UInt8(c - CChar("0")!) }
+        if (c >= CChar("a")! && c <= CChar("f")!) { return UInt8(c - (CChar("a")! - 0x0a)) }
+        if (c >= CChar("A")! && c <= CChar("F")!) { return UInt8(c - (CChar("A")! - 0x0a)) }
+        return nil
+    }
+    
+    init(_ s: String) {
+        let s = s.utf8CString
+        self.u8 = ((_hexu(s[0])!  << 4) | _hexu(s[1])!,  (_hexu(s[2])!  << 4) | _hexu(s[3])!,
+                   (_hexu(s[4])!  << 4) | _hexu(s[5])!,  (_hexu(s[6])!  << 4) | _hexu(s[7])!,
+                   (_hexu(s[8])!  << 4) | _hexu(s[9])!,  (_hexu(s[10])! << 4) | _hexu(s[11])!,
+                   (_hexu(s[12])! << 4) | _hexu(s[13])!, (_hexu(s[14])! << 4) | _hexu(s[15])!,
+                   (_hexu(s[16])! << 4) | _hexu(s[17])!, (_hexu(s[18])! << 4) | _hexu(s[19])!,
+                   (_hexu(s[20])! << 4) | _hexu(s[21])!, (_hexu(s[22])! << 4) | _hexu(s[23])!,
+                   (_hexu(s[24])! << 4) | _hexu(s[25])!, (_hexu(s[26])! << 4) | _hexu(s[27])!,
+                   (_hexu(s[28])! << 4) | _hexu(s[29])!, (_hexu(s[30])! << 4) | _hexu(s[31])!,
+                   (_hexu(s[32])! << 4) | _hexu(s[33])!, (_hexu(s[34])! << 4) | _hexu(s[35])!,
+                   (_hexu(s[36])! << 4) | _hexu(s[37])!, (_hexu(s[38])! << 4) | _hexu(s[39])!,
+                   (_hexu(s[40])! << 4) | _hexu(s[41])!, (_hexu(s[42])! << 4) | _hexu(s[43])!,
+                   (_hexu(s[44])! << 4) | _hexu(s[45])!, (_hexu(s[46])! << 4) | _hexu(s[47])!,
+                   (_hexu(s[48])! << 4) | _hexu(s[49])!, (_hexu(s[50])! << 4) | _hexu(s[51])!,
+                   (_hexu(s[52])! << 4) | _hexu(s[53])!, (_hexu(s[54])! << 4) | _hexu(s[55])!,
+                   (_hexu(s[56])! << 4) | _hexu(s[57])!, (_hexu(s[58])! << 4) | _hexu(s[59])!,
+                   (_hexu(s[60])! << 4) | _hexu(s[61])!, (_hexu(s[62])! << 4) | _hexu(s[63])!)
+    }
+    
     public var description: String {
         return String(format:"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x" +
             "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
