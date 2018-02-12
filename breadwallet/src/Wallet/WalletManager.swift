@@ -38,7 +38,6 @@ extension NSNotification.Name {
 
 class WalletManager {
     private let currency: CurrencyDef
-    internal var didInitWallet = false
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
     var db: CoreDatabase?
@@ -97,12 +96,11 @@ class WalletManager {
     }
 
     func initPeerManager(callback: @escaping () -> Void) {
-        db?.loadBlocks { [weak self] blocks in
-            guard let myself = self else { return }
-            myself.db?.loadPeers { peers in
-                guard let wallet = myself.wallet else { return }
-                myself.peerManager = BRPeerManager(currency: myself.currency, wallet: wallet, earliestKeyTime: myself.earliestKeyTime,
-                                                 blocks: blocks, peers: peers, listener: myself)
+        db?.loadBlocks { [unowned self] blocks in
+            self.db?.loadPeers { peers in
+                guard let wallet = self.wallet else { return }
+                self.peerManager = BRPeerManager(currency: self.currency, wallet: wallet, earliestKeyTime: self.earliestKeyTime,
+                                                 blocks: blocks, peers: peers, listener: self)
                 callback()
             }
         }

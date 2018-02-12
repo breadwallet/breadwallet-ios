@@ -90,7 +90,6 @@ extension WalletManager : WalletAuthenticator {
     
     // true if keychain is available and we know that no wallet exists on it
     var noWallet: Bool {
-        if didInitWallet { return false }
         return WalletManager.staticNoWallet
     }
 
@@ -432,7 +431,6 @@ extension WalletManager : WalletAuthenticator {
             db?.delete()
             db = nil
             masterPubKey = BRMasterPubKey()
-            didInitWallet = false
             earliestKeyTime = 0
             if let bundleId = Bundle.main.bundleIdentifier {
                 UserDefaults.standard.removePersistentDomain(forName: bundleId)
