@@ -17,7 +17,7 @@ class WalletInfoTest : XCTestCase {
     override class func setUp() {
         clearKeychain()
         deleteDb()
-        walletManager = try! WalletManager(store: Store(), dbPath: nil)
+        walletManager = try! WalletManager(currency: Currencies.btc, dbPath: nil)
         let _ = walletManager?.setRandomSeedPhrase()
         client = walletManager?.apiClient
     }
