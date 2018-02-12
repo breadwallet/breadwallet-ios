@@ -11,7 +11,7 @@ import XCTest
 
 class PhraseTests: XCTestCase {
 
-    private let walletManager: WalletManager = try! WalletManager(store: Store(), dbPath: nil)
+    private let walletManager: WalletManager = try! WalletManager(currency: Currencies.btc, dbPath: nil)
 
     func testEmptyPhrase() {
         XCTAssertFalse(walletManager.isPhraseValid(""), "Empty phrase should not be valid")

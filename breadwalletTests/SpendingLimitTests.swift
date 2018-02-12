@@ -11,7 +11,7 @@ import XCTest
 
 class SpendingLimitTests : XCTestCase {
 
-    private let walletManager: WalletManager = try! WalletManager(store: Store(), dbPath: nil)
+    private let walletManager: WalletManager = try! WalletManager(currency: Currencies.btc, dbPath: nil)
 
     override func setUp() {
         super.setUp()
