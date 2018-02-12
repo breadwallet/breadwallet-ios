@@ -25,15 +25,15 @@
 import Foundation
 import BRCore
 
-let BRBCashDNSSeeds: Array<UnsafePointer<Int8>?> =
-    [UnsafePointer<Int8>("seed-abc.breadwallet.com."), UnsafePointer<Int8>("seed.bitcoinabc.org."),
-     UnsafePointer<Int8>("seed-abc.bitcoinforks.org."), UnsafePointer<Int8>("seed.bitcoinunlimited.info."),
-     UnsafePointer<Int8>("seed.bitprim.org."), UnsafePointer<Int8>("seed.deadalnix.me."), nil]
+typealias CStr = UnsafePointer<CChar>
 
-let BRBCashTestNetDNSSeeds: Array<UnsafePointer<Int8>?> =
-    [UnsafePointer<Int8>("testnet-seed.bitcoinabc.org"), UnsafePointer<Int8>("testnet-seed-abc.bitcoinforks.org"),
-     UnsafePointer<Int8>("testnet-seed.bitprim.org"), UnsafePointer<Int8>("testnet-seed.deadalnix.me"),
-     UnsafePointer<Int8>("testnet-seeder.criptolayer.net"), nil]
+let BRBCashDNSSeeds: Array<CStr?> =
+    [CStr("seed-abc.breadwallet.com."), CStr("seed.bitcoinabc.org."), CStr("seed-abc.bitcoinforks.org."),
+     CStr("seed.bitcoinunlimited.info."), CStr("seed.bitprim.org."), CStr("seed.deadalnix.me."), nil]
+
+let BRBCashTestNetDNSSeeds: Array<CStr?> =
+    [CStr("testnet-seed.bitcoinabc.org"), CStr("testnet-seed-abc.bitcoinforks.org"), CStr("testnet-seed.bitprim.org"),
+     CStr("testnet-seed.deadalnix.me"), CStr("testnet-seeder.criptolayer.net"), nil]
 
 extension BRCheckPoint {
     init(_ height: UInt32, _ hash: String, _ timestamp: UInt32, _ target: UInt32) {
@@ -41,7 +41,7 @@ extension BRCheckPoint {
     }
 }
 
-let BRBCashCheckpoints =
+let BRBCashCheckpoints: Array<BRCheckPoint> =
     [BRCheckPoint(     0, "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f", 1231006505, 0x1d00ffff),
      BRCheckPoint( 20160, "000000000f1aef56190aee63d33a373e6487132d522ff4cd98ccfc96566d461e", 1248481816, 0x1d00ffff),
      BRCheckPoint( 40320, "0000000045861e169b5a961b7034f8de9e98022e7a39100dde3ae3ea240d7245", 1266191579, 0x1c654657),
@@ -69,7 +69,7 @@ let BRBCashCheckpoints =
      BRCheckPoint(483840, "00000000000000000098963251fcfc19d0fa2ef05cf22936a182609f8d650346", 1503802540, 0x1803c5d5),
      BRCheckPoint(504000, "0000000000000000006cdeece5716c9c700f34ad98cb0ed0ad2c5767bbe0bc8c", 1510516839, 0x18021abd)]
 
-let BRBCashTestNetCheckpoints =
+let BRBCashTestNetCheckpoints: Array<BRCheckPoint> =
     [BRCheckPoint(      0, "000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943", 1296688602, 0x1d00ffff),
      BRCheckPoint( 100800, "0000000000a33112f86f3f7b0aa590cb4949b84c2d9c673e9e303257b3be9000", 1376543922, 0x1c00d907),
      BRCheckPoint( 201600, "0000000000376bb71314321c45de3015fe958543afcbada242a3b1b072498e38", 1393813869, 0x1b602ac0),
@@ -83,13 +83,12 @@ let BRBCashTestNetCheckpoints =
      BRCheckPoint(1008000, "000000000000390aca616746a9456a0d64c1bd73661fd60a51b5bf1c92bae5a0", 1476926743, 0x1a52ccc0),
      BRCheckPoint(1108800, "00000000000288d9a219419d0607fb67cc324d4b6d2945ca81eaa5e739fab81e", 1490751239, 0x1b09ecf0)]
 
-public let BRBCashParams =
+let BRBCashParams =
     BRChainParams(dnsSeeds: BRBCashDNSSeeds, standardPort: 8333, magicNumber: 0xe8f3e1e3,
                   services: UInt64(SERVICES_NODE_BCASH), verifyDifficulty: BRTestNetVerifyDifficulty,
                   checkpoints: BRBCashCheckpoints, checkpointsCount: BRBCashCheckpoints.count)
 
-public let BRBCashTestNetParams =
+let BRBCashTestNetParams =
     BRChainParams(dnsSeeds: BRBCashTestNetDNSSeeds, standardPort: 18333, magicNumber: 0xf4f3e5f4,
                   services: UInt64(SERVICES_NODE_BCASH), verifyDifficulty: BRTestNetVerifyDifficulty,
                   checkpoints: BRBCashTestNetCheckpoints, checkpointsCount: BRBCashTestNetCheckpoints.count)
-
