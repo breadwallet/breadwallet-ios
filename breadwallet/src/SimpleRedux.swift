@@ -138,6 +138,8 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
 class Store {
 
     private static let shared = Store()
+    
+    private var isClearingSubscriptions = false
 
     //MARK: - Public
     static func perform(action: Action) {
@@ -217,6 +219,7 @@ class Store {
     }
 
     func unsubscribe(_ subscriber: Subscriber) {
+        guard !isClearingSubscriptions else { return }
         self.subscriptions.removeValue(forKey: subscriber.hashValue)
         self.triggers.removeValue(forKey: subscriber.hashValue)
     }
@@ -237,6 +240,8 @@ class Store {
 
     func removeAllSubscriptions() {
         DispatchQueue.main.async {
+            // removing the subscription may trigger deinit of the object and a duplicate call to unsubscribe
+            self.isClearingSubscriptions = true
             self.subscriptions.removeAll()
             self.triggers.removeAll()
         }
