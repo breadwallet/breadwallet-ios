@@ -705,9 +705,9 @@ class BRPeerManager {
 
 extension UInt256 : CustomStringConvertible {
     private func _hexu(_ c: CChar) -> UInt8? {
-        if (c >= CChar("0")! && c <= CChar("9")!) { return UInt8(c - CChar("0")!) }
-        if (c >= CChar("a")! && c <= CChar("f")!) { return UInt8(c - (CChar("a")! - 0x0a)) }
-        if (c >= CChar("A")! && c <= CChar("F")!) { return UInt8(c - (CChar("A")! - 0x0a)) }
+        if (c >= "0".utf8CString[0] && c <= "9".utf8CString[0]) { return UInt8(c - "0".utf8CString[0]) }
+        if (c >= "a".utf8CString[0] && c <= "f".utf8CString[0]) { return UInt8(c - ("a".utf8CString[0] - 0x0a)) }
+        if (c >= "A".utf8CString[0] && c <= "F".utf8CString[0]) { return UInt8(c - ("A".utf8CString[0] - 0x0a)) }
         return nil
     }
     
