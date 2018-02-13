@@ -69,6 +69,7 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
         tableView.backgroundColor = .whiteBackground
+        tableView.alwaysBounceVertical = false
         addCustomTitle()
     }
 
