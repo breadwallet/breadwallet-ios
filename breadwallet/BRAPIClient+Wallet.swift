@@ -22,8 +22,9 @@ extension BRAPIClient {
         task.resume()
     }
 
-    func feePerKb(_ handler: @escaping (_ fees: Fees, _ error: String?) -> Void) {
-        let req = URLRequest(url: url("/fee-per-kb"))
+    func feePerKb(code: String, _ handler: @escaping (_ fees: Fees, _ error: String?) -> Void) {
+        let param = code == Currencies.bch.code ? "?currency=bch" : ""
+        let req = URLRequest(url: url("/fee-per-kb\(param)"))
         let task = self.dataTaskWithRequest(req) { (data, response, err) -> Void in
             var regularFeePerKb: uint_fast64_t = 0
             var economyFeePerKb: uint_fast64_t = 0
@@ -32,9 +33,15 @@ extension BRAPIClient {
                 do {
                     let parsedObject: Any? = try JSONSerialization.jsonObject(
                         with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
-                    if let top = parsedObject as? NSDictionary, let regular = top["fee_per_kb"] as? NSNumber, let economy = top["fee_per_kb_economy"] as? NSNumber {
-                        regularFeePerKb = regular.uint64Value
-                        economyFeePerKb = economy.uint64Value
+                    if let top = parsedObject as? NSDictionary {
+                        if let regular = top["fee_per_kb"] as? NSNumber {
+                            regularFeePerKb = regular.uint64Value
+                        }
+                        if let economy = top["fee_per_kb_economy"] as? NSNumber {
+                            economyFeePerKb = economy.uint64Value
+                        } else {
+                            economyFeePerKb = regularFeePerKb
+                        }
                     }
                 } catch (let e) {
                     self.log("fee-per-kb: error parsing json \(e)")

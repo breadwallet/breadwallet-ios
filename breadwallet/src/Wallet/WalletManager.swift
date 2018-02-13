@@ -37,7 +37,7 @@ extension NSNotification.Name {
 // After instantiating a WalletManager object, call myWalletManager.peerManager.connect() to begin syncing.
 
 class WalletManager {
-    private let currency: CurrencyDef
+    let currency: CurrencyDef
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
     var db: CoreDatabase?

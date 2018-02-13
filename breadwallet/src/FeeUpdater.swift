@@ -15,9 +15,6 @@ struct Fees : Codable {
 }
 
 class FeeUpdater : Trackable {
-    
-    //TODO:BCH multi-currency support
-    let currency: CurrencyDef = Currencies.btc
 
     //MARK: - Public
     init(walletManager: WalletManager) {
@@ -25,16 +22,13 @@ class FeeUpdater : Trackable {
     }
 
     func refresh(completion: @escaping () -> Void) {
-        walletManager.apiClient?.feePerKb { newFees, error in
+        walletManager.apiClient?.feePerKb(code: walletManager.currency.code) { newFees, error in
             guard error == nil else { print("feePerKb error: \(String(describing: error))"); completion(); return }
             guard newFees.regular < self.maxFeePerKB && newFees.economy > self.minFeePerKB else {
                 self.saveEvent("wallet.didUseDefaultFeePerKB")
                 return
             }
-            UserDefaults.fees = newFees
-            Store.perform(action: WalletChange(self.currency).setFees(newFees))
-            //TODO:BCH
-            Store.perform(action: WalletChange(Currencies.bch).setFees(Fees(regular: 21000, economy: 21000, timestamp: Date().timeIntervalSince1970)))
+            Store.perform(action: WalletChange(self.walletManager.currency).setFees(newFees))
             completion()
         }
 
