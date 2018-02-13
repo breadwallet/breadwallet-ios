@@ -25,7 +25,10 @@ extension UINavigationController {
     }
     
     func setGrayStyle() {
-        setClearNavbar()
+        navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationBar.shadowImage = UIImage()
+        navigationBar.isTranslucent = false
+        navigationBar.barTintColor = .whiteBackground
         navigationBar.tintColor = .mediumGray
         navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: UIFont.customBold(size: 16.0)
