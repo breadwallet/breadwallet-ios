@@ -239,8 +239,7 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func makeSendView(currency: CurrencyDef) -> UIViewController? {
-        //TODO:BCH
-        guard !Currencies.btc.state.isRescanning else {
+        guard !currency.state.isRescanning else {
             let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
             topViewController?.present(alert, animated: true, completion: nil)
@@ -248,7 +247,11 @@ class ModalPresenter : Subscriber, Trackable {
         }
         guard let walletManager = walletManagers[currency.code] else { return nil }
         guard let kvStore = walletManager.apiClient?.kv else { return nil }
-        let sendVC = SendViewController(sender: Sender(walletManager: walletManager, kvStore: kvStore, currency: currency), walletManager: walletManager, initialRequest: currentRequest, gethManager: nil, currency: currency)
+        let sendVC = SendViewController(sender: Sender(walletManager: walletManager, kvStore: kvStore, currency: currency),
+                                        walletManager: walletManager,
+                                        initialRequest: currentRequest,
+                                        gethManager: nil,
+                                        currency: currency)
         currentRequest = nil
 
         if Store.state.isLoginRequired {
