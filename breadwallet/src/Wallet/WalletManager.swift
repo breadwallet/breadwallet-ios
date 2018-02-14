@@ -224,7 +224,7 @@ extension WalletManager : BRPeerManagerListener, Trackable {
                 if self.retryTimer == nil && self.networkIsReachable() {
                     self.retryTimer = RetryTimer()
                     self.retryTimer?.callback = strongify(self) { myself in
-                        Store.trigger(name: .retrySync)
+                        Store.trigger(name: .retrySync(self.currency))
                     }
                     self.retryTimer?.start()
                 }

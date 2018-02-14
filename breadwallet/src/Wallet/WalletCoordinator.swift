@@ -53,24 +53,18 @@ class WalletCoordinator : Subscriber, Trackable {
     }
 
     private func addSubscriptions() {
-        Store.subscribe(self, name: .retrySync, callback: { _ in
+        Store.subscribe(self, name: .retrySync(self.currency), callback: { _ in
             DispatchQueue.walletQueue.async {
                 self.walletManager.peerManager?.connect()
             }
         })
 
-        Store.subscribe(self, name: .rescan, callback: { _ in
+        Store.subscribe(self, name: .rescan(self.currency), callback: { _ in
             Store.perform(action: WalletChange(self.currency).setRecommendScan(false))
-            //In case rescan is called while a sync is in progess
-            //we need to make sure it's false before a rescan starts
-            //self.store.perform(action: WalletChange(currency).setIsSyncing(false))
+            Store.perform(action: WalletChange(self.currency).setIsRescanning(true))
             DispatchQueue.walletQueue.async {
                 self.walletManager.peerManager?.rescan()
             }
-        })
-
-        Store.subscribe(self, name: .rescan, callback: { _ in
-            Store.perform(action: WalletChange(self.currency).setIsRescanning(true))
         })
     }
 

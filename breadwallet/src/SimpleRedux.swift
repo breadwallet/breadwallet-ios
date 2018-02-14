@@ -39,8 +39,8 @@ struct Trigger {
 enum TriggerName {
     case presentFaq(String)
     case registerForPushNotificationToken
-    case retrySync
-    case rescan
+    case retrySync(CurrencyDef)
+    case rescan(CurrencyDef)
     case lock
     case promptBiometrics
     case promptPaperKey
@@ -49,7 +49,7 @@ enum TriggerName {
     case blockModalDismissal
     case unblockModalDismissal
     case openFile(Data)
-    case recommendRescan
+    case recommendRescan(CurrencyDef)
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
     case copyWalletAddresses(String?, String?)
@@ -76,10 +76,10 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.registerForPushNotificationToken, .registerForPushNotificationToken):
         return true
-    case (.retrySync, .retrySync):
-        return true
-    case (.rescan, .rescan):
-        return true
+    case (.retrySync(let lhsCurrency), .retrySync(let rhsCurrency)):
+        return lhsCurrency.code == rhsCurrency.code
+    case (.rescan(let lhsCurrency), .rescan(let rhsCurrency)):
+        return lhsCurrency.code == rhsCurrency.code
     case (.lock, .lock):
         return true
     case (.promptBiometrics, .promptBiometrics):
@@ -96,8 +96,8 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.openFile(_), .openFile(_)):
         return true
-    case (.recommendRescan, .recommendRescan):
-        return true
+    case (.recommendRescan(let lhsCurrency), .recommendRescan(let rhsCurrency)):
+        return lhsCurrency.code == rhsCurrency.code
     case (.receivedPaymentRequest(_), .receivedPaymentRequest(_)):
         return true
     case (.scanQr, .scanQr):

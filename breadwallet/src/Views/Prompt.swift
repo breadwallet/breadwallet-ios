@@ -56,12 +56,12 @@ enum PromptType {
     }
 
     //This is the trigger that happens when the prompt is tapped
-    var trigger: TriggerName? {
+    func trigger(currency: CurrencyDef) -> TriggerName? {
         switch self {
         case .biometrics: return .promptBiometrics
         case .paperKey: return .promptPaperKey
         case .upgradePin: return .promptUpgradePin
-        case .recommendRescan: return .recommendRescan
+        case .recommendRescan: return .recommendRescan(currency)
         case .noPasscode: return nil
         case .shareData: return .promptShareData
         }
@@ -76,7 +76,7 @@ enum PromptType {
         case .upgradePin:
             return walletManager.pinLength != 6
         case .recommendRescan:
-            return state[Currencies.btc].recommendRescan
+            return state[walletManager.currency].recommendRescan
         case .noPasscode:
             return !LAContext.isPasscodeEnabled
         case .shareData:
