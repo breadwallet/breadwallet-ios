@@ -102,6 +102,8 @@ class ApplicationController : Subscriber, Trackable {
                 self.walletCoordinators[currency.code] = WalletCoordinator(walletManager: walletManager, currency: currency)
                 self.exchangeUpdaters[currency.code] = ExchangeUpdater(currency: currency, walletManager: walletManager)
                 walletManager.initPeerManager {
+                    // TODO:BCH only connect last active wallet
+                    walletManager.peerManager?.connect()
                     dispatchGroup.leave()
                 }
             }
@@ -182,6 +184,7 @@ class ApplicationController : Subscriber, Trackable {
             Store.perform(action: RequireLogin())
         }
         DispatchQueue.walletQueue.async {
+            //TODO:BCH connect the last active wallet
             walletManager.peerManager?.connect()
         }
         exchangeUpdaters.values.forEach { $0.refresh(completion: {}) }
@@ -324,11 +327,12 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func startDataFetchers() {
-//        walletManager?.apiClient?.updateFeatureFlags()
+        
+//        primaryWalletManager.apiClient?.updateFeatureFlags() //TODO:BCH
         initKVStoreCoordinator()
         feeUpdaters.values.forEach { $0.refresh() }
-//        defaultsUpdater?.refresh()
-//        walletManager?.apiClient?.events?.up()
+//        defaultsUpdater?.refresh() //TODO:BCH
+//        primaryWalletManager.apiClient?.events?.up() //TODO:BCH
         exchangeUpdaters.values.forEach {
             $0.refresh(completion: {
                 //self.watchSessionManager.walletManager = self.walletManager
@@ -337,19 +341,18 @@ class ApplicationController : Subscriber, Trackable {
         }
     }
 
+    /// Handles new wallet creation or recovery
     private func addWalletCreationListener() {
-//        Store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
-//            DispatchQueue.walletQueue.async {
-//                self.walletManager?.initWallet { _ in
-//                    self.walletManager?.initPeerManager {
-//                        self.walletManager?.peerManager?.connect()
-//                        self.modalPresenter?.walletManager = self.walletManager
-//                        self.startDataFetchers()
-//
-//                    }
-//                }
-//            }
-//        })
+        Store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
+            DispatchQueue.walletQueue.async {
+                self.primaryWalletManager.initWallet { _ in
+                    self.primaryWalletManager.initPeerManager {
+                        self.primaryWalletManager.peerManager?.connect()
+                        self.startDataFetchers()
+                    }
+                }
+            }
+        })
     }
     
     private func updateAssetBundles() {
