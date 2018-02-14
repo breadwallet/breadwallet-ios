@@ -12,7 +12,6 @@ import LocalAuthentication
 class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Public
-    // TODO:BCH: this is the primary wallet manager (BTC)
     let primaryWalletManager: WalletManager
     let walletManagers: [String: WalletManager]
     var gethManager: GethManager?
@@ -221,9 +220,9 @@ class ModalPresenter : Subscriber, Trackable {
             return nil //The scan view needs a custom presentation
         case .loginAddress:
             return receiveView(currency: Currencies.btc, isRequestAmountVisible: false)
-        case .requestAmount:
-            guard let wallet = primaryWalletManager.wallet else { return nil } // TODO:BCH
-            let requestVc = RequestAmountViewController(wallet: wallet)
+        case .requestAmount(let currency):
+            guard let wallet = walletManagers[currency.code]?.wallet else { return nil }
+            let requestVc = RequestAmountViewController(currency: currency, wallet: wallet)
             requestVc.presentEmail = { [weak self] bitcoinURL, image in
                 self?.messagePresenter.presenter = self?.topViewController
                 self?.messagePresenter.presentMailCompose(bitcoinURL: bitcoinURL, image: image)

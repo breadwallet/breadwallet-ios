@@ -146,10 +146,10 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
             self?.addressTapped()
         }
         request.tap = { [weak self] in
-            guard let modalTransitionDelegate = self?.parent?.transitioningDelegate as? ModalTransitionDelegate else { return }
+            guard let `self` = self, let modalTransitionDelegate = self.parent?.transitioningDelegate as? ModalTransitionDelegate else { return }
             modalTransitionDelegate.reset()
-            self?.dismiss(animated: true, completion: {
-                Store.perform(action: RootModalActions.Present(modal: .requestAmount))
+            self.dismiss(animated: true, completion: {
+                Store.perform(action: RootModalActions.Present(modal: .requestAmount(currency: self.currency)))
             })
         }
         share.addTarget(self, action: #selector(ReceiveViewController.shareTapped), for: .touchUpInside)
