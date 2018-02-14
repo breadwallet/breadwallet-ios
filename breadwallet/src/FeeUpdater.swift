@@ -49,6 +49,7 @@ class FeeUpdater : Trackable {
     private let walletManager: WalletManager
     private let feeKey = "FEE_PER_KB"
     private let txFeePerKb: UInt64 = 1000
+    //TODO:BCH these values should be currency-pecific
     private lazy var minFeePerKB: UInt64 = {
         return ((self.txFeePerKb*1000 + 190)/191) // minimum relay fee on a 191byte tx
     }()
