@@ -215,12 +215,12 @@ class ModalPresenter : Subscriber, Trackable {
             return nil
         case .send(let currency):
             return makeSendView(currency: currency)
-        case .receive:
-            return receiveView(isRequestAmountVisible: true)
+        case .receive(let currency):
+            return receiveView(currency: currency, isRequestAmountVisible: true)
         case .loginScan:
             return nil //The scan view needs a custom presentation
         case .loginAddress:
-            return receiveView(isRequestAmountVisible: false)
+            return receiveView(currency: Currencies.btc, isRequestAmountVisible: false)
         case .requestAmount:
             guard let wallet = primaryWalletManager.wallet else { return nil } // TODO:BCH
             let requestVc = RequestAmountViewController(wallet: wallet)
@@ -278,8 +278,8 @@ class ModalPresenter : Subscriber, Trackable {
         return root
     }
 
-    private func receiveView(isRequestAmountVisible: Bool) -> UIViewController? {
-        let receiveVC = ReceiveViewController(isRequestAmountVisible: isRequestAmountVisible)
+    private func receiveView(currency: CurrencyDef, isRequestAmountVisible: Bool) -> UIViewController? {
+        let receiveVC = ReceiveViewController(currency: currency, isRequestAmountVisible: isRequestAmountVisible)
         let root = ModalViewController(childViewController: receiveVC)
         receiveVC.presentEmail = { [weak self, weak root] address, image in
             guard let root = root else { return }

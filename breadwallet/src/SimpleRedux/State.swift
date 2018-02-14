@@ -94,7 +94,7 @@ extension State {
 enum RootModal {
     case none
     case send(currency: CurrencyDef)
-    case receive
+    case receive(currency: CurrencyDef)
     case loginAddress
     case loginScan
     case requestAmount

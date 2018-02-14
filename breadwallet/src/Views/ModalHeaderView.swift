@@ -21,16 +21,10 @@ class ModalHeaderView : UIView {
         didSet { close.tap = closeCallback }
     }
     
-    var title: String {
-        didSet {
-            self.titleLabel.text = title
-        }
-    }
-
     init(title: String, style: ModalHeaderViewStyle, faqInfo: String? = nil) {
-        self.title = title
+        self.titleLabel.text = title
         self.style = style
-
+        
         if let faqInfo = faqInfo {
             self.faq = UIButton.buildFaqButton(articleId: faqInfo)
         }
@@ -48,6 +42,10 @@ class ModalHeaderView : UIView {
                 addFaqButton()
             }
         }
+    }
+    
+    func setTitle(_ title: String) {
+        self.titleLabel.text = title
     }
 
     //MARK - Private

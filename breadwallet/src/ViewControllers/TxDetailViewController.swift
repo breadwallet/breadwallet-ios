@@ -157,7 +157,7 @@ class TxDetailViewController: UIViewController, Subscriber {
         detailsButton.setTitle(S.TransactionDetails.hideDetails, for: .selected)
         detailsButton.addTarget(self, action: #selector(onToggleDetails), for: .touchUpInside)
         
-        header.title = viewModel.title
+        header.setTitle(viewModel.title)
     }
     
     private func reload() {

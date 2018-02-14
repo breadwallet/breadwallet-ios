@@ -22,13 +22,14 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     var presentEmail: PresentShare?
     var presentText: PresentShare?
 
-    init(isRequestAmountVisible: Bool) {
+    init(currency: CurrencyDef, isRequestAmountVisible: Bool) {
+        self.currency = currency
         self.isRequestAmountVisible = isRequestAmountVisible
         super.init(nibName: nil, bundle: nil)
     }
 
     //MARK - Private
-    private let currency: CurrencyDef = Currencies.btc //TODO:BCH
+    private let currency: CurrencyDef
     
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 14.0))
@@ -259,10 +260,6 @@ extension ReceiveViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        if let token = currency.state.token {
-            return "Receive \(token.code)"
-        } else {
-            return S.Receive.title
-        }
+        return "\(S.Receive.title) \(currency.code)"
     }
 }
