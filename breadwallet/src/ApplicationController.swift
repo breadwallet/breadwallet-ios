@@ -61,6 +61,11 @@ class ApplicationController : Subscriber, Trackable {
         guard let btcWalletManager = try? WalletManager(currency: btc, dbPath: btc.dbPath) else { return }
         walletManagers[btc.code] = btcWalletManager
         btcWalletManager.initWallet { [unowned self] success in
+            guard success else {
+                completion()
+                return
+            }
+            
             self.walletCoordinators[btc.code] = WalletCoordinator(walletManager: btcWalletManager, currency: btc)
             self.exchangeUpdaters[btc.code] = ExchangeUpdater(currency: btc, walletManager: btcWalletManager)
             btcWalletManager.initPeerManager {
@@ -95,7 +100,6 @@ class ApplicationController : Subscriber, Trackable {
             walletManagers[currency.code] = walletManager
             walletManager.initWallet { success in
                 guard success else {
-                    print("Wallet init failed!")
                     dispatchGroup.leave()
                     return
                 }
