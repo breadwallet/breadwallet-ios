@@ -33,15 +33,9 @@ extension BRAPIClient {
                 do {
                     let parsedObject: Any? = try JSONSerialization.jsonObject(
                         with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
-                    if let top = parsedObject as? NSDictionary {
-                        if let regular = top["fee_per_kb"] as? NSNumber {
-                            regularFeePerKb = regular.uint64Value
-                        }
-                        if let economy = top["fee_per_kb_economy"] as? NSNumber {
-                            economyFeePerKb = economy.uint64Value
-                        } else {
-                            economyFeePerKb = regularFeePerKb
-                        }
+                    if let top = parsedObject as? NSDictionary, let regular = top["fee_per_kb"] as? NSNumber, let economy = top["fee_per_kb_economy"] as? NSNumber {
+                        regularFeePerKb = regular.uint64Value
+                        economyFeePerKb = economy.uint64Value
                     }
                 } catch (let e) {
                     self.log("fee-per-kb: error parsing json \(e)")
