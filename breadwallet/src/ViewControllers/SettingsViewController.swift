@@ -56,7 +56,6 @@ class SettingsViewController : UITableViewController, CustomTitleView {
     let customTitle: String
 
     override func viewDidLoad() {
-        //navigationItem.backBarButtonItem?.title = (navigationController?.viewControllers.count ?? 0) > 1 ? "" : "Home"
         self.title = ""
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 48.0))
@@ -73,19 +72,9 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         addCustomTitle()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        var indexPaths: [IndexPath] = []
-        sections.enumerated().forEach { i, key in
-            rows[key]?.enumerated().forEach { j, setting in
-                if setting.accessoryText != nil {
-                    indexPaths.append(IndexPath(row: j, section: i))
-                }
-            }
-        }
-        tableView.beginUpdates()
-        tableView.reloadRows(at: indexPaths, with: .automatic)
-        tableView.endUpdates()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
