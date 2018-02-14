@@ -20,32 +20,24 @@ class RootNavigationController : UINavigationController {
                 loginView.modalPresentationCapturesStatusBarAppearance = true
                 loginView.shouldSelfDismiss = true
                 present(loginView, animated: false, completion: {
-                    self.tempLoginView?.remove()
+                    self.tempLoginView.remove()
                     //todo - attempt show welcome here
                 })
             }
         }
     }
 
-//    var store: Store? {
-//        didSet {
-//            guard let store = store else { return }
-//            self.tempLoginView = LoginViewController(store: store, isPresentedForLock: false)
-//        }
-//    }
-    private var tempLoginView: LoginViewController?
+    private var tempLoginView = LoginViewController(isPresentedForLock: false)
     private let welcomeTransitingDelegate = PinTransitioningDelegate()
     private let loginTransitionDelegate = LoginTransitionDelegate()
 
     override func viewDidLoad() {
+        self.addChildViewController(tempLoginView, layout: {
+            tempLoginView.view.constrain(toSuperviewEdges: nil)
+        })
         guardProtected(queue: DispatchQueue.main) {
-            if !WalletManager.staticNoWallet {
-                if let tempLoginView = self.tempLoginView {
-                    self.addChildViewController(tempLoginView, layout: {
-                        tempLoginView.view.constrain(toSuperviewEdges: nil)
-                    })
-                }
-            } else {
+            if WalletManager.staticNoWallet {
+                self.tempLoginView.remove()
                 let tempStartView = StartViewController(didTapCreate: {}, didTapRecover: {})
                 self.addChildViewController(tempStartView, layout: {
                     tempStartView.view.constrain(toSuperviewEdges: nil)
@@ -58,6 +50,7 @@ class RootNavigationController : UINavigationController {
         }
     }
 
+    //TODO: unused
     private func attemptShowWelcomeView() {
         if !UserDefaults.hasShownWelcome {
             let welcome = WelcomeViewController()
