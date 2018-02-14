@@ -19,10 +19,9 @@ class RequestAmountViewController : UIViewController {
     var presentEmail: PresentShare?
     var presentText: PresentShare?
 
-    init(wallet: BRWallet) {
+    init(currency: CurrencyDef, wallet: BRWallet) {
         self.wallet = wallet
-        // TODO:BCH support multi-currency
-        amountView = AmountViewController(currency: Currencies.btc, isPinPadExpandedAtLaunch: true, isRequesting: true)
+        amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: true, isRequesting: true)
         super.init(nibName: nil, bundle: nil)
     }
 
