@@ -277,7 +277,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                 self.currentPrompt = nil
             }
             currentPrompt!.continueButton.tap = { [unowned self] in
-                if let trigger = type.trigger {
+                if let trigger = type.trigger(currency: self.currency) {
                     Store.trigger(name: trigger)
                 }
                 self.saveEvent("prompt.\(type.name).trigger")

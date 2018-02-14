@@ -80,10 +80,12 @@ class ModalPresenter : Subscriber, Trackable {
                 self.handleFile(file)
             }
         })
-        Store.subscribe(self, name: .recommendRescan, callback: { _ in
-            //TODO:BCH make currency-specific
-            self.presentRescan()
-        })
+        
+        for walletManager in walletManagers.values {
+            Store.subscribe(self, name: .recommendRescan(walletManager.currency), callback: { _ in
+                self.presentRescan(currency: walletManager.currency)
+            })
+        }
 
         //URLs
         Store.subscribe(self, name: .receivedPaymentRequest(nil), callback: {
@@ -556,8 +558,8 @@ class ModalPresenter : Subscriber, Trackable {
         self.topViewController?.present(vc, animated: true, completion: nil)
     }
 
-    private func presentRescan() {
-        let vc = ReScanViewController(currency: Currencies.btc)
+    private func presentRescan(currency: CurrencyDef) {
+        let vc = ReScanViewController(currency: currency)
         let nc = UINavigationController(rootViewController: vc)
         nc.setClearNavbar()
         vc.addCloseNavigationItem()

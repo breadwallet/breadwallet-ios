@@ -79,7 +79,7 @@ class ReScanViewController : UIViewController, Subscriber {
         let alert = UIAlertController(title: S.ReScan.alertTitle, message: S.ReScan.alertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
         alert.addAction(UIAlertAction(title: S.ReScan.alertAction, style: .default, handler: { _ in
-            Store.trigger(name: .rescan)
+            Store.trigger(name: .rescan(self.currency))
             self.showSyncView()
         }))
         present(alert, animated: true, completion: nil)
