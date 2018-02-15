@@ -12,7 +12,6 @@ import MachO
 
 let accountHeaderHeight: CGFloat = 152.0
 let accountFooterHeight: CGFloat = 67.0
-private let transactionsLoadingViewHeightConstant: CGFloat = 48.0
 
 class AccountViewController : UIViewController, Subscriber {
 
@@ -43,9 +42,7 @@ class AccountViewController : UIViewController, Subscriber {
     private let headerView: AccountHeaderView
     private let footerView: AccountFooterView
     private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
-    private let transactionsLoadingView = LoadingProgressView()
     private var transactionsTableView: TransactionsTableViewController!
-    private var transactionsLoadingViewTop: NSLayoutConstraint?
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var isLoginRequired = false
     private let searchHeaderview: SearchHeaderView = {
@@ -134,15 +131,6 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func addSubscriptions() {
-
-        //TODO:BCH this was never being set
-//        Store.subscribe(self, selector: { $0.isLoadingTransactions != $1.isLoadingTransactions }, callback: {
-//            if $0.isLoadingTransactions {
-//                self.loadingDidStart()
-//            } else {
-//                self.hideLoadingView()
-//            }
-//        })
         Store.subscribe(self, selector: { $0.isLoginRequired != $1.isLoginRequired }, callback: { self.isLoginRequired = $0.isLoginRequired })
         Store.subscribe(self, name: .showStatusBar, callback: { _ in
             self.shouldShowStatusBar = true
@@ -191,57 +179,6 @@ class AccountViewController : UIViewController, Subscriber {
         searchHeaderview.didChangeFilters = { [weak self] filters in
             self?.transactionsTableView.filters = filters
         }
-    }
-
-    private func loadingDidStart() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
-            if !self.didEndLoading {
-                self.showLoadingView()
-            }
-        })
-    }
-
-    private func showLoadingView() {
-        view.insertSubview(transactionsLoadingView, belowSubview: headerContainer)
-        transactionsLoadingViewTop = transactionsLoadingView.topAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -transactionsLoadingViewHeightConstant)
-        transactionsLoadingView.constrain([
-            transactionsLoadingViewTop,
-            transactionsLoadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            transactionsLoadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            transactionsLoadingView.heightAnchor.constraint(equalToConstant: transactionsLoadingViewHeightConstant) ])
-        transactionsLoadingView.progress = 0.01
-        view.layoutIfNeeded()
-        UIView.animate(withDuration: C.animationDuration, animations: {
-        self.transactionsTableView.tableView.verticallyOffsetContent(transactionsLoadingViewHeightConstant)
-            self.transactionsLoadingViewTop?.constant = 0.0
-            self.view.layoutIfNeeded()
-        }) { completed in
-            //This view needs to be brought to the front so that it's above the headerview shadow. It looks weird if it's below.
-            self.view.insertSubview(self.transactionsLoadingView, aboveSubview: self.headerContainer)
-        }
-        loadingTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateLoadingProgress), userInfo: nil, repeats: true)
-    }
-
-    private func hideLoadingView() {
-        didEndLoading = true
-        guard self.transactionsLoadingViewTop?.constant == 0.0 else { return } //Should skip hide if it's not shown
-        loadingTimer?.invalidate()
-        loadingTimer = nil
-        transactionsLoadingView.progress = 1.0
-        view.insertSubview(transactionsLoadingView, belowSubview: headerContainer)
-        if transactionsLoadingView.superview != nil {
-            UIView.animate(withDuration: C.animationDuration, animations: {
-                self.transactionsTableView.tableView.verticallyOffsetContent(-transactionsLoadingViewHeightConstant)
-                self.transactionsLoadingViewTop?.constant = -transactionsLoadingViewHeightConstant
-                self.view.layoutIfNeeded()
-            }) { completed in
-                self.transactionsLoadingView.removeFromSuperview()
-            }
-        }
-    }
-
-    @objc private func updateLoadingProgress() {
-        transactionsLoadingView.progress = transactionsLoadingView.progress + (1.0 - transactionsLoadingView.progress)/8.0
     }
 
     private func addTransactionsView() {

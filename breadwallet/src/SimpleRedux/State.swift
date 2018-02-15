@@ -130,7 +130,6 @@ struct WalletState {
     let currentRate: Rate?
     let fees: Fees?
     let recommendRescan: Bool
-//    let isLoadingTransactions: Bool //TODO:BCH this is never writter to, was only read in AccountViewController
     let maxDigits: Int // this is bits vs bitcoin setting
 //    let isBtcSwapped: Bool // show amounts as fiat setting
     
@@ -155,7 +154,6 @@ struct WalletState {
                            currentRate: nil,
                            fees: nil,
                            recommendRescan: false,
-//                           isLoadingTransactions: false,
                            maxDigits: UserDefaults.maxDigits)
     }
 
@@ -177,7 +175,6 @@ struct WalletState {
                     rates: [Rate]? = nil,
                     fees: Fees? = nil,
                     recommendRescan: Bool? = nil,
-//                    isLoadingTransactions: Bool? = nil,
                     maxDigits: Int? = nil) -> WalletState {
 
         return WalletState(currency: self.currency,
@@ -199,7 +196,6 @@ struct WalletState {
                            currentRate: currentRate ?? self.currentRate,
                            fees: fees ?? self.fees,
                            recommendRescan: recommendRescan ?? self.recommendRescan,
-//                           isLoadingTransactions: isLoadingTransactions ?? self.isLoadingTransactions,
                            maxDigits: maxDigits ?? self.maxDigits)
     }
 }
@@ -208,7 +204,6 @@ extension WalletState : Equatable {}
 
 func ==(lhs: WalletState, rhs: WalletState) -> Bool {
     return lhs.currency.code == rhs.currency.code &&
-//        lhs.displayOrder == rhs.displayOrder &&
 //        lhs.isConnected == rhs.isConnected &&
         lhs.syncProgress == rhs.syncProgress &&
         lhs.syncState == rhs.syncState &&
@@ -222,7 +217,6 @@ func ==(lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.currentRate == rhs.currentRate &&
         lhs.fees == rhs.fees &&
         lhs.recommendRescan == rhs.recommendRescan &&
-//        lhs.isLoadingTransactions == rhs.isLoadingTransactions &&
         lhs.maxDigits == rhs.maxDigits
 }
 
