@@ -579,7 +579,6 @@ class ModalPresenter : Subscriber, Trackable {
     private func wipeWalletNoPrompt() {
         let activity = BRActivityViewController(message: S.WipeWallet.wiping)
         self.topViewController?.present(activity, animated: true, completion: nil)
-        //TODO:BCH
         DispatchQueue.walletQueue.async {
             self.walletManagers.values.forEach({ $0.peerManager?.disconnect() })
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
@@ -665,7 +664,7 @@ class ModalPresenter : Subscriber, Trackable {
                     modalTransitionDelegate.reset()
                     topVC.dismiss(animated: true, completion: {
                         //TODO:BCH
-                        //Store.perform(action: RootModalActions.Present(modal: .send))
+                        Store.perform(action: RootModalActions.Present(modal: .send(currency: Currencies.btc)))
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { //This is a hack because present has no callback
                             let _ = attemptConfirmRequest()
                         })
@@ -689,16 +688,15 @@ class ModalPresenter : Subscriber, Trackable {
     private func handlePaymentRequest(request: PaymentRequest) {
         self.currentRequest = request
         //TODO:BCH
-        //guard !Store.state.isLoginRequired else { presentModal(.send); return }
+        let currency = Currencies.btc
+        guard !Store.state.isLoginRequired else { presentModal(.send(currency: currency)); return }
 
         if topViewController is AccountViewController {
-            //TODO:BCH
-            //presentModal(.send)
+            presentModal(.send(currency: currency))
         } else {
             if let presented = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
                 presented.dismiss(animated: true, completion: {
-                    //TODO:BCH
-                    //self.presentModal(.send)
+                    self.presentModal(.send(currency: currency))
                 })
             }
         }
