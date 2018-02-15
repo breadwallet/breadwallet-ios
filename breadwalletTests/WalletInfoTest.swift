@@ -16,9 +16,10 @@ class WalletInfoTest : XCTestCase {
 
     override class func setUp() {
         clearKeychain()
-        deleteDb()
+        deleteKvStoreDb()
         walletManager = try! WalletManager(currency: Currencies.btc, dbPath: nil)
         let _ = walletManager?.setRandomSeedPhrase()
+        initWallet(walletManager: walletManager!)
         client = walletManager?.apiClient
     }
 
@@ -34,7 +35,7 @@ class WalletInfoTest : XCTestCase {
 
             // 3. Delete Kv Store and simulatore restore wallet
             client = nil
-            deleteDb()
+            deleteKvStoreDb()
             client = BRAPIClient(authenticator: walletManager!)
             guard let newKv = client?.kv else { XCTFail("KV store should exist"); return }
 
