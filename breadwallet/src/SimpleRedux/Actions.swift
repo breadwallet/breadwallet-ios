@@ -91,7 +91,6 @@ struct WalletChange: Trackable {
     }
     
     func setExchangeRates(currentRate: Rate, rates: [Rate]) -> WalletAction {
-        //TODO:BCH what is this used for, does it make sense to only store one currency's rate?
         UserDefaults.setCurrentRateData(newValue: currentRate.dictionary, forCode: currentRate.reciprocalCode)
 
         return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(currentRate: currentRate, rates: rates)) })
@@ -143,32 +142,6 @@ enum CurrencyChange {
     }
 }
 
-//MARK: - Exchange Rates
-//enum ExchangeRates {
-//    struct setRates : Action {
-//        let reduce: Reducer
-//        init(currentRate: Rate, rates: [Rate] ) {
-//            //TODO:BCH what is this used for, does it make sense to only store one currency's rate?
-//            UserDefaults.setCurrentRateData(newValue: currentRate.dictionary, forCode: currentRate.reciprocalCode)
-//            //TODO:BCH this should not alter the global state, just the currency state
-////            reduce = {
-////                let currencies = $0.currencies.map { currencyDef -> CurrencyDef in
-////                    let state = currencyDef.state
-////                    return currencyDef.mutate(state: CurrencyState(rate: currentRate, fees: state.fees))
-////                }
-////                return $0.mutate(currencies: currencies)
-////            }
-//            reduce = { $0.mutate(walletState: $0.walletState.mutate(currentRate: currentRate, rates: rates)) }
-//        }
-//    }
-//    struct setRate: Action {
-//        let reduce: Reducer
-//        init(_ currentRate: Rate) {
-//            reduce = { $0.mutate(walletState: $0.walletState.mutate(currentRate: currentRate)) }
-//        }
-//    }
-//}
-
 //MARK: - Alerts
 enum Alert {
     struct Show : Action {
@@ -204,36 +177,6 @@ enum DefaultCurrency {
     }
 }
 
-//enum RecommendRescan {
-//    struct set : Action, Trackable {
-//        let reduce: Reducer
-//        init(_ recommendRescan: Bool) {
-//            reduce = { $0.mutate(recommendRescan: recommendRescan) }
-//            saveEvent("event.recommendRescan")
-//        }
-//    }
-//}
-//
-//enum LoadTransactions {
-//    struct set : Action {
-//        let reduce: Reducer
-//        init(_ isLoadingTransactions: Bool) {
-//            reduce = { $0.mutate(isLoadingTransactions: isLoadingTransactions) }
-//        }
-//    }
-//}
-//
-//enum MaxDigits {
-//    struct set : Action, Trackable {
-//        let reduce: Reducer
-//        init(_ maxDigits: Int) {
-//            UserDefaults.maxDigits = maxDigits
-//            reduce = { $0.mutate(maxDigits: maxDigits)}
-//            saveEvent("maxDigits.set", attributes: ["maxDigits": "\(maxDigits)"])
-//        }
-//    }
-//}
-
 enum PushNotifications {
     struct setIsEnabled : Action {
         let reduce: Reducer
@@ -260,13 +203,3 @@ enum PinLength {
         }
     }
 }
-
-//enum UpdateFees {
-//    struct set : Action {
-//        let reduce: Reducer
-//        init(_ fees: Fees) {
-//            reduce = { $0.mutate(fees: fees) }
-//        }
-//    }
-//}
-
