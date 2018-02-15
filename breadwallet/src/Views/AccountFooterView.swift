@@ -31,31 +31,36 @@ class AccountFooterView: UIView, Trackable {
 
     private func setup() {
         let toolbar = UIToolbar()
+        let separator = UIView(color: .separatorGray)
+        addSubview(toolbar)
+        addSubview(separator)
+        
+        toolbar.clipsToBounds = true // to remove separator line
+        toolbar.isOpaque = true
+        
+        // buttons
+        var buttonCount: Int
         
         let send = UIButton.rounded(title: S.Button.send)
         send.tintColor = .white
         send.backgroundColor = currency.colors.0
         send.addTarget(self, action: #selector(AccountFooterView.send), for: .touchUpInside)
+        let sendButton = UIBarButtonItem(customView: send)
 
         let receive = UIButton.rounded(title: S.Button.receive)
         receive.tintColor = .white
         receive.backgroundColor = currency.colors.0
         receive.addTarget(self, action: #selector(AccountFooterView.receive), for: .touchUpInside)
+        let receiveButton = UIBarButtonItem(customView: receive)
 
         let buy = UIButton.rounded(title: S.Button.buy)
         buy.tintColor = .white
         buy.backgroundColor = currency.colors.0
         buy.addTarget(self, action: #selector(AccountFooterView.buy), for: .touchUpInside)
-        
-        let paddingWidth = C.padding[2]
-        
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        
-        let sendButton = UIBarButtonItem(customView: send)
-        let receiveButton = UIBarButtonItem(customView: receive)
         let buyButton = UIBarButtonItem(customView: buy)
         
-        var buttonCount: Int
+        let paddingWidth = C.padding[2]
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         
         if currency.matches(Currencies.btc) && BRAPIClient.featureEnabled(.buyBitcoin) {
             toolbar.items = [
@@ -79,10 +84,9 @@ class AccountFooterView: UIView, Trackable {
             buttonCount = 2
         }
         
-        addSubview(toolbar)
-        
         // constraints
         toolbar.constrain(toSuperviewEdges: nil)
+        separator.constrainTopCorners(height: 0.5)
         
         let buttonWidth = (self.bounds.width - (paddingWidth * CGFloat(buttonCount+1))) / CGFloat(buttonCount)
         let buttonHeight = CGFloat(44.0)

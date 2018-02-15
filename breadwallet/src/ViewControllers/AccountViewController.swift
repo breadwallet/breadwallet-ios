@@ -106,22 +106,31 @@ class AccountViewController : UIViewController, Subscriber {
     private func addSubviews() {
         view.addSubview(headerContainer)
         headerContainer.addSubview(headerView)
-        view.addSubview(footerView)
         headerContainer.addSubview(searchHeaderview)
+        view.addSubview(footerView)
     }
 
     private func addConstraints() {
-        headerContainer.constrainTopCorners(sidePadding: 0, topPadding: 0)
-        headerContainer.constrain([ headerContainer.constraint(.height, constant: accountHeaderHeight) ])
+        headerContainer.constrainTopCorners(height: accountHeaderHeight)
         headerView.constrain(toSuperviewEdges: nil)
 
-        footerView.constrainBottomCorners(sidePadding: -C.padding[1], bottomPadding: 0)
-        footerView.constrain([
-            footerView.constraint(.height, constant: E.isIPhoneX ? accountFooterHeight + 20.0 : accountFooterHeight) ])
+        if #available(iOS 11.0, *) {
+            footerView.constrain([
+                footerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                footerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                footerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                footerView.heightAnchor.constraint(equalToConstant: accountFooterHeight)
+                ])
+        } else {
+            footerView.constrain([
+                footerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                footerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                footerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                footerView.heightAnchor.constraint(equalToConstant: accountFooterHeight)
+                ])
+            
+        }
         searchHeaderview.constrain(toSuperviewEdges: nil)
-        searchHeaderview.constrain([
-            searchHeaderview.constraint(.height, toView: headerContainer)
-            ])
     }
 
     private func addSubscriptions() {
@@ -144,36 +153,41 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func setInitialData() {
-        headerView.searchButton.tap = { [weak self] in
-            guard let myself = self else { return }
-            myself.navigationController?.setNavigationBarHidden(true, animated: false)
-            UIView.transition(from: myself.headerView,
-                              to: myself.searchHeaderview,
+        let navBarHeight: CGFloat = 44.0
+        
+        headerView.searchButton.tap = { [unowned self] in
+            self.navigationController?.setNavigationBarHidden(true, animated: false)
+            var contentInset = self.transactionsTableView.tableView.contentInset
+            var contentOffset = self.transactionsTableView.tableView.contentOffset
+            contentInset.top += navBarHeight
+            contentOffset.y -= navBarHeight
+            self.transactionsTableView.tableView.contentInset = contentInset
+            self.transactionsTableView.tableView.contentOffset = contentOffset
+            UIView.transition(from: self.headerView,
+                              to: self.searchHeaderview,
                               duration: C.animationDuration,
                               options: [.transitionFlipFromBottom, .showHideTransitionViews, .curveEaseOut],
                               completion: { _ in
-                                myself.searchHeaderview.triggerUpdate()
-                                myself.setNeedsStatusBarAppearanceUpdate()
-                                let contentInset = myself.transactionsTableView.tableView.contentInset
-                                myself.transactionsTableView.tableView.contentInset = UIEdgeInsetsMake(contentInset.top + 64.0, contentInset.left, contentInset.bottom, contentInset.right)
+                                self.searchHeaderview.triggerUpdate()
+                                self.setNeedsStatusBarAppearanceUpdate()
             })
         }
-
-        searchHeaderview.didCancel = { [weak self] in
-            guard let myself = self else { return }
-            myself.navigationController?.setNavigationBarHidden(false, animated: false)
-            UIView.transition(from: myself.searchHeaderview,
-                              to: myself.headerView,
+        
+        searchHeaderview.didCancel = { [unowned self] in
+            self.navigationController?.setNavigationBarHidden(false, animated: false)
+            var contentInset = self.transactionsTableView.tableView.contentInset
+            contentInset.top -= navBarHeight
+            self.transactionsTableView.tableView.contentInset = contentInset
+            UIView.transition(from: self.searchHeaderview,
+                              to: self.headerView,
                               duration: C.animationDuration,
                               options: [.transitionFlipFromTop, .showHideTransitionViews, .curveEaseOut],
                               completion: { _ in
-                                myself.setNeedsStatusBarAppearanceUpdate()
-                                let contentInset = myself.transactionsTableView.tableView.contentInset
-                                myself.transactionsTableView.tableView.contentInset = UIEdgeInsetsMake(contentInset.top - 64.0, contentInset.left, contentInset.bottom, contentInset.right)
+                                self.setNeedsStatusBarAppearanceUpdate()
             })
         }
-
-
+        
+        
         searchHeaderview.didChangeFilters = { [weak self] filters in
             self?.transactionsTableView.filters = filters
         }
@@ -231,8 +245,18 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func addTransactionsView() {
+        view.backgroundColor = .whiteTint
         addChildViewController(transactionsTableView, layout: {
-            transactionsTableView.view.constrain(toSuperviewEdges: nil)
+            if #available(iOS 11.0, *) {
+                transactionsTableView.view.constrain([
+                    transactionsTableView.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                transactionsTableView.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                transactionsTableView.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                transactionsTableView.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                ])
+            } else {
+                transactionsTableView.view.constrain(toSuperviewEdges: nil)
+            }
         })
     }
     
