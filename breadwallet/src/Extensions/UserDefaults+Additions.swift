@@ -134,7 +134,7 @@ extension UserDefaults {
         set { defaults.set(newValue, forKey: hasShownWelcomeKey) }
     }
 
-    // TODO:BCH not used, can be removed?
+    // TODO:BCH not used, remove?
     static var fees: Fees? {
         //Returns nil if feeCacheTimeout exceeded
         get {

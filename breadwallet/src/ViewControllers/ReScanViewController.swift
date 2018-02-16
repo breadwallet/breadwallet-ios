@@ -97,7 +97,6 @@ class ReScanViewController : UIViewController, Subscriber {
         syncView.layer.cornerRadius = 4.0
         syncView.layer.masksToBounds = true
 
-        //TODO:BCH
         Store.subscribe(self, selector: { $0[self.currency].lastBlockTimestamp != $1[self.currency].lastBlockTimestamp },
                         callback: { state in
                             syncView.timestamp = state[self.currency].lastBlockTimestamp

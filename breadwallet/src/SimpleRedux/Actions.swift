@@ -109,11 +109,6 @@ struct WalletChange: Trackable {
         return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(recommendRescan: recommendRescan)) })
     }
 
-    //TODO:BCH this action and associated property is never used
-//    func setLoadingTransactions(_ isLoadingTransactions: Bool) -> WalletAction {
-//        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(isLoadingTransactions: isLoadingTransactions)) })
-//    }
-
     func setMaxDigits(_ maxDigits: Int) -> WalletAction {
         UserDefaults.maxDigits = maxDigits
         saveEvent("maxDigits.set", attributes: ["maxDigits": "\(maxDigits)"])
