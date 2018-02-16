@@ -157,7 +157,7 @@ class BRReplicatedKVStoreTest: XCTestCase {
         let (v, t, d, val) = try! store.get("hello")
         XCTAssertEqual(val, [0, 1])
         XCTAssertEqual(v1, v)
-        XCTAssertEqualWithAccuracy(t1.timeIntervalSince1970, t.timeIntervalSince1970, accuracy: 0.001)
+        XCTAssertEqual(t1.timeIntervalSince1970, t.timeIntervalSince1970, accuracy: 0.001)
         XCTAssertEqual(d, false)
     }
     
@@ -204,7 +204,7 @@ class BRReplicatedKVStoreTest: XCTestCase {
         XCTAssertEqual(1, lst.count)
         XCTAssertEqual("hello", lst[0].0)
         XCTAssertEqual(v1, lst[0].1)
-        XCTAssertEqualWithAccuracy(t1.timeIntervalSince1970, lst[0].2.timeIntervalSince1970, accuracy: 0.001)
+        XCTAssertEqual(t1.timeIntervalSince1970, lst[0].2.timeIntervalSince1970, accuracy: 0.001)
         XCTAssertEqual(0, lst[0].3)
         XCTAssertEqual(false, lst[0].4)
     }

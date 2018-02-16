@@ -10,7 +10,9 @@ import UIKit
 
 func guardProtected(queue: DispatchQueue, callback: @escaping () -> Void) {
     if UIApplication.shared.isProtectedDataAvailable {
-        callback()
+        queue.async {
+            callback()
+        }
     } else {
         var observer: Any?
         observer = NotificationCenter.default.addObserver(forName: .UIApplicationProtectedDataDidBecomeAvailable, object: nil, queue: nil,
