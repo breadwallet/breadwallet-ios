@@ -13,6 +13,7 @@ class Background : UIView, GradientDrawable {
     var currency: CurrencyDef?
 
     override func layoutSubviews() {
+        super.layoutSubviews()
         let maskLayer = CAShapeLayer()
         let corners: UIRectCorner = .allCorners
         maskLayer.path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: 4.0, height: 4.0)).cgPath
@@ -25,7 +26,7 @@ class Background : UIView, GradientDrawable {
     }
 }
 
-class HomeScreenCell : UITableViewCell {
+class HomeScreenCell : UITableViewCell, Subscriber {
     
     static let cellIdentifier = "CurrencyCell"
 
@@ -33,7 +34,16 @@ class HomeScreenCell : UITableViewCell {
     private let price = UILabel(font: .customBold(size: 14.0), color: .transparentWhiteText)
     private let fiatBalance = UILabel(font: .customBold(size: 18.0), color: .white)
     private let tokenBalance = UILabel(font: .customBold(size: 14.0), color: .transparentWhiteText)
+    private let syncIndicator = SyncingIndicator()
     private let container = Background()
+    
+    private var isSyncIndicatorVisible: Bool = false {
+        didSet {
+            syncIndicator.isHidden = !isSyncIndicatorVisible
+            tokenBalance.isHidden = isSyncIndicatorVisible
+            fiatBalance.textColor = isSyncIndicatorVisible ? .disabledWhiteText : .white
+        }
+    }
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -41,12 +51,33 @@ class HomeScreenCell : UITableViewCell {
     }
 
     func set(viewModel: AssetListViewModel) {
-        self.container.currency = viewModel.currency
-        self.currencyName.text = viewModel.currency.name
-        self.price.text = viewModel.exchangeRate
-        self.fiatBalance.text = viewModel.fiatBalance
-        self.tokenBalance.text = viewModel.tokenBalance
-        self.container.setNeedsDisplay()
+        container.currency = viewModel.currency
+        currencyName.text = viewModel.currency.name
+        price.text = viewModel.exchangeRate
+        fiatBalance.text = viewModel.fiatBalance
+        tokenBalance.text = viewModel.tokenBalance
+        container.setNeedsDisplay()
+        
+        Store.subscribe(self, selector: { $0[viewModel.currency].syncState != $1[viewModel.currency].syncState },
+                        callback: { state in
+                            switch state[viewModel.currency].syncState {
+                            case .connecting:
+                                self.isSyncIndicatorVisible = true
+                                self.syncIndicator.text = S.SyncingView.connecting
+                            case .syncing:
+                                self.isSyncIndicatorVisible = true
+                                self.syncIndicator.text = S.SyncingView.syncing
+                            case .success:
+                                self.isSyncIndicatorVisible = false
+                            }
+        })
+        
+        Store.subscribe(self, selector: {
+            return $0[viewModel.currency].lastBlockTimestamp != $1[viewModel.currency].lastBlockTimestamp },
+                        callback: { state in
+                            print(">>>> sync progress: \(viewModel.currency.code): \(state[viewModel.currency].syncProgress)")
+                            self.syncIndicator.progress = CGFloat(state[viewModel.currency].syncProgress)
+        })
     }
 
     private func setupViews() {
@@ -61,6 +92,9 @@ class HomeScreenCell : UITableViewCell {
         container.addSubview(price)
         container.addSubview(fiatBalance)
         container.addSubview(tokenBalance)
+        container.addSubview(syncIndicator)
+        
+        syncIndicator.isHidden = true
     }
 
     private func addConstraints() {
@@ -74,7 +108,7 @@ class HomeScreenCell : UITableViewCell {
             ])
         price.constrain([
             price.leadingAnchor.constraint(equalTo: currencyName.leadingAnchor),
-            price.topAnchor.constraint(equalTo: currencyName.bottomAnchor, constant: 0.0),
+            price.topAnchor.constraint(equalTo: currencyName.bottomAnchor),
             price.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -C.padding[2])
             ])
         fiatBalance.constrain([
@@ -84,15 +118,30 @@ class HomeScreenCell : UITableViewCell {
             ])
         tokenBalance.constrain([
             tokenBalance.trailingAnchor.constraint(equalTo: fiatBalance.trailingAnchor),
-            tokenBalance.topAnchor.constraint(equalTo: fiatBalance.bottomAnchor, constant: 0.0),
+            tokenBalance.topAnchor.constraint(equalTo: fiatBalance.bottomAnchor),
             tokenBalance.leadingAnchor.constraint(greaterThanOrEqualTo: price.trailingAnchor, constant: C.padding[1]),
-            price.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -C.padding[2])
+            tokenBalance.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -C.padding[2])
+            ])
+        
+        syncIndicator.constrain([
+            syncIndicator.trailingAnchor.constraint(equalTo: fiatBalance.trailingAnchor),
+            syncIndicator.topAnchor.constraint(equalTo: fiatBalance.bottomAnchor),
+            syncIndicator.leadingAnchor.constraint(greaterThanOrEqualTo: price.trailingAnchor, constant: C.padding[1]),
+            syncIndicator.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -C.padding[2])
             ])
     }
 
     private func setupStyle() {
         selectionStyle = .none
         backgroundColor = .clear
+    }
+    
+    override func prepareForReuse() {
+        Store.unsubscribe(self)
+    }
+    
+    deinit {
+        Store.unsubscribe(self)
     }
 
     required init?(coder aDecoder: NSCoder) {
