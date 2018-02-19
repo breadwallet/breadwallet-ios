@@ -118,15 +118,15 @@ class AccountViewController : UIViewController, Subscriber {
         if #available(iOS 11.0, *) {
             footerView.constrain([
                 footerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-                footerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-                footerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                footerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -C.padding[1]),
+                footerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: C.padding[1]),
                 footerView.heightAnchor.constraint(equalToConstant: accountFooterHeight)
                 ])
         } else {
             footerView.constrain([
                 footerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                footerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                footerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                footerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -C.padding[1]),
+                footerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: C.padding[1]),
                 footerView.heightAnchor.constraint(equalToConstant: accountFooterHeight)
                 ])
             

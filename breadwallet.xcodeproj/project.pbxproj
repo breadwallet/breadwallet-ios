@@ -223,6 +223,7 @@
 		75A2A8231DA5938500A983D8 /* NotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 75A2A81C1DA5938500A983D8 /* NotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		75C735AA1DAA1B9C00251ECF /* libunbound.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD4121DAA0E3E0075898E /* libunbound.c */; };
 		75DF48391F62328400FC2DD3 /* Geth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DF48381F62328400FC2DD3 /* Geth.swift */; };
+		7C230E752037AD52002F0FF1 /* SyncingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C230E742037AD52002F0FF1 /* SyncingIndicator.swift */; };
 		7C35E712200AC2080064808F /* TxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBF4B612007DB9200E003AA /* TxViewModel.swift */; };
 		7C35E714200AC2680064808F /* ERC20Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBF4B5F2007DB8000E003AA /* ERC20Transaction.swift */; };
 		7C35E715200AC26A0064808F /* EthTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBF4B5B2007DB5300E003AA /* EthTransaction.swift */; };
@@ -1417,6 +1418,7 @@
 		75DC783C1DAA05B500932D9A /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
 		75DF48381F62328400FC2DD3 /* Geth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geth.swift; sourceTree = "<group>"; };
 		75FEFD1B1DAED56E00203D3A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		7C230E742037AD52002F0FF1 /* SyncingIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SyncingIndicator.swift; path = src/Views/SyncingIndicator.swift; sourceTree = "<group>"; };
 		7C35E70E200ABA190064808F /* BtcTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BtcTransaction.swift; sourceTree = "<group>"; };
 		7C35E716200ADF450064808F /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		7C35E718200AF3940064808F /* TxListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TxListViewModel.swift; sourceTree = "<group>"; };
@@ -3049,6 +3051,7 @@
 				CE0822651FCE059A00EF371D /* HomeScreenCell.swift */,
 				7C7F18EC1FED9A3B0030230E /* TxStatusIndicator.swift */,
 				7CBA74E720227D1300FBBFA9 /* MenuCell.swift */,
+				7C230E742037AD52002F0FF1 /* SyncingIndicator.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -4139,6 +4142,7 @@
 				CE20C9191DBE7B8200C8397A /* State.swift in Sources */,
 				CEEC70811E90C04700EF788E /* SeparatorCell.swift in Sources */,
 				CE20C8FE1DBB133A00C8397A /* SimpleRedux.swift in Sources */,
+				7C230E752037AD52002F0FF1 /* SyncingIndicator.swift in Sources */,
 				22122B721F0B8996000E9AB9 /* BRAPIClient+Events.swift in Sources */,
 				CE4B6C201E233C2C00CF935B /* UITableView+Additions.swift in Sources */,
 				CE760EDC1E561DF900EFAC2B /* SecurityCenterViewController.swift in Sources */,

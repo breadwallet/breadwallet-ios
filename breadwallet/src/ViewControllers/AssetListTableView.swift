@@ -26,8 +26,6 @@ class AssetListTableView: UITableViewController, Subscriber {
         tableView.register(HomeScreenCell.self, forCellReuseIdentifier: HomeScreenCell.cellIdentifier)
         tableView.register(MenuCell.self, forCellReuseIdentifier: MenuCell.cellIdentifier)
         tableView.separatorStyle = .none
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 140
 
         tableView.reloadData()
 
@@ -100,7 +98,7 @@ class AssetListTableView: UITableViewController, Subscriber {
 
         switch section {
         case .assets:
-            return 82.0
+            return 85.0
         case .menu:
             return 53.0
         }

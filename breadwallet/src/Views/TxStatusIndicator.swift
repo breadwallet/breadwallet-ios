@@ -17,12 +17,12 @@ class TxStatusIndicator: UIView {
     }
     
     let height: CGFloat = 7.0
-    private let padding: CGFloat = -7.0
-    let pipWidth: CGFloat = 84.0
     var width: CGFloat {
         return (pipWidth * 3) + (padding * 2)
     }
     
+    private let padding: CGFloat = -7.0
+    private let pipWidth: CGFloat = 84.0
     private var pips = [StatusPip]()
     
     // MARK: Init

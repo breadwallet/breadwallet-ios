@@ -111,6 +111,10 @@ extension UIColor {
     static var transparentWhiteText: UIColor {
         return UIColor(white: 1.0, alpha: 0.7)
     }
+    
+    static var disabledWhiteText: UIColor {
+        return UIColor(white: 1.0, alpha: 0.5)
+    }
 
     static var transparentBlack: UIColor {
         return UIColor(white: 0.0, alpha: 0.3)
