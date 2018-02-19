@@ -94,26 +94,33 @@ class ApplicationController : Subscriber, Trackable {
     private func initWallet(completion: @escaping () -> Void) {
         let dispatchGroup = DispatchGroup()
         Store.state.currencies.forEach { currency in
-            dispatchGroup.enter()
-            guard let currency = currency as? Bitcoin else { return }
-            guard let walletManager = try? WalletManager(currency: currency, dbPath: currency.dbPath) else { return }
-            walletManagers[currency.code] = walletManager
-            walletManager.initWallet { success in
-                guard success else {
-                    dispatchGroup.leave()
-                    return
-                }
-                self.walletCoordinators[currency.code] = WalletCoordinator(walletManager: walletManager, currency: currency)
-                self.exchangeUpdaters[currency.code] = ExchangeUpdater(currency: currency, walletManager: walletManager)
-                walletManager.initPeerManager {
-                    // TODO:BCH only connect last active wallet
-                    walletManager.peerManager?.connect()
-                    dispatchGroup.leave()
-                }
-            }
+            initWallet(currency: currency, dispatchGroup: dispatchGroup)
         }
         dispatchGroup.notify(queue: .main) {
             completion()
+        }
+    }
+
+    private func initWallet(currency: CurrencyDef, dispatchGroup: DispatchGroup) {
+        dispatchGroup.enter()
+        guard let currency = currency as? Bitcoin else { return }
+        guard let walletManager = try? WalletManager(currency: currency, dbPath: currency.dbPath) else { return }
+        walletManagers[currency.code] = walletManager
+        walletManager.initWallet { success in
+            guard success else {
+                walletManager.db?.close()
+                walletManager.db?.delete()
+                self.walletManagers[currency.code] = nil
+                self.initWallet(currency: currency, dispatchGroup: dispatchGroup)
+                return
+            }
+            self.walletCoordinators[currency.code] = WalletCoordinator(walletManager: walletManager, currency: currency)
+            self.exchangeUpdaters[currency.code] = ExchangeUpdater(currency: currency, walletManager: walletManager)
+            walletManager.initPeerManager {
+                // TODO:BCH only connect last active wallet
+                walletManager.peerManager?.connect()
+                dispatchGroup.leave()
+            }
         }
     }
 
