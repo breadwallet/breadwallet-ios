@@ -27,6 +27,7 @@ private let hasCompletedKYC = "hasCompletedKYCKey"
 private let hasAgreedToCrowdsaleTermsKey = "hasAgreedToCrowdsaleTermsKey"
 private let feesKey = "feesKey"
 private let selectedCurrencyCodeKey = "selectedCurrencyCodeKey"
+private let mostRecentSelectedCurrencyCodeKey = "mostRecentSelectedCurrencyCodeKey"
 private let hasSetSelectedCurrencyKey = "hasSetSelectedCurrencyKey"
 
 extension UserDefaults {
@@ -229,5 +230,14 @@ extension UserDefaults {
     static var hasSetSelectedCurrency: Bool {
         get { return defaults.bool(forKey: hasSetSelectedCurrencyKey) }
         set { defaults.setValue(newValue, forKey: hasSetSelectedCurrencyKey) }
+    }
+
+    static var mostRecentSelectedCurrencyCode: String {
+        get {
+            return defaults.string(forKey: mostRecentSelectedCurrencyCodeKey) ?? Currencies.btc.code
+        }
+        set {
+            defaults.setValue(newValue, forKey: mostRecentSelectedCurrencyCodeKey)
+        }
     }
 }

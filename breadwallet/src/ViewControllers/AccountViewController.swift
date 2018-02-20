@@ -97,6 +97,11 @@ class AccountViewController : UIViewController, Subscriber {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         headerView.setBalances()
+        if walletManager?.peerManager?.connectionStatus == BRPeerStatusDisconnected {
+            DispatchQueue.walletQueue.async { [weak self] in
+                self?.walletManager?.peerManager?.connect()
+            }
+        }
     }
 
     private func addSubviews() {
