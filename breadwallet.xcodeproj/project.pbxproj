@@ -230,6 +230,7 @@
 		7C35E717200ADF450064808F /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C35E716200ADF450064808F /* Transaction.swift */; };
 		7C35E719200AF3940064808F /* TxListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C35E718200AF3940064808F /* TxListViewModel.swift */; };
 		7C35E71B200AF8170064808F /* BtcTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C35E70E200ABA190064808F /* BtcTransaction.swift */; };
+		7C5AC8A6203B93D3001B221E /* TxListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5AC8A5203B93D3001B221E /* TxListCell.swift */; };
 		7C6ACCB11FEB21580028ABFA /* TxDetailDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB01FEB21580028ABFA /* TxDetailDataSource.swift */; };
 		7C6ACCB41FEB34470028ABFA /* TxLabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */; };
 		7C6ACCB61FEB345E0028ABFA /* TxStatusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */; };
@@ -1422,6 +1423,7 @@
 		7C35E70E200ABA190064808F /* BtcTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BtcTransaction.swift; sourceTree = "<group>"; };
 		7C35E716200ADF450064808F /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		7C35E718200AF3940064808F /* TxListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TxListViewModel.swift; sourceTree = "<group>"; };
+		7C5AC8A5203B93D3001B221E /* TxListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxListCell.swift; path = src/Views/TransactionCells/TxListCell.swift; sourceTree = "<group>"; };
 		7C6ACCB01FEB21580028ABFA /* TxDetailDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TxDetailDataSource.swift; sourceTree = "<group>"; };
 		7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxLabelCell.swift; path = src/Views/TransactionCells/TxLabelCell.swift; sourceTree = "<group>"; };
 		7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxStatusCell.swift; path = src/Views/TransactionCells/TxStatusCell.swift; sourceTree = "<group>"; };
@@ -3193,6 +3195,7 @@
 				7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */,
 				7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */,
 				7CF913BD1FFC7DC30085CB70 /* TxMemoCell.swift */,
+				7C5AC8A5203B93D3001B221E /* TxListCell.swift */,
 			);
 			name = TransactionCells;
 			sourceTree = "<group>";
@@ -3962,6 +3965,7 @@
 				754AE0BC1DFE8A46007FD001 /* BRCore.swift in Sources */,
 				22A9A94A1DF61945000F0016 /* BRCameraPlugin.swift in Sources */,
 				CEC6AA3B1DEE4EB000EE5AFD /* CGRect+Additions.swift in Sources */,
+				7C5AC8A6203B93D3001B221E /* TxListCell.swift in Sources */,
 				CE45C1FB1E74F89C002C3847 /* WalletInfo.swift in Sources */,
 				CEE659E71F65A936001FF29D /* RetryTimer.swift in Sources */,
 				CE90571A1DFF18B2006BA848 /* ScanViewController.swift in Sources */,

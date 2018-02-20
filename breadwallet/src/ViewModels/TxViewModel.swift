@@ -56,6 +56,12 @@ extension TxViewModel {
         return DateFormatter.longDateFormatter.string(from: date)
     }
     
+    var shortTimestamp: String {
+        guard tx.timestamp > 0 else { return tx.isValid ? S.Transaction.justNow : "" }
+        let date = Date(timeIntervalSince1970: tx.timestamp)
+        return DateFormatter.shortDateFormatter.string(from: date)
+    }
+    
     var shouldDisplayAvailableToSpend: Bool { return false }
 }
 
@@ -65,6 +71,12 @@ extension DateFormatter {
     static let longDateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.setLocalizedDateFormatFromTemplate("MMMM d, yyy h:mm a")
+        return df
+    }()
+    
+    static let shortDateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.setLocalizedDateFormatFromTemplate("MMM d")
         return df
     }()
 }

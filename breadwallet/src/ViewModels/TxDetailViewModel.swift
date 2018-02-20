@@ -124,7 +124,8 @@ extension TxDetailViewModel {
         let amount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
                                    selectedRate: nil,
                                    minimumFractionDigits: nil,
-                                   currency: tx.currency)
+                                   currency: tx.currency,
+                                   negative: true)
         return amount.description
     }
     
@@ -140,11 +141,13 @@ extension TxDetailViewModel {
             let currentAmount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
                                               selectedRate: currentRate,
                                               minimumFractionDigits: nil,
-                                              currency: tx.currency).description
+                                              currency: tx.currency,
+                                              negative: false).description
             let originalAmount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
                                                selectedRate: originalRate,
                                                minimumFractionDigits: nil,
-                                               currency: tx.currency).description
+                                               currency: tx.currency,
+                                               negative: false).description
             return (currentAmount, originalAmount)
             
         } else {
@@ -152,7 +155,8 @@ extension TxDetailViewModel {
             let currentAmount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
                                               selectedRate: currentRate,
                                               minimumFractionDigits: nil,
-                                              currency: tx.currency)
+                                              currency: tx.currency,
+                                              negative: false)
             return (currentAmount.description, nil)
         }
     }

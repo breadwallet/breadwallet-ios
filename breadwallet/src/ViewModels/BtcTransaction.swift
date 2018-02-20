@@ -14,7 +14,7 @@ struct BtcTransaction: Transaction {
     
     // MARK: Transaction Properties
     
-    let currency: CurrencyDef = Currencies.btc
+    let currency: CurrencyDef
     let hash: String
     let status: TransactionStatus
     let direction: TransactionDirection
@@ -54,6 +54,7 @@ struct BtcTransaction: Transaction {
     init?(_ tx: BRTxRef, walletManager: WalletManager, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         guard let wallet = walletManager.wallet,
             let peerManager = walletManager.peerManager else { return nil }
+        self.currency = walletManager.currency
         self.tx = tx
         self.kvStore = kvStore
         

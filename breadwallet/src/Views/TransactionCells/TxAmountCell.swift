@@ -75,18 +75,11 @@ class TxAmountCell: UITableViewCell, Subscriber {
         let smallFont = UIFont.customBody(size: 14.0)
         let fiatColor = UIColor.mediumGray
         let textColor = UIColor.lightGray
-        var tokenColor = UIColor.darkGray
-        var prefix = ""
+        let tokenColor: UIColor = (viewModel.direction == .received) ? .receivedGreen : .darkGray
         
-        if viewModel.direction == .received {
-            tokenColor = .receivedGreen
-        } else if viewModel.direction == .sent {
-            prefix = "-"
-        }
-        
-        let amountText = NSMutableAttributedString(string: prefix + viewModel.amount,
-                                                        attributes: [.font: largeFont,
-                                                                     .foregroundColor: tokenColor])
+        let amountText = NSMutableAttributedString(string: viewModel.amount,
+                                                   attributes: [.font: largeFont,
+                                                                .foregroundColor: tokenColor])
         // TODO:BCH custom font for currency code
         //        amountText.append(NSAttributedString(string: " " + viewModel.currency.symbol.uppercased(),
 //                                                  attributes: [.font: smallFont,

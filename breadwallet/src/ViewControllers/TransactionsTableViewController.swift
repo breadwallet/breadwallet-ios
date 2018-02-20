@@ -92,11 +92,11 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: transactionCellIdentifier)
+        tableView.register(TxListCell.self, forCellReuseIdentifier: transactionCellIdentifier)
         tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: headerCellIdentifier)
 
         tableView.separatorStyle = .none
-        tableView.estimatedRowHeight = 100.0
+        tableView.estimatedRowHeight = 60.0
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.backgroundColor = .whiteTint
 
@@ -107,7 +107,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                         selector: { $0[self.currency].currentRate != $1[self.currency].currentRate},
                         callback: {
                             self.rate = $0[self.currency].currentRate
-                            self.reload()
         })
         Store.subscribe(self, selector: { $0[self.currency].maxDigits != $1[self.currency].maxDigits }, callback: {_ in
             self.reload()
@@ -190,7 +189,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 
     private func setContentInset() {
-        let insets = UIEdgeInsets(top: accountHeaderHeight - 44.0 - (E.isIPhoneX ? 28.0 : 0.0), left: 0, bottom: accountFooterHeight + C.padding[2], right: 0)
+        let insets = UIEdgeInsets(top: accountHeaderHeight - 64.0 - (E.isIPhoneX ? 28.0 : 0.0), left: 0, bottom: accountFooterHeight + C.padding[2], right: 0)
         tableView.contentInset = insets
         tableView.scrollIndicatorInsets = insets
     }
@@ -321,26 +320,16 @@ extension TransactionsTableViewController {
     }
 
     private func transactionCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
-        let numRows = tableView.numberOfRows(inSection: indexPath.section)
-        var style: TransactionCellStyle = .middle
-        if numRows == 1 {
-            style = .single
-        }
-        if numRows > 1 {
-            if indexPath.row == 0 {
-                style = .first
-            }
-            if indexPath.row == numRows - 1 {
-                style = .last
-            }
-        }
         let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
-        if let transactionCell = cell as? TransactionTableViewCell,
+        if let transactionCell = cell as? TxListCell,
             let rate = rate,
             let walletManager = walletManager {
             let viewModel = TxListViewModel(tx: transactions[indexPath.row], walletManager: walletManager)
-            transactionCell.setStyle(style)
-            transactionCell.setTransaction(viewModel, isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: currency.state.maxDigits, isSyncing: currency.state.syncState != .success)
+            transactionCell.setTransaction(viewModel,
+                                           isBtcSwapped: isBtcSwapped,
+                                           rate: rate,
+                                           maxDigits: currency.state.maxDigits,
+                                           isSyncing: currency.state.syncState != .success)
         }
         return cell
     }
