@@ -277,8 +277,9 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
         if closeOnURLsMatch(navigationAction.request.url) {
             if let onClose = onClose { onClose() }
             decisionHandler(.cancel)
+        } else {
+            decisionHandler(.allow)
         }
-        decisionHandler(.allow)
     }
     
     open func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
