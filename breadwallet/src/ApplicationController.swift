@@ -333,7 +333,14 @@ class ApplicationController : Subscriber, Trackable {
         home.didTapSettings = {
             self.modalPresenter?.presentSettings()
         }
-        
+
+        //State restoration
+        if let currency = Store.state.currencies.first(where: { $0.code == UserDefaults.selectedCurrencyCode }) {
+            let accountViewController = AccountViewController(currency: currency)
+            accountViewController.walletManager = self.walletManagers[currency.code]
+            nc.pushViewController(accountViewController, animated: true)
+        }
+
         window.rootViewController = nc
     }
 

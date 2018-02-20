@@ -48,6 +48,7 @@ class RootNavigationController : UINavigationController {
                 })
             }
         }
+        self.delegate = self
     }
 
     //TODO: unused
@@ -68,6 +69,16 @@ class RootNavigationController : UINavigationController {
             return .default
         } else {
             return .lightContent
+        }
+    }
+}
+
+extension RootNavigationController : UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        if viewController is HomeScreenViewController {
+            UserDefaults.selectedCurrencyCode = nil
+        } else if let accountView = viewController as? AccountViewController {
+            UserDefaults.selectedCurrencyCode = accountView.currency.code
         }
     }
 }
