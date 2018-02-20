@@ -322,9 +322,11 @@ class ApplicationController : Subscriber, Trackable {
             store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { state in
                 if self.fetchCompletionHandler != nil {
                     if state.walletState.syncState == .success {
-                        DispatchQueue.walletQueue.async {
+                        DispatchQueue.walletConcurrentQueue.async {
                             peerManager.disconnect()
-                            group.leave()
+                            DispatchQueue.main.async {
+                                group.leave()
+                            }
                         }
                     }
                 }
