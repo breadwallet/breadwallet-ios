@@ -6,7 +6,7 @@
 //  Copyright © 2018 breadwallet LLC. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 /// View model of a transaction in list view
 struct TxListViewModel: TxViewModel {
@@ -27,6 +27,27 @@ struct TxListViewModel: TxViewModel {
     var shouldDisplayAvailableToSpend: Bool {
         guard tx.currency is Bitcoin else { return false }
         return tx.status == .confirmed
+    }
+    
+    var shortDescription: String {
+        if let comment = comment, comment.count > 0 {
+            return comment
+        } else {
+            return String(format: tx.direction.directionAddressTextFormat, tx.toAddress)
+        }
+    }
+
+    func amount(isBtcSwapped: Bool, rate: Rate) -> NSAttributedString {
+        guard let tx = tx as? BtcTransaction else { return NSAttributedString(string: "") }
+        let text = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
+                                 selectedRate: isBtcSwapped ? rate : nil,
+                                 minimumFractionDigits: nil,
+                                 currency: tx.currency,
+                                 negative: (tx.direction == .sent)).description
+        let color: UIColor = (tx.direction == .received) ? .receivedGreen : .darkGray
+        
+        return NSMutableAttributedString(string: text,
+                                         attributes: [.foregroundColor: color])
     }
     
     // MARK: -

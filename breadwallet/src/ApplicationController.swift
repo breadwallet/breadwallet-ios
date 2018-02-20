@@ -342,15 +342,16 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func startDataFetchers() {
-//        primaryWalletManager.apiClient?.updateFeatureFlags() //TODO:BCH
+        primaryWalletManager.apiClient?.updateFeatureFlags()
         initKVStoreCoordinator()
         feeUpdaters.values.forEach { $0.refresh() }
-//        defaultsUpdater?.refresh() //TODO:BCH
-//        primaryWalletManager.apiClient?.events?.up() //TODO:BCH
-        exchangeUpdaters.values.forEach {
-            $0.refresh(completion: {
-                //self.watchSessionManager.walletManager = self.walletManager
-                self.watchSessionManager.rate = Currencies.btc.state.currentRate
+        defaultsUpdater?.refresh()
+        primaryWalletManager.apiClient?.events?.up()
+        exchangeUpdaters.forEach { (code, updater) in
+            updater.refresh(completion: {
+                if code == Currencies.btc.code {
+                    self.watchSessionManager.rate = Currencies.btc.state.currentRate
+                }
             })
         }
     }

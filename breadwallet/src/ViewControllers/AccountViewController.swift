@@ -60,7 +60,6 @@ class AccountViewController : UIViewController, Subscriber {
             }
         }
     }
-    private var didEndLoading = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -114,6 +113,7 @@ class AccountViewController : UIViewController, Subscriber {
     private func addConstraints() {
         headerContainer.constrainTopCorners(height: accountHeaderHeight)
         headerView.constrain(toSuperviewEdges: nil)
+        searchHeaderview.constrain(toSuperviewEdges: nil)
 
         if #available(iOS 11.0, *) {
             footerView.constrain([
@@ -129,9 +129,7 @@ class AccountViewController : UIViewController, Subscriber {
                 footerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: C.padding[1]),
                 footerView.heightAnchor.constraint(equalToConstant: accountFooterHeight)
                 ])
-            
         }
-        searchHeaderview.constrain(toSuperviewEdges: nil)
     }
 
     private func addSubscriptions() {

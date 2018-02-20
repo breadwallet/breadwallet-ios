@@ -189,10 +189,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         NSLayoutConstraint.activate(isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
 
         searchButton.constrain([
-            searchButton.constraint(.trailing, toView: self, constant: -C.padding[1]),
+            searchButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[1]),
             searchButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0.0),
-            searchButton.constraint(.width, constant: 40.0),
-            searchButton.constraint(.height, constant: 40.0) ])
+            searchButton.widthAnchor.constraint(equalToConstant: 40.0),
+            searchButton.heightAnchor.constraint(equalToConstant: 40.0)
+            ])
         let inset: CGFloat = 12.0
         searchButton.imageEdgeInsets = UIEdgeInsetsMake(inset, inset, inset, inset)
 

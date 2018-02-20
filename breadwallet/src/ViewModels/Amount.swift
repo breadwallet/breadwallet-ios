@@ -115,6 +115,19 @@ struct DisplayAmount {
     let selectedRate: Rate?
     let minimumFractionDigits: Int?
     let currency: CurrencyDef
+    let negative: Bool
+    
+    init(amount: Satoshis, selectedRate: Rate?, minimumFractionDigits: Int?, currency: CurrencyDef, negative: Bool) {
+        self.amount = amount
+        self.selectedRate = selectedRate
+        self.minimumFractionDigits = minimumFractionDigits
+        self.currency = currency
+        self.negative = negative
+    }
+    
+    init(amount: Satoshis, selectedRate: Rate?, minimumFractionDigits: Int?, currency: CurrencyDef) {
+        self.init(amount: amount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, currency: currency, negative: false)
+    }
     
     var description: String {
         return selectedRate != nil ? fiatDescription : bitcoinDescription
@@ -126,7 +139,8 @@ struct DisplayAmount {
 
     private var fiatDescription: String {
         guard let rate = selectedRate ?? currency.state.currentRate else { return "" }
-        guard let string = localFormat.string(from: Double(amount.rawValue)/currency.baseUnit*rate.rate as NSNumber) else { return "" }
+        let tokenAmount = Double(amount.rawValue) * (negative ? -1.0 : 1.0)
+        guard let string = localFormat.string(from: tokenAmount/currency.baseUnit*rate.rate as NSNumber) else { return "" }
         return string
     }
 
@@ -134,7 +148,7 @@ struct DisplayAmount {
         var decimal = Decimal(self.amount.rawValue)
         var amount: Decimal = 0.0
         NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-currency.state.maxDigits), .up)
-        let number = NSDecimalNumber(decimal: amount)
+        let number = NSDecimalNumber(decimal: amount * (negative ? -1.0 : 1.0))
         guard let string = btcFormat.string(from: number) else { return "" }
         return string
     }
@@ -144,7 +158,7 @@ struct DisplayAmount {
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "¤#")!, with: "-¤#")
         if let rate = selectedRate {
             format.currencySymbol = rate.currencySymbol
         } else if let rate = currency.state.currentRate {
@@ -161,8 +175,8 @@ struct DisplayAmount {
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencyCode = "XBT"
+        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "¤#")!, with: "-¤#")
+        format.currencyCode = currency.code
         switch currency.state.maxDigits {
         case 2:
             format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
