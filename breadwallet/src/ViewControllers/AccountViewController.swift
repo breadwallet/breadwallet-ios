@@ -23,6 +23,8 @@ class AccountViewController : UIViewController, Subscriber {
         }
     }
 
+    let currency: CurrencyDef
+
     init(currency: CurrencyDef) {
         self.currency = currency
         self.headerView = AccountHeaderView(currency: currency)
@@ -36,8 +38,6 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     //MARK: - Private
-    private let currency: CurrencyDef
-    
     private let headerView: AccountHeaderView
     private let footerView: AccountFooterView
     private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)

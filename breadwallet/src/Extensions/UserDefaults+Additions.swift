@@ -26,6 +26,8 @@ private let hasShownWelcomeKey = "hasShownWelcomeKey"
 private let hasCompletedKYC = "hasCompletedKYCKey"
 private let hasAgreedToCrowdsaleTermsKey = "hasAgreedToCrowdsaleTermsKey"
 private let feesKey = "feesKey"
+private let selectedCurrencyCodeKey = "selectedCurrencyCodeKey"
+private let hasSetSelectedCurrencyKey = "hasSetSelectedCurrencyKey"
 
 extension UserDefaults {
 
@@ -205,5 +207,27 @@ extension UserDefaults {
     static var hasAgreedToCrowdsaleTerms: Bool {
         get { return defaults.bool(forKey: hasAgreedToCrowdsaleTermsKey) }
         set { defaults.set(newValue, forKey: hasAgreedToCrowdsaleTermsKey) }
+    }
+}
+
+//MARK: - State Restoration
+extension UserDefaults {
+    static var selectedCurrencyCode: String? {
+        get {
+            if UserDefaults.hasSetSelectedCurrency {
+                return defaults.string(forKey: selectedCurrencyCodeKey)
+            } else {
+                return Currencies.btc.code
+            }
+        }
+        set {
+            UserDefaults.hasSetSelectedCurrency = true
+            defaults.setValue(newValue, forKey: selectedCurrencyCodeKey)
+        }
+    }
+
+    static var hasSetSelectedCurrency: Bool {
+        get { return defaults.bool(forKey: hasSetSelectedCurrencyKey) }
+        set { defaults.setValue(newValue, forKey: hasSetSelectedCurrencyKey) }
     }
 }
