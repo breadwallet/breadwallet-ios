@@ -70,6 +70,7 @@
 		22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431331DF89DFE0017CAEA /* BRCoderTests.swift */; };
 		22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */; };
 		22E773041EE7813000397E0E /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E773031EE7813000397E0E /* Bonjour.swift */; };
+		24249C10203BB1BD00806491 /* LFWalletLockTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24249C0F203BB1BD00806491 /* LFWalletLockTest.swift */; };
 		7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */; };
 		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
 		752438751DAAC50800844BEC /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6761DAA0E400075898E /* alloc.c */; };
@@ -772,6 +773,7 @@
 		22C431331DF89DFE0017CAEA /* BRCoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRCoderTests.swift; sourceTree = "<group>"; };
 		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bonjour.swift; sourceTree = "<group>"; };
+		24249C0F203BB1BD00806491 /* LFWalletLockTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LFWalletLockTest.swift; sourceTree = "<group>"; };
 		7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WalletManager+Auth.swift"; path = "src/WalletManager+Auth.swift"; sourceTree = "<group>"; };
 		7528D2971ECF655500925DBC /* PaymentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentProtocol.swift; path = src/PaymentProtocol.swift; sourceTree = "<group>"; };
 		752FB03B1DF8BE4B009086FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -2867,6 +2869,7 @@
 				CEEC70871E943DC900EF788E /* TouchIdEnabledTests.swift */,
 				CEEC70971E96BF8800EF788E /* DefaultCurrencyTests.swift */,
 				CEA7E6751F057D77001F8C27 /* WalletInfoTest.swift */,
+				24249C0F203BB1BD00806491 /* LFWalletLockTest.swift */,
 			);
 			path = breadwalletTests;
 			sourceTree = "<group>";
@@ -4225,6 +4228,7 @@
 				22C4312E1DF89D970017CAEA /* BRHTTPServerTests.swift in Sources */,
 				CE6DCC2B1E63D6290044257B /* WalletCreationTests.swift in Sources */,
 				CEC6F8471E8878B6000795B8 /* PaymentRequestTests.swift in Sources */,
+				24249C10203BB1BD00806491 /* LFWalletLockTest.swift in Sources */,
 				22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */,
 				CEDD8F101E575DD4007A4123 /* WalletAuthenticationTests.swift in Sources */,
 				CEF3D2D71E8AB9980070178E /* SpendingLimitTests.swift in Sources */,
