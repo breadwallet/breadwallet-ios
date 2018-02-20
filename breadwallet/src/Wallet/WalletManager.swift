@@ -196,7 +196,6 @@ extension WalletManager : BRPeerManagerListener, Trackable {
     func syncStarted() {
         DispatchQueue.main.async() {
             self.db?.setDBFileAttributes()
-
             //endBackgroundTask()
             //startBackgroundTask()
             self.progressTimer = Timer.scheduledTimer(timeInterval: self.progressUpdateInterval, target: self, selector: #selector(self.updateProgress), userInfo: nil, repeats: true)
@@ -244,7 +243,9 @@ extension WalletManager : BRPeerManagerListener, Trackable {
     }
 
     func txStatusUpdate() {
-        requestTxUpdate()
+        DispatchQueue.main.async { [weak self] in
+            self?.requestTxUpdate()
+        }
     }
 
     func saveBlocks(_ replace: Bool, _ blocks: [BRBlockRef?]) {
@@ -280,9 +281,12 @@ extension WalletManager : BRPeerManagerListener, Trackable {
 
 extension WalletManager : BRWalletListener {
     func balanceChanged(_ balance: UInt64) {
-        checkForReceived(newBalance: balance)
-        Store.perform(action: WalletChange(self.currency).setBalance(balance))
-        requestTxUpdate()
+        DispatchQueue.main.async { [weak self] in
+            guard let myself = self else { return }
+            myself.checkForReceived(newBalance: balance)
+            Store.perform(action: WalletChange(myself.currency).setBalance(balance))
+            myself.requestTxUpdate()
+        }
     }
 
     func txAdded(_ tx: BRTxRef) {
@@ -296,10 +300,14 @@ extension WalletManager : BRWalletListener {
     func txDeleted(_ txHash: UInt256, notifyUser: Bool, recommendRescan: Bool) {
         if notifyUser {
             if recommendRescan {
-                Store.perform(action: WalletChange(self.currency).setRecommendScan(recommendRescan))
+                DispatchQueue.main.async { [weak self] in
+                    guard let myself = self else { return }
+                    Store.perform(action: WalletChange(myself.currency).setRecommendScan(recommendRescan)) }
             }
         }
-        requestTxUpdate()
+        DispatchQueue.main.async { [weak self] in
+            self?.requestTxUpdate()
+        }
         db?.txDeleted(txHash, notifyUser: notifyUser, recommendRescan: true)
     }
 
