@@ -117,8 +117,6 @@ class ApplicationController : Subscriber, Trackable {
             self.walletCoordinators[currency.code] = WalletCoordinator(walletManager: walletManager, currency: currency)
             self.exchangeUpdaters[currency.code] = ExchangeUpdater(currency: currency, walletManager: walletManager)
             walletManager.initPeerManager {
-                // TODO:BCH only connect last active wallet
-                walletManager.peerManager?.connect()
                 dispatchGroup.leave()
             }
         }
@@ -195,8 +193,7 @@ class ApplicationController : Subscriber, Trackable {
             Store.perform(action: RequireLogin())
         }
         DispatchQueue.walletQueue.async {
-            //TODO:BCH connect the last active wallet
-            walletManager.peerManager?.connect()
+            self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
         }
         exchangeUpdaters.values.forEach { $0.refresh(completion: {}) }
         feeUpdaters.values.forEach { $0.refresh() }
@@ -208,7 +205,7 @@ class ApplicationController : Subscriber, Trackable {
         let walletManager = primaryWalletManager
         guard !walletManager.noWallet else { return }
         DispatchQueue.walletQueue.async {
-            walletManager.peerManager?.connect()
+            self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
         }
         exchangeUpdaters.values.forEach { $0.refresh(completion: {}) }
         feeUpdaters.values.forEach { $0.refresh() }
@@ -269,7 +266,7 @@ class ApplicationController : Subscriber, Trackable {
                 Store.perform(action: ShowStartFlow())
             } else {
                 DispatchQueue.walletQueue.async {
-                    self.walletManagers.values.forEach { $0.peerManager?.connect() }
+                    self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
                 }
                 startDataFetchers()
             }
@@ -277,7 +274,7 @@ class ApplicationController : Subscriber, Trackable {
         //For when watch app launches app in background
         } else {
             DispatchQueue.walletQueue.async {
-                self.primaryWalletManager.peerManager?.connect()
+                self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
                 if self.fetchCompletionHandler != nil {
                     self.performBackgroundFetch()
                 }
@@ -345,7 +342,6 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func startDataFetchers() {
-        
 //        primaryWalletManager.apiClient?.updateFeatureFlags() //TODO:BCH
         initKVStoreCoordinator()
         feeUpdaters.values.forEach { $0.refresh() }
@@ -365,7 +361,7 @@ class ApplicationController : Subscriber, Trackable {
             DispatchQueue.walletQueue.async {
                 self.primaryWalletManager.initWallet { _ in
                     self.primaryWalletManager.initPeerManager {
-                        self.primaryWalletManager.peerManager?.connect()
+                        self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
                         self.startDataFetchers()
                     }
                 }
