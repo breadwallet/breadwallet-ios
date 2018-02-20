@@ -520,6 +520,21 @@ enum BRPeerManagerError: Error {
     case posixError(errorCode: Int32, description: String)
 }
 
+extension BRPeerStatus {
+    var description: String {
+        switch self {
+        case BRPeerStatusDisconnected:
+            return S.NodeSelector.notConnected
+        case BRPeerStatusConnecting:
+            return S.NodeSelector.connecting
+        case BRPeerStatusConnected:
+            return S.NodeSelector.connected
+        default:
+            return S.NodeSelector.connected
+        }
+    }
+}
+
 protocol BRPeerManagerListener {
     func syncStarted()
     func syncStopped(_ error: BRPeerManagerError?)
@@ -580,11 +595,9 @@ class BRPeerManager {
     func clearCallbacks() {
         BRPeerManagerSetCallbacks(cPtr, nil, nil, nil, nil, nil, nil, nil, nil)
     }
-    
-    // true if currently connected to at least one peer
-    // TODO - this should return an enum
-    var isConnected: Bool {
-        return BRPeerManagerConnectStatus(cPtr) == BRPeerStatusConnected
+
+    var connectionStatus: BRPeerStatus {
+        return BRPeerManagerConnectStatus(cPtr)
     }
     
     // connect to bitcoin peer-to-peer network (also call this whenever networkIsReachable() status changes)

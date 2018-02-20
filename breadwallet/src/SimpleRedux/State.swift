@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCore
 
 struct State {
     let isStartFlowVisible: Bool
@@ -112,7 +113,6 @@ enum SyncState {
 struct WalletState {
     let currency: CurrencyDef
     let displayOrder: Int
-//    let isConnected: Bool
     let syncProgress: Double
     let syncState: SyncState
     let balance: UInt64?
@@ -131,13 +131,13 @@ struct WalletState {
     let fees: Fees?
     let recommendRescan: Bool
     let maxDigits: Int // this is bits vs bitcoin setting
+    let connectionStatus: BRPeerStatus
 //    let isBtcSwapped: Bool // show amounts as fiat setting
     
     
     static func initial(_ currency: CurrencyDef, displayOrder: Int) -> WalletState {
         return WalletState(currency: currency,
                            displayOrder: displayOrder,
-//                           isConnected: false,
                            syncProgress: 0.0,
                            syncState: .success,
                            balance: nil,
@@ -154,11 +154,11 @@ struct WalletState {
                            currentRate: nil,
                            fees: nil,
                            recommendRescan: false,
-                           maxDigits: UserDefaults.maxDigits)
+                           maxDigits: UserDefaults.maxDigits,
+                           connectionStatus: BRPeerStatusDisconnected)
     }
 
     func mutate(    displayOrder: Int? = nil,
-//                    isConnected: Bool? = nil,
                     syncProgress: Double? = nil,
                     syncState: SyncState? = nil,
                     balance: UInt64? = nil,
@@ -175,11 +175,11 @@ struct WalletState {
                     rates: [Rate]? = nil,
                     fees: Fees? = nil,
                     recommendRescan: Bool? = nil,
-                    maxDigits: Int? = nil) -> WalletState {
+                    maxDigits: Int? = nil,
+                    connectionStatus: BRPeerStatus? = nil) -> WalletState {
 
         return WalletState(currency: self.currency,
                            displayOrder: displayOrder ?? self.displayOrder,
-//                           isConnected: isConnected ?? self.isConnected,
                            syncProgress: syncProgress ?? self.syncProgress,
                            syncState: syncState ?? self.syncState,
                            balance: balance ?? self.balance,
@@ -196,7 +196,8 @@ struct WalletState {
                            currentRate: currentRate ?? self.currentRate,
                            fees: fees ?? self.fees,
                            recommendRescan: recommendRescan ?? self.recommendRescan,
-                           maxDigits: maxDigits ?? self.maxDigits)
+                           maxDigits: maxDigits ?? self.maxDigits,
+                           connectionStatus: connectionStatus ?? self.connectionStatus)
     }
 }
 
@@ -204,7 +205,6 @@ extension WalletState : Equatable {}
 
 func ==(lhs: WalletState, rhs: WalletState) -> Bool {
     return lhs.currency.code == rhs.currency.code &&
-//        lhs.isConnected == rhs.isConnected &&
         lhs.syncProgress == rhs.syncProgress &&
         lhs.syncState == rhs.syncState &&
         lhs.balance == rhs.balance &&
@@ -217,7 +217,8 @@ func ==(lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.currentRate == rhs.currentRate &&
         lhs.fees == rhs.fees &&
         lhs.recommendRescan == rhs.recommendRescan &&
-        lhs.maxDigits == rhs.maxDigits
+        lhs.maxDigits == rhs.maxDigits &&
+        lhs.connectionStatus == rhs.connectionStatus
 }
 
 extension RootModal : Equatable {}

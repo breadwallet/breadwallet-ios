@@ -82,9 +82,7 @@ class NodeSelectorViewController : UIViewController, Trackable {
     }
 
     @objc private func setStatusText() {
-        if let peerManager = walletManager.peerManager {
-            status.text = peerManager.isConnected ? S.NodeSelector.connected : S.NodeSelector.notConnected
-        }
+        status.text = walletManager.peerManager?.connectionStatus.description
         node.text = walletManager.peerManager?.downloadPeerName
     }
 
