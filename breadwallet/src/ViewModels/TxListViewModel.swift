@@ -30,10 +30,19 @@ struct TxListViewModel: TxViewModel {
     }
     
     var shortDescription: String {
-        if let comment = comment, comment.count > 0 {
+        let isComplete = tx.status == .complete
+        
+        if let comment = comment, comment.count > 0, isComplete {
             return comment
         } else {
-            return String(format: tx.direction.directionAddressTextFormat, tx.toAddress)
+            var format: String
+            switch tx.direction {
+            case .sent, .moved:
+                format = isComplete ? S.Transaction.sentTo : S.Transaction.sendingTo
+            case .received:
+                format = isComplete ? S.Transaction.receivedVia : S.Transaction.receivingVia
+            }
+            return String(format: format, tx.toAddress)
         }
     }
 

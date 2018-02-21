@@ -78,14 +78,4 @@ enum TransactionDirection : String {
             return S.TransactionDetails.to
         }
     }
-    
-    var directionAddressTextFormat: String {
-        switch self {
-        case .sent, .moved:
-            return S.Transaction.sentTo
-        case .received:
-            return S.Transaction.receivedVia
-        }
-    }
-
 }

@@ -16,6 +16,9 @@ class TxListCell: UITableViewCell {
     private let descriptionLabel = UILabel(font: .customBody(size: 14.0), color: .lightGray)
     private let amount = UILabel(font: .customBold(size: 18.0))
     private let separator = UIView(color: .separatorGray)
+    private let statusIndicator = TxStatusIndicator(width: 44.0)
+    private var pendingConstraints = [NSLayoutConstraint]()
+    private var completeConstraints = [NSLayoutConstraint]()
     
     // MARK: Vars
     
@@ -34,6 +37,19 @@ class TxListCell: UITableViewCell {
         timestamp.text = viewModel.shortTimestamp
         descriptionLabel.text = viewModel.shortDescription
         amount.attributedText = viewModel.amount(isBtcSwapped: isBtcSwapped, rate: rate)
+        
+        statusIndicator.status = viewModel.status
+        if viewModel.status == .complete {
+            statusIndicator.isHidden = true
+            timestamp.isHidden = false
+            NSLayoutConstraint.deactivate(pendingConstraints)
+            NSLayoutConstraint.activate(completeConstraints)
+        } else {
+            statusIndicator.isHidden = false
+            timestamp.isHidden = true
+            NSLayoutConstraint.deactivate(completeConstraints)
+            NSLayoutConstraint.activate(pendingConstraints)
+        }
     }
     
     // MARK: - Private
@@ -47,6 +63,7 @@ class TxListCell: UITableViewCell {
     private func addSubviews() {
         contentView.addSubview(timestamp)
         contentView.addSubview(descriptionLabel)
+        contentView.addSubview(statusIndicator)
         contentView.addSubview(amount)
         contentView.addSubview(separator)
     }
@@ -58,10 +75,26 @@ class TxListCell: UITableViewCell {
             ])
         
         descriptionLabel.constrain([
-            descriptionLabel.topAnchor.constraint(equalTo: timestamp.bottomAnchor),
             descriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -C.padding[2]),
-            descriptionLabel.leadingAnchor.constraint(equalTo: timestamp.leadingAnchor),
             descriptionLabel.trailingAnchor.constraint(equalTo: timestamp.trailingAnchor)
+            ])
+        
+        pendingConstraints = [
+            descriptionLabel.centerYAnchor.constraint(equalTo: statusIndicator.centerYAnchor),
+            descriptionLabel.leadingAnchor.constraint(equalTo: statusIndicator.trailingAnchor, constant: C.padding[1]),
+            descriptionLabel.heightAnchor.constraint(equalToConstant: 48.0)
+        ]
+        
+        completeConstraints = [
+            descriptionLabel.topAnchor.constraint(equalTo: timestamp.bottomAnchor),
+            descriptionLabel.leadingAnchor.constraint(equalTo: timestamp.leadingAnchor),
+        ]
+        
+        statusIndicator.constrain([
+            statusIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            statusIndicator.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[2]),
+            statusIndicator.widthAnchor.constraint(equalToConstant: statusIndicator.width),
+            statusIndicator.heightAnchor.constraint(equalToConstant: statusIndicator.height)
             ])
         
         amount.constrain([
