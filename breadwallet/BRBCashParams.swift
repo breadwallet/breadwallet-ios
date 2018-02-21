@@ -25,15 +25,13 @@
 import Foundation
 import BRCore
 
-typealias CStr = UnsafePointer<CChar>
+let BRBCashDNSSeeds: Array<UnsafePointer<CChar>?> =
+    ["seed-abc.breadwallet.com.".cStr, "seed.bitcoinabc.org.".cStr, "seed-abc.bitcoinforks.org.".cStr,
+     "seed.bitcoinunlimited.info.".cStr, "seed.bitprim.org.".cStr, "seed.deadalnix.me.".cStr, nil]
 
-let BRBCashDNSSeeds: Array<CStr?> =
-    [CStr("seed-abc.breadwallet.com."), CStr("seed.bitcoinabc.org."), CStr("seed-abc.bitcoinforks.org."),
-     CStr("seed.bitcoinunlimited.info."), CStr("seed.bitprim.org."), CStr("seed.deadalnix.me."), nil]
-
-let BRBCashTestNetDNSSeeds: Array<CStr?> =
-    [CStr("testnet-seed.bitcoinabc.org"), CStr("testnet-seed-abc.bitcoinforks.org"), CStr("testnet-seed.bitprim.org"),
-     CStr("testnet-seed.deadalnix.me"), CStr("testnet-seeder.criptolayer.net"), nil]
+let BRBCashTestNetDNSSeeds: Array<UnsafePointer<CChar>?> =
+    ["testnet-seed.bitcoinabc.org".cStr, "testnet-seed-abc.bitcoinforks.org".cStr, "testnet-seed.bitprim.org".cStr,
+     "testnet-seed.deadalnix.me".cStr, "testnet-seeder.criptolayer.net".cStr, nil]
 
 extension BRCheckPoint {
     init(_ height: UInt32, _ hash: String, _ timestamp: UInt32, _ target: UInt32) {
