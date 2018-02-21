@@ -109,7 +109,7 @@ class ProgressBar: UIView {
         }
         
         // pulse
-        if ratio > 0.0 && ratio < 1.0 {
+        if ratio > 0.0 {
             UIView.animate(withDuration: 1.0,
                            delay: 0.5,
                            options: [.repeat, .autoreverse],
