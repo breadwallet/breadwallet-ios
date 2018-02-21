@@ -28,8 +28,9 @@ class TxStatusIndicator: UIView {
     // MARK: Init
     
     init(width: CGFloat) {
-        self.pipWidth = width * (7.0/19.0)
-        self.padding = -(width / 19.0)
+        let ratio: CGFloat = (width > 150.0) ? 22.0 : 8.0
+        self.padding = -(width / ratio)
+        self.pipWidth = width * ((ratio + 2.0) / (ratio * 3.0))
         super.init(frame: .zero)
         setup()
     }
