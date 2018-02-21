@@ -158,6 +158,8 @@ enum S {
         static let failed = NSLocalizedString("Transaction.failed", value: "Failed", comment: "Transaction failed status text")
         static let sentTo = NSLocalizedString("Transaction.sentTo", value:"sent to %1$@", comment: "sent to <address>")
         static let receivedVia = NSLocalizedString("TransactionDetails.receivedVia", value:"received via %1$@", comment: "received via <address>")
+        static let sendingTo = NSLocalizedString("Transaction.sendingTo", value:"sending to %1$@", comment: "sending to <address>")
+        static let receivingVia = NSLocalizedString("TransactionDetails.receivingVia", value:"receiving via %1$@", comment: "receiving via <address>")
     }
 
     enum TransactionDetails {

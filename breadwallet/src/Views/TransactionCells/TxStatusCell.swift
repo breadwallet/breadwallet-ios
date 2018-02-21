@@ -19,7 +19,7 @@ class TxStatusCell: UITableViewCell, Subscriber {
         label.textAlignment = .center
         return label
     }()
-    private let statusIndicator = TxStatusIndicator()
+    private let statusIndicator = TxStatusIndicator(width: 238.0)
     
     // MARK: - Init
     
