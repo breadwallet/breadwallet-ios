@@ -80,6 +80,7 @@ class AccountViewController : UIViewController, Subscriber {
             showJailbreakWarnings(isJailbroken: isJailbroken)
         }
 
+        setupNavigationBar()
         addTransactionsView()
         addSubviews()
         addConstraints()
@@ -101,6 +102,15 @@ class AccountViewController : UIViewController, Subscriber {
                 self?.walletManager?.peerManager?.connect()
             }
         }
+    }
+    
+    private func setupNavigationBar() {
+        let searchButton = UIButton(type: .system)
+        searchButton.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
+        searchButton.tintColor = .white
+        searchButton.tap = showSearchHeaderView
+        searchButton.imageEdgeInsets = UIEdgeInsets(top: 12.0, left: 24.0, bottom: 12.0, right: 2.0)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchButton)
     }
 
     private func addSubviews() {
@@ -143,41 +153,7 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func setInitialData() {
-        let navBarHeight: CGFloat = 44.0
-        
-        headerView.searchButton.tap = { [unowned self] in
-            self.navigationController?.setNavigationBarHidden(true, animated: false)
-            var contentInset = self.transactionsTableView.tableView.contentInset
-            var contentOffset = self.transactionsTableView.tableView.contentOffset
-            contentInset.top += navBarHeight
-            contentOffset.y -= navBarHeight
-            self.transactionsTableView.tableView.contentInset = contentInset
-            self.transactionsTableView.tableView.contentOffset = contentOffset
-            UIView.transition(from: self.headerView,
-                              to: self.searchHeaderview,
-                              duration: C.animationDuration,
-                              options: [.transitionFlipFromBottom, .showHideTransitionViews, .curveEaseOut],
-                              completion: { _ in
-                                self.searchHeaderview.triggerUpdate()
-                                self.setNeedsStatusBarAppearanceUpdate()
-            })
-        }
-        
-        searchHeaderview.didCancel = { [unowned self] in
-            self.navigationController?.setNavigationBarHidden(false, animated: false)
-            var contentInset = self.transactionsTableView.tableView.contentInset
-            contentInset.top -= navBarHeight
-            self.transactionsTableView.tableView.contentInset = contentInset
-            UIView.transition(from: self.searchHeaderview,
-                              to: self.headerView,
-                              duration: C.animationDuration,
-                              options: [.transitionFlipFromTop, .showHideTransitionViews, .curveEaseOut],
-                              completion: { _ in
-                                self.setNeedsStatusBarAppearanceUpdate()
-            })
-        }
-        
-        
+        searchHeaderview.didCancel = hideSearchHeaderView
         searchHeaderview.didChangeFilters = { [weak self] filters in
             self?.transactionsTableView.filters = filters
         }
@@ -238,6 +214,40 @@ class AccountViewController : UIViewController, Subscriber {
             }))
         }
         present(alert, animated: true, completion: nil)
+    }
+    
+    private func showSearchHeaderView() {
+        let navBarHeight: CGFloat = 44.0
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        var contentInset = self.transactionsTableView.tableView.contentInset
+        var contentOffset = self.transactionsTableView.tableView.contentOffset
+        contentInset.top += navBarHeight
+        contentOffset.y -= navBarHeight
+        self.transactionsTableView.tableView.contentInset = contentInset
+        self.transactionsTableView.tableView.contentOffset = contentOffset
+        UIView.transition(from: self.headerView,
+                          to: self.searchHeaderview,
+                          duration: C.animationDuration,
+                          options: [.transitionFlipFromBottom, .showHideTransitionViews, .curveEaseOut],
+                          completion: { _ in
+                            self.searchHeaderview.triggerUpdate()
+                            self.setNeedsStatusBarAppearanceUpdate()
+        })
+    }
+    
+    private func hideSearchHeaderView() {
+        let navBarHeight: CGFloat = 44.0
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        var contentInset = self.transactionsTableView.tableView.contentInset
+        contentInset.top -= navBarHeight
+        self.transactionsTableView.tableView.contentInset = contentInset
+        UIView.transition(from: self.searchHeaderview,
+                          to: self.headerView,
+                          duration: C.animationDuration,
+                          options: [.transitionFlipFromTop, .showHideTransitionViews, .curveEaseOut],
+                          completion: { _ in
+                            self.setNeedsStatusBarAppearanceUpdate()
+        })
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

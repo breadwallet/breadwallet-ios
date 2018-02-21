@@ -75,7 +75,6 @@ class HomeScreenCell : UITableViewCell, Subscriber {
         Store.subscribe(self, selector: {
             return $0[viewModel.currency].lastBlockTimestamp != $1[viewModel.currency].lastBlockTimestamp },
                         callback: { state in
-                            print(">>>> sync progress: \(viewModel.currency.code): \(state[viewModel.currency].syncProgress)")
                             self.syncIndicator.progress = CGFloat(state[viewModel.currency].syncProgress)
         })
     }

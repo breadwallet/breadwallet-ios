@@ -24,30 +24,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 
     let didSelectTransaction: ([Transaction], Int) -> Void
-    private let syncingView = SyncingView()
-    private var isSyncingViewVisible = false {
-        didSet {
-            guard oldValue != isSyncingViewVisible else { return } //We only care about changes
-            if isSyncingViewVisible {
-                tableView.beginUpdates()
-                if currentPrompt != nil {
-                    currentPrompt = nil
-                    tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
-                } else {
-                    tableView.insertSections(IndexSet(integer: 0), with: .automatic)
-                }
-                tableView.endUpdates()
-            } else {
-                tableView.beginUpdates()
-                tableView.deleteSections(IndexSet(integer: 0), with: .automatic)
-                tableView.endUpdates()
-
-                DispatchQueue.main.asyncAfter(deadline: .now() + promptDelay , execute: {
-                    self.attemptShowPrompt()
-                })
-            }
-        }
-    }
 
     var filters: [TransactionFilter] = [] {
         didSet {
@@ -78,7 +54,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                 tableView.beginUpdates()
                 tableView.insertSections(IndexSet(integer: 0), with: .automatic)
                 tableView.endUpdates()
-            } else if currentPrompt == nil && oldValue != nil && !isSyncingViewVisible {
+            } else if currentPrompt == nil && oldValue != nil {
                 tableView.beginUpdates()
                 tableView.deleteSections(IndexSet(integer: 0), with: .automatic)
                 tableView.endUpdates()
@@ -86,7 +62,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         }
     }
     private var hasExtraSection: Bool {
-        return isSyncingViewVisible || (currentPrompt != nil)
+        return (currentPrompt != nil)
     }
 
     override func viewDidLoad() {
@@ -110,31 +86,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         })
         Store.subscribe(self, selector: { $0[self.currency].maxDigits != $1[self.currency].maxDigits }, callback: {_ in
             self.reload()
-        })
-
-        Store.subscribe(self, selector: { $0[self.currency].syncState != $1[self.currency].syncState },
-                        callback: { state in
-                            guard let peerManager = self.walletManager?.peerManager else { return }
-                            if state[self.currency].syncState == .syncing {
-                                self.syncingView.reset()
-                            } else if state[self.currency].syncState == .connecting {
-                                self.syncingView.setIsConnecting()
-                            }
-
-                            if state[self.currency].syncState == .success {
-                                self.isSyncingViewVisible = false
-                            } else if peerManager.shouldShowSyncingView {
-                                self.isSyncingViewVisible = true
-                            } else {
-                                self.isSyncingViewVisible = false
-                            }
-        })
-
-        Store.subscribe(self, selector: {
-            return $0[self.currency].lastBlockTimestamp != $1[self.currency].lastBlockTimestamp },
-                        callback: { state in
-                            self.syncingView.progress = CGFloat(state[self.currency].syncProgress)
-                            self.syncingView.timestamp = state[self.currency].lastBlockTimestamp
         })
 
         Store.subscribe(self, selector: { $0[self.currency].recommendRescan != $1[self.currency].recommendRescan }, callback: { _ in
@@ -181,10 +132,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         DispatchQueue.main.asyncAfter(deadline: .now() + promptDelay, execute: { [weak self] in
-            guard let myself = self else { return }
-            if !myself.isSyncingViewVisible {
-                myself.attemptShowPrompt()
-            }
+            self?.attemptShowPrompt()
         })
     }
 
@@ -263,7 +211,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
     private func attemptShowPrompt() {
         guard let walletManager = walletManager else { return }
-        guard !isSyncingViewVisible else { return }
         let types = PromptType.defaultOrder
         if let type = types.first(where: { $0.shouldPrompt(walletManager: walletManager, state: Store.state) }) {
             self.saveEvent("prompt.\(type.name).displayed")
@@ -309,11 +256,6 @@ extension TransactionsTableViewController {
             if let prompt = currentPrompt {
                 transactionCell.container.addSubview(prompt)
                 prompt.constrain(toSuperviewEdges: nil)
-            } else {
-                transactionCell.container.addSubview(syncingView)
-                syncingView.constrain(toSuperviewEdges: nil)
-                syncingView.constrain([
-                    syncingView.heightAnchor.constraint(equalToConstant: 88.0) ])
             }
         }
         return cell
