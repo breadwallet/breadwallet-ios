@@ -11,7 +11,13 @@ import UIKit
 /// Small syncing progress indicator
 class SyncingIndicator: UIView {
     
+    enum Style {
+        case home
+        case account
+    }
+    
     // MARK: Vars
+    private let style: Style
     private let label = UILabel(font: .customBold(size: 12.0), color: .transparentWhiteText)
     private let progressBar = ProgressBar()
     
@@ -29,7 +35,8 @@ class SyncingIndicator: UIView {
     
     // MARK: Init
     
-    init() {
+    init(style: Style) {
+        self.style = style
         super.init(frame: .zero)
         setup()
     }
@@ -39,6 +46,7 @@ class SyncingIndicator: UIView {
         addSubview(label)
         setupConstraints()
         
+        label.font = (style == .home) ? .customBold(size: 12.0) : .customBody(size: 14.0)
         label.textAlignment = .right
         label.text = text
     }
@@ -53,7 +61,7 @@ class SyncingIndicator: UIView {
         progressBar.constrain([
             progressBar.trailingAnchor.constraint(equalTo: trailingAnchor),
             progressBar.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: C.padding[1]),
-            progressBar.centerYAnchor.constraint(equalTo: label.firstBaselineAnchor, constant: -2.0),
+            progressBar.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 1.0),
             progressBar.heightAnchor.constraint(equalToConstant: 4.0),
             progressBar.widthAnchor.constraint(equalToConstant: 34.0)
             ])
@@ -110,6 +118,7 @@ class ProgressBar: UIView {
         
         // pulse
         if ratio > 0.0 {
+            progress.layer.removeAllAnimations()
             UIView.animate(withDuration: 1.0,
                            delay: 0.5,
                            options: [.repeat, .autoreverse],

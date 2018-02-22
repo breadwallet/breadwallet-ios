@@ -22,7 +22,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private let secondaryBalance: UpdatingLabel
     private let conversionSymbol = UIImageView(image: #imageLiteral(resourceName: "conversion"))
     private let currencyTapView = UIView()
-    private let syncIndicator = SyncingIndicator()
+    private let syncIndicator = SyncingIndicator(style: .account)
     private let modeLabel = UILabel(font: .customBody(size: 12.0), color: .transparentWhiteText) // debug info
     
     private var regularConstraints: [NSLayoutConstraint] = []

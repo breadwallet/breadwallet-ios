@@ -34,7 +34,7 @@ class HomeScreenCell : UITableViewCell, Subscriber {
     private let price = UILabel(font: .customBold(size: 14.0), color: .transparentWhiteText)
     private let fiatBalance = UILabel(font: .customBold(size: 18.0), color: .white)
     private let tokenBalance = UILabel(font: .customBold(size: 14.0), color: .transparentWhiteText)
-    private let syncIndicator = SyncingIndicator()
+    private let syncIndicator = SyncingIndicator(style: .home)
     private let container = Background()
     
     private var isSyncIndicatorVisible: Bool = false {
