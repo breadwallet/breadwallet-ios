@@ -44,9 +44,7 @@ class ApplicationController : Subscriber, Trackable {
 
     init() {
         guardProtected(queue: DispatchQueue.walletQueue) {
-            let path = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
-            create: false).appendingPathComponent(Currencies.bch.dbPath).path
-            if FileManager.default.fileExists(atPath: path) {
+            if UserDefaults.hasBchConnected {
                 self.initWallet(completion: self.didAttemptInitWallet)
             } else {
                 self.initWalletWithMigration(completion: self.didAttemptInitWallet)
@@ -84,6 +82,14 @@ class ApplicationController : Subscriber, Trackable {
                         self.walletCoordinators[bch.code] = WalletCoordinator(walletManager: bchWalletManager!, currency: bch)
                         self.exchangeUpdaters[bch.code] = ExchangeUpdater(currency: bch, walletManager: bchWalletManager!)
                         bchWalletManager?.initPeerManager(blocks: preForkBlocks)
+                        bchWalletManager?.db?.loadTransactions { storedTransactions in
+                            if storedTransactions.count == 0 {
+                                bchWalletManager?.wallet?.transactions.flatMap{$0}.forEach { txn in
+                                    bchWalletManager?.db?.txAdded(txn)
+                                }
+                            }
+
+                        }
                         completion()
                     }
                 }

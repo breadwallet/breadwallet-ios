@@ -29,6 +29,7 @@ private let feesKey = "feesKey"
 private let selectedCurrencyCodeKey = "selectedCurrencyCodeKey"
 private let mostRecentSelectedCurrencyCodeKey = "mostRecentSelectedCurrencyCodeKey"
 private let hasSetSelectedCurrencyKey = "hasSetSelectedCurrencyKey"
+private let hasBchConnectedKey = "hasBchConnectedKey"
 
 extension UserDefaults {
 
@@ -239,5 +240,10 @@ extension UserDefaults {
         set {
             defaults.setValue(newValue, forKey: mostRecentSelectedCurrencyCodeKey)
         }
+    }
+
+    static var hasBchConnected: Bool {
+        get { return defaults.bool(forKey: hasBchConnectedKey) }
+        set { defaults.set(newValue, forKey: hasBchConnectedKey) }
     }
 }
