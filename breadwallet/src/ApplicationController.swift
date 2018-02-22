@@ -244,6 +244,9 @@ class ApplicationController : Subscriber, Trackable {
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
         Store.perform(action: PinLength.set(primaryWalletManager.pinLength))
         rootViewController.walletManager = primaryWalletManager
+        if let homeScreen = rootViewController.viewControllers.first as? HomeScreenViewController {
+            homeScreen.primaryWalletManager = primaryWalletManager
+        }
         hasPerformedWalletDependentInitialization = true
         modalPresenter = ModalPresenter(walletManagers: walletManagers, window: window, apiClient: noAuthApiClient, gethManager: nil)
         startFlowController = StartFlowPresenter(walletManager: primaryWalletManager, rootViewController: rootViewController)
@@ -308,14 +311,15 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func setupRootViewController() {
-        let home = HomeScreenViewController()
+        let home = HomeScreenViewController(primaryWalletManager: walletManagers[Currencies.btc.code])
         let nc = RootNavigationController()
         nc.navigationBar.isTranslucent = false
         nc.navigationBar.tintColor = .white
         nc.pushViewController(home, animated: false)
+        
         home.didSelectCurrency = { currency in
-            let accountViewController = AccountViewController(currency: currency)
-            accountViewController.walletManager = self.walletManagers[currency.code]
+            guard let walletManager = self.walletManagers[currency.code] else { return }
+            let accountViewController = AccountViewController(walletManager: walletManager)
             nc.pushViewController(accountViewController, animated: true)
         }
         
@@ -330,11 +334,11 @@ class ApplicationController : Subscriber, Trackable {
         home.didTapSettings = {
             self.modalPresenter?.presentSettings()
         }
-
+        
         //State restoration
-        if let currency = Store.state.currencies.first(where: { $0.code == UserDefaults.selectedCurrencyCode }) {
-            let accountViewController = AccountViewController(currency: currency)
-            accountViewController.walletManager = self.walletManagers[currency.code]
+        if let currency = Store.state.currencies.first(where: { $0.code == UserDefaults.selectedCurrencyCode }),
+            let walletManager = self.walletManagers[currency.code] {
+            let accountViewController = AccountViewController(walletManager: walletManager)
             nc.pushViewController(accountViewController, animated: true)
         }
 

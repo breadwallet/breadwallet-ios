@@ -13,11 +13,10 @@ private let promptDelay: TimeInterval = 0.6
 
 class TransactionsTableViewController : UITableViewController, Subscriber, Trackable {
 
-    let currency: CurrencyDef
-    
     //MARK: - Public
-    init(currency: CurrencyDef, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
-        self.currency = currency
+    init(walletManager: WalletManager, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
+        self.walletManager = walletManager
+        self.currency = walletManager.currency
         self.didSelectTransaction = didSelectTransaction
         self.isBtcSwapped = Store.state.isBtcSwapped
         super.init(nibName: nil, bundle: nil)
@@ -32,9 +31,10 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         }
     }
 
-    var walletManager: WalletManager?
-
     //MARK: - Private
+    private let walletManager: WalletManager
+    private let currency: CurrencyDef
+    
     private let headerCellIdentifier = "HeaderCellIdentifier"
     private let transactionCellIdentifier = "TransactionCellIdentifier"
     private var transactions: [Transaction] = []
@@ -48,6 +48,8 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         didSet { reload() }
     }
     private let emptyMessage = UILabel.wrapping(font: .customBody(size: 16.0), color: .grayTextTint)
+    
+    //TODO:BCH replace with recommend rescan / tx failed prompt
     private var currentPrompt: Prompt? {
         didSet {
             if currentPrompt != nil && oldValue == nil {
@@ -75,7 +77,16 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         tableView.estimatedRowHeight = 60.0
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.backgroundColor = .whiteTint
+        
+        emptyMessage.textAlignment = .center
+        emptyMessage.text = S.TransactionDetails.emptyMessage
+        
+        setContentInset()
 
+        setupSubscriptions()
+    }
+    
+    private func setupSubscriptions() {
         Store.subscribe(self,
                         selector: { $0.isBtcSwapped != $1.isBtcSwapped },
                         callback: { self.isBtcSwapped = $0.isBtcSwapped })
@@ -87,29 +98,11 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         Store.subscribe(self, selector: { $0[self.currency].maxDigits != $1[self.currency].maxDigits }, callback: {_ in
             self.reload()
         })
-
+        
         Store.subscribe(self, selector: { $0[self.currency].recommendRescan != $1[self.currency].recommendRescan }, callback: { _ in
-            self.attemptShowPrompt()
+            //TODO:BCH show failed tx
         })
-        Store.subscribe(self, selector: { $0[self.currency].syncState != $1[self.currency].syncState }, callback: { _ in
-            self.reload()
-        })
-        Store.subscribe(self, name: .didUpgradePin, callback: { _ in
-            if self.currentPrompt?.type == .upgradePin {
-                self.currentPrompt = nil
-            }
-        })
-        Store.subscribe(self, name: .didEnableShareData, callback: { _ in
-            if self.currentPrompt?.type == .shareData {
-                self.currentPrompt = nil
-            }
-        })
-        Store.subscribe(self, name: .didWritePaperKey, callback: { _ in
-            if self.currentPrompt?.type == .paperKey {
-                self.currentPrompt = nil
-            }
-        })
-
+        
         Store.subscribe(self, name: .txMemoUpdated(""), callback: {
             guard let trigger = $0 else { return }
             if case .txMemoUpdated(let txHash) = trigger {
@@ -117,22 +110,10 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             }
         })
         
-        emptyMessage.textAlignment = .center
-        emptyMessage.text = S.TransactionDetails.emptyMessage
-
-        setContentInset()
-
         Store.subscribe(self, selector: { $0[self.currency].transactions != $1[self.currency].transactions },
                         callback: { state in
                             self.allTransactions = state[self.currency].transactions
                             self.reload()
-        })
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        DispatchQueue.main.asyncAfter(deadline: .now() + promptDelay, execute: { [weak self] in
-            self?.attemptShowPrompt()
         })
     }
 
@@ -209,34 +190,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         }
     }
 
-    private func attemptShowPrompt() {
-        guard let walletManager = walletManager else { return }
-        let types = PromptType.defaultOrder
-        if let type = types.first(where: { $0.shouldPrompt(walletManager: walletManager, state: Store.state) }) {
-            self.saveEvent("prompt.\(type.name).displayed")
-            currentPrompt = Prompt(type: type)
-            currentPrompt!.dismissButton.tap = { [unowned self] in
-                self.saveEvent("prompt.\(type.name).dismissed")
-                self.currentPrompt = nil
-            }
-            currentPrompt!.continueButton.tap = { [unowned self] in
-                if let trigger = type.trigger(currency: self.currency) {
-                    Store.trigger(name: trigger)
-                }
-                self.saveEvent("prompt.\(type.name).trigger")
-                self.currentPrompt = nil
-            }
-            if type == .biometrics {
-                UserDefaults.hasPromptedBiometrics = true
-            }
-            if type == .shareData {
-                UserDefaults.hasPromptedShareData = true
-            }
-        } else {
-            currentPrompt = nil
-        }
-    }
-
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -264,8 +217,7 @@ extension TransactionsTableViewController {
     private func transactionCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
         if let transactionCell = cell as? TxListCell,
-            let rate = rate,
-            let walletManager = walletManager {
+            let rate = rate {
             let viewModel = TxListViewModel(tx: transactions[indexPath.row], walletManager: walletManager)
             transactionCell.setTransaction(viewModel,
                                            isBtcSwapped: isBtcSwapped,

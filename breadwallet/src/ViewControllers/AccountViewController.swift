@@ -15,29 +15,25 @@ let accountFooterHeight: CGFloat = 67.0
 
 class AccountViewController : UIViewController, Subscriber {
 
-    var walletManager: WalletManager? {
-        didSet {
-            guard let walletManager = walletManager else { return }
-            transactionsTableView.walletManager = walletManager
-            headerView.isWatchOnly = walletManager.isWatchOnly
-        }
-    }
-
+    //MARK: - Public
     let currency: CurrencyDef
-
-    init(currency: CurrencyDef) {
-        self.currency = currency
+    
+    init(walletManager: WalletManager) {
+        self.walletManager = walletManager
+        self.currency = walletManager.currency
         self.headerView = AccountHeaderView(currency: currency)
         self.footerView = AccountFooterView(currency: currency)
         super.init(nibName: nil, bundle: nil)
-        self.transactionsTableView = TransactionsTableViewController(currency: currency, didSelectTransaction: didSelectTransaction)
+        self.transactionsTableView = TransactionsTableViewController(walletManager: walletManager, didSelectTransaction: didSelectTransaction)
         
-        footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send(currency: currency))) }
-        footerView.receiveCallback = { Store.perform(action: RootModalActions.Present(modal: .receive(currency: currency))) }
+        headerView.isWatchOnly = walletManager.isWatchOnly
+        footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send(currency: walletManager.currency))) }
+        footerView.receiveCallback = { Store.perform(action: RootModalActions.Present(modal: .receive(currency: walletManager.currency))) }
         footerView.buyCallback = { Store.perform(action: RootModalActions.Present(modal: .buy)) }
     }
 
     //MARK: - Private
+    private let walletManager: WalletManager
     private let headerView: AccountHeaderView
     private let footerView: AccountFooterView
     private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
@@ -97,19 +93,21 @@ class AccountViewController : UIViewController, Subscriber {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         headerView.setBalances()
-        if walletManager?.peerManager?.connectionStatus == BRPeerStatusDisconnected {
+        if walletManager.peerManager?.connectionStatus == BRPeerStatusDisconnected {
             DispatchQueue.walletQueue.async { [weak self] in
-                self?.walletManager?.peerManager?.connect()
+                self?.walletManager.peerManager?.connect()
             }
         }
     }
+    
+    // MARK: -
     
     private func setupNavigationBar() {
         let searchButton = UIButton(type: .system)
         searchButton.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
         searchButton.tintColor = .white
         searchButton.tap = showSearchHeaderView
-        searchButton.imageEdgeInsets = UIEdgeInsets(top: 12.0, left: 24.0, bottom: 12.0, right: 2.0)
+        searchButton.imageEdgeInsets = UIEdgeInsets(top: 13.0, left: 25.0, bottom: 13.0, right: 5.0)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchButton)
     }
 
@@ -202,7 +200,7 @@ class AccountViewController : UIViewController, Subscriber {
 
     private func showJailbreakWarnings(isJailbroken: Bool) {
         guard isJailbroken else { return }
-        let totalSent = walletManager?.wallet?.totalSent ?? 0
+        let totalSent = walletManager.wallet?.totalSent ?? 0
         let message = totalSent > 0 ? S.JailbreakWarnings.messageWithBalance : S.JailbreakWarnings.messageWithBalance
         let alert = UIAlertController(title: S.JailbreakWarnings.title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.JailbreakWarnings.ignore, style: .default, handler: nil))
