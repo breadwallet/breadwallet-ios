@@ -32,6 +32,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         self.initialAddress = initialAddress
         self.initialRequest = initialRequest
         self.currencyButton = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: currency.state.maxDigits), type: .tertiary)
+        self.addressCell = AddressCell(currency: currency)
         self.gethManager = gethManager
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
 
@@ -49,7 +50,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let sender: Sender
     private let walletManager: WalletManager
     private let amountView: AmountViewController
-    private let addressCell = AddressCell()
+    private let addressCell: AddressCell
     private let memoCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary)
     private let currencyButton: ShadowButton
@@ -213,8 +214,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return showAlert(title: S.Alert.error, message: S.Send.emptyPasteboard, buttonLabel: S.Button.ok)
         }
 
-        guard let request = PaymentRequest(string: pasteboard) else {
-            return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressOnPasteboard, buttonLabel: S.Button.ok)
+        guard let request = PaymentRequest(string: pasteboard, currency: currency) else {
+            let message = String.init(format: S.Send.invalidAddressOnPasteboard, currency.name)
+            return showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
         }
         handleRequest(request)
     }
@@ -237,12 +239,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             guard let address = addressCell.address else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             }
+            
             guard currency.state.fees != nil else {
                 return showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
             }
-//            guard address.isValidAddress else {
-//                return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
-//            }
+            guard currency.isValidAddress(address) else {
+                let message = String.init(format: S.Send.invalidAddressMessage, currency.name)
+                return showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
+            }
             guard let amount = amount else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
             }
@@ -265,7 +269,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
 
         guard let amount = amount else { return }
-        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingBiometrics: sender.canUseBiometrics)
+        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.displayAddress ?? "", isUsingBiometrics: sender.canUseBiometrics)
         confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
                 self.send()
@@ -398,7 +402,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private func handleRequest(_ request: PaymentRequest) {
         switch request.type {
         case .local:
-            addressCell.setContent(request.toAddress)
+            addressCell.setContent(request.displayAddress)
             addressCell.isEditable = true
             if let amount = request.amount {
                 amountView.forceUpdateAmount(amount: amount)

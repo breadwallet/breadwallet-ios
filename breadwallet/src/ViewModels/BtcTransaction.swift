@@ -85,23 +85,25 @@ struct BtcTransaction: Transaction {
         
         let endingBalance: UInt64 = wallet.balanceAfterTx(tx)
         var startingBalance: UInt64
+        var address: String
         switch direction {
         case .received:
-            toAddress = myAddress
+            address = myAddress
             amount = amountReceived
             startingBalance = endingBalance.subtractingReportingOverflow(amount).0.subtractingReportingOverflow(fee).0
         case .sent:
-            toAddress = otherAddress
+            address = otherAddress
             amount = amountSent - amountReceived - fee
             startingBalance = endingBalance.addingReportingOverflow(amount).0.addingReportingOverflow(fee).0
         case .moved:
-            toAddress = myAddress
+            address = myAddress
             amount = amountSent
             startingBalance = endingBalance.addingReportingOverflow(self.fee).0
         }
         self.startingBalance = startingBalance
         self.endingBalance = endingBalance
         
+        toAddress = currency.matches(Currencies.bch) ? address.bCashAddr : address
         
         hash = tx.pointee.txHash.description
         timestamp = TimeInterval(tx.pointee.timestamp)

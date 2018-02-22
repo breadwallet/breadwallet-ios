@@ -260,7 +260,7 @@ class ModalPresenter : Subscriber, Trackable {
         }
 
         let root = ModalViewController(childViewController: sendVC)
-        sendVC.presentScan = presentScan(parent: root)
+        sendVC.presentScan = presentScan(parent: root, currency: currency)
         sendVC.presentVerifyPin = { [weak self, weak root] bodyText, success in
             guard let myself = self else { return }
             let walletManager = myself.primaryWalletManager
@@ -294,20 +294,20 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func presentLoginScan() {
+        //TODO:BCH URL support
         guard let top = topViewController else { return }
-        let present = presentScan(parent: top)
+        let present = presentScan(parent: top, currency: Currencies.btc)
         Store.perform(action: RootModalActions.Present(modal: .none))
         present({ paymentRequest in
             guard let request = paymentRequest else { return }
             self.currentRequest = request
-            //TODO:BCH
-            //self.presentModal(.send)
+            self.presentModal(.send(currency: Currencies.btc))
         })
     }
     
     func presentSettings() {
         guard let top = topViewController else { return }
-        let walletManager = primaryWalletManager // TODO:BCH
+        let walletManager = primaryWalletManager
         let settingsNav = UINavigationController()
         settingsNav.setGrayStyle()
         let sections: [SettingsSections] = [.wallet, .preferences, .currencies, .other]
@@ -440,7 +440,7 @@ class ModalPresenter : Subscriber, Trackable {
         top.present(settingsNav, animated: true, completion: nil)
     }
         
-    private func presentScan(parent: UIViewController) -> PresentScan {
+    private func presentScan(parent: UIViewController, currency: CurrencyDef) -> PresentScan {
         return { [weak parent] scanCompletion in
             guard ScanViewController.isCameraAllowed else {
                 self.saveEvent("scan.cameraDenied")
@@ -449,13 +449,9 @@ class ModalPresenter : Subscriber, Trackable {
                 }
                 return
             }
-            let vc = ScanViewController(completion: { paymentRequest in
+            let vc = ScanViewController(currency: currency, completion: { paymentRequest in
                 scanCompletion(paymentRequest)
                 parent?.view.isFrameChangeBlocked = false
-            }, isValidURI: { address in
-                //TODO:AC - add isValidAddress
-                return true
-                //return Store.state.currency.isValidAddress(address)
             })
             parent?.view.isFrameChangeBlocked = true
             parent?.present(vc, animated: true, completion: {})

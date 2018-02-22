@@ -10,13 +10,18 @@ import UIKit
 
 class AddressCell : UIView {
 
-    init() {
+    init(currency: CurrencyDef) {
+        self.currency = currency
         super.init(frame: .zero)
         setupViews()
     }
 
-    var address: String? {
+    var displayAddress: String? {
         return contentLabel.text
+    }
+    
+    var address: String? {
+        return currency.matches(Currencies.bch) ? contentLabel.text?.bitcoinAddr : contentLabel.text
     }
 
     var didBeginEditing: (() -> Void)?
@@ -41,6 +46,8 @@ class AddressCell : UIView {
     fileprivate let gr = UITapGestureRecognizer()
     fileprivate let tapView = UIView()
     private let border = UIView(color: .secondaryShadow)
+    
+    fileprivate let currency: CurrencyDef
 
     private func setupViews() {
         addSubviews()
@@ -141,7 +148,7 @@ extension AddressCell : UITextFieldDelegate {
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if let request = PaymentRequest(string: string) {
+        if let request = PaymentRequest(string: string, currency: currency) {
             didReceivePaymentRequest?(request)
             return false
         } else {

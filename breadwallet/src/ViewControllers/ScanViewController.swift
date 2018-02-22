@@ -39,16 +39,20 @@ class ScanViewController : UIViewController, Trackable {
     private let close = UIButton.close
     private let flash = UIButton.icon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
     fileprivate var currentUri = ""
-    private let currency: CurrencyDef = Currencies.btc
+    private let currency: CurrencyDef
 
-    init(completion: @escaping ScanCompletion, isValidURI: @escaping (String) -> Bool) {
+    init(currency: CurrencyDef, completion: @escaping ScanCompletion) {
+        self.currency = currency
         self.completion = completion
         self.scanKeyCompletion = nil
-        self.isValidURI = isValidURI
+        self.isValidURI = { address in
+            currency.isValidAddress(address)
+        }
         super.init(nibName: nil, bundle: nil)
     }
 
     init(scanKeyCompletion: @escaping KeyScanCompletion, isValidURI: @escaping (String) -> Bool) {
+        self.currency = Currencies.btc //TODO:BCH
         self.scanKeyCompletion = scanKeyCompletion
         self.completion = nil
         self.isValidURI = isValidURI
@@ -195,11 +199,8 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
             if uri.isValidEthAddress, let request = PaymentRequest(ethAddress: uri)  {
                 saveEvent("scan.ethAddress")
                 createPaymentRequestSuccess(request: request)
-            } else if let request = PaymentRequest(string: uri) {
-                saveEvent("scan.bitcoinUri")
-                createPaymentRequestSuccess(request: request)
-            } else if uri.isValidBCHAddress, let request = PaymentRequest(string: uri.bitcoinAddr) { // XXX this will show the bitcoin address instead of the bCashAddr in the send view
-                saveEvent("scan.bCashAddr")
+            } else if let request = PaymentRequest(string: uri, currency: currency) {
+                saveEvent(currency.matches(Currencies.bch) ? "scan.bCashAddr" : "scan.bitcoinUri")
                 createPaymentRequestSuccess(request: request)
             } else {
                 guide.state = .negative

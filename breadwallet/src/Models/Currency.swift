@@ -25,6 +25,8 @@ protocol CurrencyDef {
     var colors: (UIColor, UIColor) { get }
     /// Returns true if the currency ticker codes match
     func matches(_ other: CurrencyDef) -> Bool
+    /// Checks address validity in currency-specific format
+    func isValidAddress(_ address: String) -> Bool
 }
 
 extension CurrencyDef {
@@ -44,6 +46,14 @@ struct Bitcoin: CurrencyDef {
     let colors: (UIColor, UIColor)
     let dbPath: String
     let forkId: Int
+    
+    func isValidAddress(_ address: String) -> Bool {
+        if self.matches(Currencies.bch) {
+            return address.isValidBCHAddress
+        } else {
+            return address.isValidAddress
+        }
+    }
 }
 
 /// Ethereum-compatible currency type
@@ -53,6 +63,10 @@ struct Ethereum: CurrencyDef {
     let code: String
     let symbol: String
     let colors: (UIColor, UIColor)
+    
+    func isValidAddress(_ address: String) -> Bool {
+        return address.isValidEthAddress
+    }
 }
 
 /// Ethereum ERC20 token currency type
@@ -65,6 +79,10 @@ struct ERC20Token: CurrencyDef {
     let decimals: Int
     let abi: String
     let colors: (UIColor, UIColor)
+    
+    func isValidAddress(_ address: String) -> Bool {
+        return address.isValidEthAddress
+    }
 }
 
 // MARK: Instances
