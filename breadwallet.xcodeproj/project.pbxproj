@@ -56,8 +56,6 @@
 		22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */; };
 		22E773041EE7813000397E0E /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E773031EE7813000397E0E /* Bonjour.swift */; };
 		7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */; };
-		75152F34202E32650079E476 /* BRBCashParams.swift in Headers */ = {isa = PBXBuildFile; fileRef = 75152F33202E32640079E476 /* BRBCashParams.swift */; };
-		75152F35202E34C40079E476 /* BRBCashParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75152F33202E32640079E476 /* BRBCashParams.swift */; };
 		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
 		752438751DAAC50800844BEC /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6761DAA0E400075898E /* alloc.c */; };
 		752438761DAAC52700844BEC /* config_file.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD67A1DAA0E400075898E /* config_file.c */; };
@@ -175,6 +173,7 @@
 		755CD9E61DAA1A270075898E /* BRSet.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77C91DAA05B500932D9A /* BRSet.c */; };
 		755CD9E71DAA1A270075898E /* BRTransaction.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77CB1DAA05B500932D9A /* BRTransaction.c */; };
 		755CD9E81DAA1A270075898E /* BRWallet.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77CD1DAA05B500932D9A /* BRWallet.c */; };
+		759B4BDF203E5A32002C68CA /* BRBCashAddr.c in Sources */ = {isa = PBXBuildFile; fileRef = 759B4BDD203E5A31002C68CA /* BRBCashAddr.c */; };
 		759DA0A11DAB838D008CC49B /* view.c in Sources */ = {isa = PBXBuildFile; fileRef = 759DA09F1DAB838D008CC49B /* view.c */; };
 		759DA0A31DAC0D6B008CC49B /* dsa.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD7AC1DAA16810075898E /* dsa.c */; };
 		759DA0A41DAC0D84008CC49B /* ecc-point.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD7D71DAA16810075898E /* ecc-point.c */; };
@@ -685,7 +684,6 @@
 		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bonjour.swift; sourceTree = "<group>"; };
 		7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WalletManager+Auth.swift"; sourceTree = "<group>"; };
-		75152F33202E32640079E476 /* BRBCashParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRBCashParams.swift; sourceTree = "<group>"; };
 		7528D2971ECF655500925DBC /* PaymentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentProtocol.swift; path = src/PaymentProtocol.swift; sourceTree = "<group>"; };
 		752FB03B1DF8BE4B009086FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		752FB03C1DF8BE4B009086FB /* iphone.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = iphone.modulemap; sourceTree = "<group>"; };
@@ -1296,6 +1294,9 @@
 		755CD9BF1DAA16830075898E /* yarrow_key_event.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = yarrow_key_event.c; sourceTree = "<group>"; };
 		755CD9C41DAA18420075898E /* libunbound.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libunbound.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		755CD9D11DAA197C0075898E /* libBRCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBRCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		759B4BDC203E5A31002C68CA /* BRBCashParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRBCashParams.h; sourceTree = "<group>"; };
+		759B4BDD203E5A31002C68CA /* BRBCashAddr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRBCashAddr.c; sourceTree = "<group>"; };
+		759B4BDE203E5A31002C68CA /* BRBCashAddr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRBCashAddr.h; sourceTree = "<group>"; };
 		759DA09F1DAB838D008CC49B /* view.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = view.c; sourceTree = "<group>"; };
 		759DA0A01DAB838D008CC49B /* view.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = view.h; sourceTree = "<group>"; };
 		75A2A7901DA5934300A983D8 /* breadwallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = breadwallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2620,6 +2621,16 @@
 			path = tools;
 			sourceTree = "<group>";
 		};
+		759B4BDB203E5A31002C68CA /* bcash */ = {
+			isa = PBXGroup;
+			children = (
+				759B4BDC203E5A31002C68CA /* BRBCashParams.h */,
+				759B4BDD203E5A31002C68CA /* BRBCashAddr.c */,
+				759B4BDE203E5A31002C68CA /* BRBCashAddr.h */,
+			);
+			path = bcash;
+			sourceTree = "<group>";
+		};
 		75A2A7871DA5934300A983D8 = {
 			isa = PBXGroup;
 			children = (
@@ -2668,7 +2679,6 @@
 				CE20C8F11DBAF71500C8397A /* ApplicationController.swift */,
 				75DF48381F62328400FC2DD3 /* Geth.swift */,
 				754AE0BB1DFE8A46007FD001 /* BRCore.swift */,
-				75152F33202E32640079E476 /* BRBCashParams.swift */,
 				CEE659E61F65A936001FF29D /* RetryTimer.swift */,
 				CE8CD8DC1E2D9EF200785E02 /* Sender.swift */,
 				CE74F58C1E3BA85600ED5FA9 /* ExchangeUpdater.swift */,
@@ -2875,6 +2885,7 @@
 				75DC77CE1DAA05B500932D9A /* BRWallet.h */,
 				CE1B66E520222E3E003B4692 /* BRChainParams.h */,
 				755CD3181DAA099D0075898E /* module.modulemap */,
+				759B4BDB203E5A31002C68CA /* bcash */,
 				755CD3191DAA0A110075898E /* secp256k1 */,
 				75DC783C1DAA05B500932D9A /* test.c */,
 			);
@@ -3285,7 +3296,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75152F34202E32650079E476 /* BRBCashParams.swift in Headers */,
 				CE1B66E620222E3F003B4692 /* BRChainParams.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3948,6 +3958,7 @@
 				755CD9E61DAA1A270075898E /* BRSet.c in Sources */,
 				755CD9E21DAA1A270075898E /* BRMerkleBlock.c in Sources */,
 				755CD9DC1DAA1A270075898E /* BRBIP32Sequence.c in Sources */,
+				759B4BDF203E5A32002C68CA /* BRBCashAddr.c in Sources */,
 				755CD9E81DAA1A270075898E /* BRWallet.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4057,7 +4068,6 @@
 				CE2DC1391EBC36EE000FE727 /* Prompt.swift in Sources */,
 				CE83DE2A1E9EB7F600D07636 /* SendAmountCell.swift in Sources */,
 				22A9A9521DF61945000F0016 /* BRKVStorePlugin.swift in Sources */,
-				75152F35202E34C40079E476 /* BRBCashParams.swift in Sources */,
 				CEAFC8611E5D5B0500E4FD06 /* SegmentedButton.swift in Sources */,
 				CE30F0E61EB27844004B8EE5 /* PhoneWCSessionManager.swift in Sources */,
 				7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */,
