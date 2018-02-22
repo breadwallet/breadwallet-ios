@@ -198,6 +198,9 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
             } else if let request = PaymentRequest(string: uri) {
                 saveEvent("scan.bitcoinUri")
                 createPaymentRequestSuccess(request: request)
+            } else if uri.isValidBCHAddress, let request = PaymentRequest(string: uri.bitcoinAddr) { // XXX this will show the bitcoin address instead of the bCashAddr in the send view
+                saveEvent("scan.bCashAddr")
+                createPaymentRequestSuccess(request: request)
             } else {
                 guide.state = .negative
             }

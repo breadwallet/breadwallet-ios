@@ -16,11 +16,21 @@ extension String {
     }
 
     var isValidBCHAddress: Bool {
-        var addr = [CChar](repeating:0, 55);
-        BRBCashAddrDecode(&addr, self)
-        return String(cString: addr).isValidAddress
+        return bitcoinAddr.isValidAddress
     }
 
+    var bCashAddr: String {
+        var addr = [CChar](repeating: 0, count: 55)
+        BRBCashAddrEncode(&addr, self)
+        return String(cString: addr)
+    }
+    
+    var bitcoinAddr: String {
+        var addr = [CChar](repeating: 0, count: 36)
+        BRBCashAddrDecode(&addr, self)
+        return String(cString: addr)
+    }
+    
     var isValidEthAddress: Bool {
         let pattern = "^0[xX][0-9a-fA-F]{40}$"
         return range(of: pattern, options: .regularExpression) != nil
