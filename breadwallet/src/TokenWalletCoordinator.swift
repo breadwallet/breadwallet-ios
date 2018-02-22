@@ -24,39 +24,5 @@ class TokenWalletCoordinator {
     }
 
     @objc private func refresh() {
-        guard let token = currency.state.token,
-            let receiveAddress = currency.state.receiveAddress else { return }
-        let tokenAddress = token.address
-
-        apiClient.tokenBalance(tokenAddress: tokenAddress, address: self.currency.state.receiveAddress!, callback: { balance in
-            DispatchQueue.main.async {
-                Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(bigBalance: balance)))
-            }
-        })
-
-        apiClient.tokenHistory(tokenAddress: tokenAddress, ethAddress: receiveAddress) { events in
-            let newViewModels = events.sorted { $0.timeStamp > $1.timeStamp }.map {
-                ERC20Transaction(event: $0, address: receiveAddress, token: token)
-            }
-
-            let oldViewModels = self.currency.state.transactions
-            let oldCompleteViewModels = oldViewModels.filter { $0.status != .pending }
-            let oldPendingViewModels = oldViewModels.filter { $0.status == .pending }
-
-            let mergedViewModels: [Transaction]
-            if oldPendingViewModels.count > 0 {
-                if (oldPendingViewModels.count + oldCompleteViewModels.count) == newViewModels.count {
-                    mergedViewModels = newViewModels
-                } else {
-                    mergedViewModels = oldPendingViewModels + newViewModels
-                }
-            } else {
-                mergedViewModels = newViewModels
-            }
-
-            DispatchQueue.main.async {
-                Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(transactions: mergedViewModels)))
-            }
-        }
     }
 }

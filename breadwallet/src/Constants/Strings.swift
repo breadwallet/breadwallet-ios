@@ -605,19 +605,6 @@ enum S {
         static let totalLabel = NSLocalizedString("Confirmation.totalLabel", value: "Total Cost:", comment: "Total Cost: ($5.00)")
     }
 
-    enum BCH {
-        static let title = NSLocalizedString("BCH.title", value: "Withdraw BCH", comment: "Widthdraw BCH view title")
-        static let body = NSLocalizedString("BCH.body", value: "Enter a destination BCH address below. All BCH in your wallet at the time of the fork (%1$@) will be sent.", comment: "Send BCH view body.")
-        static let txHashHeader = NSLocalizedString("BCH.txHashHeader", value: "BCH Transaction ID", comment: "Tx Hash button header")
-        static let paymentProtocolError = NSLocalizedString("BCH.paymentProtocolError", value: "Payment Protocol Requests are not supported for BCH transactions", comment: "Attempted to scan unsupported qr code error message.")
-        static let noAddressError = NSLocalizedString("BCH.noAddressError", value: "Please enter an address", comment: "No address error message")
-        static let confirmationTitle = NSLocalizedString("BCH.confirmationTitle", value: "Confirmation", comment: "Confirmation alert title")
-        static let confirmationMessage = NSLocalizedString("BCH.confirmationMessage", value: "Confirm sending %1$@ to %2$@", comment: "Confirm sending <$5.00> to <address>?")
-        static let successMessage = NSLocalizedString("BCH.successMessage", value: "BCH was successfully sent.", comment: "BCH successfully sent alert message")
-        static let hashCopiedMessage = NSLocalizedString("BCH.hashCopiedMessage", value: "Transaction ID copied", comment: "Transaction ID copied message")
-        static let genericError = NSLocalizedString("BCH.genericError", value: "Your account does not contain any BCH, or you received BCH after the fork.", comment: "Generic bch erorr message")
-    }
-
     enum NodeSelector {
         static let manualButton = NSLocalizedString("NodeSelector.manualButton", value: "Switch to Manual Mode", comment: "Switch to manual mode button label")
         static let automaticButton = NSLocalizedString("NodeSelector.automaticButton", value: "Switch to Automatic Mode", comment: "Switch to automatic mode button label")
