@@ -16,7 +16,9 @@ extension String {
     }
 
     var isValidBCHAddress: Bool {
-        return isValidAddress
+        var addr = [CChar](repeating:0, 55);
+        BRBCashAddrDecode(&addr, self)
+        return String(cString: addr).isValidAddress
     }
 
     var isValidEthAddress: Bool {
