@@ -138,10 +138,11 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         bitcoinSwitch.valueChanged = strongify(self) { myself in
             let newIndex = myself.bitcoinSwitch.selectedSegmentIndex
             if newIndex == 1 {
-                //TODO:BCH multi-currency support?
                 Store.perform(action: WalletChange(Currencies.btc).setMaxDigits(8))
+                Store.perform(action: WalletChange(Currencies.bch).setMaxDigits(8))
             } else {
                 Store.perform(action: WalletChange(Currencies.btc).setMaxDigits(2))
+                Store.perform(action: WalletChange(Currencies.bch).setMaxDigits(2))
             }
         }
 
