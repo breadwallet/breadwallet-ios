@@ -8,13 +8,20 @@
 
 import UIKit
 
-class HomeScreenViewController : UIViewController, Subscriber {
+class HomeScreenViewController : UIViewController, Subscriber, Trackable {
     
+    var primaryWalletManager: WalletManager? {
+        didSet {
+            attemptShowPrompt()
+        }
+    }
     private let currencyList = AssetListTableView()
     private let subHeaderView = UIView()
     private let logo = UIImageView(image:#imageLiteral(resourceName: "LogoGradient"))
     private let total = UILabel(font: .customBold(size: 28.0), color: .darkGray)
     private let totalHeader = UILabel(font: .customMedium(size: 16.0), color: .mediumGray)
+    private let prompt = UIView()
+    private var promptHiddenConstraint: NSLayoutConstraint!
 
     var didSelectCurrency : ((CurrencyDef) -> Void)?
     var didTapSecurity: (() -> Void)?
@@ -23,7 +30,8 @@ class HomeScreenViewController : UIViewController, Subscriber {
     
     // MARK: -
     
-    init() {
+    init(primaryWalletManager: WalletManager?) {
+        self.primaryWalletManager = primaryWalletManager
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -33,14 +41,6 @@ class HomeScreenViewController : UIViewController, Subscriber {
         currencyList.didTapSupport = didTapSupport
         currencyList.didTapSettings = didTapSettings
         
-        view.backgroundColor = .whiteBackground
-        subHeaderView.backgroundColor = .whiteBackground
-        subHeaderView.clipsToBounds = false
-        
-        navigationController?.navigationBar.isTranslucent = true
-        navigationController?.navigationBar.shadowImage = #imageLiteral(resourceName: "TransparentPixel")
-        navigationController?.navigationBar.setBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .default)
-
         Store.subscribe(self, selector: {
             var result = false
             let oldState = $0
@@ -59,17 +59,44 @@ class HomeScreenViewController : UIViewController, Subscriber {
                         callback: { _ in
             self.updateTotalAssets()
         })
+        
+        // prompts
+        Store.subscribe(self, name: .didUpgradePin, callback: { _ in
+            if self.currentPrompt?.type == .upgradePin {
+                self.currentPrompt = nil
+            }
+        })
+        Store.subscribe(self, name: .didEnableShareData, callback: { _ in
+            if self.currentPrompt?.type == .shareData {
+                self.currentPrompt = nil
+            }
+        })
+        Store.subscribe(self, name: .didWritePaperKey, callback: { _ in
+            if self.currentPrompt?.type == .paperKey {
+                self.currentPrompt = nil
+            }
+        })
 
         addSubviews()
         addConstraints()
         setInitialData()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        DispatchQueue.main.asyncAfter(deadline: .now() + promptDelay) { [weak self] in
+            self?.attemptShowPrompt()
+        }
+    }
+    
+    // MARK: Setup
 
     private func addSubviews() {
         view.addSubview(subHeaderView)
         subHeaderView.addSubview(totalHeader)
         subHeaderView.addSubview(total)
         subHeaderView.addSubview(logo)
+        view.addSubview(prompt)
     }
 
     private func addConstraints() {
@@ -101,22 +128,39 @@ class HomeScreenViewController : UIViewController, Subscriber {
             totalHeader.trailingAnchor.constraint(equalTo: total.trailingAnchor),
             totalHeader.bottomAnchor.constraint(equalTo: total.topAnchor, constant: 0.0) ])
         
+        promptHiddenConstraint = prompt.heightAnchor.constraint(equalToConstant: 0.0)
+        prompt.constrain([
+            prompt.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            prompt.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            prompt.topAnchor.constraint(equalTo: subHeaderView.bottomAnchor),
+            promptHiddenConstraint
+            ])
+        
         addChildViewController(currencyList, layout: {
             currencyList.view.constrain([
                 currencyList.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                currencyList.view.topAnchor.constraint(equalTo: subHeaderView.bottomAnchor),
+                currencyList.view.topAnchor.constraint(equalTo: prompt.bottomAnchor),
                 currencyList.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 currencyList.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
         })
     }
 
     private func setInitialData() {
+        view.backgroundColor = .whiteBackground
+        subHeaderView.backgroundColor = .whiteBackground
+        subHeaderView.clipsToBounds = false
+        
+        navigationItem.titleView = UIView()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.shadowImage = #imageLiteral(resourceName: "TransparentPixel")
+        navigationController?.navigationBar.setBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .default)
+        
         totalHeader.text = S.HomeScreen.totalAssets
         totalHeader.textAlignment = .left
         total.textAlignment = .left
         total.text = "$0" //TODO - currency symbol
         title = ""
-        navigationItem.titleView = UIView()
+        
         updateTotalAssets()
     }
 
@@ -134,6 +178,79 @@ class HomeScreenViewController : UIViewController, Subscriber {
         format.currencySymbol = "$" //TODO - currency symbol
         self.total.text = format.string(from: NSNumber(value: fiatTotal))
     }
+    
+    // MARK: - Prompt
+    
+    private let promptDelay: TimeInterval = 0.6
+    
+    private var currentPrompt: Prompt? {
+        didSet {
+            if currentPrompt != oldValue {
+                var afterFadeOut: TimeInterval = 0.0
+                if let oldPrompt = oldValue {
+                    afterFadeOut = 0.15
+                    UIView.animate(withDuration: 0.2, animations: {
+                        oldValue?.alpha = 0.0
+                    }, completion: { _ in
+                        oldPrompt.removeFromSuperview()
+                    })
+                }
+                
+                if let newPrompt = currentPrompt {
+                    newPrompt.alpha = 0.0
+                    prompt.addSubview(newPrompt)
+                    newPrompt.constrain(toSuperviewEdges: .zero)
+                    prompt.layoutIfNeeded()
+                    promptHiddenConstraint.isActive = false
+
+                    // fade-in after fade-out and layout
+                    UIView.animate(withDuration: 0.2, delay: afterFadeOut + 0.15, options: .curveEaseInOut, animations: {
+                        newPrompt.alpha = 1.0
+                    })
+                } else {
+                    promptHiddenConstraint.isActive = true
+                }
+                
+                // layout after fade-out
+                UIView.animate(withDuration: 0.2, delay: afterFadeOut, options: .curveEaseInOut, animations: {
+                    self.view.layoutIfNeeded()
+                })
+            }
+        }
+    }
+    
+    private func attemptShowPrompt() {
+        guard let walletManager = primaryWalletManager else {
+            currentPrompt = nil
+            return
+        }
+        if let type = PromptType.nextPrompt(walletManager: walletManager) {
+            self.saveEvent("prompt.\(type.name).displayed")
+            currentPrompt = Prompt(type: type)
+            currentPrompt!.dismissButton.tap = { [unowned self] in
+                self.saveEvent("prompt.\(type.name).dismissed")
+                self.currentPrompt = nil
+            }
+            currentPrompt!.continueButton.tap = { [unowned self] in
+                // TODO:BCH move out of home screen
+                if let trigger = type.trigger(currency: Currencies.btc) {
+                    Store.trigger(name: trigger)
+                }
+                self.saveEvent("prompt.\(type.name).trigger")
+                self.currentPrompt = nil
+            }
+            if type == .biometrics {
+                UserDefaults.hasPromptedBiometrics = true
+            }
+            if type == .shareData {
+                UserDefaults.hasPromptedShareData = true
+            }
+        } else {
+            currentPrompt = nil
+        }
+    }
+    
+    // MARK: -
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

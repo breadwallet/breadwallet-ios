@@ -428,7 +428,7 @@ enum S {
     
     enum HomeScreen {
         static let totalAssets = NSLocalizedString("HomeScreen.totalAssets", value: "total assets", comment: "header")
-        static let portfolio = NSLocalizedString("HomeScreen.portfolio", value: "Portfolio", comment: "Section header")
+        static let portfolio = NSLocalizedString("HomeScreen.portfolio", value: "Wallets", comment: "Section header")
         static let admin = NSLocalizedString("HomeScreen.admin", value: "Admin", comment: "Section header")
     }
 
