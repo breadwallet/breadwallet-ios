@@ -551,6 +551,7 @@ class BRPeerManager {
     let bcashParams = [BRBCashParams]
     let testNetParams = [BRTestNetParams]
     let bcashTestNetParams = [BRBCashTestNetParams]
+    let currency: CurrencyDef
 
     init?(currency: CurrencyDef, wallet: BRWallet, earliestKeyTime: TimeInterval, blocks: [BRBlockRef?], peers: [BRPeer],
           listener: BRPeerManagerListener) {
@@ -560,6 +561,7 @@ class BRPeerManager {
                                           &blockRefs, blockRefs.count, peers, peers.count) else { return nil }
         self.listener = listener
         self.cPtr = cPtr
+        self.currency = currency
         
         BRPeerManagerSetCallbacks(cPtr, Unmanaged.passUnretained(self).toOpaque(),
         { (info) in // syncStarted
@@ -602,6 +604,9 @@ class BRPeerManager {
     
     // connect to bitcoin peer-to-peer network (also call this whenever networkIsReachable() status changes)
     func connect() {
+        if currency.code == Currencies.bch.code {
+            UserDefaults.hasBchConnected = true
+        }
         if let fixedAddress = UserDefaults.customNodeIP {
             setFixedPeer(address: fixedAddress, port: UserDefaults.customNodePort ?? C.standardPort)
         }
