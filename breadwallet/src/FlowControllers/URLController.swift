@@ -93,7 +93,7 @@ class URLController : Trackable {
     }
 
     private func handleBitcoinUri(_ uri: URL) -> Bool {
-        if let request = PaymentRequest(string: uri.absoluteString) {
+        if let request = PaymentRequest(string: uri.absoluteString, currency: Currencies.btc) {
             Store.trigger(name: .receivedPaymentRequest(request))
             return true
         } else {
