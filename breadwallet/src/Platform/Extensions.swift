@@ -107,11 +107,7 @@ public extension String {
             }
         }
         return ret
-    }
-    
-    var cStr: UnsafePointer<CChar>? {
-        return (self as NSString).utf8String
-    }
+    }    
 }
 
 extension UserDefaults {
