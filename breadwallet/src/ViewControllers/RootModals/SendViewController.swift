@@ -97,13 +97,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[5] : -C.padding[2]) ])
         addButtonActions()
         Store.subscribe(self, selector: { $0[self.currency].balance != $1[self.currency].balance },
-                        callback: {
+                        callback: { [unowned self] in
                             if let balance = $0[self.currency].balance {
                                 self.balance = balance
                             }
         })
-        Store.subscribe(self, selector: { $0[self.currency].fees != $1[self.currency].fees }, callback: {
+        Store.subscribe(self, selector: { $0[self.currency].fees != $1[self.currency].fees }, callback: { [unowned self] in
             if let fees = $0[self.currency].fees {
+                self.amountView.canEditFee = (fees.regular != fees.economy) || self.currency.matches(Currencies.btc)
                 if let feeType = self.feeType {
                     switch feeType {
                     case .regular :
