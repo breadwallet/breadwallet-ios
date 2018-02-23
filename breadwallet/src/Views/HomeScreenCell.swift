@@ -39,8 +39,7 @@ class HomeScreenCell : UITableViewCell, Subscriber {
     
     private var isSyncIndicatorVisible: Bool = false {
         didSet {
-            syncIndicator.isHidden = !isSyncIndicatorVisible
-            tokenBalance.isHidden = isSyncIndicatorVisible
+            UIView.crossfade(tokenBalance, syncIndicator, toRight: isSyncIndicatorVisible, duration: 0.3)
             fiatBalance.textColor = isSyncIndicatorVisible ? .disabledWhiteText : .white
         }
     }

@@ -145,14 +145,6 @@ enum S {
         static let invalid = NSLocalizedString("Transaction.invalid", value:"INVALID", comment: "Invalid transaction")
         static let complete = NSLocalizedString("Transaction.complete", value:"Complete", comment: "Transaction complete label")
         static let waiting = NSLocalizedString("Transaction.waiting", value:"Waiting to be confirmed. Some merchants require confirmation to complete a transaction. Estimated time: 1-2 hours.", comment: "Waiting to be confirmed string")
-        static let starting = NSLocalizedString("Transaction.starting", value: "Starting balance: %1$@", comment: "eg. Starting balance: $50.00")
-        static let fee = NSLocalizedString("Transaction.fee", value: "(%1$@ fee)", comment: "(b600 fee)")
-        static let ending = NSLocalizedString("Transaction.ending", value: "Ending balance: %1$@", comment: "eg. Ending balance: $50.00")
-        static let exchangeOnDaySent = NSLocalizedString("Transaction.exchangeOnDaySent", value: "Exchange rate when sent:", comment: "Exchange rate on date header")
-        static let exchangeOnDayReceived = NSLocalizedString("Transaction.exchangeOnDayReceived", value: "Exchange rate when received:", comment: "Exchange rate on date header")
-        static let receivedStatus = NSLocalizedString("Transaction.receivedStatus", value: "In progress: %1$@", comment: "Receive status text: 'In progress: 20%'")
-        static let sendingStatus = NSLocalizedString("Transaction.sendingStatus", value: "In progress: %1$@", comment: "Send status text: 'In progress: 20%'")
-        static let available = NSLocalizedString("Transaction.available", value: "Available to Spend", comment: "Availability status text")
         static let pending = NSLocalizedString("Transaction.pending", value: "Pending", comment: "Transaction is pending status text")
         static let confirming = NSLocalizedString("Transaction.confirming", value: "In Progress", comment: "Transaction is confirming status text")
         static let failed = NSLocalizedString("Transaction.failed", value: "Failed", comment: "Transaction failed status text")
@@ -185,24 +177,12 @@ enum S {
         static let amountWhenReceived = NSLocalizedString("TransactionDetails.amountWhenReceived", value: "%1$@ when received %2$@ now", comment: "$100 when received $200 now")
         static let amountWhenSent = NSLocalizedString("TransactionDetails.amountWhenReceived", value: "%1$@ when sent %2$@ now", comment: "$100 when sent $200 now")
         
-        // OLD
-        static let title = NSLocalizedString("TransactionDetails.title", value:"Transaction Details", comment: "Transaction Details Title")
-        
         static let emptyMessage = NSLocalizedString("TransactionDetails.emptyMessage", value:"Your transactions will appear here.", comment: "Empty transaction list message.")
-        static let more = NSLocalizedString("TransactionDetails.more", value:"More...", comment: "More button title")
-        
-        static let sentAmountDescription = NSLocalizedString("TransactionDetails.sentAmountDescription", value: "Sent <b>%1$@</b>", comment: "Sent $5.00")
-        static let receivedAmountDescription = NSLocalizedString("TransactionDetails.receivedAmountDescription", value: "Received <b>%1$@</b>", comment: "Received $5.00")
-        static let movedAmountDescription = NSLocalizedString("TransactionDetails.movedAmountDescription", value: "Moved <b>%1$@</b>", comment: "Moved $5.00")
-        static let account = NSLocalizedString("TransactionDetails.account", value: "account", comment: "e.g. I received money from an account.")
         static let sent = NSLocalizedString("TransactionDetails.sent", value:"Sent %1$@", comment: "Sent $5.00 (sent title 1/2)")
         static let received = NSLocalizedString("TransactionDetails.received", value:"Received %1$@", comment: "Received $5.00 (received title 1/2)")
         static let moved = NSLocalizedString("TransactionDetails.moved", value:"Moved %1$@", comment: "Moved $5.00")
-        static let to = NSLocalizedString("TransactionDetails.to", value:"to %1$@", comment: "[sent] to <address> (sent title 2/2)")
-        static let from = NSLocalizedString("TransactionDetails.from", value:"at %1$@", comment: "[received] at <address> (received title 2/2)")
         static let blockHeightLabel = NSLocalizedString("TransactionDetails.blockHeightLabel", value: "Confirmed in Block", comment: "Block height label")
         static let notConfirmedBlockHeightLabel = NSLocalizedString("TransactionDetails.notConfirmedBlockHeightLabel", value: "Not Confirmed", comment: "eg. Confirmed in Block: Not Confirmed")
-        static let ethFrom = NSLocalizedString("TransactionDetails.ethFrom", value: "from %1$@", comment: "[received ] from <address>")
         
         static let initializedTimestampHeader = NSLocalizedString("TransactionDetails.initializedTimestampHeader", value:"Initialized", comment: "Timestamp section header for incomplete tx")
         static let completeTimestampHeader = NSLocalizedString("TransactionDetails.completeTimestampHeader", value:"Complete", comment: "Timestamp section header for complete tx")
@@ -395,11 +375,6 @@ enum S {
         static let step = NSLocalizedString("WritePaperPhrase.step", value:"%1$d of %2$d", comment: "1 of 3")
         static let next = NSLocalizedString("WritePaperPhrase.next", value:"Next", comment: "button label")
         static let previous = NSLocalizedString("WritePaperPhrase.previous", value:"Previous", comment: "button label")
-    }
-
-    enum TransactionDirection {
-        static let to = NSLocalizedString("TransactionDirection.to", value:"Sent to this Address", comment: "(this transaction was) Sent to this address:")
-        static let received = NSLocalizedString("TransactionDirection.address", value:"Received at this Address", comment: "(this transaction was) Received at this address:")
     }
 
     enum RequestAnAmount {

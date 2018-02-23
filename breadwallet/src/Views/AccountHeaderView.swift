@@ -35,8 +35,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     
     private var isSyncIndicatorVisible: Bool = false {
         didSet {
-            syncIndicator.isHidden = !isSyncIndicatorVisible
-            balanceLabel.isHidden = isSyncIndicatorVisible
+            UIView.crossfade(balanceLabel, syncIndicator, toRight: isSyncIndicatorVisible, duration: 0.3)
         }
     }
 
@@ -106,7 +105,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private func setup() {
         addSubviews()
         addConstraints()
-        addShadow()
+        //addShadow()
         setData()
         addSubscriptions()
     }

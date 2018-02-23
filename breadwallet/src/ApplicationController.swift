@@ -249,7 +249,7 @@ class ApplicationController : Subscriber, Trackable {
             homeScreen.primaryWalletManager = primaryWalletManager
         }
         hasPerformedWalletDependentInitialization = true
-        modalPresenter = ModalPresenter(walletManagers: walletManagers, window: window, apiClient: noAuthApiClient, gethManager: nil)
+        modalPresenter = ModalPresenter(walletManagers: walletManagers, window: window, apiClient: noAuthApiClient)
         startFlowController = StartFlowPresenter(walletManager: primaryWalletManager, rootViewController: rootViewController)
         
         walletManagers.forEach { (currencyCode, walletManager) in
