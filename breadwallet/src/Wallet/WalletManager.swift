@@ -190,11 +190,8 @@ extension WalletManager : BRPeerManagerListener, Trackable {
     func syncStarted() {
         DispatchQueue.main.async() {
             self.db?.setDBFileAttributes()
-            //endBackgroundTask()
-            //startBackgroundTask()
             self.progressTimer = Timer.scheduledTimer(timeInterval: self.progressUpdateInterval, target: self, selector: #selector(self.updateProgress), userInfo: nil, repeats: true)
             Store.perform(action: WalletChange(self.currency).setSyncingState(.syncing))
-            //startActivity()
         }
     }
 
@@ -212,8 +209,6 @@ extension WalletManager : BRPeerManagerListener, Trackable {
 
                 Store.perform(action: WalletChange(self.currency).setSyncingState(.connecting))
                 self.saveEvent("event.syncErrorMessage", attributes: ["message": "\(description) (\(errorCode))"])
-                //endActivity()
-
                 if self.retryTimer == nil && self.networkIsReachable() {
                     self.retryTimer = RetryTimer()
                     self.retryTimer?.callback = strongify(self) { myself in
@@ -222,7 +217,6 @@ extension WalletManager : BRPeerManagerListener, Trackable {
                     self.retryTimer?.start()
                 }
             case .none:
-                //endBackgroundTask()
                 self.retryTimer?.stop()
                 self.retryTimer = nil
                 if let height = self.peerManager?.lastBlockHeight {
@@ -231,7 +225,6 @@ extension WalletManager : BRPeerManagerListener, Trackable {
                 self.progressTimer?.invalidate()
                 self.progressTimer = nil
                 Store.perform(action: WalletChange(self.currency).setSyncingState(.success))
-                //endActivity()
             }
         }
     }
