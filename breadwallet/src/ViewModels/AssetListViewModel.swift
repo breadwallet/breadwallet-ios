@@ -31,7 +31,7 @@ struct AssetListViewModel {
         guard let balance = currency.state.balance else { return "" }
         return DisplayAmount(amount: Satoshis(rawValue: balance),
                              selectedRate: rate,
-                             minimumFractionDigits: (rate == nil) ? currency.state.maxDigits : nil,
+                             minimumFractionDigits: nil,
                              currency: currency).description
     }
 }
