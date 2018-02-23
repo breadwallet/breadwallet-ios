@@ -107,8 +107,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         addSubviews()
         addConstraints()
         addShadow()
-        addSubscriptions()
         setData()
+        addSubscriptions()
     }
 
     private func setData() {

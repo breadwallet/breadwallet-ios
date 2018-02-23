@@ -95,6 +95,14 @@ class ProgressBar: UIView {
             progress.bottomAnchor.constraint(equalTo: bottomAnchor),
             progressWidth
             ])
+        
+        // pulse animation
+        UIView.animate(withDuration: 1.0,
+                       delay: 0.5,
+                       options: [.repeat, .autoreverse],
+                       animations: {
+                        self.progress.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+        }, completion: nil)
     }
     
     override func layoutSubviews() {
@@ -112,24 +120,9 @@ class ProgressBar: UIView {
         progressWidth.isActive = false
         progressWidth = progress.widthAnchor.constraint(equalTo: widthAnchor, multiplier: ratio)
         progressWidth.isActive = true
+        
         UIView.animate(withDuration: 0.2) {
             self.progress.setNeedsLayout()
-        }
-        
-        // pulse
-        if ratio > 0.0 {
-            progress.layer.removeAllAnimations()
-            UIView.animate(withDuration: 1.0,
-                           delay: 0.5,
-                           options: [.repeat, .autoreverse],
-                           animations: {
-                            let color = self.progress.backgroundColor!
-                            var alpha: CGFloat = 0.0
-                            color.getWhite(nil, alpha: &alpha)
-                            self.progress.backgroundColor = color.withAlphaComponent(1.3 - alpha)
-            }, completion: nil)
-        } else {
-            progress.layer.removeAllAnimations()
         }
     }
     
