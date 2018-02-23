@@ -118,7 +118,20 @@ extension BRAPIClient {
             }
         }.resume()
     }
-    
+
+    func fetchUTXOS(address: String, currency: CurrencyDef, completion: @escaping ([[String: Any]]?)->Void) {
+        let path = currency.matches(Currencies.btc) ? "/q/addrs/utxo" : "/q/addrs/utxo?currency=bch"
+        var req = URLRequest(url: url(path))
+        req.httpMethod = "POST"
+        req.httpBody = "addrs=\(address)".data(using: .utf8)
+        dataTaskWithRequest(req, handler: { data, resp, error in
+            guard error == nil else { completion(nil); return }
+            guard let data = data,
+                let jsonData = try? JSONSerialization.jsonObject(with: data, options: []),
+                let json = jsonData as? [[String: Any]] else { completion(nil); return }
+                completion(json)
+        }).resume()
+    }
 }
 
 struct ExchangeRateResponse : Codable {
