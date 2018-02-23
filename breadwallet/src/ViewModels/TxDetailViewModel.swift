@@ -125,7 +125,7 @@ extension TxDetailViewModel {
                                    selectedRate: nil,
                                    minimumFractionDigits: nil,
                                    currency: tx.currency,
-                                   negative: true)
+                                   negative: (tx.direction == .sent))
         return amount.description
     }
     

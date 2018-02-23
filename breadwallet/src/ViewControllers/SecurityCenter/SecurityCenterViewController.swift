@@ -55,6 +55,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     }
 
     override func viewDidLoad() {
+        title = ""
         setupSubviewProperties()
         addSubviews()
         addConstraints()
