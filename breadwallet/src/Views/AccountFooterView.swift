@@ -90,11 +90,9 @@ class AccountFooterView: UIView, Trackable {
         
         let buttonWidth = (self.bounds.width - (paddingWidth * CGFloat(buttonCount+1))) / CGFloat(buttonCount)
         let buttonHeight = CGFloat(44.0)
-        
-        let buttons = [sendButton, receiveButton, buyButton]
-        let constraints = buttons.flatMap { $0.customView?.widthAnchor.constraint(equalToConstant: buttonWidth) } +
-            buttons.flatMap { $0.customView?.heightAnchor.constraint(equalToConstant: buttonHeight) }
-        NSLayoutConstraint.activate(constraints)
+        [sendButton, receiveButton, buyButton].forEach {
+            $0.customView?.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonHeight)
+        }
     }
 
     @objc private func send() { sendCallback?() }
