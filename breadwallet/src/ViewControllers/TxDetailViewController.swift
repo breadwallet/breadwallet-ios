@@ -21,7 +21,7 @@ class TxDetailViewController: UIViewController, Subscriber {
     
     private let container = UIView()
     private let tapView = UIView()
-    private let header = ModalHeaderView(title: S.TransactionDetails.title, style: .transaction)
+    private let header = ModalHeaderView(title: "", style: .transaction)
     private let footer = UIView()
     private let separator = UIView()
     private let detailsButton = UIButton(type: .custom)

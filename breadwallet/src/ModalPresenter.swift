@@ -14,19 +14,17 @@ class ModalPresenter : Subscriber, Trackable {
     //MARK: - Public
     let primaryWalletManager: WalletManager
     let walletManagers: [String: WalletManager]
-    var gethManager: GethManager?
     lazy var supportCenter: SupportCenterContainer = {
         return SupportCenterContainer(walletManager: self.primaryWalletManager, apiClient: self.noAuthApiClient)
     }()
     
-    init(walletManagers: [String: WalletManager], window: UIWindow, apiClient: BRAPIClient, gethManager: GethManager?) {
+    init(walletManagers: [String: WalletManager], window: UIWindow, apiClient: BRAPIClient) {
         self.window = window
         self.walletManagers = walletManagers
         self.primaryWalletManager = walletManagers[Currencies.btc.code]!
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular)
         self.wipeNavigationDelegate = StartNavigationDelegate()
         self.noAuthApiClient = apiClient
-        self.gethManager = gethManager
         addSubscriptions()
     }
 
@@ -251,7 +249,6 @@ class ModalPresenter : Subscriber, Trackable {
         let sendVC = SendViewController(sender: Sender(walletManager: walletManager, kvStore: kvStore, currency: currency),
                                         walletManager: walletManager,
                                         initialRequest: currentRequest,
-                                        gethManager: nil,
                                         currency: currency)
         currentRequest = nil
 

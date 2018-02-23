@@ -71,7 +71,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         super.viewDidLoad()
 
         tableView.register(TxListCell.self, forCellReuseIdentifier: transactionCellIdentifier)
-        tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: headerCellIdentifier)
+        tableView.register(TxListCell.self, forCellReuseIdentifier: headerCellIdentifier)
 
         tableView.separatorStyle = .none
         tableView.estimatedRowHeight = 60.0
@@ -200,14 +200,9 @@ extension TransactionsTableViewController {
 
     private func headerCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath)
-        if let transactionCell = cell as? TransactionTableViewCell {
-            transactionCell.setStyle(.single)
-            transactionCell.selectionStyle = .none
-            transactionCell.container.subviews.forEach {
-                $0.removeFromSuperview()
-            }
+        if let containerCell = cell as? TxListCell {
             if let prompt = currentPrompt {
-                transactionCell.container.addSubview(prompt)
+                containerCell.contentView.addSubview(prompt)
                 prompt.constrain(toSuperviewEdges: nil)
             }
         }
@@ -218,7 +213,7 @@ extension TransactionsTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
         if let transactionCell = cell as? TxListCell,
             let rate = rate {
-            let viewModel = TxListViewModel(tx: transactions[indexPath.row], walletManager: walletManager)
+            let viewModel = TxListViewModel(tx: transactions[indexPath.row])
             transactionCell.setTransaction(viewModel,
                                            isBtcSwapped: isBtcSwapped,
                                            rate: rate,

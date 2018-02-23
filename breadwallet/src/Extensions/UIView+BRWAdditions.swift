@@ -197,4 +197,26 @@ extension UIView {
             leadingAnchor.constraint(equalTo: toView.leadingAnchor),
             topAnchor.constraint(equalTo: toView.bottomAnchor, constant: topPadding)])
     }
+    
+    /// Cross-fades between two views by animating their alpha then setting one or the other hidden.
+    /// - parameters:
+    ///     - lhs: left view
+    ///     - rhs: right view
+    ///     - toRight: fade to the right view if true, fade to the left view if false
+    ///     - duration: animation duration
+    ///
+    static func crossfade(_ lhs: UIView, _ rhs: UIView, toRight: Bool, duration: TimeInterval) {
+        lhs.alpha = toRight ? 1.0 : 0.0
+        rhs.alpha = toRight ? 0.0 : 1.0
+        lhs.isHidden = false
+        rhs.isHidden = false
+        
+        UIView.animate(withDuration: duration, animations: {
+            lhs.alpha = toRight ? 0.0 : 1.0
+            rhs.alpha = toRight ? 1.0 : 0.0
+        }) { _ in
+            lhs.isHidden = toRight
+            rhs.isHidden = !toRight
+        }
+    }
 }

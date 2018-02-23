@@ -25,7 +25,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     var initialAddress: String?
     var isPresentedFromLock = false
 
-    init(sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil, gethManager: GethManager? = nil, currency: CurrencyDef) {
+    init(sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil, currency: CurrencyDef) {
         self.currency = currency
         self.sender = sender
         self.walletManager = walletManager
@@ -33,7 +33,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         self.initialRequest = initialRequest
         self.currencyButton = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: currency.state.maxDigits), type: .tertiary)
         self.addressCell = AddressCell(currency: currency)
-        self.gethManager = gethManager
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
 
         super.init(nibName: nil, bundle: nil)
@@ -59,13 +58,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private var pinPadHeightConstraint: NSLayoutConstraint?
     private var balance: UInt64 = 0
     private var amount: Satoshis?
-    private var ethAmount: GethBigInt?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
     private let initialRequest: PaymentRequest?
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private var feeType: Fee?
-    private let gethManager: GethManager?
     private let currency: CurrencyDef
 
     override func viewDidLoad() {
@@ -286,117 +283,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         confirm.modalPresentationCapturesStatusBarAppearance = true
         present(confirm, animated: true, completion: nil)
         return
-    }
-
-    private func confirmEth() {
-//        guard let ethManager = gethManager else { return }
-//        let confirm = EthConfirmationViewController(amount: amountView.ethOutput, fee: ethManager.fee(isCrowdsale: false), feeType: feeType ?? .regular, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseBiometrics, store: store)
-//        confirm.callback = {
-//            confirm.dismiss(animated: true, completion: {
-//                self.presentEthPin()
-//            })
-//        }
-//        confirmTransitioningDelegate.shouldShowMaskView = false
-//        confirm.transitioningDelegate = confirmTransitioningDelegate
-//        confirm.modalPresentationStyle = .overFullScreen
-//        confirm.modalPresentationCapturesStatusBarAppearance = true
-//        present(confirm, animated: true, completion: nil)
-    }
-
-    private func confirmToken() {
-//        guard let ethManager = gethManager else { return }
-//        //TODO - calculate erc20 token transfer fees correctly
-//        let confirm = EthConfirmationViewController(amount: amountView.tokenOutput, fee: ethManager.fee(isCrowdsale: false), feeType: feeType ?? .regular, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingTouchId: sender.canUseBiometrics)
-//        confirm.callback = {
-//            confirm.dismiss(animated: true, completion: {
-//                self.presentEthPin()
-//            })
-//        }
-//        confirmTransitioningDelegate.shouldShowMaskView = false
-//        confirm.transitioningDelegate = confirmTransitioningDelegate
-//        confirm.modalPresentationStyle = .overFullScreen
-//        confirm.modalPresentationCapturesStatusBarAppearance = true
-//        present(confirm, animated: true, completion: nil)
-    }
-
-    private func presentEthPin() {
-        presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin in
-            guard let myself = self else { return }
-            myself.parent?.view.isFrameChangeBlocked = false
-            myself.sendEth()
-        }
-    }
-
-    private func sendEth() {
-        let amount = amountView.ethOutput
-        guard let address = addressCell.textField.text?.lowercased() else { return }
-        guard let ethManager = gethManager else { return }
-
-        guard address.isValidEthAddress else {
-            return showErrorMessage(S.Send.invalidAddressMessage)
-        }
-
-        guard address != ethManager.address.getHex().lowercased() else {
-            return showErrorMessage(S.Send.ethSendSelf)
-        }
-
-        let tx = ethManager.createTx(forAmount: amount, toAddress: address, nonce: Int64(currency.state.numSent), isCrowdsale: false)
-        let signedTx = ethManager.signTx(tx, ethPrivKey: walletManager.ethPrivKey!)
-        if let error = ethManager.publishTx(signedTx) {
-            let balance = DisplayAmount.ethString(value: ethManager.balance)
-            let sendAmount = DisplayAmount.ethString(value: amount)
-            let fee = DisplayAmount.ethString(value: ethManager.fee(isCrowdsale: false))
-            showErrorMessage(error.localizedDescription + "\nSending: \(sendAmount) from wallet with balance: \(balance) with fee: \(fee)")
-        } else {
-            dismiss(animated: true, completion: {
-                Store.trigger(name: .showStatusBar)
-                if self.isPresentedFromLock {
-                    Store.trigger(name: .loginFromSend)
-                }
-                self.onPublishSuccess?()
-
-                //Add temporary transaction
-                let timestamp = Date().timeIntervalSince1970
-                let tempTx = EthTx(blockNumber: 0, timeStamp: timestamp, value: amount, from: ethManager.address.getHex(), to: address, confirmations: 0, hash: signedTx.getHash(), isError: false)
-                let transactionViewModel = EthTransaction(tx: tempTx, address: ethManager.address.getHex())
-                let newTransactions = [transactionViewModel] + self.currency.state.transactions
-                Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(transactions: newTransactions)))
-            })
-        }
-    }
-
-    private func sendToken() {
-        let amount = amountView.tokenOutput
-        guard let address = addressCell.textField.text?.lowercased() else { return }
-        guard let ethManager = gethManager else { return }
-        guard let token = currency.state.token else { return }
-
-        guard address.isValidEthAddress else {
-            return showErrorMessage(S.Send.invalidAddressMessage)
-        }
-
-        guard address.lowercased() != ethManager.address.getHex().lowercased() else {
-            return showErrorMessage(S.Send.ethSendSelf)
-        }
-
-        if let error = ethManager.transfer(amount: amount, toAddress: address, privKey: walletManager.ethPrivKey!, token: token, nonce: currency.state.numSent) {
-            let balance = DisplayAmount.ethString(value: ethManager.balance)
-            let sendAmount = DisplayAmount.ethString(value: amount)
-            let fee = DisplayAmount.ethString(value: ethManager.fee(isCrowdsale: false))
-            showErrorMessage(error.localizedDescription + "\nSending: \(sendAmount) from wallet with balance: \(balance) with fee: \(fee)")
-        } else {
-            dismiss(animated: true, completion: {
-                Store.trigger(name: .showStatusBar)
-                self.onPublishSuccess?()
-
-                //Add temporary transaction
-                let timestamp = String(Date().timeIntervalSince1970)
-                let tempEvent = Event(timestamp: timestamp, from: ethManager.address.getHex(), to: address, amount: amount.getString(10))
-                let transactionViewModel = ERC20Transaction(event: tempEvent, address: ethManager.address.getHex(), token: token)
-                let newTransactions = [transactionViewModel] + self.currency.state.transactions
-                Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(transactions: newTransactions)))
-            })
-        }
     }
 
     private func handleRequest(_ request: PaymentRequest) {
