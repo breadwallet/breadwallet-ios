@@ -13,6 +13,7 @@ class PhraseView: UIView {
     private let phrase: String
     private let label = UILabel()
 
+
     static let defaultSize = CGSize(width: 128.0, height: 88.0)
 
     var xConstraint: NSLayoutConstraint?

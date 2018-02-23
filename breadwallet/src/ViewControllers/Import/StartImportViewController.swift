@@ -9,18 +9,17 @@
 import UIKit
 import BRCore
 
-private let mainURL = "https://api.breadwallet.com/q/addrs/utxo"
-private let fallbackURL = "https://insight.bitpay.com/api/addrs/utxo"
-private let testnetURL = "https://test-insight.bitpay.com/api/addrs/utxo"
-
 class StartImportViewController : UIViewController {
 
     init(walletManager: WalletManager) {
         self.walletManager = walletManager
+        self.currency = walletManager.currency
+        assert(walletManager.currency is Bitcoin, "Importing only supports bitcoin")
         super.init(nibName: nil, bundle: nil)
     }
 
     private let walletManager: WalletManager
+    private let currency: CurrencyDef
     private let header = RadialGradientView(backgroundColor: .blue, offset: 64.0)
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "ImportIllustration"))
     private let message = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
@@ -149,21 +148,10 @@ class StartImportViewController : UIViewController {
         present(balanceActivity, animated: true, completion: {
             var key = key
             guard let address = key.address() else { return }
-            let urlString = E.isTestnet ? testnetURL : mainURL
-            let request = NSMutableURLRequest(url: URL(string: urlString)!,
-                                              cachePolicy: .reloadIgnoringLocalCacheData,
-                                              timeoutInterval: 20.0)
-            request.httpMethod = "POST"
-            request.httpBody = "addrs=\(address)".data(using: .utf8)
-            let task = URLSession.shared.dataTask(with: request as URLRequest) { [weak self] data, response, error in
-                guard let myself = self else { return }
-                guard error == nil else { print("error: \(error!)"); return }
-                guard let data = data,
-                    let jsonData = try? JSONSerialization.jsonObject(with: data, options: []),
-                    let json = jsonData as? [[String: Any]] else { return }
-                myself.handleData(data: json, key: key)
-            }
-            task.resume()
+            self.walletManager.apiClient?.fetchUTXOS(address: address, currency: self.currency, completion: { data in
+                guard let data = data else { return }
+                self.handleData(data: data, key: key)
+            })
         })
     }
 
@@ -213,8 +201,7 @@ class StartImportViewController : UIViewController {
             guard let script = BRAddress(string: wallet.receiveAddress)?.scriptPubKey else { return }
             tx.addOutput(amount: balance - fee, script: script)
             var keys = [key]
-            //TODO:BCH - forkId
-            let _ = tx.sign(forkId: 0, keys: &keys)
+            let _ = tx.sign(forkId: (self.currency as! Bitcoin).forkId, keys: &keys)
                 guard tx.isSigned else {
                     self.importingActivity.dismiss(animated: true, completion: {
                         self.showErrorMessage(S.Import.Error.signing)
