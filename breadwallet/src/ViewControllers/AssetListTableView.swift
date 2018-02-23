@@ -26,19 +26,17 @@ class AssetListTableView: UITableViewController, Subscriber {
         tableView.register(HomeScreenCell.self, forCellReuseIdentifier: HomeScreenCell.cellIdentifier)
         tableView.register(MenuCell.self, forCellReuseIdentifier: MenuCell.cellIdentifier)
         tableView.separatorStyle = .none
-
+        
         tableView.reloadData()
-
+        
         Store.subscribe(self, selector: {
             var result = false
             let oldState = $0
             let newState = $1
             $0.currencies.forEach { currency in
-                if oldState[currency].balance != newState[currency].balance {
-                    result = true
-                }
-
-                if oldState[currency].currentRate?.rate != newState[currency].currentRate?.rate {
+                if oldState[currency].balance != newState[currency].balance
+                    || oldState[currency].currentRate?.rate != newState[currency].currentRate?.rate
+                    || oldState[currency].maxDigits != newState[currency].maxDigits {
                     result = true
                 }
             }
