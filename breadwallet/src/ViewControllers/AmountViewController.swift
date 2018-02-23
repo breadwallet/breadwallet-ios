@@ -69,6 +69,9 @@ class AmountViewController : UIViewController, Trackable {
             feeSelector.didUpdateFee = didUpdateFee
         }
     }
+    
+    var canEditFee: Bool = true
+    
     func forceUpdateAmount(amount: Satoshis) {
         self.amount = amount
         fullRefresh()
@@ -321,7 +324,7 @@ class AmountViewController : UIViewController, Trackable {
             balanceLabel.attributedText = balance
             feeLabel.attributedText = fee
             if let amount = amount, amount > 0, !isRequesting {
-                editFee.isHidden = false
+                editFee.isHidden = !canEditFee
             } else {
                 editFee.isHidden = true
             }
@@ -373,7 +376,7 @@ class AmountViewController : UIViewController, Trackable {
         if let amount = amount, amount.rawValue > 0 {
             balanceLabel.isHidden = false
             if !isRequesting {
-                editFee.isHidden = false
+                editFee.isHidden = !canEditFee
             }
         } else {
             balanceLabel.isHidden = cursor.isHidden
