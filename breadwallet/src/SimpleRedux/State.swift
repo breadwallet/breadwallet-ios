@@ -125,7 +125,6 @@ struct WalletState {
     let bigBalance: GethBigInt? // ??
     let token: ERC20Token? // ??
     let numSent: Int // ??
-    
     let rates: [Rate]
     let currentRate: Rate?
     let fees: Fees?

@@ -175,7 +175,7 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencySymbol = "$" //TODO - currency symbol
+        format.currencySymbol = "$" //TODO:BCH - currency symbol
         self.total.text = format.string(from: NSNumber(value: fiatTotal))
     }
     

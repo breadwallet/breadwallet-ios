@@ -13,15 +13,12 @@ private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
 class ApplicationController : Subscriber, Trackable {
-    
-    //Ideally the window would be private, but is unfortunately required
-    //by the UIApplicationDelegate Protocol
+
     let window = UIWindow()
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
-
     private var walletManagers = [String: WalletManager]()
-    private var walletCoordinators = [String: WalletCoordinator]()
+    private var walletCoordinator: WalletCoordinator?
     private var exchangeUpdaters = [String: ExchangeUpdater]()
     private var feeUpdaters = [String: FeeUpdater]()
     private var primaryWalletManager: WalletManager {
@@ -63,8 +60,7 @@ class ApplicationController : Subscriber, Trackable {
                 completion()
                 return
             }
-            
-            self.walletCoordinators[btc.code] = WalletCoordinator(walletManager: btcWalletManager, currency: btc)
+
             self.exchangeUpdaters[btc.code] = ExchangeUpdater(currency: btc, walletManager: btcWalletManager)
             btcWalletManager.initPeerManager {
                 btcWalletManager.db?.loadTransactions { txns in
@@ -79,7 +75,6 @@ class ApplicationController : Subscriber, Trackable {
                         }
                         self.walletManagers[bch.code] = bchWalletManager
                         bchWalletManager?.initWallet(transactions: preForkTransactions)
-                        self.walletCoordinators[bch.code] = WalletCoordinator(walletManager: bchWalletManager!, currency: bch)
                         self.exchangeUpdaters[bch.code] = ExchangeUpdater(currency: bch, walletManager: bchWalletManager!)
                         bchWalletManager?.initPeerManager(blocks: preForkBlocks)
                         bchWalletManager?.db?.loadTransactions { storedTransactions in
@@ -120,7 +115,6 @@ class ApplicationController : Subscriber, Trackable {
                 self.initWallet(currency: currency, dispatchGroup: dispatchGroup)
                 return
             }
-            self.walletCoordinators[currency.code] = WalletCoordinator(walletManager: walletManager, currency: currency)
             self.exchangeUpdaters[currency.code] = ExchangeUpdater(currency: currency, walletManager: walletManager)
             walletManager.initPeerManager {
                 dispatchGroup.leave()
@@ -248,6 +242,7 @@ class ApplicationController : Subscriber, Trackable {
 
     private func didInitWalletManager() {
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
+        walletCoordinator = WalletCoordinator(walletManagers: walletManagers)
         Store.perform(action: PinLength.set(primaryWalletManager.pinLength))
         rootViewController.walletManager = primaryWalletManager
         if let homeScreen = rootViewController.viewControllers.first as? HomeScreenViewController {
