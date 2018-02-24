@@ -106,10 +106,13 @@ class AccountViewController : UIViewController, Subscriber {
     private func setupNavigationBar() {
         let searchButton = UIButton(type: .system)
         searchButton.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
+        searchButton.frame = CGRect(x: 0.0, y: 12.0, width: 22.0, height: 22.0) // for iOS 10
+        searchButton.widthAnchor.constraint(equalToConstant: 22.0).isActive = true
+        searchButton.heightAnchor.constraint(equalToConstant: 22.0).isActive = true
         searchButton.tintColor = .white
         searchButton.tap = showSearchHeaderView
-        searchButton.imageEdgeInsets = UIEdgeInsets(top: 13.0, left: 25.0, bottom: 13.0, right: 5.0)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchButton)
+        
     }
 
     private func addSubviews() {
