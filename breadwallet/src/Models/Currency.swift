@@ -23,6 +23,8 @@ protocol CurrencyDef {
     var baseUnit: Double { get }
     /// Primary + secondary color
     var colors: (UIColor, UIColor) { get }
+    /// URL scheme for payment requests
+    var urlScheme: String? { get }
     /// Returns true if the currency ticker codes match
     func matches(_ other: CurrencyDef) -> Bool
     /// Checks address validity in currency-specific format
@@ -30,6 +32,10 @@ protocol CurrencyDef {
 }
 
 extension CurrencyDef {
+    var urlScheme: String? {
+        return nil
+    }
+    
     func matches(_ other: CurrencyDef) -> Bool {
         return self.code == other.code
     }
@@ -46,6 +52,7 @@ struct Bitcoin: CurrencyDef {
     let colors: (UIColor, UIColor)
     let dbPath: String
     let forkId: Int
+    let urlScheme: String?
     
     func isValidAddress(_ address: String) -> Bool {
         if self.matches(Currencies.bch) {
@@ -93,13 +100,15 @@ struct Currencies {
                              symbol: S.Symbols.btc,
                              colors: (UIColor(red:0.972549, green:0.623529, blue:0.200000, alpha:1.0), UIColor(red:0.898039, green:0.505882, blue:0.031373, alpha:1.0)),
                              dbPath: "BreadWallet.sqlite",
-                             forkId: 0)
+                             forkId: 0,
+                             urlScheme: "bitcoin")
     static let bch = Bitcoin(name: "Bitcoin Cash",
                              code: "BCH",
                              symbol: S.Symbols.btc,
                              colors: (UIColor(red:0.278431, green:0.521569, blue:0.349020, alpha:1.0), UIColor(red:0.278431, green:0.521569, blue:0.349020, alpha:1.0)),
                              dbPath: "BreadWallet-bch.sqlite",
-                             forkId: 0x40)
+                             forkId: 0x40,
+                             urlScheme: E.isTestnet ? "bchtest" : "bitcoincash")
     static let eth = Ethereum(name: "Ethereum",
                               code: "ETH",
                               symbol: S.Symbols.eth,

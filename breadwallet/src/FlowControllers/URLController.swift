@@ -24,7 +24,9 @@ class URLController : Trackable {
             "path" : url.path
         ])
 
-        switch url.scheme ?? "" {
+        guard let scheme = url.scheme else { return false }
+        
+        switch scheme {
         case "bread":
             if let query = url.query {
                 for component in query.components(separatedBy: "&") {
@@ -57,18 +59,17 @@ class URLController : Trackable {
                     copyAddress(callback: success)
                 }
             } else if let uri = isBitcoinUri(url: url, uri: uri) {
-                return handleBitcoinUri(uri)
+                return handlePaymentRequestUri(uri, currency: Currencies.btc)
             }
             return true
-        case "bitcoin":
-            return handleBitcoinUri(url)
         case "bitid":
             if BRBitID.isBitIDURL(url) {
                 handleBitId(url)
             }
             return true
         default:
-            return false
+            guard let currency = Store.state.currencies.first(where: { $0.urlScheme == scheme }) else { return false }
+            return handlePaymentRequestUri(url, currency: currency)
         }
     }
 
@@ -92,8 +93,8 @@ class URLController : Trackable {
         }
     }
 
-    private func handleBitcoinUri(_ uri: URL) -> Bool {
-        if let request = PaymentRequest(string: uri.absoluteString, currency: Currencies.btc) {
+    private func handlePaymentRequestUri(_ uri: URL, currency: CurrencyDef) -> Bool {
+        if let request = PaymentRequest(string: uri.absoluteString, currency: currency) {
             Store.trigger(name: .receivedPaymentRequest(request))
             return true
         } else {
