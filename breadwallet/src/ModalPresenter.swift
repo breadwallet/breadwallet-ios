@@ -680,19 +680,36 @@ class ModalPresenter : Subscriber, Trackable {
 
     private func handlePaymentRequest(request: PaymentRequest) {
         self.currentRequest = request
-        //TODO:BCH
-        let currency = Currencies.btc
-        guard !Store.state.isLoginRequired else { presentModal(.send(currency: currency)); return }
+        guard !Store.state.isLoginRequired else { presentModal(.send(currency: request.currency)); return }
 
-        if topViewController is AccountViewController {
-            presentModal(.send(currency: currency))
+        if let accountVC = topViewController as? AccountViewController {
+            if accountVC.currency.matches(request.currency) {
+                presentModal(.send(currency: request.currency))
+            } else {
+                // switch currencies
+                accountVC.navigationController?.popToRootViewController(animated: false)
+                showAccountView(currency: request.currency, animated: false)
+                presentModal(.send(currency: request.currency))
+            }
+        } else if topViewController is HomeScreenViewController {
+            showAccountView(currency: request.currency, animated: false)
+            presentModal(.send(currency: request.currency))
         } else {
             if let presented = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
                 presented.dismiss(animated: true, completion: {
-                    self.presentModal(.send(currency: currency))
+                    self.showAccountView(currency: request.currency, animated: false)
+                    self.presentModal(.send(currency: request.currency))
                 })
             }
         }
+    }
+    
+    private func showAccountView(currency: CurrencyDef, animated: Bool) {
+        guard let nc = topViewController?.navigationController as? RootNavigationController,
+            nc.viewControllers.count == 1 else { return }
+        guard let walletManager = self.walletManagers[currency.code] else { return }
+        let accountViewController = AccountViewController(walletManager: walletManager)
+        nc.pushViewController(accountViewController, animated: animated)
     }
 
     private func handleScanQrURL() {
@@ -766,6 +783,9 @@ class ModalPresenter : Subscriber, Trackable {
 
     private var topViewController: UIViewController? {
         var viewController = window.rootViewController
+        if let nc = viewController as? UINavigationController {
+            viewController = nc.topViewController
+        }
         while viewController?.presentedViewController != nil {
             viewController = viewController?.presentedViewController
         }

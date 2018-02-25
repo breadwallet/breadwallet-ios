@@ -18,13 +18,19 @@ struct PaymentRequest {
 
     init?(string: String, currency: CurrencyDef) {
         self.currency = currency
-        if var url = NSURL(string: string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")), currency.code == Currencies.btc.code {
+        if var url = NSURL(string: string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")) {
             if let scheme = url.scheme, let resourceSpecifier = url.resourceSpecifier, url.host == nil {
                 url = NSURL(string: "\(scheme)://\(resourceSpecifier)")!
-
-                if url.scheme == "bitcoin" {
+                
+                if url.scheme == currency.urlScheme {
                     let host = url.host
-                    toAddress = host
+                    if let host = host, currency.matches(Currencies.bch) {
+                        // BCH CashAddr includes the bitcoincash: prefix in the address format
+                        // the payment request stores the address in legacy address
+                        toAddress = "\(scheme):\(host)".bitcoinAddr
+                    } else {
+                        toAddress = host
+                    }
                     guard let components = url.query?.components(separatedBy: "&") else { type = .local; return }
                     for component in components {
                         let pair = component.components(separatedBy: "=")
@@ -32,11 +38,11 @@ struct PaymentRequest {
                         let key = pair[0]
                         var value = String(component[component.index(key.endIndex, offsetBy: 1)...])
                         value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
-
+                        
                         switch key {
                         case "amount":
                             amount = Satoshis(btcString: value)
-                        case "label":
+                        case "label", "memo":
                             label = value
                         case "message":
                             message = value
@@ -52,7 +58,7 @@ struct PaymentRequest {
                             return nil
                         }
                     }
-
+                    
                     type = r == nil ? .local : .remote
                     return
                 }
@@ -62,7 +68,7 @@ struct PaymentRequest {
                 return
             }
         }
-
+        
         // core internally uses bitcoin address format but PaymentRequest will only accept the currency-specific address format
         if currency.isValidAddress(string) {
             if currency.matches(Currencies.bch) {
@@ -73,7 +79,7 @@ struct PaymentRequest {
             type = .local
             return
         }
-
+        
         return nil
     }
 
