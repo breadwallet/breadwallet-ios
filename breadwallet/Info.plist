@@ -54,6 +54,8 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLName</key>
 			<string>bitcoincash</string>
 			<key>CFBundleURLSchemes</key>
@@ -61,8 +63,6 @@
 				<string>bitcoincash</string>
 				<string>bchtest</string>
 			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
@@ -96,7 +96,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>220</string>
+	<string>222</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
