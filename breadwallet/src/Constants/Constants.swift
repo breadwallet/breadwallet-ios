@@ -32,7 +32,7 @@ struct C {
     static let animationDuration: TimeInterval = 0.3
     static let secondsInDay: TimeInterval = 86400
     static let maxMoney: UInt64 = 84000000*100000000
-    static let satoshis: UInt64 = 100000000
+    static let satoshis: UInt64 = 100000000//TODO: review math to replace with 'litoshis'
     static let walletQueue = "com.litecoin.walletqueue"
     static let btcCurrencyCode = "LTC"
     static let null = "(null)"

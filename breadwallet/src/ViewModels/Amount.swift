@@ -65,16 +65,16 @@ struct Amount {
 
         switch maxDigits {
         case 2: // photons
-            format.currencySymbol = "m\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+            format.currencySymbol = "m\(S.Symbols.lites)\(S.Symbols.narrowSpace)"
             format.maximum = (C.maxMoney/C.satoshis)*100000 as NSNumber
         case 5: // lites
-            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+            format.currencySymbol = "\(S.Symbols.lites)\(S.Symbols.narrowSpace)"
             format.maximum = (C.maxMoney/C.satoshis)*1000 as NSNumber
         case 8: // litecoin
-            format.currencySymbol = "\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
+            format.currencySymbol = "\(S.Symbols.ltc)\(S.Symbols.narrowSpace)"
             format.maximum = C.maxMoney/C.satoshis as NSNumber
         default:
-            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+            format.currencySymbol = "\(S.Symbols.lites)\(S.Symbols.narrowSpace)"
         }
 
         format.maximumFractionDigits = maxDigits
@@ -151,16 +151,16 @@ struct DisplayAmount {
 
         switch state.maxDigits {
         case 2:
-            format.currencySymbol = "m\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+            format.currencySymbol = "m\(S.Symbols.lites)\(S.Symbols.narrowSpace)"
             format.maximum = (C.maxMoney/C.satoshis)*100000 as NSNumber
         case 5:
-            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+            format.currencySymbol = "\(S.Symbols.lites)\(S.Symbols.narrowSpace)"
             format.maximum = (C.maxMoney/C.satoshis)*1000 as NSNumber
         case 8:
-            format.currencySymbol = "\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
+            format.currencySymbol = "\(S.Symbols.ltc)\(S.Symbols.narrowSpace)"
             format.maximum = C.maxMoney/C.satoshis as NSNumber
         default:
-            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
+            format.currencySymbol = "\(S.Symbols.lites)\(S.Symbols.narrowSpace)"
         }
 
         format.maximumFractionDigits = state.maxDigits

@@ -11,21 +11,22 @@ import Foundation
 enum S {
 
     enum Symbols {
-        static let bits = "ł"
-        static let btc = "Ł"
+        static let photons = "mł"
+        static let lites = "ł"
+        static let ltc = "Ł"
         static let narrowSpace = "\u{2009}"
         static let lock = "\u{1F512}"
         static let redX = "\u{274C}"
         static func currencyButtonTitle(maxDigits: Int) -> String {
             switch maxDigits {
             case 2:
-                return "photons\(S.Symbols.narrowSpace)(m\(S.Symbols.bits))"
+                return "photons\(S.Symbols.narrowSpace)(m\(S.Symbols.lites))"
             case 5:
-                return "lites\(S.Symbols.narrowSpace)(\(S.Symbols.bits))"
+                return "lites\(S.Symbols.narrowSpace)(\(S.Symbols.lites))"
             case 8:
-                return "LTC\(S.Symbols.narrowSpace)(\(S.Symbols.btc))"
+                return "LTC\(S.Symbols.narrowSpace)(\(S.Symbols.ltc))"
             default:
-                return "lites\(S.Symbols.narrowSpace)(\(S.Symbols.bits))"
+                return "lites\(S.Symbols.narrowSpace)(\(S.Symbols.lites))"
             }
         }
     }

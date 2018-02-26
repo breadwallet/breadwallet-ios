@@ -39,7 +39,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     }
 
     private let bitcoinLabel = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let bitcoinSwitch = UISegmentedControl(items: ["lites (\(S.Symbols.bits))", "LTC (\(S.Symbols.btc))"])
+    private let bitcoinSwitch = UISegmentedControl(items: ["photons (\(S.Symbols.photons))","lites (\(S.Symbols.lites))", "LTC (\(S.Symbols.ltc))"])
     private let rateLabel = UILabel(font: .customBody(size: 16.0), color: .darkText)
     private var header: UIView?
 
@@ -131,18 +131,26 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
             bitcoinSwitch.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -C.padding[2]),
             bitcoinSwitch.widthAnchor.constraint(equalTo: header.widthAnchor, constant: -C.padding[4]) ])
 
-        if store.state.maxDigits == 8 {
-            bitcoinSwitch.selectedSegmentIndex = 1
-        } else {
-            bitcoinSwitch.selectedSegmentIndex = 0
+        let settingSegment = store.state.maxDigits
+        switch settingSegment {
+            case 2:     bitcoinSwitch.selectedSegmentIndex = 0
+            case 5:     bitcoinSwitch.selectedSegmentIndex = 1
+            case 8:     bitcoinSwitch.selectedSegmentIndex = 2
+            default:    bitcoinSwitch.selectedSegmentIndex = 2
         }
 
         bitcoinSwitch.valueChanged = strongify(self) { myself in
             let newIndex = myself.bitcoinSwitch.selectedSegmentIndex
-            if newIndex == 1 {
-                myself.store.perform(action: MaxDigits.set(8))
-            } else {
-                myself.store.perform(action: MaxDigits.set(5))
+
+            switch newIndex {
+                case 0:  //photons
+                    myself.store.perform(action: MaxDigits.set(2))
+                case 1:  //lites
+                    myself.store.perform(action: MaxDigits.set(5))
+                case 2:  //LTC
+                    myself.store.perform(action: MaxDigits.set(8))
+                default: //LTC
+                    myself.store.perform(action: MaxDigits.set(8))
             }
         }
 
