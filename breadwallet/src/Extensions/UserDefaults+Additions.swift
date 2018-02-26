@@ -74,14 +74,9 @@ extension UserDefaults {
     static var maxDigits: Int {
         get {
             guard defaults.object(forKey: maxDigitsKey) != nil else {
-                return 5
+                return 8///Default to LTC
             }
-            let maxDigits = defaults.integer(forKey: maxDigitsKey)
-            if maxDigits == 5 {
-                return 8 //Convert lites to LTC
-            } else {
-                return maxDigits
-            }
+            return defaults.integer(forKey: maxDigitsKey)
         }
         set { defaults.set(newValue, forKey: maxDigitsKey) }
     }
