@@ -241,7 +241,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             guard currency.state.fees != nil else {
                 return showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
             }
-            guard currency.isValidAddress(address) else {
+            guard address.isValidAddress else {
                 let message = String.init(format: S.Send.invalidAddressMessage, currency.name)
                 return showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
             }

@@ -103,6 +103,9 @@ class AddressCell : UIView {
         textField.returnKeyType = .done
         textField.delegate = self
         textField.clearButtonMode = .whileEditing
+        textField.autocorrectionType = .no
+        textField.autocapitalizationType = .none
+        textField.keyboardType = .asciiCapable
         label.textColor = .grayTextTint
         contentLabel.lineBreakMode = .byTruncatingMiddle
 
