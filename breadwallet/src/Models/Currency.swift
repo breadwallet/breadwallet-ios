@@ -29,6 +29,8 @@ protocol CurrencyDef {
     func matches(_ other: CurrencyDef) -> Bool
     /// Checks address validity in currency-specific format
     func isValidAddress(_ address: String) -> Bool
+    /// Returns a URI with the given address
+    func addressURI(_ address: String) -> String?
 }
 
 extension CurrencyDef {
@@ -38,6 +40,11 @@ extension CurrencyDef {
     
     func matches(_ other: CurrencyDef) -> Bool {
         return self.code == other.code
+    }
+    
+    func addressURI(_ address: String) -> String? {
+        guard let scheme = urlScheme, isValidAddress(address) else { return nil }
+        return "\(scheme):\(address)"
     }
 }
 
@@ -59,6 +66,15 @@ struct Bitcoin: CurrencyDef {
             return address.isValidBCHAddress
         } else {
             return address.isValidAddress
+        }
+    }
+    
+    func addressURI(_ address: String) -> String? {
+        guard let scheme = urlScheme, isValidAddress(address) else { return nil }
+        if self.matches(Currencies.bch) {
+            return address
+        } else {
+            return "\(scheme):\(address)"
         }
     }
 }

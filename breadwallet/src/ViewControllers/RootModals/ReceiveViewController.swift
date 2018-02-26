@@ -75,7 +75,8 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
             qrCode.constraint(.centerX, toView: view) ])
         address.constrain([
             address.constraint(toBottom: qrCode, constant: C.padding[1]),
-            address.constraint(.centerX, toView: view) ])
+            address.constraint(.leading, toView: view),
+            address.constraint(.trailing, toView: view) ])
         addressPopout.heightConstraint = addressPopout.constraint(.height, constant: 0.0)
         addressPopout.constrain([
             addressPopout.constraint(toBottom: address, constant: 0.0),
@@ -117,6 +118,9 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     private func setStyle() {
         view.backgroundColor = .white
         address.textColor = .grayTextTint
+        address.textAlignment = .center
+        address.adjustsFontSizeToFitWidth = true
+        address.minimumScaleFactor = 0.7
         border.backgroundColor = .secondaryBorder
         share.isToggleable = true
         if !isRequestAmountVisible {
