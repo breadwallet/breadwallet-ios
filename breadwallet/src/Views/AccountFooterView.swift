@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AccountFooterView: UIView, Trackable {
+class AccountFooterView: UIView, Subscriber, Trackable {
 
     var sendCallback: (() -> Void)?
     var receiveCallback: (() -> Void)?
@@ -16,7 +16,8 @@ class AccountFooterView: UIView, Trackable {
     
     private var hasSetup = false
     private let currency: CurrencyDef
-
+    private let toolbar = UIToolbar()
+    
     init(currency: CurrencyDef) {
         self.currency = currency
         super.init(frame: .zero)
@@ -30,7 +31,6 @@ class AccountFooterView: UIView, Trackable {
     }
 
     private func setup() {
-        let toolbar = UIToolbar()
         let separator = UIView(color: .separatorGray)
         addSubview(toolbar)
         addSubview(separator)
@@ -38,6 +38,18 @@ class AccountFooterView: UIView, Trackable {
         toolbar.clipsToBounds = true // to remove separator line
         toolbar.isOpaque = true
         
+        // constraints
+        toolbar.constrain(toSuperviewEdges: nil)
+        separator.constrainTopCorners(height: 0.5)
+        
+        setupToolbarButtons()
+        
+        Store.subscribe(self, name: .didUpdateFeatureFlags) { [weak self] _ in
+            self?.setupToolbarButtons()
+        }
+    }
+    
+    private func setupToolbarButtons() {
         // buttons
         var buttonCount: Int
         
@@ -83,10 +95,6 @@ class AccountFooterView: UIView, Trackable {
             ]
             buttonCount = 2
         }
-        
-        // constraints
-        toolbar.constrain(toSuperviewEdges: nil)
-        separator.constrainTopCorners(height: 0.5)
         
         let buttonWidth = (self.bounds.width - (paddingWidth * CGFloat(buttonCount+1))) / CGFloat(buttonCount)
         let buttonHeight = CGFloat(44.0)
