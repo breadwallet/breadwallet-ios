@@ -13,8 +13,8 @@ class MessageUIPresenter: NSObject, Trackable {
 
     weak var presenter: UIViewController?
 
-    func presentMailCompose(bitcoinAddress: String, image: UIImage) {
-        presentMailCompose(string: "bitcoin: \(bitcoinAddress)", image: image)
+    func presentMailCompose(uri: String, image: UIImage) {
+        presentMailCompose(string: uri, image: image)
     }
 
     func presentMailCompose(bitcoinURL: String, image: UIImage) {
@@ -55,8 +55,8 @@ class MessageUIPresenter: NSObject, Trackable {
         present(emailView)
     }
 
-    func presentMessageCompose(address: String, image: UIImage) {
-        presentMessage(string: "bitcoin: \(address)", image: image)
+    func presentMessageCompose(uri: String, image: UIImage) {
+        presentMessage(string: uri, image: image)
     }
 
     func presentMessageCompose(bitcoinURL: String, image: UIImage) {

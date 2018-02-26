@@ -278,14 +278,14 @@ class ModalPresenter : Subscriber, Trackable {
         let receiveVC = ReceiveViewController(currency: currency, isRequestAmountVisible: isRequestAmountVisible)
         let root = ModalViewController(childViewController: receiveVC)
         receiveVC.presentEmail = { [weak self, weak root] address, image in
-            guard let root = root else { return }
+            guard let root = root, let uri = currency.addressURI(address) else { return }
             self?.messagePresenter.presenter = root
-            self?.messagePresenter.presentMailCompose(bitcoinAddress: address, image: image)
+            self?.messagePresenter.presentMailCompose(uri: uri, image: image)
         }
         receiveVC.presentText = { [weak self, weak root] address, image in
-            guard let root = root else { return }
+            guard let root = root, let uri = currency.addressURI(address) else { return }
             self?.messagePresenter.presenter = root
-            self?.messagePresenter.presentMessageCompose(address: address, image: image)
+            self?.messagePresenter.presentMessageCompose(uri: uri, image: image)
         }
         return root
     }
