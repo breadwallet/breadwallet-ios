@@ -126,7 +126,7 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         totalHeader.text = S.HomeScreen.totalAssets
         totalHeader.textAlignment = .left
         total.textAlignment = .left
-        total.text = "$0" //TODO - currency symbol
+        total.text = "0"
         title = ""
         
         updateTotalAssets()
@@ -143,7 +143,7 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencySymbol = "$" //TODO:BCH - currency symbol
+        format.currencySymbol = Store.state[Currencies.btc].currentRate?.currencySymbol ?? ""
         self.total.text = format.string(from: NSNumber(value: fiatTotal))
     }
     
