@@ -88,7 +88,6 @@ class AccountViewController : UIViewController, Subscriber {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         shouldShowStatusBar = true
-        addCustomBackButton()
     }
 
     override func viewDidAppear(_ animated: Bool) {
