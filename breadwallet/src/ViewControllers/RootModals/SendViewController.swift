@@ -31,7 +31,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         self.walletManager = walletManager
         self.initialAddress = initialAddress
         self.initialRequest = initialRequest
-        self.currencyButton = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: currency.state.maxDigits), type: .tertiary)
         self.addressCell = AddressCell(currency: currency)
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
 
@@ -52,7 +51,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let addressCell: AddressCell
     private let memoCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary)
-    private let currencyButton: ShadowButton
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
