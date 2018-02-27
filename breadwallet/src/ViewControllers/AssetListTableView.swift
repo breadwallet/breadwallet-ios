@@ -46,6 +46,15 @@ class AssetListTableView: UITableViewController, Subscriber {
         })
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.visibleCells.forEach {
+            if let cell = $0 as? HomeScreenCell {
+                cell.refreshAnimations()
+            }
+        }
+    }
+    
     func reload() {
         tableView.reloadData()
     }

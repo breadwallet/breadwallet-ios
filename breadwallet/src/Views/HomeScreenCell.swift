@@ -77,6 +77,10 @@ class HomeScreenCell : UITableViewCell, Subscriber {
                             self.syncIndicator.progress = CGFloat(state[viewModel.currency].syncProgress)
         })
     }
+    
+    func refreshAnimations() {
+        syncIndicator.pulse()
+    }
 
     private func setupViews() {
         addSubviews()

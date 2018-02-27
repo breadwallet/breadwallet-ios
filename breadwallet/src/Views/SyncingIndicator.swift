@@ -30,6 +30,7 @@ class SyncingIndicator: UIView {
     var text: String = S.SyncingView.syncing {
         didSet {
             label.text = text
+            progressBar.pulse()
         }
     }
     
@@ -67,13 +68,17 @@ class SyncingIndicator: UIView {
             ])
     }
     
+    func pulse() {
+        progressBar.pulse()
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 
-class ProgressBar: UIView {
+private class ProgressBar: UIView {
     private let progress: UIView
     private var progressWidth: NSLayoutConstraint!
     
@@ -95,14 +100,6 @@ class ProgressBar: UIView {
             progress.bottomAnchor.constraint(equalTo: bottomAnchor),
             progressWidth
             ])
-        
-        // pulse animation
-        UIView.animate(withDuration: 1.0,
-                       delay: 0.5,
-                       options: [.repeat, .autoreverse],
-                       animations: {
-                        self.progress.backgroundColor = UIColor.white.withAlphaComponent(0.3)
-        }, completion: nil)
     }
     
     override func layoutSubviews() {
@@ -124,6 +121,19 @@ class ProgressBar: UIView {
         UIView.animate(withDuration: 0.2) {
             self.progress.setNeedsLayout()
         }
+    }
+    
+    /// pulse animation
+    func pulse() {
+        self.progress.layer.removeAllAnimations()
+        self.progress.backgroundColor = .white
+        
+        UIView.animate(withDuration: 1.0,
+                       delay: 0.5,
+                       options: [.repeat, .autoreverse],
+                       animations: {
+                        self.progress.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+        }, completion: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
