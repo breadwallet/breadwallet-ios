@@ -73,7 +73,6 @@ class StartFlowPresenter : Subscriber {
                                                       didTapRecover: { [weak self] in
             guard let myself = self else { return }
             let recoverIntro = RecoverWalletIntroViewController(didTapNext: myself.pushRecoverWalletView)
-            myself.navigationController?.setTintableBackArrow()
             myself.navigationController?.setClearNavbar()
             myself.navigationController?.setNavigationBarHidden(false, animated: false)
             myself.navigationController?.pushViewController(recoverIntro, animated: true)
@@ -131,7 +130,6 @@ class StartFlowPresenter : Subscriber {
         }
 
         navigationController?.setNavigationBarHidden(false, animated: false)
-        navigationController?.setTintableBackArrow()
         navigationController?.setClearNavbar()
         navigationController?.pushViewController(pinCreationViewController, animated: true)
     }
