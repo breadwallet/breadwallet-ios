@@ -11,7 +11,7 @@ import UIKit
 class StartFlowPresenter : Subscriber {
 
     //MARK: - Public
-    init(walletManager: WalletManager, rootViewController: UIViewController) {
+    init(walletManager: WalletManager, rootViewController: RootNavigationController) {
         self.walletManager = walletManager
         self.rootViewController = rootViewController
         self.navigationControllerDelegate = StartNavigationDelegate()
@@ -19,7 +19,7 @@ class StartFlowPresenter : Subscriber {
     }
 
     //MARK: - Private
-    private let rootViewController: UIViewController
+    private let rootViewController: RootNavigationController
     private var navigationController: ModalNavigationController?
     private let navigationControllerDelegate: StartNavigationDelegate
     private let walletManager: WalletManager
@@ -36,7 +36,7 @@ class StartFlowPresenter : Subscriber {
     }
 
     private func addSubscriptions() {
-        Store.subscribe(self,
+        Store.lazySubscribe(self,
                         selector: { $0.isStartFlowVisible != $1.isStartFlowVisible },
                         callback: { self.handleStartFlowChange(state: $0) })
         Store.lazySubscribe(self,
@@ -82,6 +82,7 @@ class StartFlowPresenter : Subscriber {
         navigationController = ModalNavigationController(rootViewController: startViewController)
         navigationController?.delegate = navigationControllerDelegate
         if let startFlow = navigationController {
+            rootViewController.popToRootViewController(animated: false)
             startFlow.setNavigationBarHidden(true, animated: false)
             rootViewController.present(startFlow, animated: false, completion: nil)
         }
@@ -120,6 +121,7 @@ class StartFlowPresenter : Subscriber {
             autoreleasepool {
                 guard self?.walletManager.setRandomSeedPhrase() != nil else { self?.handleWalletCreationError(); return }
                 //TODO:BCH multi-currency support
+                UserDefaults.selectedCurrencyCode = nil // to land on home screen after new wallet creation
                 Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(Date()))
                 DispatchQueue.main.async {
                     self?.pushStartPaperPhraseCreationViewController(pin: pin)
