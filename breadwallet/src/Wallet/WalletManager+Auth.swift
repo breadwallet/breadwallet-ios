@@ -424,12 +424,7 @@ extension WalletManager : WalletAuthenticator {
         guard pin == "forceWipe" || authenticate(pin: pin) else { return false }
 
         do {
-            peerManager?.clearCallbacks()
-            wallet = nil
-            peerManager = nil
-            db?.close()
-            db?.delete()
-            db = nil
+            resetForWipe()
             masterPubKey = BRMasterPubKey()
             earliestKeyTime = 0
             if let bundleId = Bundle.main.bundleIdentifier {
@@ -453,6 +448,16 @@ extension WalletManager : WalletAuthenticator {
             print("Wipe wallet error: \(error)")
             return false
         }
+    }
+    
+    func resetForWipe() {
+        peerManager?.clearCallbacks()
+        peerManager?.disconnect()
+        wallet = nil
+        peerManager = nil
+        db?.close()
+        db?.delete()
+        db = nil
     }
     
     // key used for authenticated API calls

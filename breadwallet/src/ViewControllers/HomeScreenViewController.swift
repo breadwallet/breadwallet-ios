@@ -12,6 +12,9 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
     
     var primaryWalletManager: WalletManager? {
         didSet {
+            setInitialData()
+            setupSubscriptions()
+            currencyList.reload()
             attemptShowPrompt()
         }
     }
@@ -41,45 +44,10 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         currencyList.didTapSupport = didTapSupport
         currencyList.didTapSettings = didTapSettings
         
-        Store.subscribe(self, selector: {
-            var result = false
-            let oldState = $0
-            let newState = $1
-            $0.currencies.forEach { currency in
-                if oldState[currency].balance != newState[currency].balance {
-                    result = true
-                }
-
-                if oldState[currency].currentRate?.rate != newState[currency].currentRate?.rate {
-                    result = true
-                }
-            }
-            return result
-                },
-                        callback: { _ in
-            self.updateTotalAssets()
-        })
-        
-        // prompts
-        Store.subscribe(self, name: .didUpgradePin, callback: { _ in
-            if self.currentPrompt?.type == .upgradePin {
-                self.currentPrompt = nil
-            }
-        })
-        Store.subscribe(self, name: .didEnableShareData, callback: { _ in
-            if self.currentPrompt?.type == .shareData {
-                self.currentPrompt = nil
-            }
-        })
-        Store.subscribe(self, name: .didWritePaperKey, callback: { _ in
-            if self.currentPrompt?.type == .paperKey {
-                self.currentPrompt = nil
-            }
-        })
-
         addSubviews()
         addConstraints()
         setInitialData()
+        setupSubscriptions()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -177,6 +145,46 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         format.currencySymbol = "$" //TODO:BCH - currency symbol
         self.total.text = format.string(from: NSNumber(value: fiatTotal))
+    }
+    
+    private func setupSubscriptions() {
+        Store.unsubscribe(self)
+        
+        Store.subscribe(self, selector: {
+            var result = false
+            let oldState = $0
+            let newState = $1
+            $0.currencies.forEach { currency in
+                if oldState[currency].balance != newState[currency].balance {
+                    result = true
+                }
+                
+                if oldState[currency].currentRate?.rate != newState[currency].currentRate?.rate {
+                    result = true
+                }
+            }
+            return result
+        },
+                        callback: { _ in
+                            self.updateTotalAssets()
+        })
+        
+        // prompts
+        Store.subscribe(self, name: .didUpgradePin, callback: { _ in
+            if self.currentPrompt?.type == .upgradePin {
+                self.currentPrompt = nil
+            }
+        })
+        Store.subscribe(self, name: .didEnableShareData, callback: { _ in
+            if self.currentPrompt?.type == .shareData {
+                self.currentPrompt = nil
+            }
+        })
+        Store.subscribe(self, name: .didWritePaperKey, callback: { _ in
+            if self.currentPrompt?.type == .paperKey {
+                self.currentPrompt = nil
+            }
+        })
     }
     
     // MARK: - Prompt

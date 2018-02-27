@@ -83,7 +83,6 @@ class ApplicationController : Subscriber, Trackable {
                                     bchWalletManager?.db?.txAdded(txn)
                                 }
                             }
-
                         }
                         completion()
                     }
@@ -109,10 +108,13 @@ class ApplicationController : Subscriber, Trackable {
         walletManagers[currency.code] = walletManager
         walletManager.initWallet { success in
             guard success else {
-                walletManager.db?.close()
-                walletManager.db?.delete()
-                self.walletManagers[currency.code] = nil
-                self.initWallet(currency: currency, dispatchGroup: dispatchGroup)
+                // always keep BTC wallet manager, even if not initialized, since it the primaryWalletManager and needed for onboarding
+                if !currency.matches(Currencies.btc) {
+                    walletManager.db?.close()
+                    walletManager.db?.delete()
+                    self.walletManagers[currency.code] = nil
+                }
+                dispatchGroup.leave()
                 return
             }
             self.exchangeUpdaters[currency.code] = ExchangeUpdater(currency: currency, walletManager: walletManager)
@@ -171,17 +173,18 @@ class ApplicationController : Subscriber, Trackable {
     }
     
     private func reinitWalletManager(callback: @escaping () -> Void) {
-        Store.state.currencies.forEach { currency in
-            walletManagers[currency.code]?.peerManager?.disconnect()
-        }
-        
         Store.removeAllSubscriptions()
         Store.perform(action: Reset())
         self.setup()
+        
         DispatchQueue.walletQueue.async {
+            self.walletManagers.values.forEach({ $0.resetForWipe() })
+            self.walletManagers.removeAll()
             self.initWallet {
-                self.didInitWalletManager()
-                callback()
+                DispatchQueue.main.async {
+                    self.didInitWalletManager()
+                    callback()
+                }
             }
         }
     }
@@ -365,12 +368,7 @@ class ApplicationController : Subscriber, Trackable {
     private func addWalletCreationListener() {
         Store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
             DispatchQueue.walletQueue.async {
-                self.primaryWalletManager.initWallet { _ in
-                    self.primaryWalletManager.initPeerManager {
-                        self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
-                        self.startDataFetchers()
-                    }
-                }
+                self.initWallet(completion: self.didInitWalletManager)
             }
         })
     }
