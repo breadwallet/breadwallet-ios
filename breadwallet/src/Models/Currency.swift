@@ -31,6 +31,10 @@ protocol CurrencyDef {
     func isValidAddress(_ address: String) -> Bool
     /// Returns a URI with the given address
     func addressURI(_ address: String) -> String?
+    /// Returns the unit name for given denomination or empty string
+    func unitName(maxDigits: Int) -> String
+    /// Returns the unit symbol for given denomination or empty string
+    func unitSymbol(maxDigits: Int) -> String
 }
 
 extension CurrencyDef {
@@ -45,6 +49,14 @@ extension CurrencyDef {
     func addressURI(_ address: String) -> String? {
         guard let scheme = urlScheme, isValidAddress(address) else { return nil }
         return "\(scheme):\(address)"
+    }
+    
+    func unitName(maxDigits: Int) -> String {
+        return ""
+    }
+    
+    func unitSymbol(maxDigits: Int) -> String {
+        return ""
     }
 }
 
@@ -75,6 +87,30 @@ struct Bitcoin: CurrencyDef {
             return address
         } else {
             return "\(scheme):\(address)"
+        }
+    }
+    
+    func unitName(maxDigits: Int) -> String {
+        switch maxDigits {
+        case 2:
+            return "Bits"
+        case 8:
+            return code.uppercased()
+        default:
+            return ""
+        }
+    }
+    
+    func unitSymbol(maxDigits: Int) -> String {
+        switch maxDigits {
+        case 2:
+            return S.Symbols.bits
+        case 5:
+            return "m\(S.Symbols.btc)"
+        case 8:
+            return S.Symbols.btc
+        default:
+            return S.Symbols.bits
         }
     }
 }

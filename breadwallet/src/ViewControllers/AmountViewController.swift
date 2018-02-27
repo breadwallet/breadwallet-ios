@@ -22,7 +22,7 @@ class AmountViewController : UIViewController, Trackable {
         if let rate = currency.state.currentRate, Store.state.isBtcSwapped {
             self.currencyToggle = ShadowButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
-            let title = S.Symbols.currencyButtonTitle(maxDigits: currency.state.maxDigits)
+            let title = S.Symbols.currencyButtonTitle(currency: currency, maxDigits: currency.state.maxDigits)
             self.currencyToggle = ShadowButton(title: title, type: .tertiary)
         }
         self.feeSelector = FeeSelector()
@@ -403,7 +403,7 @@ class AmountViewController : UIViewController, Trackable {
         if let rate = selectedRate {
             self.currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
         } else {
-            let title = S.Symbols.currencyButtonTitle(maxDigits: currency.state.maxDigits)
+            let title = S.Symbols.currencyButtonTitle(currency: currency, maxDigits: currency.state.maxDigits)
             self.currencyToggle.title = title
         }
     }
@@ -417,4 +417,17 @@ extension Fees : Equatable {}
 
 func ==(lhs: Fees, rhs: Fees) -> Bool {
     return lhs.regular == rhs.regular && lhs.economy == rhs.economy
+}
+
+extension S.Symbols {
+    static func currencyButtonTitle(currency: CurrencyDef, maxDigits: Int) -> String {
+        let name = currency.unitName(maxDigits: maxDigits)
+        let symbol = currency.unitSymbol(maxDigits: maxDigits)
+        
+        if name.count > 0 {
+            return "\(name)\(S.Symbols.narrowSpace)(\(symbol))"
+        } else {
+            return symbol
+        }
+    }
 }

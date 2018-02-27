@@ -20,12 +20,14 @@ class RequestAmountViewController : UIViewController {
     var presentText: PresentShare?
 
     init(currency: CurrencyDef, wallet: BRWallet) {
+        self.currency = currency
         self.wallet = wallet
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: true, isRequesting: true)
         super.init(nibName: nil, bundle: nil)
     }
 
     //MARK - Private
+    private let currency: CurrencyDef
     private let amountView: AmountViewController
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 14.0))
@@ -35,6 +37,10 @@ class RequestAmountViewController : UIViewController {
     private let border = UIView()
     private var topSharePopoutConstraint: NSLayoutConstraint?
     private let wallet: BRWallet
+    
+    private var receiveAddress: String {
+        return currency.matches(Currencies.bch) ? wallet.receiveAddress.bCashAddr : wallet.receiveAddress
+    }
 
     //MARK - PinPad State
     private var amount: Satoshis? {
@@ -74,7 +80,8 @@ class RequestAmountViewController : UIViewController {
             qrCode.constraint(.centerX, toView: view) ])
         address.constrain([
             address.constraint(toBottom: qrCode, constant: C.padding[1]),
-            address.constraint(.centerX, toView: view) ])
+            address.constraint(.leading, toView: view),
+            address.constraint(.trailing, toView: view) ])
         addressPopout.heightConstraint = addressPopout.constraint(.height, constant: 0.0)
         addressPopout.constrain([
             addressPopout.constraint(toBottom: address, constant: 0.0),
@@ -103,10 +110,13 @@ class RequestAmountViewController : UIViewController {
 
     private func setData() {
         view.backgroundColor = .white
-        address.text = wallet.receiveAddress
+        address.textAlignment = .center
+        address.adjustsFontSizeToFitWidth = true
+        address.minimumScaleFactor = 0.7
+        address.text = receiveAddress
         address.textColor = .grayTextTint
         border.backgroundColor = .secondaryBorder
-        qrCode.image = UIImage.qrCode(data: "\(wallet.receiveAddress)".data(using: .utf8)!, color: CIColor(color: .black))?
+        qrCode.image = UIImage.qrCode(data: "\(address.text)".data(using: .utf8)!, color: CIColor(color: .black))?
             .resize(qrSize)!
         share.isToggleable = true
         sharePopout.clipsToBounds = true
@@ -124,7 +134,7 @@ class RequestAmountViewController : UIViewController {
 
     private func setQrCode(){
         guard let amount = amount else { return }
-        let request = PaymentRequest.requestString(withAddress: wallet.receiveAddress, forAmount: amount.rawValue)
+        let request = PaymentRequest.requestString(withAddress: receiveAddress, forAmount: amount.rawValue, currency: currency)
         qrCode.image = UIImage.qrCode(data: request.data(using: .utf8)!, color: CIColor(color: .black))?
             .resize(qrSize)!
     }
@@ -177,13 +187,13 @@ class RequestAmountViewController : UIViewController {
 
     @objc private func emailTapped() {
         guard let amount = amount else { return showErrorMessage(S.RequestAnAmount.noAmount) }
-        let text = PaymentRequest.requestString(withAddress: wallet.receiveAddress, forAmount: amount.rawValue)
+        let text = PaymentRequest.requestString(withAddress: receiveAddress, forAmount: amount.rawValue, currency: currency)
         presentEmail?(text, qrCode.image!)
     }
 
     @objc private func textTapped() {
         guard let amount = amount else { return showErrorMessage(S.RequestAnAmount.noAmount) }
-        let text = PaymentRequest.requestString(withAddress: wallet.receiveAddress, forAmount: amount.rawValue)
+        let text = PaymentRequest.requestString(withAddress: receiveAddress, forAmount: amount.rawValue, currency: currency)
         presentText?(text, qrCode.image!)
     }
 

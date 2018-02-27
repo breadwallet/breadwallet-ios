@@ -127,9 +127,10 @@ struct PaymentRequest {
         }.resume()
     }
 
-    static func requestString(withAddress: String, forAmount: UInt64) -> String {
+    static func requestString(withAddress address: String, forAmount: UInt64, currency: CurrencyDef) -> String {
         let btcAmount = convertToBTC(fromSatoshis: forAmount)
-        return "bitcoin:\(withAddress)?amount=\(btcAmount)"
+        guard let uri = currency.addressURI(address) else { return "" }
+        return "\(uri)?amount=\(btcAmount)"
     }
 
     let currency: CurrencyDef
