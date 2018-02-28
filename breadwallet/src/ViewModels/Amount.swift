@@ -158,7 +158,7 @@ struct DisplayAmount {
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "¤#")!, with: "-¤#")
+        format.negativeFormat = "-\(format.positiveFormat!)"
         if let rate = selectedRate {
             format.currencySymbol = rate.currencySymbol
         } else if let rate = currency.state.currentRate {
@@ -175,7 +175,7 @@ struct DisplayAmount {
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "¤#")!, with: "-¤#")
+        format.negativeFormat = "-\(format.positiveFormat!)"
         format.currencyCode = currency.code
         switch currency.state.maxDigits {
         case 2:
