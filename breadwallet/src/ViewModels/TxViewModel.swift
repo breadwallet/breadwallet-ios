@@ -45,7 +45,7 @@ extension TxViewModel {
     }
     
     var blockHeight: String {
-        return (tx.blockHeight == UInt64.max)
+        return (tx.blockHeight == C.txUnconfirmedHeight)
             ? S.TransactionDetails.notConfirmedBlockHeightLabel
             : "\(tx.blockHeight)"
     }
