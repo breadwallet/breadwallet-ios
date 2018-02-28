@@ -150,7 +150,7 @@ struct WalletState {
                            token: nil,
                            numSent: 0,
                            rates: [],
-                           currentRate: nil,
+                           currentRate: UserDefaults.currentRate(forCode: currency.code),
                            fees: nil,
                            recommendRescan: false,
                            maxDigits: UserDefaults.maxDigits,
