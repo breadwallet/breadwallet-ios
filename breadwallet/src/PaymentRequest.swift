@@ -28,6 +28,10 @@ struct PaymentRequest {
                         // BCH CashAddr includes the bitcoincash: prefix in the address format
                         // the payment request stores the address in legacy address
                         toAddress = "\(scheme):\(host)".bitcoinAddr
+                        if toAddress == "" {
+                            toAddress = host
+                            warningMessage = S.Send.legacyAddressWarning
+                        }
                     } else {
                         toAddress = host
                     }
@@ -149,6 +153,7 @@ struct PaymentRequest {
     var remoteRequest: NSURL?
     var paymentProtoclRequest: PaymentProtocolRequest?
     var r: URL?
+    var warningMessage: String? //Displayed to the user before the send view fields are populated
 }
 
 private func convertToBTC(fromSatoshis: UInt64) -> String {

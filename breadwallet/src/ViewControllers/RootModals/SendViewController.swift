@@ -285,6 +285,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func handleRequest(_ request: PaymentRequest) {
+        guard request.warningMessage == nil else { return handleRequestWithWarning(request) }
         switch request.type {
         case .local:
             addressCell.setContent(request.displayAddress)
@@ -310,6 +311,18 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 }
             })
         }
+    }
+
+    private func handleRequestWithWarning(_ request: PaymentRequest) {
+        guard let message = request.warningMessage else { return }
+        let alert = UIAlertController(title: S.Alert.warning, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: S.Button.continueAction, style: .default, handler: { [weak self] _ in
+            var requestCopy = request
+            requestCopy.warningMessage = nil
+            self?.handleRequest(requestCopy)
+        }))
+        present(alert, animated: true, completion: nil)
     }
 
     private func send() {
