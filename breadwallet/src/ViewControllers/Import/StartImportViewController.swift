@@ -33,9 +33,19 @@ class StartImportViewController : UIViewController {
     private let unlockingActivity = BRActivityViewController(message: S.Import.unlockingActivity)
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         addSubviews()
         addConstraints()
         setInitialData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if walletManager.peerManager?.connectionStatus == BRPeerStatusDisconnected {
+            DispatchQueue.walletQueue.async { [weak self] in
+                self?.walletManager.peerManager?.connect()
+            }
+        }
     }
 
     private func addSubviews() {
@@ -196,9 +206,10 @@ class StartImportViewController : UIViewController {
     }
 
     private func publish(tx: UnsafeMutablePointer<BRTransaction>, balance: UInt64, fee: UInt64, key: BRKey) {
+        guard let wallet = walletManager.wallet else { return }
+        guard let script = BRAddress(string: wallet.receiveAddress)?.scriptPubKey else { return }
+        guard walletManager.peerManager?.connectionStatus != BRPeerStatusDisconnected else { return }
         present(importingActivity, animated: true, completion: {
-            guard let wallet = self.walletManager.wallet else { return }
-            guard let script = BRAddress(string: wallet.receiveAddress)?.scriptPubKey else { return }
             tx.addOutput(amount: balance - fee, script: script)
             var keys = [key]
             let _ = tx.sign(forkId: (self.currency as! Bitcoin).forkId, keys: &keys)
