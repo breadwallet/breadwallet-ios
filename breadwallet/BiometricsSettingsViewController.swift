@@ -27,7 +27,6 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
     private let textView = UnEditableTextView()
     private let walletManager: WalletManager
     private var rate: Rate?
-    fileprivate var didTapSpendingLimit = false
 
     deinit {
         Store.unsubscribe(self)
@@ -44,7 +43,6 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        didTapSpendingLimit = false
         textView.attributedText = textViewText
     }
 
@@ -171,8 +169,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
 extension BiometricsSettingsViewController : UITextViewDelegate {
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
         if LAContext.canUseBiometrics {
-            guard !didTapSpendingLimit else { return false }
-            didTapSpendingLimit = true
+            guard navigationController?.presentedViewController == nil else { return false }
             presentSpendingLimit?()
         } else {
             presentCantUseBiometricsAlert()
