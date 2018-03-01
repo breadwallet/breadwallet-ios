@@ -13,7 +13,7 @@ class RootNavigationController : UINavigationController {
     var walletManager: WalletManager? {
         didSet {
             guard let walletManager = walletManager else { return }
-            if !walletManager.noWallet {
+            if !walletManager.noWallet && Store.state.isLoginRequired {
                 let loginView = LoginViewController(isPresentedForLock: false, walletManager: walletManager)
                 loginView.transitioningDelegate = loginTransitionDelegate
                 loginView.modalPresentationStyle = .overFullScreen

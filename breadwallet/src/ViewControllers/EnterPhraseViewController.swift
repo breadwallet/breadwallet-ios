@@ -169,6 +169,7 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
             //Since we know that the user had their phrase at this point,
             //this counts as a write date
             UserDefaults.writePaperPhraseDate = Date()
+            Store.perform(action: LoginSuccess())
             return callback(phrase)
         case .validateForResettingPin(let callback):
             guard self.walletManager.authenticate(phrase: phrase) else { errorLabel.isHidden = false; return }
