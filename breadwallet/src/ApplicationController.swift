@@ -461,7 +461,7 @@ class ApplicationController : Subscriber, Trackable {
     func willResignActive() {
         guard !Store.state.isPushNotificationsEnabled else { return }
         guard let pushToken = UserDefaults.pushToken else { return }
-        //walletManager?.apiClient?.deletePushNotificationToken(pushToken)
+        primaryWalletManager.apiClient?.deletePushNotificationToken(pushToken)
     }
 }
 
