@@ -407,15 +407,24 @@ class ModalPresenter : Subscriber, Trackable {
                     settingsNav.pushViewController(AboutViewController(), animated: true)
                 }),
                 Setting(title: S.Settings.advanced, callback: {
-                    let sections = [SettingsSections.network]
-                    let advancedSettings = [
+                    var sections = [SettingsSections.network]
+                    var advancedSettings = [
                         SettingsSections.network: [
                             Setting(title: S.NodeSelector.title, callback: {
                                 let nodeSelector = NodeSelectorViewController(walletManager: walletManager)
                                 settingsNav.pushViewController(nodeSelector, animated: true)
                             }),
-                        ]
+                        ],
                     ]
+
+                    if E.isTestFlight {
+                        advancedSettings[SettingsSections.other] = [
+                            Setting(title: S.Settings.sendLogs, callback: {
+                                self.showEmailLogsModal()
+                            })
+                        ]
+                        sections.append(SettingsSections.other)
+                    }
                     
                     let advancedSettingsVC = SettingsViewController(sections: sections, rows: advancedSettings, optionalTitle: S.Settings.advancedTitle)
                     settingsNav.pushViewController(advancedSettingsVC, animated: true)
@@ -843,6 +852,11 @@ class ModalPresenter : Subscriber, Trackable {
                 alert.removeFromSuperview()
             })
         })
+    }
+
+    private func showEmailLogsModal() {
+        self.messagePresenter.presenter = self.topViewController
+        self.messagePresenter.presentEmailLogs()
     }
 }
 
