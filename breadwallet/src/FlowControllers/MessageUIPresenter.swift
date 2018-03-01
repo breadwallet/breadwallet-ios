@@ -27,7 +27,7 @@ class MessageUIPresenter: NSObject, Trackable {
         originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
         UINavigationBar.appearance().titleTextAttributes = nil
         let emailView = MFMailComposeViewController()
-        emailView.setToRecipients(["support@breadapp.com"])
+        emailView.setToRecipients([C.iosEmail])
         emailView.setSubject("BRD Logs")
         emailView.setMessageBody("BRD Logs", isHTML: false)
         emailView.addAttachmentData(logData, mimeType: "text/plain", fileName: "brd_logs.txt")
