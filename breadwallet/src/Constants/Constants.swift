@@ -47,4 +47,8 @@ struct C {
     static let bCashForkBlockHeight: UInt32 = E.isTestnet ? 1155876 : 478559
     static let bCashForkTimeStamp: TimeInterval = E.isTestnet ? (1501597117 - NSTimeIntervalSince1970) : (1501568580 - NSTimeIntervalSince1970)
     static let txUnconfirmedHeight = Int32.max
+    static var logFilePath: URL {
+        let cachesDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
+        return URL(fileURLWithPath: cachesDirectory).appendingPathComponent("log.txt")
+    }
 }
