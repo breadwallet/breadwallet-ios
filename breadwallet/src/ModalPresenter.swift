@@ -48,7 +48,7 @@ class ModalPresenter : Subscriber, Trackable {
                         callback: { self.presentModal($0.rootModal) })
         
         Store.lazySubscribe(self,
-                        selector: { $0.alert != $1.alert && $1.alert != nil },
+                        selector: { $0.alert != $1.alert && $1.alert != .none },
                         callback: { self.handleAlertChange($0.alert) })
         
         Store.subscribe(self, name: .presentFaq(""), callback: {
@@ -150,8 +150,8 @@ class ModalPresenter : Subscriber, Trackable {
         }
     }
 
-    private func handleAlertChange(_ type: AlertType?) {
-        guard let type = type else { return }
+    private func handleAlertChange(_ type: AlertType) {
+        guard type != .none else { return }
         presentAlert(type, completion: {
             Store.perform(action: Alert.Hide())
         })

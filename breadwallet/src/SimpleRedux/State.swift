@@ -14,7 +14,7 @@ struct State {
     let isLoginRequired: Bool
     let rootModal: RootModal
     let isBtcSwapped: Bool //move to CurrencyState
-    let alert: AlertType?
+    let alert: AlertType
     let isBiometricsEnabled: Bool
     let defaultCurrencyCode: String
     let isPushNotificationsEnabled: Bool
@@ -49,7 +49,7 @@ extension State {
                         isLoginRequired: true,
                         rootModal: .none,
                         isBtcSwapped: UserDefaults.isBtcSwapped,
-                        alert: nil,
+                        alert: .none,
                         isBiometricsEnabled: UserDefaults.isBiometricsEnabled,
                         defaultCurrencyCode: UserDefaults.defaultCurrencyCode,
                         isPushNotificationsEnabled: UserDefaults.pushToken != nil,

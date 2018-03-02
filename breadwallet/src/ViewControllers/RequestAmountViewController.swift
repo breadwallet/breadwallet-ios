@@ -116,7 +116,7 @@ class RequestAmountViewController : UIViewController {
         address.text = receiveAddress
         address.textColor = .grayTextTint
         border.backgroundColor = .secondaryBorder
-        qrCode.image = UIImage.qrCode(data: "\(address.text)".data(using: .utf8)!, color: CIColor(color: .black))?
+        qrCode.image = UIImage.qrCode(data: "\(address.text!)".data(using: .utf8)!, color: CIColor(color: .black))?
             .resize(qrSize)!
         share.isToggleable = true
         sharePopout.clipsToBounds = true

@@ -146,7 +146,10 @@ enum Alert {
         }
     }
     struct Hide : Action {
-        let reduce: Reducer = { $0.mutate(alert: nil) }
+        let reduce: Reducer = {
+            let newState = $0.mutate(alert: AlertType.none)
+            return newState
+        }
     }
 }
 

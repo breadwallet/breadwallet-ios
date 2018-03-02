@@ -83,7 +83,7 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
             let bytesDat = Data(bytes: &bytes, count: bytes.count)
             super.init(key: txHash.txKey, version: ver, lastModified: date, deleted: del, data: bytesDat)
             return
-        } catch let _ {
+        } catch _ {
             //print("[BRTxMetadataObject] Unable to initialize BRTxMetadataObject: \(String(describing: e))")
         }
 
@@ -103,7 +103,7 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
             let bytesDat = Data(bytes: &bytes, count: bytes.count)
             super.init(key: txKey, version: ver, lastModified: date, deleted: del, data: bytesDat)
             return
-        } catch let _ {
+        } catch _ {
             //print("[BRTxMetadataObject] Unable to initialize BRTxMetadataObject: \(String(describing: e))")
         }
 
