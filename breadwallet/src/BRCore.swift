@@ -708,9 +708,10 @@ class BRPeerManager {
     let f = BRBCashTestNetVerifyDifficulty
     let g = BRMainNetDNSSeeds
     let h = BRMainNetCheckpoints
-    let i = BRTestNetDNSSeeds
-    let j = BRTestNetCheckpoints
-    let k = BRTestNetVerifyDifficulty
+    let i = BRMainNetVerifyDifficulty
+    let j = BRTestNetDNSSeeds
+    let k = BRTestNetCheckpoints
+    let l = BRTestNetVerifyDifficulty
 }
 
 extension UInt256 : CustomStringConvertible {
