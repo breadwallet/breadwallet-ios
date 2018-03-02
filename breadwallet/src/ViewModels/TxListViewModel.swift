@@ -28,7 +28,11 @@ struct TxListViewModel: TxViewModel {
             case .received:
                 format = isComplete ? S.Transaction.receivedVia : S.Transaction.receivingVia
             }
-            return String(format: format, tx.toAddress)
+            var address = tx.toAddress
+            if currency.matches(Currencies.bch) {
+                address = address.replacingOccurrences(of: "\(Currencies.bch.urlScheme!):", with: "")
+            }
+            return String(format: format, address)
         }
     }
 
