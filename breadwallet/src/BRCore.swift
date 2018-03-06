@@ -95,7 +95,7 @@ extension BRAddress: CustomStringConvertible, Hashable {
     var scriptPubKey: [UInt8]? {
         var script = [UInt8](repeating: 0, count: 25)
         let count = BRAddressScriptPubKey(&script, script.count,
-                                        UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self))
+                                          UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self))
         guard count > 0 else { return nil }
         if count < script.count { script.removeSubrange(count...) }
         return script
@@ -340,7 +340,7 @@ extension UnsafeMutablePointer where Pointee == BRTransaction {
     // adds signatures to any inputs with NULL signatures that can be signed with any keys
     // forkId is 0 for bitcoin, 0x40 for b-cash
     // returns true if tx is signed
-    func sign(forkId: Int = 0, keys: inout [BRKey]) -> Bool {
+    func sign(forkId: Int, keys: inout [BRKey]) -> Bool {
         return BRTransactionSign(self, Int32(forkId), &keys, keys.count) != 0
     }
     
@@ -456,7 +456,7 @@ class BRWallet {
     // forkId is 0 for bitcoin, 0x40 for b-cash
     // seed is the master private key (wallet seed) corresponding to the master public key given when wallet was created
     // returns true if all inputs were signed, or false if there was an error or not all inputs were able to be signed
-    func signTransaction(_ tx: BRTxRef, forkId: Int = 0, seed: inout UInt512) -> Bool {
+    func signTransaction(_ tx: BRTxRef, forkId: Int, seed: inout UInt512) -> Bool {
         return BRWalletSignTransaction(cPtr, tx, Int32(forkId), &seed, MemoryLayout<UInt512>.stride) != 0
     }
     
@@ -520,6 +520,21 @@ enum BRPeerManagerError: Error {
     case posixError(errorCode: Int32, description: String)
 }
 
+extension BRPeerStatus {
+    var description: String {
+        switch self {
+        case BRPeerStatusDisconnected:
+            return S.NodeSelector.notConnected
+        case BRPeerStatusConnecting:
+            return S.NodeSelector.connecting
+        case BRPeerStatusConnected:
+            return S.NodeSelector.connected
+        default:
+            return S.NodeSelector.connected
+        }
+    }
+}
+
 protocol BRPeerManagerListener {
     func syncStarted()
     func syncStopped(_ error: BRPeerManagerError?)
@@ -533,16 +548,20 @@ class BRPeerManager {
     let cPtr: OpaquePointer
     let listener: BRPeerManagerListener
     let mainNetParams = [BRMainNetParams]
+    let bcashParams = [BRBCashParams]
     let testNetParams = [BRTestNetParams]
+    let bcashTestNetParams = [BRBCashTestNetParams]
+    let currency: CurrencyDef
 
-    init?(wallet: BRWallet, earliestKeyTime: TimeInterval, blocks: [BRBlockRef?], peers: [BRPeer],
+    init?(currency: CurrencyDef, wallet: BRWallet, earliestKeyTime: TimeInterval, blocks: [BRBlockRef?], peers: [BRPeer],
           listener: BRPeerManagerListener) {
         var blockRefs = blocks
-        guard let cPtr = BRPeerManagerNew(E.isTestnet ? testNetParams: mainNetParams,
+        guard let cPtr = BRPeerManagerNew(currency.code == Currencies.btc.code ? (E.isTestnet ? testNetParams: mainNetParams) : (E.isTestnet ? bcashTestNetParams : bcashParams),
                                           wallet.cPtr, UInt32(earliestKeyTime + NSTimeIntervalSince1970),
                                           &blockRefs, blockRefs.count, peers, peers.count) else { return nil }
         self.listener = listener
         self.cPtr = cPtr
+        self.currency = currency
         
         BRPeerManagerSetCallbacks(cPtr, Unmanaged.passUnretained(self).toOpaque(),
         { (info) in // syncStarted
@@ -578,14 +597,16 @@ class BRPeerManager {
     func clearCallbacks() {
         BRPeerManagerSetCallbacks(cPtr, nil, nil, nil, nil, nil, nil, nil, nil)
     }
-    
-    // true if currently connected to at least one peer
-    var isConnected: Bool {
-        return BRPeerManagerConnectStatus(cPtr) != BRPeerStatusDisconnected
+
+    var connectionStatus: BRPeerStatus {
+        return BRPeerManagerConnectStatus(cPtr)
     }
     
     // connect to bitcoin peer-to-peer network (also call this whenever networkIsReachable() status changes)
     func connect() {
+        if currency.code == Currencies.bch.code {
+            UserDefaults.hasBchConnected = true
+        }
         if let fixedAddress = UserDefaults.customNodeIP {
             setFixedPeer(address: fixedAddress, port: UserDefaults.customNodePort ?? C.standardPort)
         }
@@ -616,13 +637,6 @@ class BRPeerManager {
     // the (unverified) best block height reported by connected peers
     var estimatedBlockHeight: UInt32 {
         return BRPeerManagerEstimatedBlockHeight(cPtr)
-    }
-
-    //Only show syncing view if more than 2 days behind
-    var shouldShowSyncingView: Bool {
-        let lastBlock = Date(timeIntervalSince1970: TimeInterval(lastBlockTimestamp))
-        let cutoff = Date().addingTimeInterval(-24*60*60*2) //2 days ago
-        return lastBlock.compare(cutoff) == .orderedAscending
     }
     
     // current network sync progress from 0 to 1
@@ -684,16 +698,50 @@ class BRPeerManager {
             self.completion = completion
         }
     }
-    
+
     //hack to keep the swift compiler happy
+    let a = BRBCashCheckpoints
+    let b = BRBCashDNSSeeds
+    let c = BRBCashVerifyDifficulty
+    let d = BRBCashTestNetCheckpoints
+    let e = BRBCashTestNetDNSSeeds
+    let f = BRBCashTestNetVerifyDifficulty
     let g = BRMainNetDNSSeeds
     let h = BRMainNetCheckpoints
-    let i = BRTestNetDNSSeeds
-    let j = BRTestNetCheckpoints
-    let k = BRTestNetVerifyDifficulty
+    let i = BRMainNetVerifyDifficulty
+    let j = BRTestNetDNSSeeds
+    let k = BRTestNetCheckpoints
+    let l = BRTestNetVerifyDifficulty
 }
 
 extension UInt256 : CustomStringConvertible {
+    private func _hexu(_ c: CChar) -> UInt8? {
+        if (c >= "0".utf8CString[0] && c <= "9".utf8CString[0]) { return UInt8(c - "0".utf8CString[0]) }
+        if (c >= "a".utf8CString[0] && c <= "f".utf8CString[0]) { return UInt8(c - ("a".utf8CString[0] - 0x0a)) }
+        if (c >= "A".utf8CString[0] && c <= "F".utf8CString[0]) { return UInt8(c - ("A".utf8CString[0] - 0x0a)) }
+        return nil
+    }
+    
+    init(_ s: String) {
+        let s = s.utf8CString
+        self.u8 = ((_hexu(s[0])!  << 4) | _hexu(s[1])!,  (_hexu(s[2])!  << 4) | _hexu(s[3])!,
+                   (_hexu(s[4])!  << 4) | _hexu(s[5])!,  (_hexu(s[6])!  << 4) | _hexu(s[7])!,
+                   (_hexu(s[8])!  << 4) | _hexu(s[9])!,  (_hexu(s[10])! << 4) | _hexu(s[11])!,
+                   (_hexu(s[12])! << 4) | _hexu(s[13])!, (_hexu(s[14])! << 4) | _hexu(s[15])!,
+                   (_hexu(s[16])! << 4) | _hexu(s[17])!, (_hexu(s[18])! << 4) | _hexu(s[19])!,
+                   (_hexu(s[20])! << 4) | _hexu(s[21])!, (_hexu(s[22])! << 4) | _hexu(s[23])!,
+                   (_hexu(s[24])! << 4) | _hexu(s[25])!, (_hexu(s[26])! << 4) | _hexu(s[27])!,
+                   (_hexu(s[28])! << 4) | _hexu(s[29])!, (_hexu(s[30])! << 4) | _hexu(s[31])!,
+                   (_hexu(s[32])! << 4) | _hexu(s[33])!, (_hexu(s[34])! << 4) | _hexu(s[35])!,
+                   (_hexu(s[36])! << 4) | _hexu(s[37])!, (_hexu(s[38])! << 4) | _hexu(s[39])!,
+                   (_hexu(s[40])! << 4) | _hexu(s[41])!, (_hexu(s[42])! << 4) | _hexu(s[43])!,
+                   (_hexu(s[44])! << 4) | _hexu(s[45])!, (_hexu(s[46])! << 4) | _hexu(s[47])!,
+                   (_hexu(s[48])! << 4) | _hexu(s[49])!, (_hexu(s[50])! << 4) | _hexu(s[51])!,
+                   (_hexu(s[52])! << 4) | _hexu(s[53])!, (_hexu(s[54])! << 4) | _hexu(s[55])!,
+                   (_hexu(s[56])! << 4) | _hexu(s[57])!, (_hexu(s[58])! << 4) | _hexu(s[59])!,
+                   (_hexu(s[60])! << 4) | _hexu(s[61])!, (_hexu(s[62])! << 4) | _hexu(s[63])!)
+    }
+    
     public var description: String {
         return String(format:"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x" +
             "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",

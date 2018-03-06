@@ -18,11 +18,10 @@ typealias EnterPhraseCallback = (String) -> Void
 
 class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, CustomTitleView, Trackable {
 
-    init(store: Store, walletManager: WalletManager, reason: PhraseEntryReason) {
-        self.store = store
+    init(walletManager: WalletManager, reason: PhraseEntryReason) {
         self.walletManager = walletManager
         self.enterPhrase = EnterPhraseCollectionViewController(walletManager: walletManager)
-        self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.recoverWallet)
+        self.faq = UIButton.buildFaqButton(articleId: ArticleIds.recoverWallet)
         self.reason = reason
 
         switch reason {
@@ -40,7 +39,6 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
     }
 
     //MARK: - Private
-    private let store: Store
     private let walletManager: WalletManager
     private let reason: PhraseEntryReason
     private let enterPhrase: EnterPhraseCollectionViewController
@@ -142,8 +140,8 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
             subheader.text = S.RecoverWallet.subheaderResetPin
             instruction.isHidden = true
             moreInfoButton.setTitle(S.RecoverWallet.resetPinInfo, for: .normal)
-            moreInfoButton.tap = { [weak self] in
-                self?.store.trigger(name: .presentFaq(ArticleIds.resetPinWithPaperKey))
+            moreInfoButton.tap = {
+                Store.trigger(name: .presentFaq(ArticleIds.resetPinWithPaperKey))
             }
             faq.isHidden = true
         case .validateForWipingWallet(_):
@@ -171,6 +169,7 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
             //Since we know that the user had their phrase at this point,
             //this counts as a write date
             UserDefaults.writePaperPhraseDate = Date()
+            Store.perform(action: LoginSuccess())
             return callback(phrase)
         case .validateForResettingPin(let callback):
             guard self.walletManager.authenticate(phrase: phrase) else { errorLabel.isHidden = false; return }

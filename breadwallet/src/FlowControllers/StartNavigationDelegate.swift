@@ -10,12 +10,6 @@ import UIKit
 
 class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
 
-    let store: Store
-
-    init(store: Store) {
-        self.store = store
-    }
-
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
 
         if viewController is RecoverWalletIntroViewController {

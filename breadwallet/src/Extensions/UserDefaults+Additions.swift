@@ -23,7 +23,13 @@ private let customNodeIPKey = "customNodeIPKey"
 private let customNodePortKey = "customNodePortKey"
 private let hasPromptedShareDataKey = "hasPromptedShareDataKey"
 private let hasShownWelcomeKey = "hasShownWelcomeKey"
+private let hasCompletedKYC = "hasCompletedKYCKey"
+private let hasAgreedToCrowdsaleTermsKey = "hasAgreedToCrowdsaleTermsKey"
 private let feesKey = "feesKey"
+private let selectedCurrencyCodeKey = "selectedCurrencyCodeKey"
+private let mostRecentSelectedCurrencyCodeKey = "mostRecentSelectedCurrencyCodeKey"
+private let hasSetSelectedCurrencyKey = "hasSetSelectedCurrencyKey"
+private let hasBchConnectedKey = "hasBchConnectedKey"
 
 extension UserDefaults {
 
@@ -88,23 +94,22 @@ extension UserDefaults {
         set { defaults.set(newValue, forKey: pushTokenKey) }
     }
 
-    static var currentRate: Rate? {
-        get {
-            guard let data = defaults.object(forKey: currentRateKey) as? [String: Any] else {
-                return nil
-            }
-            return Rate(data: data)
+    static func currentRate(forCode: String) -> Rate? {
+        guard let data = defaults.object(forKey: currentRateKey + forCode) as? [String: Any] else {
+            return nil
         }
+        return Rate(dictionary: data)
     }
 
-    static var currentRateData: [String: Any]? {
-        get {
-            guard let data = defaults.object(forKey: currentRateKey) as? [String: Any] else {
-                return nil
-            }
-            return data
+    static func currentRateData(forCode: String) -> [String: Any]? {
+        guard let data = defaults.object(forKey: currentRateKey + forCode) as? [String: Any] else {
+            return nil
         }
-        set { defaults.set(newValue, forKey: currentRateKey) }
+        return data
+    }
+
+    static func setCurrentRateData(newValue: [String: Any], forCode: String) {
+        defaults.set(newValue, forKey: currentRateKey + forCode)
     }
 
     static var customNodeIP: Int? {
@@ -133,6 +138,7 @@ extension UserDefaults {
         set { defaults.set(newValue, forKey: hasShownWelcomeKey) }
     }
 
+    // TODO:BCH not used, remove?
     static var fees: Fees? {
         //Returns nil if feeCacheTimeout exceeded
         get {
@@ -187,5 +193,57 @@ extension UserDefaults {
     static var hasPromptedBiometrics: Bool {
         get { return defaults.bool(forKey: hasPromptedBiometricsKey) }
         set { defaults.set(newValue, forKey: hasPromptedBiometricsKey) }
+    }
+}
+
+//MARK: - KYC
+extension UserDefaults {
+    static func hasCompletedKYC(forContractAddress: String) -> Bool {
+        return defaults.bool(forKey: "\(hasCompletedKYC)\(forContractAddress)")
+    }
+
+    static func setHasCompletedKYC(_ hasCompleted: Bool, contractAddress: String) {
+        defaults.set(hasCompleted, forKey: "\(hasCompletedKYC)\(contractAddress)")
+    }
+
+    static var hasAgreedToCrowdsaleTerms: Bool {
+        get { return defaults.bool(forKey: hasAgreedToCrowdsaleTermsKey) }
+        set { defaults.set(newValue, forKey: hasAgreedToCrowdsaleTermsKey) }
+    }
+}
+
+//MARK: - State Restoration
+extension UserDefaults {
+    static var selectedCurrencyCode: String? {
+        get {
+            if UserDefaults.hasSetSelectedCurrency {
+                return defaults.string(forKey: selectedCurrencyCodeKey)
+            } else {
+                return Currencies.btc.code
+            }
+        }
+        set {
+            UserDefaults.hasSetSelectedCurrency = true
+            defaults.setValue(newValue, forKey: selectedCurrencyCodeKey)
+        }
+    }
+
+    static var hasSetSelectedCurrency: Bool {
+        get { return defaults.bool(forKey: hasSetSelectedCurrencyKey) }
+        set { defaults.setValue(newValue, forKey: hasSetSelectedCurrencyKey) }
+    }
+
+    static var mostRecentSelectedCurrencyCode: String {
+        get {
+            return defaults.string(forKey: mostRecentSelectedCurrencyCodeKey) ?? Currencies.btc.code
+        }
+        set {
+            defaults.setValue(newValue, forKey: mostRecentSelectedCurrencyCodeKey)
+        }
+    }
+
+    static var hasBchConnected: Bool {
+        get { return defaults.bool(forKey: hasBchConnectedKey) }
+        set { defaults.set(newValue, forKey: hasBchConnectedKey) }
     }
 }

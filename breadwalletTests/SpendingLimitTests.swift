@@ -11,25 +11,30 @@ import XCTest
 
 class SpendingLimitTests : XCTestCase {
 
-    private let walletManager: WalletManager = try! WalletManager(store: Store(), dbPath: nil)
+    private var walletManager: WalletManager?
 
     override func setUp() {
         super.setUp()
         clearKeychain()
-        let _ = walletManager.setRandomSeedPhrase()
+        walletManager = try! WalletManager(currency: Currencies.btc, dbPath: Currencies.btc.dbPath)
+        let _ = walletManager?.setRandomSeedPhrase()
+        initWallet(walletManager: walletManager!)
     }
 
     func testDefaultValue() {
+        guard let walletManager = walletManager else { return XCTAssert(false, "Wallet manager should not be nil")}
         UserDefaults.standard.removeObject(forKey: "SPEND_LIMIT_AMOUNT")
         XCTAssertTrue(walletManager.spendingLimit == 0, "Default value should be 0")
     }
 
     func testSaveSpendingLimit() {
+        guard let walletManager = walletManager else { return XCTAssert(false, "Wallet manager should not be nil")}
         walletManager.spendingLimit = 100
         XCTAssertTrue(walletManager.spendingLimit == 100)
     }
 
     func testSaveZero() {
+        guard let walletManager = walletManager else { return XCTAssert(false, "Wallet manager should not be nil")}
         walletManager.spendingLimit = 0
         XCTAssertTrue(walletManager.spendingLimit == 0)
     }

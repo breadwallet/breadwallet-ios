@@ -25,14 +25,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     var initialAddress: String?
     var isPresentedFromLock = false
 
-    init(store: Store, sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil) {
-        self.store = store
+    init(sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil, currency: CurrencyDef) {
+        self.currency = currency
         self.sender = sender
         self.walletManager = walletManager
         self.initialAddress = initialAddress
         self.initialRequest = initialRequest
-        self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
-        amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
+        self.addressCell = AddressCell(currency: currency)
+        amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
 
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
@@ -41,18 +41,16 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
     //MARK - Private
     deinit {
-        store.unsubscribe(self)
+        Store.unsubscribe(self)
         NotificationCenter.default.removeObserver(self)
     }
 
-    private let store: Store
     private let sender: Sender
     private let walletManager: WalletManager
     private let amountView: AmountViewController
-    private let addressCell = AddressCell()
-    private let descriptionCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
+    private let addressCell: AddressCell
+    private let memoCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary)
-    private let currency: ShadowButton
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
@@ -63,11 +61,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let initialRequest: PaymentRequest?
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private var feeType: Fee?
+    private let currency: CurrencyDef
 
     override func viewDidLoad() {
         view.backgroundColor = .white
         view.addSubview(addressCell)
-        view.addSubview(descriptionCell)
+        view.addSubview(memoCell)
         view.addSubview(sendButton)
 
         addressCell.constrainTopCorners(height: SendCell.defaultHeight)
@@ -79,30 +78,31 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 amountView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         })
 
-        descriptionCell.constrain([
-            descriptionCell.widthAnchor.constraint(equalTo: amountView.view.widthAnchor),
-            descriptionCell.topAnchor.constraint(equalTo: amountView.view.bottomAnchor),
-            descriptionCell.leadingAnchor.constraint(equalTo: amountView.view.leadingAnchor),
-            descriptionCell.heightAnchor.constraint(equalTo: descriptionCell.textView.heightAnchor, constant: C.padding[4]) ])
+        memoCell.constrain([
+            memoCell.widthAnchor.constraint(equalTo: amountView.view.widthAnchor),
+            memoCell.topAnchor.constraint(equalTo: amountView.view.bottomAnchor),
+            memoCell.leadingAnchor.constraint(equalTo: amountView.view.leadingAnchor),
+            memoCell.heightAnchor.constraint(equalTo: memoCell.textView.heightAnchor, constant: C.padding[4]) ])
 
-        descriptionCell.accessoryView.constrain([
-                descriptionCell.accessoryView.constraint(.width, constant: 0.0) ])
+        memoCell.accessoryView.constrain([
+                memoCell.accessoryView.constraint(.width, constant: 0.0) ])
 
         sendButton.constrain([
             sendButton.constraint(.leading, toView: view, constant: C.padding[2]),
             sendButton.constraint(.trailing, toView: view, constant: -C.padding[2]),
-            sendButton.constraint(toBottom: descriptionCell, constant: verticalButtonPadding),
+            sendButton.constraint(toBottom: memoCell, constant: verticalButtonPadding),
             sendButton.constraint(.height, constant: C.Sizes.buttonHeight),
             sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[5] : -C.padding[2]) ])
         addButtonActions()
-        store.subscribe(self, selector: { $0.walletState.balance != $1.walletState.balance },
-                        callback: {
-                            if let balance = $0.walletState.balance {
+        Store.subscribe(self, selector: { $0[self.currency].balance != $1[self.currency].balance },
+                        callback: { [unowned self] in
+                            if let balance = $0[self.currency].balance {
                                 self.balance = balance
                             }
         })
-        store.subscribe(self, selector: { $0.fees != $1.fees }, callback: {
-            if let fees = $0.fees {
+        Store.subscribe(self, selector: { $0[self.currency].fees != $1[self.currency].fees }, callback: { [unowned self] in
+            if let fees = $0[self.currency].fees {
+                self.amountView.canEditFee = (fees.regular != fees.economy) || self.currency.matches(Currencies.btc)
                 if let feeType = self.feeType {
                     switch feeType {
                     case .regular :
@@ -131,10 +131,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         addressCell.paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         addressCell.scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
         sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
-        descriptionCell.didReturn = { textView in
+        memoCell.didReturn = { textView in
             textView.resignFirstResponder()
         }
-        descriptionCell.didBeginEditing = { [weak self] in
+        memoCell.didBeginEditing = { [weak self] in
             self?.amountView.closePinPad()
         }
         addressCell.didBeginEditing = strongify(self) { myself in
@@ -146,14 +146,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         amountView.balanceTextForAmount = { [weak self] amount, rate in
             return self?.balanceTextForAmount(amount: amount, rate: rate)
         }
-
         amountView.didUpdateAmount = { [weak self] amount in
             self?.amount = amount
         }
         amountView.didUpdateFee = strongify(self) { myself, fee in
             guard let wallet = myself.walletManager.wallet else { return }
             myself.feeType = fee
-            if let fees = myself.store.state.fees {
+            if let fees = self.currency.state.fees {
                 switch fee {
                 case .regular:
                     wallet.feePerKb = fees.regular
@@ -166,14 +165,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
         amountView.didChangeFirstResponder = { [weak self] isFirstResponder in
             if isFirstResponder {
-                self?.descriptionCell.textView.resignFirstResponder()
+                self?.memoCell.textView.resignFirstResponder()
                 self?.addressCell.textField.resignFirstResponder()
             }
         }
     }
 
     private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
+        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), selectedRate: rate, minimumFractionDigits: 0, currency: currency)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
@@ -181,7 +180,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         var feeColor: UIColor = .grayTextTint
         if let amount = amount, amount.rawValue > 0 {
             if let fee = sender.feeForTx(amount: amount.rawValue) {
-                let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
+                let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), selectedRate: rate, minimumFractionDigits: 0, currency: currency)
                 let feeText = feeAmount.description
                 feeOutput = String(format: S.Send.fee, feeText)
                 if (balance >= fee) && amount.rawValue > (balance - fee) {
@@ -210,14 +209,16 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         guard let pasteboard = UIPasteboard.general.string, pasteboard.utf8.count > 0 else {
             return showAlert(title: S.Alert.error, message: S.Send.emptyPasteboard, buttonLabel: S.Button.ok)
         }
-        guard let request = PaymentRequest(string: pasteboard) else {
-            return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressOnPasteboard, buttonLabel: S.Button.ok)
+
+        guard let request = PaymentRequest(string: pasteboard, currency: currency) else {
+            let message = String.init(format: S.Send.invalidAddressOnPasteboard, currency.name)
+            return showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
         }
         handleRequest(request)
     }
 
     @objc private func scanTapped() {
-        descriptionCell.textView.resignFirstResponder()
+        memoCell.textView.resignFirstResponder()
         addressCell.textField.resignFirstResponder()
         presentScan? { [weak self] paymentRequest in
             guard let request = paymentRequest else { return }
@@ -234,19 +235,21 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             guard let address = addressCell.address else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             }
-            guard store.state.fees != nil else {
+            
+            guard currency.state.fees != nil else {
                 return showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
             }
-//            guard address.isValidAddress else {
-//                return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
-//            }
+            guard address.isValidAddress else {
+                let message = String.init(format: S.Send.invalidAddressMessage, currency.name)
+                return showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
+            }
             guard let amount = amount else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
             }
             if let minOutput = walletManager.wallet?.minOutputAmount {
                 guard amount.rawValue >= minOutput else {
-                    let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: store.state.maxDigits)
-                    let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutputAmount.string(isBtcSwapped: store.state.isBtcSwapped))
+                    let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: currency.state.maxDigits, currency: currency)
+                    let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutputAmount.string(isBtcSwapped: Store.state.isBtcSwapped))
                     return showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
                 }
             }
@@ -262,7 +265,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
 
         guard let amount = amount else { return }
-        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingBiometrics: sender.canUseBiometrics)
+        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.displayAddress ?? "", isUsingBiometrics: sender.canUseBiometrics)
         confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
                 self.send()
@@ -282,15 +285,16 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func handleRequest(_ request: PaymentRequest) {
+        guard request.warningMessage == nil else { return handleRequestWithWarning(request) }
         switch request.type {
         case .local:
-            addressCell.setContent(request.toAddress)
+            addressCell.setContent(request.displayAddress)
             addressCell.isEditable = true
             if let amount = request.amount {
                 amountView.forceUpdateAmount(amount: amount)
             }
             if request.label != nil {
-                descriptionCell.content = request.label
+                memoCell.content = request.label
             }
         case .remote:
             let loadingView = BRActivityViewController(message: S.Send.loadingRequest)
@@ -309,13 +313,25 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
     }
 
+    private func handleRequestWithWarning(_ request: PaymentRequest) {
+        guard let message = request.warningMessage else { return }
+        let alert = UIAlertController(title: S.Alert.warning, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: S.Button.continueAction, style: .default, handler: { [weak self] _ in
+            var requestCopy = request
+            requestCopy.warningMessage = nil
+            self?.handleRequest(requestCopy)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+
     private func send() {
-        guard let rate = store.state.currentRate else { return }
+        guard let rate = currency.state.currentRate else { return }
         guard let feePerKb = walletManager.wallet?.feePerKb else { return }
 
         sender.send(biometricsMessage: S.VerifyPin.touchIdMessage,
                     rate: rate,
-                    comment: descriptionCell.textView.text,
+                    comment: memoCell.textView.text,
                     feePerKb: feePerKb,
                     verifyPinFunction: { [weak self] pinValidationCallback in
                         self?.presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin in
@@ -327,9 +343,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 case .success:
                     self?.dismiss(animated: true, completion: {
                         guard let myself = self else { return }
-                        myself.store.trigger(name: .showStatusBar)
+                        Store.trigger(name: .showStatusBar)
                         if myself.isPresentedFromLock {
-                            myself.store.trigger(name: .loginFromSend)
+                            Store.trigger(name: .loginFromSend)
                         }
                         myself.onPublishSuccess?()
                     })
@@ -381,11 +397,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 self?.confirmProtocolRequest(protoReq: protoReq)
             })
         } else if requestAmount < wallet.minOutputAmount {
-            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: store.state.maxDigits)
+            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: currency.state.maxDigits, currency: currency)
             let message = String(format: S.PaymentProtocol.Errors.smallPayment, amount.bits)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         } else if isOutputTooSmall {
-            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: store.state.maxDigits)
+            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: currency.state.maxDigits, currency: currency)
             let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.bits)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         }
@@ -397,7 +413,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         if requestAmount > 0 {
             amountView.forceUpdateAmount(amount: requestAmount)
         }
-        descriptionCell.content = protoReq.details.memo
+        memoCell.content = protoReq.details.memo
 
         if requestAmount == 0 {
             if let amount = amount {
@@ -449,6 +465,6 @@ extension SendViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        return S.Send.title
+        return "\(S.Send.title) \(currency.code)"
     }
 }

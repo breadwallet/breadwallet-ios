@@ -9,20 +9,17 @@
 import UIKit
 import BRCore
 
-private let mainURL = "https://api.breadwallet.com/q/addrs/utxo"
-private let fallbackURL = "https://insight.bitpay.com/api/addrs/utxo"
-private let testnetURL = "https://test-insight.bitpay.com/api/addrs/utxo"
-
 class StartImportViewController : UIViewController {
 
-    init(walletManager: WalletManager, store: Store) {
+    init(walletManager: WalletManager) {
         self.walletManager = walletManager
-        self.store = store
+        self.currency = walletManager.currency
+        assert(walletManager.currency is Bitcoin, "Importing only supports bitcoin")
         super.init(nibName: nil, bundle: nil)
     }
 
     private let walletManager: WalletManager
-    private let store: Store
+    private let currency: CurrencyDef
     private let header = RadialGradientView(backgroundColor: .blue, offset: 64.0)
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "ImportIllustration"))
     private let message = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
@@ -36,9 +33,19 @@ class StartImportViewController : UIViewController {
     private let unlockingActivity = BRActivityViewController(message: S.Import.unlockingActivity)
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         addSubviews()
         addConstraints()
         setInitialData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if walletManager.peerManager?.connectionStatus == BRPeerStatusDisconnected {
+            DispatchQueue.walletQueue.async { [weak self] in
+                self?.walletManager.peerManager?.connect()
+            }
+        }
     }
 
     private func addSubviews() {
@@ -55,12 +62,12 @@ class StartImportViewController : UIViewController {
     private func addConstraints() {
         header.constrainTopCorners(sidePadding: 0, topPadding: 0)
         header.constrain([
-            header.constraint(.height, constant: 220.0) ])
+            header.constraint(.height, constant: E.isIPhoneX ? 250.0 : 220.0) ])
         illustration.constrain([
             illustration.constraint(.width, constant: 64.0),
             illustration.constraint(.height, constant: 84.0),
             illustration.constraint(.centerX, toView: header, constant: 0.0),
-            illustration.constraint(.centerY, toView: header, constant: -C.padding[1]) ])
+            illustration.constraint(.centerY, toView: header, constant: E.isIPhoneX ? 4.0 : -C.padding[1]) ])
         leftCaption.constrain([
             leftCaption.topAnchor.constraint(equalTo: illustration.bottomAnchor, constant: C.padding[1]),
             leftCaption.trailingAnchor.constraint(equalTo: header.centerXAnchor, constant: -C.padding[2]),
@@ -99,13 +106,13 @@ class StartImportViewController : UIViewController {
         rightCaption.textAlignment = .center
         warning.text = S.Import.importWarning
 
-        button.tap = { [weak self] in
+        button.tap = strongify(self) { myself in
             let scan = ScanViewController(scanKeyCompletion: { address in
-                self?.didReceiveAddress(address)
+                myself.didReceiveAddress(address)
             }, isValidURI: { (string) -> Bool in
                 return string.isValidPrivateKey || string.isValidBip38Key
             })
-            self?.parent?.present(scan, animated: true, completion: nil)
+            myself.parent?.present(scan, animated: true, completion: nil)
         }
     }
 
@@ -151,21 +158,10 @@ class StartImportViewController : UIViewController {
         present(balanceActivity, animated: true, completion: {
             var key = key
             guard let address = key.address() else { return }
-            let urlString = E.isTestnet ? testnetURL : mainURL
-            let request = NSMutableURLRequest(url: URL(string: urlString)!,
-                                              cachePolicy: .reloadIgnoringLocalCacheData,
-                                              timeoutInterval: 20.0)
-            request.httpMethod = "POST"
-            request.httpBody = "addrs=\(address)".data(using: .utf8)
-            let task = URLSession.shared.dataTask(with: request as URLRequest) { [weak self] data, response, error in
-                guard let myself = self else { return }
-                guard error == nil else { print("error: \(error!)"); return }
-                guard let data = data,
-                    let jsonData = try? JSONSerialization.jsonObject(with: data, options: []),
-                    let json = jsonData as? [[String: Any]] else { return }
-                myself.handleData(data: json, key: key)
-            }
-            task.resume()
+            self.walletManager.apiClient?.fetchUTXOS(address: address, currency: self.currency, completion: { data in
+                guard let data = data else { return }
+                self.handleData(data: data, key: key)
+            })
         })
     }
 
@@ -174,7 +170,7 @@ class StartImportViewController : UIViewController {
         guard let tx = UnsafeMutablePointer<BRTransaction>() else { return }
         guard let wallet = walletManager.wallet else { return }
         guard let address = key.address() else { return }
-        guard let fees = store.state.fees else { return }
+        guard let fees = Currencies.btc.state.fees else { return }
         guard !wallet.containsAddress(address) else {
             return showErrorMessage(S.Import.Error.duplicate)
         }
@@ -194,11 +190,11 @@ class StartImportViewController : UIViewController {
             guard fee + wallet.minOutputAmount <= balance else {
                 return self.showErrorMessage(S.Import.Error.highFees)
             }
-            guard let rate = self.store.state.currentRate else { return }
-            let balanceAmount = Amount(amount: balance, rate: rate, maxDigits: self.store.state.maxDigits)
-            let feeAmount = Amount(amount: fee, rate: rate, maxDigits: self.store.state.maxDigits)
-            let balanceText = self.store.state.isBtcSwapped ? balanceAmount.localCurrency : balanceAmount.bits
-            let feeText = self.store.state.isBtcSwapped ? feeAmount.localCurrency : feeAmount.bits
+            guard let rate = Currencies.btc.state.currentRate else { return }
+            let balanceAmount = Amount(amount: balance, rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
+            let feeAmount = Amount(amount: fee, rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
+            let balanceText = Store.state.isBtcSwapped ? balanceAmount.localCurrency : balanceAmount.bits
+            let feeText = Store.state.isBtcSwapped ? feeAmount.localCurrency : feeAmount.bits
             let message = String(format: S.Import.confirm, balanceText, feeText)
             let alert = UIAlertController(title: S.Import.title, message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
@@ -210,12 +206,13 @@ class StartImportViewController : UIViewController {
     }
 
     private func publish(tx: UnsafeMutablePointer<BRTransaction>, balance: UInt64, fee: UInt64, key: BRKey) {
+        guard let wallet = walletManager.wallet else { return }
+        guard let script = BRAddress(string: wallet.receiveAddress)?.scriptPubKey else { return }
+        guard walletManager.peerManager?.connectionStatus != BRPeerStatusDisconnected else { return }
         present(importingActivity, animated: true, completion: {
-            guard let wallet = self.walletManager.wallet else { return }
-            guard let script = BRAddress(string: wallet.receiveAddress)?.scriptPubKey else { return }
             tx.addOutput(amount: balance - fee, script: script)
             var keys = [key]
-            let _ = tx.sign(keys: &keys)
+            let _ = tx.sign(forkId: (self.currency as! Bitcoin).forkId, keys: &keys)
                 guard tx.isSigned else {
                     self.importingActivity.dismiss(animated: true, completion: {
                         self.showErrorMessage(S.Import.Error.signing)
@@ -238,7 +235,7 @@ class StartImportViewController : UIViewController {
     }
 
     private func showSuccess() {
-        store.perform(action: Alert.Show(.sweepSuccess(callback: { [weak self] in
+        Store.perform(action: Alert.Show(.sweepSuccess(callback: { [weak self] in
             guard let myself = self else { return }
             myself.dismiss(animated: true, completion: nil)
         })))

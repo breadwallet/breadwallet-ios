@@ -107,6 +107,14 @@ extension UIColor {
     static var transparentWhite: UIColor {
         return UIColor(white: 1.0, alpha: 0.3)
     }
+    
+    static var transparentWhiteText: UIColor {
+        return UIColor(white: 1.0, alpha: 0.7)
+    }
+    
+    static var disabledWhiteText: UIColor {
+        return UIColor(white: 1.0, alpha: 0.5)
+    }
 
     static var transparentBlack: UIColor {
         return UIColor(white: 0.0, alpha: 0.3)
@@ -122,5 +130,41 @@ extension UIColor {
 
     static var txListGreen: UIColor {
         return UIColor(red: 0.0, green: 169.0/255.0, blue: 157.0/255.0, alpha: 1.0)
+    }
+    
+    static var blueButtonText: UIColor {
+        return UIColor(red: 127.0/255.0, green: 181.0/255.0, blue: 255.0/255.0, alpha: 1.0)
+    }
+    
+    static var darkGray: UIColor {
+        return UIColor(red: 84.0/255.0, green: 104.0/255.0, blue: 117.0/255.0, alpha: 1.0)
+    }
+    
+    static var lightGray: UIColor {
+        return UIColor(red: 179.0/255.0, green: 192.0/255.0, blue: 200.0/255.0, alpha: 1.0)
+    }
+    
+    static var mediumGray: UIColor {
+        return UIColor(red: 120.0/255.0, green: 143.0/255.0, blue: 158.0/255.0, alpha: 1.0)
+    }
+    
+    static var receivedGreen: UIColor {
+        return UIColor(red: 155.0/255.0, green: 213.0/255.0, blue: 85.0/255.0, alpha: 1.0)
+    }
+    
+    static var statusIndicatorActive: UIColor {
+        return UIColor(red: 75.0/255.0, green: 119.0/255.0, blue: 243.0/255.0, alpha: 1.0)
+    }
+    
+    static var grayBackground: UIColor {
+        return UIColor(red: 224.0/255.0, green: 229.0/255.0, blue: 232.0/255.0, alpha: 1.0)
+    }
+    
+    static var whiteBackground: UIColor {
+        return UIColor(red: 249.0/255.0, green: 251.0/255.0, blue: 254.0/255.0, alpha: 1.0)
+    }
+    
+    static var separator: UIColor {
+        return UIColor(red: 236.0/255.0, green: 236.0/255.0, blue: 236.0/255.0, alpha: 1.0)
     }
 }

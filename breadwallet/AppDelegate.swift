@@ -34,6 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let applicationController = ApplicationController()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        redirectStdOut()
         UIView.swizzleSetFrame()
         applicationController.launch(application: application, options: launchOptions)
         return true
@@ -79,5 +80,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return applicationController.open(url: url)
     }
 
+    //stdout is redirected to C.logFilePath for testflight builds
+    private func redirectStdOut() {
+        guard E.isTestFlight else { return }
+        C.logFilePath.withUnsafeFileSystemRepresentation {
+            _ = freopen($0, "w+", stdout)
+        }
+    }
 }
 

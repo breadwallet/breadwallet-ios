@@ -10,27 +10,28 @@ import Foundation
 
 class ExchangeUpdater : Subscriber {
 
+    let currency: CurrencyDef
+    
     //MARK: - Public
-    init(store: Store, walletManager: WalletManager) {
-        self.store = store
+    init(currency: CurrencyDef, walletManager: WalletManager) {
+        self.currency = currency
         self.walletManager = walletManager
-        store.subscribe(self,
+        Store.subscribe(self,
                         selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode },
                         callback: { state in
-                            guard let currentRate = state.rates.first( where: { $0.code == state.defaultCurrencyCode }) else { return }
-                            self.store.perform(action: ExchangeRates.setRate(currentRate))
+                            guard let currentRate = state[self.currency].rates.first( where: { $0.code == state.defaultCurrencyCode }) else { return }
+                            Store.perform(action: WalletChange(self.currency).setExchangeRate(currentRate))
         })
     }
 
     func refresh(completion: @escaping () -> Void) {
-        walletManager.apiClient?.exchangeRates { rates, error in
-            guard let currentRate = rates.first( where: { $0.code == self.store.state.defaultCurrencyCode }) else { completion(); return }
-            self.store.perform(action: ExchangeRates.setRates(currentRate: currentRate, rates: rates))
+        walletManager.apiClient?.exchangeRates(code: currency.code) { rates, error in
+            guard let currentRate = rates.first( where: { $0.code == Store.state.defaultCurrencyCode }) else { completion(); return }
+            Store.perform(action: WalletChange(self.currency).setExchangeRates(currentRate: currentRate, rates: rates))
             completion()
         }
     }
 
     //MARK: - Private
-    let store: Store
     let walletManager: WalletManager
 }

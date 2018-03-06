@@ -20,15 +20,15 @@ private let protocolPaymentTimeout: TimeInterval = 20.0
 
 class Sender {
 
-    init(walletManager: WalletManager, kvStore: BRReplicatedKVStore, store: Store) {
+    init(walletManager: WalletManager, kvStore: BRReplicatedKVStore, currency: CurrencyDef) {
         self.walletManager = walletManager
         self.kvStore = kvStore
-        self.store = store
+        self.currency = currency
     }
 
     private let walletManager: WalletManager
     private let kvStore: BRReplicatedKVStore
-    private let store: Store
+    private let currency: CurrencyDef
     var transaction: BRTxRef?
     var protocolRequest: PaymentProtocolRequest?
     var rate: Rate?
@@ -71,7 +71,7 @@ class Sender {
         if UserDefaults.isBiometricsEnabled && walletManager.canUseBiometrics(forTx:tx) {
             DispatchQueue.walletQueue.async { [weak self] in
                 guard let myself = self else { return }
-                myself.walletManager.signTransaction(tx, biometricsPrompt: biometricsMessage, completion: { result in
+                myself.walletManager.signTransaction(tx, forkId: (myself.currency as! Bitcoin).forkId, biometricsPrompt: biometricsMessage, completion: { result in
                     if result == .success {
                         myself.publish(completion: completion)
                     } else {
@@ -93,7 +93,7 @@ class Sender {
             let group = DispatchGroup()
             group.enter()
             DispatchQueue.walletQueue.async {
-                if self.walletManager.signTransaction(tx, pin: pin) {
+                if self.walletManager.signTransaction(tx, forkId: (self.currency as! Bitcoin).forkId, pin: pin) {
                     self.publish(completion: completion)
                 }
                 group.leave()
@@ -136,7 +136,7 @@ class Sender {
         } catch let error {
             print("could not update metadata: \(error)")
         }
-        store.trigger(name: .txMemoUpdated(tx.pointee.txHash.description))
+        Store.trigger(name: .txMemoUpdated(tx.pointee.txHash.description))
     }
 
     private func postProtocolPaymentIfNeeded() {

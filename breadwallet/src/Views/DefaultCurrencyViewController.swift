@@ -10,15 +10,13 @@ import UIKit
 
 class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
-    init(walletManager: WalletManager, store: Store) {
+    init(walletManager: WalletManager) {
         self.walletManager = walletManager
-        self.store = store
-        self.rates = store.state.rates.filter { $0.code != C.btcCurrencyCode }
+        self.rates = Currencies.btc.state.rates.filter { $0.code != C.btcCurrencyCode }
         super.init(style: .plain)
     }
 
     private let walletManager: WalletManager
-    private let store: Store
     private let cellIdentifier = "CellIdentifier"
     private var rates: [Rate] = [] {
         didSet {
@@ -44,15 +42,15 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
     private var header: UIView?
 
     deinit {
-        store.unsubscribe(self)
+        Store.unsubscribe(self)
     }
 
     override func viewDidLoad() {
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
-        store.subscribe(self, selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode }, callback: {
+        Store.subscribe(self, selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode }, callback: {
             self.defaultCurrencyCode = $0.defaultCurrencyCode
         })
-        store.subscribe(self, selector: { $0.maxDigits != $1.maxDigits }, callback: { _ in
+        Store.subscribe(self, selector: { $0[Currencies.btc].maxDigits != $1[Currencies.btc].maxDigits }, callback: { _ in
             self.setExchangeRateLabel()
         })
 
@@ -66,15 +64,15 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         titleLabel.sizeToFit()
         navigationItem.titleView = titleLabel
 
-        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.displayCurrency)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.displayCurrency)
         faqButton.tintColor = .darkText
         navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
     }
 
     private func setExchangeRateLabel() {
         if let currentRate = rates.filter({ $0.code == defaultCurrencyCode }).first {
-            let amount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: store.state.maxDigits)
-            let bitsAmount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: store.state.maxDigits)
+            let amount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
+            let bitsAmount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
             rateLabel.textColor = .darkText
             rateLabel.text = "\(bitsAmount.bits) = \(amount.string(forLocal: currentRate.locale))"
         }
@@ -131,7 +129,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
             bitcoinSwitch.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -C.padding[2]),
             bitcoinSwitch.widthAnchor.constraint(equalTo: header.widthAnchor, constant: -C.padding[4]) ])
 
-        if store.state.maxDigits == 8 {
+        if Currencies.btc.state.maxDigits == 8 {
             bitcoinSwitch.selectedSegmentIndex = 1
         } else {
             bitcoinSwitch.selectedSegmentIndex = 0
@@ -140,9 +138,11 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         bitcoinSwitch.valueChanged = strongify(self) { myself in
             let newIndex = myself.bitcoinSwitch.selectedSegmentIndex
             if newIndex == 1 {
-                myself.store.perform(action: MaxDigits.set(8))
+                Store.perform(action: WalletChange(Currencies.btc).setMaxDigits(8))
+                Store.perform(action: WalletChange(Currencies.bch).setMaxDigits(8))
             } else {
-                myself.store.perform(action: MaxDigits.set(2))
+                Store.perform(action: WalletChange(Currencies.btc).setMaxDigits(2))
+                Store.perform(action: WalletChange(Currencies.bch).setMaxDigits(2))
             }
         }
 
@@ -155,7 +155,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let rate = rates[indexPath.row]
-        store.perform(action: DefaultCurrency.setDefault(rate.code))
+        Store.perform(action: DefaultCurrency.setDefault(rate.code))
     }
 
 

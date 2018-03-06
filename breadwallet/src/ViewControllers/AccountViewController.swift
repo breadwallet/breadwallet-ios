@@ -10,65 +10,36 @@ import UIKit
 import BRCore
 import MachO
 
-let accountHeaderHeight: CGFloat = 136.0
-private let transactionsLoadingViewHeightConstant: CGFloat = 48.0
+let accountHeaderHeight: CGFloat = 152.0
+let accountFooterHeight: CGFloat = 67.0
 
 class AccountViewController : UIViewController, Subscriber {
 
     //MARK: - Public
-    var sendCallback: (() -> Void)? {
-        didSet { footerView.sendCallback = sendCallback }
-    }
-    var receiveCallback: (() -> Void)? {
-        didSet { footerView.receiveCallback = receiveCallback }
-    }
-    var menuCallback: (() -> Void)? {
-        didSet { footerView.menuCallback = menuCallback }
-    }
-
-    var walletManager: WalletManager? {
-        didSet {
-            guard let walletManager = walletManager else { return }
-            if !walletManager.noWallet {
-                loginView.walletManager = walletManager
-                loginView.transitioningDelegate = loginTransitionDelegate
-                loginView.modalPresentationStyle = .overFullScreen
-                loginView.modalPresentationCapturesStatusBarAppearance = true
-                loginView.shouldSelfDismiss = true
-                present(loginView, animated: false, completion: {
-                    self.tempLoginView.remove()
-                    self.attemptShowWelcomeView()
-                })
-            }
-            transactionsTableView.walletManager = walletManager
-            headerView.isWatchOnly = walletManager.isWatchOnly
-        }
-    }
-
-    init(store: Store, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
-        self.store = store
-        self.transactionsTableView = TransactionsTableViewController(store: store, didSelectTransaction: didSelectTransaction)
-        self.headerView = AccountHeaderView(store: store)
-        self.loginView = LoginViewController(store: store, isPresentedForLock: false)
-        self.tempLoginView = LoginViewController(store: store, isPresentedForLock: false)
+    let currency: CurrencyDef
+    
+    init(walletManager: WalletManager) {
+        self.walletManager = walletManager
+        self.currency = walletManager.currency
+        self.headerView = AccountHeaderView(currency: currency)
+        self.footerView = AccountFooterView(currency: currency)
         super.init(nibName: nil, bundle: nil)
+        self.transactionsTableView = TransactionsTableViewController(walletManager: walletManager, didSelectTransaction: didSelectTransaction)
+        
+        headerView.isWatchOnly = walletManager.isWatchOnly
+        footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send(currency: walletManager.currency))) }
+        footerView.receiveCallback = { Store.perform(action: RootModalActions.Present(modal: .receive(currency: walletManager.currency))) }
+        footerView.buyCallback = { Store.perform(action: RootModalActions.Present(modal: .buy)) }
     }
 
     //MARK: - Private
-    private let store: Store
+    private let walletManager: WalletManager
     private let headerView: AccountHeaderView
-    private let footerView = AccountFooterView()
-    private let transactionsLoadingView = LoadingProgressView()
-    private let transactionsTableView: TransactionsTableViewController
-    private let footerHeight: CGFloat = 56.0
-    private var transactionsLoadingViewTop: NSLayoutConstraint?
+    private let footerView: AccountFooterView
+    private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
+    private var transactionsTableView: TransactionsTableViewController!
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var isLoginRequired = false
-    private let loginView: LoginViewController
-    private let tempLoginView: LoginViewController
-    private let loginTransitionDelegate = LoginTransitionDelegate()
-    private let welcomeTransitingDelegate = PinTransitioningDelegate()
-
     private let searchHeaderview: SearchHeaderView = {
         let view = SearchHeaderView()
         view.isHidden = true
@@ -85,9 +56,9 @@ class AccountViewController : UIViewController, Subscriber {
             }
         }
     }
-    private var didEndLoading = false
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
         if !E.isSimulator {
             var s = stat()
@@ -105,12 +76,12 @@ class AccountViewController : UIViewController, Subscriber {
             showJailbreakWarnings(isJailbroken: isJailbroken)
         }
 
+        setupNavigationBar()
         addTransactionsView()
         addSubviews()
         addConstraints()
         addSubscriptions()
         addAppLifecycleNotificationEvents()
-        addTemporaryStartupViews()
         setInitialData()
     }
 
@@ -121,183 +92,96 @@ class AccountViewController : UIViewController, Subscriber {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        headerView.setBalances()
+        if walletManager.peerManager?.connectionStatus == BRPeerStatusDisconnected {
+            DispatchQueue.walletQueue.async { [weak self] in
+                self?.walletManager.peerManager?.connect()
+            }
+        }
+    }
+    
+    // MARK: -
+    
+    private func setupNavigationBar() {
+        let searchButton = UIButton(type: .system)
+        searchButton.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
+        searchButton.frame = CGRect(x: 0.0, y: 12.0, width: 22.0, height: 22.0) // for iOS 10
+        searchButton.widthAnchor.constraint(equalToConstant: 22.0).isActive = true
+        searchButton.heightAnchor.constraint(equalToConstant: 22.0).isActive = true
+        searchButton.tintColor = .white
+        searchButton.tap = showSearchHeaderView
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchButton)
+        
     }
 
     private func addSubviews() {
         view.addSubview(headerContainer)
         headerContainer.addSubview(headerView)
-        view.addSubview(footerView)
         headerContainer.addSubview(searchHeaderview)
+        view.addSubview(footerView)
     }
 
     private func addConstraints() {
-        headerContainer.constrainTopCorners(sidePadding: 0, topPadding: 0)
-        headerContainer.constrain([ headerContainer.constraint(.height, constant: E.isIPhoneX ? accountHeaderHeight + 14.0 : accountHeaderHeight) ])
+        headerContainer.constrainTopCorners(height: accountHeaderHeight)
         headerView.constrain(toSuperviewEdges: nil)
-
-        footerView.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
-        footerView.constrain([
-            footerView.constraint(.height, constant: E.isIPhoneX ? footerHeight + 19.0 : footerHeight) ])
         searchHeaderview.constrain(toSuperviewEdges: nil)
+
+        if #available(iOS 11.0, *) {
+            footerView.constrain([
+                footerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                footerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -C.padding[1]),
+                footerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: C.padding[1]),
+                footerView.heightAnchor.constraint(equalToConstant: accountFooterHeight)
+                ])
+        } else {
+            footerView.constrain([
+                footerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                footerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -C.padding[1]),
+                footerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: C.padding[1]),
+                footerView.heightAnchor.constraint(equalToConstant: accountFooterHeight)
+                ])
+        }
     }
 
     private func addSubscriptions() {
-        store.subscribe(self, selector: { $0.walletState.syncProgress != $1.walletState.syncProgress },
-                        callback: { state in
-                            self.transactionsTableView.syncingView.progress = CGFloat(state.walletState.syncProgress)
-                            self.transactionsTableView.syncingView.timestamp = state.walletState.lastBlockTimestamp
-        })
-
-        store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState },
-                            callback: { state in
-                                guard let peerManager = self.walletManager?.peerManager else { return }
-                                if state.walletState.syncState == .success {
-                                    self.transactionsTableView.isSyncingViewVisible = false
-                                } else if peerManager.shouldShowSyncingView {
-                                    self.transactionsTableView.isSyncingViewVisible = true
-                                } else {
-                                    self.transactionsTableView.isSyncingViewVisible = false
-                                }
-        })
-
-        store.subscribe(self, selector: { $0.isLoadingTransactions != $1.isLoadingTransactions }, callback: {
-            if $0.isLoadingTransactions {
-                self.loadingDidStart()
-            } else {
-                self.hideLoadingView()
-            }
-        })
-        store.subscribe(self, selector: { $0.isLoginRequired != $1.isLoginRequired }, callback: { self.isLoginRequired = $0.isLoginRequired })
-        store.subscribe(self, name: .showStatusBar, callback: { _ in
+        Store.subscribe(self, selector: { $0.isLoginRequired != $1.isLoginRequired }, callback: { self.isLoginRequired = $0.isLoginRequired })
+        Store.subscribe(self, name: .showStatusBar, callback: { _ in
             self.shouldShowStatusBar = true
         })
-        store.subscribe(self, name: .hideStatusBar, callback: { _ in
+        Store.subscribe(self, name: .hideStatusBar, callback: { _ in
             self.shouldShowStatusBar = false
         })
     }
 
     private func setInitialData() {
-        headerView.search.tap = { [weak self] in
-            guard let myself = self else { return }
-            UIView.transition(from: myself.headerView,
-                              to: myself.searchHeaderview,
-                              duration: C.animationDuration,
-                              options: [.transitionFlipFromBottom, .showHideTransitionViews, .curveEaseOut],
-                              completion: { _ in
-                                myself.searchHeaderview.triggerUpdate()
-                                myself.setNeedsStatusBarAppearanceUpdate()
-            })
-        }
-
-        searchHeaderview.didCancel = { [weak self] in
-            guard let myself = self else { return }
-            UIView.transition(from: myself.searchHeaderview,
-                              to: myself.headerView,
-                              duration: C.animationDuration,
-                              options: [.transitionFlipFromTop, .showHideTransitionViews, .curveEaseOut],
-                              completion: { _ in
-                                myself.setNeedsStatusBarAppearanceUpdate()
-            })
-        }
-
-
+        searchHeaderview.didCancel = hideSearchHeaderView
         searchHeaderview.didChangeFilters = { [weak self] filters in
             self?.transactionsTableView.filters = filters
         }
     }
 
-    private func loadingDidStart() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
-            if !self.didEndLoading {
-                self.showLoadingView()
-            }
-        })
-    }
-
-    private func showLoadingView() {
-        view.insertSubview(transactionsLoadingView, belowSubview: headerContainer)
-        transactionsLoadingViewTop = transactionsLoadingView.topAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -transactionsLoadingViewHeightConstant)
-        transactionsLoadingView.constrain([
-            transactionsLoadingViewTop,
-            transactionsLoadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            transactionsLoadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            transactionsLoadingView.heightAnchor.constraint(equalToConstant: transactionsLoadingViewHeightConstant) ])
-        transactionsLoadingView.progress = 0.01
-        view.layoutIfNeeded()
-        UIView.animate(withDuration: C.animationDuration, animations: {
-        self.transactionsTableView.tableView.verticallyOffsetContent(transactionsLoadingViewHeightConstant)
-            self.transactionsLoadingViewTop?.constant = 0.0
-            self.view.layoutIfNeeded()
-        }) { completed in
-            //This view needs to be brought to the front so that it's above the headerview shadow. It looks weird if it's below.
-            self.view.insertSubview(self.transactionsLoadingView, aboveSubview: self.headerContainer)
-        }
-        loadingTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateLoadingProgress), userInfo: nil, repeats: true)
-    }
-
-    private func hideLoadingView() {
-        didEndLoading = true
-        guard self.transactionsLoadingViewTop?.constant == 0.0 else { return } //Should skip hide if it's not shown
-        loadingTimer?.invalidate()
-        loadingTimer = nil
-        transactionsLoadingView.progress = 1.0
-        view.insertSubview(transactionsLoadingView, belowSubview: headerContainer)
-        if transactionsLoadingView.superview != nil {
-            UIView.animate(withDuration: C.animationDuration, animations: {
-                self.transactionsTableView.tableView.verticallyOffsetContent(-transactionsLoadingViewHeightConstant)
-                self.transactionsLoadingViewTop?.constant = -transactionsLoadingViewHeightConstant
-                self.view.layoutIfNeeded()
-            }) { completed in
-                self.transactionsLoadingView.removeFromSuperview()
-            }
-        }
-    }
-
-    @objc private func updateLoadingProgress() {
-        transactionsLoadingView.progress = transactionsLoadingView.progress + (1.0 - transactionsLoadingView.progress)/8.0
-    }
-
-    private func addTemporaryStartupViews() {
-        guardProtected(queue: DispatchQueue.main) {
-            if !WalletManager.staticNoWallet {
-                self.addChildViewController(self.tempLoginView, layout: {
-                    self.tempLoginView.view.constrain(toSuperviewEdges: nil)
-                })
-            } else {
-                let tempStartView = StartViewController(store: self.store, didTapCreate: {}, didTapRecover: {})
-                self.addChildViewController(tempStartView, layout: {
-                    tempStartView.view.constrain(toSuperviewEdges: nil)
-                    tempStartView.view.isUserInteractionEnabled = false
-                })
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                    tempStartView.remove()
-                })
-            }
-        }
-    }
-
     private func addTransactionsView() {
+        view.backgroundColor = .whiteTint
         addChildViewController(transactionsTableView, layout: {
-            transactionsTableView.view.constrain(toSuperviewEdges: nil)
-            if #available(iOS 11, *) {
-                transactionsTableView.tableView.contentInset =
-                    UIEdgeInsets(top: E.isIPhoneX ? accountHeaderHeight + 14 : accountHeaderHeight + C.padding[2],
-                                 left: 0,
-                                 bottom: E.isIPhoneX ? footerHeight + C.padding[2] + 19 : footerHeight + C.padding[2],
-                                 right: 0)
+            if #available(iOS 11.0, *) {
+                transactionsTableView.view.constrain([
+                    transactionsTableView.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                transactionsTableView.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                transactionsTableView.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                transactionsTableView.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                ])
             } else {
-                transactionsTableView.tableView.contentInset =
-                    UIEdgeInsets(top: E.isIPhoneX ? accountHeaderHeight + C.padding[2] + 14 : accountHeaderHeight + C.padding[2],
-                                 left: 0,
-                                 bottom: E.isIPhoneX ? footerHeight + C.padding[2] + 19 : footerHeight + C.padding[2],
-                                 right: 0)
+                transactionsTableView.view.constrain(toSuperviewEdges: nil)
             }
-            transactionsTableView.tableView.scrollIndicatorInsets =
-                UIEdgeInsets(top: E.isIPhoneX ? accountHeaderHeight + 14 : accountHeaderHeight,
-                             left: 0,
-                             bottom: E.isIPhoneX ? footerHeight + 19 : footerHeight,
-                             right: 0)
         })
+    }
+    
+    private func didSelectTransaction(transactions: [Transaction], selectedIndex: Int) -> Void {
+        let transactionDetails = TxDetailViewController(transaction: transactions[selectedIndex])
+        transactionDetails.modalPresentationStyle = .overCurrentContext
+        transactionDetails.transitioningDelegate = transitionDelegate
+        transactionDetails.modalPresentationCapturesStatusBarAppearance = true
+        present(transactionDetails, animated: true, completion: nil)
     }
 
     private func addAppLifecycleNotificationEvents() {
@@ -309,7 +193,7 @@ class AccountViewController : UIViewController, Subscriber {
             })
         }
         NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { note in
-            if !self.isLoginRequired && !self.store.state.isPromptingBiometrics {
+            if !self.isLoginRequired && !Store.state.isPromptingBiometrics {
                 self.blurView.alpha = 1.0
                 self.view.addSubview(self.blurView)
                 self.blurView.constrain(toSuperviewEdges: nil)
@@ -319,7 +203,7 @@ class AccountViewController : UIViewController, Subscriber {
 
     private func showJailbreakWarnings(isJailbroken: Bool) {
         guard isJailbroken else { return }
-        let totalSent = walletManager?.wallet?.totalSent ?? 0
+        let totalSent = walletManager.wallet?.totalSent ?? 0
         let message = totalSent > 0 ? S.JailbreakWarnings.messageWithBalance : S.JailbreakWarnings.messageWithBalance
         let alert = UIAlertController(title: S.JailbreakWarnings.title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.JailbreakWarnings.ignore, style: .default, handler: nil))
@@ -332,17 +216,39 @@ class AccountViewController : UIViewController, Subscriber {
         }
         present(alert, animated: true, completion: nil)
     }
-
-    private func attemptShowWelcomeView() {
-        if !UserDefaults.hasShownWelcome {
-            let welcome = WelcomeViewController()
-            welcome.transitioningDelegate = welcomeTransitingDelegate
-            welcome.modalPresentationStyle = .overFullScreen
-            welcome.modalPresentationCapturesStatusBarAppearance = true
-            welcomeTransitingDelegate.shouldShowMaskView = false
-            loginView.present(welcome, animated: true, completion: nil)
-            UserDefaults.hasShownWelcome = true
-        }
+    
+    private func showSearchHeaderView() {
+        let navBarHeight: CGFloat = 44.0
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        var contentInset = self.transactionsTableView.tableView.contentInset
+        var contentOffset = self.transactionsTableView.tableView.contentOffset
+        contentInset.top += navBarHeight
+        contentOffset.y -= navBarHeight
+        self.transactionsTableView.tableView.contentInset = contentInset
+        self.transactionsTableView.tableView.contentOffset = contentOffset
+        UIView.transition(from: self.headerView,
+                          to: self.searchHeaderview,
+                          duration: C.animationDuration,
+                          options: [.transitionFlipFromBottom, .showHideTransitionViews, .curveEaseOut],
+                          completion: { _ in
+                            self.searchHeaderview.triggerUpdate()
+                            self.setNeedsStatusBarAppearanceUpdate()
+        })
+    }
+    
+    private func hideSearchHeaderView() {
+        let navBarHeight: CGFloat = 44.0
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        var contentInset = self.transactionsTableView.tableView.contentInset
+        contentInset.top -= navBarHeight
+        self.transactionsTableView.tableView.contentInset = contentInset
+        UIView.transition(from: self.searchHeaderview,
+                          to: self.headerView,
+                          duration: C.animationDuration,
+                          options: [.transitionFlipFromTop, .showHideTransitionViews, .curveEaseOut],
+                          completion: { _ in
+                            self.setNeedsStatusBarAppearanceUpdate()
+        })
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

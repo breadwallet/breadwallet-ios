@@ -31,6 +31,7 @@ extension BRAPIClient {
                                 self.log("malformed feature: \(feat)")
                             }
                         }
+                        Store.trigger(name: .didUpdateFeatureFlags)
                     } catch let e {
                         self.log("error loading features json: \(e)")
                     }

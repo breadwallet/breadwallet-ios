@@ -10,12 +10,6 @@ import UIKit
 
 class ShareDataViewController : UIViewController {
 
-    init(store: Store) {
-        self.store = store
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    private let store: Store
     private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let body = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
     private let label = UILabel(font: .customBold(size: 16.0), color: .darkText)
@@ -71,12 +65,8 @@ class ShareDataViewController : UIViewController {
         toggle.valueChanged = strongify(self) { myself in
             UserDefaults.hasAquiredShareDataPermission = myself.toggle.isOn
             if myself.toggle.isOn {
-                myself.store.trigger(name: .didEnableShareData)
+                Store.trigger(name: .didEnableShareData)
             }
         }
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

@@ -13,21 +13,22 @@ enum PromptType {
     case biometrics
     case paperKey
     case upgradePin
-    case recommendRescan
     case noPasscode
     case shareData
 
     static var defaultOrder: [PromptType] = {
-        return [.recommendRescan, .upgradePin, .paperKey, .noPasscode, .biometrics, .shareData]
+        return [.upgradePin, .paperKey, .noPasscode, .biometrics, .shareData]
     }()
     
+    static func nextPrompt(walletManager: WalletManager) -> PromptType? {
+        return defaultOrder.first(where: { $0.shouldPrompt(walletManager: walletManager) })
+    }
 
     var title: String {
         switch self {
         case .biometrics: return LAContext.biometricType() == .face ? S.Prompts.FaceId.title : S.Prompts.TouchId.title
         case .paperKey: return S.Prompts.PaperKey.title
         case .upgradePin: return S.Prompts.UpgradePin.title
-        case .recommendRescan: return S.Prompts.RecommendRescan.title
         case .noPasscode: return S.Prompts.NoPasscode.title
         case .shareData: return S.Prompts.ShareData.title
         }
@@ -38,7 +39,6 @@ enum PromptType {
         case .biometrics: return "biometricsPrompt"
         case .paperKey: return "paperKeyPrompt"
         case .upgradePin: return "upgradePinPrompt"
-        case .recommendRescan: return "recommendRescanPrompt"
         case .noPasscode: return "noPasscodePrompt"
         case .shareData: return "shareDataPrompt"
         }
@@ -49,25 +49,23 @@ enum PromptType {
         case .biometrics: return LAContext.biometricType() == .face ? S.Prompts.FaceId.body : S.Prompts.TouchId.body
         case .paperKey: return S.Prompts.PaperKey.body
         case .upgradePin: return S.Prompts.UpgradePin.body
-        case .recommendRescan: return S.Prompts.RecommendRescan.body
         case .noPasscode: return S.Prompts.NoPasscode.body
         case .shareData: return S.Prompts.ShareData.body
         }
     }
 
     //This is the trigger that happens when the prompt is tapped
-    var trigger: TriggerName? {
+    func trigger(currency: CurrencyDef) -> TriggerName? {
         switch self {
         case .biometrics: return .promptBiometrics
         case .paperKey: return .promptPaperKey
         case .upgradePin: return .promptUpgradePin
-        case .recommendRescan: return .recommendRescan
         case .noPasscode: return nil
         case .shareData: return .promptShareData
         }
     }
 
-    func shouldPrompt(walletManager: WalletManager, state: State) -> Bool {
+    private func shouldPrompt(walletManager: WalletManager) -> Bool {
         switch self {
         case .biometrics:
             return !UserDefaults.hasPromptedBiometrics && LAContext.canUseBiometrics && !UserDefaults.isBiometricsEnabled
@@ -75,8 +73,6 @@ enum PromptType {
             return UserDefaults.walletRequiresBackup
         case .upgradePin:
             return walletManager.pinLength != 6
-        case .recommendRescan:
-            return state.recommendRescan
         case .noPasscode:
             return !LAContext.isPasscodeEnabled
         case .shareData:
@@ -93,28 +89,79 @@ class Prompt : UIView {
         setup()
     }
 
-    let close = UIButton.close
+    let dismissButton = UIButton.rounded(title: S.Button.dismiss)
+    let continueButton = UIButton.rounded(title: S.Button.continueAction)
     let type: PromptType
-    private let title = UILabel(font: .customBold(size: 14.0), color: .darkText)
-    private let body = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
+    
+    private let title = UILabel(font: .customBold(size: 16.0), color: .darkGray)
+    private let body = UILabel.wrapping(font: .customBody(size: 14.0), color: .darkGray)
+    private let container = UIView()
 
     private func setup() {
-        addSubview(title)
-        addSubview(body)
-        addSubview(close)
-        title.constrain([
-            title.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
-            title.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[2]) ])
-        body.constrain([
-            body.leadingAnchor.constraint(equalTo: title.leadingAnchor),
-            body.topAnchor.constraint(equalTo: title.bottomAnchor),
-            body.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]) ])
-        close.constrain([
-            close.topAnchor.constraint(equalTo: topAnchor),
-            close.trailingAnchor.constraint(equalTo: trailingAnchor) ])
-        close.pin(toSize: CGSize(width: 44.0, height: 44.0))
+        addSubviews()
+        setupConstraints()
+        setupStyle()
+        
         title.text = type.title
         body.text = type.body
+    }
+    
+    private func addSubviews() {
+        addSubview(container)
+        container.addSubview(title)
+        container.addSubview(body)
+        container.addSubview(dismissButton)
+        container.addSubview(continueButton)
+    }
+    
+    private func setupConstraints() {
+        container.constrain(toSuperviewEdges: UIEdgeInsets(top: C.padding[1],
+                                                           left: C.padding[2],
+                                                           bottom: -C.padding[1],
+                                                           right: -C.padding[2]))
+        
+        title.constrain([
+            title.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
+            title.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[2]),
+            title.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[2])
+            ])
+        
+        body.constrain([
+            body.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
+            body.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[2]),
+            body.topAnchor.constraint(equalTo: title.bottomAnchor, constant: C.padding[1])
+            ])
+        
+        dismissButton.constrain([
+            dismissButton.topAnchor.constraint(equalTo: body.bottomAnchor, constant: C.padding[2]),
+            dismissButton.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
+            dismissButton.heightAnchor.constraint(equalToConstant: 44.0),
+            dismissButton.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -C.padding[2])
+            ])
+        
+        continueButton.constrain([
+            continueButton.topAnchor.constraint(equalTo: dismissButton.topAnchor),
+            continueButton.leadingAnchor.constraint(equalTo: dismissButton.trailingAnchor, constant: C.padding[1]),
+            continueButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[2]),
+            continueButton.widthAnchor.constraint(equalTo: dismissButton.widthAnchor),
+            continueButton.bottomAnchor.constraint(equalTo: dismissButton.bottomAnchor)
+            ])
+    }
+    
+    private func setupStyle() {
+        dismissButton.backgroundColor = .lightGray
+        dismissButton.setTitleColor(.white, for: .normal)
+        continueButton.backgroundColor = .statusIndicatorActive
+        continueButton.setTitleColor(.white, for: .normal)
+        
+        container.backgroundColor = .whiteBackground
+        container.layer.cornerRadius = 4.0
+        container.layer.shadowRadius = 4.0
+        container.layer.shadowColor = UIColor.black.cgColor
+        container.layer.shadowOpacity = 0.08
+        container.layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
+        container.layer.borderColor = UIColor.black.withAlphaComponent(0.12).cgColor
+        container.layer.borderWidth = 1.0
     }
 
     required init?(coder aDecoder: NSCoder) {

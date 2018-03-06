@@ -16,14 +16,25 @@ enum PaymentRequestType {
 
 struct PaymentRequest {
 
-    init?(string: String) {
+    init?(string: String, currency: CurrencyDef) {
+        self.currency = currency
         if var url = NSURL(string: string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")) {
             if let scheme = url.scheme, let resourceSpecifier = url.resourceSpecifier, url.host == nil {
                 url = NSURL(string: "\(scheme)://\(resourceSpecifier)")!
-
-                if url.scheme == "bitcoin" {
+                
+                if url.scheme == currency.urlScheme {
                     let host = url.host
-                    toAddress = host
+                    if let host = host, currency.matches(Currencies.bch) {
+                        // BCH CashAddr includes the bitcoincash: prefix in the address format
+                        // the payment request stores the address in legacy address
+                        toAddress = "\(scheme):\(host)".bitcoinAddr
+                        if toAddress == "" {
+                            toAddress = host
+                            warningMessage = S.Send.legacyAddressWarning
+                        }
+                    } else {
+                        toAddress = host
+                    }
                     guard let components = url.query?.components(separatedBy: "&") else { type = .local; return }
                     for component in components {
                         let pair = component.components(separatedBy: "=")
@@ -31,11 +42,11 @@ struct PaymentRequest {
                         let key = pair[0]
                         var value = String(component[component.index(key.endIndex, offsetBy: 1)...])
                         value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
-
+                        
                         switch key {
                         case "amount":
                             amount = Satoshis(btcString: value)
-                        case "label":
+                        case "label", "memo":
                             label = value
                         case "message":
                             message = value
@@ -51,7 +62,7 @@ struct PaymentRequest {
                             return nil
                         }
                     }
-
+                    
                     type = r == nil ? .local : .remote
                     return
                 }
@@ -61,18 +72,31 @@ struct PaymentRequest {
                 return
             }
         }
-
-        if string.isValidAddress {
-            toAddress = string
+        
+        // core internally uses bitcoin address format but PaymentRequest will only accept the currency-specific address format
+        if currency.isValidAddress(string) {
+            if currency.matches(Currencies.bch) {
+                toAddress = string.bitcoinAddr
+            } else {
+                toAddress = string
+            }
             type = .local
             return
         }
-
+        
         return nil
     }
 
-    init?(data: Data) {
+    init?(data: Data, currency: CurrencyDef) {
+        self.currency = currency
         self.paymentProtoclRequest = PaymentProtocolRequest(data: data)
+        type = .local
+    }
+
+    init?(ethAddress: String) {
+        self.currency = Currencies.eth
+        guard ethAddress.isValidEthAddress else { return nil }
+        toAddress = ethAddress
         type = .local
     }
 
@@ -93,11 +117,11 @@ struct PaymentRequest {
             guard let response = response else { return completion(nil) }
 
             if response.mimeType?.lowercased() == "application/bitcoin-paymentrequest" {
-                completion(PaymentRequest(data: data))
+                completion(PaymentRequest(data: data, currency: Currencies.btc))
             } else if response.mimeType?.lowercased() == "text/uri-list" {
                 for line in (String(data: data, encoding: .utf8)?.components(separatedBy: "\n"))! {
                     if line.hasPrefix("#") { continue }
-                    completion(PaymentRequest(string: line))
+                    completion(PaymentRequest(string: line, currency: Currencies.btc))
                     break
                 }
                 completion(nil)
@@ -107,12 +131,21 @@ struct PaymentRequest {
         }.resume()
     }
 
-    static func requestString(withAddress: String, forAmount: UInt64) -> String {
+    static func requestString(withAddress address: String, forAmount: UInt64, currency: CurrencyDef) -> String {
         let btcAmount = convertToBTC(fromSatoshis: forAmount)
-        return "bitcoin:\(withAddress)?amount=\(btcAmount)"
+        guard let uri = currency.addressURI(address) else { return "" }
+        return "\(uri)?amount=\(btcAmount)"
     }
 
+    let currency: CurrencyDef
     var toAddress: String?
+    var displayAddress: String? {
+        if currency.matches(Currencies.bch) {
+            return toAddress?.bCashAddr
+        } else {
+            return toAddress
+        }
+    }
     let type: PaymentRequestType
     var amount: Satoshis?
     var label: String?
@@ -120,6 +153,7 @@ struct PaymentRequest {
     var remoteRequest: NSURL?
     var paymentProtoclRequest: PaymentProtocolRequest?
     var r: URL?
+    var warningMessage: String? //Displayed to the user before the send view fields are populated
 }
 
 private func convertToBTC(fromSatoshis: UInt64) -> String {

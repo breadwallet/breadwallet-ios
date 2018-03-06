@@ -37,7 +37,6 @@ import WebKit
     var debugEndpoint: String?
     var mountPoint: String
     var walletManager: WalletManager
-    let store: Store
     let noAuthApiClient: BRAPIClient?
 
     // bonjour debug endpoint establishment - this will configure the debugEndpoint 
@@ -71,12 +70,11 @@ import WebKit
     
     private let messageUIPresenter = MessageUIPresenter()
     
-    init(bundleName: String, mountPoint: String = "/", walletManager: WalletManager, store: Store, noAuthApiClient: BRAPIClient? = nil) {
+    init(bundleName: String, mountPoint: String = "/", walletManager: WalletManager, noAuthApiClient: BRAPIClient? = nil) {
         wkProcessPool = WKProcessPool()
         self.bundleName = bundleName
         self.mountPoint = mountPoint
         self.walletManager = walletManager
-        self.store = store
         self.noAuthApiClient = noAuthApiClient
         super.init(nibName: nil, bundle: nil)
         if debugOverBonjour {
@@ -171,7 +169,7 @@ import WebKit
                         }
                         // XXX(sam): log this event so we know how frequently it happens
                         DispatchQueue.main.asyncAfter(deadline: timeout) {
-                            self?.store.trigger(name: .showStatusBar)
+                            Store.trigger(name: .showStatusBar)
                             self?.dismiss(animated: true) {
                                 self?.notifyUserOfLoadFailure()
                             }
@@ -204,7 +202,7 @@ import WebKit
     }
     
     fileprivate func closeNow() {
-        store.trigger(name: .showStatusBar)
+        Store.trigger(name: .showStatusBar)
         dismiss(animated: true, completion: nil)
     }
     
@@ -296,7 +294,7 @@ import WebKit
         router.plugin(BRCameraPlugin(fromViewController: self))
         
         // wallet plugin provides access to the wallet
-        router.plugin(BRWalletPlugin(walletManager: walletManager, store: store))
+        router.plugin(BRWalletPlugin(walletManager: walletManager))
         
         // link plugin which allows opening links to other apps
         router.plugin(BRLinkPlugin(fromViewController: self))

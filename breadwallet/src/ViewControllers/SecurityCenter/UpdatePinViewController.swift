@@ -22,13 +22,12 @@ class UpdatePinViewController : UIViewController, Subscriber {
     var resetFromDisabledSuccess: (() -> Void)?
     var resetFromDisabledWillSucceed: (() -> Void)?
 
-    init(store: Store, walletManager: WalletManager, type: UpdatePinType, showsBackButton: Bool = true, phrase: String? = nil) {
-        self.store = store
+    init(walletManager: WalletManager, type: UpdatePinType, showsBackButton: Bool = true, phrase: String? = nil) {
         self.walletManager = walletManager
         self.phrase = phrase
-        self.pinView = PinView(style: .create, length: store.state.pinLength)
+        self.pinView = PinView(style: .create, length: Store.state.pinLength)
         self.showsBackButton = showsBackButton
-        self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.setPin)
+        self.faq = UIButton.buildFaqButton(articleId: ArticleIds.setPin)
         self.type = type
         super.init(nibName: nil, bundle: nil)
     }
@@ -40,7 +39,6 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private var pinView: PinView
     private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad, maxDigits: 0)
     private let spacer = UIView()
-    private let store: Store
     private let walletManager: WalletManager
     private let faq: UIButton
     private var step: Step = .verify {
@@ -169,7 +167,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
 
     private func didUpdateForCurrent(pin: String) {
         pinView.fill(pin.utf8.count)
-        if pin.utf8.count == store.state.pinLength {
+        if pin.utf8.count == Store.state.pinLength {
             if walletManager.authenticate(pin: pin) {
                 pushNewStep(.new)
                 currentPin = pin
@@ -177,7 +175,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
             } else {
                 if walletManager.walletDisabledUntil > 0 {
                     dismiss(animated: true, completion: {
-                        self.store.perform(action: RequireLogin())
+                        Store.perform(action: RequireLogin())
                     })
                 } else {
                     clearAfterFailure()
@@ -243,7 +241,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
                 success = self?.walletManager.forceSetPin(newPin: newPin, seedPhrase: seedPhrase)
             } else if let currentPin = self?.currentPin {
                 success = self?.walletManager.changePin(newPin: newPin, pin: currentPin)
-                DispatchQueue.main.async { self?.store.trigger(name: .didUpgradePin) }
+                DispatchQueue.main.async { Store.trigger(name: .didUpgradePin) }
             } else if self?.type == .creationNoPhrase {
                 success = self?.walletManager.forceSetPin(newPin: newPin)
             }
@@ -252,13 +250,13 @@ class UpdatePinViewController : UIViewController, Subscriber {
                 if let success = success, success == true {
                     if self?.resetFromDisabledSuccess != nil {
                         self?.resetFromDisabledWillSucceed?()
-                        self?.store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
+                        Store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
                             self?.dismiss(animated: true, completion: {
                                 self?.resetFromDisabledSuccess?()
                             })
                         })))
                     } else {
-                        self?.store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
+                        Store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
                             self?.setPinSuccess?(newPin)
                             if self?.type != .creationNoPhrase {
                                 self?.parent?.dismiss(animated: true, completion: nil)

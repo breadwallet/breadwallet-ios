@@ -44,7 +44,7 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
     required public init?(coder decoder: BRCoder) {
         classVersion = decoder.decode("classVersion")
         if classVersion == Int.zeroValue() {
-            print("[BRTxMetadataObject] Unable to unarchive _TXMetadata: no version")
+            //print("[BRTxMetadataObject] Unable to unarchive _TXMetadata: no version")
             return nil
         }
         blockHeight = decoder.decode("bh")
@@ -77,14 +77,14 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
         var del: Bool
         var bytes: [UInt8]
 
-        print("[BRTxMetadataObject] find \(txHash.txKey)")
+        //print("[BRTxMetadataObject] find \(txHash.txKey)")
         do {
             (ver, date, del, bytes) = try store.get(txHash.txKey)
             let bytesDat = Data(bytes: &bytes, count: bytes.count)
             super.init(key: txHash.txKey, version: ver, lastModified: date, deleted: del, data: bytesDat)
             return
-        } catch let e {
-            print("[BRTxMetadataObject] Unable to initialize BRTxMetadataObject: \(String(describing: e))")
+        } catch _ {
+            //print("[BRTxMetadataObject] Unable to initialize BRTxMetadataObject: \(String(describing: e))")
         }
 
         return nil
@@ -97,14 +97,14 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
         var del: Bool
         var bytes: [UInt8]
 
-        print("[BRTxMetadataObject] find \(txKey)")
+        //print("[BRTxMetadataObject] find \(txKey)")
         do {
             (ver, date, del, bytes) = try store.get(txKey)
             let bytesDat = Data(bytes: &bytes, count: bytes.count)
             super.init(key: txKey, version: ver, lastModified: date, deleted: del, data: bytesDat)
             return
-        } catch let e {
-            print("[BRTxMetadataObject] Unable to initialize BRTxMetadataObject: \(String(describing: e))")
+        } catch _ {
+            //print("[BRTxMetadataObject] Unable to initialize BRTxMetadataObject: \(String(describing: e))")
         }
 
         return nil

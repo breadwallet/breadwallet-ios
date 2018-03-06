@@ -12,24 +12,49 @@ private let currencyHeight: CGFloat = 80.0
 private let feeHeight: CGFloat = 130.0
 
 class AmountViewController : UIViewController, Trackable {
+    
+    private let currency: CurrencyDef
 
-    init(store: Store, isPinPadExpandedAtLaunch: Bool, isRequesting: Bool = false) {
-        self.store = store
+    init(currency: CurrencyDef, isPinPadExpandedAtLaunch: Bool, isRequesting: Bool = false) {
+        self.currency = currency
         self.isPinPadExpandedAtLaunch = isPinPadExpandedAtLaunch
         self.isRequesting = isRequesting
-        if let rate = store.state.currentRate, store.state.isBtcSwapped {
+        if let rate = currency.state.currentRate, Store.state.isBtcSwapped {
             self.currencyToggle = ShadowButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
-            self.currencyToggle = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
+            let title = S.Symbols.currencyButtonTitle(currency: currency, maxDigits: currency.state.maxDigits)
+            self.currencyToggle = ShadowButton(title: title, type: .tertiary)
         }
-        self.feeSelector = FeeSelector(store: store)
-        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: store.state.maxDigits)
+        self.feeSelector = FeeSelector()
+        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: currency.state.maxDigits)
         super.init(nibName: nil, bundle: nil)
     }
 
     var balanceTextForAmount: ((Satoshis?, Rate?) -> (NSAttributedString?, NSAttributedString?)?)?
     var didUpdateAmount: ((Satoshis?) -> Void)?
+    var didUpdateEth: ((GethBigInt?) -> Void)?
     var didChangeFirstResponder: ((Bool) -> Void)?
+
+    var ethOutput: GethBigInt {
+        let decimalSeparator = NumberFormatter().currencyDecimalSeparator
+        var decimal = Decimal(string: currentOutput.replacingOccurrences(of: S.Symbols.eth, with: "").replacingOccurrences(of: decimalSeparator!, with: ".")) ?? Decimal(0)
+        var result: Decimal = 0.0
+        NSDecimalMultiplyByPowerOf10(&result, &decimal, Int16(18), .up)
+        let wei = NSDecimalNumber(decimal: result)
+        let returnValue = GethBigInt(0)
+        returnValue.setString(wei.description(withLocale: nil), base: 10)
+        return returnValue
+    }
+
+    var tokenOutput: GethBigInt {
+        guard let token = currency.state.token else { return GethBigInt(0) }
+        let decimalSeparator = NumberFormatter().currencyDecimalSeparator
+        let string = currentOutput.replacingOccurrences(of: token.code, with: "").replacingOccurrences(of: decimalSeparator!, with: ".")
+        let output = GethBigInt(0)
+        let zeroes = [String](repeating: "0", count: token.decimals).reduce("", +)
+        output.setString(string + zeroes, base: 10)
+        return output
+    }
 
     var currentOutput: String {
         return amountLabel.text ?? ""
@@ -44,6 +69,9 @@ class AmountViewController : UIViewController, Trackable {
             feeSelector.didUpdateFee = didUpdateFee
         }
     }
+    
+    var canEditFee: Bool = true
+    
     func forceUpdateAmount(amount: Satoshis) {
         self.amount = amount
         fullRefresh()
@@ -55,7 +83,6 @@ class AmountViewController : UIViewController, Trackable {
         }
     }
 
-    private let store: Store
     private let isPinPadExpandedAtLaunch: Bool
     private let isRequesting: Bool
     var minimumFractionDigits = 0
@@ -82,6 +109,14 @@ class AmountViewController : UIViewController, Trackable {
             updateAmountLabel()
             updateBalanceLabel()
             didUpdateAmount?(amount)
+        }
+    }
+
+    private var ethAmount: GethBigInt? {
+        didSet {
+            updateAmountLabel()
+            updateBalanceLabel()
+            didUpdateEth?(ethAmount)
         }
     }
 
@@ -177,8 +212,8 @@ class AmountViewController : UIViewController, Trackable {
         amountLabel.text = ""
         placeholder.text = S.Send.amountLabel
         bottomBorder.isHidden = true
-        if store.state.isBtcSwapped {
-            if let rate = store.state.currentRate {
+        if Store.state.isBtcSwapped {
+            if let rate = currency.state.currentRate {
                 selectedRate = rate
             }
         }
@@ -210,7 +245,7 @@ class AmountViewController : UIViewController, Trackable {
 
     private func toggleCurrency() {
         saveEvent("amount.swapCurrency")
-        selectedRate = selectedRate == nil ? store.state.currentRate : nil
+        selectedRate = selectedRate == nil ? currency.state.currentRate : nil
         updateCurrencyToggleTitle()
     }
 
@@ -223,6 +258,14 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func handlePinPadUpdate(output: String) {
+        handleBtcOutput(output: output)
+    }
+
+    private func handleEthOutput(output: String) {
+        //TODO:AC
+    }
+
+    private func handleBtcOutput(output: String) {
         let currencyDecimalSeparator = NumberFormatter().currencyDecimalSeparator ?? "."
         placeholder.isHidden = output.utf8.count > 0 ? true : false
         minimumFractionDigits = 0 //set default
@@ -244,11 +287,11 @@ class AmountViewController : UIViewController, Trackable {
             if let rate = selectedRate {
                 newAmount = Satoshis(value: outputAmount, rate: rate)
             } else {
-                if store.state.maxDigits == 2 {
+                if currency.state.maxDigits == 2 {
                     let bits = Bits(rawValue: outputAmount)
                     newAmount = Satoshis(bits: bits)
                 } else {
-                    let bitcoin = Bitcoin(rawValue: outputAmount)
+                    let bitcoin = Bitcoins(rawValue: outputAmount)
                     newAmount = Satoshis(bitcoin: bitcoin)
                 }
             }
@@ -267,7 +310,7 @@ class AmountViewController : UIViewController, Trackable {
 
     private func updateAmountLabel() {
         guard let amount = amount else { amountLabel.text = ""; return }
-        let displayAmount = DisplayAmount(amount: amount, state: store.state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+        let displayAmount = DisplayAmount(amount: amount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, currency: Currencies.btc)
         var output = displayAmount.description
         if hasTrailingDecimal {
             output = output.appending(NumberFormatter().currencyDecimalSeparator)
@@ -281,7 +324,7 @@ class AmountViewController : UIViewController, Trackable {
             balanceLabel.attributedText = balance
             feeLabel.attributedText = fee
             if let amount = amount, amount > 0, !isRequesting {
-                editFee.isHidden = false
+                editFee.isHidden = !canEditFee
             } else {
                 editFee.isHidden = true
             }
@@ -333,7 +376,7 @@ class AmountViewController : UIViewController, Trackable {
         if let amount = amount, amount.rawValue > 0 {
             balanceLabel.isHidden = false
             if !isRequesting {
-                editFee.isHidden = false
+                editFee.isHidden = !canEditFee
             }
         } else {
             balanceLabel.isHidden = cursor.isHidden
@@ -360,7 +403,8 @@ class AmountViewController : UIViewController, Trackable {
         if let rate = selectedRate {
             self.currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
         } else {
-            self.currencyToggle.title = S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
+            let title = S.Symbols.currencyButtonTitle(currency: currency, maxDigits: currency.state.maxDigits)
+            self.currencyToggle.title = title
         }
     }
 
@@ -373,4 +417,17 @@ extension Fees : Equatable {}
 
 func ==(lhs: Fees, rhs: Fees) -> Bool {
     return lhs.regular == rhs.regular && lhs.economy == rhs.economy
+}
+
+extension S.Symbols {
+    static func currencyButtonTitle(currency: CurrencyDef, maxDigits: Int) -> String {
+        let name = currency.unitName(maxDigits: maxDigits)
+        let symbol = currency.unitSymbol(maxDigits: maxDigits)
+        
+        if name.count > 0 {
+            return "\(name)\(S.Symbols.narrowSpace)(\(symbol))"
+        } else {
+            return symbol
+        }
+    }
 }
