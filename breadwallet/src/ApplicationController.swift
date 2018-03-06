@@ -17,6 +17,7 @@ class ApplicationController : Subscriber, Trackable {
     let window = UIWindow()
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var walletManagers = [String: WalletManager]()
     private var walletCoordinator: WalletCoordinator?
     private var exchangeUpdaters = [String: ExchangeUpdater]()
@@ -459,9 +460,30 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     func willResignActive() {
+        applyBlurEffect()
         guard !Store.state.isPushNotificationsEnabled else { return }
         guard let pushToken = UserDefaults.pushToken else { return }
         primaryWalletManager.apiClient?.deletePushNotificationToken(pushToken)
+    }
+    
+    func didBecomeActive() {
+        removeBlurEffect()
+    }
+    
+    private func applyBlurEffect() {
+        guard !Store.state.isLoginRequired && !Store.state.isPromptingBiometrics else { return }
+        blurView.alpha = 1.0
+        blurView.frame = window.frame
+        window.addSubview(blurView)
+    }
+    
+    private func removeBlurEffect() {
+        let duration = Store.state.isLoginRequired ? 0.4 : 0.1 // keep content hidden if lock screen about to appear on top
+        UIView.animate(withDuration: duration, animations: {
+            self.blurView.alpha = 0.0
+        }, completion: { _ in
+            self.blurView.removeFromSuperview()
+        })
     }
 }
 

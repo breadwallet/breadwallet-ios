@@ -38,7 +38,6 @@ class AccountViewController : UIViewController, Subscriber {
     private let footerView: AccountFooterView
     private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
     private var transactionsTableView: TransactionsTableViewController!
-    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var isLoginRequired = false
     private let searchHeaderview: SearchHeaderView = {
         let view = SearchHeaderView()
@@ -81,7 +80,6 @@ class AccountViewController : UIViewController, Subscriber {
         addSubviews()
         addConstraints()
         addSubscriptions()
-        addAppLifecycleNotificationEvents()
         setInitialData()
     }
 
@@ -182,23 +180,6 @@ class AccountViewController : UIViewController, Subscriber {
         transactionDetails.transitioningDelegate = transitionDelegate
         transactionDetails.modalPresentationCapturesStatusBarAppearance = true
         present(transactionDetails, animated: true, completion: nil)
-    }
-
-    private func addAppLifecycleNotificationEvents() {
-        NotificationCenter.default.addObserver(forName: .UIApplicationDidBecomeActive, object: nil, queue: nil) { note in
-            UIView.animate(withDuration: 0.1, animations: {
-                self.blurView.alpha = 0.0
-            }, completion: { _ in
-                self.blurView.removeFromSuperview()
-            })
-        }
-        NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { note in
-            if !self.isLoginRequired && !Store.state.isPromptingBiometrics {
-                self.blurView.alpha = 1.0
-                self.view.addSubview(self.blurView)
-                self.blurView.constrain(toSuperviewEdges: nil)
-            }
-        }
     }
 
     private func showJailbreakWarnings(isJailbroken: Bool) {
