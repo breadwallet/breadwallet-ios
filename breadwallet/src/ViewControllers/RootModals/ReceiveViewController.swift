@@ -22,14 +22,15 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     var presentEmail: PresentShare?
     var presentText: PresentShare?
 
-    init(wallet: BRWallet, store: Store, isRequestAmountVisible: Bool) {
-        self.wallet = wallet
+    init(currency: CurrencyDef, isRequestAmountVisible: Bool) {
+        self.currency = currency
         self.isRequestAmountVisible = isRequestAmountVisible
-        self.store = store
         super.init(nibName: nil, bundle: nil)
     }
 
     //MARK - Private
+    private let currency: CurrencyDef
+    
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 14.0))
     private let addressPopout = InViewAlert(type: .primary)
@@ -39,17 +40,6 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     private let request = ShadowButton(title: S.Receive.request, type: .secondary)
     private let addressButton = UIButton(type: .system)
     private var topSharePopoutConstraint: NSLayoutConstraint?
-    private let wallet: BRWallet
-    private let store: Store
-    private var balance: UInt64? = nil {
-        didSet {
-            if let newValue = balance, let oldValue = oldValue {
-                if newValue > oldValue {
-                    setReceiveAddress()
-                }
-            }
-        }
-    }
     fileprivate let isRequestAmountVisible: Bool
     private var requestTop: NSLayoutConstraint?
     private var requestBottom: NSLayoutConstraint?
@@ -61,8 +51,8 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
         addActions()
         setupCopiedMessage()
         setupShareButtons()
-        store.subscribe(self, selector: { $0.walletState.balance != $1.walletState.balance }, callback: {
-            self.balance = $0.walletState.balance
+        Store.subscribe(self, selector: { $0[self.currency].receiveAddress != $1[self.currency].receiveAddress }, callback: { _ in
+            self.setReceiveAddress()
         })
     }
 
@@ -85,7 +75,8 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
             qrCode.constraint(.centerX, toView: view) ])
         address.constrain([
             address.constraint(toBottom: qrCode, constant: C.padding[1]),
-            address.constraint(.centerX, toView: view) ])
+            address.constraint(.leading, toView: view),
+            address.constraint(.trailing, toView: view) ])
         addressPopout.heightConstraint = addressPopout.constraint(.height, constant: 0.0)
         addressPopout.constrain([
             addressPopout.constraint(toBottom: address, constant: 0.0),
@@ -127,6 +118,9 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     private func setStyle() {
         view.backgroundColor = .white
         address.textColor = .grayTextTint
+        address.textAlignment = .center
+        address.adjustsFontSizeToFitWidth = true
+        address.minimumScaleFactor = 0.7
         border.backgroundColor = .secondaryBorder
         share.isToggleable = true
         if !isRequestAmountVisible {
@@ -145,7 +139,8 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     }
 
     private func setReceiveAddress() {
-        address.text = wallet.receiveAddress
+        guard let addressText = currency.state.receiveAddress else { return }
+        address.text = currency.matches(Currencies.bch) ? addressText.bCashAddr : addressText
         qrCode.image = UIImage.qrCode(data: "\(address.text!)".data(using: .utf8)!, color: CIColor(color: .black))?
             .resize(CGSize(width: qrSize, height: qrSize))!
     }
@@ -155,10 +150,10 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
             self?.addressTapped()
         }
         request.tap = { [weak self] in
-            guard let modalTransitionDelegate = self?.parent?.transitioningDelegate as? ModalTransitionDelegate else { return }
+            guard let `self` = self, let modalTransitionDelegate = self.parent?.transitioningDelegate as? ModalTransitionDelegate else { return }
             modalTransitionDelegate.reset()
-            self?.dismiss(animated: true, completion: {
-                self?.store.perform(action: RootModalActions.Present(modal: .requestAmount))
+            self.dismiss(animated: true, completion: {
+                Store.perform(action: RootModalActions.Present(modal: .requestAmount(currency: self.currency)))
             })
         }
         share.addTarget(self, action: #selector(ReceiveViewController.shareTapped), for: .touchUpInside)
@@ -269,6 +264,6 @@ extension ReceiveViewController : ModalDisplayable {
     }
 
     var modalTitle: String {
-        return S.Receive.title
+        return "\(S.Receive.title) \(currency.code)"
     }
 }

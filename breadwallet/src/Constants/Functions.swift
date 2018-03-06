@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Executes the callback on the given queue when the device becomes unlocked, or immediately if protected data is already available
 func guardProtected(queue: DispatchQueue, callback: @escaping () -> Void) {
     if UIApplication.shared.isProtectedDataAvailable {
         queue.async {
@@ -15,15 +16,14 @@ func guardProtected(queue: DispatchQueue, callback: @escaping () -> Void) {
         }
     } else {
         var observer: Any?
-        observer = NotificationCenter.default.addObserver(forName: .UIApplicationProtectedDataDidBecomeAvailable, object: nil, queue: nil,
-                                                          using: { note in
-                                                            queue.async {
-                                                                callback()
-                                                            }
-                                                            if let observer = observer {
-                                                                NotificationCenter.default.removeObserver(observer)
-                                                            }
-        })
+        observer = NotificationCenter.default.addObserver(forName: .UIApplicationProtectedDataDidBecomeAvailable, object: nil, queue: nil) { note in
+            queue.async {
+                callback()
+            }
+            if let observer = observer {
+                NotificationCenter.default.removeObserver(observer)
+            }
+        }
     }
 }
 

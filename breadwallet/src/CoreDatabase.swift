@@ -31,9 +31,9 @@ class CoreDatabase {
     private var peerEnt: Int32 = 0
     private let queue = DispatchQueue(label: "com.breadwallet.corecbqueue")
 
-    init() {
+    init(dbPath: String = "BreadWallet.sqlite") {
         self.dbPath = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
-                                    create: false).appendingPathComponent("BreadWallet.sqlite").path
+                                    create: false).appendingPathComponent(dbPath).path
         queue.async {
             try? self.openDatabase()
         }
@@ -272,13 +272,6 @@ class CoreDatabase {
                 print(String(cString: sqlite3_errmsg(self.db)))
                 return
             }
-
-            if notifyUser {
-                DispatchQueue.main.async() {
-                    NotificationCenter.default.post(name: .WalletTxRejectedNotification, object: nil,
-                                                    userInfo: ["txHash": txHash, "recommendRescan": recommendRescan])
-                }
-            }
         }
     }
 
@@ -454,7 +447,13 @@ class CoreDatabase {
                 b.pointee.target = UInt32(bitPattern: sqlite3_column_int(sql, 2))
                 b.pointee.totalTx = UInt32(bitPattern: sqlite3_column_int(sql, 3))
                 b.pointee.version = UInt32(bitPattern: sqlite3_column_int(sql, 4))
-                b.pointee.timestamp = UInt32(bitPattern: sqlite3_column_int(sql, 5)) + UInt32(NSTimeIntervalSince1970)
+                let result = UInt32(bitPattern: sqlite3_column_int(sql, 5)).addingReportingOverflow(UInt32(NSTimeIntervalSince1970))
+                if result.1 {
+                    print("skipped overflowed timestamp: \(sqlite3_column_int(sql, 5))")
+                    continue
+                } else {
+                    b.pointee.timestamp = result.0
+                }
                 b.pointee.blockHash = sqlite3_column_blob(sql, 6).assumingMemoryBound(to: UInt256.self).pointee
 
                 let flags: UnsafePointer<UInt8>? = SafeSqlite3ColumnBlob(statement: sql!, iCol: 7)

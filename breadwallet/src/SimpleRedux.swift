@@ -39,8 +39,8 @@ struct Trigger {
 enum TriggerName {
     case presentFaq(String)
     case registerForPushNotificationToken
-    case retrySync
-    case rescan
+    case retrySync(CurrencyDef)
+    case rescan(CurrencyDef)
     case lock
     case promptBiometrics
     case promptPaperKey
@@ -49,7 +49,7 @@ enum TriggerName {
     case blockModalDismissal
     case unblockModalDismissal
     case openFile(Data)
-    case recommendRescan
+    case recommendRescan(CurrencyDef)
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
     case copyWalletAddresses(String?, String?)
@@ -66,6 +66,7 @@ enum TriggerName {
     case didEnableShareData
     case didWritePaperKey
     case wipeWalletNoPrompt
+    case didUpdateFeatureFlags
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName : Equatable {}
@@ -76,10 +77,10 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.registerForPushNotificationToken, .registerForPushNotificationToken):
         return true
-    case (.retrySync, .retrySync):
-        return true
-    case (.rescan, .rescan):
-        return true
+    case (.retrySync(let lhsCurrency), .retrySync(let rhsCurrency)):
+        return lhsCurrency.code == rhsCurrency.code
+    case (.rescan(let lhsCurrency), .rescan(let rhsCurrency)):
+        return lhsCurrency.code == rhsCurrency.code
     case (.lock, .lock):
         return true
     case (.promptBiometrics, .promptBiometrics):
@@ -96,8 +97,8 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.openFile(_), .openFile(_)):
         return true
-    case (.recommendRescan, .recommendRescan):
-        return true
+    case (.recommendRescan(let lhsCurrency), .recommendRescan(let rhsCurrency)):
+        return lhsCurrency.code == rhsCurrency.code
     case (.receivedPaymentRequest(_), .receivedPaymentRequest(_)):
         return true
     case (.scanQr, .scanQr):
@@ -130,6 +131,8 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.wipeWalletNoPrompt, .wipeWalletNoPrompt):
         return true
+    case (.didUpdateFeatureFlags, .didUpdateFeatureFlags):
+        return true
     default:
         return false
     }
@@ -137,7 +140,44 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
 
 class Store {
 
+    private static let shared = Store()
+    
+    private var isClearingSubscriptions = false
+
     //MARK: - Public
+    static func perform(action: Action) {
+        Store.shared.perform(action: action)
+    }
+
+    static func trigger(name: TriggerName) {
+        Store.shared.trigger(name: name)
+    }
+
+    static var state: State {
+        return shared.state
+    }
+
+    static func subscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> Void) {
+        Store.shared.subscribe(subscriber, selector: selector, callback: callback)
+    }
+
+    static func subscribe(_ subscriber: Subscriber, name: TriggerName, callback: @escaping (TriggerName?) -> Void) {
+        Store.shared.subscribe(subscriber, name: name, callback: callback)
+    }
+
+    static func lazySubscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> Void) {
+        Store.shared.lazySubscribe(subscriber, selector: selector, callback: callback)
+    }
+
+    static func unsubscribe(_ subscriber: Subscriber) {
+        Store.shared.unsubscribe(subscriber)
+    }
+
+    static func removeAllSubscriptions() {
+        Store.shared.removeAllSubscriptions()
+    }
+
+    //MARK: - Private
     func perform(action: Action) {
         state = action.reduce(state)
     }
@@ -146,7 +186,11 @@ class Store {
         triggers
             .flatMap { $0.value }
             .filter { $0.name == name }
-            .forEach { $0.callback(name) }
+            .forEach { trigger in
+                DispatchQueue.main.async {
+                    trigger.callback(name)
+                }
+        }
     }
 
     //Subscription callback is immediately called with current State value on subscription
@@ -178,10 +222,9 @@ class Store {
     }
 
     func unsubscribe(_ subscriber: Subscriber) {
-        DispatchQueue.main.async {
-            self.subscriptions.removeValue(forKey: subscriber.hashValue)
-            self.triggers.removeValue(forKey: subscriber.hashValue)
-        }
+        guard !isClearingSubscriptions else { return }
+        self.subscriptions.removeValue(forKey: subscriber.hashValue)
+        self.triggers.removeValue(forKey: subscriber.hashValue)
     }
 
     //MARK: - Private
@@ -190,12 +233,18 @@ class Store {
             subscriptions
                 .flatMap { $0.value } //Retreive all subscriptions (subscriptions is a dictionary)
                 .filter { $0.selector(oldValue, state) }
-                .forEach { $0.callback(state) }
+                .forEach { subscription in
+                    DispatchQueue.main.async {
+                        subscription.callback(self.state)
+                    }
+            }
         }
     }
 
     func removeAllSubscriptions() {
         DispatchQueue.main.async {
+            // removing the subscription may trigger deinit of the object and a duplicate call to unsubscribe
+            self.isClearingSubscriptions = true
             self.subscriptions.removeAll()
             self.triggers.removeAll()
         }

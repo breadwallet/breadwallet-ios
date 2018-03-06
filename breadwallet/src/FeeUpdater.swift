@@ -17,20 +17,18 @@ struct Fees : Codable {
 class FeeUpdater : Trackable {
 
     //MARK: - Public
-    init(walletManager: WalletManager, store: Store) {
+    init(walletManager: WalletManager) {
         self.walletManager = walletManager
-        self.store = store
     }
 
     func refresh(completion: @escaping () -> Void) {
-        walletManager.apiClient?.feePerKb { newFees, error in
+        walletManager.apiClient?.feePerKb(code: walletManager.currency.code) { newFees, error in
             guard error == nil else { print("feePerKb error: \(String(describing: error))"); completion(); return }
             guard newFees.regular < self.maxFeePerKB && newFees.economy > self.minFeePerKB else {
                 self.saveEvent("wallet.didUseDefaultFeePerKB")
                 return
             }
-            UserDefaults.fees = newFees
-            self.store.perform(action: UpdateFees.set(newFees))
+            Store.perform(action: WalletChange(self.walletManager.currency).setFees(newFees))
             completion()
         }
 
@@ -49,9 +47,9 @@ class FeeUpdater : Trackable {
 
     //MARK: - Private
     private let walletManager: WalletManager
-    private let store: Store
     private let feeKey = "FEE_PER_KB"
     private let txFeePerKb: UInt64 = 1000
+    //TODO:BCH these values should be currency-pecific
     private lazy var minFeePerKB: UInt64 = {
         return ((self.txFeePerKb*1000 + 190)/191) // minimum relay fee on a 191byte tx
     }()

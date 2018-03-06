@@ -107,7 +107,7 @@ public extension String {
             }
         }
         return ret
-    }
+    }    
 }
 
 extension UserDefaults {

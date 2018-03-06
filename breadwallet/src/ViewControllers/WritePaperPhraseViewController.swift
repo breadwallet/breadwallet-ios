@@ -10,7 +10,6 @@ import UIKit
 
 class WritePaperPhraseViewController: UIViewController {
 
-    private let store: Store
     private let walletManager: WalletManager
     private let pin: String
     private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
@@ -39,8 +38,7 @@ class WritePaperPhraseViewController: UIViewController {
 
     var lastWordSeen: (() -> Void)?
 
-    init(store: Store, walletManager: WalletManager, pin: String, callback: @escaping () -> Void) {
-        self.store = store
+    init(walletManager: WalletManager, pin: String, callback: @escaping () -> Void) {
         self.walletManager = walletManager
         self.pin = pin
         self.callback = callback
@@ -72,7 +70,7 @@ class WritePaperPhraseViewController: UIViewController {
             self?.dismiss(animated: true, completion: nil)
         }
 
-        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.writePhrase)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.writePhrase)
         faqButton.tintColor = .white
         navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
     }

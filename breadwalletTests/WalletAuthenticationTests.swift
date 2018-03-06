@@ -11,14 +11,15 @@ import XCTest
 
 class WalletAuthenticationTests : XCTestCase {
 
-    private let walletManager: WalletManager = try! WalletManager(store: Store(), dbPath: nil)
+    private var walletManager: WalletManager?
     private let pin = "123456"
 
     override func setUp() {
         super.setUp()
         clearKeychain()
-        guard walletManager.noWallet else { XCTFail("Wallet should not exist"); return }
-        guard walletManager.setRandomSeedPhrase() != nil else { XCTFail("Phrase should not be nil"); return }
+        walletManager = try! WalletManager(currency: Currencies.btc, dbPath: Currencies.btc.dbPath)
+        let _ = walletManager?.setRandomSeedPhrase()
+        initWallet(walletManager: walletManager!)
     }
 
     override func tearDown() {
@@ -27,11 +28,13 @@ class WalletAuthenticationTests : XCTestCase {
     }
 
     func testAuthentication() {
+        guard let walletManager = walletManager else { return XCTAssert(false, "Wallet manager should not be nil")}
         XCTAssert(walletManager.forceSetPin(newPin: pin), "Setting PIN should succeed")
         XCTAssert(walletManager.authenticate(pin: pin), "Authentication should succeed.")
     }
 
     func testWalletDisabledUntil() {
+        guard let walletManager = walletManager else { return XCTAssert(false, "Wallet manager should not be nil")}
         XCTAssert(walletManager.forceSetPin(newPin: pin), "Setting PIN should succeed")
 
         //Perform 2 wrong pin attempts
@@ -46,6 +49,7 @@ class WalletAuthenticationTests : XCTestCase {
     }
 
     func testWalletDisabledTwice() {
+        guard let walletManager = walletManager else { return XCTAssert(false, "Wallet manager should not be nil")}
         XCTAssert(walletManager.forceSetPin(newPin: pin), "Setting PIN should succeed")
 
         //Lock wallet
@@ -58,6 +62,7 @@ class WalletAuthenticationTests : XCTestCase {
     }
 
     func testWalletNotDisabled() {
+        guard let walletManager = walletManager else { return XCTAssert(false, "Wallet manager should not be nil")}
         XCTAssert(walletManager.forceSetPin(newPin: pin), "Setting PIN should succeed")
         XCTAssert(walletManager.walletDisabledUntil == 0, "Wallet should not be disabled after pin has been set")
     }

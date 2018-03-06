@@ -23,7 +23,7 @@ extension Satoshis {
         rawValue = UInt64((bits.rawValue * 100.0).rounded(.toNearestOrEven))
     }
 
-    init(bitcoin: Bitcoin) {
+    init(bitcoin: Bitcoins) {
         rawValue = UInt64((bitcoin.rawValue * Double(C.satoshis)).rounded(.toNearestOrEven))
     }
 
@@ -87,14 +87,29 @@ extension Bits {
     }
 }
 
-//MARK: - Bitcoin
-struct Bitcoin {
+//MARK: - Bitcoins
+struct Bitcoins {
     let rawValue: Double
 }
 
-extension Bitcoin {
+extension Bitcoins {
     init?(string: String) {
         guard let value = Double(string) else { return nil }
         rawValue = value
+    }
+}
+
+//MARK: Wei
+struct Wei {
+    let rawValue: UInt64
+}
+
+extension Wei {
+    init?(ethString: String) {
+        var decimal: Decimal = 0.0
+        var amount: Decimal = 0.0
+        guard Scanner(string: ethString).scanDecimal(&decimal) else { return nil }
+        NSDecimalMultiplyByPowerOf10(&amount, &decimal, 18, .up)
+        rawValue = NSDecimalNumber(decimal: amount).uint64Value
     }
 }

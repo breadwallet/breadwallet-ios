@@ -8,6 +8,7 @@
 
 import Foundation
 import XCTest
+@testable import breadwallet
 
 func clearKeychain() {
     let classes = [kSecClassGenericPassword as String,
@@ -20,7 +21,7 @@ func clearKeychain() {
     }
 }
 
-func deleteDb() {
+func deleteKvStoreDb() {
     let fm = FileManager.default
     let docsUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!
     let url = docsUrl.appendingPathComponent("kvstore.sqlite3")
@@ -30,5 +31,17 @@ func deleteDb() {
         } catch let error {
             XCTFail("Could not delete kv store data: \(error)")
         }
+    }
+}
+
+func initWallet(walletManager: WalletManager) {
+    guard walletManager.wallet == nil else { return }
+    var didInitWallet = false
+    walletManager.initWallet { success in
+        didInitWallet = success
+    }
+    while !didInitWallet {
+        //This Can't use a semaphore because the initWallet callback gets called on the main thread
+        RunLoop.current.run(mode: .defaultRunLoopMode, before: .distantFuture)
     }
 }

@@ -11,8 +11,20 @@ import Foundation
 private let fallbackRatesURL = "https://bitpay.com/api/rates"
 
 extension BRAPIClient {
-    func feePerKb(_ handler: @escaping (_ fees: Fees, _ error: String?) -> Void) {
-        let req = URLRequest(url: url("/fee-per-kb"))
+
+    func me() {
+        let req = URLRequest(url: url("/me"))
+        let task = dataTaskWithRequest(req, authenticated: true, handler: { data, response, err in
+            if let data = data {
+                print("me: \(String(describing: String(data: data, encoding: .utf8)))")
+            }
+        })
+        task.resume()
+    }
+
+    func feePerKb(code: String, _ handler: @escaping (_ fees: Fees, _ error: String?) -> Void) {
+        let param = code == Currencies.bch.code ? "?currency=bch" : ""
+        let req = URLRequest(url: url("/fee-per-kb\(param)"))
         let task = self.dataTaskWithRequest(req) { (data, response, err) -> Void in
             var regularFeePerKb: uint_fast64_t = 0
             var economyFeePerKb: uint_fast64_t = 0
@@ -40,8 +52,9 @@ extension BRAPIClient {
         task.resume()
     }
     
-    func exchangeRates(isFallback: Bool = false, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
-        let request = isFallback ? URLRequest(url: URL(string: fallbackRatesURL)!) : URLRequest(url: url("/rates"))
+    func exchangeRates(code: String, isFallback: Bool = false, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
+        let param = code == Currencies.bch.code ? "?currency=bch" : ""
+        let request = isFallback ? URLRequest(url: URL(string: fallbackRatesURL)!) : URLRequest(url: url("/rates\(param)"))
         let task = dataTaskWithRequest(request) { (data, response, error) in
             if error == nil, let data = data,
                 let parsedData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) {
@@ -49,19 +62,19 @@ extension BRAPIClient {
                     guard let array = parsedData as? [Any] else {
                         return handler([], "/rates didn't return an array")
                     }
-                    handler(array.flatMap { Rate(data: $0) }, nil)
+                    handler(array.flatMap { Rate(data: $0, reciprocalCode: code) }, nil)
                 } else {
                     guard let dict = parsedData as? [String: Any],
                         let array = dict["body"] as? [Any] else {
-                            return self.exchangeRates(isFallback: true, handler)
+                            return self.exchangeRates(code: code, isFallback: true, handler)
                     }
-                    handler(array.flatMap { Rate(data: $0) }, nil)
+                    handler(array.flatMap { Rate(data: $0, reciprocalCode: code) }, nil)
                 }
             } else {
                 if isFallback {
                     handler([], "Error fetching from fallback url")
                 } else {
-                    self.exchangeRates(isFallback: true, handler)
+                    self.exchangeRates(code: code, isFallback: true, handler)
                 }
             }
         }
@@ -106,23 +119,29 @@ extension BRAPIClient {
         }.resume()
     }
 
-    func publishBCashTransaction(_ txData: Data, callback: @escaping (String?) -> Void) {
-        var req = URLRequest(url: url("/bch/publish-transaction"))
+    func fetchUTXOS(address: String, currency: CurrencyDef, completion: @escaping ([[String: Any]]?)->Void) {
+        let path = currency.matches(Currencies.btc) ? "/q/addrs/utxo" : "/q/addrs/utxo?currency=bch"
+        var req = URLRequest(url: url(path))
         req.httpMethod = "POST"
-        req.setValue("application/bcashdata", forHTTPHeaderField: "Content-Type")
-        req.httpBody = txData
-        dataTaskWithRequest(req as URLRequest, authenticated: true, retryCount: 0) { (dat, resp, er) in
-            if let statusCode = resp?.statusCode {
-                if statusCode >= 200 && statusCode < 300 {
-                    callback(nil)
-                } else if let data = dat, let errorString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) {
-                    callback(errorString as String)
-                } else {
-                    callback("\(statusCode)")
-                }
-            }
-        }.resume()
+        req.httpBody = "addrs=\(address)".data(using: .utf8)
+        dataTaskWithRequest(req, handler: { data, resp, error in
+            guard error == nil else { completion(nil); return }
+            guard let data = data,
+                let jsonData = try? JSONSerialization.jsonObject(with: data, options: []),
+                let json = jsonData as? [[String: Any]] else { completion(nil); return }
+                completion(json)
+        }).resume()
     }
+}
+
+struct ExchangeRateResponse : Codable {
+    let status: String
+    let message: String
+    let result: EthRate
+}
+
+struct EthRate : Codable {
+    let ethbtc: String
 }
 
 private func pushNotificationEnvironment() -> String {

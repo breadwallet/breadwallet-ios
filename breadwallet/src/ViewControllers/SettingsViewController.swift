@@ -8,16 +8,40 @@
 import UIKit
 import LocalAuthentication
 
-class SettingsViewController : UITableViewController, CustomTitleView {
+enum SettingsSections: String {
+    case wallet
+    case preferences
+    case currencies
+    case other
+    case currency
+    case network
+    
+    var title: String {
+        switch self {
+        case .wallet:
+            return S.Settings.wallet
+        case .preferences:
+            return S.Settings.preferences
+        case .currencies:
+            return S.Settings.currencySettings
+        case .other:
+            return S.Settings.other
+        default:
+            return ""
+        }
+    }
+}
 
-    init(sections: [String], rows: [String: [Setting]], optionalTitle: String? = nil) {
+class SettingsViewController : UITableViewController, CustomTitleView {
+    
+    init(sections: [SettingsSections], rows: [SettingsSections: [Setting]], optionalTitle: String? = nil) {
         self.sections = sections
         if UserDefaults.isBiometricsEnabled {
             self.rows = rows
         } else {
             var tempRows = rows
             let biometricsLimit = LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit
-            tempRows["Manage"] = tempRows["Manage"]?.filter { $0.title != biometricsLimit }
+            tempRows[.preferences] = tempRows[.preferences]?.filter { $0.title != biometricsLimit }
             self.rows = tempRows
         }
         customTitle = optionalTitle ?? S.Settings.title
@@ -25,38 +49,31 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         super.init(style: .plain)
     }
 
-    private let sections: [String]
-    private let rows: [String: [Setting]]
+    private let sections: [SettingsSections]
+    private let rows: [SettingsSections: [Setting]]
     private let cellIdentifier = "CellIdentifier"
-    let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
+    let titleLabel = UILabel(font: .customBold(size: 28.0), color: .darkGray)
     let customTitle: String
 
     override func viewDidLoad() {
+        self.title = ""
+        
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 48.0))
-        headerView.backgroundColor = .whiteTint
+        headerView.backgroundColor = .whiteBackground
         headerView.addSubview(titleLabel)
-        titleLabel.constrain(toSuperviewEdges: UIEdgeInsetsMake(0, C.padding[2], 0, 0))
+        titleLabel.constrain(toSuperviewEdges: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -C.padding[2]))
+        titleLabel.textAlignment = .right
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.tableHeaderView = headerView
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
-        tableView.backgroundColor = .whiteTint
+        tableView.backgroundColor = .whiteBackground
         addCustomTitle()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        var indexPaths: [IndexPath] = []
-        sections.enumerated().forEach { i, key in
-            rows[key]?.enumerated().forEach { j, setting in
-                if setting.accessoryText != nil {
-                    indexPaths.append(IndexPath(row: j, section: i))
-                }
-            }
-        }
-        tableView.beginUpdates()
-        tableView.reloadRows(at: indexPaths, with: .automatic)
-        tableView.endUpdates()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -73,9 +90,9 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         if let setting = rows[sections[indexPath.section]]?[indexPath.row] {
             cell.textLabel?.text = setting.title
             cell.textLabel?.font = .customBody(size: 16.0)
-            cell.textLabel?.textColor = .darkText
+            cell.textLabel?.textColor = .darkGray
 
-            let label = UILabel(font: .customMedium(size: 14.0), color: .grayTextTint)
+            let label = UILabel(font: .customMedium(size: 16.0), color: .darkGray)
             label.text = setting.accessoryText?()
             label.sizeToFit()
             cell.accessoryView = label
@@ -84,20 +101,13 @@ class SettingsViewController : UITableViewController, CustomTitleView {
     }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 44))
-        view.backgroundColor = .whiteTint
-        let label = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 47))
+        view.backgroundColor = .whiteBackground
+        let label = UILabel(font: .customMedium(size: 12.0), color: .mediumGray)
         view.addSubview(label)
-        switch sections[section] {
-        case "Wallet":
-            label.text = S.Settings.wallet
-        case "Manage":
-            label.text = S.Settings.manage
-        default:
-            label.text = ""
-        }
+        label.text = sections[section].title
         let separator = UIView()
-        separator.backgroundColor = .secondaryShadow
+        separator.backgroundColor = .separator
         view.addSubview(separator)
         separator.constrain([
             separator.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -107,7 +117,8 @@ class SettingsViewController : UITableViewController, CustomTitleView {
 
         label.constrain([
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            label.bottomAnchor.constraint(equalTo: separator.topAnchor, constant: -4.0) ])
+            label.bottomAnchor.constraint(equalTo: separator.topAnchor, constant: -C.padding[1])
+            ])
 
         return view
     }

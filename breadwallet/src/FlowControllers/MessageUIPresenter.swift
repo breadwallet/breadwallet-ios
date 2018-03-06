@@ -13,12 +13,26 @@ class MessageUIPresenter: NSObject, Trackable {
 
     weak var presenter: UIViewController?
 
-    func presentMailCompose(bitcoinAddress: String, image: UIImage) {
-        presentMailCompose(string: "bitcoin: \(bitcoinAddress)", image: image)
+    func presentMailCompose(uri: String, image: UIImage) {
+        presentMailCompose(string: uri, image: image)
     }
 
     func presentMailCompose(bitcoinURL: String, image: UIImage) {
         presentMailCompose(string: bitcoinURL, image: image)
+    }
+
+    func presentEmailLogs() {
+        guard MFMailComposeViewController.canSendMail() else { showEmailUnavailableAlert(); return }
+        guard let logData = try? Data(contentsOf: C.logFilePath) else { showErrorMessage(S.ErrorMessages.noLogsFound); return }
+        originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
+        UINavigationBar.appearance().titleTextAttributes = nil
+        let emailView = MFMailComposeViewController()
+        emailView.setToRecipients([C.iosEmail])
+        emailView.setSubject("BRD Logs")
+        emailView.setMessageBody("BRD Logs", isHTML: false)
+        emailView.addAttachmentData(logData, mimeType: "text/plain", fileName: "brd_logs.txt")
+        emailView.mailComposeDelegate = self
+        present(emailView)
     }
 
     private func presentMailCompose(string: String, image: UIImage) {
@@ -55,8 +69,8 @@ class MessageUIPresenter: NSObject, Trackable {
         present(emailView)
     }
 
-    func presentMessageCompose(address: String, image: UIImage) {
-        presentMessage(string: "bitcoin: \(address)", image: image)
+    func presentMessageCompose(uri: String, image: UIImage) {
+        presentMessage(string: uri, image: image)
     }
 
     func presentMessageCompose(bitcoinURL: String, image: UIImage) {
@@ -101,6 +115,12 @@ class MessageUIPresenter: NSObject, Trackable {
     private func showMessageUnavailableAlert() {
         saveEvent("receive.messagingUnavailable")
         let alert = UIAlertController(title: S.ErrorMessages.messagingUnavailableTitle, message: S.ErrorMessages.messagingUnavailableMessage, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
+        presenter?.present(alert, animated: true, completion: nil)
+    }
+
+    private func showErrorMessage(_ message: String) {
+        let alert = UIAlertController(title: S.Alert.error, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
         presenter?.present(alert, animated: true, completion: nil)
     }

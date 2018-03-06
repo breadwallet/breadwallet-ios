@@ -46,10 +46,8 @@ enum SearchFilterType {
                 if transaction.hash.lowercased().contains(loweredText) {
                     return true
                 }
-                if let address = transaction.toAddress {
-                    if address.lowercased().contains(loweredText) {
-                        return true
-                    }
+                if transaction.toAddress.lowercased().contains(loweredText) {
+                    return true
                 }
                 if let metaData = transaction.metaData {
                     if metaData.comment.lowercased().contains(loweredText) {

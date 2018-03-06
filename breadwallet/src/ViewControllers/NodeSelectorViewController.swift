@@ -48,7 +48,11 @@ class NodeSelectorViewController : UIViewController, Trackable {
     }
 
     private func addConstraints() {
-        titleLabel.pinTopLeft(padding: C.padding[2])
+        titleLabel.constrain([
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[6]),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2])
+            ])
         nodeLabel.pinTopLeft(toView: titleLabel, topPadding: C.padding[2])
         node.pinTopLeft(toView: nodeLabel, topPadding: 0)
         statusLabel.pinTopLeft(toView: node, topPadding: C.padding[2])
@@ -63,6 +67,7 @@ class NodeSelectorViewController : UIViewController, Trackable {
     private func setInitialData() {
         view.backgroundColor = .whiteTint
         titleLabel.text = S.NodeSelector.title
+        titleLabel.textAlignment = .right
         nodeLabel.text = S.NodeSelector.nodeLabel
         statusLabel.text = S.NodeSelector.statusLabel
         button.tap = strongify(self) { myself in
@@ -77,9 +82,7 @@ class NodeSelectorViewController : UIViewController, Trackable {
     }
 
     @objc private func setStatusText() {
-        if let peerManager = walletManager.peerManager {
-            status.text = peerManager.isConnected ? S.NodeSelector.connected : S.NodeSelector.notConnected
-        }
+        status.text = walletManager.peerManager?.connectionStatus.description
         node.text = walletManager.peerManager?.downloadPeerName
     }
 

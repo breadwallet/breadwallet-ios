@@ -15,13 +15,7 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
     private let textField = UITextField()
     private let separator = UIView(color: .secondaryShadow)
     fileprivate let body = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
-    private let store: Store
     fileprivate let maxWalletNameLength = 20
-
-    init(store: Store) {
-        self.store = store
-        super.init(nibName: nil, bundle: nil)
-    }
 
     override func viewDidLoad() {
         addSubviews()
@@ -38,7 +32,7 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
 
     deinit {
         NotificationCenter.default.removeObserver(self)
-        store.unsubscribe(self)
+        Store.unsubscribe(self)
     }
 
     private func addSubviews() {
@@ -77,8 +71,9 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
         textFieldLabel.text = S.ManageWallet.textFieldLabel
         textField.delegate = self
 
-        self.textField.text = store.state.walletState.name
-        let creationDate = store.state.walletState.creationDate
+        // TODO:BCH
+        self.textField.text = Currencies.btc.state.name
+        let creationDate = Currencies.btc.state.creationDate
         if creationDate.timeIntervalSince1970 > 0 {
             let df = DateFormatter()
             df.dateFormat = "MMMM d, yyyy"
@@ -110,7 +105,8 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
         if name.utf8.count > maxWalletNameLength {
             name = String(name[..<name.index(name.startIndex, offsetBy: maxWalletNameLength)])
         }
-        store.perform(action: WalletChange.setWalletName(name))
+        //TODO:BCH multi-currency support
+        Store.perform(action: WalletChange(Currencies.btc).setWalletName(name))
     }
 
     required init?(coder aDecoder: NSCoder) {

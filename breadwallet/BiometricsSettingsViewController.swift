@@ -13,9 +13,8 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
 
     var presentSpendingLimit: (() -> Void)?
 
-    init(walletManager: WalletManager, store: Store) {
+    init(walletManager: WalletManager) {
         self.walletManager = walletManager
-        self.store = store
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -27,17 +26,15 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
     private let separator = UIView(color: .secondaryShadow)
     private let textView = UnEditableTextView()
     private let walletManager: WalletManager
-    private let store: Store
     private var rate: Rate?
-    fileprivate var didTapSpendingLimit = false
 
     deinit {
-        store.unsubscribe(self)
+        Store.unsubscribe(self)
     }
 
     override func viewDidLoad() {
-        store.subscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: {
-            self.rate = $0.currentRate
+        Store.subscribe(self, selector: { $0[Currencies.btc].currentRate != $1[Currencies.btc].currentRate }, callback: {
+            self.rate = $0[Currencies.btc].currentRate
         })
         addSubviews()
         addConstraints()
@@ -46,7 +43,6 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        didTapSpendingLimit = false
         textView.attributedText = textViewText
     }
 
@@ -102,7 +98,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
         textView.tintColor = .primaryButton
         addFaqButton()
         let hasSetToggleInitialValue = false
-        store.subscribe(self, selector: { $0.isBiometricsEnabled != $1.isBiometricsEnabled }, callback: {
+        Store.subscribe(self, selector: { $0.isBiometricsEnabled != $1.isBiometricsEnabled }, callback: {
             self.toggle.isOn = $0.isBiometricsEnabled
             if !hasSetToggleInitialValue {
                 self.toggle.sendActions(for: .valueChanged) //This event is needed because the gradient background gets set on valueChanged events
@@ -112,7 +108,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
             guard let myself = self else { return }
             
             if LAContext.canUseBiometrics {
-                myself.store.perform(action: Biometrics.setIsEnabled(myself.toggle.isOn))
+                Store.perform(action: Biometrics.setIsEnabled(myself.toggle.isOn))
                 myself.textView.attributedText = myself.textViewText
             } else {
                 myself.presentCantUseBiometricsAlert()
@@ -124,14 +120,14 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
     private func addFaqButton() {
         let negativePadding = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         negativePadding.width = -16.0
-        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.enableTouchId)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.enableTouchId)
         faqButton.tintColor = .white
         navigationItem.rightBarButtonItems = [negativePadding, UIBarButtonItem(customView: faqButton)]
     }
 
     private var textViewText: NSAttributedString {
         guard let rate = rate else { return NSAttributedString(string: "") }
-        let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: store.state.maxDigits)
+        let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
         let customizeText = LAContext.biometricType() == .face ? S.FaceIDSettings.customizeText : S.TouchIdSettings.customizeText
         let linkText = LAContext.biometricType() == .face ? S.FaceIDSettings.linkText : S.TouchIdSettings.linkText
         let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.bits, amount.localCurrency))\n\n\(String(format: customizeText, linkText))"
@@ -173,8 +169,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
 extension BiometricsSettingsViewController : UITextViewDelegate {
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
         if LAContext.canUseBiometrics {
-            guard !didTapSpendingLimit else { return false }
-            didTapSpendingLimit = true
+            guard navigationController?.presentedViewController == nil else { return false }
             presentSpendingLimit?()
         } else {
             presentCantUseBiometricsAlert()

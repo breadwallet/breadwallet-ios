@@ -10,21 +10,21 @@ import UIKit
 
 class ReScanViewController : UIViewController, Subscriber {
 
-    init(store: Store) {
-        self.store = store
-        self.faq = .buildFaqButton(store: store, articleId: ArticleIds.reScan)
+    init(currency: CurrencyDef) {
+        self.currency = currency
+        self.faq = .buildFaqButton(articleId: ArticleIds.reScan)
         super.init(nibName: nil, bundle: nil)
     }
 
+    private let currency: CurrencyDef
     private let header = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let body = UILabel.wrapping(font: .systemFont(ofSize: 15.0))
     private let button = ShadowButton(title: S.ReScan.buttonTitle, type: .primary)
     private let footer = UILabel.wrapping(font: .customBody(size: 16.0), color: .secondaryGrayText)
-    private let store: Store
     private let faq: UIButton
 
     deinit {
-        store.unsubscribe(self)
+        Store.unsubscribe(self)
     }
 
     override func viewDidLoad() {
@@ -79,44 +79,10 @@ class ReScanViewController : UIViewController, Subscriber {
         let alert = UIAlertController(title: S.ReScan.alertTitle, message: S.ReScan.alertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
         alert.addAction(UIAlertAction(title: S.ReScan.alertAction, style: .default, handler: { _ in
-            self.store.trigger(name: .rescan)
-            self.showSyncView()
+            Store.trigger(name: .rescan(self.currency))
+            self.dismiss(animated: true, completion: nil)
         }))
         present(alert, animated: true, completion: nil)
-    }
-
-    private func showSyncView() {
-        guard let window = UIApplication.shared.keyWindow else { return }
-        let mask = UIView(color: .transparentBlack)
-        mask.alpha = 0.0
-        window.addSubview(mask)
-        mask.constrain(toSuperviewEdges: nil)
-
-        let syncView = SyncingView()
-        syncView.backgroundColor = .white
-        syncView.layer.cornerRadius = 4.0
-        syncView.layer.masksToBounds = true
-
-        store.subscribe(self, selector: { $0.walletState.syncProgress != $1.walletState.syncProgress },
-                        callback: { state in
-                            syncView.timestamp = state.walletState.lastBlockTimestamp
-                            syncView.progress = CGFloat(state.walletState.syncProgress)
-        })
-        mask.addSubview(syncView)
-        syncView.constrain([
-            syncView.leadingAnchor.constraint(equalTo: window.leadingAnchor, constant: C.padding[2]),
-            syncView.topAnchor.constraint(equalTo: window.topAnchor, constant: 136.0 + C.padding[2]),
-            syncView.trailingAnchor.constraint(equalTo: window.trailingAnchor, constant: -C.padding[2]),
-            syncView.heightAnchor.constraint(equalToConstant: 88.0) ])
-
-        UIView.animate(withDuration: C.animationDuration, animations: {
-            mask.alpha = 1.0
-        })
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
-            mask.removeFromSuperview()
-            self.dismiss(animated: true, completion: nil)
-        })
     }
 
     private var bodyText: NSAttributedString {
