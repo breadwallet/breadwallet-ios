@@ -32,7 +32,7 @@ languages([
 scheme "Screenshots"
 
 # Where should the resulting screenshots be stored?
-output_directory "./screenshots/shots“
+output_directory "./screenshots/shots"
 
 # clear_previous_screenshots true # remove the '#' to clear all previously generated screenshots before creating new ones
 
