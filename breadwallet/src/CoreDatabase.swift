@@ -234,8 +234,7 @@ class CoreDatabase {
             defer { sqlite3_finalize(sql) }
 
             for i in 0..<txHashes.count {
-                sqlite3_bind_blob(sql, Int32(i + 1), UnsafePointer(txHashes) + i, Int32(MemoryLayout<UInt256>.size),
-                                  SQLITE_TRANSIENT)
+                sqlite3_bind_blob(sql, Int32(i + 1), [txHashes[i]], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
             }
 
             sqlite3_prepare_v2(self.db, "update ZBRTXMETADATAENTITY set ZBLOB = ? where ZTXHASH = ?", -1, &sql2, nil)
