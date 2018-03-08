@@ -15,9 +15,10 @@ class WelcomeViewController : UIViewController, ContentBoxPresenter {
     let contentBox = UIView(color: .white)
 
     private let header = GradientView()
-    private let titleLabel = UILabel.wrapping(font: .customBody(size: 26.0), color: .darkText)
+    private let titleLabel = UILabel.wrapping(font: .customBold(size: 16.0), color: .darkText)
     private let body = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
-    private let button = ShadowButton(title: S.Button.ok, type: .primary)
+    private let buttonAction = ShadowButton(title: S.Button.home, type: .primary)
+    private let buttonDismiss = ShadowButton(title: S.Button.dismiss, type: .tertiary)
 
     override func viewDidLoad() {
         addSubviews()
@@ -30,7 +31,8 @@ class WelcomeViewController : UIViewController, ContentBoxPresenter {
         contentBox.addSubview(header)
         contentBox.addSubview(titleLabel)
         contentBox.addSubview(body)
-        contentBox.addSubview(button)
+        contentBox.addSubview(buttonAction)
+        contentBox.addSubview(buttonDismiss)
     }
 
     private func addConstraints() {
@@ -49,35 +51,35 @@ class WelcomeViewController : UIViewController, ContentBoxPresenter {
             body.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: C.padding[2]),
             body.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]) ])
 
-        button.constrain([
-            button.leadingAnchor.constraint(equalTo: body.leadingAnchor),
-            button.topAnchor.constraint(equalTo: body.bottomAnchor, constant: C.padding[2]),
-            button.trailingAnchor.constraint(equalTo: body.trailingAnchor),
-            button.bottomAnchor.constraint(equalTo: contentBox.bottomAnchor, constant: -C.padding[2]) ])
+        buttonDismiss.constrain([
+            buttonDismiss.leadingAnchor.constraint(equalTo: body.leadingAnchor),
+            buttonDismiss.topAnchor.constraint(equalTo: body.bottomAnchor, constant: C.padding[2]),
+            buttonDismiss.bottomAnchor.constraint(equalTo: contentBox.bottomAnchor, constant: -C.padding[2]),
+            buttonDismiss.widthAnchor.constraint(equalTo: buttonAction.widthAnchor)
+            ])
+        
+        buttonAction.constrain([
+            buttonAction.leadingAnchor.constraint(equalTo: buttonDismiss.trailingAnchor, constant: C.padding[2]),
+            buttonAction.topAnchor.constraint(equalTo: body.bottomAnchor, constant: C.padding[2]),
+            buttonAction.trailingAnchor.constraint(equalTo: body.trailingAnchor),
+            buttonAction.bottomAnchor.constraint(equalTo: contentBox.bottomAnchor, constant: -C.padding[2]) ])
     }
 
     private func setInitialData() {
         view.backgroundColor = .clear
         contentBox.layer.cornerRadius = 6.0
         contentBox.layer.masksToBounds = true
-        titleLabel.textAlignment = .center
         titleLabel.text = S.Welcome.title
-        setBodyText()
-        button.tap = strongify(self) { myself in
-            myself.dismiss(animated: true, completion: nil)
+        body.text = S.Welcome.body
+        buttonDismiss.tap = { [unowned self] in
+            self.dismiss(animated: true, completion: nil)
         }
-    }
-
-    private func setBodyText() {
-        let bodyText = S.Welcome.body
-        let attributedString = NSMutableAttributedString(string: S.Welcome.body)
-        let icon = NSTextAttachment()
-        icon.image = #imageLiteral(resourceName: "Faq")
-        icon.bounds = CGRect(x: 0, y: -3.0, width: body.font.pointSize, height: body.font.pointSize)
-        let range = S.Welcome.body.range(of: "(?)")
-        let nsRange = bodyText.nsRange(from: range!)
-        attributedString.replaceCharacters(in: nsRange, with: NSAttributedString(attachment: icon))
-        body.attributedText = attributedString
+        buttonAction.tap = { [unowned self] in
+            let nc = self.presentingViewController as? RootNavigationController
+            self.dismiss(animated: true, completion: {
+                nc?.popToRootViewController(animated: true)
+            })
+        }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
