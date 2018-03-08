@@ -228,14 +228,13 @@ class CoreDatabase {
         queue.async {
             guard txHashes.count > 0 else { return }
             let timestamp = (timestamp > UInt32(NSTimeIntervalSince1970)) ? timestamp - UInt32(NSTimeIntervalSince1970) : 0
-            var sql: OpaquePointer? = nil, sql2: OpaquePointer? = nil
+            var sql: OpaquePointer? = nil, sql2: OpaquePointer? = nil, count = 0
             sqlite3_prepare_v2(self.db, "select ZTXHASH, ZBLOB from ZBRTXMETADATAENTITY where ZTYPE = 1 and " +
                 "ZTXHASH in (" + String(repeating: "?, ", count: txHashes.count - 1) + "?)", -1, &sql, nil)
             defer { sqlite3_finalize(sql) }
 
             for i in 0..<txHashes.count {
-                sqlite3_bind_blob(sql, Int32(i + 1), UnsafePointer(txHashes) + i, Int32(MemoryLayout<UInt256>.size),
-                                  SQLITE_TRANSIENT)
+                sqlite3_bind_blob(sql, Int32(i + 1), [txHashes[i]], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
             }
 
             sqlite3_prepare_v2(self.db, "update ZBRTXMETADATAENTITY set ZBLOB = ? where ZTXHASH = ?", -1, &sql2, nil)
@@ -255,9 +254,16 @@ class CoreDatabase {
                         sqlite3_reset(sql2)
                     }
                 }
+                
+                count = count + 1
             }
 
             if sqlite3_errcode(self.db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(self.db))) }
+
+            if count != txHashes.count {
+                print("Fewer tx records updated than hashes! This causes tx to go missing!")
+                exit(0) // DIE! DIE! DIE!
+            }
         }
     }
 
