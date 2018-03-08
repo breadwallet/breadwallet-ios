@@ -22,8 +22,8 @@ class ApplicationController : Subscriber, Trackable {
     private var walletCoordinator: WalletCoordinator?
     private var exchangeUpdaters = [String: ExchangeUpdater]()
     private var feeUpdaters = [String: FeeUpdater]()
-    private var primaryWalletManager: WalletManager {
-        return walletManagers[Currencies.btc.code]!
+    private var primaryWalletManager: WalletManager? {
+        return walletManagers[Currencies.btc.code]
     }
     
     private var kvStoreCoordinator: KVStoreCoordinator?
@@ -191,8 +191,8 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     func willEnterForeground() {
-        let walletManager = primaryWalletManager
-        guard !walletManager.noWallet else { return }
+        guard let walletManager = primaryWalletManager,
+            !walletManager.noWallet else { return }
         if shouldRequireLogin() {
             Store.perform(action: RequireLogin())
         }
@@ -206,8 +206,8 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     func retryAfterIsReachable() {
-        let walletManager = primaryWalletManager
-        guard !walletManager.noWallet else { return }
+        guard let walletManager = primaryWalletManager,
+            !walletManager.noWallet else { return }
         DispatchQueue.walletQueue.async {
             self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
         }
@@ -228,7 +228,7 @@ class ApplicationController : Subscriber, Trackable {
         if !Store.state.isLoginRequired {
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
         }
-        primaryWalletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
+        primaryWalletManager?.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
     }
 
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -245,6 +245,7 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func didInitWalletManager() {
+        guard let primaryWalletManager = primaryWalletManager else { return }
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
         walletCoordinator = WalletCoordinator(walletManagers: walletManagers)
         Store.perform(action: PinLength.set(primaryWalletManager.pinLength))
@@ -351,6 +352,7 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func startDataFetchers() {
+        guard let primaryWalletManager = primaryWalletManager else { return }
         primaryWalletManager.apiClient?.updateFeatureFlags()
         initKVStoreCoordinator()
         feeUpdaters.values.forEach { $0.refresh() }
@@ -389,7 +391,7 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func initKVStoreCoordinator() {
-        guard let kvStore = primaryWalletManager.apiClient?.kv else { return }
+        guard let kvStore = primaryWalletManager?.apiClient?.kv else { return }
         guard kvStoreCoordinator == nil else { return }
         kvStore.syncAllKeys { [weak self] error in
             print("KV finished syncing. err: \(String(describing: error))")
@@ -463,7 +465,7 @@ class ApplicationController : Subscriber, Trackable {
         applyBlurEffect()
         guard !Store.state.isPushNotificationsEnabled else { return }
         guard let pushToken = UserDefaults.pushToken else { return }
-        primaryWalletManager.apiClient?.deletePushNotificationToken(pushToken)
+        primaryWalletManager?.apiClient?.deletePushNotificationToken(pushToken)
     }
     
     func didBecomeActive() {
