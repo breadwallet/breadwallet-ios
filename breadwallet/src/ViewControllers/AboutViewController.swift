@@ -44,7 +44,7 @@ class AboutViewController : UIViewController {
         logoBackground.constrain([
             logoBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoBackground.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: C.padding[3]),
-            logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
+            logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.3),
             logoBackground.heightAnchor.constraint(equalTo: logoBackground.widthAnchor, multiplier: 342.0/553.0) ])
         logo.constrain(toSuperviewEdges: nil)
         blog.constrain([
@@ -64,7 +64,8 @@ class AboutViewController : UIViewController {
             privacy.topAnchor.constraint(equalTo: reddit.bottomAnchor, constant: C.padding[2])])
         footer.constrain([
             footer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            footer.topAnchor.constraint(equalTo: privacy.bottomAnchor) ])
+            footer.topAnchor.constraint(equalTo: privacy.bottomAnchor),
+            footer.heightAnchor.constraint(equalToConstant: 60)])
     }
 
     private func setData() {
@@ -73,9 +74,11 @@ class AboutViewController : UIViewController {
         privacy.setTitle(S.About.privacy, for: .normal)
         privacy.titleLabel?.font = UIFont.customBody(size: 13.0)
         footer.textAlignment = .center
+        footer.numberOfLines = 3
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
             footer.text = String(format: S.About.footer, "\(version) (\(build))")
         }
+        logo.contentMode = .scaleAspectFill
     }
 
     private func setActions() {
