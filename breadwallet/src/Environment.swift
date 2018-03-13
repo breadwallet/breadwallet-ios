@@ -44,6 +44,13 @@ struct E {
             return false
         #endif
     }()
+    static let isRunningTests: Bool = {
+        #if Debug
+            return ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+        #else
+            return false
+        #endif
+    }()
     static var isIPhone4: Bool {
         return UIApplication.shared.keyWindow?.bounds.height == 480.0
     }
