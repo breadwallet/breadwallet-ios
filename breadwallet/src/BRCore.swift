@@ -752,6 +752,45 @@ extension UInt256 : CustomStringConvertible {
     }
 }
 
+extension UInt256 {
+    public init(_ integer: UInt64) {
+        self = createUInt256(integer)
+    }
+    
+    public init(hexString: String) {
+        self.init(string: hexString.withoutHexPrefix, radix: 16)
+    }
+    
+    public init(string: String, radix: Int = 10) {
+        var error: Int32 = 0
+        self = createUInt256Parse(string, Int32(radix), &error)
+    }
+    
+    public func string(radix: Int) -> String {
+        guard let buf = coerceString(self, Int32(radix)) else { return "" }
+        let str = String(cString: buf)
+        free(buf)
+        return str.trimmedLeadingZeros
+    }
+    
+    public var hexWithPrefix: String {
+        return string(radix: 16).withHexPrefix
+    }
+}
+
+extension UInt256: Codable {
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let str = try container.decode(String.self)
+        self.init(hexString: str)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(hexWithPrefix)
+    }
+}
+
 extension UInt128: Equatable {
     static public func == (l: UInt128, r: UInt128) -> Bool {
         return l.u64 == r.u64
@@ -772,13 +811,17 @@ extension UInt160: Equatable {
     }
 }
 
-extension UInt256: Equatable {
+extension UInt256: Comparable {
     static public func == (l: UInt256, r: UInt256) -> Bool {
-        return l.u64 == r.u64
+        return eqUInt256(l, r) == 1
     }
     
     static public func != (l: UInt256, r: UInt256) -> Bool {
-        return l.u64 != r.u64
+        return eqUInt256(l, r) == 0
+    }
+    
+    static public func < (l: UInt256, r: UInt256) -> Bool {
+        return ltUInt256(l, r) == 1
     }
     
     var hexString: String {
