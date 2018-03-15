@@ -277,6 +277,8 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             lock.topAnchor.constraint(equalTo: label.bottomAnchor, constant: C.padding[1]),
             lock.centerXAnchor.constraint(equalTo: label.centerXAnchor) ])
         view.layoutIfNeeded()
+        
+        let nc = self.presentingViewController as? RootNavigationController
 
         UIView.spring(0.6, animations: {
             self.pinPadPottom?.constant = self.pinPad.height
@@ -289,7 +291,9 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             self.view.layoutIfNeeded()
         }) { completion in
             if self.shouldSelfDismiss {
-                self.dismiss(animated: true, completion: nil)
+                self.dismiss(animated: true, completion: {
+                    nc?.attemptShowWelcomeView()
+                })
             }
             Store.perform(action: LoginSuccess())
             Store.trigger(name: .showStatusBar)

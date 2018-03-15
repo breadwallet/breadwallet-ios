@@ -128,6 +128,8 @@ private class ProgressBar: UIView {
         self.progress.layer.removeAllAnimations()
         self.progress.backgroundColor = .white
         
+        guard !E.isScreenshots else { return } // looping animations cause UI tests to hang
+        
         UIView.animate(withDuration: 1.0,
                        delay: 0.5,
                        options: [.repeat, .autoreverse],

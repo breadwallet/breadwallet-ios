@@ -35,8 +35,8 @@ class Screenshots: XCTestCase {
         // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
 
-        snapshot("1LockScreen")
-
+        snapshot("2LockScreen")
+        
         let app = XCUIApplication()
         let staticText = app.collectionViews.staticTexts["5"]
         staticText.tap()
@@ -45,19 +45,22 @@ class Screenshots: XCTestCase {
         staticText.tap()
         staticText.tap()
         staticText.tap()
-        snapshot("0TxList")
-
-        app.buttons["MENU"].tap()
-        let scrollViewsQuery = app.scrollViews
-        scrollViewsQuery.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element(boundBy: 0).tap()
-        snapshot("2Security")
-        scrollViewsQuery.otherElements.buttons["Close"].tap()
-
-        app.buttons["MENU"].tap()
-        let scrollViewsQuery2 = app.scrollViews
-        scrollViewsQuery2.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element(boundBy: 1).tap()
-        snapshot("3Support")
-
+        snapshot("0HomeScreen")
+        
+        // tx list
+        let tablesQuery = app.tables
+        tablesQuery.staticTexts["Bitcoin"].tap()
+        snapshot("1TxList")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        
+        // security center
+        tablesQuery.cells.element(boundBy: 3).tap()
+        snapshot("3Security")
+        app.scrollViews.otherElements.buttons["Close"].tap()
+        
+        // support
+        tablesQuery.cells.element(boundBy: 4).tap()
+        snapshot("4Support")
     }
     
 }

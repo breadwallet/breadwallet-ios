@@ -105,7 +105,8 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
             processingTime.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]) ])
         sendLabel.constrain([
             sendLabel.leadingAnchor.constraint(equalTo: processingTime.leadingAnchor),
-            sendLabel.topAnchor.constraint(equalTo: processingTime.bottomAnchor, constant: C.padding[2]) ])
+            sendLabel.topAnchor.constraint(equalTo: processingTime.bottomAnchor, constant: C.padding[2]),
+            sendLabel.trailingAnchor.constraint(lessThanOrEqualTo: send.leadingAnchor) ])
         send.constrain([
             send.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]),
             sendLabel.firstBaselineAnchor.constraint(equalTo: send.firstBaselineAnchor) ])
@@ -154,6 +155,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         }
 
         sendLabel.text = S.Confirmation.amountLabel
+        sendLabel.adjustsFontSizeToFitWidth = true
         send.text = displayAmount.description
         feeLabel.text = S.Confirmation.feeLabel
         fee.text = displayFee.description

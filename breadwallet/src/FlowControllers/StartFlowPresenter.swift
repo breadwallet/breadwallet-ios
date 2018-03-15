@@ -188,8 +188,8 @@ class StartFlowPresenter : Subscriber {
         loginView.modalPresentationStyle = .overFullScreen
         loginView.modalPresentationCapturesStatusBarAppearance = true
         loginViewController = loginView
-        if let first = rootViewController.childViewControllers.first {
-            first.dismiss(animated: false, completion: {
+        if let modal = rootViewController.presentedViewController {
+            modal.dismiss(animated: false, completion: {
                 self.rootViewController.present(loginView, animated: false, completion: nil)
             })
         } else {
