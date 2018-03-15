@@ -17,7 +17,7 @@ class InAppAlert : UIView {
         self.message.text = message
     }
 
-    static let height: CGFloat = 136.0
+    static let height: CGFloat = accountHeaderHeight
     var bottomConstraint: NSLayoutConstraint?
     var hide: (() -> Void)?
 

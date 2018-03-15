@@ -50,6 +50,7 @@ class HomeScreenCell : UITableViewCell, Subscriber {
     }
 
     func set(viewModel: AssetListViewModel) {
+        accessibilityIdentifier = viewModel.currency.name
         container.currency = viewModel.currency
         currencyName.text = viewModel.currency.name
         price.text = viewModel.exchangeRate

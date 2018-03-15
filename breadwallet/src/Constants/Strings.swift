@@ -38,6 +38,7 @@ enum S {
         static let buy = NSLocalizedString("Button.buy", value: "Buy", comment: "buy button")
         static let continueAction = NSLocalizedString("Button.continueAction", value: "Continue", comment: "prompt continue button")
         static let dismiss = NSLocalizedString("Button.dismiss", value: "Dismiss", comment: "prompt dismiss button")
+        static let home = NSLocalizedString("Button.home", value: "Home", comment: "prompt home button")
     }
 
     enum Alert {
@@ -584,8 +585,8 @@ enum S {
     }
 
     enum Welcome {
-        static let title = NSLocalizedString("Welcome.title", value: "Welcome to BRD!", comment: "Welcome view title")
-        static let body = NSLocalizedString("Welcome.body", value: "Breadwallet has changed its name to BRD, with a brand new look and some new features.\n\nIf you need help, look for the (?) in the top right of most screens.", comment: "Welcome view body text")
+        static let title = NSLocalizedString("Welcome.title", value: "BRD now supports Bitcoin Cash!", comment: "Welcome view title")
+        static let body = NSLocalizedString("Welcome.body", value: "Any BCH in your wallet can be accessed through the home screen.", comment: "Welcome view body text")
     }
 
     enum Crowdsale {
