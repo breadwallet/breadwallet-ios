@@ -108,6 +108,21 @@ extension String {
         }
         return Data(bytes: bytes)
     }
+    
+    var withoutHexPrefix: String {
+        guard self.hasPrefix("0x") else { return self }
+        return String(self.dropFirst(2))
+    }
+    
+    var withHexPrefix: String {
+        guard !self.hasPrefix("0x") else { return self }
+        return "0x\(self)"
+    }
+    
+    var trimmedLeadingZeros: String {
+        let trimmed = self.ltrim(["0"])
+        return trimmed.count > 0 ? trimmed : "0"
+    }
 }
 
 extension UnicodeScalar {
@@ -122,5 +137,12 @@ extension UnicodeScalar {
             return UInt8(value - 87)
         }
         return nil
+    }
+}
+
+// UInt256 support
+extension String {
+    init(_ value: UInt256, radix: Int = 10) {
+        self = value.string(radix: radix)
     }
 }

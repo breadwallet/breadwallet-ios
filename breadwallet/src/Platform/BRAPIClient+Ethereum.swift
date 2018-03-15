@@ -25,7 +25,7 @@ extension BRAPIClient {
         send(request: JSONRPCRequest(method: "eth_estimateGas", params: JSONRPCParams([transaction, "pending"])), handler: handler)
     }
     
-    public func sendRawTransaction(rawTx: String, handler: @escaping (JSONRPCResult<Quantity>) -> Void) {
+    public func sendRawTransaction(rawTx: String, handler: @escaping (JSONRPCResult<String>) -> Void) {
         send(request: JSONRPCRequest(method: "eth_sendRawTransaction", params: JSONRPCParams([rawTx])), handler: handler)
     }
     

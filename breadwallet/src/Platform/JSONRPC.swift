@@ -7,9 +7,10 @@
 //
 
 import Foundation
+import BRCore
 
 // TODO:ETH types
-public typealias Quantity = String
+public typealias Quantity = UInt256
 public typealias EthAddress = String
 
 // MARK: - Requests
@@ -51,7 +52,7 @@ public struct JSONRPCParams: Encodable {
 public struct TransactionParams: Codable {
     public var from: String
     public var to: String
-    public var value: String? = "0x0"
+    public var value: UInt256?
     public var gas: String?
     public var gasPrice: String?
     public var data: String?
