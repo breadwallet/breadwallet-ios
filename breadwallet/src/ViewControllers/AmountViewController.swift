@@ -32,29 +32,30 @@ class AmountViewController : UIViewController, Trackable {
 
     var balanceTextForAmount: ((Satoshis?, Rate?) -> (NSAttributedString?, NSAttributedString?)?)?
     var didUpdateAmount: ((Satoshis?) -> Void)?
-    var didUpdateEth: ((GethBigInt?) -> Void)?
     var didChangeFirstResponder: ((Bool) -> Void)?
 
-    var ethOutput: GethBigInt {
-        let decimalSeparator = NumberFormatter().currencyDecimalSeparator
-        var decimal = Decimal(string: currentOutput.replacingOccurrences(of: S.Symbols.eth, with: "").replacingOccurrences(of: decimalSeparator!, with: ".")) ?? Decimal(0)
-        var result: Decimal = 0.0
-        NSDecimalMultiplyByPowerOf10(&result, &decimal, Int16(18), .up)
-        let wei = NSDecimalNumber(decimal: result)
-        let returnValue = GethBigInt(0)
-        returnValue.setString(wei.description(withLocale: nil), base: 10)
-        return returnValue
-    }
-
-    var tokenOutput: GethBigInt {
-        guard let token = currency.state.token else { return GethBigInt(0) }
-        let decimalSeparator = NumberFormatter().currencyDecimalSeparator
-        let string = currentOutput.replacingOccurrences(of: token.code, with: "").replacingOccurrences(of: decimalSeparator!, with: ".")
-        let output = GethBigInt(0)
-        let zeroes = [String](repeating: "0", count: token.decimals).reduce("", +)
-        output.setString(string + zeroes, base: 10)
-        return output
-    }
+    //TODO:ETH
+//    var didUpdateEth: ((GethBigInt?) -> Void)?
+//    var ethOutput: GethBigInt {
+//        let decimalSeparator = NumberFormatter().currencyDecimalSeparator
+//        var decimal = Decimal(string: currentOutput.replacingOccurrences(of: S.Symbols.eth, with: "").replacingOccurrences(of: decimalSeparator!, with: ".")) ?? Decimal(0)
+//        var result: Decimal = 0.0
+//        NSDecimalMultiplyByPowerOf10(&result, &decimal, Int16(18), .up)
+//        let wei = NSDecimalNumber(decimal: result)
+//        let returnValue = GethBigInt(0)
+//        returnValue.setString(wei.description(withLocale: nil), base: 10)
+//        return returnValue
+//    }
+//
+//    var tokenOutput: GethBigInt {
+//        guard let token = currency.state.token else { return GethBigInt(0) }
+//        let decimalSeparator = NumberFormatter().currencyDecimalSeparator
+//        let string = currentOutput.replacingOccurrences(of: token.code, with: "").replacingOccurrences(of: decimalSeparator!, with: ".")
+//        let output = GethBigInt(0)
+//        let zeroes = [String](repeating: "0", count: token.decimals).reduce("", +)
+//        output.setString(string + zeroes, base: 10)
+//        return output
+//    }
 
     var currentOutput: String {
         return amountLabel.text ?? ""
@@ -112,13 +113,14 @@ class AmountViewController : UIViewController, Trackable {
         }
     }
 
-    private var ethAmount: GethBigInt? {
-        didSet {
-            updateAmountLabel()
-            updateBalanceLabel()
-            didUpdateEth?(ethAmount)
-        }
-    }
+    //TODO:ETH
+//    private var ethAmount: GethBigInt? {
+//        didSet {
+//            updateAmountLabel()
+//            updateBalanceLabel()
+//            didUpdateEth?(ethAmount)
+//        }
+//    }
 
     override func viewDidLoad() {
         addSubviews()
@@ -261,9 +263,10 @@ class AmountViewController : UIViewController, Trackable {
         handleBtcOutput(output: output)
     }
 
-    private func handleEthOutput(output: String) {
-        //TODO:AC
-    }
+    //TODO:ETH
+//    private func handleEthOutput(output: String) {
+//        //TODO:AC
+//    }
 
     private func handleBtcOutput(output: String) {
         let currencyDecimalSeparator = NumberFormatter().currencyDecimalSeparator ?? "."

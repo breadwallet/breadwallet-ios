@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import BRCore
 
 struct EthTransaction: EthLikeTransaction {
     
@@ -24,7 +25,7 @@ struct EthTransaction: EthLikeTransaction {
     
     // MARK: ETH-network transaction properties
     
-    let amount: GethBigInt
+    let amount: UInt256
     let fromAddress: String
     
     // MARK: ETH-specific properties

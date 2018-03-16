@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import BRCore
 
 struct EthTxList : Codable {
     let status: String
@@ -17,7 +18,7 @@ struct EthTxList : Codable {
 struct EthTx {
     let blockNumber: UInt64
     let timeStamp: TimeInterval
-    let value: GethBigInt
+    let value: UInt256
     let from: String
     let to: String
     let confirmations: UInt64
@@ -44,9 +45,8 @@ extension EthTx: Decodable {
         confirmations = try container.decodeFromString(UInt64.self, forKey: .confirmations)
         timeStamp = try container.decodeFromString(TimeInterval.self, forKey: .timeStamp)
         let valueString = try container.decode(String.self, forKey: .value)
-        let value = GethBigInt(0)
-        value.setString(valueString, base: 10)
-        self.value = value
+        self.value = UInt256(string: valueString, radix: 10) // TODO:ETH
+        //self.value = try container.decode(UInt256.self, forKey: .value)
         from = try container.decode(String.self, forKey: .from)
         to = try container.decode(String.self, forKey: .to)
         hash = try container.decode(String.self, forKey: .hash)
@@ -62,7 +62,7 @@ extension EthTx: Encodable {
         try container.encode(String(blockNumber), forKey: .blockNumber)
         try container.encode(String(confirmations), forKey: .confirmations)
         try container.encode(String(timeStamp), forKey: .timeStamp)
-        try container.encode(value.stringValue, forKey: .value)
+        try container.encode(value.hexString, forKey: .value)
         try container.encode(from, forKey: .from)
         try container.encode(to, forKey: .to)
         try container.encode(hash, forKey: .hash)
@@ -107,12 +107,7 @@ struct Event : Codable {
 extension Event {
     init(timestamp: String, from: String, to: String, amount: String) {
         let topics = ["",from,to]
-        let timestampNumber = GethBigInt(0)
-        timestampNumber.setString(timestamp, base: 10)
-
-        let amountNumber = GethBigInt(0)
-        amountNumber.setString(amount, base: 10)
-        self.init(address: "", topics: topics, data: amountNumber.getString(16), timeStamp: timestampNumber.getString(16), transactionHash: "", isComplete: false)
+        self.init(address: "", topics: topics, data: UInt256(string: amount).hexString, timeStamp: UInt256(string: timestamp).hexString, transactionHash: "", isComplete: false)
         self.isComplete = false
     }
 }

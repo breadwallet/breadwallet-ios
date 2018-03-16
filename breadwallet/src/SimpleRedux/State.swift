@@ -122,9 +122,6 @@ struct WalletState {
     let creationDate: Date
     let isRescanning: Bool
     let receiveAddress: String?
-    let bigBalance: GethBigInt? // ??
-    let token: ERC20Token? // ??
-    let numSent: Int // ??
     let rates: [Rate]
     let currentRate: Rate?
     let fees: Fees?
@@ -146,9 +143,6 @@ struct WalletState {
                            creationDate: Date.zeroValue(),
                            isRescanning: false,
                            receiveAddress: nil,
-                           bigBalance: nil,
-                           token: nil,
-                           numSent: 0,
                            rates: [],
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
                            fees: nil,
@@ -167,9 +161,6 @@ struct WalletState {
                     creationDate: Date? = nil,
                     isRescanning: Bool? = nil,
                     receiveAddress: String? = nil,
-                    bigBalance: GethBigInt? = nil,
-                    token: ERC20Token? = nil,
-                    numSent: Int? = nil,
                     currentRate: Rate? = nil,
                     rates: [Rate]? = nil,
                     fees: Fees? = nil,
@@ -188,9 +179,6 @@ struct WalletState {
                            creationDate: creationDate ?? self.creationDate,
                            isRescanning: isRescanning ?? self.isRescanning,
                            receiveAddress: receiveAddress ?? self.receiveAddress,
-                           bigBalance: bigBalance ?? self.bigBalance,
-                           token: token ?? self.token,
-                           numSent: numSent ?? self.numSent,
                            rates: rates ?? self.rates,
                            currentRate: currentRate ?? self.currentRate,
                            fees: fees ?? self.fees,
@@ -211,7 +199,6 @@ func ==(lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.name == rhs.name &&
         lhs.creationDate == rhs.creationDate &&
         lhs.isRescanning == rhs.isRescanning &&
-        lhs.numSent == rhs.numSent &&
         lhs.rates == rhs.rates &&
         lhs.currentRate == rhs.currentRate &&
         lhs.fees == rhs.fees &&

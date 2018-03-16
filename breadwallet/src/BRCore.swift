@@ -25,6 +25,7 @@
 
 import Foundation
 import BRCore
+import BRCore.Ethereum
 
 typealias BRTxRef = UnsafeMutablePointer<BRTransaction>
 typealias BRBlockRef = UnsafeMutablePointer<BRMerkleBlock>
