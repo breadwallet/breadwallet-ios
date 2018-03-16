@@ -201,24 +201,24 @@ struct DisplayAmount {
         return format
     }
 
-    // TODO:BCH cleanup
-    static func ethString(value: GethBigInt) -> String {
-        guard let rate = Currencies.eth.state.currentRate else { return "" }
-        let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 0, currency: Currencies.eth)
-        var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
-        var amount: Decimal = 0.0
-        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
-        let eth = NSDecimalNumber(decimal: amount)
-        return placeholderAmount.ethFormat.string(from: eth) ?? ""
-    }
-
-    static func localEthString(value: GethBigInt) -> String {
-        guard let rate = Currencies.eth.state.currentRate else { return "" }
-        let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 0, currency: Currencies.eth)
-        var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
-        var amount: Decimal = 0.0
-        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
-        let eth = NSDecimalNumber(decimal: amount)
-        return placeholderAmount.localFormat.string(for: eth.doubleValue*rate.rate) ?? ""
-    }
+    // TODO:ETH
+//    static func ethString(value: GethBigInt) -> String {
+//        guard let rate = Currencies.eth.state.currentRate else { return "" }
+//        let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 0, currency: Currencies.eth)
+//        var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
+//        var amount: Decimal = 0.0
+//        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
+//        let eth = NSDecimalNumber(decimal: amount)
+//        return placeholderAmount.ethFormat.string(from: eth) ?? ""
+//    }
+//
+//    static func localEthString(value: GethBigInt) -> String {
+//        guard let rate = Currencies.eth.state.currentRate else { return "" }
+//        let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 0, currency: Currencies.eth)
+//        var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
+//        var amount: Decimal = 0.0
+//        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
+//        let eth = NSDecimalNumber(decimal: amount)
+//        return placeholderAmount.localFormat.string(for: eth.doubleValue*rate.rate) ?? ""
+//    }
 }

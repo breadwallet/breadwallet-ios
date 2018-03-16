@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import BRCore
 
 /// Transacton status
 enum TransactionStatus {
@@ -52,7 +53,7 @@ extension Transaction {
 // MARK: -
 
 protocol EthLikeTransaction: Transaction {
-    var amount: GethBigInt { get }
+    var amount: UInt256 { get }
     var fromAddress: String { get }
 }
 

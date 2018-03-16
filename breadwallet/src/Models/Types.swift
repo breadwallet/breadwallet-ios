@@ -106,6 +106,7 @@ struct Wei {
 
 extension Wei {
     init?(ethString: String) {
+        //TODO:ETH
         var decimal: Decimal = 0.0
         var amount: Decimal = 0.0
         guard Scanner(string: ethString).scanDecimal(&decimal) else { return nil }
