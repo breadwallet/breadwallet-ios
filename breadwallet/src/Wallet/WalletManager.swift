@@ -27,6 +27,7 @@ import Foundation
 import UIKit
 import SystemConfiguration
 import BRCore
+import BRCore.Ethereum
 import AVFoundation
 
 extension NSNotification.Name {
@@ -36,7 +37,41 @@ extension NSNotification.Name {
 // A WalletManger instance manages a single wallet, and that wallet's individual connection to the bitcoin network.
 // After instantiating a WalletManager object, call myWalletManager.peerManager.connect() to begin syncing.
 
-class WalletManager {
+protocol WalletManager {
+    var currency: CurrencyDef { get }
+    func resetForWipe()
+    var peerManager: BRPeerManager? { get }
+    var wallet: BRWallet? { get }
+    var kvStore: BRReplicatedKVStore? { get set }
+    var apiClient: BRAPIClient? { get }
+    func canUseBiometrics(forTx: BRTxRef) -> Bool
+}
+
+class EthWalletManager : WalletManager {
+    var peerManager: BRPeerManager?
+    var wallet: BRWallet?
+    var currency: CurrencyDef = Currencies.eth
+    var kvStore: BRReplicatedKVStore?
+    var apiClient: BRAPIClient? 
+    func resetForWipe() {
+        return
+    }
+    func canUseBiometrics(forTx: BRTxRef) -> Bool {
+        return false
+    }
+
+    init() {
+        guard var words = Words.rawWordList else { return }
+        installSharedWordList(&words, Int32(words.count))
+        if let address = addressAsString(accountGetPrimaryAddress(createAccount(loadPhrase()))) {
+            if let address = String(cString: address, encoding: .utf8) {
+                print("we have an eth address!: \(address)")
+            }
+        }
+    }
+}
+
+class BTCWalletManager : WalletManager {
     let currency: CurrencyDef
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
@@ -118,11 +153,6 @@ class WalletManager {
         return BRAPIClient(authenticator: self)
     }()
 
-    var wordList: [NSString]? {
-        guard let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist") else { return nil }
-        return NSArray(contentsOfFile: path) as? [NSString]
-    }
-
     lazy var allWordsLists: [[NSString]] = {
         var array: [[NSString]] = []
         Bundle.main.localizations.forEach { lang in
@@ -146,11 +176,6 @@ class WalletManager {
         }
         return set
     }()
-
-    var rawWordList: [UnsafePointer<CChar>?]? {
-        guard let wordList = wordList, wordList.count == 2048 else { return nil }
-        return wordList.map({ $0.utf8String })
-    }
 
     init(currency: CurrencyDef, masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
         self.currency = currency
@@ -185,7 +210,7 @@ class WalletManager {
     }
 }
 
-extension WalletManager : BRPeerManagerListener, Trackable {
+extension BTCWalletManager : BRPeerManagerListener, Trackable {
 
     func syncStarted() {
         DispatchQueue.main.async() {
@@ -266,7 +291,7 @@ extension WalletManager : BRPeerManagerListener, Trackable {
     }
 }
 
-extension WalletManager : BRWalletListener {
+extension BTCWalletManager : BRWalletListener {
     func balanceChanged(_ balance: UInt64) {
         DispatchQueue.main.async { [weak self] in
             guard let myself = self else { return }

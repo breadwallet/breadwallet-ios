@@ -17,7 +17,7 @@ struct Fees : Codable {
 class FeeUpdater : Trackable {
 
     //MARK: - Public
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
     }
 
@@ -46,7 +46,7 @@ class FeeUpdater : Trackable {
     }
 
     //MARK: - Private
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private let feeKey = "FEE_PER_KB"
     private let txFeePerKb: UInt64 = 1000
     //TODO:BCH these values should be currency-pecific

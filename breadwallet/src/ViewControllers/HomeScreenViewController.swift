@@ -10,7 +10,7 @@ import UIKit
 
 class HomeScreenViewController : UIViewController, Subscriber, Trackable {
     
-    var primaryWalletManager: WalletManager? {
+    var primaryWalletManager: BTCWalletManager? {
         didSet {
             setInitialData()
             setupSubscriptions()
@@ -33,7 +33,7 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
     
     // MARK: -
     
-    init(primaryWalletManager: WalletManager?) {
+    init(primaryWalletManager: BTCWalletManager?) {
         self.primaryWalletManager = primaryWalletManager
         super.init(nibName: nil, bundle: nil)
     }

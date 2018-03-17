@@ -13,7 +13,7 @@ class ExchangeUpdater : Subscriber {
     let currency: CurrencyDef
     
     //MARK: - Public
-    init(currency: CurrencyDef, walletManager: WalletManager) {
+    init(currency: CurrencyDef, walletManager: BTCWalletManager) {
         self.currency = currency
         self.walletManager = walletManager
         Store.subscribe(self,
@@ -33,5 +33,5 @@ class ExchangeUpdater : Subscriber {
     }
 
     //MARK: - Private
-    let walletManager: WalletManager
+    let walletManager: BTCWalletManager
 }

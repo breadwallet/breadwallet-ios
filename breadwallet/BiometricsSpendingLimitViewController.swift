@@ -12,14 +12,14 @@ import LocalAuthentication
 class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
 
     private let cellIdentifier = "CellIdentifier"
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private let limits: [UInt64] = [0, 1000000, 10000000, 100000000, 1000000000]
     private var selectedLimit: UInt64?
     private var header: UIView?
     private let amount = UILabel(font: .customMedium(size: 26.0), color: .darkText)
     private let body = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
     
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
         super.init(nibName: nil, bundle: nil)
     }

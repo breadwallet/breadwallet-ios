@@ -12,7 +12,7 @@ import LocalAuthentication
 class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Public
-    let primaryWalletManager: WalletManager
+    let primaryWalletManager: BTCWalletManager
     let walletManagers: [String: WalletManager]
     lazy var supportCenter: SupportCenterContainer = {
         return SupportCenterContainer(walletManager: self.primaryWalletManager, apiClient: self.noAuthApiClient)
@@ -21,7 +21,7 @@ class ModalPresenter : Subscriber, Trackable {
     init(walletManagers: [String: WalletManager], window: UIWindow, apiClient: BRAPIClient) {
         self.window = window
         self.walletManagers = walletManagers
-        self.primaryWalletManager = walletManagers[Currencies.btc.code]!
+        self.primaryWalletManager = walletManagers[Currencies.btc.code]! as! BTCWalletManager
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular)
         self.wipeNavigationDelegate = StartNavigationDelegate()
         self.noAuthApiClient = apiClient
@@ -318,7 +318,7 @@ class ModalPresenter : Subscriber, Trackable {
                     SettingsSections.currency: [
                         Setting(title: S.Settings.importTile, callback: {
                             settingsNav.dismiss(animated: true, completion: {
-                                self.presentKeyImport(walletManager: walletManager)
+                                self.presentKeyImport(walletManager: walletManager as! BTCWalletManager)
                             })
                         }),
                         Setting(title: S.Settings.sync, callback: {
@@ -597,7 +597,7 @@ class ModalPresenter : Subscriber, Trackable {
         }
     }
     
-    private func presentKeyImport(walletManager: WalletManager) {
+    private func presentKeyImport(walletManager: BTCWalletManager) {
         let nc = ModalNavigationController()
         nc.setClearNavbar()
         nc.setWhiteStyle()

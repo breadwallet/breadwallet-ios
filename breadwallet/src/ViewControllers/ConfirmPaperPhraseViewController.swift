@@ -10,7 +10,7 @@ import UIKit
 
 class ConfirmPaperPhraseViewController : UIViewController {
 
-    init(walletManager: WalletManager, pin: String, callback: @escaping () -> Void) {
+    init(walletManager: BTCWalletManager, pin: String, callback: @escaping () -> Void) {
         self.pin = pin
         self.walletManager = walletManager
         self.callback = callback
@@ -27,7 +27,7 @@ class ConfirmPaperPhraseViewController : UIViewController {
     private let submit = ShadowButton(title: S.Button.submit, type: .primary)
     private let header = RadialGradientView(backgroundColor: .pink)
     private let pin: String
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private let callback: () -> Void
     
     //Select 2 random indices from 1 to 10. The second number must

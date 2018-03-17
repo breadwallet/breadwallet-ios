@@ -22,8 +22,8 @@ class ApplicationController : Subscriber, Trackable {
     private var walletCoordinator: WalletCoordinator?
     private var exchangeUpdaters = [String: ExchangeUpdater]()
     private var feeUpdaters = [String: FeeUpdater]()
-    private var primaryWalletManager: WalletManager? {
-        return walletManagers[Currencies.btc.code]
+    private var primaryWalletManager: BTCWalletManager? {
+        return walletManagers[Currencies.btc.code] as! BTCWalletManager
     }
     
     private var kvStoreCoordinator: KVStoreCoordinator?
@@ -54,7 +54,7 @@ class ApplicationController : Subscriber, Trackable {
     private func initWalletWithMigration(completion: @escaping () -> Void) {
         let btc = Currencies.btc
         let bch = Currencies.bch
-        guard let btcWalletManager = try? WalletManager(currency: btc, dbPath: btc.dbPath) else { return }
+        guard let btcWalletManager = try? BTCWalletManager(currency: btc, dbPath: btc.dbPath) else { return }
         walletManagers[btc.code] = btcWalletManager
         btcWalletManager.initWallet { [unowned self] success in
             guard success else {
@@ -68,11 +68,11 @@ class ApplicationController : Subscriber, Trackable {
                     btcWalletManager.db?.loadBlocks { blocks in
                         let preForkTransactions = txns.flatMap{$0}.filter { $0.pointee.blockHeight < C.bCashForkBlockHeight }
                         let preForkBlocks = blocks.flatMap{$0}.filter { $0.pointee.height < C.bCashForkBlockHeight }
-                        var bchWalletManager: WalletManager?
+                        var bchWalletManager: BTCWalletManager?
                         if preForkBlocks.count > 0 || blocks.count == 0 {
-                            bchWalletManager = try? WalletManager(currency: bch, dbPath: bch.dbPath)
+                            bchWalletManager = try? BTCWalletManager(currency: bch, dbPath: bch.dbPath)
                         } else {
-                            bchWalletManager = try? WalletManager(currency: bch, dbPath: bch.dbPath, earliestKeyTimeOverride: C.bCashForkTimeStamp)
+                            bchWalletManager = try? BTCWalletManager(currency: bch, dbPath: bch.dbPath, earliestKeyTimeOverride: C.bCashForkTimeStamp)
                         }
                         self.walletManagers[bch.code] = bchWalletManager
                         bchWalletManager?.initWallet(transactions: preForkTransactions)
@@ -104,8 +104,13 @@ class ApplicationController : Subscriber, Trackable {
 
     private func initWallet(currency: CurrencyDef, dispatchGroup: DispatchGroup) {
         dispatchGroup.enter()
+        if let currency = currency as? Ethereum {
+            walletManagers[currency.code] = EthWalletManager()
+            dispatchGroup.leave()
+            return
+        }
         guard let currency = currency as? Bitcoin else { return }
-        guard let walletManager = try? WalletManager(currency: currency, dbPath: currency.dbPath) else { return }
+        guard let walletManager = try? BTCWalletManager(currency: currency, dbPath: currency.dbPath) else { return }
         walletManagers[currency.code] = walletManager
         walletManager.initWallet { success in
             guard success else {
@@ -257,8 +262,13 @@ class ApplicationController : Subscriber, Trackable {
         modalPresenter = ModalPresenter(walletManagers: walletManagers, window: window, apiClient: noAuthApiClient)
         startFlowController = StartFlowPresenter(walletManager: primaryWalletManager, rootViewController: rootViewController)
         
-        walletManagers.forEach { (currencyCode, walletManager) in
-            feeUpdaters[currencyCode] = FeeUpdater(walletManager: walletManager)
+        walletManagers.forEach { (arg) in
+
+            let (currencyCode, walletManager) = arg
+            if let manager = walletManager as? BTCWalletManager {
+                feeUpdaters[currencyCode] = FeeUpdater(walletManager: manager)
+            }
+
         }
 
         defaultsUpdater = UserDefaultsUpdater(walletManager: primaryWalletManager)
@@ -317,7 +327,7 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func setupRootViewController() {
-        let home = HomeScreenViewController(primaryWalletManager: walletManagers[Currencies.btc.code])
+        let home = HomeScreenViewController(primaryWalletManager: walletManagers[Currencies.btc.code] as? BTCWalletManager)
         let nc = RootNavigationController()
         nc.navigationBar.isTranslucent = false
         nc.navigationBar.tintColor = .white

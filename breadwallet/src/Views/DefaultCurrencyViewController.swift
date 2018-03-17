@@ -10,13 +10,13 @@ import UIKit
 
 class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
         self.rates = Currencies.btc.state.rates.filter { $0.code != C.btcCurrencyCode }
         super.init(style: .plain)
     }
 
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private let cellIdentifier = "CellIdentifier"
     private var rates: [Rate] = [] {
         didSet {

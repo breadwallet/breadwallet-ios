@@ -53,3 +53,15 @@ struct C {
         return URL(fileURLWithPath: cachesDirectory).appendingPathComponent("log.txt")
     }
 }
+
+enum Words {
+    static var wordList: [NSString]? {
+        guard let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist") else { return nil }
+        return NSArray(contentsOfFile: path) as? [NSString]
+    }
+
+    static var rawWordList: [UnsafePointer<CChar>?]? {
+        guard let wordList = Words.wordList, wordList.count == 2048 else { return nil }
+        return wordList.map({ $0.utf8String })
+    }
+}
