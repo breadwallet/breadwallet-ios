@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCore
 
 /// View model of a transaction in list view
 struct TxListViewModel: TxViewModel {
@@ -38,7 +39,7 @@ struct TxListViewModel: TxViewModel {
 
     func amount(isBtcSwapped: Bool, rate: Rate) -> NSAttributedString {
         guard let tx = tx as? BtcTransaction else { return NSAttributedString(string: "") }
-        let text = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
+        let text = DisplayAmount(amount: UInt256(tx.amount),
                                  selectedRate: isBtcSwapped ? rate : nil,
                                  minimumFractionDigits: nil,
                                  currency: tx.currency,

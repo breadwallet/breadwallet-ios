@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import BRCore
 
 struct Amount {
 
@@ -24,7 +25,7 @@ struct Amount {
     }
 
     var localAmount: Double {
-        return Double(amount)/currency.baseUnit*rate.rate
+        return Double(amount)/pow(Double(10.0),Double(currency.baseUnitPower))*rate.rate
     }
 
     var bits: String {
@@ -37,7 +38,7 @@ struct Amount {
     }
 
     var localCurrency: String {
-        guard let string = localFormat.string(from: Double(amount)/currency.baseUnit*rate.rate as NSNumber) else { return "" }
+        guard let string = localFormat.string(from: Double(amount)/pow(Double(10.0),Double(currency.baseUnitPower))*rate.rate as NSNumber) else { return "" }
         return string
     }
 
@@ -48,7 +49,7 @@ struct Amount {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        guard let string = format.string(from: Double(amount)/currency.baseUnit*rate.rate as NSNumber) else { return "" }
+        guard let string = format.string(from: Double(amount)/pow(Double(10.0),Double(currency.baseUnitPower))*rate.rate as NSNumber) else { return "" }
         return string
     }
 
@@ -111,13 +112,13 @@ struct Amount {
 
 // TODO:BCH conslidate DisplayAmount + Amount
 struct DisplayAmount {
-    let amount: Satoshis
+    let amount: UInt256
     let selectedRate: Rate?
     let minimumFractionDigits: Int?
     let currency: CurrencyDef
     let negative: Bool
     
-    init(amount: Satoshis, selectedRate: Rate?, minimumFractionDigits: Int?, currency: CurrencyDef, negative: Bool) {
+    init(amount: UInt256, selectedRate: Rate?, minimumFractionDigits: Int?, currency: CurrencyDef, negative: Bool) {
         self.amount = amount
         self.selectedRate = selectedRate
         self.minimumFractionDigits = minimumFractionDigits
@@ -125,8 +126,16 @@ struct DisplayAmount {
         self.negative = negative
     }
     
-    init(amount: Satoshis, selectedRate: Rate?, minimumFractionDigits: Int?, currency: CurrencyDef) {
+    init(amount: UInt256, selectedRate: Rate?, minimumFractionDigits: Int?, currency: CurrencyDef) {
         self.init(amount: amount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, currency: currency, negative: false)
+    }
+    
+    var primaryUnitString: String {
+        return amount.string(decimals: currency.baseUnitPower)
+    }
+    
+    var primaryUnitValue: Double? {
+        return Double(primaryUnitString)
     }
     
     var description: String {
@@ -136,19 +145,27 @@ struct DisplayAmount {
     var combinedDescription: String {
         return Store.state.isBtcSwapped ? "\(fiatDescription) (\(bitcoinDescription))" : "\(bitcoinDescription) (\(fiatDescription))"
     }
+    
+    var tokenValue: Double {
+        let str = amount.string(decimals: currency.state.maxDigits)
+        return Double(str) ?? -1.0
+    }
+    
+    var fiatValue: Double {
+        guard let rate = selectedRate ?? currency.state.currentRate,
+            let value = primaryUnitValue else { return 0.0 }
+        let tokenAmount = value * (negative ? -1.0 : 1.0)
+        return tokenAmount * rate.rate
+    }
 
     private var fiatDescription: String {
-        guard let rate = selectedRate ?? currency.state.currentRate else { return "" }
-        let tokenAmount = Double(amount.rawValue) * (negative ? -1.0 : 1.0)
-        guard let string = localFormat.string(from: tokenAmount/currency.baseUnit*rate.rate as NSNumber) else { return "" }
+        guard let string = localFormat.string(from: fiatValue as NSNumber) else { return "" }
         return string
     }
 
     private var bitcoinDescription: String {
-        var decimal = Decimal(self.amount.rawValue)
-        var amount: Decimal = 0.0
-        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-currency.state.maxDigits), .up)
-        let number = NSDecimalNumber(decimal: amount * (negative ? -1.0 : 1.0))
+        var decimal = Decimal(tokenValue)
+        let number = NSDecimalNumber(decimal: decimal * (negative ? -1.0 : 1.0))
         guard let string = btcFormat.string(from: number) else { return "" }
         return string
     }

@@ -8,10 +8,11 @@
 
 import UIKit
 import LocalAuthentication
+import BRCore
 
 class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
-    init(amount: Satoshis, fee: Satoshis, feeType: Fee, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool) {
+    init(amount: UInt256, fee: UInt256, feeType: Fee, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool) {
         self.amount = amount
         self.feeAmount = fee
         self.feeType = feeType
@@ -22,8 +23,8 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         super.init(nibName: nil, bundle: nil)
     }
 
-    private let amount: Satoshis
-    private let feeAmount: Satoshis
+    private let amount: UInt256
+    private let feeAmount: UInt256
     private let feeType: Fee
     private let selectedRate: Rate?
     private let minimumFractionDigits: Int?

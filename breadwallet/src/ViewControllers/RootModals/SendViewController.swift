@@ -97,7 +97,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         Store.subscribe(self, selector: { $0[self.currency].balance != $1[self.currency].balance },
                         callback: { [unowned self] in
                             if let balance = $0[self.currency].balance {
-                                self.balance = balance
+                                //TODO:ETH
+                                self.balance = balance.asUInt64
                             }
         })
         Store.subscribe(self, selector: { $0[self.currency].fees != $1[self.currency].fees }, callback: { [unowned self] in
@@ -172,7 +173,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), selectedRate: rate, minimumFractionDigits: 0, currency: currency)
+        let balanceAmount = DisplayAmount(amount: UInt256(balance), selectedRate: rate, minimumFractionDigits: 0, currency: currency)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
@@ -180,7 +181,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         var feeColor: UIColor = .grayTextTint
         if let amount = amount, amount.rawValue > 0 {
             if let fee = sender.feeForTx(amount: amount.rawValue) {
-                let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), selectedRate: rate, minimumFractionDigits: 0, currency: currency)
+                let feeAmount = DisplayAmount(amount: UInt256(fee), selectedRate: rate, minimumFractionDigits: 0, currency: currency)
                 let feeText = feeAmount.description
                 feeOutput = String(format: S.Send.fee, feeText)
                 if (balance >= fee) && amount.rawValue > (balance - fee) {
@@ -265,7 +266,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
 
         guard let amount = amount else { return }
-        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.displayAddress ?? "", isUsingBiometrics: sender.canUseBiometrics)
+        //TODO:ETH
+        let confirm = ConfirmationViewController(amount: UInt256(amount.rawValue), fee: UInt256(sender.fee), feeType: feeType ?? .regular, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.displayAddress ?? "", isUsingBiometrics: sender.canUseBiometrics)
         confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
                 self.send()

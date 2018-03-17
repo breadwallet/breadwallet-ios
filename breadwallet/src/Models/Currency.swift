@@ -19,8 +19,8 @@ protocol CurrencyDef {
     /// Primary unit symbol
     var symbol: String { get }
     var name: String { get }
-    /// Base unit to primary unit multiplier
-    var baseUnit: Double { get }
+    /// Base unit to primary unit multiplier, power of 10
+    var baseUnitPower: Int { get }
     /// Primary + secondary color
     var colors: (UIColor, UIColor) { get }
     /// URL scheme for payment requests
@@ -64,7 +64,7 @@ extension CurrencyDef {
 
 /// Bitcoin-compatible currency type
 struct Bitcoin: CurrencyDef {
-    let baseUnit = 100000000.0
+    let baseUnitPower: Int = 8 // 1 Satoshi = 1e-8 BTC
     let name: String
     let code: String
     let symbol: String
@@ -117,7 +117,7 @@ struct Bitcoin: CurrencyDef {
 
 /// Ethereum-compatible currency type
 struct Ethereum: CurrencyDef {
-    let baseUnit: Double = 1000000000000000000.0
+    let baseUnitPower: Int = 18 // 1 Wei = 1e-18 ETH
     let name: String
     let code: String
     let symbol: String
@@ -130,7 +130,7 @@ struct Ethereum: CurrencyDef {
 
 /// Ethereum ERC20 token currency type
 struct ERC20Token: CurrencyDef {
-    let baseUnit: Double = 1000000000000000000.0
+    let baseUnitPower: Int = 18 // 1 Wei = 1e-18 ETH
     let name: String
     let code: String
     let symbol: String

@@ -57,8 +57,7 @@ extension State {
                         pinLength: 6,
                         wallets: [Currencies.btc.code: WalletState.initial(Currencies.btc, displayOrder: 0),
                                   Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: 1),
-                                  Currencies.eth.code: WalletState.initial(Currencies.eth, displayOrder: 2)
-            ])
+                                  Currencies.eth.code: WalletState.initial(Currencies.eth, displayOrder: 2)])
     }
     
     func mutate(   isStartFlowVisible: Bool? = nil,
@@ -117,7 +116,7 @@ struct WalletState {
     let displayOrder: Int
     let syncProgress: Double
     let syncState: SyncState
-    let balance: UInt64?
+    let balance: UInt256?
     let transactions: [Transaction]
     let lastBlockTimestamp: UInt32
     let name: String
@@ -156,7 +155,7 @@ struct WalletState {
     func mutate(    displayOrder: Int? = nil,
                     syncProgress: Double? = nil,
                     syncState: SyncState? = nil,
-                    balance: UInt64? = nil,
+                    balance: UInt256? = nil,
                     transactions: [Transaction]? = nil,
                     lastBlockTimestamp: UInt32? = nil,
                     name: String? = nil,
