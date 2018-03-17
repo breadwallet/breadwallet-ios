@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCore
 
 private let largeFontSize: CGFloat = 28.0
 private let smallFontSize: CGFloat = 14.0
@@ -64,7 +65,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         }
     }
     
-    private var balance: UInt64 = 0 {
+    private var balance: UInt256 = 0 {
         didSet {
             DispatchQueue.main.async {
                 self.setBalances()
@@ -274,12 +275,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         
         exchangeRateLabel.text = "\(rate.localString)\(S.AccountHeader.exchangeRateSeparator)\(currency.code)"
         
-        let maxDigits = currency.state.maxDigits
-        let amount = Amount(amount: balance, rate: rate, maxDigits: maxDigits, currency: currency)
+        let amount = DisplayAmount(amount: balance, selectedRate: rate, minimumFractionDigits: nil, currency: currency)
         
         if !hasInitialized {
-            primaryBalance.setValue(amount.amountForBtcFormat)
-            secondaryBalance.setValue(amount.localAmount)
+            primaryBalance.setValue(amount.tokenValue)
+            secondaryBalance.setValue(amount.fiatValue)
             swapLabels()
             hasInitialized = true
         } else {
@@ -291,10 +291,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                 secondaryBalance.isHidden = false
             }
             
-            primaryBalance.setValueAnimated(amount.amountForBtcFormat, completion: { [weak self] in
+            primaryBalance.setValueAnimated(amount.tokenValue, completion: { [weak self] in
                 self?.swapLabels()
             })
-            secondaryBalance.setValueAnimated(amount.localAmount, completion: { [weak self] in
+            secondaryBalance.setValueAnimated(amount.fiatValue, completion: { [weak self] in
                 self?.swapLabels()
             })
         }

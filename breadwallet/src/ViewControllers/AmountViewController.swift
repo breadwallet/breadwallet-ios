@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCore
 
 private let currencyHeight: CGFloat = 80.0
 private let feeHeight: CGFloat = 130.0
@@ -313,7 +314,8 @@ class AmountViewController : UIViewController, Trackable {
 
     private func updateAmountLabel() {
         guard let amount = amount else { amountLabel.text = ""; return }
-        let displayAmount = DisplayAmount(amount: amount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, currency: Currencies.btc)
+        //TODO:ETH
+        let displayAmount = DisplayAmount(amount: UInt256(amount.rawValue), selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, currency: Currencies.btc)
         var output = displayAmount.description
         if hasTrailingDecimal {
             output = output.appending(NumberFormatter().currencyDecimalSeparator)

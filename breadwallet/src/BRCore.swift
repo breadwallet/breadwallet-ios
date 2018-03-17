@@ -774,8 +774,46 @@ extension UInt256 {
         return str.trimmedLeadingZeros
     }
     
-    public var hexWithPrefix: String {
+    public var hexString: String {
         return string(radix: 16).withHexPrefix
+    }
+    
+    public func string(decimals: Int) -> String {
+        guard let buf = coerceStringDecimal(self, Int32(decimals)) else { return "" }
+        let str = String(cString: buf)
+        free(buf)
+        return str
+    }
+    
+    var asUInt64: UInt64 {
+        if self > UInt256(UInt64.max) {
+            return UInt64.max
+        } else {
+            return self.u64.0
+        }
+    }
+}
+
+extension UInt256 {
+    public static func * (l: UInt256, r: UInt256) -> UInt256 {
+        // TODO: throw error on overflow
+        var overflow: Int32 = 0
+        let result = mulUInt256_Overflow(l, r, &overflow)
+        return result
+    }
+    
+    public static func + (l: UInt256, r: UInt256) -> UInt256 {
+        // TODO: throw error on overflow
+        var overflow: Int32 = 0
+        let result = addUInt256_Overflow(l, r, &overflow)
+        return result
+    }
+    
+    public static func - (l: UInt256, r: UInt256) -> UInt256 {
+        // TODO: throw error on negative
+        var negative: Int32 = 0
+        let result = subUInt256_Negative(l, r, &negative)
+        return (negative > 0) ? UInt256(0) : result
     }
 }
 
@@ -788,7 +826,13 @@ extension UInt256: Codable {
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(hexWithPrefix)
+        try container.encode(hexString)
+    }
+}
+
+extension UInt256: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: UInt64) {
+        self.init(value)
     }
 }
 
@@ -825,13 +869,20 @@ extension UInt256: Comparable {
         return ltUInt256(l, r) == 1
     }
     
-    var hexString: String {
-        get {
-            var u = self
-            return withUnsafePointer(to: &u, { p in
-                return Data(bytes: p, count: MemoryLayout<UInt256>.stride).hexString
-            })
-        }
+    static public func < (l: UInt256, r: UInt64) -> Bool {
+        return ltUInt256(l, UInt256(r)) == 1
+    }
+    
+    static public func < (l: UInt64, r: UInt256) -> Bool {
+        return ltUInt256(UInt256(l), r) == 1
+    }
+    
+    static public func > (l: UInt256, r: UInt64) -> Bool {
+        return gtUInt256(l, UInt256(r)) == 1
+    }
+    
+    static public func > (l: UInt64, r: UInt256) -> Bool {
+        return gtUInt256(UInt256(l), r) == 1
     }
 }
 

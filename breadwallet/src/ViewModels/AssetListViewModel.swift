@@ -29,7 +29,7 @@ struct AssetListViewModel {
     /// Returns balance string in fiat if rate specified or token amount otherwise
     private func balanceString(inFiatWithRate rate: Rate? = nil) -> String {
         guard let balance = currency.state.balance else { return "" }
-        return DisplayAmount(amount: Satoshis(rawValue: balance),
+        return DisplayAmount(amount: balance,
                              selectedRate: rate,
                              minimumFractionDigits: nil,
                              currency: currency).description

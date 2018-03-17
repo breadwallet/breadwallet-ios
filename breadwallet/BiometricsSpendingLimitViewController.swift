@@ -8,6 +8,7 @@
 
 import UIKit
 import LocalAuthentication
+import BRCore
 
 class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
 
@@ -69,7 +70,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
         if limit == 0 {
             cell.textLabel?.text = S.TouchIdSpendingLimit.requirePasscode
         } else {
-            let displayAmount = DisplayAmount(amount: Satoshis(rawValue: limit), selectedRate: nil, minimumFractionDigits: 0, currency: Currencies.btc)
+            let displayAmount = DisplayAmount(amount: UInt256(limit), selectedRate: nil, minimumFractionDigits: 0, currency: Currencies.btc)
             cell.textLabel?.text = displayAmount.combinedDescription
         }
         if limits[indexPath.row] == selectedLimit {

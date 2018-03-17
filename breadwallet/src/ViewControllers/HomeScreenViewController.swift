@@ -134,9 +134,13 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
 
     private func updateTotalAssets() {
         let fiatTotal = Store.state.currencies.map {
-            let balance = Store.state[$0].balance ?? 0
-            let rate = Store.state[$0].currentRate?.rate ?? 0
-            return Double(balance)/$0.baseUnit * rate
+            guard let balance = Store.state[$0].balance,
+            let rate = Store.state[$0].currentRate else { return 0.0 }
+            let amount = DisplayAmount(amount: balance,
+                                       selectedRate: rate,
+                                       minimumFractionDigits: nil,
+                                       currency: $0)
+            return amount.fiatValue
         }.reduce(0.0, +)
         let format = NumberFormatter()
         format.isLenient = true

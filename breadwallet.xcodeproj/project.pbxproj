@@ -236,16 +236,6 @@
 		7C6ACCB11FEB21580028ABFA /* TxDetailDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB01FEB21580028ABFA /* TxDetailDataSource.swift */; };
 		7C6ACCB41FEB34470028ABFA /* TxLabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */; };
 		7C6ACCB61FEB345E0028ABFA /* TxStatusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */; };
-		7C754AFE20586556006646A6 /* BREthereumTransaction.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C754AAB205864D4006646A6 /* BREthereumTransaction.c */; };
-		7C754AFF20586556006646A6 /* BREthereumNetwork.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C754AAE205864D4006646A6 /* BREthereumNetwork.c */; };
-		7C754B0020586556006646A6 /* BREthereumContract.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C754AB2205864D4006646A6 /* BREthereumContract.c */; };
-		7C754B0120586556006646A6 /* BREthereumWallet.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C754AB3205864D4006646A6 /* BREthereumWallet.c */; };
-		7C754B0220586556006646A6 /* BREthereumMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C754AB4205864D4006646A6 /* BREthereumMath.c */; };
-		7C754B0320586556006646A6 /* BREthereumHolding.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C754AC4205864D4006646A6 /* BREthereumHolding.c */; };
-		7C754B0420586556006646A6 /* BRRlpCoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C754AC8205864D4006646A6 /* BRRlpCoder.c */; };
-		7C754B0520586556006646A6 /* BREthereumEther.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C754AC9205864D4006646A6 /* BREthereumEther.c */; };
-		7C754B0720586556006646A6 /* BREthereumGas.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C754ACC205864D4006646A6 /* BREthereumGas.c */; };
-		7C754B0820586556006646A6 /* BREthereumLightNode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C754ADA205864D4006646A6 /* BREthereumLightNode.c */; };
 		7C7F18ED1FED9A3B0030230E /* TxStatusIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7F18EC1FED9A3B0030230E /* TxStatusIndicator.swift */; };
 		7C9724661FF07B9A004248C4 /* StatusPip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9724651FF07B9A004248C4 /* StatusPip.swift */; };
 		7CA238142011A97C00A4A59D /* TxDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA238132011A97C00A4A59D /* TxDetailViewController.swift */; };
@@ -258,7 +248,24 @@
 		7CBF4B6B2008899100E003AA /* TxAddressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBF4B6A2008899100E003AA /* TxAddressCell.swift */; };
 		7CCD9F6C1FEC1FA300175E64 /* TxAmountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */; };
 		7CE940E61FEB8A5F005A2B53 /* TxDetailRowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */; };
-		7CF115ED205C316700C03D42 /* BREthereumAccount.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C754ACA205864D4006646A6 /* BREthereumAccount.c */; };
+		7CF11617205C943800C03D42 /* BRRlpCoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115F2205C943500C03D42 /* BRRlpCoder.c */; };
+		7CF11618205C943800C03D42 /* BRUtilMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115F6205C943500C03D42 /* BRUtilMath.c */; };
+		7CF11619205C943800C03D42 /* BRUtilMathParse.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115F7205C943500C03D42 /* BRUtilMathParse.c */; };
+		7CF1161A205C943800C03D42 /* BRUtilHex.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115F9205C943500C03D42 /* BRUtilHex.c */; };
+		7CF1161B205C943800C03D42 /* BREthereumToken.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FA205C943500C03D42 /* BREthereumToken.c */; };
+		7CF1161C205C943800C03D42 /* BREthereumAccount.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FD205C943500C03D42 /* BREthereumAccount.c */; };
+		7CF1161D205C943800C03D42 /* BRUtilMathParse.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FE205C943500C03D42 /* BRUtilMathParse.c */; };
+		7CF1161E205C943800C03D42 /* BREthereumLightNode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FF205C943500C03D42 /* BREthereumLightNode.c */; };
+		7CF1161F205C943800C03D42 /* BRUtilMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11600205C943500C03D42 /* BRUtilMath.c */; };
+		7CF11620205C943800C03D42 /* BREthereumGas.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11601205C943500C03D42 /* BREthereumGas.c */; };
+		7CF11621205C943800C03D42 /* BREthereumTransaction.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11607205C943600C03D42 /* BREthereumTransaction.c */; };
+		7CF11622205C943800C03D42 /* BREthereumAmount.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1160A205C943600C03D42 /* BREthereumAmount.c */; };
+		7CF11623205C943800C03D42 /* BREthereumEther.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1160F205C943700C03D42 /* BREthereumEther.c */; };
+		7CF11624205C943800C03D42 /* BRUtilHex.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11610205C943700C03D42 /* BRUtilHex.c */; };
+		7CF11625205C943800C03D42 /* BREthereumNetwork.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11612205C943700C03D42 /* BREthereumNetwork.c */; };
+		7CF11626205C943800C03D42 /* BREthereumContract.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11613205C943700C03D42 /* BREthereumContract.c */; };
+		7CF11627205C943800C03D42 /* BRRlpCoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11614205C943700C03D42 /* BRRlpCoder.c */; };
+		7CF11628205C943800C03D42 /* BREthereumWallet.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11615205C943800C03D42 /* BREthereumWallet.c */; };
 		7CF913BE1FFC7DC30085CB70 /* TxMemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF913BD1FFC7DC30085CB70 /* TxMemoCell.swift */; };
 		CE03EC721EF193810038E3A8 /* String+Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC711EF193800038E3A8 /* String+Keys.swift */; };
 		CE03EC741EF256AC0038E3A8 /* SimpleUTXO.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */; };
@@ -1440,30 +1447,6 @@
 		7C6ACCB01FEB21580028ABFA /* TxDetailDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TxDetailDataSource.swift; sourceTree = "<group>"; };
 		7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxLabelCell.swift; path = src/Views/TransactionCells/TxLabelCell.swift; sourceTree = "<group>"; };
 		7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxStatusCell.swift; path = src/Views/TransactionCells/TxStatusCell.swift; sourceTree = "<group>"; };
-		7C754AAB205864D4006646A6 /* BREthereumTransaction.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumTransaction.c; sourceTree = "<group>"; };
-		7C754AAC205864D4006646A6 /* BREthereumEther.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumEther.h; sourceTree = "<group>"; };
-		7C754AAD205864D4006646A6 /* BREthereumAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumAccount.h; sourceTree = "<group>"; };
-		7C754AAE205864D4006646A6 /* BREthereumNetwork.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumNetwork.c; sourceTree = "<group>"; };
-		7C754AAF205864D4006646A6 /* BREthereumLightNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumLightNode.h; sourceTree = "<group>"; };
-		7C754AB0205864D4006646A6 /* BREthereumGas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumGas.h; sourceTree = "<group>"; };
-		7C754AB2205864D4006646A6 /* BREthereumContract.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumContract.c; sourceTree = "<group>"; };
-		7C754AB3205864D4006646A6 /* BREthereumWallet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumWallet.c; sourceTree = "<group>"; };
-		7C754AB4205864D4006646A6 /* BREthereumMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumMath.c; sourceTree = "<group>"; };
-		7C754AC3205864D4006646A6 /* BREthereum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereum.h; sourceTree = "<group>"; };
-		7C754AC4205864D4006646A6 /* BREthereumHolding.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumHolding.c; sourceTree = "<group>"; };
-		7C754AC6205864D4006646A6 /* BRRlp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRlp.h; sourceTree = "<group>"; };
-		7C754AC7205864D4006646A6 /* BRRlpCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRlpCoder.h; sourceTree = "<group>"; };
-		7C754AC8205864D4006646A6 /* BRRlpCoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRRlpCoder.c; sourceTree = "<group>"; };
-		7C754AC9205864D4006646A6 /* BREthereumEther.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumEther.c; sourceTree = "<group>"; };
-		7C754ACA205864D4006646A6 /* BREthereumAccount.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumAccount.c; sourceTree = "<group>"; };
-		7C754ACB205864D4006646A6 /* BREthereumTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumTransaction.h; sourceTree = "<group>"; };
-		7C754ACC205864D4006646A6 /* BREthereumGas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumGas.c; sourceTree = "<group>"; };
-		7C754AD9205864D4006646A6 /* BREthereumNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumNetwork.h; sourceTree = "<group>"; };
-		7C754ADA205864D4006646A6 /* BREthereumLightNode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumLightNode.c; sourceTree = "<group>"; };
-		7C754ADC205864D4006646A6 /* BREthereumContract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumContract.h; sourceTree = "<group>"; };
-		7C754ADD205864D4006646A6 /* BREthereumWallet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumWallet.h; sourceTree = "<group>"; };
-		7C754ADE205864D4006646A6 /* BREthereumHolding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumHolding.h; sourceTree = "<group>"; };
-		7C754ADF205864D4006646A6 /* BREthereumMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumMath.h; sourceTree = "<group>"; };
 		7C7F18EC1FED9A3B0030230E /* TxStatusIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxStatusIndicator.swift; path = src/Views/TxStatusIndicator.swift; sourceTree = "<group>"; };
 		7C9724651FF07B9A004248C4 /* StatusPip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StatusPip.swift; path = src/Views/StatusPip.swift; sourceTree = "<group>"; };
 		7CA238132011A97C00A4A59D /* TxDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailViewController.swift; path = src/ViewControllers/TxDetailViewController.swift; sourceTree = "<group>"; };
@@ -1479,6 +1462,45 @@
 		7CBF4B6A2008899100E003AA /* TxAddressCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TxAddressCell.swift; path = src/Views/TransactionCells/TxAddressCell.swift; sourceTree = "<group>"; };
 		7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TxAmountCell.swift; path = src/Views/TransactionCells/TxAmountCell.swift; sourceTree = "<group>"; };
 		7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailRowCell.swift; path = src/Views/TransactionCells/TxDetailRowCell.swift; sourceTree = "<group>"; };
+		7CF115EE205C943400C03D42 /* BREthereum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereum.h; sourceTree = "<group>"; };
+		7CF115F0205C943500C03D42 /* BRRlp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRlp.h; sourceTree = "<group>"; };
+		7CF115F1205C943500C03D42 /* BRRlpCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRlpCoder.h; sourceTree = "<group>"; };
+		7CF115F2205C943500C03D42 /* BRRlpCoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRRlpCoder.c; sourceTree = "<group>"; };
+		7CF115F4205C943500C03D42 /* BRUtilMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRUtilMath.h; sourceTree = "<group>"; };
+		7CF115F5205C943500C03D42 /* BRUtilHex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRUtilHex.h; sourceTree = "<group>"; };
+		7CF115F6205C943500C03D42 /* BRUtilMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRUtilMath.c; sourceTree = "<group>"; };
+		7CF115F7205C943500C03D42 /* BRUtilMathParse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRUtilMathParse.c; sourceTree = "<group>"; };
+		7CF115F8205C943500C03D42 /* BRUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRUtil.h; sourceTree = "<group>"; };
+		7CF115F9205C943500C03D42 /* BRUtilHex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRUtilHex.c; sourceTree = "<group>"; };
+		7CF115FA205C943500C03D42 /* BREthereumToken.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumToken.c; sourceTree = "<group>"; };
+		7CF115FB205C943500C03D42 /* BRRlpCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BRRlpCoder.h; path = rlp/BRRlpCoder.h; sourceTree = "<group>"; };
+		7CF115FC205C943500C03D42 /* BREthereumContract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumContract.h; sourceTree = "<group>"; };
+		7CF115FD205C943500C03D42 /* BREthereumAccount.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumAccount.c; sourceTree = "<group>"; };
+		7CF115FE205C943500C03D42 /* BRUtilMathParse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = BRUtilMathParse.c; path = util/BRUtilMathParse.c; sourceTree = "<group>"; };
+		7CF115FF205C943500C03D42 /* BREthereumLightNode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumLightNode.c; sourceTree = "<group>"; };
+		7CF11600205C943500C03D42 /* BRUtilMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = BRUtilMath.c; path = util/BRUtilMath.c; sourceTree = "<group>"; };
+		7CF11601205C943500C03D42 /* BREthereumGas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumGas.c; sourceTree = "<group>"; };
+		7CF11602205C943500C03D42 /* BREthereumLightNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumLightNode.h; sourceTree = "<group>"; };
+		7CF11603205C943600C03D42 /* BREthereumWallet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumWallet.h; sourceTree = "<group>"; };
+		7CF11604205C943600C03D42 /* BREthereumAmount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumAmount.h; sourceTree = "<group>"; };
+		7CF11605205C943600C03D42 /* BREthereumToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumToken.h; sourceTree = "<group>"; };
+		7CF11606205C943600C03D42 /* BREthereumAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumAccount.h; sourceTree = "<group>"; };
+		7CF11607205C943600C03D42 /* BREthereumTransaction.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumTransaction.c; sourceTree = "<group>"; };
+		7CF11608205C943600C03D42 /* BREthereumNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumNetwork.h; sourceTree = "<group>"; };
+		7CF11609205C943600C03D42 /* BREthereumTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumTransaction.h; sourceTree = "<group>"; };
+		7CF1160A205C943600C03D42 /* BREthereumAmount.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumAmount.c; sourceTree = "<group>"; };
+		7CF1160B205C943600C03D42 /* BRUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BRUtil.h; path = util/BRUtil.h; sourceTree = "<group>"; };
+		7CF1160C205C943600C03D42 /* BRUtilHex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BRUtilHex.h; path = util/BRUtilHex.h; sourceTree = "<group>"; };
+		7CF1160D205C943700C03D42 /* BRRlp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BRRlp.h; path = rlp/BRRlp.h; sourceTree = "<group>"; };
+		7CF1160E205C943700C03D42 /* BRUtilMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BRUtilMath.h; path = util/BRUtilMath.h; sourceTree = "<group>"; };
+		7CF1160F205C943700C03D42 /* BREthereumEther.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumEther.c; sourceTree = "<group>"; };
+		7CF11610205C943700C03D42 /* BRUtilHex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = BRUtilHex.c; path = util/BRUtilHex.c; sourceTree = "<group>"; };
+		7CF11611205C943700C03D42 /* BREthereumEther.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumEther.h; sourceTree = "<group>"; };
+		7CF11612205C943700C03D42 /* BREthereumNetwork.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumNetwork.c; sourceTree = "<group>"; };
+		7CF11613205C943700C03D42 /* BREthereumContract.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumContract.c; sourceTree = "<group>"; };
+		7CF11614205C943700C03D42 /* BRRlpCoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = BRRlpCoder.c; path = rlp/BRRlpCoder.c; sourceTree = "<group>"; };
+		7CF11615205C943800C03D42 /* BREthereumWallet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumWallet.c; sourceTree = "<group>"; };
+		7CF11616205C943800C03D42 /* BREthereumGas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumGas.h; sourceTree = "<group>"; };
 		7CF913BD1FFC7DC30085CB70 /* TxMemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxMemoCell.swift; path = src/Views/TransactionCells/TxMemoCell.swift; sourceTree = "<group>"; };
 		CE03EC711EF193800038E3A8 /* String+Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Keys.swift"; path = "src/Extensions/String+Keys.swift"; sourceTree = "<group>"; };
 		CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleUTXO.swift; path = src/Models/SimpleUTXO.swift; sourceTree = "<group>"; };
@@ -2941,40 +2963,63 @@
 		7C754AAA205864D4006646A6 /* ethereum */ = {
 			isa = PBXGroup;
 			children = (
-				7C754AC3205864D4006646A6 /* BREthereum.h */,
-				7C754ACA205864D4006646A6 /* BREthereumAccount.c */,
-				7C754AAD205864D4006646A6 /* BREthereumAccount.h */,
-				7C754AB2205864D4006646A6 /* BREthereumContract.c */,
-				7C754ADC205864D4006646A6 /* BREthereumContract.h */,
-				7C754AC9205864D4006646A6 /* BREthereumEther.c */,
-				7C754AAC205864D4006646A6 /* BREthereumEther.h */,
-				7C754ACC205864D4006646A6 /* BREthereumGas.c */,
-				7C754AB0205864D4006646A6 /* BREthereumGas.h */,
-				7C754AC4205864D4006646A6 /* BREthereumHolding.c */,
-				7C754ADE205864D4006646A6 /* BREthereumHolding.h */,
-				7C754ADA205864D4006646A6 /* BREthereumLightNode.c */,
-				7C754AAF205864D4006646A6 /* BREthereumLightNode.h */,
-				7C754AB4205864D4006646A6 /* BREthereumMath.c */,
-				7C754ADF205864D4006646A6 /* BREthereumMath.h */,
-				7C754AAE205864D4006646A6 /* BREthereumNetwork.c */,
-				7C754AD9205864D4006646A6 /* BREthereumNetwork.h */,
-				7C754AAB205864D4006646A6 /* BREthereumTransaction.c */,
-				7C754ACB205864D4006646A6 /* BREthereumTransaction.h */,
-				7C754AB3205864D4006646A6 /* BREthereumWallet.c */,
-				7C754ADD205864D4006646A6 /* BREthereumWallet.h */,
-				7C754AC5205864D4006646A6 /* rlp */,
+				7CF115EE205C943400C03D42 /* BREthereum.h */,
+				7CF115FD205C943500C03D42 /* BREthereumAccount.c */,
+				7CF11606205C943600C03D42 /* BREthereumAccount.h */,
+				7CF1160A205C943600C03D42 /* BREthereumAmount.c */,
+				7CF11604205C943600C03D42 /* BREthereumAmount.h */,
+				7CF11613205C943700C03D42 /* BREthereumContract.c */,
+				7CF115FC205C943500C03D42 /* BREthereumContract.h */,
+				7CF1160F205C943700C03D42 /* BREthereumEther.c */,
+				7CF11611205C943700C03D42 /* BREthereumEther.h */,
+				7CF11601205C943500C03D42 /* BREthereumGas.c */,
+				7CF11616205C943800C03D42 /* BREthereumGas.h */,
+				7CF115FF205C943500C03D42 /* BREthereumLightNode.c */,
+				7CF11602205C943500C03D42 /* BREthereumLightNode.h */,
+				7CF11612205C943700C03D42 /* BREthereumNetwork.c */,
+				7CF11608205C943600C03D42 /* BREthereumNetwork.h */,
+				7CF115FA205C943500C03D42 /* BREthereumToken.c */,
+				7CF11605205C943600C03D42 /* BREthereumToken.h */,
+				7CF11607205C943600C03D42 /* BREthereumTransaction.c */,
+				7CF11609205C943600C03D42 /* BREthereumTransaction.h */,
+				7CF11615205C943800C03D42 /* BREthereumWallet.c */,
+				7CF11603205C943600C03D42 /* BREthereumWallet.h */,
+				7CF1160D205C943700C03D42 /* BRRlp.h */,
+				7CF11614205C943700C03D42 /* BRRlpCoder.c */,
+				7CF115FB205C943500C03D42 /* BRRlpCoder.h */,
+				7CF1160B205C943600C03D42 /* BRUtil.h */,
+				7CF11610205C943700C03D42 /* BRUtilHex.c */,
+				7CF1160C205C943600C03D42 /* BRUtilHex.h */,
+				7CF11600205C943500C03D42 /* BRUtilMath.c */,
+				7CF1160E205C943700C03D42 /* BRUtilMath.h */,
+				7CF115FE205C943500C03D42 /* BRUtilMathParse.c */,
+				7CF115EF205C943500C03D42 /* rlp */,
+				7CF115F3205C943500C03D42 /* util */,
 			);
 			path = ethereum;
 			sourceTree = "<group>";
 		};
-		7C754AC5205864D4006646A6 /* rlp */ = {
+		7CF115EF205C943500C03D42 /* rlp */ = {
 			isa = PBXGroup;
 			children = (
-				7C754AC6205864D4006646A6 /* BRRlp.h */,
-				7C754AC7205864D4006646A6 /* BRRlpCoder.h */,
-				7C754AC8205864D4006646A6 /* BRRlpCoder.c */,
+				7CF115F0205C943500C03D42 /* BRRlp.h */,
+				7CF115F2205C943500C03D42 /* BRRlpCoder.c */,
+				7CF115F1205C943500C03D42 /* BRRlpCoder.h */,
 			);
 			path = rlp;
+			sourceTree = "<group>";
+		};
+		7CF115F3205C943500C03D42 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				7CF115F8205C943500C03D42 /* BRUtil.h */,
+				7CF115F9205C943500C03D42 /* BRUtilHex.c */,
+				7CF115F5205C943500C03D42 /* BRUtilHex.h */,
+				7CF115F6205C943500C03D42 /* BRUtilMath.c */,
+				7CF115F4205C943500C03D42 /* BRUtilMath.h */,
+				7CF115F7205C943500C03D42 /* BRUtilMathParse.c */,
+			);
+			path = util;
 			sourceTree = "<group>";
 		};
 		CE1E5F241EF081F300BD0F72 /* Import */ = {
@@ -4012,34 +4057,41 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7CF115ED205C316700C03D42 /* BREthereumAccount.c in Sources */,
-				7C754AFE20586556006646A6 /* BREthereumTransaction.c in Sources */,
-				7C754AFF20586556006646A6 /* BREthereumNetwork.c in Sources */,
-				7C754B0020586556006646A6 /* BREthereumContract.c in Sources */,
-				7C754B0120586556006646A6 /* BREthereumWallet.c in Sources */,
-				7C754B0220586556006646A6 /* BREthereumMath.c in Sources */,
-				7C754B0320586556006646A6 /* BREthereumHolding.c in Sources */,
-				7C754B0420586556006646A6 /* BRRlpCoder.c in Sources */,
-				7C754B0520586556006646A6 /* BREthereumEther.c in Sources */,
-				7C754B0720586556006646A6 /* BREthereumGas.c in Sources */,
-				7C754B0820586556006646A6 /* BREthereumLightNode.c in Sources */,
+				7CF11617205C943800C03D42 /* BRRlpCoder.c in Sources */,
+				7CF11625205C943800C03D42 /* BREthereumNetwork.c in Sources */,
+				7CF11624205C943800C03D42 /* BRUtilHex.c in Sources */,
+				7CF11619205C943800C03D42 /* BRUtilMathParse.c in Sources */,
 				755CD9E71DAA1A270075898E /* BRTransaction.c in Sources */,
+				7CF11628205C943800C03D42 /* BREthereumWallet.c in Sources */,
+				7CF11618205C943800C03D42 /* BRUtilMath.c in Sources */,
 				755CD9E41DAA1A270075898E /* BRPeer.c in Sources */,
+				7CF11621205C943800C03D42 /* BREthereumTransaction.c in Sources */,
 				755CD9DD1DAA1A270075898E /* BRBIP38Key.c in Sources */,
+				7CF11626205C943800C03D42 /* BREthereumContract.c in Sources */,
+				7CF1161B205C943800C03D42 /* BREthereumToken.c in Sources */,
+				7CF11620205C943800C03D42 /* BREthereumGas.c in Sources */,
 				755CD9DA1DAA1A270075898E /* BRAddress.c in Sources */,
+				7CF11622205C943800C03D42 /* BREthereumAmount.c in Sources */,
+				7CF11627205C943800C03D42 /* BRRlpCoder.c in Sources */,
 				755CD9DB1DAA1A270075898E /* BRBase58.c in Sources */,
 				75C468AA2056E5F800113F92 /* BRBech32.c in Sources */,
 				755CD9DF1DAA1A270075898E /* BRBloomFilter.c in Sources */,
+				7CF1161C205C943800C03D42 /* BREthereumAccount.c in Sources */,
 				755CD9DE1DAA1A270075898E /* BRBIP39Mnemonic.c in Sources */,
 				755CD9E11DAA1A270075898E /* BRKey.c in Sources */,
 				755CD9E51DAA1A270075898E /* BRPeerManager.c in Sources */,
 				755CD9E31DAA1A270075898E /* BRPaymentProtocol.c in Sources */,
 				755CD9E01DAA1A270075898E /* BRCrypto.c in Sources */,
+				7CF1161D205C943800C03D42 /* BRUtilMathParse.c in Sources */,
 				755CD9E61DAA1A270075898E /* BRSet.c in Sources */,
 				755CD9E21DAA1A270075898E /* BRMerkleBlock.c in Sources */,
+				7CF1161E205C943800C03D42 /* BREthereumLightNode.c in Sources */,
 				755CD9DC1DAA1A270075898E /* BRBIP32Sequence.c in Sources */,
 				759B4BDF203E5A32002C68CA /* BRBCashAddr.c in Sources */,
+				7CF1161A205C943800C03D42 /* BRUtilHex.c in Sources */,
+				7CF11623205C943800C03D42 /* BREthereumEther.c in Sources */,
 				755CD9E81DAA1A270075898E /* BRWallet.c in Sources */,
+				7CF1161F205C943800C03D42 /* BRUtilMath.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCore
 
 /// View model of a transaction in detail view
 struct TxDetailViewModel: TxViewModel {
@@ -121,7 +122,7 @@ extension TxDetailViewModel {
     
     private static func tokenAmount(tx: Transaction) -> String? {
         guard let tx = tx as? BtcTransaction else { return nil }
-        let amount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
+        let amount = DisplayAmount(amount: UInt256(tx.amount),
                                    selectedRate: nil,
                                    minimumFractionDigits: nil,
                                    currency: tx.currency,
@@ -138,12 +139,12 @@ extension TxDetailViewModel {
                                     name: currentRate.name,
                                     rate: txRate,
                                     reciprocalCode: currentRate.reciprocalCode)
-            let currentAmount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
+            let currentAmount = DisplayAmount(amount: UInt256(tx.amount),
                                               selectedRate: currentRate,
                                               minimumFractionDigits: nil,
                                               currency: tx.currency,
                                               negative: false).description
-            let originalAmount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
+            let originalAmount = DisplayAmount(amount: UInt256(tx.amount),
                                                selectedRate: originalRate,
                                                minimumFractionDigits: nil,
                                                currency: tx.currency,
@@ -152,7 +153,7 @@ extension TxDetailViewModel {
             
         } else {
             // no tx-time rate
-            let currentAmount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
+            let currentAmount = DisplayAmount(amount: UInt256(tx.amount),
                                               selectedRate: currentRate,
                                               minimumFractionDigits: nil,
                                               currency: tx.currency,

@@ -103,7 +103,7 @@ class BTCWalletManager : WalletManager {
             }
             self.wallet = BRWallet(transactions: txns, masterPubKey: self.masterPubKey, listener: self)
             if let wallet = self.wallet {
-                Store.perform(action: WalletChange(self.currency).setBalance(wallet.balance))
+                Store.perform(action: WalletChange(self.currency).setBalance(UInt256(wallet.balance)))
                 Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(receiveAddress: wallet.receiveAddress)))
             }
             callback(self.wallet != nil)
@@ -119,7 +119,7 @@ class BTCWalletManager : WalletManager {
         }
         self.wallet = BRWallet(transactions: transactions, masterPubKey: self.masterPubKey, listener: self)
         if let wallet = self.wallet {
-            Store.perform(action: WalletChange(self.currency).setBalance(wallet.balance))
+            Store.perform(action: WalletChange(self.currency).setBalance(UInt256(wallet.balance)))
             Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(receiveAddress: wallet.receiveAddress)))
         }
     }
@@ -284,7 +284,7 @@ extension BTCWalletManager : BRPeerManagerListener, Trackable {
             DispatchQueue.main.async {
                 Store.perform(action: WalletChange(self.currency).setProgress(progress: progress, timestamp: timestamp))
                 if let wallet = self.wallet {
-                    Store.perform(action: WalletChange(self.currency).setBalance(wallet.balance))
+                    Store.perform(action: WalletChange(self.currency).setBalance(UInt256(wallet.balance)))
                 }
             }
         }
@@ -296,7 +296,7 @@ extension BTCWalletManager : BRWalletListener {
         DispatchQueue.main.async { [weak self] in
             guard let myself = self else { return }
             myself.checkForReceived(newBalance: balance)
-            Store.perform(action: WalletChange(myself.currency).setBalance(balance))
+            Store.perform(action: WalletChange(myself.currency).setBalance(UInt256(balance)))
             myself.requestTxUpdate()
         }
     }
@@ -324,7 +324,8 @@ extension BTCWalletManager : BRWalletListener {
     }
 
     private func checkForReceived(newBalance: UInt64) {
-        if let oldBalance = currency.state.balance {
+        //TODO:ETH
+        if let oldBalance = currency.state.balance?.asUInt64 {
             if newBalance > oldBalance {
                 let walletState = currency.state
                 Store.perform(action: WalletChange(currency).set(walletState.mutate(receiveAddress: wallet?.receiveAddress)))
@@ -337,10 +338,16 @@ extension BTCWalletManager : BRWalletListener {
 
     private func showReceived(amount: UInt64) {
         if let rate = currency.state.currentRate {
-            let maxDigits = currency.state.maxDigits
-            let amount = Amount(amount: amount, rate: rate, maxDigits: maxDigits, currency: currency)
-            let primary = Store.state.isBtcSwapped ? amount.localCurrency : amount.bits
-            let secondary = Store.state.isBtcSwapped ? amount.bits : amount.localCurrency
+            let tokenAmount = DisplayAmount(amount: UInt256(amount),
+                                       selectedRate: nil,
+                                       minimumFractionDigits: 0,
+                                       currency: currency)
+            let fiatAmount = DisplayAmount(amount: UInt256(amount),
+                                            selectedRate: rate,
+                                            minimumFractionDigits: 0,
+                                            currency: currency)
+            let primary = Store.state.isBtcSwapped ? fiatAmount.description : tokenAmount.description
+            let secondary = Store.state.isBtcSwapped ? tokenAmount.description : fiatAmount.description
             let message = String(format: S.TransactionDetails.received, "\(primary) (\(secondary))")
             Store.trigger(name: .lightWeightAlert(message))
             showLocalNotification(message: message)

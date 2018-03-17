@@ -62,7 +62,7 @@ extension EthTx: Encodable {
         try container.encode(String(blockNumber), forKey: .blockNumber)
         try container.encode(String(confirmations), forKey: .confirmations)
         try container.encode(String(timeStamp), forKey: .timeStamp)
-        try container.encode(value.hexString, forKey: .value)
+        try container.encode(value, forKey: .value)
         try container.encode(from, forKey: .from)
         try container.encode(to, forKey: .to)
         try container.encode(hash, forKey: .hash)
