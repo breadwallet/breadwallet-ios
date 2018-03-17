@@ -17,7 +17,7 @@ protocol ContentBoxPresenter {
 
 class VerifyPinViewController : UIViewController, ContentBoxPresenter {
 
-    init(bodyText: String, pinLength: Int, walletManager: WalletManager, success: @escaping (String) -> Void) {
+    init(bodyText: String, pinLength: Int, walletManager: BTCWalletManager, success: @escaping (String) -> Void) {
         self.bodyText = bodyText
         self.success = success
         self.pinLength = pinLength
@@ -39,7 +39,7 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
     private let cancel = UIButton(type: .system)
     private let bodyText: String
     private let pinLength: Int
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
 
     override func viewDidLoad() {
         addSubviews()

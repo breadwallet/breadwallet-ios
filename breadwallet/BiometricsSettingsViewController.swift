@@ -13,7 +13,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
 
     var presentSpendingLimit: (() -> Void)?
 
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
         super.init(nibName: nil, bundle: nil)
     }
@@ -25,7 +25,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
     private let toggle = GradientSwitch()
     private let separator = UIView(color: .secondaryShadow)
     private let textView = UnEditableTextView()
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private var rate: Rate?
 
     deinit {

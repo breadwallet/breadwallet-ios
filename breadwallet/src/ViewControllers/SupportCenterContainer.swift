@@ -14,7 +14,7 @@ class SupportCenterContainer : UIViewController {
         webView.navigate(to: to)
     }
 
-    init(walletManager: WalletManager, apiClient: BRAPIClient) {
+    init(walletManager: BTCWalletManager, apiClient: BRAPIClient) {
         let mountPoint = "/support"
         #if Debug || Testflight
             webView = BRWebViewController(bundleName: "bread-frontend-staging", mountPoint: mountPoint, walletManager: walletManager, noAuthApiClient: apiClient)

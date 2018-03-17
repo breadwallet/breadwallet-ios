@@ -11,14 +11,14 @@ import BRCore
 
 class StartImportViewController : UIViewController {
 
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
         self.currency = walletManager.currency
         assert(walletManager.currency is Bitcoin, "Importing only supports bitcoin")
         super.init(nibName: nil, bundle: nil)
     }
 
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private let currency: CurrencyDef
     private let header = RadialGradientView(backgroundColor: .blue, offset: 64.0)
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "ImportIllustration"))

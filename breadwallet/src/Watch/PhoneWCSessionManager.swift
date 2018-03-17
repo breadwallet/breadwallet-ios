@@ -12,7 +12,7 @@ import WatchConnectivity
 class PhoneWCSessionManager : NSObject {
     private let session: WCSession
 
-    var walletManager: WalletManager?
+    var walletManager: BTCWalletManager?
     var rate: Rate?
 
     override init() {
@@ -32,7 +32,7 @@ class PhoneWCSessionManager : NSObject {
 
 extension PhoneWCSessionManager : WCSessionDelegate {
 
-    func watchData(forWalletManager: WalletManager, rate: Rate) -> WatchData? {
+    func watchData(forWalletManager: BTCWalletManager, rate: Rate) -> WatchData? {
         if let noWallet = walletManager?.noWallet, noWallet == true {
             return WatchData(balance: "", localBalance: "", receiveAddress: "", latestTransaction: "", qrCode: UIImage(), transactions: [], hasWallet: false)
         }

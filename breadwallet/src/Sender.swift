@@ -71,7 +71,8 @@ class Sender {
         if UserDefaults.isBiometricsEnabled && walletManager.canUseBiometrics(forTx:tx) {
             DispatchQueue.walletQueue.async { [weak self] in
                 guard let myself = self else { return }
-                myself.walletManager.signTransaction(tx, forkId: (myself.currency as! Bitcoin).forkId, biometricsPrompt: biometricsMessage, completion: { result in
+                guard let walletManager = myself.walletManager as? BTCWalletManager else { return }
+                walletManager.signTransaction(tx, forkId: (myself.currency as! Bitcoin).forkId, biometricsPrompt: biometricsMessage, completion: { result in
                     if result == .success {
                         myself.publish(completion: completion)
                     } else {
@@ -93,7 +94,8 @@ class Sender {
             let group = DispatchGroup()
             group.enter()
             DispatchQueue.walletQueue.async {
-                if self.walletManager.signTransaction(tx, forkId: (self.currency as! Bitcoin).forkId, pin: pin) {
+                //TODO:ETH
+                if (self.walletManager as! BTCWalletManager).signTransaction(tx, forkId: (self.currency as! Bitcoin).forkId, pin: pin) {
                     self.publish(completion: completion)
                 }
                 group.leave()

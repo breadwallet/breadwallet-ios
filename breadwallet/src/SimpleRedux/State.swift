@@ -56,7 +56,9 @@ extension State {
                         isPromptingBiometrics: false,
                         pinLength: 6,
                         wallets: [Currencies.btc.code: WalletState.initial(Currencies.btc, displayOrder: 0),
-                                  Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: 1)])
+                                  Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: 1),
+                                  Currencies.eth.code: WalletState.initial(Currencies.eth, displayOrder: 2)
+            ])
     }
     
     func mutate(   isStartFlowVisible: Bool? = nil,

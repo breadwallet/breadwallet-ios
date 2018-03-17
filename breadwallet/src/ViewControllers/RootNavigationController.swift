@@ -10,7 +10,7 @@ import UIKit
 
 class RootNavigationController : UINavigationController {
 
-    var walletManager: WalletManager? {
+    var walletManager: BTCWalletManager? {
         didSet {
             guard let walletManager = walletManager else { return }
             if !walletManager.noWallet && Store.state.isLoginRequired {
@@ -35,7 +35,7 @@ class RootNavigationController : UINavigationController {
             tempLoginView.view.constrain(toSuperviewEdges: nil)
         })
         guardProtected(queue: DispatchQueue.main) {
-            if WalletManager.staticNoWallet {
+            if BTCWalletManager.staticNoWallet {
                 self.tempLoginView.remove()
                 let tempStartView = StartViewController(didTapCreate: {}, didTapRecover: {})
                 self.addChildViewController(tempStartView, layout: {

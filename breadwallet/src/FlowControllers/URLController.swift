@@ -10,11 +10,11 @@ import UIKit
 
 class URLController : Trackable {
 
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
     }
 
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private var xSource, xSuccess, xError, uri: String?
 
     func handleUrl(_ url: URL) -> Bool {

@@ -51,7 +51,7 @@ struct BtcTransaction: Transaction {
     
     // MARK: - Init
     
-    init?(_ tx: BRTxRef, walletManager: WalletManager, kvStore: BRReplicatedKVStore?, rate: Rate?) {
+    init?(_ tx: BRTxRef, walletManager: BTCWalletManager, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         guard let wallet = walletManager.wallet,
             let peerManager = walletManager.peerManager else { return nil }
         self.currency = walletManager.currency

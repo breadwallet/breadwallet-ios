@@ -16,7 +16,7 @@ private enum AppGroup {
 
 class UserDefaultsUpdater {
 
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
     }
 
@@ -30,6 +30,6 @@ class UserDefaultsUpdater {
         return UserDefaults(suiteName: AppGroup.id)
     }()
 
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
 
 }
