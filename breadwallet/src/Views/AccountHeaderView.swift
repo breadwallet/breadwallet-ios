@@ -87,11 +87,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         self.currency = currency
         self.isBtcSwapped = Store.state.isBtcSwapped
         if let rate = currency.state.currentRate {
-            let maxDigits = currency.state.maxDigits
-            let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: maxDigits, currency: currency)
+            let placeholderAmount = Amount(amount: 0, currency: currency, rate: rate)
             self.exchangeRate = rate
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
-            self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.btcFormat)
+            self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.tokenFormat)
         } else {
             self.secondaryBalance = UpdatingLabel(formatter: NumberFormatter())
             self.primaryBalance = UpdatingLabel(formatter: NumberFormatter())
@@ -223,10 +222,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                             selector: { $0[self.currency].currentRate != $1[self.currency].currentRate},
                             callback: {
                                 if let rate = $0[self.currency].currentRate {
-                                    let maxDigits = $0[self.currency].maxDigits
-                                    let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: maxDigits, currency: self.currency)
+                                    let placeholderAmount = Amount(amount: 0, currency: self.currency, rate: rate)
                                     self.secondaryBalance.formatter = placeholderAmount.localFormat
-                                    self.primaryBalance.formatter = placeholderAmount.btcFormat
+                                    self.primaryBalance.formatter = placeholderAmount.tokenFormat
                                 }
                                 self.exchangeRate = $0[self.currency].currentRate
         })
@@ -235,10 +233,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                             selector: { $0[self.currency].maxDigits != $1[self.currency].maxDigits},
                             callback: {
                                 if let rate = $0[self.currency].currentRate {
-                                    let maxDigits = $0[self.currency].maxDigits
-                                    let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: maxDigits, currency: self.currency)
+                                    let placeholderAmount = Amount(amount: 0, currency: self.currency, rate: rate)
                                     self.secondaryBalance.formatter = placeholderAmount.localFormat
-                                    self.primaryBalance.formatter = placeholderAmount.btcFormat
+                                    self.primaryBalance.formatter = placeholderAmount.tokenFormat
                                     self.setBalances()
                                 }
         })
@@ -275,7 +272,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         
         exchangeRateLabel.text = "\(rate.localString)\(S.AccountHeader.exchangeRateSeparator)\(currency.code)"
         
-        let amount = DisplayAmount(amount: balance, selectedRate: rate, minimumFractionDigits: nil, currency: currency)
+        let amount = Amount(amount: balance, currency: currency, rate: rate)
         
         if !hasInitialized {
             primaryBalance.setValue(amount.tokenValue)

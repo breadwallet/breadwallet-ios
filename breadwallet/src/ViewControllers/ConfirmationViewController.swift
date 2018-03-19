@@ -139,9 +139,9 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         view.backgroundColor = .clear
         payLabel.text = S.Confirmation.send
 
-        let displayAmount = DisplayAmount(amount: amount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, currency: Currencies.btc)
-        let displayFee = DisplayAmount(amount: feeAmount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, currency: Currencies.btc)
-        let displayTotal = DisplayAmount(amount: amount + feeAmount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, currency: Currencies.btc)
+        let displayAmount = Amount(amount: amount, currency: Currencies.btc, rate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+        let displayFee = Amount(amount: feeAmount, currency: Currencies.btc, rate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+        let displayTotal = Amount(amount: amount + feeAmount, currency: Currencies.btc, rate: selectedRate, minimumFractionDigits: minimumFractionDigits)
 
         amountLabel.text = displayAmount.combinedDescription
 
