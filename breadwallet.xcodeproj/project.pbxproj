@@ -251,12 +251,9 @@
 		7CF11617205C943800C03D42 /* BRRlpCoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115F2205C943500C03D42 /* BRRlpCoder.c */; };
 		7CF11618205C943800C03D42 /* BRUtilMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115F6205C943500C03D42 /* BRUtilMath.c */; };
 		7CF11619205C943800C03D42 /* BRUtilMathParse.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115F7205C943500C03D42 /* BRUtilMathParse.c */; };
-		7CF1161A205C943800C03D42 /* BRUtilHex.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115F9205C943500C03D42 /* BRUtilHex.c */; };
 		7CF1161B205C943800C03D42 /* BREthereumToken.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FA205C943500C03D42 /* BREthereumToken.c */; };
 		7CF1161C205C943800C03D42 /* BREthereumAccount.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FD205C943500C03D42 /* BREthereumAccount.c */; };
-		7CF1161D205C943800C03D42 /* BRUtilMathParse.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FE205C943500C03D42 /* BRUtilMathParse.c */; };
 		7CF1161E205C943800C03D42 /* BREthereumLightNode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FF205C943500C03D42 /* BREthereumLightNode.c */; };
-		7CF1161F205C943800C03D42 /* BRUtilMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11600205C943500C03D42 /* BRUtilMath.c */; };
 		7CF11620205C943800C03D42 /* BREthereumGas.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11601205C943500C03D42 /* BREthereumGas.c */; };
 		7CF11621205C943800C03D42 /* BREthereumTransaction.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11607205C943600C03D42 /* BREthereumTransaction.c */; };
 		7CF11622205C943800C03D42 /* BREthereumAmount.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1160A205C943600C03D42 /* BREthereumAmount.c */; };
@@ -264,7 +261,6 @@
 		7CF11624205C943800C03D42 /* BRUtilHex.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11610205C943700C03D42 /* BRUtilHex.c */; };
 		7CF11625205C943800C03D42 /* BREthereumNetwork.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11612205C943700C03D42 /* BREthereumNetwork.c */; };
 		7CF11626205C943800C03D42 /* BREthereumContract.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11613205C943700C03D42 /* BREthereumContract.c */; };
-		7CF11627205C943800C03D42 /* BRRlpCoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11614205C943700C03D42 /* BRRlpCoder.c */; };
 		7CF11628205C943800C03D42 /* BREthereumWallet.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11615205C943800C03D42 /* BREthereumWallet.c */; };
 		7CF913BE1FFC7DC30085CB70 /* TxMemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF913BD1FFC7DC30085CB70 /* TxMemoCell.swift */; };
 		CE03EC721EF193810038E3A8 /* String+Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC711EF193800038E3A8 /* String+Keys.swift */; };
@@ -3702,7 +3698,7 @@
 			attributes = {
 				CLASSPREFIX = BR;
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "breadwallet LLC";
 				TargetAttributes = {
 					22A9A9951DF63426000F0016 = {
@@ -4069,7 +4065,6 @@
 				7CF11620205C943800C03D42 /* BREthereumGas.c in Sources */,
 				755CD9DA1DAA1A270075898E /* BRAddress.c in Sources */,
 				7CF11622205C943800C03D42 /* BREthereumAmount.c in Sources */,
-				7CF11627205C943800C03D42 /* BRRlpCoder.c in Sources */,
 				755CD9DB1DAA1A270075898E /* BRBase58.c in Sources */,
 				75C468AA2056E5F800113F92 /* BRBech32.c in Sources */,
 				755CD9DF1DAA1A270075898E /* BRBloomFilter.c in Sources */,
@@ -4079,16 +4074,13 @@
 				755CD9E51DAA1A270075898E /* BRPeerManager.c in Sources */,
 				755CD9E31DAA1A270075898E /* BRPaymentProtocol.c in Sources */,
 				755CD9E01DAA1A270075898E /* BRCrypto.c in Sources */,
-				7CF1161D205C943800C03D42 /* BRUtilMathParse.c in Sources */,
 				755CD9E61DAA1A270075898E /* BRSet.c in Sources */,
 				755CD9E21DAA1A270075898E /* BRMerkleBlock.c in Sources */,
 				7CF1161E205C943800C03D42 /* BREthereumLightNode.c in Sources */,
 				755CD9DC1DAA1A270075898E /* BRBIP32Sequence.c in Sources */,
 				759B4BDF203E5A32002C68CA /* BRBCashAddr.c in Sources */,
-				7CF1161A205C943800C03D42 /* BRUtilHex.c in Sources */,
 				7CF11623205C943800C03D42 /* BREthereumEther.c in Sources */,
 				755CD9E81DAA1A270075898E /* BRWallet.c in Sources */,
-				7CF1161F205C943800C03D42 /* BRUtilMath.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
