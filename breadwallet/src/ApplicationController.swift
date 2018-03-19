@@ -23,7 +23,7 @@ class ApplicationController : Subscriber, Trackable {
     private var exchangeUpdaters = [String: ExchangeUpdater]()
     private var feeUpdaters = [String: FeeUpdater]()
     private var primaryWalletManager: BTCWalletManager? {
-        return walletManagers[Currencies.btc.code] as! BTCWalletManager
+        return walletManagers[Currencies.btc.code] as? BTCWalletManager
     }
     
     private var kvStoreCoordinator: KVStoreCoordinator?
