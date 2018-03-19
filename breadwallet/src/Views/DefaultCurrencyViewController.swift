@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCore
 
 class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
@@ -71,10 +72,9 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
     private func setExchangeRateLabel() {
         if let currentRate = rates.filter({ $0.code == defaultCurrencyCode }).first {
-            let amount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
-            let bitsAmount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
+            let amount = Amount(amount: UInt256(C.satoshis), currency: Currencies.btc, rate: currentRate)
             rateLabel.textColor = .darkText
-            rateLabel.text = "\(bitsAmount.bits) = \(amount.string(forLocal: currentRate.locale))"
+            rateLabel.text = "\(amount.tokenDescription) = \(amount.fiatDescription(forLocale: currentRate.locale))"
         }
     }
 

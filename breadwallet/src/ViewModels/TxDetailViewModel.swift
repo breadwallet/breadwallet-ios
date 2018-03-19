@@ -88,16 +88,13 @@ extension TxDetailViewModel {
     private static func balances(tx: Transaction, showFiatAmount: Bool) -> (String, String) {
         guard let tx = tx as? BtcTransaction,
             let rate = tx.currency.state.currentRate else { return ("", "") }
-        let maxDigits = tx.currency.state.maxDigits
         
-        var startingString = Amount(amount: tx.startingBalance,
-                                    rate: rate,
-                                    maxDigits: maxDigits,
-                                    currency: Currencies.btc).string(isBtcSwapped: showFiatAmount)
-        var endingString = Amount(amount: tx.endingBalance,
-                                  rate: rate,
-                                  maxDigits: maxDigits,
-                                  currency: Currencies.btc).string(isBtcSwapped: showFiatAmount)
+        var startingString = Amount(amount: UInt256(tx.startingBalance),
+                                           currency: Currencies.btc,
+                                           rate: showFiatAmount ? rate : nil).description
+        var endingString = Amount(amount: UInt256(tx.endingBalance),
+                                         currency: Currencies.btc,
+                                         rate: showFiatAmount ? rate : nil).description
         
         if tx.startingBalance > C.maxMoney {
             startingString = ""
@@ -122,10 +119,9 @@ extension TxDetailViewModel {
     
     private static func tokenAmount(tx: Transaction) -> String? {
         guard let tx = tx as? BtcTransaction else { return nil }
-        let amount = DisplayAmount(amount: UInt256(tx.amount),
-                                   selectedRate: nil,
-                                   minimumFractionDigits: nil,
+        let amount = Amount(amount: UInt256(tx.amount),
                                    currency: tx.currency,
+                                   rate: nil,
                                    negative: (tx.direction == .sent))
         return amount.description
     }
@@ -139,24 +135,21 @@ extension TxDetailViewModel {
                                     name: currentRate.name,
                                     rate: txRate,
                                     reciprocalCode: currentRate.reciprocalCode)
-            let currentAmount = DisplayAmount(amount: UInt256(tx.amount),
-                                              selectedRate: currentRate,
-                                              minimumFractionDigits: nil,
+            let currentAmount = Amount(amount: UInt256(tx.amount),
                                               currency: tx.currency,
+                                              rate: currentRate,
                                               negative: false).description
-            let originalAmount = DisplayAmount(amount: UInt256(tx.amount),
-                                               selectedRate: originalRate,
-                                               minimumFractionDigits: nil,
+            let originalAmount = Amount(amount: UInt256(tx.amount),
                                                currency: tx.currency,
+                                               rate: originalRate,
                                                negative: false).description
             return (currentAmount, originalAmount)
             
         } else {
             // no tx-time rate
-            let currentAmount = DisplayAmount(amount: UInt256(tx.amount),
-                                              selectedRate: currentRate,
-                                              minimumFractionDigits: nil,
+            let currentAmount = Amount(amount: UInt256(tx.amount),
                                               currency: tx.currency,
+                                              rate: currentRate,
                                               negative: false)
             return (currentAmount.description, nil)
         }

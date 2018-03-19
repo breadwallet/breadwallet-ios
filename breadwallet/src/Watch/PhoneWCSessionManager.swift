@@ -8,6 +8,7 @@
 
 import UIKit
 import WatchConnectivity
+import BRCore
 
 class PhoneWCSessionManager : NSObject {
     private let session: WCSession
@@ -39,13 +40,13 @@ extension PhoneWCSessionManager : WCSessionDelegate {
 
         guard let wallet = forWalletManager.wallet else { return nil }
 
-        let amount = Amount(amount: wallet.balance, rate: rate, maxDigits: 2, currency: Currencies.btc) //TODO - fix always bits on watch
+        let amount = Amount(amount: UInt256(wallet.balance), currency: Currencies.btc, rate: rate)
 
         let image = UIImage.qrCode(data: "\(wallet.receiveAddress)".data(using: .utf8)!, color: CIColor(color: .black))?
             .resize(CGSize(width: 136.0, height: 136.0))!
 
-        return WatchData(balance: amount.bits,
-                         localBalance: amount.localCurrency,
+        return WatchData(balance: amount.tokenDescription,
+                         localBalance: amount.fiatDescription,
                             receiveAddress: wallet.receiveAddress,
                             latestTransaction: "Latest transaction",
                             qrCode: image!,

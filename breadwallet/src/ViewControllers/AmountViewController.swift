@@ -315,7 +315,10 @@ class AmountViewController : UIViewController, Trackable {
     private func updateAmountLabel() {
         guard let amount = amount else { amountLabel.text = ""; return }
         //TODO:ETH
-        let displayAmount = DisplayAmount(amount: UInt256(amount.rawValue), selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, currency: Currencies.btc)
+        let displayAmount = Amount(amount: UInt256(amount.rawValue),
+                                          currency: Currencies.btc,
+                                          rate: selectedRate,
+                                          minimumFractionDigits: minimumFractionDigits)
         var output = displayAmount.description
         if hasTrailingDecimal {
             output = output.appending(NumberFormatter().currencyDecimalSeparator)

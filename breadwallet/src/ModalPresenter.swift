@@ -8,6 +8,7 @@
 
 import UIKit
 import LocalAuthentication
+import BRCore
 
 class ModalPresenter : Subscriber, Trackable {
 
@@ -366,8 +367,8 @@ class ModalPresenter : Subscriber, Trackable {
                 //                }),
                 Setting(title: LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit, accessoryText: {
                     guard let rate = Currencies.btc.state.currentRate else { return "" }
-                    let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
-                    return amount.localCurrency
+                    let amount = Amount(amount: UInt256(walletManager.spendingLimit), currency: Currencies.btc, rate: rate)
+                    return amount.fiatDescription
                 }, callback: {
                     self.pushBiometricsSpendingLimit(onNc: settingsNav)
                 }),

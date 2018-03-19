@@ -39,10 +39,9 @@ struct TxListViewModel: TxViewModel {
 
     func amount(isBtcSwapped: Bool, rate: Rate) -> NSAttributedString {
         guard let tx = tx as? BtcTransaction else { return NSAttributedString(string: "") }
-        let text = DisplayAmount(amount: UInt256(tx.amount),
-                                 selectedRate: isBtcSwapped ? rate : nil,
-                                 minimumFractionDigits: nil,
+        let text = Amount(amount: UInt256(tx.amount),
                                  currency: tx.currency,
+                                 rate: isBtcSwapped ? rate : nil,
                                  negative: (tx.direction == .sent)).description
         let color: UIColor = (tx.direction == .received) ? .receivedGreen : .darkGray
         

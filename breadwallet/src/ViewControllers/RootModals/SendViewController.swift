@@ -172,8 +172,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
     }
 
+    //TODO:ETH
     private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount = DisplayAmount(amount: UInt256(balance), selectedRate: rate, minimumFractionDigits: 0, currency: currency)
+        let balanceAmount = Amount(amount: UInt256(balance), currency: currency, rate: rate, minimumFractionDigits: 0)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
@@ -181,7 +182,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         var feeColor: UIColor = .grayTextTint
         if let amount = amount, amount.rawValue > 0 {
             if let fee = sender.feeForTx(amount: amount.rawValue) {
-                let feeAmount = DisplayAmount(amount: UInt256(fee), selectedRate: rate, minimumFractionDigits: 0, currency: currency)
+                let feeAmount = Amount(amount: UInt256(fee), currency: currency, rate: rate, minimumFractionDigits: 0)
                 let feeText = feeAmount.description
                 feeOutput = String(format: S.Send.fee, feeText)
                 if (balance >= fee) && amount.rawValue > (balance - fee) {
@@ -249,8 +250,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             }
             if let minOutput = walletManager.wallet?.minOutputAmount {
                 guard amount.rawValue >= minOutput else {
-                    let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: currency.state.maxDigits, currency: currency)
-                    let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutputAmount.string(isBtcSwapped: Store.state.isBtcSwapped))
+                    let minOutputAmount = Amount(amount: UInt256(minOutput), currency: currency, rate: Rate.empty)
+                    let text = Store.state.isBtcSwapped ? minOutputAmount.fiatDescription : minOutputAmount.tokenDescription
+                    let message = String(format: S.PaymentProtocol.Errors.smallPayment, text)
                     return showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
                 }
             }
@@ -399,12 +401,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 self?.confirmProtocolRequest(protoReq: protoReq)
             })
         } else if requestAmount < wallet.minOutputAmount {
-            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: currency.state.maxDigits, currency: currency)
-            let message = String(format: S.PaymentProtocol.Errors.smallPayment, amount.bits)
+            let amount = Amount(amount: UInt256(wallet.minOutputAmount), currency: currency, rate: Rate.empty)
+            let message = String(format: S.PaymentProtocol.Errors.smallPayment, amount.tokenDescription)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         } else if isOutputTooSmall {
-            let amount = Amount(amount: wallet.minOutputAmount, rate: Rate.empty, maxDigits: currency.state.maxDigits, currency: currency)
-            let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.bits)
+            let amount = Amount(amount: UInt256(wallet.minOutputAmount), currency: currency, rate: Rate.empty)
+            let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.tokenDescription)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
         }
 

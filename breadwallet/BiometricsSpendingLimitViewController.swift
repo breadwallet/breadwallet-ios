@@ -50,7 +50,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
         //If the user has a limit that is not a current option, we display their limit
         if !limits.contains(walletManager.spendingLimit) {
             if let rate = Currencies.btc.state.currentRate {
-                let spendingLimit = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
+                let spendingLimit = Amount(amount: UInt256(walletManager.spendingLimit), currency: Currencies.btc, rate: rate)
                 setAmount(limitAmount: spendingLimit)
             }
         }
@@ -70,7 +70,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
         if limit == 0 {
             cell.textLabel?.text = S.TouchIdSpendingLimit.requirePasscode
         } else {
-            let displayAmount = DisplayAmount(amount: UInt256(limit), selectedRate: nil, minimumFractionDigits: 0, currency: Currencies.btc)
+            let displayAmount = Amount(amount: UInt256(limit), currency: Currencies.btc, rate: nil, minimumFractionDigits: 0)
             cell.textLabel?.text = displayAmount.combinedDescription
         }
         if limits[indexPath.row] == selectedLimit {
@@ -109,7 +109,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
     }
 
     private func setAmount(limitAmount: Amount) {
-        amount.text = "\(limitAmount.bits) = \(limitAmount.localCurrency)"
+        amount.text = "\(limitAmount.tokenDescription) = \(limitAmount.fiatDescription)"
     }
 
     required init?(coder aDecoder: NSCoder) {
