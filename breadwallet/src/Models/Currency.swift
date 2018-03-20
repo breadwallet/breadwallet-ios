@@ -130,12 +130,11 @@ struct Ethereum: CurrencyDef {
 
 /// Ethereum ERC20 token currency type
 struct ERC20Token: CurrencyDef {
-    let baseUnitPower: Int = 18 // 1 Wei = 1e-18 ETH
     let name: String
     let code: String
     let symbol: String
+    let baseUnitPower: Int
     let address: String
-    let decimals: Int
     let abi: String
     let colors: (UIColor, UIColor)
     
@@ -168,8 +167,8 @@ struct Currencies {
     static let brd = ERC20Token(name: "Bread Token",
                                 code: "BRD",
                                 symbol: "🍞",
+                                baseUnitPower: 18,
                                 address: "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6",
-                                decimals: 18,
                                 abi: "", //TODO:BRD - add erc20 abi
                                 colors: (UIColor(red:0.95, green:0.65, blue:0.00, alpha:1.0), UIColor(red:0.95, green:0.35, blue:0.13, alpha:1.0)))
 }
