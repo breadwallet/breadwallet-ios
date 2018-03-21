@@ -161,8 +161,6 @@ enum S {
         static let amountHeader = NSLocalizedString("TransactionDetails.amountHeader", value:"Amount", comment: "Amount section header")
         static let txHashHeader = NSLocalizedString("TransactionDetails.txHashHeader", value:"Transaction ID", comment: "Transaction ID header")
         
-        static let startingBalanceHeader = NSLocalizedString("TransactionDetails.startingBalanceHeader", value:"Starting Balance", comment: "Starting balance section header")
-        static let endingBalanceHeader = NSLocalizedString("TransactionDetails.endingBalanceHeader", value:"Ending Balance", comment: "Ending balance section header")
         static let exchangeRateHeader = NSLocalizedString("TransactionDetails.exchangeRateHeader", value:"Exchange Rate", comment: "Exchange rate section header")
         
         static let amountWhenReceived = NSLocalizedString("TransactionDetails.amountWhenReceived", value: "%1$@ when received %2$@ now", comment: "$100 when received $200 now")
