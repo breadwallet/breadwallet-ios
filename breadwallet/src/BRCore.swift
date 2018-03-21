@@ -763,8 +763,8 @@ extension UInt256 {
     }
     
     public init(string: String, radix: Int = 10) {
-        var error: Int32 = 0
-        self = createUInt256Parse(string, Int32(radix), &error)
+        var status: BRCoreParseStatus = CORE_PARSE_OK
+        self = createUInt256Parse(string, Int32(radix), &status)
     }
     
     public func string(radix: Int) -> String {
