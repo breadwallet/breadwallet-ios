@@ -17,8 +17,6 @@ struct TxDetailViewModel: TxViewModel {
     let amount: String
     let fiatAmount: String
     let originalFiatAmount: String?
-    let startingBalance: String
-    let endingBalance: String
     let exchangeRate: String
     let transactionHash: String
     let tx: Transaction
@@ -75,33 +73,9 @@ extension TxDetailViewModel {
         let fiatAmounts = TxDetailViewModel.fiatAmounts(tx: tx, currentRate: rate)
         fiatAmount = fiatAmounts.0
         originalFiatAmount = fiatAmounts.1
-        
-        let balances = TxDetailViewModel.balances(tx: tx, showFiatAmount: Store.state.isBtcSwapped)
-        
-        startingBalance = balances.0
-        endingBalance = balances.1
         exchangeRate = TxDetailViewModel.exchangeRateText(tx: tx) ?? ""
         transactionHash = tx.hash
         self.tx = tx
-    }
-    
-    private static func balances(tx: Transaction, showFiatAmount: Bool) -> (String, String) {
-        guard let tx = tx as? BtcTransaction,
-            let rate = tx.currency.state.currentRate else { return ("", "") }
-        
-        var startingString = Amount(amount: UInt256(tx.startingBalance),
-                                           currency: Currencies.btc,
-                                           rate: showFiatAmount ? rate : nil).description
-        var endingString = Amount(amount: UInt256(tx.endingBalance),
-                                         currency: Currencies.btc,
-                                         rate: showFiatAmount ? rate : nil).description
-        
-        if tx.startingBalance > C.maxMoney {
-            startingString = ""
-            endingString = ""
-        }
-        
-        return (startingString, endingString)
     }
     
     /// The fiat exchange rate at the time of transaction
