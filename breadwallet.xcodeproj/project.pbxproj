@@ -739,6 +739,7 @@
 		3CADA52B205C23E000BA121F /* BRUtilHex.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = BRUtilHex.c; sourceTree = "<group>"; };
 		3CADA52D205C25DC00BA121F /* BRUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BRUtil.h; sourceTree = "<group>"; };
 		3CADA52E205C7D9F00BA121F /* BRUtilMathParse.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = BRUtilMathParse.c; sourceTree = "<group>"; };
+		3CB8DE1020615E4300BE51F5 /* BREthereumPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BREthereumPrivate.h; sourceTree = "<group>"; };
 		7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WalletManager+Auth.swift"; sourceTree = "<group>"; };
 		7528D2971ECF655500925DBC /* PaymentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentProtocol.swift; path = src/PaymentProtocol.swift; sourceTree = "<group>"; };
 		752FB03B1DF8BE4B009086FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1912,6 +1913,7 @@
 				3CADA529205C22AE00BA121F /* util */,
 				3CADA4B4205885C600BA121F /* rlp */,
 				3CADA4B2205885C600BA121F /* BREthereum.h */,
+				3CB8DE1020615E4300BE51F5 /* BREthereumPrivate.h */,
 				3CADA49B205885C600BA121F /* BREthereumEther.h */,
 				3CADA4B8205885C600BA121F /* BREthereumEther.c */,
 				3CADA49F205885C600BA121F /* BREthereumGas.h */,
