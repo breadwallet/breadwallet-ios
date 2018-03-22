@@ -52,22 +52,59 @@ class EthWalletManager : WalletManager {
     var wallet: BRWallet?
     var currency: CurrencyDef = Currencies.eth
     var kvStore: BRReplicatedKVStore?
-    var apiClient: BRAPIClient? 
-    func resetForWipe() {
-        return
-    }
-    func canUseBiometrics(forTx: BRTxRef) -> Bool {
-        return false
-    }
+    var apiClient: BRAPIClient?
+    var address: String?
+
+    var ethAddress: BREthereumAddress?
+    var account: BREthereumAccount?
+    var ethWallet: BREthereumWallet?
 
     init() {
         guard var words = Words.rawWordList else { return }
         installSharedWordList(&words, Int32(words.count))
-        if let address = addressAsString(accountGetPrimaryAddress(createAccount(loadPhrase()))) {
+        self.account = createAccount(loadPhrase())
+        self.ethAddress = accountGetPrimaryAddress(self.account)
+        self.ethWallet = walletCreate(account, E.isTestnet ? ethereumTestnet : ethereumMainnet)
+        if let address = addressAsString(self.ethAddress) {
             if let address = String(cString: address, encoding: .utf8) {
-                print("we have an eth address!: \(address)")
+                self.address = address
+                Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(receiveAddress: address)))
             }
         }
+    }
+    
+    func updateBalance() {
+        apiClient?.getBalance(address: address!, handler: { result in
+            switch result {
+            case .success(let value):
+                Store.perform(action: WalletChange(self.currency).setBalance(value))
+            case .error(let error):
+                print("getBalance error: \(error.localizedDescription)")
+            }
+        })
+    }
+
+    func sendTx(toAddress: String, amount: UInt256, callback: @escaping (JSONRPCResult<String>)->Void) {
+        //TODO:ETH - add authentication
+        let toAddress = createAddress(toAddress)
+        let amount = amountCreateEther((etherCreate(amount)))
+        let gasPrice = gasPriceCreate((etherCreate(UInt256(22000000000))))
+        let gasLimit = gasCreate(UInt64(21000))
+        let nonce = Int32(36)
+        let tx = walletCreateTransactionDetailed(ethWallet, toAddress, amount, gasPrice, gasLimit, nonce)
+        walletSignTransaction(ethWallet, tx, loadPhrase())
+        let txString = walletGetRawTransactionHexEncoded(ethWallet, tx, "0x")
+        apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { result in
+            callback(result)
+        })
+    }
+
+    func resetForWipe() {
+        return
+    }
+
+    func canUseBiometrics(forTx: BRTxRef) -> Bool {
+        return false
     }
 }
 

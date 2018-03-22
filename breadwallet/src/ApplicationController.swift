@@ -105,7 +105,8 @@ class ApplicationController : Subscriber, Trackable {
     private func initWallet(currency: CurrencyDef, dispatchGroup: DispatchGroup) {
         dispatchGroup.enter()
         if let currency = currency as? Ethereum {
-            walletManagers[currency.code] = EthWalletManager()
+            let manager = EthWalletManager()
+            walletManagers[currency.code] = manager
             dispatchGroup.leave()
             return
         }
@@ -253,6 +254,10 @@ class ApplicationController : Subscriber, Trackable {
         guard let primaryWalletManager = primaryWalletManager else { return }
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
         walletCoordinator = WalletCoordinator(walletManagers: walletManagers)
+        if let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager {
+            ethWalletManager.apiClient = primaryWalletManager.apiClient
+            ethWalletManager.updateBalance()
+        }
         Store.perform(action: PinLength.set(primaryWalletManager.pinLength))
         rootViewController.walletManager = primaryWalletManager
         if let homeScreen = rootViewController.viewControllers.first as? HomeScreenViewController {
@@ -263,12 +268,10 @@ class ApplicationController : Subscriber, Trackable {
         startFlowController = StartFlowPresenter(walletManager: primaryWalletManager, rootViewController: rootViewController)
         
         walletManagers.forEach { (arg) in
-
             let (currencyCode, walletManager) = arg
             if let manager = walletManager as? BTCWalletManager {
                 feeUpdaters[currencyCode] = FeeUpdater(walletManager: manager)
             }
-
         }
 
         defaultsUpdater = UserDefaultsUpdater(walletManager: primaryWalletManager)
