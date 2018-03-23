@@ -111,7 +111,9 @@ struct WalletChange: Trackable {
     }
 
     func setMaxDigits(_ maxDigits: Int) -> WalletAction {
-        UserDefaults.maxDigits = maxDigits
+        if !self.currency.matches(Currencies.eth) {
+            UserDefaults.maxDigits = maxDigits
+        }
         saveEvent("maxDigits.set", attributes: ["maxDigits": "\(maxDigits)"])
         return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(maxDigits: maxDigits)) })
     }
