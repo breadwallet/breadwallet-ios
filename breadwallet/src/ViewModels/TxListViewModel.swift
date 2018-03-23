@@ -38,8 +38,14 @@ struct TxListViewModel: TxViewModel {
     }
 
     func amount(isBtcSwapped: Bool, rate: Rate) -> NSAttributedString {
-        guard let tx = tx as? BtcTransaction else { return NSAttributedString(string: "") }
-        let text = Amount(amount: UInt256(tx.amount),
+        var amount: UInt256 = 0 //TODO:ETH - cleanup
+        if let tx = tx as? BtcTransaction {
+            amount = UInt256(tx.amount)
+        } else if let tx = tx as? EthTransaction {
+            amount = tx.amount
+        }
+
+        let text = Amount(amount:amount,
                                  currency: tx.currency,
                                  rate: isBtcSwapped ? rate : nil,
                                  negative: (tx.direction == .sent)).description
