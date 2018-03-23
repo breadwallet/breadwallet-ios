@@ -20,7 +20,7 @@ class ApplicationController : Subscriber, Trackable {
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var walletManagers = [String: WalletManager]()
     private var walletCoordinator: WalletCoordinator?
-    private var exchangeUpdaters = [String: ExchangeUpdater]()
+    private var exchangeUpdater: ExchangeUpdater?
     private var feeUpdaters = [String: FeeUpdater]()
     private var primaryWalletManager: BTCWalletManager? {
         return walletManagers[Currencies.btc.code] as? BTCWalletManager
@@ -62,7 +62,7 @@ class ApplicationController : Subscriber, Trackable {
                 return
             }
 
-            self.exchangeUpdaters[btc.code] = ExchangeUpdater(currency: btc, walletManager: btcWalletManager)
+            self.exchangeUpdater = ExchangeUpdater(currencies: Store.state.currencies, apiClient: self.primaryWalletManager!.apiClient!)
             btcWalletManager.initPeerManager {
                 btcWalletManager.db?.loadTransactions { txns in
                     btcWalletManager.db?.loadBlocks { blocks in
@@ -76,7 +76,6 @@ class ApplicationController : Subscriber, Trackable {
                         }
                         self.walletManagers[bch.code] = bchWalletManager
                         bchWalletManager?.initWallet(transactions: preForkTransactions)
-                        self.exchangeUpdaters[bch.code] = ExchangeUpdater(currency: bch, walletManager: bchWalletManager!)
                         bchWalletManager?.initPeerManager(blocks: preForkBlocks)
                         bchWalletManager?.db?.loadTransactions { storedTransactions in
                             if storedTransactions.count == 0 {
@@ -124,7 +123,9 @@ class ApplicationController : Subscriber, Trackable {
                 dispatchGroup.leave()
                 return
             }
-            self.exchangeUpdaters[currency.code] = ExchangeUpdater(currency: currency, walletManager: walletManager)
+            if currency.matches(Currencies.btc) {
+                self.exchangeUpdater = ExchangeUpdater(currencies: Store.state.currencies, apiClient: self.primaryWalletManager!.apiClient!)
+            }
             walletManager.initPeerManager {
                 dispatchGroup.leave()
             }
@@ -205,7 +206,7 @@ class ApplicationController : Subscriber, Trackable {
         DispatchQueue.walletQueue.async {
             self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
         }
-        exchangeUpdaters.values.forEach { $0.refresh(completion: {}) }
+        exchangeUpdater?.refresh(completion: {})
         feeUpdaters.values.forEach { $0.refresh() }
         walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
         walletManager.apiClient?.updateFeatureFlags()
@@ -217,7 +218,7 @@ class ApplicationController : Subscriber, Trackable {
         DispatchQueue.walletQueue.async {
             self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
         }
-        exchangeUpdaters.values.forEach { $0.refresh(completion: {}) }
+        exchangeUpdater?.refresh(completion: {})
         feeUpdaters.values.forEach { $0.refresh() }
         walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
         walletManager.apiClient?.updateFeatureFlags()
@@ -301,13 +302,9 @@ class ApplicationController : Subscriber, Trackable {
                     self.performBackgroundFetch()
                 }
             }
-            for (currencyCode, exchangeUpdater) in exchangeUpdaters {
-                exchangeUpdater.refresh {
-                    if currencyCode == Currencies.btc.code {
-                        self.watchSessionManager.walletManager = self.primaryWalletManager
-                        self.watchSessionManager.rate = Currencies.btc.state.currentRate
-                    }
-                }
+            exchangeUpdater?.refresh {
+                self.watchSessionManager.walletManager = self.primaryWalletManager
+                self.watchSessionManager.rate = Currencies.btc.state.currentRate
             }
         }
     }
@@ -371,13 +368,9 @@ class ApplicationController : Subscriber, Trackable {
         feeUpdaters.values.forEach { $0.refresh() }
         defaultsUpdater?.refresh()
         primaryWalletManager.apiClient?.events?.up()
-        exchangeUpdaters.forEach { (code, updater) in
-            updater.refresh(completion: {
-                if code == Currencies.btc.code {
-                    self.watchSessionManager.rate = Currencies.btc.state.currentRate
-                }
-            })
-        }
+        exchangeUpdater?.refresh(completion: {
+            self.watchSessionManager.rate = Currencies.btc.state.currentRate
+        })
     }
 
     /// Handles new wallet creation or recovery
