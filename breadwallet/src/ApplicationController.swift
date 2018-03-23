@@ -308,7 +308,7 @@ class ApplicationController : Subscriber, Trackable {
 
     private func setupEthInitialState() {
         guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
-        ethWalletManager.apiClient = primaryWalletManager.apiClient
+        ethWalletManager.apiClient = primaryWalletManager?.apiClient
         ethWalletManager.updateBalance()
         ethWalletManager.updateTransactionList()
         Store.perform(action: WalletChange(Currencies.eth).setMaxDigits(18))
