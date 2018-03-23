@@ -14,11 +14,11 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         didSet {
             setInitialData()
             setupSubscriptions()
-            currencyList.reload()
+            assetList.reload()
             attemptShowPrompt()
         }
     }
-    private let currencyList = AssetListTableView()
+    private let assetList = AssetListTableView()
     private let subHeaderView = UIView()
     private let logo = UIImageView(image:#imageLiteral(resourceName: "LogoGradient"))
     private let total = UILabel(font: .customBold(size: 28.0), color: .darkGray)
@@ -39,10 +39,10 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
     }
 
     override func viewDidLoad() {
-        currencyList.didSelectCurrency = didSelectCurrency
-        currencyList.didTapSecurity = didTapSecurity
-        currencyList.didTapSupport = didTapSupport
-        currencyList.didTapSettings = didTapSettings
+        assetList.didSelectCurrency = didSelectCurrency
+        assetList.didTapSecurity = didTapSecurity
+        assetList.didTapSupport = didTapSupport
+        assetList.didTapSettings = didTapSettings
         
         addSubviews()
         addConstraints()
@@ -104,12 +104,12 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
             promptHiddenConstraint
             ])
         
-        addChildViewController(currencyList, layout: {
-            currencyList.view.constrain([
-                currencyList.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                currencyList.view.topAnchor.constraint(equalTo: prompt.bottomAnchor),
-                currencyList.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                currencyList.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
+        addChildViewController(assetList, layout: {
+            assetList.view.constrain([
+                assetList.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                assetList.view.topAnchor.constraint(equalTo: prompt.bottomAnchor),
+                assetList.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                assetList.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
         })
     }
 
