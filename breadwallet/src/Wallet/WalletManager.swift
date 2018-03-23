@@ -58,6 +58,8 @@ class EthWalletManager : WalletManager {
     var ethAddress: BREthereumAddress?
     var account: BREthereumAccount?
     var ethWallet: BREthereumWallet?
+    private var timer: Timer? = nil
+    private let updateInterval: TimeInterval = 15
 
     init() {
         guard var words = Words.rawWordList else { return }
@@ -71,6 +73,15 @@ class EthWalletManager : WalletManager {
                 Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(receiveAddress: address)))
             }
         }
+        DispatchQueue.main.async { [weak self] in
+            guard let myself = self else { return }
+            myself.timer = Timer.scheduledTimer(timeInterval: myself.updateInterval, target: myself, selector: #selector(myself.refresh), userInfo: nil, repeats: true)
+        }
+    }
+
+    @objc private func refresh() {
+        updateBalance()
+        updateTransactionList()
     }
     
     func updateBalance() {
