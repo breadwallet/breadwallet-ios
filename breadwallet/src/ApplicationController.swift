@@ -258,6 +258,7 @@ class ApplicationController : Subscriber, Trackable {
         if let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager {
             ethWalletManager.apiClient = primaryWalletManager.apiClient
             ethWalletManager.updateBalance()
+            ethWalletManager.updateTransactionList()
         }
         Store.perform(action: PinLength.set(primaryWalletManager.pinLength))
         rootViewController.walletManager = primaryWalletManager

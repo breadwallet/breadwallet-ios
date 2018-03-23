@@ -12,7 +12,6 @@ import BRCore
 extension BRAPIClient {
     
     // MARK: -
-    
     public func getBalance(address: EthAddress, handler: @escaping (JSONRPCResult<Quantity>) -> Void) {
         send(request: JSONRPCRequest(method: "eth_getBalance", params: JSONRPCParams([address, "latest"])), handler: handler)
     }
@@ -27,6 +26,25 @@ extension BRAPIClient {
     
     public func sendRawTransaction(rawTx: String, handler: @escaping (JSONRPCResult<String>) -> Void) {
         send(request: JSONRPCRequest(method: "eth_sendRawTransaction", params: JSONRPCParams([rawTx])), handler: handler)
+    }
+
+    public func getEthTxList(address: EthAddress, handler: @escaping ([EthTx])->Void) {
+        let host = E.isTestnet ? "ropsten.etherscan.io" : "api.etherscan.io"
+        let url = URL(string: "http://\(host)/api?module=account&action=txlist&address=\(address)&sort=desc")!
+        let req = URLRequest(url: url)
+        //var req = URLRequest(url: url("/ethq/\(network)/query?module=account&action=txlist&address=\(address)"))
+        //req.httpMethod = "POST" TODO:ETH = remove etherscan
+        dataTaskWithRequest(req, authenticated: true, retryCount: 0, handler: { data, response, error in
+            guard let json = data else { return }
+            let decoder = JSONDecoder()
+            do {
+                let response = try decoder.decode(EthTxList.self, from: json)
+                handler(response.result)
+            } catch let e {
+                print("error: \(e)")
+            }
+
+        }).resume()
     }
     
     // MARK: -

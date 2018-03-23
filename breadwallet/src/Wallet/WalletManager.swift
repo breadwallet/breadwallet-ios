@@ -84,6 +84,16 @@ class EthWalletManager : WalletManager {
         })
     }
 
+    func updateTransactionList() {
+        apiClient?.getEthTxList(address: self.address!, handler: { [weak self] txList in
+            guard let myself = self else { return }
+            let transactions = txList.map { EthTransaction(tx: $0, address: myself.address!) }
+            DispatchQueue.main.async {
+                Store.perform(action: WalletChange(myself.currency).setTransactions(transactions))
+            }
+        })
+    }
+
     func sendTx(toAddress: String, amount: UInt256, callback: @escaping (JSONRPCResult<String>)->Void) {
         //TODO:ETH - add authentication
         let toAddress = createAddress(toAddress)
