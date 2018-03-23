@@ -255,11 +255,7 @@ class ApplicationController : Subscriber, Trackable {
         guard let primaryWalletManager = primaryWalletManager else { return }
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
         walletCoordinator = WalletCoordinator(walletManagers: walletManagers)
-        if let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager {
-            ethWalletManager.apiClient = primaryWalletManager.apiClient
-            ethWalletManager.updateBalance()
-            ethWalletManager.updateTransactionList()
-        }
+        setupEthInitialState()
         Store.perform(action: PinLength.set(primaryWalletManager.pinLength))
         rootViewController.walletManager = primaryWalletManager
         if let homeScreen = rootViewController.viewControllers.first as? HomeScreenViewController {
@@ -308,6 +304,14 @@ class ApplicationController : Subscriber, Trackable {
                 self.watchSessionManager.rate = Currencies.btc.state.currentRate
             }
         }
+    }
+
+    private func setupEthInitialState() {
+        guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
+        ethWalletManager.apiClient = primaryWalletManager.apiClient
+        ethWalletManager.updateBalance()
+        ethWalletManager.updateTransactionList()
+        Store.perform(action: WalletChange(Currencies.eth).setMaxDigits(18))
     }
 
     private func shouldRequireLogin() -> Bool {
