@@ -35,7 +35,6 @@ struct C {
     static let maxMoney: UInt64 = 21000000*100000000
     static let satoshis: UInt64 = 100000000
     static let walletQueue = "com.breadwallet.walletqueue"
-    static let btcCurrencyCode = "BTC"
     static let null = "(null)"
     static let maxMemoLength = 250
     static let feedbackEmail = "feedback@breadapp.com"

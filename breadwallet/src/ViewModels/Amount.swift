@@ -39,7 +39,7 @@ struct Amount {
     
     var fiatValue: Double {
         guard let rate = rate ?? currency.state.currentRate,
-            let value = primaryUnitValue else { return 0.0 }
+            let value = commonUnitValue else { return 0.0 }
         let tokenAmount = value * (negative ? -1.0 : 1.0)
         return tokenAmount * rate.rate
     }
@@ -59,8 +59,9 @@ struct Amount {
     var tokenDescription: String {
         let decimal = Decimal(tokenValue)
         let number = NSDecimalNumber(decimal: decimal * (negative ? -1.0 : 1.0))
-        guard let string = tokenFormat.string(from: number) else { return "" }
-        return string
+        guard let amount = tokenFormat.string(from: number) else { return "" }
+        let unit = currency.unitName(forDecimals: currency.state.maxDigits)
+        return "\(amount) \(unit)"
     }
 
     var localFormat: NumberFormatter {
@@ -87,39 +88,18 @@ struct Amount {
         format.generatesDecimalNumbers = true
         format.negativeFormat = "-\(format.positiveFormat!)"
         format.currencyCode = currency.code
-        format.currencySymbol = "\(currency.symbol)\(S.Symbols.narrowSpace)"
-        
-        if currency is Bitcoin {
-            switch currency.state.maxDigits {
-            case 2:
-                format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
-                format.maximum = (C.maxMoney/C.satoshis)*100000 as NSNumber
-            case 5:
-                format.currencySymbol = "m\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
-                format.maximum = (C.maxMoney/C.satoshis)*1000 as NSNumber
-            case 8:
-                format.currencySymbol = "\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
-                format.maximum = C.maxMoney/C.satoshis as NSNumber
-            default:
-                format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
-                format.maximum = Decimal(C.maxMoney)/(pow(10.0, currency.state.maxDigits)) as NSNumber
-            }
-            
-            format.maximumFractionDigits = currency.state.maxDigits
-        }
-        
-        if let minimumFractionDigits = minimumFractionDigits {
-            format.minimumFractionDigits = minimumFractionDigits
-        }
-
+        format.currencySymbol = ""
+        format.maximumFractionDigits = currency.state.maxDigits
+        format.minimumFractionDigits = minimumFractionDigits ?? 0
         return format
     }
     
-    private var primaryUnitString: String {
-        return amount.string(decimals: currency.baseUnitPower)
+    private var commonUnitString: String {
+        return amount.string(decimals: currency.commonUnit.decimals)
     }
     
-    private var primaryUnitValue: Double? {
-        return Double(primaryUnitString)
+    private var commonUnitValue: Double? {
+        // NB: assumes common units are small enough to fit a  Double
+        return Double(commonUnitString)
     }
 }

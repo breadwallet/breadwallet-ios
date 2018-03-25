@@ -23,7 +23,7 @@ class AmountViewController : UIViewController, Trackable {
         if let rate = currency.state.currentRate, Store.state.isBtcSwapped {
             self.currencyToggle = ShadowButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
-            let title = S.Symbols.currencyButtonTitle(currency: currency, maxDigits: currency.state.maxDigits)
+            let title = currency.unitName(forDecimals: currency.state.maxDigits)
             self.currencyToggle = ShadowButton(title: title, type: .tertiary)
         }
         self.feeSelector = FeeSelector()
@@ -314,11 +314,10 @@ class AmountViewController : UIViewController, Trackable {
 
     private func updateAmountLabel() {
         guard let amount = amount else { amountLabel.text = ""; return }
-        //TODO:ETH
         let displayAmount = Amount(amount: UInt256(amount.rawValue),
-                                          currency: Currencies.btc,
-                                          rate: selectedRate,
-                                          minimumFractionDigits: minimumFractionDigits)
+                                   currency: currency,
+                                   rate: selectedRate,
+                                   minimumFractionDigits: minimumFractionDigits)
         var output = displayAmount.description
         if hasTrailingDecimal {
             output = output.appending(NumberFormatter().currencyDecimalSeparator)
@@ -411,8 +410,7 @@ class AmountViewController : UIViewController, Trackable {
         if let rate = selectedRate {
             self.currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
         } else {
-            let title = S.Symbols.currencyButtonTitle(currency: currency, maxDigits: currency.state.maxDigits)
-            self.currencyToggle.title = title
+            currencyToggle.title = currency.unitName(forDecimals: currency.state.maxDigits)
         }
     }
 
@@ -425,17 +423,4 @@ extension Fees : Equatable {}
 
 func ==(lhs: Fees, rhs: Fees) -> Bool {
     return lhs.regular == rhs.regular && lhs.economy == rhs.economy
-}
-
-extension S.Symbols {
-    static func currencyButtonTitle(currency: CurrencyDef, maxDigits: Int) -> String {
-        let name = currency.unitName(maxDigits: maxDigits)
-        let symbol = currency.unitSymbol(maxDigits: maxDigits)
-        
-        if name.count > 0 {
-            return "\(name)\(S.Symbols.narrowSpace)(\(symbol))"
-        } else {
-            return symbol
-        }
-    }
 }

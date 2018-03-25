@@ -30,7 +30,7 @@ struct AssetListViewModel {
     private func balanceString(inFiatWithRate rate: Rate? = nil) -> String {
         guard let balance = currency.state.balance else { return "" }
         return Amount(amount: balance,
-                             currency: currency,
-                             rate: rate).description
+                      currency: currency,
+                      rate: rate).description
     }
 }

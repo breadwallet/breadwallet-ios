@@ -13,7 +13,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
     init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
-        self.rates = Currencies.btc.state.rates.filter { $0.code != C.btcCurrencyCode }
+        self.rates = Currencies.btc.state.rates.filter { $0.code != Currencies.btc.code }
         super.init(style: .plain)
     }
 
