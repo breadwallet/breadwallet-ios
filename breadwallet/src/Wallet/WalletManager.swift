@@ -397,13 +397,13 @@ extension BTCWalletManager : BRWalletListener {
     private func showReceived(amount: UInt64) {
         if let rate = currency.state.currentRate {
             let tokenAmount = Amount(amount: UInt256(amount),
-                                            currency: currency,
-                                            rate: nil,
-                                            minimumFractionDigits: 0)
+                                     currency: currency,
+                                     rate: nil,
+                                     minimumFractionDigits: 0)
             let fiatAmount = Amount(amount: UInt256(amount),
-                                           currency: currency,
-                                           rate: rate,
-                                           minimumFractionDigits: 0)
+                                    currency: currency,
+                                    rate: rate,
+                                    minimumFractionDigits: 0)
             let primary = Store.state.isBtcSwapped ? fiatAmount.description : tokenAmount.description
             let secondary = Store.state.isBtcSwapped ? tokenAmount.description : fiatAmount.description
             let message = String(format: S.TransactionDetails.received, "\(primary) (\(secondary))")

@@ -53,15 +53,7 @@ extension BRAPIClient {
     }
     
     func exchangeRates(code: String, isFallback: Bool = false, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
-        var param = ""
-        switch code {
-        case Currencies.bch.code:
-            param = "?currency=bch"
-        case Currencies.eth.code:
-            param = "?currency=eth"
-        default:
-            param = ""
-        }
+        var param = "?currency=\(code.lowercased())"
         let request = isFallback ? URLRequest(url: URL(string: fallbackRatesURL)!) : URLRequest(url: url("/rates\(param)"))
         let task = dataTaskWithRequest(request) { (data, response, error) in
             if error == nil, let data = data,
