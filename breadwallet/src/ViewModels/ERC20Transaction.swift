@@ -18,6 +18,7 @@ struct ERC20Transaction: EthLikeTransaction {
     let status: TransactionStatus
     let direction: TransactionDirection
     let toAddress: String
+    let amount: UInt256
     let timestamp: TimeInterval
     let blockHeight: UInt64 = 0 // TODO
     let confirmations: UInt64 = 0 // TODO
@@ -25,7 +26,6 @@ struct ERC20Transaction: EthLikeTransaction {
     
     // MARK: ETH-network transaction properties
     
-    let amount: UInt256
     let fromAddress: String
     
     // MARK: ERC20-specific properties

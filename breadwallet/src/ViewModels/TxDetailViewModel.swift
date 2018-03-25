@@ -81,8 +81,7 @@ extension TxDetailViewModel {
     /// The fiat exchange rate at the time of transaction
     /// Assumes fiat currency does not change
     private static func exchangeRateText(tx: Transaction) -> String? {
-        guard let tx = tx as? BtcTransaction,
-            let rate = tx.metaData?.exchangeRate,
+        guard let rate = tx.metaData?.exchangeRate,
             let symbol = tx.currency.state.currentRate?.currencySymbol else { return nil }
         
         let nf = NumberFormatter()
@@ -92,39 +91,36 @@ extension TxDetailViewModel {
     }
     
     private static func tokenAmount(tx: Transaction) -> String? {
-        guard let tx = tx as? BtcTransaction else { return nil }
-        let amount = Amount(amount: UInt256(tx.amount),
-                                   currency: tx.currency,
-                                   rate: nil,
-                                   negative: (tx.direction == .sent))
+        let amount = Amount(amount: tx.amount,
+                            currency: tx.currency,
+                            rate: nil,
+                            negative: (tx.direction == .sent))
         return amount.description
     }
     
     /// Fiat amount at current exchange rate and at original rate at time of transaction (if available)
     /// Returns (currentFiatAmount, originalFiatAmount)
     private static func fiatAmounts(tx: Transaction, currentRate: Rate) -> (String, String?) {
-        guard let tx = tx as? BtcTransaction else { return ("", nil) }
         if let txRate = tx.metaData?.exchangeRate {
             let originalRate = Rate(code: currentRate.code,
                                     name: currentRate.name,
                                     rate: txRate,
                                     reciprocalCode: currentRate.reciprocalCode)
-            let currentAmount = Amount(amount: UInt256(tx.amount),
-                                              currency: tx.currency,
-                                              rate: currentRate,
-                                              negative: false).description
-            let originalAmount = Amount(amount: UInt256(tx.amount),
-                                               currency: tx.currency,
-                                               rate: originalRate,
-                                               negative: false).description
+            let currentAmount = Amount(amount: tx.amount,
+                                       currency: tx.currency,
+                                       rate: currentRate,
+                                       negative: false).description
+            let originalAmount = Amount(amount: tx.amount,
+                                        currency: tx.currency,
+                                        rate: originalRate,
+                                        negative: false).description
             return (currentAmount, originalAmount)
-            
         } else {
             // no tx-time rate
-            let currentAmount = Amount(amount: UInt256(tx.amount),
-                                              currency: tx.currency,
-                                              rate: currentRate,
-                                              negative: false)
+            let currentAmount = Amount(amount: tx.amount,
+                                       currency: tx.currency,
+                                       rate: currentRate,
+                                       negative: false)
             return (currentAmount.description, nil)
         }
     }

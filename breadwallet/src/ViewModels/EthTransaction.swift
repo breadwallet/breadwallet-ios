@@ -18,6 +18,7 @@ struct EthTransaction: EthLikeTransaction {
     let status: TransactionStatus
     let direction: TransactionDirection
     let toAddress: String
+    let amount: UInt256
     let timestamp: TimeInterval
     let blockHeight: UInt64
     let confirmations: UInt64
@@ -25,7 +26,6 @@ struct EthTransaction: EthLikeTransaction {
     
     // MARK: ETH-network transaction properties
     
-    let amount: UInt256
     let fromAddress: String
     
     // MARK: ETH-specific properties

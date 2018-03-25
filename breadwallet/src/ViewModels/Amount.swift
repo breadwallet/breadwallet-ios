@@ -99,7 +99,6 @@ struct Amount {
     }
     
     private var commonUnitValue: Double? {
-        // NB: assumes common units are small enough to fit a  Double
         return Double(commonUnitString)
     }
 }

@@ -31,6 +31,7 @@ protocol Transaction {
     var direction: TransactionDirection { get }
     var timestamp: TimeInterval { get }
     var toAddress: String { get }
+    var amount: UInt256 { get }
     
     var metaData: TxMetaData? { get }
     var comment: String? { get }
@@ -53,7 +54,6 @@ extension Transaction {
 // MARK: -
 
 protocol EthLikeTransaction: Transaction {
-    var amount: UInt256 { get }
     var fromAddress: String { get }
 }
 
