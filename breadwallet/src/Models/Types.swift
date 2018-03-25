@@ -8,7 +8,7 @@
 
 import Foundation
 
-//MARK: - Satishis
+//MARK: - Satoshis
 struct Satoshis {
     let rawValue: UInt64
 }

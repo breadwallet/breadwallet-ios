@@ -19,8 +19,8 @@ protocol CurrencyDef {
     /// Primary unit symbol
     var symbol: String { get }
     var name: String { get }
-    /// Base unit to primary unit multiplier, power of 10
-    var baseUnitPower: Int { get }
+    /// The common unit used for fiat exchange rate and amount display
+    var commonUnit: CurrencyUnit { get }
     /// Primary + secondary color
     var colors: (UIColor, UIColor) { get }
     /// URL scheme for payment requests
@@ -31,10 +31,15 @@ protocol CurrencyDef {
     func isValidAddress(_ address: String) -> Bool
     /// Returns a URI with the given address
     func addressURI(_ address: String) -> String?
-    /// Returns the unit name for given denomination or empty string
-    func unitName(maxDigits: Int) -> String
-    /// Returns the unit symbol for given denomination or empty string
-    func unitSymbol(maxDigits: Int) -> String
+    
+    /// Returns the unit associated with the number of decimals
+    func unit(forDecimals decimals: Int) -> CurrencyUnit?
+    /// Returns the abbreviated name for given unit
+    func name(forUnit unit: CurrencyUnit) -> String
+    /// Returns the abbreviated unit name for given decimals
+    func unitName(forDecimals decimals: Int) -> String
+    /// Returns the symbol for given unit or its name if no symbol defined
+    func symbol(forUnit unit: CurrencyUnit) -> String
 }
 
 extension CurrencyDef {
@@ -51,20 +56,64 @@ extension CurrencyDef {
         return "\(scheme):\(address)"
     }
     
-    func unitName(maxDigits: Int) -> String {
-        return ""
+    func unit(forDecimals decimals: Int) -> CurrencyUnit? {
+        return TokenUnit(decimals: decimals, name: code)
     }
     
-    func unitSymbol(maxDigits: Int) -> String {
-        return ""
+    func name(forUnit unit: CurrencyUnit) -> String {
+        if unit.decimals == commonUnit.decimals {
+            return code.uppercased()
+        } else {
+            return unit.name
+        }
     }
+
+    func symbol(forUnit unit: CurrencyUnit) -> String {
+        if unit.decimals == commonUnit.decimals {
+            return symbol
+        } else {
+            return name(forUnit: unit)
+        }
+    }
+    
+    func unitName(forDecimals decimals: Int) -> String {
+        guard let unit = unit(forDecimals: decimals) else { return "" }
+        return name(forUnit: unit)
+    }
+}
+
+// MARK: - Units
+
+/// Represents the unit of account for a token
+protocol CurrencyUnit {
+    /// Base unit (e.g. Satoshis) multiplier, as a power of 10
+    var decimals: Int { get }
+    var name: String { get }
+}
+
+extension CurrencyUnit where Self: RawRepresentable, Self.RawValue == Int {
+    var decimals: Int { return rawValue }
+    var name: String { return String(describing: self) }
+}
+
+/// A generic token unit with variable decimals
+struct TokenUnit: CurrencyUnit {
+    var decimals: Int
+    var name: String
 }
 
 /// MARK: - Currency Definitions
 
 /// Bitcoin-compatible currency type
 struct Bitcoin: CurrencyDef {
-    let baseUnitPower: Int = 8 // 1 Satoshi = 1e-8 BTC
+    
+    enum Units: Int, CurrencyUnit {
+        case satoshi = 0
+        case bit = 2
+        case millibitcoin = 5
+        case bitcoin = 8 // 1 Satoshi = 1e-8 BTC
+    }
+    
     let name: String
     let code: String
     let symbol: String
@@ -72,6 +121,10 @@ struct Bitcoin: CurrencyDef {
     let dbPath: String
     let forkId: Int
     let urlScheme: String?
+    
+    var commonUnit: CurrencyUnit {
+        return Units.bitcoin
+    }
     
     func isValidAddress(_ address: String) -> Bool {
         if self.matches(Currencies.bch) {
@@ -90,41 +143,67 @@ struct Bitcoin: CurrencyDef {
         }
     }
     
-    func unitName(maxDigits: Int) -> String {
-        switch maxDigits {
-        case 2:
-            return "Bits"
-        case 8:
+    func unit(forDecimals decimals: Int) -> CurrencyUnit? {
+        return Units(rawValue: decimals)
+    }
+    
+    func name(forUnit unit: CurrencyUnit) -> String {
+        guard let unit = unit as? Units else { return "" }
+        switch unit {
+        case .satoshi:
+            return "sat"
+        case .bit:
+            return (self.code == Currencies.btc.code) ? "bits" : "μ\(code.uppercased())"
+        case .millibitcoin:
+            return "m\(code.uppercased())"
+        case .bitcoin:
             return code.uppercased()
-        default:
-            return ""
         }
     }
     
-    func unitSymbol(maxDigits: Int) -> String {
-        switch maxDigits {
-        case 2:
+    func symbol(forUnit unit: CurrencyUnit) -> String {
+        guard let unit = unit as? Units else { return "" }
+        switch unit {
+        case .bit:
             return S.Symbols.bits
-        case 5:
-            return "m\(S.Symbols.btc)"
-        case 8:
-            return S.Symbols.btc
+        case .millibitcoin:
+            return "m\(symbol)"
+        case .bitcoin:
+            return symbol
         default:
-            return S.Symbols.bits
+            return name(forUnit: unit)
         }
     }
 }
 
 /// Ethereum-compatible currency type
 struct Ethereum: CurrencyDef {
-    let baseUnitPower: Int = 18 // 1 Wei = 1e-18 ETH
+    
+    enum Units: Int, CurrencyUnit {
+        case wei = 0
+        case kwei = 3
+        case mwei = 6
+        case gwei = 9
+        case micro = 12
+        case milli = 15
+        case eth = 18 // 1 Wei = 1e-18 ETH
+    }
+    
     let name: String
     let code: String
     let symbol: String
     let colors: (UIColor, UIColor)
     
+    var commonUnit: CurrencyUnit {
+        return Units.eth
+    }
+    
     func isValidAddress(_ address: String) -> Bool {
         return address.isValidEthAddress
+    }
+    
+    func unit(forDecimals decimals: Int) -> CurrencyUnit? {
+        return Units(rawValue: decimals)
     }
 }
 
@@ -133,13 +212,25 @@ struct ERC20Token: CurrencyDef {
     let name: String
     let code: String
     let symbol: String
-    let baseUnitPower: Int
+    let decimals: Int
     let address: String
     let abi: String
     let colors: (UIColor, UIColor)
     
+    var commonUnit: CurrencyUnit {
+        return TokenUnit(decimals: decimals, name: code)
+    }
+    
     func isValidAddress(_ address: String) -> Bool {
         return address.isValidEthAddress
+    }
+    
+    func unitName<T>(_ unit: T) -> String where T : CurrencyUnit {
+        return code
+    }
+    
+    func unitSymbol<T>(_ unit: T) -> String where T : CurrencyUnit {
+        return symbol
     }
 }
 
@@ -167,7 +258,7 @@ struct Currencies {
     static let brd = ERC20Token(name: "Bread Token",
                                 code: "BRD",
                                 symbol: "🍞",
-                                baseUnitPower: 18,
+                                decimals: 18,
                                 address: "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6",
                                 abi: "", //TODO:BRD - add erc20 abi
                                 colors: (UIColor(red:0.95, green:0.65, blue:0.00, alpha:1.0), UIColor(red:0.95, green:0.35, blue:0.13, alpha:1.0)))
