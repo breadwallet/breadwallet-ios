@@ -236,9 +236,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             guard let address = addressCell.address else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             }
-            
-            guard currency.state.fees != nil else {
-                return showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
+
+            if currency.matches(Currencies.btc) {
+                guard currency.state.fees != nil else {
+                    return showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
+                }
             }
             guard address.isValidAddress else {
                 let message = String.init(format: S.Send.invalidAddressMessage, currency.name)
