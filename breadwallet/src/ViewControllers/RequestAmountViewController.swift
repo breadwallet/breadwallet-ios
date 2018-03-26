@@ -43,7 +43,7 @@ class RequestAmountViewController : UIViewController {
     }
 
     //MARK - PinPad State
-    private var amount: Satoshis? {
+    private var amount: Amount? {
         didSet {
             setQrCode()
         }

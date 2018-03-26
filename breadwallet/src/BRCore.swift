@@ -767,6 +767,16 @@ extension UInt256 {
         self = createUInt256Parse(string, Int32(radix), &status)
     }
     
+    public init(string: String, decimals: Int) {
+        // createUInt256ParseDecimal skips decimal conversion for integer inputs
+        var decimalString = string
+        if decimalString.index(of: ".") == nil {
+            decimalString.append(".")
+        }
+        var status: BRCoreParseStatus = CORE_PARSE_OK
+        self = createUInt256ParseDecimal(decimalString, Int32(decimals), &status)
+    }
+    
     public func string(radix: Int) -> String {
         guard let buf = coerceString(self, Int32(radix)) else { return "" }
         let str = String(cString: buf)
@@ -815,6 +825,10 @@ extension UInt256 {
         let result = subUInt256_Negative(l, r, &negative)
         return (negative > 0) ? UInt256(0) : result
     }
+    
+    public static func += (l: inout UInt256, r: UInt256) {
+        l = l + r
+    }
 }
 
 extension UInt256: Codable {
@@ -861,6 +875,14 @@ extension UInt256: Comparable {
         return eqUInt256(l, r) == 1
     }
     
+    static public func == (l: UInt256, r: UInt64) -> Bool {
+        return eqUInt256(l, UInt256(r)) == 1
+    }
+    
+    static public func == (l: UInt64, r: UInt256) -> Bool {
+        return eqUInt256(UInt256(l), r) == 1
+    }
+    
     static public func != (l: UInt256, r: UInt256) -> Bool {
         return eqUInt256(l, r) == 0
     }
@@ -877,12 +899,28 @@ extension UInt256: Comparable {
         return ltUInt256(UInt256(l), r) == 1
     }
     
+    static public func <= (l: UInt64, r: UInt256) -> Bool {
+        return UInt256(l) < r || UInt256(l) == r
+    }
+    
+    static public func <= (l: UInt256, r: UInt64) -> Bool {
+        return l < UInt256(r) || l == UInt256(r)
+    }
+    
     static public func > (l: UInt256, r: UInt64) -> Bool {
         return gtUInt256(l, UInt256(r)) == 1
     }
     
     static public func > (l: UInt64, r: UInt256) -> Bool {
         return gtUInt256(UInt256(l), r) == 1
+    }
+    
+    static public func >= (l: UInt64, r: UInt256) -> Bool {
+        return UInt256(l) > r || UInt256(l) == r
+    }
+    
+    static public func >= (l: UInt256, r: UInt64) -> Bool {
+        return l > UInt256(r) || l == UInt256(r)
     }
 }
 
