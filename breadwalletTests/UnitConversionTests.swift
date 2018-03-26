@@ -38,6 +38,13 @@ class UnitConversionTests : XCTestCase {
         XCTAssertEqual(String(UInt256(0x1001), radix: 16), "1001")
         XCTAssertEqual(String(UInt256(0x0102030405060708), radix: 16), "102030405060708")
         XCTAssertEqual(String(sample, radix: 16), "123456789abcdefedcba98765432123456789abcdef")
+        
+        // Satoshis -> BTC
+        XCTAssertEqual("1.23456789", UInt256(123456789).string(decimals: 8))
+        
+        // Wei -> ETH
+        XCTAssertEqual("1.234567891234567891", UInt256(1234567891234567891).string(decimals: 18))
+        
     }
     
     func testStringToUInt256() {
@@ -58,5 +65,16 @@ class UnitConversionTests : XCTestCase {
         actual = UInt256(255)
         XCTAssertEqual(hex, actual)
         XCTAssertEqual(base10, actual)
+        
+        // BTC -> Satoshis
+        XCTAssertEqual(UInt256(string: "1", decimals: 8), UInt256(100000000))
+        XCTAssertEqual(UInt256(string: "1.23456789", decimals: 8), UInt256(123456789))
+        
+        // ETH -> Wei
+        XCTAssertEqual(UInt256(string: "1", decimals: 18), UInt256(1000000000000000000))
+        XCTAssertEqual(UInt256(string: "1.0", decimals: 18), UInt256(1000000000000000000))
+        XCTAssertEqual(UInt256(string: "1.23456", decimals: 18), UInt256(123456))
+        XCTAssertEqual(UInt256(string: "1.2345678", decimals: 18), UInt256(12345678))
+        XCTAssertEqual(UInt256(string: "1.234567891234567891", decimals: 18), UInt256(1234567891234567891))
     }
 }

@@ -16,11 +16,26 @@ struct Amount {
     let minimumFractionDigits: Int?
     let negative: Bool
     
+    //TODO:ETH
+    var rawValue: UInt256 { return amount }
+    
     init(amount: UInt256, currency: CurrencyDef, rate: Rate? = nil, minimumFractionDigits: Int? = nil, negative: Bool = false) {
         self.amount = amount
+        self.currency = currency
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
+        self.negative = negative
+    }
+    
+    init(string: String, currency: CurrencyDef, unit: CurrencyUnit? = nil, rate: Rate? = nil, minimumFractionDigits: Int? = nil, negative: Bool = false) {
+        var decimals = currency.commonUnit.decimals
+        if let unit = unit {
+            decimals = unit.decimals
+        }
+        self.amount = UInt256(string: string, decimals: decimals)
         self.currency = currency
+        self.rate = rate
+        self.minimumFractionDigits = minimumFractionDigits
         self.negative = negative
     }
     

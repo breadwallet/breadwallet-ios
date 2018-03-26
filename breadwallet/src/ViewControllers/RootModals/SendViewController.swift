@@ -54,8 +54,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
-    private var balance: UInt64 = 0
-    private var amount: Satoshis?
+    private var balance: UInt256 = 0
+    private var amount: Amount?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
     private let initialRequest: PaymentRequest?
@@ -97,8 +97,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         Store.subscribe(self, selector: { $0[self.currency].balance != $1[self.currency].balance },
                         callback: { [unowned self] in
                             if let balance = $0[self.currency].balance {
-                                //TODO:ETH
-                                self.balance = balance.asUInt64
+                                self.balance = balance
                             }
         })
         Store.subscribe(self, selector: { $0[self.currency].fees != $1[self.currency].fees }, callback: { [unowned self] in
@@ -171,18 +170,18 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             }
         }
     }
-
-    //TODO:ETH
-    private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount = Amount(amount: UInt256(balance), currency: currency, rate: rate, minimumFractionDigits: 0)
+    
+    private func balanceTextForAmount(amount: Amount?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
+        let balanceAmount = Amount(amount: balance, currency: currency, rate: rate, minimumFractionDigits: 0)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
         var color: UIColor = .grayTextTint
         var feeColor: UIColor = .grayTextTint
-        if let amount = amount, amount.rawValue > 0 {
+        
+        if let amount = amount, amount.rawValue > UInt256(0) {
             if let fee = sender.feeForTx(amount: amount.rawValue) {
-                let feeAmount = Amount(amount: UInt256(fee), currency: currency, rate: rate, minimumFractionDigits: 0)
+                let feeAmount = Amount(amount: fee, currency: currency, rate: rate, minimumFractionDigits: 0)
                 let feeText = feeAmount.description
                 feeOutput = String(format: S.Send.fee, feeText)
                 if (balance >= fee) && amount.rawValue > (balance - fee) {
@@ -262,14 +261,21 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             guard amount.rawValue <= (walletManager.wallet?.maxOutputAmount ?? 0) else {
                 return showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
             }
-            guard sender.createTransaction(amount: amount.rawValue, to: address) else {
+            //TODO:ETH
+            guard sender.createTransaction(amount: amount.rawValue.asUInt64, to: address) else {
                 return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
             }
         }
 
         guard let amount = amount else { return }
         //TODO:ETH
-        let confirm = ConfirmationViewController(amount: UInt256(amount.rawValue), fee: UInt256(sender.fee), feeType: feeType ?? .regular, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.displayAddress ?? "", isUsingBiometrics: sender.canUseBiometrics)
+        let confirm = ConfirmationViewController(amount: amount.rawValue,
+                                                 fee: sender.fee,
+                                                 feeType: feeType ?? .regular,
+                                                 selectedRate: amountView.selectedRate,
+                                                 minimumFractionDigits: amountView.minimumFractionDigits,
+                                                 address: addressCell.displayAddress ?? "",
+                                                 isUsingBiometrics: sender.canUseBiometrics)
         confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
                 self.send()
@@ -379,12 +385,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
 
         //TODO: check for duplicates of already paid requests
-        var requestAmount = Satoshis(0)
+        var requestAmount = UInt256(0)
         protoReq.details.outputs.forEach { output in
             if output.amount > 0 && output.amount < wallet.minOutputAmount {
                 isOutputTooSmall = true
             }
-            requestAmount += output.amount
+            requestAmount += UInt256(output.amount)
         }
 
         if wallet.containsAddress(address) {
@@ -414,14 +420,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             addressCell.setContent(protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized)
         }
 
-        if requestAmount > 0 {
-            amountView.forceUpdateAmount(amount: requestAmount)
+        if requestAmount > UInt256(0) {
+            amountView.forceUpdateAmount(amount: Amount(amount: requestAmount, currency: currency))
         }
         memoCell.content = protoReq.details.memo
 
         if requestAmount == 0 {
             if let amount = amount {
-                guard sender.createTransaction(amount: amount.rawValue, to: address) else {
+                //TODO:ETH
+                guard sender.createTransaction(amount: amount.rawValue.asUInt64, to: address) else {
                     return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
                 }
             }

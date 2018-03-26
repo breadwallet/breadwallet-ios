@@ -45,7 +45,7 @@ struct PaymentRequest {
                         
                         switch key {
                         case "amount":
-                            amount = Satoshis(btcString: value)
+                            amount = Amount(string: value, currency: currency)
                         case "label", "memo":
                             label = value
                         case "message":
@@ -131,8 +131,9 @@ struct PaymentRequest {
         }.resume()
     }
 
-    static func requestString(withAddress address: String, forAmount: UInt64, currency: CurrencyDef) -> String {
-        let btcAmount = convertToBTC(fromSatoshis: forAmount)
+    static func requestString(withAddress address: String, forAmount amount: UInt256, currency: CurrencyDef) -> String {
+        //TODO:ETH
+        let btcAmount = amount.string(decimals: currency.commonUnit.decimals)
         guard let uri = currency.addressURI(address) else { return "" }
         return "\(uri)?amount=\(btcAmount)"
     }
@@ -147,18 +148,11 @@ struct PaymentRequest {
         }
     }
     let type: PaymentRequestType
-    var amount: Satoshis?
+    var amount: Amount?
     var label: String?
     var message: String?
     var remoteRequest: NSURL?
     var paymentProtoclRequest: PaymentProtocolRequest?
     var r: URL?
     var warningMessage: String? //Displayed to the user before the send view fields are populated
-}
-
-private func convertToBTC(fromSatoshis: UInt64) -> String {
-    var decimal = Decimal(fromSatoshis)
-    var amount: Decimal = 0.0
-    NSDecimalMultiplyByPowerOf10(&amount, &decimal, -8, .up)
-    return NSDecimalNumber(decimal: amount).stringValue
 }

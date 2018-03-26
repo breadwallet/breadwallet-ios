@@ -31,8 +31,8 @@ class AmountViewController : UIViewController, Trackable {
         super.init(nibName: nil, bundle: nil)
     }
 
-    var balanceTextForAmount: ((Satoshis?, Rate?) -> (NSAttributedString?, NSAttributedString?)?)?
-    var didUpdateAmount: ((Satoshis?) -> Void)?
+    var balanceTextForAmount: ((Amount?, Rate?) -> (NSAttributedString?, NSAttributedString?)?)?
+    var didUpdateAmount: ((Amount?) -> Void)?
     var didChangeFirstResponder: ((Bool) -> Void)?
 
     //TODO:ETH
@@ -74,7 +74,7 @@ class AmountViewController : UIViewController, Trackable {
     
     var canEditFee: Bool = true
     
-    func forceUpdateAmount(amount: Satoshis) {
+    func forceUpdateAmount(amount: Amount) {
         self.amount = amount
         fullRefresh()
     }
@@ -106,7 +106,7 @@ class AmountViewController : UIViewController, Trackable {
     private let editFee = UIButton(type: .system)
     private let feeSelector: FeeSelector
 
-    private var amount: Satoshis? {
+    private var amount: Amount? {
         didSet {
             updateAmountLabel()
             updateBalanceLabel()
@@ -261,15 +261,6 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func handlePinPadUpdate(output: String) {
-        handleBtcOutput(output: output)
-    }
-
-    //TODO:ETH
-//    private func handleEthOutput(output: String) {
-//        //TODO:AC
-//    }
-
-    private func handleBtcOutput(output: String) {
         let currencyDecimalSeparator = NumberFormatter().currencyDecimalSeparator ?? "."
         placeholder.isHidden = output.utf8.count > 0 ? true : false
         minimumFractionDigits = 0 //set default
@@ -286,35 +277,27 @@ class AmountViewController : UIViewController, Trackable {
             }
         }
 
-        var newAmount: Satoshis?
-        if let outputAmount = NumberFormatter().number(from: output)?.doubleValue {
-            if let rate = selectedRate {
-                newAmount = Satoshis(value: outputAmount, rate: rate)
-            } else {
-                if currency.state.maxDigits == 2 {
-                    let bits = Bits(rawValue: outputAmount)
-                    newAmount = Satoshis(bits: bits)
-                } else {
-                    let bitcoin = Bitcoins(rawValue: outputAmount)
-                    newAmount = Satoshis(bitcoin: bitcoin)
-                }
-            }
-        }
-
-        if let newAmount = newAmount {
-            if newAmount > C.maxMoney {
-                pinPad.removeLast()
-            } else {
-                amount = newAmount
-            }
+        if let unit = currency.unit(forDecimals: currency.state.maxDigits) {
+            amount = Amount(string: output, currency: currency, unit: unit, rate: selectedRate)
         } else {
             amount = nil
         }
+        
+        //TODO:ETH allow entry > maxMoney?
+//        if let newAmount = newAmount {
+//            if newAmount > C.maxMoney {
+//                pinPad.removeLast()
+//            } else {
+//                amount = newAmount
+//            }
+//        } else {
+//            amount = nil
+//        }
     }
 
     private func updateAmountLabel() {
         guard let amount = amount else { amountLabel.text = ""; return }
-        let displayAmount = Amount(amount: UInt256(amount.rawValue),
+        let displayAmount = Amount(amount: amount.rawValue,
                                    currency: currency,
                                    rate: selectedRate,
                                    minimumFractionDigits: minimumFractionDigits)
@@ -330,7 +313,7 @@ class AmountViewController : UIViewController, Trackable {
         if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
             balanceLabel.attributedText = balance
             feeLabel.attributedText = fee
-            if let amount = amount, amount > 0, !isRequesting {
+            if let amount = amount, amount.rawValue > UInt256(0), !isRequesting {
                 editFee.isHidden = !canEditFee
             } else {
                 editFee.isHidden = true
@@ -380,7 +363,7 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func updateBalanceAndFeeLabels() {
-        if let amount = amount, amount.rawValue > 0 {
+        if let amount = amount, amount.rawValue > UInt256(0) {
             balanceLabel.isHidden = false
             if !isRequesting {
                 editFee.isHidden = !canEditFee

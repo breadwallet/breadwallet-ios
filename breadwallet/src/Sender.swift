@@ -45,9 +45,19 @@ class Sender {
         transaction = walletManager.wallet?.createTxForOutputs(forPaymentProtocol.details.outputs)
     }
 
-    var fee: UInt64 {
-        guard let tx = transaction else { return 0 }
-        return walletManager.wallet?.feeForTx(tx) ?? 0
+    var fee: UInt256 {
+        switch currency {
+        case is Bitcoin:
+            guard let tx = transaction, let fee = walletManager.wallet?.feeForTx(tx) else { return 0 }
+            return UInt256(fee)
+        case is Ethereum:
+            //TODO:ETH
+            return UInt256(21000)
+        default:
+            //TODO:ERC20
+            assertionFailure("unsupported")
+            return UInt256(0)
+        }
     }
 
     var canUseBiometrics: Bool {
@@ -55,9 +65,19 @@ class Sender {
         return walletManager.canUseBiometrics(forTx: tx)
     }
 
-    func feeForTx(amount: UInt64) -> UInt64? {
-        let fee = walletManager.wallet?.feeForTx(amount:amount)
-        return fee == 0 ? nil : fee
+    func feeForTx(amount: UInt256) -> UInt256? {
+        switch currency {
+        case is Bitcoin:
+            guard let fee = walletManager.wallet?.feeForTx(amount: amount.asUInt64) else { return nil }
+            return UInt256(fee)
+        case is Ethereum:
+            //TODO:ETH
+            return UInt256(21000)
+        default:
+            //TODO:ERC20
+            assertionFailure("unsupported")
+            return UInt256(0)
+        }
     }
 
     //Amount in bits
