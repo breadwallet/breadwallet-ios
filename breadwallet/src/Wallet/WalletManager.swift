@@ -112,7 +112,7 @@ class EthWalletManager : WalletManager {
         let gasPrice = gasPriceCreate((etherCreate(UInt256(22000000000))))
         let gasLimit = gasCreate(UInt64(21000))
         let nonce = Int32(Store.state.wallets[currency.code]!.transactions.filter { $0.direction == .sent }.count)
-        let tx = walletCreateTransactionDetailed(ethWallet, toAddress, amount, gasPrice, gasLimit, nonce)
+        let tx = walletCreateTransactionDetailed(ethWallet, toAddress, amount, gasPrice, gasLimit, UInt64(nonce))
         walletSignTransaction(ethWallet, tx, loadPhrase())
         let txString = walletGetRawTransactionHexEncoded(ethWallet, tx, "0x")
         apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { result in
