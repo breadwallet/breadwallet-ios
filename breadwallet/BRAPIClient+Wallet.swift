@@ -53,6 +53,7 @@ extension BRAPIClient {
     }
     
     func exchangeRates(code: String, isFallback: Bool = false, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
+        guard Currencies.eth.code != code else { return exchangeRate(code: code, handler) }
         let param = "?currency=\(code.lowercased())"
         let request = isFallback ? URLRequest(url: URL(string: fallbackRatesURL)!) : URLRequest(url: url("/rates\(param)"))
         let task = dataTaskWithRequest(request) { (data, response, error) in
@@ -79,6 +80,28 @@ extension BRAPIClient {
             }
         }
         task.resume()
+    }
+
+    //For rate endpoint that returns rate in relation to btc
+    func exchangeRate(code: String, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
+        let param = "?currency=\(code.lowercased())"
+        let request = URLRequest(url: url("/rates\(param)"))
+        dataTaskWithRequest(request, handler: { data, response, error in
+            if error == nil, let data = data {
+                do {
+                    let rates = try JSONDecoder().decode(BTCRateResponse.self, from: data).body
+                    let ethRate = rates.first!
+                    let ethRates = Store.state.wallets[Currencies.btc.code]?.rates.map {
+                        return Rate(code: $0.code, name: $0.name, rate: $0.rate*ethRate.rate, reciprocalCode: code.lowercased())
+                    }
+                    handler(ethRates!, nil)
+                } catch let e {
+                    handler([], e.localizedDescription)
+                }
+            } else {
+                handler([], error?.localizedDescription)
+            }
+        }).resume()
     }
     
     func savePushNotificationToken(_ token: Data) {
@@ -134,14 +157,14 @@ extension BRAPIClient {
     }
 }
 
-struct ExchangeRateResponse : Codable {
-    let status: String
-    let message: String
-    let result: EthRate
+struct BTCRateResponse : Codable {
+    let body: [BTCRate]
 }
 
-struct EthRate : Codable {
-    let ethbtc: String
+struct BTCRate : Codable {
+    let code: String
+    let name: String
+    let rate: Double
 }
 
 private func pushNotificationEnvironment() -> String {
