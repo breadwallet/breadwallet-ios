@@ -59,7 +59,7 @@ class EthWalletManager : WalletManager {
     var account: BREthereumAccount?
     var ethWallet: BREthereumWallet?
     private var timer: Timer? = nil
-    private let updateInterval: TimeInterval = 15
+    private let updateInterval: TimeInterval = 5
 
     init() {
         guard var words = Words.rawWordList else { return }

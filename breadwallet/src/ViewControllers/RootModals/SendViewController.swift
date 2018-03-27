@@ -236,13 +236,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             guard let address = addressCell.address else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             }
-
             if currency.matches(Currencies.btc) {
                 guard currency.state.fees != nil else {
                     return showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
                 }
             }
-            guard address.isValidAddress else {
+            guard currency.isValidAddress(address) else {
                 let message = String.init(format: S.Send.invalidAddressMessage, currency.name)
                 return showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
             }
@@ -260,11 +259,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             guard !(walletManager.wallet?.containsAddress(address) ?? false) else {
                 return showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
             }
-            guard amount.rawValue <= (walletManager.wallet?.maxOutputAmount ?? 0) else {
-                return showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
+            if currency.matches(Currencies.btc) || currency.matches(Currencies.bch) {
+                guard amount.rawValue <= (walletManager.wallet?.maxOutputAmount ?? 0) else {
+                    return showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
+                }
             }
-            //TODO:ETH
-            guard sender.createTransaction(amount: amount.rawValue.asUInt64, to: address) else {
+            guard sender.createTransaction(amount: amount.rawValue, to: address) else {
                 return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
             }
         }
@@ -339,12 +339,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
     private func send() {
         guard let rate = currency.state.currentRate else { return }
-        guard let feePerKb = walletManager.wallet?.feePerKb else { return }
 
         sender.send(biometricsMessage: S.VerifyPin.touchIdMessage,
                     rate: rate,
                     comment: memoCell.textView.text,
-                    feePerKb: feePerKb,
+                    feePerKb: walletManager.wallet?.feePerKb ?? 0,
                     verifyPinFunction: { [weak self] pinValidationCallback in
                         self?.presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin in
                             self?.parent?.view.isFrameChangeBlocked = false
@@ -430,7 +429,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         if requestAmount == 0 {
             if let amount = amount {
                 //TODO:ETH
-                guard sender.createTransaction(amount: amount.rawValue.asUInt64, to: address) else {
+                guard sender.createTransaction(amount: amount.rawValue, to: address) else {
                     return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
                 }
             }
