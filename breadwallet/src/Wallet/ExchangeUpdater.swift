@@ -27,8 +27,10 @@ class ExchangeUpdater : Subscriber {
     }
 
     func refresh(completion: @escaping () -> Void) {
+        //TODO:ETH - use new /rates endpoint
+        let regularCurrencies = [Currencies.btc, Currencies.bch]
         let dispatchGroup = DispatchGroup()
-        currencies.forEach { currency in
+        regularCurrencies.forEach { currency in
             dispatchGroup.enter()
             apiClient.exchangeRates(code: currency.code) { rates, error in
                 guard let currentRate = rates.first( where: { $0.code == Store.state.defaultCurrencyCode }) else { completion(); return }
@@ -37,7 +39,11 @@ class ExchangeUpdater : Subscriber {
             }
         }
         dispatchGroup.notify(queue: .main) {
-            completion()
+            self.apiClient.exchangeRates(code: Currencies.eth.code) { rates, error in
+                guard let currentRate = rates.first( where: { $0.code == Store.state.defaultCurrencyCode }) else { completion(); return }
+                Store.perform(action: WalletChange(Currencies.eth).setExchangeRates(currentRate: currentRate, rates: rates))
+                completion()
+            }
         }
     }
 
