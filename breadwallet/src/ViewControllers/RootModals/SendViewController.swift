@@ -277,7 +277,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                                                  selectedRate: amountView.selectedRate,
                                                  minimumFractionDigits: amountView.minimumFractionDigits,
                                                  address: addressCell.displayAddress ?? "",
-                                                 isUsingBiometrics: sender.canUseBiometrics)
+                                                 isUsingBiometrics: sender.canUseBiometrics,
+                                                 currency: currency)
         confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
                 self.send()
