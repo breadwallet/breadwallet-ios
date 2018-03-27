@@ -35,9 +35,19 @@ class Sender {
     var comment: String?
     var feePerKb: UInt64?
 
-    func createTransaction(amount: UInt64, to: String) -> Bool {
-        transaction = walletManager.wallet?.createTransaction(forAmount: amount, toAddress: to)
-        return transaction != nil
+    //TODO:ETH - replace these with a tx protocol
+    var amount: UInt256?
+    var toAddress: String?
+
+    func createTransaction(amount: UInt256, to: String) -> Bool {
+        if currency.matches(Currencies.eth) {
+            self.amount = amount
+            self.toAddress = to
+            return true
+        } else {
+            transaction = walletManager.wallet?.createTransaction(forAmount: amount.asUInt64, toAddress: to)
+            return transaction != nil
+        }
     }
 
     func createTransaction(forPaymentProtocol: PaymentProtocolRequest) {
@@ -82,6 +92,14 @@ class Sender {
 
     //Amount in bits
     func send(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Void) -> Void, completion:@escaping (SendResult) -> Void) {
+        if currency.matches(Currencies.eth) {
+            sendEth(biometricsMessage: biometricsMessage, rate: rate, comment: comment, feePerKb: feePerKb, verifyPinFunction: verifyPinFunction, completion: completion)
+        } else {
+            sendBTC(biometricsMessage: biometricsMessage, rate: rate, comment: comment, feePerKb: feePerKb, verifyPinFunction: verifyPinFunction, completion: completion)
+        }
+    }
+
+    private func sendBTC(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Void) -> Void, completion:@escaping (SendResult) -> Void) {
         guard let tx = transaction else { return completion(.creationError(S.Send.createTransactionError)) }
 
         self.rate = rate
@@ -105,6 +123,21 @@ class Sender {
         } else {
             self.verifyPin(tx: tx, verifyPinFunction: verifyPinFunction, completion: completion)
         }
+    }
+
+    private func sendEth(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Void) -> Void, completion:@escaping (SendResult) -> Void) {
+        guard let ethWalletManager = walletManager as? EthWalletManager else { return }
+        verifyPinFunction({ [weak self] pin in
+            guard let myself = self else { return }
+            ethWalletManager.sendTx(toAddress: myself.toAddress!, amount: myself.amount!, callback: { result in
+                switch result {
+                case .success( _):
+                    completion(.success)
+                case .error(let error):
+                    completion(.creationError(error.localizedDescription))
+                }
+            })
+        })
     }
 
     private func verifyPin(tx: BRTxRef,
