@@ -47,16 +47,15 @@ struct Amount {
         return Store.state.isBtcSwapped ? "\(fiatDescription) (\(tokenDescription))" : "\(tokenDescription) (\(fiatDescription))"
     }
     
-    var tokenValue: Double {
-        let str = amount.string(decimals: currency.state.maxDigits)
-        return Double(str) ?? -1.0
+    var tokenValue: Decimal {
+        return Decimal(string: amount.string(decimals: currency.state.maxDigits)) ?? 0.0
     }
     
-    var fiatValue: Double {
+    var fiatValue: Decimal {
         guard let rate = rate ?? currency.state.currentRate,
             let value = commonUnitValue else { return 0.0 }
         let tokenAmount = value * (negative ? -1.0 : 1.0)
-        return tokenAmount * rate.rate
+        return tokenAmount * Decimal(rate.rate)
     }
 
     var fiatDescription: String {
@@ -72,8 +71,7 @@ struct Amount {
     }
 
     var tokenDescription: String {
-        let decimal = Decimal(tokenValue)
-        let number = NSDecimalNumber(decimal: decimal * (negative ? -1.0 : 1.0))
+        let number = NSDecimalNumber(decimal: tokenValue * (negative ? -1.0 : 1.0))
         guard let amount = tokenFormat.string(from: number) else { return "" }
         let unit = currency.unitName(forDecimals: currency.state.maxDigits)
         return "\(amount) \(unit)"
@@ -113,7 +111,7 @@ struct Amount {
         return amount.string(decimals: currency.commonUnit.decimals)
     }
     
-    private var commonUnitValue: Double? {
-        return Double(commonUnitString)
+    private var commonUnitValue: Decimal? {
+        return Decimal(string: commonUnitString)
     }
 }

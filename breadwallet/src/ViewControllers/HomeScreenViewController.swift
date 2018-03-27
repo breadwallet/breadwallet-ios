@@ -133,7 +133,7 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
     }
 
     private func updateTotalAssets() {
-        let fiatTotal = Store.state.currencies.map {
+        let fiatTotal: Decimal = Store.state.currencies.map {
             guard let balance = Store.state[$0].balance,
                 let rate = Store.state[$0].currentRate else { return 0.0 }
             let amount = Amount(amount: balance,
@@ -147,7 +147,7 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         format.currencySymbol = Store.state[Currencies.btc].currentRate?.currencySymbol ?? ""
-        self.total.text = format.string(from: NSNumber(value: fiatTotal))
+        self.total.text = format.string(from: fiatTotal as NSDecimalNumber)
     }
     
     private func setupSubscriptions() {
