@@ -210,16 +210,14 @@ extension TransactionsTableViewController {
     }
 
     private func transactionCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
-        if let transactionCell = cell as? TxListCell,
-            let rate = rate {
-            let viewModel = TxListViewModel(tx: transactions[indexPath.row])
-            transactionCell.setTransaction(viewModel,
-                                           isBtcSwapped: isBtcSwapped,
-                                           rate: rate,
-                                           maxDigits: currency.state.maxDigits,
-                                           isSyncing: currency.state.syncState != .success)
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath) as! TxListCell
+        let rate = self.rate ?? Rate.empty
+        let viewModel = TxListViewModel(tx: transactions[indexPath.row])
+        cell.setTransaction(viewModel,
+                            isBtcSwapped: isBtcSwapped,
+                            rate: rate,
+                            maxDigits: currency.state.maxDigits,
+                            isSyncing: currency.state.syncState != .success)
         return cell
     }
 }

@@ -254,7 +254,7 @@ struct Currencies {
     static let eth = Ethereum(name: "Ethereum",
                               code: "ETH",
                               symbol: S.Symbols.eth,
-                              colors: (UIColor(red:0.407843, green:0.529412, blue:0.654902, alpha:1.0), UIColor(red:0.180392, green:0.278431, blue:0.376471, alpha:1.0)))
+                              colors: (UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0), UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0)))
     static let brd = ERC20Token(name: "Bread Token",
                                 code: "BRD",
                                 symbol: "🍞",
