@@ -12,7 +12,8 @@ import BRCore
 
 class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
-    init(amount: UInt256, fee: UInt256, feeType: Fee, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool) {
+    //TODO:ETH - make this accept Amount params
+    init(amount: UInt256, fee: UInt256, feeType: Fee, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool, currency: CurrencyDef) {
         self.amount = amount
         self.feeAmount = fee
         self.feeType = feeType
@@ -20,6 +21,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         self.minimumFractionDigits = minimumFractionDigits
         self.addressText = address
         self.isUsingBiometrics = isUsingBiometrics
+        self.currency = currency
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -30,6 +32,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private let minimumFractionDigits: Int?
     private let addressText: String
     private let isUsingBiometrics: Bool
+    private let currency: CurrencyDef
 
     //ContentBoxPresenter
     let contentBox = UIView(color: .white)
@@ -139,9 +142,9 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         view.backgroundColor = .clear
         payLabel.text = S.Confirmation.send
 
-        let displayAmount = Amount(amount: amount, currency: Currencies.btc, rate: selectedRate, minimumFractionDigits: minimumFractionDigits)
-        let displayFee = Amount(amount: feeAmount, currency: Currencies.btc, rate: selectedRate, minimumFractionDigits: minimumFractionDigits)
-        let displayTotal = Amount(amount: amount + feeAmount, currency: Currencies.btc, rate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+        let displayAmount = Amount(amount: amount, currency: currency, rate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+        let displayFee = Amount(amount: feeAmount, currency: currency, rate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+        let displayTotal = Amount(amount: amount + feeAmount, currency: currency, rate: selectedRate, minimumFractionDigits: minimumFractionDigits)
 
         amountLabel.text = displayAmount.combinedDescription
 
