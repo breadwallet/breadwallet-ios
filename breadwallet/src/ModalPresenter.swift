@@ -52,10 +52,10 @@ class ModalPresenter : Subscriber, Trackable {
                         selector: { $0.alert != $1.alert && $1.alert != .none },
                         callback: { self.handleAlertChange($0.alert) })
         
-        Store.subscribe(self, name: .presentFaq(""), callback: {
+        Store.subscribe(self, name: .presentFaq("", nil), callback: {
             guard let trigger = $0 else { return }
-            if case .presentFaq(let articleId) = trigger {
-                self.presentFaq(articleId: articleId)
+            if case .presentFaq(let articleId, let currency) = trigger {
+                self.presentFaq(articleId: articleId, currency: currency)
             }
         })
 
@@ -197,12 +197,19 @@ class ModalPresenter : Subscriber, Trackable {
         })
     }
 
-    func presentFaq(articleId: String? = nil) {
+    func presentFaq(articleId: String? = nil, currency: CurrencyDef? = nil) {
         supportCenter.modalPresentationStyle = .overFullScreen
         supportCenter.modalPresentationCapturesStatusBarAppearance = true
         supportCenter.transitioningDelegate = supportCenter
-        //TODO:AC - add currency
-        let url = articleId == nil ? "/support?" : "/support/article?slug=\(articleId!)"
+        var url: String
+        if let articleId = articleId {
+            url = "/support/article?slug=\(articleId)"
+            if let currency = currency {
+                url += "&currency=\(currency.code.lowercased())"
+            }
+        } else {
+            url = "/support?"
+        }
         supportCenter.navigate(to: url)
         topViewController?.present(supportCenter, animated: true, completion: {})
     }
@@ -605,7 +612,7 @@ class ModalPresenter : Subscriber, Trackable {
         let start = StartImportViewController(walletManager: walletManager)
         start.addCloseNavigationItem(tintColor: .white)
         start.navigationItem.title = S.Import.title
-        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet, currency: walletManager.currency)
         faqButton.tintColor = .white
         start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
         nc.viewControllers = [start]

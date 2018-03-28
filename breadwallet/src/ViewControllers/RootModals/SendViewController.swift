@@ -476,6 +476,10 @@ extension SendViewController : ModalDisplayable {
     var faqArticleId: String? {
         return ArticleIds.sendBitcoin
     }
+    
+    var faqCurrency: CurrencyDef? {
+        return currency
+    }
 
     var modalTitle: String {
         return "\(S.Send.title) \(currency.code)"

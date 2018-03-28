@@ -21,7 +21,7 @@ class TxDetailViewController: UIViewController, Subscriber {
     
     private let container = UIView()
     private let tapView = UIView()
-    private let header = ModalHeaderView(title: "", style: .transaction, faqInfo: ArticleIds.transactionDetails)
+    private let header: ModalHeaderView
     private let footer = UIView()
     private let separator = UIView()
     private let detailsButton = UIButton(type: .custom)
@@ -55,6 +55,7 @@ class TxDetailViewController: UIViewController, Subscriber {
         self.transaction = transaction
         self.viewModel = TxDetailViewModel(tx: transaction)
         self.dataSource = TxDetailDataSource(viewModel: viewModel)
+        self.header = ModalHeaderView(title: "", style: .transaction, faqInfo: ArticleIds.transactionDetails, currency: transaction.currency)
         
         super.init(nibName: nil, bundle: nil)
         

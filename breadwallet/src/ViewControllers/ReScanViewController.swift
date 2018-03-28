@@ -12,7 +12,7 @@ class ReScanViewController : UIViewController, Subscriber {
 
     init(currency: CurrencyDef) {
         self.currency = currency
-        self.faq = .buildFaqButton(articleId: ArticleIds.reScan)
+        self.faq = .buildFaqButton(articleId: ArticleIds.reScan, currency: currency)
         super.init(nibName: nil, bundle: nil)
     }
 
