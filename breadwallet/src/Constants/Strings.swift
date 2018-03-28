@@ -141,8 +141,10 @@ enum S {
         static let failed = NSLocalizedString("Transaction.failed", value: "Failed", comment: "Transaction failed status text")
         static let sentTo = NSLocalizedString("Transaction.sentTo", value:"sent to %1$@", comment: "sent to <address>")
         static let receivedVia = NSLocalizedString("TransactionDetails.receivedVia", value:"received via %1$@", comment: "received via <address>")
+        static let receivedFrom = NSLocalizedString("TransactionDetails.receivedFrom", value:"received from %1$@", comment: "received from <address>")
         static let sendingTo = NSLocalizedString("Transaction.sendingTo", value:"sending to %1$@", comment: "sending to <address>")
         static let receivingVia = NSLocalizedString("TransactionDetails.receivingVia", value:"receiving via %1$@", comment: "receiving via <address>")
+        static let receivingFrom = NSLocalizedString("TransactionDetails.receivingFrom", value:"receiving from %1$@", comment: "receiving from <address>")
     }
 
     enum TransactionDetails {
@@ -158,6 +160,7 @@ enum S {
         
         static let statusHeader = NSLocalizedString("TransactionDetails.statusHeader", value:"Status", comment: "Status section header")
         static let commentsHeader = NSLocalizedString("TransactionDetails.commentsHeader", value:"Memo", comment: "Memo section header")
+        static let commentsPlaceholder = NSLocalizedString("TransactionDetails.commentsPlaceholder", value:"Add memo...", comment: "Memo field placeholder")
         static let amountHeader = NSLocalizedString("TransactionDetails.amountHeader", value:"Amount", comment: "Amount section header")
         static let txHashHeader = NSLocalizedString("TransactionDetails.txHashHeader", value:"Transaction ID", comment: "Transaction ID header")
         

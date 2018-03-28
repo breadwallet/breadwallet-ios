@@ -13,6 +13,7 @@ class TxMemoCell: TxDetailRowCell {
     // MARK: - Views
     
     fileprivate let textView = UITextView()
+    fileprivate let placeholderLabel = UILabel(font: .customBody(size: 14.0), color: .lightGray)
     
     // MARK: - Vars
 
@@ -24,6 +25,7 @@ class TxMemoCell: TxDetailRowCell {
     override func addSubviews() {
         super.addSubviews()
         container.addSubview(textView)
+        textView.addSubview(placeholderLabel)
     }
     
     override func addConstraints() {
@@ -35,6 +37,14 @@ class TxMemoCell: TxDetailRowCell {
             textView.topAnchor.constraint(equalTo: container.topAnchor),
             textView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
             ])
+        
+        placeholderLabel.constrain([
+            placeholderLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            placeholderLabel.topAnchor.constraint(equalTo: container.topAnchor),
+            placeholderLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+            placeholderLabel.widthAnchor.constraint(equalTo: textView.widthAnchor)
+            ])
+        placeholderLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
     
     override func setupStyle() {
@@ -46,6 +56,9 @@ class TxMemoCell: TxDetailRowCell {
         textView.isScrollEnabled = false
         textView.returnKeyType = .done
         textView.delegate = self
+        
+        placeholderLabel.textAlignment = .right
+        placeholderLabel.text = S.TransactionDetails.commentsPlaceholder
     }
     
     // MARK: -
@@ -54,6 +67,7 @@ class TxMemoCell: TxDetailRowCell {
         self.tableView = tableView
         self.viewModel = viewModel
         textView.text = viewModel.comment
+        placeholderLabel.isHidden = !textView.text.isEmpty
     }
     
     fileprivate func saveComment(comment: String) {
@@ -87,6 +101,7 @@ extension TxMemoCell: UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
+        placeholderLabel.isHidden = !textView.text.isEmpty
         // trigger cell resize
         tableView.beginUpdates()
         tableView.endUpdates()
