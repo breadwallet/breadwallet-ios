@@ -245,11 +245,20 @@ class AmountViewController : UIViewController, Trackable {
             }
         }
 
-        if let unit = currency.unit(forDecimals: currency.state.maxDigits) {
-            amount = Amount(string: output, currency: currency, unit: unit, rate: selectedRate)
+        if let rate = selectedRate {
+            amount = Amount(fiatString: output,
+                            currency: currency,
+                            rate: rate)
+        } else if let unit = currency.unit(forDecimals: currency.state.maxDigits) {
+            amount = Amount(tokenString: output,
+                            currency: currency,
+                            unit: unit,
+                            rate: selectedRate)
         } else {
             amount = nil
         }
+        
+        print(amount?.rawValue.string(radix:10) ?? "nil")
         
         //TODO:ETH allow entry > maxMoney?
 //        if let newAmount = newAmount {
