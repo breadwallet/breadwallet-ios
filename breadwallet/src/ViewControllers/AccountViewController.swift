@@ -28,6 +28,8 @@ class AccountViewController : UIViewController, Subscriber {
 
         if let btcWalletManager = walletManager as? BTCWalletManager {
             headerView.isWatchOnly = btcWalletManager.isWatchOnly
+        } else {
+            headerView.isWatchOnly = false
         }
 
         footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send(currency: walletManager.currency))) }

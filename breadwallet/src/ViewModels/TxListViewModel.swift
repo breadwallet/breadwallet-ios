@@ -22,14 +22,19 @@ struct TxListViewModel: TxViewModel {
         if let comment = comment, comment.count > 0, isComplete {
             return comment
         } else {
+            var address = tx.toAddress
             var format: String
             switch tx.direction {
             case .sent, .moved:
                 format = isComplete ? S.Transaction.sentTo : S.Transaction.sendingTo
             case .received:
-                format = isComplete ? S.Transaction.receivedVia : S.Transaction.receivingVia
+                if let tx = tx as? EthTransaction {
+                    format = isComplete ? S.Transaction.receivedFrom : S.Transaction.receivingFrom
+                    address = tx.fromAddress
+                } else {
+                    format = isComplete ? S.Transaction.receivedVia : S.Transaction.receivingVia
+                }
             }
-            var address = tx.toAddress
             if currency.matches(Currencies.bch) {
                 address = address.replacingOccurrences(of: "\(Currencies.bch.urlScheme!):", with: "")
             }
