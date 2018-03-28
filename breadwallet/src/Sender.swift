@@ -82,7 +82,7 @@ class Sender {
             return UInt256(fee)
         case is Ethereum:
             //TODO:ETH
-            return UInt256(21000)
+            return UInt256(21000)*UInt256(22000000000)
         default:
             //TODO:ERC20
             assertionFailure("unsupported")

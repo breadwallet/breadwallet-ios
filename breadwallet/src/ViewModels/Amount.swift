@@ -27,12 +27,25 @@ struct Amount {
         self.negative = negative
     }
     
-    init(string: String, currency: CurrencyDef, unit: CurrencyUnit? = nil, rate: Rate? = nil, minimumFractionDigits: Int? = nil, negative: Bool = false) {
-        var decimals = currency.commonUnit.decimals
-        if let unit = unit {
-            decimals = unit.decimals
-        }
-        self.amount = UInt256(string: string, decimals: decimals)
+    init(tokenString: String, currency: CurrencyDef, unit: CurrencyUnit? = nil, rate: Rate? = nil, minimumFractionDigits: Int? = nil, negative: Bool = false) {
+        let decimals = unit?.decimals ?? currency.commonUnit.decimals
+        self.amount = UInt256(string: tokenString, decimals: decimals)
+        self.currency = currency
+        self.rate = rate
+        self.minimumFractionDigits = minimumFractionDigits
+        self.negative = negative
+    }
+    
+    init?(fiatString: String, currency: CurrencyDef, rate: Rate, minimumFractionDigits: Int? = nil, negative: Bool = false) {
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = currency.commonUnit.decimals
+        formatter.minimumFractionDigits = 1
+        formatter.minimumIntegerDigits = 1
+        formatter.generatesDecimalNumbers = true
+        guard let fiatAmount = NumberFormatter().number(from: fiatString)?.decimalValue,
+            let commonUnitString = formatter.string(from: (fiatAmount / Decimal(rate.rate)) as NSDecimalNumber) else { return nil }
+        
+        self.amount = UInt256(string: commonUnitString, decimals: currency.commonUnit.decimals)
         self.currency = currency
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
