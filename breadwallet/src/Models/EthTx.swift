@@ -19,9 +19,13 @@ public struct EthTx {
     let blockNumber: UInt64
     let timeStamp: TimeInterval
     let value: UInt256
+    let gasPrice: UInt256
+    let gasLimit: UInt64
+    let gasUsed: UInt64
     let from: String
     let to: String
     let confirmations: UInt64
+    let nonce: UInt64
     let hash: String
     let isError: Bool
     
@@ -29,9 +33,13 @@ public struct EthTx {
         case blockNumber
         case timeStamp
         case value
+        case gasPrice
+        case gasLimit = "gas"
+        case gasUsed
         case from
         case to
         case confirmations
+        case nonce
         case hash
         case isError
     }
@@ -43,10 +51,12 @@ extension EthTx: Decodable {
         
         blockNumber = try container.decodeFromString(UInt64.self, forKey: .blockNumber)
         confirmations = try container.decodeFromString(UInt64.self, forKey: .confirmations)
+        nonce = try container.decodeFromString(UInt64.self, forKey: .nonce)
         timeStamp = try container.decodeFromString(TimeInterval.self, forKey: .timeStamp)
-        let valueString = try container.decode(String.self, forKey: .value)
-        self.value = UInt256(string: valueString, radix: 10) // TODO:ETH
-        //self.value = try container.decode(UInt256.self, forKey: .value)
+        value = try container.decode(UInt256.self, forKey: .value)
+        gasPrice = try container.decode(UInt256.self, forKey: .gasPrice)
+        gasLimit = try container.decodeFromString(UInt64.self, forKey: .gasLimit)
+        gasUsed = try container.decodeFromString(UInt64.self, forKey: .gasUsed)
         from = try container.decode(String.self, forKey: .from)
         to = try container.decode(String.self, forKey: .to)
         hash = try container.decode(String.self, forKey: .hash)
@@ -61,8 +71,12 @@ extension EthTx: Encodable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(String(blockNumber), forKey: .blockNumber)
         try container.encode(String(confirmations), forKey: .confirmations)
+        try container.encode(String(nonce), forKey: .nonce)
         try container.encode(String(timeStamp), forKey: .timeStamp)
         try container.encode(value, forKey: .value)
+        try container.encode(gasPrice, forKey: .gasPrice)
+        try container.encode(String(gasLimit), forKey: .gasLimit)
+        try container.encode(String(gasUsed), forKey: .gasUsed)
         try container.encode(from, forKey: .from)
         try container.encode(to, forKey: .to)
         try container.encode(hash, forKey: .hash)

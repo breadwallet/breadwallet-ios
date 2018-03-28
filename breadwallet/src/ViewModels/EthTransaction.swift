@@ -27,6 +27,9 @@ struct EthTransaction: EthLikeTransaction {
     // MARK: ETH-network transaction properties
     
     let fromAddress: String
+    let gasPrice: UInt256
+    let gasLimit: UInt64
+    let gasUsed: UInt64
     
     // MARK: ETH-specific properties
     
@@ -60,5 +63,8 @@ struct EthTransaction: EthLikeTransaction {
         confirmations = tx.confirmations
         fromAddress = tx.from
         toAddress = tx.to
+        gasPrice = tx.gasPrice
+        gasLimit = tx.gasLimit
+        gasUsed = tx.gasUsed
     }
 }

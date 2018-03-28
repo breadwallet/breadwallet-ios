@@ -21,6 +21,12 @@ struct TxDetailViewModel: TxViewModel {
     let transactionHash: String
     let tx: Transaction
     
+    // Ethereum-specific fields
+    var gasPrice: Amount?
+    var gasLimit: String?
+    var fee: Amount?
+    var total: Amount?
+    
     var title: String {
         guard status != .invalid else { return S.TransactionDetails.titleFailed }
         switch direction {
@@ -76,6 +82,14 @@ extension TxDetailViewModel {
         exchangeRate = TxDetailViewModel.exchangeRateText(tx: tx) ?? ""
         transactionHash = tx.hash
         self.tx = tx
+        
+        if let tx = tx as? EthLikeTransaction {
+            gasPrice = Amount(amount: tx.gasPrice, currency: tx.currency, rate: rate)
+            gasLimit = String(tx.gasLimit)
+            let totalFee = tx.gasPrice * UInt256(tx.gasUsed)
+            fee = Amount(amount: totalFee, currency: tx.currency, rate: rate)
+            total = Amount(amount: tx.amount + totalFee, currency: tx.currency, rate: rate)
+        }
     }
     
     /// The fiat exchange rate at the time of transaction

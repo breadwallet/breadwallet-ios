@@ -21,6 +21,10 @@ class TxDetailDataSource: NSObject {
         case exchangeRate
         case blockHeight
         case transactionId
+        case gasPrice
+        case gasLimit
+        case fee
+        case total
         
         var cellType: UITableViewCell.Type {
             switch self {
@@ -64,6 +68,10 @@ class TxDetailDataSource: NSObject {
             .transactionId
         ]
         
+        if viewModel.currency is Ethereum, let index = fields.index(of: .exchangeRate) {
+            fields.insert(contentsOf: [.gasPrice, .gasLimit, .fee, .total], at: index)
+        }
+        
         if viewModel.status == .complete, let index = fields.index(of: .status) {
             fields.remove(at: index)
         }
@@ -91,7 +99,14 @@ class TxDetailDataSource: NSObject {
             return S.TransactionDetails.blockHeightLabel
         case .transactionId:
             return S.TransactionDetails.txHashHeader
-            
+        case .gasPrice:
+            return S.TransactionDetails.gasPriceHeader
+        case .gasLimit:
+            return S.TransactionDetails.gasLimitHeader
+        case .fee:
+            return S.TransactionDetails.feeHeader
+        case .total:
+            return S.TransactionDetails.totalHeader
         default:
             return ""
         }
@@ -119,7 +134,6 @@ extension TxDetailDataSource: UITableViewDataSource {
         case .amount:
             let amountCell = cell as! TxAmountCell
             amountCell.set(viewModel: viewModel)
-            break
     
         case .status:
             let statusCell = cell as! TxStatusCell
@@ -149,6 +163,28 @@ extension TxDetailDataSource: UITableViewDataSource {
         case .transactionId:
             let addressCell = cell as! TxAddressCell
             addressCell.set(address: viewModel.transactionHash)
+            
+        case .gasPrice:
+            let labelCell = cell as! TxLabelCell
+            if let amount = viewModel.gasPrice {
+                labelCell.value = amount.tokenDescription(inUnit: Ethereum.Units.gwei)
+            }
+            
+        case .gasLimit:
+            let labelCell = cell as! TxLabelCell
+            labelCell.value = viewModel.gasLimit ?? ""
+            
+        case .fee:
+            let labelCell = cell as! TxLabelCell
+            if let amount = viewModel.fee {
+                labelCell.value = Store.state.isBtcSwapped ? amount.fiatDescription : amount.tokenDescription
+            }
+            
+        case .total:
+            let labelCell = cell as! TxLabelCell
+            if let amount = viewModel.total {
+                labelCell.value = Store.state.isBtcSwapped ? amount.fiatDescription : amount.tokenDescription
+            }
         }
         
         return cell
