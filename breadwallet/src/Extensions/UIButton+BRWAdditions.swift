@@ -40,10 +40,10 @@ extension UIButton {
         return UIButton.icon(image: #imageLiteral(resourceName: "Close"), accessibilityLabel: accessibilityLabel)
     }
 
-    static func buildFaqButton(articleId: String) -> UIButton {
+    static func buildFaqButton(articleId: String, currency: CurrencyDef? = nil) -> UIButton {
         let button = UIButton.icon(image: #imageLiteral(resourceName: "Faq"), accessibilityLabel: S.AccessibilityLabels.faq)
         button.tap = {
-            Store.trigger(name: .presentFaq(articleId))
+            Store.trigger(name: .presentFaq(articleId, currency))
         }
         return button
     }

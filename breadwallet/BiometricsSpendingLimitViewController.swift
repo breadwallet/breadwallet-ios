@@ -41,6 +41,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
         titleLabel.sizeToFit()
         navigationItem.titleView = titleLabel
 
+        //TODO:ETH pass currency to faq button
         let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.touchIdSpendingLimit)
         faqButton.tintColor = .darkText
         navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]

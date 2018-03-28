@@ -37,7 +37,7 @@ struct Trigger {
 }
 
 enum TriggerName {
-    case presentFaq(String)
+    case presentFaq(String, CurrencyDef?)
     case registerForPushNotificationToken
     case retrySync(CurrencyDef)
     case rescan(CurrencyDef)
@@ -73,7 +73,7 @@ extension TriggerName : Equatable {}
 
 func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     switch (lhs, rhs) {
-    case (.presentFaq(_), .presentFaq(_)):
+    case (.presentFaq(_,_), .presentFaq(_,_)):
         return true
     case (.registerForPushNotificationToken, .registerForPushNotificationToken):
         return true

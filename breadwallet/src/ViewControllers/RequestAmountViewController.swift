@@ -245,6 +245,10 @@ extension RequestAmountViewController : ModalDisplayable {
     var faqArticleId: String? {
         return ArticleIds.requestAmount
     }
+    
+    var faqCurrency: CurrencyDef? {
+        return currency
+    }
 
     var modalTitle: String {
         return S.Receive.request

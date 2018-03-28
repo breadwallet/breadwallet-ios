@@ -262,6 +262,10 @@ extension ReceiveViewController : ModalDisplayable {
     var faqArticleId: String? {
         return ArticleIds.receiveBitcoin
     }
+    
+    var faqCurrency: CurrencyDef? {
+        return currency
+    }
 
     var modalTitle: String {
         return "\(S.Receive.title) \(currency.code)"

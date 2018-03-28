@@ -141,7 +141,7 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
             instruction.isHidden = true
             moreInfoButton.setTitle(S.RecoverWallet.resetPinInfo, for: .normal)
             moreInfoButton.tap = {
-                Store.trigger(name: .presentFaq(ArticleIds.resetPinWithPaperKey))
+                Store.trigger(name: .presentFaq(ArticleIds.resetPinWithPaperKey, nil))
             }
             faq.isHidden = true
         case .validateForWipingWallet(_):
