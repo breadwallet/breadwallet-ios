@@ -134,7 +134,14 @@ class Sender {
                 case .success( _):
                     completion(.success)
                 case .error(let error):
-                    completion(.creationError(error.localizedDescription))
+                    switch error {
+                    case .httpError(let e):
+                        completion(.creationError(e?.localizedDescription ?? ""))
+                    case .jsonError(let e):
+                        completion(.creationError(e?.localizedDescription ?? ""))
+                    case .rpcError(let e):
+                        completion(.creationError(e.message))
+                    }
                 }
             })
         })
