@@ -27,7 +27,11 @@ struct ERC20Transaction: EthLikeTransaction {
     // MARK: ETH-network transaction properties
     
     let fromAddress: String
-    
+    //TODO:ERC20
+    let gasPrice: UInt256 = 0
+    let gasLimit: UInt64 = 0
+    let gasUsed: UInt64 = 0
+   
     // MARK: ERC20-specific properties
     
     let event: Event

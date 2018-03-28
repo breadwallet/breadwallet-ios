@@ -179,6 +179,10 @@ enum S {
         static let addressViaHeader = NSLocalizedString("TransactionDetails.addressViaHeader", value:"Via", comment: "Address received at header")
         static let addressFromHeader = NSLocalizedString("TransactionDetails.addressFromHeader", value:"From", comment: "Address received from header")
         
+        static let totalHeader = NSLocalizedString("TransactionDetails.totalHeader", value:"Total", comment: "Tx detail field header")
+        static let feeHeader = NSLocalizedString("TransactionDetails.feeHeader", value:"Total Fee", comment: "Tx detail field header")
+        static let gasPriceHeader = NSLocalizedString("TransactionDetails.gasPriceHeader", value:"Gas Price", comment: "Tx detail field header")
+        static let gasLimitHeader = NSLocalizedString("TransactionDetails.gasLimitHeader", value:"Gas Limit", comment: "Tx detail field header")
     }
 
     enum SecurityCenter {

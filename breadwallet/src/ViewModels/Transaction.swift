@@ -55,6 +55,9 @@ extension Transaction {
 
 protocol EthLikeTransaction: Transaction {
     var fromAddress: String { get }
+    var gasPrice: UInt256 { get }
+    var gasLimit: UInt64 { get }
+    var gasUsed: UInt64 { get }
 }
 
 

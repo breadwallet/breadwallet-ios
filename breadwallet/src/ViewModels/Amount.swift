@@ -71,10 +71,18 @@ struct Amount {
     }
 
     var tokenDescription: String {
-        let number = NSDecimalNumber(decimal: tokenValue * (negative ? -1.0 : 1.0))
-        guard let amount = tokenFormat.string(from: number) else { return "" }
-        let unit = currency.unitName(forDecimals: currency.state.maxDigits)
-        return "\(amount) \(unit)"
+        let unit = currency.unit(forDecimals: currency.state.maxDigits) ?? currency.commonUnit
+        return tokenDescription(inUnit: unit)
+    }
+    
+    func tokenDescription(inUnit unit: CurrencyUnit) -> String {
+        var value = Decimal(string: amount.string(decimals: unit.decimals)) ?? 0.0
+        if negative {
+            value *= -1.0
+        }
+        guard let formattedValue = tokenFormat.string(from: value as NSDecimalNumber) else { return "" }
+        let symbol = currency.name(forUnit: unit)
+        return "\(formattedValue) \(symbol)"
     }
 
     var localFormat: NumberFormatter {

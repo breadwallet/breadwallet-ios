@@ -835,7 +835,11 @@ extension UInt256: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let str = try container.decode(String.self)
-        self.init(hexString: str)
+        if str.hasPrefix("0x") {
+            self.init(hexString: str)
+        } else {
+            self.init(string: str, radix: 10)
+        }
     }
     
     public func encode(to encoder: Encoder) throws {
