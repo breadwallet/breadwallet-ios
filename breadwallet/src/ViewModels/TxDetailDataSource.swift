@@ -72,7 +72,8 @@ class TxDetailDataSource: NSObject {
             fields.insert(contentsOf: [.gasPrice, .gasLimit, .fee, .total], at: index)
         }
         
-        if viewModel.status == .complete, let index = fields.index(of: .status) {
+        if (viewModel.status == .complete || viewModel.status == .invalid),
+            let index = fields.index(of: .status) {
             fields.remove(at: index)
         }
         
@@ -166,9 +167,7 @@ extension TxDetailDataSource: UITableViewDataSource {
             
         case .gasPrice:
             let labelCell = cell as! TxLabelCell
-            if let amount = viewModel.gasPrice {
-                labelCell.value = amount.tokenDescription(inUnit: Ethereum.Units.gwei)
-            }
+            labelCell.value = viewModel.gasPrice ?? ""
             
         case .gasLimit:
             let labelCell = cell as! TxLabelCell
@@ -176,18 +175,15 @@ extension TxDetailDataSource: UITableViewDataSource {
             
         case .fee:
             let labelCell = cell as! TxLabelCell
-            if let amount = viewModel.fee {
-                labelCell.value = Store.state.isBtcSwapped ? amount.fiatDescription : amount.tokenDescription
-            }
+            labelCell.value = viewModel.fee ?? ""
             
         case .total:
             let labelCell = cell as! TxLabelCell
-            if let amount = viewModel.total {
-                labelCell.value = Store.state.isBtcSwapped ? amount.fiatDescription : amount.tokenDescription
-            }
+            labelCell.value = viewModel.total ?? ""
         }
         
         return cell
+
     }
     
 }

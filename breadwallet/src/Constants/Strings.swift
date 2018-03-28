@@ -133,12 +133,12 @@ enum S {
 
     enum Transaction {
         static let justNow = NSLocalizedString("Transaction.justNow", value:"just now", comment: "Timestamp label for event that just happened")
-        static let invalid = NSLocalizedString("Transaction.invalid", value:"INVALID", comment: "Invalid transaction")
+        static let invalid = NSLocalizedString("Transaction.invalid", value:"Failed", comment: "Invalid transaction")
         static let complete = NSLocalizedString("Transaction.complete", value:"Complete", comment: "Transaction complete label")
         static let waiting = NSLocalizedString("Transaction.waiting", value:"Waiting to be confirmed. Some merchants require confirmation to complete a transaction. Estimated time: 1-2 hours.", comment: "Waiting to be confirmed string")
         static let pending = NSLocalizedString("Transaction.pending", value: "Pending", comment: "Transaction is pending status text")
         static let confirming = NSLocalizedString("Transaction.confirming", value: "In Progress", comment: "Transaction is confirming status text")
-        static let failed = NSLocalizedString("Transaction.failed", value: "Failed", comment: "Transaction failed status text")
+        static let failed = NSLocalizedString("Transaction.failed", value: "failed", comment: "Transaction failed status text")
         static let sentTo = NSLocalizedString("Transaction.sentTo", value:"sent to %1$@", comment: "sent to <address>")
         static let receivedVia = NSLocalizedString("TransactionDetails.receivedVia", value:"received via %1$@", comment: "received via <address>")
         static let receivedFrom = NSLocalizedString("TransactionDetails.receivedFrom", value:"received from %1$@", comment: "received from <address>")

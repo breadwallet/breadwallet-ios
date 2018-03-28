@@ -152,6 +152,10 @@ extension UIColor {
         return UIColor(red: 155.0/255.0, green: 213.0/255.0, blue: 85.0/255.0, alpha: 1.0)
     }
     
+    static var failedRed: UIColor {
+        return UIColor(red: 244.0/255.0, green: 107.0/255.0, blue: 65.0/255.0, alpha: 1.0)
+    }
+    
     static var statusIndicatorActive: UIColor {
         return UIColor(red: 75.0/255.0, green: 119.0/255.0, blue: 243.0/255.0, alpha: 1.0)
     }

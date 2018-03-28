@@ -49,6 +49,9 @@ extension Transaction {
     var isPending: Bool {
         return status == .pending
     }
+    var isValid: Bool {
+        return status != .invalid
+    }
 }
 
 // MARK: -

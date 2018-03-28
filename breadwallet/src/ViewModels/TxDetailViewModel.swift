@@ -22,10 +22,10 @@ struct TxDetailViewModel: TxViewModel {
     let tx: Transaction
     
     // Ethereum-specific fields
-    var gasPrice: Amount?
+    var gasPrice: String?
     var gasLimit: String?
-    var fee: Amount?
-    var total: Amount?
+    var fee: String?
+    var total: String?
     
     var title: String {
         guard status != .invalid else { return S.TransactionDetails.titleFailed }
@@ -84,11 +84,24 @@ extension TxDetailViewModel {
         self.tx = tx
         
         if let tx = tx as? EthLikeTransaction {
-            gasPrice = Amount(amount: tx.gasPrice, currency: tx.currency, rate: rate)
-            gasLimit = String(tx.gasLimit)
+            let gasFormatter = NumberFormatter()
+            gasFormatter.numberStyle = .decimal
+            gasFormatter.maximumFractionDigits = 0
+            gasLimit = gasFormatter.string(from: tx.gasLimit as NSNumber)
+            
+            gasPrice = Amount(amount: tx.gasPrice, currency: tx.currency, rate: rate).tokenDescription(inUnit: Ethereum.Units.gwei)
+            
             let totalFee = tx.gasPrice * UInt256(tx.gasUsed)
-            fee = Amount(amount: totalFee, currency: tx.currency, rate: rate)
-            total = Amount(amount: tx.amount + totalFee, currency: tx.currency, rate: rate)
+            let feeAmount = Amount(amount: totalFee, currency: tx.currency, rate: rate)
+            let totalAmount = Amount(amount: tx.amount + totalFee, currency: tx.currency, rate: rate)
+            
+            if Store.state.isBtcSwapped {
+                fee = feeAmount.fiatDescription
+                total = totalAmount.fiatDescription
+            } else {
+                fee = feeAmount.tokenDescription
+                total = totalAmount.tokenDescription
+            }
         }
     }
     

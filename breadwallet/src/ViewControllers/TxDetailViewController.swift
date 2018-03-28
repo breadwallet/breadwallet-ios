@@ -39,7 +39,7 @@ class TxDetailViewController: UIViewController, Subscriber {
     private var isExpanded: Bool = false
     
     private var compactContainerHeight: CGFloat {
-        return viewModel.status == .complete ? C.compactContainerHeight : C.compactContainerHeight + C.statusRowHeight
+        return (viewModel.status == .complete || viewModel.status == .invalid) ? C.compactContainerHeight : C.compactContainerHeight + C.statusRowHeight
     }
     
     private var expandedContainerHeight: CGFloat {
