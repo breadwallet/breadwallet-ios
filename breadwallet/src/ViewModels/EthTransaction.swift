@@ -22,7 +22,6 @@ struct EthTransaction: EthLikeTransaction {
     let timestamp: TimeInterval
     let blockHeight: UInt64
     let confirmations: UInt64
-    let isValid: Bool
     
     // MARK: ETH-network transaction properties
     
@@ -46,16 +45,18 @@ struct EthTransaction: EthLikeTransaction {
         amount = tx.value
         timestamp = tx.timeStamp
         direction = tx.to.lowercased() == accountAddress.lowercased() ? .received : .sent
-        isValid = !tx.isError
         
-        if isValid {
-            if Int(tx.confirmations) == 0 {
+        if tx.isError {
+            status = .invalid
+        } else {
+            switch tx.confirmations {
+            case 0:
                 status = .pending
-            } else {
+            case 1..<6:
+                status = .confirmed
+            default:
                 status = .complete
             }
-        } else {
-            status = .invalid
         }
         
         hash = tx.hash
