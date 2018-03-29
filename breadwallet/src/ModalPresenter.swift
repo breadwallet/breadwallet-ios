@@ -310,6 +310,7 @@ class ModalPresenter : Subscriber, Trackable {
         })
     }
     
+    // MARK: Settings
     func presentSettings() {
         guard let top = topViewController else { return }
         let walletManager = primaryWalletManager
@@ -317,23 +318,28 @@ class ModalPresenter : Subscriber, Trackable {
         settingsNav.setGrayStyle()
         let sections: [SettingsSections] = [.wallet, .preferences, .currencies, .other]
         
-        let currencySettings: [Setting]  = Store.state.currencies.flatMap { (currency) -> Setting? in
+        let currencySettings: [Setting]  = Store.state.currencies.compactMap { (currency) -> Setting? in
             guard let walletManager = walletManagers[currency.code] else { return nil }
             return Setting(title: currency.name, callback: { [weak self] in
                 guard let `self` = self else { return }
                 let sections = [SettingsSections.currency]
-                let currencySettings = [
-                    SettingsSections.currency: [
-                        Setting(title: S.Settings.importTile, callback: {
-                            settingsNav.dismiss(animated: true, completion: {
-                                self.presentKeyImport(walletManager: walletManager as! BTCWalletManager)
-                            })
-                        }),
-                        Setting(title: S.Settings.sync, callback: {
-                            settingsNav.pushViewController(ReScanViewController(currency: currency), animated: true)
-                        }),
+                var currencySettings = [SettingsSections: [Setting]]()
+                if currency is Bitcoin {
+                    currencySettings = [
+                        SettingsSections.currency: [
+                            Setting(title: S.Settings.importTile, callback: {
+                                settingsNav.dismiss(animated: true, completion: {
+                                    self.presentKeyImport(walletManager: walletManager as! BTCWalletManager)
+                                })
+                            }),
+                            Setting(title: S.Settings.sync, callback: {
+                                settingsNav.pushViewController(ReScanViewController(currency: currency), animated: true)
+                            }),
+                        ]
                     ]
-                ]
+                } else {
+                    //TODO:ETH
+                }
                 
                 let pageTitle = String(format: S.Settings.currencyPageTitle, currency.name)
                 let currencySettingsVC = SettingsViewController(sections: sections, rows: currencySettings, optionalTitle: pageTitle)
