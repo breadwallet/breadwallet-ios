@@ -351,24 +351,24 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                             pinValidationCallback(pin)
                         }
             }, completion: { [weak self] result in
+                guard let `self` = self else { return }
                 switch result {
                 case .success:
-                    self?.dismiss(animated: true, completion: {
-                        guard let myself = self else { return }
+                    self.dismiss(animated: true, completion: {
                         Store.trigger(name: .showStatusBar)
-                        if myself.isPresentedFromLock {
+                        if self.isPresentedFromLock {
                             Store.trigger(name: .loginFromSend)
                         }
-                        myself.onPublishSuccess?()
+                        self.onPublishSuccess?()
                     })
-                    self?.saveEvent("send.success")
+                    self.saveEvent("send.success")
                 case .creationError(let message):
-                    self?.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
-                    self?.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
+                    self.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
+                    self.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
                 case .publishFailure(let error):
                     if case .posixError(let code, let description) = error {
-                        self?.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
-                        self?.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(description) (\(code))"])
+                        self.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
+                        self.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(description) (\(code))"])
                     }
                 }
         })

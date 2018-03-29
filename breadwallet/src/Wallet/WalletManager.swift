@@ -60,6 +60,7 @@ class EthWalletManager : WalletManager {
     var ethWallet: BREthereumWallet?
     private var timer: Timer? = nil
     private let updateInterval: TimeInterval = 5
+    private var pendingTransactions = [EthTx]()
 
     init() {
         guard var words = Words.rawWordList else { return }
@@ -97,25 +98,46 @@ class EthWalletManager : WalletManager {
 
     func updateTransactionList() {
         apiClient?.getEthTxList(address: self.address!, handler: { [weak self] txList in
-            guard let myself = self else { return }
-            let transactions = txList.map { EthTransaction(tx: $0, address: myself.address!) }
+            guard let `self` = self else { return }
+            for tx in txList {
+                if let index = self.pendingTransactions.index(where: { $0.hash == tx.hash }) {
+                    self.pendingTransactions.remove(at: index)
+                }
+            }
+            let transactions = (self.pendingTransactions + txList).map { EthTransaction(tx: $0, address: self.address!) }
             DispatchQueue.main.async {
-                Store.perform(action: WalletChange(myself.currency).setTransactions(transactions))
+                Store.perform(action: WalletChange(self.currency).setTransactions(transactions))
             }
         })
     }
 
     func sendTx(toAddress: String, amount: UInt256, callback: @escaping (JSONRPCResult<String>)->Void) {
         //TODO:ETH - add authentication
-        let toAddress = createAddress(toAddress)
-        let amount = amountCreateEther((etherCreate(amount)))
+        let ethToAddress = createAddress(toAddress)
+        let ethAmount = amountCreateEther((etherCreate(amount)))
         let gasPrice = gasPriceCreate((etherCreate(UInt256(22000000000))))
         let gasLimit = gasCreate(UInt64(21000))
         let nonce = Int32(Store.state.wallets[currency.code]!.transactions.filter { $0.direction == .sent }.count)
-        let tx = walletCreateTransactionDetailed(ethWallet, toAddress, amount, gasPrice, gasLimit, UInt64(nonce))
+        let tx = walletCreateTransactionDetailed(ethWallet, ethToAddress, ethAmount, gasPrice, gasLimit, UInt64(nonce))
         walletSignTransaction(ethWallet, tx, loadPhrase())
         let txString = walletGetRawTransactionHexEncoded(ethWallet, tx, "0x")
-        apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { result in
+        apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { [weak self] result in
+            guard let `self` = self else { return }
+            if case .success(let txHash) = result {
+                let pendingTx = EthTx(blockNumber: 0,
+                                      timeStamp: Date().timeIntervalSince1970,
+                                      value: amount,
+                                      gasPrice: gasPrice.etherPerGas.valueInWEI,
+                                      gasLimit: gasLimit.amountOfGas,
+                                      gasUsed: 0,
+                                      from: self.address!,
+                                      to: toAddress,
+                                      confirmations: 0,
+                                      nonce: UInt64(nonce),
+                                      hash: txHash,
+                                      isError: false)
+                self.pendingTransactions.append(pendingTx)
+            }
             callback(result)
         })
     }

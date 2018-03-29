@@ -42,20 +42,20 @@ class TxListCell: UITableViewCell {
         statusIndicator.status = viewModel.status
         
         switch viewModel.status {
-        case .complete:
-            failedIndicator.isHidden = true
-            statusIndicator.isHidden = true
-            timestamp.isHidden = false
-            NSLayoutConstraint.deactivate(pendingConstraints)
-            NSLayoutConstraint.activate(completeConstraints)
         case .invalid:
             failedIndicator.isHidden = false
             statusIndicator.isHidden = true
             timestamp.isHidden = true
             NSLayoutConstraint.deactivate(completeConstraints)
             NSLayoutConstraint.activate(pendingConstraints)
+        case .complete:
+            failedIndicator.isHidden = true
+            statusIndicator.isHidden = true
+            timestamp.isHidden = false
+            NSLayoutConstraint.deactivate(pendingConstraints)
+            NSLayoutConstraint.activate(completeConstraints)
         default:
-            failedIndicator.isHidden = false
+            failedIndicator.isHidden = true
             statusIndicator.isHidden = false
             timestamp.isHidden = true
             NSLayoutConstraint.deactivate(completeConstraints)

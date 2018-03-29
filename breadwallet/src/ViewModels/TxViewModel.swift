@@ -43,7 +43,7 @@ extension TxViewModel {
     }
     
     var blockHeight: String {
-        return (tx.blockHeight == C.txUnconfirmedHeight)
+        return (tx.blockHeight == C.txUnconfirmedHeight || tx.confirmations == 0)
             ? S.TransactionDetails.notConfirmedBlockHeightLabel
             : "\(tx.blockHeight)"
     }

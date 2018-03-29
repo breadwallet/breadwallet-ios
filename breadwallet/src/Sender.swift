@@ -90,9 +90,8 @@ class Sender {
         }
     }
 
-    //Amount in bits
     func send(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Void) -> Void, completion:@escaping (SendResult) -> Void) {
-        if currency.matches(Currencies.eth) {
+        if currency is Ethereum {
             sendEth(biometricsMessage: biometricsMessage, rate: rate, comment: comment, feePerKb: feePerKb, verifyPinFunction: verifyPinFunction, completion: completion)
         } else {
             sendBTC(biometricsMessage: biometricsMessage, rate: rate, comment: comment, feePerKb: feePerKb, verifyPinFunction: verifyPinFunction, completion: completion)
@@ -128,8 +127,8 @@ class Sender {
     private func sendEth(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Void) -> Void, completion:@escaping (SendResult) -> Void) {
         guard let ethWalletManager = walletManager as? EthWalletManager else { return }
         verifyPinFunction({ [weak self] pin in
-            guard let myself = self else { return }
-            ethWalletManager.sendTx(toAddress: myself.toAddress!, amount: myself.amount!, callback: { result in
+            guard let `self` = self else { return }
+            ethWalletManager.sendTx(toAddress: self.toAddress!, amount: self.amount!, callback: { result in
                 switch result {
                 case .success( _):
                     completion(.success)
