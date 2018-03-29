@@ -92,8 +92,8 @@ extension TxDetailViewModel {
             gasPrice = Amount(amount: tx.gasPrice, currency: tx.currency, rate: rate).tokenDescription(inUnit: Ethereum.Units.gwei)
             
             let totalFee = tx.gasPrice * UInt256(tx.gasUsed)
-            let feeAmount = Amount(amount: totalFee, currency: tx.currency, rate: rate)
-            let totalAmount = Amount(amount: tx.amount + totalFee, currency: tx.currency, rate: rate)
+            let feeAmount = Amount(amount: totalFee, currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
+            let totalAmount = Amount(amount: tx.amount + totalFee, currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
             
             if Store.state.isBtcSwapped {
                 fee = feeAmount.fiatDescription
@@ -121,6 +121,7 @@ extension TxDetailViewModel {
         let amount = Amount(amount: tx.amount,
                             currency: tx.currency,
                             rate: nil,
+                            maximumFractionDigits: Amount.highPrecisionDigits,
                             negative: (tx.direction == .sent))
         return amount.description
     }
