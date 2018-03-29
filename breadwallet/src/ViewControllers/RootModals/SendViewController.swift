@@ -144,7 +144,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             self?.handleRequest(request)
         }
         amountView.balanceTextForAmount = { [weak self] amount, rate in
-            return self?.balanceTextForAmount(amount: amount, rate: rate)
+            return self?.balanceTextForAmount(amount, rate: rate)
         }
         amountView.didUpdateAmount = { [weak self] amount in
             self?.amount = amount
@@ -171,7 +171,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
     }
     
-    private func balanceTextForAmount(amount: Amount?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
+    private func balanceTextForAmount(_ amount: Amount?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
         let balanceAmount = Amount(amount: balance, currency: currency, rate: rate, minimumFractionDigits: 0)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
@@ -181,7 +181,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         
         if let amount = amount, amount.rawValue > UInt256(0) {
             if let fee = sender.feeForTx(amount: amount.rawValue) {
-                let feeAmount = Amount(amount: fee, currency: currency, rate: rate, minimumFractionDigits: 0)
+                let feeAmount = Amount(amount: fee, currency: currency, rate: rate)
                 let feeText = feeAmount.description
                 feeOutput = String(format: S.Send.fee, feeText)
                 if (balance >= fee) && amount.rawValue > (balance - fee) {

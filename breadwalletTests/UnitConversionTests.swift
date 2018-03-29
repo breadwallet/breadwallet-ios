@@ -73,8 +73,27 @@ class UnitConversionTests : XCTestCase {
         // ETH -> Wei
         XCTAssertEqual(UInt256(string: "1", decimals: 18), UInt256(1000000000000000000))
         XCTAssertEqual(UInt256(string: "1.0", decimals: 18), UInt256(1000000000000000000))
-        XCTAssertEqual(UInt256(string: "1.23456", decimals: 18), UInt256(123456))
-        XCTAssertEqual(UInt256(string: "1.2345678", decimals: 18), UInt256(12345678))
+        XCTAssertEqual(UInt256(string: "0.000000000000000001", decimals: 18), UInt256(1))
+        XCTAssertEqual(UInt256(string: "1.2345678", decimals: 18), UInt256(1234567800000000000))
         XCTAssertEqual(UInt256(string: "1.234567891234567891", decimals: 18), UInt256(1234567891234567891))
+        
+        //TODO: test overflow, underflow, strange inputs
+    }
+    
+    func testAmount() {
+        let zero = UInt256(0)
+        let one = UInt256(1)
+        let highP = UInt256(string: "1.123456789987654321", decimals: 18)
+        let rate = Rate(code: "USD", name: "USD", rate: 1000.0, reciprocalCode: "BTC")
+        
+        XCTAssertEqual(Amount(amount: zero, currency: Currencies.btc, rate: rate).fiatDescription, "$0.00")
+        XCTAssertEqual(Amount(amount: zero, currency: Currencies.btc, rate: rate).tokenDescription, "0 BTC")
+        XCTAssertEqual(Amount(amount: one, currency: Currencies.btc, rate: rate).fiatDescription, "$0.01")
+        XCTAssertEqual(Amount(amount: one, currency: Currencies.btc, rate: rate).tokenDescription, "0.00000001 BTC")
+        XCTAssertEqual(Amount(amount: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 5).tokenDescription, "1.12346 ETH")
+        XCTAssertEqual(Amount(amount: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 8).tokenDescription, "1.12345679 ETH")
+        XCTAssertEqual(Amount(amount: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 8).fiatDescription, "$1,123.46")
+        
+        //TODO: test fiat conversion to closest round number token
     }
 }

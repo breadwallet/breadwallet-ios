@@ -10,33 +10,56 @@ import Foundation
 import BRCore
 
 struct Amount {
+    static let normalPrecisionDigits = 5
+    static let highPrecisionDigits = 8
+    
     let amount: UInt256
     let currency: CurrencyDef
     let rate: Rate?
     let minimumFractionDigits: Int?
+    let maximumFractionDigits: Int
     let negative: Bool
     
-    //TODO:ETH
     var rawValue: UInt256 { return amount }
     
-    init(amount: UInt256, currency: CurrencyDef, rate: Rate? = nil, minimumFractionDigits: Int? = nil, negative: Bool = false) {
+    // MARK: - Init
+    
+    init(amount: UInt256,
+         currency: CurrencyDef,
+         rate: Rate? = nil,
+         minimumFractionDigits: Int? = nil,
+         maximumFractionDigits: Int = Amount.normalPrecisionDigits,
+         negative: Bool = false) {
         self.amount = amount
         self.currency = currency
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
+        self.maximumFractionDigits = maximumFractionDigits
         self.negative = negative
     }
     
-    init(tokenString: String, currency: CurrencyDef, unit: CurrencyUnit? = nil, rate: Rate? = nil, minimumFractionDigits: Int? = nil, negative: Bool = false) {
+    init(tokenString: String,
+         currency: CurrencyDef,
+         unit: CurrencyUnit? = nil,
+         rate: Rate? = nil,
+         minimumFractionDigits: Int? = nil,
+         maximumFractionDigits: Int = Amount.normalPrecisionDigits,
+         negative: Bool = false) {
         let decimals = unit?.decimals ?? currency.commonUnit.decimals
         self.amount = UInt256(string: tokenString, decimals: decimals)
         self.currency = currency
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
+        self.maximumFractionDigits = maximumFractionDigits
         self.negative = negative
     }
     
-    init?(fiatString: String, currency: CurrencyDef, rate: Rate, minimumFractionDigits: Int? = nil, negative: Bool = false) {
+    init?(fiatString: String,
+          currency: CurrencyDef,
+          rate: Rate,
+          minimumFractionDigits: Int? = nil,
+          maximumFractionDigits: Int = Amount.normalPrecisionDigits,
+          negative: Bool = false) {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = currency.commonUnit.decimals
         formatter.minimumFractionDigits = 1
@@ -49,8 +72,11 @@ struct Amount {
         self.currency = currency
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
+        self.maximumFractionDigits = maximumFractionDigits
         self.negative = negative
     }
+    
+    // MARK: - Convenience Accessors
     
     var description: String {
         return rate != nil ? fiatDescription : tokenDescription
@@ -60,29 +86,12 @@ struct Amount {
         return Store.state.isBtcSwapped ? "\(fiatDescription) (\(tokenDescription))" : "\(tokenDescription) (\(fiatDescription))"
     }
     
+    // MARK: Token
+    
     var tokenValue: Decimal {
         return Decimal(string: amount.string(decimals: currency.state.maxDigits)) ?? 0.0
     }
     
-    var fiatValue: Decimal {
-        guard let rate = rate ?? currency.state.currentRate,
-            let value = commonUnitValue else { return 0.0 }
-        let tokenAmount = value * (negative ? -1.0 : 1.0)
-        return tokenAmount * Decimal(rate.rate)
-    }
-
-    var fiatDescription: String {
-        guard let string = localFormat.string(from: fiatValue as NSNumber) else { return "" }
-        return string
-    }
-    
-    func fiatDescription(forLocale locale: Locale) -> String {
-        let formatter = localFormat
-        formatter.locale = locale
-        guard let string = formatter.string(from: fiatValue as NSNumber) else { return "" }
-        return string
-    }
-
     var tokenDescription: String {
         let unit = currency.unit(forDecimals: currency.state.maxDigits) ?? currency.commonUnit
         return tokenDescription(inUnit: unit)
@@ -93,11 +102,57 @@ struct Amount {
         if negative {
             value *= -1.0
         }
-        guard let formattedValue = tokenFormat.string(from: value as NSDecimalNumber) else { return "" }
+        guard var formattedValue = tokenFormat.string(from: value as NSDecimalNumber) else { return "" }
+        if amount > UInt256(0) && Double(formattedValue) == 0.0 {
+            // small value requires more precision to be displayed
+            let formatter = tokenFormat.copy() as! NumberFormatter
+            formatter.maximumFractionDigits = unit.decimals
+            formattedValue = formatter.string(from: value as NSDecimalNumber) ?? formattedValue
+        }
         let symbol = currency.name(forUnit: unit)
         return "\(formattedValue) \(symbol)"
     }
+    
+    var tokenFormat: NumberFormatter {
+        let format = NumberFormatter()
+        format.isLenient = true
+        format.numberStyle = .currency
+        format.generatesDecimalNumbers = true
+        format.negativeFormat = "-\(format.positiveFormat!)"
+        format.currencyCode = currency.code
+        format.currencySymbol = ""
+        format.maximumFractionDigits = min(currency.state.maxDigits, maximumFractionDigits)
+        format.minimumFractionDigits = minimumFractionDigits ?? 0
+        return format
+    }
 
+    // MARK: - Fiat
+    
+    var fiatValue: Decimal {
+        guard let rate = rate ?? currency.state.currentRate,
+            let value = commonUnitValue else { return 0.0 }
+        let tokenAmount = value * (negative ? -1.0 : 1.0)
+        return tokenAmount * Decimal(rate.rate)
+    }
+    
+    var fiatDescription: String {
+        return fiatDescription()
+    }
+    
+    func fiatDescription(forLocale locale: Locale? = nil) -> String {
+        let formatter = localFormat
+        if let locale = locale {
+            formatter.locale = locale
+        }
+        guard var fiatString = formatter.string(from: fiatValue as NSDecimalNumber) else { return "" }
+        if let stringValue = formatter.number(from: fiatString), abs(fiatValue) > 0.0, stringValue == 0 {
+            // if non-zero values show as 0, show minimum fractional value for fiat
+            let minimumValue = pow(10.0, Double(-formatter.minimumFractionDigits)) * (negative ? -1.0 : 1.0)
+            fiatString = formatter.string(from: NSDecimalNumber(value: minimumValue)) ?? fiatString
+        }
+        return fiatString
+    }
+    
     var localFormat: NumberFormatter {
         let format = NumberFormatter()
         format.isLenient = true
@@ -109,24 +164,11 @@ struct Amount {
         } else if let rate = currency.state.currentRate {
             format.currencySymbol = rate.currencySymbol
         }
-        if let minimumFractionDigits = minimumFractionDigits {
-            format.minimumFractionDigits = minimumFractionDigits
-        }
+        format.minimumFractionDigits = minimumFractionDigits ?? format.minimumFractionDigits
         return format
     }
-
-    var tokenFormat: NumberFormatter {
-        let format = NumberFormatter()
-        format.isLenient = true
-        format.numberStyle = .currency
-        format.generatesDecimalNumbers = true
-        format.negativeFormat = "-\(format.positiveFormat!)"
-        format.currencyCode = currency.code
-        format.currencySymbol = ""
-        format.maximumFractionDigits = currency.state.maxDigits
-        format.minimumFractionDigits = minimumFractionDigits ?? 0
-        return format
-    }
+    
+    // MARK: - Private
     
     private var commonUnitString: String {
         return amount.string(decimals: currency.commonUnit.decimals)
