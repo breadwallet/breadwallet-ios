@@ -12,24 +12,19 @@ import BRCore
 
 class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
-    //TODO:ETH - make this accept Amount params
-    init(amount: UInt256, fee: UInt256, feeType: Fee, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool, currency: CurrencyDef) {
+    init(amount: Amount, fee: Amount, feeType: Fee, address: String, isUsingBiometrics: Bool, currency: CurrencyDef) {
         self.amount = amount
         self.feeAmount = fee
         self.feeType = feeType
-        self.selectedRate = selectedRate
-        self.minimumFractionDigits = minimumFractionDigits
         self.addressText = address
         self.isUsingBiometrics = isUsingBiometrics
         self.currency = currency
         super.init(nibName: nil, bundle: nil)
     }
 
-    private let amount: UInt256
-    private let feeAmount: UInt256
+    private let amount: Amount
+    private let feeAmount: Amount
     private let feeType: Fee
-    private let selectedRate: Rate?
-    private let minimumFractionDigits: Int?
     private let addressText: String
     private let isUsingBiometrics: Bool
     private let currency: CurrencyDef
@@ -142,15 +137,18 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         view.backgroundColor = .clear
         payLabel.text = S.Confirmation.send
 
-        let displayAmount = Amount(amount: amount, currency: currency, rate: selectedRate, minimumFractionDigits: minimumFractionDigits)
-        let displayFee = Amount(amount: feeAmount, currency: currency, rate: selectedRate, minimumFractionDigits: minimumFractionDigits)
-        let displayTotal = Amount(amount: amount + feeAmount, currency: currency, rate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+        let displayTotal = Amount(amount: amount.rawValue + feeAmount.rawValue,
+                                  currency: currency,
+                                  rate: amount.rate,
+                                  minimumFractionDigits: amount.minimumFractionDigits)
 
-        amountLabel.text = displayAmount.combinedDescription
+        amountLabel.text = amount.combinedDescription
 
         toLabel.text = S.Confirmation.to
         address.text = addressText
         address.lineBreakMode = .byTruncatingMiddle
+        
+        //TODO:ETH
         switch feeType {
         case .regular:
             processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.regularTime)
@@ -160,9 +158,9 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
         sendLabel.text = S.Confirmation.amountLabel
         sendLabel.adjustsFontSizeToFitWidth = true
-        send.text = displayAmount.description
+        send.text = amount.description
         feeLabel.text = S.Confirmation.feeLabel
-        fee.text = displayFee.description
+        fee.text = feeAmount.description
 
         totalLabel.text = S.Confirmation.totalLabel
         total.text = displayTotal.description

@@ -270,12 +270,20 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
 
         guard let amount = amount else { return }
-        //TODO:ETH
-        let confirm = ConfirmationViewController(amount: amount.rawValue,
-                                                 fee: sender.fee,
+        
+        let displyAmount = Amount(amount: amount.rawValue,
+                                  currency: currency,
+                                  rate: amountView.selectedRate,
+                                  minimumFractionDigits: amountView.minimumFractionDigits)
+        //TODO:ETH show estimated gas instead of fee (gas limit)
+        let feeAmount = Amount(amount: sender.fee,
+                               currency: currency,
+                               rate: amountView.selectedRate,
+                               minimumFractionDigits: amountView.minimumFractionDigits)
+
+        let confirm = ConfirmationViewController(amount: displyAmount,
+                                                 fee: feeAmount,
                                                  feeType: feeType ?? .regular,
-                                                 selectedRate: amountView.selectedRate,
-                                                 minimumFractionDigits: amountView.minimumFractionDigits,
                                                  address: addressCell.displayAddress ?? "",
                                                  isUsingBiometrics: sender.canUseBiometrics,
                                                  currency: currency)
