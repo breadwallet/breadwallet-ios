@@ -88,16 +88,26 @@ struct Amount {
     
     // MARK: Token
     
+    /// Token value in default units as Decimal number
+    /// NB: Decimal can only represent maximum 38 digits wheras UInt256 can represent up to 78 digits -- it is assumed the units represented will be multiple orders of magnitude smaller than the raw value and precision loss is acceptable.
     var tokenValue: Decimal {
-        return Decimal(string: amount.string(decimals: currency.state.maxDigits)) ?? 0.0
+        return (Decimal(string: amount.string(decimals: currency.state.maxDigits)) ?? 0.0) * (negative ? -1.0 : 1.0)
     }
     
+    /// Token value in default units as formatted string with currency ticker symbol suffix
     var tokenDescription: String {
         let unit = currency.unit(forDecimals: currency.state.maxDigits) ?? currency.commonUnit
         return tokenDescription(inUnit: unit)
     }
     
-    func tokenDescription(inUnit unit: CurrencyUnit) -> String {
+    /// Token value in default units as formatted string without symbol
+    var tokenFormattedValue: String {
+        let unit = currency.unit(forDecimals: currency.state.maxDigits) ?? currency.commonUnit
+        return tokenFormattedValue(inUnit: unit)
+    }
+    
+    /// Token value in specified units as formatted string without symbol
+    func tokenFormattedValue(inUnit unit: CurrencyUnit) -> String {
         var value = Decimal(string: amount.string(decimals: unit.decimals)) ?? 0.0
         if negative {
             value *= -1.0
@@ -109,8 +119,12 @@ struct Amount {
             formatter.maximumFractionDigits = unit.decimals
             formattedValue = formatter.string(from: value as NSDecimalNumber) ?? formattedValue
         }
-        let symbol = currency.name(forUnit: unit)
-        return "\(formattedValue) \(symbol)"
+        return formattedValue
+    }
+    
+    /// Token value in specified units as formatted string with currency ticker symbol suffix
+    func tokenDescription(inUnit unit: CurrencyUnit) -> String {
+        return "\(tokenFormattedValue(inUnit: unit)) \(currency.name(forUnit: unit))"
     }
     
     var tokenFormat: NumberFormatter {
