@@ -399,10 +399,10 @@ class PaymentProtocolACK {
         var cPtr = BRPaymentProtocolACKParse(bytes, bytes.count)
 
         if cPtr == nil {
-            guard let req = try? JSONDecoder().decode(Ack.self, from: data) else { return nil }
+            guard let ack = try? JSONDecoder().decode(Ack.self, from: data) else { return nil }
             guard let payment = PaymentProtocolPayment(transactions: [], refundTo: []) else { return nil }
-            payment.currency = req.payment.currency
-            cPtr = BRPaymentProtocolACKNew(payment.cPtr, req.memo)
+            payment.currency = ack.payment.currency
+            cPtr = BRPaymentProtocolACKNew(payment.cPtr, ack.memo)
         }
         
         guard cPtr != nil else { return nil }
