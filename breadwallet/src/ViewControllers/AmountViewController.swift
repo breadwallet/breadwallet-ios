@@ -28,6 +28,7 @@ class AmountViewController : UIViewController, Trackable {
         }
         self.feeSelector = FeeSelector()
         self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: currency.state.maxDigits)
+        self.canEditFee = (currency is Bitcoin)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -49,7 +50,7 @@ class AmountViewController : UIViewController, Trackable {
         }
     }
     
-    var canEditFee: Bool = true
+    var canEditFee: Bool
     
     func forceUpdateAmount(amount: Amount) {
         self.amount = amount
