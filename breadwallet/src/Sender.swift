@@ -52,7 +52,16 @@ class Sender {
 
     func createTransaction(forPaymentProtocol: PaymentProtocolRequest) {
         protocolRequest = forPaymentProtocol
-        transaction = walletManager.wallet?.createTxForOutputs(forPaymentProtocol.details.outputs)
+        let feePerKb = walletManager.wallet?.feePerKb ?? 0
+
+        if UInt64(forPaymentProtocol.details.requiredFeePerByte*1000) >= feePerKb {
+            walletManager.wallet?.feePerKb = UInt64(forPaymentProtocol.details.requiredFeePerByte*1000)
+            transaction = walletManager.wallet?.createTxForOutputs(forPaymentProtocol.details.outputs)
+            walletManager.wallet?.feePerKb = feePerKb
+        }
+        else {
+            transaction = walletManager.wallet?.createTxForOutputs(forPaymentProtocol.details.outputs)
+        }
     }
 
     var fee: UInt256 {
@@ -207,20 +216,29 @@ class Sender {
         let payment = PaymentProtocolPayment(merchantData: protoReq.details.merchantData,
                                              transactions: [transaction],
                                              refundTo: [(address: wallet.receiveAddress, amount: amount)])
+        payment?.currency = currency.code
         guard let urlString = protoReq.details.paymentURL else { return }
         guard let url = URL(string: urlString) else { return }
 
         let request = NSMutableURLRequest(url: url, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: protocolPaymentTimeout)
-
-        request.setValue("application/bitcoin-payment", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/bitcoin-paymentack", forHTTPHeaderField: "Accept")
         request.httpMethod = "POST"
-        request.httpBody = Data(bytes: payment!.bytes)
+        
+        if (protoReq.mimeType == "application/payment-request") {
+            request.setValue("application/payment", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/payment-ack", forHTTPHeaderField: "Accept")
+            request.httpBody = payment?.json?.data(using: .utf8)
+        }
+        else {
+            request.setValue("application/bitcoin-payment", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/bitcoin-paymentack", forHTTPHeaderField: "Accept")
+            request.httpBody = Data(bytes: payment!.bytes)
+        }
 
         URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
             guard error == nil else { print("payment error: \(error!)"); return }
             guard let response = response, let data = data else { print("no response or data"); return }
-            if response.mimeType == "application/bitcoin-paymentack" && data.count <= 50000 {
+            if (response.mimeType == "application/bitcoin-paymentack" || response.mimeType == "application/payment-ack") &&
+                data.count <= 50000 {
                 if let ack = PaymentProtocolACK(data: data) {
                     print("received ack: \(ack)") //TODO - show memo to user
                 } else {

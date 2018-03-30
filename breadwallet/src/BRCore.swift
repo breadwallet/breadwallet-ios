@@ -248,6 +248,12 @@ extension BRTxInput {
 }
 
 extension BRTxOutput {
+    init(_ address: String, _ amount: UInt64) {
+        self.init()
+        self.amount = amount
+        BRTxOutputSetAddress(&self, address)
+    }
+    
     var swiftAddress: String {
         get { return String(cString: UnsafeRawPointer([self.address]).assumingMemoryBound(to: CChar.self)) }
         set { BRTxOutputSetAddress(&self, newValue) }
@@ -715,14 +721,7 @@ class BRPeerManager {
     let l = BRTestNetVerifyDifficulty
 }
 
-extension UInt256 : CustomStringConvertible {
-    private func _hexu(_ c: CChar) -> UInt8? {
-        if (c >= "0".utf8CString[0] && c <= "9".utf8CString[0]) { return UInt8(c - "0".utf8CString[0]) }
-        if (c >= "a".utf8CString[0] && c <= "f".utf8CString[0]) { return UInt8(c - ("a".utf8CString[0] - 0x0a)) }
-        if (c >= "A".utf8CString[0] && c <= "F".utf8CString[0]) { return UInt8(c - ("A".utf8CString[0] - 0x0a)) }
-        return nil
-    }
-    
+extension UInt256 : CustomStringConvertible {    
     public var description: String {
         return String(format:"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x" +
             "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",

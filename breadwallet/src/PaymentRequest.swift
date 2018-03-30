@@ -89,7 +89,7 @@ struct PaymentRequest {
 
     init?(data: Data, currency: CurrencyDef) {
         self.currency = currency
-        self.paymentProtoclRequest = PaymentProtocolRequest(data: data)
+        self.paymentProtocolRequest = PaymentProtocolRequest(data: data)
         type = .local
     }
 
@@ -110,6 +110,7 @@ struct PaymentRequest {
         }
 
         request.setValue("application/bitcoin-paymentrequest", forHTTPHeaderField: "Accept")
+        request.addValue("application/payment-request", forHTTPHeaderField: "Accept")
 
         URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
             guard error == nil else { return completion(nil) }
@@ -118,10 +119,17 @@ struct PaymentRequest {
 
             if response.mimeType?.lowercased() == "application/bitcoin-paymentrequest" {
                 completion(PaymentRequest(data: data, currency: Currencies.btc))
-            } else if response.mimeType?.lowercased() == "text/uri-list" {
+            }
+            if response.mimeType?.lowercased() == "application/payment-request" {
+                // TODO: XXX validate hash from response header
+                let req = PaymentRequest(data: data, currency: self.currency)
+                // TODO: XXX populate the certified common name from the https response
+                completion(req)
+            }
+            else if response.mimeType?.lowercased() == "text/uri-list" {
                 for line in (String(data: data, encoding: .utf8)?.components(separatedBy: "\n"))! {
                     if line.hasPrefix("#") { continue }
-                    completion(PaymentRequest(string: line, currency: Currencies.btc))
+                    completion(PaymentRequest(string: line, currency: self.currency))
                     break
                 }
                 completion(nil)
@@ -152,7 +160,7 @@ struct PaymentRequest {
     var label: String?
     var message: String?
     var remoteRequest: NSURL?
-    var paymentProtoclRequest: PaymentProtocolRequest?
+    var paymentProtocolRequest: PaymentProtocolRequest?
     var r: URL?
     var warningMessage: String? //Displayed to the user before the send view fields are populated
 }
