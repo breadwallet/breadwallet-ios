@@ -29,7 +29,7 @@ struct EthTransaction: EthLikeTransaction {
     let gasPrice: UInt256
     let gasLimit: UInt64
     let gasUsed: UInt64
-    
+    let nonce: UInt64
     // MARK: ETH-specific properties
     
     let tx: EthTx
@@ -67,5 +67,6 @@ struct EthTransaction: EthLikeTransaction {
         gasPrice = tx.gasPrice
         gasLimit = tx.gasLimit
         gasUsed = tx.gasUsed
+        nonce = tx.nonce
     }
 }

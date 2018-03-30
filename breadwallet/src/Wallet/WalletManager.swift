@@ -112,34 +112,46 @@ class EthWalletManager : WalletManager {
     }
 
     func sendTx(toAddress: String, amount: UInt256, callback: @escaping (JSONRPCResult<String>)->Void) {
-        //TODO:ETH - add authentication
-        let ethToAddress = createAddress(toAddress)
-        let ethAmount = amountCreateEther((etherCreate(amount)))
-        let gasPrice = gasPriceCreate((etherCreate(UInt256(22000000000))))
-        let gasLimit = gasCreate(UInt64(21000))
-        let nonce = Int32(Store.state.wallets[currency.code]!.transactions.filter { $0.direction == .sent }.count)
-        let tx = walletCreateTransactionDetailed(ethWallet, ethToAddress, ethAmount, gasPrice, gasLimit, UInt64(nonce))
-        walletSignTransaction(ethWallet, tx, loadPhrase())
-        let txString = walletGetRawTransactionHexEncoded(ethWallet, tx, "0x")
-        apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { [weak self] result in
+        apiClient?.getGasPrice { [weak self] result in
             guard let `self` = self else { return }
-            if case .success(let txHash) = result {
-                let pendingTx = EthTx(blockNumber: 0,
-                                      timeStamp: Date().timeIntervalSince1970,
-                                      value: amount,
-                                      gasPrice: gasPrice.etherPerGas.valueInWEI,
-                                      gasLimit: gasLimit.amountOfGas,
-                                      gasUsed: 0,
-                                      from: self.address!,
-                                      to: toAddress,
-                                      confirmations: 0,
-                                      nonce: UInt64(nonce),
-                                      hash: txHash,
-                                      isError: false)
-                self.pendingTransactions.append(pendingTx)
+            if case .success(let gasPrice) = result {
+                let ethToAddress = createAddress(toAddress)
+                let ethAmount = amountCreateEther((etherCreate(amount)))
+                let gasPrice = gasPriceCreate((etherCreate(gasPrice)))
+                let gasLimit = gasCreate(UInt64(21000))
+                let nonce = self.getNonce()
+                let tx = walletCreateTransactionDetailed(self.ethWallet, ethToAddress, ethAmount, gasPrice, gasLimit, nonce)
+                walletSignTransaction(self.ethWallet, tx, self.loadPhrase())
+                let txString = walletGetRawTransactionHexEncoded(self.ethWallet, tx, "0x")
+                self.apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { result in
+                    if case .success(let txHash) = result {
+                        let pendingTx = EthTx(blockNumber: 0,
+                                              timeStamp: Date().timeIntervalSince1970,
+                                              value: amount,
+                                              gasPrice: gasPrice.etherPerGas.valueInWEI,
+                                              gasLimit: gasLimit.amountOfGas,
+                                              gasUsed: 0,
+                                              from: self.address!,
+                                              to: toAddress,
+                                              confirmations: 0,
+                                              nonce: UInt64(nonce),
+                                              hash: txHash,
+                                              isError: false)
+                        self.pendingTransactions.append(pendingTx)
+                    }
+                    callback(result)
+                })
+            } else if case .error(let error) = result {
+                callback(.error(error))
             }
-            callback(result)
-        })
+        }
+    }
+
+    //Nonce is either previous nonce + 1 , or 1 if no transactions have been sent yet
+    private func getNonce() -> UInt64 {
+        let sentTransactions = Store.state.wallets[currency.code]?.transactions.filter { $0.direction == .sent }
+        let previousNonce = sentTransactions?.map { ($0 as! EthTransaction).nonce }.max()
+        return (previousNonce == nil) ? 1 : previousNonce! + 1
     }
 
     func resetForWipe() {
