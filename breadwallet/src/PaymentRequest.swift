@@ -120,7 +120,7 @@ struct PaymentRequest {
             if response.mimeType?.lowercased() == "application/bitcoin-paymentrequest" {
                 completion(PaymentRequest(data: data, currency: Currencies.btc))
             }
-            if response.mimeType?.lowercased() == "application/payment-request" {
+            else if response.mimeType?.lowercased() == "application/payment-request" {
                 // TODO: XXX validate hash from response header
                 let req = PaymentRequest(data: data, currency: self.currency)
                 // TODO: XXX populate the certified common name from the https response
