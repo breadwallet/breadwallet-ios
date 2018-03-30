@@ -66,8 +66,8 @@ class ApplicationController : Subscriber, Trackable {
             btcWalletManager.initPeerManager {
                 btcWalletManager.db?.loadTransactions { txns in
                     btcWalletManager.db?.loadBlocks { blocks in
-                        let preForkTransactions = txns.flatMap{$0}.filter { $0.pointee.blockHeight < C.bCashForkBlockHeight }
-                        let preForkBlocks = blocks.flatMap{$0}.filter { $0.pointee.height < C.bCashForkBlockHeight }
+                        let preForkTransactions = txns.compactMap{$0}.filter { $0.pointee.blockHeight < C.bCashForkBlockHeight }
+                        let preForkBlocks = blocks.compactMap{$0}.filter { $0.pointee.height < C.bCashForkBlockHeight }
                         var bchWalletManager: BTCWalletManager?
                         if preForkBlocks.count > 0 || blocks.count == 0 {
                             bchWalletManager = try? BTCWalletManager(currency: bch, dbPath: bch.dbPath)
@@ -79,7 +79,7 @@ class ApplicationController : Subscriber, Trackable {
                         bchWalletManager?.initPeerManager(blocks: preForkBlocks)
                         bchWalletManager?.db?.loadTransactions { storedTransactions in
                             if storedTransactions.count == 0 {
-                                bchWalletManager?.wallet?.transactions.flatMap{$0}.forEach { txn in
+                                bchWalletManager?.wallet?.transactions.compactMap{$0}.forEach { txn in
                                     bchWalletManager?.db?.txAdded(txn)
                                 }
                             }

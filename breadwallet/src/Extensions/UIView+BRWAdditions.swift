@@ -39,7 +39,7 @@ extension UIView {
     func constrain(_ constraints: [NSLayoutConstraint?]) {
         guard superview != nil else { assert(false, "Superview cannot be nil when adding contraints"); return }
         translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate(constraints.flatMap{ $0 })
+        NSLayoutConstraint.activate(constraints.compactMap{ $0 })
     }
 
     func constraint(_ attribute: NSLayoutAttribute, toView: UIView, constant: CGFloat?) -> NSLayoutConstraint? {

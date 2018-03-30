@@ -464,7 +464,7 @@ extension BTCWalletManager : BRWalletListener {
     }
 
     func makeTransactionViewModels(transactions: [BRTxRef?], rate: Rate?) -> [Transaction] {
-        return transactions.flatMap{ $0 }.sorted {
+        return transactions.compactMap{ $0 }.sorted {
             if $0.pointee.timestamp == 0 {
                 return true
             } else if $1.pointee.timestamp == 0 {
@@ -472,7 +472,7 @@ extension BTCWalletManager : BRWalletListener {
             } else {
                 return $0.pointee.timestamp > $1.pointee.timestamp
             }
-            }.flatMap {
+            }.compactMap {
                 return BtcTransaction($0, walletManager: self, kvStore: kvStore, rate: rate)
         }
     }
