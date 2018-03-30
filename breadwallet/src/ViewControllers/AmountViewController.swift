@@ -257,19 +257,6 @@ class AmountViewController : UIViewController, Trackable {
         } else {
             amount = nil
         }
-        
-        print(amount?.rawValue.string(radix:10) ?? "nil")
-        
-        //TODO:ETH allow entry > maxMoney?
-//        if let newAmount = newAmount {
-//            if newAmount > C.maxMoney {
-//                pinPad.removeLast()
-//            } else {
-//                amount = newAmount
-//            }
-//        } else {
-//            amount = nil
-//        }
     }
 
     private func updateAmountLabel() {
@@ -278,7 +265,7 @@ class AmountViewController : UIViewController, Trackable {
                                    currency: currency,
                                    rate: selectedRate,
                                    minimumFractionDigits: minimumFractionDigits)
-        var output = displayAmount.description
+        var output = (selectedRate == nil) ? displayAmount.tokenFormattedValue : displayAmount.fiatDescription
         if hasTrailingDecimal {
             output = output.appending(NumberFormatter().currencyDecimalSeparator)
         }
