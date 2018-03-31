@@ -55,6 +55,7 @@ class EthWalletManager : WalletManager {
     var apiClient: BRAPIClient?
     var address: String?
     var gasPrice: UInt256 = 0
+    var walletID: String?
 
     var ethAddress: BREthereumAddress?
     var account: BREthereumAccount?
@@ -74,6 +75,10 @@ class EthWalletManager : WalletManager {
                 self.address = address
                 Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(receiveAddress: address)))
             }
+        }
+        if let walletID = getWalletID() {
+            self.walletID = walletID
+            print("walletID:", walletID)
         }
         DispatchQueue.main.async { [weak self] in
             guard let myself = self else { return }
@@ -154,6 +159,26 @@ class EthWalletManager : WalletManager {
 
     func canUseBiometrics(forTx: BRTxRef) -> Bool {
         return false
+    }
+    
+    // walletID identifies a wallet by the ethereum public key
+    // 1. compute the sha256(address[0]) -- note address excludes the "0x" prefix
+    // 2. take the first 10 bytes of the sha256 and base32 encode it (lowercasing the result)
+    // 3. split the result into chunks of 4-character strings and join with a space
+    //
+    // this provides an easily human-readable (and verbally-recitable) string that can
+    // be used to uniquely identify this wallet.
+    //
+    // the user may then provide this ID for later lookup in associated systems
+    private func getWalletID() -> String? {
+        if let small = address?.dropFirst(2).data(using: .utf8)?.sha256[0..<10].base32.lowercased() {
+            return stride(from: 0, to: small.count, by: 4).map {
+                let start = small.index(small.startIndex, offsetBy: $0)
+                let end = small.index(start, offsetBy: 4, limitedBy: small.endIndex) ?? small.endIndex
+                return String(small[start..<end])
+            }.joined(separator: " ")
+        }
+        return nil
     }
 }
 
