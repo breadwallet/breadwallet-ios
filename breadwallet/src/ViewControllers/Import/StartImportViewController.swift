@@ -174,7 +174,7 @@ class StartImportViewController : UIViewController {
         guard !wallet.containsAddress(address) else {
             return showErrorMessage(S.Import.Error.duplicate)
         }
-        let outputs = data.flatMap { SimpleUTXO(json: $0) }
+        let outputs = data.compactMap { SimpleUTXO(json: $0) }
         let balance = outputs.map { $0.satoshis }.reduce(0, +)
         outputs.forEach { output in
             tx.addInput(txHash: output.hash, index: output.index, amount: output.satoshis, script: output.script)
