@@ -265,11 +265,8 @@ class ApplicationController : Subscriber, Trackable {
         modalPresenter = ModalPresenter(walletManagers: walletManagers, window: window, apiClient: noAuthApiClient)
         startFlowController = StartFlowPresenter(walletManager: primaryWalletManager, rootViewController: rootViewController)
         
-        walletManagers.forEach { (arg) in
-            let (currencyCode, walletManager) = arg
-            if let manager = walletManager as? BTCWalletManager {
-                feeUpdaters[currencyCode] = FeeUpdater(walletManager: manager)
-            }
+        walletManagers.forEach { (currencyCode, walletManager) in
+            feeUpdaters[currencyCode] = FeeUpdater(walletManager: walletManager)
         }
 
         defaultsUpdater = UserDefaultsUpdater(walletManager: primaryWalletManager)

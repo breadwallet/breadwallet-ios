@@ -70,8 +70,8 @@ class Sender {
             guard let tx = transaction, let fee = walletManager.wallet?.feeForTx(tx) else { return 0 }
             return UInt256(fee)
         case is Ethereum:
-            //TODO:ETH
-            return UInt256(21000)
+            guard let gasPrice = (walletManager as? EthWalletManager)?.gasPrice else { return 0 }
+            return gasPrice * UInt256(21000) // tx gas limit
         default:
             //TODO:ERC20
             assertionFailure("unsupported")
@@ -90,12 +90,11 @@ class Sender {
             guard let fee = walletManager.wallet?.feeForTx(amount: amount.asUInt64) else { return nil }
             return UInt256(fee)
         case is Ethereum:
-            //TODO:ETH
-            return UInt256(21000)*UInt256(22000000000)
+            return fee
         default:
             //TODO:ERC20
             assertionFailure("unsupported")
-            return UInt256(0)
+            return nil
         }
     }
 
