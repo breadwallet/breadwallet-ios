@@ -52,7 +52,7 @@ enum BiometricsResult {
     case failure
 }
 
-extension WalletManager : WalletAuthenticator {
+extension BTCWalletManager : WalletAuthenticator {
     static private var failedPins = [String]()
     
     convenience init(currency: CurrencyDef, dbPath: String? = nil, earliestKeyTimeOverride: TimeInterval? = nil) throws {
@@ -90,7 +90,7 @@ extension WalletManager : WalletAuthenticator {
     
     // true if keychain is available and we know that no wallet exists on it
     var noWallet: Bool {
-        return WalletManager.staticNoWallet
+        return BTCWalletManager.staticNoWallet
     }
 
     static var staticNoWallet: Bool {
@@ -196,7 +196,7 @@ extension WalletManager : WalletAuthenticator {
                 }
             }
             
-            if !WalletManager.failedPins.contains(pin) { // count unique attempts before checking success
+            if !BTCWalletManager.failedPins.contains(pin) { // count unique attempts before checking success
                 failCount += 1
                 try setKeychainItem(key: KeychainKey.pinFailCount, item: Int64(failCount))
             }
@@ -205,8 +205,8 @@ extension WalletManager : WalletAuthenticator {
                 try authenticationSuccess()
                 return true
             }
-            else if !WalletManager.failedPins.contains(pin) { // unique failed attempt
-                WalletManager.failedPins.append(pin)
+            else if !BTCWalletManager.failedPins.contains(pin) { // unique failed attempt
+                BTCWalletManager.failedPins.append(pin)
                 
                 if (failCount >= 8) { // wipe wallet after 8 failed pin attempts and 24+ hours of lockout
                     Store.trigger(name: .wipeWalletNoPrompt)
@@ -247,7 +247,7 @@ extension WalletManager : WalletAuthenticator {
     private func authenticationSuccess() throws {
         let limit = Int64(UserDefaults.standard.double(forKey: DefaultsKey.spendLimitAmount))
 
-        WalletManager.failedPins.removeAll()
+        BTCWalletManager.failedPins.removeAll()
         UserDefaults.standard.set(Date.timeIntervalSinceReferenceDate, forKey: DefaultsKey.pinUnlockTime)
         try setKeychainItem(key: KeychainKey.pinFailTime, item: Int64(0))
         try setKeychainItem(key: KeychainKey.pinFailCount, item: Int64(0))
@@ -349,7 +349,7 @@ extension WalletManager : WalletAuthenticator {
     // will fail if a wallet already exists on the keychain
     func setRandomSeedPhrase() -> String? {
         guard noWallet else { return nil }
-        guard var words = rawWordList else { return nil }
+        guard var words = Words.rawWordList else { return nil }
         let time = Date.timeIntervalSinceReferenceDate
 
         // we store the wallet creation time on the keychain because keychain data persists even when app is deleted
@@ -370,7 +370,7 @@ extension WalletManager : WalletAuthenticator {
             var phraseData = CFDataCreateMutable(secureAllocator, phraseLen) as Data
             phraseData.count = phraseLen
             guard phraseData.withUnsafeMutableBytes({
-                BRBIP39Encode($0, phraseData.count, &words, entropyRef, MemoryLayout<UInt128>.size)
+                BRBIP39Encode($0, phraseLen, &words, entropyRef, MemoryLayout<UInt128>.size)
             }) == phraseData.count else { return nil }
             entropy = UInt128()
             let phrase = CFStringCreateFromExternalRepresentation(secureAllocator, phraseData as CFData,
@@ -549,20 +549,6 @@ extension WalletManager : WalletAuthenticator {
         }
     }
     
-    private struct KeychainKey {
-        public static let mnemonic = "mnemonic"
-        public static let creationTime = "creationtime"
-        public static let masterPubKey = "masterpubkey"
-        public static let spendLimit = "spendlimit"
-        public static let pin = "pin"
-        public static let pinFailCount = "pinfailcount"
-        public static let pinFailTime = "pinfailheight"
-        public static let apiAuthKey = "authprivkey"
-        public static let ethPrivKey = "ethprivkey"
-        public static let userAccount = "https://api.breadwallet.com"
-        public static let seed = "seed" // deprecated
-    }
-    
     private struct DefaultsKey {
         public static let spendLimitAmount = "SPEND_LIMIT_AMOUNT"
         public static let pinUnlockTime = "PIN_UNLOCK_TIME"
@@ -581,6 +567,29 @@ extension WalletManager : WalletAuthenticator {
             catch { return false }
         }
     }
+}
+
+extension EthWalletManager {
+    func loadPhrase() -> String? {
+        do {
+            return try keychainItem(key: KeychainKey.mnemonic)
+        }
+        catch { return nil }
+    }
+}
+
+private struct KeychainKey {
+    public static let mnemonic = "mnemonic"
+    public static let creationTime = "creationtime"
+    public static let masterPubKey = "masterpubkey"
+    public static let spendLimit = "spendlimit"
+    public static let pin = "pin"
+    public static let pinFailCount = "pinfailcount"
+    public static let pinFailTime = "pinfailheight"
+    public static let apiAuthKey = "authprivkey"
+    public static let ethPrivKey = "ethprivkey"
+    public static let userAccount = "https://api.breadwallet.com"
+    public static let seed = "seed" // deprecated
 }
 
 private func keychainItem<T>(key: String) throws -> T? {

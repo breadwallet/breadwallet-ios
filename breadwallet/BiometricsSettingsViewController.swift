@@ -8,12 +8,13 @@
 
 import UIKit
 import LocalAuthentication
+import BRCore
 
 class BiometricsSettingsViewController : UIViewController, Subscriber {
 
     var presentSpendingLimit: (() -> Void)?
 
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
         super.init(nibName: nil, bundle: nil)
     }
@@ -25,7 +26,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
     private let toggle = GradientSwitch()
     private let separator = UIView(color: .secondaryShadow)
     private let textView = UnEditableTextView()
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private var rate: Rate?
 
     deinit {
@@ -127,10 +128,10 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
 
     private var textViewText: NSAttributedString {
         guard let rate = rate else { return NSAttributedString(string: "") }
-        let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
+        let amount = Amount(amount: UInt256(walletManager.spendingLimit), currency: Currencies.btc, rate: rate)
         let customizeText = LAContext.biometricType() == .face ? S.FaceIDSettings.customizeText : S.TouchIdSettings.customizeText
         let linkText = LAContext.biometricType() == .face ? S.FaceIDSettings.linkText : S.TouchIdSettings.linkText
-        let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.bits, amount.localCurrency))\n\n\(String(format: customizeText, linkText))"
+        let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.tokenDescription, amount.fiatDescription))\n\n\(String(format: customizeText, linkText))"
         let attributedString = NSMutableAttributedString(string: string, attributes: [
                 NSAttributedStringKey.font: UIFont.customBody(size: 13.0),
                 NSAttributedStringKey.foregroundColor: UIColor.darkText

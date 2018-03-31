@@ -53,7 +53,8 @@ extension BRAPIClient {
     }
     
     func exchangeRates(code: String, isFallback: Bool = false, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
-        let param = code == Currencies.bch.code ? "?currency=bch" : ""
+        guard Currencies.eth.code != code else { return exchangeRate(code: code, handler) }
+        let param = "?currency=\(code.lowercased())"
         let request = isFallback ? URLRequest(url: URL(string: fallbackRatesURL)!) : URLRequest(url: url("/rates\(param)"))
         let task = dataTaskWithRequest(request) { (data, response, error) in
             if error == nil, let data = data,
@@ -62,13 +63,13 @@ extension BRAPIClient {
                     guard let array = parsedData as? [Any] else {
                         return handler([], "/rates didn't return an array")
                     }
-                    handler(array.flatMap { Rate(data: $0, reciprocalCode: code) }, nil)
+                    handler(array.compactMap { Rate(data: $0, reciprocalCode: code) }, nil)
                 } else {
                     guard let dict = parsedData as? [String: Any],
                         let array = dict["body"] as? [Any] else {
                             return self.exchangeRates(code: code, isFallback: true, handler)
                     }
-                    handler(array.flatMap { Rate(data: $0, reciprocalCode: code) }, nil)
+                    handler(array.compactMap { Rate(data: $0, reciprocalCode: code) }, nil)
                 }
             } else {
                 if isFallback {
@@ -79,6 +80,28 @@ extension BRAPIClient {
             }
         }
         task.resume()
+    }
+
+    //For rate endpoint that returns rate in relation to btc
+    func exchangeRate(code: String, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
+        let param = "?currency=\(code.lowercased())"
+        let request = URLRequest(url: url("/rates\(param)"))
+        dataTaskWithRequest(request, handler: { data, response, error in
+            if error == nil, let data = data {
+                do {
+                    let rates = try JSONDecoder().decode(BTCRateResponse.self, from: data).body
+                    let ethRate = rates.first!
+                    let ethRates = Store.state.wallets[Currencies.btc.code]?.rates.map {
+                        return Rate(code: $0.code, name: $0.name, rate: $0.rate*ethRate.rate, reciprocalCode: code.lowercased())
+                    }
+                    handler(ethRates!, nil)
+                } catch let e {
+                    handler([], e.localizedDescription)
+                }
+            } else {
+                handler([], error?.localizedDescription)
+            }
+        }).resume()
     }
     
     func savePushNotificationToken(_ token: Data) {
@@ -134,14 +157,14 @@ extension BRAPIClient {
     }
 }
 
-struct ExchangeRateResponse : Codable {
-    let status: String
-    let message: String
-    let result: EthRate
+struct BTCRateResponse : Codable {
+    let body: [BTCRate]
 }
 
-struct EthRate : Codable {
-    let ethbtc: String
+struct BTCRate : Codable {
+    let code: String
+    let name: String
+    let rate: Double
 }
 
 private func pushNotificationEnvironment() -> String {

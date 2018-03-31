@@ -18,7 +18,7 @@ typealias EnterPhraseCallback = (String) -> Void
 
 class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, CustomTitleView, Trackable {
 
-    init(walletManager: WalletManager, reason: PhraseEntryReason) {
+    init(walletManager: BTCWalletManager, reason: PhraseEntryReason) {
         self.walletManager = walletManager
         self.enterPhrase = EnterPhraseCollectionViewController(walletManager: walletManager)
         self.faq = UIButton.buildFaqButton(articleId: ArticleIds.recoverWallet)
@@ -39,7 +39,7 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
     }
 
     //MARK: - Private
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private let reason: PhraseEntryReason
     private let enterPhrase: EnterPhraseCollectionViewController
     private let errorLabel = UILabel.wrapping(font: .customBody(size: 16.0), color: .cameraGuideNegative)
@@ -141,7 +141,7 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
             instruction.isHidden = true
             moreInfoButton.setTitle(S.RecoverWallet.resetPinInfo, for: .normal)
             moreInfoButton.tap = {
-                Store.trigger(name: .presentFaq(ArticleIds.resetPinWithPaperKey))
+                Store.trigger(name: .presentFaq(ArticleIds.resetPinWithPaperKey, nil))
             }
             faq.isHidden = true
         case .validateForWipingWallet(_):

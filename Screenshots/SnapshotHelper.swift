@@ -198,7 +198,7 @@ open class Snapshot: NSObject {
 
             homeDir = usersDir.appendingPathComponent(user)
         #else
-            #if arch(i386) || arch(x86_64)
+            #if targetEnvironment(simulator)
                 guard let simulatorHostHome = ProcessInfo().environment["SIMULATOR_HOST_HOME"] else {
                     throw SnapshotError.cannotFindSimulatorHomeDirectory
                 }

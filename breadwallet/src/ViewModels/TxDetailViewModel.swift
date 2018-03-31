@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCore
 
 /// View model of a transaction in detail view
 struct TxDetailViewModel: TxViewModel {
@@ -16,11 +17,15 @@ struct TxDetailViewModel: TxViewModel {
     let amount: String
     let fiatAmount: String
     let originalFiatAmount: String?
-    let startingBalance: String
-    let endingBalance: String
     let exchangeRate: String
     let transactionHash: String
     let tx: Transaction
+    
+    // Ethereum-specific fields
+    var gasPrice: String?
+    var gasLimit: String?
+    var fee: String?
+    var total: String?
     
     var title: String {
         guard status != .invalid else { return S.TransactionDetails.titleFailed }
@@ -74,43 +79,36 @@ extension TxDetailViewModel {
         let fiatAmounts = TxDetailViewModel.fiatAmounts(tx: tx, currentRate: rate)
         fiatAmount = fiatAmounts.0
         originalFiatAmount = fiatAmounts.1
-        
-        let balances = TxDetailViewModel.balances(tx: tx, showFiatAmount: Store.state.isBtcSwapped)
-        
-        startingBalance = balances.0
-        endingBalance = balances.1
         exchangeRate = TxDetailViewModel.exchangeRateText(tx: tx) ?? ""
         transactionHash = tx.hash
         self.tx = tx
-    }
-    
-    private static func balances(tx: Transaction, showFiatAmount: Bool) -> (String, String) {
-        guard let tx = tx as? BtcTransaction,
-            let rate = tx.currency.state.currentRate else { return ("", "") }
-        let maxDigits = tx.currency.state.maxDigits
         
-        var startingString = Amount(amount: tx.startingBalance,
-                                    rate: rate,
-                                    maxDigits: maxDigits,
-                                    currency: Currencies.btc).string(isBtcSwapped: showFiatAmount)
-        var endingString = Amount(amount: tx.endingBalance,
-                                  rate: rate,
-                                  maxDigits: maxDigits,
-                                  currency: Currencies.btc).string(isBtcSwapped: showFiatAmount)
-        
-        if tx.startingBalance > C.maxMoney {
-            startingString = ""
-            endingString = ""
+        if let tx = tx as? EthLikeTransaction {
+            let gasFormatter = NumberFormatter()
+            gasFormatter.numberStyle = .decimal
+            gasFormatter.maximumFractionDigits = 0
+            gasLimit = gasFormatter.string(from: tx.gasLimit as NSNumber)
+            
+            gasPrice = Amount(amount: tx.gasPrice, currency: tx.currency, rate: rate).tokenDescription(inUnit: Ethereum.Units.gwei)
+            
+            let totalFee = tx.gasPrice * UInt256(tx.gasUsed)
+            let feeAmount = Amount(amount: totalFee, currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
+            let totalAmount = Amount(amount: tx.amount + totalFee, currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
+            
+            if Store.state.isBtcSwapped {
+                fee = feeAmount.fiatDescription
+                total = totalAmount.fiatDescription
+            } else {
+                fee = feeAmount.tokenDescription
+                total = totalAmount.tokenDescription
+            }
         }
-        
-        return (startingString, endingString)
     }
     
     /// The fiat exchange rate at the time of transaction
     /// Assumes fiat currency does not change
     private static func exchangeRateText(tx: Transaction) -> String? {
-        guard let tx = tx as? BtcTransaction,
-            let rate = tx.metaData?.exchangeRate,
+        guard let rate = tx.metaData?.exchangeRate,
             let symbol = tx.currency.state.currentRate?.currencySymbol else { return nil }
         
         let nf = NumberFormatter()
@@ -120,43 +118,37 @@ extension TxDetailViewModel {
     }
     
     private static func tokenAmount(tx: Transaction) -> String? {
-        guard let tx = tx as? BtcTransaction else { return nil }
-        let amount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
-                                   selectedRate: nil,
-                                   minimumFractionDigits: nil,
-                                   currency: tx.currency,
-                                   negative: (tx.direction == .sent))
+        let amount = Amount(amount: tx.amount,
+                            currency: tx.currency,
+                            rate: nil,
+                            maximumFractionDigits: Amount.highPrecisionDigits,
+                            negative: (tx.direction == .sent))
         return amount.description
     }
     
     /// Fiat amount at current exchange rate and at original rate at time of transaction (if available)
     /// Returns (currentFiatAmount, originalFiatAmount)
     private static func fiatAmounts(tx: Transaction, currentRate: Rate) -> (String, String?) {
-        guard let tx = tx as? BtcTransaction else { return ("", nil) }
         if let txRate = tx.metaData?.exchangeRate {
             let originalRate = Rate(code: currentRate.code,
                                     name: currentRate.name,
                                     rate: txRate,
                                     reciprocalCode: currentRate.reciprocalCode)
-            let currentAmount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
-                                              selectedRate: currentRate,
-                                              minimumFractionDigits: nil,
-                                              currency: tx.currency,
-                                              negative: false).description
-            let originalAmount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
-                                               selectedRate: originalRate,
-                                               minimumFractionDigits: nil,
-                                               currency: tx.currency,
-                                               negative: false).description
+            let currentAmount = Amount(amount: tx.amount,
+                                       currency: tx.currency,
+                                       rate: currentRate,
+                                       negative: false).description
+            let originalAmount = Amount(amount: tx.amount,
+                                        currency: tx.currency,
+                                        rate: originalRate,
+                                        negative: false).description
             return (currentAmount, originalAmount)
-            
         } else {
             // no tx-time rate
-            let currentAmount = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
-                                              selectedRate: currentRate,
-                                              minimumFractionDigits: nil,
-                                              currency: tx.currency,
-                                              negative: false)
+            let currentAmount = Amount(amount: tx.amount,
+                                       currency: tx.currency,
+                                       rate: currentRate,
+                                       negative: false)
             return (currentAmount.description, nil)
         }
     }

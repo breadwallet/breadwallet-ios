@@ -56,7 +56,8 @@ extension State {
                         isPromptingBiometrics: false,
                         pinLength: 6,
                         wallets: [Currencies.btc.code: WalletState.initial(Currencies.btc, displayOrder: 0),
-                                  Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: 1)])
+                                  Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: 1),
+                                  Currencies.eth.code: WalletState.initial(Currencies.eth, displayOrder: 2)])
     }
     
     func mutate(   isStartFlowVisible: Bool? = nil,
@@ -115,16 +116,13 @@ struct WalletState {
     let displayOrder: Int
     let syncProgress: Double
     let syncState: SyncState
-    let balance: UInt64?
+    let balance: UInt256?
     let transactions: [Transaction]
     let lastBlockTimestamp: UInt32
     let name: String
     let creationDate: Date
     let isRescanning: Bool
     let receiveAddress: String?
-    let bigBalance: GethBigInt? // ??
-    let token: ERC20Token? // ??
-    let numSent: Int // ??
     let rates: [Rate]
     let currentRate: Rate?
     let fees: Fees?
@@ -146,9 +144,6 @@ struct WalletState {
                            creationDate: Date.zeroValue(),
                            isRescanning: false,
                            receiveAddress: nil,
-                           bigBalance: nil,
-                           token: nil,
-                           numSent: 0,
                            rates: [],
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
                            fees: nil,
@@ -160,16 +155,13 @@ struct WalletState {
     func mutate(    displayOrder: Int? = nil,
                     syncProgress: Double? = nil,
                     syncState: SyncState? = nil,
-                    balance: UInt64? = nil,
+                    balance: UInt256? = nil,
                     transactions: [Transaction]? = nil,
                     lastBlockTimestamp: UInt32? = nil,
                     name: String? = nil,
                     creationDate: Date? = nil,
                     isRescanning: Bool? = nil,
                     receiveAddress: String? = nil,
-                    bigBalance: GethBigInt? = nil,
-                    token: ERC20Token? = nil,
-                    numSent: Int? = nil,
                     currentRate: Rate? = nil,
                     rates: [Rate]? = nil,
                     fees: Fees? = nil,
@@ -188,9 +180,6 @@ struct WalletState {
                            creationDate: creationDate ?? self.creationDate,
                            isRescanning: isRescanning ?? self.isRescanning,
                            receiveAddress: receiveAddress ?? self.receiveAddress,
-                           bigBalance: bigBalance ?? self.bigBalance,
-                           token: token ?? self.token,
-                           numSent: numSent ?? self.numSent,
                            rates: rates ?? self.rates,
                            currentRate: currentRate ?? self.currentRate,
                            fees: fees ?? self.fees,
@@ -211,7 +200,6 @@ func ==(lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.name == rhs.name &&
         lhs.creationDate == rhs.creationDate &&
         lhs.isRescanning == rhs.isRescanning &&
-        lhs.numSent == rhs.numSent &&
         lhs.rates == rhs.rates &&
         lhs.currentRate == rhs.currentRate &&
         lhs.fees == rhs.fees &&

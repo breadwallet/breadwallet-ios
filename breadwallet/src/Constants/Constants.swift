@@ -35,7 +35,6 @@ struct C {
     static let maxMoney: UInt64 = 21000000*100000000
     static let satoshis: UInt64 = 100000000
     static let walletQueue = "com.breadwallet.walletqueue"
-    static let btcCurrencyCode = "BTC"
     static let null = "(null)"
     static let maxMemoLength = 250
     static let feedbackEmail = "feedback@breadapp.com"
@@ -51,5 +50,17 @@ struct C {
     static var logFilePath: URL {
         let cachesDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
         return URL(fileURLWithPath: cachesDirectory).appendingPathComponent("log.txt")
+    }
+}
+
+enum Words {
+    static var wordList: [NSString]? {
+        guard let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist") else { return nil }
+        return NSArray(contentsOfFile: path) as? [NSString]
+    }
+
+    static var rawWordList: [UnsafePointer<CChar>?]? {
+        guard let wordList = Words.wordList, wordList.count == 2048 else { return nil }
+        return wordList.map({ $0.utf8String })
     }
 }

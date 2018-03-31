@@ -24,7 +24,7 @@ struct E {
         #endif
     }()
     static let isSimulator: Bool = {
-        #if arch(i386) || arch(x86_64)
+        #if targetEnvironment(simulator)
             return true
         #else
             return false
@@ -40,6 +40,13 @@ struct E {
     static let isScreenshots: Bool = {
         #if Screenshots
             return true
+        #else
+            return false
+        #endif
+    }()
+    static let isRunningTests: Bool = {
+        #if Debug
+            return ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
         #else
             return false
         #endif

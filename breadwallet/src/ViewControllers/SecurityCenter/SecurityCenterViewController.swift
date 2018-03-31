@@ -31,7 +31,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         didSet { paperKeyCell.tap = didTapPaperKey }
     }
 
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
         self.header = ModalHeaderView(title: S.SecurityCenter.title, style: .light, faqInfo: (ArticleIds.securityCenter))
         super.init(nibName: nil, bundle: nil)
@@ -47,7 +47,7 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     private let biometricsCell = SecurityCenterCell(title: LAContext.biometricType() == .face ? S.SecurityCenter.Cells.faceIdTitle : S.SecurityCenter.Cells.touchIdTitle, descriptionText: S.SecurityCenter.Cells.touchIdDescription)
     private let paperKeyCell = SecurityCenterCell(title: S.SecurityCenter.Cells.paperKeyTitle, descriptionText: S.SecurityCenter.Cells.paperKeyDescription)
     private let separator = UIView(color: .secondaryShadow)
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     fileprivate var didViewAppear = false
 
     deinit {

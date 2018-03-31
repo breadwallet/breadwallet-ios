@@ -26,6 +26,9 @@
 import Foundation
 import BRCore
 
+// BIP70 payment protocol: https://github.com/bitcoin/bips/blob/master/bip-0070.mediawiki
+// bitpay json payment protocol: https://github.com/bitpay/jsonPaymentProtocol/blob/master/specification.md
+
 class PaymentProtocolDetails {
     internal let cPtr: UnsafeMutablePointer<BRPaymentProtocolDetails>
     internal var isManaged: Bool
@@ -43,7 +46,8 @@ class PaymentProtocolDetails {
         self.isManaged = true
     }
     
-    init?(bytes: [UInt8]) {
+    init?(data: Data) {
+        let bytes = [UInt8](data)
         guard let cPtr = BRPaymentProtocolDetailsParse(bytes, bytes.count) else { return nil }
         self.cPtr = cPtr
         self.isManaged = true
@@ -55,9 +59,13 @@ class PaymentProtocolDetails {
         return bytes
     }
     
-    var network: String { // "main" or "test", default is "main"
+    var network: String { // main / test / regtest, default is "main"
         return String(cString: cPtr.pointee.network)
     }
+    
+    var currency: String = "BTC" // three digit currency code representing which coin the request is based on (bitpay)
+    
+    var requiredFeePerByte: Double = 0.0 // the minimum fee per byte required on this transaction (bitpay)
 
     var outputs: [BRTxOutput] { // where to send payments, outputs[n].amount defaults to 0
         return [BRTxOutput](UnsafeBufferPointer(start: cPtr.pointee.outputs, count: cPtr.pointee.outCount))
@@ -81,6 +89,8 @@ class PaymentProtocolDetails {
         return String(cString: cPtr.pointee.paymentURL)
     }
 
+    var paymentId: String? = nil // the invoice ID, can be kept for records (bitpay)
+    
     var merchantData: [UInt8]? { // arbitrary data to include in the payment message, optional
         guard cPtr.pointee.merchantData != nil else { return nil }
         return [UInt8](UnsafeBufferPointer(start: cPtr.pointee.merchantData, count: cPtr.pointee.merchDataLen))
@@ -92,6 +102,23 @@ class PaymentProtocolDetails {
 }
 
 class PaymentProtocolRequest {
+    internal struct Request: Decodable {
+        internal struct Output: Decodable {
+            let amount: UInt64
+            let address: String
+        }
+        
+        let network: String
+        let currency: String
+        let requiredFeePerByte: Double
+        let outputs: [Output]
+        let time: Date
+        let expires: Date
+        let memo: String
+        let paymentUrl: URL
+        let paymentId: String
+    }
+    
     internal let cPtr: UnsafeMutablePointer<BRPaymentProtocolRequest>
     internal var isManaged: Bool
     private var cName: String?
@@ -115,8 +142,27 @@ class PaymentProtocolRequest {
 
     init?(data: Data) {
         let bytes = [UInt8](data)
-        guard let cPtr = BRPaymentProtocolRequestParse(bytes, bytes.count) else { return nil }
-        self.cPtr = cPtr
+        var cPtr = BRPaymentProtocolRequestParse(bytes, bytes.count)
+        
+        if cPtr == nil {
+            guard let req = try? JSONDecoder().decode(Request.self, from: data) else { return nil }
+            let outputs = req.outputs.map {
+                BRTxOutput(req.currency == "BCH" ? $0.address.bitcoinAddr : $0.address, $0.amount)
+            }
+            guard let details = PaymentProtocolDetails(network: req.network, outputs: outputs,
+                                                       time: UInt64(req.time.timeIntervalSince1970),
+                                                       expires: UInt64(req.expires.timeIntervalSince1970),
+                                                       memo: req.memo, paymentURL: req.paymentUrl.absoluteString)
+                else { return nil }
+            details.currency = req.currency
+            details.requiredFeePerByte = req.requiredFeePerByte
+            details.paymentId = req.paymentId
+            mimeType = "application/payment-request"
+            cPtr = BRPaymentProtocolRequestNew(1, "none", nil, 0, details.cPtr, nil, 0)
+        }
+        
+        guard cPtr != nil else { return nil }
+        self.cPtr = cPtr!
         self.isManaged = true
     }
     
@@ -250,12 +296,19 @@ class PaymentProtocolRequest {
         return errMsg
     }
     
+    var mimeType: String = "application/bitcoin-paymentrequest"
+    
     deinit {
         if isManaged { BRPaymentProtocolRequestFree(cPtr) }
     }
 }
 
 class PaymentProtocolPayment {
+    internal struct Payment: Decodable, Encodable {
+        let currency: String
+        let transactions: [String]
+    }
+    
     internal let cPtr: UnsafeMutablePointer<BRPaymentProtocolPayment>
     internal var isManaged: Bool
 
@@ -275,7 +328,8 @@ class PaymentProtocolPayment {
         self.isManaged = true
     }
 
-    init?(bytes: [UInt8]) {
+    init?(data: Data) {
+        let bytes = [UInt8](data)
         guard let cPtr = BRPaymentProtocolPaymentParse(bytes, bytes.count) else { return nil }
         self.cPtr = cPtr
         self.isManaged = true
@@ -287,6 +341,8 @@ class PaymentProtocolPayment {
         return bytes
     }
 
+    var currency: String = "BTC" // three digit currency code representing which coin the request is based on (bitpay)
+    
     var merchantData: [UInt8]? { // from request->details->merchantData, optional
         guard cPtr.pointee.merchantData != nil else { return nil }
         return [UInt8](UnsafeBufferPointer(start: cPtr.pointee.merchantData, count: cPtr.pointee.merchDataLen))
@@ -305,12 +361,23 @@ class PaymentProtocolPayment {
         return String(cString: cPtr.pointee.memo)
     }
     
+    var json: String? {
+        let tx = transactions.compactMap { $0?.bytes?.reduce("") { $0 + String(format: "%02x", $1) } }
+        guard let data = try? JSONEncoder().encode(Payment(currency: currency, transactions: tx)) else { return nil }
+        return String(data: data, encoding: .utf8)
+    }
+    
     deinit {
         if isManaged { BRPaymentProtocolPaymentFree(cPtr) }
     }
 }
 
 class PaymentProtocolACK {
+    internal struct Ack: Decodable {
+        let payment: PaymentProtocolPayment.Payment
+        let memo: String?
+    }
+    
     internal let cPtr: UnsafeMutablePointer<BRPaymentProtocolACK>
     internal var isManaged: Bool
     
@@ -329,8 +396,17 @@ class PaymentProtocolACK {
     
     init?(data: Data) {
         let bytes = [UInt8](data)
-        guard let cPtr = BRPaymentProtocolACKParse(bytes, bytes.count) else { return nil }
-        self.cPtr = cPtr
+        var cPtr = BRPaymentProtocolACKParse(bytes, bytes.count)
+
+        if cPtr == nil {
+            guard let ack = try? JSONDecoder().decode(Ack.self, from: data) else { return nil }
+            guard let payment = PaymentProtocolPayment(transactions: [], refundTo: []) else { return nil }
+            payment.currency = ack.payment.currency
+            cPtr = BRPaymentProtocolACKNew(payment.cPtr, ack.memo)
+        }
+        
+        guard cPtr != nil else { return nil }
+        self.cPtr = cPtr!
         self.isManaged = true
     }
     

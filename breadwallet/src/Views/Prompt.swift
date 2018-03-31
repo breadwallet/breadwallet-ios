@@ -20,7 +20,7 @@ enum PromptType {
         return [.upgradePin, .paperKey, .noPasscode, .biometrics, .shareData]
     }()
     
-    static func nextPrompt(walletManager: WalletManager) -> PromptType? {
+    static func nextPrompt(walletManager: BTCWalletManager) -> PromptType? {
         return defaultOrder.first(where: { $0.shouldPrompt(walletManager: walletManager) })
     }
 
@@ -65,7 +65,7 @@ enum PromptType {
         }
     }
 
-    private func shouldPrompt(walletManager: WalletManager) -> Bool {
+    private func shouldPrompt(walletManager: BTCWalletManager) -> Bool {
         switch self {
         case .biometrics:
             return !UserDefaults.hasPromptedBiometrics && LAContext.canUseBiometrics && !UserDefaults.isBiometricsEnabled

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import BRCore
 
 /// Transacton status
 enum TransactionStatus {
@@ -30,6 +31,7 @@ protocol Transaction {
     var direction: TransactionDirection { get }
     var timestamp: TimeInterval { get }
     var toAddress: String { get }
+    var amount: UInt256 { get }
     
     var metaData: TxMetaData? { get }
     var comment: String? { get }
@@ -47,13 +49,18 @@ extension Transaction {
     var isPending: Bool {
         return status == .pending
     }
+    var isValid: Bool {
+        return status != .invalid
+    }
 }
 
 // MARK: -
 
 protocol EthLikeTransaction: Transaction {
-    var amount: GethBigInt { get }
     var fromAddress: String { get }
+    var gasPrice: UInt256 { get }
+    var gasLimit: UInt64 { get }
+    var gasUsed: UInt64 { get }
 }
 
 

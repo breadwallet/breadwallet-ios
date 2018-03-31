@@ -38,7 +38,7 @@ struct BtcTransaction: Transaction {
         return metaDataContainer?.metaData
     }
     
-    let amount: UInt64
+    let amount: UInt256
     let fee: UInt64
     let startingBalance: UInt64
     let endingBalance: UInt64
@@ -51,7 +51,7 @@ struct BtcTransaction: Transaction {
     
     // MARK: - Init
     
-    init?(_ tx: BRTxRef, walletManager: WalletManager, kvStore: BRReplicatedKVStore?, rate: Rate?) {
+    init?(_ tx: BRTxRef, walletManager: BTCWalletManager, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         guard let wallet = walletManager.wallet,
             let peerManager = walletManager.peerManager else { return nil }
         self.currency = walletManager.currency
@@ -86,6 +86,7 @@ struct BtcTransaction: Transaction {
         let endingBalance: UInt64 = wallet.balanceAfterTx(tx)
         var startingBalance: UInt64
         var address: String
+        var amount: UInt64
         switch direction {
         case .received:
             address = myAddress
@@ -100,6 +101,7 @@ struct BtcTransaction: Transaction {
             amount = amountSent
             startingBalance = endingBalance.addingReportingOverflow(self.fee).0
         }
+        self.amount = UInt256(amount)
         self.startingBalance = startingBalance
         self.endingBalance = endingBalance
         

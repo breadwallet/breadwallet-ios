@@ -10,28 +10,43 @@ import Foundation
 
 class ExchangeUpdater : Subscriber {
 
-    let currency: CurrencyDef
+    let currencies: [CurrencyDef]
     
     //MARK: - Public
-    init(currency: CurrencyDef, walletManager: WalletManager) {
-        self.currency = currency
-        self.walletManager = walletManager
-        Store.subscribe(self,
-                        selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode },
-                        callback: { state in
-                            guard let currentRate = state[self.currency].rates.first( where: { $0.code == state.defaultCurrencyCode }) else { return }
-                            Store.perform(action: WalletChange(self.currency).setExchangeRate(currentRate))
-        })
+    init(currencies: [CurrencyDef], apiClient: BRAPIClient) {
+        self.currencies = currencies
+        self.apiClient = apiClient
+        currencies.forEach { currency in
+            Store.subscribe(self,
+                            selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode },
+                            callback: { state in
+                                guard let currentRate = state[currency].rates.first( where: { $0.code == state.defaultCurrencyCode }) else { return }
+                                Store.perform(action: WalletChange(currency).setExchangeRate(currentRate))
+            })
+        }
     }
 
     func refresh(completion: @escaping () -> Void) {
-        walletManager.apiClient?.exchangeRates(code: currency.code) { rates, error in
-            guard let currentRate = rates.first( where: { $0.code == Store.state.defaultCurrencyCode }) else { completion(); return }
-            Store.perform(action: WalletChange(self.currency).setExchangeRates(currentRate: currentRate, rates: rates))
-            completion()
+        //TODO:ETH - use new /rates endpoint
+        let regularCurrencies = [Currencies.btc, Currencies.bch]
+        let dispatchGroup = DispatchGroup()
+        regularCurrencies.forEach { currency in
+            dispatchGroup.enter()
+            apiClient.exchangeRates(code: currency.code) { rates, error in
+                guard let currentRate = rates.first( where: { $0.code == Store.state.defaultCurrencyCode }) else { completion(); return }
+                Store.perform(action: WalletChange(currency).setExchangeRates(currentRate: currentRate, rates: rates))
+                dispatchGroup.leave()
+            }
+        }
+        dispatchGroup.notify(queue: .main) {
+            self.apiClient.exchangeRates(code: Currencies.eth.code) { rates, error in
+                guard let currentRate = rates.first( where: { $0.code == Store.state.defaultCurrencyCode }) else { completion(); return }
+                Store.perform(action: WalletChange(Currencies.eth).setExchangeRates(currentRate: currentRate, rates: rates))
+                completion()
+            }
         }
     }
 
     //MARK: - Private
-    let walletManager: WalletManager
+    let apiClient: BRAPIClient
 }

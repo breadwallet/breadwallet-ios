@@ -10,15 +10,15 @@ import UIKit
 
 class HomeScreenViewController : UIViewController, Subscriber, Trackable {
     
-    var primaryWalletManager: WalletManager? {
+    var primaryWalletManager: BTCWalletManager? {
         didSet {
             setInitialData()
             setupSubscriptions()
-            currencyList.reload()
+            assetList.reload()
             attemptShowPrompt()
         }
     }
-    private let currencyList = AssetListTableView()
+    private let assetList = AssetListTableView()
     private let subHeaderView = UIView()
     private let logo = UIImageView(image:#imageLiteral(resourceName: "LogoGradient"))
     private let total = UILabel(font: .customBold(size: 28.0), color: .darkGray)
@@ -33,16 +33,16 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
     
     // MARK: -
     
-    init(primaryWalletManager: WalletManager?) {
+    init(primaryWalletManager: BTCWalletManager?) {
         self.primaryWalletManager = primaryWalletManager
         super.init(nibName: nil, bundle: nil)
     }
 
     override func viewDidLoad() {
-        currencyList.didSelectCurrency = didSelectCurrency
-        currencyList.didTapSecurity = didTapSecurity
-        currencyList.didTapSupport = didTapSupport
-        currencyList.didTapSettings = didTapSettings
+        assetList.didSelectCurrency = didSelectCurrency
+        assetList.didTapSecurity = didTapSecurity
+        assetList.didTapSupport = didTapSupport
+        assetList.didTapSettings = didTapSettings
         
         addSubviews()
         addConstraints()
@@ -104,12 +104,12 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
             promptHiddenConstraint
             ])
         
-        addChildViewController(currencyList, layout: {
-            currencyList.view.constrain([
-                currencyList.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                currencyList.view.topAnchor.constraint(equalTo: prompt.bottomAnchor),
-                currencyList.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                currencyList.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
+        addChildViewController(assetList, layout: {
+            assetList.view.constrain([
+                assetList.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                assetList.view.topAnchor.constraint(equalTo: prompt.bottomAnchor),
+                assetList.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                assetList.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
         })
     }
 
@@ -133,18 +133,21 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
     }
 
     private func updateTotalAssets() {
-        let fiatTotal = Store.state.currencies.map {
-            let balance = Store.state[$0].balance ?? 0
-            let rate = Store.state[$0].currentRate?.rate ?? 0
-            return Double(balance)/$0.baseUnit * rate
-        }.reduce(0.0, +)
+        let fiatTotal: Decimal = Store.state.currencies.map {
+            guard let balance = Store.state[$0].balance,
+                let rate = Store.state[$0].currentRate else { return 0.0 }
+            let amount = Amount(amount: balance,
+                                currency: $0,
+                                rate: rate)
+            return amount.fiatValue
+            }.reduce(0.0, +)
         let format = NumberFormatter()
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         format.currencySymbol = Store.state[Currencies.btc].currentRate?.currencySymbol ?? ""
-        self.total.text = format.string(from: NSNumber(value: fiatTotal))
+        self.total.text = format.string(from: fiatTotal as NSDecimalNumber)
     }
     
     private func setupSubscriptions() {

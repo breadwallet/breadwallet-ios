@@ -17,6 +17,7 @@ class TxListCell: UITableViewCell {
     private let amount = UILabel(font: .customBold(size: 18.0))
     private let separator = UIView(color: .separatorGray)
     private let statusIndicator = TxStatusIndicator(width: 44.0)
+    private let failedIndicator = UIButton(type: .system)
     private var pendingConstraints = [NSLayoutConstraint]()
     private var completeConstraints = [NSLayoutConstraint]()
     
@@ -39,12 +40,22 @@ class TxListCell: UITableViewCell {
         amount.attributedText = viewModel.amount(isBtcSwapped: isBtcSwapped, rate: rate)
         
         statusIndicator.status = viewModel.status
-        if viewModel.status == .complete {
+        
+        switch viewModel.status {
+        case .invalid:
+            failedIndicator.isHidden = false
+            statusIndicator.isHidden = true
+            timestamp.isHidden = true
+            NSLayoutConstraint.deactivate(completeConstraints)
+            NSLayoutConstraint.activate(pendingConstraints)
+        case .complete:
+            failedIndicator.isHidden = true
             statusIndicator.isHidden = true
             timestamp.isHidden = false
             NSLayoutConstraint.deactivate(pendingConstraints)
             NSLayoutConstraint.activate(completeConstraints)
-        } else {
+        default:
+            failedIndicator.isHidden = true
             statusIndicator.isHidden = false
             timestamp.isHidden = true
             NSLayoutConstraint.deactivate(completeConstraints)
@@ -64,6 +75,7 @@ class TxListCell: UITableViewCell {
         contentView.addSubview(timestamp)
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(statusIndicator)
+        contentView.addSubview(failedIndicator)
         contentView.addSubview(amount)
         contentView.addSubview(separator)
     }
@@ -97,6 +109,13 @@ class TxListCell: UITableViewCell {
             statusIndicator.heightAnchor.constraint(equalToConstant: statusIndicator.height)
             ])
         
+        failedIndicator.constrain([
+            failedIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            failedIndicator.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[2]),
+            failedIndicator.widthAnchor.constraint(equalToConstant: statusIndicator.width),
+            failedIndicator.heightAnchor.constraint(equalToConstant: 20.0)
+            ])
+        
         amount.constrain([
             amount.topAnchor.constraint(equalTo: contentView.topAnchor),
             amount.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
@@ -113,6 +132,12 @@ class TxListCell: UITableViewCell {
         amount.setContentHuggingPriority(.required, for: .horizontal)
         timestamp.setContentHuggingPriority(.required, for: .vertical)
         descriptionLabel.lineBreakMode = .byTruncatingTail
+        
+        failedIndicator.setTitle(S.Transaction.failed, for: .normal)
+        failedIndicator.titleLabel?.font = .customBold(size: 12.0)
+        failedIndicator.setTitleColor(.white, for: .normal)
+        failedIndicator.backgroundColor = .failedRed
+        failedIndicator.layer.cornerRadius = 3
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -43,7 +43,7 @@ class RequestAmountViewController : UIViewController {
     }
 
     //MARK - PinPad State
-    private var amount: Satoshis? {
+    private var amount: Amount? {
         didSet {
             setQrCode()
         }
@@ -244,6 +244,10 @@ class RequestAmountViewController : UIViewController {
 extension RequestAmountViewController : ModalDisplayable {
     var faqArticleId: String? {
         return ArticleIds.requestAmount
+    }
+    
+    var faqCurrency: CurrencyDef? {
+        return currency
     }
 
     var modalTitle: String {

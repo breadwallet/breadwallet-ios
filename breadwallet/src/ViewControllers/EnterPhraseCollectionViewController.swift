@@ -18,7 +18,7 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         return itemHeight * 4.0
     }
 
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
         let layout = UICollectionViewFlowLayout()
         let screenWidth = UIScreen.main.safeWidth
@@ -31,7 +31,7 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
 
     //MARK: - Private
     private let cellIdentifier = "CellIdentifier"
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private var phrase: String {
         return (0...11).map { index in
                 guard let phraseCell = collectionView?.cellForItem(at: IndexPath(item: index, section: 0)) as? EnterPhraseCell else { return ""}
