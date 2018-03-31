@@ -54,6 +54,7 @@ class EthWalletManager : WalletManager {
     var kvStore: BRReplicatedKVStore?
     var apiClient: BRAPIClient?
     var address: String?
+    var gasPrice: UInt256 = 0
 
     var ethAddress: BREthereumAddress?
     var account: BREthereumAccount?
@@ -112,39 +113,32 @@ class EthWalletManager : WalletManager {
     }
 
     func sendTx(toAddress: String, amount: UInt256, callback: @escaping (JSONRPCResult<String>)->Void) {
-        apiClient?.getGasPrice { [weak self] result in
-            guard let `self` = self else { return }
-            if case .success(let gasPrice) = result {
-                let ethToAddress = createAddress(toAddress)
-                let ethAmount = amountCreateEther((etherCreate(amount)))
-                let gasPrice = gasPriceCreate((etherCreate(gasPrice)))
-                let gasLimit = gasCreate(UInt64(21000))
-                let nonce = self.getNonce()
-                let tx = walletCreateTransactionDetailed(self.ethWallet, ethToAddress, ethAmount, gasPrice, gasLimit, nonce)
-                walletSignTransaction(self.ethWallet, tx, self.loadPhrase())
-                let txString = walletGetRawTransactionHexEncoded(self.ethWallet, tx, "0x")
-                self.apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { result in
-                    if case .success(let txHash) = result {
-                        let pendingTx = EthTx(blockNumber: 0,
-                                              timeStamp: Date().timeIntervalSince1970,
-                                              value: amount,
-                                              gasPrice: gasPrice.etherPerGas.valueInWEI,
-                                              gasLimit: gasLimit.amountOfGas,
-                                              gasUsed: 0,
-                                              from: self.address!,
-                                              to: toAddress,
-                                              confirmations: 0,
-                                              nonce: UInt64(nonce),
-                                              hash: txHash,
-                                              isError: false)
-                        self.pendingTransactions.append(pendingTx)
-                    }
-                    callback(result)
-                })
-            } else if case .error(let error) = result {
-                callback(.error(error))
+        let ethToAddress = createAddress(toAddress)
+        let ethAmount = amountCreateEther((etherCreate(amount)))
+        let gasPrice = gasPriceCreate((etherCreate(self.gasPrice)))
+        let gasLimit = gasCreate(UInt64(21000))
+        let nonce = getNonce()
+        let tx = walletCreateTransactionDetailed(ethWallet, ethToAddress, ethAmount, gasPrice, gasLimit, nonce)
+        walletSignTransaction(ethWallet, tx, loadPhrase())
+        let txString = walletGetRawTransactionHexEncoded(ethWallet, tx, "0x")
+        apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { result in
+            if case .success(let txHash) = result {
+                let pendingTx = EthTx(blockNumber: 0,
+                                      timeStamp: Date().timeIntervalSince1970,
+                                      value: amount,
+                                      gasPrice: gasPrice.etherPerGas.valueInWEI,
+                                      gasLimit: gasLimit.amountOfGas,
+                                      gasUsed: 0,
+                                      from: self.address!,
+                                      to: toAddress,
+                                      confirmations: 0,
+                                      nonce: UInt64(nonce),
+                                      hash: txHash,
+                                      isError: false)
+                self.pendingTransactions.append(pendingTx)
             }
-        }
+            callback(result)
+        })
     }
 
     //Nonce is either previous nonce + 1 , or 1 if no transactions have been sent yet

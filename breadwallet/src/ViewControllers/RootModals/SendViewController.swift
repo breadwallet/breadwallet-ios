@@ -101,18 +101,22 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                             }
         })
         Store.subscribe(self, selector: { $0[self.currency].fees != $1[self.currency].fees }, callback: { [unowned self] in
-            if let fees = $0[self.currency].fees {
+            guard let fees = $0[self.currency].fees else { return }
+            if let walletManager = self.walletManager as? BTCWalletManager {
                 self.amountView.canEditFee = (fees.regular != fees.economy) || self.currency.matches(Currencies.btc)
                 if let feeType = self.feeType {
                     switch feeType {
                     case .regular :
-                        self.walletManager.wallet?.feePerKb = fees.regular
+                        walletManager.wallet?.feePerKb = fees.regular
                     case .economy:
-                        self.walletManager.wallet?.feePerKb = fees.economy
+                        walletManager.wallet?.feePerKb = fees.economy
                     }
                 } else {
-                    self.walletManager.wallet?.feePerKb = fees.regular
+                    walletManager.wallet?.feePerKb = fees.regular
                 }
+            } else if let walletManager = self.walletManager as? EthWalletManager {
+                self.amountView.canEditFee = false
+                walletManager.gasPrice = fees.gasPrice
             }
         })
     }
@@ -150,7 +154,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             self?.amount = amount
         }
         amountView.didUpdateFee = strongify(self) { myself, fee in
-            guard let wallet = myself.walletManager.wallet else { return }
+            guard myself.walletManager is Bitcoin,
+                let wallet = myself.walletManager.wallet else { return }
             myself.feeType = fee
             if let fees = self.currency.state.fees {
                 switch fee {
@@ -273,13 +278,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         
         let displyAmount = Amount(amount: amount.rawValue,
                                   currency: currency,
-                                  rate: amountView.selectedRate,
-                                  minimumFractionDigits: amountView.minimumFractionDigits)
-        //TODO:ETH show estimated gas instead of fee (gas limit)
+                                  rate: amountView.selectedRate)
         let feeAmount = Amount(amount: sender.fee,
                                currency: currency,
-                               rate: amountView.selectedRate,
-                               minimumFractionDigits: amountView.minimumFractionDigits)
+                               rate: amountView.selectedRate)
 
         let confirm = ConfirmationViewController(amount: displyAmount,
                                                  fee: feeAmount,
