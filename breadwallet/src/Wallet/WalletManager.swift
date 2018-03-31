@@ -27,6 +27,7 @@ import Foundation
 import UIKit
 import SystemConfiguration
 import BRCore
+import BRCore.Ethereum
 import AVFoundation
 
 extension NSNotification.Name {
@@ -36,7 +37,127 @@ extension NSNotification.Name {
 // A WalletManger instance manages a single wallet, and that wallet's individual connection to the bitcoin network.
 // After instantiating a WalletManager object, call myWalletManager.peerManager.connect() to begin syncing.
 
-class WalletManager {
+protocol WalletManager {
+    var currency: CurrencyDef { get }
+    func resetForWipe()
+    var peerManager: BRPeerManager? { get }
+    var wallet: BRWallet? { get }
+    var kvStore: BRReplicatedKVStore? { get set }
+    var apiClient: BRAPIClient? { get }
+    func canUseBiometrics(forTx: BRTxRef) -> Bool
+}
+
+class EthWalletManager : WalletManager {
+    var peerManager: BRPeerManager?
+    var wallet: BRWallet?
+    var currency: CurrencyDef = Currencies.eth
+    var kvStore: BRReplicatedKVStore?
+    var apiClient: BRAPIClient?
+    var address: String?
+    var gasPrice: UInt256 = 0
+
+    var ethAddress: BREthereumAddress?
+    var account: BREthereumAccount?
+    var ethWallet: BREthereumWallet?
+    private var timer: Timer? = nil
+    private let updateInterval: TimeInterval = 5
+    private var pendingTransactions = [EthTx]()
+
+    init() {
+        guard var words = Words.rawWordList else { return }
+        installSharedWordList(&words, Int32(words.count))
+        self.account = createAccount(loadPhrase())
+        self.ethAddress = accountGetPrimaryAddress(self.account)
+        self.ethWallet = walletCreate(account, E.isTestnet ? ethereumTestnet : ethereumMainnet)
+        if let address = addressAsString(self.ethAddress) {
+            if let address = String(cString: address, encoding: .utf8) {
+                self.address = address
+                Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(receiveAddress: address)))
+            }
+        }
+        DispatchQueue.main.async { [weak self] in
+            guard let myself = self else { return }
+            myself.timer = Timer.scheduledTimer(timeInterval: myself.updateInterval, target: myself, selector: #selector(myself.refresh), userInfo: nil, repeats: true)
+        }
+    }
+
+    @objc private func refresh() {
+        updateBalance()
+        updateTransactionList()
+    }
+    
+    func updateBalance() {
+        apiClient?.getBalance(address: address!, handler: { result in
+            switch result {
+            case .success(let value):
+                Store.perform(action: WalletChange(self.currency).setBalance(value))
+            case .error(let error):
+                print("getBalance error: \(error.localizedDescription)")
+            }
+        })
+    }
+
+    func updateTransactionList() {
+        apiClient?.getEthTxList(address: self.address!, handler: { [weak self] txList in
+            guard let `self` = self else { return }
+            for tx in txList {
+                if let index = self.pendingTransactions.index(where: { $0.hash == tx.hash }) {
+                    self.pendingTransactions.remove(at: index)
+                }
+            }
+            let transactions = (self.pendingTransactions + txList).map { EthTransaction(tx: $0, address: self.address!) }
+            DispatchQueue.main.async {
+                Store.perform(action: WalletChange(self.currency).setTransactions(transactions))
+            }
+        })
+    }
+
+    func sendTx(toAddress: String, amount: UInt256, callback: @escaping (JSONRPCResult<String>)->Void) {
+        let ethToAddress = createAddress(toAddress)
+        let ethAmount = amountCreateEther((etherCreate(amount)))
+        let gasPrice = gasPriceCreate((etherCreate(self.gasPrice)))
+        let gasLimit = gasCreate(UInt64(21000))
+        let nonce = getNonce()
+        let tx = walletCreateTransactionDetailed(ethWallet, ethToAddress, ethAmount, gasPrice, gasLimit, nonce)
+        walletSignTransaction(ethWallet, tx, loadPhrase())
+        let txString = walletGetRawTransactionHexEncoded(ethWallet, tx, "0x")
+        apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { result in
+            if case .success(let txHash) = result {
+                let pendingTx = EthTx(blockNumber: 0,
+                                      timeStamp: Date().timeIntervalSince1970,
+                                      value: amount,
+                                      gasPrice: gasPrice.etherPerGas.valueInWEI,
+                                      gasLimit: gasLimit.amountOfGas,
+                                      gasUsed: 0,
+                                      from: self.address!,
+                                      to: toAddress,
+                                      confirmations: 0,
+                                      nonce: UInt64(nonce),
+                                      hash: txHash,
+                                      isError: false)
+                self.pendingTransactions.append(pendingTx)
+            }
+            callback(result)
+        })
+    }
+
+    //Nonce is either previous nonce + 1 , or 1 if no transactions have been sent yet
+    private func getNonce() -> UInt64 {
+        let sentTransactions = Store.state.wallets[currency.code]?.transactions.filter { $0.direction == .sent }
+        let previousNonce = sentTransactions?.map { ($0 as! EthTransaction).nonce }.max()
+        return (previousNonce == nil) ? 1 : previousNonce! + 1
+    }
+
+    func resetForWipe() {
+        return
+    }
+
+    func canUseBiometrics(forTx: BRTxRef) -> Bool {
+        return false
+    }
+}
+
+class BTCWalletManager : WalletManager {
     let currency: CurrencyDef
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
@@ -68,7 +189,7 @@ class WalletManager {
             }
             self.wallet = BRWallet(transactions: txns, masterPubKey: self.masterPubKey, listener: self)
             if let wallet = self.wallet {
-                Store.perform(action: WalletChange(self.currency).setBalance(wallet.balance))
+                Store.perform(action: WalletChange(self.currency).setBalance(UInt256(wallet.balance)))
                 Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(receiveAddress: wallet.receiveAddress)))
             }
             callback(self.wallet != nil)
@@ -84,7 +205,7 @@ class WalletManager {
         }
         self.wallet = BRWallet(transactions: transactions, masterPubKey: self.masterPubKey, listener: self)
         if let wallet = self.wallet {
-            Store.perform(action: WalletChange(self.currency).setBalance(wallet.balance))
+            Store.perform(action: WalletChange(self.currency).setBalance(UInt256(wallet.balance)))
             Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(receiveAddress: wallet.receiveAddress)))
         }
     }
@@ -118,11 +239,6 @@ class WalletManager {
         return BRAPIClient(authenticator: self)
     }()
 
-    var wordList: [NSString]? {
-        guard let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist") else { return nil }
-        return NSArray(contentsOfFile: path) as? [NSString]
-    }
-
     lazy var allWordsLists: [[NSString]] = {
         var array: [[NSString]] = []
         Bundle.main.localizations.forEach { lang in
@@ -146,11 +262,6 @@ class WalletManager {
         }
         return set
     }()
-
-    var rawWordList: [UnsafePointer<CChar>?]? {
-        guard let wordList = wordList, wordList.count == 2048 else { return nil }
-        return wordList.map({ $0.utf8String })
-    }
 
     init(currency: CurrencyDef, masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
         self.currency = currency
@@ -185,7 +296,7 @@ class WalletManager {
     }
 }
 
-extension WalletManager : BRPeerManagerListener, Trackable {
+extension BTCWalletManager : BRPeerManagerListener, Trackable {
 
     func syncStarted() {
         DispatchQueue.main.async() {
@@ -259,19 +370,19 @@ extension WalletManager : BRPeerManagerListener, Trackable {
             DispatchQueue.main.async {
                 Store.perform(action: WalletChange(self.currency).setProgress(progress: progress, timestamp: timestamp))
                 if let wallet = self.wallet {
-                    Store.perform(action: WalletChange(self.currency).setBalance(wallet.balance))
+                    Store.perform(action: WalletChange(self.currency).setBalance(UInt256(wallet.balance)))
                 }
             }
         }
     }
 }
 
-extension WalletManager : BRWalletListener {
+extension BTCWalletManager : BRWalletListener {
     func balanceChanged(_ balance: UInt64) {
         DispatchQueue.main.async { [weak self] in
             guard let myself = self else { return }
             myself.checkForReceived(newBalance: balance)
-            Store.perform(action: WalletChange(myself.currency).setBalance(balance))
+            Store.perform(action: WalletChange(myself.currency).setBalance(UInt256(balance)))
             myself.requestTxUpdate()
         }
     }
@@ -299,7 +410,8 @@ extension WalletManager : BRWalletListener {
     }
 
     private func checkForReceived(newBalance: UInt64) {
-        if let oldBalance = currency.state.balance {
+        //TODO:ETH
+        if let oldBalance = currency.state.balance?.asUInt64 {
             if newBalance > oldBalance {
                 let walletState = currency.state
                 Store.perform(action: WalletChange(currency).set(walletState.mutate(receiveAddress: wallet?.receiveAddress)))
@@ -312,10 +424,16 @@ extension WalletManager : BRWalletListener {
 
     private func showReceived(amount: UInt64) {
         if let rate = currency.state.currentRate {
-            let maxDigits = currency.state.maxDigits
-            let amount = Amount(amount: amount, rate: rate, maxDigits: maxDigits, currency: currency)
-            let primary = Store.state.isBtcSwapped ? amount.localCurrency : amount.bits
-            let secondary = Store.state.isBtcSwapped ? amount.bits : amount.localCurrency
+            let tokenAmount = Amount(amount: UInt256(amount),
+                                     currency: currency,
+                                     rate: nil,
+                                     minimumFractionDigits: 0)
+            let fiatAmount = Amount(amount: UInt256(amount),
+                                    currency: currency,
+                                    rate: rate,
+                                    minimumFractionDigits: 0)
+            let primary = Store.state.isBtcSwapped ? fiatAmount.description : tokenAmount.description
+            let secondary = Store.state.isBtcSwapped ? tokenAmount.description : fiatAmount.description
             let message = String(format: S.TransactionDetails.received, "\(primary) (\(secondary))")
             Store.trigger(name: .lightWeightAlert(message))
             showLocalNotification(message: message)
@@ -346,7 +464,7 @@ extension WalletManager : BRWalletListener {
     }
 
     func makeTransactionViewModels(transactions: [BRTxRef?], rate: Rate?) -> [Transaction] {
-        return transactions.flatMap{ $0 }.sorted {
+        return transactions.compactMap{ $0 }.sorted {
             if $0.pointee.timestamp == 0 {
                 return true
             } else if $1.pointee.timestamp == 0 {
@@ -354,7 +472,7 @@ extension WalletManager : BRWalletListener {
             } else {
                 return $0.pointee.timestamp > $1.pointee.timestamp
             }
-            }.flatMap {
+            }.compactMap {
                 return BtcTransaction($0, walletManager: self, kvStore: kvStore, rate: rate)
         }
     }

@@ -15,14 +15,14 @@ private let topControlHeight: CGFloat = 32.0
 class LoginViewController : UIViewController, Subscriber, Trackable {
 
     //MARK: - Public
-    var walletManager: WalletManager? {
+    var walletManager: BTCWalletManager? {
         didSet {
             guard walletManager != nil else { return }
             pinView = PinView(style: .login, length: Store.state.pinLength)
         }
     }
     var shouldSelfDismiss = false
-    init(isPresentedForLock: Bool, walletManager: WalletManager? = nil) {
+    init(isPresentedForLock: Bool, walletManager: BTCWalletManager? = nil) {
         self.walletManager = walletManager
         self.isPresentedForLock = isPresentedForLock
         self.disabledView = WalletDisabledView()

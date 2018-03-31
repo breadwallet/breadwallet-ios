@@ -7,218 +7,188 @@
 //
 
 import Foundation
+import BRCore
 
 struct Amount {
-
-    //MARK: - Public
-    let amount: UInt64 //amount in satoshis
-    let rate: Rate
-    let maxDigits: Int
-    let currency: CurrencyDef
+    static let normalPrecisionDigits = 5
+    static let highPrecisionDigits = 8
     
-    var amountForBtcFormat: Double {
-        var decimal = Decimal(self.amount)
-        var amount: Decimal = 0.0
-        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-maxDigits), .up)
-        return NSDecimalNumber(decimal: amount).doubleValue
-    }
-
-    var localAmount: Double {
-        return Double(amount)/currency.baseUnit*rate.rate
-    }
-
-    var bits: String {
-        var decimal = Decimal(self.amount)
-        var amount: Decimal = 0.0
-        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-maxDigits), .up)
-        let number = NSDecimalNumber(decimal: amount)
-        guard let string = btcFormat.string(from: number) else { return "" }
-        return string
-    }
-
-    var localCurrency: String {
-        guard let string = localFormat.string(from: Double(amount)/currency.baseUnit*rate.rate as NSNumber) else { return "" }
-        return string
-    }
-
-    func string(forLocal local: Locale) -> String {
-        let format = NumberFormatter()
-        format.locale = local
-        format.isLenient = true
-        format.numberStyle = .currency
-        format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        guard let string = format.string(from: Double(amount)/currency.baseUnit*rate.rate as NSNumber) else { return "" }
-        return string
-    }
-
-    func string(isBtcSwapped: Bool) -> String {
-        return isBtcSwapped ? localCurrency : bits
-    }
-
-    var ethFormat: NumberFormatter {
-        let format = NumberFormatter()
-        format.isLenient = true
-        format.numberStyle = .currency
-        format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencyCode = "ETH"
-        format.currencySymbol = "\(S.Symbols.eth)\(S.Symbols.narrowSpace)"
-        format.maximumFractionDigits = 8
-        format.minimumFractionDigits = 0
-        return format
-    }
-
-    var btcFormat: NumberFormatter {
-        let format = NumberFormatter()
-        format.isLenient = true
-        format.numberStyle = .currency
-        format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencyCode = "XBT"
-
-        switch maxDigits {
-        case 2:
-            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
-            format.maximum = (C.maxMoney/C.satoshis)*100000 as NSNumber
-        case 5:
-            format.currencySymbol = "m\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
-            format.maximum = (C.maxMoney/C.satoshis)*1000 as NSNumber
-        case 8:
-            format.currencySymbol = "\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
-            format.maximum = C.maxMoney/C.satoshis as NSNumber
-        default:
-            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
-        }
-
-        format.maximumFractionDigits = maxDigits
-        format.minimumFractionDigits = 0 // iOS 8 bug, minimumFractionDigits now has to be set after currencySymbol
-        format.maximum = Decimal(C.maxMoney)/(pow(10.0, maxDigits)) as NSNumber
-
-        return format
-    }
-
-    var localFormat: NumberFormatter {
-        let format = NumberFormatter()
-        format.isLenient = true
-        format.numberStyle = .currency
-        format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencySymbol = rate.currencySymbol
-        return format
-    }
-}
-
-// TODO:BCH conslidate DisplayAmount + Amount
-struct DisplayAmount {
-    let amount: Satoshis
-    let selectedRate: Rate?
-    let minimumFractionDigits: Int?
+    let amount: UInt256
     let currency: CurrencyDef
+    let rate: Rate?
+    let minimumFractionDigits: Int?
+    let maximumFractionDigits: Int
     let negative: Bool
     
-    init(amount: Satoshis, selectedRate: Rate?, minimumFractionDigits: Int?, currency: CurrencyDef, negative: Bool) {
+    var rawValue: UInt256 { return amount }
+    
+    // MARK: - Init
+    
+    init(amount: UInt256,
+         currency: CurrencyDef,
+         rate: Rate? = nil,
+         minimumFractionDigits: Int? = nil,
+         maximumFractionDigits: Int = Amount.normalPrecisionDigits,
+         negative: Bool = false) {
         self.amount = amount
-        self.selectedRate = selectedRate
-        self.minimumFractionDigits = minimumFractionDigits
         self.currency = currency
+        self.rate = rate
+        self.minimumFractionDigits = minimumFractionDigits
+        self.maximumFractionDigits = maximumFractionDigits
         self.negative = negative
     }
     
-    init(amount: Satoshis, selectedRate: Rate?, minimumFractionDigits: Int?, currency: CurrencyDef) {
-        self.init(amount: amount, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits, currency: currency, negative: false)
+    init(tokenString: String,
+         currency: CurrencyDef,
+         unit: CurrencyUnit? = nil,
+         rate: Rate? = nil,
+         minimumFractionDigits: Int? = nil,
+         maximumFractionDigits: Int = Amount.normalPrecisionDigits,
+         negative: Bool = false) {
+        let decimals = unit?.decimals ?? currency.commonUnit.decimals
+        self.amount = UInt256(string: tokenString, decimals: decimals)
+        self.currency = currency
+        self.rate = rate
+        self.minimumFractionDigits = minimumFractionDigits
+        self.maximumFractionDigits = maximumFractionDigits
+        self.negative = negative
     }
     
+    init?(fiatString: String,
+          currency: CurrencyDef,
+          rate: Rate,
+          minimumFractionDigits: Int? = nil,
+          maximumFractionDigits: Int = Amount.normalPrecisionDigits,
+          negative: Bool = false) {
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = currency.commonUnit.decimals
+        formatter.minimumFractionDigits = 1
+        formatter.minimumIntegerDigits = 1
+        formatter.generatesDecimalNumbers = true
+        guard let fiatAmount = NumberFormatter().number(from: fiatString)?.decimalValue,
+            let commonUnitString = formatter.string(from: (fiatAmount / Decimal(rate.rate)) as NSDecimalNumber) else { return nil }
+        
+        self.amount = UInt256(string: commonUnitString, decimals: currency.commonUnit.decimals)
+        self.currency = currency
+        self.rate = rate
+        self.minimumFractionDigits = minimumFractionDigits
+        self.maximumFractionDigits = maximumFractionDigits
+        self.negative = negative
+    }
+    
+    // MARK: - Convenience Accessors
+    
     var description: String {
-        return selectedRate != nil ? fiatDescription : bitcoinDescription
+        return rate != nil ? fiatDescription : tokenDescription
     }
 
     var combinedDescription: String {
-        return Store.state.isBtcSwapped ? "\(fiatDescription) (\(bitcoinDescription))" : "\(bitcoinDescription) (\(fiatDescription))"
+        return Store.state.isBtcSwapped ? "\(fiatDescription) (\(tokenDescription))" : "\(tokenDescription) (\(fiatDescription))"
     }
-
-    private var fiatDescription: String {
-        guard let rate = selectedRate ?? currency.state.currentRate else { return "" }
-        let tokenAmount = Double(amount.rawValue) * (negative ? -1.0 : 1.0)
-        guard let string = localFormat.string(from: tokenAmount/currency.baseUnit*rate.rate as NSNumber) else { return "" }
-        return string
+    
+    // MARK: Token
+    
+    /// Token value in default units as Decimal number
+    /// NB: Decimal can only represent maximum 38 digits wheras UInt256 can represent up to 78 digits -- it is assumed the units represented will be multiple orders of magnitude smaller than the raw value and precision loss is acceptable.
+    var tokenValue: Decimal {
+        return (Decimal(string: amount.string(decimals: currency.state.maxDigits)) ?? 0.0) * (negative ? -1.0 : 1.0)
     }
-
-    private var bitcoinDescription: String {
-        var decimal = Decimal(self.amount.rawValue)
-        var amount: Decimal = 0.0
-        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-currency.state.maxDigits), .up)
-        let number = NSDecimalNumber(decimal: amount * (negative ? -1.0 : 1.0))
-        guard let string = btcFormat.string(from: number) else { return "" }
-        return string
+    
+    /// Token value in default units as formatted string with currency ticker symbol suffix
+    var tokenDescription: String {
+        let unit = currency.unit(forDecimals: currency.state.maxDigits) ?? currency.commonUnit
+        return tokenDescription(inUnit: unit)
     }
-
-    var localFormat: NumberFormatter {
-        let format = NumberFormatter()
-        format.isLenient = true
-        format.numberStyle = .currency
-        format.generatesDecimalNumbers = true
-        format.negativeFormat = "-\(format.positiveFormat!)"
-        if let rate = selectedRate {
-            format.currencySymbol = rate.currencySymbol
-        } else if let rate = currency.state.currentRate {
-            format.currencySymbol = rate.currencySymbol
+    
+    /// Token value in default units as formatted string without symbol
+    var tokenFormattedValue: String {
+        let unit = currency.unit(forDecimals: currency.state.maxDigits) ?? currency.commonUnit
+        return tokenFormattedValue(inUnit: unit)
+    }
+    
+    /// Token value in specified units as formatted string without symbol
+    func tokenFormattedValue(inUnit unit: CurrencyUnit) -> String {
+        var value = Decimal(string: amount.string(decimals: unit.decimals)) ?? 0.0
+        if negative {
+            value *= -1.0
         }
-        if let minimumFractionDigits = minimumFractionDigits {
-            format.minimumFractionDigits = minimumFractionDigits
+        guard var formattedValue = tokenFormat.string(from: value as NSDecimalNumber) else { return "" }
+        if amount > UInt256(0) && Double(formattedValue) == 0.0 {
+            // small value requires more precision to be displayed
+            let formatter = tokenFormat.copy() as! NumberFormatter
+            formatter.maximumFractionDigits = unit.decimals
+            formattedValue = formatter.string(from: value as NSDecimalNumber) ?? formattedValue
         }
-        return format
+        return formattedValue
     }
-
-    var btcFormat: NumberFormatter {
+    
+    /// Token value in specified units as formatted string with currency ticker symbol suffix
+    func tokenDescription(inUnit unit: CurrencyUnit) -> String {
+        return "\(tokenFormattedValue(inUnit: unit)) \(currency.name(forUnit: unit))"
+    }
+    
+    var tokenFormat: NumberFormatter {
         let format = NumberFormatter()
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = "-\(format.positiveFormat!)"
         format.currencyCode = currency.code
-        switch currency.state.maxDigits {
-        case 2:
-            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
-            format.maximum = (C.maxMoney/C.satoshis)*100000 as NSNumber
-        case 5:
-            format.currencySymbol = "m\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
-            format.maximum = (C.maxMoney/C.satoshis)*1000 as NSNumber
-        case 8:
-            format.currencySymbol = "\(S.Symbols.btc)\(S.Symbols.narrowSpace)"
-            format.maximum = C.maxMoney/C.satoshis as NSNumber
-        default:
-            format.currencySymbol = "\(S.Symbols.bits)\(S.Symbols.narrowSpace)"
-        }
-
-        format.maximumFractionDigits = currency.state.maxDigits
-        format.maximum = Decimal(C.maxMoney)/(pow(10.0, currency.state.maxDigits)) as NSNumber
-
-        if let minimumFractionDigits = minimumFractionDigits {
-            format.minimumFractionDigits = minimumFractionDigits
-        }
-
+        format.currencySymbol = ""
+        format.maximumFractionDigits = min(currency.state.maxDigits, maximumFractionDigits)
+        format.minimumFractionDigits = minimumFractionDigits ?? 0
         return format
     }
 
-    // TODO:BCH cleanup
-    static func ethString(value: GethBigInt) -> String {
-        guard let rate = Currencies.eth.state.currentRate else { return "" }
-        let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 0, currency: Currencies.eth)
-        var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
-        var amount: Decimal = 0.0
-        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
-        let eth = NSDecimalNumber(decimal: amount)
-        return placeholderAmount.ethFormat.string(from: eth) ?? ""
+    // MARK: - Fiat
+    
+    var fiatValue: Decimal {
+        guard let rate = rate ?? currency.state.currentRate,
+            let value = commonUnitValue else { return 0.0 }
+        let tokenAmount = value * (negative ? -1.0 : 1.0)
+        return tokenAmount * Decimal(rate.rate)
     }
-
-    static func localEthString(value: GethBigInt) -> String {
-        guard let rate = Currencies.eth.state.currentRate else { return "" }
-        let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: 0, currency: Currencies.eth)
-        var decimal = Decimal(string: value.getString(10)) ?? Decimal(0)
-        var amount: Decimal = 0.0
-        NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-18), .up)
-        let eth = NSDecimalNumber(decimal: amount)
-        return placeholderAmount.localFormat.string(for: eth.doubleValue*rate.rate) ?? ""
+    
+    var fiatDescription: String {
+        return fiatDescription()
+    }
+    
+    func fiatDescription(forLocale locale: Locale? = nil) -> String {
+        let formatter = localFormat
+        if let locale = locale {
+            formatter.locale = locale
+        }
+        guard var fiatString = formatter.string(from: fiatValue as NSDecimalNumber) else { return "" }
+        if let stringValue = formatter.number(from: fiatString), abs(fiatValue) > 0.0, stringValue == 0 {
+            // if non-zero values show as 0, show minimum fractional value for fiat
+            let minimumValue = pow(10.0, Double(-formatter.minimumFractionDigits)) * (negative ? -1.0 : 1.0)
+            fiatString = formatter.string(from: NSDecimalNumber(value: minimumValue)) ?? fiatString
+        }
+        return fiatString
+    }
+    
+    var localFormat: NumberFormatter {
+        let format = NumberFormatter()
+        format.isLenient = true
+        format.numberStyle = .currency
+        format.generatesDecimalNumbers = true
+        format.negativeFormat = "-\(format.positiveFormat!)"
+        if let rate = rate {
+            format.currencySymbol = rate.currencySymbol
+        } else if let rate = currency.state.currentRate {
+            format.currencySymbol = rate.currencySymbol
+        }
+        format.minimumFractionDigits = minimumFractionDigits ?? format.minimumFractionDigits
+        return format
+    }
+    
+    // MARK: - Private
+    
+    private var commonUnitString: String {
+        return amount.string(decimals: currency.commonUnit.decimals)
+    }
+    
+    private var commonUnitValue: Decimal? {
+        return Decimal(string: commonUnitString)
     }
 }

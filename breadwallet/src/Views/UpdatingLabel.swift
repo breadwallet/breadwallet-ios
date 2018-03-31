@@ -23,17 +23,17 @@ class UpdatingLabel : UILabel {
     }
 
     var completion: (() -> Void)?
-    private var value: Double = 0.0
+    private var value: Decimal = 0.0
 
-    func setValue(_ value: Double) {
+    func setValue(_ value: Decimal) {
         self.value = value
         setFormattedText(forValue: value)
     }
 
-    func setValueAnimated(_ endingValue: Double, completion: @escaping () -> Void) {
+    func setValueAnimated(_ endingValue: Decimal, completion: @escaping () -> Void) {
         self.completion = completion
         guard let currentText = text else { return }
-        guard let startingValue = formatter.number(from: currentText)?.doubleValue else { return }
+        guard let startingValue = formatter.number(from: currentText)?.decimalValue else { return }
         self.startingValue = startingValue
         self.endingValue = endingValue
 
@@ -47,8 +47,8 @@ class UpdatingLabel : UILabel {
     private let duration = 0.6
     private var easingRate: Double = 3.0
     private var timer: CADisplayLink?
-    private var startingValue: Double = 0.0
-    private var endingValue: Double = 0.0
+    private var startingValue: Decimal = 0.0
+    private var endingValue: Decimal = 0.0
     private var progress: Double = 0.0
     private var lastUpdate: CFTimeInterval = 0.0
 
@@ -71,13 +71,13 @@ class UpdatingLabel : UILabel {
         } else {
             let percentProgress = progress/duration
             let easedVal = 1.0-pow((1.0-percentProgress), easingRate)
-            setFormattedText(forValue: startingValue + (easedVal * (endingValue - startingValue)))
+            setFormattedText(forValue: startingValue + (Decimal(easedVal) * (endingValue - startingValue)))
         }
     }
 
-    private func setFormattedText(forValue: Double) {
+    private func setFormattedText(forValue: Decimal) {
         value = forValue
-        text = formatter.string(from: forValue as NSNumber)
+        text = formatter.string(from: value as NSDecimalNumber)
         sizeToFit()
     }
 

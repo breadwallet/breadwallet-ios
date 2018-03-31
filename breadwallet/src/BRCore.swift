@@ -25,6 +25,7 @@
 
 import Foundation
 import BRCore
+import BRCore.Ethereum
 
 typealias BRTxRef = UnsafeMutablePointer<BRTransaction>
 typealias BRBlockRef = UnsafeMutablePointer<BRMerkleBlock>
@@ -159,7 +160,7 @@ extension BRKey {
             let count = BRKeyPrivKey(&self, nil, 0)
             var data = CFDataCreateMutable(secureAllocator, count) as Data
             data.count = count
-            guard data.withUnsafeMutableBytes({ BRKeyPrivKey(&self, $0, data.count) }) != 0 else { return nil }
+            guard data.withUnsafeMutableBytes({ BRKeyPrivKey(&self, $0, count) }) != 0 else { return nil }
             return CFStringCreateFromExternalRepresentation(secureAllocator, data as CFData,
                                                             CFStringBuiltInEncodings.UTF8.rawValue) as String
         }
@@ -174,7 +175,7 @@ extension BRKey {
             let count = BRKeyBIP38Key(&self, nil, 0, nfcPhrase as String)
             var data = CFDataCreateMutable(secureAllocator, count) as Data
             data.count = count
-            guard data.withUnsafeMutableBytes({ BRKeyBIP38Key(&self, $0, data.count, nfcPhrase as String) }) != 0
+            guard data.withUnsafeMutableBytes({ BRKeyBIP38Key(&self, $0, count, nfcPhrase as String) }) != 0
                 else { return nil }
             return CFStringCreateFromExternalRepresentation(secureAllocator, data as CFData,
                                                             CFStringBuiltInEncodings.UTF8.rawValue) as String
@@ -247,6 +248,12 @@ extension BRTxInput {
 }
 
 extension BRTxOutput {
+    init(_ address: String, _ amount: UInt64) {
+        self.init()
+        self.amount = amount
+        BRTxOutputSetAddress(&self, address)
+    }
+    
     var swiftAddress: String {
         get { return String(cString: UnsafeRawPointer([self.address]).assumingMemoryBound(to: CChar.self)) }
         set { BRTxOutputSetAddress(&self, newValue) }
@@ -714,34 +721,7 @@ class BRPeerManager {
     let l = BRTestNetVerifyDifficulty
 }
 
-extension UInt256 : CustomStringConvertible {
-    private func _hexu(_ c: CChar) -> UInt8? {
-        if (c >= "0".utf8CString[0] && c <= "9".utf8CString[0]) { return UInt8(c - "0".utf8CString[0]) }
-        if (c >= "a".utf8CString[0] && c <= "f".utf8CString[0]) { return UInt8(c - ("a".utf8CString[0] - 0x0a)) }
-        if (c >= "A".utf8CString[0] && c <= "F".utf8CString[0]) { return UInt8(c - ("A".utf8CString[0] - 0x0a)) }
-        return nil
-    }
-    
-    init(_ s: String) {
-        let s = s.utf8CString
-        self.u8 = ((_hexu(s[0])!  << 4) | _hexu(s[1])!,  (_hexu(s[2])!  << 4) | _hexu(s[3])!,
-                   (_hexu(s[4])!  << 4) | _hexu(s[5])!,  (_hexu(s[6])!  << 4) | _hexu(s[7])!,
-                   (_hexu(s[8])!  << 4) | _hexu(s[9])!,  (_hexu(s[10])! << 4) | _hexu(s[11])!,
-                   (_hexu(s[12])! << 4) | _hexu(s[13])!, (_hexu(s[14])! << 4) | _hexu(s[15])!,
-                   (_hexu(s[16])! << 4) | _hexu(s[17])!, (_hexu(s[18])! << 4) | _hexu(s[19])!,
-                   (_hexu(s[20])! << 4) | _hexu(s[21])!, (_hexu(s[22])! << 4) | _hexu(s[23])!,
-                   (_hexu(s[24])! << 4) | _hexu(s[25])!, (_hexu(s[26])! << 4) | _hexu(s[27])!,
-                   (_hexu(s[28])! << 4) | _hexu(s[29])!, (_hexu(s[30])! << 4) | _hexu(s[31])!,
-                   (_hexu(s[32])! << 4) | _hexu(s[33])!, (_hexu(s[34])! << 4) | _hexu(s[35])!,
-                   (_hexu(s[36])! << 4) | _hexu(s[37])!, (_hexu(s[38])! << 4) | _hexu(s[39])!,
-                   (_hexu(s[40])! << 4) | _hexu(s[41])!, (_hexu(s[42])! << 4) | _hexu(s[43])!,
-                   (_hexu(s[44])! << 4) | _hexu(s[45])!, (_hexu(s[46])! << 4) | _hexu(s[47])!,
-                   (_hexu(s[48])! << 4) | _hexu(s[49])!, (_hexu(s[50])! << 4) | _hexu(s[51])!,
-                   (_hexu(s[52])! << 4) | _hexu(s[53])!, (_hexu(s[54])! << 4) | _hexu(s[55])!,
-                   (_hexu(s[56])! << 4) | _hexu(s[57])!, (_hexu(s[58])! << 4) | _hexu(s[59])!,
-                   (_hexu(s[60])! << 4) | _hexu(s[61])!, (_hexu(s[62])! << 4) | _hexu(s[63])!)
-    }
-    
+extension UInt256 : CustomStringConvertible {    
     public var description: String {
         return String(format:"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x" +
             "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
@@ -749,6 +729,107 @@ extension UInt256 : CustomStringConvertible {
                       self.u8.23, self.u8.22, self.u8.21, self.u8.20, self.u8.19, self.u8.18, self.u8.17, self.u8.16,
                       self.u8.15, self.u8.14, self.u8.13, self.u8.12, self.u8.11, self.u8.10, self.u8.9, self.u8.8,
                       self.u8.7, self.u8.6, self.u8.5, self.u8.4, self.u8.3, self.u8.2, self.u8.1, self.u8.0)
+    }
+}
+
+extension UInt256 {
+    public init(_ integer: UInt64) {
+        self = createUInt256(integer)
+    }
+    
+    public init(hexString: String) {
+        self.init(string: hexString.withoutHexPrefix, radix: 16)
+    }
+    
+    public init(string: String, radix: Int = 10) {
+        var status: BRCoreParseStatus = CORE_PARSE_OK
+        self = createUInt256Parse(string, Int32(radix), &status)
+    }
+    
+    public init(string: String, decimals: Int) {
+        // createUInt256ParseDecimal skips decimal conversion for integer inputs
+        var decimalString = string
+        if decimalString.index(of: ".") == nil {
+            decimalString.append(".")
+        }
+        var status: BRCoreParseStatus = CORE_PARSE_OK
+        self = createUInt256ParseDecimal(decimalString, Int32(decimals), &status)
+    }
+    
+    public func string(radix: Int) -> String {
+        guard let buf = coerceString(self, Int32(radix)) else { return "" }
+        let str = String(cString: buf)
+        free(buf)
+        return str.trimmedLeadingZeros
+    }
+    
+    public var hexString: String {
+        return string(radix: 16).withHexPrefix
+    }
+    
+    public func string(decimals: Int) -> String {
+        guard let buf = coerceStringDecimal(self, Int32(decimals)) else { return "" }
+        let str = String(cString: buf)
+        free(buf)
+        return str
+    }
+    
+    var asUInt64: UInt64 {
+        if self > UInt256(UInt64.max) {
+            return UInt64.max
+        } else {
+            return self.u64.0
+        }
+    }
+}
+
+extension UInt256 {
+    public static func * (l: UInt256, r: UInt256) -> UInt256 {
+        // TODO: throw error on overflow
+        var overflow: Int32 = 0
+        let result = mulUInt256_Overflow(l, r, &overflow)
+        return result
+    }
+    
+    public static func + (l: UInt256, r: UInt256) -> UInt256 {
+        // TODO: throw error on overflow
+        var overflow: Int32 = 0
+        let result = addUInt256_Overflow(l, r, &overflow)
+        return result
+    }
+    
+    public static func - (l: UInt256, r: UInt256) -> UInt256 {
+        // TODO: throw error on negative
+        var negative: Int32 = 0
+        let result = subUInt256_Negative(l, r, &negative)
+        return (negative > 0) ? UInt256(0) : result
+    }
+    
+    public static func += (l: inout UInt256, r: UInt256) {
+        l = l + r
+    }
+}
+
+extension UInt256: Codable {
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let str = try container.decode(String.self)
+        if str.hasPrefix("0x") {
+            self.init(hexString: str)
+        } else {
+            self.init(string: str, radix: 10)
+        }
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(hexString)
+    }
+}
+
+extension UInt256: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: UInt64) {
+        self.init(value)
     }
 }
 
@@ -772,22 +853,60 @@ extension UInt160: Equatable {
     }
 }
 
-extension UInt256: Equatable {
+extension UInt256: Comparable {
     static public func == (l: UInt256, r: UInt256) -> Bool {
-        return l.u64 == r.u64
+        return eqUInt256(l, r) == 1
+    }
+    
+    static public func == (l: UInt256, r: UInt64) -> Bool {
+        return eqUInt256(l, UInt256(r)) == 1
+    }
+    
+    static public func == (l: UInt64, r: UInt256) -> Bool {
+        return eqUInt256(UInt256(l), r) == 1
     }
     
     static public func != (l: UInt256, r: UInt256) -> Bool {
-        return l.u64 != r.u64
+        return eqUInt256(l, r) == 0
     }
     
-    var hexString: String {
-        get {
-            var u = self
-            return withUnsafePointer(to: &u, { p in
-                return Data(bytes: p, count: MemoryLayout<UInt256>.stride).hexString
-            })
-        }
+    static public func < (l: UInt256, r: UInt256) -> Bool {
+        return ltUInt256(l, r) == 1
+    }
+}
+
+// UInt256 / UInt64 comparison
+extension UInt256 {
+    static public func < (l: UInt256, r: UInt64) -> Bool {
+        return ltUInt256(l, UInt256(r)) == 1
+    }
+    
+    static public func < (l: UInt64, r: UInt256) -> Bool {
+        return ltUInt256(UInt256(l), r) == 1
+    }
+    
+    static public func <= (l: UInt64, r: UInt256) -> Bool {
+        return UInt256(l) < r || UInt256(l) == r
+    }
+    
+    static public func <= (l: UInt256, r: UInt64) -> Bool {
+        return l < UInt256(r) || l == UInt256(r)
+    }
+    
+    static public func > (l: UInt256, r: UInt64) -> Bool {
+        return gtUInt256(l, UInt256(r)) == 1
+    }
+    
+    static public func > (l: UInt64, r: UInt256) -> Bool {
+        return gtUInt256(UInt256(l), r) == 1
+    }
+    
+    static public func >= (l: UInt64, r: UInt256) -> Bool {
+        return UInt256(l) > r || UInt256(l) == r
+    }
+    
+    static public func >= (l: UInt256, r: UInt64) -> Bool {
+        return l > UInt256(r) || l == UInt256(r)
     }
 }
 

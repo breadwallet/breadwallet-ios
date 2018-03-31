@@ -22,7 +22,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
     var resetFromDisabledSuccess: (() -> Void)?
     var resetFromDisabledWillSucceed: (() -> Void)?
 
-    init(walletManager: WalletManager, type: UpdatePinType, showsBackButton: Bool = true, phrase: String? = nil) {
+    init(walletManager: BTCWalletManager, type: UpdatePinType, showsBackButton: Bool = true, phrase: String? = nil) {
         self.walletManager = walletManager
         self.phrase = phrase
         self.pinView = PinView(style: .create, length: Store.state.pinLength)
@@ -39,7 +39,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private var pinView: PinView
     private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad, maxDigits: 0)
     private let spacer = UIView()
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private let faq: UIButton
     private var step: Step = .verify {
         didSet {

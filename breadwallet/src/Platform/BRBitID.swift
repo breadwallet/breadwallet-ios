@@ -60,13 +60,13 @@ open class BRBitID : NSObject {
     }
     
     let url: URL
-    let walletManager: WalletManager
+    let walletManager: BTCWalletManager
     
     open var siteName: String {
         return "\(url.host!)\(url.path)"
     }
     
-    init(url u: URL, walletManager wm: WalletManager) {
+    init(url u: URL, walletManager wm: BTCWalletManager) {
         walletManager = wm
         url = u
     }

@@ -9,7 +9,7 @@
 import XCTest
 @testable import breadwallet
 
-private var walletManager: WalletManager?
+private var walletManager: BTCWalletManager?
 private var client: BRAPIClient?
 
 class WalletInfoTest : XCTestCase {
@@ -17,7 +17,7 @@ class WalletInfoTest : XCTestCase {
     override class func setUp() {
         clearKeychain()
         deleteKvStoreDb()
-        walletManager = try! WalletManager(currency: Currencies.btc, dbPath: nil)
+        walletManager = try! BTCWalletManager(currency: Currencies.btc, dbPath: nil)
         let _ = walletManager?.setRandomSeedPhrase()
         initWallet(walletManager: walletManager!)
         client = walletManager?.apiClient

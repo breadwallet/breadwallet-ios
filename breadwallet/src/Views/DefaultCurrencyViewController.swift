@@ -7,16 +7,17 @@
 //
 
 import UIKit
+import BRCore
 
 class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
-        self.rates = Currencies.btc.state.rates.filter { $0.code != C.btcCurrencyCode }
+        self.rates = Currencies.btc.state.rates.filter { $0.code != Currencies.btc.code }
         super.init(style: .plain)
     }
 
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private let cellIdentifier = "CellIdentifier"
     private var rates: [Rate] = [] {
         didSet {
@@ -64,17 +65,16 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         titleLabel.sizeToFit()
         navigationItem.titleView = titleLabel
 
-        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.displayCurrency)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.displayCurrency, currency: walletManager.currency)
         faqButton.tintColor = .darkText
         navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
     }
 
     private func setExchangeRateLabel() {
         if let currentRate = rates.filter({ $0.code == defaultCurrencyCode }).first {
-            let amount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
-            let bitsAmount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
+            let amount = Amount(amount: UInt256(C.satoshis), currency: Currencies.btc, rate: currentRate)
             rateLabel.textColor = .darkText
-            rateLabel.text = "\(bitsAmount.bits) = \(amount.string(forLocal: currentRate.locale))"
+            rateLabel.text = "\(amount.tokenDescription) = \(amount.fiatDescription(forLocale: currentRate.locale))"
         }
     }
 

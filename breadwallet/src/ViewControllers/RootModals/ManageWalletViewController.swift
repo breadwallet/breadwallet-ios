@@ -138,6 +138,10 @@ extension ManageWalletViewController : ModalDisplayable {
     var faqArticleId: String? {
         return ArticleIds.manageWallet
     }
+    
+    var faqCurrency: CurrencyDef? {
+        return nil
+    }
 
     var modalTitle: String {
         return S.ManageWallet.title

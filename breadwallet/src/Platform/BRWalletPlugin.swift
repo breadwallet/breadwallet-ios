@@ -34,14 +34,14 @@ enum BitIdAuthResult {
 
 class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     var sockets = [String: BRWebSocket]()
-    let walletManager: WalletManager
+    let walletManager: BTCWalletManager
     var tempBitIDKeys = [String: BRKey]() // this should only ever be mutated from the main thread
     private var tempBitIDResponses = [String: Int]()
     private var tempAuthResponses = [String: Int]()
     private var tempAuthResults = [String: Bool]()
     private var isPresentingAuth = false
 
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
     }
     
@@ -66,13 +66,13 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         router.get("/_wallet/format") { (request, match) -> BRHTTPResponse in
             if let amounts = request.query["amount"] , amounts.count > 0 {
                 let amount = amounts[0]
-                var intAmount: Int64 = 0
+                var intAmount: UInt64 = 0
                 if amount.contains(".") { // assume full bitcoins
                     if let x = Float(amount) {
-                        intAmount = Int64(x * 100000000.0)
+                        intAmount = UInt64(x * 100000000.0)
                     }
                 } else {
-                    if let x = Int64(amount) {
+                    if let x = UInt64(amount) {
                         intAmount = x
                     }
                 }
@@ -275,15 +275,14 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         return d
     }
     
-    func currencyFormat(_ amount: Int64) -> [String: Any] {
+    func currencyFormat(_ amount: UInt64) -> [String: Any] {
         var d = [String: Any]()
         if let rate = walletManager.currency.state.currentRate {
-            let amount = Amount(amount: UInt64(amount),
-                                rate: rate,
-                                maxDigits: walletManager.currency.state.maxDigits,
-                                currency: walletManager.currency)
-            d["local_currency_amount"] = amount.localCurrency
-            d["currency_amount"] = amount.bits
+            let amount = Amount(amount: UInt256(amount),
+                                       currency: walletManager.currency,
+                                       rate: rate)
+            d["local_currency_amount"] = amount.fiatDescription
+            d["currency_amount"] = amount.tokenDescription
         }
         return d
     }

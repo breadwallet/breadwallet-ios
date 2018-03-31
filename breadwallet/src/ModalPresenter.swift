@@ -8,11 +8,12 @@
 
 import UIKit
 import LocalAuthentication
+import BRCore
 
 class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Public
-    let primaryWalletManager: WalletManager
+    let primaryWalletManager: BTCWalletManager
     let walletManagers: [String: WalletManager]
     lazy var supportCenter: SupportCenterContainer = {
         return SupportCenterContainer(walletManager: self.primaryWalletManager, apiClient: self.noAuthApiClient)
@@ -21,7 +22,7 @@ class ModalPresenter : Subscriber, Trackable {
     init(walletManagers: [String: WalletManager], window: UIWindow, apiClient: BRAPIClient) {
         self.window = window
         self.walletManagers = walletManagers
-        self.primaryWalletManager = walletManagers[Currencies.btc.code]!
+        self.primaryWalletManager = walletManagers[Currencies.btc.code]! as! BTCWalletManager
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular)
         self.wipeNavigationDelegate = StartNavigationDelegate()
         self.noAuthApiClient = apiClient
@@ -51,10 +52,10 @@ class ModalPresenter : Subscriber, Trackable {
                         selector: { $0.alert != $1.alert && $1.alert != .none },
                         callback: { self.handleAlertChange($0.alert) })
         
-        Store.subscribe(self, name: .presentFaq(""), callback: {
+        Store.subscribe(self, name: .presentFaq("", nil), callback: {
             guard let trigger = $0 else { return }
-            if case .presentFaq(let articleId) = trigger {
-                self.presentFaq(articleId: articleId)
+            if case .presentFaq(let articleId, let currency) = trigger {
+                self.presentFaq(articleId: articleId, currency: currency)
             }
         })
 
@@ -196,12 +197,19 @@ class ModalPresenter : Subscriber, Trackable {
         })
     }
 
-    func presentFaq(articleId: String? = nil) {
+    func presentFaq(articleId: String? = nil, currency: CurrencyDef? = nil) {
         supportCenter.modalPresentationStyle = .overFullScreen
         supportCenter.modalPresentationCapturesStatusBarAppearance = true
         supportCenter.transitioningDelegate = supportCenter
-        //TODO:AC - add currency
-        let url = articleId == nil ? "/support?" : "/support/article?slug=\(articleId!)"
+        var url: String
+        if let articleId = articleId {
+            url = "/support/article?slug=\(articleId)"
+            if let currency = currency {
+                url += "&currency=\(currency.code.lowercased())"
+            }
+        } else {
+            url = "/support?"
+        }
         supportCenter.navigate(to: url)
         topViewController?.present(supportCenter, animated: true, completion: {})
     }
@@ -302,6 +310,7 @@ class ModalPresenter : Subscriber, Trackable {
         })
     }
     
+    // MARK: Settings
     func presentSettings() {
         guard let top = topViewController else { return }
         let walletManager = primaryWalletManager
@@ -309,23 +318,28 @@ class ModalPresenter : Subscriber, Trackable {
         settingsNav.setGrayStyle()
         let sections: [SettingsSections] = [.wallet, .preferences, .currencies, .other]
         
-        let currencySettings: [Setting]  = Store.state.currencies.flatMap { (currency) -> Setting? in
+        let currencySettings: [Setting]  = Store.state.currencies.compactMap { (currency) -> Setting? in
             guard let walletManager = walletManagers[currency.code] else { return nil }
             return Setting(title: currency.name, callback: { [weak self] in
                 guard let `self` = self else { return }
                 let sections = [SettingsSections.currency]
-                let currencySettings = [
-                    SettingsSections.currency: [
-                        Setting(title: S.Settings.importTile, callback: {
-                            settingsNav.dismiss(animated: true, completion: {
-                                self.presentKeyImport(walletManager: walletManager)
-                            })
-                        }),
-                        Setting(title: S.Settings.sync, callback: {
-                            settingsNav.pushViewController(ReScanViewController(currency: currency), animated: true)
-                        }),
+                var currencySettings = [SettingsSections: [Setting]]()
+                if currency is Bitcoin {
+                    currencySettings = [
+                        SettingsSections.currency: [
+                            Setting(title: S.Settings.importTile, callback: {
+                                settingsNav.dismiss(animated: true, completion: {
+                                    self.presentKeyImport(walletManager: walletManager as! BTCWalletManager)
+                                })
+                            }),
+                            Setting(title: S.Settings.sync, callback: {
+                                settingsNav.pushViewController(ReScanViewController(currency: currency), animated: true)
+                            }),
+                        ]
                     ]
-                ]
+                } else {
+                    //TODO:ETH
+                }
                 
                 let pageTitle = String(format: S.Settings.currencyPageTitle, currency.name)
                 let currencySettingsVC = SettingsViewController(sections: sections, rows: currencySettings, optionalTitle: pageTitle)
@@ -366,8 +380,8 @@ class ModalPresenter : Subscriber, Trackable {
                 //                }),
                 Setting(title: LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit, accessoryText: {
                     guard let rate = Currencies.btc.state.currentRate else { return "" }
-                    let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
-                    return amount.localCurrency
+                    let amount = Amount(amount: UInt256(walletManager.spendingLimit), currency: Currencies.btc, rate: rate)
+                    return amount.fiatDescription
                 }, callback: {
                     self.pushBiometricsSpendingLimit(onNc: settingsNav)
                 }),
@@ -597,14 +611,14 @@ class ModalPresenter : Subscriber, Trackable {
         }
     }
     
-    private func presentKeyImport(walletManager: WalletManager) {
+    private func presentKeyImport(walletManager: BTCWalletManager) {
         let nc = ModalNavigationController()
         nc.setClearNavbar()
         nc.setWhiteStyle()
         let start = StartImportViewController(walletManager: walletManager)
         start.addCloseNavigationItem(tintColor: .white)
         start.navigationItem.title = S.Import.title
-        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet, currency: walletManager.currency)
         faqButton.tintColor = .white
         start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
         nc.viewControllers = [start]

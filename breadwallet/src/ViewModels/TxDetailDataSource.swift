@@ -18,11 +18,13 @@ class TxDetailDataSource: NSObject {
         case memo
         case timestamp
         case address
-        case startingBalance
-        case endingBalance
         case exchangeRate
         case blockHeight
         case transactionId
+        case gasPrice
+        case gasLimit
+        case fee
+        case total
         
         var cellType: UITableViewCell.Type {
             switch self {
@@ -61,14 +63,17 @@ class TxDetailDataSource: NSObject {
             .timestamp,
             .address,
             .memo,
-            .startingBalance,
-            .endingBalance,
             .exchangeRate,
             .blockHeight,
             .transactionId
         ]
         
-        if viewModel.status == .complete, let index = fields.index(of: .status) {
+        if viewModel.currency is Ethereum, let index = fields.index(of: .exchangeRate) {
+            fields.insert(contentsOf: [.gasPrice, .gasLimit, .fee, .total], at: index)
+        }
+        
+        if (viewModel.status == .complete || viewModel.status == .invalid),
+            let index = fields.index(of: .status) {
             fields.remove(at: index)
         }
         
@@ -89,17 +94,20 @@ class TxDetailDataSource: NSObject {
             return S.TransactionDetails.commentsHeader
         case .address:
             return viewModel.addressHeader
-        case .startingBalance:
-            return S.TransactionDetails.startingBalanceHeader
-        case .endingBalance:
-            return S.TransactionDetails.endingBalanceHeader
         case .exchangeRate:
             return S.TransactionDetails.exchangeRateHeader
         case .blockHeight:
             return S.TransactionDetails.blockHeightLabel
         case .transactionId:
             return S.TransactionDetails.txHashHeader
-            
+        case .gasPrice:
+            return S.TransactionDetails.gasPriceHeader
+        case .gasLimit:
+            return S.TransactionDetails.gasLimitHeader
+        case .fee:
+            return S.TransactionDetails.feeHeader
+        case .total:
+            return S.TransactionDetails.totalHeader
         default:
             return ""
         }
@@ -127,7 +135,6 @@ extension TxDetailDataSource: UITableViewDataSource {
         case .amount:
             let amountCell = cell as! TxAmountCell
             amountCell.set(viewModel: viewModel)
-            break
     
         case .status:
             let statusCell = cell as! TxStatusCell
@@ -146,14 +153,6 @@ extension TxDetailDataSource: UITableViewDataSource {
             let addressCell = cell as! TxAddressCell
             addressCell.set(address: viewModel.displayAddress)
             
-        case .startingBalance:
-            let labelCell = cell as! TxLabelCell
-            labelCell.value = viewModel.startingBalance
-            
-        case .endingBalance:
-            let labelCell = cell as! TxLabelCell
-            labelCell.value = viewModel.endingBalance
-            
         case .exchangeRate:
             let labelCell = cell as! TxLabelCell
             labelCell.value = viewModel.exchangeRate
@@ -165,9 +164,26 @@ extension TxDetailDataSource: UITableViewDataSource {
         case .transactionId:
             let addressCell = cell as! TxAddressCell
             addressCell.set(address: viewModel.transactionHash)
+            
+        case .gasPrice:
+            let labelCell = cell as! TxLabelCell
+            labelCell.value = viewModel.gasPrice ?? ""
+            
+        case .gasLimit:
+            let labelCell = cell as! TxLabelCell
+            labelCell.value = viewModel.gasLimit ?? ""
+            
+        case .fee:
+            let labelCell = cell as! TxLabelCell
+            labelCell.value = viewModel.fee ?? ""
+            
+        case .total:
+            let labelCell = cell as! TxLabelCell
+            labelCell.value = viewModel.total ?? ""
         }
         
         return cell
+
     }
     
 }

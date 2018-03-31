@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCore
 
 struct StateChange : Action {
     let reduce: Reducer
@@ -74,7 +75,7 @@ struct WalletChange: Trackable {
     func setSyncingState(_ syncState: SyncState) -> WalletAction {
         return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(syncState: syncState)) })
     }
-    func setBalance(_ balance: UInt64) -> WalletAction {
+    func setBalance(_ balance: UInt256) -> WalletAction {
         return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(balance: balance)) })
     }
     func setTransactions(_ transactions: [Transaction]) -> WalletAction {
@@ -110,7 +111,9 @@ struct WalletChange: Trackable {
     }
 
     func setMaxDigits(_ maxDigits: Int) -> WalletAction {
-        UserDefaults.maxDigits = maxDigits
+        if !self.currency.matches(Currencies.eth) {
+            UserDefaults.maxDigits = maxDigits
+        }
         saveEvent("maxDigits.set", attributes: ["maxDigits": "\(maxDigits)"])
         return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(maxDigits: maxDigits)) })
     }

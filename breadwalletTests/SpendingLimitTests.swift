@@ -11,12 +11,12 @@ import XCTest
 
 class SpendingLimitTests : XCTestCase {
 
-    private var walletManager: WalletManager?
+    private var walletManager: BTCWalletManager?
 
     override func setUp() {
         super.setUp()
         clearKeychain()
-        walletManager = try! WalletManager(currency: Currencies.btc, dbPath: Currencies.btc.dbPath)
+        walletManager = try! BTCWalletManager(currency: Currencies.btc, dbPath: Currencies.btc.dbPath)
         let _ = walletManager?.setRandomSeedPhrase()
         initWallet(walletManager: walletManager!)
     }

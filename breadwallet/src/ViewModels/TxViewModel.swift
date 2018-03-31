@@ -18,7 +18,6 @@ protocol TxViewModel {
     var direction: TransactionDirection { get }
     var displayAddress: String { get }
     var comment: String? { get }
-    var isValid: Bool { get }
     var shouldDisplayAvailableToSpend: Bool { get }
 }
 
@@ -28,7 +27,6 @@ extension TxViewModel {
     var currency: CurrencyDef { return tx.currency }
     var status: TransactionStatus { return tx.status }
     var direction: TransactionDirection { return tx.direction }
-    var isValid: Bool { return tx.isValid }
     var comment: String? { return tx.comment }
     
     // BTC does not have "from" address, only "sent to" or "received at"
@@ -45,7 +43,7 @@ extension TxViewModel {
     }
     
     var blockHeight: String {
-        return (tx.blockHeight == C.txUnconfirmedHeight)
+        return (tx.blockHeight == C.txUnconfirmedHeight || tx.confirmations == 0)
             ? S.TransactionDetails.notConfirmedBlockHeightLabel
             : "\(tx.blockHeight)"
     }

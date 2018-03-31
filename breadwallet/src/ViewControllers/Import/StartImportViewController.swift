@@ -11,14 +11,14 @@ import BRCore
 
 class StartImportViewController : UIViewController {
 
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
         self.currency = walletManager.currency
         assert(walletManager.currency is Bitcoin, "Importing only supports bitcoin")
         super.init(nibName: nil, bundle: nil)
     }
 
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private let currency: CurrencyDef
     private let header = RadialGradientView(backgroundColor: .blue, offset: 64.0)
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "ImportIllustration"))
@@ -174,7 +174,7 @@ class StartImportViewController : UIViewController {
         guard !wallet.containsAddress(address) else {
             return showErrorMessage(S.Import.Error.duplicate)
         }
-        let outputs = data.flatMap { SimpleUTXO(json: $0) }
+        let outputs = data.compactMap { SimpleUTXO(json: $0) }
         let balance = outputs.map { $0.satoshis }.reduce(0, +)
         outputs.forEach { output in
             tx.addInput(txHash: output.hash, index: output.index, amount: output.satoshis, script: output.script)
@@ -191,10 +191,10 @@ class StartImportViewController : UIViewController {
                 return self.showErrorMessage(S.Import.Error.highFees)
             }
             guard let rate = Currencies.btc.state.currentRate else { return }
-            let balanceAmount = Amount(amount: balance, rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
-            let feeAmount = Amount(amount: fee, rate: rate, maxDigits: Currencies.btc.state.maxDigits, currency: Currencies.btc)
-            let balanceText = Store.state.isBtcSwapped ? balanceAmount.localCurrency : balanceAmount.bits
-            let feeText = Store.state.isBtcSwapped ? feeAmount.localCurrency : feeAmount.bits
+            let balanceAmount = Amount(amount: UInt256(balance), currency: Currencies.btc, rate: rate)
+            let feeAmount = Amount(amount: UInt256(fee), currency: Currencies.btc, rate: rate)
+            let balanceText = Store.state.isBtcSwapped ? balanceAmount.fiatDescription : balanceAmount.tokenDescription
+            let feeText = Store.state.isBtcSwapped ? feeAmount.fiatDescription : feeAmount.tokenDescription
             let message = String(format: S.Import.confirm, balanceText, feeText)
             let alert = UIAlertController(title: S.Import.title, message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))

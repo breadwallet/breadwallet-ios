@@ -25,8 +25,13 @@ class AccountViewController : UIViewController, Subscriber {
         self.footerView = AccountFooterView(currency: currency)
         super.init(nibName: nil, bundle: nil)
         self.transactionsTableView = TransactionsTableViewController(walletManager: walletManager, didSelectTransaction: didSelectTransaction)
-        
-        headerView.isWatchOnly = walletManager.isWatchOnly
+
+        if let btcWalletManager = walletManager as? BTCWalletManager {
+            headerView.isWatchOnly = btcWalletManager.isWatchOnly
+        } else {
+            headerView.isWatchOnly = false
+        }
+
         footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send(currency: walletManager.currency))) }
         footerView.receiveCallback = { Store.perform(action: RootModalActions.Present(modal: .receive(currency: walletManager.currency))) }
         footerView.buyCallback = { Store.perform(action: RootModalActions.Present(modal: .buy)) }

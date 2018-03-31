@@ -19,7 +19,7 @@ class WelcomeViewController : UIViewController, ContentBoxPresenter {
     private let body = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
     private let actionButton = ShadowButton(title: S.Button.home, type: .primary)
     private let dismissButton = ShadowButton(title: S.Button.dismiss, type: .tertiary)
-    private let supportButton = UIButton.buildFaqButton(articleId: "bitcoin-cash")
+    private let supportButton = UIButton.buildFaqButton(articleId: "bitcoin-cash", currency: Currencies.bch)
 
     override func viewDidLoad() {
         addSubviews()

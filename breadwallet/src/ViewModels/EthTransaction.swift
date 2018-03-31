@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import BRCore
 
 struct EthTransaction: EthLikeTransaction {
     
@@ -17,16 +18,18 @@ struct EthTransaction: EthLikeTransaction {
     let status: TransactionStatus
     let direction: TransactionDirection
     let toAddress: String
+    let amount: UInt256
     let timestamp: TimeInterval
     let blockHeight: UInt64
     let confirmations: UInt64
-    let isValid: Bool
     
     // MARK: ETH-network transaction properties
     
-    let amount: GethBigInt
     let fromAddress: String
-    
+    let gasPrice: UInt256
+    let gasLimit: UInt64
+    let gasUsed: UInt64
+    let nonce: UInt64
     // MARK: ETH-specific properties
     
     let tx: EthTx
@@ -42,16 +45,18 @@ struct EthTransaction: EthLikeTransaction {
         amount = tx.value
         timestamp = tx.timeStamp
         direction = tx.to.lowercased() == accountAddress.lowercased() ? .received : .sent
-        isValid = !tx.isError
         
-        if isValid {
-            if Int(tx.confirmations) == 0 {
+        if tx.isError {
+            status = .invalid
+        } else {
+            switch tx.confirmations {
+            case 0:
                 status = .pending
-            } else {
+            case 1..<6:
+                status = .confirmed
+            default:
                 status = .complete
             }
-        } else {
-            status = .invalid
         }
         
         hash = tx.hash
@@ -59,5 +64,9 @@ struct EthTransaction: EthLikeTransaction {
         confirmations = tx.confirmations
         fromAddress = tx.from
         toAddress = tx.to
+        gasPrice = tx.gasPrice
+        gasLimit = tx.gasLimit
+        gasUsed = tx.gasUsed
+        nonce = tx.nonce
     }
 }

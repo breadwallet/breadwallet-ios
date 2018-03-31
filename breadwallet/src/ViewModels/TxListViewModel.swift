@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCore
 
 /// View model of a transaction in list view
 struct TxListViewModel: TxViewModel {
@@ -21,14 +22,19 @@ struct TxListViewModel: TxViewModel {
         if let comment = comment, comment.count > 0, isComplete {
             return comment
         } else {
+            var address = tx.toAddress
             var format: String
             switch tx.direction {
             case .sent, .moved:
                 format = isComplete ? S.Transaction.sentTo : S.Transaction.sendingTo
             case .received:
-                format = isComplete ? S.Transaction.receivedVia : S.Transaction.receivingVia
+                if let tx = tx as? EthTransaction {
+                    format = isComplete ? S.Transaction.receivedFrom : S.Transaction.receivingFrom
+                    address = tx.fromAddress
+                } else {
+                    format = isComplete ? S.Transaction.receivedVia : S.Transaction.receivingVia
+                }
             }
-            var address = tx.toAddress
             if currency.matches(Currencies.bch) {
                 address = address.replacingOccurrences(of: "\(Currencies.bch.urlScheme!):", with: "")
             }
@@ -37,12 +43,10 @@ struct TxListViewModel: TxViewModel {
     }
 
     func amount(isBtcSwapped: Bool, rate: Rate) -> NSAttributedString {
-        guard let tx = tx as? BtcTransaction else { return NSAttributedString(string: "") }
-        let text = DisplayAmount(amount: Satoshis(rawValue: tx.amount),
-                                 selectedRate: isBtcSwapped ? rate : nil,
-                                 minimumFractionDigits: nil,
-                                 currency: tx.currency,
-                                 negative: (tx.direction == .sent)).description
+        let text = Amount(amount: tx.amount,
+                          currency: tx.currency,
+                          rate: isBtcSwapped ? rate : nil,
+                          negative: (tx.direction == .sent)).description
         let color: UIColor = (tx.direction == .received) ? .receivedGreen : .darkGray
         
         return NSMutableAttributedString(string: text,

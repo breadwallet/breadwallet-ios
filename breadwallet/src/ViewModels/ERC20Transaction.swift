@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import BRCore
 
 struct ERC20Transaction: EthLikeTransaction {
     
@@ -17,6 +18,7 @@ struct ERC20Transaction: EthLikeTransaction {
     let status: TransactionStatus
     let direction: TransactionDirection
     let toAddress: String
+    let amount: UInt256
     let timestamp: TimeInterval
     let blockHeight: UInt64 = 0 // TODO
     let confirmations: UInt64 = 0 // TODO
@@ -24,9 +26,12 @@ struct ERC20Transaction: EthLikeTransaction {
     
     // MARK: ETH-network transaction properties
     
-    let amount: GethBigInt
     let fromAddress: String
-    
+    //TODO:ERC20
+    let gasPrice: UInt256 = 0
+    let gasLimit: UInt64 = 0
+    let gasUsed: UInt64 = 0
+   
     // MARK: ERC20-specific properties
     
     let event: Event
@@ -54,14 +59,10 @@ struct ERC20Transaction: EthLikeTransaction {
             self.toAddress = address1
             self.fromAddress = address0
         }
-        let timestampWrapper = GethBigInt(0)
-        timestampWrapper.setString(event.timeStamp.replacingOccurrences(of: "0x", with: ""), base: 16)
-        self.timestamp = TimeInterval(timestampWrapper.getInt64())
+        let ts = UInt64(event.timeStamp, radix: 16)
+        self.timestamp = TimeInterval(ts ?? 0)
         self.hash = event.transactionHash
-        
-        let amount = GethBigInt(0)
-        amount.setString(event.data.replacingOccurrences(of: "0x", with: ""), base: 16)
-        self.amount = amount
+        self.amount = UInt256(hexString: event.data)
         
         if event.isComplete {
             self.status = .complete

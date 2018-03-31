@@ -17,12 +17,12 @@ class NodeSelectorViewController : UIViewController, Trackable {
     private let statusLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
     private let status = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let button: ShadowButton
-    private let walletManager: WalletManager
+    private let walletManager: BTCWalletManager
     private var okAction: UIAlertAction?
     private var timer: Timer?
     private let decimalSeparator = NumberFormatter().decimalSeparator ?? "."
 
-    init(walletManager: WalletManager) {
+    init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
         if UserDefaults.customNodeIP == nil {
             button = ShadowButton(title: S.NodeSelector.manualButton, type: .primary)

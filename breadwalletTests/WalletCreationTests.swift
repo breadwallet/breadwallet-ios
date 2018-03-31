@@ -11,7 +11,7 @@ import XCTest
 
 class WalletCreationTests: XCTestCase {
 
-    private let walletManager: WalletManager = try! WalletManager(currency: Currencies.btc, dbPath: nil)
+    private let walletManager: BTCWalletManager = try! BTCWalletManager(currency: Currencies.btc, dbPath: nil)
 
     override func setUp() {
         super.setUp()
