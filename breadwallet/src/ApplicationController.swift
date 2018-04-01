@@ -401,13 +401,12 @@ class ApplicationController : Subscriber, Trackable {
     private func initKVStoreCoordinator() {
         guard let kvStore = primaryWalletManager?.apiClient?.kv else { return }
         guard kvStoreCoordinator == nil else { return }
-        kvStore.syncAllKeys { [weak self] error in
+        kvStore.syncAllKeys { [unowned self] error in
             print("KV finished syncing. err: \(String(describing: error))")
-            self?.walletManagers[Currencies.btc.code]?.kvStore = kvStore
-            self?.walletManagers[Currencies.bch.code]?.kvStore = kvStore
-            self?.kvStoreCoordinator = KVStoreCoordinator(kvStore: kvStore)
-            self?.kvStoreCoordinator?.retreiveStoredWalletInfo()
-            self?.kvStoreCoordinator?.listenForWalletChanges()
+            self.walletManagers.values.forEach({ $0.kvStore = kvStore })
+            self.kvStoreCoordinator = KVStoreCoordinator(kvStore: kvStore)
+            self.kvStoreCoordinator!.retreiveStoredWalletInfo()
+            self.kvStoreCoordinator!.listenForWalletChanges()
         }
     }
 

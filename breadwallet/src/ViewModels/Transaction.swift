@@ -35,6 +35,8 @@ protocol Transaction {
     
     var metaData: TxMetaData? { get }
     var comment: String? { get }
+    var metaDataContainer: MetaDataContainer? { get }
+    var kvStore: BRReplicatedKVStore? { get }
     var hasKvStore: Bool { get }
     
     var isPending: Bool { get }
@@ -43,14 +45,23 @@ protocol Transaction {
 
 // MARK: Default Values
 extension Transaction {
-    var metaData: TxMetaData? { return nil }
+    
+    var metaData: TxMetaData? { return metaDataContainer?.metaData }
     var comment: String? { return metaData?.comment }
-    var hasKvStore: Bool { return false }
-    var isPending: Bool {
-        return status == .pending
+    var metaDataContainer: MetaDataContainer? { return nil }
+    var kvStore: BRReplicatedKVStore? { return nil }
+    var hasKvStore: Bool { return kvStore != nil }
+    
+    var isPending: Bool { return status == .pending }
+    var isValid: Bool { return status != .invalid }
+    
+    func createMetaData(rate: Rate, comment: String? = nil, feeRate: Double? = nil) {
+        metaDataContainer?.createMetaData(tx: self, rate: rate, comment: comment, feeRate: feeRate)
     }
-    var isValid: Bool {
-        return status != .invalid
+    
+    func saveComment(comment: String, rate: Rate) {
+        guard let metaDataContainer = metaDataContainer else { return }
+        metaDataContainer.save(comment: comment, tx: self, rate: rate)
     }
 }
 
@@ -62,7 +73,6 @@ protocol EthLikeTransaction: Transaction {
     var gasLimit: UInt64 { get }
     var gasUsed: UInt64 { get }
 }
-
 
 // MARK: - Equatable support
 
@@ -81,4 +91,61 @@ func ==(lhs: [Transaction], rhs: [Transaction]) -> Bool {
 
 func !=(lhs: [Transaction], rhs: [Transaction]) -> Bool {
     return !lhs.elementsEqual(rhs, by: ==)
+}
+
+// MARK: - Metadata Container
+
+/// Encapsulates the transaction metadata in the KV store
+class MetaDataContainer {
+    var metaData: TxMetaData? {
+        get {
+            guard metaDataCache == nil else { return metaDataCache }
+            guard let data = TxMetaData(txKey: key, store: kvStore) else { return nil }
+            metaDataCache = data
+            return metaDataCache
+        }
+    }
+    
+    var kvStore: BRReplicatedKVStore
+    
+    private var key: String
+    private var metaDataCache: TxMetaData?
+    
+    init(key: String, kvStore: BRReplicatedKVStore) {
+        self.key = key
+        self.kvStore = kvStore
+    }
+    
+    /// Creates and stores new metadata in KV store if it does not exist
+    func createMetaData(tx: Transaction, rate: Rate, comment: String? = nil, feeRate: Double? = nil) {
+        guard metaData == nil else { return }
+        
+        let newData = TxMetaData(key: key,
+                                 transaction: tx,
+                                 exchangeRate: rate.rate,
+                                 exchangeRateCurrency: rate.code,
+                                 feeRate: feeRate ?? 0.0,
+                                 deviceId: UserDefaults.standard.deviceID)
+        if let comment = comment {
+            newData.comment = comment
+        }
+        do {
+            let _ = try kvStore.set(newData)
+        } catch let error {
+            print("could not update metadata: \(error)")
+        }
+    }
+    
+    func save(comment: String, tx: Transaction, rate: Rate) {
+        if let metaData = metaData {
+            metaData.comment = comment
+            do {
+                let _ = try kvStore.set(metaData)
+            } catch let error {
+                print("could not update metadata: \(error)")
+            }
+        } else {
+            createMetaData(tx: tx, rate: rate, comment: comment)
+        }
+    }
 }

@@ -99,6 +99,10 @@ class Sender {
     }
 
     func send(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Void) -> Void, completion:@escaping (SendResult) -> Void) {
+        self.rate = rate
+        self.comment = comment
+        self.feePerKb = feePerKb
+        
         if currency is Ethereum {
             sendEth(biometricsMessage: biometricsMessage, rate: rate, comment: comment, feePerKb: feePerKb, verifyPinFunction: verifyPinFunction, completion: completion)
         } else {
@@ -108,10 +112,6 @@ class Sender {
 
     private func sendBTC(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Void) -> Void, completion:@escaping (SendResult) -> Void) {
         guard let tx = transaction else { return completion(.creationError(S.Send.createTransactionError)) }
-
-        self.rate = rate
-        self.comment = comment
-        self.feePerKb = feePerKb
 
         if UserDefaults.isBiometricsEnabled && walletManager.canUseBiometrics(forTx:tx) {
             DispatchQueue.walletQueue.async { [weak self] in
@@ -138,7 +138,8 @@ class Sender {
             guard let `self` = self else { return }
             ethWalletManager.sendTx(toAddress: self.toAddress!, amount: self.amount!, callback: { result in
                 switch result {
-                case .success( _):
+                case .success(let pendingTx):
+                    self.setMetaData(ethTx: pendingTx)
                     completion(.success)
                 case .error(let error):
                     switch error {
@@ -183,7 +184,7 @@ class Sender {
                     if let error = error {
                         completion(.publishFailure(error))
                     } else {
-                        myself.setMetaData()
+                        myself.setMetaData(btcTx: tx)
                         completion(.success)
                         myself.postProtocolPaymentIfNeeded()
                     }
@@ -192,20 +193,21 @@ class Sender {
         }
     }
 
-    private func setMetaData() {
-        guard let rate = rate, let tx = transaction, let feePerKb = feePerKb else { print("Incomplete tx metadata"); return }
-        let metaData = TxMetaData(transaction: tx.pointee,
-                                  exchangeRate: rate.rate,
-                                  exchangeRateCurrency: rate.code,
-                                  feeRate: Double(feePerKb),
-                                  deviceId: UserDefaults.standard.deviceID,
-                                  comment: comment)
-        do {
-            let _ = try kvStore.set(metaData)
-        } catch let error {
-            print("could not update metadata: \(error)")
-        }
-        Store.trigger(name: .txMemoUpdated(tx.pointee.txHash.description))
+    private func setMetaData(btcTx: BRTxRef) {
+        guard let rate = rate, let feePerKb = feePerKb else { print("Incomplete tx metadata"); return }
+        guard let walletManager = walletManager as? BTCWalletManager,
+            let tx = BtcTransaction(btcTx, walletManager: walletManager, kvStore: kvStore, rate: rate) else { return }
+        
+        tx.createMetaData(rate: rate, comment: comment, feeRate: Double(feePerKb))
+        Store.trigger(name: .txMemoUpdated(tx.hash))
+    }
+    
+    private func setMetaData(ethTx: EthTx) {
+        guard let rate = rate else { print("Incomplete tx metadata"); return }
+        let tx = EthTransaction(tx: ethTx, accountAddress: "", kvStore: kvStore, rate: rate)
+        tx.createMetaData(rate: rate, comment: comment)
+        // TODO:ETHLIGHT the tx will not be populated until next network fetch
+        //Store.trigger(name: .txMemoUpdated(tx.hash))
     }
 
     private func postProtocolPaymentIfNeeded() {

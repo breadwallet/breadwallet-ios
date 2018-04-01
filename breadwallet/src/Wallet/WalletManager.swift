@@ -37,7 +37,7 @@ extension NSNotification.Name {
 // A WalletManger instance manages a single wallet, and that wallet's individual connection to the bitcoin network.
 // After instantiating a WalletManager object, call myWalletManager.peerManager.connect() to begin syncing.
 
-protocol WalletManager {
+protocol WalletManager: class {
     var currency: CurrencyDef { get }
     func resetForWipe()
     var peerManager: BRPeerManager? { get }
@@ -110,14 +110,14 @@ class EthWalletManager : WalletManager {
                     self.pendingTransactions.remove(at: index)
                 }
             }
-            let transactions = (self.pendingTransactions + txList).map { EthTransaction(tx: $0, address: self.address!) }
+            let transactions = (self.pendingTransactions + txList).map { EthTransaction(tx: $0, accountAddress: self.address!, kvStore: self.kvStore, rate: self.currency.state.currentRate) }
             DispatchQueue.main.async {
                 Store.perform(action: WalletChange(self.currency).setTransactions(transactions))
             }
         })
     }
 
-    func sendTx(toAddress: String, amount: UInt256, callback: @escaping (JSONRPCResult<String>)->Void) {
+    func sendTx(toAddress: String, amount: UInt256, callback: @escaping (JSONRPCResult<EthTx>)->Void) {
         let ethToAddress = createAddress(toAddress)
         let ethAmount = amountCreateEther((etherCreate(amount)))
         let gasPrice = gasPriceCreate((etherCreate(self.gasPrice)))
@@ -127,7 +127,8 @@ class EthWalletManager : WalletManager {
         walletSignTransaction(ethWallet, tx, loadPhrase())
         let txString = walletGetRawTransactionHexEncoded(ethWallet, tx, "0x")
         apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { result in
-            if case .success(let txHash) = result {
+            switch result {
+            case .success(let txHash):
                 let pendingTx = EthTx(blockNumber: 0,
                                       timeStamp: Date().timeIntervalSince1970,
                                       value: amount,
@@ -141,8 +142,11 @@ class EthWalletManager : WalletManager {
                                       hash: txHash,
                                       isError: false)
                 self.pendingTransactions.append(pendingTx)
+                callback(.success(pendingTx))
+                
+            case .error(let error):
+                callback(.error(error))
             }
-            callback(result)
         })
     }
 
@@ -479,7 +483,7 @@ extension BTCWalletManager : BRWalletListener {
             guard let myself = self else { return }
             guard let txRefs = myself.wallet?.transactions else { return }
             let transactions = myself.makeTransactionViewModels(transactions: txRefs,
-                                                              rate: myself.currency.state.currentRate)
+                                                                rate: myself.currency.state.currentRate)
             if transactions.count > 0 {
                 DispatchQueue.main.async {
                     Store.perform(action: WalletChange(myself.currency).setTransactions(transactions))
