@@ -84,7 +84,8 @@ class ApplicationController : Subscriber, Trackable {
                                 }
                             }
                         }
-                        completion()
+                        // init other wallets
+                        self.initWallet(completion: completion)
                     }
                 }
             }
@@ -94,7 +95,9 @@ class ApplicationController : Subscriber, Trackable {
     private func initWallet(completion: @escaping () -> Void) {
         let dispatchGroup = DispatchGroup()
         Store.state.currencies.forEach { currency in
-            initWallet(currency: currency, dispatchGroup: dispatchGroup)
+            if walletManagers[currency.code] == nil {
+                initWallet(currency: currency, dispatchGroup: dispatchGroup)
+            }
         }
         dispatchGroup.notify(queue: .main) {
             completion()
