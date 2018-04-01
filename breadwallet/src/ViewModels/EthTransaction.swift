@@ -22,6 +22,8 @@ struct EthTransaction: EthLikeTransaction {
     let timestamp: TimeInterval
     let blockHeight: UInt64
     let confirmations: UInt64
+    let metaDataContainer: MetaDataContainer?
+    let kvStore: BRReplicatedKVStore?
     
     // MARK: ETH-network transaction properties
     
@@ -30,17 +32,14 @@ struct EthTransaction: EthLikeTransaction {
     let gasLimit: UInt64
     let gasUsed: UInt64
     let nonce: UInt64
+    
     // MARK: ETH-specific properties
     
     let tx: EthTx
     
     // MARK: - Init
     
-    init(tx: EthTx, address: String) {
-        self.init(tx: tx, accountAddress: address)
-    }
-    
-    init(tx: EthTx, accountAddress: String) {
+    init(tx: EthTx, accountAddress: String, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         self.tx = tx
         amount = tx.value
         timestamp = tx.timeStamp
@@ -68,5 +67,18 @@ struct EthTransaction: EthLikeTransaction {
         gasLimit = tx.gasLimit
         gasUsed = tx.gasUsed
         nonce = tx.nonce
+        
+        // metadata
+        self.kvStore = kvStore
+        let key = UInt256(hexString: tx.hash).txKey
+        if let kvStore = kvStore {
+            metaDataContainer = MetaDataContainer(key: key, kvStore: kvStore)
+            if let rate = rate,
+                confirmations < 6 && direction == .received {
+                metaDataContainer!.createMetaData(tx: self, rate: rate)
+            }
+        } else {
+            metaDataContainer = nil
+        }
     }
 }
