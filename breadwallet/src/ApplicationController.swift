@@ -311,6 +311,7 @@ class ApplicationController : Subscriber, Trackable {
         ethWalletManager.updateBalance()
         ethWalletManager.updateTransactionList()
         Store.perform(action: WalletChange(Currencies.eth).setMaxDigits(18))
+        Store.perform(action: WalletID.set(ethWalletManager.walletID))
     }
 
     private func shouldRequireLogin() -> Bool {

@@ -14,6 +14,7 @@ class AboutViewController : UIViewController {
     private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout"))
     private let logoBackground = GradientView()
+    private let walletID = WalletIDCell()
     private let blog = AboutCell(text: S.About.blog)
     private let twitter = AboutCell(text: S.About.twitter)
     private let reddit = AboutCell(text: S.About.reddit)
@@ -30,6 +31,7 @@ class AboutViewController : UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(logoBackground)
         logoBackground.addSubview(logo)
+        view.addSubview(walletID)
         view.addSubview(blog)
         view.addSubview(twitter)
         view.addSubview(reddit)
@@ -47,8 +49,12 @@ class AboutViewController : UIViewController {
             logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
             logoBackground.heightAnchor.constraint(equalTo: logoBackground.widthAnchor, multiplier: 342.0/553.0) ])
         logo.constrain(toSuperviewEdges: nil)
+        walletID.constrain([
+            walletID.topAnchor.constraint(equalTo: logoBackground.bottomAnchor, constant: C.padding[2]),
+            walletID.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            walletID.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         blog.constrain([
-            blog.topAnchor.constraint(equalTo: logoBackground.bottomAnchor, constant: C.padding[2]),
+            blog.topAnchor.constraint(equalTo: walletID.bottomAnchor, constant: C.padding[2]),
             blog.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             blog.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         twitter.constrain([
