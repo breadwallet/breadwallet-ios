@@ -68,6 +68,7 @@ class EthWalletManager : WalletManager {
         guard var words = Words.rawWordList else { return }
         installSharedWordList(&words, Int32(words.count))
         self.account = createAccount(loadPhrase())
+        guard account != nil else { return }
         self.ethAddress = accountGetPrimaryAddress(self.account)
         self.ethWallet = walletCreate(account, E.isTestnet ? ethereumTestnet : ethereumMainnet)
         if let address = addressAsString(self.ethAddress) {
@@ -158,7 +159,7 @@ class EthWalletManager : WalletManager {
     }
 
     func resetForWipe() {
-        return
+        timer?.invalidate()
     }
 
     func canUseBiometrics(forTx: BRTxRef) -> Bool {

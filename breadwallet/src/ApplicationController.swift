@@ -184,7 +184,6 @@ class ApplicationController : Subscriber, Trackable {
     }
     
     private func reinitWalletManager(callback: @escaping () -> Void) {
-        Store.removeAllSubscriptions()
         Store.perform(action: Reset())
         self.setup()
         
@@ -381,6 +380,7 @@ class ApplicationController : Subscriber, Trackable {
     /// Handles new wallet creation or recovery
     private func addWalletCreationListener() {
         Store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
+            self.walletManagers.removeAll() // remove the empty wallet managers
             DispatchQueue.walletQueue.async {
                 self.initWallet(completion: self.didInitWalletManager)
             }
