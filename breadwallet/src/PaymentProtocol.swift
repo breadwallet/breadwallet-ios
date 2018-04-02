@@ -42,6 +42,7 @@ class PaymentProtocolDetails {
           paymentURL: String? = nil, merchantData: [UInt8]? = nil) {
         guard let cPtr = BRPaymentProtocolDetailsNew(network, outputs, outputs.count, time, expires, memo, paymentURL,
                                                      merchantData, merchantData?.count ?? 0) else { return nil }
+        cPtr.pointee.outCount = outputs.count
         self.cPtr = cPtr
         self.isManaged = true
     }
@@ -65,7 +66,7 @@ class PaymentProtocolDetails {
     
     var currency: String = "BTC" // three digit currency code representing which coin the request is based on (bitpay)
     
-    var requiredFeePerByte: Double = 0.0 // the minimum fee per byte required on this transaction (bitpay)
+    var requiredFeeRate: Double = 0.0 // the minimum fee per byte required on this transaction (bitpay)
 
     var outputs: [BRTxOutput] { // where to send payments, outputs[n].amount defaults to 0
         return [BRTxOutput](UnsafeBufferPointer(start: cPtr.pointee.outputs, count: cPtr.pointee.outCount))
@@ -110,7 +111,7 @@ class PaymentProtocolRequest {
         
         let network: String
         let currency: String
-        let requiredFeePerByte: Double
+        let requiredFeeRate: Double
         let outputs: [Output]
         let time: Date
         let expires: Date
@@ -126,6 +127,8 @@ class PaymentProtocolRequest {
     private var didValidate: Bool = false
     
     internal init(_ cPtr: UnsafeMutablePointer<BRPaymentProtocolRequest>) {
+        self.details = PaymentProtocolDetails(cPtr.pointee.details)
+        self.details.isManaged = false
         self.cPtr = cPtr
         self.isManaged = false
     }
@@ -133,6 +136,7 @@ class PaymentProtocolRequest {
     init?(version: UInt32 = 1, pkiType: String = "none", pkiData: [UInt8]? = nil, details: PaymentProtocolDetails,
           signature: [UInt8]? = nil) {
         guard details.isManaged else { return nil } // request must be able take over memory management of details
+        self.details = details
         guard let cPtr = BRPaymentProtocolRequestNew(version, pkiType, pkiData, pkiData?.count ?? 0, details.cPtr,
                                                      signature, signature?.count ?? 0) else { return nil }
         details.isManaged = false
@@ -142,27 +146,36 @@ class PaymentProtocolRequest {
 
     init?(data: Data) {
         let bytes = [UInt8](data)
-        var cPtr = BRPaymentProtocolRequestParse(bytes, bytes.count)
-        
-        if cPtr == nil {
-            guard let req = try? JSONDecoder().decode(Request.self, from: data) else { return nil }
-            let outputs = req.outputs.map {
-                BRTxOutput(req.currency == "BCH" ? $0.address.bitcoinAddr : $0.address, $0.amount)
-            }
-            guard let details = PaymentProtocolDetails(network: req.network, outputs: outputs,
-                                                       time: UInt64(req.time.timeIntervalSince1970),
-                                                       expires: UInt64(req.expires.timeIntervalSince1970),
-                                                       memo: req.memo, paymentURL: req.paymentUrl.absoluteString)
-                else { return nil }
-            details.currency = req.currency
-            details.requiredFeePerByte = req.requiredFeePerByte
-            details.paymentId = req.paymentId
-            mimeType = "application/payment-request"
-            cPtr = BRPaymentProtocolRequestNew(1, "none", nil, 0, details.cPtr, nil, 0)
+        guard let cPtr = BRPaymentProtocolRequestParse(bytes, bytes.count) else { return nil }
+        self.details = PaymentProtocolDetails(cPtr.pointee.details)
+        self.details.isManaged = false
+        self.cPtr = cPtr
+        self.isManaged = true
+    }
+    
+    init?(json: String) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(formatter)
+        guard let req = try? decoder.decode(Request.self, from: json.data(using: .utf8)!) else { return nil }
+        let outputs = req.outputs.map {
+            BRTxOutput(req.currency == "BCH" ? $0.address.bitcoinAddr : $0.address, $0.amount)
         }
-        
-        guard cPtr != nil else { return nil }
-        self.cPtr = cPtr!
+        guard outputs.count > 0 && outputs[0].amount > 0 && outputs[0].scriptLen > 0 else { return nil }
+        guard let details = PaymentProtocolDetails(network: req.network, outputs: outputs,
+                                                   time: UInt64(req.time.timeIntervalSince1970),
+                                                   expires: UInt64(req.expires.timeIntervalSince1970),
+                                                   memo: req.memo, paymentURL: req.paymentUrl.absoluteString)
+            else { return nil }
+        details.currency = req.currency
+        details.requiredFeeRate = req.requiredFeeRate
+        details.paymentId = req.paymentId
+        mimeType = "application/payment-request"
+        guard let cPtr = BRPaymentProtocolRequestNew(1, "none", nil, 0, details.cPtr, nil, 0) else { return nil }
+        details.isManaged = false
+        self.details = details
+        self.cPtr = cPtr
         self.isManaged = true
     }
     
@@ -185,9 +198,7 @@ class PaymentProtocolRequest {
         return [UInt8](UnsafeBufferPointer(start: cPtr.pointee.pkiData, count: cPtr.pointee.pkiDataLen))
     }
     
-    var details: PaymentProtocolDetails { // required
-        return PaymentProtocolDetails(cPtr.pointee.details)
-    }
+    var details: PaymentProtocolDetails // required
     
     var signature: [UInt8]? { // pki-dependent signature, optional
         guard cPtr.pointee.signature != nil else { return nil }
@@ -396,17 +407,17 @@ class PaymentProtocolACK {
     
     init?(data: Data) {
         let bytes = [UInt8](data)
-        var cPtr = BRPaymentProtocolACKParse(bytes, bytes.count)
-
-        if cPtr == nil {
-            guard let ack = try? JSONDecoder().decode(Ack.self, from: data) else { return nil }
-            guard let payment = PaymentProtocolPayment(transactions: [], refundTo: []) else { return nil }
-            payment.currency = ack.payment.currency
-            cPtr = BRPaymentProtocolACKNew(payment.cPtr, ack.memo)
-        }
-        
-        guard cPtr != nil else { return nil }
-        self.cPtr = cPtr!
+        guard let cPtr = BRPaymentProtocolACKParse(bytes, bytes.count) else { return nil }
+        self.cPtr = cPtr
+        self.isManaged = true
+    }
+    
+    init?(json: String) {
+        guard let ack = try? JSONDecoder().decode(Ack.self, from: json.data(using: .utf8)!) else { return nil }
+        guard let payment = PaymentProtocolPayment(transactions: [], refundTo: []) else { return nil }
+        payment.currency = ack.payment.currency
+        guard let cPtr = BRPaymentProtocolACKNew(payment.cPtr, ack.memo) else { return nil }
+        self.cPtr = cPtr
         self.isManaged = true
     }
     

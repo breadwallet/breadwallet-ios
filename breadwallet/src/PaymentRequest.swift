@@ -93,6 +93,12 @@ struct PaymentRequest {
         type = .local
     }
 
+    init?(json: String, currency: CurrencyDef) {
+        self.currency = currency
+        self.paymentProtocolRequest = PaymentProtocolRequest(json: json)
+        type = .local
+    }
+
     init?(ethAddress: String) {
         self.currency = Currencies.eth
         guard ethAddress.isValidEthAddress else { return nil }
@@ -101,16 +107,20 @@ struct PaymentRequest {
     }
 
     func fetchRemoteRequest(completion: @escaping (PaymentRequest?) -> Void) {
-
         let request: NSMutableURLRequest
         if let url = r {
             request = NSMutableURLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0)
         } else {
             request = NSMutableURLRequest(url: remoteRequest! as URL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0) //TODO - fix !
         }
-
-        request.setValue("application/bitcoin-paymentrequest", forHTTPHeaderField: "Accept")
-        request.addValue("application/payment-request", forHTTPHeaderField: "Accept")
+        
+        if self.currency.matches(Currencies.btc) {
+            request.setValue("application/bitcoin-paymentrequest", forHTTPHeaderField: "Accept")
+            request.addValue("application/payment-request", forHTTPHeaderField: "Accept")
+        }
+        else {
+            request.setValue("application/payment-request", forHTTPHeaderField: "Accept")
+        }
 
         URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
             guard error == nil else { return completion(nil) }
@@ -122,7 +132,7 @@ struct PaymentRequest {
             }
             else if response.mimeType?.lowercased() == "application/payment-request" {
                 // TODO: XXX validate hash from response header
-                let req = PaymentRequest(data: data, currency: self.currency)
+                let req = PaymentRequest(json: String(data: data, encoding: .utf8) ?? "", currency: self.currency)
                 // TODO: XXX populate the certified common name from the https response
                 completion(req)
             }
