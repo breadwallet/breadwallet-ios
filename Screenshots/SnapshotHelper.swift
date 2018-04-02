@@ -161,7 +161,12 @@ open class Snapshot: NSObject {
                 return
             }
             
-            let screenshot = app.windows.firstMatch.screenshot()
+            guard let window = app.windows.allElementsBoundByIndex.first(where: { $0.frame.isEmpty == false }) else {
+                print("Couldn't find an element window in XCUIApplication with a non-empty frame.")
+                return
+            }
+
+            let screenshot = window.screenshot()
             guard let simulator = ProcessInfo().environment["SIMULATOR_DEVICE_NAME"], let screenshotsDir = screenshotsDirectory else { return }
             let path = screenshotsDir.appendingPathComponent("\(simulator)-\(name).png")
             do {
@@ -198,7 +203,7 @@ open class Snapshot: NSObject {
 
             homeDir = usersDir.appendingPathComponent(user)
         #else
-            #if targetEnvironment(simulator)
+            #if arch(i386) || arch(x86_64)
                 guard let simulatorHostHome = ProcessInfo().environment["SIMULATOR_HOST_HOME"] else {
                     throw SnapshotError.cannotFindSimulatorHomeDirectory
                 }
@@ -273,4 +278,4 @@ private extension CGFloat {
 
 // Please don't remove the lines below
 // They are used to detect outdated configuration files
-// SnapshotHelperVersion [1.9]
+// SnapshotHelperVersion [1.10]

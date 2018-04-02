@@ -17,8 +17,9 @@ class FakeAuthenticator: WalletAuthenticator {
     
     init() {
         var keyData = Data(count: 32)
+        let count = keyData.count
         let result = keyData.withUnsafeMutableBytes {
-            SecRandomCopyBytes(kSecRandomDefault, keyData.count, $0)
+            SecRandomCopyBytes(kSecRandomDefault, count, $0)
         }
         if result != errSecSuccess {
             fatalError("couldnt generate random data for key")
