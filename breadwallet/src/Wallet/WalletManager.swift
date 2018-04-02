@@ -65,9 +65,8 @@ class EthWalletManager : WalletManager {
     private var pendingTransactions = [EthTx]()
 
     init() {
-        guard var words = Words.rawWordList else { return }
-        installSharedWordList(&words, Int32(words.count))
-        self.account = createAccount(loadPhrase())
+        guard let pubKey = ethPubKey else { return }
+        self.account = createAccountWithPublicKey(pubKey)
         guard account != nil else { return }
         self.ethAddress = accountGetPrimaryAddress(self.account)
         self.ethWallet = walletCreate(account, E.isTestnet ? ethereumTestnet : ethereumMainnet)
@@ -93,7 +92,8 @@ class EthWalletManager : WalletManager {
     }
     
     func updateBalance() {
-        apiClient?.getBalance(address: address!, handler: { result in
+        guard let address = address else { return }
+        apiClient?.getBalance(address: address, handler: { result in
             switch result {
             case .success(let value):
                 Store.perform(action: WalletChange(self.currency).setBalance(value))
@@ -104,14 +104,15 @@ class EthWalletManager : WalletManager {
     }
 
     func updateTransactionList() {
-        apiClient?.getEthTxList(address: self.address!, handler: { [weak self] txList in
+        guard let address = address else { return }
+        apiClient?.getEthTxList(address: address, handler: { [weak self] txList in
             guard let `self` = self else { return }
             for tx in txList {
                 if let index = self.pendingTransactions.index(where: { $0.hash == tx.hash }) {
                     self.pendingTransactions.remove(at: index)
                 }
             }
-            let transactions = (self.pendingTransactions + txList).map { EthTransaction(tx: $0, accountAddress: self.address!, kvStore: self.kvStore, rate: self.currency.state.currentRate) }
+            let transactions = (self.pendingTransactions + txList).map { EthTransaction(tx: $0, accountAddress: address, kvStore: self.kvStore, rate: self.currency.state.currentRate) }
             DispatchQueue.main.async {
                 Store.perform(action: WalletChange(self.currency).setTransactions(transactions))
             }
@@ -119,13 +120,16 @@ class EthWalletManager : WalletManager {
     }
 
     func sendTx(toAddress: String, amount: UInt256, callback: @escaping (JSONRPCResult<EthTx>)->Void) {
+        guard var privKey = BRKey(privKey: ethPrivKey!) else { return }
+        privKey.compressed = 0
+        defer { privKey.clean() }
         let ethToAddress = createAddress(toAddress)
         let ethAmount = amountCreateEther((etherCreate(amount)))
         let gasPrice = gasPriceCreate((etherCreate(self.gasPrice)))
         let gasLimit = gasCreate(UInt64(21000))
         let nonce = getNonce()
         let tx = walletCreateTransactionDetailed(ethWallet, ethToAddress, ethAmount, gasPrice, gasLimit, nonce)
-        walletSignTransaction(ethWallet, tx, loadPhrase())
+        walletSignTransactionWithPrivateKey(ethWallet, tx, privKey)
         let txString = walletGetRawTransactionHexEncoded(ethWallet, tx, "0x")
         apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { result in
             switch result {
@@ -186,6 +190,8 @@ class EthWalletManager : WalletManager {
         return nil
     }
 }
+
+// MARK: -
 
 class BTCWalletManager : WalletManager {
     let currency: CurrencyDef

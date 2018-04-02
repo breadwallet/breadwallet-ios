@@ -492,46 +492,6 @@ extension BTCWalletManager : WalletAuthenticator {
         }
     }
 
-    // key used for etherium wallet
-    var ethPrivKey: String? {
-        return autoreleasepool {
-            do {
-                if let ethKey: String? = try? keychainItem(key: KeychainKey.ethPrivKey) {
-                    if ethKey != nil { return ethKey }
-                }
-                var key = BRKey()
-                var seed = UInt512()
-                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
-                BRBIP39DeriveKey(&seed, phrase, nil)
-                // BIP44 etherium path m/44H/60H/0H/0/0: https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
-                BRBIP32vPrivKeyPath(&key, &seed, MemoryLayout<UInt512>.size, 5,
-                                    getVaList([44 | BIP32_HARD, 60 | BIP32_HARD, 0 | BIP32_HARD, 0, 0]))
-                seed = UInt512() // clear seed
-                let pkLen = BRKeyPrivKey(&key, nil, 0)
-                var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
-                pkData.count = pkLen
-                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0, pkLen) }) == pkLen else { return nil }
-                let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
-                                                                       CFStringBuiltInEncodings.UTF8.rawValue) as String
-                try setKeychainItem(key: KeychainKey.ethPrivKey, item: privKey)
-                return privKey
-            }
-            catch let error {
-                print("apiAuthKey error: \(error)")
-                return nil
-            }
-        }
-    }
-    
-    // public key for etherium wallet
-    var ethPubKey: [UInt8]? {
-        var key = BRKey(privKey: ethPrivKey!)
-        defer { key?.clean() }
-        key?.compressed = 0
-        guard let pubKey = key?.pubKey(), pubKey.count == 65 else { return nil }
-        return [UInt8](pubKey[1...])
-    }
-    
     // sensitive user information stored on the keychain
     var userAccount: Dictionary<AnyHashable, Any>? {
         get {
@@ -575,6 +535,46 @@ extension EthWalletManager {
             return try keychainItem(key: KeychainKey.mnemonic)
         }
         catch { return nil }
+    }
+    
+    // key used for Ethereum wallet
+    var ethPrivKey: String? {
+        return autoreleasepool {
+            do {
+                if let ethKey: String? = try? keychainItem(key: KeychainKey.ethPrivKey) {
+                    if ethKey != nil { return ethKey }
+                }
+                var key = BRKey()
+                var seed = UInt512()
+                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
+                BRBIP39DeriveKey(&seed, phrase, nil)
+                // BIP44 etherium path m/44H/60H/0H/0/0: https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
+                BRBIP32vPrivKeyPath(&key, &seed, MemoryLayout<UInt512>.size, 5,
+                                    getVaList([44 | BIP32_HARD, 60 | BIP32_HARD, 0 | BIP32_HARD, 0, 0]))
+                seed = UInt512() // clear seed
+                let pkLen = BRKeyPrivKey(&key, nil, 0)
+                var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
+                pkData.count = pkLen
+                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0, pkLen) }) == pkLen else { return nil }
+                let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
+                                                                       CFStringBuiltInEncodings.UTF8.rawValue) as String
+                try setKeychainItem(key: KeychainKey.ethPrivKey, item: privKey)
+                return privKey
+            }
+            catch let error {
+                print("apiAuthKey error: \(error)")
+                return nil
+            }
+        }
+    }
+    
+    // public key for Ethereum wallet
+    var ethPubKey: [UInt8]? {
+        var key = BRKey(privKey: ethPrivKey!)
+        defer { key?.clean() }
+        key?.compressed = 0
+        guard let pubKey = key?.pubKey(), pubKey.count == 65 else { return nil }
+        return [UInt8](pubKey)
     }
 }
 
