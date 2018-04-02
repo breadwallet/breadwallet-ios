@@ -159,7 +159,7 @@ class EthWalletManager : WalletManager {
     private func getNonce() -> UInt64 {
         let sentTransactions = Store.state.wallets[currency.code]?.transactions.filter { $0.direction == .sent }
         let previousNonce = sentTransactions?.map { ($0 as! EthTransaction).nonce }.max()
-        return (previousNonce == nil) ? 1 : previousNonce! + 1
+        return (previousNonce == nil) ? 0 : previousNonce! + 1
     }
 
     func resetForWipe() {
