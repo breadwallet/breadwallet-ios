@@ -54,8 +54,8 @@ class Sender {
         protocolRequest = forPaymentProtocol
         let feePerKb = walletManager.wallet?.feePerKb ?? 0
 
-        if UInt64(forPaymentProtocol.details.requiredFeePerByte*1000) >= feePerKb {
-            walletManager.wallet?.feePerKb = UInt64(forPaymentProtocol.details.requiredFeePerByte*1000)
+        if UInt64(forPaymentProtocol.details.requiredFeeRate*1000) >= feePerKb {
+            walletManager.wallet?.feePerKb = UInt64(forPaymentProtocol.details.requiredFeeRate*1000)
             transaction = walletManager.wallet?.createTxForOutputs(forPaymentProtocol.details.outputs)
             walletManager.wallet?.feePerKb = feePerKb
         }
@@ -238,16 +238,19 @@ class Sender {
         URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
             guard error == nil else { print("payment error: \(error!)"); return }
             guard let response = response, let data = data else { print("no response or data"); return }
-            if (response.mimeType == "application/bitcoin-paymentack" || response.mimeType == "application/payment-ack") &&
-                data.count <= 50000 {
+            if response.mimeType == "application/bitcoin-paymentack" && data.count <= 50000 {
                 if let ack = PaymentProtocolACK(data: data) {
                     print("received ack: \(ack)") //TODO - show memo to user
-                } else {
-                    print("ack failed to deserialize")
                 }
-            } else {
-                print("invalid data")
+                else { print("ack failed to deserialize") }
             }
+            else if response.mimeType == "application/payment-ack" && data.count <= 50000 {
+                if let ack = PaymentProtocolACK(json: String(data: data, encoding: .utf8) ?? "") {
+                    print("received ack: \(ack)") //TODO - show memo to user
+                }
+                else { print("ack failed to deserialize") }
+            }
+            else { print("invalid data") }
 
             print("finished!!")
         }.resume()

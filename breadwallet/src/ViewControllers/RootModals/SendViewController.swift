@@ -393,9 +393,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         let address = firstOutput.swiftAddress
         let isValid = protoReq.isValid()
         var isOutputTooSmall = false
+        
+        if let errorMessage = protoReq.errorMessage, errorMessage == S.PaymentProtocol.Errors.requestExpired {
+            return showAlert(title: S.PaymentProtocol.Errors.requestExpired, message: errorMessage!, buttonLabel: S.Button.ok)
+        }
 
-        if let errorMessage = protoReq.errorMessage, errorMessage == S.PaymentProtocol.Errors.requestExpired, !isValid {
-            return showAlert(title: S.PaymentProtocol.Errors.badPaymentRequest, message: errorMessage, buttonLabel: S.Button.ok)
+        if !isValid {
+            return showAlert(title: S.PaymentProtocol.Errors.badPaymentRequest, message: errorMessage!, buttonLabel: S.Button.ok)
         }
 
         //TODO: check for duplicates of already paid requests
