@@ -204,3 +204,12 @@ enum PinLength {
         }
     }
 }
+
+enum WalletID {
+    struct set: Action {
+        let reduce: Reducer
+        init(_ walletID: String?) {
+            reduce = { $0.mutate(walletID: walletID) }
+        }
+    }
+}

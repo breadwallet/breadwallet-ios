@@ -20,6 +20,7 @@ struct State {
     let isPushNotificationsEnabled: Bool
     let isPromptingBiometrics: Bool
     let pinLength: Int
+    let walletID: String?
     let wallets: [String: WalletState]
     
     subscript(currency: CurrencyDef) -> WalletState {
@@ -55,6 +56,7 @@ extension State {
                         isPushNotificationsEnabled: UserDefaults.pushToken != nil,
                         isPromptingBiometrics: false,
                         pinLength: 6,
+                        walletID: nil,
                         wallets: [Currencies.btc.code: WalletState.initial(Currencies.btc, displayOrder: 0),
                                   Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: 1),
                                   Currencies.eth.code: WalletState.initial(Currencies.eth, displayOrder: 2)])
@@ -70,6 +72,7 @@ extension State {
                    isPushNotificationsEnabled: Bool? = nil,
                    isPromptingBiometrics: Bool? = nil,
                    pinLength: Int? = nil,
+                   walletID: String? = nil,
                    wallets: [String: WalletState]? = nil) -> State {
         return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible,
                      isLoginRequired: isLoginRequired ?? self.isLoginRequired,
@@ -81,6 +84,7 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled ?? self.isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics ?? self.isPromptingBiometrics,
                      pinLength: pinLength ?? self.pinLength,
+                     walletID: walletID ?? self.walletID,
                      wallets: wallets ?? self.wallets)
     }
     
@@ -129,7 +133,6 @@ struct WalletState {
     let recommendRescan: Bool
     let maxDigits: Int // this is bits vs bitcoin setting
     let connectionStatus: BRPeerStatus
-//    let isBtcSwapped: Bool // show amounts as fiat setting
     
     
     static func initial(_ currency: CurrencyDef, displayOrder: Int) -> WalletState {
