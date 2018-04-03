@@ -242,31 +242,49 @@ class Sender {
 
         print("posting to: \(url)")
         
-        URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
-            guard error == nil else { print("payment error: \(error!)"); return }
-            guard let response = response, let data = data else { print("no response or data"); return }
-            if response.mimeType == "application/bitcoin-paymentack" && data.count <= 50000 {
-                if let ack = PaymentProtocolACK(data: data) {
-                    print("received ack: \(ack)") //TODO - show memo to user
+        URLSession.shared.dataTask(with: request as URLRequest) { [weak self] data, response, error in
+            DispatchQueue.main.async {
+                guard error == nil else {
+                    print("payment error: \(error!)");
+                    return completion(.publishFailure(.posixError(errorCode: 74, description: "\(error!)")))
                 }
-                else { print("ack failed to deserialize") }
-            }
-            else if response.mimeType == "application/payment-ack" && data.count <= 50000 {
-                if let ack = PaymentProtocolACK(json: String(data: data, encoding: .utf8) ?? "") {
-                    print("received ack: \(ack)") //TODO - show memo to user
-                    if let tx = self.transaction {
-                        self.setMetaData(btcTx: tx)
+
+                guard let response = response, let data = data else {
+                    print("no response or data");
+                    return completion(.publishFailure(.posixError(errorCode: 74, description: "no response or data")))
+                }
+                
+                if response.mimeType == "application/bitcoin-paymentack" && data.count <= 50000 {
+                    if let ack = PaymentProtocolACK(data: data) {
+                        print("received ack: \(ack)") //TODO - show memo to user
                         completion(.success)
+                    }
+                    else {
+                        print("ack failed to deserialize")
+                        completion(.publishFailure(.posixError(errorCode: 74, description: "ack failed to deserialize")))
+                    }
+                }
+                else if response.mimeType == "application/payment-ack" && data.count <= 50000 {
+                    if let ack = PaymentProtocolACK(json: String(data: data, encoding: .utf8) ?? "") {
+                        print("received ack: \(ack)") //TODO - show memo to user
+
+                        if let tx = self?.transaction {
+                            self?.setMetaData(btcTx: tx)
+                            completion(.success)
+                        }
+                    }
+                    else {
+                        print("ack failed to deserialize")
+                        completion(.publishFailure(.posixError(errorCode: 74, description: "ack failed to deserialize")))
                     }
                 }
                 else {
-                    print("ack failed to deserialize")
-                    completion(.publishFailure(.posixError(errorCode: 74, description: "ack failed to deserialize")))
+                    print("invalid data")
+                    completion(.publishFailure(.posixError(errorCode: 74, description: "invalid data")))
                 }
+                
+                print("finished!!")
             }
-            else { print("invalid data") }
-
-            print("finished!!")
         }.resume()
 
     }

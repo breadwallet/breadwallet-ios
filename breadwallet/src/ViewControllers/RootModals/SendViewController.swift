@@ -438,7 +438,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         if let name = protoReq.commonName {
             addressCell.setContent(protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized)
         }
-
+        else {
+            addressCell.setContent(currency.matches(Currencies.bch) ? address.bCashAddr : address)
+        }
+        
         if requestAmount > UInt256(0) {
             amountView.forceUpdateAmount(amount: Amount(amount: requestAmount, currency: currency))
         }
