@@ -196,11 +196,16 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
     func handleURI(_ uri: String) {
         if self.currentUri != uri {
             self.currentUri = uri
-            if uri.isValidEthAddress, let request = PaymentRequest(ethAddress: uri)  {
-                saveEvent("scan.ethAddress")
-                createPaymentRequestSuccess(request: request)
-            } else if let request = PaymentRequest(string: uri, currency: currency) {
-                saveEvent(currency.matches(Currencies.bch) ? "scan.bCashAddr" : "scan.bitcoinUri")
+            if let request = PaymentRequest(string: uri, currency: currency) {
+                switch currency.code {
+                case Currencies.bch.code:
+                    saveEvent("scan.bCashAddr")
+                case Currencies.btc.code:
+                    saveEvent("scan.bitcoinUri")
+                case Currencies.eth.code:
+                    saveEvent("scan.ethAddress")
+                default: break
+                }
                 createPaymentRequestSuccess(request: request)
             } else {
                 guide.state = .negative

@@ -193,6 +193,7 @@ struct Ethereum: CurrencyDef {
     let code: String
     let symbol: String
     let colors: (UIColor, UIColor)
+    let urlScheme: String?
     
     var commonUnit: CurrencyUnit {
         return Units.eth
@@ -254,7 +255,8 @@ struct Currencies {
     static let eth = Ethereum(name: "Ethereum",
                               code: "ETH",
                               symbol: S.Symbols.eth,
-                              colors: (UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0), UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0)))
+                              colors: (UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0), UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0)),
+                              urlScheme: "ethereum")
     static let brd = ERC20Token(name: "Bread Token",
                                 code: "BRD",
                                 symbol: "🍞",

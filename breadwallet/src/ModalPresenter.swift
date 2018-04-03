@@ -231,8 +231,21 @@ class ModalPresenter : Subscriber, Trackable {
         case .loginAddress:
             return receiveView(currency: Currencies.btc, isRequestAmountVisible: false)
         case .requestAmount(let currency):
-            guard let wallet = walletManagers[currency.code]?.wallet else { return nil }
-            let requestVc = RequestAmountViewController(currency: currency, wallet: wallet)
+            guard let walletManager = walletManagers[currency.code] else { return nil }
+            var address: String?
+            switch currency.code {
+            case Currencies.btc.code:
+                address = walletManager.wallet?.receiveAddress
+            case Currencies.bch.code:
+                address = walletManager.wallet?.receiveAddress.bCashAddr
+            case Currencies.eth.code:
+                address = (walletManager as? EthWalletManager)?.address
+            default:
+                //TODO:ERC20
+                break
+            }
+            guard let receiveAddress = address else { return nil }
+            let requestVc = RequestAmountViewController(currency: currency, receiveAddress: receiveAddress)
             requestVc.presentEmail = { [weak self] bitcoinURL, image in
                 self?.messagePresenter.presenter = self?.topViewController
                 self?.messagePresenter.presentMailCompose(bitcoinURL: bitcoinURL, image: image)
