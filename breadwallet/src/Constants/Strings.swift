@@ -241,7 +241,7 @@ enum S {
     enum AccountHeader {
         static let defaultWalletName = NSLocalizedString("AccountHeader.defaultWalletName", value:"My BRD", comment: "Default wallet name")
         static let equals = NSLocalizedString("AccountHeader.equals", value:"=", comment: "Equals symbol")
-        static let exchangeRate = NSLocalizedString("Account.exchangeRateSeparator", value:"%1$@ per %2$@", comment: "$10000 per BTC")
+        static let exchangeRate = NSLocalizedString("Account.exchangeRate", value:"%1$@ per %2$@", comment: "$10000 per BTC")
     }
 
     enum VerifyPin {
