@@ -71,7 +71,7 @@ class Sender {
             return UInt256(fee)
         case is Ethereum:
             guard let gasPrice = (walletManager as? EthWalletManager)?.gasPrice else { return 0 }
-            return gasPrice * UInt256(21000) // tx gas limit
+            return gasPrice * UInt256(EthWalletManager.defaultGasLimit)
         default:
             //TODO:ERC20
             assertionFailure("unsupported")

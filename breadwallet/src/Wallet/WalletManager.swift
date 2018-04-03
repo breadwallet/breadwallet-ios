@@ -49,6 +49,8 @@ protocol WalletManager: class {
 }
 
 class EthWalletManager : WalletManager {
+    static let defaultGasLimit: UInt64 = 48000
+    
     var peerManager: BRPeerManager?
     var wallet: BRWallet?
     var currency: CurrencyDef = Currencies.eth
@@ -127,7 +129,7 @@ class EthWalletManager : WalletManager {
         let ethToAddress = createAddress(toAddress)
         let ethAmount = amountCreateEther((etherCreate(amount)))
         let gasPrice = gasPriceCreate((etherCreate(self.gasPrice)))
-        let gasLimit = gasCreate(UInt64(21000))
+        let gasLimit = gasCreate(EthWalletManager.defaultGasLimit)
         let nonce = getNonce()
         let tx = walletCreateTransactionDetailed(ethWallet, ethToAddress, ethAmount, gasPrice, gasLimit, nonce)
         walletSignTransactionWithPrivateKey(ethWallet, tx, privKey)
