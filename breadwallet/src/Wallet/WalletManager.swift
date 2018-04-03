@@ -45,6 +45,7 @@ protocol WalletManager: class {
     var kvStore: BRReplicatedKVStore? { get set }
     var apiClient: BRAPIClient? { get }
     func canUseBiometrics(forTx: BRTxRef) -> Bool
+    func isOwnAddress(address: String) -> Bool
 }
 
 class EthWalletManager : WalletManager {
@@ -168,6 +169,10 @@ class EthWalletManager : WalletManager {
 
     func canUseBiometrics(forTx: BRTxRef) -> Bool {
         return false
+    }
+    
+    func isOwnAddress(address: String) -> Bool {
+        return address.lowercased() == self.address?.lowercased()
     }
     
     // walletID identifies a wallet by the ethereum public key
@@ -329,6 +334,10 @@ class BTCWalletManager : WalletManager {
     var isWatchOnly: Bool {
         let mpkData = Data(masterPubKey: masterPubKey)
         return mpkData.count == 0
+    }
+    
+    func isOwnAddress(address: String) -> Bool {
+        return wallet?.containsAddress(address) ?? false
     }
 }
 
