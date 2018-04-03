@@ -238,7 +238,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
 
         if sender.transaction == nil {
-            guard let address = addressCell.address else {
+            guard let address = addressCell.address, let displayAddress = addressCell.displayAddress else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             }
             if currency.matches(Currencies.btc) {
@@ -246,7 +246,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                     return showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
                 }
             }
-            guard currency.isValidAddress(address) else {
+            guard currency.isValidAddress(displayAddress) else {
                 let message = String.init(format: S.Send.invalidAddressMessage, currency.name)
                 return showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
             }
