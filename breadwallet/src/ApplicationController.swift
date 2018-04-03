@@ -264,6 +264,9 @@ class ApplicationController : Subscriber, Trackable {
             homeScreen.primaryWalletManager = primaryWalletManager
         }
         hasPerformedWalletDependentInitialization = true
+        if modalPresenter != nil {
+            Store.unsubscribe(modalPresenter!)
+        }
         modalPresenter = ModalPresenter(walletManagers: walletManagers, window: window, apiClient: noAuthApiClient)
         startFlowController = StartFlowPresenter(walletManager: primaryWalletManager, rootViewController: rootViewController)
         

@@ -28,6 +28,10 @@ class ModalPresenter : Subscriber, Trackable {
         self.noAuthApiClient = apiClient
         addSubscriptions()
     }
+    
+    deinit {
+        Store.unsubscribe(self)
+    }
 
     //MARK: - Private
     private let window: UIWindow
@@ -46,92 +50,92 @@ class ModalPresenter : Subscriber, Trackable {
 
         Store.lazySubscribe(self,
                         selector: { $0.rootModal != $1.rootModal},
-                        callback: { self.presentModal($0.rootModal) })
+                        callback: { [weak self] in self?.presentModal($0.rootModal) })
         
         Store.lazySubscribe(self,
                         selector: { $0.alert != $1.alert && $1.alert != .none },
-                        callback: { self.handleAlertChange($0.alert) })
+                        callback: { [weak self] in self?.handleAlertChange($0.alert) })
         
-        Store.subscribe(self, name: .presentFaq("", nil), callback: {
+        Store.subscribe(self, name: .presentFaq("", nil), callback: { [weak self] in
             guard let trigger = $0 else { return }
             if case .presentFaq(let articleId, let currency) = trigger {
-                self.presentFaq(articleId: articleId, currency: currency)
+                self?.presentFaq(articleId: articleId, currency: currency)
             }
         })
 
         //Subscribe to prompt actions
-        Store.subscribe(self, name: .promptUpgradePin, callback: { _ in
-            self.presentUpgradePin()
+        Store.subscribe(self, name: .promptUpgradePin, callback: { [weak self] _ in
+            self?.presentUpgradePin()
         })
-        Store.subscribe(self, name: .promptPaperKey, callback: { _ in
-            self.presentWritePaperKey()
+        Store.subscribe(self, name: .promptPaperKey, callback: { [weak self] _ in
+            self?.presentWritePaperKey()
         })
-        Store.subscribe(self, name: .promptBiometrics, callback: { _ in
-            self.presentBiometricsSetting()
+        Store.subscribe(self, name: .promptBiometrics, callback: { [weak self] _ in
+            self?.presentBiometricsSetting()
         })
-        Store.subscribe(self, name: .promptShareData, callback: { _ in
-            self.promptShareData()
+        Store.subscribe(self, name: .promptShareData, callback: { [weak self] _ in
+            self?.promptShareData()
         })
-        Store.subscribe(self, name: .openFile(Data()), callback: {
+        Store.subscribe(self, name: .openFile(Data()), callback: { [weak self] in
             guard let trigger = $0 else { return }
             if case .openFile(let file) = trigger {
-                self.handleFile(file)
+                self?.handleFile(file)
             }
         })
         
         for walletManager in walletManagers.values {
-            Store.subscribe(self, name: .recommendRescan(walletManager.currency), callback: { _ in
-                self.presentRescan(currency: walletManager.currency)
+            Store.subscribe(self, name: .recommendRescan(walletManager.currency), callback: { [weak self] _ in
+                self?.presentRescan(currency: walletManager.currency)
             })
         }
 
         //URLs
-        Store.subscribe(self, name: .receivedPaymentRequest(nil), callback: {
+        Store.subscribe(self, name: .receivedPaymentRequest(nil), callback: { [weak self] in
             guard let trigger = $0 else { return }
             if case let .receivedPaymentRequest(request) = trigger {
                 if let request = request {
-                    self.handlePaymentRequest(request: request)
+                    self?.handlePaymentRequest(request: request)
                 }
             }
         })
-        Store.subscribe(self, name: .scanQr, callback: { _ in
-            self.handleScanQrURL()
+        Store.subscribe(self, name: .scanQr, callback: { [weak self] _ in
+            self?.handleScanQrURL()
         })
-        Store.subscribe(self, name: .copyWalletAddresses(nil, nil), callback: {
+        Store.subscribe(self, name: .copyWalletAddresses(nil, nil), callback: { [weak self] in
             guard let trigger = $0 else { return }
             if case .copyWalletAddresses(let success, let error) = trigger {
-                self.handleCopyAddresses(success: success, error: error)
+                self?.handleCopyAddresses(success: success, error: error)
             }
         })
-        Store.subscribe(self, name: .authenticateForBitId("", {_ in}), callback: {
+        Store.subscribe(self, name: .authenticateForBitId("", {_ in}), callback: { [weak self] in
             guard let trigger = $0 else { return }
             if case .authenticateForBitId(let prompt, let callback) = trigger {
-                self.authenticateForBitId(prompt: prompt, callback: callback)
+                self?.authenticateForBitId(prompt: prompt, callback: callback)
             }
         })
-        reachability.didChange = { isReachable in
+        reachability.didChange = { [weak self] isReachable in
             if isReachable {
-                self.hideNotReachable()
+                self?.hideNotReachable()
             } else {
-                self.showNotReachable()
+                self?.showNotReachable()
             }
         }
-        Store.subscribe(self, name: .lightWeightAlert(""), callback: {
+        Store.subscribe(self, name: .lightWeightAlert(""), callback: { [weak self] in
             guard let trigger = $0 else { return }
             if case let .lightWeightAlert(message) = trigger {
-                self.showLightWeightAlert(message: message)
+                self?.showLightWeightAlert(message: message)
             }
         })
-        Store.subscribe(self, name: .showAlert(nil), callback: {
+        Store.subscribe(self, name: .showAlert(nil), callback: { [weak self] in
             guard let trigger = $0 else { return }
             if case let .showAlert(alert) = trigger {
                 if let alert = alert {
-                    self.topViewController?.present(alert, animated: true, completion: nil)
+                    self?.topViewController?.present(alert, animated: true, completion: nil)
                 }
             }
         })
-        Store.subscribe(self, name: .wipeWalletNoPrompt, callback: { _ in
-            self.wipeWalletNoPrompt()
+        Store.subscribe(self, name: .wipeWalletNoPrompt, callback: { [weak self] _ in
+            self?.wipeWalletNoPrompt()
         })
     }
 
@@ -329,8 +333,8 @@ class ModalPresenter : Subscriber, Trackable {
                     currencySettings = [
                         SettingsSections.currency: [
                             Setting(title: S.Settings.importTile, callback: {
-                                settingsNav.dismiss(animated: true, completion: {
-                                    self.presentKeyImport(walletManager: walletManager as! BTCWalletManager)
+                                settingsNav.dismiss(animated: true, completion: { [weak self] in
+                                    self?.presentKeyImport(walletManager: walletManager as! BTCWalletManager)
                                 })
                             }),
                             Setting(title: S.Settings.sync, callback: {
@@ -356,9 +360,9 @@ class ModalPresenter : Subscriber, Trackable {
                     nc.setClearNavbar()
                     nc.setWhiteStyle()
                     nc.delegate = self.wipeNavigationDelegate
-                    let start = StartWipeWalletViewController {
-                        let recover = EnterPhraseViewController(walletManager: walletManager, reason: .validateForWipingWallet( {
-                            self.wipeWallet()
+                    let start = StartWipeWalletViewController { [weak self] in
+                        let recover = EnterPhraseViewController(walletManager: walletManager, reason: .validateForWipingWallet( { [weak self] in
+                            self?.wipeWallet()
                         }))
                         nc.pushViewController(recover, animated: true)
                     }
@@ -368,8 +372,8 @@ class ModalPresenter : Subscriber, Trackable {
                     faqButton.tintColor = .white
                     start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
                     nc.viewControllers = [start]
-                    settingsNav.dismiss(animated: true, completion: {
-                        self.topViewController?.present(nc, animated: true, completion: nil)
+                    settingsNav.dismiss(animated: true, completion: { [weak self] in
+                        self?.topViewController?.present(nc, animated: true, completion: nil)
                     })
                 })
             ],
@@ -383,8 +387,8 @@ class ModalPresenter : Subscriber, Trackable {
                     guard let rate = Currencies.btc.state.currentRate else { return "" }
                     let amount = Amount(amount: UInt256(walletManager.spendingLimit), currency: Currencies.btc, rate: rate)
                     return amount.fiatDescription
-                }, callback: {
-                    self.pushBiometricsSpendingLimit(onNc: settingsNav)
+                }, callback: { [weak self] in
+                    self?.pushBiometricsSpendingLimit(onNc: settingsNav)
                 }),
                 Setting(title: S.UpdatePin.updateTitle, callback: strongify(self) { myself in
                     let updatePin = UpdatePinViewController(walletManager: walletManager, type: .update)
@@ -434,8 +438,8 @@ class ModalPresenter : Subscriber, Trackable {
 
                     if E.isTestFlight {
                         advancedSettings[SettingsSections.other] = [
-                            Setting(title: S.Settings.sendLogs, callback: {
-                                self.showEmailLogsModal()
+                            Setting(title: S.Settings.sendLogs, callback: { [weak self] in
+                                self?.showEmailLogsModal()
                             })
                         ]
                         sections.append(SettingsSections.other)
