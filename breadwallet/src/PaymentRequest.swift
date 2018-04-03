@@ -99,13 +99,6 @@ struct PaymentRequest {
         type = .local
     }
 
-    init?(ethAddress: String) {
-        self.currency = Currencies.eth
-        guard ethAddress.isValidEthAddress else { return nil }
-        toAddress = ethAddress
-        type = .local
-    }
-
     func fetchRemoteRequest(completion: @escaping (PaymentRequest?) -> Void) {
         let request: NSMutableURLRequest
         if let url = r {
@@ -150,10 +143,9 @@ struct PaymentRequest {
     }
 
     static func requestString(withAddress address: String, forAmount amount: UInt256, currency: CurrencyDef) -> String {
-        //TODO:ETH
-        let btcAmount = amount.string(decimals: currency.commonUnit.decimals)
+        let amountString = amount.string(decimals: currency.commonUnit.decimals)
         guard let uri = currency.addressURI(address) else { return "" }
-        return "\(uri)?amount=\(btcAmount)"
+        return "\(uri)?amount=\(amountString)"
     }
 
     let currency: CurrencyDef
