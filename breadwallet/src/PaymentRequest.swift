@@ -109,7 +109,7 @@ struct PaymentRequest {
         
         if self.currency.matches(Currencies.btc) {
             request.setValue("application/bitcoin-paymentrequest", forHTTPHeaderField: "Accept")
-            request.addValue("application/payment-request", forHTTPHeaderField: "Accept")
+            //request.addValue("application/payment-request", forHTTPHeaderField: "Accept") // this breaks bitpay :(
         }
         else {
             request.setValue("application/payment-request", forHTTPHeaderField: "Accept")
@@ -137,6 +137,8 @@ struct PaymentRequest {
                 }
                 completion(nil)
             } else {
+                print("\"\(response.mimeType?.lowercased() ?? "")\"\n")
+                print("\(String(data: data, encoding: .utf8) ?? "")\n")
                 completion(nil)
             }
         }.resume()
