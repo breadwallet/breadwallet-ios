@@ -179,6 +179,11 @@ class Sender {
         guard let tx = transaction else { assert(false, "publish failure"); return }
         DispatchQueue.walletQueue.async { [weak self] in
             guard let myself = self else { assert(false, "myelf didn't exist"); return }
+            
+            if myself.protocolRequest?.mimeType == "application/payment-request" {
+                return myself.postProtocolPaymentIfNeeded(completion: completion)
+            }
+            
             myself.walletManager.peerManager?.publishTx(tx, completion: { success, error in
                 DispatchQueue.main.async {
                     if let error = error {
@@ -210,7 +215,7 @@ class Sender {
         //Store.trigger(name: .txMemoUpdated(tx.hash))
     }
 
-    private func postProtocolPaymentIfNeeded() {
+    private func postProtocolPaymentIfNeeded(completion: @escaping (SendResult) -> Void = { (nil) in }) {
         guard let protoReq = protocolRequest else { return }
         guard let wallet = walletManager.wallet else { return }
         let amount = protoReq.details.outputs.map { $0.amount }.reduce(0, +)
@@ -235,6 +240,8 @@ class Sender {
             request.httpBody = Data(bytes: payment!.bytes)
         }
 
+        print("posting to: \(url)")
+        
         URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
             guard error == nil else { print("payment error: \(error!)"); return }
             guard let response = response, let data = data else { print("no response or data"); return }
@@ -247,8 +254,15 @@ class Sender {
             else if response.mimeType == "application/payment-ack" && data.count <= 50000 {
                 if let ack = PaymentProtocolACK(json: String(data: data, encoding: .utf8) ?? "") {
                     print("received ack: \(ack)") //TODO - show memo to user
+                    if let tx = self.transaction {
+                        self.setMetaData(btcTx: tx)
+                        completion(.success)
+                    }
                 }
-                else { print("ack failed to deserialize") }
+                else {
+                    print("ack failed to deserialize")
+                    completion(.publishFailure(.posixError(errorCode: 74, description: "ack failed to deserialize")))
+                }
             }
             else { print("invalid data") }
 
