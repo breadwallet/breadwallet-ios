@@ -158,7 +158,7 @@ class EthWalletManager : WalletManager {
 
     //Nonce is either previous nonce + 1 , or 1 if no transactions have been sent yet
     private func getNonce() -> UInt64 {
-        let sentTransactions = Store.state.wallets[currency.code]?.transactions.filter { $0.direction == .sent }
+        let sentTransactions = Store.state.wallets[currency.code]?.transactions.filter { self.isOwnAddress(address: ($0 as! EthTransaction).fromAddress) }
         let previousNonce = sentTransactions?.map { ($0 as! EthTransaction).nonce }.max()
         return (previousNonce == nil) ? 0 : previousNonce! + 1
     }
