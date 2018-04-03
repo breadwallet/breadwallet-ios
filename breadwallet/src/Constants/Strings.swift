@@ -241,7 +241,7 @@ enum S {
     enum AccountHeader {
         static let defaultWalletName = NSLocalizedString("AccountHeader.defaultWalletName", value:"My BRD", comment: "Default wallet name")
         static let equals = NSLocalizedString("AccountHeader.equals", value:"=", comment: "Equals symbol")
-        static let exchangeRateSeparator = NSLocalizedString("Account.exchangeRateSeparator", value:" per ", comment: "$10000 per BTC")
+        static let exchangeRate = NSLocalizedString("Account.exchangeRateSeparator", value:"%1$@ per %2$@", comment: "$10000 per BTC")
     }
 
     enum VerifyPin {
@@ -591,8 +591,8 @@ enum S {
     }
 
     enum Welcome {
-        static let title = NSLocalizedString("Welcome.title", value: "BRD now supports Bitcoin Cash!", comment: "Welcome view title")
-        static let body = NSLocalizedString("Welcome.body", value: "Any BCH in your wallet can be accessed through the home screen.", comment: "Welcome view body text")
+        static let title = NSLocalizedString("Welcome.title", value: "BRD now supports Ethereum!", comment: "Welcome view title")
+        static let body = NSLocalizedString("Welcome.body", value: "Any ETH in your wallet can be accessed through the home screen.", comment: "Welcome view body text")
     }
 
     enum Crowdsale {

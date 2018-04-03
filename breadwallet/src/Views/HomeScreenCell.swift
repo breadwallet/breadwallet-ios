@@ -53,7 +53,7 @@ class HomeScreenCell : UITableViewCell, Subscriber {
         accessibilityIdentifier = viewModel.currency.name
         container.currency = viewModel.currency
         currencyName.text = viewModel.currency.name
-        price.text = "\(viewModel.exchangeRate)\(S.AccountHeader.exchangeRateSeparator)\(viewModel.currency.code)"
+        price.text = String(format: S.AccountHeader.exchangeRate, viewModel.exchangeRate, viewModel.currency.code)
         fiatBalance.text = viewModel.fiatBalance
         tokenBalance.text = viewModel.tokenBalance
         container.setNeedsDisplay()
