@@ -261,7 +261,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                     return showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
                 }
             }
-            guard !(walletManager.wallet?.containsAddress(address) ?? false) else {
+            guard !walletManager.isOwnAddress(address: address) else {
                 return showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
             }
             if currency.matches(Currencies.btc) || currency.matches(Currencies.bch) {
@@ -412,7 +412,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             requestAmount += UInt256(output.amount)
         }
 
-        if wallet.containsAddress(address) {
+        if walletManager.isOwnAddress(address: address) {
             return showAlert(title: S.Alert.warning, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
         } else if wallet.addressIsUsed(address) && !didIgnoreUsedAddressWarning {
             let message = "\(S.Send.UsedAddress.title)\n\n\(S.Send.UsedAddress.firstLine)\n\n\(S.Send.UsedAddress.secondLine)"
