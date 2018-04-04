@@ -421,19 +421,10 @@ class ModalPresenter : Subscriber, Trackable {
                 Setting(title: S.Settings.shareData, callback: {
                     settingsNav.pushViewController(ShareDataViewController(), animated: true)
                 }),
-                Setting(title: S.Settings.review, callback: { [weak self] in
-                    guard let `self` = self else { return }
-                    let alert = UIAlertController(title: S.Settings.review, message: S.Settings.enjoying, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: S.Button.no, style: .default, handler: { _ in
-                        self.messagePresenter.presenter = self.topViewController
-                        self.messagePresenter.presentFeedbackCompose()
-                    }))
-                    alert.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
-                        if let url = URL(string: C.reviewLink) {
-                            UIApplication.shared.openURL(url)
-                        }
-                    }))
-                    self.topViewController?.present(alert, animated: true, completion: nil)
+                Setting(title: S.Settings.review, callback: {
+                    if let url = URL(string: C.reviewLink) {
+                        UIApplication.shared.openURL(url)
+                    }
                 }),
                 Setting(title: S.Settings.about, callback: {
                     settingsNav.pushViewController(AboutViewController(), animated: true)
