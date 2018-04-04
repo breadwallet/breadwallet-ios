@@ -29,11 +29,7 @@ extension BRAPIClient {
     }
 
     public func getEthTxList(address: EthAddress, handler: @escaping ([EthTx])->Void) {
-        let host = E.isTestnet ? "ropsten.etherscan.io" : "api.etherscan.io"
-        let url = URL(string: "http://\(host)/api?module=account&action=txlist&address=\(address)&sort=desc")!
-        let req = URLRequest(url: url)
-        //var req = URLRequest(url: url("/ethq/\(network)/query?module=account&action=txlist&address=\(address)"))
-        //req.httpMethod = "POST" TODO:ETH = remove etherscan
+        let req = URLRequest(url: url("/ethq/\(network)/query?module=account&action=txlist&address=\(address)&sort=desc"))
         dataTaskWithRequest(req, authenticated: true, retryCount: 0, handler: { data, response, error in
             guard let json = data else { return }
             let decoder = JSONDecoder()
