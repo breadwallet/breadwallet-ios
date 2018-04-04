@@ -9,7 +9,6 @@
 import Foundation
 import BRCore
 import SystemConfiguration
-import AVFoundation
 import UIKit
 
 class BTCWalletManager : WalletManager {
@@ -94,30 +93,6 @@ class BTCWalletManager : WalletManager {
         return BRAPIClient(authenticator: self)
     }()
 
-    lazy var allWordsLists: [[NSString]] = {
-        var array: [[NSString]] = []
-        Bundle.main.localizations.forEach { lang in
-            if let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist", inDirectory: nil, forLocalization: lang) {
-                if let words = NSArray(contentsOfFile: path) as? [NSString] {
-                    array.append(words)
-                }
-            }
-        }
-        return array
-    }()
-
-    lazy var allWords: Set<String> = {
-        var set: Set<String> = Set()
-        Bundle.main.localizations.forEach { lang in
-            if let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist", inDirectory: nil, forLocalization: lang) {
-                if let words = NSArray(contentsOfFile: path) as? [NSString] {
-                    set.formUnion(words.map { $0 as String })
-                }
-            }
-        }
-        return set
-    }()
-
     init(currency: CurrencyDef, masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
         self.currency = currency
         self.masterPubKey = masterPubKey
@@ -129,29 +104,9 @@ class BTCWalletManager : WalletManager {
         }
     }
 
-    func isPhraseValid(_ phrase: String) -> Bool {
-        for wordList in allWordsLists {
-            var words = wordList.map({ $0.utf8String })
-            guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString) else { return false }
-            CFStringNormalize(nfkdPhrase, .KD)
-            if BRBIP39PhraseIsValid(&words, nfkdPhrase as String) != 0 {
-                return true
-            }
-        }
-        return false
-    }
-
-    func isWordValid(_ word: String) -> Bool {
-        return allWords.contains(word)
-    }
-
     var isWatchOnly: Bool {
         let mpkData = Data(masterPubKey: masterPubKey)
         return mpkData.count == 0
-    }
-
-    func isOwnAddress(address: String) -> Bool {
-        return wallet?.containsAddress(address) ?? false
     }
 }
 
@@ -334,25 +289,5 @@ extension BTCWalletManager : BRWalletListener {
             }.compactMap {
                 return BtcTransaction($0, walletManager: self, kvStore: kvStore, rate: rate)
         }
-    }
-
-    private func ping() {
-        guard let url = Bundle.main.url(forResource: "coinflip", withExtension: "aiff") else { return }
-        var id: SystemSoundID = 0
-        AudioServicesCreateSystemSoundID(url as CFURL , &id)
-        AudioServicesAddSystemSoundCompletion(id, nil, nil, { soundId, _ in
-            AudioServicesDisposeSystemSoundID(soundId)
-        }, nil)
-        AudioServicesPlaySystemSound(id)
-    }
-
-    private func showLocalNotification(message: String) {
-        guard UIApplication.shared.applicationState == .background || UIApplication.shared.applicationState == .inactive else { return }
-        guard Store.state.isPushNotificationsEnabled else { return }
-        UIApplication.shared.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
-        let notification = UILocalNotification()
-        notification.alertBody = message
-        notification.soundName = "coinflip.aiff"
-        UIApplication.shared.presentLocalNotificationNow(notification)
     }
 }
