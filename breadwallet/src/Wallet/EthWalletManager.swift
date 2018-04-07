@@ -70,17 +70,16 @@ class EthWalletManager : WalletManager {
 
     func updateTransactionList() {
         guard let address = address else { return }
-        apiClient?.getEthTxList(address: address, handler: { [weak self] txList in
+        apiClient?.getEthTxList(address: address, handler: { [weak self] result in
             guard let `self` = self else { return }
+            guard case .success(let txList) = result else { return }
             for tx in txList {
                 if let index = self.pendingTransactions.index(where: { $0.hash == tx.hash }) {
                     self.pendingTransactions.remove(at: index)
                 }
             }
             let transactions = (self.pendingTransactions + txList).map { EthTransaction(tx: $0, accountAddress: address, kvStore: self.kvStore, rate: self.currency.state.currentRate) }
-            DispatchQueue.main.async {
-                Store.perform(action: WalletChange(self.currency).setTransactions(transactions))
-            }
+            Store.perform(action: WalletChange(self.currency).setTransactions(transactions))
         })
     }
 
