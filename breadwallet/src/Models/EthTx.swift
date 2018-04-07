@@ -9,12 +9,7 @@
 import Foundation
 import BRCore
 
-struct EthTxList : Codable {
-    let status: String
-    let message: String
-    let result: [EthTx]
-}
-
+/// Maps to JSON model of ETH transaction
 public struct EthTx {
     let blockNumber: UInt64
     let timeStamp: TimeInterval
@@ -84,21 +79,12 @@ extension EthTx: Encodable {
     }
 }
 
-struct TokenBalance : Codable {
-    let status: String
-    let message: String
-    let result: String
-}
+// MARK: -
 
+//TODO:ERC20 unused
 struct Contract {
     let address: String
     let abi: String
-}
-
-struct EventResponse : Codable {
-    let status: String
-    let message: String
-    let result: [Event]
 }
 
 struct Event : Codable {
