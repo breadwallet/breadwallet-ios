@@ -105,6 +105,11 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func initWallet(currency: CurrencyDef, dispatchGroup: DispatchGroup) {
+        if let token = currency as? ERC20Token {
+            guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
+            ethWalletManager.tokens.append(token)
+            return
+        }
         dispatchGroup.enter()
         if let currency = currency as? Ethereum {
             let manager = EthWalletManager()

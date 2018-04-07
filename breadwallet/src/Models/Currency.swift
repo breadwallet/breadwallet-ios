@@ -13,7 +13,7 @@ import UIKit
 // MARK: - Protocols
 
 /// Represents common properties of cryptocurrency types
-protocol CurrencyDef {
+public protocol CurrencyDef {
     /// Ticker code -- assumed to be unique
     var code: String { get }
     /// Primary unit symbol
@@ -42,7 +42,7 @@ protocol CurrencyDef {
     func symbol(forUnit unit: CurrencyUnit) -> String
 }
 
-extension CurrencyDef {
+public extension CurrencyDef {
     var urlScheme: String? {
         return nil
     }
@@ -85,48 +85,48 @@ extension CurrencyDef {
 // MARK: - Units
 
 /// Represents the unit of account for a token
-protocol CurrencyUnit {
+public protocol CurrencyUnit {
     /// Base unit (e.g. Satoshis) multiplier, as a power of 10
     var decimals: Int { get }
     var name: String { get }
 }
 
-extension CurrencyUnit where Self: RawRepresentable, Self.RawValue == Int {
+public extension CurrencyUnit where Self: RawRepresentable, Self.RawValue == Int {
     var decimals: Int { return rawValue }
     var name: String { return String(describing: self) }
 }
 
 /// A generic token unit with variable decimals
-struct TokenUnit: CurrencyUnit {
-    var decimals: Int
-    var name: String
+public struct TokenUnit: CurrencyUnit {
+    public var decimals: Int
+    public var name: String
 }
 
 /// MARK: - Currency Definitions
 
 /// Bitcoin-compatible currency type
-struct Bitcoin: CurrencyDef {
+public struct Bitcoin: CurrencyDef {
     
-    enum Units: Int, CurrencyUnit {
+    public enum Units: Int, CurrencyUnit {
         case satoshi = 0
         case bit = 2
         case millibitcoin = 5
         case bitcoin = 8 // 1 Satoshi = 1e-8 BTC
     }
     
-    let name: String
-    let code: String
-    let symbol: String
-    let colors: (UIColor, UIColor)
+    public let name: String
+    public let code: String
+    public let symbol: String
+    public let colors: (UIColor, UIColor)
     let dbPath: String
     let forkId: Int
-    let urlScheme: String?
+    public let urlScheme: String?
     
-    var commonUnit: CurrencyUnit {
+    public var commonUnit: CurrencyUnit {
         return Units.bitcoin
     }
     
-    func isValidAddress(_ address: String) -> Bool {
+    public func isValidAddress(_ address: String) -> Bool {
         if self.matches(Currencies.bch) {
             return address.isValidBCHAddress
         } else {
@@ -134,7 +134,7 @@ struct Bitcoin: CurrencyDef {
         }
     }
     
-    func addressURI(_ address: String) -> String? {
+    public func addressURI(_ address: String) -> String? {
         guard let scheme = urlScheme, isValidAddress(address) else { return nil }
         if self.matches(Currencies.bch) {
             return address
@@ -143,11 +143,11 @@ struct Bitcoin: CurrencyDef {
         }
     }
     
-    func unit(forDecimals decimals: Int) -> CurrencyUnit? {
+    public func unit(forDecimals decimals: Int) -> CurrencyUnit? {
         return Units(rawValue: decimals)
     }
     
-    func name(forUnit unit: CurrencyUnit) -> String {
+    public func name(forUnit unit: CurrencyUnit) -> String {
         guard let unit = unit as? Units else { return "" }
         switch unit {
         case .satoshi:
@@ -161,7 +161,7 @@ struct Bitcoin: CurrencyDef {
         }
     }
     
-    func symbol(forUnit unit: CurrencyUnit) -> String {
+    public func symbol(forUnit unit: CurrencyUnit) -> String {
         guard let unit = unit as? Units else { return "" }
         switch unit {
         case .bit:
@@ -177,7 +177,7 @@ struct Bitcoin: CurrencyDef {
 }
 
 /// Ethereum-compatible currency type
-struct Ethereum: CurrencyDef {
+public struct Ethereum: CurrencyDef {
     
     enum Units: Int, CurrencyUnit {
         case wei = 0
@@ -189,55 +189,48 @@ struct Ethereum: CurrencyDef {
         case eth = 18 // 1 Wei = 1e-18 ETH
     }
     
-    let name: String
-    let code: String
-    let symbol: String
-    let colors: (UIColor, UIColor)
-    let urlScheme: String?
+    public let name: String
+    public let code: String
+    public let symbol: String
+    public let colors: (UIColor, UIColor)
+    public let urlScheme: String?
     
-    var commonUnit: CurrencyUnit {
+    public var commonUnit: CurrencyUnit {
         return Units.eth
     }
     
-    func isValidAddress(_ address: String) -> Bool {
+    public func isValidAddress(_ address: String) -> Bool {
         return address.isValidEthAddress
     }
     
-    func unit(forDecimals decimals: Int) -> CurrencyUnit? {
+    public func unit(forDecimals decimals: Int) -> CurrencyUnit? {
         return Units(rawValue: decimals)
     }
 }
 
 /// Ethereum ERC20 token currency type
-struct ERC20Token: CurrencyDef {
-    let name: String
-    let code: String
-    let symbol: String
-    let decimals: Int
-    let address: String
-    let abi: String
-    let colors: (UIColor, UIColor)
+public struct ERC20Token: CurrencyDef {
+    public let name: String
+    public let code: String
+    public let symbol: String
+    public let colors: (UIColor, UIColor)
     
-    var commonUnit: CurrencyUnit {
+    public let address: String
+    public let abi: String
+    public let decimals: Int
+    
+    public var commonUnit: CurrencyUnit {
         return TokenUnit(decimals: decimals, name: code)
     }
     
-    func isValidAddress(_ address: String) -> Bool {
+    public func isValidAddress(_ address: String) -> Bool {
         return address.isValidEthAddress
-    }
-    
-    func unitName<T>(_ unit: T) -> String where T : CurrencyUnit {
-        return code
-    }
-    
-    func unitSymbol<T>(_ unit: T) -> String where T : CurrencyUnit {
-        return symbol
     }
 }
 
 // MARK: Instances
 
-struct Currencies {
+public struct Currencies {
     static let btc = Bitcoin(name: "Bitcoin",
                              code: "BTC",
                              symbol: S.Symbols.btc,
@@ -260,8 +253,17 @@ struct Currencies {
     static let brd = ERC20Token(name: "Bread Token",
                                 code: "BRD",
                                 symbol: "🍞",
-                                decimals: 18,
+                                colors: (UIColor(red:0.95, green:0.65, blue:0.00, alpha:1.0), UIColor(red:0.95, green:0.35, blue:0.13, alpha:1.0)),
                                 address: "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6",
-                                abi: "", //TODO:BRD - add erc20 abi
-                                colors: (UIColor(red:0.95, green:0.65, blue:0.00, alpha:1.0), UIColor(red:0.95, green:0.35, blue:0.13, alpha:1.0)))
+                                abi: ERC20Token.standardAbi,
+                                decimals: 18)
+    
+    static let tst = ERC20Token(name: "Test Token",
+                                code: "TST",
+                                symbol: "",
+                                colors: (UIColor(red:0.25, green:0.45, blue:0.00, alpha:1.0), UIColor(red:0.65, green:0.25, blue:0.23, alpha:1.0)),
+                                address: E.isTestnet ?  "0x722dd3f80bac40c951b51bdd28dd19d435762180" : "0x3efd578b271d034a69499e4a2d933c631d44b9ad",
+                                abi: ERC20Token.standardAbi,
+                                decimals: 18)
+    
 }
