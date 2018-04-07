@@ -21,6 +21,8 @@ class EthWalletManager : WalletManager {
     var address: String?
     var gasPrice: UInt256 = 0
     var walletID: String?
+    
+    var tokens: [ERC20Token] = []
 
     var ethAddress: BREthereumAddress?
     var account: BREthereumAccount?
@@ -54,6 +56,8 @@ class EthWalletManager : WalletManager {
     @objc private func refresh() {
         updateBalance()
         updateTransactionList()
+        
+        updateTokenBalances()
     }
 
     func updateBalance() {
@@ -127,6 +131,7 @@ class EthWalletManager : WalletManager {
     }
 
     func resetForWipe() {
+        tokens.removeAll()
         timer?.invalidate()
     }
 
@@ -156,5 +161,23 @@ class EthWalletManager : WalletManager {
                 }.joined(separator: " ")
         }
         return nil
+    }
+}
+
+// ERC20 Support
+extension EthWalletManager {
+    func updateTokenBalances() {
+        guard let address = address, let apiClient = apiClient else { return }
+        //TODO: single API call
+        tokens.forEach { token in
+            apiClient.getTokenBalance(address: address, token: token, handler: { result in
+                switch result {
+                case .success(let value):
+                    Store.perform(action: WalletChange(token).setBalance(value))
+                case .error(let error):
+                    print("getTokenBalance error: \(error.localizedDescription)")
+                }
+            })
+        }
     }
 }

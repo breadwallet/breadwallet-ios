@@ -251,6 +251,7 @@
 		7CBA74E62022784D00FBBFA9 /* AssetListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBA74E52022784D00FBBFA9 /* AssetListViewModel.swift */; };
 		7CBA74E820227D1300FBBFA9 /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBA74E720227D1300FBBFA9 /* MenuCell.swift */; };
 		7CBABD9C20181D890077CB55 /* NSMutableAttributedString+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBABD9B20181D890077CB55 /* NSMutableAttributedString+Additions.swift */; };
+		7CBC59C020782D7E006EAE56 /* ERC20ABI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBC59BF20782D7E006EAE56 /* ERC20ABI.swift */; };
 		7CBF4B6420081BCE00E003AA /* KeyedDecodingContainer+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBF4B6320081BCE00E003AA /* KeyedDecodingContainer+Additions.swift */; };
 		7CBF4B6B2008899100E003AA /* TxAddressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBF4B6A2008899100E003AA /* TxAddressCell.swift */; };
 		7CCD9F6C1FEC1FA300175E64 /* TxAmountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */; };
@@ -1467,6 +1468,7 @@
 		7CBA74E52022784D00FBBFA9 /* AssetListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetListViewModel.swift; sourceTree = "<group>"; };
 		7CBA74E720227D1300FBBFA9 /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuCell.swift; path = src/Views/MenuCell.swift; sourceTree = "<group>"; };
 		7CBABD9B20181D890077CB55 /* NSMutableAttributedString+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "NSMutableAttributedString+Additions.swift"; path = "src/Extensions/NSMutableAttributedString+Additions.swift"; sourceTree = "<group>"; };
+		7CBC59BF20782D7E006EAE56 /* ERC20ABI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ERC20ABI.swift; sourceTree = "<group>"; };
 		7CBF4B5B2007DB5300E003AA /* EthTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthTransaction.swift; sourceTree = "<group>"; };
 		7CBF4B5F2007DB8000E003AA /* ERC20Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ERC20Transaction.swift; sourceTree = "<group>"; };
 		7CBF4B612007DB9200E003AA /* TxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TxViewModel.swift; sourceTree = "<group>"; };
@@ -3256,6 +3258,7 @@
 				CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */,
 				CE4D49F51FA04A3A00DBFFAF /* EthTx.swift */,
 				7CA3BC2F2006864C00517BF7 /* Currency.swift */,
+				7CBC59BF20782D7E006EAE56 /* ERC20ABI.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -4300,6 +4303,7 @@
 				CEF3E82F1DE534C5007C0A9E /* GradientView.swift in Sources */,
 				CE6D0F991DE8B75900BD4BCF /* DismissModalAnimator.swift in Sources */,
 				CE4C1CC61ED65D830063E184 /* DrawableCircle.swift in Sources */,
+				7CBC59C020782D7E006EAE56 /* ERC20ABI.swift in Sources */,
 				CE8CD8E31E31978100785E02 /* LoginBackgroundTriangle.swift in Sources */,
 				CEEC708C1E95461A00EF788E /* AboutViewController.swift in Sources */,
 				CEEC708A1E945E3B00EF788E /* UnEditableTextView.swift in Sources */,
