@@ -27,24 +27,28 @@ class ExchangeUpdater : Subscriber {
     }
 
     func refresh(completion: @escaping () -> Void) {
-        //TODO:ETH - use new /rates endpoint
-        let regularCurrencies = [Currencies.btc, Currencies.bch]
-        let dispatchGroup = DispatchGroup()
-        regularCurrencies.forEach { currency in
-            dispatchGroup.enter()
-            apiClient.exchangeRates(code: currency.code) { rates, error in
-                guard let currentRate = rates.first( where: { $0.code == Store.state.defaultCurrencyCode }) else { completion(); return }
-                Store.perform(action: WalletChange(currency).setExchangeRates(currentRate: currentRate, rates: rates))
-                dispatchGroup.leave()
+        apiClient.exchangeRates(code: Currencies.btc.code) { [weak self] rates, error in
+            guard let myself = self else { return }
+            let currentRate = myself.findCurrentRate(rates: rates)
+            Store.perform(action: WalletChange(Currencies.btc).setExchangeRates(currentRate: currentRate, rates: rates))
+
+            myself.apiClient.exchangeRates(code: Currencies.bch.code) { rates, error in
+                Store.perform(action: WalletChange(Currencies.bch).setExchangeRates(currentRate: currentRate, rates: rates))
             }
-        }
-        dispatchGroup.notify(queue: .main) {
-            self.apiClient.exchangeRates(code: Currencies.eth.code) { rates, error in
-                guard let currentRate = rates.first( where: { $0.code == Store.state.defaultCurrencyCode }) else { completion(); return }
+
+            myself.apiClient.exchangeRates(code: Currencies.eth.code) {  rates, error in
                 Store.perform(action: WalletChange(Currencies.eth).setExchangeRates(currentRate: currentRate, rates: rates))
                 completion()
             }
         }
+    }
+
+    private func findCurrentRate(rates: [Rate]) -> Rate {
+        guard let currentRate = rates.first( where: { $0.code == Store.state.defaultCurrencyCode }) else {
+            Store.perform(action: DefaultCurrency.setDefault(C.usdCurrencyCode))
+            return rates.first( where: { $0.code == C.usdCurrencyCode })!
+        }
+        return currentRate
     }
 
     //MARK: - Private
