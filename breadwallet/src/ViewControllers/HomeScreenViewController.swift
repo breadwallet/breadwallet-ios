@@ -30,7 +30,8 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
     var didTapSecurity: (() -> Void)?
     var didTapSupport: (() -> Void)?
     var didTapSettings: (() -> Void)?
-    
+    var didTapAddWallet: (() -> Void)?
+
     // MARK: -
     
     init(primaryWalletManager: BTCWalletManager?) {
@@ -43,7 +44,7 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         assetList.didTapSecurity = didTapSecurity
         assetList.didTapSupport = didTapSupport
         assetList.didTapSettings = didTapSettings
-        
+        assetList.didTapAddWallet = didTapAddWallet
         addSubviews()
         addConstraints()
         setInitialData()

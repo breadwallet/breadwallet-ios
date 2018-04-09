@@ -363,7 +363,12 @@ class ApplicationController : Subscriber, Trackable {
         home.didTapSettings = {
             self.modalPresenter?.presentSettings()
         }
-        
+
+        home.didTapAddWallet = {
+            let vc = TokenListViewController(type: .manage)
+            nc.pushViewController(vc, animated: true)
+        }
+
         //State restoration
         if let currency = Store.state.currencies.first(where: { $0.code == UserDefaults.selectedCurrencyCode }),
             let walletManager = self.walletManagers[currency.code] {
