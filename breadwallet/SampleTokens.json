@@ -1,0 +1,63 @@
+{
+  "tokens": [
+    {
+        "address": "0xc5d105e63711398af9bbff092d4b6769c82f793d",
+        "name": "BeautyChain",
+        "symbol": "BEC",
+        "color": "DC5A18"
+    },
+    {
+        "address": "0xf230b790e05390fc8295f4d3f60332c93bed42e2",
+        "name": "Tronix",
+        "symbol": "TRX",
+        "color": "38C7FE"
+    },
+    {
+        "address": "0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0",
+        "name": "EOS",
+        "symbol": "EOS",
+        "color": "2ECFD4"
+    },
+    {
+        "address": "0xf3e014fe81267870624132ef3a646b8e83853a96",
+        "name": "VIN",
+        "symbol": "VIN",
+        "color": "F0C747"
+    },
+    {
+        "address": "0xaddba95f769b5d42c02e144102817eab9d00efd3",
+        "name": "DataShieldCoin",
+        "symbol": "DSC",
+        "color": "DC5A18"
+    },
+    {
+        "address": "0x7a8f99fcaffb3d94f07ad30feade85e556205599",
+        "name": "ExTrade Cash",
+        "symbol": "EXTRA",
+        "color": "38C7FE"
+    },
+    {
+        "address": "0xba51ff3802aa3170ce7ac7ac001831ca3eb6eeea",
+        "name": "LinoToken",
+        "symbol": "LINO",
+        "color": "2ECFD4"
+    },
+    {
+        "address": "0xfc2c4d8f95002c14ed0a7aa65102cac9e5953b5e",
+        "name": "Rublix",
+        "symbol": "RBLX",
+        "color": "F0C747"
+    },
+    {
+        "address": "0x1f573d6fb3f13d689ff844b4ce37794d79a7ff1c",
+        "name": "Bancor Network Token",
+        "symbol": "BNT",
+        "color": "2ECFD4"
+    },
+    {
+        "address": "0x27695e09149adc738a978e9a678f99e4c39e9eb9",
+        "name": "KickCoin",
+        "symbol": "KICK",
+        "color": "DC5A18"
+    }
+]}
