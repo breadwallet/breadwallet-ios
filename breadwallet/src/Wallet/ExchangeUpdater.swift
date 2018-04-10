@@ -29,15 +29,12 @@ class ExchangeUpdater : Subscriber {
     func refresh(completion: @escaping () -> Void) {
         apiClient.exchangeRates(code: Currencies.btc.code) { [weak self] rates, error in
             guard let myself = self else { return }
-            let currentRate = myself.findCurrentRate(rates: rates)
-            Store.perform(action: WalletChange(Currencies.btc).setExchangeRates(currentRate: currentRate, rates: rates))
-
+            Store.perform(action: WalletChange(Currencies.btc).setExchangeRates(currentRate: myself.findCurrentRate(rates: rates), rates: rates))
             myself.apiClient.exchangeRates(code: Currencies.bch.code) { rates, error in
-                Store.perform(action: WalletChange(Currencies.bch).setExchangeRates(currentRate: currentRate, rates: rates))
+                Store.perform(action: WalletChange(Currencies.bch).setExchangeRates(currentRate: myself.findCurrentRate(rates: rates), rates: rates))
             }
-
             myself.apiClient.exchangeRates(code: Currencies.eth.code) {  rates, error in
-                Store.perform(action: WalletChange(Currencies.eth).setExchangeRates(currentRate: currentRate, rates: rates))
+                Store.perform(action: WalletChange(Currencies.eth).setExchangeRates(currentRate: myself.findCurrentRate(rates: rates), rates: rates))
                 completion()
             }
         }
