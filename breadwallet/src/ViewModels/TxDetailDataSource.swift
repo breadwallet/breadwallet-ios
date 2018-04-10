@@ -68,8 +68,12 @@ class TxDetailDataSource: NSObject {
             .transactionId
         ]
         
-        if viewModel.currency is Ethereum, let index = fields.index(of: .exchangeRate) {
-            fields.insert(contentsOf: [.gasPrice, .gasLimit, .fee, .total], at: index)
+        if let index = fields.index(of: .exchangeRate) {
+            if viewModel.currency is Ethereum {
+                fields.insert(contentsOf: [.gasPrice, .gasLimit, .fee, .total], at: index)
+            } else if viewModel.currency is ERC20Token {
+                fields.insert(contentsOf: [.gasPrice, .fee, .total], at: index)
+            }
         }
         
         if (viewModel.status == .complete || viewModel.status == .invalid),

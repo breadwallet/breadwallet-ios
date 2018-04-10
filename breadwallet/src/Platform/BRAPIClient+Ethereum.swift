@@ -37,13 +37,22 @@ extension BRAPIClient {
     // MARK: Tokens
     
     public func getTokenBalance(address: EthAddress, token: ERC20Token, handler: @escaping (APIResult<Quantity>) -> Void) {
-        let contractAddress = token.address
         let host = E.isTestnet ? "ropsten.etherscan.io" : "api.etherscan.io"
-        let url = URL(string: "http://\(host)/api?module=account&action=tokenbalance&address=\(address)&contractaddress=\(contractAddress)")!
+        let url = URL(string: "http://\(host)/api?module=account&action=tokenbalance&address=\(address)&contractaddress=\(token.address)")!
         let req = URLRequest(url: url)
-        //let req = URLRequest(url: url("/ethq/\(network)/query?module=account&action=tokenbalance&address=\(address)&contractaddress=\(contractAddress)"))
+        //let req = URLRequest(url: url("/ethq/\(network)/query?module=account&action=tokenbalance&address=\(address)&contractaddress=\(token.address)"))
         send(apiRequest: req, handler: handler)
     }
+    
+    public func getTokenTransactions(address: EthAddress, token: ERC20Token, handler: @escaping (APIResult<[EthLogEvent]>) -> Void) {
+        let accountAddress = address.paddedHexString
+        let host = E.isTestnet ? "ropsten.etherscan.io" : "api.etherscan.io"
+        let url = URL(string: "http://\(host)/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=\(token.address)&topic0=\(ERC20Token.transferEventSignature)&topic1=\(accountAddress)&topic1_2_opr=or&topic2=\(accountAddress)")!
+        let req = URLRequest(url: url)
+//        let req = URLRequest(url: url("/ethq/\(network)/query?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=\(token.address)&topic0=\(ERC20Token.transferEventSignature)&topic1=\(accountAddress)&topic1_2_opr=or&topic2=\(accountAddress)"))
+        send(apiRequest: req, handler: handler)
+    }
+
     
     // MARK: -
     

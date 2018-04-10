@@ -154,10 +154,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             self?.amount = amount
         }
         amountView.didUpdateFee = strongify(self) { myself, fee in
-            guard myself.walletManager.currency is Bitcoin,
+            guard myself.currency is Bitcoin,
                 let wallet = myself.walletManager.wallet else { return }
             myself.feeType = fee
-            if let fees = self.currency.state.fees {
+            if let fees = myself.currency.state.fees {
                 switch fee {
                 case .regular:
                     wallet.feePerKb = fees.regular

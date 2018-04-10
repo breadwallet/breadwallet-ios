@@ -14,9 +14,9 @@ private let promptDelay: TimeInterval = 0.6
 class TransactionsTableViewController : UITableViewController, Subscriber, Trackable {
 
     //MARK: - Public
-    init(walletManager: WalletManager, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
+    init(currency: CurrencyDef, walletManager: WalletManager, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
+        self.currency = currency
         self.walletManager = walletManager
-        self.currency = walletManager.currency
         self.didSelectTransaction = didSelectTransaction
         self.isBtcSwapped = Store.state.isBtcSwapped
         super.init(nibName: nil, bundle: nil)
