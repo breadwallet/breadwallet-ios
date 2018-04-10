@@ -53,15 +53,15 @@ class EthWalletManager : WalletManager {
         }
     }
 
-    @objc private func refresh() {
+    /// Fetch balances + transactions for ETH and ERC20 tokens from network
+    @objc func refresh() {
         updateBalance()
         updateTransactionList()
-        
         updateTokenBalances()
         updateTokenTransactions()
     }
 
-    func updateBalance() {
+    private func updateBalance() {
         guard let address = address else { return }
         apiClient?.getBalance(address: address, handler: { result in
             switch result {
@@ -73,7 +73,7 @@ class EthWalletManager : WalletManager {
         })
     }
 
-    func updateTransactionList() {
+    private func updateTransactionList() {
         guard let address = address else { return }
         apiClient?.getEthTxList(address: address, handler: { [weak self] result in
             guard let `self` = self else { return }
@@ -167,7 +167,7 @@ class EthWalletManager : WalletManager {
 
 // ERC20 Support
 extension EthWalletManager {
-    func updateTokenBalances() {
+    private func updateTokenBalances() {
         guard let address = address, let apiClient = apiClient else { return }
         tokens.forEach { token in
             apiClient.getTokenBalance(address: address, token: token, handler: { result in
@@ -181,7 +181,7 @@ extension EthWalletManager {
         }
     }
     
-    func updateTokenTransactions() {
+    private func updateTokenTransactions() {
         guard let address = address, let apiClient = apiClient else { return }
         tokens.forEach { token in
             apiClient.getTokenTransactions(address: address, token: token, handler: { result in
