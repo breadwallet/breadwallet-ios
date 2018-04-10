@@ -261,9 +261,9 @@ public struct Currencies {
     static let tst = ERC20Token(name: "Test Token",
                                 code: "TST",
                                 symbol: "",
-                                colors: (UIColor(red:0.25, green:0.45, blue:0.00, alpha:1.0), UIColor(red:0.65, green:0.25, blue:0.23, alpha:1.0)),
+                                colors: (UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0), UIColor.darkPurple),
                                 address: E.isTestnet ?  "0x722dd3f80bac40c951b51bdd28dd19d435762180" : "0x3efd578b271d034a69499e4a2d933c631d44b9ad",
                                 abi: ERC20Token.standardAbi,
-                                decimals: 18)
+                                decimals: 0)
     
 }

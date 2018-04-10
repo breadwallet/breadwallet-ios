@@ -740,7 +740,7 @@ class ModalPresenter : Subscriber, Trackable {
         guard let nc = topViewController?.navigationController as? RootNavigationController,
             nc.viewControllers.count == 1 else { return }
         guard let walletManager = self.walletManagers[currency.code] else { return }
-        let accountViewController = AccountViewController(walletManager: walletManager)
+        let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
         nc.pushViewController(accountViewController, animated: animated)
     }
 

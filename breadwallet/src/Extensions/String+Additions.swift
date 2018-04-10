@@ -123,6 +123,23 @@ extension String {
         let trimmed = self.ltrim(["0"])
         return trimmed.count > 0 ? trimmed : "0"
     }
+    
+    func leftPadding(toLength: Int, withPad character: Character) -> String {
+        if count < toLength {
+            return String(repeatElement(character, count: toLength - count)) + self
+        } else {
+            return String(self[index(self.startIndex, offsetBy: count - toLength)...])
+        }
+    }
+    
+    /// Hex string padded to 32-bytes
+    var paddedHexString: String {
+        return self.withoutHexPrefix.leftPadding(toLength: 64, withPad: "0").withHexPrefix
+    }
+    
+    var unpaddedHexString: String {
+        return self.withoutHexPrefix.trimmedLeadingZeros.withHexPrefix
+    }
 }
 
 extension UnicodeScalar {

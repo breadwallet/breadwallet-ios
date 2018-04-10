@@ -58,6 +58,7 @@ class EthWalletManager : WalletManager {
         updateTransactionList()
         
         updateTokenBalances()
+        updateTokenTransactions()
     }
 
     func updateBalance() {
@@ -168,7 +169,6 @@ class EthWalletManager : WalletManager {
 extension EthWalletManager {
     func updateTokenBalances() {
         guard let address = address, let apiClient = apiClient else { return }
-        //TODO: single API call
         tokens.forEach { token in
             apiClient.getTokenBalance(address: address, token: token, handler: { result in
                 switch result {
@@ -177,6 +177,24 @@ extension EthWalletManager {
                 case .error(let error):
                     print("getTokenBalance error: \(error.localizedDescription)")
                 }
+            })
+        }
+    }
+    
+    func updateTokenTransactions() {
+        guard let address = address, let apiClient = apiClient else { return }
+        tokens.forEach { token in
+            apiClient.getTokenTransactions(address: address, token: token, handler: { result in
+                guard case .success(let eventList) = result else { return }
+                //TODO: manage pending token tx
+//                for event in eventList {
+//                    if let index = self.pendingTransactions.index(where: { $0.hash == tx.hash }) {
+//                        self.pendingTransactions.remove(at: index)
+//                    }
+//                }
+                //let transactions = (self.pendingTransactions + txList).map { EthTransaction(tx: $0, accountAddress: address, kvStore: self.kvStore, rate: self.currency.state.currentRate) }
+                let transactions = eventList.sorted(by: { $0.timeStamp > $1.timeStamp }).map { ERC20Transaction(event: $0, accountAddress: address, token: token) }
+                Store.perform(action: WalletChange(token).setTransactions(transactions))
             })
         }
     }

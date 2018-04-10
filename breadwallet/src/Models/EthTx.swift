@@ -87,27 +87,70 @@ struct Contract {
     let abi: String
 }
 
-struct Event : Codable {
-    let address: String
-    let topics: [String]
-    let data: String
-    let timeStamp: String
-    let transactionHash: String
-    var isComplete = true
+/// Maps to JSON model of a log event
+public struct EthLogEvent {
+    public let address: String
+    public let topics: [String]
+    public let data: String
+    public let blockNumber: UInt64
+    public let gasPrice: UInt256
+    public let gasUsed: UInt64
+    public let timeStamp: TimeInterval
+    public let transactionHash: String
+//    public let transactionIndex: String
+//    public let logIndex: String
+    public var isLocal = false
 
     private enum CodingKeys: String, CodingKey {
         case address
         case topics
         case data
+        case blockNumber
+        case gasPrice
+        case gasUsed
         case timeStamp
         case transactionHash
     }
+    
+//    init(timestamp: String, from: String, to: String, amount: UInt256) {
+//        let topics = ["",from,to]
+//        self.init(address: "",
+//                  topics: topics,
+//                  data: amount.hexString,
+//                  timeStamp: UInt256(string: timestamp).hexString,
+//                  transactionHash: "",
+//                  isLocal: true)
+//    }
 }
 
-extension Event {
-    init(timestamp: String, from: String, to: String, amount: String) {
-        let topics = ["",from,to]
-        self.init(address: "", topics: topics, data: UInt256(string: amount).hexString, timeStamp: UInt256(string: timestamp).hexString, transactionHash: "", isComplete: false)
-        self.isComplete = false
+extension EthLogEvent: Decodable {
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        address = try container.decode(String.self, forKey: .address)
+        topics = try container.decode([String].self, forKey: .topics)
+        data = try container.decode(String.self, forKey: .data)
+        blockNumber = try container.decodeFromHexString(UInt64.self, forKey: .blockNumber)
+        gasPrice = try container.decode(UInt256.self, forKey: .gasPrice)
+        gasUsed = try container.decodeFromHexString(UInt64.self, forKey: .gasUsed)
+        let seconds = try container.decodeFromHexString(UInt64.self, forKey: .timeStamp)
+        timeStamp = TimeInterval(seconds)
+        transactionHash = try container.decode(String.self, forKey: .transactionHash)
+        
+        isLocal = false
+    }
+}
+
+extension EthLogEvent: Encodable {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(address, forKey: .address)
+        try container.encode(topics, forKey: .topics)
+        try container.encode(data, forKey: .data)
+        try container.encode(String(blockNumber, radix: 16), forKey: .blockNumber)
+        try container.encode(gasPrice, forKey: .gasPrice)
+        try container.encode(String(gasUsed, radix: 16), forKey: .gasUsed)
+        try container.encode(String(UInt64(timeStamp), radix: 16), forKey: .timeStamp)
+        try container.encode(transactionHash, forKey: .transactionHash)
     }
 }

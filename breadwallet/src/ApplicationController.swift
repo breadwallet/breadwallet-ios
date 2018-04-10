@@ -108,6 +108,7 @@ class ApplicationController : Subscriber, Trackable {
         if let token = currency as? ERC20Token {
             guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
             ethWalletManager.tokens.append(token)
+            walletManagers[currency.code] = ethWalletManager
             return
         }
         dispatchGroup.enter()
@@ -320,6 +321,11 @@ class ApplicationController : Subscriber, Trackable {
         ethWalletManager.updateTransactionList()
         Store.perform(action: WalletChange(Currencies.eth).setMaxDigits(18))
         Store.perform(action: WalletID.set(ethWalletManager.walletID))
+        
+        Store.state.currencies.filter({ $0 is ERC20Token }).forEach { token in
+            Store.perform(action: WalletChange(token).setMaxDigits(token.commonUnit.decimals))
+            Store.perform(action: WalletChange(token).set(token.state.mutate(receiveAddress: ethWalletManager.address)))
+        }
     }
 
     private func shouldRequireLogin() -> Bool {
@@ -348,7 +354,7 @@ class ApplicationController : Subscriber, Trackable {
         
         home.didSelectCurrency = { currency in
             guard let walletManager = self.walletManagers[currency.code] else { return }
-            let accountViewController = AccountViewController(walletManager: walletManager)
+            let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
             nc.pushViewController(accountViewController, animated: true)
         }
         
@@ -372,7 +378,7 @@ class ApplicationController : Subscriber, Trackable {
         //State restoration
         if let currency = Store.state.currencies.first(where: { $0.code == UserDefaults.selectedCurrencyCode }),
             let walletManager = self.walletManagers[currency.code] {
-            let accountViewController = AccountViewController(walletManager: walletManager)
+            let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
             nc.pushViewController(accountViewController, animated: true)
         }
 
