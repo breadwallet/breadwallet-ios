@@ -317,9 +317,8 @@ class ApplicationController : Subscriber, Trackable {
     private func setupEthInitialState() {
         guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
         ethWalletManager.apiClient = primaryWalletManager?.apiClient
-        ethWalletManager.updateBalance()
-        ethWalletManager.updateTransactionList()
-        Store.perform(action: WalletChange(Currencies.eth).setMaxDigits(18))
+        ethWalletManager.refresh()
+        Store.perform(action: WalletChange(Currencies.eth).setMaxDigits(Currencies.eth.commonUnit.decimals))
         Store.perform(action: WalletID.set(ethWalletManager.walletID))
         
         Store.state.currencies.filter({ $0 is ERC20Token }).forEach { token in
