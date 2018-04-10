@@ -14,7 +14,7 @@ class TokenCell : UITableViewCell {
     private let subheader = UILabel(font: .customBody(size: 16.0), color: .secondaryShadow)
     private let icon = UIImageView()
     private let iconBackground = UIView()
-    private let button = UIButton.outline(title: "Add")
+    private let button = UIButton.outline(title: S.TokenList.add)
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -70,11 +70,11 @@ class TokenCell : UITableViewCell {
         button.tap = strongify(self) { myself in
             if myself.button.layer.borderColor == UIColor.blue.cgColor {
                 myself.button.layer.borderColor = UIColor.red.cgColor
-                myself.button.setTitle("Remove", for: .normal)
+                myself.button.setTitle(S.TokenList.remove, for: .normal)
                 myself.button.tintColor = .red
             } else {
                 myself.button.layer.borderColor = UIColor.blue.cgColor
-                myself.button.setTitle("Add", for: .normal)
+                myself.button.setTitle(S.TokenList.add, for: .normal)
                 myself.button.tintColor  = .blue
             }
         }

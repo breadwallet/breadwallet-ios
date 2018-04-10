@@ -30,6 +30,7 @@ class TokenListViewController : UITableViewController {
     }
 
     override func viewDidLoad() {
+        title = S.TokenList.title
         tableView.register(TokenCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.separatorStyle = .none
         fetchTokens(callback: {

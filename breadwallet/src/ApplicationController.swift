@@ -348,8 +348,6 @@ class ApplicationController : Subscriber, Trackable {
     private func setupRootViewController() {
         let home = HomeScreenViewController(primaryWalletManager: walletManagers[Currencies.btc.code] as? BTCWalletManager)
         let nc = RootNavigationController()
-        nc.navigationBar.isTranslucent = false
-        nc.navigationBar.tintColor = .white
         nc.pushViewController(home, animated: false)
         
         home.didSelectCurrency = { currency in

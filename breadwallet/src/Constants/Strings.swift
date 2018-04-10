@@ -596,11 +596,9 @@ enum S {
         static let body = NSLocalizedString("Welcome.body", value: "Any ETH in your wallet can be accessed through the home screen.", comment: "Welcome view body text")
     }
 
-    enum Crowdsale {
-        static let buyButton = NSLocalizedString("Crowdsale.buyButton", value: "Buy Tokens", comment: "Buy crowdsale tokens button")
-        static let resume = NSLocalizedString("Crowdsale.resume", value: "Resume Verification", comment: "Resume Idnetify verification button")
-        static let retry = NSLocalizedString("Crowdsale.retry", value: "Retry", comment: "Retry Identity verification button")
-        static let agree = NSLocalizedString("Crowdsale.agree", value: "Agree", comment: "Agree to legal terms button")
-        static let decline = NSLocalizedString("Crowdsale.decline", value: "Decline", comment: "Decline to legal terms button")
+    enum TokenList {
+        static let title = NSLocalizedString("TokenList.title", value: "Add Wallets", comment: "Add Wallet view title")
+        static let add = NSLocalizedString("TokenList.add", value: "Add", comment: "Add currency button label")
+        static let remove = NSLocalizedString("TokeList.remove", value: "Remove", comment: "Remove currency button label")
     }
 }
