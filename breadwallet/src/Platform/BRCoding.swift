@@ -147,3 +147,17 @@ extension String: BREncodable {
         return (s as? String) ?? self.zeroValue()
     }
 }
+
+extension Array : BREncodable {
+    func encode() -> AnyObject {
+        return self as AnyObject
+    }
+
+    static func zeroValue<T>() -> [T] {
+        return [T]()
+    }
+
+    static func decode<T>(_ s: AnyObject) -> [T] {
+        return (s as? [T]) ?? self.zeroValue()
+    }
+}
