@@ -24,6 +24,8 @@ class TokenListViewController : UITableViewController {
         }
     }
 
+    private var tokenAddressesToBeAdded = [String]()
+    
     init(type: TokenListType) {
         self.type = type
         super.init(style: .plain)
@@ -37,6 +39,11 @@ class TokenListViewController : UITableViewController {
             self.tokens = $0
         })
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        addAddedTokens()
+    }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -49,8 +56,20 @@ class TokenListViewController : UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? TokenCell else { return UITableViewCell() }
         let token = tokens[indexPath.row]
-        cell.set(name: token.name, code: token.code)
+        cell.set(name: token.name, code: token.code, address: token.address)
+        cell.didAddToken = { [unowned self] address in
+            if !self.tokenAddressesToBeAdded.contains(address) {
+                self.tokenAddressesToBeAdded.append(address)
+            }
+        }
+        cell.didRemoveToken = { [unowned self] address in
+            self.tokenAddressesToBeAdded = self.tokenAddressesToBeAdded.filter { $0 != address }
+        }
         return cell
+    }
+    
+    private func addAddedTokens() {
+
     }
 
     private func fetchTokens(callback: @escaping ([TokenData])->Void) {
