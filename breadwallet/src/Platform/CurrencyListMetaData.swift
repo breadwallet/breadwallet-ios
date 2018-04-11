@@ -42,8 +42,9 @@ class CurrencyListMetaData : BRKVStoreObject, BRCoding {
     }
 
     override func dataWasSet(_ value: Data) {
-        guard let s: TokenListMetaData = BRKeyedUnarchiver.unarchiveObjectWithData(value) else { return }
-        enabledTokens = s.enabledTokens
+        guard let s: CurrencyListMetaData = BRKeyedUnarchiver.unarchiveObjectWithData(value) else { return }
+        enabledCurrencies = s.enabledCurrencies
+        hiddenCurrencies = s.hiddenCurrencies
     }
 
     required public init?(coder decoder: BRCoder) {
