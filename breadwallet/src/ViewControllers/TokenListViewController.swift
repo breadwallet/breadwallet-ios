@@ -49,17 +49,17 @@ class TokenListViewController : UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? TokenCell else { return UITableViewCell() }
         let token = tokens[indexPath.row]
-        cell.set(name: token.name, symbol: token.symbol)
+        cell.set(name: token.name, code: token.code)
         return cell
     }
 
     private func fetchTokens(callback: @escaping ([TokenData])->Void) {
         do {
-            let path = Bundle.main.path(forResource: "SampleTokens", ofType: "json")
+            let path = Bundle.main.path(forResource: "tokens", ofType: "json")
             let data = try Data(contentsOf: URL(fileURLWithPath: path!))
-            let tokenResponse = try JSONDecoder().decode(TokenResponse.self, from: data)
+            let tokens = try JSONDecoder().decode([TokenData].self, from: data)
             DispatchQueue.main.async {
-                callback(tokenResponse.tokens)
+                callback(tokens)
             }
         } catch let e {
             print("json errro: \(e)")
@@ -74,9 +74,6 @@ class TokenListViewController : UITableViewController {
 private struct TokenData : Codable {
     let address: String
     let name: String
-    let symbol: String
-}
-
-private struct TokenResponse : Codable {
-    let tokens: [TokenData]
+    let code: String
+    let colors: [String]
 }
