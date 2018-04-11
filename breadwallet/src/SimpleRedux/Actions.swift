@@ -9,13 +9,6 @@
 import UIKit
 import BRCore
 
-struct StateChange : Action {
-    let reduce: Reducer
-    init(_ state: State) {
-        reduce = { _ in return state }
-    }
-}
-
 //MARK: - Startup Modals
 struct ShowStartFlow : Action {
     let reduce: Reducer = {
@@ -53,6 +46,17 @@ struct RootModalActions {
         let reduce: Reducer
         init(modal: RootModal) {
             reduce = { $0.mutate(rootModal: modal) }
+        }
+    }
+}
+
+enum ManageWallets {
+    struct addWallets : Action {
+        let reduce: Reducer
+        init(_ newWallets: [String: WalletState]) {
+            reduce = {
+                return $0.mutate(wallets: $0.wallets.merging(newWallets) { (x, _) in x })
+            }
         }
     }
 }

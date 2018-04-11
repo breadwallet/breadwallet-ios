@@ -48,6 +48,12 @@ class AssetListTableView: UITableViewController, Subscriber {
         }, callback: { _ in
             self.tableView.reloadData()
         })
+        
+        Store.subscribe(self, selector: {
+            $0.currencies.count != $1.currencies.count
+        }, callback: { _ in
+                self.tableView.reloadData()
+            })
     }
     
     override func viewWillAppear(_ animated: Bool) {
