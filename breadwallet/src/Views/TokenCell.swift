@@ -15,16 +15,21 @@ class TokenCell : UITableViewCell {
     private let icon = UIImageView()
     private let iconBackground = UIView()
     private let button = UIButton.outline(title: S.TokenList.add)
-
+    private var address: String = ""
+    
+    var didAddToken:((String)->Void)?
+    var didRemoveToken:((String)->Void)?
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
 
-    func set(name: String, code: String) {
+    func set(name: String, code: String, address: String) {
         header.text = code
         subheader.text = name
         icon.image = #imageLiteral(resourceName: "TempBLogo")
+        self.address = address
     }
 
     private func setupViews() {
@@ -63,6 +68,7 @@ class TokenCell : UITableViewCell {
     }
 
     private func setInitialData() {
+        selectionStyle = .none
         icon.contentMode = .scaleAspectFill
         iconBackground.backgroundColor = .blue
         iconBackground.layer.cornerRadius = 4.0
@@ -72,10 +78,12 @@ class TokenCell : UITableViewCell {
                 myself.button.layer.borderColor = UIColor.red.cgColor
                 myself.button.setTitle(S.TokenList.remove, for: .normal)
                 myself.button.tintColor = .red
+                myself.didAddToken?(myself.address)
             } else {
                 myself.button.layer.borderColor = UIColor.blue.cgColor
                 myself.button.setTitle(S.TokenList.add, for: .normal)
                 myself.button.tintColor  = .blue
+                myself.didRemoveToken?(myself.address)
             }
         }
     }
