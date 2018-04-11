@@ -69,7 +69,24 @@ class TokenListViewController : UITableViewController {
     }
     
     private func addAddedTokens() {
-
+        var currentWalletCount = Store.state.wallets.values.count
+        let newWallets: [String: WalletState] = tokens.filter {
+            return self.tokenAddressesToBeAdded.contains($0.address)
+        }.map {
+            ERC20Token(name: $0.name,
+                       code: $0.code,
+                       symbol: $0.code,
+                       colors: (.lightGray, .lightGray),
+                       address: $0.address,
+                       abi: ERC20Token.standardAbi,
+                       decimals: 18) //TODO:ERC - add decimals here
+            }.reduce([String: WalletState]()) { (dictionary, currency) -> [String: WalletState] in
+                var dictionary = dictionary
+                dictionary[currency.code] = WalletState.initial(currency, displayOrder: currentWalletCount)
+                currentWalletCount = currentWalletCount + 1
+                return dictionary
+        }
+        Store.perform(action: ManageWallets.addWallets(newWallets))
     }
 
     private func fetchTokens(callback: @escaping ([TokenData])->Void) {
