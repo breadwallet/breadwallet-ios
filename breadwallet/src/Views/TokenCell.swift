@@ -21,8 +21,8 @@ class TokenCell : UITableViewCell {
         setupViews()
     }
 
-    func set(name: String, symbol: String) {
-        header.text = symbol
+    func set(name: String, code: String) {
+        header.text = code
         subheader.text = name
         icon.image = #imageLiteral(resourceName: "TempBLogo")
     }
