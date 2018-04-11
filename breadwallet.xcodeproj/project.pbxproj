@@ -336,6 +336,7 @@
 		CE65C663207B023F000C99C4 /* TokenListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65C662207B023F000C99C4 /* TokenListViewController.swift */; };
 		CE65C665207B0BEF000C99C4 /* TokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65C664207B0BEF000C99C4 /* TokenCell.swift */; };
 		CE65C667207B149D000C99C4 /* SampleTokens.json in Resources */ = {isa = PBXBuildFile; fileRef = CE65C666207B149D000C99C4 /* SampleTokens.json */; };
+		CE65C66A207D41BB000C99C4 /* CurrencyListMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65C669207D41BB000C99C4 /* CurrencyListMetaData.swift */; };
 		CE6B6B4A1E54C0CB00B31405 /* SecurityCenterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6B6B491E54C0CA00B31405 /* SecurityCenterCell.swift */; };
 		CE6B829A1FE3A7B6007A41B9 /* UIScrollView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6B82991FE3A7B6007A41B9 /* UIScrollView+Additions.swift */; };
 		CE6BCF5D1EE9E89A0029849C /* CustomTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6BCF5C1EE9E89A0029849C /* CustomTitleView.swift */; };
@@ -1594,6 +1595,7 @@
 		CE65C662207B023F000C99C4 /* TokenListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TokenListViewController.swift; path = src/ViewControllers/TokenListViewController.swift; sourceTree = "<group>"; };
 		CE65C664207B0BEF000C99C4 /* TokenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TokenCell.swift; path = src/Views/TokenCell.swift; sourceTree = "<group>"; };
 		CE65C666207B149D000C99C4 /* SampleTokens.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SampleTokens.json; sourceTree = "<group>"; };
+		CE65C669207D41BB000C99C4 /* CurrencyListMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CurrencyListMetaData.swift; path = src/Platform/CurrencyListMetaData.swift; sourceTree = "<group>"; };
 		CE6B6B491E54C0CA00B31405 /* SecurityCenterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SecurityCenterCell.swift; path = src/Views/SecurityCenterCell.swift; sourceTree = "<group>"; };
 		CE6B82991FE3A7B6007A41B9 /* UIScrollView+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIScrollView+Additions.swift"; path = "src/Extensions/UIScrollView+Additions.swift"; sourceTree = "<group>"; };
 		CE6BCF5C1EE9E89A0029849C /* CustomTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomTitleView.swift; path = src/Extensions/CustomTitleView.swift; sourceTree = "<group>"; };
@@ -1853,6 +1855,7 @@
 		22A9A9311DF61930000F0016 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
+				CE65C668207D4180000C99C4 /* KVStore Objects */,
 				CE4CA7BB1EE3649100373F11 /* BRActivityView.swift */,
 				22A9A95B1DF61964000F0016 /* Middleware */,
 				22A9A95A1DF61950000F0016 /* Plugins */,
@@ -1873,8 +1876,6 @@
 				223DB2171DF691260076A151 /* BRSocketHelpers.c */,
 				223DB2181DF691260076A151 /* BRSocketHelpers.h */,
 				22A9A9441DF61945000F0016 /* BRWebViewController.swift */,
-				CE45C1FA1E74F89C002C3847 /* WalletInfo.swift */,
-				22A9A93D1DF61945000F0016 /* TxMetaData.swift */,
 				754AE0BD1DFE8E5A007FD001 /* module.modulemap */,
 				22E773031EE7813000397E0E /* Bonjour.swift */,
 				222319AF1F27985A00008F20 /* BRBrowserViewController.swift */,
@@ -3257,6 +3258,16 @@
 			name = Platform;
 			sourceTree = "<group>";
 		};
+		CE65C668207D4180000C99C4 /* KVStore Objects */ = {
+			isa = PBXGroup;
+			children = (
+				22A9A93D1DF61945000F0016 /* TxMetaData.swift */,
+				CE45C1FA1E74F89C002C3847 /* WalletInfo.swift */,
+				CE65C669207D41BB000C99C4 /* CurrencyListMetaData.swift */,
+			);
+			name = "KVStore Objects";
+			sourceTree = "<group>";
+		};
 		CE6D0E5A1E14BF8400137DF1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -4283,6 +4294,7 @@
 				CEF3E8321DE55540007C0A9E /* CheckView.swift in Sources */,
 				CECCE5A91E0378FB00D99448 /* PinPadViewController.swift in Sources */,
 				CEF3D2DB1E8B55C80070178E /* UISlider+Gradient.swift in Sources */,
+				CE65C66A207D41BB000C99C4 /* CurrencyListMetaData.swift in Sources */,
 				CEC6AA4B1DEFD24C00EE5AFD /* MenuButtonType.swift in Sources */,
 				CE4CA7BC1EE3649100373F11 /* BRActivityView.swift in Sources */,
 				7CBABD9C20181D890077CB55 /* NSMutableAttributedString+Additions.swift in Sources */,
