@@ -66,6 +66,8 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         router.get("/_wallet/format") { (request, match) -> BRHTTPResponse in
             if let amounts = request.query["amount"] , amounts.count > 0 {
                 let amount = amounts[0]
+                
+                //TODO: support eth amounts
                 var intAmount: UInt64 = 0
                 if amount.contains(".") { // assume full bitcoins
                     if let x = Float(amount) {
@@ -241,6 +243,15 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             let build = Bundle.main.infoDictionary?["CFBundleVersion"] ?? ""
             return try BRHTTPResponse(request: req, code: 200, json: ["version": version, "build": build])
         }
+        
+        router.get("/_wallet/currencies") { (req, m) -> BRHTTPResponse in
+            let fiatCode = req.query["fiat"]?.first
+            var response = [[String: Any]]()
+            for currency in Store.state.currencies {
+                response.append(self.currencyInfo(currency, fiatCode: fiatCode))
+            }
+            return try BRHTTPResponse(request: req, code: 200, json: response)
+        }
     }
 
     private func addKeyToCache(_ key: BRKey, url: String) {
@@ -260,31 +271,6 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         request.queue.async {
             asyncResp.provide(200, json: json)
         }
-    }
-
-    // MARK: - basic wallet functions
-    func walletInfo() -> [String: Any] {
-        var d = [String: Any]()
-        d["no_wallet"] = walletManager.noWallet
-        if let wallet = walletManager.wallet {
-            d["receive_address"] = wallet.receiveAddress
-            //d["watch_only"] = TODO - add watch only
-        }
-        d["btc_denomination_digits"] = walletManager.currency.state.maxDigits
-        d["local_currency_code"] = Store.state.defaultCurrencyCode
-        return d
-    }
-    
-    func currencyFormat(_ amount: UInt64) -> [String: Any] {
-        var d = [String: Any]()
-        if let rate = walletManager.currency.state.currentRate {
-            let amount = Amount(amount: UInt256(amount),
-                                       currency: walletManager.currency,
-                                       rate: rate)
-            d["local_currency_amount"] = amount.fiatDescription
-            d["currency_amount"] = amount.tokenDescription
-        }
-        return d
     }
     
     // MARK: - socket handlers
@@ -315,5 +301,74 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     
     public func socket(_ socket: BRWebSocket, didReceiveData data: Data) {
         // nothing to do here
+    }
+}
+
+extension BRWalletPlugin {
+    // MARK: - basic wallet functions
+    func walletInfo() -> [String: Any] {
+        var d = [String: Any]()
+        d["no_wallet"] = walletManager.noWallet
+        if let wallet = walletManager.wallet {
+            d["receive_address"] = wallet.receiveAddress
+            //d["watch_only"] = TODO - add watch only
+        }
+        d["btc_denomination_digits"] = walletManager.currency.state.maxDigits
+        d["local_currency_code"] = Store.state.defaultCurrencyCode
+        return d
+    }
+    
+    func currencyFormat(_ amount: UInt64) -> [String: Any] {
+        var d = [String: Any]()
+        if let rate = walletManager.currency.state.currentRate {
+            let amount = Amount(amount: UInt256(amount),
+                                currency: walletManager.currency,
+                                rate: rate)
+            d["local_currency_amount"] = amount.fiatDescription
+            d["currency_amount"] = amount.tokenDescription
+        }
+        return d
+    }
+    
+    func currencyInfo(_ currency: CurrencyDef, fiatCode: String?) -> [String: Any] {
+        var d = [String: Any]()
+        d["id"] = currency.code
+        d["ticker"] = currency.code
+        d["name"] = currency.name
+        if let balance = currency.state.balance {
+            var numerator = balance.string(radix: 10)
+            var denomiator = UInt256(power: currency.commonUnit.decimals).string(radix: 10)
+            d["balance"] = ["currency": currency.code,
+                            "numerator": numerator,
+                            "denominator": denomiator]
+        
+            var rate: Rate?
+            if let code = fiatCode {
+                rate = currency.state.rates.filter({ $0.code == code }).first
+            } else {
+                rate = currency.state.currentRate
+            }
+            
+            if let rate = rate {
+                let amount = Amount(amount: balance, currency: currency, rate: currency.state.currentRate)
+                let decimals = amount.localFormat.maximumFractionDigits
+                let denominatorValue = (pow(10,decimals) as NSDecimalNumber).doubleValue
+                
+                let fiatValue = (amount.fiatValue as NSDecimalNumber).doubleValue
+                numerator = String(Int(fiatValue * denominatorValue))
+                denomiator = String(Int(denominatorValue))
+                d["fiatBalance"] = ["currency": rate.code,
+                                    "numerator": numerator,
+                                    "denominator": denomiator]
+                
+                let rateValue = rate.rate
+                numerator = String(Int(rateValue * denominatorValue))
+                denomiator = String(Int(denominatorValue))
+                d["exchange"] = ["currency": rate.code,
+                                 "numerator": numerator,
+                                 "denominator": denomiator]
+            }
+        }
+        return d
     }
 }
