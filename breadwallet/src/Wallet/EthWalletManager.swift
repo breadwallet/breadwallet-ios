@@ -100,7 +100,7 @@ class EthWalletManager : WalletManager {
         let tx = walletCreateTransactionDetailed(ethWallet, ethToAddress, ethAmount, gasPrice, gasLimit, nonce)
         walletSignTransactionWithPrivateKey(ethWallet, tx, privKey)
         let txString = walletGetRawTransactionHexEncoded(ethWallet, tx, "0x")
-        apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { result in
+        apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { [unowned self] result in
             switch result {
             case .success(let txHash):
                 let pendingTx = EthTx(blockNumber: 0,
@@ -116,8 +116,8 @@ class EthWalletManager : WalletManager {
                                       hash: txHash,
                                       isError: false)
                 self.pendingTransactions.append(pendingTx)
+                self.refresh()
                 callback(.success(pendingTx))
-
             case .error(let error):
                 callback(.error(error))
             }
