@@ -254,7 +254,7 @@ public struct Currencies {
                                 code: "BRD",
                                 symbol: "🍞",
                                 colors: (UIColor(red:0.95, green:0.65, blue:0.00, alpha:1.0), UIColor(red:0.95, green:0.35, blue:0.13, alpha:1.0)),
-                                address: "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6",
+                                address: E.isTestnet ? "0x7108ca7c4718efa810457f228305c9c71390931a" :  "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6",
                                 abi: ERC20Token.standardAbi,
                                 decimals: 18)
     
@@ -264,6 +264,6 @@ public struct Currencies {
                                 colors: (UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0), UIColor.darkPurple),
                                 address: E.isTestnet ?  "0x722dd3f80bac40c951b51bdd28dd19d435762180" : "0x3efd578b271d034a69499e4a2d933c631d44b9ad",
                                 abi: ERC20Token.standardAbi,
-                                decimals: 0)
+                                decimals: 18)
     
 }
