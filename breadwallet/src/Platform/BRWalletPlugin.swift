@@ -252,6 +252,23 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             }
             return try BRHTTPResponse(request: req, code: 200, json: response)
         }
+        
+        router.get("/_wallet/addresses/(code)") { (req, m) -> BRHTTPResponse in
+            var code: String?
+            if let codeArray = m["code"] {
+                guard codeArray.count == 1 else {
+                    return BRHTTPResponse(request: req, code: 400)
+                }
+                code = codeArray.first!
+            }
+            var response = [[String: Any]]()
+            let currencies = Store.state.currencies.filter { code == nil || $0.code.lowercased() == code!.lowercased() }
+            for currency in currencies {
+                response.append(["currency": currency.code,
+                                 "address": Store.state[currency].receiveAddress ?? ""])
+            }
+            return try BRHTTPResponse(request: req, code: 200, json: (response.count == 1) ? response.first! : response)
+        }
     }
 
     private func addKeyToCache(_ key: BRKey, url: String) {
