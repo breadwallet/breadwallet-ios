@@ -758,6 +758,11 @@ extension UInt256 {
         self = createUInt256ParseDecimal(decimalString, Int32(decimals), &status)
     }
     
+    public init(power: Int) {
+        var overflow: Int32 = 0
+        self = createUInt256Power(UInt8(power), &overflow)
+    }
+    
     public func string(radix: Int) -> String {
         guard let buf = coerceString(self, Int32(radix)) else { return "" }
         let str = String(cString: buf)
