@@ -16,7 +16,7 @@ class ModalPresenter : Subscriber, Trackable {
     let primaryWalletManager: BTCWalletManager
     let walletManagers: [String: WalletManager]
     lazy var supportCenter: SupportCenterContainer = {
-        return SupportCenterContainer(walletManager: self.primaryWalletManager, apiClient: self.noAuthApiClient)
+        return SupportCenterContainer(walletManagers: self.walletManagers, apiClient: self.noAuthApiClient)
     }()
     
     init(walletManagers: [String: WalletManager], window: UIWindow, apiClient: BRAPIClient) {
@@ -107,10 +107,10 @@ class ModalPresenter : Subscriber, Trackable {
                 self?.handleCopyAddresses(success: success, error: error)
             }
         })
-        Store.subscribe(self, name: .authenticateForBitId("", {_ in}), callback: { [weak self] in
+        Store.subscribe(self, name: .authenticateForPlatform("", true, {_ in}), callback: { [unowned self] in
             guard let trigger = $0 else { return }
-            if case .authenticateForBitId(let prompt, let callback) = trigger {
-                self?.authenticateForBitId(prompt: prompt, callback: callback)
+            if case .authenticateForPlatform(let prompt, let allowBiometricAuth, let callback) = trigger {
+                self.authenticateForPlatform(prompt: prompt, allowBiometricAuth: allowBiometricAuth, callback: callback)
             }
         })
         reachability.didChange = { [weak self] isReachable in
@@ -570,12 +570,11 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func presentBuyController(_ mountPoint: String) {
-        let walletManager = primaryWalletManager
         let vc: BRWebViewController
         #if Debug || Testflight
-            vc = BRWebViewController(bundleName: "bread-frontend-staging", mountPoint: mountPoint, walletManager: walletManager)
+            vc = BRWebViewController(bundleName: "bread-frontend-staging", mountPoint: mountPoint, walletManagers: walletManagers)
         #else
-            vc = BRWebViewController(bundleName: "bread-frontend", mountPoint: mountPoint, walletManager: walletManager)
+            vc = BRWebViewController(bundleName: "bread-frontend", mountPoint: mountPoint, walletManagers: walletManagers)
         #endif
         vc.startServer()
         vc.preload()
@@ -777,28 +776,28 @@ class ModalPresenter : Subscriber, Trackable {
         topViewController?.present(alert, animated: true, completion: nil)
     }
 
-    private func authenticateForBitId(prompt: String, callback: @escaping (BitIdAuthResult) -> Void) {
-        if UserDefaults.isBiometricsEnabled {
+    private func authenticateForPlatform(prompt: String, allowBiometricAuth: Bool, callback: @escaping (PlatformAuthResult) -> Void) {
+        if UserDefaults.isBiometricsEnabled && allowBiometricAuth {
             primaryWalletManager.authenticate(biometricsPrompt: prompt, completion: { result in
                 switch result {
                 case .success:
-                    return callback(.success)
+                    return callback(.success(nil))
                 case .cancel:
                     return callback(.cancelled)
                 case .failure:
-                    self.verifyPinForBitId(prompt: prompt, callback: callback)
+                    self.verifyPinForPlatform(prompt: prompt, callback: callback)
                 case .fallback:
-                    self.verifyPinForBitId(prompt: prompt, callback: callback)
+                    self.verifyPinForPlatform(prompt: prompt, callback: callback)
                 }
             })
         } else {
-            self.verifyPinForBitId(prompt: prompt, callback: callback)
+            self.verifyPinForPlatform(prompt: prompt, callback: callback)
         }
     }
 
-    private func verifyPinForBitId(prompt: String, callback: @escaping (BitIdAuthResult) -> Void) {
+    private func verifyPinForPlatform(prompt: String, callback: @escaping (PlatformAuthResult) -> Void) {
         let verify = VerifyPinViewController(bodyText: prompt, pinLength: Store.state.pinLength, walletManager: primaryWalletManager, success: { pin in
-                callback(.success)
+                callback(.success(pin))
         })
         verify.didCancel = { callback(.cancelled) }
         verify.transitioningDelegate = verifyPinTransitionDelegate

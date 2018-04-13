@@ -13,7 +13,7 @@ import BRCore
 // MARK: Types/Constants
 
 enum SendResult {
-    case success
+    case success(String?, String?)
     case creationError(String)
     case publishFailure(BRPeerManagerError)
 }
@@ -270,8 +270,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
     private func sendWithPinVerification(tx: BRTxRef,
                                          pinVerifier: PinVerifier,
                                          completion: @escaping SendCompletion) {
-        pinVerifier { [weak self] pin in
-            guard let `self` = self else { return }
+        pinVerifier { pin in
             let group = DispatchGroup()
             group.enter()
             DispatchQueue.walletQueue.async {
@@ -289,9 +288,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
     
     private func publish(tx: BRTxRef,
                          completion: @escaping SendCompletion) {
-        DispatchQueue.walletQueue.async { [weak self] in
-            guard let `self` = self else { return assertionFailure("nil self") }
-            
+        DispatchQueue.walletQueue.async {
             if self.protocolRequest?.mimeType == "application/payment-request" {
                 return self.postProtocolPaymentIfNeeded(completion: completion)
             }
@@ -304,7 +301,8 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
                         completion(.publishFailure(error))
                     } else {
                         self.setMetaData(btcTx: tx)
-                        completion(.success)
+                        let txData = Data(bytes: tx.bytes ?? [])
+                        completion(.success(tx.pointee.txHash.description, txData.hexString))
                         self.postProtocolPaymentIfNeeded()
                     }
                 }
@@ -364,7 +362,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
                 if response.mimeType == "application/bitcoin-paymentack" && data.count <= 50000 {
                     if let ack = PaymentProtocolACK(data: data) {
                         print("received ack: \(ack)") //TODO - show memo to user
-                        completion(.success)
+                        completion(.success(nil,nil))
                     }
                     else {
                         print("ack failed to deserialize")
@@ -377,7 +375,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
                         
                         if let tx = self?.transaction {
                             self?.setMetaData(btcTx: tx)
-                            completion(.success)
+                            completion(.success(nil,nil))
                         }
                     }
                     else {
@@ -453,13 +451,12 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
                 return completion(.creationError("not ready"))
         }
         
-        pinVerifier { [weak self] pin in
-            guard let `self` = self else { return }
+        pinVerifier { pin in
             self.walletManager.sendTx(toAddress: address, amount: amount) { result in
                 switch result {
                 case .success(let pendingTx):
                     self.setMetaData(ethTx: pendingTx)
-                    completion(.success)
+                    completion(.success(pendingTx.hash, pendingTx.rawTx))
                 case .error(let error):
                     switch error {
                     case .httpError(let e):
@@ -502,14 +499,13 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
                 return completion(.creationError("not ready"))
         }
 
-        pinVerifier { [weak self] pin in
-            guard let `self` = self else { return }
+        pinVerifier { pin in
             self.walletManager.send(token: self.currency, toAddress: address, amount: amount) { result in
                 switch result {
                 case .success(let pendingTx):
                     //TODO:ERC20
                     //self.setMetaData(ethTx: pendingTx)
-                    completion(.success)
+                    completion(.success(pendingTx.hash, pendingTx.rawTx))
                 case .error(let error):
                     switch error {
                     case .httpError(let e):

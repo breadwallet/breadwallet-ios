@@ -36,7 +36,10 @@ import WebKit
     var server = BRHTTPServer()
     var debugEndpoint: String?
     var mountPoint: String
-    var walletManager: BTCWalletManager
+    var walletManagers: [String: WalletManager]
+    var btcWalletManager: WalletManager? {
+        return walletManagers[Currencies.btc.code]
+    }
     let noAuthApiClient: BRAPIClient?
 
     // bonjour debug endpoint establishment - this will configure the debugEndpoint 
@@ -70,11 +73,11 @@ import WebKit
     
     private let messageUIPresenter = MessageUIPresenter()
     
-    init(bundleName: String, mountPoint: String = "/", walletManager: BTCWalletManager, noAuthApiClient: BRAPIClient? = nil) {
+    init(bundleName: String, mountPoint: String = "/", walletManagers: [String: WalletManager], noAuthApiClient: BRAPIClient? = nil) {
         wkProcessPool = WKProcessPool()
         self.bundleName = bundleName
         self.mountPoint = mountPoint
-        self.walletManager = walletManager
+        self.walletManagers = walletManagers
         self.noAuthApiClient = noAuthApiClient
         super.init(nibName: nil, bundle: nil)
         if debugOverBonjour {
@@ -157,7 +160,7 @@ import WebKit
                 // update can fail, so this update should fetch an entirely new copy
                 let activity = BRActivityViewController(message: S.Webview.dismiss)
                 myself.present(activity, animated: true, completion: nil)
-                guard let apiClient = self?.walletManager.apiClient else { return }
+                guard let apiClient = self?.btcWalletManager?.apiClient else { return }
                 apiClient.updateBundles(completionHandler: { results in
                     results.forEach({ message, err in
                         if err != nil {
@@ -260,7 +263,7 @@ import WebKit
     }
     
     fileprivate func setupIntegrations() {
-        let client: BRAPIClient? = noAuthApiClient != nil ? noAuthApiClient : walletManager.apiClient
+        let client: BRAPIClient? = noAuthApiClient != nil ? noAuthApiClient : btcWalletManager?.apiClient
         guard let apiClient = client else { return }
         // proxy api for signing and verification
         let apiProxy = BRAPIProxy(mountAt: "/_api", client: apiClient)
@@ -294,7 +297,7 @@ import WebKit
         router.plugin(BRCameraPlugin(fromViewController: self))
         
         // wallet plugin provides access to the wallet
-        router.plugin(BRWalletPlugin(walletManager: walletManager))
+        router.plugin(BRWalletPlugin(walletManagers: walletManagers))
         
         // link plugin which allows opening links to other apps
         router.plugin(BRLinkPlugin(fromViewController: self))

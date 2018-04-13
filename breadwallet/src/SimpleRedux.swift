@@ -53,7 +53,7 @@ enum TriggerName {
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
     case copyWalletAddresses(String?, String?)
-    case authenticateForBitId(String, (BitIdAuthResult)->Void)
+    case authenticateForPlatform(String, Bool, (PlatformAuthResult)->Void) // (prompt, allowBiometricAuth, callback)
     case hideStatusBar
     case showStatusBar
     case lightWeightAlert(String)
@@ -105,7 +105,7 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.copyWalletAddresses(_,_), .copyWalletAddresses(_,_)):
         return true
-    case (.authenticateForBitId(_,_), .authenticateForBitId(_,_)):
+    case (.authenticateForPlatform(_,_,_), .authenticateForPlatform(_,_,_)):
         return true
     case (.showStatusBar, .showStatusBar):
         return true
