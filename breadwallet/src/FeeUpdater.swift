@@ -9,6 +9,11 @@
 import Foundation
 import BRCore
 
+enum FeeLevel {
+    case regular
+    case economy
+}
+
 struct Fees : Codable {
     let regular: UInt64
     let economy: UInt64
@@ -27,6 +32,15 @@ struct Fees : Codable {
         self.regular = 0
         self.economy = 0
         self.gasPrice = gasPrice
+    }
+    
+    func fee(forLevel level: FeeLevel) -> UInt64 {
+        switch level {
+        case .economy:
+            return economy
+        case .regular:
+            return regular
+        }
     }
 }
 

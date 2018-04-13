@@ -271,8 +271,8 @@ class ModalPresenter : Subscriber, Trackable {
         }
         guard let walletManager = walletManagers[currency.code] else { return nil }
         guard let kvStore = walletManager.apiClient?.kv else { return nil }
-        let sendVC = SendViewController(sender: Sender(walletManager: walletManager, kvStore: kvStore, currency: currency),
-                                        walletManager: walletManager,
+        guard let sender = currency.createSender(walletManager: walletManager, kvStore: kvStore) else { return nil }
+        let sendVC = SendViewController(sender: sender,
                                         initialRequest: currentRequest,
                                         currency: currency)
         currentRequest = nil
@@ -680,7 +680,7 @@ class ModalPresenter : Subscriber, Trackable {
             if let topVC = topViewController as? ModalViewController {
                 let attemptConfirmRequest: () -> Bool = {
                     if let send = topVC.childViewController as? SendViewController {
-                        send.confirmProtocolRequest(protoReq: request)
+                        send.confirmProtocolRequest(request)
                         return true
                     }
                     return false
