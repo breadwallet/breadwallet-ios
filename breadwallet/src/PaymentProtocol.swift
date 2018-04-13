@@ -297,6 +297,10 @@ class PaymentProtocolRequest {
         return true
     }
     
+    var amount: UInt64 {
+        return details.outputs.map { $0.amount }.reduce(0, +)
+    }
+    
     var commonName: String? {
         if !didValidate { _ = self.isValid() }
         return cName

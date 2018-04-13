@@ -11,7 +11,8 @@ import BRCore
 import BRCore.Ethereum
 
 class EthWalletManager : WalletManager {
-    static let defaultGasLimit: UInt64 = 48000
+    static let defaultGasLimit: UInt64 = 48_000 // higher than standard 21000 to allow sending to contracts
+    static let defaultTokenTransferGasLimit: UInt64 = 100_000 //TODO:ERC20
 
     var peerManager: BRPeerManager?
     var wallet: BRWallet?
@@ -126,7 +127,7 @@ class EthWalletManager : WalletManager {
 
     //Nonce is either previous nonce + 1 , or 1 if no transactions have been sent yet
     private func getNonce() -> UInt64 {
-        let sentTransactions = Store.state.wallets[currency.code]?.transactions.filter { self.isOwnAddress(address: ($0 as! EthTransaction).fromAddress) }
+        let sentTransactions = Store.state.wallets[Currencies.eth.code]?.transactions.filter { self.isOwnAddress(($0 as! EthTransaction).fromAddress) }
         let previousNonce = sentTransactions?.map { ($0 as! EthTransaction).nonce }.max()
         return (previousNonce == nil) ? 0 : previousNonce! + 1
     }
@@ -140,7 +141,7 @@ class EthWalletManager : WalletManager {
         return false
     }
 
-    func isOwnAddress(address: String) -> Bool {
+    func isOwnAddress(_ address: String) -> Bool {
         return address.lowercased() == self.address?.lowercased()
     }
 
@@ -167,6 +168,47 @@ class EthWalletManager : WalletManager {
 
 // ERC20 Support
 extension EthWalletManager {
+    func send(token: ERC20Token, toAddress: String, amount: UInt256, callback: @escaping (JSONRPCResult<EthTx>)->Void) {
+        guard var privKey = BRKey(privKey: ethPrivKey!) else { return }
+        privKey.compressed = 0
+        defer { privKey.clean() }
+        
+        guard let ethToken = tokenLookup(token.address) else {
+            return assertionFailure("token \(token.code) not found in core!")
+        }
+        let tokenWallet = walletCreateHoldingToken(account, E.isTestnet ? ethereumTestnet : ethereumMainnet, ethToken)
+        let ethToAddress = createAddress(toAddress)
+        let tokenAmount = amountCreateToken((createTokenQuantity(ethToken, amount)))
+        let gasPrice = gasPriceCreate((etherCreate(self.gasPrice)))
+        let gasLimit = gasCreate(EthWalletManager.defaultTokenTransferGasLimit)
+        let nonce = getNonce()
+        let tx = walletCreateTransactionDetailed(tokenWallet, ethToAddress, tokenAmount, gasPrice, gasLimit, nonce)
+        walletSignTransactionWithPrivateKey(tokenWallet, tx, privKey)
+        let txString = walletGetRawTransactionHexEncoded(tokenWallet, tx, "0x")
+        apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { result in
+            switch result {
+            case .success(let txHash):
+                let pendingTx = EthTx(blockNumber: 0,
+                                      timeStamp: Date().timeIntervalSince1970,
+                                      value: 0,
+                                      gasPrice: gasPrice.etherPerGas.valueInWEI,
+                                      gasLimit: gasLimit.amountOfGas,
+                                      gasUsed: 0,
+                                      from: self.address!,
+                                      to: toAddress,
+                                      confirmations: 0,
+                                      nonce: UInt64(nonce),
+                                      hash: txHash,
+                                      isError: false)
+                self.pendingTransactions.append(pendingTx)
+                callback(.success(pendingTx))
+                
+            case .error(let error):
+                callback(.error(error))
+            }
+        })
+    }
+    
     private func updateTokenBalances() {
         guard let address = address, let apiClient = apiClient else { return }
         tokens.forEach { token in
