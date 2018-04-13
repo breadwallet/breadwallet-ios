@@ -26,23 +26,26 @@
 import Foundation
 import BRCore
 
-enum BitIdAuthResult {
-    case success
+enum PlatformAuthResult {
+    case success(String?)
     case cancelled
     case failed
 }
 
 class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     var sockets = [String: BRWebSocket]()
-    let walletManager: BTCWalletManager
+    let walletManagers: [String: WalletManager]
     var tempBitIDKeys = [String: BRKey]() // this should only ever be mutated from the main thread
     private var tempBitIDResponses = [String: Int]()
     private var tempAuthResponses = [String: Int]()
     private var tempAuthResults = [String: Bool]()
     private var isPresentingAuth = false
+    private var btcWalletManager: BTCWalletManager? {
+        return walletManagers[Currencies.btc.code] as? BTCWalletManager
+    }
 
-    init(walletManager: BTCWalletManager) {
-        self.walletManager = walletManager
+    init(walletManagers: [String: WalletManager]) {
+        self.walletManagers = walletManagers
     }
     
     func announce(_ json: [String: Any]) {
@@ -67,7 +70,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             if let amounts = request.query["amount"] , amounts.count > 0 {
                 let amount = amounts[0]
                 
-                //TODO: support eth amounts
+                //TODO: multi-currency support
                 var intAmount: UInt64 = 0
                 if amount.contains(".") { // assume full bitcoins
                     if let x = Float(amount) {
@@ -133,11 +136,11 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                         if UserDefaults.isBiometricsEnabled {
                             asyncResp.provide(200, json: ["error": "proxy-shutdown"])
                         }
-                        Store.trigger(name: .authenticateForBitId(prompt, { [weak self] result in
+                        Store.trigger(name: .authenticateForPlatform(prompt, true, { [weak self] result in
                             self?.isPresentingAuth = false
                             switch result {
                             case .success:
-                                if let key = self?.walletManager.buildBitIdKey(url: url, index: bitidIndex) {
+                                if let key = self?.btcWalletManager?.buildBitIdKey(url: url, index: bitidIndex) {
                                     self?.addKeyToCache(key, url: url)
                                     self?.sendBitIDResponse(stringToSign, usingKey: key, request: request, asyncResp: asyncResp)
                                 } else {
@@ -201,7 +204,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                         if UserDefaults.isBiometricsEnabled {
                             asyncResp.provide(200, json: ["error": "proxy-shutdown"])
                         }
-                        Store.trigger(name: .authenticateForBitId(prompt, { [weak self] result in
+                        Store.trigger(name: .authenticateForPlatform(prompt, true, { [weak self] result in
                             self?.isPresentingAuth = false
                             switch result {
                             case .success:
@@ -269,6 +272,87 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             }
             return try BRHTTPResponse(request: req, code: 200, json: (response.count == 1) ? response.first! : response)
         }
+        
+        router.post("/_wallet/transaction") { (request, m) -> BRHTTPResponse in
+            guard !self.isPresentingAuth else {
+                return BRHTTPResponse(request: request, code: 423)
+            }
+            
+            guard let data = request.body(),
+                let j = try? JSONSerialization.jsonObject(with: data, options: []),
+                let json = j as? [String: Any],
+                let toAddress = json["toAddress"] as? String,
+                let comment = json["toDescription"] as? String,
+                let currencyCode = json["currency"] as? String,
+                let shouldTransmit = json["transmit"] as? Int,
+                let amt = json["amount"] as? [String: String],
+                let numerator = amt["numerator"],
+                currencyCode == amt["currency"],
+                let currency = Store.state.currencies.filter({$0.code.lowercased() == currencyCode.lowercased()}).first,
+                currency.isValidAddress(toAddress) else {
+                    return BRHTTPResponse(request: request, code: 400)
+            }
+            
+            guard let walletManager = self.walletManagers[currency.code],
+                let kvStore = walletManager.apiClient?.kv,
+                let sender = currency.createSender(walletManager: walletManager, kvStore: kvStore) else {
+                    return BRHTTPResponse(request: request, code: 500)
+            }
+            
+            // assume the numerator is in currency's base units
+            let amount = UInt256(string: numerator, radix: 10)
+            
+            let result = sender.createTransaction(address: toAddress, amount: amount, comment: comment)
+            guard case .ok = result else {
+                return BRHTTPResponse(request: request, code: 400)
+            }
+            
+            let asyncResp = BRHTTPResponse(async: request)
+            if shouldTransmit != 0 {
+                DispatchQueue.walletQueue.async {
+                    self.walletManagers[currency.code]?.peerManager?.connect()
+                }
+                
+                let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
+                    //CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) { // TODO: wat?
+                        DispatchQueue.main.sync {
+                            let prompt = S.VerifyPin.authorize
+                            self?.isPresentingAuth = true
+                            Store.trigger(name: .authenticateForPlatform(prompt, false, { [weak self] result in
+                                self?.isPresentingAuth = false
+                                switch result {
+                                case .success(let pin?):
+                                    pinValidationCallback(pin)
+                                case .cancelled:
+                                    request.queue.async { asyncResp.provide(403) }
+                                default:
+                                    request.queue.async { asyncResp.provide(401) }
+                                }
+                            }))
+                        }
+                    //}
+                }
+                
+                sender.sendTransaction(pinVerifier: pinVerifier, completion: { result in
+                    switch result {
+                    case .success(let hash, let rawTx):
+                        guard let hash = hash, let rawTx = rawTx else { return request.queue.async { asyncResp.provide(500) } }
+                        request.queue.async { asyncResp.provide(200, json: ["hash": hash.withHexPrefix,
+                                                                            "transaction": rawTx.withHexPrefix,
+                                                                            "transmitted": true]) }
+                    default:
+                        request.queue.async { asyncResp.provide(500) }
+                    }
+                })
+            } else {
+                asyncResp.provide(501)
+                // TODO: sign tx without sending, get tx data / hash
+                //                asyncResp.provide(200, json: ["hash": "",
+                //                                              "transaction": "",
+                //                                              "transmitted": false])
+            }
+            return asyncResp
+        }
     }
 
     private func addKeyToCache(_ key: BRKey, url: String) {
@@ -325,6 +409,7 @@ extension BRWalletPlugin {
     // MARK: - basic wallet functions
     func walletInfo() -> [String: Any] {
         var d = [String: Any]()
+        guard let walletManager = btcWalletManager else { return d }
         d["no_wallet"] = walletManager.noWallet
         if let wallet = walletManager.wallet {
             d["receive_address"] = wallet.receiveAddress
@@ -335,8 +420,10 @@ extension BRWalletPlugin {
         return d
     }
     
+    //TODO: multi-currency support
     func currencyFormat(_ amount: UInt64) -> [String: Any] {
         var d = [String: Any]()
+        guard let walletManager = btcWalletManager else { return d }
         if let rate = walletManager.currency.state.currentRate {
             let amount = Amount(amount: UInt256(amount),
                                 currency: walletManager.currency,

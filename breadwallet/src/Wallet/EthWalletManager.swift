@@ -101,6 +101,7 @@ class EthWalletManager : WalletManager {
         let tx = walletCreateTransactionDetailed(ethWallet, ethToAddress, ethAmount, gasPrice, gasLimit, nonce)
         walletSignTransactionWithPrivateKey(ethWallet, tx, privKey)
         let txString = walletGetRawTransactionHexEncoded(ethWallet, tx, "0x")
+        let swiftTxString = String(cString: UnsafeRawPointer(txString!).assumingMemoryBound(to: CChar.self))
         apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { [unowned self] result in
             switch result {
             case .success(let txHash):
@@ -115,7 +116,8 @@ class EthWalletManager : WalletManager {
                                       confirmations: 0,
                                       nonce: UInt64(nonce),
                                       hash: txHash,
-                                      isError: false)
+                                      isError: false,
+                                      rawTx: swiftTxString) // TODO:ERC20 cleanup
                 self.pendingTransactions.append(pendingTx)
                 self.refresh()
                 callback(.success(pendingTx))
@@ -185,6 +187,7 @@ extension EthWalletManager {
         let tx = walletCreateTransactionDetailed(tokenWallet, ethToAddress, tokenAmount, gasPrice, gasLimit, nonce)
         walletSignTransactionWithPrivateKey(tokenWallet, tx, privKey)
         let txString = walletGetRawTransactionHexEncoded(tokenWallet, tx, "0x")
+        let swiftTxString = String(cString: UnsafeRawPointer(txString!).assumingMemoryBound(to: CChar.self))
         apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { result in
             switch result {
             case .success(let txHash):
@@ -199,7 +202,8 @@ extension EthWalletManager {
                                       confirmations: 0,
                                       nonce: UInt64(nonce),
                                       hash: txHash,
-                                      isError: false)
+                                      isError: false,
+                                      rawTx: swiftTxString) // TODO:ERC20 cleanup
                 self.pendingTransactions.append(pendingTx)
                 callback(.success(pendingTx))
                 

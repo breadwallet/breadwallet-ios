@@ -109,7 +109,7 @@ open class BRBitID : NSObject {
             return
         }
         let prompt = url.host ?? url.description
-        Store.trigger(name: .authenticateForBitId(prompt, {_ in
+        Store.trigger(name: .authenticateForPlatform(prompt, true, {_ in
             self.run(completionHandler)
         }))
     }

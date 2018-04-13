@@ -23,6 +23,7 @@ public struct EthTx {
     let nonce: UInt64
     let hash: String
     let isError: Bool
+    var rawTx: String? = nil // TODO:ERC20 cleanup
     
     private enum CodingKeys: String, CodingKey {
         case blockNumber
