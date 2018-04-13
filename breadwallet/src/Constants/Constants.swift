@@ -51,6 +51,7 @@ struct C {
         let cachesDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
         return URL(fileURLWithPath: cachesDirectory).appendingPathComponent("log.txt")
     }
+    static let erc20Prefix = "erc20:"
 }
 
 enum Words {

@@ -17,7 +17,8 @@ class TokenListViewController : UITableViewController {
 
     private let type: TokenListType
     private let cellIdentifier = "CellIdentifier"
-
+    private let kvStore: BRReplicatedKVStore
+    private let metaData: CurrencyListMetaData
     private var tokens = [TokenData]() {
         didSet {
             tableView.reloadData()
@@ -26,8 +27,10 @@ class TokenListViewController : UITableViewController {
 
     private var tokenAddressesToBeAdded = [String]()
     
-    init(type: TokenListType) {
+    init(type: TokenListType, kvStore: BRReplicatedKVStore) {
         self.type = type
+        self.kvStore = kvStore
+        self.metaData = CurrencyListMetaData(kvStore: kvStore)!
         super.init(style: .plain)
     }
 
@@ -36,7 +39,7 @@ class TokenListViewController : UITableViewController {
         tableView.register(TokenCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.separatorStyle = .none
         fetchTokens(callback: {
-            self.tokens = $0
+            self.tokens = $0.filter { !self.metaData.previouslyAddedTokenAddresses.contains($0.address) }
         })
     }
     
@@ -85,6 +88,12 @@ class TokenListViewController : UITableViewController {
                 dictionary[currency.code] = WalletState.initial(currency, displayOrder: currentWalletCount)
                 currentWalletCount = currentWalletCount + 1
                 return dictionary
+        }
+        metaData.addTokenAddresses(addresses: tokenAddressesToBeAdded)
+        do {
+            let _ = try kvStore.set(metaData)
+        } catch let error {
+            print("error setting wallet info: \(error)")
         }
         Store.perform(action: ManageWallets.addWallets(newWallets))
     }

@@ -12,8 +12,17 @@ class KVStoreCoordinator : Subscriber {
 
     init(kvStore: BRReplicatedKVStore) {
         self.kvStore = kvStore
+        setupStoredCurrencyList()
     }
 
+    private func setupStoredCurrencyList() {
+        //If stored currency list metadat doesn't exist, create a new one
+        if CurrencyListMetaData(kvStore: kvStore) == nil {
+            let newCurrencyListMetaData = CurrencyListMetaData()
+            set(newCurrencyListMetaData)
+        }
+    }
+    
     func retreiveStoredWalletInfo() {
         guard !hasRetreivedInitialWalletInfo else { return }
         if let walletInfo = WalletInfo(kvStore: kvStore) {
