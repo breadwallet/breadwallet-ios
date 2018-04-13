@@ -22,16 +22,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     var presentVerifyPin: ((String, @escaping ((String) -> Void))->Void)?
     var onPublishSuccess: (()->Void)?
     var parentView: UIView? //ModalPresentable
-    var initialAddress: String?
+    
     var isPresentedFromLock = false
 
-    init(sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil, currency: CurrencyDef) {
+    init(sender: Sender, initialRequest: PaymentRequest? = nil, currency: CurrencyDef) {
         self.currency = currency
         self.sender = sender
-        self.walletManager = walletManager
-        self.initialAddress = initialAddress
         self.initialRequest = initialRequest
-        self.addressCell = AddressCell(currency: currency)
+        
+        addressCell = AddressCell(currency: currency)
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
 
         super.init(nibName: nil, bundle: nil)
@@ -45,8 +44,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         NotificationCenter.default.removeObserver(self)
     }
 
-    private let sender: Sender
-    private let walletManager: WalletManager
     private let amountView: AmountViewController
     private let addressCell: AddressCell
     private let memoCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
@@ -54,15 +51,18 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
-    private var balance: UInt256 = 0
-    private var amount: Amount?
+    private let confirmTransitioningDelegate = PinTransitioningDelegate()
+    
+    private let sender: Sender
+    private let currency: CurrencyDef
+    private let initialRequest: PaymentRequest?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
-    private let initialRequest: PaymentRequest?
-    private let confirmTransitioningDelegate = PinTransitioningDelegate()
-    private var feeType: Fee?
-    private let currency: CurrencyDef
+    private var feeSelection: FeeLevel? = nil
+    private var balance: UInt256 = 0
+    private var amount: Amount?
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         view.backgroundColor = .white
         view.addSubview(addressCell)
@@ -102,35 +102,24 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         })
         Store.subscribe(self, selector: { $0[self.currency].fees != $1[self.currency].fees }, callback: { [unowned self] in
             guard let fees = $0[self.currency].fees else { return }
-            if let walletManager = self.walletManager as? BTCWalletManager {
+            self.sender.updateFeeRates(fees, level: self.feeSelection)
+            if self.currency is Bitcoin {
                 self.amountView.canEditFee = (fees.regular != fees.economy) || self.currency.matches(Currencies.btc)
-                if let feeType = self.feeType {
-                    switch feeType {
-                    case .regular :
-                        walletManager.wallet?.feePerKb = fees.regular
-                    case .economy:
-                        walletManager.wallet?.feePerKb = fees.economy
-                    }
-                } else {
-                    walletManager.wallet?.feePerKb = fees.regular
-                }
-            } else if let walletManager = self.walletManager as? EthWalletManager {
+            } else {
                 self.amountView.canEditFee = false
-                walletManager.gasPrice = fees.gasPrice
             }
         })
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if initialAddress != nil {
-            addressCell.setContent(initialAddress)
-            amountView.expandPinPad()
-        } else if let initialRequest = initialRequest {
+        if let initialRequest = initialRequest {
             handleRequest(initialRequest)
         }
     }
 
+    // MARK: - Actions
+    
     private func addButtonActions() {
         addressCell.paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         addressCell.scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
@@ -154,20 +143,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             self?.amount = amount
         }
         amountView.didUpdateFee = strongify(self) { myself, fee in
-            guard myself.currency is Bitcoin,
-                let wallet = myself.walletManager.wallet else { return }
-            myself.feeType = fee
+            guard myself.currency is Bitcoin else { return }
+            myself.feeSelection = fee
             if let fees = myself.currency.state.fees {
-                switch fee {
-                case .regular:
-                    wallet.feePerKb = fees.regular
-                case .economy:
-                    wallet.feePerKb = fees.economy
-                }
+                myself.sender.updateFeeRates(fees, level: fee)
             }
             myself.amountView.updateBalanceLabel()
         }
-
+        
         amountView.didChangeFirstResponder = { [weak self] isFirstResponder in
             if isFirstResponder {
                 self?.memoCell.textView.resignFirstResponder()
@@ -185,7 +168,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         var feeColor: UIColor = .grayTextTint
         
         if let amount = amount, amount.rawValue > UInt256(0) {
-            if let fee = sender.feeForTx(amount: amount.rawValue) {
+            if let fee = sender.fee(forAmount: amount.rawValue) {
                 let feeAmount = Amount(amount: fee, currency: currency, rate: rate)
                 let feeText = feeAmount.description
                 feeOutput = String(format: S.Send.fee, feeText)
@@ -197,20 +180,20 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 feeColor = .cameraGuideNegative
             }
         }
-
+        
         let attributes: [NSAttributedStringKey: Any] = [
             NSAttributedStringKey.font: UIFont.customBody(size: 14.0),
             NSAttributedStringKey.foregroundColor: color
         ]
-
+        
         let feeAttributes: [NSAttributedStringKey: Any] = [
             NSAttributedStringKey.font: UIFont.customBody(size: 14.0),
             NSAttributedStringKey.foregroundColor: feeColor
         ]
-
+        
         return (NSAttributedString(string: balanceOutput, attributes: attributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))
     }
-
+    
     @objc private func pasteTapped() {
         guard let pasteboard = UIPasteboard.general.string, pasteboard.utf8.count > 0 else {
             return showAlert(title: S.Alert.error, message: S.Send.emptyPasteboard, buttonLabel: S.Button.ok)
@@ -231,76 +214,89 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             self?.handleRequest(request)
         }
     }
+    
+    private func validateSendForm() -> Bool {
+        guard let _ = addressCell.address, let displayAddress = addressCell.displayAddress else {
+            showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
+            return false
+        }
+        
+        guard let amount = amount else {
+            showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
+            return false
+        }
+        
+        let validationResult = sender.createTransaction(address: displayAddress,
+                                                        amount: amount.rawValue,
+                                                        comment: memoCell.textView.text)
+        switch validationResult {
+        case .noFees:
+            showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
+            
+        case .invalidAddress:
+            let message = String.init(format: S.Send.invalidAddressMessage, currency.name)
+            showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
+            
+        case .ownAddress:
+            showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
+            
+        case .outputTooSmall(let minOutput):
+            let minOutputAmount = Amount(amount: UInt256(minOutput), currency: currency, rate: Rate.empty)
+            let text = Store.state.isBtcSwapped ? minOutputAmount.fiatDescription : minOutputAmount.tokenDescription
+            let message = String(format: S.PaymentProtocol.Errors.smallPayment, text)
+            showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
+            
+        case .insufficientFunds:
+            showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
+            
+        case .failed:
+            showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
+            
+        case .insufficientGas:
+            //TODO:ERC20
+            return false
+            
+        // allow sending without exchange rates available (the tx metadata will not be set)
+        case .ok, .noExchangeRate:
+            return true
+            
+        default:
+            break
+        }
+        
+        return false
+    }
 
     @objc private func sendTapped() {
         if addressCell.textField.isFirstResponder {
             addressCell.textField.resignFirstResponder()
         }
-
-        if sender.transaction == nil {
-            guard let address = addressCell.address, let displayAddress = addressCell.displayAddress else {
-                return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
-            }
-            if currency.matches(Currencies.btc) {
-                guard currency.state.fees != nil else {
-                    return showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
-                }
-            }
-            guard currency.isValidAddress(displayAddress) else {
-                let message = String.init(format: S.Send.invalidAddressMessage, currency.name)
-                return showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
-            }
-            guard let amount = amount else {
-                return showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
-            }
-            if let minOutput = walletManager.wallet?.minOutputAmount {
-                guard amount.rawValue >= minOutput else {
-                    let minOutputAmount = Amount(amount: UInt256(minOutput), currency: currency, rate: Rate.empty)
-                    let text = Store.state.isBtcSwapped ? minOutputAmount.fiatDescription : minOutputAmount.tokenDescription
-                    let message = String(format: S.PaymentProtocol.Errors.smallPayment, text)
-                    return showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
-                }
-            }
-            guard !walletManager.isOwnAddress(address: address) else {
-                return showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
-            }
-            if currency.matches(Currencies.btc) || currency.matches(Currencies.bch) {
-                guard amount.rawValue <= (walletManager.wallet?.maxOutputAmount ?? 0) else {
-                    return showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
-                }
-            }
-            guard sender.createTransaction(amount: amount.rawValue, to: address) else {
-                return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
-            }
-        }
-
-        guard let amount = amount else { return }
+        
+        // TODO: is checking sender.transaction == nil for the case of payment request populated send form? in which case don't want all the error checking probably
+        guard validateSendForm(),
+            let amount = amount,
+            let address = addressCell.displayAddress else { return }
+        
+        let fee = sender.fee(forAmount: amount.rawValue) ?? UInt256(0)
         
         let displyAmount = Amount(amount: amount.rawValue,
                                   currency: currency,
                                   rate: amountView.selectedRate,
                                   maximumFractionDigits: Amount.highPrecisionDigits)
-        let feeAmount = Amount(amount: sender.fee,
+        let feeAmount = Amount(amount: fee,
                                currency: currency,
                                rate: amountView.selectedRate,
                                maximumFractionDigits: Amount.highPrecisionDigits)
 
         let confirm = ConfirmationViewController(amount: displyAmount,
                                                  fee: feeAmount,
-                                                 feeType: feeType ?? .regular,
-                                                 address: addressCell.displayAddress ?? "",
+                                                 feeType: feeSelection ?? .regular,
+                                                 address: address,
                                                  isUsingBiometrics: sender.canUseBiometrics,
                                                  currency: currency)
-        confirm.successCallback = {
-            confirm.dismiss(animated: true, completion: {
-                self.send()
-            })
-        }
-        confirm.cancelCallback = {
-            confirm.dismiss(animated: true, completion: {
-                self.sender.transaction = nil
-            })
-        }
+        confirm.successCallback = send
+        confirm.cancelCallback = sender.reset
+        
         confirmTransitioningDelegate.shouldShowMaskView = false
         confirm.transitioningDelegate = confirmTransitioningDelegate
         confirm.modalPresentationStyle = .overFullScreen
@@ -328,7 +324,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 DispatchQueue.main.async {
                     loadingView.dismiss(animated: true, completion: {
                         if let paymentProtocolRequest = request?.paymentProtocolRequest {
-                            self?.confirmProtocolRequest(protoReq: paymentProtocolRequest)
+                            self?.confirmProtocolRequest(paymentProtocolRequest)
                         } else {
                             self?.showErrorMessage(S.Send.remoteRequestError)
                         }
@@ -351,94 +347,85 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func send() {
-        guard let rate = currency.state.currentRate else { return }
-
-        sender.send(biometricsMessage: S.VerifyPin.touchIdMessage,
-                    rate: rate,
-                    comment: memoCell.textView.text,
-                    feePerKb: walletManager.wallet?.feePerKb ?? 0,
-                    verifyPinFunction: { [weak self] pinValidationCallback in
-                        self?.presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin in
-                            self?.parent?.view.isFrameChangeBlocked = false
-                            pinValidationCallback(pin)
-                        }
-            }, completion: { [weak self] result in
-                guard let `self` = self else { return }
-                switch result {
-                case .success:
-                    self.dismiss(animated: true, completion: {
-                        Store.trigger(name: .showStatusBar)
-                        if self.isPresentedFromLock {
-                            Store.trigger(name: .loginFromSend)
-                        }
-                        self.onPublishSuccess?()
-                    })
-                    self.saveEvent("send.success")
-                case .creationError(let message):
-                    self.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
-                    self.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
-                case .publishFailure(let error):
-                    if case .posixError(let code, let description) = error {
-                        self.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
-                        self.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(description) (\(code))"])
+        let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
+            self?.presentVerifyPin?(S.VerifyPin.authorize) { pin in
+                self?.parent?.view.isFrameChangeBlocked = false
+                pinValidationCallback(pin)
+            }
+        }
+        
+        sender.sendTransaction(pinVerifier: pinVerifier) { [weak self] result in
+            guard let `self` = self else { return }
+            switch result {
+            case .success:
+                self.dismiss(animated: true, completion: {
+                    Store.trigger(name: .showStatusBar)
+                    if self.isPresentedFromLock {
+                        Store.trigger(name: .loginFromSend)
                     }
+                    self.onPublishSuccess?()
+                })
+                self.saveEvent("send.success")
+            case .creationError(let message):
+                self.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
+                self.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
+            case .publishFailure(let error):
+                if case .posixError(let code, let description) = error {
+                    self.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
+                    self.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(description) (\(code))"])
                 }
-        })
+            }
+        }
     }
 
-    func confirmProtocolRequest(protoReq: PaymentProtocolRequest) {
-        guard let firstOutput = protoReq.details.outputs.first else { return }
-        guard let wallet = walletManager.wallet else { return }
-
-        let address = firstOutput.swiftAddress
-        let isValid = protoReq.isValid()
-        var isOutputTooSmall = false
-        let errorMessage = protoReq.errorMessage
+    func confirmProtocolRequest(_ protoReq: PaymentProtocolRequest) {
+        let result = sender.validate(paymentRequest: protoReq, ignoreUsedAddress: didIgnoreUsedAddressWarning, ignoreIdentityNotCertified: didIgnoreIdentityNotCertified)
         
-        if errorMessage == S.PaymentProtocol.Errors.requestExpired {
-            return showAlert(title: S.PaymentProtocol.Errors.badPaymentRequest, message: errorMessage ?? "", buttonLabel: S.Button.ok)
-        }
-
-        if !isValid {
-            return showAlert(title: S.PaymentProtocol.Errors.badPaymentRequest, message: errorMessage ?? "", buttonLabel: S.Button.ok)
-        }
-
-        //TODO: check for duplicates of already paid requests
-        var requestAmount = UInt256(0)
-        protoReq.details.outputs.forEach { output in
-            if output.amount > 0 && output.amount < wallet.minOutputAmount {
-                isOutputTooSmall = true
-            }
-            requestAmount += UInt256(output.amount)
-        }
-
-        if walletManager.isOwnAddress(address: address) {
+        switch result {
+        case .invalidRequest(let errorMessage):
+            return showAlert(title: S.PaymentProtocol.Errors.badPaymentRequest, message: errorMessage, buttonLabel: S.Button.ok)
+            
+        case .ownAddress:
             return showAlert(title: S.Alert.warning, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
-        } else if wallet.addressIsUsed(address) && !didIgnoreUsedAddressWarning {
+            
+        case .usedAddress:
             let message = "\(S.Send.UsedAddress.title)\n\n\(S.Send.UsedAddress.firstLine)\n\n\(S.Send.UsedAddress.secondLine)"
-            return showError(title: S.Alert.warning, message: message, ignore: { [weak self] in
-                self?.didIgnoreUsedAddressWarning = true
-                self?.confirmProtocolRequest(protoReq: protoReq)
+            return showError(title: S.Alert.warning, message: message, ignore: { [unowned self] in
+                self.didIgnoreUsedAddressWarning = true
+                self.confirmProtocolRequest(protoReq)
             })
-        } else if let message = protoReq.errorMessage, message.utf8.count > 0 && (protoReq.commonName?.utf8.count)! > 0 && !didIgnoreIdentityNotCertified {
-            return showError(title: S.Send.identityNotCertified, message: message, ignore: { [weak self] in
-                self?.didIgnoreIdentityNotCertified = true
-                self?.confirmProtocolRequest(protoReq: protoReq)
+            
+        case .identityNotCertified(let errorMessage):
+            return showError(title: S.Send.identityNotCertified, message: errorMessage, ignore: { [unowned self] in
+                self.didIgnoreIdentityNotCertified = true
+                self.confirmProtocolRequest(protoReq)
             })
-        } else if requestAmount < wallet.minOutputAmount {
-            let amount = Amount(amount: UInt256(wallet.minOutputAmount), currency: currency, rate: Rate.empty)
+            
+        case .paymentTooSmall(let minOutput):
+            let amount = Amount(amount: UInt256(minOutput), currency: currency, rate: Rate.empty)
             let message = String(format: S.PaymentProtocol.Errors.smallPayment, amount.tokenDescription)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
-        } else if isOutputTooSmall {
-            let amount = Amount(amount: UInt256(wallet.minOutputAmount), currency: currency, rate: Rate.empty)
+            
+        case .outputTooSmall(let minOutput):
+            let amount = Amount(amount: UInt256(minOutput), currency: currency, rate: Rate.empty)
             let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.tokenDescription)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
+            
+        case .ok:
+            break
+            
+        default:
+            // unhandled error
+            print("[SEND] payment request validation error: \(result)")
+            return
         }
 
+        let address = protoReq.details.outputs.first!.swiftAddress
+        let requestAmount = UInt256(protoReq.amount)
+        
         if let name = protoReq.commonName {
             addressCell.setContent(protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized)
-        }
-        else {
+        } else {
             addressCell.setContent(currency.matches(Currencies.bch) ? address.bCashAddr : address)
         }
         
@@ -449,14 +436,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
         if requestAmount == 0 {
             if let amount = amount {
-                //TODO:ETH
-                guard sender.createTransaction(amount: amount.rawValue, to: address) else {
+                guard case .ok = sender.createTransaction(address: address, amount: amount.rawValue, comment: nil) else {
                     return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
                 }
             }
         } else {
             addressCell.isEditable = false
-            sender.createTransaction(forPaymentProtocol: protoReq)
+            guard case .ok = sender.createTransaction(forPaymentProtocol: protoReq) else {
+                return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
+            }
         }
     }
 

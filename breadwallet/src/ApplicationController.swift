@@ -367,8 +367,9 @@ class ApplicationController : Subscriber, Trackable {
             self.modalPresenter?.presentSettings()
         }
 
-        home.didTapAddWallet = {
-            let vc = TokenListViewController(type: .manage)
+        home.didTapAddWallet = { [weak self] in
+            guard let kvStore = self?.primaryWalletManager?.apiClient?.kv else { return }
+            let vc = TokenListViewController(type: .manage, kvStore: kvStore)
             nc.pushViewController(vc, animated: true)
         }
 
