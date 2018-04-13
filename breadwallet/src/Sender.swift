@@ -10,161 +10,273 @@ import Foundation
 import UIKit
 import BRCore
 
+// MARK: Types/Constants
+
 enum SendResult {
     case success
     case creationError(String)
     case publishFailure(BRPeerManagerError)
 }
 
-private let protocolPaymentTimeout: TimeInterval = 20.0
+enum SenderValidationResult {
+    case ok
+    case failed
+    case invalidAddress
+    case ownAddress
+    case insufficientFunds
+    case noExchangeRate
+    
+    // BTC errors
+    case noFees // fees not downlaoded
+    case outputTooSmall(UInt64)
+    
+    // protocol request errors
+    case invalidRequest(String)
+    case paymentTooSmall(UInt64)
+    case usedAddress
+    case identityNotCertified(String)
+    
+    // token errors
+    case insufficientGas // no eth for token transfer gas
+}
 
-class Sender {
+typealias PinVerifier = (@escaping (String) -> Void) -> Void
+typealias SendCompletion = (SendResult) -> Void
 
-    init(walletManager: WalletManager, kvStore: BRReplicatedKVStore, currency: CurrencyDef) {
+// MARK: - Protocol
+
+protocol Sender: class {
+    
+    var canUseBiometrics: Bool { get }
+
+    func updateFeeRates(_ fees: Fees, level: FeeLevel?)
+    func fee(forAmount: UInt256) -> UInt256?
+    
+    func validate(paymentRequest req: PaymentProtocolRequest, ignoreUsedAddress: Bool, ignoreIdentityNotCertified: Bool) -> SenderValidationResult
+    
+    func createTransaction(address: String, amount: UInt256, comment: String?) -> SenderValidationResult
+    func createTransaction(forPaymentProtocol: PaymentProtocolRequest) -> SenderValidationResult
+    
+    func sendTransaction(pinVerifier: @escaping PinVerifier,
+                         completion: @escaping SendCompletion)
+    
+    func reset()
+}
+
+extension Sender {
+    var canUseBiometrics: Bool { return false }
+}
+
+// MARK: - Base Class
+
+class SenderBase<CurrencyType: CurrencyDef, WalletType: WalletManager> {
+    
+    fileprivate let currency: CurrencyType
+    fileprivate let walletManager: WalletType
+    fileprivate let kvStore: BRReplicatedKVStore
+    fileprivate var comment: String?
+    fileprivate var readyToSend: Bool = false
+    
+    // MARK: Init
+    
+    fileprivate init(currency: CurrencyType, walletManager: WalletType, kvStore: BRReplicatedKVStore) {
+        self.currency = currency
         self.walletManager = walletManager
         self.kvStore = kvStore
-        self.currency = currency
     }
-
-    private let walletManager: WalletManager
-    private let kvStore: BRReplicatedKVStore
-    private let currency: CurrencyDef
-    var transaction: BRTxRef?
-    var protocolRequest: PaymentProtocolRequest?
-    var rate: Rate?
-    var comment: String?
-    var feePerKb: UInt64?
-
-    //TODO:ETH - replace these with a tx protocol
-    var amount: UInt256?
-    var toAddress: String?
-
-    func createTransaction(amount: UInt256, to: String) -> Bool {
-        if currency.matches(Currencies.eth) {
-            self.amount = amount
-            self.toAddress = to
-            return true
-        } else {
-            transaction = walletManager.wallet?.createTransaction(forAmount: amount.asUInt64, toAddress: to)
-            return transaction != nil
-        }
+    
+    // MARK: -
+    
+    func validate(paymentRequest req: PaymentProtocolRequest, ignoreUsedAddress: Bool, ignoreIdentityNotCertified: Bool) -> SenderValidationResult {
+        return .failed
     }
-
-    func createTransaction(forPaymentProtocol: PaymentProtocolRequest) {
-        protocolRequest = forPaymentProtocol
-        let feePerKb = walletManager.wallet?.feePerKb ?? 0
-
-        if UInt64(forPaymentProtocol.details.requiredFeeRate*1000) >= feePerKb {
-            walletManager.wallet?.feePerKb = UInt64(forPaymentProtocol.details.requiredFeeRate*1000)
-            transaction = walletManager.wallet?.createTxForOutputs(forPaymentProtocol.details.outputs)
-            walletManager.wallet?.feePerKb = feePerKb
-        }
-        else {
-            transaction = walletManager.wallet?.createTxForOutputs(forPaymentProtocol.details.outputs)
-        }
+    
+    func createTransaction(forPaymentProtocol: PaymentProtocolRequest) -> SenderValidationResult {
+        return .failed
     }
-
-    var fee: UInt256 {
-        switch currency {
-        case is Bitcoin:
-            guard let tx = transaction, let fee = walletManager.wallet?.feeForTx(tx) else { return 0 }
-            return UInt256(fee)
-        case is Ethereum:
-            guard let gasPrice = (walletManager as? EthWalletManager)?.gasPrice else { return 0 }
-            return gasPrice * UInt256(EthWalletManager.defaultGasLimit)
-        default:
-            //TODO:ERC20
-            assertionFailure("unsupported")
-            return UInt256(0)
-        }
+    
+    func reset() {
+        comment = nil
+        readyToSend = false
     }
+}
 
+// MARK: -
+
+class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
+    
+    // MARK: Sender
+    
     var canUseBiometrics: Bool {
         guard let tx = transaction else  { return false }
         return walletManager.canUseBiometrics(forTx: tx)
     }
-
-    func feeForTx(amount: UInt256) -> UInt256? {
-        switch currency {
-        case is Bitcoin:
-            guard let fee = walletManager.wallet?.feeForTx(amount: amount.asUInt64) else { return nil }
-            return UInt256(fee)
-        case is Ethereum:
-            return fee
-        default:
-            //TODO:ERC20
-            assertionFailure("unsupported")
-            return nil
-        }
+    
+    func updateFeeRates(_ fees: Fees, level: FeeLevel?) {
+        walletManager.wallet?.feePerKb = fees.fee(forLevel: level ?? .regular)
     }
-
-    func send(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Void) -> Void, completion:@escaping (SendResult) -> Void) {
-        self.rate = rate
-        self.comment = comment
-        self.feePerKb = feePerKb
+    
+    func fee(forAmount amount: UInt256) -> UInt256? {
+        guard let fee = walletManager.wallet?.feeForTx(amount: amount.asUInt64) else { return nil }
+        return UInt256(fee)
+    }
+    
+    func createTransaction(address: String, amount: UInt256, comment: String?) -> SenderValidationResult {
+        let btcAddress = currency.matches(Currencies.bch) ? address.bitcoinAddr : address
+        let result = validate(address: btcAddress, amount: amount)
+        guard case .ok = result else { return result }
         
-        if currency is Ethereum {
-            sendEth(biometricsMessage: biometricsMessage, rate: rate, comment: comment, feePerKb: feePerKb, verifyPinFunction: verifyPinFunction, completion: completion)
-        } else {
-            sendBTC(biometricsMessage: biometricsMessage, rate: rate, comment: comment, feePerKb: feePerKb, verifyPinFunction: verifyPinFunction, completion: completion)
+        transaction = walletManager.wallet?.createTransaction(forAmount: amount.asUInt64, toAddress: btcAddress)
+        
+        guard transaction != nil else {
+            reset()
+            return .failed
         }
+        
+        self.comment = comment
+        readyToSend = true
+        
+        return result
     }
-
-    private func sendBTC(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Void) -> Void, completion:@escaping (SendResult) -> Void) {
-        guard let tx = transaction else { return completion(.creationError(S.Send.createTransactionError)) }
-
-        if UserDefaults.isBiometricsEnabled && walletManager.canUseBiometrics(forTx:tx) {
-            DispatchQueue.walletQueue.async { [weak self] in
-                guard let myself = self else { return }
-                guard let walletManager = myself.walletManager as? BTCWalletManager else { return }
-                walletManager.signTransaction(tx, forkId: (myself.currency as! Bitcoin).forkId, biometricsPrompt: biometricsMessage, completion: { result in
-                    if result == .success {
-                        myself.publish(completion: completion)
-                    } else {
-                        if result == .failure || result == .fallback {
-                            myself.verifyPin(tx: tx, verifyPinFunction: verifyPinFunction, completion: completion)
-                        }
-                    }
-                })
+    
+    override func validate(paymentRequest req: PaymentProtocolRequest, ignoreUsedAddress: Bool, ignoreIdentityNotCertified: Bool) -> SenderValidationResult {
+        guard let firstOutput = req.details.outputs.first else { return .failed }
+        guard let wallet = walletManager.wallet else { return .failed }
+        
+        let errorMessage = req.errorMessage ?? ""
+        let address = firstOutput.swiftAddress
+        
+        guard req.isValid() else { return .invalidRequest(errorMessage)}
+        
+        if errorMessage == S.PaymentProtocol.Errors.requestExpired {
+            return .invalidRequest(errorMessage)
+        }
+        
+        //TODO: check for duplicates of already paid requests
+        var isOutputTooSmall = false
+        let requestAmount = UInt256(req.amount)
+        req.details.outputs.forEach { output in
+            if output.amount > 0 && output.amount < wallet.minOutputAmount {
+                isOutputTooSmall = true
             }
+        }
+        
+        guard !walletManager.isOwnAddress(address) else { return .ownAddress }
+        guard ignoreUsedAddress || !wallet.addressIsUsed(address) else { return .usedAddress }
+        guard ignoreIdentityNotCertified || errorMessage.utf8.isEmpty || req.commonName!.utf8.isEmpty else { return .identityNotCertified(errorMessage) }
+        
+        guard requestAmount >= wallet.minOutputAmount else {
+            return .paymentTooSmall(wallet.minOutputAmount)
+        }
+        guard !isOutputTooSmall else {
+            return .outputTooSmall(wallet.minOutputAmount)
+        }
+        
+        return .ok
+    }
+    
+    override func createTransaction(forPaymentProtocol req: PaymentProtocolRequest) -> SenderValidationResult {
+        let result = validate(paymentRequest: req, ignoreUsedAddress: true, ignoreIdentityNotCertified: true)
+        guard case .ok = result else { return result }
+        let wallet = walletManager.wallet!
+        
+        protocolRequest = req
+        let feePerKb = wallet.feePerKb
+        
+        let requiredFeeRate = UInt64(req.details.requiredFeeRate*1000)
+        if requiredFeeRate >= feePerKb {
+            wallet.feePerKb = requiredFeeRate
+            transaction = wallet.createTxForOutputs(req.details.outputs)
+            wallet.feePerKb = feePerKb
         } else {
-            self.verifyPin(tx: tx, verifyPinFunction: verifyPinFunction, completion: completion)
+            transaction = wallet.createTxForOutputs(req.details.outputs)
+        }
+        
+        guard transaction != nil else {
+            reset()
+            return .failed
+        }
+        
+        comment = req.details.memo
+        
+        
+        return result
+    }
+    
+    override func reset() {
+        transaction = nil
+        super.reset()
+    }
+    
+    func sendTransaction(pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
+        guard readyToSend, let tx = transaction else { return completion(.creationError("not ready")) }
+        
+        if UserDefaults.isBiometricsEnabled && walletManager.canUseBiometrics(forTx: tx) {
+            sendWithBiometricVerification(tx: tx, pinVerifier: pinVerifier, completion: completion)
+        } else {
+            sendWithPinVerification(tx: tx, pinVerifier: pinVerifier, completion: completion)
         }
     }
-
-    private func sendEth(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Void) -> Void, completion:@escaping (SendResult) -> Void) {
-        guard let ethWalletManager = walletManager as? EthWalletManager else { return }
-        verifyPinFunction({ [weak self] pin in
+    
+    // MARK: Private
+    
+    private var transaction: BRTxRef?
+    private var protocolRequest: PaymentProtocolRequest?
+    
+    private func validate(address: String, amount: UInt256) -> SenderValidationResult {
+        guard address.isValidAddress else { return .invalidAddress }
+        guard !walletManager.isOwnAddress(address) else { return .ownAddress }
+        guard currency.state.currentRate != nil else { return .noExchangeRate }
+        
+        if let minOutput = walletManager.wallet?.minOutputAmount {
+            guard amount >= minOutput else { return .outputTooSmall(minOutput) }
+        }
+        
+        guard amount <= (walletManager.wallet?.maxOutputAmount ?? 0) else {
+            return .insufficientFunds
+        }
+        
+        if currency.matches(Currencies.btc) {
+            guard currency.state.fees != nil else {
+                return .noFees
+            }
+        }
+        
+        return .ok
+    }
+    
+    private func sendWithBiometricVerification(tx: BRTxRef,
+                                               pinVerifier: @escaping PinVerifier,
+                                               completion: @escaping SendCompletion) {
+        let biometricsPrompt = S.VerifyPin.touchIdMessage
+        
+        DispatchQueue.walletQueue.async { [weak self] in
             guard let `self` = self else { return }
-            ethWalletManager.sendTx(toAddress: self.toAddress!, amount: self.amount!, callback: { result in
+            self.walletManager.signTransaction(tx, forkId: self.currency.forkId, biometricsPrompt: biometricsPrompt, completion: { result in
                 switch result {
-                case .success(let pendingTx):
-                    self.setMetaData(ethTx: pendingTx)
-                    completion(.success)
-                case .error(let error):
-                    switch error {
-                    case .httpError(let e):
-                        completion(.creationError(e?.localizedDescription ?? ""))
-                    case .jsonError(let e):
-                        completion(.creationError(e?.localizedDescription ?? ""))
-                    case .rpcError(let e):
-                        completion(.creationError(e.message))
-                    }
+                case .success:
+                    self.publish(tx: tx, completion: completion)
+                case .failure, .fallback:
+                    self.sendWithPinVerification(tx: tx,
+                                                 pinVerifier: pinVerifier,
+                                                 completion: completion)
+                default:
+                    break
                 }
             })
-        })
+        }
     }
-
-    private func verifyPin(tx: BRTxRef,
-                           verifyPinFunction: (@escaping(String) -> Void) -> Void,
-                           completion:@escaping (SendResult) -> Void) {
-        verifyPinFunction({ pin in
+    
+    private func sendWithPinVerification(tx: BRTxRef,
+                                         pinVerifier: PinVerifier,
+                                         completion: @escaping SendCompletion) {
+        pinVerifier { [weak self] pin in
+            guard let `self` = self else { return }
             let group = DispatchGroup()
             group.enter()
             DispatchQueue.walletQueue.async {
-                //TODO:ETH
-                if (self.walletManager as! BTCWalletManager).signTransaction(tx, forkId: (self.currency as! Bitcoin).forkId, pin: pin) {
-                    self.publish(completion: completion)
+                if self.walletManager.signTransaction(tx, forkId: self.currency.forkId, pin: pin) {
+                    self.publish(tx: tx, completion: completion)
                 }
                 group.leave()
             }
@@ -172,60 +284,55 @@ class Sender {
             if result == .timedOut {
                 fatalError("send-tx-timeout")
             }
-        })
+        }
     }
-
-    private func publish(completion: @escaping (SendResult) -> Void) {
-        guard let tx = transaction else { assert(false, "publish failure"); return }
+    
+    private func publish(tx: BRTxRef,
+                         completion: @escaping SendCompletion) {
         DispatchQueue.walletQueue.async { [weak self] in
-            guard let myself = self else { assert(false, "myelf didn't exist"); return }
+            guard let `self` = self else { return assertionFailure("nil self") }
             
-            if myself.protocolRequest?.mimeType == "application/payment-request" {
-                return myself.postProtocolPaymentIfNeeded(completion: completion)
+            if self.protocolRequest?.mimeType == "application/payment-request" {
+                return self.postProtocolPaymentIfNeeded(completion: completion)
             }
             
-            myself.walletManager.peerManager?.publishTx(tx, completion: { success, error in
+            guard let peerManager = self.walletManager.peerManager else { return completion(.publishFailure(BRPeerManagerError.posixError(errorCode: -1, description: "network not connected")))}
+            
+            peerManager.publishTx(tx) { success, error in
                 DispatchQueue.main.async {
                     if let error = error {
                         completion(.publishFailure(error))
                     } else {
-                        myself.setMetaData(btcTx: tx)
+                        self.setMetaData(btcTx: tx)
                         completion(.success)
-                        myself.postProtocolPaymentIfNeeded()
+                        self.postProtocolPaymentIfNeeded()
                     }
                 }
-            })
+            }
         }
     }
-
+    
     private func setMetaData(btcTx: BRTxRef) {
-        guard let rate = rate, let feePerKb = feePerKb else { print("Incomplete tx metadata"); return }
-        guard let walletManager = walletManager as? BTCWalletManager,
-            let tx = BtcTransaction(btcTx, walletManager: walletManager, kvStore: kvStore, rate: rate) else { return }
+        guard let rate = currency.state.currentRate, let feePerKb = walletManager.wallet?.feePerKb else { print("Incomplete tx metadata"); return }
+        guard let tx = BtcTransaction(btcTx, walletManager: walletManager, kvStore: kvStore, rate: rate) else { return }
         
         tx.createMetaData(rate: rate, comment: comment, feeRate: Double(feePerKb))
         Store.trigger(name: .txMemoUpdated(tx.hash))
     }
     
-    private func setMetaData(ethTx: EthTx) {
-        guard let rate = rate else { print("Incomplete tx metadata"); return }
-        let tx = EthTransaction(tx: ethTx, accountAddress: "", kvStore: kvStore, rate: rate)
-        tx.createMetaData(rate: rate, comment: comment)
-        // TODO:ETHLIGHT the tx will not be populated until next network fetch
-        //Store.trigger(name: .txMemoUpdated(tx.hash))
-    }
-
     private func postProtocolPaymentIfNeeded(completion: @escaping (SendResult) -> Void = { (nil) in }) {
+        let protocolPaymentTimeout: TimeInterval = 20.0
+        
         guard let protoReq = protocolRequest else { return }
         guard let wallet = walletManager.wallet else { return }
-        let amount = protoReq.details.outputs.map { $0.amount }.reduce(0, +)
+        let amount = protoReq.amount
         let payment = PaymentProtocolPayment(merchantData: protoReq.details.merchantData,
                                              transactions: [transaction],
                                              refundTo: [(address: wallet.receiveAddress, amount: amount)])
         payment?.currency = currency.code
         guard let urlString = protoReq.details.paymentURL else { return }
         guard let url = URL(string: urlString) else { return }
-
+        
         let request = NSMutableURLRequest(url: url, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: protocolPaymentTimeout)
         request.httpMethod = "POST"
         
@@ -239,7 +346,7 @@ class Sender {
             request.addValue("application/bitcoin-paymentack", forHTTPHeaderField: "Accept")
             request.httpBody = Data(bytes: payment!.bytes)
         }
-
+        
         print("posting to: \(url)")
         
         URLSession.shared.dataTask(with: request as URLRequest) { [weak self] data, response, error in
@@ -248,7 +355,7 @@ class Sender {
                     print("payment error: \(error!)");
                     return completion(.publishFailure(.posixError(errorCode: 74, description: "\(error!)")))
                 }
-
+                
                 guard let response = response, let data = data else {
                     print("no response or data");
                     return completion(.publishFailure(.posixError(errorCode: 74, description: "no response or data")))
@@ -267,7 +374,7 @@ class Sender {
                 else if response.mimeType == "application/payment-ack" && data.count <= 50000 {
                     if let ack = PaymentProtocolACK(json: String(data: data, encoding: .utf8) ?? "") {
                         print("received ack: \(ack)") //TODO - show memo to user
-
+                        
                         if let tx = self?.transaction {
                             self?.setMetaData(btcTx: tx)
                             completion(.success)
@@ -285,7 +392,153 @@ class Sender {
                 
                 print("finished!!")
             }
-        }.resume()
+            }.resume()
+    }
+}
 
+// MARK: -
+
+/// Base class for sending Ethereum-network transactions
+class EthSenderBase<CurrencyType: CurrencyDef> : SenderBase<CurrencyType, EthWalletManager> {
+    
+    fileprivate var address: String?
+    fileprivate var amount: UInt256?
+    
+    // MARK: Sender
+    
+    func updateFeeRates(_ fees: Fees, level: FeeLevel? = nil) {
+        walletManager.gasPrice = fees.gasPrice
+    }
+    
+    func createTransaction(address: String, amount: UInt256, comment: String?) -> SenderValidationResult {
+        let result = validate(address: address, amount: amount)
+        guard case .ok = result else { return result }
+        
+        self.amount = amount
+        self.address = address
+        self.comment = comment
+        readyToSend = true
+        
+        return result
+    }
+    
+    override func reset() {
+        super.reset()
+        amount = nil
+        address = nil
+    }
+    
+    // MARK: Private
+    
+    fileprivate func validate(address: String, amount: UInt256) -> SenderValidationResult {
+        guard currency.isValidAddress(address) else { return .invalidAddress }
+        guard !walletManager.isOwnAddress(address) else { return .ownAddress }
+        //guard currency.state.currentRate != nil else { return .noExchangeRate } // allow sending without exchange rate
+        return .ok
+    }
+}
+
+class EthereumSender: EthSenderBase<Ethereum>, Sender {
+    
+    // MARK: Sender
+    
+    func fee(forAmount: UInt256) -> UInt256? {
+        return walletManager.gasPrice * UInt256(EthWalletManager.defaultGasLimit)
+    }
+    
+    func sendTransaction(pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
+        guard readyToSend,
+            let address = address,
+            let amount = amount else {
+                return completion(.creationError("not ready"))
+        }
+        
+        pinVerifier { [weak self] pin in
+            guard let `self` = self else { return }
+            self.walletManager.sendTx(toAddress: address, amount: amount) { result in
+                switch result {
+                case .success(let pendingTx):
+                    self.setMetaData(ethTx: pendingTx)
+                    completion(.success)
+                case .error(let error):
+                    switch error {
+                    case .httpError(let e):
+                        completion(.creationError(e?.localizedDescription ?? ""))
+                    case .jsonError(let e):
+                        completion(.creationError(e?.localizedDescription ?? ""))
+                    case .rpcError(let e):
+                        completion(.creationError(e.message))
+                    }
+                }
+            }
+        }
+    }
+    
+    // MARK: Private
+    
+    private func setMetaData(ethTx: EthTx) {
+        guard let rate = currency.state.currentRate else { print("Incomplete tx metadata"); return }
+        let tx = EthTransaction(tx: ethTx, accountAddress: "", kvStore: kvStore, rate: rate)
+        tx.createMetaData(rate: rate, comment: comment)
+        // TODO:ETHLIGHT the tx will not be populated until next network fetch
+        //Store.trigger(name: .txMemoUpdated(tx.hash))
+    }
+}
+
+// MARK: -
+
+class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
+    
+    // MARK: Sender
+    
+    func fee(forAmount: UInt256) -> UInt256? {
+        return walletManager.gasPrice * UInt256(EthWalletManager.defaultTokenTransferGasLimit)
+    }
+    
+    func sendTransaction(pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
+        guard readyToSend,
+            let address = address,
+            let amount = amount else {
+                return completion(.creationError("not ready"))
+        }
+
+        pinVerifier { [weak self] pin in
+            guard let `self` = self else { return }
+            self.walletManager.send(token: self.currency, toAddress: address, amount: amount) { result in
+                switch result {
+                case .success(let pendingTx):
+                    //self.setMetaData(ethTx: pendingTx)
+                    completion(.success)
+                case .error(let error):
+                    switch error {
+                    case .httpError(let e):
+                        completion(.creationError(e?.localizedDescription ?? ""))
+                    case .jsonError(let e):
+                        completion(.creationError(e?.localizedDescription ?? ""))
+                    case .rpcError(let e):
+                        completion(.creationError(e.message))
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: -
+
+extension CurrencyDef {
+    func createSender(walletManager: WalletManager, kvStore: BRReplicatedKVStore) -> Sender? {
+        
+        switch (self, walletManager) {
+        case (is Bitcoin, is BTCWalletManager):
+            return BitcoinSender(currency: self as! Bitcoin, walletManager: walletManager as! BTCWalletManager, kvStore: kvStore)
+        case (is Ethereum, is EthWalletManager):
+            return EthereumSender(currency: self as! Ethereum, walletManager: walletManager as! EthWalletManager, kvStore: kvStore)
+        case (is ERC20Token, is EthWalletManager):
+            return ERC20Sender(currency: self as! ERC20Token, walletManager: walletManager as! EthWalletManager, kvStore: kvStore)
+        default:
+            assertionFailure("unsupporeted currency/wallet")
+            return nil
+        }
     }
 }

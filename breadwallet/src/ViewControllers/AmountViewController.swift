@@ -44,7 +44,7 @@ class AmountViewController : UIViewController, Trackable {
             fullRefresh()
         }
     }
-    var didUpdateFee: ((Fee) -> Void)? {
+    var didUpdateFee: ((FeeLevel) -> Void)? {
         didSet {
             feeSelector.didUpdateFee = didUpdateFee
         }
