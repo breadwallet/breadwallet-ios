@@ -52,7 +52,7 @@ protocol Sender: class {
     func updateFeeRates(_ fees: Fees, level: FeeLevel?)
     func fee(forAmount: UInt256) -> UInt256?
     
-    func validate(paymentRequest req: PaymentProtocolRequest, ignoreUsedAddress: Bool, ignoreIdentityNotCertified: Bool) -> SenderValidationResult
+    func validate(paymentRequest: PaymentProtocolRequest, ignoreUsedAddress: Bool, ignoreIdentityNotCertified: Bool) -> SenderValidationResult
     
     func createTransaction(address: String, amount: UInt256, comment: String?) -> SenderValidationResult
     func createTransaction(forPaymentProtocol: PaymentProtocolRequest) -> SenderValidationResult
@@ -507,6 +507,7 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
             self.walletManager.send(token: self.currency, toAddress: address, amount: amount) { result in
                 switch result {
                 case .success(let pendingTx):
+                    //TODO:ERC20
                     //self.setMetaData(ethTx: pendingTx)
                     completion(.success)
                 case .error(let error):

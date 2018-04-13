@@ -216,7 +216,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
     
     private func validateSendForm() -> Bool {
-        guard let _ = addressCell.address, let displayAddress = addressCell.displayAddress else {
+        guard let address = addressCell.address else {
             showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             return false
         }
@@ -226,7 +226,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return false
         }
         
-        let validationResult = sender.createTransaction(address: displayAddress,
+        let validationResult = sender.createTransaction(address: address,
                                                         amount: amount.rawValue,
                                                         comment: memoCell.textView.text)
         switch validationResult {
@@ -272,10 +272,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             addressCell.textField.resignFirstResponder()
         }
         
-        // TODO: is checking sender.transaction == nil for the case of payment request populated send form? in which case don't want all the error checking probably
         guard validateSendForm(),
             let amount = amount,
-            let address = addressCell.displayAddress else { return }
+            let address = addressCell.address else { return }
         
         let fee = sender.fee(forAmount: amount.rawValue) ?? UInt256(0)
         
