@@ -43,14 +43,14 @@ protocol WalletManager: class {
     var kvStore: BRReplicatedKVStore? { get set }
     var apiClient: BRAPIClient? { get }
     func canUseBiometrics(forTx: BRTxRef) -> Bool
-    func isOwnAddress(address: String) -> Bool
+    func isOwnAddress(_ address: String) -> Bool
 }
 
 //MARK: - Wallet
 extension WalletManager {
 
     //TODO:ETH - add eth wallet
-    func isOwnAddress(address: String) -> Bool {
+    func isOwnAddress(_ address: String) -> Bool {
         return wallet?.containsAddress(address) ?? false
     }
 }

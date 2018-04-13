@@ -8,10 +8,6 @@
 
 import UIKit
 
-enum Fee {
-    case regular
-    case economy
-}
 
 class FeeSelector : UIView {
 
@@ -20,7 +16,7 @@ class FeeSelector : UIView {
         setupViews()
     }
 
-    var didUpdateFee: ((Fee) -> Void)?
+    var didUpdateFee: ((FeeLevel) -> Void)?
 
     func removeIntrinsicSize() {
         guard let bottomConstraint = bottomConstraint else { return }
