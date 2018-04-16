@@ -17,10 +17,23 @@ class KVStoreCoordinator : Subscriber {
 
     private func setupStoredCurrencyList() {
         //If stored currency list metadat doesn't exist, create a new one
-        if CurrencyListMetaData(kvStore: kvStore) == nil {
+        guard let currencyMetaData = CurrencyListMetaData(kvStore: kvStore) else {
             let newCurrencyListMetaData = CurrencyListMetaData()
             set(newCurrencyListMetaData)
+            return
         }
+        let enabledTokenAddresses = currencyMetaData.enabledTokenAddresses
+        StoredTokenData.fetchTokens(callback: { tokenData in
+            var currentWalletCount = Store.state.wallets.values.count
+            let enabledTokenData = tokenData.filter { enabledTokenAddresses.contains($0.address) }
+            let enabledCurrencies = enabledTokenData.map { ERC20Token(tokenData: $0)}.reduce([String: WalletState]()) { (dictionary, currency) -> [String: WalletState] in
+                var dictionary = dictionary
+                dictionary[currency.code] = WalletState.initial(currency, displayOrder: currentWalletCount)
+                currentWalletCount = currentWalletCount + 1
+                return dictionary
+            }
+            Store.perform(action: ManageWallets.addWallets(enabledCurrencies))
+        })
     }
     
     func retreiveStoredWalletInfo() {
