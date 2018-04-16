@@ -59,6 +59,18 @@ enum ManageWallets {
             }
         }
     }
+    struct removeTokenAddresses : Action {
+        let reduce: Reducer
+        init(_ removedTokenAddresses: [String]) {
+            reduce = {
+                let newWallets = $0.wallets.filter {
+                    guard let token = $0.value.currency as? ERC20Token else { return true }
+                    return !removedTokenAddresses.contains(token.address)
+                }
+                return $0.mutate(wallets: newWallets)
+            }
+        }
+    }
 }
 
 //MARK: - Wallet State

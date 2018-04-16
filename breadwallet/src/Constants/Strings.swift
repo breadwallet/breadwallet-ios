@@ -597,8 +597,11 @@ enum S {
     }
 
     enum TokenList {
-        static let title = NSLocalizedString("TokenList.title", value: "Add Wallets", comment: "Add Wallet view title")
+        static let addTitle = NSLocalizedString("TokenList.addTitle", value: "Add Wallets", comment: "Add Wallet view title")
         static let add = NSLocalizedString("TokenList.add", value: "Add", comment: "Add currency button label")
+        static let show = NSLocalizedString("TokenList.show", value: "Show", comment: "Show currency button label")
         static let remove = NSLocalizedString("TokeList.remove", value: "Remove", comment: "Remove currency button label")
+        static let hide = NSLocalizedString("TokeList.hide", value: "Hide", comment: "Hide currency button label")
+        static let manageTitle = NSLocalizedString("TokenList.manageTitle", value: "Manage Wallets", comment: "Manage Wallets view title")
     }
 }

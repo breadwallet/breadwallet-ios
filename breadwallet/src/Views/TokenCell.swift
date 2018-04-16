@@ -16,6 +16,8 @@ class TokenCell : UITableViewCell {
     private let iconBackground = UIView()
     private let button = UIButton.outline(title: S.TokenList.add)
     private var address: String = ""
+    private var listType: TokenListType = .add
+    private var isTokenHidden = false
     
     var didAddToken:((String)->Void)?
     var didRemoveToken:((String)->Void)?
@@ -25,11 +27,13 @@ class TokenCell : UITableViewCell {
         setupViews()
     }
 
-    func set(name: String, code: String, address: String) {
+    func set(name: String, code: String, address: String, listType: TokenListType, isTokenHidden: Bool) {
         header.text = code
         subheader.text = name
         icon.image = #imageLiteral(resourceName: "TempBLogo")
         self.address = address
+        self.listType = listType
+        self.isTokenHidden = isTokenHidden
     }
 
     private func setupViews() {
@@ -73,19 +77,37 @@ class TokenCell : UITableViewCell {
         iconBackground.backgroundColor = .blue
         iconBackground.layer.cornerRadius = 4.0
         iconBackground.layer.masksToBounds = true
+        setInitialButtonState()
+    }
+    
+    private func setInitialButtonState() {
+        switch listType {
+        case .add:
+            setAddButton()
+        case .manage:
+            isTokenHidden ? setAddButton() : setRemoveButton()
+        }
         button.tap = strongify(self) { myself in
             if myself.button.layer.borderColor == UIColor.blue.cgColor {
-                myself.button.layer.borderColor = UIColor.red.cgColor
-                myself.button.setTitle(S.TokenList.remove, for: .normal)
-                myself.button.tintColor = .red
-                myself.didAddToken?(myself.address)
+                myself.setRemoveButton()
             } else {
-                myself.button.layer.borderColor = UIColor.blue.cgColor
-                myself.button.setTitle(S.TokenList.add, for: .normal)
-                myself.button.tintColor  = .blue
-                myself.didRemoveToken?(myself.address)
+                myself.setAddButton()
             }
         }
+    }
+    
+    private func setAddButton() {
+        button.layer.borderColor = UIColor.blue.cgColor
+        button.setTitle(listType.addTitle, for: .normal)
+        button.tintColor = .blue
+        didAddToken?(address)
+    }
+    
+    private func setRemoveButton() {
+        button.layer.borderColor = UIColor.red.cgColor
+        button.setTitle(listType.removeTitle, for: .normal)
+        button.tintColor = .red
+        didAddToken?(address)
     }
 
     required init?(coder aDecoder: NSCoder) {
