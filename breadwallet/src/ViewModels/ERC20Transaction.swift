@@ -56,8 +56,8 @@ struct ERC20Transaction: EthLikeTransaction {
             return
         }
         
-        self.fromAddress = event.topics[1].unpaddedHexString//event.topics[1].replacingOccurrences(of: "000000000000000000000000", with: "")
-        self.toAddress = event.topics[2].unpaddedHexString//.replacingOccurrences(of: "000000000000000000000000", with: "")
+        self.fromAddress = event.topics[1].unpaddedHexString
+        self.toAddress = event.topics[2].unpaddedHexString
         
         if accountAddress.lowercased() == fromAddress.lowercased() {
             self.direction = .sent

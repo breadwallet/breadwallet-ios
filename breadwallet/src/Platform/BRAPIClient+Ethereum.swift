@@ -43,15 +43,10 @@ extension BRAPIClient {
     
     public func getTokenTransactions(address: EthAddress, token: ERC20Token, handler: @escaping (APIResult<[EthLogEvent]>) -> Void) {
         let accountAddress = address.paddedHexString
-        let host = E.isTestnet ? "ropsten.etherscan.io" : "api.etherscan.io"
-        let url = URL(string: "http://\(host)/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=\(token.address)&topic0=\(ERC20Token.transferEventSignature)&topic1=\(accountAddress)&topic1_2_opr=or&topic2=\(accountAddress)")!
-        let req = URLRequest(url: url)
-        //TODO:ERC20
-//        let req = URLRequest(url: url("/ethq/\(network)/query?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=\(token.address)&topic0=\(ERC20Token.transferEventSignature)&topic1=\(accountAddress)&topic1_2_opr=or&topic2=\(accountAddress)"))
+        let req = URLRequest(url: url("/ethq/\(network)/query?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=\(token.address)&topic0=\(ERC20Token.transferEventSignature)&topic1=\(accountAddress)&topic1_2_opr=or&topic2=\(accountAddress)"))
         send(apiRequest: req, handler: handler)
     }
 
-    
     // MARK: -
     
     private func send<ResultType>(rpcRequest: JSONRPCRequest, handler: @escaping (JSONRPCResult<ResultType>) -> Void) {
