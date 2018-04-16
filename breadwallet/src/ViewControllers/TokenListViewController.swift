@@ -19,7 +19,7 @@ class TokenListViewController : UITableViewController {
     private let cellIdentifier = "CellIdentifier"
     private let kvStore: BRReplicatedKVStore
     private let metaData: CurrencyListMetaData
-    private var tokens = [TokenData]() {
+    private var tokens = [StoredTokenData]() {
         didSet {
             tableView.reloadData()
         }
@@ -38,7 +38,7 @@ class TokenListViewController : UITableViewController {
         title = S.TokenList.title
         tableView.register(TokenCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.separatorStyle = .none
-        fetchTokens(callback: {
+        StoredTokenData.fetchTokens(callback: {
             self.tokens = $0.filter { !self.metaData.previouslyAddedTokenAddresses.contains($0.address) }
         })
     }
@@ -76,13 +76,7 @@ class TokenListViewController : UITableViewController {
         let newWallets: [String: WalletState] = tokens.filter {
             return self.tokenAddressesToBeAdded.contains($0.address)
         }.map {
-            ERC20Token(name: $0.name,
-                       code: $0.code,
-                       symbol: $0.code,
-                       colors: (.lightGray, .lightGray),
-                       address: $0.address,
-                       abi: ERC20Token.standardAbi,
-                       decimals: 18) //TODO:ERC - add decimals here
+            ERC20Token(tokenData: $0)
             }.reduce([String: WalletState]()) { (dictionary, currency) -> [String: WalletState] in
                 var dictionary = dictionary
                 dictionary[currency.code] = WalletState.initial(currency, displayOrder: currentWalletCount)
@@ -98,27 +92,31 @@ class TokenListViewController : UITableViewController {
         Store.perform(action: ManageWallets.addWallets(newWallets))
     }
 
-    private func fetchTokens(callback: @escaping ([TokenData])->Void) {
-        do {
-            let path = Bundle.main.path(forResource: "tokens", ofType: "json")
-            let data = try Data(contentsOf: URL(fileURLWithPath: path!))
-            let tokens = try JSONDecoder().decode([TokenData].self, from: data)
-            DispatchQueue.main.async {
-                callback(tokens)
-            }
-        } catch let e {
-            print("json errro: \(e)")
-        }
-    }
-
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-private struct TokenData : Codable {
+struct StoredTokenData : Codable {
     let address: String
     let name: String
     let code: String
     let colors: [String]
+}
+
+extension StoredTokenData {
+    static func fetchTokens(callback: @escaping ([StoredTokenData])->Void) {
+        DispatchQueue.global(qos: .utility).async {
+            do {
+                let path = Bundle.main.path(forResource: "tokens", ofType: "json")
+                let data = try Data(contentsOf: URL(fileURLWithPath: path!))
+                let tokens = try JSONDecoder().decode([StoredTokenData].self, from: data)
+                DispatchQueue.main.async {
+                    callback(tokens)
+                }
+            } catch let e {
+                print("json errro: \(e)")
+            }
+        }
+    }
 }

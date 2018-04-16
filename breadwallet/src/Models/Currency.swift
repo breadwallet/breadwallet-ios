@@ -228,6 +228,18 @@ public struct ERC20Token: CurrencyDef {
     }
 }
 
+extension ERC20Token {
+    init(tokenData: StoredTokenData) {
+        self.init(name: tokenData.name,
+                   code: tokenData.code,
+                   symbol: tokenData.code,
+                   colors: (.lightGray, .lightGray), //TODO:ERC - add decimals here
+                   address: tokenData.address,
+                   abi: ERC20Token.standardAbi,
+                   decimals: 18) //TODO:ERC - add decimals here
+    }
+}
+
 // MARK: Instances
 
 public struct Currencies {
