@@ -255,8 +255,11 @@ class ModalPresenter : Subscriber, Trackable {
                 self?.messagePresenter.presentMessageCompose(bitcoinURL: bitcoinURL, image: image)
             }
             return ModalViewController(childViewController: requestVc)
-        case .buy:
-            presentBuyController("/buy")
+        case .buy(let currency):
+            presentPlatformWebViewController("/buy?currency=\(currency.code)")
+            return nil
+        case .sell(let currency):
+            presentPlatformWebViewController("/sell?currency=\(currency.code)")
             return nil
         }
         
@@ -461,14 +464,6 @@ class ModalPresenter : Subscriber, Trackable {
             ]
         ]
         
-        //        if BRAPIClient.featureEnabled(.earlyAccess) {
-        //            rows["Bread"]?.insert(Setting(title: S.Settings.earlyAccess, callback: {
-        //                settingsNav.dismiss(animated: true, completion: {
-        //                    self.presentBuyController("/ea")
-        //                })
-        //            }), at: 1)
-        //        }
-        
         let settings = SettingsViewController(sections: sections, rows: rows)
         settings.addCloseNavigationItem(tintColor: .mediumGray)
         settingsNav.viewControllers = [settings]
@@ -575,7 +570,7 @@ class ModalPresenter : Subscriber, Trackable {
         navigationController.pushViewController(writeVC, animated: true)
     }
 
-    private func presentBuyController(_ mountPoint: String) {
+    private func presentPlatformWebViewController(_ mountPoint: String) {
         let vc: BRWebViewController
         #if Debug || Testflight
             vc = BRWebViewController(bundleName: "bread-frontend-staging", mountPoint: mountPoint, walletManagers: walletManagers)

@@ -13,6 +13,7 @@ class AccountFooterView: UIView, Subscriber, Trackable {
     var sendCallback: (() -> Void)?
     var receiveCallback: (() -> Void)?
     var buyCallback: (() -> Void)?
+    var sellCallback: (() -> Void)?
     
     private var hasSetup = false
     private let currency: CurrencyDef
@@ -50,55 +51,36 @@ class AccountFooterView: UIView, Subscriber, Trackable {
     }
     
     private func setupToolbarButtons() {
-        // buttons
-        var buttonCount: Int
         
-        let send = UIButton.rounded(title: S.Button.send)
-        send.tintColor = .white
-        send.backgroundColor = currency.colors.0
-        send.addTarget(self, action: #selector(AccountFooterView.send), for: .touchUpInside)
-        let sendButton = UIBarButtonItem(customView: send)
-
-        let receive = UIButton.rounded(title: S.Button.receive)
-        receive.tintColor = .white
-        receive.backgroundColor = currency.colors.0
-        receive.addTarget(self, action: #selector(AccountFooterView.receive), for: .touchUpInside)
-        let receiveButton = UIBarButtonItem(customView: receive)
-
-        let buy = UIButton.rounded(title: S.Button.buy)
-        buy.tintColor = .white
-        buy.backgroundColor = currency.colors.0
-        buy.addTarget(self, action: #selector(AccountFooterView.buy), for: .touchUpInside)
-        let buyButton = UIBarButtonItem(customView: buy)
+        let buttons = [(S.Button.send, #selector(AccountFooterView.send)),
+                       (S.Button.receive, #selector(AccountFooterView.receive)),
+                       (S.Button.buy, #selector(AccountFooterView.buy)),
+                       (S.Button.sell, #selector(AccountFooterView.sell))].map { (title, selector) -> UIBarButtonItem in
+                        let button = UIButton.rounded(title: title)
+                        button.tintColor = .white
+                        button.backgroundColor = currency.colors.1
+                        button.addTarget(self, action: selector, for: .touchUpInside)
+                        return UIBarButtonItem(customView: button)
+        }
         
         let paddingWidth = C.padding[2]
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         
-        if currency.matches(Currencies.btc) && BRAPIClient.featureEnabled(.buyBitcoin) {
-            toolbar.items = [
-                flexibleSpace,
-                sendButton,
-                flexibleSpace,
-                receiveButton,
-                flexibleSpace,
-                buyButton,
-                flexibleSpace,
-            ]
-            buttonCount = 3
-        } else {
-            toolbar.items = [
-                flexibleSpace,
-                sendButton,
-                flexibleSpace,
-                receiveButton,
-                flexibleSpace,
-            ]
-            buttonCount = 2
-        }
+        toolbar.items = [
+            flexibleSpace,
+            buttons[0],
+            flexibleSpace,
+            buttons[1],
+            flexibleSpace,
+            buttons[2],
+            flexibleSpace,
+            buttons[3],
+            flexibleSpace
+        ]
         
-        let buttonWidth = (self.bounds.width - (paddingWidth * CGFloat(buttonCount+1))) / CGFloat(buttonCount)
+        let buttonWidth = (self.bounds.width - (paddingWidth * CGFloat(buttons.count+1))) / CGFloat(buttons.count)
         let buttonHeight = CGFloat(44.0)
-        [sendButton, receiveButton, buyButton].forEach {
+        buttons.forEach {
             $0.customView?.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonHeight)
         }
     }
@@ -108,6 +90,10 @@ class AccountFooterView: UIView, Subscriber, Trackable {
     @objc private func buy() {
         saveEvent("menu.didTapBuyBitcoin")
         buyCallback?()
+    }
+    @objc private func sell() {
+        saveEvent("menu.didTapSellBitcoin")
+        sellCallback?()
     }
 
     required init(coder aDecoder: NSCoder) {

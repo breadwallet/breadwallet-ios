@@ -34,7 +34,8 @@ class AccountViewController : UIViewController, Subscriber {
 
         footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send(currency: self.currency))) }
         footerView.receiveCallback = { Store.perform(action: RootModalActions.Present(modal: .receive(currency: self.currency))) }
-        footerView.buyCallback = { Store.perform(action: RootModalActions.Present(modal: .buy)) }
+        footerView.buyCallback = { Store.perform(action: RootModalActions.Present(modal: .buy(currency: self.currency))) }
+        footerView.sellCallback = { Store.perform(action: RootModalActions.Present(modal: .sell(currency: self.currency))) }
     }
 
     //MARK: - Private
