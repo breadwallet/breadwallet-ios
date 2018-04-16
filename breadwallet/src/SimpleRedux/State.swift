@@ -107,7 +107,8 @@ enum RootModal {
     case loginAddress
     case loginScan
     case requestAmount(currency: CurrencyDef)
-    case buy
+    case buy(currency: CurrencyDef)
+    case sell(currency: CurrencyDef)
 }
 
 enum SyncState {
@@ -230,8 +231,10 @@ func ==(lhs: RootModal, rhs: RootModal) -> Bool {
         return true
     case (.requestAmount(let lhsCurrency), .requestAmount(let rhsCurrency)):
         return lhsCurrency.code == rhsCurrency.code
-    case (.buy, .buy):
-        return true
+    case (.buy(let lhsCurrency), .buy(let rhsCurrency)):
+        return lhsCurrency.code == rhsCurrency.code
+    case (.sell(let lhsCurrency), .sell(let rhsCurrency)):
+        return lhsCurrency.code == rhsCurrency.code
     default:
         return false
     }

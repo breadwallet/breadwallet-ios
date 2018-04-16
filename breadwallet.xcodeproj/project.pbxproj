@@ -406,8 +406,6 @@
 		CEC6AA401DEFC87300EE5AFD /* SendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6AA3F1DEFC87300EE5AFD /* SendViewController.swift */; };
 		CEC6AA421DEFC88F00EE5AFD /* ReceiveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6AA411DEFC88F00EE5AFD /* ReceiveViewController.swift */; };
 		CEC6AA441DEFCDE900EE5AFD /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6AA431DEFCDE900EE5AFD /* ModalViewController.swift */; };
-		CEC6AA491DEFD00100EE5AFD /* MenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6AA481DEFD00100EE5AFD /* MenuButton.swift */; };
-		CEC6AA4B1DEFD24C00EE5AFD /* MenuButtonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6AA4A1DEFD24C00EE5AFD /* MenuButtonType.swift */; };
 		CEC6AA4D1DF0741100EE5AFD /* ModalDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6AA4C1DF0741100EE5AFD /* ModalDisplayable.swift */; };
 		CEC6F8451E886723000795B8 /* PaymentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6F8441E886723000795B8 /* PaymentRequest.swift */; };
 		CEC6F8471E8878B6000795B8 /* PaymentRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6F8461E8878B6000795B8 /* PaymentRequestTests.swift */; };
@@ -1672,8 +1670,6 @@
 		CEC6AA3F1DEFC87300EE5AFD /* SendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = SendViewController.swift; path = src/ViewControllers/RootModals/SendViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CEC6AA411DEFC88F00EE5AFD /* ReceiveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReceiveViewController.swift; path = src/ViewControllers/RootModals/ReceiveViewController.swift; sourceTree = "<group>"; };
 		CEC6AA431DEFCDE900EE5AFD /* ModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalViewController.swift; path = src/ViewControllers/RootModals/ModalViewController.swift; sourceTree = "<group>"; };
-		CEC6AA481DEFD00100EE5AFD /* MenuButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuButton.swift; path = src/Controls/MenuButton.swift; sourceTree = "<group>"; };
-		CEC6AA4A1DEFD24C00EE5AFD /* MenuButtonType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuButtonType.swift; path = src/Controls/MenuButtonType.swift; sourceTree = "<group>"; };
 		CEC6AA4C1DF0741100EE5AFD /* ModalDisplayable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalDisplayable.swift; path = src/ViewControllers/RootModals/ModalDisplayable.swift; sourceTree = "<group>"; };
 		CEC6F8441E886723000795B8 /* PaymentRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentRequest.swift; path = src/PaymentRequest.swift; sourceTree = "<group>"; };
 		CEC6F8461E8878B6000795B8 /* PaymentRequestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentRequestTests.swift; sourceTree = "<group>"; };
@@ -3163,52 +3159,52 @@
 		CE20C90F1DBE5B5100C8397A /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				CE6BCF5C1EE9E89A0029849C /* CustomTitleView.swift */,
-				CED341321EF5A5C00014912A /* InAppAlert.swift */,
+				CEF3E8301DE554F1007C0A9E /* AnimatedIcons */,
+				CEC6AA471DEFCFCD00EE5AFD /* Controls */,
 				CE3645461E7B40280079D0CF /* PinPadCells */,
 				CECCE5AC1E04AD4100D99448 /* SendViewCells */,
 				CEBF32F71DDD191300348FC6 /* TransactionCells */,
-				CEF3E8301DE554F1007C0A9E /* AnimatedIcons */,
-				CEC6AA471DEFCFCD00EE5AFD /* Controls */,
-				CE20C9101DBE5B6F00C8397A /* Circle.swift */,
-				7C9724651FF07B9A004248C4 /* StatusPip.swift */,
-				CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */,
-				CEAA9E961DC18E1F0066731D /* PhraseView.swift */,
-				CEAA9E9A1DC2B9320066731D /* ConfirmPhrase.swift */,
-				CEAA9EA71DC3342E0066731D /* PinView.swift */,
-				CEBF32ED1DDBC30000348FC6 /* ShadowButton.swift */,
-				CEBF32F11DDCE10D00348FC6 /* AccountHeaderView.swift */,
+				CEEC708D1E954AAB00EF788E /* AboutCell.swift */,
 				CEBF32F31DDCE12900348FC6 /* AccountFooterView.swift */,
+				CEBF32F11DDCE10D00348FC6 /* AccountHeaderView.swift */,
 				CEF3E82C1DE528BF007C0A9E /* AlertView.swift */,
-				CEF3E82E1DE534C5007C0A9E /* GradientView.swift */,
-				CEC6AA3C1DEE687000EE5AFD /* RadialGradientView.swift */,
-				CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */,
-				CE25BF8C1DF3B8A500BC67B6 /* InViewAlert.swift */,
+				CEE20C2E1EA3E5820086F724 /* BlinkingView.swift */,
 				CEA362671E00EE320061FC0E /* CameraGuideView.swift */,
+				CE20C9101DBE5B6F00C8397A /* Circle.swift */,
+				CEAA9E9A1DC2B9320066731D /* ConfirmPhrase.swift */,
+				CE6BCF5C1EE9E89A0029849C /* CustomTitleView.swift */,
+				CE4C1CC51ED65D830063E184 /* DrawableCircle.swift */,
+				CE6DCC261E6108D50044257B /* EnterPhraseCell.swift */,
+				CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */,
+				CEEC70911E95DA4400EF788E /* GradientSwitch.swift */,
+				CEF3E82E1DE534C5007C0A9E /* GradientView.swift */,
+				CE0822651FCE059A00EF371D /* HomeScreenCell.swift */,
+				CED341321EF5A5C00014912A /* InAppAlert.swift */,
+				CE25BF8C1DF3B8A500BC67B6 /* InViewAlert.swift */,
+				CEBF292D1EF99E55005C330A /* LightWeightAlert.swift */,
 				CE8CD8E21E31978100785E02 /* LoginBackgroundTriangle.swift */,
 				CECB9DB51E4985CE0081A172 /* LoginBackgroundView.swift */,
-				CE6B6B491E54C0CA00B31405 /* SecurityCenterCell.swift */,
-				CE6DCC261E6108D50044257B /* EnterPhraseCell.swift */,
-				CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */,
-				CE6DCC2F1E6666470044257B /* NonScrollingCollectionView.swift */,
-				CE124CFF1E69170900DFA146 /* SyncingView.swift */,
-				CEEC70801E90C04700EF788E /* SeparatorCell.swift */,
-				CEEC70891E945E3B00EF788E /* UnEditableTextView.swift */,
-				CEEC708D1E954AAB00EF788E /* AboutCell.swift */,
-				CEEC70911E95DA4400EF788E /* GradientSwitch.swift */,
-				CE83DE291E9EB7F600D07636 /* SendAmountCell.swift */,
-				CEE20C2C1EA288FA0086F724 /* UpdatingLabel.swift */,
-				CEE20C2E1EA3E5820086F724 /* BlinkingView.swift */,
-				CE5E6C931EB7964900A476DB /* WalletDisabledView.swift */,
-				CE8F0AE21EB91BB500AA7642 /* SearchHeaderView.swift */,
-				CE2DC1381EBC36EE000FE727 /* Prompt.swift */,
-				CE4C1CC51ED65D830063E184 /* DrawableCircle.swift */,
-				CEBF292D1EF99E55005C330A /* LightWeightAlert.swift */,
-				CE0822651FCE059A00EF371D /* HomeScreenCell.swift */,
-				7C7F18EC1FED9A3B0030230E /* TxStatusIndicator.swift */,
 				7CBA74E720227D1300FBBFA9 /* MenuCell.swift */,
+				CEE1F5621DF13E5A00D733AD /* ModalHeaderView.swift */,
+				CE6DCC2F1E6666470044257B /* NonScrollingCollectionView.swift */,
+				CEAA9E961DC18E1F0066731D /* PhraseView.swift */,
+				CEAA9EA71DC3342E0066731D /* PinView.swift */,
+				CE2DC1381EBC36EE000FE727 /* Prompt.swift */,
+				CEC6AA3C1DEE687000EE5AFD /* RadialGradientView.swift */,
+				CE8F0AE21EB91BB500AA7642 /* SearchHeaderView.swift */,
+				CE6B6B491E54C0CA00B31405 /* SecurityCenterCell.swift */,
+				CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */,
+				CE83DE291E9EB7F600D07636 /* SendAmountCell.swift */,
+				CEEC70801E90C04700EF788E /* SeparatorCell.swift */,
+				CEBF32ED1DDBC30000348FC6 /* ShadowButton.swift */,
+				7C9724651FF07B9A004248C4 /* StatusPip.swift */,
 				7C230E742037AD52002F0FF1 /* SyncingIndicator.swift */,
+				CE124CFF1E69170900DFA146 /* SyncingView.swift */,
 				CE65C664207B0BEF000C99C4 /* TokenCell.swift */,
+				7C7F18EC1FED9A3B0030230E /* TxStatusIndicator.swift */,
+				CEEC70891E945E3B00EF788E /* UnEditableTextView.swift */,
+				CEE20C2C1EA288FA0086F724 /* UpdatingLabel.swift */,
+				CE5E6C931EB7964900A476DB /* WalletDisabledView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -3395,8 +3391,6 @@
 		CEC6AA471DEFCFCD00EE5AFD /* Controls */ = {
 			isa = PBXGroup;
 			children = (
-				CEC6AA481DEFD00100EE5AFD /* MenuButton.swift */,
-				CEC6AA4A1DEFD24C00EE5AFD /* MenuButtonType.swift */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -4295,7 +4289,6 @@
 				CECCE5A91E0378FB00D99448 /* PinPadViewController.swift in Sources */,
 				CEF3D2DB1E8B55C80070178E /* UISlider+Gradient.swift in Sources */,
 				CE65C66A207D41BB000C99C4 /* CurrencyListMetaData.swift in Sources */,
-				CEC6AA4B1DEFD24C00EE5AFD /* MenuButtonType.swift in Sources */,
 				CE4CA7BC1EE3649100373F11 /* BRActivityView.swift in Sources */,
 				7CBABD9C20181D890077CB55 /* NSMutableAttributedString+Additions.swift in Sources */,
 				CEC6AA421DEFC88F00EE5AFD /* ReceiveViewController.swift in Sources */,
@@ -4351,7 +4344,6 @@
 				22E773041EE7813000397E0E /* Bonjour.swift in Sources */,
 				7CE940E61FEB8A5F005A2B53 /* TxDetailRowCell.swift in Sources */,
 				CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */,
-				CEC6AA491DEFD00100EE5AFD /* MenuButton.swift in Sources */,
 				CEF61B121ECF52C700C7EA6A /* AmountViewController.swift in Sources */,
 				CEBF32F21DDCE10D00348FC6 /* AccountHeaderView.swift in Sources */,
 				CECCE5B21E04B00D00D99448 /* SendCell.swift in Sources */,

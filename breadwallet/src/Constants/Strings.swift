@@ -36,6 +36,7 @@ enum S {
         static let send = NSLocalizedString("Button.send", value: "Send", comment: "send button")
         static let receive = NSLocalizedString("Button.receive", value: "Receive", comment: "receive button")
         static let buy = NSLocalizedString("Button.buy", value: "Buy", comment: "buy button")
+        static let sell = NSLocalizedString("Button.sell", value: "Sell", comment: "sell button")
         static let continueAction = NSLocalizedString("Button.continueAction", value: "Continue", comment: "prompt continue button")
         static let dismiss = NSLocalizedString("Button.dismiss", value: "Dismiss", comment: "prompt dismiss button")
         static let home = NSLocalizedString("Button.home", value: "Home", comment: "prompt home button")
