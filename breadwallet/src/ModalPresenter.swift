@@ -395,7 +395,7 @@ class ModalPresenter : Subscriber, Trackable {
                 Setting(title: S.TokenList.manageTitle, callback: { [weak self] in
                     guard let `self` = self else { return }
                     guard let kvStore = self.primaryWalletManager.apiClient?.kv else { return }
-                    let manage = TokenListViewController(type: .manage, kvStore: kvStore)
+                    let manage = EditWalletsViewController(type: .manage, kvStore: kvStore)
                     settingsNav.pushViewController(manage, animated: true)
                 })
             ],

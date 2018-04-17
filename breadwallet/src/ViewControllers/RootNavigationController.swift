@@ -65,7 +65,7 @@ class RootNavigationController : UINavigationController {
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        if topViewController is HomeScreenViewController || topViewController is TokenListViewController {
+        if topViewController is HomeScreenViewController || topViewController is EditWalletsViewController {
             return .default
         } else {
             return .lightContent
@@ -92,7 +92,7 @@ extension RootNavigationController : UINavigationControllerDelegate {
     }
 
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        if viewController is TokenListViewController {
+        if viewController is EditWalletsViewController {
             setDarkStyle()
         } else {
             setLightStyle()
