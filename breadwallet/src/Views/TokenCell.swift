@@ -18,7 +18,8 @@ class TokenCell : UITableViewCell {
     private var address: String = ""
     private var listType: TokenListType = .add
     private var isTokenHidden = false
-    
+    private var tokenIconLabel = UILabel.init(font: .customBold(size: 18.0), color: .white)
+
     var didAddToken:((String)->Void)?
     var didRemoveToken:((String)->Void)?
     
@@ -27,13 +28,14 @@ class TokenCell : UITableViewCell {
         setupViews()
     }
 
-    func set(name: String, code: String, address: String, listType: TokenListType, isTokenHidden: Bool) {
-        header.text = code
-        subheader.text = name
-        icon.image = #imageLiteral(resourceName: "TempBLogo")
-        self.address = address
+    func set(token: StoredTokenData, listType: TokenListType) {
+        header.text = token.code
+        subheader.text = token.name
+        self.address = token.address
         self.listType = listType
-        self.isTokenHidden = isTokenHidden
+        self.isTokenHidden = token.isHidden
+        iconBackground.backgroundColor = UIColor.fromHex(token.colors[0])
+        tokenIconLabel.text = String(token.name[...token.name.startIndex])
     }
 
     private func setupViews() {
@@ -48,6 +50,7 @@ class TokenCell : UITableViewCell {
         contentView.addSubview(iconBackground)
         iconBackground.addSubview(icon)
         contentView.addSubview(button)
+        iconBackground.addSubview(tokenIconLabel)
     }
 
     private func addConstraints() {
@@ -58,6 +61,7 @@ class TokenCell : UITableViewCell {
             iconBackground.heightAnchor.constraint(equalToConstant: 44.0),
             iconBackground.widthAnchor.constraint(equalToConstant: 44.0)])
         icon.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[1], C.padding[1]+2, -C.padding[1], -C.padding[1]))
+        tokenIconLabel.constrain(toSuperviewEdges: UIEdgeInsetsMake(C.padding[1], C.padding[1]+2, -C.padding[1], -C.padding[1]))
         header.constrain([
             header.leadingAnchor.constraint(equalTo: iconBackground.trailingAnchor, constant: C.padding[1]),
             header.bottomAnchor.constraint(equalTo: contentView.centerYAnchor)])
@@ -78,6 +82,7 @@ class TokenCell : UITableViewCell {
         iconBackground.layer.cornerRadius = 4.0
         iconBackground.layer.masksToBounds = true
         setInitialButtonState()
+        tokenIconLabel.textAlignment = .center
     }
     
     private func setInitialButtonState() {

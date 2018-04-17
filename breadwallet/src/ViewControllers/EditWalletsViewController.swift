@@ -99,8 +99,7 @@ class EditWalletsViewController : UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? TokenCell else { return UITableViewCell() }
-        let token = tokens[indexPath.row]
-        cell.set(name: token.name, code: token.code, address: token.address, listType: type, isTokenHidden: token.isHidden)
+        cell.set(token: tokens[indexPath.row], listType: type)
         cell.didAddToken = { [unowned self] address in
             switch self.type {
             case .add:
