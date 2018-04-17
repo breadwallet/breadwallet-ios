@@ -40,7 +40,7 @@ enum TokenListType {
     }
 }
 
-class TokenListViewController : UITableViewController {
+class EditWalletsViewController : UITableViewController {
 
     private let type: TokenListType
     private let cellIdentifier = "CellIdentifier"
