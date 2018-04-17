@@ -573,9 +573,9 @@ class ModalPresenter : Subscriber, Trackable {
     private func presentPlatformWebViewController(_ mountPoint: String) {
         let vc: BRWebViewController
         #if Debug || Testflight
-            vc = BRWebViewController(bundleName: "bread-frontend-staging", mountPoint: mountPoint, walletManagers: walletManagers)
+            vc = BRWebViewController(bundleName: "brd-web-staging", mountPoint: mountPoint, walletManagers: walletManagers)
         #else
-            vc = BRWebViewController(bundleName: "bread-frontend", mountPoint: mountPoint, walletManagers: walletManagers)
+            vc = BRWebViewController(bundleName: "brd-web", mountPoint: mountPoint, walletManagers: walletManagers)
         #endif
         vc.startServer()
         vc.preload()
