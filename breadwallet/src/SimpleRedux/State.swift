@@ -61,7 +61,6 @@ extension State {
                                   Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: 1),
                                   Currencies.eth.code: WalletState.initial(Currencies.eth, displayOrder: 2),
                                   Currencies.brd.code: WalletState.initial(Currencies.brd, displayOrder: 3),
-                                  Currencies.tst.code: WalletState.initial(Currencies.tst, displayOrder: 4)
             ])
     }
     

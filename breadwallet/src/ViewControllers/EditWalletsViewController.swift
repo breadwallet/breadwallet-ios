@@ -192,7 +192,10 @@ extension StoredTokenData {
             do {
                 let path = Bundle.main.path(forResource: "tokens", ofType: "json")
                 let data = try Data(contentsOf: URL(fileURLWithPath: path!))
-                let tokens = try JSONDecoder().decode([StoredTokenData].self, from: data)
+                var tokens = try JSONDecoder().decode([StoredTokenData].self, from: data)
+                if E.isDebug || E.isTestFlight {
+                    tokens.append(StoredTokenData.tst)
+                }
                 DispatchQueue.main.async {
                     callback(tokens)
                 }
@@ -200,5 +203,11 @@ extension StoredTokenData {
                 print("json errro: \(e)")
             }
         }
+    }
+}
+
+extension StoredTokenData {
+    static var tst: StoredTokenData {
+        return StoredTokenData(address: E.isTestnet ?  "0x722dd3f80bac40c951b51bdd28dd19d435762180" : "0x3efd578b271d034a69499e4a2d933c631d44b9ad", name: "Test Token", code: "TST", colors: ["FAFAFA", "FAFAFA"], isHidden: false)
     }
 }
