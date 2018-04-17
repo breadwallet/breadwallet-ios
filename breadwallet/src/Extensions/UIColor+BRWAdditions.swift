@@ -172,3 +172,20 @@ extension UIColor {
         return UIColor(red: 236.0/255.0, green: 236.0/255.0, blue: 236.0/255.0, alpha: 1.0)
     }
 }
+
+extension UIColor {
+    static func fromHex(_ hex: String) -> UIColor {
+        var sanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        if sanitized.hasPrefix("#") {
+            sanitized.remove(at: sanitized.startIndex)
+        }
+        guard sanitized.count == 6 else { return .lightGray }
+        var rgbValue: UInt32 = 0
+        Scanner(string: sanitized).scanHexInt32(&rgbValue)
+        return UIColor(
+            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+            alpha: CGFloat(1.0))
+    }
+}
