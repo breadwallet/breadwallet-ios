@@ -126,6 +126,7 @@ class EditWalletsViewController : UITableViewController {
     }
     
     private func addAddedTokens() {
+        guard tokenAddressesToBeAdded.count > 0 else { return }
         var currentWalletCount = Store.state.wallets.values.count
         let newWallets: [String: WalletState] = tokens.filter {
             return self.tokenAddressesToBeAdded.contains($0.address)
@@ -143,6 +144,7 @@ class EditWalletsViewController : UITableViewController {
     }
     
     private func removeRemovedTokens() {
+        guard tokenAddressesToBeRemoved.count > 0 else { return }
         metaData.removeTokenAddresses(addresses: tokenAddressesToBeRemoved)
         save()
         Store.perform(action: ManageWallets.removeTokenAddresses(tokenAddressesToBeRemoved))
