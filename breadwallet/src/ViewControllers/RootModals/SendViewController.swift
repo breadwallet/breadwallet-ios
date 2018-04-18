@@ -94,14 +94,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             sendButton.constraint(.height, constant: C.Sizes.buttonHeight),
             sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[5] : -C.padding[2]) ])
         addButtonActions()
-        Store.subscribe(self, selector: { $0[self.currency].balance != $1[self.currency].balance },
+        Store.subscribe(self, selector: { $0[self.currency]?.balance != $1[self.currency]?.balance },
                         callback: { [unowned self] in
-                            if let balance = $0[self.currency].balance {
+                            if let balance = $0[self.currency]?.balance {
                                 self.balance = balance
                             }
         })
-        Store.subscribe(self, selector: { $0[self.currency].fees != $1[self.currency].fees }, callback: { [unowned self] in
-            guard let fees = $0[self.currency].fees else { return }
+        Store.subscribe(self, selector: { $0[self.currency]?.fees != $1[self.currency]?.fees }, callback: { [unowned self] in
+            guard let fees = $0[self.currency]?.fees else { return }
             self.sender.updateFeeRates(fees, level: self.feeSelection)
             if self.currency is Bitcoin {
                 self.amountView.canEditFee = (fees.regular != fees.economy) || self.currency.matches(Currencies.btc)
@@ -145,7 +145,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         amountView.didUpdateFee = strongify(self) { myself, fee in
             guard myself.currency is Bitcoin else { return }
             myself.feeSelection = fee
-            if let fees = myself.currency.state.fees {
+            if let fees = myself.currency.state?.fees {
                 myself.sender.updateFeeRates(fees, level: fee)
             }
             myself.amountView.updateBalanceLabel()

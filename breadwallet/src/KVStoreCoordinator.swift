@@ -16,7 +16,7 @@ class KVStoreCoordinator : Subscriber {
     }
 
     private func setupStoredCurrencyList() {
-        //If stored currency list metadat doesn't exist, create a new one
+        //If stored currency list metadata doesn't exist, create a new one
         guard let currencyMetaData = CurrencyListMetaData(kvStore: kvStore) else {
             let newCurrencyListMetaData = CurrencyListMetaData()
             set(newCurrencyListMetaData)
@@ -50,13 +50,14 @@ class KVStoreCoordinator : Subscriber {
 
     func listenForWalletChanges() {
         Store.subscribe(self,
-                            selector: { $0[Currencies.btc].creationDate != $1[Currencies.btc].creationDate },
+                        selector: { $0[Currencies.btc]?.creationDate != $1[Currencies.btc]?.creationDate },
                             callback: {
                                 if let existingInfo = WalletInfo(kvStore: self.kvStore) {
                                     Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(existingInfo.creationDate))
                                 } else {
-                                    let newInfo = WalletInfo(name: $0[Currencies.btc].name)
-                                    newInfo.creationDate = $0[Currencies.btc].creationDate
+                                    guard let btcState = $0[Currencies.btc] else { return }
+                                    let newInfo = WalletInfo(name: btcState.name)
+                                    newInfo.creationDate = btcState.creationDate
                                     self.set(newInfo)
                                 }
         })

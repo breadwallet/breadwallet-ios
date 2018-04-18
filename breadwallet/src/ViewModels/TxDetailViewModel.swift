@@ -73,7 +73,7 @@ struct TxDetailViewModel: TxViewModel {
 
 extension TxDetailViewModel {
     init(tx: Transaction) {
-        let rate = tx.currency.state.currentRate ?? Rate.empty
+        let rate = tx.currency.state?.currentRate ?? Rate.empty
         amount = TxDetailViewModel.tokenAmount(tx: tx) ?? ""
         
         let fiatAmounts = TxDetailViewModel.fiatAmounts(tx: tx, currentRate: rate)
@@ -109,7 +109,7 @@ extension TxDetailViewModel {
     /// Assumes fiat currency does not change
     private static func exchangeRateText(tx: Transaction) -> String? {
         guard let rate = tx.metaData?.exchangeRate,
-            let symbol = tx.currency.state.currentRate?.currencySymbol else { return nil }
+            let symbol = tx.currency.state?.currentRate?.currencySymbol else { return nil }
         
         let nf = NumberFormatter()
         nf.currencySymbol = symbol

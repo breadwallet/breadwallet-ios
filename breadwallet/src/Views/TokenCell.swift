@@ -36,6 +36,7 @@ class TokenCell : UITableViewCell {
         self.isTokenHidden = token.isHidden
         iconBackground.backgroundColor = UIColor.fromHex(token.colors[0])
         tokenIconLabel.text = String(token.name[...token.name.startIndex])
+        setInitialButtonState()
     }
 
     private func setupViews() {
@@ -105,7 +106,7 @@ class TokenCell : UITableViewCell {
         button.layer.borderColor = UIColor.blue.cgColor
         button.setTitle(listType.addTitle, for: .normal)
         button.tintColor = .blue
-        didAddToken?(address)
+        didRemoveToken?(address)
     }
     
     private func setRemoveButton() {

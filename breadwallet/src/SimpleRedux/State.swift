@@ -23,10 +23,9 @@ struct State {
     let walletID: String?
     let wallets: [String: WalletState]
     
-    subscript(currency: CurrencyDef) -> WalletState {
+    subscript(currency: CurrencyDef) -> WalletState? {
         guard let walletState = wallets[currency.code] else {
-            // this should never happen as long as all currencies in use are initialized in State.initial
-            fatalError("unsupported currency!")
+            return nil
         }
         return walletState
     }
@@ -241,7 +240,7 @@ func ==(lhs: RootModal, rhs: RootModal) -> Bool {
 
 
 extension CurrencyDef {
-    var state: WalletState {
+    var state: WalletState? {
         return Store.state[self]
     }
 }

@@ -86,44 +86,65 @@ struct WalletChange: Trackable {
     }
     
     func setProgress(progress: Double, timestamp: UInt32) -> WalletAction {
-        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(syncProgress: progress, lastBlockTimestamp: timestamp)) })
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(syncProgress: progress, lastBlockTimestamp: timestamp)) })
     }
     func setSyncingState(_ syncState: SyncState) -> WalletAction {
-        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(syncState: syncState)) })
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(syncState: syncState)) })
     }
     func setBalance(_ balance: UInt256) -> WalletAction {
-        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(balance: balance)) })
+        return WalletAction(reduce: {
+            guard let walletState = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: walletState.mutate(balance: balance)) })
     }
     func setTransactions(_ transactions: [Transaction]) -> WalletAction {
-        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(transactions: transactions)) })
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(transactions: transactions)) })
     }
     func setWalletName(_ name: String) -> WalletAction {
-        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(name: name)) })
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(name: name)) })
     }
     func setWalletCreationDate(_ date: Date) -> WalletAction {
-        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(creationDate: date)) })
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(creationDate: date)) })
     }
     func setIsRescanning(_ isRescanning: Bool) -> WalletAction {
-        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(isRescanning: isRescanning)) })
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(isRescanning: isRescanning)) })
     }
     
     func setExchangeRates(currentRate: Rate, rates: [Rate]) -> WalletAction {
         UserDefaults.setCurrentRateData(newValue: currentRate.dictionary, forCode: currentRate.reciprocalCode)
-
-        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(currentRate: currentRate, rates: rates)) })
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(currentRate: currentRate, rates: rates)) })
     }
     
     func setExchangeRate(_ currentRate: Rate) -> WalletAction {
-        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(currentRate: currentRate)) })
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(currentRate: currentRate)) })
     }
     
     func setFees(_ fees: Fees) -> WalletAction {
-        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(fees: fees)) })
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(fees: fees)) })
     }
     
     func setRecommendScan(_ recommendRescan: Bool) -> WalletAction {
         saveEvent("event.recommendRescan")
-        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(recommendRescan: recommendRescan)) })
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(recommendRescan: recommendRescan)) })
     }
 
     func setMaxDigits(_ maxDigits: Int) -> WalletAction {
@@ -131,7 +152,9 @@ struct WalletChange: Trackable {
             UserDefaults.maxDigits = maxDigits
         }
         saveEvent("maxDigits.set", attributes: ["maxDigits": "\(maxDigits)"])
-        return WalletAction(reduce: { $0.mutate(walletState: $0[self.currency].mutate(maxDigits: maxDigits)) })
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(maxDigits: maxDigits)) })
     }
     
     func set(_ walletState: WalletState) -> WalletAction {

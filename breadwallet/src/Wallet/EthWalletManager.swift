@@ -22,9 +22,11 @@ class EthWalletManager : WalletManager {
     var address: String?
     var gasPrice: UInt256 = 0
     var walletID: String?
-    
-    var tokens: [ERC20Token] = []
-
+    var tokens: [ERC20Token] = [] {
+        didSet {
+            refresh()
+        }
+    }
     var ethAddress: BREthereumAddress?
     var account: BREthereumAccount?
     var ethWallet: BREthereumWallet?
@@ -41,7 +43,7 @@ class EthWalletManager : WalletManager {
         if let address = addressAsString(self.ethAddress) {
             if let address = String(cString: address, encoding: .utf8) {
                 self.address = address
-                Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(receiveAddress: address)))
+                Store.perform(action: WalletChange(self.currency).set(self.currency.state!.mutate(receiveAddress: address)))
             }
         }
         if let walletID = getWalletID() {
@@ -84,7 +86,7 @@ class EthWalletManager : WalletManager {
                     self.pendingTransactions.remove(at: index)
                 }
             }
-            let transactions = (self.pendingTransactions + txList).map { EthTransaction(tx: $0, accountAddress: address, kvStore: self.kvStore, rate: self.currency.state.currentRate) }
+            let transactions = (self.pendingTransactions + txList).map { EthTransaction(tx: $0, accountAddress: address, kvStore: self.kvStore, rate: self.currency.state?.currentRate) }
             Store.perform(action: WalletChange(self.currency).setTransactions(transactions))
         })
     }

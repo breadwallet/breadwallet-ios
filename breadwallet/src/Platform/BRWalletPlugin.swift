@@ -268,7 +268,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             let currencies = Store.state.currencies.filter { code == nil || $0.code.lowercased() == code!.lowercased() }
             for currency in currencies {
                 response.append(["currency": currency.code,
-                                 "address": Store.state[currency].receiveAddress ?? ""])
+                                 "address": Store.state[currency]?.receiveAddress ?? ""])
             }
             return try BRHTTPResponse(request: req, code: 200, json: (response.count == 1) ? response.first! : response)
         }
@@ -415,7 +415,7 @@ extension BRWalletPlugin {
             d["receive_address"] = wallet.receiveAddress
             //d["watch_only"] = TODO - add watch only
         }
-        d["btc_denomination_digits"] = walletManager.currency.state.maxDigits
+        d["btc_denomination_digits"] = walletManager.currency.state?.maxDigits
         d["local_currency_code"] = Store.state.defaultCurrencyCode
         return d
     }
@@ -424,7 +424,7 @@ extension BRWalletPlugin {
     func currencyFormat(_ amount: UInt64) -> [String: Any] {
         var d = [String: Any]()
         guard let walletManager = btcWalletManager else { return d }
-        if let rate = walletManager.currency.state.currentRate {
+        if let rate = walletManager.currency.state?.currentRate {
             let amount = Amount(amount: UInt256(amount),
                                 currency: walletManager.currency,
                                 rate: rate)
@@ -439,7 +439,7 @@ extension BRWalletPlugin {
         d["id"] = currency.code
         d["ticker"] = currency.code
         d["name"] = currency.name
-        if let balance = currency.state.balance {
+        if let balance = currency.state?.balance {
             var numerator = balance.string(radix: 10)
             var denomiator = UInt256(power: currency.commonUnit.decimals).string(radix: 10)
             d["balance"] = ["currency": currency.code,
@@ -448,13 +448,13 @@ extension BRWalletPlugin {
         
             var rate: Rate?
             if let code = fiatCode {
-                rate = currency.state.rates.filter({ $0.code == code }).first
+                rate = currency.state?.rates.filter({ $0.code == code }).first
             } else {
-                rate = currency.state.currentRate
+                rate = currency.state?.currentRate
             }
             
             if let rate = rate {
-                let amount = Amount(amount: balance, currency: currency, rate: currency.state.currentRate)
+                let amount = Amount(amount: balance, currency: currency, rate: currency.state?.currentRate)
                 let decimals = amount.localFormat.maximumFractionDigits
                 let denominatorValue = (pow(10,decimals) as NSDecimalNumber).doubleValue
                 
