@@ -14,7 +14,7 @@ class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Public
     let primaryWalletManager: BTCWalletManager
-    let walletManagers: [String: WalletManager]
+    var walletManagers: [String: WalletManager]
     lazy var supportCenter: SupportCenterContainer = {
         return SupportCenterContainer(walletManagers: self.walletManagers, apiClient: self.noAuthApiClient)
     }()
