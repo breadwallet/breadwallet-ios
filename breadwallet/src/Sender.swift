@@ -226,7 +226,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
     private func validate(address: String, amount: UInt256) -> SenderValidationResult {
         guard address.isValidAddress else { return .invalidAddress }
         guard !walletManager.isOwnAddress(address) else { return .ownAddress }
-        guard currency.state.currentRate != nil else { return .noExchangeRate }
+        guard currency.state?.currentRate != nil else { return .noExchangeRate }
         
         if let minOutput = walletManager.wallet?.minOutputAmount {
             guard amount >= minOutput else { return .outputTooSmall(minOutput) }
@@ -237,7 +237,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         }
         
         if currency.matches(Currencies.btc) {
-            guard currency.state.fees != nil else {
+            guard currency.state?.fees != nil else {
                 return .noFees
             }
         }
@@ -311,7 +311,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
     }
     
     private func setMetaData(btcTx: BRTxRef) {
-        guard let rate = currency.state.currentRate, let feePerKb = walletManager.wallet?.feePerKb else { print("Incomplete tx metadata"); return }
+        guard let rate = currency.state?.currentRate, let feePerKb = walletManager.wallet?.feePerKb else { print("Incomplete tx metadata"); return }
         guard let tx = BtcTransaction(btcTx, walletManager: walletManager, kvStore: kvStore, rate: rate) else { return }
         
         tx.createMetaData(rate: rate, comment: comment, feeRate: Double(feePerKb))
@@ -474,7 +474,7 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
     // MARK: Private
     
     private func setMetaData(ethTx: EthTx) {
-        guard let rate = currency.state.currentRate else { print("Incomplete tx metadata"); return }
+        guard let rate = currency.state?.currentRate else { print("Incomplete tx metadata"); return }
         let tx = EthTransaction(tx: ethTx, accountAddress: "", kvStore: kvStore, rate: rate)
         tx.createMetaData(rate: rate, comment: comment)
         // TODO:ETHLIGHT the tx will not be populated until next network fetch

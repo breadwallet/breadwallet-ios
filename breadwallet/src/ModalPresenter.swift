@@ -266,7 +266,7 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func makeSendView(currency: CurrencyDef) -> UIViewController? {
-        guard !currency.state.isRescanning else {
+        guard !(currency.state?.isRescanning ?? false) else {
             let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
             topViewController?.present(alert, animated: true, completion: nil)
@@ -406,7 +406,7 @@ class ModalPresenter : Subscriber, Trackable {
                 //                    settingsNav.pushViewController(PushNotificationsViewController(), animated: true)
                 //                }),
                 Setting(title: LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit, accessoryText: {
-                    guard let rate = Currencies.btc.state.currentRate else { return "" }
+                    guard let rate = Currencies.btc.state?.currentRate else { return "" }
                     let amount = Amount(amount: UInt256(walletManager.spendingLimit), currency: Currencies.btc, rate: rate)
                     return amount.fiatDescription
                 }, callback: { [weak self] in

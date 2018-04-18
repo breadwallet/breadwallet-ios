@@ -20,7 +20,7 @@ class ExchangeUpdater : Subscriber {
             Store.subscribe(self,
                             selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode },
                             callback: { state in
-                                guard let currentRate = state[currency].rates.first( where: { $0.code == state.defaultCurrencyCode }) else { return }
+                                guard let currentRate = state[currency]!.rates.first( where: { $0.code == state.defaultCurrencyCode }) else { return }
                                 Store.perform(action: WalletChange(currency).setExchangeRate(currentRate))
             })
         }

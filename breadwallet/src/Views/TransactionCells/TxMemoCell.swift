@@ -71,7 +71,7 @@ class TxMemoCell: TxDetailRowCell {
     }
     
     fileprivate func saveComment(comment: String) {
-        guard let rate = Store.state[viewModel.tx.currency].currentRate else { return }
+        guard let rate = Store.state[viewModel.tx.currency]?.currentRate else { return }
         viewModel.tx.saveComment(comment: comment, rate: rate)
         Store.trigger(name: .txMemoUpdated(viewModel.tx.hash))
     }

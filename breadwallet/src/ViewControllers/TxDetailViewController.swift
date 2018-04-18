@@ -72,10 +72,13 @@ class TxDetailViewController: UIViewController, Subscriber {
         registerForKeyboardNotifications()
         
         // refresh if rate changes
-        Store.lazySubscribe(self, selector: { $0[self.viewModel.currency].currentRate != $1[self.viewModel.currency].currentRate }, callback: { _ in self.reload() })
+        Store.lazySubscribe(self, selector: { $0[self.viewModel.currency]?.currentRate != $1[self.viewModel.currency]?.currentRate }, callback: { _ in self.reload() })
         // refresh if tx state changes
-        Store.lazySubscribe(self, selector: { $0[self.viewModel.currency].transactions != $1[self.viewModel.currency].transactions }, callback: { [unowned self] in
-            guard let tx = $0[self.viewModel.currency].transactions.first(where: { $0.hash == self.viewModel.transactionHash }) else { return }
+        Store.lazySubscribe(self, selector: {
+            guard let oldTransactions = $0[self.viewModel.currency]?.transactions else { return false }
+            guard let newTransactions = $1[self.viewModel.currency]?.transactions else { return false }
+            return oldTransactions != newTransactions }, callback: { [unowned self] in
+            guard let tx = $0[self.viewModel.currency]?.transactions.first(where: { $0.hash == self.viewModel.transactionHash }) else { return }
             self.transaction = tx
         })
     }

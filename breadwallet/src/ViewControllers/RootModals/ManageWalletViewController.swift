@@ -72,8 +72,8 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
         textField.delegate = self
 
         // TODO:BCH
-        self.textField.text = Currencies.btc.state.name
-        let creationDate = Currencies.btc.state.creationDate
+        self.textField.text = Currencies.btc.state?.name
+        let creationDate = Currencies.btc.state?.creationDate ?? Date()
         if creationDate.timeIntervalSince1970 > 0 {
             let df = DateFormatter()
             df.dateFormat = "MMMM d, yyyy"

@@ -101,23 +101,15 @@ class EditWalletsViewController : UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? TokenCell else { return UITableViewCell() }
         cell.set(token: tokens[indexPath.row], listType: type)
         cell.didAddToken = { [unowned self] address in
-            switch self.type {
-            case .add:
-                if !self.tokenAddressesToBeAdded.contains(address) {
-                    self.tokenAddressesToBeAdded.append(address)
-                }
-            case .manage:
-                self.tokenAddressesToBeRemoved = self.tokenAddressesToBeRemoved.filter { $0 != address }
+            if !self.tokenAddressesToBeAdded.contains(address) {
+                self.tokenAddressesToBeAdded.append(address)
             }
+            self.tokenAddressesToBeRemoved = self.tokenAddressesToBeRemoved.filter { $0 != address }
         }
         cell.didRemoveToken = { [unowned self] address in
-            switch self.type {
-            case .add:
-                self.tokenAddressesToBeAdded = self.tokenAddressesToBeAdded.filter { $0 != address }
-            case .manage:
-                if !self.tokenAddressesToBeRemoved.contains(address) {
-                    self.tokenAddressesToBeRemoved.append(address)
-                }
+            self.tokenAddressesToBeAdded = self.tokenAddressesToBeAdded.filter { $0 != address }
+            if !self.tokenAddressesToBeRemoved.contains(address) {
+                self.tokenAddressesToBeRemoved.append(address)
             }
         }
         return cell
@@ -128,7 +120,8 @@ class EditWalletsViewController : UITableViewController {
         case .add:
             addAddedTokens()
         case .manage:
-            updateDisplayedTokens()
+            removeRemovedTokens()
+            addAddedTokens()
         }
     }
     
@@ -149,10 +142,10 @@ class EditWalletsViewController : UITableViewController {
         Store.perform(action: ManageWallets.addWallets(newWallets))
     }
     
-    private func updateDisplayedTokens() {
-//        metaData.removeTokenAddresses(addresses: tokenAddressesToBeRemoved)
-//        save()
-//        Store.perform(action: ManageWallets.removeTokenAddresses(tokenAddressesToBeRemoved))
+    private func removeRemovedTokens() {
+        metaData.removeTokenAddresses(addresses: tokenAddressesToBeRemoved)
+        save()
+        Store.perform(action: ManageWallets.removeTokenAddresses(tokenAddressesToBeRemoved))
     }
     
     private func save() {
@@ -195,6 +188,9 @@ extension StoredTokenData {
                 if E.isDebug || E.isTestFlight {
                     tokens.append(StoredTokenData.tst)
                 }
+                if E.isDebug {
+                    tokens.append(StoredTokenData.viu)
+                }
                 DispatchQueue.main.async {
                     callback(tokens)
                 }
@@ -207,6 +203,10 @@ extension StoredTokenData {
 
 extension StoredTokenData {
     static var tst: StoredTokenData {
-        return StoredTokenData(address: E.isTestnet ?  "0x722dd3f80bac40c951b51bdd28dd19d435762180" : "0x3efd578b271d034a69499e4a2d933c631d44b9ad", name: "Test Token", code: "TST", colors: ["FAFAFA", "FAFAFA"], isHidden: false)
+        return StoredTokenData(address: E.isTestnet ?  "0x722dd3f80bac40c951b51bdd28dd19d435762180" : "0x3efd578b271d034a69499e4a2d933c631d44b9ad", name: "Test Token", code: "TST", colors: ["2FB8E6", "2FB8E6"], isHidden: false)
+    }
+    //this is a random token I was airdropped...using for testing
+    static var viu: StoredTokenData {
+        return StoredTokenData(address: "0x519475b31653e46d20cd09f9fdcf3b12bdacb4f5", name: "VIU Token", code: "VIU", colors: ["2FB8E6", "2FB8E6"], isHidden: false)
     }
 }

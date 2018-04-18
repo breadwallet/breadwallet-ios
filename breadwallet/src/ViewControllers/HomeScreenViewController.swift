@@ -135,8 +135,8 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
 
     private func updateTotalAssets() {
         let fiatTotal: Decimal = Store.state.currencies.map {
-            guard let balance = Store.state[$0].balance,
-                let rate = Store.state[$0].currentRate else { return 0.0 }
+            guard let balance = Store.state[$0]?.balance,
+                let rate = Store.state[$0]?.currentRate else { return 0.0 }
             let amount = Amount(amount: balance,
                                 currency: $0,
                                 rate: rate)
@@ -147,7 +147,7 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencySymbol = Store.state[Currencies.btc].currentRate?.currencySymbol ?? ""
+        format.currencySymbol = Store.state[Currencies.btc]?.currentRate?.currencySymbol ?? ""
         self.total.text = format.string(from: fiatTotal as NSDecimalNumber)
     }
     
@@ -159,11 +159,11 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
             let oldState = $0
             let newState = $1
             $0.currencies.forEach { currency in
-                if oldState[currency].balance != newState[currency].balance {
+                if oldState[currency]?.balance != newState[currency]?.balance {
                     result = true
                 }
                 
-                if oldState[currency].currentRate?.rate != newState[currency].currentRate?.rate {
+                if oldState[currency]?.currentRate?.rate != newState[currency]?.currentRate?.rate {
                     result = true
                 }
             }

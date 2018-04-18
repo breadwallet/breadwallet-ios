@@ -86,7 +86,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     init(currency: CurrencyDef) {
         self.currency = currency
         self.isBtcSwapped = Store.state.isBtcSwapped
-        if let rate = currency.state.currentRate {
+        if let rate = currency.state?.currentRate {
             let placeholderAmount = Amount(amount: 0, currency: currency, rate: rate)
             self.exchangeRate = rate
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
@@ -219,20 +219,20 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                             selector: { $0.isBtcSwapped != $1.isBtcSwapped },
                             callback: { self.isBtcSwapped = $0.isBtcSwapped })
         Store.lazySubscribe(self,
-                            selector: { $0[self.currency].currentRate != $1[self.currency].currentRate},
+                            selector: { $0[self.currency]?.currentRate != $1[self.currency]?.currentRate},
                             callback: {
-                                if let rate = $0[self.currency].currentRate {
+                                if let rate = $0[self.currency]?.currentRate {
                                     let placeholderAmount = Amount(amount: 0, currency: self.currency, rate: rate)
                                     self.secondaryBalance.formatter = placeholderAmount.localFormat
                                     self.primaryBalance.formatter = placeholderAmount.tokenFormat
                                 }
-                                self.exchangeRate = $0[self.currency].currentRate
+                                self.exchangeRate = $0[self.currency]?.currentRate
         })
         
         Store.lazySubscribe(self,
-                            selector: { $0[self.currency].maxDigits != $1[self.currency].maxDigits},
+                            selector: { $0[self.currency]?.maxDigits != $1[self.currency]?.maxDigits},
                             callback: {
-                                if let rate = $0[self.currency].currentRate {
+                                if let rate = $0[self.currency]?.currentRate {
                                     let placeholderAmount = Amount(amount: 0, currency: self.currency, rate: rate)
                                     self.secondaryBalance.formatter = placeholderAmount.localFormat
                                     self.primaryBalance.formatter = placeholderAmount.tokenFormat
@@ -240,15 +240,16 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                                 }
         })
         Store.subscribe(self,
-                        selector: {$0[self.currency].balance != $1[self.currency].balance },
+                        selector: { $0[self.currency]?.balance != $1[self.currency]?.balance },
                         callback: { state in
-                            if let balance = state[self.currency].balance {
+                            if let balance = state[self.currency]?.balance {
                                 self.balance = balance
                             } })
         
-        Store.subscribe(self, selector: { $0[self.currency].syncState != $1[self.currency].syncState },
+        Store.subscribe(self, selector: { $0[self.currency]?.syncState != $1[self.currency]?.syncState },
                         callback: { state in
-                            switch state[self.currency].syncState {
+                            guard let syncState = state[self.currency]?.syncState else { return }
+                            switch syncState {
                             case .connecting:
                                 self.isSyncIndicatorVisible = true
                                 self.syncIndicator.text = S.SyncingView.connecting
@@ -261,9 +262,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         })
         
         Store.subscribe(self, selector: {
-            return $0[self.currency].lastBlockTimestamp != $1[self.currency].lastBlockTimestamp },
+            return $0[self.currency]?.lastBlockTimestamp != $1[self.currency]?.lastBlockTimestamp },
                         callback: { state in
-                            self.syncIndicator.progress = CGFloat(state[self.currency].syncProgress)
+                            if let progress = state[self.currency]?.syncProgress {
+                                self.syncIndicator.progress = CGFloat(progress)
+                            }
         })
     }
 
