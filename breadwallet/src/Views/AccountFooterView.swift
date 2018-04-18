@@ -88,11 +88,11 @@ class AccountFooterView: UIView, Subscriber, Trackable {
     @objc private func send() { sendCallback?() }
     @objc private func receive() { receiveCallback?() }
     @objc private func buy() {
-        saveEvent("menu.didTapBuyBitcoin")
+        saveEvent("currency.didTapBuyBitcoin", attributes: ["currency": currency.code.lowercased()])
         buyCallback?()
     }
     @objc private func sell() {
-        saveEvent("menu.didTapSellBitcoin")
+        saveEvent("currency.didTapSellBitcoin", attributes: ["currency": currency.code.lowercased()])
         sellCallback?()
     }
 
