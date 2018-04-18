@@ -87,6 +87,12 @@ class EditWalletsViewController : UITableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         reconcileChanges()
+        navigationController?.navigationBar.backgroundColor = nil
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.backgroundColor = .white
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
