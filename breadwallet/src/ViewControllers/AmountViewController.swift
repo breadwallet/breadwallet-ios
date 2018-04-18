@@ -23,11 +23,11 @@ class AmountViewController : UIViewController, Trackable {
         if let rate = currency.state?.currentRate, Store.state.isBtcSwapped {
             self.currencyToggle = ShadowButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
-            let title = currency.unitName(forDecimals: currency.state?.maxDigits ?? 8)
+            let title = currency.unitName(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals)
             self.currencyToggle = ShadowButton(title: title, type: .tertiary)
         }
         self.feeSelector = FeeSelector()
-        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: currency.state?.maxDigits ?? 8)
+        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: currency.state?.maxDigits ?? currency.commonUnit.decimals)
         self.canEditFee = (currency is Bitcoin)
         super.init(nibName: nil, bundle: nil)
     }
@@ -250,7 +250,7 @@ class AmountViewController : UIViewController, Trackable {
             amount = Amount(fiatString: output,
                             currency: currency,
                             rate: rate)
-        } else if let unit = currency.unit(forDecimals: currency.state?.maxDigits ?? 8) {
+        } else if let unit = currency.unit(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals) {
             amount = Amount(tokenString: output,
                             currency: currency,
                             unit: unit,

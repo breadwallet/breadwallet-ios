@@ -219,7 +219,7 @@ extension TransactionsTableViewController {
         cell.setTransaction(viewModel,
                             isBtcSwapped: isBtcSwapped,
                             rate: rate,
-                            maxDigits: currency.state?.maxDigits ?? 8,
+                            maxDigits: currency.state?.maxDigits ?? currency.commonUnit.decimals,
                             isSyncing: currency.state?.syncState != .success)
         return cell
     }
