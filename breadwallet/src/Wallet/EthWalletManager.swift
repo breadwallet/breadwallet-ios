@@ -13,6 +13,8 @@ import BRCore.Ethereum
 class EthWalletManager : WalletManager {
     static let defaultGasLimit: UInt64 = 48_000 // higher than standard 21000 to allow sending to contracts
     static let defaultTokenTransferGasLimit: UInt64 = 92_000
+    static let defaultGasPrice = etherCreateNumber(500, MWEI).valueInWEI // 0.5 gwei
+    static let maxGasPrice = etherCreateNumber(100, GWEI).valueInWEI // 100 gwei
 
     var peerManager: BRPeerManager?
     var wallet: BRWallet?
@@ -20,7 +22,13 @@ class EthWalletManager : WalletManager {
     var kvStore: BRReplicatedKVStore?
     var apiClient: BRAPIClient?
     var address: String?
-    var gasPrice: UInt256 = 0
+    var gasPrice: UInt256 = EthWalletManager.defaultGasPrice {
+        didSet {
+            if gasPrice > EthWalletManager.maxGasPrice {
+                gasPrice = EthWalletManager.maxGasPrice
+            }
+        }
+    }
     var walletID: String?
     var tokens: [ERC20Token] = [] {
         didSet {
