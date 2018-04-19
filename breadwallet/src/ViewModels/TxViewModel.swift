@@ -18,7 +18,7 @@ protocol TxViewModel {
     var direction: TransactionDirection { get }
     var displayAddress: String { get }
     var comment: String? { get }
-    var shouldDisplayAvailableToSpend: Bool { get }
+    var tokenTransferCode: String? { get }
 }
 
 // Default and passthru values
@@ -60,7 +60,10 @@ extension TxViewModel {
         return DateFormatter.shortDateFormatter.string(from: date)
     }
     
-    var shouldDisplayAvailableToSpend: Bool { return false }
+    var tokenTransferCode: String? {
+        guard let code = tx.metaData?.tokenTransfer, code.count > 0 else { return nil }
+        return code
+    }
 }
 
 // MARK: - Formatting

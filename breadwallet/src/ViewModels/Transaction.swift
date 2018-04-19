@@ -55,8 +55,8 @@ extension Transaction {
     var isPending: Bool { return status == .pending }
     var isValid: Bool { return status != .invalid }
     
-    func createMetaData(rate: Rate, comment: String? = nil, feeRate: Double? = nil) {
-        metaDataContainer?.createMetaData(tx: self, rate: rate, comment: comment, feeRate: feeRate)
+    func createMetaData(rate: Rate, comment: String? = nil, feeRate: Double? = nil, tokenTransfer: String? = nil) {
+        metaDataContainer?.createMetaData(tx: self, rate: rate, comment: comment, feeRate: feeRate, tokenTransfer: tokenTransfer)
     }
     
     func saveComment(comment: String, rate: Rate) {
@@ -117,7 +117,7 @@ class MetaDataContainer {
     }
     
     /// Creates and stores new metadata in KV store if it does not exist
-    func createMetaData(tx: Transaction, rate: Rate, comment: String? = nil, feeRate: Double? = nil) {
+    func createMetaData(tx: Transaction, rate: Rate, comment: String? = nil, feeRate: Double? = nil, tokenTransfer: String? = nil) {
         guard metaData == nil else { return }
         
         let newData = TxMetaData(key: key,
@@ -125,10 +125,9 @@ class MetaDataContainer {
                                  exchangeRate: rate.rate,
                                  exchangeRateCurrency: rate.code,
                                  feeRate: feeRate ?? 0.0,
-                                 deviceId: UserDefaults.standard.deviceID)
-        if let comment = comment {
-            newData.comment = comment
-        }
+                                 deviceId: UserDefaults.standard.deviceID,
+                                 comment: comment,
+                                 tokenTransfer: tokenTransfer)
         do {
             let _ = try kvStore.set(newData)
         } catch let error {

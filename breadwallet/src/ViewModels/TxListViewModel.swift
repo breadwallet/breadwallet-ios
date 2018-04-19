@@ -21,6 +21,8 @@ struct TxListViewModel: TxViewModel {
         
         if let comment = comment, comment.count > 0, isComplete {
             return comment
+        } else if let tokenCode = tokenTransferCode {
+            return String(format: S.Transaction.tokenTransfer, tokenCode.uppercased())
         } else {
             var address = tx.toAddress
             var format: String
@@ -28,7 +30,7 @@ struct TxListViewModel: TxViewModel {
             case .sent, .moved:
                 format = isComplete ? S.Transaction.sentTo : S.Transaction.sendingTo
             case .received:
-                if let tx = tx as? EthTransaction {
+                if let tx = tx as? EthLikeTransaction {
                     format = isComplete ? S.Transaction.receivedFrom : S.Transaction.receivingFrom
                     address = tx.fromAddress
                 } else {
