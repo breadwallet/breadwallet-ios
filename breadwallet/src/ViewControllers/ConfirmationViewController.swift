@@ -164,6 +164,11 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
         totalLabel.text = S.Confirmation.totalLabel
         total.text = displayTotal.description
+        
+        if currency is ERC20Token {
+            totalLabel.isHidden = true
+            total.isHidden = true
+        }
 
         cancel.tap = strongify(self) { myself in
             myself.dismiss(animated: true, completion: myself.cancelCallback)
