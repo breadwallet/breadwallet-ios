@@ -37,8 +37,8 @@ struct TxListViewModel: TxViewModel {
                     format = isComplete ? S.Transaction.receivedVia : S.Transaction.receivingVia
                 }
             }
-            if currency.matches(Currencies.bch) {
-                address = address.replacingOccurrences(of: "\(Currencies.bch.urlScheme!):", with: "")
+            if currency.matches(Currencies.bch), let urlSchemes = Currencies.bch.urlSchemes {
+                address = address.replacingOccurrences(of: "\(urlSchemes[0]):", with: "")
             }
             return String(format: format, address)
         }

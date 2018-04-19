@@ -21,8 +21,8 @@ struct PaymentRequest {
         if var url = NSURL(string: string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")) {
             if let scheme = url.scheme, let resourceSpecifier = url.resourceSpecifier, url.host == nil {
                 url = NSURL(string: "\(scheme)://\(resourceSpecifier)")!
-                
-                if url.scheme == currency.urlScheme {
+
+                if let scheme = url.scheme, let currencySchemes = currency.urlSchemes, currencySchemes.contains(scheme) {
                     let host = url.host
                     if let host = host, currency.matches(Currencies.bch) {
                         // BCH CashAddr includes the bitcoincash: prefix in the address format
@@ -42,7 +42,7 @@ struct PaymentRequest {
                         let key = pair[0]
                         var value = String(component[component.index(key.endIndex, offsetBy: 1)...])
                         value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
-                        
+
                         switch key {
                         case "amount":
                             amount = Amount(tokenString: value, currency: currency)
@@ -62,7 +62,7 @@ struct PaymentRequest {
                             return nil
                         }
                     }
-                    
+
                     type = r == nil ? .local : .remote
                     return
                 }

@@ -24,7 +24,7 @@ public protocol CurrencyDef {
     /// Primary + secondary color
     var colors: (UIColor, UIColor) { get }
     /// URL scheme for payment requests
-    var urlScheme: String? { get }
+    var urlSchemes: [String]? { get }
     /// Returns true if the currency ticker codes match
     func matches(_ other: CurrencyDef) -> Bool
     /// Checks address validity in currency-specific format
@@ -43,7 +43,7 @@ public protocol CurrencyDef {
 }
 
 public extension CurrencyDef {
-    var urlScheme: String? {
+    var urlSchemes: [String]? {
         return nil
     }
     
@@ -52,8 +52,8 @@ public extension CurrencyDef {
     }
     
     func addressURI(_ address: String) -> String? {
-        guard let scheme = urlScheme, isValidAddress(address) else { return nil }
-        return "\(scheme):\(address)"
+        guard let schemes = urlSchemes, schemes.count > 0, isValidAddress(address) else { return nil }
+        return "\(schemes[0]):\(address)"
     }
     
     func unit(forDecimals decimals: Int) -> CurrencyUnit? {
@@ -120,7 +120,7 @@ public struct Bitcoin: CurrencyDef {
     public let colors: (UIColor, UIColor)
     let dbPath: String
     let forkId: Int
-    public let urlScheme: String?
+    public let urlSchemes: [String]?
     
     public var commonUnit: CurrencyUnit {
         return Units.bitcoin
@@ -135,11 +135,11 @@ public struct Bitcoin: CurrencyDef {
     }
     
     public func addressURI(_ address: String) -> String? {
-        guard let scheme = urlScheme, isValidAddress(address) else { return nil }
+        guard let schemes = urlSchemes, isValidAddress(address) else { return nil }
         if self.matches(Currencies.bch) {
             return address
         } else {
-            return "\(scheme):\(address)"
+            return "\(schemes[0]):\(address)"
         }
     }
     
@@ -193,7 +193,7 @@ public struct Ethereum: CurrencyDef {
     public let code: String
     public let symbol: String
     public let colors: (UIColor, UIColor)
-    public let urlScheme: String?
+    public let urlSchemes: [String]?
     
     public var commonUnit: CurrencyUnit {
         return Units.eth
@@ -249,19 +249,19 @@ public struct Currencies {
                              colors: (UIColor(red:0.972549, green:0.623529, blue:0.200000, alpha:1.0), UIColor(red:0.898039, green:0.505882, blue:0.031373, alpha:1.0)),
                              dbPath: "BreadWallet.sqlite",
                              forkId: 0,
-                             urlScheme: "bitcoin")
+                             urlSchemes: ["bitcoin"])
     static let bch = Bitcoin(name: "Bitcoin Cash",
                              code: "BCH",
                              symbol: S.Symbols.btc,
                              colors: (UIColor(red:0.278431, green:0.521569, blue:0.349020, alpha:1.0), UIColor(red:0.278431, green:0.521569, blue:0.349020, alpha:1.0)),
                              dbPath: "BreadWallet-bch.sqlite",
                              forkId: 0x40,
-                             urlScheme: E.isTestnet ? "bchtest" : "bitcoincash")
+                             urlSchemes: [E.isTestnet ? "bchtest" : "bitcoincash"])
     static let eth = Ethereum(name: "Ethereum",
                               code: "ETH",
                               symbol: S.Symbols.eth,
                               colors: (UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0), UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0)),
-                              urlScheme: "ethereum")
+                              urlSchemes: ["ethereum", "ether"])
     static let brd = ERC20Token(name: "BRD",
                                 code: "BRD",
                                 symbol: "🍞",
