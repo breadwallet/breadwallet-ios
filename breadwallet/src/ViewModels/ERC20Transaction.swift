@@ -22,6 +22,8 @@ struct ERC20Transaction: EthLikeTransaction {
     let timestamp: TimeInterval
     let blockHeight: UInt64
     let confirmations: UInt64 = 1 // TODO:ERC20
+    let metaDataContainer: MetaDataContainer?
+    let kvStore: BRReplicatedKVStore?
     
     // MARK: ETH-network transaction properties
     
@@ -32,15 +34,11 @@ struct ERC20Transaction: EthLikeTransaction {
    
     // MARK: ERC20-specific properties
     
-    let event: EthLogEvent
-    
     // MARK: - Init
     
-    init(event: EthLogEvent, accountAddress: String, token: ERC20Token) {
+    init(event: EthLogEvent, accountAddress: String, token: ERC20Token, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         self.currency = token
-        self.event = event
         
-        //let ts = UInt64(event.timeStamp, radix: 16)
         self.timestamp = TimeInterval(event.timeStamp)
         self.blockHeight = event.blockNumber
         self.hash = event.transactionHash
@@ -53,6 +51,8 @@ struct ERC20Transaction: EthLikeTransaction {
             self.amount = UInt256(0)
             self.direction = .sent
             self.status = .invalid
+            self.kvStore = nil
+            self.metaDataContainer = nil
             return
         }
         
@@ -69,5 +69,47 @@ struct ERC20Transaction: EthLikeTransaction {
         
         //TODO:ERC20 confirmations?
         self.status = event.isLocal ? .pending : .complete
+        
+        // metadata
+        self.kvStore = kvStore
+        let key = UInt256(hexString: event.transactionHash).tokenTxKey
+        if let kvStore = kvStore {
+            metaDataContainer = MetaDataContainer(key: key, kvStore: kvStore)
+            if let rate = rate,
+                confirmations < 6 && direction == .received {
+                metaDataContainer!.createMetaData(tx: self, rate: rate)
+            }
+        } else {
+            metaDataContainer = nil
+        }
+    }
+    
+    /// Create a placeholder pending transaction
+    init(token: ERC20Token,
+         accountAddress: String,
+         toAddress: String,
+         amount: UInt256,
+         timestamp: TimeInterval,
+         gasPrice: UInt256,
+         hash: String,
+         kvStore: BRReplicatedKVStore?) {
+        self.currency = token
+        self.fromAddress = accountAddress
+        self.toAddress = toAddress
+        self.amount = amount
+        self.gasPrice = gasPrice
+        self.gasUsed = 0
+        self.blockHeight = 0
+        self.hash = hash
+        self.timestamp = timestamp
+        self.direction = .sent
+        self.status = .pending
+        self.kvStore = nil
+        let key = UInt256(hexString: hash).tokenTxKey
+        if let kvStore = kvStore {
+            metaDataContainer = MetaDataContainer(key: key, kvStore: kvStore)
+        } else {
+            metaDataContainer = nil
+        }
     }
 }

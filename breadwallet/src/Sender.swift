@@ -477,8 +477,6 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
         guard let rate = currency.state?.currentRate else { print("Incomplete tx metadata"); return }
         let tx = EthTransaction(tx: ethTx, accountAddress: "", kvStore: kvStore, rate: rate)
         tx.createMetaData(rate: rate, comment: comment)
-        // TODO:ETHLIGHT the tx will not be populated until next network fetch
-        //Store.trigger(name: .txMemoUpdated(tx.hash))
     }
 }
 
@@ -502,10 +500,9 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
         pinVerifier { pin in
             self.walletManager.send(token: self.currency, toAddress: address, amount: amount) { result in
                 switch result {
-                case .success(let pendingTx):
-                    //TODO:ERC20
-                    //self.setMetaData(ethTx: pendingTx)
-                    completion(.success(pendingTx.hash, pendingTx.rawTx))
+                case .success(let (pendingEthTx, pendingTokenTx)):
+                    self.setMetaData(ethTx: pendingEthTx, tokenTx: pendingTokenTx)
+                    completion(.success(pendingEthTx.tx.hash, pendingEthTx.tx.rawTx))
                 case .error(let error):
                     switch error {
                     case .httpError(let e):
@@ -518,6 +515,17 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
                 }
             }
         }
+    }
+    
+    // MARK: Private
+    
+    private func setMetaData(ethTx: EthTransaction, tokenTx: ERC20Transaction) {
+        guard let ethRate = Currencies.eth.state?.currentRate,
+            let tokenRate = currency.state?.currentRate else { print("Incomplete tx metadata"); return }
+        
+        // the ETH transaction (token transfer contract execution) is flagged as a token transfer with the token code
+        ethTx.createMetaData(rate: ethRate, tokenTransfer: currency.code)
+        tokenTx.createMetaData(rate: tokenRate, comment: comment)
     }
 }
 

@@ -112,16 +112,6 @@ public struct EthLogEvent {
         case timeStamp
         case transactionHash
     }
-    
-//    init(timestamp: String, from: String, to: String, amount: UInt256) {
-//        let topics = ["",from,to]
-//        self.init(address: "",
-//                  topics: topics,
-//                  data: amount.hexString,
-//                  timeStamp: UInt256(string: timestamp).hexString,
-//                  transactionHash: "",
-//                  isLocal: true)
-//    }
 }
 
 extension EthLogEvent: Decodable {
@@ -137,8 +127,6 @@ extension EthLogEvent: Decodable {
         let seconds = try container.decodeFromHexString(UInt64.self, forKey: .timeStamp)
         timeStamp = TimeInterval(seconds)
         transactionHash = try container.decode(String.self, forKey: .transactionHash)
-        
-        isLocal = false
     }
 }
 
