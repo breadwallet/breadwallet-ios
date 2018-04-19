@@ -169,7 +169,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         
         if let amount = amount, amount.rawValue > UInt256(0) {
             if let fee = sender.fee(forAmount: amount.rawValue) {
-                let feeAmount = Amount(amount: fee, currency: currency, rate: rate)
+                let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
+                let feeAmount = Amount(amount: fee, currency: feeCurrency, rate: rate)
                 let feeText = feeAmount.description
                 feeOutput = String(format: S.Send.fee, feeText)
                 if (balance >= fee) && amount.rawValue > (balance - fee) {
@@ -277,13 +278,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             let address = addressCell.address else { return }
         
         let fee = sender.fee(forAmount: amount.rawValue) ?? UInt256(0)
+        let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
         
         let displyAmount = Amount(amount: amount.rawValue,
                                   currency: currency,
                                   rate: amountView.selectedRate,
                                   maximumFractionDigits: Amount.highPrecisionDigits)
         let feeAmount = Amount(amount: fee,
-                               currency: currency,
+                               currency: feeCurrency,
                                rate: amountView.selectedRate,
                                maximumFractionDigits: Amount.highPrecisionDigits)
 
