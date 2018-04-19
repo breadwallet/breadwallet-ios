@@ -217,12 +217,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
     
     private func validateSendForm() -> Bool {
-        guard let address = addressCell.address else {
+        guard let address = addressCell.address, address.count > 0 else {
             showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             return false
         }
         
-        guard let amount = amount else {
+        guard let amount = amount, amount.rawValue > UInt256(0) else {
             showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
             return false
         }
