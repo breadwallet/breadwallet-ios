@@ -340,7 +340,7 @@ class ModalPresenter : Subscriber, Trackable {
         
         let currencySettings: [Setting]  = Store.state.currencies.compactMap { (currency) -> Setting? in
             guard let walletManager = walletManagers[currency.code] else { return nil }
-            guard !currency.matches(Currencies.eth) else { return nil } //TODO:ETH
+            guard !(currency is Ethereum) && !(currency is ERC20Token) else { return nil }
             return Setting(title: currency.name, callback: { [weak self] in
                 guard let `self` = self else { return }
                 let sections = [SettingsSections.currency]
