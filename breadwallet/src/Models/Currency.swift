@@ -236,7 +236,7 @@ extension ERC20Token {
                    colors: (UIColor.fromHex(tokenData.colors[0]), UIColor.fromHex(tokenData.colors[1])),
                    address: tokenData.address,
                    abi: ERC20Token.standardAbi,
-                   decimals: 18) //TODO:ERC - add decimals here
+                   decimals: Int(tokenData.decimal) ?? 18)
     }
 }
 
