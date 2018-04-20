@@ -132,13 +132,19 @@ extension String {
         }
     }
     
+    func leftTrim(toLength: Int) -> String {
+        let offset = max(0, count - toLength)
+        return String(self[index(self.startIndex, offsetBy: offset)...])
+    }
+    
     /// Hex string padded to 32-bytes
     var paddedHexString: String {
         return self.withoutHexPrefix.leftPadding(toLength: 64, withPad: "0").withHexPrefix
     }
     
+    /// Hex string with 0-padding removed down to 20-bytes
     var unpaddedHexString: String {
-        return self.withoutHexPrefix.trimmedLeadingZeros.withHexPrefix
+        return self.withoutHexPrefix.leftTrim(toLength: 40).withHexPrefix
     }
 }
 

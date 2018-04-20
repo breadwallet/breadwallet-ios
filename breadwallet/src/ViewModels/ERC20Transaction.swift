@@ -58,6 +58,8 @@ struct ERC20Transaction: EthLikeTransaction {
         
         let topic1 = event.topics[1].unpaddedHexString
         let topic2 = event.topics[2].unpaddedHexString
+        assert(topic1.isValidEthAddress && topic2.isValidEthAddress)
+        
         if accountAddress.lowercased() == topic1.lowercased() {
             self.direction = .sent
             self.fromAddress = topic1
