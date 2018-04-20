@@ -314,36 +314,51 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 }
                 
                 let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
-                    //CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) { // TODO: wat?
-                        DispatchQueue.main.sync {
-                            let prompt = S.VerifyPin.authorize
-                            self?.isPresentingAuth = true
-                            Store.trigger(name: .authenticateForPlatform(prompt, false, { [weak self] result in
-                                self?.isPresentingAuth = false
-                                switch result {
-                                case .success(let pin?):
-                                    pinValidationCallback(pin)
-                                case .cancelled:
-                                    request.queue.async { asyncResp.provide(403) }
-                                default:
-                                    request.queue.async { asyncResp.provide(401) }
-                                }
-                            }))
+                    let prompt = S.VerifyPin.authorize
+                    self?.isPresentingAuth = true
+                    Store.trigger(name: .authenticateForPlatform(prompt, false, { [weak self] result in
+                        self?.isPresentingAuth = false
+                        switch result {
+                        case .success(let pin?):
+                            pinValidationCallback(pin)
+                        case .cancelled:
+                            request.queue.async { asyncResp.provide(403) }
+                        default:
+                            request.queue.async { asyncResp.provide(401) }
                         }
-                    //}
+                    }))
                 }
                 
-                sender.sendTransaction(pinVerifier: pinVerifier, completion: { result in
-                    switch result {
-                    case .success(let hash, let rawTx):
-                        guard let hash = hash, let rawTx = rawTx else { return request.queue.async { asyncResp.provide(500) } }
-                        request.queue.async { asyncResp.provide(200, json: ["hash": hash.withHexPrefix,
-                                                                            "transaction": rawTx.withHexPrefix,
-                                                                            "transmitted": true]) }
-                    default:
-                        request.queue.async { asyncResp.provide(500) }
+                let fee = sender.fee(forAmount: amount) ?? UInt256(0)
+                let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
+                let confirmAmount = Amount(amount: amount,
+                                          currency: currency,
+                                          rate: nil,//currency.state?.currentRate,
+                                          maximumFractionDigits: Amount.highPrecisionDigits)
+                let feeAmount = Amount(amount: fee,
+                                       currency: feeCurrency,
+                                       rate: nil,//feeCurrency.state?.currentRate,
+                                       maximumFractionDigits: Amount.highPrecisionDigits)
+                
+                DispatchQueue.main.sync {
+                    CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
+                        Store.trigger(name: .confirmTransaction(currency, confirmAmount, feeAmount, toAddress, { (confirmed) in
+                            guard confirmed else { return request.queue.async { asyncResp.provide(403) } }
+                            
+                            sender.sendTransaction(pinVerifier: pinVerifier, completion: { result in
+                                switch result {
+                                case .success(let hash, let rawTx):
+                                    guard let hash = hash, let rawTx = rawTx else { return request.queue.async { asyncResp.provide(500) } }
+                                    request.queue.async { asyncResp.provide(200, json: ["hash": hash.withHexPrefix,
+                                                                                        "transaction": rawTx.withHexPrefix,
+                                                                                        "transmitted": true]) }
+                                default:
+                                    request.queue.async { asyncResp.provide(500) }
+                                }
+                            })
+                        }))
                     }
-                })
+                }
             } else {
                 asyncResp.provide(501)
                 // TODO: sign tx without sending, get tx data / hash

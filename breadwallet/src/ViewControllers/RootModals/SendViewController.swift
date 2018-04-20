@@ -286,7 +286,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                                   maximumFractionDigits: Amount.highPrecisionDigits)
         let feeAmount = Amount(amount: fee,
                                currency: feeCurrency,
-                               rate: amountView.selectedRate,
+                               rate: (amountView.selectedRate != nil) ? feeCurrency.state?.currentRate : nil,
                                maximumFractionDigits: Amount.highPrecisionDigits)
 
         let confirm = ConfirmationViewController(amount: displyAmount,

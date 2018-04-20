@@ -76,6 +76,10 @@ struct Amount {
         self.negative = negative
     }
     
+    static var empty: Amount {
+        return Amount(amount: UInt256(0), currency: Currencies.btc)
+    }
+    
     // MARK: - Convenience Accessors
     
     var description: String {

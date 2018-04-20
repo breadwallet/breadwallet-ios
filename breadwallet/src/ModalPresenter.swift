@@ -113,6 +113,12 @@ class ModalPresenter : Subscriber, Trackable {
                 self.authenticateForPlatform(prompt: prompt, allowBiometricAuth: allowBiometricAuth, callback: callback)
             }
         })
+        Store.subscribe(self, name: .confirmTransaction(Currencies.btc, Amount.empty, Amount.empty, "", {_ in}), callback: { [unowned self] in
+            guard let trigger = $0 else { return }
+            if case .confirmTransaction(let currency, let amount, let fee, let address, let callback) = trigger {
+                self.confirmTransaction(currency: currency, amount: amount, fee: fee, address: address, callback: callback)
+            }
+        })
         reachability.didChange = { [weak self] isReachable in
             if isReachable {
                 self?.hideNotReachable()
@@ -805,6 +811,25 @@ class ModalPresenter : Subscriber, Trackable {
         verify.modalPresentationStyle = .overFullScreen
         verify.modalPresentationCapturesStatusBarAppearance = true
         topViewController?.present(verify, animated: true, completion: nil)
+    }
+    
+    private func confirmTransaction(currency: CurrencyDef, amount: Amount, fee: Amount, address: String, callback: @escaping (Bool) -> Void) {
+        let confirm = ConfirmationViewController(amount: amount,
+                                                 fee: fee,
+                                                 feeType: .regular,
+                                                 address: address,
+                                                 isUsingBiometrics: false,
+                                                 currency: currency)
+        confirm.transitioningDelegate = PinTransitioningDelegate()
+        confirm.modalPresentationStyle = .overFullScreen
+        confirm.modalPresentationCapturesStatusBarAppearance = true
+        confirm.successCallback = {
+            callback(true)
+        }
+        confirm.cancelCallback = {
+            callback(false)
+        }
+        topViewController?.present(confirm, animated: true, completion: nil)
     }
 
     private func copyAllAddressesToClipboard() {
