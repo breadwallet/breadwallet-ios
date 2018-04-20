@@ -174,7 +174,7 @@ struct StoredTokenData : Codable {
     let name: String
     let code: String
     let colors: [String]
-    
+    let decimal: String
     //extras not in json
     var isHidden = false
     
@@ -183,6 +183,7 @@ struct StoredTokenData : Codable {
         case name
         case code
         case colors
+        case decimal
     }
 }
 
@@ -211,10 +212,10 @@ extension StoredTokenData {
 
 extension StoredTokenData {
     static var tst: StoredTokenData {
-        return StoredTokenData(address: E.isTestnet ?  "0x722dd3f80bac40c951b51bdd28dd19d435762180" : "0x3efd578b271d034a69499e4a2d933c631d44b9ad", name: "Test Token", code: "TST", colors: ["2FB8E6", "2FB8E6"], isHidden: false)
+        return StoredTokenData(address: E.isTestnet ?  "0x722dd3f80bac40c951b51bdd28dd19d435762180" : "0x3efd578b271d034a69499e4a2d933c631d44b9ad", name: "Test Token", code: "TST", colors: ["2FB8E6", "2FB8E6"], decimal: "18", isHidden: false)
     }
     //this is a random token I was airdropped...using for testing
     static var viu: StoredTokenData {
-        return StoredTokenData(address: "0x519475b31653e46d20cd09f9fdcf3b12bdacb4f5", name: "VIU Token", code: "VIU", colors: ["2FB8E6", "2FB8E6"], isHidden: false)
+        return StoredTokenData(address: "0x519475b31653e46d20cd09f9fdcf3b12bdacb4f5", name: "VIU Token", code: "VIU", colors: ["2FB8E6", "2FB8E6"], decimal: "18", isHidden: false)
     }
 }
