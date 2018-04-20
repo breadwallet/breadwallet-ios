@@ -56,13 +56,16 @@ struct ERC20Transaction: EthLikeTransaction {
             return
         }
         
-        self.fromAddress = event.topics[1].unpaddedHexString
-        self.toAddress = event.topics[2].unpaddedHexString
-        
-        if accountAddress.lowercased() == fromAddress.lowercased() {
+        let topic1 = event.topics[1].unpaddedHexString
+        let topic2 = event.topics[2].unpaddedHexString
+        if accountAddress.lowercased() == topic1.lowercased() {
             self.direction = .sent
+            self.fromAddress = topic1
+            self.toAddress = topic2
         } else {
             self.direction = .received
+            self.fromAddress = topic2
+            self.toAddress = topic1
         }
         
         self.amount = UInt256(hexString: event.data)
