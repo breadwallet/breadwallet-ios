@@ -439,6 +439,7 @@ extension BTCWalletManager : WalletAuthenticator {
             try setKeychainItem(key: KeychainKey.pinFailCount, item: nil as Int64?)
             try setKeychainItem(key: KeychainKey.pin, item: nil as String?)
             try setKeychainItem(key: KeychainKey.masterPubKey, item: nil as Data?)
+            try setKeychainItem(key: KeychainKey.ethPrivKey, item: nil as String?)
             try setKeychainItem(key: KeychainKey.seed, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.mnemonic, item: nil as String?, authenticated: true)
             NotificationCenter.default.post(name: .WalletDidWipe, object: nil)
@@ -530,13 +531,6 @@ extension BTCWalletManager : WalletAuthenticator {
 }
 
 extension EthWalletManager {
-    func loadPhrase() -> String? {
-        do {
-            return try keychainItem(key: KeychainKey.mnemonic)
-        }
-        catch { return nil }
-    }
-    
     // key used for Ethereum wallet
     var ethPrivKey: String? {
         return autoreleasepool {
