@@ -74,9 +74,11 @@ open class BRHTTPMiddlewareResponse {
     }
     
     func start() throws {
-        for _ in 0 ..< 100 {
+        for i in 0 ..< 100 {
             // get a random port
-            let port = in_port_t(arc4random() % (49152 - 1024) + 1024)
+            
+            let port = E.isDebug ? in_port_t(12345+Int(i)) : in_port_t(arc4random() % (49152 - 1024) + 1024)
+            
             do {
                 try listenServer(port)
                 self.port = port
