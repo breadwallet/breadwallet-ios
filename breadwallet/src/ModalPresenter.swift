@@ -143,6 +143,12 @@ class ModalPresenter : Subscriber, Trackable {
         Store.subscribe(self, name: .wipeWalletNoPrompt, callback: { [weak self] _ in
             self?.wipeWalletNoPrompt()
         })
+        Store.subscribe(self, name: .showCurrency(Currencies.btc), callback: { [unowned self] in
+            guard let trigger = $0 else { return }
+            if case .showCurrency(let currency) = trigger {
+                self.showAccountView(currency: currency, animated: true, completion: nil)
+            }
+        })
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
@@ -720,34 +726,42 @@ class ModalPresenter : Subscriber, Trackable {
         self.currentRequest = request
         guard !Store.state.isLoginRequired else { presentModal(.send(currency: request.currency)); return }
 
-        if let accountVC = topViewController as? AccountViewController {
-            if accountVC.currency.matches(request.currency) {
-                presentModal(.send(currency: request.currency))
-            } else {
-                // switch currencies
-                accountVC.navigationController?.popToRootViewController(animated: false)
-                showAccountView(currency: request.currency, animated: false)
-                presentModal(.send(currency: request.currency))
-            }
-        } else if topViewController is HomeScreenViewController {
-            showAccountView(currency: request.currency, animated: false)
-            presentModal(.send(currency: request.currency))
-        } else {
-            if let presented = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
-                presented.dismiss(animated: true, completion: {
-                    self.showAccountView(currency: request.currency, animated: false)
-                    self.presentModal(.send(currency: request.currency))
-                })
-            }
+        showAccountView(currency: request.currency, animated: false) {
+            self.presentModal(.send(currency: request.currency))
         }
     }
     
-    private func showAccountView(currency: CurrencyDef, animated: Bool) {
-        guard let nc = topViewController?.navigationController as? RootNavigationController,
-            nc.viewControllers.count == 1 else { return }
-        guard let walletManager = self.walletManagers[currency.code] else { return }
-        let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
-        nc.pushViewController(accountViewController, animated: animated)
+    private func showAccountView(currency: CurrencyDef, animated: Bool, completion: (() -> Void)?) {
+        let pushAccountView = {
+            guard let nc = self.topViewController?.navigationController as? RootNavigationController,
+                nc.viewControllers.count == 1 else { return }
+            guard let walletManager = self.walletManagers[currency.code] else { return }
+            let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
+            nc.pushViewController(accountViewController, animated: animated)
+            completion?()
+        }
+        
+        if let accountVC = topViewController as? AccountViewController {
+            if accountVC.currency.matches(currency) {
+                completion?()
+            } else {
+                accountVC.navigationController?.popToRootViewController(animated: false)
+                pushAccountView()
+            }
+        } else if topViewController is HomeScreenViewController {
+            pushAccountView()
+        } else if let presented = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
+            if let nc = presented.presentingViewController as? RootNavigationController, nc.viewControllers.count > 1 {
+                // modal on top of another account screen
+                presented.dismiss(animated: false) {
+                    self.showAccountView(currency: currency, animated: animated, completion: completion)
+                }
+            } else {
+                presented.dismiss(animated: true) {
+                    pushAccountView()
+                }
+            }
+        }
     }
 
     private func handleScanQrURL() {

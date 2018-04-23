@@ -68,6 +68,7 @@ enum TriggerName {
     case didWritePaperKey
     case wipeWalletNoPrompt
     case didUpdateFeatureFlags
+    case showCurrency(CurrencyDef)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName : Equatable {}
@@ -135,6 +136,8 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.wipeWalletNoPrompt, .wipeWalletNoPrompt):
         return true
     case (.didUpdateFeatureFlags, .didUpdateFeatureFlags):
+        return true
+    case (.showCurrency(_), .showCurrency(_)):
         return true
     default:
         return false

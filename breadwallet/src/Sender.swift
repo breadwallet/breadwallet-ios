@@ -16,6 +16,7 @@ enum SendResult {
     case success(String?, String?)
     case creationError(String)
     case publishFailure(BRPeerManagerError)
+    case insufficientGas(String) // for ERC20 token transfers
 }
 
 enum SenderValidationResult {
@@ -431,6 +432,13 @@ class EthSenderBase<CurrencyType: CurrencyDef> : SenderBase<CurrencyType, EthWal
     fileprivate func validate(address: String, amount: UInt256) -> SenderValidationResult {
         guard currency.isValidAddress(address) else { return .invalidAddress }
         guard !walletManager.isOwnAddress(address) else { return .ownAddress }
+        if let balance = currency.state?.balance {
+            guard amount < balance else { return .insufficientFunds }
+        }
+        // ERC20 token transfers require ETH for gas
+        if !currency.matches(Currencies.eth), let ethBalance = Currencies.eth.state?.balance {
+            guard ethBalance > UInt256(0) else { return .insufficientGas }
+        }
         //guard currency.state.currentRate != nil else { return .noExchangeRate } // allow sending without exchange rate
         return .ok
     }
@@ -510,7 +518,12 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
                     case .jsonError(let e):
                         completion(.creationError(e?.localizedDescription ?? ""))
                     case .rpcError(let e):
-                        completion(.creationError(e.message))
+                        //TODO: hack, need a better way to detect this scenario
+                        if e.message.hasPrefix("insufficient funds for gas") {
+                            completion(.insufficientGas(e.message))
+                        } else {
+                            completion(.creationError(e.message))
+                        }
                     }
                 }
             }
