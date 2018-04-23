@@ -40,7 +40,7 @@ enum TokenListType {
     }
 }
 
-class EditWalletsViewController : UITableViewController {
+class EditWalletsViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     private let type: TokenListType
     private let cellIdentifier = "CellIdentifier"
@@ -74,15 +74,34 @@ class EditWalletsViewController : UITableViewController {
             }
         }
     }
+    private let tableView = UITableView()
     
     init(type: TokenListType, kvStore: BRReplicatedKVStore) {
         self.type = type
         self.kvStore = kvStore
         self.metaData = CurrencyListMetaData(kvStore: kvStore)!
-        super.init(style: .plain)
+        //super.init(style: .plain)
+        super.init(nibName: nil, bundle: nil)
     }
 
     override func viewDidLoad() {
+        view.backgroundColor = .white
+        view.addSubview(tableView)
+        if #available(iOS 11.0, *) {
+            tableView.constrain([
+                tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
+        } else {
+            tableView.constrain([
+                tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                tableView.topAnchor.constraint(equalTo: view.topAnchor),
+                tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
+        }
+        tableView.delegate = self
+        tableView.dataSource = self
         title = type.title
         tableView.register(TokenCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.separatorStyle = .none
@@ -107,23 +126,17 @@ class EditWalletsViewController : UITableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         reconcileChanges()
-        navigationController?.navigationBar.backgroundColor = nil
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.backgroundColor = .white
-    }
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tokens.count
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? TokenCell else { return UITableViewCell() }
         cell.set(token: tokens[indexPath.row], listType: type)
         cell.didAddToken = { [unowned self] address in
