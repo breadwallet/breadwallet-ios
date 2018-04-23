@@ -340,7 +340,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 let shouldTransmit = json["transmit"] as? Int,
                 let amt = json["amount"] as? [String: String],
                 let numerator = amt["numerator"],
-                currencyCode == amt["currency"],
+                currencyCode.lowercased() == amt["currency"]?.lowercased(),
                 let currency = Store.state.currencies.filter({$0.code.lowercased() == currencyCode.lowercased()}).first,
                 currency.isValidAddress(toAddress) else {
                     return BRHTTPResponse(request: request, code: 400)
