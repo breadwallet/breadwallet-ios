@@ -194,10 +194,8 @@ extension StoredTokenData {
                 let path = Bundle.main.path(forResource: "tokens", ofType: "json")
                 let data = try Data(contentsOf: URL(fileURLWithPath: path!))
                 var tokens = try JSONDecoder().decode([StoredTokenData].self, from: data)
-                if E.isDebug || E.isTestFlight {
-                    tokens.append(StoredTokenData.tst)
-                }
                 if E.isDebug {
+                    tokens.append(StoredTokenData.tst)
                     tokens.append(StoredTokenData.viu)
                 }
                 DispatchQueue.main.async {
