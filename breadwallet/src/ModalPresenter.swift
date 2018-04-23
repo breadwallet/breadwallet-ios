@@ -231,7 +231,7 @@ class ModalPresenter : Subscriber, Trackable {
         case .send(let currency):
             return makeSendView(currency: currency)
         case .receive(let currency):
-            return receiveView(currency: currency, isRequestAmountVisible: true)
+            return receiveView(currency: currency, isRequestAmountVisible: (currency.urlSchemes != nil))
         case .loginScan:
             return nil //The scan view needs a custom presentation
         case .loginAddress:
