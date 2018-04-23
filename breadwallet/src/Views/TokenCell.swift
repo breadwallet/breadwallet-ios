@@ -96,8 +96,10 @@ class TokenCell : UITableViewCell {
         button.tap = strongify(self) { myself in
             if myself.button.layer.borderColor == UIColor.blue.cgColor {
                 myself.setRemoveButton()
+                myself.didAddToken?(myself.address)
             } else {
                 myself.setAddButton()
+                myself.didRemoveToken?(myself.address)
             }
         }
     }
@@ -106,14 +108,12 @@ class TokenCell : UITableViewCell {
         button.layer.borderColor = UIColor.blue.cgColor
         button.setTitle(listType.addTitle, for: .normal)
         button.tintColor = .blue
-        didRemoveToken?(address)
     }
     
     private func setRemoveButton() {
         button.layer.borderColor = UIColor.red.cgColor
         button.setTitle(listType.removeTitle, for: .normal)
         button.tintColor = .red
-        didAddToken?(address)
     }
 
     required init?(coder aDecoder: NSCoder) {

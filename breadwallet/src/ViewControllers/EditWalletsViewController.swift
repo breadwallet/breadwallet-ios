@@ -52,8 +52,28 @@ class EditWalletsViewController : UITableViewController {
         }
     }
 
-    private var tokenAddressesToBeAdded = [String]()
-    private var tokenAddressesToBeRemoved = [String]()
+    private var tokenAddressesToBeAdded = [String]() {
+        didSet {
+            tokens = tokens.map {
+                var token = $0
+                if tokenAddressesToBeAdded.contains($0.address) {
+                    token.isHidden = false
+                }
+                return token
+            }
+        }
+    }
+    private var tokenAddressesToBeRemoved = [String]() {
+        didSet {
+            tokens = tokens.map {
+                var token = $0
+                if tokenAddressesToBeRemoved.contains($0.address) {
+                    token.isHidden = true
+                }
+                return token
+            }
+        }
+    }
     
     init(type: TokenListType, kvStore: BRReplicatedKVStore) {
         self.type = type
