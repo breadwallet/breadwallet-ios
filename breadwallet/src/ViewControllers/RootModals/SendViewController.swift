@@ -254,8 +254,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
             
         case .insufficientGas:
-            //TODO:ERC20
-            return false
+            showInsufficientGasError()
             
         // allow sending without exchange rates available (the tx metadata will not be set)
         case .ok, .noExchangeRate:
@@ -375,6 +374,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                     self.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
                     self.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(description) (\(code))"])
                 }
+            case .insufficientGas(let rpcErrorMessage):
+                self.showInsufficientGasError()
+                self.saveEvent("send.publishFailed", attributes: ["errorMessage": rpcErrorMessage])
             }
         }
     }
@@ -455,6 +457,21 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             ignore()
         }))
         alertController.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    /// Insufficient gas for ERC20 token transfer
+    private func showInsufficientGasError() {
+        guard let amount = self.amount,
+            let fee = self.sender.fee(forAmount: amount.rawValue) else { return assertionFailure() }
+        let feeAmount = Amount(amount: fee, currency: Currencies.eth, rate: nil)
+        let message = String(format: S.Send.insufficientGasMessage, feeAmount.description)
+        
+        let alertController = UIAlertController(title: S.Send.insufficientGasTitle, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
+            Store.trigger(name: .showCurrency(Currencies.eth))
+        }))
+        alertController.addAction(UIAlertAction(title: S.Button.no, style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
 
