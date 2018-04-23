@@ -342,7 +342,12 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 
                 DispatchQueue.main.sync {
                     CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
+                        self.isPresentingAuth = true
+                        if UserDefaults.isBiometricsEnabled {
+                            asyncResp.provide(200, json: ["error": "proxy-shutdown"])
+                        }
                         Store.trigger(name: .confirmTransaction(currency, confirmAmount, feeAmount, toAddress, { (confirmed) in
+                            self.isPresentingAuth = false
                             guard confirmed else { return request.queue.async { asyncResp.provide(403) } }
                             
                             sender.sendTransaction(pinVerifier: pinVerifier, completion: { result in
