@@ -247,6 +247,27 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             return try BRHTTPResponse(request: req, code: 200, json: ["version": version, "build": build])
         }
         
+        // POST /_wallet/currencies
+        //
+        // Returns all currency details
+        //
+        // Response body: application/json
+        //      {
+        //          "id": "BTC" // ticker code
+        //          "ticker": "BTC"
+        //          "name": "Bitcoin"
+        //          "balance": {
+        //              "numerator": "10000",
+        //              "denominator": "100000000",
+        //              "currency": "BTC",
+        //          }
+        //          "exchange": {
+        //              "numerator": "10000",
+        //              "denominator": "100000000",
+        //              "currency": "JPY", // current fiat exchange rate
+        //          }
+        //          "colors": ["#000000","#ffffff"] // array of 2 colors in hex
+        //      }
         router.get("/_wallet/currencies") { (req, m) -> BRHTTPResponse in
             let fiatCode = req.query["fiat"]?.first
             var response = [[String: Any]]()
@@ -256,6 +277,15 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             return try BRHTTPResponse(request: req, code: 200, json: response)
         }
         
+        // POST /_wallet/addresses/<currency_code>
+        //
+        // Returns the receive addresses of the given wallet
+        //
+        // Response body: application/json
+        //      {
+        //          "currency": "btc"
+        //          "address": "1abcd..." // receive address
+        //      }
         router.get("/_wallet/addresses/(code)") { (req, m) -> BRHTTPResponse in
             var code: String?
             if let codeArray = m["code"] {
@@ -273,6 +303,29 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             return try BRHTTPResponse(request: req, code: 200, json: (response.count == 1) ? response.first! : response)
         }
         
+        // POST /_wallet/transaction
+        //
+        // Creates and optionally sends a transaction
+        //
+        // Request body: application/json
+        //      {
+        //          "toAddress": "0x1234...",
+        //          "toDescription": "memo", // memo field contents
+        //          "currency": "eth", // currency code
+        //          "amount": {
+        //              "numerator": "10000",
+        //              "denominator": "100000000",
+        //              "currency": "eth",
+        //          }
+        //          "transmit": 1 // should transmit or not
+        //      }
+        //
+        // Response body: application/json
+        //      {
+        //          "hash": "0x123...", // transaction hash
+        //          "transaction: "0xffff..." // raw transaction hex encoded
+        //          "transmitted": true
+        //      }
         router.post("/_wallet/transaction") { (request, m) -> BRHTTPResponse in
             guard !self.isPresentingAuth else {
                 return BRHTTPResponse(request: request, code: 423)
@@ -456,6 +509,7 @@ extension BRWalletPlugin {
         d["id"] = currency.code
         d["ticker"] = currency.code
         d["name"] = currency.name
+        d["colors"] = [currency.colors.0.toHex, currency.colors.1.toHex]
         if let balance = currency.state?.balance {
             var numerator = balance.string(radix: 10)
             var denomiator = UInt256(power: currency.commonUnit.decimals).string(radix: 10)
