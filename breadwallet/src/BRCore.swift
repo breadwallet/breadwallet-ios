@@ -750,6 +750,7 @@ extension UInt256 {
         // createUInt256ParseDecimal skips decimal conversion for integer inputs
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
+        formatter.usesGroupingSeparator = false
         formatter.minimumFractionDigits = 1
         formatter.maximumFractionDigits = decimals
         formatter.locale = Locale(identifier: "en_us")
