@@ -253,8 +253,9 @@ class ModalPresenter : Subscriber, Trackable {
             case Currencies.eth.code:
                 address = (walletManager as? EthWalletManager)?.address
             default:
-                //TODO:ERC20
-                break
+                if currency is ERC20Token {
+                    address = (walletManager as? EthWalletManager)?.address
+                }
             }
             guard let receiveAddress = address else { return nil }
             let requestVc = RequestAmountViewController(currency: currency, receiveAddress: receiveAddress)

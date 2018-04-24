@@ -226,6 +226,10 @@ public struct ERC20Token: CurrencyDef {
     public func isValidAddress(_ address: String) -> Bool {
         return address.isValidEthAddress
     }
+    
+    public var urlSchemes: [String]? {
+        return Currencies.eth.urlSchemes
+    }
 }
 
 extension ERC20Token {
