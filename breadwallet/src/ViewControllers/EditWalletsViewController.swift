@@ -58,6 +58,8 @@ class EditWalletsViewController : UIViewController, UITableViewDelegate, UITable
                 var token = $0
                 if tokenAddressesToBeAdded.contains($0.address) {
                     token.isHidden = false
+                } else if tokenAddressesToBeRemoved.contains($0.address) {
+                    token.isHidden = true
                 }
                 return token
             }
@@ -69,6 +71,8 @@ class EditWalletsViewController : UIViewController, UITableViewDelegate, UITable
                 var token = $0
                 if tokenAddressesToBeRemoved.contains($0.address) {
                     token.isHidden = true
+                } else if tokenAddressesToBeAdded.contains($0.address) {
+                    token.isHidden = false
                 }
                 return token
             }
@@ -80,7 +84,6 @@ class EditWalletsViewController : UIViewController, UITableViewDelegate, UITable
         self.type = type
         self.kvStore = kvStore
         self.metaData = CurrencyListMetaData(kvStore: kvStore)!
-        //super.init(style: .plain)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -109,7 +112,11 @@ class EditWalletsViewController : UIViewController, UITableViewDelegate, UITable
             guard let `self` = self else { return }
             switch self.type {
             case .add:
-                self.tokens = $0.filter { !self.metaData.previouslyAddedTokenAddresses.contains($0.address) }
+                self.tokens = $0.filter { !self.metaData.previouslyAddedTokenAddresses.contains($0.address) }.map {
+                    var token = $0
+                    token.isHidden = true
+                    return token
+                }
             case .manage:
                 let addedTokens = $0.filter { self.metaData.enabledTokenAddresses.contains($0.address) }
                 var hiddenTokens = $0.filter { self.metaData.hiddenTokenAddresses.contains($0.address) }
