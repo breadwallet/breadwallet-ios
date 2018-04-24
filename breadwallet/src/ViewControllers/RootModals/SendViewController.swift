@@ -354,7 +354,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             }
         }
         
-        sender.sendTransaction(pinVerifier: pinVerifier) { [weak self] result in
+        sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier) { [weak self] result in
             guard let `self` = self else { return }
             switch result {
             case .success:

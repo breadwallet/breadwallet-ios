@@ -58,7 +58,8 @@ protocol Sender: class {
     func createTransaction(address: String, amount: UInt256, comment: String?) -> SenderValidationResult
     func createTransaction(forPaymentProtocol: PaymentProtocolRequest) -> SenderValidationResult
     
-    func sendTransaction(pinVerifier: @escaping PinVerifier,
+    func sendTransaction(allowBiometrics: Bool,
+                         pinVerifier: @escaping PinVerifier,
                          completion: @escaping SendCompletion)
     
     func reset()
@@ -109,7 +110,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
     // MARK: Sender
     
     var canUseBiometrics: Bool {
-        guard let tx = transaction else  { return false }
+        guard let tx = transaction else { return false }
         return walletManager.canUseBiometrics(forTx: tx)
     }
     
@@ -209,10 +210,10 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         super.reset()
     }
     
-    func sendTransaction(pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
+    func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
         guard readyToSend, let tx = transaction else { return completion(.creationError("not ready")) }
         
-        if UserDefaults.isBiometricsEnabled && walletManager.canUseBiometrics(forTx: tx) {
+        if allowBiometrics && UserDefaults.isBiometricsEnabled && walletManager.canUseBiometrics(forTx: tx) {
             sendWithBiometricVerification(tx: tx, pinVerifier: pinVerifier, completion: completion)
         } else {
             sendWithPinVerification(tx: tx, pinVerifier: pinVerifier, completion: completion)
@@ -452,7 +453,7 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
         return walletManager.gasPrice * UInt256(EthWalletManager.defaultGasLimit)
     }
     
-    func sendTransaction(pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
+    func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
         guard readyToSend,
             let address = address,
             let amount = amount else {
@@ -498,7 +499,7 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
         return walletManager.gasPrice * UInt256(EthWalletManager.defaultTokenTransferGasLimit)
     }
     
-    func sendTransaction(pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
+    func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
         guard readyToSend,
             let address = address,
             let amount = amount else {

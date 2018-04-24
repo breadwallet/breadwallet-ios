@@ -399,9 +399,9 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 let fee = sender.fee(forAmount: amount) ?? UInt256(0)
                 let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
                 let confirmAmount = Amount(amount: amount,
-                                          currency: currency,
-                                          rate: nil,//currency.state?.currentRate,
-                                          maximumFractionDigits: Amount.highPrecisionDigits)
+                                           currency: currency,
+                                           rate: nil,//currency.state?.currentRate,
+                                           maximumFractionDigits: Amount.highPrecisionDigits)
                 let feeAmount = Amount(amount: fee,
                                        currency: feeCurrency,
                                        rate: nil,//feeCurrency.state?.currentRate,
@@ -414,7 +414,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                             self.isPresentingAuth = false
                             guard confirmed else { return request.queue.async { asyncResp.provide(403) } }
                             
-                            sender.sendTransaction(pinVerifier: pinVerifier, completion: { result in
+                            sender.sendTransaction(allowBiometrics: false, pinVerifier: pinVerifier, completion: { result in
                                 switch result {
                                 case .success(let hash, let rawTx):
                                     guard let hash = hash, let rawTx = rawTx else { return request.queue.async { asyncResp.provide(500) } }
