@@ -834,7 +834,9 @@ class ModalPresenter : Subscriber, Trackable {
                                                  address: address,
                                                  isUsingBiometrics: false,
                                                  currency: currency)
-        confirm.transitioningDelegate = PinTransitioningDelegate()
+        let transitionDelegate = PinTransitioningDelegate()
+        transitionDelegate.shouldShowMaskView = true
+        confirm.transitioningDelegate = transitionDelegate
         confirm.modalPresentationStyle = .overFullScreen
         confirm.modalPresentationCapturesStatusBarAppearance = true
         confirm.successCallback = {
