@@ -331,6 +331,8 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 return BRHTTPResponse(request: request, code: 423)
             }
             
+            let asyncResp = BRHTTPResponse(async: request)
+            
             guard let data = request.body(),
                 let j = try? JSONSerialization.jsonObject(with: data, options: []),
                 let json = j as? [String: Any],
@@ -343,7 +345,8 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 currencyCode.lowercased() == amt["currency"]?.lowercased(),
                 let currency = Store.state.currencies.filter({$0.code.lowercased() == currencyCode.lowercased()}).first,
                 currency.isValidAddress(toAddress) else {
-                    return BRHTTPResponse(request: request, code: 400)
+                    asyncResp.provide(400, json: ["error": "params-error"])
+                    return asyncResp
             }
             
             guard let walletManager = self.walletManagers[currency.code],
@@ -353,14 +356,25 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             }
             
             // assume the numerator is in currency's base units
-            let amount = UInt256(string: numerator, radix: 10)
+            var amount = UInt256(string: numerator, radix: 10)
+            
+            guard let fee = sender.fee(forAmount: amount),
+                let balance = currency.state?.balance else {
+                    asyncResp.provide(500, json: ["error": "fee-error"])
+                    return asyncResp
+            }
+            
+            if (amount <= balance) && (amount + fee) > balance {
+                // amount is close to balance and fee puts it over, subtract the fee
+                amount = amount - fee
+            }
             
             let result = sender.createTransaction(address: toAddress, amount: amount, comment: comment)
             guard case .ok = result else {
-                return BRHTTPResponse(request: request, code: 400)
+                asyncResp.provide(400, json: ["error": "tx-error"])
+                return asyncResp
             }
             
-            let asyncResp = BRHTTPResponse(async: request)
             if shouldTransmit != 0 {
                 DispatchQueue.walletQueue.async {
                     self.walletManagers[currency.code]?.peerManager?.connect()
