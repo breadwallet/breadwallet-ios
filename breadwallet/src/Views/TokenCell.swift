@@ -87,12 +87,7 @@ class TokenCell : UITableViewCell {
     }
     
     private func setInitialButtonState() {
-        switch listType {
-        case .add:
-            setAddButton()
-        case .manage:
-            isTokenHidden ? setAddButton() : setRemoveButton()
-        }
+        isTokenHidden ? setAddButton() : setRemoveButton()
         button.tap = strongify(self) { myself in
             if myself.button.layer.borderColor == UIColor.blue.cgColor {
                 myself.setRemoveButton()
