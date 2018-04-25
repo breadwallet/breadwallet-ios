@@ -134,7 +134,7 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
     }
 
     private func updateTotalAssets() {
-        let fiatTotal: Decimal = Store.state.currencies.map {
+        let fiatTotal: Decimal = Store.state.displayCurrencies.map {
             guard let balance = Store.state[$0]?.balance,
                 let rate = Store.state[$0]?.currentRate else { return 0.0 }
             let amount = Amount(amount: balance,
@@ -158,7 +158,7 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
             var result = false
             let oldState = $0
             let newState = $1
-            $0.currencies.forEach { currency in
+            $0.displayCurrencies.forEach { currency in
                 if oldState[currency]?.balance != newState[currency]?.balance {
                     result = true
                 }

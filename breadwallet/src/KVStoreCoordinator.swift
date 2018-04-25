@@ -20,20 +20,46 @@ class KVStoreCoordinator : Subscriber {
         guard let currencyMetaData = CurrencyListMetaData(kvStore: kvStore) else {
             let newCurrencyListMetaData = CurrencyListMetaData()
             set(newCurrencyListMetaData)
+            //TODO - setInitialDisplayWallets
             return
         }
-        let enabledTokenAddresses = currencyMetaData.enabledTokenAddresses
+        if currencyMetaData.doesRequireSave == 1 {
+            currencyMetaData.doesRequireSave = 0
+            set(currencyMetaData)
+            try? kvStore.syncKey(tokenListMetaDataKey, completionHandler: {_ in })
+        }
+
         StoredTokenData.fetchTokens(callback: { tokenData in
-            var currentWalletCount = Store.state.wallets.values.count
-            let enabledTokenData = tokenData.filter { enabledTokenAddresses.contains($0.address) }
-            let enabledCurrencies = enabledTokenData.map { ERC20Token(tokenData: $0)}.reduce([String: WalletState]()) { (dictionary, currency) -> [String: WalletState] in
-                var dictionary = dictionary
-                dictionary[currency.code] = WalletState.initial(currency, displayOrder: currentWalletCount)
-                currentWalletCount = currentWalletCount + 1
-                return dictionary
-            }
-            Store.perform(action: ManageWallets.addWallets(enabledCurrencies))
+            self.setInitialDisplayWallets(metaData: currencyMetaData, tokenData: tokenData.map { ERC20Token(tokenData: $0) })
         })
+    }
+
+    private func setInitialDisplayWallets(metaData: CurrencyListMetaData, tokenData: [ERC20Token]) {
+        let oldWallets = Store.state.wallets
+        var newWallets = [String: WalletState]()
+        var displayOrder = 0
+        metaData.enabledCurrencies.forEach {
+            if let walletState = oldWallets[$0] {
+                newWallets[$0] = walletState.mutate(displayOrder: displayOrder)
+                displayOrder = displayOrder + 1
+            } else {
+                //Since a WalletState wasn't found, it must be a token address
+                let tokenAddress = $0.replacingOccurrences(of: C.erc20Prefix, with: "")
+                if tokenAddress.lowercased() == Currencies.brd.address.lowercased() {
+                    newWallets[Currencies.brd.code] = oldWallets[Currencies.brd.code]!.mutate(displayOrder: displayOrder)
+                    displayOrder = displayOrder + 1
+                } else {
+                    let filteredTokens = tokenData.filter { $0.address.lowercased() == tokenAddress.lowercased() }
+                    if let token = filteredTokens.first {
+                        newWallets[token.code] = WalletState.initial(token, displayOrder: displayOrder)
+                        displayOrder = displayOrder + 1
+                    } else {
+                        assert(false)
+                    }
+                }
+            }
+        }
+        Store.perform(action: ManageWallets.setWallets(newWallets))
     }
     
     func retreiveStoredWalletInfo() {

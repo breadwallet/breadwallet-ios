@@ -14,25 +14,29 @@ class TokenCell : UITableViewCell {
     private let subheader = UILabel(font: .customBody(size: 16.0), color: .secondaryShadow)
     private let icon = UIImageView()
     private let button = UIButton.outline(title: S.TokenList.add)
-    private var address: String = ""
+    private var identifier: String = ""
     private var listType: TokenListType = .add
-    private var isTokenHidden = false
+    private var isCurrencyHidden = false
 
-    var didAddToken:((String)->Void)?
-    var didRemoveToken:((String)->Void)?
+    var didAddIdentifier:((String)->Void)?
+    var didRemoveIdentifier:((String)->Void)?
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
 
-    func set(token: StoredTokenData, listType: TokenListType) {
-        header.text = token.code
-        subheader.text = token.name
-        self.address = token.address
+    func set(currency: CurrencyDef, listType: TokenListType, isHidden: Bool) {
+        header.text = currency.code
+        subheader.text = currency.name
+        icon.image = UIImage(named: currency.code.lowercased())
+        self.isCurrencyHidden = isHidden
+        if let token = currency as? ERC20Token {
+            self.identifier = token.address
+        } else {
+            self.identifier = currency.code
+        }
         self.listType = listType
-        self.isTokenHidden = token.isHidden
-        self.icon.image = UIImage(named: token.code.lowercased())
         setInitialButtonState()
     }
 
@@ -76,14 +80,14 @@ class TokenCell : UITableViewCell {
     }
     
     private func setInitialButtonState() {
-        isTokenHidden ? setAddButton() : setRemoveButton()
+        isCurrencyHidden ? setAddButton() : setRemoveButton()
         button.tap = strongify(self) { myself in
             if myself.button.layer.borderColor == UIColor.blue.cgColor {
                 myself.setRemoveButton()
-                myself.didAddToken?(myself.address)
+                myself.didAddIdentifier?(myself.identifier)
             } else {
                 myself.setAddButton()
-                myself.didRemoveToken?(myself.address)
+                myself.didRemoveIdentifier?(myself.identifier)
             }
         }
     }
