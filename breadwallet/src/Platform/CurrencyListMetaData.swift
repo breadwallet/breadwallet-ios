@@ -12,9 +12,10 @@ let tokenListMetaDataKey = "token-list-metadata-2"
 
 class CurrencyListMetaData : BRKVStoreObject, BRCoding {
     
-    var classVersion = 1
+    var classVersion = 2
     var enabledCurrencies = [String]()
     var hiddenCurrencies = [String]()
+    var doesRequireSave = 0
 
     //Create new
     init() {
@@ -45,12 +46,24 @@ class CurrencyListMetaData : BRKVStoreObject, BRCoding {
         guard let s: CurrencyListMetaData = BRKeyedUnarchiver.unarchiveObjectWithData(value) else { return }
         enabledCurrencies = s.enabledCurrencies
         hiddenCurrencies = s.hiddenCurrencies
+        doesRequireSave = s.doesRequireSave
     }
 
     required public init?(coder decoder: BRCoder) {
         classVersion = decoder.decode("classVersion")
         enabledCurrencies = decoder.decode("enabledCurrencies")
         hiddenCurrencies = decoder.decode("hiddenCurrencies")
+        doesRequireSave = decoder.decode("doesRequireSave")
+
+        //Upgrade Testflight users from a time before hiding currencies was possible
+        if classVersion == 1 {
+            enabledCurrencies = [Currencies.btc.code,
+                                 Currencies.bch.code,
+                                 Currencies.eth.code,
+                                 "\(C.erc20Prefix)\(Currencies.brd.address)"] + enabledCurrencies
+            doesRequireSave = 1
+        }
+
         super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
     }
 
@@ -58,10 +71,12 @@ class CurrencyListMetaData : BRKVStoreObject, BRCoding {
         coder.encode(classVersion, key: "classVersion")
         coder.encode(enabledCurrencies, key: "enabledCurrencies")
         coder.encode(hiddenCurrencies, key: "hiddenCurrencies")
+        coder.encode(doesRequireSave, key: "doesRequireSave")
     }
 }
 
 extension CurrencyListMetaData {
+
     var previouslyAddedTokenAddresses: [String] {
         return (enabledCurrencies + hiddenCurrencies).filter { $0.hasPrefix(C.erc20Prefix) }.map { $0.replacingOccurrences(of: C.erc20Prefix, with: "") }
     }

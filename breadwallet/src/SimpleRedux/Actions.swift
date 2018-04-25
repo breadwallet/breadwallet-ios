@@ -51,6 +51,16 @@ struct RootModalActions {
 }
 
 enum ManageWallets {
+
+    struct setWallets : Action {
+        let reduce: Reducer
+        init(_ newWallets: [String: WalletState]) {
+            reduce = {
+                return $0.mutate(wallets: newWallets)
+            }
+        }
+    }
+
     struct addWallets : Action {
         let reduce: Reducer
         init(_ newWallets: [String: WalletState]) {
