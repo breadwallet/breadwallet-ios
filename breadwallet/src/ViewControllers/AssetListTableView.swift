@@ -37,7 +37,7 @@ class AssetListTableView: UITableViewController, Subscriber {
             var result = false
             let oldState = $0
             let newState = $1
-            $0.currencies.forEach { currency in
+            $0.displayCurrencies.forEach { currency in
                 if oldState[currency]?.balance != newState[currency]?.balance
                     || oldState[currency]?.currentRate?.rate != newState[currency]?.currentRate?.rate
                     || oldState[currency]?.maxDigits != newState[currency]?.maxDigits {
@@ -50,7 +50,7 @@ class AssetListTableView: UITableViewController, Subscriber {
         })
         
         Store.subscribe(self, selector: {
-            $0.currencies.count != $1.currencies.count
+            $0.displayCurrencies.count != $1.displayCurrencies.count
         }, callback: { _ in
                 self.tableView.reloadData()
             })
@@ -108,7 +108,7 @@ class AssetListTableView: UITableViewController, Subscriber {
         
         switch section {
         case .assets:
-            return Store.state.wallets.count + 1
+            return Store.state.displayCurrencies.count + 1
         case .menu:
             return Menu.allItems.count
         }
@@ -135,7 +135,7 @@ class AssetListTableView: UITableViewController, Subscriber {
 
         switch section {
         case .assets:
-            let currency = Store.state.currencies[indexPath.row]
+            let currency = Store.state.displayCurrencies[indexPath.row]
             let viewModel = AssetListViewModel(currency: currency)
 
             let cell = tableView.dequeueReusableCell(withIdentifier: HomeScreenCell.cellIdentifier, for: indexPath) as! HomeScreenCell
@@ -177,7 +177,7 @@ class AssetListTableView: UITableViewController, Subscriber {
         
         switch section {
         case .assets:
-            isAddWalletRow(row: indexPath.row) ? didTapAddWallet?() : didSelectCurrency?(Store.state.currencies[indexPath.row])
+            isAddWalletRow(row: indexPath.row) ? didTapAddWallet?() : didSelectCurrency?(Store.state.displayCurrencies[indexPath.row])
         case .menu:
             guard let item = Menu(rawValue: indexPath.row) else { return }
             switch item {
@@ -192,6 +192,6 @@ class AssetListTableView: UITableViewController, Subscriber {
     }
 
     private func isAddWalletRow(row: Int) -> Bool {
-        return row == Store.state.currencies.count
+        return row == Store.state.displayCurrencies.count
     }
 }

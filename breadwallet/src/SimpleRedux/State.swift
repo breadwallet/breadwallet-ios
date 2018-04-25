@@ -41,6 +41,10 @@ struct State {
     var primaryWallet: WalletState {
         return wallets[Currencies.btc.code]!
     }
+
+    var displayCurrencies: [CurrencyDef] {
+        return orderedWallets.filter { $0.displayOrder >= 0 }.map { $0.currency }
+    }
 }
 
 extension State {
@@ -119,7 +123,7 @@ enum SyncState {
 
 struct WalletState {
     let currency: CurrencyDef
-    let displayOrder: Int
+    let displayOrder: Int // -1 for hidden
     let syncProgress: Double
     let syncState: SyncState
     let balance: UInt256?
