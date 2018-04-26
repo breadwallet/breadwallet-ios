@@ -38,6 +38,8 @@ class EthWalletManager : WalletManager {
     var ethAddress: BREthereumAddress?
     var account: BREthereumAccount?
     var ethWallet: BREthereumWallet?
+    var latestBlockNumber: UInt64?
+    
     private var timer: Timer? = nil
     private let updateInterval: TimeInterval = 15
     private var pendingTransactions = [EthTx]()
@@ -71,6 +73,7 @@ class EthWalletManager : WalletManager {
         updateTransactionList()
         updateTokenBalances()
         updateTokenTransactions()
+        updateBlockNumber()
     }
 
     private func updateBalance() {
@@ -83,6 +86,17 @@ class EthWalletManager : WalletManager {
                 print("getBalance error: \(error.localizedDescription)")
             }
         })
+    }
+    
+    private func updateBlockNumber() {
+        apiClient?.getLastBlockNumber() { [weak self] result in
+            switch result {
+            case .success(let blockNumber):
+                self?.latestBlockNumber = blockNumber.asUInt64
+            case .error(let error):
+                print("getLatestBlock error: \(error.localizedDescription)")
+            }
+        }
     }
 
     private func updateTransactionList() {
@@ -271,7 +285,7 @@ extension EthWalletManager {
                         }
                     }
                 }
-                let transactions = pendingTokenTxs + eventList.sorted(by: { $0.timeStamp > $1.timeStamp }).map { ERC20Transaction(event: $0, accountAddress: address, token: token, kvStore: self.kvStore, rate: token.state?.currentRate) }
+                let transactions = pendingTokenTxs + eventList.sorted(by: { $0.timeStamp > $1.timeStamp }).map { ERC20Transaction(event: $0, accountAddress: address, token: token, latestBlockNumber: self.latestBlockNumber, kvStore: self.kvStore, rate: token.state?.currentRate) }
                 Store.perform(action: WalletChange(token).setTransactions(transactions))
             })
         }

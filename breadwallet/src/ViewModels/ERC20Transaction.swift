@@ -36,7 +36,7 @@ struct ERC20Transaction: EthLikeTransaction {
     
     // MARK: - Init
     
-    init(event: EthLogEvent, accountAddress: String, token: ERC20Token, kvStore: BRReplicatedKVStore?, rate: Rate?) {
+    init(event: EthLogEvent, accountAddress: String, token: ERC20Token, latestBlockNumber: UInt64?, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         self.currency = token
         
         self.timestamp = TimeInterval(event.timeStamp)
@@ -69,8 +69,23 @@ struct ERC20Transaction: EthLikeTransaction {
         
         self.amount = UInt256(hexString: event.data)
         
-        //TODO:ERC20 confirmations?
-        self.status = event.isLocal ? .pending : .complete
+        if let latestBlockNumber = latestBlockNumber {
+            let confirmations = (latestBlockNumber > event.blockNumber) ? (latestBlockNumber - event.blockNumber) : 0
+            if event.isLocal {
+                self.status = .pending
+            } else {
+                switch confirmations {
+                case 0:
+                    status = .pending
+                case 1..<6:
+                    status = .confirmed
+                default:
+                    status = .complete
+                }
+            }
+        } else {
+            self.status = event.isLocal ? .pending : .complete
+        }
         
         // metadata
         self.kvStore = kvStore
