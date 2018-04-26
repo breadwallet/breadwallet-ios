@@ -57,10 +57,7 @@ class CurrencyListMetaData : BRKVStoreObject, BRCoding {
 
         //Upgrade Testflight users from a time before hiding currencies was possible
         if classVersion == 1 {
-            enabledCurrencies = [Currencies.btc.code,
-                                 Currencies.bch.code,
-                                 Currencies.eth.code,
-                                 "\(C.erc20Prefix)\(Currencies.brd.address)"] + enabledCurrencies
+            enabledCurrencies = CurrencyListMetaData.defaultCurrencies + enabledCurrencies
             doesRequireSave = 1
         }
 
@@ -72,6 +69,13 @@ class CurrencyListMetaData : BRKVStoreObject, BRCoding {
         coder.encode(enabledCurrencies, key: "enabledCurrencies")
         coder.encode(hiddenCurrencies, key: "hiddenCurrencies")
         coder.encode(doesRequireSave, key: "doesRequireSave")
+    }
+
+    class var defaultCurrencies: [String] {
+        return [Currencies.btc.code,
+                Currencies.bch.code,
+                Currencies.eth.code,
+                "\(C.erc20Prefix)\(Currencies.brd.address)"]
     }
 }
 
