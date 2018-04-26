@@ -48,11 +48,14 @@ class EditWalletsViewController : UIViewController {
     private let metaData: CurrencyListMetaData
     private let localCurrencies: [CurrencyDef] = [Currencies.btc, Currencies.bch, Currencies.eth, Currencies.brd]
     private let tableView = UITableView()
+    private let searchBar = UISearchBar()
 
     //(Currency, isHidden)
     private var model = [(CurrencyDef, Bool)]() {
         didSet { tableView.reloadData() }
     }
+
+    private var allModels = [(CurrencyDef, Bool)]()
 
     init(type: TokenListType, kvStore: BRReplicatedKVStore) {
         self.type = type
@@ -94,6 +97,20 @@ class EditWalletsViewController : UIViewController {
         if type == .manage {
             tableView.setEditing(true, animated: true)
         }
+        addSearchBar()
+    }
+
+    private func addSearchBar() {
+        guard type == .add else { return }
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 48.0))
+        tableView.tableHeaderView = headerView
+        headerView.addSubview(searchBar)
+        searchBar.delegate = self
+        searchBar.constrain([
+            searchBar.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: C.padding[1]),
+            searchBar.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -C.padding[1]),
+            searchBar.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)])
+        searchBar.backgroundImage = UIImage()
     }
 
     private func setManageModel(storedCurrencies: [CurrencyDef]) {
@@ -105,6 +122,7 @@ class EditWalletsViewController : UIViewController {
 
     private func setAddModel(storedCurrencies: [CurrencyDef]) {
         model = storedCurrencies.filter { !self.metaData.previouslyAddedTokenAddresses.contains(($0 as! ERC20Token).address)}.map{($0, true)}
+        allModels = model
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -127,6 +145,13 @@ class EditWalletsViewController : UIViewController {
 
     private func editCurrency(identifier: String, isHidden: Bool) {
         model = model.map { row in
+            if currencyMatchesCode(currency: row.0, identifier: identifier) {
+                return (row.0, isHidden)
+            } else {
+                return row
+            }
+        }
+        allModels = allModels.map { row in
             if currencyMatchesCode(currency: row.0, identifier: identifier) {
                 return (row.0, isHidden)
             } else {
@@ -252,6 +277,18 @@ extension EditWalletsViewController : UITableViewDelegate, UITableViewDataSource
         let movedObject = model[sourceIndexPath.row]
         model.remove(at: sourceIndexPath.row)
         model.insert(movedObject, at: destinationIndexPath.row)
+    }
+}
+
+extension EditWalletsViewController : UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText == "" {
+            model = allModels
+        } else {
+            model = allModels.filter {
+                return $0.0.name.lowercased().contains(searchText.lowercased()) || $0.0.code.lowercased().contains(searchText.lowercased())
+            }
+        }
     }
 }
 
