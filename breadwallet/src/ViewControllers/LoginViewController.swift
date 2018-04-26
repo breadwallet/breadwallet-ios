@@ -90,6 +90,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     private var hasAttemptedToShowBiometrics = false
     private let lockedOverlay = UIVisualEffectView()
     private var isResetting = false
+    private let version = UILabel(font: .customMedium(size: 12), color: .whiteTint)
 
     override func viewDidLoad() {
         addSubviews()
@@ -170,6 +171,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         topControlContainer.addSubview(addressButton)
         topControlContainer.addSubview(scanButton)
         view.addSubview(logo)
+        view.addSubview(version)
         if walletManager != nil {
             view.addSubview(pinPadBackground)
         } else {
@@ -213,6 +215,10 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             logo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: C.Sizes.logoAspectRatio),
             logo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.35) ])
+        version.constrain([
+            version.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            version.topAnchor.constraint(equalTo:logo.bottomAnchor, constant: C.padding[2]),
+            version.heightAnchor.constraint(equalToConstant: 14)])
         if walletManager != nil {
             pinPadBackground.constrain([
                 pinPadBackground.leadingAnchor.constraint(equalTo: pinPad.view.leadingAnchor),
@@ -226,6 +232,8 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             activityView.startAnimating()
         }
         subheader.text = S.UnlockScreen.subheader
+        version.text = AppVersion.string
+        version.textAlignment = .center
 
         addressButton.addTarget(self, action: #selector(addressTapped), for: .touchUpInside)
         scanButton.addTarget(self, action: #selector(scanTapped), for: .touchUpInside)

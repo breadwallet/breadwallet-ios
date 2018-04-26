@@ -32,7 +32,7 @@ struct C {
     static let animationDuration: TimeInterval = 0.3
     static let secondsInDay: TimeInterval = 86400
     static let maxMoney: UInt64 = 84000000*100000000
-    static let satoshis: UInt64 = 100000000//TODO: review math to replace with 'litoshis'
+    static let satoshis: UInt64 = 100000000
     static let walletQueue = "com.litecoin.walletqueue"
     static let btcCurrencyCode = "LTC"
     static let null = "(null)"
@@ -42,4 +42,10 @@ struct C {
     static var standardPort: Int {
         return E.isTestnet ? 19335 : 9333
     }
+}
+
+struct AppVersion {
+    static let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+    static let versionNumber = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    static let string = "v." + versionNumber! + " (\(buildNumber!))"
 }
