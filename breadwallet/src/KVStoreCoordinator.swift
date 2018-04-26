@@ -19,10 +19,12 @@ class KVStoreCoordinator : Subscriber {
         //If stored currency list metadata doesn't exist, create a new one
         guard let currencyMetaData = CurrencyListMetaData(kvStore: kvStore) else {
             let newCurrencyListMetaData = CurrencyListMetaData()
+            newCurrencyListMetaData.enabledCurrencies = CurrencyListMetaData.defaultCurrencies
             set(newCurrencyListMetaData)
-            //TODO - setInitialDisplayWallets
+            setInitialDisplayWallets(metaData: newCurrencyListMetaData, tokenData: [])
             return
         }
+
         if currencyMetaData.doesRequireSave == 1 {
             currencyMetaData.doesRequireSave = 0
             set(currencyMetaData)
