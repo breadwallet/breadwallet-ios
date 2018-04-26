@@ -20,7 +20,7 @@ class StartViewController : UIViewController {
     }
 
     //MARK: - Private
-    private let message = UILabel(font: .customMedium(size: 18.0), color: .whiteTint)
+    private let message = UILabel(font: .customMedium(size: 20.0), color: .whiteTint)
     private let create = ShadowButton(title: S.StartViewController.createButton, type: .primary)
     private let recover = ShadowButton(title: S.StartViewController.recoverButton, type: .secondary)
     private let store: Store
@@ -33,6 +33,7 @@ class StartViewController : UIViewController {
         return image
     }()
     private var faq: UIButton
+    private let version = UILabel(font: .customMedium(size: 12), color: .whiteTint)
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -48,6 +49,8 @@ class StartViewController : UIViewController {
         message.numberOfLines = 0
         message.textAlignment = .center
         faq.tintColor = .whiteTint
+        version.text = AppVersion.string
+        version.textAlignment = .left
     }
 
     private func addSubviews() {
@@ -57,6 +60,7 @@ class StartViewController : UIViewController {
         view.addSubview(create)
         view.addSubview(recover)
         view.addSubview(faq)
+        view.addSubview(version)
     }
 
     private func addConstraints() {
@@ -67,7 +71,7 @@ class StartViewController : UIViewController {
             yConstraint])
         message.constrain([
             message.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            message.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: C.padding[3]),
+            message.topAnchor.constraint(equalTo: version.bottomAnchor, constant: C.padding[3]),
             message.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
         recover.constrain([
             recover.constraint(.leading, toView: view, constant: C.padding[2]),
@@ -84,6 +88,10 @@ class StartViewController : UIViewController {
             faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             faq.widthAnchor.constraint(equalToConstant: 44.0),
             faq.heightAnchor.constraint(equalToConstant: 44.0) ])
+        version.constrain([
+            version.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: C.padding[2]),
+            version.constraint(.centerX, toView: view, constant: nil),
+            version.heightAnchor.constraint(equalToConstant: 20.0) ])
     }
 
     private func addButtonActions() {
