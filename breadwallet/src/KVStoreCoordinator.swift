@@ -34,6 +34,19 @@ class KVStoreCoordinator : Subscriber {
         StoredTokenData.fetchTokens(callback: { tokenData in
             self.setInitialDisplayWallets(metaData: currencyMetaData, tokenData: tokenData.map { ERC20Token(tokenData: $0) })
         })
+
+        Store.subscribe(self, name: .resetDisplayCurrencies, callback: { _ in
+            self.resetDisplayCurrencies()
+        })
+    }
+
+    private func resetDisplayCurrencies() {
+        guard let currencyMetaData = CurrencyListMetaData(kvStore: kvStore) else { return }
+        currencyMetaData.enabledCurrencies = CurrencyListMetaData.defaultCurrencies
+        currencyMetaData.hiddenCurrencies = []
+        set(currencyMetaData)
+        try? kvStore.syncKey(tokenListMetaDataKey, completionHandler: {_ in })
+        setInitialDisplayWallets(metaData: currencyMetaData, tokenData: [])
     }
 
     private func setInitialDisplayWallets(metaData: CurrencyListMetaData, tokenData: [ERC20Token]) {

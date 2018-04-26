@@ -379,7 +379,13 @@ class ModalPresenter : Subscriber, Trackable {
                 let currencySettingsVC = SettingsViewController(sections: sections, rows: currencySettings, optionalTitle: pageTitle)
                 settingsNav.pushViewController(currencySettingsVC, animated: true)
             })
-        }
+            } + [
+                Setting(title: S.Settings.resetCurrencies, callback: {
+                    settingsNav.dismiss(animated: true, completion: {
+                        Store.trigger(name: .resetDisplayCurrencies)
+                    })
+                })
+        ]
         
         let rows = [
             SettingsSections.wallet: [
@@ -482,7 +488,7 @@ class ModalPresenter : Subscriber, Trackable {
         settingsNav.viewControllers = [settings]
         top.present(settingsNav, animated: true, completion: nil)
     }
-        
+
     private func presentScan(parent: UIViewController, currency: CurrencyDef) -> PresentScan {
         return { [weak parent] scanCompletion in
             guard ScanViewController.isCameraAllowed else {
