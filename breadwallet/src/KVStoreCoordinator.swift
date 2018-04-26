@@ -61,6 +61,20 @@ class KVStoreCoordinator : Subscriber {
                 }
             }
         }
+
+        //Re-add hidden default currencies
+        CurrencyListMetaData.defaultCurrencies.forEach {
+            if let walletState = oldWallets[$0] {
+                if newWallets[$0] == nil {
+                    newWallets[$0] = walletState
+                }
+            }
+
+            let tokenAddress = $0.replacingOccurrences(of: C.erc20Prefix, with: "")
+            if tokenAddress.lowercased() == Currencies.brd.address.lowercased() {
+                newWallets[Currencies.brd.code] = oldWallets[Currencies.brd.code]
+            }
+        }
         Store.perform(action: ManageWallets.setWallets(newWallets))
     }
     
