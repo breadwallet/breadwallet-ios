@@ -364,7 +364,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                     return asyncResp
             }
             
-            if (amount <= balance) && (amount + fee) > balance {
+            if !(currency is ERC20Token) && (amount <= balance) && (amount + fee) > balance {
                 // amount is close to balance and fee puts it over, subtract the fee
                 amount = amount - fee
             }
