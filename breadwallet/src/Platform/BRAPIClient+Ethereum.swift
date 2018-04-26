@@ -17,6 +17,10 @@ extension BRAPIClient {
         send(rpcRequest: JSONRPCRequest(method: "eth_getBalance", params: JSONRPCParams([address, "latest"])), handler: handler)
     }
     
+    public func getLastBlockNumber(handler: @escaping (JSONRPCResult<Quantity>) -> Void) {
+        send(rpcRequest: JSONRPCRequest(method: "eth_blockNumber", params: JSONRPCParams(["latest"])), handler: handler)
+    }
+    
     public func getGasPrice(handler: @escaping (JSONRPCResult<Quantity>) -> Void) {
         send(rpcRequest: JSONRPCRequest(method: "eth_gasPrice", params: JSONRPCParams([])), handler: handler)
     }
@@ -71,10 +75,8 @@ extension BRAPIClient {
                 return handler(.error(.httpError(error: nil)))
             }
             
-            var rpcResponse: JSONRPCResponse<ResultType>
-            
             do {
-                rpcResponse = try JSONRPCResponse<ResultType>.from(data: data)
+                let rpcResponse = try JSONRPCResponse<ResultType>.from(data: data)
                 if let rpcError = rpcResponse.error {
                     handler(.error(.rpcError(error: rpcError)))
                 } else {
