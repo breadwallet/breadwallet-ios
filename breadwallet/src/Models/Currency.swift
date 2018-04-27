@@ -269,7 +269,7 @@ public struct Currencies {
     static let brd = ERC20Token(name: "BRD",
                                 code: "BRD",
                                 symbol: "🍞",
-                                colors: (UIColor(red:0.95, green:0.65, blue:0.00, alpha:1.0), UIColor(red:0.95, green:0.35, blue:0.13, alpha:1.0)),
+                                colors: (UIColor.fromHex("f9a43a"), UIColor.fromHex("ff5193")),
                                 address: E.isTestnet ? "0x7108ca7c4718efa810457f228305c9c71390931a" :  "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6",
                                 abi: ERC20Token.standardAbi,
                                 decimals: 18)
