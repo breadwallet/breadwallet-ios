@@ -111,6 +111,7 @@ class EditWalletsViewController : UIViewController {
             searchBar.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -C.padding[1]),
             searchBar.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)])
         searchBar.backgroundImage = UIImage()
+        searchBar.placeholder = S.Search.search
     }
 
     private func setManageModel(storedCurrencies: [CurrencyDef]) {
