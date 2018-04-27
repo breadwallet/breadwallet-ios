@@ -57,33 +57,24 @@ class TxDetailDataSource: NSObject {
         self.viewModel = viewModel
         
         // define visible rows and order
-        fields = [
-            .amount,
-            .status,
-            .timestamp,
-            .address,
-            .memo,
-            .exchangeRate,
-            .blockHeight,
-            .transactionId
-        ]
+        fields = [.amount]
         
-        if let index = fields.index(of: .exchangeRate) {
-            if viewModel.currency is Ethereum {
-                fields.insert(contentsOf: [.gasPrice, .gasLimit, .fee, .total], at: index)
-            } else if viewModel.currency is ERC20Token {
-                fields.insert(contentsOf: [.gasPrice, .fee, .total], at: index)
-            }
+        if viewModel.status != .complete && viewModel.status != .invalid {
+            fields.append(.status)
         }
         
-        if (viewModel.status == .complete || viewModel.status == .invalid),
-            let index = fields.index(of: .status) {
-            fields.remove(at: index)
-        }
+        fields.append(.timestamp)
+        fields.append(.address)
         
-        if viewModel.comment == nil, let index = fields.index(of: .memo) {
-            fields.remove(at: index)
-        }
+        if viewModel.comment != nil      { fields.append(.memo) }
+        if viewModel.gasPrice != nil     { fields.append(.gasPrice) }
+        if viewModel.gasLimit != nil     { fields.append(.gasLimit) }
+        if viewModel.fee != nil          { fields.append(.fee) }
+        if viewModel.total != nil        { fields.append(.total) }
+        if viewModel.exchangeRate != nil { fields.append(.exchangeRate) }
+        
+        fields.append(.blockHeight)
+        fields.append(.transactionId)
     }
     
     func registerCells(forTableView tableView: UITableView) {
@@ -159,7 +150,7 @@ extension TxDetailDataSource: UITableViewDataSource {
             
         case .exchangeRate:
             let labelCell = cell as! TxLabelCell
-            labelCell.value = viewModel.exchangeRate
+            labelCell.value = viewModel.exchangeRate ?? ""
             
         case .blockHeight:
             let labelCell = cell as! TxLabelCell
