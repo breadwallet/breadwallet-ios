@@ -148,12 +148,15 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         address.text = addressText
         address.lineBreakMode = .byTruncatingMiddle
         
-        //TODO:ETH
-        switch feeType {
-        case .regular:
-            processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.regularTime)
-        case .economy:
-            processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.economyTime)
+        if currency is Bitcoin {
+            switch feeType {
+            case .regular:
+                processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.regularTime)
+            case .economy:
+                processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.economyTime)
+            }
+        } else {
+            processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.ethTime)
         }
 
         sendLabel.text = S.Confirmation.amountLabel
