@@ -173,7 +173,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 let feeAmount = Amount(amount: fee, currency: feeCurrency, rate: rate)
                 let feeText = feeAmount.description
                 feeOutput = String(format: S.Send.fee, feeText)
-                if (balance >= fee) && amount.rawValue > (balance - fee) {
+                if feeCurrency.matches(currency) && (balance >= fee) && amount.rawValue > (balance - fee) {
                     color = .cameraGuideNegative
                 }
             } else {

@@ -431,17 +431,8 @@ class EthSenderBase<CurrencyType: CurrencyDef> : SenderBase<CurrencyType, EthWal
     // MARK: Private
     
     fileprivate func validate(address: String, amount: UInt256) -> SenderValidationResult {
-        guard currency.isValidAddress(address) else { return .invalidAddress }
-        guard !walletManager.isOwnAddress(address) else { return .ownAddress }
-        if let balance = currency.state?.balance {
-            guard amount < balance else { return .insufficientFunds }
-        }
-        // ERC20 token transfers require ETH for gas
-        if !currency.matches(Currencies.eth), let ethBalance = Currencies.eth.state?.balance {
-            guard ethBalance > UInt256(0) else { return .insufficientGas }
-        }
-        //guard currency.state.currentRate != nil else { return .noExchangeRate } // allow sending without exchange rate
-        return .ok
+        // must override
+        return .failed
     }
 }
 
@@ -478,6 +469,18 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
                 }
             }
         }
+    }
+    
+    // MARK: EthSenderBase
+    
+    fileprivate override func validate(address: String, amount: UInt256) -> SenderValidationResult {
+        guard currency.isValidAddress(address) else { return .invalidAddress }
+        guard !walletManager.isOwnAddress(address) else { return .ownAddress }
+        if let balance = currency.state?.balance {
+            guard amount < balance else { return .insufficientFunds }
+        }
+        //guard currency.state.currentRate != nil else { return .noExchangeRate } // allow sending without exchange rate
+        return .ok
     }
     
     // MARK: Private
@@ -529,6 +532,22 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
                 }
             }
         }
+    }
+    
+    // MARK: EthSenderBase
+    
+    fileprivate override func validate(address: String, amount: UInt256) -> SenderValidationResult {
+        guard currency.isValidAddress(address) else { return .invalidAddress }
+        guard !walletManager.isOwnAddress(address) else { return .ownAddress }
+        if let balance = currency.state?.balance {
+            guard amount <= balance else { return .insufficientFunds }
+        }
+        // ERC20 token transfers require ETH for gas
+        if let ethBalance = Currencies.eth.state?.balance {
+            guard ethBalance > UInt256(0) else { return .insufficientGas }
+        }
+        //guard currency.state.currentRate != nil else { return .noExchangeRate } // allow sending without exchange rate
+        return .ok
     }
     
     // MARK: Private
