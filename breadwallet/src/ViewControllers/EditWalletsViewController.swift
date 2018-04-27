@@ -67,6 +67,7 @@ class EditWalletsViewController : UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = .white
         view.addSubview(tableView)
+        tableView.keyboardDismissMode = .interactive
         tableView.constrain([
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
