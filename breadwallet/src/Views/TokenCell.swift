@@ -10,8 +10,8 @@ import UIKit
 
 class TokenCell : UITableViewCell {
 
-    private let header = UILabel(font: .customBold(size: 18.0), color: .darkText)
-    private let subheader = UILabel(font: .customBody(size: 16.0), color: .secondaryShadow)
+    private let header = UILabel(font: .customBold(size: 18.0), color: UIColor.fromHex("546875"))
+    private let subheader = UILabel(font: .customBody(size: 16.0), color: UIColor.fromHex("546875"))
     private let icon = UIImageView()
     private let button = UIButton.outline(title: S.TokenList.add)
     private var identifier: String = ""
@@ -55,21 +55,22 @@ class TokenCell : UITableViewCell {
 
     private func addConstraints() {
         icon.constrain([
-            icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[1]),
             icon.topAnchor.constraint(equalTo: contentView.topAnchor, constant: C.padding[1]),
             icon.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -C.padding[1]),
-            icon.heightAnchor.constraint(equalToConstant: 44.0),
-            icon.widthAnchor.constraint(equalToConstant: 44.0)])
+            icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[2]),
+            icon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            icon.heightAnchor.constraint(equalToConstant: 40.0),
+            icon.widthAnchor.constraint(equalToConstant: 40.0)])
         header.constrain([
             header.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: C.padding[1]),
-            header.bottomAnchor.constraint(equalTo: contentView.centerYAnchor)])
+            header.bottomAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 1.0)])
         subheader.constrain([
             subheader.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: C.padding[1]),
-            subheader.topAnchor.constraint(equalTo: contentView.centerYAnchor)])
+            subheader.topAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -1.0)])
         button.constrain([
-            button.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -C.padding[1]),
-            button.topAnchor.constraint(equalTo: contentView.topAnchor, constant: C.padding[1]),
-            button.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -C.padding[1]),
+            button.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -C.padding[2]),
+            button.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            button.heightAnchor.constraint(equalToConstant: 40.0),
             button.widthAnchor.constraint(equalToConstant: 80.0)])
     }
 
