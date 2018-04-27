@@ -82,7 +82,6 @@ class EditWalletsViewController : UIViewController {
         }
         tableView.delegate = self
         tableView.dataSource = self
-        title = type.title
         tableView.register(TokenCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.separatorStyle = .singleLine
         tableView.separatorInset = UIEdgeInsetsMake(0, C.padding[2], 0, C.padding[2])
@@ -106,7 +105,9 @@ class EditWalletsViewController : UIViewController {
                 self.setManageModel(storedCurrencies: $0.map{ ERC20Token(tokenData: $0) })
             }
         })
+        title = type.title
     }
+
 
     private func addSearchBar() {
         guard type == .add else { return }
@@ -153,6 +154,7 @@ class EditWalletsViewController : UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         reconcileChanges()
+        title = ""
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
