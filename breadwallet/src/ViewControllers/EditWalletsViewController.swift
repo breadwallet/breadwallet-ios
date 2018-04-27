@@ -45,7 +45,7 @@ class EditWalletsViewController : UIViewController {
     private let type: TokenListType
     private let cellIdentifier = "CellIdentifier"
     private let kvStore: BRReplicatedKVStore
-    private let metaData: CurrencyListMetaData
+    private var metaData: CurrencyListMetaData
     private let localCurrencies: [CurrencyDef] = [Currencies.btc, Currencies.bch, Currencies.eth, Currencies.brd]
     private let tableView = UITableView()
     private let searchBar = UISearchBar()
@@ -86,8 +86,19 @@ class EditWalletsViewController : UIViewController {
         tableView.register(TokenCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.separatorStyle = .singleLine
         tableView.separatorInset = UIEdgeInsetsMake(0, C.padding[2], 0, C.padding[2])
+
+        if type == .manage {
+            tableView.setEditing(true, animated: true)
+            addMenuButton()
+        }
+        addSearchBar()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         StoredTokenData.fetchTokens(callback: { [weak self] in
             guard let `self` = self else { return }
+            self.metaData = CurrencyListMetaData(kvStore: self.kvStore)!
             switch self.type {
             case .add:
                 self.setAddModel(storedCurrencies: $0.map{ ERC20Token(tokenData: $0) })
@@ -95,10 +106,6 @@ class EditWalletsViewController : UIViewController {
                 self.setManageModel(storedCurrencies: $0.map{ ERC20Token(tokenData: $0) })
             }
         })
-        if type == .manage {
-            tableView.setEditing(true, animated: true)
-        }
-        addSearchBar()
     }
 
     private func addSearchBar() {
@@ -113,6 +120,22 @@ class EditWalletsViewController : UIViewController {
             searchBar.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)])
         searchBar.backgroundImage = UIImage()
         searchBar.placeholder = S.Search.search
+    }
+
+    private func addMenuButton() {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 56.0))
+        tableView.tableFooterView = footerView
+        let menuButton = MenuButton(title: S.MenuButton.addWallet, icon: #imageLiteral(resourceName: "PlaylistPlus"))
+        footerView.addSubview(menuButton)
+        menuButton.constrain(toSuperviewEdges: UIEdgeInsetsMake(0, 0, 0, 0))
+        menuButton.tap = {
+            self.pushAddWallets()
+        }
+    }
+
+    private func pushAddWallets() {
+        let addWallets = EditWalletsViewController(type: .add, kvStore: kvStore)
+        navigationController?.pushViewController(addWallets, animated: true)
     }
 
     private func setManageModel(storedCurrencies: [CurrencyDef]) {

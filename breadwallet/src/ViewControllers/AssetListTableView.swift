@@ -17,7 +17,7 @@ class AssetListTableView: UITableViewController, Subscriber {
     var didTapAddWallet: (() -> Void)?
     private let assetHeight: CGFloat = 85.0
     private let menuHeight: CGFloat = 53.0
-    private let addWalletContent = (S.MenuButton.addWallet, #imageLiteral(resourceName: "PlaylistPlus"))
+    private let manageWalletContent = (S.TokenList.manageTitle, #imageLiteral(resourceName: "PlaylistPlus"))
 
     // MARK: - Init
     
@@ -129,7 +129,7 @@ class AssetListTableView: UITableViewController, Subscriber {
 
         if section == .assets && isAddWalletRow(row: indexPath.row) {
             let cell = tableView.dequeueReusableCell(withIdentifier: MenuCell.cellIdentifier, for: indexPath) as! MenuCell
-            cell.set(title: addWalletContent.0, icon: addWalletContent.1)
+            cell.set(title: manageWalletContent.0, icon: manageWalletContent.1)
             return cell
         }
 
