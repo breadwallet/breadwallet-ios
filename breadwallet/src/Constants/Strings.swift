@@ -430,6 +430,7 @@ enum S {
         static let received = NSLocalizedString("Search.received", value: "received", comment: "Received filter label")
         static let pending = NSLocalizedString("Search.pending", value: "pending", comment: "Pending filter label")
         static let complete = NSLocalizedString("Search.complete", value: "complete", comment: "Complete filter label")
+        static let search = NSLocalizedString("Search.search", value: "Search", comment: "Search bar placeholder text")
     }
 
     enum Prompts {
