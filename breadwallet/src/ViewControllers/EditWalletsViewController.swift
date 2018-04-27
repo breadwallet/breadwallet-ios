@@ -67,18 +67,17 @@ class EditWalletsViewController : UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = .white
         view.addSubview(tableView)
+        tableView.constrain([
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
         if #available(iOS 11.0, *) {
             tableView.constrain([
-                tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-                tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
+                tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)])
         } else {
             tableView.constrain([
-                tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                tableView.topAnchor.constraint(equalTo: view.topAnchor),
-                tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
+                tableView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor)])
+            automaticallyAdjustsScrollViewInsets = false
         }
         tableView.delegate = self
         tableView.dataSource = self
