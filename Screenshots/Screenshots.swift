@@ -56,14 +56,26 @@ class Screenshots: XCTestCase {
         snapshot("1TxList")
         app.navigationBars.buttons.element(boundBy: 0).tap()
         
-        // security center
-        let currencyRows = 3
-        tablesQuery.cells.element(boundBy: currencyRows + 1).tap()
+        enum Rows: Int {
+            case bitcoin = 0
+            case addWallet = 4 // number of currencies
+            case settings
+            case security
+            case support
+        }
+        
+        let security = Rows.security.rawValue
+        
+        tablesQuery.cells.element(boundBy: Rows.addWallet.rawValue).tap()
+        snapshot("5AddWallet")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        
+        tablesQuery.cells.element(boundBy: Rows.security.rawValue).tap()
         snapshot("3Security")
         app.scrollViews.otherElements.buttons["Close"].tap()
         
         // support
-        tablesQuery.cells.element(boundBy: currencyRows + 2).tap()
+        tablesQuery.cells.element(boundBy: Rows.support.rawValue).tap()
         //snapshot("4Support") // TODO: this fails with "error getting main window"
     }
     
