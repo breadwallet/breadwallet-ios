@@ -40,7 +40,7 @@ extension UIButton {
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = UIFont.customMedium(size: 16.0)
         button.layer.cornerRadius = 5
-        button.layer.borderWidth = 1.0
+        button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.blue.cgColor
         return button
     }

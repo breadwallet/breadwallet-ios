@@ -83,7 +83,8 @@ class EditWalletsViewController : UIViewController {
         tableView.dataSource = self
         title = type.title
         tableView.register(TokenCell.self, forCellReuseIdentifier: cellIdentifier)
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = .singleLine
+        tableView.separatorInset = UIEdgeInsetsMake(0, C.padding[2], 0, C.padding[2])
         StoredTokenData.fetchTokens(callback: { [weak self] in
             guard let `self` = self else { return }
             switch self.type {
