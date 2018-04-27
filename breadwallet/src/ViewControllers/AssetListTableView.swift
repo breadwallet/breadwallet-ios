@@ -50,7 +50,7 @@ class AssetListTableView: UITableViewController, Subscriber {
         })
         
         Store.subscribe(self, selector: {
-            $0.displayCurrencies.count != $1.displayCurrencies.count
+            $0.displayCurrencies.map { $0.code } != $1.displayCurrencies.map { $0.code }
         }, callback: { _ in
                 self.tableView.reloadData()
             })
