@@ -371,7 +371,7 @@ class ApplicationController : Subscriber, Trackable {
 
         home.didTapAddWallet = { [weak self] in
             guard let kvStore = self?.primaryWalletManager?.apiClient?.kv else { return }
-            let vc = EditWalletsViewController(type: .add, kvStore: kvStore)
+            let vc = EditWalletsViewController(type: .manage, kvStore: kvStore)
             nc.pushViewController(vc, animated: true)
         }
 
