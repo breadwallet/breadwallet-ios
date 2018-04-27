@@ -13,8 +13,8 @@ import BRCore.Ethereum
 class EthWalletManager : WalletManager {
     static let defaultGasLimit: UInt64 = 48_000 // higher than standard 21000 to allow sending to contracts
     static let defaultTokenTransferGasLimit: UInt64 = 92_000
-    static let defaultGasPrice = etherCreateNumber(500, MWEI).valueInWEI // 0.5 gwei
-    static let maxGasPrice = etherCreateNumber(100, GWEI).valueInWEI // 100 gwei
+    static let defaultGasPrice = etherCreateNumber(1, GWEI).valueInWEI
+    static let maxGasPrice = etherCreateNumber(100, GWEI).valueInWEI
 
     var peerManager: BRPeerManager?
     var wallet: BRWallet?
