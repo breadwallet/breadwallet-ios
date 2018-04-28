@@ -363,10 +363,11 @@ extension WalletManager : WalletAuthenticator {
                 else { return nil }
             let phraseLen = BRBIP39Encode(nil, 0, &words, entropyRef, MemoryLayout<UInt128>.size)
             var phraseData = CFDataCreateMutable(secureAllocator, phraseLen) as Data
+            var localPhraseData = phraseData
             phraseData.count = phraseLen
-            guard phraseData.withUnsafeMutableBytes({
-                BRBIP39Encode($0, phraseData.count, &words, entropyRef, MemoryLayout<UInt128>.size)
-            }) == phraseData.count else { return nil }
+            guard localPhraseData.withUnsafeMutableBytes({
+                BRBIP39Encode($0, localPhraseData.count, &words, entropyRef, MemoryLayout<UInt128>.size)
+            }) == localPhraseData.count else { return nil }
             entropy = UInt128()
             let phrase = CFStringCreateFromExternalRepresentation(secureAllocator, phraseData as CFData,
                                                                   CFStringBuiltInEncodings.UTF8.rawValue) as String

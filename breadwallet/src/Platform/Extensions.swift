@@ -239,7 +239,7 @@ public extension Data {
         myDat.withUnsafeMutableBytes { (datBuff: UnsafeMutablePointer<Int8>) -> Void in
             stream.next_in = datBuff
             stream.avail_in = UInt32(data.count)
-            var buff = Data(capacity: Int(BZCompressionBufferSize))
+            var buff = Data(capacity: Int(BZCompressionBufferSize)) 
             buff.withUnsafeMutableBytes { (outBuff: UnsafeMutablePointer<Int8>) -> Void in
                 stream.next_out = outBuff
                 stream.avail_out = BZCompressionBufferSize
