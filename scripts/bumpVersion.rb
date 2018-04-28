@@ -1,14 +1,14 @@
 # dependencies: gem install xcodeproj
-# 
+#
 # invocation: ruby bumpVersion.rb
 #
 # This will increment the CFBundleVersion of all of the required targets by one
-# 
+#
 require 'xcodeproj'
 project_path = './breadwallet.xcodeproj'
 project = Xcodeproj::Project.open(project_path)
 
-desiredTargets = ['breadwallet', 'breadwallet WatchKit Extension', 'breadwallet WatchKit App', 'TodayExtension', 'NotificationServiceExtension', 'MessagesExtension']
+desiredTargets = ['breadwallet', 'breadwallet WatchKit Extension', 'breadwallet WatchKit App', 'TodayExtension', 'NotificationServiceExtension', 'MessagesExtension', 'loafwallet-dev', 'loafwallet-dev WatchKit Extension', 'loafwallet-dev WatchKit App', 'TodayExtension-dev', 'NotificationServiceExtension-dev', 'MessagesExtension-dev']
 targets = project.native_targets.select do |target|
   desiredTargets.include? target.name
 end
