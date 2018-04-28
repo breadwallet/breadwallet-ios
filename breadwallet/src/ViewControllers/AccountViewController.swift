@@ -57,7 +57,7 @@ class AccountViewController : UIViewController, Subscriber {
     //MARK: - Private
     private let store: Store
     private let headerView: AccountHeaderView
-    private let footerView = AccountFooterView()
+    private var footerView = AccountFooterView()
     private let transactionsLoadingView = LoadingProgressView()
     private let transactionsTableView: TransactionsTableViewController
     private let footerHeight: CGFloat = 56.0
@@ -101,6 +101,11 @@ class AccountViewController : UIViewController, Subscriber {
             }
             NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: nil) { note in
                 self.showJailbreakWarnings(isJailbroken: isJailbroken)
+            }
+            NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil) { _ in
+                if UserDefaults.writePaperPhraseDate != nil {
+                    self.footerView.refreshButtonStatus()
+                }
             }
             showJailbreakWarnings(isJailbroken: isJailbroken)
         }

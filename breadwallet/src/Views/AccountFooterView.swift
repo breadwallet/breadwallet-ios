@@ -13,12 +13,11 @@ class AccountFooterView: UIView {
     var sendCallback: (() -> Void)?
     var receiveCallback: (() -> Void)?
     var menuCallback: (() -> Void)?
+    var hasSetup = false
 
     init() {
         super.init(frame: .zero)
     }
-
-    var hasSetup = false
 
     override func layoutSubviews() {
         guard !hasSetup else { return }
@@ -51,6 +50,9 @@ class AccountFooterView: UIView {
         addSubview(send)
         addSubview(receive)
         addSubview(menu)
+        
+        send.isEnabled = checkPaperKeyStatus()
+        receive.isEnabled = checkPaperKeyStatus()
 
         send.constrain([
                 send.constraint(.leading, toView: self, constant: 0.0),
@@ -67,6 +69,18 @@ class AccountFooterView: UIView {
                 menu.constraint(.top, toView: self, constant: C.padding[2]),
                 NSLayoutConstraint(item: menu, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/3.0, constant: 1.0)
             ])
+    }
+    
+    func checkPaperKeyStatus() -> Bool {
+        if UserDefaults.writePaperPhraseDate != nil {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func refreshButtonStatus() {
+        self.setupSubViews()
     }
 
     @objc private func send() { sendCallback?() }
