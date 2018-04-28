@@ -11,7 +11,7 @@ import UIKit
 class SupportCenterContainer : UIViewController {
 
     func navigate(to: String) {
-        webView.navigate(to: to)
+//        webView.navigate(to: to)
     }
 
     init(walletManager: WalletManager, store: Store, apiClient: BRAPIClient) {
@@ -21,7 +21,7 @@ class SupportCenterContainer : UIViewController {
         #else
             webView = BRWebViewController(bundleName: "bread-frontend", mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: apiClient)
         #endif
-        webView.startServer()
+//        webView.startServer()
         webView.preload()
         super.init(nibName: nil, bundle: nil)
     }
