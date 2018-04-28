@@ -153,7 +153,7 @@ class StartFlowPresenter : Subscriber {
         })
         paperPhraseViewController.title = S.SecurityCenter.Cells.paperKeyTitle
         paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
-        paperPhraseViewController.navigationItem.leftBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: closeButton)]
+        paperPhraseViewController.hideCloseNavigationItem() //Forces user to confirm paper-key
 
         let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.paperKey)
         faqButton.tintColor = .white
@@ -171,7 +171,7 @@ class StartFlowPresenter : Subscriber {
             self?.pushConfirmPaperPhraseViewController(pin: pin)
         })
         writeViewController.title = S.SecurityCenter.Cells.paperKeyTitle
-        writeViewController.navigationItem.leftBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: closeButton)]
+        writeViewController.hideCloseNavigationItem()
         navigationController?.pushViewController(writeViewController, animated: true)
     }
 
