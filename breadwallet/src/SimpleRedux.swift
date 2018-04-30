@@ -53,7 +53,8 @@ enum TriggerName {
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
     case copyWalletAddresses(String?, String?)
-    case authenticateForBitId(String, (BitIdAuthResult)->Void)
+    case authenticateForPlatform(String, Bool, (PlatformAuthResult)->Void) // (prompt, allowBiometricAuth, callback)
+    case confirmTransaction(CurrencyDef, Amount, Amount, String, (Bool)->Void) // currency, amount, fee, address, callback
     case hideStatusBar
     case showStatusBar
     case lightWeightAlert(String)
@@ -67,6 +68,8 @@ enum TriggerName {
     case didWritePaperKey
     case wipeWalletNoPrompt
     case didUpdateFeatureFlags
+    case showCurrency(CurrencyDef)
+    case resetDisplayCurrencies
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName : Equatable {}
@@ -105,7 +108,9 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.copyWalletAddresses(_,_), .copyWalletAddresses(_,_)):
         return true
-    case (.authenticateForBitId(_,_), .authenticateForBitId(_,_)):
+    case (.authenticateForPlatform(_,_,_), .authenticateForPlatform(_,_,_)):
+        return true
+    case (.confirmTransaction(_,_,_,_,_), .confirmTransaction(_,_,_,_,_)):
         return true
     case (.showStatusBar, .showStatusBar):
         return true
@@ -132,6 +137,10 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.wipeWalletNoPrompt, .wipeWalletNoPrompt):
         return true
     case (.didUpdateFeatureFlags, .didUpdateFeatureFlags):
+        return true
+    case (.showCurrency(_), .showCurrency(_)):
+        return true
+    case (.resetDisplayCurrencies, .resetDisplayCurrencies):
         return true
     default:
         return false

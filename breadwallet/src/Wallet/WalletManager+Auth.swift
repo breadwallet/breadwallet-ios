@@ -563,12 +563,12 @@ extension EthWalletManager {
     }
     
     // public key for Ethereum wallet
-    var ethPubKey: [UInt8]? {
+    var ethPubKey: BRKey? {
         var key = BRKey(privKey: ethPrivKey!)
         defer { key?.clean() }
         key?.compressed = 0
         guard let pubKey = key?.pubKey(), pubKey.count == 65 else { return nil }
-        return [UInt8](pubKey)
+        return BRKey(pubKey: [UInt8](pubKey))
     }
 }
 

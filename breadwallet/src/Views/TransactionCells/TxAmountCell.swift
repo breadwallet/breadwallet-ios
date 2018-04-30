@@ -16,6 +16,7 @@ class TxAmountCell: UITableViewCell, Subscriber {
     private lazy var tokenAmountLabel: UILabel = {
         let label = UILabel(font: UIFont.customBody(size: 26.0))
         label.textAlignment = .center
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     private lazy var fiatAmountLabel: UILabel = {
@@ -80,10 +81,6 @@ class TxAmountCell: UITableViewCell, Subscriber {
         let amountText = NSMutableAttributedString(string: viewModel.amount,
                                                    attributes: [.font: largeFont,
                                                                 .foregroundColor: tokenColor])
-        // TODO:BCH custom font for currency code
-        //        amountText.append(NSAttributedString(string: " " + viewModel.currency.symbol.uppercased(),
-//                                                  attributes: [.font: smallFont,
-//                                                               .foregroundColor: tokenColor]))
         tokenAmountLabel.attributedText = amountText
         
         

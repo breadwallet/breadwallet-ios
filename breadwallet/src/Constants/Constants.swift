@@ -52,6 +52,7 @@ struct C {
         return URL(fileURLWithPath: cachesDirectory).appendingPathComponent("log.txt")
     }
     static let usdCurrencyCode = "USD"
+    static let erc20Prefix = "erc20:"
 }
 
 enum Words {

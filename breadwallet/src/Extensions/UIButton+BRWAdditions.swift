@@ -35,6 +35,16 @@ extension UIButton {
         return button
     }
 
+    static func outline(title: String) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(title, for: .normal)
+        button.titleLabel?.font = UIFont.customMedium(size: 16.0)
+        button.layer.cornerRadius = 5
+        button.layer.borderWidth = 0.5
+        button.layer.borderColor = UIColor.blue.cgColor
+        return button
+    }
+
     static var close: UIButton {
         let accessibilityLabel = E.isScreenshots ? "Close" : S.AccessibilityLabels.close
         return UIButton.icon(image: #imageLiteral(resourceName: "Close"), accessibilityLabel: accessibilityLabel)

@@ -16,12 +16,8 @@ class AddressCell : UIView {
         setupViews()
     }
 
-    var displayAddress: String? {
-        return contentLabel.text
-    }
-    
     var address: String? {
-        return currency.matches(Currencies.bch) ? contentLabel.text?.bitcoinAddr : contentLabel.text
+        return contentLabel.text
     }
 
     var didBeginEditing: (() -> Void)?

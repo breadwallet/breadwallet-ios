@@ -105,6 +105,12 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func initWallet(currency: CurrencyDef, dispatchGroup: DispatchGroup) {
+        if let token = currency as? ERC20Token {
+            guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
+            ethWalletManager.tokens.append(token)
+            walletManagers[currency.code] = ethWalletManager
+            return
+        }
         dispatchGroup.enter()
         if let currency = currency as? Ethereum {
             let manager = EthWalletManager()
@@ -228,7 +234,7 @@ class ApplicationController : Subscriber, Trackable {
 
     func didEnterBackground() {
         // disconnect synced peer managers
-        Store.state.currencies.filter { $0.state.syncState == .success }.forEach { currency in
+        Store.state.currencies.filter { $0.state?.syncState == .success }.forEach { currency in
             DispatchQueue.walletQueue.async {
                 self.walletManagers[currency.code]?.peerManager?.disconnect()
             }
@@ -258,6 +264,7 @@ class ApplicationController : Subscriber, Trackable {
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
         walletCoordinator = WalletCoordinator(walletManagers: walletManagers)
         setupEthInitialState()
+        addTokenCountChangeListener()
         Store.perform(action: PinLength.set(primaryWalletManager.pinLength))
         rootViewController.walletManager = primaryWalletManager
         if let homeScreen = rootViewController.viewControllers.first as? HomeScreenViewController {
@@ -303,7 +310,7 @@ class ApplicationController : Subscriber, Trackable {
             }
             exchangeUpdater?.refresh {
                 self.watchSessionManager.walletManager = self.primaryWalletManager
-                self.watchSessionManager.rate = Currencies.btc.state.currentRate
+                self.watchSessionManager.rate = Currencies.btc.state?.currentRate
             }
         }
     }
@@ -311,10 +318,15 @@ class ApplicationController : Subscriber, Trackable {
     private func setupEthInitialState() {
         guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
         ethWalletManager.apiClient = primaryWalletManager?.apiClient
-        ethWalletManager.updateBalance()
-        ethWalletManager.updateTransactionList()
-        Store.perform(action: WalletChange(Currencies.eth).setMaxDigits(18))
+        ethWalletManager.refresh()
+        Store.perform(action: WalletChange(Currencies.eth).setMaxDigits(Currencies.eth.commonUnit.decimals))
         Store.perform(action: WalletID.set(ethWalletManager.walletID))
+        
+        Store.state.currencies.filter({ $0 is ERC20Token }).forEach { token in
+            Store.perform(action: WalletChange(token).setMaxDigits(token.commonUnit.decimals))
+            guard let state = token.state else { return }
+            Store.perform(action: WalletChange(token).set(state.mutate(receiveAddress: ethWalletManager.address)))
+        }
     }
 
     private func shouldRequireLogin() -> Bool {
@@ -337,13 +349,11 @@ class ApplicationController : Subscriber, Trackable {
     private func setupRootViewController() {
         let home = HomeScreenViewController(primaryWalletManager: walletManagers[Currencies.btc.code] as? BTCWalletManager)
         let nc = RootNavigationController()
-        nc.navigationBar.isTranslucent = false
-        nc.navigationBar.tintColor = .white
         nc.pushViewController(home, animated: false)
         
         home.didSelectCurrency = { currency in
             guard let walletManager = self.walletManagers[currency.code] else { return }
-            let accountViewController = AccountViewController(walletManager: walletManager)
+            let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
             nc.pushViewController(accountViewController, animated: true)
         }
         
@@ -358,11 +368,17 @@ class ApplicationController : Subscriber, Trackable {
         home.didTapSettings = {
             self.modalPresenter?.presentSettings()
         }
-        
+
+        home.didTapAddWallet = { [weak self] in
+            guard let kvStore = self?.primaryWalletManager?.apiClient?.kv else { return }
+            let vc = EditWalletsViewController(type: .manage, kvStore: kvStore)
+            nc.pushViewController(vc, animated: true)
+        }
+
         //State restoration
         if let currency = Store.state.currencies.first(where: { $0.code == UserDefaults.selectedCurrencyCode }),
             let walletManager = self.walletManagers[currency.code] {
-            let accountViewController = AccountViewController(walletManager: walletManager)
+            let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
             nc.pushViewController(accountViewController, animated: true)
         }
 
@@ -377,7 +393,7 @@ class ApplicationController : Subscriber, Trackable {
         defaultsUpdater?.refresh()
         primaryWalletManager.apiClient?.events?.up()
         exchangeUpdater?.refresh(completion: {
-            self.watchSessionManager.rate = Currencies.btc.state.currentRate
+            self.watchSessionManager.rate = Currencies.btc.state?.currentRate
         })
     }
 
@@ -499,6 +515,26 @@ class ApplicationController : Subscriber, Trackable {
             self.blurView.alpha = 0.0
         }, completion: { _ in
             self.blurView.removeFromSuperview()
+        })
+    }
+
+    private func addTokenCountChangeListener() {
+        Store.subscribe(self, selector: {
+            let oldTokens = Set($0.currencies.filter { $0 is ERC20Token }.map { ($0 as! ERC20Token).address })
+            let newTokens = Set($1.currencies.filter { $0 is ERC20Token }.map { ($0 as! ERC20Token).address })
+            return oldTokens != newTokens
+        }, callback: { state in
+            guard let ethWalletManager = self.walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
+            let tokens = state.currencies.filter { $0 is ERC20Token }.map { $0 as! ERC20Token }
+            ethWalletManager.tokens = tokens
+            tokens.forEach { token in
+                self.walletManagers[token.code] = ethWalletManager
+                self.modalPresenter?.walletManagers[token.code] = ethWalletManager
+                Store.perform(action: WalletChange(token).setMaxDigits(token.commonUnit.decimals))
+                guard let state = token.state else { return }
+                Store.perform(action: WalletChange(token).set(state.mutate(receiveAddress: ethWalletManager.address)))
+                self.exchangeUpdater?.refresh {}
+            }
         })
     }
 }
