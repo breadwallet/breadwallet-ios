@@ -9,7 +9,6 @@
 import Foundation
 import BRCore
 
-// TODO:ETH types
 public typealias Quantity = UInt256
 public typealias EthAddress = String
 
@@ -98,3 +97,21 @@ public enum JSONRPCError: Error {
         let message: String
     }
 }
+
+// MARK:
+
+public struct APIResponse<ResultType: Codable>: Decodable {
+    public let status: String
+    public let message: String
+    public let result: ResultType
+    
+    static func from(data: Data) throws -> APIResponse<ResultType> {
+        return try JSONDecoder().decode(APIResponse<ResultType>.self, from: data)
+    }
+}
+
+public enum APIResult<ResultType: Codable> {
+    case success(ResultType)
+    case error(Error)
+}
+

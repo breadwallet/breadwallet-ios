@@ -44,7 +44,7 @@ class BTCWalletManager : WalletManager {
             self.wallet = BRWallet(transactions: txns, masterPubKey: self.masterPubKey, listener: self)
             if let wallet = self.wallet {
                 Store.perform(action: WalletChange(self.currency).setBalance(UInt256(wallet.balance)))
-                Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(receiveAddress: wallet.receiveAddress)))
+                Store.perform(action: WalletChange(self.currency).set(self.currency.state!.mutate(receiveAddress: wallet.receiveAddress)))
             }
             callback(self.wallet != nil)
         }
@@ -60,7 +60,7 @@ class BTCWalletManager : WalletManager {
         self.wallet = BRWallet(transactions: transactions, masterPubKey: self.masterPubKey, listener: self)
         if let wallet = self.wallet {
             Store.perform(action: WalletChange(self.currency).setBalance(UInt256(wallet.balance)))
-            Store.perform(action: WalletChange(self.currency).set(self.currency.state.mutate(receiveAddress: wallet.receiveAddress)))
+            Store.perform(action: WalletChange(self.currency).set(self.currency.state!.mutate(receiveAddress: wallet.receiveAddress)))
         }
     }
 
@@ -225,19 +225,20 @@ extension BTCWalletManager : BRWalletListener {
 
     private func checkForReceived(newBalance: UInt64) {
         //TODO:ETH
-        if let oldBalance = currency.state.balance?.asUInt64 {
+        if let oldBalance = currency.state?.balance?.asUInt64 {
             if newBalance > oldBalance {
-                let walletState = currency.state
-                Store.perform(action: WalletChange(currency).set(walletState.mutate(receiveAddress: wallet?.receiveAddress)))
-                if currency.state.syncState == .success {
-                    showReceived(amount: newBalance - oldBalance)
+                if let walletState = currency.state {
+                    Store.perform(action: WalletChange(currency).set(walletState.mutate(receiveAddress: wallet?.receiveAddress)))
+                    if currency.state?.syncState == .success {
+                        showReceived(amount: newBalance - oldBalance)
+                    }
                 }
             }
         }
     }
 
     private func showReceived(amount: UInt64) {
-        if let rate = currency.state.currentRate {
+        if let rate = currency.state?.currentRate {
             let tokenAmount = Amount(amount: UInt256(amount),
                                      currency: currency,
                                      rate: nil,
@@ -267,8 +268,9 @@ extension BTCWalletManager : BRWalletListener {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard let myself = self else { return }
             guard let txRefs = myself.wallet?.transactions else { return }
+            guard let currentRate = myself.currency.state?.currentRate else { return }
             let transactions = myself.makeTransactionViewModels(transactions: txRefs,
-                                                                rate: myself.currency.state.currentRate)
+                                                                rate: currentRate)
             if transactions.count > 0 {
                 DispatchQueue.main.async {
                     Store.perform(action: WalletChange(myself.currency).setTransactions(transactions))

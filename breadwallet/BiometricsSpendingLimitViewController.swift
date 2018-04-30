@@ -50,7 +50,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
 
         //If the user has a limit that is not a current option, we display their limit
         if !limits.contains(walletManager.spendingLimit) {
-            if let rate = Currencies.btc.state.currentRate {
+            if let rate = Currencies.btc.state?.currentRate {
                 let spendingLimit = Amount(amount: UInt256(walletManager.spendingLimit), currency: Currencies.btc, rate: rate)
                 setAmount(limitAmount: spendingLimit)
             }

@@ -14,13 +14,17 @@ class AssetListTableView: UITableViewController, Subscriber {
     var didTapSecurity: (() -> Void)?
     var didTapSupport: (() -> Void)?
     var didTapSettings: (() -> Void)?
-    
+    var didTapAddWallet: (() -> Void)?
+    private let assetHeight: CGFloat = 85.0
+    private let menuHeight: CGFloat = 53.0
+    private let manageWalletContent = (S.TokenList.manageTitle, #imageLiteral(resourceName: "PlaylistPlus"))
+
     // MARK: - Init
     
     init() {
         super.init(style: .grouped)
     }
-    
+
     override func viewDidLoad() {
         tableView.backgroundColor = .whiteBackground
         tableView.register(HomeScreenCell.self, forCellReuseIdentifier: HomeScreenCell.cellIdentifier)
@@ -33,10 +37,10 @@ class AssetListTableView: UITableViewController, Subscriber {
             var result = false
             let oldState = $0
             let newState = $1
-            $0.currencies.forEach { currency in
-                if oldState[currency].balance != newState[currency].balance
-                    || oldState[currency].currentRate?.rate != newState[currency].currentRate?.rate
-                    || oldState[currency].maxDigits != newState[currency].maxDigits {
+            $0.displayCurrencies.forEach { currency in
+                if oldState[currency]?.balance != newState[currency]?.balance
+                    || oldState[currency]?.currentRate?.rate != newState[currency]?.currentRate?.rate
+                    || oldState[currency]?.maxDigits != newState[currency]?.maxDigits {
                     result = true
                 }
             }
@@ -44,6 +48,12 @@ class AssetListTableView: UITableViewController, Subscriber {
         }, callback: { _ in
             self.tableView.reloadData()
         })
+        
+        Store.subscribe(self, selector: {
+            $0.displayCurrencies.map { $0.code } != $1.displayCurrencies.map { $0.code }
+        }, callback: { _ in
+                self.tableView.reloadData()
+            })
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -69,7 +79,7 @@ class AssetListTableView: UITableViewController, Subscriber {
         case assets
         case menu
     }
-    
+
     enum Menu: Int {
         case settings
         case security
@@ -98,7 +108,7 @@ class AssetListTableView: UITableViewController, Subscriber {
         
         switch section {
         case .assets:
-            return Store.state.wallets.count
+            return Store.state.displayCurrencies.count + 1
         case .menu:
             return Menu.allItems.count
         }
@@ -106,27 +116,31 @@ class AssetListTableView: UITableViewController, Subscriber {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let section = Section(rawValue: indexPath.section) else { return 0 }
-
         switch section {
         case .assets:
-            return 85.0
+            return isAddWalletRow(row: indexPath.row) ? menuHeight : assetHeight
         case .menu:
-            return 53.0
+            return menuHeight
         }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let section = Section(rawValue: indexPath.section) else { return UITableViewCell() }
-        
+
+        if section == .assets && isAddWalletRow(row: indexPath.row) {
+            let cell = tableView.dequeueReusableCell(withIdentifier: MenuCell.cellIdentifier, for: indexPath) as! MenuCell
+            cell.set(title: manageWalletContent.0, icon: manageWalletContent.1)
+            return cell
+        }
+
         switch section {
         case .assets:
-            let currency = Store.state.currencies[indexPath.row]
+            let currency = Store.state.displayCurrencies[indexPath.row]
             let viewModel = AssetListViewModel(currency: currency)
-            
+
             let cell = tableView.dequeueReusableCell(withIdentifier: HomeScreenCell.cellIdentifier, for: indexPath) as! HomeScreenCell
             cell.set(viewModel: viewModel)
             return cell
-            
         case .menu:
             let cell = tableView.dequeueReusableCell(withIdentifier: MenuCell.cellIdentifier, for: indexPath) as! MenuCell
             guard let item = Menu(rawValue: indexPath.row) else { return cell }
@@ -163,7 +177,7 @@ class AssetListTableView: UITableViewController, Subscriber {
         
         switch section {
         case .assets:
-            didSelectCurrency?(Store.state.currencies[indexPath.row])
+            isAddWalletRow(row: indexPath.row) ? didTapAddWallet?() : didSelectCurrency?(Store.state.displayCurrencies[indexPath.row])
         case .menu:
             guard let item = Menu(rawValue: indexPath.row) else { return }
             switch item {
@@ -175,5 +189,9 @@ class AssetListTableView: UITableViewController, Subscriber {
                 didTapSupport?()
             }
         }
+    }
+
+    private func isAddWalletRow(row: Int) -> Bool {
+        return row == Store.state.displayCurrencies.count
     }
 }

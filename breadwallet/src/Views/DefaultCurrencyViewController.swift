@@ -13,7 +13,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
     init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
-        self.rates = Currencies.btc.state.rates.filter { $0.code != Currencies.btc.code }
+        self.rates = Currencies.btc.state?.rates.filter { $0.code != Currencies.btc.code } ?? [Rate]()
         super.init(style: .plain)
     }
 
@@ -51,7 +51,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         Store.subscribe(self, selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode }, callback: {
             self.defaultCurrencyCode = $0.defaultCurrencyCode
         })
-        Store.subscribe(self, selector: { $0[Currencies.btc].maxDigits != $1[Currencies.btc].maxDigits }, callback: { _ in
+        Store.subscribe(self, selector: { $0[Currencies.btc]?.maxDigits != $1[Currencies.btc]?.maxDigits }, callback: { _ in
             self.setExchangeRateLabel()
         })
 
@@ -129,7 +129,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
             bitcoinSwitch.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -C.padding[2]),
             bitcoinSwitch.widthAnchor.constraint(equalTo: header.widthAnchor, constant: -C.padding[4]) ])
 
-        if Currencies.btc.state.maxDigits == 8 {
+        if Currencies.btc.state?.maxDigits == 8 {
             bitcoinSwitch.selectedSegmentIndex = 1
         } else {
             bitcoinSwitch.selectedSegmentIndex = 0

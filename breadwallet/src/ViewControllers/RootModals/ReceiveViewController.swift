@@ -51,7 +51,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
         addActions()
         setupCopiedMessage()
         setupShareButtons()
-        Store.subscribe(self, selector: { $0[self.currency].receiveAddress != $1[self.currency].receiveAddress }, callback: { _ in
+        Store.subscribe(self, selector: { $0[self.currency]?.receiveAddress != $1[self.currency]?.receiveAddress }, callback: { _ in
             self.setReceiveAddress()
         })
     }
@@ -139,7 +139,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     }
 
     private func setReceiveAddress() {
-        guard let addressText = currency.state.receiveAddress else { return }
+        guard let addressText = currency.state?.receiveAddress else { return }
         address.text = currency.matches(Currencies.bch) ? addressText.bCashAddr : addressText
         qrCode.image = UIImage.qrCode(data: "\(address.text!)".data(using: .utf8)!, color: CIColor(color: .black))?
             .resize(CGSize(width: qrSize, height: qrSize))!

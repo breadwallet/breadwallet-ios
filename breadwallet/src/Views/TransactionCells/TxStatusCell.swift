@@ -66,10 +66,13 @@ class TxStatusCell: UITableViewCell, Subscriber {
     
     func set(txInfo: TxDetailViewModel) {
         Store.lazySubscribe(self,
-                            selector: { $0[txInfo.currency].transactions != $1[txInfo.currency].transactions },
+                            selector: {
+                                guard let oldTransactions = $0[txInfo.currency]?.transactions else { return false}
+                                guard let newTransactions = $1[txInfo.currency]?.transactions else { return false}
+                                return oldTransactions != newTransactions },
                             callback: { [weak self] state in
                                 guard let `self` = self,
-                                    let updatedTx = state[txInfo.currency].transactions.filter({ $0.hash == txInfo.transactionHash }).first else { return }
+                                    let updatedTx = state[txInfo.currency]?.transactions.filter({ $0.hash == txInfo.transactionHash }).first else { return }
                                 DispatchQueue.main.async {
                                     let updatedInfo = TxDetailViewModel(tx: updatedTx)
                                     self.update(status: updatedInfo.status)

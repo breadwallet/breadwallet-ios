@@ -10,6 +10,11 @@ import Foundation
 
 private let fallbackRatesURL = "https://bitpay.com/api/rates"
 
+enum RatesResult {
+    case success([Rate])
+    case error(String)
+}
+
 extension BRAPIClient {
 
     func me() {
@@ -52,8 +57,9 @@ extension BRAPIClient {
         task.resume()
     }
     
-    func exchangeRates(code: String, isFallback: Bool = false, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
-        guard Currencies.eth.code != code else { return exchangeRate(code: code, handler) }
+    /// Fetches Bitcoin exchange rates in all available fiat currencies
+    func bitcoinExchangeRates(isFallback: Bool = false, _ handler: @escaping (RatesResult) -> Void) {
+        let code = Currencies.btc.code
         let param = "?currency=\(code.lowercased())"
         let request = isFallback ? URLRequest(url: URL(string: fallbackRatesURL)!) : URLRequest(url: url("/rates\(param)"))
         let task = dataTaskWithRequest(request) { (data, response, error) in
@@ -61,45 +67,49 @@ extension BRAPIClient {
                 let parsedData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) {
                 if isFallback {
                     guard let array = parsedData as? [Any] else {
-                        return handler([], "/rates didn't return an array")
+                        return handler(.error("/rates didn't return an array"))
                     }
-                    handler(array.compactMap { Rate(data: $0, reciprocalCode: code) }, nil)
+                    handler(.success(array.compactMap { Rate(data: $0, reciprocalCode: code) }))
                 } else {
                     guard let dict = parsedData as? [String: Any],
                         let array = dict["body"] as? [Any] else {
-                            return self.exchangeRates(code: code, isFallback: true, handler)
+                            return self.bitcoinExchangeRates(isFallback: true, handler)
                     }
-                    handler(array.compactMap { Rate(data: $0, reciprocalCode: code) }, nil)
+                    handler(.success(array.compactMap { Rate(data: $0, reciprocalCode: code) }))
                 }
             } else {
                 if isFallback {
-                    handler([], "Error fetching from fallback url")
+                    handler(.error("Error fetching from fallback url"))
                 } else {
-                    self.exchangeRates(code: code, isFallback: true, handler)
+                    self.bitcoinExchangeRates(isFallback: true, handler)
                 }
             }
         }
         task.resume()
     }
 
-    //For rate endpoint that returns rate in relation to btc
-    func exchangeRate(code: String, _ handler: @escaping (_ rates: [Rate], _ error: String?) -> Void) {
-        let param = "?currency=\(code.lowercased())"
-        let request = URLRequest(url: url("/rates\(param)"))
+    /// Fetches all token exchange rates in BTC from CoinMarketCap
+    func tokenExchangeRates(_ handler: @escaping (RatesResult) -> Void) {
+        let request = URLRequest(url: URL(string: "https://api.coinmarketcap.com/v1/ticker/?limit=1000&convert=BTC")!)
         dataTaskWithRequest(request, handler: { data, response, error in
             if error == nil, let data = data {
                 do {
-                    let rates = try JSONDecoder().decode(BTCRateResponse.self, from: data).body
-                    let ethRate = rates.first!
-                    let ethRates = Store.state.wallets[Currencies.btc.code]?.rates.map {
-                        return Rate(code: $0.code, name: $0.name, rate: $0.rate*ethRate.rate, reciprocalCode: code.lowercased())
-                    }
-                    handler(ethRates!, nil)
+                    let codes = Store.state.currencies.map({ $0.code.lowercased() })
+                    let tickers = try JSONDecoder().decode([Ticker].self, from: data)
+                    let rates: [Rate] = tickers.compactMap({ ticker in
+                        guard ticker.btcRate != nil, let rate = Double(ticker.btcRate!) else { return nil }
+                        guard codes.contains(ticker.symbol.lowercased()) else { return nil }
+                        return Rate(code: Currencies.btc.code,
+                                    name: ticker.name,
+                                    rate: rate,
+                                    reciprocalCode: ticker.symbol.lowercased())
+                    })
+                    handler(.success(rates))
                 } catch let e {
-                    handler([], e.localizedDescription)
+                    handler(.error(e.localizedDescription))
                 }
             } else {
-                handler([], error?.localizedDescription)
+                handler(.error(error?.localizedDescription ?? "unknown error"))
             }
         }).resume()
     }
@@ -159,12 +169,26 @@ extension BRAPIClient {
 
 struct BTCRateResponse : Codable {
     let body: [BTCRate]
+    
+    struct BTCRate : Codable {
+        let code: String
+        let name: String
+        let rate: Double
+    }
 }
 
-struct BTCRate : Codable {
-    let code: String
+struct Ticker: Codable {
+    let symbol: String
     let name: String
-    let rate: Double
+    let usdRate: String?
+    let btcRate: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case symbol
+        case name
+        case usdRate = "price_usd"
+        case btcRate = "price_btc"
+    }
 }
 
 private func pushNotificationEnvironment() -> String {

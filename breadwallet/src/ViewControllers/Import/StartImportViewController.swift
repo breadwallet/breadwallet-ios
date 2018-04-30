@@ -170,7 +170,7 @@ class StartImportViewController : UIViewController {
         guard let tx = UnsafeMutablePointer<BRTransaction>() else { return }
         guard let wallet = walletManager.wallet else { return }
         guard let address = key.address() else { return }
-        guard let fees = Currencies.btc.state.fees else { return }
+        guard let fees = Currencies.btc.state?.fees else { return }
         guard !wallet.containsAddress(address) else {
             return showErrorMessage(S.Import.Error.duplicate)
         }
@@ -190,7 +190,7 @@ class StartImportViewController : UIViewController {
             guard fee + wallet.minOutputAmount <= balance else {
                 return self.showErrorMessage(S.Import.Error.highFees)
             }
-            guard let rate = Currencies.btc.state.currentRate else { return }
+            guard let rate = Currencies.btc.state?.currentRate else { return }
             let balanceAmount = Amount(amount: UInt256(balance), currency: Currencies.btc, rate: rate)
             let feeAmount = Amount(amount: UInt256(fee), currency: Currencies.btc, rate: rate)
             let balanceText = Store.state.isBtcSwapped ? balanceAmount.fiatDescription : balanceAmount.tokenDescription

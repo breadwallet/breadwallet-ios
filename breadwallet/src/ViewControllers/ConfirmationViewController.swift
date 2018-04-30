@@ -12,7 +12,7 @@ import BRCore
 
 class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
-    init(amount: Amount, fee: Amount, feeType: Fee, address: String, isUsingBiometrics: Bool, currency: CurrencyDef) {
+    init(amount: Amount, fee: Amount, feeType: FeeLevel, address: String, isUsingBiometrics: Bool, currency: CurrencyDef) {
         self.amount = amount
         self.feeAmount = fee
         self.feeType = feeType
@@ -24,7 +24,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
     private let amount: Amount
     private let feeAmount: Amount
-    private let feeType: Fee
+    private let feeType: FeeLevel
     private let addressText: String
     private let isUsingBiometrics: Bool
     private let currency: CurrencyDef
@@ -148,12 +148,15 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         address.text = addressText
         address.lineBreakMode = .byTruncatingMiddle
         
-        //TODO:ETH
-        switch feeType {
-        case .regular:
-            processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.regularTime)
-        case .economy:
-            processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.economyTime)
+        if currency is Bitcoin {
+            switch feeType {
+            case .regular:
+                processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.regularTime)
+            case .economy:
+                processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.economyTime)
+            }
+        } else {
+            processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.ethTime)
         }
 
         sendLabel.text = S.Confirmation.amountLabel
@@ -164,15 +167,20 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
         totalLabel.text = S.Confirmation.totalLabel
         total.text = displayTotal.description
+        
+        if currency is ERC20Token {
+            totalLabel.isHidden = true
+            total.isHidden = true
+        }
 
         cancel.tap = strongify(self) { myself in
-            myself.cancelCallback?()
+            myself.dismiss(animated: true, completion: myself.cancelCallback)
         }
         header.closeCallback = strongify(self) { myself in
-            myself.cancelCallback?()
+            myself.dismiss(animated: true, completion: myself.cancelCallback)
         }
         sendButton.tap = strongify(self) { myself in
-            myself.successCallback?()
+            myself.dismiss(animated: true, completion: myself.successCallback)
         }
 
         contentBox.layer.cornerRadius = 6.0

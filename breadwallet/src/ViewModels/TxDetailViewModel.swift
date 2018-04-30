@@ -17,7 +17,7 @@ struct TxDetailViewModel: TxViewModel {
     let amount: String
     let fiatAmount: String
     let originalFiatAmount: String?
-    let exchangeRate: String
+    let exchangeRate: String?
     let transactionHash: String
     let tx: Transaction
     
@@ -73,13 +73,13 @@ struct TxDetailViewModel: TxViewModel {
 
 extension TxDetailViewModel {
     init(tx: Transaction) {
-        let rate = tx.currency.state.currentRate ?? Rate.empty
+        let rate = tx.currency.state?.currentRate ?? Rate.empty
         amount = TxDetailViewModel.tokenAmount(tx: tx) ?? ""
         
         let fiatAmounts = TxDetailViewModel.fiatAmounts(tx: tx, currentRate: rate)
         fiatAmount = fiatAmounts.0
         originalFiatAmount = fiatAmounts.1
-        exchangeRate = TxDetailViewModel.exchangeRateText(tx: tx) ?? ""
+        exchangeRate = TxDetailViewModel.exchangeRateText(tx: tx)
         transactionHash = tx.hash
         self.tx = tx
         
@@ -87,20 +87,24 @@ extension TxDetailViewModel {
             let gasFormatter = NumberFormatter()
             gasFormatter.numberStyle = .decimal
             gasFormatter.maximumFractionDigits = 0
-            gasLimit = gasFormatter.string(from: tx.gasLimit as NSNumber)
+            gasLimit = (currency is ERC20Token) ? nil : gasFormatter.string(from: tx.gasLimit as NSNumber)
             
-            gasPrice = Amount(amount: tx.gasPrice, currency: tx.currency, rate: rate).tokenDescription(inUnit: Ethereum.Units.gwei)
+            let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
+            
+            gasPrice = Amount(amount: tx.gasPrice, currency: feeCurrency, rate: rate).tokenDescription(inUnit: Ethereum.Units.gwei)
             
             let totalFee = tx.gasPrice * UInt256(tx.gasUsed)
-            let feeAmount = Amount(amount: totalFee, currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
-            let totalAmount = Amount(amount: tx.amount + totalFee, currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
+            let feeAmount = Amount(amount: totalFee, currency: feeCurrency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
+            
+            // omit total for ERC20
+            let totalAmount: Amount? = (currency is ERC20Token) ? nil : Amount(amount: tx.amount + totalFee, currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
             
             if Store.state.isBtcSwapped {
                 fee = feeAmount.fiatDescription
-                total = totalAmount.fiatDescription
+                total = totalAmount?.fiatDescription
             } else {
                 fee = feeAmount.tokenDescription
-                total = totalAmount.tokenDescription
+                total = totalAmount?.tokenDescription
             }
         }
     }
@@ -109,7 +113,7 @@ extension TxDetailViewModel {
     /// Assumes fiat currency does not change
     private static func exchangeRateText(tx: Transaction) -> String? {
         guard let rate = tx.metaData?.exchangeRate,
-            let symbol = tx.currency.state.currentRate?.currencySymbol else { return nil }
+            let symbol = tx.currency.state?.currentRate?.currencySymbol else { return nil }
         
         let nf = NumberFormatter()
         nf.currencySymbol = symbol

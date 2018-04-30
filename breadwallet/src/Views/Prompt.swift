@@ -119,33 +119,25 @@ class Prompt : UIView {
                                                            left: C.padding[2],
                                                            bottom: -C.padding[1],
                                                            right: -C.padding[2]))
-        
         title.constrain([
             title.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
             title.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[2]),
-            title.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[2])
-            ])
-        
+            title.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[2])])
         body.constrain([
             body.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
             body.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[2]),
-            body.topAnchor.constraint(equalTo: title.bottomAnchor, constant: C.padding[1])
-            ])
-        
+            body.topAnchor.constraint(equalTo: title.bottomAnchor, constant: C.padding[1])])
         dismissButton.constrain([
             dismissButton.topAnchor.constraint(equalTo: body.bottomAnchor, constant: C.padding[2]),
             dismissButton.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
             dismissButton.heightAnchor.constraint(equalToConstant: 44.0),
-            dismissButton.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -C.padding[2])
-            ])
-        
+            dismissButton.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -C.padding[2])])
         continueButton.constrain([
             continueButton.topAnchor.constraint(equalTo: dismissButton.topAnchor),
             continueButton.leadingAnchor.constraint(equalTo: dismissButton.trailingAnchor, constant: C.padding[1]),
             continueButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[2]),
             continueButton.widthAnchor.constraint(equalTo: dismissButton.widthAnchor),
-            continueButton.bottomAnchor.constraint(equalTo: dismissButton.bottomAnchor)
-            ])
+            continueButton.bottomAnchor.constraint(equalTo: dismissButton.bottomAnchor)])
     }
     
     private func setupStyle() {
