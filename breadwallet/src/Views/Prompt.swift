@@ -101,7 +101,7 @@ class Prompt : UIView {
     private func setup() {
         addSubview(title)
         addSubview(body)
-        addSubview(close)
+        
         title.constrain([
             title.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
             title.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[2]) ])
