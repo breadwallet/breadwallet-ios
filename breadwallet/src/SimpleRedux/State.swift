@@ -23,10 +23,9 @@ struct State {
     let walletID: String?
     let wallets: [String: WalletState]
     
-    subscript(currency: CurrencyDef) -> WalletState {
+    subscript(currency: CurrencyDef) -> WalletState? {
         guard let walletState = wallets[currency.code] else {
-            // this should never happen as long as all currencies in use are initialized in State.initial
-            fatalError("unsupported currency!")
+            return nil
         }
         return walletState
     }
@@ -41,6 +40,10 @@ struct State {
     
     var primaryWallet: WalletState {
         return wallets[Currencies.btc.code]!
+    }
+
+    var displayCurrencies: [CurrencyDef] {
+        return orderedWallets.filter { $0.displayOrder >= 0 }.map { $0.currency }
     }
 }
 
@@ -57,9 +60,11 @@ extension State {
                         isPromptingBiometrics: false,
                         pinLength: 6,
                         walletID: nil,
-                        wallets: [Currencies.btc.code: WalletState.initial(Currencies.btc, displayOrder: 0),
-                                  Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: 1),
-                                  Currencies.eth.code: WalletState.initial(Currencies.eth, displayOrder: 2)])
+                        wallets: [Currencies.btc.code: WalletState.initial(Currencies.btc, displayOrder: -1),
+                                  Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: -1),
+                                  Currencies.eth.code: WalletState.initial(Currencies.eth, displayOrder: -1),
+                                  Currencies.brd.code: WalletState.initial(Currencies.brd, displayOrder: -1),
+            ])
     }
     
     func mutate(   isStartFlowVisible: Bool? = nil,
@@ -104,7 +109,8 @@ enum RootModal {
     case loginAddress
     case loginScan
     case requestAmount(currency: CurrencyDef)
-    case buy
+    case buy(currency: CurrencyDef)
+    case sell(currency: CurrencyDef)
 }
 
 enum SyncState {
@@ -117,7 +123,7 @@ enum SyncState {
 
 struct WalletState {
     let currency: CurrencyDef
-    let displayOrder: Int
+    let displayOrder: Int // -1 for hidden
     let syncProgress: Double
     let syncState: SyncState
     let balance: UInt256?
@@ -227,8 +233,10 @@ func ==(lhs: RootModal, rhs: RootModal) -> Bool {
         return true
     case (.requestAmount(let lhsCurrency), .requestAmount(let rhsCurrency)):
         return lhsCurrency.code == rhsCurrency.code
-    case (.buy, .buy):
-        return true
+    case (.buy(let lhsCurrency), .buy(let rhsCurrency)):
+        return lhsCurrency.code == rhsCurrency.code
+    case (.sell(let lhsCurrency), .sell(let rhsCurrency)):
+        return lhsCurrency.code == rhsCurrency.code
     default:
         return false
     }
@@ -236,7 +244,7 @@ func ==(lhs: RootModal, rhs: RootModal) -> Bool {
 
 
 extension CurrencyDef {
-    var state: WalletState {
+    var state: WalletState? {
         return Store.state[self]
     }
 }

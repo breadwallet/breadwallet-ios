@@ -37,6 +37,22 @@ class PaymentRequestTests : XCTestCase {
         XCTAssertTrue(request?.displayAddress == "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u")
     }
 
+    func testBasicExampleETH() {
+        let uri = "ethereum:0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508"
+        let request = PaymentRequest(string: uri, currency: Currencies.eth)
+        XCTAssertNotNil(request)
+        XCTAssertTrue(request?.toAddress == "0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508")
+        XCTAssertTrue(request?.displayAddress == "0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508")
+    }
+
+    func testSecondaryExampleETH() {
+        let uri = "ether:0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508"
+        let request = PaymentRequest(string: uri, currency: Currencies.eth)
+        XCTAssertNotNil(request)
+        XCTAssertTrue(request?.toAddress == "0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508")
+        XCTAssertTrue(request?.displayAddress == "0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508")
+    }
+
     func testAmountInUriBTC() {
         let uri = "bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu?amount=1.2"
         let request = PaymentRequest(string: uri, currency: Currencies.btc)

@@ -68,7 +68,15 @@ class URLController : Trackable {
             }
             return true
         default:
-            guard let currency = Store.state.currencies.first(where: { $0.urlScheme == scheme }) else { return false }
+            guard let currency = Store.state.currencies.first(where: {
+                var result = false
+                $0.urlSchemes?.forEach {
+                    if $0 == scheme {
+                        result = true
+                    }
+                }
+                return result
+            }) else { return false }
             return handlePaymentRequestUri(url, currency: currency)
         }
     }

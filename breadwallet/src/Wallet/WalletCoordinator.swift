@@ -30,7 +30,7 @@ class WalletCoordinator : Subscriber, Trackable {
         //Listen for sync state changes in all wallets
         Store.subscribe(self, selector: {
             for (key, val) in $0.wallets {
-                if val.syncState != $1.wallets[key]!.syncState {
+                if val.syncState != $1.wallets[key]?.syncState {
                     return true
                 }
             }

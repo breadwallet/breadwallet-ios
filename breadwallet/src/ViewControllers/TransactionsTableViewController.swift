@@ -14,9 +14,9 @@ private let promptDelay: TimeInterval = 0.6
 class TransactionsTableViewController : UITableViewController, Subscriber, Trackable {
 
     //MARK: - Public
-    init(walletManager: WalletManager, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
+    init(currency: CurrencyDef, walletManager: WalletManager, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
+        self.currency = currency
         self.walletManager = walletManager
-        self.currency = walletManager.currency
         self.didSelectTransaction = didSelectTransaction
         self.isBtcSwapped = Store.state.isBtcSwapped
         super.init(nibName: nil, bundle: nil)
@@ -91,15 +91,15 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                         selector: { $0.isBtcSwapped != $1.isBtcSwapped },
                         callback: { self.isBtcSwapped = $0.isBtcSwapped })
         Store.subscribe(self,
-                        selector: { $0[self.currency].currentRate != $1[self.currency].currentRate},
+                        selector: { $0[self.currency]?.currentRate != $1[self.currency]?.currentRate},
                         callback: {
-                            self.rate = $0[self.currency].currentRate
+                            self.rate = $0[self.currency]?.currentRate
         })
-        Store.subscribe(self, selector: { $0[self.currency].maxDigits != $1[self.currency].maxDigits }, callback: {_ in
+        Store.subscribe(self, selector: { $0[self.currency]?.maxDigits != $1[self.currency]?.maxDigits }, callback: {_ in
             self.reload()
         })
         
-        Store.subscribe(self, selector: { $0[self.currency].recommendRescan != $1[self.currency].recommendRescan }, callback: { _ in
+        Store.subscribe(self, selector: { $0[self.currency]?.recommendRescan != $1[self.currency]?.recommendRescan }, callback: { _ in
             //TODO:BCH show failed tx
         })
         
@@ -110,9 +110,12 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             }
         })
         
-        Store.subscribe(self, selector: { $0[self.currency].transactions != $1[self.currency].transactions },
+        Store.subscribe(self, selector: {
+            guard let oldTransactions = $0[self.currency]?.transactions else { return false }
+            guard let newTransactions = $1[self.currency]?.transactions else { return false }
+            return oldTransactions != newTransactions },
                         callback: { state in
-                            self.allTransactions = state[self.currency].transactions
+                            self.allTransactions = state[self.currency]?.transactions ?? [Transaction]()
                             self.reload()
         })
     }
@@ -216,8 +219,8 @@ extension TransactionsTableViewController {
         cell.setTransaction(viewModel,
                             isBtcSwapped: isBtcSwapped,
                             rate: rate,
-                            maxDigits: currency.state.maxDigits,
-                            isSyncing: currency.state.syncState != .success)
+                            maxDigits: currency.state?.maxDigits ?? currency.commonUnit.decimals,
+                            isSyncing: currency.state?.syncState != .success)
         return cell
     }
 }
