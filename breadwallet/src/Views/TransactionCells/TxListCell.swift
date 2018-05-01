@@ -83,46 +83,32 @@ class TxListCell: UITableViewCell {
     private func addConstraints() {
         timestamp.constrain([
             timestamp.topAnchor.constraint(equalTo: contentView.topAnchor, constant: C.padding[2]),
-            timestamp.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[2])
-            ])
-        
+            timestamp.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[2])])
         descriptionLabel.constrain([
             descriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -C.padding[2]),
-            descriptionLabel.trailingAnchor.constraint(equalTo: timestamp.trailingAnchor)
-            ])
-        
+            descriptionLabel.trailingAnchor.constraint(equalTo: timestamp.trailingAnchor)])
         pendingConstraints = [
             descriptionLabel.centerYAnchor.constraint(equalTo: statusIndicator.centerYAnchor),
             descriptionLabel.leadingAnchor.constraint(equalTo: statusIndicator.trailingAnchor, constant: C.padding[1]),
-            descriptionLabel.heightAnchor.constraint(equalToConstant: 48.0)
-        ]
-        
+            descriptionLabel.heightAnchor.constraint(equalToConstant: 48.0)]
         completeConstraints = [
             descriptionLabel.topAnchor.constraint(equalTo: timestamp.bottomAnchor),
-            descriptionLabel.leadingAnchor.constraint(equalTo: timestamp.leadingAnchor),
-        ]
-        
+            descriptionLabel.leadingAnchor.constraint(equalTo: timestamp.leadingAnchor),]
         statusIndicator.constrain([
             statusIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             statusIndicator.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[2]),
             statusIndicator.widthAnchor.constraint(equalToConstant: statusIndicator.width),
-            statusIndicator.heightAnchor.constraint(equalToConstant: statusIndicator.height)
-            ])
-        
+            statusIndicator.heightAnchor.constraint(equalToConstant: statusIndicator.height)])
         failedIndicator.constrain([
             failedIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             failedIndicator.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[2]),
             failedIndicator.widthAnchor.constraint(equalToConstant: statusIndicator.width),
-            failedIndicator.heightAnchor.constraint(equalToConstant: 20.0)
-            ])
-        
+            failedIndicator.heightAnchor.constraint(equalToConstant: 20.0)])
         amount.constrain([
             amount.topAnchor.constraint(equalTo: contentView.topAnchor),
             amount.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             amount.leadingAnchor.constraint(equalTo: descriptionLabel.trailingAnchor, constant: C.padding[6]),
-            amount.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -C.padding[2]),
-            ])
-        
+            amount.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -C.padding[2])])
         separator.constrainBottomCorners(height: 0.5)
     }
     

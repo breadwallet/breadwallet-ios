@@ -31,6 +31,8 @@ class RootNavigationController : UINavigationController {
     private let loginTransitionDelegate = LoginTransitionDelegate()
 
     override func viewDidLoad() {
+        setLightStyle()
+        navigationBar.isTranslucent = false
         self.addChildViewController(tempLoginView, layout: {
             tempLoginView.view.constrain(toSuperviewEdges: nil)
         })
@@ -63,11 +65,19 @@ class RootNavigationController : UINavigationController {
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        if topViewController is HomeScreenViewController {
+        if topViewController is HomeScreenViewController || topViewController is EditWalletsViewController {
             return .default
         } else {
             return .lightContent
         }
+    }
+
+    func setLightStyle() {
+        navigationBar.tintColor = .white
+    }
+
+    func setDarkStyle() {
+        navigationBar.tintColor = .black
     }
 }
 
@@ -78,6 +88,14 @@ extension RootNavigationController : UINavigationControllerDelegate {
         } else if let accountView = viewController as? AccountViewController {
             UserDefaults.selectedCurrencyCode = accountView.currency.code
             UserDefaults.mostRecentSelectedCurrencyCode = accountView.currency.code
+        }
+    }
+
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if viewController is EditWalletsViewController {
+            setDarkStyle()
+        } else {
+            setLightStyle()
         }
     }
 }

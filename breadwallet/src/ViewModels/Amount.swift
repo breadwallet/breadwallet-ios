@@ -76,6 +76,10 @@ struct Amount {
         self.negative = negative
     }
     
+    static var empty: Amount {
+        return Amount(amount: UInt256(0), currency: Currencies.btc)
+    }
+    
     // MARK: - Convenience Accessors
     
     var description: String {
@@ -91,18 +95,18 @@ struct Amount {
     /// Token value in default units as Decimal number
     /// NB: Decimal can only represent maximum 38 digits wheras UInt256 can represent up to 78 digits -- it is assumed the units represented will be multiple orders of magnitude smaller than the raw value and precision loss is acceptable.
     var tokenValue: Decimal {
-        return (Decimal(string: amount.string(decimals: currency.state.maxDigits)) ?? 0.0) * (negative ? -1.0 : 1.0)
+        return (Decimal(string: amount.string(decimals: currency.state?.maxDigits ?? currency.commonUnit.decimals)) ?? 0.0) * (negative ? -1.0 : 1.0)
     }
     
     /// Token value in default units as formatted string with currency ticker symbol suffix
     var tokenDescription: String {
-        let unit = currency.unit(forDecimals: currency.state.maxDigits) ?? currency.commonUnit
+        let unit = currency.unit(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals) ?? currency.commonUnit
         return tokenDescription(inUnit: unit)
     }
     
     /// Token value in default units as formatted string without symbol
     var tokenFormattedValue: String {
-        let unit = currency.unit(forDecimals: currency.state.maxDigits) ?? currency.commonUnit
+        let unit = currency.unit(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals) ?? currency.commonUnit
         return tokenFormattedValue(inUnit: unit)
     }
     
@@ -135,7 +139,7 @@ struct Amount {
         format.negativeFormat = "-\(format.positiveFormat!)"
         format.currencyCode = currency.code
         format.currencySymbol = ""
-        format.maximumFractionDigits = min(currency.state.maxDigits, maximumFractionDigits)
+        format.maximumFractionDigits = min(currency.state?.maxDigits ?? currency.commonUnit.decimals, maximumFractionDigits)
         format.minimumFractionDigits = minimumFractionDigits ?? 0
         return format
     }
@@ -143,7 +147,7 @@ struct Amount {
     // MARK: - Fiat
     
     var fiatValue: Decimal {
-        guard let rate = rate ?? currency.state.currentRate,
+        guard let rate = rate ?? currency.state?.currentRate,
             let value = commonUnitValue else { return 0.0 }
         let tokenAmount = value * (negative ? -1.0 : 1.0)
         return tokenAmount * Decimal(rate.rate)
@@ -175,7 +179,7 @@ struct Amount {
         format.negativeFormat = "-\(format.positiveFormat!)"
         if let rate = rate {
             format.currencySymbol = rate.currencySymbol
-        } else if let rate = currency.state.currentRate {
+        } else if let rate = currency.state?.currentRate {
             format.currencySymbol = rate.currencySymbol
         }
         format.minimumFractionDigits = minimumFractionDigits ?? format.minimumFractionDigits

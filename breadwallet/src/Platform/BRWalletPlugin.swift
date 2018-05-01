@@ -26,23 +26,26 @@
 import Foundation
 import BRCore
 
-enum BitIdAuthResult {
-    case success
+enum PlatformAuthResult {
+    case success(String?)
     case cancelled
     case failed
 }
 
 class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     var sockets = [String: BRWebSocket]()
-    let walletManager: BTCWalletManager
+    let walletManagers: [String: WalletManager]
     var tempBitIDKeys = [String: BRKey]() // this should only ever be mutated from the main thread
     private var tempBitIDResponses = [String: Int]()
     private var tempAuthResponses = [String: Int]()
     private var tempAuthResults = [String: Bool]()
     private var isPresentingAuth = false
+    private var btcWalletManager: BTCWalletManager? {
+        return walletManagers[Currencies.btc.code] as? BTCWalletManager
+    }
 
-    init(walletManager: BTCWalletManager) {
-        self.walletManager = walletManager
+    init(walletManagers: [String: WalletManager]) {
+        self.walletManagers = walletManagers
     }
     
     func announce(_ json: [String: Any]) {
@@ -66,6 +69,8 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         router.get("/_wallet/format") { (request, match) -> BRHTTPResponse in
             if let amounts = request.query["amount"] , amounts.count > 0 {
                 let amount = amounts[0]
+                
+                //TODO: multi-currency support
                 var intAmount: UInt64 = 0
                 if amount.contains(".") { // assume full bitcoins
                     if let x = Float(amount) {
@@ -131,11 +136,11 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                         if UserDefaults.isBiometricsEnabled {
                             asyncResp.provide(200, json: ["error": "proxy-shutdown"])
                         }
-                        Store.trigger(name: .authenticateForBitId(prompt, { [weak self] result in
+                        Store.trigger(name: .authenticateForPlatform(prompt, true, { [weak self] result in
                             self?.isPresentingAuth = false
                             switch result {
                             case .success:
-                                if let key = self?.walletManager.buildBitIdKey(url: url, index: bitidIndex) {
+                                if let key = self?.btcWalletManager?.buildBitIdKey(url: url, index: bitidIndex) {
                                     self?.addKeyToCache(key, url: url)
                                     self?.sendBitIDResponse(stringToSign, usingKey: key, request: request, asyncResp: asyncResp)
                                 } else {
@@ -199,7 +204,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                         if UserDefaults.isBiometricsEnabled {
                             asyncResp.provide(200, json: ["error": "proxy-shutdown"])
                         }
-                        Store.trigger(name: .authenticateForBitId(prompt, { [weak self] result in
+                        Store.trigger(name: .authenticateForPlatform(prompt, true, { [weak self] result in
                             self?.isPresentingAuth = false
                             switch result {
                             case .success:
@@ -241,6 +246,197 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             let build = Bundle.main.infoDictionary?["CFBundleVersion"] ?? ""
             return try BRHTTPResponse(request: req, code: 200, json: ["version": version, "build": build])
         }
+        
+        // POST /_wallet/currencies
+        //
+        // Returns all currency details
+        //
+        // Response body: application/json
+        //      {
+        //          "id": "BTC" // ticker code
+        //          "ticker": "BTC"
+        //          "name": "Bitcoin"
+        //          "balance": {
+        //              "numerator": "10000",
+        //              "denominator": "100000000",
+        //              "currency": "BTC",
+        //          }
+        //          "exchange": {
+        //              "numerator": "10000",
+        //              "denominator": "100000000",
+        //              "currency": "JPY", // current fiat exchange rate
+        //          }
+        //          "colors": ["#000000","#ffffff"] // array of 2 colors in hex
+        //      }
+        router.get("/_wallet/currencies") { (req, m) -> BRHTTPResponse in
+            let fiatCode = req.query["fiat"]?.first
+            var response = [[String: Any]]()
+            for currency in Store.state.currencies {
+                response.append(self.currencyInfo(currency, fiatCode: fiatCode))
+            }
+            return try BRHTTPResponse(request: req, code: 200, json: response)
+        }
+        
+        // POST /_wallet/addresses/<currency_code>
+        //
+        // Returns the receive addresses of the given wallet
+        //
+        // Response body: application/json
+        //      {
+        //          "currency": "btc"
+        //          "address": "1abcd..." // receive address
+        //      }
+        router.get("/_wallet/addresses/(code)") { (req, m) -> BRHTTPResponse in
+            var code: String?
+            if let codeArray = m["code"] {
+                guard codeArray.count == 1 else {
+                    return BRHTTPResponse(request: req, code: 400)
+                }
+                code = codeArray.first!
+            }
+            var response = [[String: Any]]()
+            let currencies = Store.state.currencies.filter { code == nil || $0.code.lowercased() == code!.lowercased() }
+            for currency in currencies {
+                response.append(["currency": currency.code,
+                                 "address": Store.state[currency]?.receiveAddress ?? ""])
+            }
+            return try BRHTTPResponse(request: req, code: 200, json: (response.count == 1) ? response.first! : response)
+        }
+        
+        // POST /_wallet/transaction
+        //
+        // Creates and optionally sends a transaction
+        //
+        // Request body: application/json
+        //      {
+        //          "toAddress": "0x1234...",
+        //          "toDescription": "memo", // memo field contents
+        //          "currency": "eth", // currency code
+        //          "amount": {
+        //              "numerator": "10000",
+        //              "denominator": "100000000",
+        //              "currency": "eth",
+        //          }
+        //          "transmit": 1 // should transmit or not
+        //      }
+        //
+        // Response body: application/json
+        //      {
+        //          "hash": "0x123...", // transaction hash
+        //          "transaction: "0xffff..." // raw transaction hex encoded
+        //          "transmitted": true
+        //      }
+        router.post("/_wallet/transaction") { (request, m) -> BRHTTPResponse in
+            guard !self.isPresentingAuth else {
+                return BRHTTPResponse(request: request, code: 423)
+            }
+            
+            let asyncResp = BRHTTPResponse(async: request)
+            
+            guard let data = request.body(),
+                let j = try? JSONSerialization.jsonObject(with: data, options: []),
+                let json = j as? [String: Any],
+                let toAddress = json["toAddress"] as? String,
+                let comment = json["toDescription"] as? String,
+                let currencyCode = json["currency"] as? String,
+                let shouldTransmit = json["transmit"] as? Int,
+                let amt = json["amount"] as? [String: String],
+                let numerator = amt["numerator"],
+                currencyCode.lowercased() == amt["currency"]?.lowercased(),
+                let currency = Store.state.currencies.filter({$0.code.lowercased() == currencyCode.lowercased()}).first,
+                currency.isValidAddress(toAddress) else {
+                    asyncResp.provide(400, json: ["error": "params-error"])
+                    return asyncResp
+            }
+            
+            guard let walletManager = self.walletManagers[currency.code],
+                let kvStore = walletManager.apiClient?.kv,
+                let sender = currency.createSender(walletManager: walletManager, kvStore: kvStore) else {
+                    return BRHTTPResponse(request: request, code: 500)
+            }
+            
+            // assume the numerator is in currency's base units
+            var amount = UInt256(string: numerator, radix: 10)
+            
+            guard let fee = sender.fee(forAmount: amount),
+                let balance = currency.state?.balance else {
+                    asyncResp.provide(500, json: ["error": "fee-error"])
+                    return asyncResp
+            }
+            
+            if !(currency is ERC20Token) && (amount <= balance) && (amount + fee) > balance {
+                // amount is close to balance and fee puts it over, subtract the fee
+                amount = amount - fee
+            }
+            
+            let result = sender.createTransaction(address: toAddress, amount: amount, comment: comment)
+            guard case .ok = result else {
+                asyncResp.provide(400, json: ["error": "tx-error"])
+                return asyncResp
+            }
+            
+            if shouldTransmit != 0 {
+                DispatchQueue.walletQueue.async {
+                    self.walletManagers[currency.code]?.peerManager?.connect()
+                }
+                
+                let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
+                    let prompt = S.VerifyPin.authorize
+                    self?.isPresentingAuth = true
+                    Store.trigger(name: .authenticateForPlatform(prompt, false, { [weak self] result in
+                        self?.isPresentingAuth = false
+                        switch result {
+                        case .success(let pin?):
+                            pinValidationCallback(pin)
+                        case .cancelled:
+                            request.queue.async { asyncResp.provide(403) }
+                        default:
+                            request.queue.async { asyncResp.provide(401) }
+                        }
+                    }))
+                }
+                
+                let fee = sender.fee(forAmount: amount) ?? UInt256(0)
+                let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
+                let confirmAmount = Amount(amount: amount,
+                                           currency: currency,
+                                           rate: nil,//currency.state?.currentRate,
+                                           maximumFractionDigits: Amount.highPrecisionDigits)
+                let feeAmount = Amount(amount: fee,
+                                       currency: feeCurrency,
+                                       rate: nil,//feeCurrency.state?.currentRate,
+                                       maximumFractionDigits: Amount.highPrecisionDigits)
+                
+                DispatchQueue.main.sync {
+                    CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
+                        self.isPresentingAuth = true
+                        Store.trigger(name: .confirmTransaction(currency, confirmAmount, feeAmount, toAddress, { (confirmed) in
+                            self.isPresentingAuth = false
+                            guard confirmed else { return request.queue.async { asyncResp.provide(403) } }
+                            
+                            sender.sendTransaction(allowBiometrics: false, pinVerifier: pinVerifier, completion: { result in
+                                switch result {
+                                case .success(let hash, let rawTx):
+                                    guard let hash = hash, let rawTx = rawTx else { return request.queue.async { asyncResp.provide(500) } }
+                                    request.queue.async { asyncResp.provide(200, json: ["hash": hash.withHexPrefix,
+                                                                                        "transaction": rawTx.withHexPrefix,
+                                                                                        "transmitted": true]) }
+                                default:
+                                    request.queue.async { asyncResp.provide(500) }
+                                }
+                            })
+                        }))
+                    }
+                }
+            } else {
+                asyncResp.provide(501)
+                // TODO: sign tx without sending, get tx data / hash
+                //                asyncResp.provide(200, json: ["hash": "",
+                //                                              "transaction": "",
+                //                                              "transmitted": false])
+            }
+            return asyncResp
+        }
     }
 
     private func addKeyToCache(_ key: BRKey, url: String) {
@@ -260,31 +456,6 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         request.queue.async {
             asyncResp.provide(200, json: json)
         }
-    }
-
-    // MARK: - basic wallet functions
-    func walletInfo() -> [String: Any] {
-        var d = [String: Any]()
-        d["no_wallet"] = walletManager.noWallet
-        if let wallet = walletManager.wallet {
-            d["receive_address"] = wallet.receiveAddress
-            //d["watch_only"] = TODO - add watch only
-        }
-        d["btc_denomination_digits"] = walletManager.currency.state.maxDigits
-        d["local_currency_code"] = Store.state.defaultCurrencyCode
-        return d
-    }
-    
-    func currencyFormat(_ amount: UInt64) -> [String: Any] {
-        var d = [String: Any]()
-        if let rate = walletManager.currency.state.currentRate {
-            let amount = Amount(amount: UInt256(amount),
-                                       currency: walletManager.currency,
-                                       rate: rate)
-            d["local_currency_amount"] = amount.fiatDescription
-            d["currency_amount"] = amount.tokenDescription
-        }
-        return d
     }
     
     // MARK: - socket handlers
@@ -315,5 +486,78 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     
     public func socket(_ socket: BRWebSocket, didReceiveData data: Data) {
         // nothing to do here
+    }
+}
+
+extension BRWalletPlugin {
+    // MARK: - basic wallet functions
+    func walletInfo() -> [String: Any] {
+        var d = [String: Any]()
+        guard let walletManager = btcWalletManager else { return d }
+        d["no_wallet"] = walletManager.noWallet
+        if let wallet = walletManager.wallet {
+            d["receive_address"] = wallet.receiveAddress
+            //d["watch_only"] = TODO - add watch only
+        }
+        d["btc_denomination_digits"] = walletManager.currency.state?.maxDigits
+        d["local_currency_code"] = Store.state.defaultCurrencyCode
+        return d
+    }
+    
+    //TODO: multi-currency support
+    func currencyFormat(_ amount: UInt64) -> [String: Any] {
+        var d = [String: Any]()
+        guard let walletManager = btcWalletManager else { return d }
+        if let rate = walletManager.currency.state?.currentRate {
+            let amount = Amount(amount: UInt256(amount),
+                                currency: walletManager.currency,
+                                rate: rate)
+            d["local_currency_amount"] = amount.fiatDescription
+            d["currency_amount"] = amount.tokenDescription
+        }
+        return d
+    }
+    
+    func currencyInfo(_ currency: CurrencyDef, fiatCode: String?) -> [String: Any] {
+        var d = [String: Any]()
+        d["id"] = currency.code
+        d["ticker"] = currency.code
+        d["name"] = currency.name
+        d["colors"] = [currency.colors.0.toHex, currency.colors.1.toHex]
+        if let balance = currency.state?.balance {
+            var numerator = balance.string(radix: 10)
+            var denomiator = UInt256(power: currency.commonUnit.decimals).string(radix: 10)
+            d["balance"] = ["currency": currency.code,
+                            "numerator": numerator,
+                            "denominator": denomiator]
+        
+            var rate: Rate?
+            if let code = fiatCode {
+                rate = currency.state?.rates.filter({ $0.code == code }).first
+            } else {
+                rate = currency.state?.currentRate
+            }
+            
+            if let rate = rate {
+                let amount = Amount(amount: balance, currency: currency, rate: currency.state?.currentRate)
+                let decimals = amount.localFormat.maximumFractionDigits
+                let denominatorValue = (pow(10,decimals) as NSDecimalNumber).doubleValue
+                
+                let fiatValue = (amount.fiatValue as NSDecimalNumber).doubleValue
+                numerator = String(Int(fiatValue * denominatorValue))
+                denomiator = String(Int(denominatorValue))
+                d["fiatBalance"] = ["currency": rate.code,
+                                    "numerator": numerator,
+                                    "denominator": denomiator]
+                
+                let rateValue = rate.rate
+                numerator = String(Int(rateValue * denominatorValue))
+                denomiator = String(Int(denominatorValue))
+                d["exchange"] = ["currency": rate.code,
+                                 "numerator": numerator,
+                                 "denominator": denomiator]
+            }
+        }
+        return d
     }
 }

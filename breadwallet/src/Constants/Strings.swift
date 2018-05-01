@@ -36,6 +36,7 @@ enum S {
         static let send = NSLocalizedString("Button.send", value: "Send", comment: "send button")
         static let receive = NSLocalizedString("Button.receive", value: "Receive", comment: "receive button")
         static let buy = NSLocalizedString("Button.buy", value: "Buy", comment: "buy button")
+        static let sell = NSLocalizedString("Button.sell", value: "Sell", comment: "sell button")
         static let continueAction = NSLocalizedString("Button.continueAction", value: "Continue", comment: "prompt continue button")
         static let dismiss = NSLocalizedString("Button.dismiss", value: "Dismiss", comment: "prompt dismiss button")
         static let home = NSLocalizedString("Button.home", value: "Home", comment: "prompt home button")
@@ -86,6 +87,8 @@ enum S {
         static let nilFeeError = NSLocalizedString("Send.nilFeeError", value: "Insufficient funds to cover the transaction fee.", comment: "Transaction fee could not be be caluculated error.")
         static let noFeesError = NSLocalizedString("Send.noFeesError", value: "Network Fee conditions are being downloaded. Please try again.", comment: "No Fees error")
         static let legacyAddressWarning = NSLocalizedString("Send.legacyAddressWarning", value: "Warning: this is a legacy bitcoin address. Are you sure you want to send Bitcoin Cash to it?", comment: "Attempting to send to ")
+        static let insufficientGasTitle = NSLocalizedString("Send.insufficientGasTitle", value: "Insufficient Ethereum Balance", comment: "Insufficient gas alert title")
+        static let insufficientGasMessage = NSLocalizedString("Send.insufficientGasMessage", value: "You must have at least %1$@ in your wallet in order to transfer this type of token. Would you like to go to your Ethereum wallet now?", comment: "Insufficient gas alert message")
     }
 
     enum Receive {
@@ -145,6 +148,7 @@ enum S {
         static let sendingTo = NSLocalizedString("Transaction.sendingTo", value:"sending to %1$@", comment: "sending to <address>")
         static let receivingVia = NSLocalizedString("TransactionDetails.receivingVia", value:"receiving via %1$@", comment: "receiving via <address>")
         static let receivingFrom = NSLocalizedString("TransactionDetails.receivingFrom", value:"receiving from %1$@", comment: "receiving from <address>")
+        static let tokenTransfer = NSLocalizedString("Transaction.tokenTransfer", value:"Fee for token transfer: %1$@", comment: "Fee for token transfer: BRD")
     }
 
     enum TransactionDetails {
@@ -304,6 +308,7 @@ enum S {
         static let advancedTitle = NSLocalizedString("Settings.advancedTitle", value: "Advanced Settings", comment: "Advanced Settings title")
         static let faceIdLimit = NSLocalizedString("Settings.faceIdLimit", value:"Face ID Spending Limit", comment: "Face ID spending limit label")
         static let sendLogs = NSLocalizedString("Settings.sendLogs", value: "Send Logs", comment: "Send Logs option")
+        static let resetCurrencies = NSLocalizedString("Settings.resetCurrencies", value: "Reset to Default Currencies", comment: "Reset currencies button")
     }
 
     enum About {
@@ -396,6 +401,7 @@ enum S {
         static let settings = NSLocalizedString("MenuButton.settings", value:"Settings", comment: "Menu button title")
         static let lock = NSLocalizedString("MenuButton.lock", value:"Lock Wallet", comment: "Menu button title")
         static let buy = NSLocalizedString("MenuButton.buy", value:"Buy Bitcoin", comment: "Buy bitcoin title")
+        static let addWallet = NSLocalizedString("MenuButton.addWallet", value: "Add Wallet", comment: "Add Wallet button title")
     }
     
     enum HomeScreen {
@@ -424,6 +430,7 @@ enum S {
         static let received = NSLocalizedString("Search.received", value: "received", comment: "Received filter label")
         static let pending = NSLocalizedString("Search.pending", value: "pending", comment: "Pending filter label")
         static let complete = NSLocalizedString("Search.complete", value: "complete", comment: "Complete filter label")
+        static let search = NSLocalizedString("Search.search", value: "Search", comment: "Search bar placeholder text")
     }
 
     enum Prompts {
@@ -565,6 +572,7 @@ enum S {
         static let economy = NSLocalizedString("FeeSelector.economy", value: "Economy", comment: "Economy fee")
         static let economyTime = NSLocalizedString("FeeSelector.economyTime", value: "1-24 hours", comment: "E.g. [This transaction is predicted to complete in] 1-24 hours")
         static let regularTime = NSLocalizedString("FeeSelector.regularTime", value: "10-60 minutes", comment: "E.g. [This transaction is predicted to complete in] 10-60 minutes")
+        static let ethTime = NSLocalizedString("FeeSelector.ethTime", value: "2-5 minutes", comment: "E.g. [This transaction is predicted to complete in] 2-5 minutes")
     }
 
     enum Confirmation {
@@ -595,11 +603,12 @@ enum S {
         static let body = NSLocalizedString("Welcome.body", value: "Any ETH in your wallet can be accessed through the home screen.", comment: "Welcome view body text")
     }
 
-    enum Crowdsale {
-        static let buyButton = NSLocalizedString("Crowdsale.buyButton", value: "Buy Tokens", comment: "Buy crowdsale tokens button")
-        static let resume = NSLocalizedString("Crowdsale.resume", value: "Resume Verification", comment: "Resume Idnetify verification button")
-        static let retry = NSLocalizedString("Crowdsale.retry", value: "Retry", comment: "Retry Identity verification button")
-        static let agree = NSLocalizedString("Crowdsale.agree", value: "Agree", comment: "Agree to legal terms button")
-        static let decline = NSLocalizedString("Crowdsale.decline", value: "Decline", comment: "Decline to legal terms button")
+    enum TokenList {
+        static let addTitle = NSLocalizedString("TokenList.addTitle", value: "Add Wallets", comment: "Add Wallet view title")
+        static let add = NSLocalizedString("TokenList.add", value: "Add", comment: "Add currency button label")
+        static let show = NSLocalizedString("TokenList.show", value: "Show", comment: "Show currency button label")
+        static let remove = NSLocalizedString("TokenList.remove", value: "Remove", comment: "Remove currency button label")
+        static let hide = NSLocalizedString("TokenList.hide", value: "Hide", comment: "Hide currency button label")
+        static let manageTitle = NSLocalizedString("TokenList.manageTitle", value: "Manage Wallets", comment: "Manage Wallets view title")
     }
 }

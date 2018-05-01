@@ -53,14 +53,15 @@ class HomeScreenCell : UITableViewCell, Subscriber {
         accessibilityIdentifier = viewModel.currency.name
         container.currency = viewModel.currency
         currencyName.text = viewModel.currency.name
-        price.text = String(format: S.AccountHeader.exchangeRate, viewModel.exchangeRate, viewModel.currency.code)
+        price.text = viewModel.exchangeRate
         fiatBalance.text = viewModel.fiatBalance
         tokenBalance.text = viewModel.tokenBalance
         container.setNeedsDisplay()
         
-        Store.subscribe(self, selector: { $0[viewModel.currency].syncState != $1[viewModel.currency].syncState },
+        Store.subscribe(self, selector: { $0[viewModel.currency]?.syncState != $1[viewModel.currency]?.syncState },
                         callback: { state in
-                            switch state[viewModel.currency].syncState {
+                            guard let syncState = state[viewModel.currency]?.syncState else { return }
+                            switch syncState {
                             case .connecting:
                                 self.isSyncIndicatorVisible = true
                                 self.syncIndicator.text = S.SyncingView.connecting
@@ -73,9 +74,11 @@ class HomeScreenCell : UITableViewCell, Subscriber {
         })
         
         Store.subscribe(self, selector: {
-            return $0[viewModel.currency].lastBlockTimestamp != $1[viewModel.currency].lastBlockTimestamp },
+            return $0[viewModel.currency]?.lastBlockTimestamp != $1[viewModel.currency]?.lastBlockTimestamp },
                         callback: { state in
-                            self.syncIndicator.progress = CGFloat(state[viewModel.currency].syncProgress)
+                            if let progress = state[viewModel.currency]?.syncProgress {
+                                self.syncIndicator.progress = CGFloat(progress)
+                            }
         })
     }
     

@@ -62,11 +62,9 @@ struct Rate {
 
 extension Rate {
     init?(data: Any, reciprocalCode: String) {
-        guard let dictionary = data as? [String: Any] else { return nil }
-        guard let code = dictionary["code"] as? String else { return nil }
-        guard let name = dictionary["name"] as? String else { return nil }
-        guard let rate = dictionary["rate"] as? Double else { return nil }
-        self.init(code: code, name: name, rate: rate, reciprocalCode: reciprocalCode)
+        guard var dictionary = data as? [String: Any] else { return nil }
+        dictionary["reciprocalCode"] = reciprocalCode
+        self.init(dictionary: dictionary)
     }
 
     init?(dictionary: Any) {

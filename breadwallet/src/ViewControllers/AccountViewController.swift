@@ -18,13 +18,13 @@ class AccountViewController : UIViewController, Subscriber {
     //MARK: - Public
     let currency: CurrencyDef
     
-    init(walletManager: WalletManager) {
+    init(currency: CurrencyDef, walletManager: WalletManager) {
         self.walletManager = walletManager
-        self.currency = walletManager.currency
+        self.currency = currency
         self.headerView = AccountHeaderView(currency: currency)
         self.footerView = AccountFooterView(currency: currency)
         super.init(nibName: nil, bundle: nil)
-        self.transactionsTableView = TransactionsTableViewController(walletManager: walletManager, didSelectTransaction: didSelectTransaction)
+        self.transactionsTableView = TransactionsTableViewController(currency: currency, walletManager: walletManager, didSelectTransaction: didSelectTransaction)
 
         if let btcWalletManager = walletManager as? BTCWalletManager {
             headerView.isWatchOnly = btcWalletManager.isWatchOnly
@@ -32,9 +32,10 @@ class AccountViewController : UIViewController, Subscriber {
             headerView.isWatchOnly = false
         }
 
-        footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send(currency: walletManager.currency))) }
-        footerView.receiveCallback = { Store.perform(action: RootModalActions.Present(modal: .receive(currency: walletManager.currency))) }
-        footerView.buyCallback = { Store.perform(action: RootModalActions.Present(modal: .buy)) }
+        footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send(currency: self.currency))) }
+        footerView.receiveCallback = { Store.perform(action: RootModalActions.Present(modal: .receive(currency: self.currency))) }
+        footerView.buyCallback = { Store.perform(action: RootModalActions.Present(modal: .buy(currency: self.currency))) }
+        footerView.sellCallback = { Store.perform(action: RootModalActions.Present(modal: .sell(currency: self.currency))) }
     }
 
     //MARK: - Private

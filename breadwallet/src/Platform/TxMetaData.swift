@@ -30,7 +30,7 @@ import BRCore
 
 // Txn metadata stores additional information about a given transaction
 open class TxMetaData : BRKVStoreObject, BRCoding {
-    var classVersion: Int = 2
+    var classVersion: Int = 3
     
     var blockHeight: Int = 0
     var exchangeRate: Double = 0
@@ -40,6 +40,7 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
     var created: Date = Date.zeroValue()
     var deviceId: String = ""
     var comment = ""
+    var tokenTransfer = ""
 
     required public init?(coder decoder: BRCoder) {
         classVersion = decoder.decode("classVersion")
@@ -55,6 +56,7 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
         deviceId = decoder.decode("dId")
         created = decoder.decode("c")
         comment = decoder.decode("comment")
+        tokenTransfer = decoder.decode("tokenTransfer")
         super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
     }
     
@@ -68,6 +70,7 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
         coder.encode(created, key: "c")
         coder.encode(deviceId, key: "dId")
         coder.encode(comment, key: "comment")
+        coder.encode(tokenTransfer, key: "tokenTransfer")
     }
     
     /// Find metadata object based on the txHash
@@ -117,7 +120,8 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
          exchangeRateCurrency: String,
          feeRate: Double? = nil,
          deviceId: String,
-         comment: String? = nil) {
+         comment: String? = nil,
+         tokenTransfer: String? = nil) {
         print("[BRTxMetadataObject] new \(key)")
         super.init(key: key,
                    version: 0,
@@ -138,6 +142,12 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
             var rawTx = transaction.rawTransaction
             self.size = BRTransactionSize(&rawTx)
         }
+        
+        if transaction is EthTransaction {
+            self.tokenTransfer = tokenTransfer ?? ""
+        } else {
+            self.tokenTransfer = ""
+        }
     }
     
     override func getData() -> Data? {
@@ -145,6 +155,7 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
     }
     
     override func dataWasSet(_ value: Data) {
+        guard value.count > 0 else { return }
         guard let s: TxMetaData = BRKeyedUnarchiver.unarchiveObjectWithData(value) else {
             print("[BRTxMetadataObject] unable to deserialise tx metadata")
             return
@@ -157,18 +168,25 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
         created = s.created
         deviceId = s.deviceId
         comment = s.comment
+        tokenTransfer = s.tokenTransfer
     }
 
 }
 
 extension UInt256 {
-    var txKey: String {
-        get {
-            var u = self
-            return withUnsafePointer(to: &u) { p in
-                let bd = Data(bytes: p, count: MemoryLayout<UInt256>.stride).sha256
-                return "txn2-\(bd.hexString)"
-            }
+    var sha256: String {
+        var u = self
+        return withUnsafePointer(to: &u) { p in
+            let bd = Data(bytes: p, count: MemoryLayout<UInt256>.stride).sha256
+            return (bd.hexString)
         }
+    }
+    
+    var txKey: String {
+        return "txn2-\(sha256)"
+    }
+    
+    var tokenTxKey: String {
+        return "tkxf-\(sha256)"
     }
 }
