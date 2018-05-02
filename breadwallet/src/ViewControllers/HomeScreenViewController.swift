@@ -56,6 +56,7 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         DispatchQueue.main.asyncAfter(deadline: .now() + promptDelay) { [weak self] in
             self?.attemptShowPrompt()
         }
+        updateTotalAssets()
     }
     
     // MARK: Setup
@@ -159,13 +160,8 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
             let oldState = $0
             let newState = $1
             $0.displayCurrencies.forEach { currency in
-                if oldState[currency]?.balance != newState[currency]?.balance {
-                    result = true
-                }
-                
-                if oldState[currency]?.currentRate?.rate != newState[currency]?.currentRate?.rate {
-                    result = true
-                }
+                result = result || oldState[currency]?.balance != newState[currency]?.balance
+                result = result || oldState[currency]?.currentRate?.rate != newState[currency]?.currentRate?.rate
             }
             return result
         },
