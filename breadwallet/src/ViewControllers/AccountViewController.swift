@@ -92,6 +92,9 @@ class AccountViewController : UIViewController, Subscriber {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         shouldShowStatusBar = true
+        if let walletManager = walletManager as? EthWalletManager {
+            walletManager.beginFetchingTransactions(currency: currency)
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -101,6 +104,13 @@ class AccountViewController : UIViewController, Subscriber {
             DispatchQueue.walletQueue.async { [weak self] in
                 self?.walletManager.peerManager?.connect()
             }
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let walletManager = walletManager as? EthWalletManager {
+            walletManager.stopFetchingTransactions()
         }
     }
     

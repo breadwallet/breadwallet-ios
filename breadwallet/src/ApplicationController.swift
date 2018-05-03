@@ -318,11 +318,12 @@ class ApplicationController : Subscriber, Trackable {
     private func setupEthInitialState() {
         guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
         ethWalletManager.apiClient = primaryWalletManager?.apiClient
-        ethWalletManager.refresh()
+        Store.perform(action: WalletChange(Currencies.eth).setSyncingState(.connecting))
         Store.perform(action: WalletChange(Currencies.eth).setMaxDigits(Currencies.eth.commonUnit.decimals))
         Store.perform(action: WalletID.set(ethWalletManager.walletID))
         
         Store.state.currencies.filter({ $0 is ERC20Token }).forEach { token in
+            Store.perform(action: WalletChange(token).setSyncingState(.connecting))
             Store.perform(action: WalletChange(token).setMaxDigits(token.commonUnit.decimals))
             guard let state = token.state else { return }
             Store.perform(action: WalletChange(token).set(state.mutate(receiveAddress: ethWalletManager.address)))
@@ -520,21 +521,22 @@ class ApplicationController : Subscriber, Trackable {
 
     private func addTokenCountChangeListener() {
         Store.subscribe(self, selector: {
-            let oldTokens = Set($0.currencies.filter { $0 is ERC20Token }.map { ($0 as! ERC20Token).address })
-            let newTokens = Set($1.currencies.filter { $0 is ERC20Token }.map { ($0 as! ERC20Token).address })
+            let oldTokens = Set($0.currencies.compactMap { ($0 as? ERC20Token)?.address })
+            let newTokens = Set($1.currencies.compactMap { ($0 as? ERC20Token)?.address })
             return oldTokens != newTokens
         }, callback: { state in
             guard let ethWalletManager = self.walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
-            let tokens = state.currencies.filter { $0 is ERC20Token }.map { $0 as! ERC20Token }
-            ethWalletManager.tokens = tokens
+            let tokens = state.currencies.compactMap { $0 as? ERC20Token }
             tokens.forEach { token in
                 self.walletManagers[token.code] = ethWalletManager
                 self.modalPresenter?.walletManagers[token.code] = ethWalletManager
                 Store.perform(action: WalletChange(token).setMaxDigits(token.commonUnit.decimals))
+                Store.perform(action: WalletChange(token).setSyncingState(.connecting))
                 guard let state = token.state else { return }
                 Store.perform(action: WalletChange(token).set(state.mutate(receiveAddress: ethWalletManager.address)))
-                self.exchangeUpdater?.refresh {}
             }
+            ethWalletManager.tokens = tokens // triggers balance refresh
+            self.exchangeUpdater?.refresh() {}
         })
     }
 }
