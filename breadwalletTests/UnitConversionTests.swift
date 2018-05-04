@@ -75,6 +75,7 @@ class UnitConversionTests : XCTestCase {
         XCTAssertEqual(UInt256(string: "1.0", decimals: 18), UInt256(1000000000000000000))
         XCTAssertEqual(UInt256(string: "0.000000000000000001", decimals: 18), UInt256(1))
         XCTAssertEqual(UInt256(string: "1.2345678", decimals: 18), UInt256(1234567800000000000))
+        XCTAssertEqual(UInt256(string: "1,234,567.891", decimals: 18), UInt256(hexString: "0x1056E0F39C37A5C9B8000"))
         XCTAssertEqual(UInt256(string: "1.234567891234567891", decimals: 18), UInt256(1234567891234567891))
         
         //TODO: test overflow, underflow, strange inputs
