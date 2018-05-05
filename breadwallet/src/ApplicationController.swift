@@ -268,7 +268,7 @@ class ApplicationController : Subscriber, Trackable {
             self.startDataFetchers()
         })
     }
-    
+    //TODO: What are we losing by not updating these assets?
 //    private func updateAssetBundles() {
 //        DispatchQueue.global(qos: .utility).async { [weak self] in
 //            guard let myself = self else { return }
