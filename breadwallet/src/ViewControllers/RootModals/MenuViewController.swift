@@ -22,9 +22,6 @@ class MenuViewController : UIViewController, Trackable {
     fileprivate let buttons: [MenuButton] = {
         let types: [MenuButtonType] = [.security, .support, .settings, .lock, .buy]
         return types.compactMap {
-            //if $0 == .buy && !BRAPIClient.featureEnabled(.buyBitcoin) {
-            //    return nil
-            //}
             return MenuButton(type: $0)
         }
     }()

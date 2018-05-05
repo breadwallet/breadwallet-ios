@@ -102,14 +102,15 @@ class AccountViewController : UIViewController, Subscriber {
             NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: nil) { note in
                 self.showJailbreakWarnings(isJailbroken: isJailbroken)
             }
-            NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil) { _ in
-                if UserDefaults.writePaperPhraseDate != nil {
-                    self.footerView.refreshButtonStatus()
-                }
-            }
             showJailbreakWarnings(isJailbroken: isJailbroken)
         }
 
+        NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil) { _ in
+            if UserDefaults.writePaperPhraseDate != nil {
+                self.footerView.refreshButtonStatus()
+            }
+        }
+        
         addTransactionsView()
         addSubviews()
         addConstraints()
@@ -204,7 +205,6 @@ class AccountViewController : UIViewController, Subscriber {
                                 myself.setNeedsStatusBarAppearanceUpdate()
             })
         }
-
 
         searchHeaderview.didChangeFilters = { [weak self] filters in
             self?.transactionsTableView.filters = filters
