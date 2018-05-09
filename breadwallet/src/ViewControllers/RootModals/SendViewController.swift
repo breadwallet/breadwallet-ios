@@ -56,12 +56,19 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let sender: Sender
     private let currency: CurrencyDef
     private let initialRequest: PaymentRequest?
+    private var validatedProtoRequest: PaymentProtocolRequest?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
     private var feeSelection: FeeLevel? = nil
     private var balance: UInt256 = 0
     private var amount: Amount?
-
+    private var address: String? {
+        if let protoRequest = validatedProtoRequest {
+            return protoRequest.address
+        } else {
+            return addressCell.address
+        }
+    }
     // MARK: - Lifecycle
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -204,6 +211,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             let message = String.init(format: S.Send.invalidAddressOnPasteboard, currency.name)
             return showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
         }
+        self.validatedProtoRequest = nil
         handleRequest(request)
     }
 
@@ -211,13 +219,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         memoCell.textView.resignFirstResponder()
         addressCell.textField.resignFirstResponder()
         presentScan? { [weak self] paymentRequest in
+            self?.validatedProtoRequest = nil
             guard let request = paymentRequest else { return }
             self?.handleRequest(request)
         }
     }
     
     private func validateSendForm() -> Bool {
-        guard let address = addressCell.address, address.count > 0 else {
+        guard let address = address, address.count > 0 else {
             showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             return false
         }
@@ -226,7 +235,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
             return false
         }
-        
+
         let validationResult = sender.createTransaction(address: address,
                                                         amount: amount.rawValue,
                                                         comment: memoCell.textView.text)
@@ -274,7 +283,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         
         guard validateSendForm(),
             let amount = amount,
-            let address = addressCell.address else { return }
+            let address = address else { return }
         
         let fee = sender.fee(forAmount: amount.rawValue) ?? UInt256(0)
         let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
@@ -415,6 +424,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
             
         case .ok:
+            self.validatedProtoRequest = protoReq
             break
             
         default:
@@ -423,7 +433,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             return
         }
 
-        let address = protoReq.details.outputs.first!.swiftAddress
+        let address = protoReq.address
         let requestAmount = UInt256(protoReq.amount)
         
         if let name = protoReq.commonName {
