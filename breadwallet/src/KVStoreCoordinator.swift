@@ -15,7 +15,7 @@ class KVStoreCoordinator : Subscriber {
         setupStoredCurrencyList()
     }
 
-    private func setupStoredCurrencyList() {
+    func setupStoredCurrencyList() {
         //If stored currency list metadata doesn't exist, create a new one
         guard let currencyMetaData = CurrencyListMetaData(kvStore: kvStore) else {
             let newCurrencyListMetaData = CurrencyListMetaData()
