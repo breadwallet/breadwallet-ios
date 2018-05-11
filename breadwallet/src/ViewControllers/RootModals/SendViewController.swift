@@ -64,7 +64,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private var amount: Amount?
     private var address: String? {
         if let protoRequest = validatedProtoRequest {
-            return protoRequest.address
+            return currency.matches(Currencies.bch) ? protoRequest.address.bCashAddr : protoRequest.address
         } else {
             return addressCell.address
         }
