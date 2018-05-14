@@ -50,9 +50,13 @@ class KVStoreCoordinator : Subscriber {
     }
 
     private func setInitialDisplayWallets(metaData: CurrencyListMetaData, tokenData: [ERC20Token]) {
+        //skip this setup if stored wallets are the same as wallets in the state
+        guard walletsHaveChanged(displayCurrencies: Store.state.displayCurrencies, enabledCurrencies: metaData.enabledCurrencies) else { return }
+
         let oldWallets = Store.state.wallets
         var newWallets = [String: WalletState]()
         var displayOrder = 0
+
         metaData.enabledCurrencies.forEach {
             if let walletState = oldWallets[$0] {
                 newWallets[$0] = walletState.mutate(displayOrder: displayOrder)
@@ -90,6 +94,17 @@ class KVStoreCoordinator : Subscriber {
             }
         }
         Store.perform(action: ManageWallets.setWallets(newWallets))
+    }
+
+    private func walletsHaveChanged(displayCurrencies: [CurrencyDef], enabledCurrencies: [String]) -> Bool {
+        let identifiers: [String] = displayCurrencies.map {
+            if let token = $0 as? ERC20Token {
+                return C.erc20Prefix + token.address
+            } else {
+                return $0.code
+            }
+        }
+        return identifiers != enabledCurrencies
     }
     
     func retreiveStoredWalletInfo() {
