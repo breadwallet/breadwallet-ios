@@ -429,7 +429,7 @@ class ApplicationController : Subscriber, Trackable {
         kvStore.syncAllKeys { [unowned self] error in
             print("KV finished syncing. err: \(String(describing: error))")
             self.walletManagers.values.forEach({ $0.kvStore = kvStore })
-            //self.kvStoreCoordinator?.setupStoredCurrencyList()
+            self.kvStoreCoordinator?.setupStoredCurrencyList()
             self.kvStoreCoordinator?.retreiveStoredWalletInfo()
             self.kvStoreCoordinator?.listenForWalletChanges()
         }
