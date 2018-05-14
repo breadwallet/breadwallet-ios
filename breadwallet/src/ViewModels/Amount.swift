@@ -40,13 +40,14 @@ struct Amount {
     
     init(tokenString: String,
          currency: CurrencyDef,
+         locale: Locale = Locale.current,
          unit: CurrencyUnit? = nil,
          rate: Rate? = nil,
          minimumFractionDigits: Int? = nil,
          maximumFractionDigits: Int = Amount.normalPrecisionDigits,
          negative: Bool = false) {
         let decimals = unit?.decimals ?? currency.commonUnit.decimals
-        self.amount = UInt256(string: tokenString, decimals: decimals)
+        self.amount = UInt256(string: tokenString.usDecimalString(fromLocale: locale), decimals: decimals)
         self.currency = currency
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
@@ -65,6 +66,8 @@ struct Amount {
         formatter.minimumFractionDigits = 1
         formatter.minimumIntegerDigits = 1
         formatter.generatesDecimalNumbers = true
+        formatter.usesGroupingSeparator = false
+        formatter.locale = Locale(identifier: "en_US")
         guard let fiatAmount = NumberFormatter().number(from: fiatString)?.decimalValue,
             let commonUnitString = formatter.string(from: (fiatAmount / Decimal(rate.rate)) as NSDecimalNumber) else { return nil }
         
