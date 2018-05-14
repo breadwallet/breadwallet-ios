@@ -50,6 +50,11 @@ class FeeUpdater : Trackable {
     
     init(walletManager: WalletManager) {
         self.walletManager = walletManager
+        
+        // set default fee for BCH
+        if walletManager.currency.matches(Currencies.bch) {
+            walletManager.wallet?.feePerKb = 1000
+        }
     }
 
     func refresh(completion: @escaping () -> Void) {
@@ -83,14 +88,15 @@ class FeeUpdater : Trackable {
     
     private func refreshBitcoin(completion: @escaping () -> Void) {
         // Bitcoin-specific constants
-        let txFeePerKb: UInt64 = 1000
-        let minFeePerKB: UInt64 = (txFeePerKb*1000 + 190)/191 // minimum relay fee on a 191byte tx
-        let maxFeePerKB: UInt64 = ((1000100*1000 + 190)/191) // slightly higher than a 10000bit fee on a 191byte tx
+        let txFeePerKb: UInt64 = TX_FEE_PER_KB
+        let minFeePerKB: UInt64 = txFeePerKb
+        let maxFeePerKB: UInt64 = ((txFeePerKb*1000100 + 190)/191) // slightly higher than a 10,000bit fee on a 191byte tx
         
         walletManager.apiClient?.feePerKb(code: walletManager.currency.code) { [weak self] newFees, error in
             guard let `self` = self else { return }
             guard error == nil else { print("feePerKb error: \(String(describing: error))"); completion(); return }
-            if self.walletManager.currency.matches(Currencies.btc) {
+            print("\(self.walletManager.currency.code) fees updated: \(newFees.regular) / \(newFees.economy)")
+            if self.walletManager.currency is Bitcoin {
                 guard newFees.regular < maxFeePerKB && newFees.economy > minFeePerKB else {
                     self.saveEvent("wallet.didUseDefaultFeePerKB")
                     return
