@@ -70,7 +70,11 @@ class KVStoreCoordinator : Subscriber {
                 } else {
                     let filteredTokens = tokenData.filter { $0.address.lowercased() == tokenAddress.lowercased() }
                     if let token = filteredTokens.first {
-                        newWallets[token.code] = WalletState.initial(token, displayOrder: displayOrder)
+                        if let oldWallet = oldWallets[token.code] {
+                            newWallets[token.code] = oldWallet.mutate(displayOrder: displayOrder)
+                        } else {
+                            newWallets[token.code] = WalletState.initial(token, displayOrder: displayOrder)
+                        }
                         displayOrder = displayOrder + 1
                     } else {
                         assert(false)
