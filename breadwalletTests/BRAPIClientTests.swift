@@ -74,7 +74,7 @@ class BRAPIClientTests: XCTestCase {
         }
         XCTAssertEqual(pubKey1, key.publicKey.base58) // the key decoded from our encoded key is the same
     }
-    
+    /*
     func testHandshake() {
         // test that we can get a token and access /me
         let req = URLRequest(url: client.url("/me"))
@@ -84,5 +84,5 @@ class BRAPIClientTests: XCTestCase {
             exp.fulfill()
         }.resume()
         waitForExpectations(timeout: 30, handler: nil)
-    }
+    } */
 }

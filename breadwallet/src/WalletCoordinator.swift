@@ -140,7 +140,7 @@ class WalletCoordinator : Subscriber, Trackable {
     }
 
     func makeTransactionViewModels(transactions: [BRTxRef?], walletManager: WalletManager, kvStore: BRReplicatedKVStore?, rate: Rate?) -> [Transaction] {
-        return transactions.flatMap{ $0 }.sorted {
+        return transactions.compactMap{ $0 }.sorted {
                 if $0.pointee.timestamp == 0 {
                     return true
                 } else if $1.pointee.timestamp == 0 {
@@ -148,7 +148,7 @@ class WalletCoordinator : Subscriber, Trackable {
                 } else {
                     return $0.pointee.timestamp > $1.pointee.timestamp
                 }
-            }.flatMap {
+            }.compactMap {
                 return Transaction($0, walletManager: walletManager, kvStore: kvStore, rate: rate)
         }
     }
