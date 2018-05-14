@@ -747,25 +747,8 @@ extension UInt256 {
     }
     
     public init(string: String, decimals: Int) {
-        // createUInt256ParseDecimal expects en_us formatted string
-        let inputFormat = NumberFormatter()
-        let expectedFormat = NumberFormatter()
-        expectedFormat.numberStyle = .decimal
-        expectedFormat.locale = Locale(identifier: "en_us")
-        
-        // remove grouping separators and replace decimal separators
-        var sanitized = string.replacingOccurrences(of: inputFormat.currencyGroupingSeparator, with: "")
-        sanitized = sanitized.replacingOccurrences(of: inputFormat.groupingSeparator, with: "")
-        sanitized = sanitized.replacingOccurrences(of: inputFormat.currencyDecimalSeparator, with: expectedFormat.decimalSeparator)
-        sanitized = sanitized.replacingOccurrences(of: inputFormat.decimalSeparator, with: expectedFormat.decimalSeparator)
-        
-        // createUInt256ParseDecimal does not accept integers
-        if !sanitized.contains(expectedFormat.decimalSeparator) {
-            sanitized += expectedFormat.decimalSeparator
-        }
-        
         var status: BRCoreParseStatus = CORE_PARSE_OK
-        self = createUInt256ParseDecimal(sanitized, Int32(decimals), &status)
+        self = createUInt256ParseDecimal(string, Int32(decimals), &status)
     }
     
     public init(power: Int) {
