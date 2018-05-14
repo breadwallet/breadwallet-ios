@@ -39,6 +39,7 @@ class StartPaperPhraseViewController : UIViewController {
             let df = DateFormatter()
             df.setLocalizedDateFormatFromTemplate("MMMM d, yyyy")
             footer.text = String(format: S.StartPaperPhrase.date, df.string(from: writePaperPhraseDate))
+            footer.textAlignment = .center
         }
     }
 

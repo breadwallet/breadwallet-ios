@@ -75,9 +75,7 @@ class AboutViewController : UIViewController {
         privacy.titleLabel?.font = UIFont.customBody(size: 13.0)
         footer.textAlignment = .center
         footer.numberOfLines = 3
-        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-            footer.text = String(format: S.About.footer, "\(version) (\(build))")
-        }
+        footer.text = String(format: S.About.footer, AppVersion.string)
         logo.contentMode = .scaleAspectFill
     }
 

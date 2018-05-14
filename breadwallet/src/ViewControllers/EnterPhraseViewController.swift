@@ -164,7 +164,6 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
         }
         saveEvent("enterPhrase.valid")
         errorLabel.isHidden = true
-
         switch reason {
         case .setSeed(let callback):
             guard self.walletManager.setSeedPhrase(phrase) else { errorLabel.isHidden = false; return }

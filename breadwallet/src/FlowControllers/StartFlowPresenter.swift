@@ -97,28 +97,6 @@ class StartFlowPresenter : Subscriber {
         }
     }
 
-    private var pushPinCreationViewForRecoveredWallet: (String) -> Void {
-        return { [weak self] phrase in
-            guard let myself = self else { return }
-            let pinCreationView = UpdatePinViewController(store: myself.store, walletManager: myself.walletManager, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
-            pinCreationView.setPinSuccess = { [weak self] _ in
-                DispatchQueue.walletQueue.async {
-                    self?.walletManager.peerManager?.connect()
-                    DispatchQueue.main.async {
-                        self?.store.trigger(name: .didCreateOrRecoverWallet)
-                    }
-                }
-            }
-            myself.navigationController?.pushViewController(pinCreationView, animated: true)
-        }
-    }
-
-    private func dismissStartFlow() {
-        navigationController?.dismiss(animated: true) { [weak self] in
-            self?.navigationController = nil
-        }
-    }
-
     private func pushPinCreationViewControllerForNewWallet() {
         let pinCreationViewController = UpdatePinViewController(store: store, walletManager: walletManager, type: .creationNoPhrase, showsBackButton: true, phrase: nil)
         pinCreationViewController.setPinSuccess = { [weak self] pin in
@@ -140,20 +118,30 @@ class StartFlowPresenter : Subscriber {
         navigationController?.setClearNavbar()
         navigationController?.pushViewController(pinCreationViewController, animated: true)
     }
-
-    private func handleWalletCreationError() {
-        let alert = UIAlertController(title: S.Alert.error, message: "Could not create wallet", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
-        navigationController?.present(alert, animated: true, completion: nil)
+    
+    private var pushPinCreationViewForRecoveredWallet: (String) -> Void {
+        return { [weak self] phrase in
+            guard let myself = self else { return }
+            let pinCreationView = UpdatePinViewController(store: myself.store, walletManager: myself.walletManager, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
+            pinCreationView.setPinSuccess = { [weak self] _ in
+                DispatchQueue.walletQueue.async {
+                    self?.walletManager.peerManager?.connect()
+                    DispatchQueue.main.async {
+                        self?.store.trigger(name: .didCreateOrRecoverWallet)
+                    }
+                }
+            }
+            myself.navigationController?.pushViewController(pinCreationView, animated: true)
+        }
     }
-
+    
     private func pushStartPaperPhraseCreationViewController(pin: String) {
         let paperPhraseViewController = StartPaperPhraseViewController(store: store, callback: { [weak self] in
             self?.pushWritePaperPhraseViewController(pin: pin)
         })
         paperPhraseViewController.title = S.SecurityCenter.Cells.paperKeyTitle
         paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
-        paperPhraseViewController.navigationItem.leftBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: closeButton)]
+        paperPhraseViewController.hideCloseNavigationItem() //Forces user to confirm paper-key
 
         let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.paperKey)
         faqButton.tintColor = .white
@@ -171,7 +159,7 @@ class StartFlowPresenter : Subscriber {
             self?.pushConfirmPaperPhraseViewController(pin: pin)
         })
         writeViewController.title = S.SecurityCenter.Cells.paperKeyTitle
-        writeViewController.navigationItem.leftBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: closeButton)]
+        writeViewController.hideCloseNavigationItem()
         navigationController?.pushViewController(writeViewController, animated: true)
     }
 
@@ -197,6 +185,18 @@ class StartFlowPresenter : Subscriber {
         loginView.modalPresentationCapturesStatusBarAppearance = true
         loginViewController = loginView
         rootViewController.present(loginView, animated: false, completion: nil)
+    }
+    
+    private func handleWalletCreationError() {
+        let alert = UIAlertController(title: S.Alert.error, message: "Could not create wallet", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
+        navigationController?.present(alert, animated: true, completion: nil)
+    }
+    
+    private func dismissStartFlow() {
+        navigationController?.dismiss(animated: true) { [weak self] in
+            self?.navigationController = nil
+        }
     }
 
     private func dismissLoginFlow() {

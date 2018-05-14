@@ -57,7 +57,7 @@ class AccountViewController : UIViewController, Subscriber {
     //MARK: - Private
     private let store: Store
     private let headerView: AccountHeaderView
-    private let footerView = AccountFooterView()
+    private var footerView = AccountFooterView()
     private let transactionsLoadingView = LoadingProgressView()
     private let transactionsTableView: TransactionsTableViewController
     private let footerHeight: CGFloat = 56.0
@@ -105,6 +105,12 @@ class AccountViewController : UIViewController, Subscriber {
             showJailbreakWarnings(isJailbroken: isJailbroken)
         }
 
+        NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification, object: nil, queue: nil) { _ in
+            if UserDefaults.writePaperPhraseDate != nil {
+                self.footerView.refreshButtonStatus()
+            }
+        }
+        
         addTransactionsView()
         addSubviews()
         addConstraints()
@@ -199,7 +205,6 @@ class AccountViewController : UIViewController, Subscriber {
                                 myself.setNeedsStatusBarAppearanceUpdate()
             })
         }
-
 
         searchHeaderview.didChangeFilters = { [weak self] filters in
             self?.transactionsTableView.filters = filters

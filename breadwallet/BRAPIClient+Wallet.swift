@@ -50,12 +50,12 @@ extension BRAPIClient {
                     guard let array = parsedData as? [Any] else {
                         return handler([], "/rates didn't return an array")
                     }
-                    handler(array.flatMap { Rate(data: $0) }, nil)
+                    handler(array.compactMap { Rate(data: $0) }, nil)
                 } else {
                     guard let array = parsedData as? [Any] else {
                         return handler([], "/rates didn't return an array")
                     }
-                    handler(array.flatMap { Rate(data: $0) }, nil)
+                    handler(array.compactMap { Rate(data: $0) }, nil)
                 }
             } else {
                 if isFallback {

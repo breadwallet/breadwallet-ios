@@ -283,7 +283,7 @@ enum S {
         static let twitter = NSLocalizedString("About.twitter", value:"Twitter", comment: "About screen twitter label")
         static let reddit = NSLocalizedString("About.reddit", value:"Reddit", comment: "About screen reddit label")
         static let privacy = NSLocalizedString("About.privacy", value:"Privacy Policy", comment: "Privay Policy button label")
-        static let footer = NSLocalizedString("About.footer", value:"Made by Charlie Lee (the creator of Litecoin)\n and the global LoafWallet team.\nVersion %1$@", comment: "About screen footer")
+        static let footer = NSLocalizedString("About.footer", value:"Made by Charlie Lee (the creator of Litecoin)\n and the global LoafWallet team.\n %1$@", comment: "About screen footer")
     }
 
     enum PushNotifications {
