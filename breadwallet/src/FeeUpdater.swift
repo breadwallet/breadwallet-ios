@@ -79,6 +79,11 @@ class FeeUpdater : Trackable {
     @objc func intervalRefresh() {
         refresh(completion: {})
     }
+    
+    func stop() {
+        timer?.invalidate()
+        timer = nil
+    }
 
     //MARK: - Private
     

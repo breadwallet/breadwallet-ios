@@ -41,7 +41,9 @@ class KVStoreCoordinator : Subscriber {
     }
 
     private func resetDisplayCurrencies() {
-        guard let currencyMetaData = CurrencyListMetaData(kvStore: kvStore) else { return }
+        guard let currencyMetaData = CurrencyListMetaData(kvStore: kvStore) else {
+            return setupStoredCurrencyList()
+        }
         currencyMetaData.enabledCurrencies = CurrencyListMetaData.defaultCurrencies
         currencyMetaData.hiddenCurrencies = []
         set(currencyMetaData)
