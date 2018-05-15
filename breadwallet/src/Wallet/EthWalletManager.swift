@@ -60,10 +60,10 @@ class EthWalletManager : WalletManager {
 
     // MARK: -
     
-    init() {
-        guard let pubKey = ethPubKey else { return }
+    init?() {
+        guard let pubKey = ethPubKey else { return nil }
         self.account = createAccountWithPublicKey(pubKey)
-        guard account != nil else { return }
+        guard account != nil else { return nil }
         self.ethAddress = accountGetPrimaryAddress(self.account)
         self.ethWallet = walletCreate(account, E.isTestnet ? ethereumTestnet : ethereumMainnet)
         if let address = addressAsString(self.ethAddress) {

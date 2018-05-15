@@ -422,6 +422,10 @@ extension BTCWalletManager : WalletAuthenticator {
     // Using the trigger will ensure the correct UI gets displayed
     func wipeWallet(pin: String = "forceWipe") -> Bool {
         guard pin == "forceWipe" || authenticate(pin: pin) else { return false }
+        
+        if #available(iOS 10.0, *) {
+            dispatchPrecondition(condition: .onQueue(DispatchQueue.walletQueue))
+        }
 
         do {
             resetForWipe()
@@ -564,6 +568,7 @@ extension EthWalletManager {
     
     // public key for Ethereum wallet
     var ethPubKey: BRKey? {
+        guard ethPrivKey != nil else { return nil }
         var key = BRKey(privKey: ethPrivKey!)
         defer { key?.clean() }
         key?.compressed = 0
