@@ -446,6 +446,7 @@
 		CEE659E71F65A936001FF29D /* RetryTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE659E61F65A936001FF29D /* RetryTimer.swift */; };
 		CEE659E91F664C73001FF29D /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE659E81F664C73001FF29D /* WelcomeViewController.swift */; };
 		CEE65DF01E39056F0002994D /* Rate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE65DEF1E39056F0002994D /* Rate.swift */; };
+		CEE9A2E920AB4F9A00C5CF2F /* BRAPIClient+Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE9A2E820AB4F9A00C5CF2F /* BRAPIClient+Metrics.swift */; };
 		CEEC707F1E8D6B4100EF788E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC707E1E8D6B4100EF788E /* SettingsViewController.swift */; };
 		CEEC70811E90C04700EF788E /* SeparatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70801E90C04700EF788E /* SeparatorCell.swift */; };
 		CEEC70831E90C07C00EF788E /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70821E90C07C00EF788E /* Setting.swift */; };
@@ -1713,6 +1714,7 @@
 		CEE659ED1F68AAB5001FF29D /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		CEE659EE1F68AAB9001FF29D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		CEE65DEF1E39056F0002994D /* Rate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Rate.swift; path = src/Models/Rate.swift; sourceTree = "<group>"; };
+		CEE9A2E820AB4F9A00C5CF2F /* BRAPIClient+Metrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Metrics.swift"; path = "src/Platform/BRAPIClient+Metrics.swift"; sourceTree = "<group>"; };
 		CEEC707E1E8D6B4100EF788E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = src/ViewControllers/SettingsViewController.swift; sourceTree = "<group>"; };
 		CEEC70801E90C04700EF788E /* SeparatorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SeparatorCell.swift; path = src/Views/SeparatorCell.swift; sourceTree = "<group>"; };
 		CEEC70821E90C07C00EF788E /* Setting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Setting.swift; path = src/Models/Setting.swift; sourceTree = "<group>"; };
@@ -1864,6 +1866,7 @@
 				22A9A9321DF61945000F0016 /* BRAPIClient.swift */,
 				2218BD761E8F55430091D5E8 /* BRAPIClient+Assets.swift */,
 				222C424F1E90492800078EB5 /* BRAPIClient+KV.swift */,
+				CEE9A2E820AB4F9A00C5CF2F /* BRAPIClient+Metrics.swift */,
 				2228734C1E916F7C0044BA15 /* BRAPIClient+Features.swift */,
 				2228734E1E916FC30044BA15 /* BRAPIClient+Wallet.swift */,
 				22122B711F0B8996000E9AB9 /* BRAPIClient+Events.swift */,
@@ -4209,6 +4212,7 @@
 				22A9A94D1DF61945000F0016 /* BRHTTPFileMiddleware.swift in Sources */,
 				CE8644251F2C160200033129 /* ConfirmationViewController.swift in Sources */,
 				7CBA74E820227D1300FBBFA9 /* MenuCell.swift in Sources */,
+				CEE9A2E920AB4F9A00C5CF2F /* BRAPIClient+Metrics.swift in Sources */,
 				CEBF32F01DDCD30600348FC6 /* AccountViewController.swift in Sources */,
 				CE38D3F420756AB400E01C2B /* EthWalletManager.swift in Sources */,
 				CEE1F5631DF13E5A00D733AD /* ModalHeaderView.swift in Sources */,
