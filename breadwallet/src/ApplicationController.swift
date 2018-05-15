@@ -194,6 +194,8 @@ class ApplicationController : Subscriber, Trackable {
         self.setup()
         
         DispatchQueue.walletQueue.async {
+            self.feeUpdaters.values.forEach({ $0.stop() })
+            self.feeUpdaters.removeAll()
             self.walletManagers.values.forEach({ $0.resetForWipe() })
             self.walletManagers.removeAll()
             self.initWallet {
@@ -277,8 +279,8 @@ class ApplicationController : Subscriber, Trackable {
         modalPresenter = ModalPresenter(walletManagers: walletManagers, window: window, apiClient: noAuthApiClient)
         startFlowController = StartFlowPresenter(walletManager: primaryWalletManager, rootViewController: rootViewController)
         
-        walletManagers.forEach { (currencyCode, walletManager) in
-            feeUpdaters[currencyCode] = FeeUpdater(walletManager: walletManager)
+        walletManagers.values.forEach { walletManager in
+            feeUpdaters[walletManager.currency.code] = FeeUpdater(walletManager: walletManager)
         }
 
         defaultsUpdater = UserDefaultsUpdater(walletManager: primaryWalletManager)
