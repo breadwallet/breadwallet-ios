@@ -25,7 +25,7 @@ open class AssetArchive {
         return fileManager.fileExists(atPath: extractedPath)
     }
     
-    private var version: String? {
+    var version: String? {
         guard let archiveContents = try? Data(contentsOf: archiveUrl) else {
             return nil
         }
@@ -223,7 +223,7 @@ extension BRAPIClient {
         }
     }
     
-    fileprivate var bundleDirUrl: URL {
+    var bundleDirUrl: URL {
         let fm = FileManager.default
         let docsUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!
         let bundleDirUrl = docsUrl.appendingPathComponent("bundles", isDirectory: true)
