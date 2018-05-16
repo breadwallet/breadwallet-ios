@@ -15,6 +15,8 @@ extension BRAPIClient {
             guard let `self` = self else { return }
             var req = URLRequest(url: self.url("/me/metrics"))
             req.httpMethod = "POST"
+            req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            req.setValue("application/json", forHTTPHeaderField: "Accept")
             let data = LaunchData(data: BundleData(bundles: self.bundles))
             req.httpBody = try? JSONEncoder().encode(data)
             self.dataTaskWithRequest(req, authenticated: true, handler: { data, response, error in
