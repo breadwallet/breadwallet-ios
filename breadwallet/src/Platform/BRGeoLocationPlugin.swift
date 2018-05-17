@@ -136,13 +136,7 @@ open class BRGeoLocationPlugin: NSObject, BRHTTPRouterPlugin, CLLocationManagerD
         // full time geo availability to the app
         router.post("/_permissions/geo") { (request, match) -> BRHTTPResponse in
             if let j = request.json(), let dict = j as? NSDictionary, let style = dict["style"] as? String {
-                switch style {
-                case "inuse": self.manager.requestWhenInUseAuthorization()
-                case "always": self.manager.requestAlwaysAuthorization()
-                default: return BRHTTPResponse(request: request, code: 400)
-                }
-                UserDefaults.standard.set(true, forKey: "geo_permission_was_queried")
-                return BRHTTPResponse(request: request, code: 204)
+                return BRHTTPResponse(request: request, code: 500) // deprecated
             }
             return BRHTTPResponse(request: request, code: 400)
         }
