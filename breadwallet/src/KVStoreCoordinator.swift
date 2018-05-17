@@ -79,7 +79,7 @@ class KVStoreCoordinator : Subscriber {
                         }
                         displayOrder = displayOrder + 1
                     } else {
-                        assert(false)
+                        assert(E.isTestnet, "unknown token")
                     }
                 }
             }
