@@ -16,7 +16,7 @@ class ModalPresenter : Subscriber, Trackable {
     let primaryWalletManager: BTCWalletManager
     var walletManagers: [String: WalletManager]
     lazy var supportCenter: SupportCenterContainer = {
-        return SupportCenterContainer(walletManagers: self.walletManagers, apiClient: self.noAuthApiClient)
+        return SupportCenterContainer(walletManagers: self.walletManagers, noAuthApiClient: Store.state.isLoginRequired ? self.noAuthApiClient : nil)
     }()
     
     init(walletManagers: [String: WalletManager], window: UIWindow, apiClient: BRAPIClient) {
