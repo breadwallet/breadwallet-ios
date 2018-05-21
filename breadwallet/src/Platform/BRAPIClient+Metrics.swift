@@ -42,8 +42,6 @@ extension BRAPIClient {
 
 private struct LaunchData : Codable {
     let metric = "launch"
-    let app_version = (Bundle.main.infoDictionary?["CFBundleVersion"] as? String) ?? "0"
-    let client = "ios"
     let data: BundleData
 }
 
