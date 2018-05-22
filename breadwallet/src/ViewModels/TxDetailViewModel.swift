@@ -107,6 +107,11 @@ extension TxDetailViewModel {
                 total = totalAmount?.tokenDescription
             }
         }
+        
+        if let tx = tx as? BtcTransaction {
+            let feeAmount = Amount(amount: UInt256(tx.fee), currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
+            fee = Store.state.isBtcSwapped ? feeAmount.fiatDescription : feeAmount.tokenDescription
+        }
     }
     
     /// The fiat exchange rate at the time of transaction
