@@ -292,7 +292,8 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         }) { completion in
             if self.shouldSelfDismiss {
                 self.dismiss(animated: true, completion: {
-                    nc?.attemptShowWelcomeView()
+                    // welcome message removed IOS-677
+                    //nc?.attemptShowWelcomeView()
                 })
             }
             Store.perform(action: LoginSuccess())

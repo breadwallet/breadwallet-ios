@@ -310,6 +310,10 @@ class PaymentProtocolRequest {
         if !didValidate { _ = self.isValid() }
         return errMsg
     }
+
+    var address: String {
+        return details.outputs.first!.swiftAddress
+    }
     
     var mimeType: String = "application/bitcoin-paymentrequest"
     

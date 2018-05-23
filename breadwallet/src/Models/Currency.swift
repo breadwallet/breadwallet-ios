@@ -260,7 +260,7 @@ public struct Currencies {
                              colors: (UIColor(red:0.278431, green:0.521569, blue:0.349020, alpha:1.0), UIColor(red:0.278431, green:0.521569, blue:0.349020, alpha:1.0)),
                              dbPath: "BreadWallet-bch.sqlite",
                              forkId: 0x40,
-                             urlSchemes: [E.isTestnet ? "bchtest" : "bitcoincash"])
+                             urlSchemes: E.isTestnet ? ["bchtest", "bitcoincash"] :  ["bitcoincash"])
     static let eth = Ethereum(name: "Ethereum",
                               code: "ETH",
                               symbol: S.Symbols.eth,

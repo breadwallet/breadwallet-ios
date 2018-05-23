@@ -67,14 +67,15 @@ class UnitConversionTests : XCTestCase {
         XCTAssertEqual(base10, actual)
         
         // BTC -> Satoshis
-        XCTAssertEqual(UInt256(string: "1", decimals: 8), UInt256(100000000))
+        XCTAssertEqual(UInt256(string: "1.", decimals: 8), UInt256(100000000))
         XCTAssertEqual(UInt256(string: "1.23456789", decimals: 8), UInt256(123456789))
         
         // ETH -> Wei
-        XCTAssertEqual(UInt256(string: "1", decimals: 18), UInt256(1000000000000000000))
+        XCTAssertEqual(UInt256(string: "1.", decimals: 18), UInt256(1000000000000000000))
         XCTAssertEqual(UInt256(string: "1.0", decimals: 18), UInt256(1000000000000000000))
         XCTAssertEqual(UInt256(string: "0.000000000000000001", decimals: 18), UInt256(1))
         XCTAssertEqual(UInt256(string: "1.2345678", decimals: 18), UInt256(1234567800000000000))
+        XCTAssertEqual(UInt256(string: "1234567.891", decimals: 18), UInt256(hexString: "0x1056E0F39C37A5C9B8000"))
         XCTAssertEqual(UInt256(string: "1.234567891234567891", decimals: 18), UInt256(1234567891234567891))
         
         //TODO: test overflow, underflow, strange inputs
@@ -94,6 +95,29 @@ class UnitConversionTests : XCTestCase {
         XCTAssertEqual(Amount(amount: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 8).tokenDescription, "1.12345679 ETH")
         XCTAssertEqual(Amount(amount: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 8).fiatDescription, "$1,123.46")
         
-        //TODO: test fiat conversion to closest round number token
+        XCTAssertEqual(Amount(tokenString: "1", currency: Currencies.eth).rawValue, UInt256(1000000000000000000))
+        XCTAssertEqual(Amount(tokenString: "1.0", currency: Currencies.eth).rawValue, UInt256(1000000000000000000))
+        XCTAssertEqual(Amount(tokenString: "0.000000000000000001", currency: Currencies.eth).rawValue, UInt256(1))
+        XCTAssertEqual(Amount(tokenString: "1.2345678", currency: Currencies.eth).rawValue, UInt256(1234567800000000000))
+        XCTAssertEqual(Amount(tokenString: "1,234,567.891", currency: Currencies.eth).rawValue, UInt256(hexString: "0x1056E0F39C37A5C9B8000"))
+        XCTAssertEqual(Amount(tokenString: "1.234567891234567891", currency: Currencies.eth).rawValue, UInt256(1234567891234567891))
+        
+        let french = Locale(identifier: "fr_FR")
+        XCTAssertEqual(Amount(tokenString: "1,0", currency: Currencies.eth, locale: french).rawValue, UInt256(1000000000000000000))
+        XCTAssertEqual(Amount(tokenString: "0,000000000000000001", currency: Currencies.eth, locale: french).rawValue, UInt256(1))
+        XCTAssertEqual(Amount(tokenString: "1,2345678", currency: Currencies.eth, locale: french).rawValue, UInt256(1234567800000000000))
+        XCTAssertEqual(Amount(tokenString: "1 234 567,891", currency: Currencies.eth, locale: french).rawValue, UInt256(hexString: "0x1056E0F39C37A5C9B8000"))
+        XCTAssertEqual(Amount(tokenString: "1,234567891234567891", currency: Currencies.eth, locale: french).rawValue, UInt256(1234567891234567891))
+        
+        let portugese = Locale(identifier: "pt_BR")
+        XCTAssertEqual(Amount(tokenString: "1,0", currency: Currencies.eth, locale: portugese).rawValue, UInt256(1000000000000000000))
+        XCTAssertEqual(Amount(tokenString: "0,000000000000000001", currency: Currencies.eth, locale: portugese).rawValue, UInt256(1))
+        XCTAssertEqual(Amount(tokenString: "1,2345678", currency: Currencies.eth, locale: portugese).rawValue, UInt256(1234567800000000000))
+        XCTAssertEqual(Amount(tokenString: "1.234.567,891", currency: Currencies.eth, locale: portugese).rawValue, UInt256(hexString: "0x1056E0F39C37A5C9B8000"))
+        XCTAssertEqual(Amount(tokenString: "1,234567891234567891", currency: Currencies.eth, locale: portugese).rawValue, UInt256(1234567891234567891))
+        
+        XCTAssertEqual(Amount(fiatString: "0.01", currency: Currencies.btc, rate: rate)?.rawValue, UInt256(1000))
+        XCTAssertEqual(Amount(fiatString: ".0001", currency: Currencies.btc, rate: rate)?.rawValue, UInt256(10))
+        XCTAssertEqual(Amount(fiatString: "100001.9999", currency: Currencies.btc, rate: rate)?.rawValue, UInt256(10000199990))
     }
 }
