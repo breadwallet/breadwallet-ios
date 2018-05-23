@@ -92,7 +92,7 @@ class AboutViewController : UIViewController {
             myself.presentURL(string: "https://twitter.com/breadapp")
         }
         reddit.button.tap = strongify(self) { myself in
-            myself.presentURL(string: "https://reddit.com/r/breadwallet/")
+            myself.presentURL(string: "https://reddit.com/r/brdapp/")
         }
         privacy.tap = strongify(self) { myself in
             myself.presentURL(string: "https://breadapp.com/privacy-policy")

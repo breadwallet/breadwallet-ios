@@ -329,7 +329,7 @@ extension EditWalletsViewController {
                     currency = $0
                 }
             }
-            assert(currency != nil)
+            assert(currency != nil || E.isTestnet)
             return currency
         }
     }

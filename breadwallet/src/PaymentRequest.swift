@@ -45,7 +45,7 @@ struct PaymentRequest {
 
                         switch key {
                         case "amount":
-                            amount = Amount(tokenString: value, currency: currency)
+                            amount = Amount(tokenString: value, currency: currency, locale: Locale(identifier: "en_US"))
                         case "label", "memo":
                             label = value
                         case "message":

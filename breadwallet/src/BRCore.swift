@@ -747,16 +747,8 @@ extension UInt256 {
     }
     
     public init(string: String, decimals: Int) {
-        // createUInt256ParseDecimal skips decimal conversion for integer inputs
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.usesGroupingSeparator = false
-        formatter.minimumFractionDigits = 1
-        formatter.maximumFractionDigits = decimals
-        formatter.locale = Locale(identifier: "en_us")
-        let decimalString = formatter.string(from: NSDecimalNumber(string: string, locale: Locale.current)) ?? ""
         var status: BRCoreParseStatus = CORE_PARSE_OK
-        self = createUInt256ParseDecimal(decimalString, Int32(decimals), &status)
+        self = createUInt256ParseDecimal(string, Int32(decimals), &status)
     }
     
     public init(power: Int) {

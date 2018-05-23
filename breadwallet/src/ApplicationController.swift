@@ -194,6 +194,8 @@ class ApplicationController : Subscriber, Trackable {
         self.setup()
         
         DispatchQueue.walletQueue.async {
+            self.feeUpdaters.values.forEach({ $0.stop() })
+            self.feeUpdaters.removeAll()
             self.walletManagers.values.forEach({ $0.resetForWipe() })
             self.walletManagers.removeAll()
             self.initWallet {
@@ -208,6 +210,7 @@ class ApplicationController : Subscriber, Trackable {
     func willEnterForeground() {
         guard let walletManager = primaryWalletManager,
             !walletManager.noWallet else { return }
+        walletManager.apiClient?.sendLaunchEvent()
         if shouldRequireLogin() {
             Store.perform(action: RequireLogin())
         }
@@ -263,6 +266,7 @@ class ApplicationController : Subscriber, Trackable {
         guard let primaryWalletManager = primaryWalletManager else { return }
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
         walletCoordinator = WalletCoordinator(walletManagers: walletManagers)
+        primaryWalletManager.apiClient?.sendLaunchEvent()
         setupEthInitialState()
         addTokenCountChangeListener()
         Store.perform(action: PinLength.set(primaryWalletManager.pinLength))
@@ -277,8 +281,8 @@ class ApplicationController : Subscriber, Trackable {
         modalPresenter = ModalPresenter(walletManagers: walletManagers, window: window, apiClient: noAuthApiClient)
         startFlowController = StartFlowPresenter(walletManager: primaryWalletManager, rootViewController: rootViewController)
         
-        walletManagers.forEach { (currencyCode, walletManager) in
-            feeUpdaters[currencyCode] = FeeUpdater(walletManager: walletManager)
+        walletManagers.values.forEach { walletManager in
+            feeUpdaters[walletManager.currency.code] = FeeUpdater(walletManager: walletManager)
         }
 
         defaultsUpdater = UserDefaultsUpdater(walletManager: primaryWalletManager)
@@ -318,11 +322,12 @@ class ApplicationController : Subscriber, Trackable {
     private func setupEthInitialState() {
         guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
         ethWalletManager.apiClient = primaryWalletManager?.apiClient
-        ethWalletManager.refresh()
+        Store.perform(action: WalletChange(Currencies.eth).setSyncingState(.connecting))
         Store.perform(action: WalletChange(Currencies.eth).setMaxDigits(Currencies.eth.commonUnit.decimals))
         Store.perform(action: WalletID.set(ethWalletManager.walletID))
         
         Store.state.currencies.filter({ $0 is ERC20Token }).forEach { token in
+            Store.perform(action: WalletChange(token).setSyncingState(.connecting))
             Store.perform(action: WalletChange(token).setMaxDigits(token.commonUnit.decimals))
             guard let state = token.state else { return }
             Store.perform(action: WalletChange(token).set(state.mutate(receiveAddress: ethWalletManager.address)))
@@ -424,12 +429,13 @@ class ApplicationController : Subscriber, Trackable {
     private func initKVStoreCoordinator() {
         guard let kvStore = primaryWalletManager?.apiClient?.kv else { return }
         guard kvStoreCoordinator == nil else { return }
+        self.kvStoreCoordinator = KVStoreCoordinator(kvStore: kvStore)
         kvStore.syncAllKeys { [unowned self] error in
             print("KV finished syncing. err: \(String(describing: error))")
             self.walletManagers.values.forEach({ $0.kvStore = kvStore })
-            self.kvStoreCoordinator = KVStoreCoordinator(kvStore: kvStore)
-            self.kvStoreCoordinator!.retreiveStoredWalletInfo()
-            self.kvStoreCoordinator!.listenForWalletChanges()
+            self.kvStoreCoordinator?.setupStoredCurrencyList()
+            self.kvStoreCoordinator?.retreiveStoredWalletInfo()
+            self.kvStoreCoordinator?.listenForWalletChanges()
         }
     }
 
@@ -520,21 +526,22 @@ class ApplicationController : Subscriber, Trackable {
 
     private func addTokenCountChangeListener() {
         Store.subscribe(self, selector: {
-            let oldTokens = Set($0.currencies.filter { $0 is ERC20Token }.map { ($0 as! ERC20Token).address })
-            let newTokens = Set($1.currencies.filter { $0 is ERC20Token }.map { ($0 as! ERC20Token).address })
+            let oldTokens = Set($0.currencies.compactMap { ($0 as? ERC20Token)?.address })
+            let newTokens = Set($1.currencies.compactMap { ($0 as? ERC20Token)?.address })
             return oldTokens != newTokens
         }, callback: { state in
             guard let ethWalletManager = self.walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
-            let tokens = state.currencies.filter { $0 is ERC20Token }.map { $0 as! ERC20Token }
-            ethWalletManager.tokens = tokens
+            let tokens = state.currencies.compactMap { $0 as? ERC20Token }
             tokens.forEach { token in
                 self.walletManagers[token.code] = ethWalletManager
                 self.modalPresenter?.walletManagers[token.code] = ethWalletManager
                 Store.perform(action: WalletChange(token).setMaxDigits(token.commonUnit.decimals))
+                Store.perform(action: WalletChange(token).setSyncingState(.connecting))
                 guard let state = token.state else { return }
                 Store.perform(action: WalletChange(token).set(state.mutate(receiveAddress: ethWalletManager.address)))
-                self.exchangeUpdater?.refresh {}
             }
+            ethWalletManager.tokens = tokens // triggers balance refresh
+            self.exchangeUpdater?.refresh() {}
         })
     }
 }
