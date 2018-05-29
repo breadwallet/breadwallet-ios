@@ -32,7 +32,7 @@ enum SettingsSections: String {
     }
 }
 
-class SettingsViewController : UITableViewController, CustomTitleView {
+class SettingsViewController : UITableViewController {
     
     init(sections: [SettingsSections], rows: [SettingsSections: [Setting]], optionalTitle: String? = nil) {
         self.sections = sections
@@ -44,31 +44,21 @@ class SettingsViewController : UITableViewController, CustomTitleView {
             tempRows[.preferences] = tempRows[.preferences]?.filter { $0.title != biometricsLimit }
             self.rows = tempRows
         }
-        customTitle = optionalTitle ?? S.Settings.title
-        titleLabel.text = optionalTitle ?? S.Settings.title
+        self.optionalTitle = optionalTitle
         super.init(style: .plain)
     }
 
     private let sections: [SettingsSections]
     private let rows: [SettingsSections: [Setting]]
     private let cellIdentifier = "CellIdentifier"
-    let titleLabel = UILabel(font: .customBold(size: 28.0), color: .darkGray)
-    let customTitle: String
+    private let optionalTitle: String?
 
     override func viewDidLoad() {
-        self.title = ""
-        
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 48.0))
-        headerView.backgroundColor = .whiteBackground
-        headerView.addSubview(titleLabel)
-        titleLabel.constrain(toSuperviewEdges: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -C.padding[2]))
-        titleLabel.textAlignment = .right
+        title = optionalTitle ?? S.Settings.title
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
-        tableView.tableHeaderView = headerView
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
         tableView.backgroundColor = .whiteBackground
-        addCustomTitle()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -135,14 +125,6 @@ class SettingsViewController : UITableViewController, CustomTitleView {
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 48.0
-    }
-
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        didScrollForCustomTitle(yOffset: scrollView.contentOffset.y)
-    }
-
-    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        scrollViewWillEndDraggingForCustomTitle(yOffset: targetContentOffset.pointee.y)
     }
 
     required init?(coder aDecoder: NSCoder) {

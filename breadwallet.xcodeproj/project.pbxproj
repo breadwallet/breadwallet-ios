@@ -337,7 +337,6 @@
 		CE65C66A207D41BB000C99C4 /* CurrencyListMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65C669207D41BB000C99C4 /* CurrencyListMetaData.swift */; };
 		CE6B6B4A1E54C0CB00B31405 /* SecurityCenterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6B6B491E54C0CA00B31405 /* SecurityCenterCell.swift */; };
 		CE6B829A1FE3A7B6007A41B9 /* UIScrollView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6B82991FE3A7B6007A41B9 /* UIScrollView+Additions.swift */; };
-		CE6BCF5D1EE9E89A0029849C /* CustomTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6BCF5C1EE9E89A0029849C /* CustomTitleView.swift */; };
 		CE6D0E5C1E14BFA700137DF1 /* KeyboardNotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0E5B1E14BFA600137DF1 /* KeyboardNotificationInfo.swift */; };
 		CE6D0F971DE8B73A00BD4BCF /* ModalTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0F961DE8B73A00BD4BCF /* ModalTransitionDelegate.swift */; };
 		CE6D0F991DE8B75900BD4BCF /* DismissModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */; };
@@ -1495,7 +1494,6 @@
 		CE65C669207D41BB000C99C4 /* CurrencyListMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CurrencyListMetaData.swift; path = src/Platform/CurrencyListMetaData.swift; sourceTree = "<group>"; };
 		CE6B6B491E54C0CA00B31405 /* SecurityCenterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SecurityCenterCell.swift; path = src/Views/SecurityCenterCell.swift; sourceTree = "<group>"; };
 		CE6B82991FE3A7B6007A41B9 /* UIScrollView+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIScrollView+Additions.swift"; path = "src/Extensions/UIScrollView+Additions.swift"; sourceTree = "<group>"; };
-		CE6BCF5C1EE9E89A0029849C /* CustomTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomTitleView.swift; path = src/Extensions/CustomTitleView.swift; sourceTree = "<group>"; };
 		CE6D0E5B1E14BFA600137DF1 /* KeyboardNotificationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeyboardNotificationInfo.swift; path = src/Models/KeyboardNotificationInfo.swift; sourceTree = "<group>"; };
 		CE6D0F961DE8B73A00BD4BCF /* ModalTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalTransitionDelegate.swift; path = src/ViewControllers/ViewControllerTransitions/ModalTransitionDelegate.swift; sourceTree = "<group>"; };
 		CE6D0F981DE8B75900BD4BCF /* DismissModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DismissModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/DismissModalAnimator.swift; sourceTree = "<group>"; };
@@ -3003,7 +3001,6 @@
 				CEA362671E00EE320061FC0E /* CameraGuideView.swift */,
 				CE20C9101DBE5B6F00C8397A /* Circle.swift */,
 				CEAA9E9A1DC2B9320066731D /* ConfirmPhrase.swift */,
-				CE6BCF5C1EE9E89A0029849C /* CustomTitleView.swift */,
 				CE4C1CC51ED65D830063E184 /* DrawableCircle.swift */,
 				CE6DCC261E6108D50044257B /* EnterPhraseCell.swift */,
 				CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */,
@@ -3943,7 +3940,6 @@
 				CEB909F71E5FE654001804DC /* EnterPhraseCollectionViewController.swift in Sources */,
 				CEF3D2DD1E8CBA790070178E /* LAContext+Extensions.swift in Sources */,
 				CECCE5AE1E04AD6300D99448 /* AddressCell.swift in Sources */,
-				CE6BCF5D1EE9E89A0029849C /* CustomTitleView.swift in Sources */,
 				CE2DC1391EBC36EE000FE727 /* Prompt.swift in Sources */,
 				CE83DE2A1E9EB7F600D07636 /* SendAmountCell.swift in Sources */,
 				22A9A9521DF61945000F0016 /* BRKVStorePlugin.swift in Sources */,
