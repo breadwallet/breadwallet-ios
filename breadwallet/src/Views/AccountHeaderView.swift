@@ -25,7 +25,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private let currencyTapView = UIView()
     private let syncIndicator = SyncingIndicator(style: .account)
     private let modeLabel = UILabel(font: .customBody(size: 12.0), color: .transparentWhiteText) // debug info
-    
     private var regularConstraints: [NSLayoutConstraint] = []
     private var swappedConstraints: [NSLayoutConstraint] = []
     
@@ -105,7 +104,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private func setup() {
         addSubviews()
         addConstraints()
-        //addShadow()
         setData()
         addSubscriptions()
     }
@@ -150,30 +148,19 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         currencyName.constrain([
             currencyName.constraint(.leading, toView: self, constant: C.padding[2]),
             currencyName.constraint(.trailing, toView: self, constant: -C.padding[2]),
-            currencyName.constraint(.top, toView: self, constant: E.isIPhoneX ? C.padding[5] : C.padding[3])
-            ])
-        
+            currencyName.constraint(.top, toView: self, constant: E.isIPhoneX ? C.padding[5] : C.padding[3])])
         exchangeRateLabel.pinTo(viewAbove: currencyName)
-        
         balanceLabel.constrain([
             balanceLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
-            balanceLabel.bottomAnchor.constraint(equalTo: primaryBalance.topAnchor, constant: 0.0)
-            ])
-        
+            balanceLabel.bottomAnchor.constraint(equalTo: primaryBalance.topAnchor, constant: 0.0)])
         primaryBalance.constrain([
-            primaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[2])
-            ])
-        
+            primaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[2])])
         secondaryBalance.constrain([
-            secondaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[2]),
-            ])
-        
+            secondaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[2])])
         conversionSymbol.constrain([
             conversionSymbol.heightAnchor.constraint(equalToConstant: 12.0),
             conversionSymbol.heightAnchor.constraint(equalTo: conversionSymbol.widthAnchor),
-            conversionSymbol.bottomAnchor.constraint(equalTo: primaryBalance.firstBaselineAnchor)
-            ])
-        
+            conversionSymbol.bottomAnchor.constraint(equalTo: primaryBalance.firstBaselineAnchor)])
         currencyTapView.constrain([
             currencyTapView.trailingAnchor.constraint(equalTo: balanceLabel.trailingAnchor),
             currencyTapView.topAnchor.constraint(equalTo: primaryBalance.topAnchor, constant: -C.padding[1]),
@@ -185,33 +172,21 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             conversionSymbol.leadingAnchor.constraint(equalTo: secondaryBalance.trailingAnchor, constant: C.padding[1]),
             currencyTapView.leadingAnchor.constraint(equalTo: secondaryBalance.leadingAnchor)
         ]
-
         swappedConstraints = [
             secondaryBalance.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
             secondaryBalance.leadingAnchor.constraint(equalTo: conversionSymbol.trailingAnchor, constant: C.padding[1]),
             conversionSymbol.leadingAnchor.constraint(equalTo: primaryBalance.trailingAnchor, constant: C.padding[1]),
             currencyTapView.leadingAnchor.constraint(equalTo: primaryBalance.leadingAnchor)
         ]
-
         NSLayoutConstraint.activate(isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
 
         modeLabel.constrain([
             modeLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
-            modeLabel.centerYAnchor.constraint(equalTo: balanceLabel.centerYAnchor)
-            ])
-        
+            modeLabel.centerYAnchor.constraint(equalTo: balanceLabel.centerYAnchor)])
         syncIndicator.constrain([
             syncIndicator.trailingAnchor.constraint(equalTo: balanceLabel.trailingAnchor),
             syncIndicator.topAnchor.constraint(equalTo: balanceLabel.topAnchor),
-            syncIndicator.bottomAnchor.constraint(equalTo: balanceLabel.bottomAnchor)
-            ])
-    }
-
-    private func addShadow() {
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-        layer.shadowOpacity = 0.15
-        layer.shadowRadius = 8.0
+            syncIndicator.bottomAnchor.constraint(equalTo: balanceLabel.bottomAnchor)])
     }
 
     private func addSubscriptions() {
