@@ -27,7 +27,6 @@ class RootNavigationController : UINavigationController {
     }
 
     private var tempLoginView = LoginViewController(isPresentedForLock: false)
-    private let welcomeTransitingDelegate = PinTransitioningDelegate()
     private let loginTransitionDelegate = LoginTransitionDelegate()
 
     override func viewDidLoad() {
@@ -50,18 +49,6 @@ class RootNavigationController : UINavigationController {
             }
         }
         self.delegate = self
-    }
-
-    func attemptShowWelcomeView() {
-        if !UserDefaults.hasShownWelcome {
-            let welcome = WelcomeViewController()
-            welcome.transitioningDelegate = welcomeTransitingDelegate
-            welcome.modalPresentationStyle = .overFullScreen
-            welcome.modalPresentationCapturesStatusBarAppearance = true
-            welcomeTransitingDelegate.shouldShowMaskView = false
-            topViewController?.present(welcome, animated: true, completion: nil)
-            UserDefaults.hasShownWelcome = true
-        }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
