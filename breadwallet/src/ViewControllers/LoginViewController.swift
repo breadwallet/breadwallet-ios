@@ -114,7 +114,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard UIApplication.shared.applicationState != .background else { return }
-        if shouldUseBiometrics && !hasAttemptedToShowBiometrics && !isPresentedForLock && UserDefaults.hasShownWelcome {
+        if shouldUseBiometrics && !hasAttemptedToShowBiometrics && !isPresentedForLock {
             hasAttemptedToShowBiometrics = true
             biometricsTapped()
         }
@@ -237,8 +237,6 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             lock.topAnchor.constraint(equalTo: label.bottomAnchor, constant: C.padding[1]),
             lock.centerXAnchor.constraint(equalTo: label.centerXAnchor) ])
         view.layoutIfNeeded()
-        
-        //let nc = self.presentingViewController as? RootNavigationController
 
         UIView.spring(0.6, animations: {
             self.pinPadPottom?.constant = self.pinPad.height
@@ -251,10 +249,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             self.view.layoutIfNeeded()
         }) { completion in
             if self.shouldSelfDismiss {
-                self.dismiss(animated: true, completion: {
-                    // welcome message removed IOS-677
-                    //nc?.attemptShowWelcomeView()
-                })
+                self.dismiss(animated: true, completion: {})
             }
             Store.perform(action: LoginSuccess())
             Store.trigger(name: .showStatusBar)
