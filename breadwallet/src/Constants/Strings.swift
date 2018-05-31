@@ -288,7 +288,7 @@ enum S {
 
     enum Settings {
         static let title = NSLocalizedString("Settings.title", value:"Settings", comment: "Settings title")
-        static let wallet = NSLocalizedString("Settings.wallet", value: "Wallet", comment: "Wallet Settings section header")
+        static let wallet = NSLocalizedString("Settings.wallet", value: "Wallets", comment: "Wallet Settings section header")
         static let preferences = NSLocalizedString("Settings.preferences", value: "Preferences", comment: "Preferences settings section header")
         static let currencySettings = NSLocalizedString("Settings.currencySettings", value: "Currency Settings", comment: "Currency settings section header")
         static let other = NSLocalizedString("Settings.other", value: "Other", comment: "Other settings section header")

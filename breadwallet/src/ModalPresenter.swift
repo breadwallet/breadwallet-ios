@@ -479,7 +479,7 @@ class ModalPresenter : Subscriber, Trackable {
         ]
         
         let settings = SettingsViewController(sections: sections, rows: rows)
-        settings.addCloseNavigationItem(tintColor: .mediumGray)
+        settings.addCloseNavigationItem(tintColor: .darkText)
         settingsNav.viewControllers = [settings]
         top.present(settingsNav, animated: true, completion: nil)
     }
