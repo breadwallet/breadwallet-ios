@@ -28,7 +28,19 @@ extension UIColor {
     }
 
     static var darkText: UIColor {
-        return UIColor(red: 35.0/255.0, green: 37.0/255.0, blue: 38.0/255.0, alpha: 1.0)
+        return UIColor.fromHex("4F4F4F")
+    }
+
+    static var lightText: UIColor {
+        return UIColor.fromHex("828282")
+    }
+
+    static var lightHeaderBackground: UIColor {
+        return UIColor.fromHex("F9F9F9")
+    }
+
+    static var lightTableViewSectionHeaderBackground: UIColor {
+        return UIColor.fromHex("ECECEC")
     }
 
     static var darkLine: UIColor {
