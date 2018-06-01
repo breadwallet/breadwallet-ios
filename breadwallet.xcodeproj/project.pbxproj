@@ -368,6 +368,7 @@
 		CEA7E6761F057D77001F8C27 /* WalletInfoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7E6751F057D77001F8C27 /* WalletInfoTest.swift */; };
 		CEA7E67E1F09A9D2001F8C27 /* Screenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7E67D1F09A9D2001F8C27 /* Screenshots.swift */; };
 		CEA7E6871F09AB00001F8C27 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7E6861F09AB00001F8C27 /* SnapshotHelper.swift */; };
+		CEA9178620C07FBB00F29B31 /* SyncingHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9178520C07FBB00F29B31 /* SyncingHeaderView.swift */; };
 		CEAA9E8F1DC074410066731D /* StartPaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */; };
 		CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */; };
 		CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */; };
@@ -1526,6 +1527,7 @@
 		CEA7E67D1F09A9D2001F8C27 /* Screenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screenshots.swift; sourceTree = "<group>"; };
 		CEA7E67F1F09A9D2001F8C27 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CEA7E6861F09AB00001F8C27 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
+		CEA9178520C07FBB00F29B31 /* SyncingHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SyncingHeaderView.swift; path = src/Views/SyncingHeaderView.swift; sourceTree = "<group>"; };
 		CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartPaperPhraseViewController.swift; path = src/ViewControllers/StartPaperPhraseViewController.swift; sourceTree = "<group>"; };
 		CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewPropertyAnimator+BRWAdditions.swift"; path = "src/Extensions/UIViewPropertyAnimator+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CEAA9E921DC110E70066731D /* WritePaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WritePaperPhraseViewController.swift; path = src/ViewControllers/WritePaperPhraseViewController.swift; sourceTree = "<group>"; };
@@ -3031,6 +3033,7 @@
 				CEE20C2C1EA288FA0086F724 /* UpdatingLabel.swift */,
 				CE5E6C931EB7964900A476DB /* WalletDisabledView.swift */,
 				CE1E7A9920938DFD00C86BB7 /* MenuButton.swift */,
+				CEA9178520C07FBB00F29B31 /* SyncingHeaderView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -3847,6 +3850,7 @@
 				CE45C1FD1E7650F5002C3847 /* KVStoreCoordinator.swift in Sources */,
 				754AE0BC1DFE8A46007FD001 /* BRCore.swift in Sources */,
 				22A9A94A1DF61945000F0016 /* BRCameraPlugin.swift in Sources */,
+				CEA9178620C07FBB00F29B31 /* SyncingHeaderView.swift in Sources */,
 				CEC6AA3B1DEE4EB000EE5AFD /* CGRect+Additions.swift in Sources */,
 				7C5AC8A6203B93D3001B221E /* TxListCell.swift in Sources */,
 				CE45C1FB1E74F89C002C3847 /* WalletInfo.swift in Sources */,
