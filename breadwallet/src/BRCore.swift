@@ -625,9 +625,17 @@ class BRPeerManager {
         BRPeerManagerDisconnect(cPtr)
     }
     
-    // rescans blocks and transactions after earliestKeyTime (a new random download peer is also selected due to the
-    // possibility that a malicious node might lie by omitting transactions that match the bloom filter)
-    func rescan() {
+    func rescan(fromBlockHeight blockNumber: UInt32) {
+        BRPeerManagerRescanFromBlockNumber(cPtr, blockNumber)
+    }
+    
+    func rescanFromLatestCheckpoint() {
+        BRPeerManagerRescanFromLastHardcodedCheckpoint(cPtr)
+    }
+    
+    /// rescans blocks and transactions after earliestKeyTime (a new random download peer is also selected due to the
+    /// possibility that a malicious node might lie by omitting transactions that match the bloom filter)
+    func rescanFull() {
         BRPeerManagerRescan(cPtr)
     }
     

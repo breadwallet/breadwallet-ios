@@ -9,9 +9,12 @@
 import Foundation
 import UIKit
 
-//Coordinates the sync state of all wallet managers to
-//display the activity indicator and control backtround tasks
+/// Coordinates the sync state of all wallet managers to
+/// display the activity indicator and control backtround tasks
 class WalletCoordinator : Subscriber, Trackable {
+    
+    // 24-hours until incremental rescan is reset
+    private let incrementalRescanInterval: TimeInterval = (24*60*60)
 
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
     private var reachability = ReachabilityMonitor()
@@ -40,19 +43,65 @@ class WalletCoordinator : Subscriber, Trackable {
         })
 
         Store.state.currencies.forEach { currency in
-            Store.subscribe(self, name: .retrySync(currency), callback: { _ in
+            Store.subscribe(self, name: .retrySync(currency), callback: { [weak self] _ in
                 DispatchQueue.walletQueue.async {
-                    self.walletManagers[currency.code]?.peerManager?.connect()
+                    self?.walletManagers[currency.code]?.peerManager?.connect()
                 }
             })
 
-            Store.subscribe(self, name: .rescan(currency), callback: { _ in
+            Store.subscribe(self, name: .rescan(currency), callback: { [weak self] _ in
+                guard Store.state[currency]?.isRescanning == false else { return }
                 Store.perform(action: WalletChange(currency).setRecommendScan(false))
                 Store.perform(action: WalletChange(currency).setIsRescanning(true))
                 DispatchQueue.walletQueue.async {
-                    self.walletManagers[currency.code]?.peerManager?.rescan()
+                    self?.initiateRescan(currency: currency)
                 }
             })
+        }
+    }
+    
+    private func initiateRescan(currency: CurrencyDef) {
+        guard let peerManager = self.walletManagers[currency.code]?.peerManager else { return assertionFailure() }
+        peerManager.connect()
+        
+        var startingPoint = RescanState.StartingPoint.lastSentTx
+        var blockHeight: UInt64? = nil
+        
+        if let prevRescan = UserDefaults.rescanState(for: currency) {
+            if abs(prevRescan.startTime.timeIntervalSinceNow) > incrementalRescanInterval {
+                startingPoint = .lastSentTx
+            } else {
+                startingPoint = prevRescan.startingPoint.next
+            }
+        }
+        
+        if startingPoint == .lastSentTx {
+            blockHeight = Store.state[currency]?.transactions
+                .filter { $0.direction == .sent && $0.status == .complete }
+                .map { $0.blockHeight }
+                .max()
+            if blockHeight == nil {
+                startingPoint = startingPoint.next
+            }
+        }
+        
+        UserDefaults.setRescanState(for: currency, to: RescanState(startTime: Date(), startingPoint: startingPoint))
+        
+        // clear pending transactions
+        if let txs = Store.state[currency]?.transactions {
+            Store.perform(action: WalletChange(currency).setTransactions(txs.filter({ $0.status != .pending })))
+        }
+        
+        switch startingPoint {
+        case .lastSentTx:
+            print("[\(currency.code)] initiating rescan from block #\(blockHeight!)")
+            peerManager.rescan(fromBlockHeight: UInt32(blockHeight!))
+        case .checkpoint:
+            print("[\(currency.code)] initiating rescan from last checkpoint")
+            peerManager.rescanFromLatestCheckpoint()
+        case .walletCreation:
+            print("[\(currency.code)] initiating rescan from earliestKeyTime")
+            peerManager.rescanFull()
         }
     }
 
@@ -109,4 +158,25 @@ class WalletCoordinator : Subscriber, Trackable {
         UIApplication.shared.isIdleTimerDisabled = false
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
+    
+    deinit {
+        Store.unsubscribe(self)
+    }
+}
+
+/// Rescan state of a currency - stored in UserDefaults
+struct RescanState: Codable {
+    enum StartingPoint: Int, Codable {
+        // in order of latest to earliest
+        case lastSentTx = 0
+        case checkpoint
+        case walletCreation
+        
+        var next: StartingPoint {
+            return StartingPoint(rawValue: rawValue + 1) ?? .walletCreation
+        }
+    }
+    
+    var startTime: Date
+    var startingPoint: StartingPoint = .lastSentTx
 }
