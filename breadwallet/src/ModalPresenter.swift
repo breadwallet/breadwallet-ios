@@ -84,6 +84,7 @@ class ModalPresenter : Subscriber, Trackable {
         })
         
         for walletManager in walletManagers.values {
+            // TODO: show alert and automatic rescan instead of showing the rescan screen
             Store.subscribe(self, name: .recommendRescan(walletManager.currency), callback: { [weak self] _ in
                 self?.presentRescan(currency: walletManager.currency)
             })
