@@ -41,8 +41,6 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0)
     private let pinViewContainer = UIView()
     private var pinView: PinView?
-    private let addressButton = SegmentedButton(title: S.UnlockScreen.myAddress, type: .left)
-    private let scanButton = SegmentedButton(title: S.UnlockScreen.scan, type: .right)
     private let isPresentedForLock: Bool
     private let disabledView: WalletDisabledView
     private let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
@@ -69,22 +67,6 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     private var topControlTop: NSLayoutConstraint?
     private var unlockTimer: Timer?
     private let pinPadBackground = GradientView()
-    private let topControlContainer: UIView = {
-        let view = UIView()
-        view.layer.borderColor = UIColor.white.cgColor
-        view.layer.borderWidth = 1.0
-        view.layer.cornerRadius = 5.0
-        view.layer.masksToBounds = true
-        let separator = UIView()
-        view.addSubview(separator)
-        separator.backgroundColor = .white
-        separator.constrain([
-            separator.topAnchor.constraint(equalTo: view.topAnchor),
-            separator.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            separator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            separator.widthAnchor.constraint(equalToConstant: 1.0) ])
-        return view
-    }()
     private var hasAttemptedToShowBiometrics = false
     private let lockedOverlay = UIVisualEffectView()
     private var isResetting = false
@@ -163,9 +145,6 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     private func addSubviews() {
         view.addSubview(backgroundView)
         view.addSubview(pinViewContainer)
-        view.addSubview(topControlContainer)
-        topControlContainer.addSubview(addressButton)
-        topControlContainer.addSubview(scanButton)
         view.addSubview(logo)
         if walletManager != nil {
             view.addSubview(pinPadBackground)
@@ -188,25 +167,9 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         }
         pinViewContainer.constrain(toSuperviewEdges: nil)
 
-        topControlTop = topControlContainer.topAnchor.constraint(equalTo: view.topAnchor, constant: E.isIPhoneX ? C.padding[1] + 35.0 : C.padding[1] + 20.0)
-        topControlContainer.constrain([
-            topControlTop,
-            topControlContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            topControlContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            topControlContainer.heightAnchor.constraint(equalToConstant: topControlHeight) ])
-        addressButton.constrain([
-            addressButton.leadingAnchor.constraint(equalTo: topControlContainer.leadingAnchor),
-            addressButton.topAnchor.constraint(equalTo: topControlContainer.topAnchor),
-            addressButton.trailingAnchor.constraint(equalTo: topControlContainer.centerXAnchor),
-            addressButton.bottomAnchor.constraint(equalTo: topControlContainer.bottomAnchor) ])
-        scanButton.constrain([
-            scanButton.leadingAnchor.constraint(equalTo: topControlContainer.centerXAnchor),
-            scanButton.topAnchor.constraint(equalTo: topControlContainer.topAnchor),
-            scanButton.trailingAnchor.constraint(equalTo: topControlContainer.trailingAnchor),
-            scanButton.bottomAnchor.constraint(equalTo: topControlContainer.bottomAnchor) ])
-
+        topControlTop = logo.topAnchor.constraint(equalTo: view.topAnchor, constant: topControlHeight + (E.isIPhoneX ? C.padding[9] + 35.0 : C.padding[9] + 20.0))
         logo.constrain([
-            logo.topAnchor.constraint(equalTo: topControlContainer.bottomAnchor, constant: C.padding[8]),
+            topControlTop,
             logo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: C.Sizes.logoAspectRatio),
             logo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.35) ])
@@ -223,9 +186,6 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             activityView.startAnimating()
         }
         subheader.text = S.UnlockScreen.subheader
-
-        addressButton.addTarget(self, action: #selector(addressTapped), for: .touchUpInside)
-        scanButton.addTarget(self, action: #selector(scanTapped), for: .touchUpInside)
     }
 
     private func addBiometricsButton() {
@@ -278,7 +238,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             lock.centerXAnchor.constraint(equalTo: label.centerXAnchor) ])
         view.layoutIfNeeded()
         
-        let nc = self.presentingViewController as? RootNavigationController
+        //let nc = self.presentingViewController as? RootNavigationController
 
         UIView.spring(0.6, animations: {
             self.pinPadPottom?.constant = self.pinPad.height
