@@ -54,7 +54,8 @@ class AccountFooterView: UIView, Subscriber, Trackable {
         
         let buttons = [(S.Button.send, #selector(AccountFooterView.send)),
                        (S.Button.receive, #selector(AccountFooterView.receive)),
-                       (S.Button.buy, #selector(AccountFooterView.buy))].map { (title, selector) -> UIBarButtonItem in
+                       (S.Button.buy, #selector(AccountFooterView.buy)),
+                       (S.Button.sell, #selector(AccountFooterView.sell))].map { (title, selector) -> UIBarButtonItem in
                         let button = UIButton.rounded(title: title)
                         button.tintColor = .white
                         button.backgroundColor = currency.colors.1
@@ -72,6 +73,8 @@ class AccountFooterView: UIView, Subscriber, Trackable {
             buttons[1],
             flexibleSpace,
             buttons[2],
+            flexibleSpace,
+            buttons[3],
             flexibleSpace
         ]
         
