@@ -28,7 +28,6 @@ class ApplicationController : Subscriber, Trackable {
     
     private var kvStoreCoordinator: KVStoreCoordinator?
     fileprivate var application: UIApplication?
-    private let watchSessionManager = PhoneWCSessionManager()
     private var urlController: URLController?
     private var defaultsUpdater: UserDefaultsUpdater?
     private var reachability = ReachabilityMonitor()
@@ -312,10 +311,6 @@ class ApplicationController : Subscriber, Trackable {
                     self.performBackgroundFetch()
                 }
             }
-            exchangeUpdater?.refresh {
-                self.watchSessionManager.walletManager = self.primaryWalletManager
-                self.watchSessionManager.rate = Currencies.btc.state?.currentRate
-            }
         }
     }
 
@@ -397,9 +392,6 @@ class ApplicationController : Subscriber, Trackable {
         feeUpdaters.values.forEach { $0.refresh() }
         defaultsUpdater?.refresh()
         primaryWalletManager.apiClient?.events?.up()
-        exchangeUpdater?.refresh(completion: {
-            self.watchSessionManager.rate = Currencies.btc.state?.currentRate
-        })
     }
 
     /// Handles new wallet creation or recovery
