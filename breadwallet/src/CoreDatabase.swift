@@ -317,6 +317,12 @@ class CoreDatabase {
 
                 let timestampResult = Int32(bitPattern: b.pointee.timestamp).subtractingReportingOverflow(Int32(NSTimeIntervalSince1970))
                 guard !timestampResult.1 else { print("skipped block with overflowed timestamp"); continue }
+                
+                let height = Int32(bitPattern: b.pointee.height)
+                guard height != BLOCK_UNKNOWN_HEIGHT else {
+                    print("skipped block with invalid blockheight: \(height)")
+                    continue
+                }
 
                 pk = pk + 1
                 sqlite3_bind_int(sql2, 1, pk)
