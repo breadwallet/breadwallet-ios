@@ -11,199 +11,145 @@ import BRCore
 import BRCore.Ethereum
 
 class EthWalletManager : WalletManager {
+    
+    // MARK: Constants
+    
     static let defaultGasLimit: UInt64 = 48_000 // higher than standard 21000 to allow sending to contracts
     static let defaultTokenTransferGasLimit: UInt64 = 150_000
     static let defaultGasPrice = etherCreateNumber(1, GWEI).valueInWEI
     static let maxGasPrice = etherCreateNumber(100, GWEI).valueInWEI
+    
+    // MARK: WalletManager
 
-    var peerManager: BRPeerManager?
-    var wallet: BRWallet?
-    var currency: CurrencyDef = Currencies.eth
+    let currency: CurrencyDef = Currencies.eth
     var kvStore: BRReplicatedKVStore?
     var apiClient: BRAPIClient? {
         didSet {
-            DispatchQueue.main.async {
-                self.balanceRefresher.start()
-            }
+            self.node.connect()
         }
     }
+    
+    // MARK: Eth
+    
+    var node: EthereumLightNode!
+    
     var address: String?
     var gasPrice: UInt256 = EthWalletManager.defaultGasPrice {
         didSet {
             if gasPrice > EthWalletManager.maxGasPrice {
                 gasPrice = EthWalletManager.maxGasPrice
             }
+            node.updateDefaultGasPrice(gasPrice)
         }
     }
+    
+    /// identifies a wallet by the ethereum public key
     var walletID: String?
+    
     var tokens: [ERC20Token] = [] {
         didSet {
-            balanceRefresher.trigger()
-            refreshTransactions()
+            tokens.forEach { token in
+                // creates the core wallet if needed
+                let _ = node.wallet(token)
+            }
         }
     }
-    var ethAddress: BREthereumAddress?
-    var account: BREthereumAccount?
-    var ethWallet: BREthereumWallet?
-    var latestBlockNumber: UInt64?
     
-    private var pendingTransactions = [EthTx]()
-    private var pendingTokenTransactions = [String: [ERC20Transaction]]()
-    
-    private let balanceUpdateInterval: TimeInterval = 10
-    private let txUpdateInterval: TimeInterval = 10
-    private let slowSyncTimeoutInterval: TimeInterval = 2
-    
-    private var balanceRefresher: Refresher!
-    private var txRefresher: Refresher!
-    private var txRefreshCurrency: CurrencyDef?
+    private let syncState = RequestSyncState(timeout: 2) // 2s until sync indicator shown
 
     // MARK: -
     
     init?() {
         guard let pubKey = ethPubKey else { return nil }
-        self.account = createAccountWithPublicKey(pubKey)
-        guard account != nil else { return nil }
-        self.ethAddress = accountGetPrimaryAddress(self.account)
-        self.ethWallet = walletCreate(account, E.isTestnet ? ethereumTestnet : ethereumMainnet)
-        if let address = addressAsString(self.ethAddress) {
-            if let address = String(cString: address, encoding: .utf8) {
-                self.address = address
-                Store.perform(action: WalletChange(self.currency).set(self.currency.state!.mutate(receiveAddress: address)))
-            }
-        }
+        let network: EthereumNetwork = (E.isTestnet || E.isRunningTests) ? .testnet : .mainnet
+        node = EthereumLightNode(client: self,
+                                 listener: self,
+                                 network: network,
+                                 publicKey: pubKey)
+        _ = node.wallet(Currencies.eth) // create eth wallet
+        let address = node.address
+        self.address = address
+        Store.perform(action: WalletChange(self.currency).set(self.currency.state!.mutate(receiveAddress: address)))
         if let walletID = getWalletID() {
             self.walletID = walletID
             print("walletID:", walletID)
         }
-        
-        balanceRefresher = Refresher(interval: balanceUpdateInterval,
-                                     timeout: slowSyncTimeoutInterval,
-                                     refreshHandler: refreshBalances)
-        txRefresher = Refresher(interval: txUpdateInterval,
-                                timeout: slowSyncTimeoutInterval,
-                                refreshHandler: refreshTransactions)
     }
 
-    func beginFetchingTransactions(currency: CurrencyDef) {
-        txRefreshCurrency = currency
-        txRefresher.start()
-    }
-    
-    func stopFetchingTransactions() {
-        txRefresher.stop()
-        txRefreshCurrency = nil
-    }
-
+    /// Triggers balance fetch for all wallets
     private func refreshBalances() {
-        updateBalance()
-        updateTokenBalances()
+        node.wallet(Currencies.eth).updateBalance()
+        tokens.forEach { node.wallet($0).updateBalance() }
     }
     
-    private func updateBalance() {
-        guard let address = address, balanceRefresher.willBeginRefresh(self.currency) else { return }
-        apiClient?.getBalance(address: address, handler: { [weak self] result in
-            guard let `self` = self else { return }
-            self.balanceRefresher.didEndRefresh(self.currency)
-            switch result {
-            case .success(let value):
-                Store.perform(action: WalletChange(self.currency).setSyncingState(.success))
-                Store.perform(action: WalletChange(self.currency).setBalance(value))
-            case .error(let error):
-                print("getBalance error: \(error.localizedDescription)")
-            }
-        })
-    }
-    
+    /// Triggers transaction fetch for all wallets
     private func refreshTransactions() {
-        guard txRefreshCurrency != nil else {
-            // fetch all
-            updateTransactionList()
-            tokens.forEach { updateTokenTransactions(token: $0) }
-            return
-        }
+        node.wallet(Currencies.eth).updateTransactions()
+    }
+    
+    /// Updates wallet state with transactions from core
+    private func updateTransactions(_ currency: CurrencyDef) {
+        guard let accountAddress = address else { return assertionFailure() }
+        let txs = self.node.wallet(currency).transactions
+        var viewModels: [Transaction]
         
-        if let token = txRefreshCurrency as? ERC20Token {
-            updateTokenTransactions(token: token)
+        if let token = currency as? ERC20Token {
+            viewModels = txs.map { ERC20Transaction(tx: $0, accountAddress: accountAddress, token: token, kvStore: self.kvStore, rate: currency.state?.currentRate) }
         } else {
-            updateTransactionList()
+            viewModels = txs.map { EthTransaction(tx: $0, accountAddress: accountAddress, kvStore: self.kvStore, rate: currency.state?.currentRate) }
         }
-        updateBlockNumber()
-    }
-    
-    private func updateTransactionList() {
-        guard let address = address,
-            let apiClient = apiClient,
-            txRefresher.willBeginRefresh(currency) else { return }
-        apiClient.getEthTxList(address: address, handler: { [weak self] result in
-            guard let `self` = self else { return }
-            self.txRefresher.didEndRefresh(self.currency)
-            guard case .success(let txList) = result else { return }
-            for tx in txList {
-                if let index = self.pendingTransactions.index(where: { $0.hash == tx.hash }) {
-                    self.pendingTransactions.remove(at: index)
-                }
-            }
-            let transactions = (self.pendingTransactions + txList).map { EthTransaction(tx: $0, accountAddress: address, kvStore: self.kvStore, rate: self.currency.state?.currentRate) }
-            Store.perform(action: WalletChange(self.currency).setTransactions(transactions))
-        })
-    }
-    
-    private func updateBlockNumber() {
-        apiClient?.getLastBlockNumber() { [weak self] result in
-            switch result {
-            case .success(let blockNumber):
-                self?.latestBlockNumber = blockNumber.asUInt64
-            case .error(let error):
-                print("getLatestBlock error: \(error.localizedDescription)")
-            }
-        }
+        viewModels.sort(by: { $0.timestamp > $1.timestamp })
+        print("processed \(txs.count) \(currency.code) transactions")
+        Store.perform(action: WalletChange(currency).setTransactions(viewModels))
     }
 
-    func sendTx(toAddress: String, amount: UInt256, callback: @escaping (JSONRPCResult<EthTx>)->Void) {
-        guard var privKey = BRKey(privKey: ethPrivKey!) else { return }
+    enum SendTransactionResult {
+        case success(EthTransaction, ERC20Transaction?, String)
+        case authenticationFailed
+        case error(JSONRPCError)
+    }
+    
+    /// Creates, signs and submits an ETH transaction or ERC20 token transfer
+    /// Caller must authenticate
+    func sendTransaction(currency: CurrencyDef, toAddress: String, amount: UInt256, callback: @escaping (SendTransactionResult) -> Void) {
+        guard let accountAddress = address, let apiClient = apiClient else { return assertionFailure() }
+        
+        guard ethPrivKey != nil, var privKey = BRKey(privKey: ethPrivKey!) else { return }
         privKey.compressed = 0
         defer { privKey.clean() }
-        let ethToAddress = createAddress(toAddress)
-        let ethAmount = amountCreateEther((etherCreate(amount)))
-        let gasPrice = gasPriceCreate((etherCreate(self.gasPrice)))
-        let gasLimit = gasCreate(EthWalletManager.defaultGasLimit)
-        let nonce = getNonce()
-        let tx = walletCreateTransactionDetailed(ethWallet, ethToAddress, ethAmount, gasPrice, gasLimit, nonce)
-        walletSignTransactionWithPrivateKey(ethWallet, tx, privKey)
-        let txString = walletGetRawTransactionHexEncoded(ethWallet, tx, "0x")
-        let swiftTxString = String(cString: UnsafeRawPointer(txString!).assumingMemoryBound(to: CChar.self))
-        apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { [unowned self] result in
+        
+        let wallet = node.wallet(currency)
+        let tx = wallet.createTransaction(currency: currency, recvAddress: toAddress, amount: amount)
+        wallet.sign(transaction: tx, privateKey: privKey)
+        
+        let txRawHex = wallet.rawTransactionHexEncoded(tx)
+        
+        apiClient.sendRawTransaction(rawTx: txRawHex, handler: { [unowned self] result in
             switch result {
             case .success(let txHash):
-                let pendingTx = EthTx(blockNumber: 0,
-                                      timeStamp: Date().timeIntervalSince1970,
-                                      value: amount,
-                                      gasPrice: gasPrice.etherPerGas.valueInWEI,
-                                      gasLimit: gasLimit.amountOfGas,
-                                      gasUsed: 0,
-                                      from: self.address!,
-                                      to: toAddress,
-                                      confirmations: 0,
-                                      nonce: UInt64(nonce),
-                                      hash: txHash,
-                                      isError: false,
-                                      rawTx: swiftTxString) // TODO:ERC20 cleanup
-                self.pendingTransactions.append(pendingTx)
-                self.balanceRefresher.trigger()
-                self.txRefresher.trigger()
-                callback(.success(pendingTx))
+                wallet.announceSubmitTransaction(tx, hash: txHash)
+                assert(tx.hash == txHash)
+                self.updateTransactions(currency)
+                
+                let pendingEthTx = EthTransaction(tx: tx,
+                                                  accountAddress: accountAddress,
+                                                  kvStore: self.kvStore,
+                                                  rate: nil)
+                
+                if let token = currency as? ERC20Token {
+                    let pendingTokenTx = ERC20Transaction(tx: tx,
+                                                          accountAddress: accountAddress,
+                                                          token: token,
+                                                          kvStore: self.kvStore,
+                                                          rate: nil)
+                    callback(.success(pendingEthTx, pendingTokenTx, txRawHex))
+                } else {
+                    callback(.success(pendingEthTx, nil, txRawHex))
+                }
             case .error(let error):
                 callback(.error(error))
             }
         })
-    }
-
-    //Nonce is either previous nonce + 1 , or 1 if no transactions have been sent yet
-    private func getNonce() -> UInt64 {
-        let sentTransactions = Store.state.wallets[Currencies.eth.code]?.transactions.filter { self.isOwnAddress(($0 as! EthTransaction).fromAddress) }
-        let previousNonce = sentTransactions?.map { ($0 as! EthTransaction).nonce }.max()
-        return (previousNonce == nil) ? 0 : previousNonce! + 1
     }
 
     func canUseBiometrics(forTx: BRTxRef) -> Bool {
@@ -235,174 +181,234 @@ class EthWalletManager : WalletManager {
     }
     
     func resetForWipe() {
-        txRefresher.stop()
-        balanceRefresher.stop()
+        node.disconnect()
         tokens.removeAll()
     }
 }
 
-// MARK: - ERC20
-
-extension EthWalletManager {
-    enum SendTokenResult {
-        case success((EthTransaction, ERC20Transaction))
-        case error(JSONRPCError)
+/// The EthereumClient functions are called by Core to send requests to the network
+extension EthWalletManager: EthereumClient {
+    func getGasPrice(wallet: EthereumWallet, completion: @escaping (String) -> Void) {
+        // unused - gas price is set by the FeeUpdater
+        assertionFailure()
     }
     
-    func send(token: ERC20Token, toAddress: String, amount: UInt256, callback: @escaping (SendTokenResult)->Void) {
-        guard var privKey = BRKey(privKey: ethPrivKey!) else { return }
-        privKey.compressed = 0
-        defer { privKey.clean() }
+    func getGasEstimate(wallet: EthereumWallet, tid: EthereumTransactionId, to: String, amount: String, data: String, completion: @escaping (String) -> Void) {
+        //guard let apiClient = apiClient else { return assertionFailure() }
+        let currency = wallet.currency
+        print("getGasEstimate \(currency.code)")
+        //TODO
+    }
+    
+    func getBalance(wallet: EthereumWallet, address: String, completion: @escaping (String) -> Void) {
+        guard let apiClient = apiClient else { return assertionFailure() }
+        let currency = wallet.currency
+        print("getBalance \(currency.code)")
         
-        guard let ethToken = tokenLookup(token.address) else {
-            return assertionFailure("token \(token.code) not found in core!")
-        }
-        let tokenWallet = walletCreateHoldingToken(account, E.isTestnet ? ethereumTestnet : ethereumMainnet, ethToken)
-        let ethToAddress = createAddress(toAddress)
-        let tokenAmount = amountCreateToken((createTokenQuantity(ethToken, amount)))
-        let gasPrice = gasPriceCreate((etherCreate(self.gasPrice)))
-        let gasLimit = gasCreate(EthWalletManager.defaultTokenTransferGasLimit)
-        let nonce = getNonce()
-        let tx = walletCreateTransactionDetailed(tokenWallet, ethToAddress, tokenAmount, gasPrice, gasLimit, nonce)
-        walletSignTransactionWithPrivateKey(tokenWallet, tx, privKey)
-        let txString = walletGetRawTransactionHexEncoded(tokenWallet, tx, "0x")
-        let swiftTxString = String(cString: UnsafeRawPointer(txString!).assumingMemoryBound(to: CChar.self))
-        apiClient?.sendRawTransaction(rawTx: String(cString: txString!, encoding: .utf8)!, handler: { [unowned self] result in
-            switch result {
-            case .success(let txHash):
-                let ethTx = EthTx(blockNumber: 0,
-                                      timeStamp: Date().timeIntervalSince1970,
-                                      value: 0,
-                                      gasPrice: gasPrice.etherPerGas.valueInWEI,
-                                      gasLimit: gasLimit.amountOfGas,
-                                      gasUsed: 0,
-                                      from: self.address!,
-                                      to: token.address,
-                                      confirmations: 0,
-                                      nonce: UInt64(nonce),
-                                      hash: txHash,
-                                      isError: false,
-                                      rawTx: swiftTxString) // TODO:ERC20 cleanup
-                let pendingEthTx = EthTransaction(tx: ethTx,
-                                                  accountAddress: self.address!,
-                                                  kvStore: self.kvStore,
-                                                  rate: self.currency.state?.currentRate)
-                let pendingTokenTx = ERC20Transaction(token: token,
-                                                      accountAddress: self.address!,
-                                                      toAddress: toAddress,
-                                                      amount: amount,
-                                                      timestamp: Date().timeIntervalSince1970,
-                                                      gasPrice: gasPrice.etherPerGas.valueInWEI,
-                                                      hash: txHash,
-                                                      kvStore: self.kvStore)
-                self.pendingTransactions.append(ethTx)
-                self.addPendingTokenTransaction(pendingTokenTx)
-                self.balanceRefresher.trigger()
-                self.txRefresher.trigger()
-                callback(.success((pendingEthTx, pendingTokenTx)))
-                
-            case .error(let error):
-                callback(.error(error))
-            }
-        })
-    }
-    
-    private func updateTokenBalances() {
-        guard let address = address, let apiClient = apiClient else { return }
-        tokens.forEach { token in
-            if balanceRefresher.willBeginRefresh(token) {
-                apiClient.getTokenBalance(address: address, token: token, handler: { [weak self] result in
-                    guard let `self` = self else { return }
-                    self.balanceRefresher.didEndRefresh(token)
-                    switch result {
-                    case .success(let value):
-                        Store.perform(action: WalletChange(token).setBalance(value))
-                    case .error(let error):
-                        print("getTokenBalance error: \(error.localizedDescription)")
-                    }
-                })
-            }
-        }
-    }
-    
-    private func updateTokenTransactions(token: ERC20Token) {
-        guard let address = address,
-            let apiClient = apiClient,
-            txRefresher.willBeginRefresh(token) else { return }
-        apiClient.getTokenTransactions(address: address, token: token, handler: { [weak self] result in
-            guard let `self` = self else { return }
-            self.txRefresher.didEndRefresh(token)
-            guard case .success(let eventList) = result else { return }
-            var pendingTokenTxs: [ERC20Transaction] = self.pendingTokenTransactions[token.code] ?? []
-            if pendingTokenTxs.count > 0 {
-                for event in eventList {
-                    if let index = pendingTokenTxs.index(where: { $0.hash == event.transactionHash }) {
-                        pendingTokenTxs.remove(at: index)
-                    }
+        if let token = currency as? ERC20Token {
+            guard tokens.contains(token) else { return }
+            guard syncState.willBeginRequest(.getBalance, currencies: [currency]) else { return print("getBalance \(currency.code) skipped") }
+            apiClient.getTokenBalance(address: address, token: token) { result in
+                switch result {
+                case .success(let value):
+                    print("got \(currency.code) balance: \(value)")
+                    completion(value)
+                case .error(let error):
+                    print("getBalance error: \(error.localizedDescription)")
                 }
             }
-            let transactions = pendingTokenTxs + eventList.sorted(by: { $0.timeStamp > $1.timeStamp }).map { ERC20Transaction(event: $0, accountAddress: address, token: token, latestBlockNumber: self.latestBlockNumber, kvStore: self.kvStore, rate: token.state?.currentRate) }
-            Store.perform(action: WalletChange(token).setTransactions(transactions))
-        })
+        } else {
+            guard syncState.willBeginRequest(.getBalance, currencies: [currency]) else { return print("getBalance \(currency.code) skipped") }
+            apiClient.getBalance(address: address) { result in
+                switch result {
+                case .success(let value):
+                    print("got \(currency.code) balance: \(value)")
+                    completion(value)
+                case .error(let error):
+                    print("getBalance error: \(error.localizedDescription)")
+                }
+            }
+        }
     }
     
-    private func addPendingTokenTransaction(_ tx: ERC20Transaction) {
-        if pendingTokenTransactions[tx.currency.code] == nil {
-            pendingTokenTransactions[tx.currency.code] = [ERC20Transaction]()
+    func submitTransaction(wallet: EthereumWallet, tid: EthereumTransactionId, rawTransaction: String, completion: @escaping (String) -> Void) {
+        // unused - transactions are submitted in the send function
+        assertionFailure()
+    }
+    
+    func getTransactions(address: String, completion: @escaping ([EthTxJSON]) -> Void) {
+        print("getTransactions")
+        guard let apiClient = apiClient else { return assertionFailure() }
+        guard syncState.willBeginRequest(.getTransactions, currencies: [currency]) else { return print("getTransactions skipped") }
+        
+        apiClient.getEthTxList(address: address) { [weak self] result in
+            guard let `self` = self else { return }
+            defer {
+                self.syncState.didEndRequest(.getTransactions, currencies: [self.currency])
+                print("DONE getTransactions")
+            }
+            
+            switch result {
+            case .success(let jsonObjects):
+                print("got \(jsonObjects.count) ETH transactions")
+                completion(jsonObjects) // imports transaction json data into core
+                self.updateTransactions(self.currency)
+            case .error(let error):
+                print("getTransactions error: \(error.localizedDescription)")
+            }
         }
-        pendingTokenTransactions[tx.currency.code]?.append(tx)
+    }
+    
+    func getLogs(address: String, contract: String?, event: String, completion: @escaping ([EthLogEventJSON]) -> Void) {
+        print("getLogs \(contract ?? "")")
+        guard let apiClient = apiClient else { return assertionFailure() }
+        var tokens = [ERC20Token]()
+        if let contract = contract, let token = self.tokens.filter({ $0.address == contract }).first {
+            tokens = [token]
+        } else {
+            tokens = self.tokens
+        }
+        guard syncState.willBeginRequest(.getTransactions, currencies: tokens) else { return print("getTransactions skipped") }
+        
+        apiClient.getTokenTransferLogs(address: address, contractAddress: contract) { [weak self] result in
+            guard let `self` = self else { return }
+            defer {
+                self.syncState.didEndRequest(.getTransactions, currencies: tokens)
+                print("DONE getLogs")
+            }
+            switch result {
+            case .success(let jsonObjects):
+                print("got \(jsonObjects.count) logs")
+                completion(jsonObjects) // imports logs json data into core
+                for token in self.tokens {
+                    self.updateTransactions(token)
+                }
+            case .error(let error):
+                print("getLogs error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func getBlockNumber(completion: @escaping EthereumClient.AmountHandler) {
+        guard let apiClient = apiClient else { return assertionFailure() }
+        apiClient.getLastBlockNumber() { result in
+            switch result {
+            case .success(let blockNumber):
+                completion(blockNumber)
+            case .error(let error):
+                print("getLatestBlock error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func getNonce(address: String, completion: @escaping EthereumClient.AmountHandler) {
+        guard let apiClient = apiClient else { return assertionFailure() }
+        apiClient.getTransactionCount(address: address) { result in
+            switch result {
+            case .success(let nonce):
+                completion(nonce)
+            case .error(let error):
+                print("getNonce error: \(error.localizedDescription)")
+            }
+        }
+    }
+}
+
+/// The EthereumListener functions are called by Core to notify of events
+extension EthWalletManager: EthereumListener {
+    
+    func handleWalletEvent(wallet: EthereumWallet,
+                           event: EthereumWalletEvent,
+                           status: BREthereumStatus,
+                           errorDesc: String?) {
+        print("\(wallet.currency.code) wallet event: \(event), status: \(status.rawValue)\(errorDesc != nil ? ", error: \(errorDesc!)" : "")")
+        switch (event) {
+        case .balanceUpdated:
+            DispatchQueue.main.async {
+                self.syncState.didEndRequest(.getBalance, currencies: [wallet.currency])
+                Store.perform(action: WalletChange(wallet.currency).setBalance(wallet.balance))
+            }
+            
+        default:
+            break
+        }
+    }
+    
+    func handleTransactionEvent(wallet: EthereumWallet,
+                                transaction: EthereumTransaction,
+                                event: EthereumTransactionEvent,
+                                status: BREthereumStatus,
+                                errorDesc: String?) {
+        //print("\(wallet.currency.code) tx event: \(event), status: \(status), \(errorDesc != nil ? "error: \(errorDesc!)" : "hash: \(transaction.hash)")")
+    }
+    
+    func handleBlockEvent(block: EthereumBlock,
+                          event: BREthereumBlockEvent,
+                          status: BREthereumStatus,
+                          errorDesc: String?) {
+        // unused
     }
 }
 
 extension EthWalletManager {
-    /// Handles refreshing currency state and showing/hiding sync indicators
-    class Refresher {
+    /// Manages currency sync indicators based on request state
+    class RequestSyncState {
         
-        /// Triggers _refreshHandler_ after every _refreshInterval_, shows syncIndicator after _timeoutInterval_
-        init(interval: TimeInterval, timeout: TimeInterval, refreshHandler: @escaping (() -> Void)) {
-            self.refreshInterval = interval
-            self.timeoutInterval = timeout
-            self.refreshHandler = refreshHandler
+        enum Request {
+            case getBalance
+            case getTransactions
         }
         
-        /// Initiates a refresh immediately and starts the timer for intermittent refresh
-        func start() {
-            firstTime = true
-            refreshTimer = Timer.scheduledTimer(timeInterval: refreshInterval,
-                                                target: self,
-                                                selector: #selector(refresh),
-                                                userInfo: nil,
-                                                repeats: true)
-            refresh()
+        init(timeout: TimeInterval) {
+            timeoutInterval = timeout
+            
+            inProgress[.getBalance] = []
+            inProgress[.getTransactions] = []
         }
         
-        /// Stop intermittent refresh
         func stop() {
-            refreshTimer?.invalidate()
             timeoutTimer?.invalidate()
         }
         
-        /// Manually trigger a refresh. Does not reset the refresh interval.
-        func trigger() {
-            refreshTimer?.fire()
-        }
-        
-        /// Call before initiating a fetch. Returns false is a fetch is already in progress, true otherwise.
-        func willBeginRefresh(_ currency: CurrencyDef) -> Bool {
-            if currency.state?.syncState == .connecting {
-                Store.perform(action: WalletChange(currency).setProgress(progress: 0.8, timestamp: 0))
-                Store.perform(action: WalletChange(currency).setSyncingState(.syncing))
+        /// Call before initiating a fetch. Returns false if a fetch of this type is already in progress, true otherwise.
+        func willBeginRequest(_ request: Request, currencies: [CurrencyDef]) -> Bool {
+            guard let currenciesInProgress = inProgress[request] else {
+                assertionFailure()
+                return false
             }
-            guard !inProgress.contains(where: { $0.code == currency.code }) else { return false }
-            inProgress.append(currency)
+            
+            guard Set(currenciesInProgress.map({ $0.code })).isDisjoint(with: currencies.map({ $0.code })) else {
+                return false
+            }
+            
+            inProgress[request] = currenciesInProgress + currencies
+            
+            for currency in currencies {
+                if currency.state?.syncState == .connecting {
+                    Store.perform(action: WalletChange(currency).setProgress(progress: 0.8, timestamp: 0))
+                    Store.perform(action: WalletChange(currency).setSyncingState(.syncing))
+                }
+            }
+            
+            if firstTime && timeoutTimer == nil {
+                timeoutTimer = Timer.scheduledTimer(timeInterval: timeoutInterval,
+                                                    target: self,
+                                                    selector: #selector(timeout),
+                                                    userInfo: nil,
+                                                    repeats: false)
+            }
             return true
         }
         
         /// Call after a fetch has completed
-        func didEndRefresh(_ currency: CurrencyDef) {
-            Store.perform(action: WalletChange(currency).setSyncingState(.success))
-            inProgress = inProgress.filter { $0.code != currency.code }
-            if inProgress.isEmpty {
+        func didEndRequest(_ request: Request, currencies: [CurrencyDef]) {
+            guard let currenciesInProgress = inProgress[request] else { return assertionFailure() }
+            
+            let finishedCodes = currencies.map { $0.code }
+            inProgress[request] = currenciesInProgress.filter({ !finishedCodes.contains($0.code) })
+            currencies.forEach { Store.perform(action: WalletChange($0).setSyncingState(.success)) }
+            
+            if allFinished {
                 firstTime = false
                 timeoutTimer?.invalidate()
                 timeoutTimer = nil
@@ -412,28 +418,18 @@ extension EthWalletManager {
         // MARK: Private
         
         private var firstTime: Bool = true
-        private var refreshTimer: Timer?
         private var timeoutTimer: Timer?
-        private var refreshHandler: (() -> Void)
-        private var refreshInterval: TimeInterval
         private var timeoutInterval: TimeInterval
-        private var inProgress: [CurrencyDef] = []
-        
-        @objc private func refresh() {
-            if firstTime && timeoutTimer == nil {
-                timeoutTimer = Timer.scheduledTimer(timeInterval: timeoutInterval,
-                                                    target: self,
-                                                    selector: #selector(timeout),
-                                                    userInfo: nil,
-                                                    repeats: false)
-            }
-            refreshHandler()
+        private var inProgress: [Request: [CurrencyDef]] = [:]
+        private var allFinished: Bool {
+            return inProgress.values.filter({ !$0.isEmpty }).count == 0
         }
         
         @objc private func timeout() {
             // only show sync indicator for the first fetch
             guard firstTime else { return }
-            for currency in inProgress {
+            
+            for currency in inProgress.values.flatMap({ $0 }) {
                 Store.perform(action: WalletChange(currency).setProgress(progress: 0.8, timestamp: 0))
                 Store.perform(action: WalletChange(currency).setSyncingState(.syncing))
             }
