@@ -61,13 +61,12 @@ class HomeScreenCell : UITableViewCell, Subscriber {
         Store.subscribe(self, selector: { $0[viewModel.currency]?.syncState != $1[viewModel.currency]?.syncState },
                         callback: { state in
                             guard let syncState = state[viewModel.currency]?.syncState else { return }
+                            self.syncIndicator.syncState = syncState
                             switch syncState {
                             case .connecting:
                                 self.isSyncIndicatorVisible = true
-                                self.syncIndicator.text = S.SyncingView.connecting
                             case .syncing:
                                 self.isSyncIndicatorVisible = true
-                                self.syncIndicator.text = S.SyncingView.syncing
                             case .success:
                                 self.isSyncIndicatorVisible = false
                             }

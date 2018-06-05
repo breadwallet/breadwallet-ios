@@ -249,10 +249,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                             switch syncState {
                             case .connecting:
                                 self.isSyncIndicatorVisible = true
-                                self.syncView.syncIndicator.text = S.SyncingView.connecting
                             case .syncing:
                                 self.isSyncIndicatorVisible = true
-                                self.syncView.syncIndicator.text = S.SyncingView.syncing
                             case .success:
                                 self.isSyncIndicatorVisible = false
                             }
