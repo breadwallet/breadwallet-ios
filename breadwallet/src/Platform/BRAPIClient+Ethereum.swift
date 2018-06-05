@@ -13,12 +13,16 @@ extension BRAPIClient {
     
     // MARK: ETH
     
-    public func getBalance(address: EthAddress, handler: @escaping (JSONRPCResult<Quantity>) -> Void) {
+    public func getBalance(address: EthAddress, handler: @escaping (JSONRPCResult<String>) -> Void) {
         send(rpcRequest: JSONRPCRequest(method: "eth_getBalance", params: JSONRPCParams([address, "latest"])), handler: handler)
     }
     
-    public func getLastBlockNumber(handler: @escaping (JSONRPCResult<Quantity>) -> Void) {
+    public func getLastBlockNumber(handler: @escaping (JSONRPCResult<String>) -> Void) {
         send(rpcRequest: JSONRPCRequest(method: "eth_blockNumber", params: JSONRPCParams(["latest"])), handler: handler)
+    }
+    
+    public func getTransactionCount(address: EthAddress, handler: @escaping (JSONRPCResult<String>) -> Void) {
+        send(rpcRequest: JSONRPCRequest(method: "eth_getTransactionCount", params: JSONRPCParams([address, "latest"])), handler: handler)
     }
     
     public func getGasPrice(handler: @escaping (JSONRPCResult<Quantity>) -> Void) {
@@ -33,21 +37,22 @@ extension BRAPIClient {
         send(rpcRequest: JSONRPCRequest(method: "eth_sendRawTransaction", params: JSONRPCParams([rawTx])), handler: handler)
     }
 
-    public func getEthTxList(address: EthAddress, handler: @escaping (APIResult<[EthTx]>)->Void) {
+    public func getEthTxList(address: EthAddress, handler: @escaping (APIResult<[EthTxJSON]>)->Void) {
         let req = URLRequest(url: url("/ethq/\(network)/query?module=account&action=txlist&address=\(address)&sort=desc"))
         send(apiRequest: req, handler: handler)
     }
     
     // MARK: Tokens
     
-    public func getTokenBalance(address: EthAddress, token: ERC20Token, handler: @escaping (APIResult<Quantity>) -> Void) {
+    public func getTokenBalance(address: EthAddress, token: ERC20Token, handler: @escaping (APIResult<String>) -> Void) {
         let req = URLRequest(url: url("/ethq/\(network)/query?module=account&action=tokenbalance&address=\(address)&contractaddress=\(token.address)"))
         send(apiRequest: req, handler: handler)
     }
     
-    public func getTokenTransactions(address: EthAddress, token: ERC20Token, handler: @escaping (APIResult<[EthLogEvent]>) -> Void) {
+    public func getTokenTransferLogs(address: EthAddress, contractAddress: String?, handler: @escaping (APIResult<[EthLogEventJSON]>) -> Void) {
         let accountAddress = address.paddedHexString
-        let req = URLRequest(url: url("/ethq/\(network)/query?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=\(token.address)&topic0=\(ERC20Token.transferEventSignature)&topic1=\(accountAddress)&topic1_2_opr=or&topic2=\(accountAddress)"))
+        let tokenAddressParam = (contractAddress != nil) ? "&address=\(contractAddress!)" : ""
+        let req = URLRequest(url: url("/ethq/\(network)/query?module=logs&action=getLogs&fromBlock=0&toBlock=latest\(tokenAddressParam)&topic0=\(ERC20Token.transferEventSignature)&topic1=\(accountAddress)&topic1_2_opr=or&topic2=\(accountAddress)"))
         send(apiRequest: req, handler: handler)
     }
 
@@ -108,4 +113,42 @@ extension BRAPIClient {
     private var network: String {
         return (E.isTestnet || E.isRunningTests) ? "ropsten" : "mainnet"
     }
+}
+
+// MARK: JSON Types
+
+/// Maps to JSON model of ETH transaction
+public struct EthTxJSON: Codable {
+    let hash: String
+    let nonce: String
+    let blockHash: String
+    let blockNumber: String
+    let transactionIndex: String
+    let from: String
+    let to: String
+    let value: String
+    let gasPrice: String
+    let gas: String // gasLimit
+    let gasUsed: String
+    let input: String // data
+    let timeStamp: String
+    let confirmations: String
+    let contractAddress: String
+    let isError: String
+}
+
+// MARK: -
+
+/// Maps to JSON model of a log event
+public struct EthLogEventJSON: Codable {
+    public let address: String
+    public let topics: [String]
+    public let data: String
+    public let blockNumber: String
+    public let gasPrice: String
+    public let gasUsed: String
+    public let timeStamp: String
+    public let transactionHash: String
+    public let transactionIndex: String
+    public let logIndex: String
 }

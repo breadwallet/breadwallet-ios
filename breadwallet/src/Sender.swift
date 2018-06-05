@@ -452,11 +452,11 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
         }
         
         pinVerifier { pin in
-            self.walletManager.sendTx(toAddress: address, amount: amount) { result in
+            self.walletManager.sendTransaction(currency: self.currency, toAddress: address, amount: amount) { result in
                 switch result {
-                case .success(let pendingTx):
-                    self.setMetaData(ethTx: pendingTx)
-                    completion(.success(pendingTx.hash, pendingTx.rawTx))
+                case .success(let pendingTx, nil, let rawTx):
+                    self.setMetaData(tx: pendingTx)
+                    completion(.success(pendingTx.hash, rawTx))
                 case .error(let error):
                     switch error {
                     case .httpError(let e):
@@ -466,6 +466,8 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
                     case .rpcError(let e):
                         completion(.creationError(e.message))
                     }
+                default:
+                    assertionFailure("invalid parameters")
                 }
             }
         }
@@ -485,9 +487,8 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
     
     // MARK: Private
     
-    private func setMetaData(ethTx: EthTx) {
+    private func setMetaData(tx: EthTransaction) {
         guard let rate = currency.state?.currentRate else { print("Incomplete tx metadata"); return }
-        let tx = EthTransaction(tx: ethTx, accountAddress: "", kvStore: kvStore, rate: rate)
         tx.createMetaData(rate: rate, comment: comment)
     }
 }
@@ -510,11 +511,11 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
         }
 
         pinVerifier { pin in
-            self.walletManager.send(token: self.currency, toAddress: address, amount: amount) { result in
+            self.walletManager.sendTransaction(currency: self.currency, toAddress: address, amount: amount) { result in
                 switch result {
-                case .success(let (pendingEthTx, pendingTokenTx)):
+                case .success(let pendingEthTx, let pendingTokenTx?, let rawTx):
                     self.setMetaData(ethTx: pendingEthTx, tokenTx: pendingTokenTx)
-                    completion(.success(pendingEthTx.tx.hash, pendingEthTx.tx.rawTx))
+                    completion(.success(pendingEthTx.hash, rawTx))
                 case .error(let error):
                     switch error {
                     case .httpError(let e):
@@ -529,6 +530,8 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
                             completion(.creationError(e.message))
                         }
                     }
+                default:
+                    assertionFailure("invalid parameters")
                 }
             }
         }

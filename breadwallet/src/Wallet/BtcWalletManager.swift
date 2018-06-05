@@ -11,6 +11,8 @@ import BRCore
 import SystemConfiguration
 import UIKit
 
+// A WalletManger instance manages a single wallet, and that wallet's individual connection to the bitcoin network.
+// After instantiating a WalletManager object, call myWalletManager.peerManager.connect() to begin syncing.
 class BTCWalletManager : WalletManager {
     let currency: CurrencyDef
     var masterPubKey = BRMasterPubKey()
