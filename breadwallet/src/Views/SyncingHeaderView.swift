@@ -10,8 +10,8 @@ import UIKit
 
 class SyncingHeaderView : UIView, Subscriber {
 
+    static let height: CGFloat = 40.0
     let syncIndicator = SyncingIndicator(style: .account)
-
     private let date = UILabel(font: .customBody(size: 12.0), color: .lightText)
     private let currency: CurrencyDef
 

@@ -20,7 +20,8 @@ class SyncingIndicator: UIView {
     private let style: SyncingIndicatorStyle
     private let label = UILabel()
     private let progressCircle: ProgressCircle
-    
+    private let circleHeight: CGFloat = 14.0
+
     var progress: CGFloat = 0.0 {
         didSet {
             progressCircle.setProgress(progress)
@@ -71,11 +72,12 @@ class SyncingIndicator: UIView {
             label.leadingAnchor.constraint(equalTo: leadingAnchor),
             label.topAnchor.constraint(equalTo: topAnchor),
             label.bottomAnchor.constraint(equalTo: bottomAnchor) ])
+        let circlePadding = (SyncingHeaderView.height - circleHeight)/2.0
         progressCircle.constrain([
             progressCircle.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0.0),
             progressCircle.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: C.padding[1]),
-            progressCircle.centerYAnchor.constraint(equalTo: centerYAnchor),
-            progressCircle.heightAnchor.constraint(equalToConstant: 14.0),
+            progressCircle.topAnchor.constraint(equalTo: topAnchor, constant: circlePadding),
+            progressCircle.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -circlePadding),
             progressCircle.widthAnchor.constraint(equalToConstant: 14.0)])
     }
     
