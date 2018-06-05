@@ -44,13 +44,13 @@ class SyncingHeaderView : UIView, Subscriber {
     }
 
     private func setInitialState() {
-        backgroundColor = UIColor.fromHex("E5E5E5")
+        backgroundColor = .syncingBackground
         Store.subscribe(self, selector: {
             return $0[self.currency]?.lastBlockTimestamp != $1[self.currency]?.lastBlockTimestamp
         }, callback: {
             let date = Date(timeIntervalSince1970: Double($0[self.currency]?.lastBlockTimestamp ?? 0))
             let dateString = DateFormatter.mediumDateFormatter.string(from: date)
-            self.date.text = "Synced through \(dateString)"
+            self.date.text = String(format: S.SyncingView.syncedThrough, dateString)
         })
     }
 
