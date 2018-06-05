@@ -337,7 +337,7 @@ enum S {
     enum SyncingView {
         static let syncing = NSLocalizedString("SyncingView.syncing", value:"Syncing", comment: "Syncing view syncing state header text")
         static let connecting = NSLocalizedString("SyncingView.connecting", value:"Connecting", comment: "Syncing view connectiong state header text")
-        static let syncedThrough = NSLocalizedString("SyncingView.syncedThrough", value: "Synced through 1$@", comment: "eg. Synced through <Jan 12, 2015>")
+        static let syncedThrough = NSLocalizedString("SyncingView.syncedThrough", value: "Synced through %1$@", comment: "eg. Synced through <Jan 12, 2015>")
         static let failed = NSLocalizedString("SyncingView.failed", value: "Sync Failed", comment: "Sync failed label")
     }
 
