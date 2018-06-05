@@ -18,9 +18,9 @@ class SyncingIndicator: UIView {
     
     // MARK: Vars
     private let style: SyncingIndicatorStyle
-    private let label = UILabel(font: .customBody(size: 12.0), color: .lightText)
+    private let label = UILabel()
     private let progressCircle: ProgressCircle
-
+    
     var progress: CGFloat = 0.0 {
         didSet {
             progressCircle.setProgress(progress)
@@ -37,7 +37,6 @@ class SyncingIndicator: UIView {
     
     var text: String = S.SyncingView.syncing {
         didSet {
-            progressCircle.pulse()
             label.text = text
             if text == S.SyncingView.failed {
                 progressCircle.isHidden = true
@@ -55,18 +54,14 @@ class SyncingIndicator: UIView {
         super.init(frame: .zero)
         setup()
     }
-
-    func pulse() {
-        progressCircle.pulse()
-    }
     
     private func setup() {
         addSubview(progressCircle)
         addSubview(label)
         setupConstraints()
         
-        label.font = .customBody(size: 12.0)
-        label.textColor = (style == .home) ? .white : .lightText
+        label.font = (style == .home) ? .customBold(size:12.0) : .customBody(size: 12.0)
+        label.textColor = (style == .home) ? .transparentWhiteText : .lightText
         label.textAlignment = .right
         label.text = text
     }
@@ -98,7 +93,7 @@ class ProgressCircle : UIView {
 
     init(style: SyncingIndicatorStyle) {
         self.style = style
-        self.startBackgroundColor = (style == .home) ? .white : UIColor.fromHex("828282")
+        self.startBackgroundColor = (style == .home) ? .transparentWhiteText : UIColor.fromHex("828282")
         super.init(frame: .zero)
     }
 
@@ -111,21 +106,6 @@ class ProgressCircle : UIView {
                                  endAngle: end,
                                  clockwise: true)
         circle.path = path2.cgPath
-    }
-
-    /// pulse animation
-    func pulse() {
-//        self.circle.removeAllAnimations()
-//        self.circle.strokeColor = startBackgroundColor.cgColor
-//
-//        guard !E.isScreenshots else { return } // looping animations cause UI tests to hang
-//
-//        UIView.animate(withDuration: 1.0,
-//                       delay: 0.5,
-//                       options: [.repeat, .autoreverse],
-//                       animations: {
-//                        self.circle.strokeColor = UIColor.white.withAlphaComponent(0.3).cgColor
-//        }, completion: nil)
     }
 
     override func layoutSubviews() {

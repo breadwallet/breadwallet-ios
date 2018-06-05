@@ -82,9 +82,7 @@ class HomeScreenCell : UITableViewCell, Subscriber {
         })
     }
     
-    func refreshAnimations() {
-        syncIndicator.pulse()
-    }
+    func refreshAnimations() {}
 
     private func setupViews() {
         addSubviews()
