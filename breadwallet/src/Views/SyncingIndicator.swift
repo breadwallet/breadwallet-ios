@@ -20,30 +20,39 @@ class SyncingIndicator: UIView {
     private let style: SyncingIndicatorStyle
     private let label = UILabel()
     private let progressCircle: ProgressCircle
-    private let circleHeight: CGFloat = 14.0
+    private let circleSize: CGFloat = 14.0
+    private var circleWidth: NSLayoutConstraint?
 
     var progress: CGFloat = 0.0 {
         didSet {
             progressCircle.setProgress(progress)
-            let nf = NumberFormatter()
-            nf.numberStyle = .percent
-            nf.maximumFractionDigits = 0
-            if text == S.SyncingView.syncing, let percent = nf.string(from: NSNumber(value: Float(progress))) {
-                label.text = "\(text) \(percent)"
-            } else {
-                label.text = text
+            updateTextLabel()
+        }
+    }
+
+    var syncState: SyncState = .success {
+        didSet {
+            switch syncState {
+            case .connecting:
+                circleWidth?.constant = 0.0
+                switch style {
+                case .home:
+                    self.text = S.SyncingView.connecting
+                case .account:
+                    self.text = ""
+                }
+            case .syncing:
+                circleWidth?.constant = circleSize
+                self.text = S.SyncingView.syncing
+            case .success:
+                self.text = ""
             }
         }
     }
-    
-    var text: String = S.SyncingView.syncing {
+
+    private var text: String = S.SyncingView.syncing {
         didSet {
-            label.text = text
-            if text == S.SyncingView.failed {
-                progressCircle.isHidden = true
-            } else {
-                progressCircle.isHidden = false
-            }
+            updateTextLabel()
         }
     }
     
@@ -72,13 +81,25 @@ class SyncingIndicator: UIView {
             label.leadingAnchor.constraint(equalTo: leadingAnchor),
             label.topAnchor.constraint(equalTo: topAnchor),
             label.bottomAnchor.constraint(equalTo: bottomAnchor) ])
-        let circlePadding = (SyncingHeaderView.height - circleHeight)/2.0
+        let circlePadding = (SyncingHeaderView.height - circleSize)/2.0
+        circleWidth = progressCircle.widthAnchor.constraint(equalToConstant: circleSize)
         progressCircle.constrain([
             progressCircle.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0.0),
             progressCircle.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: C.padding[1]),
             progressCircle.topAnchor.constraint(equalTo: topAnchor, constant: circlePadding),
             progressCircle.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -circlePadding),
-            progressCircle.widthAnchor.constraint(equalToConstant: 14.0)])
+            circleWidth])
+    }
+
+    private func updateTextLabel() {
+        let nf = NumberFormatter()
+        nf.numberStyle = .percent
+        nf.maximumFractionDigits = 0
+        if text == S.SyncingView.syncing, let percent = nf.string(from: NSNumber(value: Float(progress))) {
+            label.text = "\(text) \(percent)"
+        } else {
+            label.text = text
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

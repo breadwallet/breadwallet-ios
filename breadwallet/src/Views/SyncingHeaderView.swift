@@ -14,7 +14,16 @@ class SyncingHeaderView : UIView, Subscriber {
     let syncIndicator = SyncingIndicator(style: .account)
     private let date = UILabel(font: .customBody(size: 12.0), color: .lightText)
     private let currency: CurrencyDef
-
+    private var syncState: SyncState = .success {
+        didSet {
+            updateText()
+        }
+    }
+    private var lastBlockTimestamp: UInt32 = 0 {
+        didSet {
+            updateText()
+        }
+    }
     init(currency: CurrencyDef) {
         self.currency = currency
         super.init(frame: .zero)
@@ -45,13 +54,31 @@ class SyncingHeaderView : UIView, Subscriber {
 
     private func setInitialState() {
         backgroundColor = .syncingBackground
+
+        Store.subscribe(self, selector: { $0[self.currency]?.syncState != $1[self.currency]?.syncState },
+                        callback: { state in
+                            guard let syncState = state[self.currency]?.syncState else { return }
+                            self.syncState = syncState
+        })
+
         Store.subscribe(self, selector: {
             return $0[self.currency]?.lastBlockTimestamp != $1[self.currency]?.lastBlockTimestamp
         }, callback: {
-            let date = Date(timeIntervalSince1970: Double($0[self.currency]?.lastBlockTimestamp ?? 0))
+            self.lastBlockTimestamp = $0[self.currency]?.lastBlockTimestamp ?? 0
+        })
+    }
+
+    private func updateText() {
+        switch syncState {
+        case .connecting:
+            self.date.text = S.SyncingView.connecting
+        case .syncing:
+            let date = Date(timeIntervalSince1970: Double(self.lastBlockTimestamp))
             let dateString = DateFormatter.mediumDateFormatter.string(from: date)
             self.date.text = String(format: S.SyncingView.syncedThrough, dateString)
-        })
+        case .success:
+            self.date.text = ""
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
