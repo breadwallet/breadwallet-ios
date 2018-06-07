@@ -441,7 +441,7 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
     // MARK: Sender
     
     func fee(forAmount: UInt256) -> UInt256? {
-        return walletManager.gasPrice * UInt256(EthWalletManager.defaultGasLimit)
+        return walletManager.gasPrice * UInt256(walletManager.defaultGasLimit(currency: currency))
     }
     
     func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
@@ -500,7 +500,7 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
     // MARK: Sender
     
     func fee(forAmount: UInt256) -> UInt256? {
-        return walletManager.gasPrice * UInt256(EthWalletManager.defaultTokenTransferGasLimit)
+        return walletManager.gasPrice * UInt256(walletManager.defaultGasLimit(currency: currency))
     }
     
     func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {

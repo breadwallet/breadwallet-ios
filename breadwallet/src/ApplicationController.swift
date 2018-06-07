@@ -155,12 +155,14 @@ class ApplicationController : Subscriber, Trackable {
         application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalNever)
         setup()
         handleLaunchOptions(options)
-        reachability.didChange = { isReachable in
-            if !isReachable {
-                self.reachability.didChange = { isReachable in
-                    if isReachable {
-                        self.retryAfterIsReachable()
-                    }
+        if reachability.isReachable {
+            reachability.didChange = handleReachabilityLost
+        } else {
+            // app not reachable at launch
+            self.reachability.didChange = { isReachable in
+                if isReachable {
+                    self.retryAfterIsReachable()
+                    self.reachability.didChange = self.handleReachabilityLost
                 }
             }
         }
@@ -169,7 +171,7 @@ class ApplicationController : Subscriber, Trackable {
             didInitWalletManager()
         }
     }
-
+    
     private func setup() {
         setupDefaults()
         setupAppearance()
@@ -188,24 +190,6 @@ class ApplicationController : Subscriber, Trackable {
         })
     }
     
-    private func reinitWalletManager(callback: @escaping () -> Void) {
-        Store.perform(action: Reset())
-        self.setup()
-        
-        DispatchQueue.walletQueue.async {
-            self.feeUpdaters.values.forEach({ $0.stop() })
-            self.feeUpdaters.removeAll()
-            self.walletManagers.values.forEach({ $0.resetForWipe() })
-            self.walletManagers.removeAll()
-            self.initWallet {
-                DispatchQueue.main.async {
-                    self.didInitWalletManager()
-                    callback()
-                }
-            }
-        }
-    }
-
     func willEnterForeground() {
         guard let walletManager = primaryWalletManager,
             !walletManager.noWallet else { return }
@@ -213,18 +197,6 @@ class ApplicationController : Subscriber, Trackable {
         if shouldRequireLogin() {
             Store.perform(action: RequireLogin())
         }
-        DispatchQueue.walletQueue.async {
-            self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
-        }
-        exchangeUpdater?.refresh(completion: {})
-        feeUpdaters.values.forEach { $0.refresh() }
-        walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
-        walletManager.apiClient?.updateFeatureFlags()
-    }
-
-    func retryAfterIsReachable() {
-        guard let walletManager = primaryWalletManager,
-            !walletManager.noWallet else { return }
         DispatchQueue.walletQueue.async {
             self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
         }
@@ -313,6 +285,24 @@ class ApplicationController : Subscriber, Trackable {
             }
         }
     }
+    
+    private func reinitWalletManager(callback: @escaping () -> Void) {
+        Store.perform(action: Reset())
+        self.setup()
+        
+        DispatchQueue.walletQueue.async {
+            self.feeUpdaters.values.forEach({ $0.stop() })
+            self.feeUpdaters.removeAll()
+            self.walletManagers.values.forEach({ $0.resetForWipe() })
+            self.walletManagers.removeAll()
+            self.initWallet {
+                DispatchQueue.main.async {
+                    self.didInitWalletManager()
+                    callback()
+                }
+            }
+        }
+    }
 
     private func setupEthInitialState() {
         guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
@@ -392,6 +382,32 @@ class ApplicationController : Subscriber, Trackable {
         feeUpdaters.values.forEach { $0.refresh() }
         defaultsUpdater?.refresh()
         primaryWalletManager.apiClient?.events?.up()
+    }
+    
+    private func handleReachabilityLost(isReachable: Bool) {
+        if !isReachable {
+            self.reachability.didChange = { isReachable in
+                if isReachable {
+                    self.retryAfterIsReachable()
+                }
+            }
+        }
+    }
+    
+    private func retryAfterIsReachable() {
+        guard let walletManager = primaryWalletManager,
+            !walletManager.noWallet else { return }
+        walletManagers.values.filter { $0 is BTCWalletManager }.map { $0.currency }.forEach {
+            // reset sync state before re-connecting
+            Store.perform(action: WalletChange($0).setSyncingState(.success))
+        }
+        DispatchQueue.walletQueue.async {
+            self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
+        }
+        exchangeUpdater?.refresh(completion: {})
+        feeUpdaters.values.forEach { $0.refresh() }
+        walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
+        walletManager.apiClient?.updateFeatureFlags()
     }
 
     /// Handles new wallet creation or recovery
