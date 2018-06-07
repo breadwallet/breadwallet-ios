@@ -96,21 +96,21 @@ extension UserDefaults {
     }
 
     static func currentRate(forCode: String) -> Rate? {
-        guard let data = defaults.object(forKey: currentRateKey + forCode) as? [String: Any] else {
+        guard let data = defaults.object(forKey: currentRateKey + forCode.uppercased()) as? [String: Any] else {
             return nil
         }
         return Rate(dictionary: data)
     }
 
     static func currentRateData(forCode: String) -> [String: Any]? {
-        guard let data = defaults.object(forKey: currentRateKey + forCode) as? [String: Any] else {
+        guard let data = defaults.object(forKey: currentRateKey + forCode.uppercased()) as? [String: Any] else {
             return nil
         }
         return data
     }
 
     static func setCurrentRateData(newValue: [String: Any], forCode: String) {
-        defaults.set(newValue, forKey: currentRateKey + forCode)
+        defaults.set(newValue, forKey: currentRateKey + forCode.uppercased())
     }
 
     static var customNodeIP: Int? {
