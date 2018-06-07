@@ -12,12 +12,16 @@ import BRCore.Ethereum
 
 class EthWalletManager : WalletManager {
     
-    // MARK: Constants
+    // MARK:
+
+    private static let defaultGasPrice = etherCreateNumber(1, GWEI).valueInWEI
+    private static let maxGasPrice = etherCreateNumber(100, GWEI).valueInWEI
     
-    static let defaultGasLimit: UInt64 = 48_000 // higher than standard 21000 to allow sending to contracts
-    static let defaultTokenTransferGasLimit: UInt64 = 150_000
-    static let defaultGasPrice = etherCreateNumber(1, GWEI).valueInWEI
-    static let maxGasPrice = etherCreateNumber(100, GWEI).valueInWEI
+    enum SendTransactionResult {
+        case success(EthTransaction, ERC20Transaction?, String)
+        case authenticationFailed
+        case error(JSONRPCError)
+    }
     
     // MARK: WalletManager
 
@@ -30,8 +34,6 @@ class EthWalletManager : WalletManager {
     }
     
     // MARK: Eth
-    
-    var node: EthereumLightNode!
     
     var address: String?
     var gasPrice: UInt256 = EthWalletManager.defaultGasPrice {
@@ -55,6 +57,7 @@ class EthWalletManager : WalletManager {
         }
     }
     
+    private var node: EthereumLightNode!
     private let syncState = RequestSyncState(timeout: 2) // 2s until sync indicator shown
 
     // MARK: -
@@ -75,38 +78,10 @@ class EthWalletManager : WalletManager {
             print("walletID:", walletID)
         }
     }
-
-    /// Triggers balance fetch for all wallets
-    private func refreshBalances() {
-        node.wallet(Currencies.eth).updateBalance()
-        tokens.forEach { node.wallet($0).updateBalance() }
-    }
     
-    /// Triggers transaction fetch for all wallets
-    private func refreshTransactions() {
-        node.wallet(Currencies.eth).updateTransactions()
-    }
-    
-    /// Updates wallet state with transactions from core
-    private func updateTransactions(_ currency: CurrencyDef) {
-        guard let accountAddress = address else { return assertionFailure() }
-        let txs = self.node.wallet(currency).transactions
-        var viewModels: [Transaction]
-        
-        if let token = currency as? ERC20Token {
-            viewModels = txs.map { ERC20Transaction(tx: $0, accountAddress: accountAddress, token: token, kvStore: self.kvStore, rate: currency.state?.currentRate) }
-        } else {
-            viewModels = txs.map { EthTransaction(tx: $0, accountAddress: accountAddress, kvStore: self.kvStore, rate: currency.state?.currentRate) }
-        }
-        viewModels.sort(by: { $0.timestamp > $1.timestamp })
-        print("processed \(txs.count) \(currency.code) transactions")
-        Store.perform(action: WalletChange(currency).setTransactions(viewModels))
-    }
-
-    enum SendTransactionResult {
-        case success(EthTransaction, ERC20Transaction?, String)
-        case authenticationFailed
-        case error(JSONRPCError)
+    func defaultGasLimit(currency: CurrencyDef) -> UInt64 {
+        let wallet = node.wallet(currency)
+        return wallet.defaultGasLimit
     }
     
     /// Creates, signs and submits an ETH transaction or ERC20 token transfer
@@ -159,7 +134,14 @@ class EthWalletManager : WalletManager {
     func isOwnAddress(_ address: String) -> Bool {
         return address.lowercased() == self.address?.lowercased()
     }
-
+    
+    func resetForWipe() {
+        node.disconnect()
+        tokens.removeAll()
+    }
+    
+    // MARK: - Private
+    
     // walletID identifies a wallet by the ethereum public key
     // 1. compute the sha256(address[0]) -- note address excludes the "0x" prefix
     // 2. take the first 10 bytes of the sha256 and base32 encode it (lowercasing the result)
@@ -180,9 +162,20 @@ class EthWalletManager : WalletManager {
         return nil
     }
     
-    func resetForWipe() {
-        node.disconnect()
-        tokens.removeAll()
+    /// Updates wallet state with transactions from core
+    private func updateTransactions(_ currency: CurrencyDef) {
+        guard let accountAddress = address else { return assertionFailure() }
+        let txs = self.node.wallet(currency).transactions
+        var viewModels: [Transaction]
+        
+        if let token = currency as? ERC20Token {
+            viewModels = txs.map { ERC20Transaction(tx: $0, accountAddress: accountAddress, token: token, kvStore: self.kvStore, rate: currency.state?.currentRate) }
+        } else {
+            viewModels = txs.map { EthTransaction(tx: $0, accountAddress: accountAddress, kvStore: self.kvStore, rate: currency.state?.currentRate) }
+        }
+        viewModels.sort(by: { $0.timestamp > $1.timestamp })
+        print("processed \(txs.count) \(currency.code) transactions")
+        Store.perform(action: WalletChange(currency).setTransactions(viewModels))
     }
 }
 
@@ -203,7 +196,6 @@ extension EthWalletManager: EthereumClient {
     func getBalance(wallet: EthereumWallet, address: String, completion: @escaping (String) -> Void) {
         guard let apiClient = apiClient else { return assertionFailure() }
         let currency = wallet.currency
-        print("getBalance \(currency.code)")
         
         if let token = currency as? ERC20Token {
             guard tokens.contains(token) else { return }
@@ -211,10 +203,11 @@ extension EthWalletManager: EthereumClient {
             apiClient.getTokenBalance(address: address, token: token) { result in
                 switch result {
                 case .success(let value):
-                    print("got \(currency.code) balance: \(value)")
                     completion(value)
+                    self.syncState.didEndRequest(.getBalance, currencies: [currency], success: true)
                 case .error(let error):
                     print("getBalance error: \(error.localizedDescription)")
+                    self.syncState.didEndRequest(.getBalance, currencies: [currency], success: false)
                 }
             }
         } else {
@@ -222,10 +215,11 @@ extension EthWalletManager: EthereumClient {
             apiClient.getBalance(address: address) { result in
                 switch result {
                 case .success(let value):
-                    print("got \(currency.code) balance: \(value)")
                     completion(value)
+                    self.syncState.didEndRequest(.getBalance, currencies: [currency], success: true)
                 case .error(let error):
                     print("getBalance error: \(error.localizedDescription)")
+                    self.syncState.didEndRequest(.getBalance, currencies: [currency], success: false)
                 }
             }
         }
@@ -237,30 +231,24 @@ extension EthWalletManager: EthereumClient {
     }
     
     func getTransactions(address: String, completion: @escaping ([EthTxJSON]) -> Void) {
-        print("getTransactions")
         guard let apiClient = apiClient else { return assertionFailure() }
         guard syncState.willBeginRequest(.getTransactions, currencies: [currency]) else { return print("getTransactions skipped") }
         
         apiClient.getEthTxList(address: address) { [weak self] result in
             guard let `self` = self else { return }
-            defer {
-                self.syncState.didEndRequest(.getTransactions, currencies: [self.currency])
-                print("DONE getTransactions")
-            }
-            
             switch result {
             case .success(let jsonObjects):
-                print("got \(jsonObjects.count) ETH transactions")
                 completion(jsonObjects) // imports transaction json data into core
                 self.updateTransactions(self.currency)
+                self.syncState.didEndRequest(.getTransactions, currencies: [self.currency], success: true)
             case .error(let error):
                 print("getTransactions error: \(error.localizedDescription)")
+                self.syncState.didEndRequest(.getTransactions, currencies: [self.currency], success: false)
             }
         }
     }
     
     func getLogs(address: String, contract: String?, event: String, completion: @escaping ([EthLogEventJSON]) -> Void) {
-        print("getLogs \(contract ?? "")")
         guard let apiClient = apiClient else { return assertionFailure() }
         var tokens = [ERC20Token]()
         if let contract = contract, let token = self.tokens.filter({ $0.address == contract }).first {
@@ -268,23 +256,20 @@ extension EthWalletManager: EthereumClient {
         } else {
             tokens = self.tokens
         }
-        guard syncState.willBeginRequest(.getTransactions, currencies: tokens) else { return print("getTransactions skipped") }
+        guard syncState.willBeginRequest(.getTransactions, currencies: tokens) else { return print("getLogs skipped") }
         
         apiClient.getTokenTransferLogs(address: address, contractAddress: contract) { [weak self] result in
             guard let `self` = self else { return }
-            defer {
-                self.syncState.didEndRequest(.getTransactions, currencies: tokens)
-                print("DONE getLogs")
-            }
             switch result {
             case .success(let jsonObjects):
-                print("got \(jsonObjects.count) logs")
                 completion(jsonObjects) // imports logs json data into core
                 for token in self.tokens {
                     self.updateTransactions(token)
                 }
+                self.syncState.didEndRequest(.getTransactions, currencies: tokens, success: true)
             case .error(let error):
                 print("getLogs error: \(error.localizedDescription)")
+                self.syncState.didEndRequest(.getTransactions, currencies: tokens, success: false)
             }
         }
     }
@@ -324,10 +309,7 @@ extension EthWalletManager: EthereumListener {
         print("\(wallet.currency.code) wallet event: \(event), status: \(status.rawValue)\(errorDesc != nil ? ", error: \(errorDesc!)" : "")")
         switch (event) {
         case .balanceUpdated:
-            DispatchQueue.main.async {
-                self.syncState.didEndRequest(.getBalance, currencies: [wallet.currency])
-                Store.perform(action: WalletChange(wallet.currency).setBalance(wallet.balance))
-            }
+            Store.perform(action: WalletChange(wallet.currency).setBalance(wallet.balance))
             
         default:
             break
@@ -401,12 +383,15 @@ extension EthWalletManager {
         }
         
         /// Call after a fetch has completed
-        func didEndRequest(_ request: Request, currencies: [CurrencyDef]) {
+        func didEndRequest(_ request: Request, currencies: [CurrencyDef], success: Bool) {
             guard let currenciesInProgress = inProgress[request] else { return assertionFailure() }
             
             let finishedCodes = currencies.map { $0.code }
             inProgress[request] = currenciesInProgress.filter({ !finishedCodes.contains($0.code) })
-            currencies.forEach { Store.perform(action: WalletChange($0).setSyncingState(.success)) }
+            currencies.forEach {
+                Store.perform(action: WalletChange($0).setProgress(progress: success ? 1.0 : 0.0, timestamp: 0))
+                Store.perform(action: WalletChange($0).setSyncingState(success ? .success : .connecting))
+            }
             
             if allFinished {
                 firstTime = false
