@@ -96,16 +96,24 @@ extension TxDetailViewModel {
             let totalFee = tx.gasPrice * UInt256(tx.gasUsed)
             let feeAmount = Amount(amount: totalFee, currency: feeCurrency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
             
-            // omit total for ERC20
-            let totalAmount: Amount? = (currency is ERC20Token) ? nil : Amount(amount: tx.amount + totalFee, currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
-            
-            if Store.state.isBtcSwapped {
-                fee = feeAmount.fiatDescription
-                total = totalAmount?.fiatDescription
-            } else {
-                fee = feeAmount.tokenDescription
-                total = totalAmount?.tokenDescription
+            // gas used is unknown until confirmed
+            if tx.confirmations > 0 {
+                // omit total for ERC20
+                let totalAmount: Amount? = (currency is ERC20Token) ? nil : Amount(amount: tx.amount + totalFee, currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
+                
+                if Store.state.isBtcSwapped {
+                    fee = feeAmount.fiatDescription
+                    total = totalAmount?.fiatDescription
+                } else {
+                    fee = feeAmount.tokenDescription
+                    total = totalAmount?.tokenDescription
+                }
             }
+        }
+        
+        if let tx = tx as? BtcTransaction {
+            let feeAmount = Amount(amount: UInt256(tx.fee), currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
+            fee = Store.state.isBtcSwapped ? feeAmount.fiatDescription : feeAmount.tokenDescription
         }
     }
     

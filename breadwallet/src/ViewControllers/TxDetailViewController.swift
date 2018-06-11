@@ -167,6 +167,7 @@ class TxDetailViewController: UIViewController, Subscriber {
     private func reload() {
         viewModel = TxDetailViewModel(tx: transaction)
         dataSource = TxDetailDataSource(viewModel: viewModel)
+        dataSource.registerCells(forTableView: tableView)
         tableView.dataSource = dataSource
         tableView.reloadData()
     }

@@ -215,6 +215,7 @@ public struct ERC20Token: CurrencyDef {
     public let symbol: String
     public let colors: (UIColor, UIColor)
     
+    /// token contract address
     public let address: String
     public let abi: String
     public let decimals: Int

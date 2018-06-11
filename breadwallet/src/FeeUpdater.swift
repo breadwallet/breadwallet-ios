@@ -117,6 +117,7 @@ class FeeUpdater : Trackable {
             guard let `self` = self else { return }
             if case .success(let gasPrice) = result {
                 let newFees = Fees(gasPrice: gasPrice, timestamp: Date().timeIntervalSince1970)
+                print("gas price updated: \(newFees.gasPrice.string(decimals: Ethereum.Units.gwei.decimals)) gwei")
                 (self.walletManager as? EthWalletManager)?.gasPrice = gasPrice
                 Store.perform(action: WalletChange(self.walletManager.currency).setFees(newFees))
                 completion()
