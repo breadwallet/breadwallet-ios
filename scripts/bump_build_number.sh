@@ -23,11 +23,11 @@ xcodeproj="breadwallet.xcodeproj"
 # the first plist will be used as the source of the current build/version number
 plists=(
         "breadwallet/Info.plist"
-        "breadwallet WatchKit App/Info.plist"
-        "breadwallet WatchKit Extension/Info.plist"
-        "MessagesExtension/Info.plist"
-        "NotificationServiceExtension/Info.plist"
-        "TodayExtension/Info.plist"
+        #"breadwallet WatchKit App/Info.plist"
+        #"breadwallet WatchKit Extension/Info.plist"
+        #"MessagesExtension/Info.plist"
+        #"NotificationServiceExtension/Info.plist"
+        #"TodayExtension/Info.plist"
     )
 
 if [[ -z ${plist} ]]; then

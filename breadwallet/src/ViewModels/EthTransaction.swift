@@ -33,36 +33,32 @@ struct EthTransaction: EthLikeTransaction {
     let gasUsed: UInt64
     let nonce: UInt64
     
-    // MARK: ETH-specific properties
-    
-    let tx: EthTx
-    
     // MARK: - Init
     
-    init(tx: EthTx, accountAddress: String, kvStore: BRReplicatedKVStore?, rate: Rate?) {
-        self.tx = tx
-        amount = tx.value
-        timestamp = tx.timeStamp
-        direction = tx.to.lowercased() == accountAddress.lowercased() ? .received : .sent
+    init(tx: EthereumTransaction, accountAddress: String, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         
-        if tx.isError {
-            status = .invalid
+        switch tx.confirmations {
+        case 0:
+            status = .pending
+        case 1..<6:
+            status = .confirmed
+        default:
+            status = .complete
+        }
+        
+        if status == .pending && tx.blockTimestamp == 0 {
+            timestamp = Date().timeIntervalSince1970
         } else {
-            switch tx.confirmations {
-            case 0:
-                status = .pending
-            case 1..<6:
-                status = .confirmed
-            default:
-                status = .complete
-            }
+            timestamp = TimeInterval(tx.blockTimestamp)
         }
         
         hash = tx.hash
         blockHeight = tx.blockNumber
+        amount = tx.amount
+        fromAddress = tx.sourceAddress
+        toAddress = tx.targetAddress
+        direction = tx.targetAddress.lowercased() == accountAddress.lowercased() ? .received : .sent
         confirmations = tx.confirmations
-        fromAddress = tx.from
-        toAddress = tx.to
         gasPrice = tx.gasPrice
         gasLimit = tx.gasLimit
         gasUsed = tx.gasUsed

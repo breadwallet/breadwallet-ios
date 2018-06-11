@@ -501,6 +501,9 @@ extension BRWalletPlugin {
         }
         d["btc_denomination_digits"] = walletManager.currency.state?.maxDigits
         d["local_currency_code"] = Store.state.defaultCurrencyCode
+        let amount = Amount(amount: UInt256(0), currency: Currencies.btc, rate: Currencies.btc.state?.currentRate)
+        d["local_currency_precision"] = amount.localFormat.maximumFractionDigits
+        d["local_currency_symbol"] = amount.localFormat.currencySymbol
         return d
     }
     

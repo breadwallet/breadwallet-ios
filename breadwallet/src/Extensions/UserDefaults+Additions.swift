@@ -30,6 +30,7 @@ private let selectedCurrencyCodeKey = "selectedCurrencyCodeKey"
 private let mostRecentSelectedCurrencyCodeKey = "mostRecentSelectedCurrencyCodeKey"
 private let hasSetSelectedCurrencyKey = "hasSetSelectedCurrencyKey"
 private let hasBchConnectedKey = "hasBchConnectedKey"
+private let rescanStateKeyPrefix = "lastRescan" // append uppercased currency code for key
 
 extension UserDefaults {
 
@@ -95,21 +96,21 @@ extension UserDefaults {
     }
 
     static func currentRate(forCode: String) -> Rate? {
-        guard let data = defaults.object(forKey: currentRateKey + forCode) as? [String: Any] else {
+        guard let data = defaults.object(forKey: currentRateKey + forCode.uppercased()) as? [String: Any] else {
             return nil
         }
         return Rate(dictionary: data)
     }
 
     static func currentRateData(forCode: String) -> [String: Any]? {
-        guard let data = defaults.object(forKey: currentRateKey + forCode) as? [String: Any] else {
+        guard let data = defaults.object(forKey: currentRateKey + forCode.uppercased()) as? [String: Any] else {
             return nil
         }
         return data
     }
 
     static func setCurrentRateData(newValue: [String: Any], forCode: String) {
-        defaults.set(newValue, forKey: currentRateKey + forCode)
+        defaults.set(newValue, forKey: currentRateKey + forCode.uppercased())
     }
 
     static var customNodeIP: Int? {
@@ -153,6 +154,17 @@ extension UserDefaults {
                 defaults.set(data, forKey: feesKey)
             }
         }
+    }
+    
+    static func rescanState(for currency: CurrencyDef) -> RescanState? {
+        let key = rescanStateKeyPrefix + currency.code.uppercased()
+        guard let data = defaults.object(forKey: key) as? Data else { return nil }
+        return try? PropertyListDecoder().decode(RescanState.self, from: data)
+    }
+    
+    static func setRescanState(for currency: CurrencyDef, to state: RescanState) {
+        let key = rescanStateKeyPrefix + currency.code.uppercased()
+        defaults.set(try? PropertyListEncoder().encode(state), forKey: key)
     }
 }
 

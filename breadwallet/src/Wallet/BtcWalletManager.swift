@@ -11,6 +11,8 @@ import BRCore
 import SystemConfiguration
 import UIKit
 
+// A WalletManger instance manages a single wallet, and that wallet's individual connection to the bitcoin network.
+// After instantiating a WalletManager object, call myWalletManager.peerManager.connect() to begin syncing.
 class BTCWalletManager : WalletManager {
     let currency: CurrencyDef
     var masterPubKey = BRMasterPubKey()
@@ -113,6 +115,7 @@ class BTCWalletManager : WalletManager {
 extension BTCWalletManager : BRPeerManagerListener, Trackable {
 
     func syncStarted() {
+        print("[\(currency.code)] sync started")
         DispatchQueue.main.async() {
             self.db?.setDBFileAttributes()
             self.progressTimer = Timer.scheduledTimer(timeInterval: self.progressUpdateInterval, target: self, selector: #selector(self.updateProgress), userInfo: nil, repeats: true)
@@ -131,7 +134,7 @@ extension BTCWalletManager : BRPeerManagerListener, Trackable {
 
             switch error {
             case .some(let .posixError(errorCode, description)):
-
+                print("[\(self.currency.code)] sync error: \(description) (\(errorCode))")
                 Store.perform(action: WalletChange(self.currency).setSyncingState(.connecting))
                 self.saveEvent("event.syncErrorMessage", attributes: ["message": "\(description) (\(errorCode))"])
                 if self.retryTimer == nil && self.networkIsReachable() {
@@ -150,6 +153,8 @@ extension BTCWalletManager : BRPeerManagerListener, Trackable {
                 self.progressTimer?.invalidate()
                 self.progressTimer = nil
                 Store.perform(action: WalletChange(self.currency).setSyncingState(.success))
+                Store.perform(action: WalletChange(self.currency).setIsRescanning(false))
+                print("[\(self.currency.code)] sync completed - block height \(self.lastBlockHeight)")
             }
         }
     }

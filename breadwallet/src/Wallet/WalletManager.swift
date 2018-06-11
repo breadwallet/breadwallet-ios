@@ -32,16 +32,14 @@ extension NSNotification.Name {
     public static let WalletDidWipe = NSNotification.Name("WalletDidWipe")
 }
 
-// A WalletManger instance manages a single wallet, and that wallet's individual connection to the bitcoin network.
-// After instantiating a WalletManager object, call myWalletManager.peerManager.connect() to begin syncing.
-
 protocol WalletManager: class {
     var currency: CurrencyDef { get }
-    func resetForWipe()
     var peerManager: BRPeerManager? { get }
     var wallet: BRWallet? { get }
     var kvStore: BRReplicatedKVStore? { get set }
     var apiClient: BRAPIClient? { get }
+    
+    func resetForWipe()
     func canUseBiometrics(forTx: BRTxRef) -> Bool
     func isOwnAddress(_ address: String) -> Bool
 }
@@ -49,7 +47,9 @@ protocol WalletManager: class {
 //MARK: - Wallet
 extension WalletManager {
 
-    //TODO:ETH - add eth wallet
+    var peerManager: BRPeerManager? { return nil }
+    var wallet: BRWallet? { return nil }
+    
     func isOwnAddress(_ address: String) -> Bool {
         return wallet?.containsAddress(address) ?? false
     }

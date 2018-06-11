@@ -99,10 +99,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             self.reload()
         })
         
-        Store.subscribe(self, selector: { $0[self.currency]?.recommendRescan != $1[self.currency]?.recommendRescan }, callback: { _ in
-            //TODO:BCH show failed tx
-        })
-        
         Store.subscribe(self, name: .txMemoUpdated(""), callback: {
             guard let trigger = $0 else { return }
             if case .txMemoUpdated(let txHash) = trigger {

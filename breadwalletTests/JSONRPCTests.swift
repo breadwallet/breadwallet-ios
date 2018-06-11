@@ -32,7 +32,7 @@ class JSONRPCClientTests: XCTestCase {
         client.getBalance(address: "0xD5034292972ec9e54c7186D38CD39A6F449CCE77") { result in
             switch result {
             case .success(let value):
-                XCTAssertEqual(value, UInt256(0))
+                XCTAssertEqual(value, "0x0")
             case .error(let error):
                 XCTFail("getBalance error: \(error.localizedDescription)")
             }
@@ -53,20 +53,5 @@ class JSONRPCClientTests: XCTestCase {
             exp.fulfill()
         }
         waitForExpectations(timeout: 15, handler: nil)
-    }
-    
-    func testSendTransaction() {
-//        let exp = expectation(description: "request")
-//        let tx = TransactionParams(from: "0xD5034292972ec9e54c7186D38CD39A6F449CCE77", to: "0xD5034292972ec9e54c7186D38CD39A6F449CCE77")
-//        client.sendRawTransaction(transaction: tx) { result in
-//            switch result {
-//            case .success(let value):
-//                XCTAssertEqual(value, "0xb2d05e00") //TODO: assert validity instead of value
-//            case .error(let error):
-//                XCTFail("getGasPrice error: \(error.localizedDescription)")
-//            }
-//            exp.fulfill()
-//        }
-//        waitForExpectations(timeout: 15, handler: nil)
     }
 }

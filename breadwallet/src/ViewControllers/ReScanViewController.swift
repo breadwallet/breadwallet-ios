@@ -31,6 +31,14 @@ class ReScanViewController : UIViewController, Subscriber {
         addSubviews()
         addConstraints()
         setInitialData()
+        
+        // need to be connected to p2p network and synced up before rescan can be initated
+        Store.trigger(name: .retrySync(self.currency))
+        Store.subscribe(self, selector: { $0[self.currency]?.syncState != $1[self.currency]?.syncState },
+                        callback: { state in
+                            guard let syncState = state[self.currency]?.syncState else { return }
+                            self.button.isEnabled = syncState == .success
+        })
     }
 
     private func addSubviews() {
@@ -92,8 +100,6 @@ class ReScanViewController : UIViewController, Subscriber {
         let bodyAttributes = [ NSAttributedStringKey.font: UIFont.customBody(size: 16.0),
                                NSAttributedStringKey.foregroundColor: UIColor.darkText ]
 
-        body.append(NSAttributedString(string: "\(S.ReScan.subheader1)\n", attributes: headerAttributes))
-        body.append(NSAttributedString(string: "\(S.ReScan.body1)\n\n", attributes: bodyAttributes))
         body.append(NSAttributedString(string: "\(S.ReScan.subheader2)\n", attributes: headerAttributes))
         body.append(NSAttributedString(string: "\(S.ReScan.body2)\n\n\(S.ReScan.body3)", attributes: bodyAttributes))
         return body

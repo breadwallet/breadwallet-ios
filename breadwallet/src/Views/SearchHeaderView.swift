@@ -37,9 +37,9 @@ enum SearchFilterType {
         case .received:
             return { $0.direction == .received }
         case .pending:
-            return { $0.isPending }
+            return { $0.status == .pending || $0.status == .confirmed}
         case .complete:
-            return { !$0.isPending }
+            return { $0.status == .complete }
         case .text(let text):
             return { transaction in
                 let loweredText = text.lowercased()
