@@ -75,12 +75,12 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Tracka
         container.constrain([
             container.widthAnchor.constraint(equalTo: view.widthAnchor) ])
         subheader.constrain([
-            subheader.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            subheader.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
             subheader.topAnchor.constraint(equalTo: container.topAnchor),
-            subheader.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
+            subheader.trailingAnchor.constraint(equalTo: faq.leadingAnchor, constant: -C.padding[2])])
         instruction.constrain([
             instruction.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: C.padding[3]),
-            instruction.leadingAnchor.constraint(equalTo: subheader.leadingAnchor) ])
+            instruction.leadingAnchor.constraint(equalTo: subheader.leadingAnchor, constant: C.padding[2])])
         enterPhrase.view.constrain([
             enterPhrase.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             enterPhrase.view.topAnchor.constraint(equalTo: instruction.bottomAnchor, constant: C.padding[1]),
