@@ -22,7 +22,6 @@ private let currentRateKey = "currentRateKey"
 private let customNodeIPKey = "customNodeIPKey"
 private let customNodePortKey = "customNodePortKey"
 private let hasPromptedShareDataKey = "hasPromptedShareDataKey"
-private let hasShownWelcomeKey = "hasShownBCHWelcomeKey"
 private let hasCompletedKYC = "hasCompletedKYCKey"
 private let hasAgreedToCrowdsaleTermsKey = "hasAgreedToCrowdsaleTermsKey"
 private let feesKey = "feesKey"
@@ -132,11 +131,6 @@ extension UserDefaults {
     static var hasPromptedShareData: Bool {
         get { return defaults.bool(forKey: hasPromptedBiometricsKey) }
         set { defaults.set(newValue, forKey: hasPromptedBiometricsKey) }
-    }
-
-    static var hasShownWelcome: Bool {
-        get { return defaults.bool(forKey: hasShownWelcomeKey) }
-        set { defaults.set(newValue, forKey: hasShownWelcomeKey) }
     }
 
     // TODO:BCH not used, remove?

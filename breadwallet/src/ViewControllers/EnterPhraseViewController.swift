@@ -16,23 +16,13 @@ enum PhraseEntryReason {
 
 typealias EnterPhraseCallback = (String) -> Void
 
-class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, CustomTitleView, Trackable {
+class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Trackable {
 
     init(walletManager: BTCWalletManager, reason: PhraseEntryReason) {
         self.walletManager = walletManager
         self.enterPhrase = EnterPhraseCollectionViewController(walletManager: walletManager)
         self.faq = UIButton.buildFaqButton(articleId: ArticleIds.recoverWallet)
         self.reason = reason
-
-        switch reason {
-        case .setSeed(_):
-            self.customTitle = S.RecoverWallet.header
-        case .validateForResettingPin(_):
-            self.customTitle = S.RecoverWallet.headerResetPin
-        case .validateForWipingWallet(_):
-            self.customTitle = S.WipeWallet.title
-        }
-
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -44,13 +34,11 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
     private let enterPhrase: EnterPhraseCollectionViewController
     private let errorLabel = UILabel.wrapping(font: .customBody(size: 16.0), color: .cameraGuideNegative)
     private let instruction = UILabel(font: .customBold(size: 14.0), color: .darkText)
-    internal let titleLabel = UILabel.wrapping(font: .customBold(size: 26.0), color: .darkText)
     private let subheader = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
     private let faq: UIButton
     private let scrollView = UIScrollView()
     private let container = UIView()
     private let moreInfoButton = UIButton(type: .system)
-    let customTitle: String
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -59,13 +47,12 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
-        setData()
+        setInitialData()
     }
 
     private func addSubviews() {
         view.addSubview(scrollView)
         scrollView.addSubview(container)
-        container.addSubview(titleLabel)
         container.addSubview(subheader)
         container.addSubview(errorLabel)
         container.addSubview(instruction)
@@ -87,17 +74,13 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
         container.constrain(toSuperviewEdges: nil)
         container.constrain([
             container.widthAnchor.constraint(equalTo: view.widthAnchor) ])
-        titleLabel.constrain([
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            titleLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[1]),
-            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: faq.leadingAnchor) ])
         subheader.constrain([
-            subheader.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            subheader.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
-            subheader.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
+            subheader.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
+            subheader.topAnchor.constraint(equalTo: container.topAnchor),
+            subheader.trailingAnchor.constraint(equalTo: faq.leadingAnchor, constant: -C.padding[2])])
         instruction.constrain([
             instruction.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: C.padding[3]),
-            instruction.leadingAnchor.constraint(equalTo: subheader.leadingAnchor) ])
+            instruction.leadingAnchor.constraint(equalTo: subheader.leadingAnchor, constant: C.padding[2])])
         enterPhrase.view.constrain([
             enterPhrase.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             enterPhrase.view.topAnchor.constraint(equalTo: instruction.bottomAnchor, constant: C.padding[1]),
@@ -110,7 +93,7 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
             errorLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -C.padding[2] )])
         faq.constrain([
             faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            faq.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            faq.centerYAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[2]),
             faq.widthAnchor.constraint(equalToConstant: 44.0),
             faq.heightAnchor.constraint(equalToConstant: 44.0) ])
         moreInfoButton.constrain([
@@ -118,7 +101,7 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
             moreInfoButton.leadingAnchor.constraint(equalTo: subheader.leadingAnchor) ])
     }
 
-    private func setData() {
+    private func setInitialData() {
         view.backgroundColor = .secondaryButton
         errorLabel.text = S.RecoverWallet.invalid
         errorLabel.isHidden = true
@@ -127,16 +110,15 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
             self?.validatePhrase(phrase)
         }
         instruction.text = S.RecoverWallet.instruction
-
         switch reason {
         case .setSeed(_):
             saveEvent("enterPhrase.setSeed")
-            titleLabel.text = S.RecoverWallet.header
+            title = S.RecoverWallet.header
             subheader.text = S.RecoverWallet.subheader
             moreInfoButton.isHidden = true
         case .validateForResettingPin(_):
             saveEvent("enterPhrase.resettingPin")
-            titleLabel.text = S.RecoverWallet.headerResetPin
+            title = S.RecoverWallet.headerResetPin
             subheader.text = S.RecoverWallet.subheaderResetPin
             instruction.isHidden = true
             moreInfoButton.setTitle(S.RecoverWallet.resetPinInfo, for: .normal)
@@ -146,12 +128,11 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
             faq.isHidden = true
         case .validateForWipingWallet(_):
             saveEvent("enterPhrase.wipeWallet")
-            titleLabel.text = S.WipeWallet.title
+            title = S.WipeWallet.title
             subheader.text = S.WipeWallet.instruction
         }
 
         scrollView.delegate = self
-        addCustomTitle()
     }
 
     private func validatePhrase(_ phrase: String) {
@@ -197,14 +178,6 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Custom
             contentInset.bottom = 0.0
         }
         scrollView.contentInset = contentInset
-    }
-
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        didScrollForCustomTitle(yOffset: scrollView.contentOffset.y)
-    }
-
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        scrollViewWillEndDraggingForCustomTitle(yOffset: targetContentOffset.pointee.y)
     }
 
     required init?(coder aDecoder: NSCoder) {
