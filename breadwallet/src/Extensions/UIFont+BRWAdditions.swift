@@ -10,7 +10,7 @@ import UIKit
 
 extension UIFont {
     static var header: UIFont {
-        guard let font = UIFont(name: "CircularPro-Bold", size: 17.0) else { return UIFont.preferredFont(forTextStyle: .headline) }
+        guard let font = UIFont(name: "CircularPro-Bold", size: 18.0) else { return UIFont.preferredFont(forTextStyle: .headline) }
         return font
     }
     static func customBold(size: CGFloat) -> UIFont {

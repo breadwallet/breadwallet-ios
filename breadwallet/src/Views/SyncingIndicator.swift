@@ -8,46 +8,70 @@
 
 import UIKit
 
+enum SyncingIndicatorStyle {
+    case home
+    case account
+}
+
 /// Small syncing progress indicator
 class SyncingIndicator: UIView {
     
-    enum Style {
-        case home
-        case account
-    }
-    
     // MARK: Vars
-    private let style: Style
-    private let label = UILabel(font: .customBold(size: 12.0), color: .transparentWhiteText)
-    private let progressBar = ProgressBar()
-    
+    private let style: SyncingIndicatorStyle
+    private let label = UILabel()
+    private let progressCircle: ProgressCircle
+    private let circleSize: CGFloat = 14.0
+    private var circleWidth: NSLayoutConstraint?
+
     var progress: CGFloat = 0.0 {
         didSet {
-            progressBar.setProgress(ratio: progress)
+            progressCircle.setProgress(progress)
+            updateTextLabel()
         }
     }
-    
-    var text: String = S.SyncingView.syncing {
+
+    var syncState: SyncState = .success {
         didSet {
-            label.text = text
-            progressBar.pulse()
+            switch syncState {
+            case .connecting:
+                circleWidth?.constant = 0.0
+                switch style {
+                case .home:
+                    self.text = S.SyncingView.connecting
+                case .account:
+                    self.text = ""
+                }
+            case .syncing:
+                circleWidth?.constant = circleSize
+                self.text = S.SyncingView.syncing
+            case .success:
+                self.text = ""
+            }
+        }
+    }
+
+    private var text: String = S.SyncingView.syncing {
+        didSet {
+            updateTextLabel()
         }
     }
     
     // MARK: Init
     
-    init(style: Style) {
+    init(style: SyncingIndicatorStyle) {
         self.style = style
+        self.progressCircle = ProgressCircle(style: style)
         super.init(frame: .zero)
         setup()
     }
     
     private func setup() {
-        addSubview(progressBar)
+        addSubview(progressCircle)
         addSubview(label)
         setupConstraints()
         
-        label.font = (style == .home) ? .customBold(size: 12.0) : .customBody(size: 14.0)
+        label.font = (style == .home) ? .customBold(size:12.0) : .customBody(size: 12.0)
+        label.textColor = (style == .home) ? .transparentWhiteText : .lightText
         label.textAlignment = .right
         label.text = text
     }
@@ -56,20 +80,26 @@ class SyncingIndicator: UIView {
         label.constrain([
             label.leadingAnchor.constraint(equalTo: leadingAnchor),
             label.topAnchor.constraint(equalTo: topAnchor),
-            label.bottomAnchor.constraint(equalTo: bottomAnchor)
-            ])
-        
-        progressBar.constrain([
-            progressBar.trailingAnchor.constraint(equalTo: trailingAnchor),
-            progressBar.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: C.padding[1]),
-            progressBar.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 1.0),
-            progressBar.heightAnchor.constraint(equalToConstant: 4.0),
-            progressBar.widthAnchor.constraint(equalToConstant: 34.0)
-            ])
+            label.bottomAnchor.constraint(equalTo: bottomAnchor) ])
+        let circlePadding = (SyncingHeaderView.height - circleSize)/2.0
+        circleWidth = progressCircle.widthAnchor.constraint(equalToConstant: circleSize)
+        progressCircle.constrain([
+            progressCircle.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0.0),
+            progressCircle.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: C.padding[1]),
+            progressCircle.topAnchor.constraint(equalTo: topAnchor, constant: circlePadding),
+            progressCircle.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -circlePadding),
+            circleWidth])
     }
-    
-    func pulse() {
-        progressBar.pulse()
+
+    private func updateTextLabel() {
+        let nf = NumberFormatter()
+        nf.numberStyle = .percent
+        nf.maximumFractionDigits = 0
+        if text == S.SyncingView.syncing, let percent = nf.string(from: NSNumber(value: Float(progress))) {
+            label.text = "\(text) \(percent)"
+        } else {
+            label.text = text
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -77,67 +107,41 @@ class SyncingIndicator: UIView {
     }
 }
 
+class ProgressCircle : UIView {
+    private let circle = CAShapeLayer()
+    private var hasPerformedLayout = false
+    private let lineWidth: CGFloat = 2.0
+    private let startBackgroundColor: UIColor
+    private let style: SyncingIndicatorStyle
 
-private class ProgressBar: UIView {
-    private let progress: UIView
-    private var progressWidth: NSLayoutConstraint!
-    
-    init(backgroundColor: UIColor = UIColor.white.withAlphaComponent(0.5),
-         foregroundColor: UIColor = .white) {
-        progress = UIView(color: foregroundColor)
+    init(style: SyncingIndicatorStyle) {
+        self.style = style
+        self.startBackgroundColor = (style == .home) ? .transparentWhiteText : UIColor.fromHex("828282")
         super.init(frame: .zero)
-        self.backgroundColor = backgroundColor
-        setup()
     }
-    
-    private func setup() {
-        addSubview(progress)
-        
-        progressWidth = progress.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.0)
-        progress.constrain([
-            progress.leadingAnchor.constraint(equalTo: leadingAnchor),
-            progress.topAnchor.constraint(equalTo: topAnchor),
-            progress.bottomAnchor.constraint(equalTo: bottomAnchor),
-            progressWidth
-            ])
+
+    func setProgress(_ progress: CGFloat) {
+        let start = CGFloat(3.0 * (.pi / 2.0))
+        let end = start + CGFloat(2.0*(.pi) * progress)
+        let path2 = UIBezierPath(arcCenter: bounds.center,
+                                 radius: bounds.width/2.0,
+                                 startAngle: start,
+                                 endAngle: end,
+                                 clockwise: true)
+        circle.path = path2.cgPath
     }
-    
+
     override func layoutSubviews() {
-        super.layoutSubviews()
-        layer.cornerRadius = frame.height / 2.0
-        layer.masksToBounds = true
-        
-        progress.layer.cornerRadius = layer.cornerRadius
-        progress.layer.masksToBounds = true
+        guard !hasPerformedLayout else { hasPerformedLayout = true; return }
+        clipsToBounds = false
+        backgroundColor = .clear
+        circle.fillColor = UIColor.clear.cgColor
+        circle.strokeColor = startBackgroundColor.cgColor
+        circle.lineWidth = 3.0
+        circle.lineCap = kCALineCapRound
+        layer.addSublayer(circle)
     }
-    
-    /// Set progress ratio (0.0 to 1.0)
-    func setProgress(ratio: CGFloat) {
-        let ratio = max(0.0, min(ratio, 1.0))
-        progressWidth.isActive = false
-        progressWidth = progress.widthAnchor.constraint(equalTo: widthAnchor, multiplier: ratio)
-        progressWidth.isActive = true
-        
-        UIView.animate(withDuration: 0.2) {
-            self.progress.setNeedsLayout()
-        }
-    }
-    
-    /// pulse animation
-    func pulse() {
-        self.progress.layer.removeAllAnimations()
-        self.progress.backgroundColor = .white
-        
-        guard !E.isScreenshots else { return } // looping animations cause UI tests to hang
-        
-        UIView.animate(withDuration: 1.0,
-                       delay: 0.5,
-                       options: [.repeat, .autoreverse],
-                       animations: {
-                        self.progress.backgroundColor = UIColor.white.withAlphaComponent(0.3)
-        }, completion: nil)
-    }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
