@@ -176,18 +176,17 @@ class AccountViewController : UIViewController, Subscriber {
             self?.transactionsTableView.filters = filters
         }
     }
-
+    
     private func addTransactionsView() {
         view.backgroundColor = .whiteTint
         addChildViewController(transactionsTableView, layout: {
             if #available(iOS 11.0, *) {
                 transactionsTableView.view.constrain([
-
                     transactionsTableView.view.topAnchor.constraint(equalTo: headerContainer.bottomAnchor),
-                transactionsTableView.view.bottomAnchor.constraint(equalTo: footerView.topAnchor),
-                transactionsTableView.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-                transactionsTableView.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-                ])
+                    transactionsTableView.view.bottomAnchor.constraint(equalTo: footerView.topAnchor),
+                    transactionsTableView.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                    transactionsTableView.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                    ])
             } else {
                 transactionsTableView.view.constrain(toSuperviewEdges: nil)
             }

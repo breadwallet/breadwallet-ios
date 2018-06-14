@@ -423,10 +423,8 @@ extension BTCWalletManager : WalletAuthenticator {
     func wipeWallet(pin: String = "forceWipe") -> Bool {
         guard pin == "forceWipe" || authenticate(pin: pin) else { return false }
         
-        if #available(iOS 10.0, *) {
-            dispatchPrecondition(condition: .onQueue(DispatchQueue.walletQueue))
-        }
-
+        dispatchPrecondition(condition: .onQueue(DispatchQueue.walletQueue))
+        
         do {
             resetForWipe()
             masterPubKey = BRMasterPubKey()
