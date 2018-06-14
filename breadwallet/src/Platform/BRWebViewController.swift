@@ -99,7 +99,7 @@ import WebKit
         config.processPool = wkProcessPool
         config.allowsInlineMediaPlayback = false
         config.allowsAirPlayForMediaPlayback = false
-        config.requiresUserActionForMediaPlayback = true
+        config.mediaTypesRequiringUserActionForPlayback = .all
         config.allowsPictureInPictureMediaPlayback = false
 
         let request = URLRequest(url: indexUrl)

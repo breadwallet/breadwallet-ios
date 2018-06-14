@@ -446,7 +446,7 @@ class ModalPresenter : Subscriber, Trackable {
                 }),
                 Setting(title: S.Settings.review, callback: {
                     if let url = URL(string: C.reviewLink) {
-                        UIApplication.shared.openURL(url)
+                        UIApplication.shared.open(url)
                     }
                 }),
                 Setting(title: S.Settings.about, callback: {
@@ -793,7 +793,7 @@ class ModalPresenter : Subscriber, Trackable {
                 self?.copyAllAddressesToClipboard()
                 Store.perform(action: Alert.Show(.addressesCopied))
                 if let success = success, let url = URL(string: success) {
-                    UIApplication.shared.openURL(url)
+                    UIApplication.shared.open(url)
                 }
             })
             verify.transitioningDelegate = self?.verifyPinTransitionDelegate
@@ -938,7 +938,7 @@ class SecurityCenterNavigationDelegate : NSObject, UINavigationControllerDelegat
         guard let coordinator = navigationController.topViewController?.transitionCoordinator else { return }
 
         if coordinator.isInteractive {
-            coordinator.notifyWhenInteractionEnds { context in
+            coordinator.notifyWhenInteractionChanges { context in
                 //We only want to style the view controller if the
                 //pop animation wasn't cancelled
                 if !context.isCancelled {
