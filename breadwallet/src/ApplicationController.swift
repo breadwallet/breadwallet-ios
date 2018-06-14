@@ -556,16 +556,14 @@ class ApplicationController : Subscriber, Trackable {
 //MARK: - Push notifications
 extension ApplicationController {
     func listenForPushNotificationRequest() {
-        Store.subscribe(self, name: .registerForPushNotificationToken, callback: { _ in
-            let settings = UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil)
-            self.application?.registerUserNotificationSettings(settings)
-        })
-    }
-
-    func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
-        if !notificationSettings.types.isEmpty {
-            application.registerForRemoteNotifications()
-        }
+        // TODO: notifications
+//        Store.subscribe(self, name: .registerForPushNotificationToken, callback: { _ in
+//            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+//                if granted {
+//                    self.application?.registerForRemoteNotifications()
+//                }
+//            }
+//        })
     }
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {

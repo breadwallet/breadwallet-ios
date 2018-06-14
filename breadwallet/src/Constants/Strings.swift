@@ -13,13 +13,7 @@ enum S {
     enum Symbols {
         static let bits = "ƀ"
         static let eth = "Ξ"
-        static var btc: String {
-            if  #available(iOS 10, *) {
-                return "₿"
-            } else {
-                return "Ƀ"
-            }
-        }
+        static let btc = "₿"
         static let narrowSpace = "\u{2009}"
         static let lock = "\u{1F512}"
         static let redX = "\u{274C}"
