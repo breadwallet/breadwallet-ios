@@ -208,37 +208,18 @@ class SearchHeaderView : UIView {
     }
 
     private func addFilterButtons() {
-        if #available(iOS 9, *) {
-            let stackView = UIStackView()
-            addSubview(stackView)
-            stackView.distribution = .fillProportionally
-            stackView.spacing = C.padding[1]
-            stackView.constrain([
-                stackView.leadingAnchor.constraint(equalTo: searchBar.leadingAnchor),
-                stackView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: C.padding[1]),
-                stackView.trailingAnchor.constraint(equalTo: cancel.trailingAnchor) ])
-            stackView.addArrangedSubview(sent)
-            stackView.addArrangedSubview(received)
-            stackView.addArrangedSubview(pending)
-            stackView.addArrangedSubview(complete)
-        } else {
-            addSubview(sent)
-            addSubview(received)
-            addSubview(pending)
-            addSubview(complete)
-            sent.constrain([
-                sent.leadingAnchor.constraint(equalTo: searchBar.leadingAnchor),
-                sent.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: C.padding[1]) ])
-            received.constrain([
-                received.leadingAnchor.constraint(equalTo: sent.trailingAnchor, constant: C.padding[1]),
-                received.topAnchor.constraint(equalTo: sent.topAnchor)])
-            pending.constrain([
-                pending.leadingAnchor.constraint(equalTo: received.trailingAnchor, constant: C.padding[1]),
-                pending.topAnchor.constraint(equalTo: received.topAnchor)])
-            complete.constrain([
-                complete.leadingAnchor.constraint(equalTo: pending.trailingAnchor, constant: C.padding[1]),
-                complete.topAnchor.constraint(equalTo: sent.topAnchor) ])
-        }
+        let stackView = UIStackView()
+        addSubview(stackView)
+        stackView.distribution = .fillProportionally
+        stackView.spacing = C.padding[1]
+        stackView.constrain([
+            stackView.leadingAnchor.constraint(equalTo: searchBar.leadingAnchor),
+            stackView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: C.padding[1]),
+            stackView.trailingAnchor.constraint(equalTo: cancel.trailingAnchor) ])
+        stackView.addArrangedSubview(sent)
+        stackView.addArrangedSubview(received)
+        stackView.addArrangedSubview(pending)
+        stackView.addArrangedSubview(complete)
     }
 
     required init?(coder aDecoder: NSCoder) {

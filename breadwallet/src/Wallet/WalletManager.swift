@@ -128,10 +128,11 @@ extension WalletManager {
     func showLocalNotification(message: String) {
         guard UIApplication.shared.applicationState == .background || UIApplication.shared.applicationState == .inactive else { return }
         guard Store.state.isPushNotificationsEnabled else { return }
-        UIApplication.shared.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
-        let notification = UILocalNotification()
-        notification.alertBody = message
-        notification.soundName = "coinflip.aiff"
-        UIApplication.shared.presentLocalNotificationNow(notification)
+        //TODO: notifications
+//        UIApplication.shared.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
+//        let notification = UILocalNotification()
+//        notification.alertBody = message
+//        notification.soundName = "coinflip.aiff"
+//        UIApplication.shared.presentLocalNotificationNow(notification)
     }
 }
