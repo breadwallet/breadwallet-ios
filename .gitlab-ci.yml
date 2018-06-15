@@ -3,6 +3,8 @@ stages:
 
 build_project:
   stage: build
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
   script:
     - xcodebuild clean -project breadwallet.xcodeproj -scheme breadwallet | xcpretty
     - xcodebuild test -project breadwallet.xcodeproj -scheme breadwallet -destination 'platform=iOS Simulator,name=iPhone 7,OS=11.4' | xcpretty -s
