@@ -52,7 +52,8 @@ class EthWalletManager : WalletManager {
         didSet {
             tokens.forEach { token in
                 // creates the core wallet if needed
-                let _ = node.wallet(token)
+                let wallet = node.wallet(token)
+                wallet.updateBalance()
             }
         }
     }
