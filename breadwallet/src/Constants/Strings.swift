@@ -281,7 +281,7 @@ enum S {
     }
 
     enum Settings {
-        static let title = NSLocalizedString("Settings.title", value:"Settings", comment: "Settings title")
+        static let title = NSLocalizedString("Settings.title", value:"Menu", comment: "Settings title")
         static let wallet = NSLocalizedString("Settings.wallet", value: "Wallets", comment: "Wallet Settings section header")
         static let preferences = NSLocalizedString("Settings.preferences", value: "Preferences", comment: "Preferences settings section header")
         static let currencySettings = NSLocalizedString("Settings.currencySettings", value: "Currency Settings", comment: "Currency settings section header")
@@ -392,18 +392,23 @@ enum S {
     }
 
     enum MenuButton {
-        static let security = NSLocalizedString("MenuButton.security", value:"Security Center", comment: "Menu button title")
+        static let security = NSLocalizedString("MenuButton.security", value:"Security Settings", comment: "Menu button title")
         static let support = NSLocalizedString("MenuButton.support", value:"Support", comment: "Menu button title")
         static let settings = NSLocalizedString("MenuButton.settings", value:"Settings", comment: "Menu button title")
         static let lock = NSLocalizedString("MenuButton.lock", value:"Lock Wallet", comment: "Menu button title")
         static let buy = NSLocalizedString("MenuButton.buy", value:"Buy Bitcoin", comment: "Buy bitcoin title")
-        static let addWallet = NSLocalizedString("MenuButton.addWallet", value: "Add Wallet", comment: "Add Wallet button title")
+        static let addWallet = NSLocalizedString("MenuButton.addWallet", value: "Add Wallet", comment: "Menu button title")
+        static let manageWallets = NSLocalizedString("MenuButton.manageWallets", value: "Manage Wallets", comment: "Menu button title")
+        static let scan = NSLocalizedString("MenuButton.scan", value: "Scan QR Code", comment: "Menu button title")
     }
     
     enum HomeScreen {
-        static let totalAssets = NSLocalizedString("HomeScreen.totalAssets", value: "total assets", comment: "header")
+        static let totalAssets = NSLocalizedString("HomeScreen.totalAssets", value: "Total Assets", comment: "header")
         static let portfolio = NSLocalizedString("HomeScreen.portfolio", value: "Wallets", comment: "Section header")
         static let admin = NSLocalizedString("HomeScreen.admin", value: "Admin", comment: "Section header")
+        static let buy = NSLocalizedString("Button.buy", value: "Buy Bitcoin", comment: "home screen toolbar button")
+        static let trade = NSLocalizedString("Button.trade", value: "Trade", comment: "home screen toolbar button")
+        static let menu = NSLocalizedString("Button.menu", value: "Menu", comment: "home screen toolbar button")
     }
 
     enum StartViewController {
