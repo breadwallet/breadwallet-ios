@@ -10,8 +10,6 @@ import UIKit
 import BRCore
 import MachO
 
-//let accountHeaderHeight: CGFloat = 162.0
-let accountFooterHeight: CGFloat = 67.0
 
 class AccountViewController : UIViewController, Subscriber {
 
@@ -42,6 +40,7 @@ class AccountViewController : UIViewController, Subscriber {
     private let walletManager: WalletManager
     private let headerView: AccountHeaderView
     private let footerView: AccountFooterView
+    private var footerHeightConstraint: NSLayoutConstraint?
     private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
     private var transactionsTableView: TransactionsTableViewController!
     private var isLoginRequired = false
@@ -92,9 +91,6 @@ class AccountViewController : UIViewController, Subscriber {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         shouldShowStatusBar = true
-//        if let walletManager = walletManager as? EthWalletManager {
-//            walletManager.beginFetchingTransactions(currency: currency)
-//        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -107,11 +103,9 @@ class AccountViewController : UIViewController, Subscriber {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-//        if let walletManager = walletManager as? EthWalletManager {
-//            walletManager.stopFetchingTransactions()
-//        }
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        footerHeightConstraint?.constant = AccountFooterView.height + view.safeAreaInsets.bottom
     }
     
     // MARK: -
@@ -125,7 +119,6 @@ class AccountViewController : UIViewController, Subscriber {
         searchButton.tintColor = .white
         searchButton.tap = showSearchHeaderView
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchButton)
-        
     }
 
     private func addSubviews() {
@@ -145,18 +138,19 @@ class AccountViewController : UIViewController, Subscriber {
         headerView.constrain(toSuperviewEdges: nil)
         searchHeaderview.constrain(toSuperviewEdges: nil)
 
+        footerHeightConstraint = footerView.heightAnchor.constraint(equalToConstant: AccountFooterView.height)
         if #available(iOS 11.0, *) {
             footerView.constrain([
-                footerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                footerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
                 footerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -C.padding[1]),
                 footerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: C.padding[1]),
-                footerView.heightAnchor.constraint(equalToConstant: accountFooterHeight) ])
+                footerHeightConstraint ])
         } else {
             footerView.constrain([
                 footerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
                 footerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -C.padding[1]),
                 footerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: C.padding[1]),
-                footerView.heightAnchor.constraint(equalToConstant: accountFooterHeight) ])
+                footerHeightConstraint ])
         }
     }
 

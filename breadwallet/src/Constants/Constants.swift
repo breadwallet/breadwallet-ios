@@ -11,15 +11,17 @@ import UIKit
 let π: CGFloat = .pi
 
 struct Padding {
+    var increment: CGFloat
+    
     subscript(multiplier: Int) -> CGFloat {
         get {
-            return CGFloat(multiplier) * 8.0
+            return CGFloat(multiplier) * increment
         }
     }
 }
 
 struct C {
-    static let padding = Padding()
+    static let padding = Padding(increment: 8.0)
     struct Sizes {
         static let buttonHeight: CGFloat = 48.0
         static let headerHeight: CGFloat = 48.0

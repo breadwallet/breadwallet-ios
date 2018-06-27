@@ -12,10 +12,11 @@ class SeparatorCell : UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         let separator = UIView()
-        separator.backgroundColor = .separator
+        separator.backgroundColor = .navigationBackground
         addSubview(separator)
-        contentView.backgroundColor = .lightHeaderBackground
-        backgroundColor = .lightHeaderBackground
+        contentView.backgroundColor = .clear
+        backgroundColor = .transparentCellBackground
+        selectedBackgroundView = UIView.init(color: UIColor.navigationTint.withAlphaComponent(0.7))
         separator.constrain([
             separator.leadingAnchor.constraint(equalTo: leadingAnchor),
             separator.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -25,25 +26,5 @@ class SeparatorCell : UITableViewCell {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension SeparatorCell {
-    func setSetting(_ setting: Setting) {
-        textLabel?.text = setting.title
-        textLabel?.font = .customBody(size: 16.0)
-        textLabel?.textColor = .darkGray
-        textLabel?.backgroundColor = .lightHeaderBackground
-
-        if let accessoryText = setting.accessoryText?() {
-            let label = UILabel(font: .customMedium(size: 16.0), color: .darkGray)
-            label.text = accessoryText
-            label.backgroundColor = .lightHeaderBackground
-            label.sizeToFit()
-            accessoryView = label
-        } else {
-            accessoryView = nil
-            accessoryType = .disclosureIndicator
-        }
     }
 }
