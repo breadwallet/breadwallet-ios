@@ -11,29 +11,54 @@ import UIKit
 class AssetListTableView: UITableViewController, Subscriber {
 
     var didSelectCurrency: ((CurrencyDef) -> Void)?
-    var didTapSecurity: (() -> Void)?
-    var didTapSupport: (() -> Void)?
-    var didTapSettings: (() -> Void)?
     var didTapAddWallet: (() -> Void)?
-    private let assetHeight: CGFloat = 85.0
-    private let menuHeight: CGFloat = 53.0
-    private let manageWalletContent = (S.TokenList.manageTitle, #imageLiteral(resourceName: "PlaylistPlus"))
+    
+    private let assetHeight: CGFloat = 90.0
+    private let addWalletButtonHeight: CGFloat = 80.0
+    private let addWalletButton = UIButton.icon(image: #imageLiteral(resourceName: "add"), title: S.TokenList.addTitle)
 
     // MARK: - Init
     
     init() {
-        super.init(style: .grouped)
+        super.init(style: .plain)
     }
 
     override func viewDidLoad() {
-        tableView.backgroundColor = .whiteBackground
+        super.viewDidLoad()
+        tableView.backgroundColor = .darkBackground
         tableView.register(HomeScreenCell.self, forCellReuseIdentifier: HomeScreenCell.cellIdentifier)
-        tableView.register(MenuCell.self, forCellReuseIdentifier: MenuCell.cellIdentifier)
         tableView.separatorStyle = .none
+        tableView.rowHeight = assetHeight
         
-        tableView.reloadData()
+        setupAddWalletButton()
+        setupSubscriptions()
+        reload()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.visibleCells.forEach {
+            if let cell = $0 as? HomeScreenCell {
+                cell.refreshAnimations()
+            }
+        }
+    }
+    
+    private func setupAddWalletButton() {
         
-        Store.subscribe(self, selector: {
+        addWalletButton.tintColor = .disabledWhiteText
+        addWalletButton.setTitleColor(.disabledWhiteText, for: .normal)
+        addWalletButton.setTitleColor(.transparentWhite, for: .highlighted)
+        addWalletButton.addTarget(self, action: #selector(addWallet), for: .touchUpInside)
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: addWalletButtonHeight))
+        addWalletButton.frame = CGRect(x: 0, y: 0, width: footerView.frame.width, height: addWalletButtonHeight)
+        footerView.addSubview(addWalletButton)
+        footerView.backgroundColor = .darkBackground
+        tableView.tableFooterView = footerView
+    }
+    
+    private func setupSubscriptions() {
+        Store.lazySubscribe(self, selector: {
             var result = false
             let oldState = $0
             let newState = $1
@@ -49,20 +74,15 @@ class AssetListTableView: UITableViewController, Subscriber {
             self.tableView.reloadData()
         })
         
-        Store.subscribe(self, selector: {
+        Store.lazySubscribe(self, selector: {
             $0.displayCurrencies.map { $0.code } != $1.displayCurrencies.map { $0.code }
         }, callback: { _ in
-                self.tableView.reloadData()
-            })
+            self.tableView.reloadData()
+        })
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tableView.visibleCells.forEach {
-            if let cell = $0 as? HomeScreenCell {
-                cell.refreshAnimations()
-            }
-        }
+    @objc func addWallet() {
+        didTapAddWallet?()
     }
     
     func reload() {
@@ -74,124 +94,27 @@ class AssetListTableView: UITableViewController, Subscriber {
     }
     
     // MARK: - Data Source
-    
-    enum Section: Int {
-        case assets
-        case menu
-    }
-
-    enum Menu: Int {
-        case settings
-        case security
-        case support
-        
-        var content: (String, UIImage) {
-            switch self {
-            case .settings:
-                return (S.MenuButton.settings, #imageLiteral(resourceName: "Settings"))
-            case .security:
-                return (S.MenuButton.security, #imageLiteral(resourceName: "Shield"))
-            case .support:
-                return (S.MenuButton.support, #imageLiteral(resourceName: "Faq"))
-            }
-        }
-        
-        static let allItems: [Menu] = [.settings, .security, .support]
-    }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let section = Section(rawValue: section) else { return 0 }
-        
-        switch section {
-        case .assets:
-            return Store.state.displayCurrencies.count + 1
-        case .menu:
-            return Menu.allItems.count
-        }
+        return Store.state.displayCurrencies.count
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let section = Section(rawValue: indexPath.section) else { return 0 }
-        switch section {
-        case .assets:
-            return isAddWalletRow(row: indexPath.row) ? menuHeight : assetHeight
-        case .menu:
-            return menuHeight
-        }
-    }
-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let section = Section(rawValue: indexPath.section) else { return UITableViewCell() }
-
-        if section == .assets && isAddWalletRow(row: indexPath.row) {
-            let cell = tableView.dequeueReusableCell(withIdentifier: MenuCell.cellIdentifier, for: indexPath) as! MenuCell
-            cell.set(title: manageWalletContent.0, icon: manageWalletContent.1)
-            return cell
-        }
-
-        switch section {
-        case .assets:
-            let currency = Store.state.displayCurrencies[indexPath.row]
-            let viewModel = AssetListViewModel(currency: currency)
-
-            let cell = tableView.dequeueReusableCell(withIdentifier: HomeScreenCell.cellIdentifier, for: indexPath) as! HomeScreenCell
-            cell.set(viewModel: viewModel)
-            return cell
-        case .menu:
-            let cell = tableView.dequeueReusableCell(withIdentifier: MenuCell.cellIdentifier, for: indexPath) as! MenuCell
-            guard let item = Menu(rawValue: indexPath.row) else { return cell }
-            let content = item.content
-            cell.set(title: content.0, icon: content.1)
-            return cell
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        guard let section = Section(rawValue: section) else { return nil }
-
-        switch section {
-        case .assets:
-            return S.HomeScreen.portfolio
-        case .menu:
-            return S.HomeScreen.admin
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        guard let header = view as? UITableViewHeaderFooterView,
-            let label = header.textLabel else { return }
-        label.text = label.text?.capitalized
-        label.textColor = .mediumGray
-        label.font = .customBody(size: 12.0)
-        header.tintColor = tableView.backgroundColor
+        let currency = Store.state.displayCurrencies[indexPath.row]
+        let viewModel = AssetListViewModel(currency: currency)
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: HomeScreenCell.cellIdentifier, for: indexPath) as! HomeScreenCell
+        cell.set(viewModel: viewModel)
+        return cell
     }
     
     // MARK: - Delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let section = Section(rawValue: indexPath.section) else { return }
-        
-        switch section {
-        case .assets:
-            isAddWalletRow(row: indexPath.row) ? didTapAddWallet?() : didSelectCurrency?(Store.state.displayCurrencies[indexPath.row])
-        case .menu:
-            guard let item = Menu(rawValue: indexPath.row) else { return }
-            switch item {
-            case .settings:
-                didTapSettings?()
-            case .security:
-                didTapSecurity?()
-            case .support:
-                didTapSupport?()
-            }
-        }
-    }
-
-    private func isAddWalletRow(row: Int) -> Bool {
-        return row == Store.state.displayCurrencies.count
+        didSelectCurrency?(Store.state.displayCurrencies[indexPath.row])
     }
 }
