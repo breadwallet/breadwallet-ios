@@ -10,9 +10,29 @@ import UIKit
 
 extension UIColor {
 
+    static var newGradientStart: UIColor {
+        return UIColor.fromHex("FB5491")
+    }
+
+    static var newGradientEnd: UIColor {
+        return UIColor.fromHex("FAA03F")
+    }
+
+    static var darkBackground: UIColor {
+        return UIColor.fromHex("302442")
+    }
+
+    static var orangeText: UIColor {
+        return UIColor.fromHex("FA724D")
+    }
+
     // MARK: Buttons
     static var primaryButton: UIColor {
         return UIColor(red: 76.0/255.0, green: 152.0/255.0, blue: 252.0/255.0, alpha: 1.0)
+    }
+    
+    static var orangeButton: UIColor {
+        return UIColor.fromHex("E7AA41")
     }
 
     static var primaryText: UIColor {
@@ -125,7 +145,7 @@ extension UIColor {
     }
     
     static var transparentWhiteText: UIColor {
-        return UIColor(white: 1.0, alpha: 0.7)
+        return UIColor(white: 1.0, alpha: 0.75)
     }
     
     static var disabledWhiteText: UIColor {
@@ -186,6 +206,22 @@ extension UIColor {
     
     static var separator: UIColor {
         return UIColor(red: 236.0/255.0, green: 236.0/255.0, blue: 236.0/255.0, alpha: 1.0)
+    }
+    
+    static var navigationTint: UIColor {
+        return UIColor.fromHex("29ABE2")
+    }
+    
+    static var navigationBackground: UIColor {
+        return UIColor.fromHex("251935")
+    }
+    
+    static var transparentCellBackground: UIColor {
+        return UIColor(white: 1.0, alpha: 0.03)
+    }
+    
+    static var transparentIconBackground: UIColor {
+        return UIColor(white: 1.0, alpha: 0.25)
     }
 }
 

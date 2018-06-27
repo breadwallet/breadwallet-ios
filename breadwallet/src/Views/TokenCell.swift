@@ -8,12 +8,17 @@
 
 import UIKit
 
-class TokenCell : UITableViewCell {
+class TokenCell : SeparatorCell {
+    
+    static let cellIdentifier = "TokenCell"
+    
+    private let addColor = UIColor.navigationTint
+    private let removeColor = UIColor.orangeButton
 
-    private let header = UILabel(font: .customBold(size: 18.0), color: UIColor.fromHex("546875"))
-    private let subheader = UILabel(font: .customBody(size: 16.0), color: UIColor.fromHex("546875"))
+    private let header = UILabel(font: .customBold(size: 18.0), color: UIColor.white)
+    private let subheader = UILabel(font: .customBody(size: 14.0), color: UIColor.transparentWhiteText)
     private let icon = UIImageView()
-    private let button = UIButton.outline(title: S.TokenList.add)
+    private let button = ToggleButton(normalTitle: S.TokenList.add, normalColor: .navigationTint, selectedTitle: S.TokenList.hide, selectedColor: .orangeButton)
     private var identifier: String = ""
     private var listType: TokenListType = .add
     private var isCurrencyHidden = false
@@ -27,8 +32,8 @@ class TokenCell : UITableViewCell {
     }
 
     func set(currency: CurrencyDef, listType: TokenListType, isHidden: Bool) {
-        header.text = currency.code
-        subheader.text = currency.name
+        header.text = currency.name
+        subheader.text = currency.code
         icon.image = UIImage(named: currency.code.lowercased())
         self.isCurrencyHidden = isHidden
         if let token = currency as? ERC20Token {
@@ -37,7 +42,7 @@ class TokenCell : UITableViewCell {
             self.identifier = currency.code
         }
         self.listType = listType
-        setInitialButtonState()
+        setState()
     }
 
     private func setupViews() {
@@ -55,12 +60,10 @@ class TokenCell : UITableViewCell {
 
     private func addConstraints() {
         icon.constrain([
-            icon.topAnchor.constraint(equalTo: contentView.topAnchor, constant: C.padding[1]),
-            icon.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -C.padding[1]),
             icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[2]),
             icon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            icon.heightAnchor.constraint(equalToConstant: 40.0),
-            icon.widthAnchor.constraint(equalToConstant: 40.0)])
+            icon.heightAnchor.constraint(equalToConstant: 36.0),
+            icon.widthAnchor.constraint(equalToConstant: 36.0)])
         header.constrain([
             header.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: C.padding[1]),
             header.bottomAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 1.0)])
@@ -70,39 +73,43 @@ class TokenCell : UITableViewCell {
         button.constrain([
             button.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -C.padding[2]),
             button.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            button.heightAnchor.constraint(equalToConstant: 40.0),
-            button.widthAnchor.constraint(equalToConstant: 80.0)])
+            button.heightAnchor.constraint(equalToConstant: 36.0),
+            button.widthAnchor.constraint(equalToConstant: 70.0)])
     }
 
     private func setInitialData() {
         selectionStyle = .none
         icon.contentMode = .scaleAspectFill
-        setInitialButtonState()
+        setState()
     }
     
-    private func setInitialButtonState() {
-        isCurrencyHidden ? setAddButton() : setRemoveButton()
-        button.tap = strongify(self) { myself in
-            if myself.button.layer.borderColor == UIColor.blue.cgColor {
-                myself.setRemoveButton()
-                myself.didAddIdentifier?(myself.identifier)
-            } else {
-                myself.setAddButton()
-                myself.didRemoveIdentifier?(myself.identifier)
-            }
+    private func setState() {
+        if listType == .add {
+            button.setTitle(S.TokenList.add, for: .normal)
+            button.setTitle(S.TokenList.remove, for: .selected)
+        } else {
+            button.setTitle(S.TokenList.show, for: .normal)
+            button.setTitle(S.TokenList.hide, for: .selected)
         }
-    }
-    
-    private func setAddButton() {
-        button.layer.borderColor = UIColor.blue.cgColor
-        button.setTitle(listType.addTitle, for: .normal)
-        button.tintColor = .blue
-    }
-    
-    private func setRemoveButton() {
-        button.layer.borderColor = UIColor.red.cgColor
-        button.setTitle(listType.removeTitle, for: .normal)
-        button.tintColor = .red
+        
+        button.tap = strongify(self) { myself in
+            let isRemoveButton = myself.button.isSelected
+            if isRemoveButton {
+                myself.didRemoveIdentifier?(myself.identifier)
+            } else {
+                myself.didAddIdentifier?(myself.identifier)
+            }
+            myself.button.isSelected = !isRemoveButton
+        }
+        
+        button.isSelected = !isCurrencyHidden
+        
+        if listType == .manage {
+            let alpha: CGFloat = isCurrencyHidden ? 0.5 : 1.0
+            header.alpha = alpha
+            subheader.alpha = alpha
+            icon.alpha = alpha
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {

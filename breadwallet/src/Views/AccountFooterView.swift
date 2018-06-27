@@ -9,6 +9,8 @@
 import UIKit
 
 class AccountFooterView: UIView, Subscriber, Trackable {
+    
+    static let height: CGFloat = 67.0
 
     var sendCallback: (() -> Void)?
     var receiveCallback: (() -> Void)?
@@ -36,11 +38,15 @@ class AccountFooterView: UIView, Subscriber, Trackable {
         addSubview(toolbar)
         addSubview(separator)
         
+        backgroundColor = currency.colors.1
+        
         toolbar.clipsToBounds = true // to remove separator line
         toolbar.isOpaque = true
+        toolbar.isTranslucent = false
+        toolbar.barTintColor = backgroundColor
         
         // constraints
-        toolbar.constrain(toSuperviewEdges: nil)
+        toolbar.constrainTopCorners(height: AccountFooterView.height)
         separator.constrainTopCorners(height: 0.5)
         
         setupToolbarButtons()
@@ -57,7 +63,7 @@ class AccountFooterView: UIView, Subscriber, Trackable {
                        (S.Button.buy, #selector(AccountFooterView.buy))].map { (title, selector) -> UIBarButtonItem in
                         let button = UIButton.rounded(title: title)
                         button.tintColor = .white
-                        button.backgroundColor = currency.colors.1
+                        button.backgroundColor = .transparentWhite
                         button.addTarget(self, action: selector, for: .touchUpInside)
                         return UIBarButtonItem(customView: button)
         }

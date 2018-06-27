@@ -116,9 +116,9 @@ class Prompt : UIView {
     
     private func setupConstraints() {
         container.constrain(toSuperviewEdges: UIEdgeInsets(top: C.padding[1],
-                                                           left: C.padding[2],
+                                                           left: 10.0,
                                                            bottom: -C.padding[1],
-                                                           right: -C.padding[2]))
+                                                           right: -10.0))
         title.constrain([
             title.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
             title.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[2]),

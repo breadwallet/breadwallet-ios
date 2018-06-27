@@ -217,6 +217,7 @@
 		7C35E717200ADF450064808F /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C35E716200ADF450064808F /* Transaction.swift */; };
 		7C35E719200AF3940064808F /* TxListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C35E718200AF3940064808F /* TxListViewModel.swift */; };
 		7C35E71B200AF8170064808F /* BtcTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C35E70E200ABA190064808F /* BtcTransaction.swift */; };
+		7C40DE2D20E09207000E289D /* ToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C40DE2C20E09207000E289D /* ToggleButton.swift */; };
 		7C5AC8A6203B93D3001B221E /* TxListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5AC8A5203B93D3001B221E /* TxListCell.swift */; };
 		7C67B6362056FB13006487BE /* BRAPIClient+Ethereum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C67B6352056FB13006487BE /* BRAPIClient+Ethereum.swift */; };
 		7C67B6382056FBFA006487BE /* JSONRPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C67B6372056FBFA006487BE /* JSONRPC.swift */; };
@@ -432,9 +433,9 @@
 		CEE659E71F65A936001FF29D /* RetryTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE659E61F65A936001FF29D /* RetryTimer.swift */; };
 		CEE65DF01E39056F0002994D /* Rate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE65DEF1E39056F0002994D /* Rate.swift */; };
 		CEE9A2E920AB4F9A00C5CF2F /* BRAPIClient+Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE9A2E820AB4F9A00C5CF2F /* BRAPIClient+Metrics.swift */; };
-		CEEC707F1E8D6B4100EF788E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC707E1E8D6B4100EF788E /* SettingsViewController.swift */; };
+		CEEC707F1E8D6B4100EF788E /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC707E1E8D6B4100EF788E /* MenuViewController.swift */; };
 		CEEC70811E90C04700EF788E /* SeparatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70801E90C04700EF788E /* SeparatorCell.swift */; };
-		CEEC70831E90C07C00EF788E /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70821E90C07C00EF788E /* Setting.swift */; };
+		CEEC70831E90C07C00EF788E /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70821E90C07C00EF788E /* MenuItem.swift */; };
 		CEEC70861E94397D00EF788E /* UserDefaults+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70851E94397D00EF788E /* UserDefaults+Additions.swift */; };
 		CEEC70881E943DC900EF788E /* TouchIdEnabledTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70871E943DC900EF788E /* TouchIdEnabledTests.swift */; };
 		CEEC708A1E945E3B00EF788E /* UnEditableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70891E945E3B00EF788E /* UnEditableTextView.swift */; };
@@ -1319,6 +1320,7 @@
 		7C35E70E200ABA190064808F /* BtcTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BtcTransaction.swift; sourceTree = "<group>"; };
 		7C35E716200ADF450064808F /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		7C35E718200AF3940064808F /* TxListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TxListViewModel.swift; sourceTree = "<group>"; };
+		7C40DE2C20E09207000E289D /* ToggleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ToggleButton.swift; path = src/Controls/ToggleButton.swift; sourceTree = "<group>"; };
 		7C5AC8A5203B93D3001B221E /* TxListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxListCell.swift; path = src/Views/TransactionCells/TxListCell.swift; sourceTree = "<group>"; };
 		7C67B6352056FB13006487BE /* BRAPIClient+Ethereum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Ethereum.swift"; path = "src/Platform/BRAPIClient+Ethereum.swift"; sourceTree = "<group>"; };
 		7C67B6372056FBFA006487BE /* JSONRPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JSONRPC.swift; path = src/Platform/JSONRPC.swift; sourceTree = "<group>"; };
@@ -1596,9 +1598,9 @@
 		CEE659EE1F68AAB9001FF29D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		CEE65DEF1E39056F0002994D /* Rate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Rate.swift; path = src/Models/Rate.swift; sourceTree = "<group>"; };
 		CEE9A2E820AB4F9A00C5CF2F /* BRAPIClient+Metrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Metrics.swift"; path = "src/Platform/BRAPIClient+Metrics.swift"; sourceTree = "<group>"; };
-		CEEC707E1E8D6B4100EF788E /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = src/ViewControllers/SettingsViewController.swift; sourceTree = "<group>"; };
+		CEEC707E1E8D6B4100EF788E /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuViewController.swift; path = src/ViewControllers/MenuViewController.swift; sourceTree = "<group>"; };
 		CEEC70801E90C04700EF788E /* SeparatorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SeparatorCell.swift; path = src/Views/SeparatorCell.swift; sourceTree = "<group>"; };
-		CEEC70821E90C07C00EF788E /* Setting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Setting.swift; path = src/Models/Setting.swift; sourceTree = "<group>"; };
+		CEEC70821E90C07C00EF788E /* MenuItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuItem.swift; path = src/Models/MenuItem.swift; sourceTree = "<group>"; };
 		CEEC70851E94397D00EF788E /* UserDefaults+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UserDefaults+Additions.swift"; path = "src/Extensions/UserDefaults+Additions.swift"; sourceTree = "<group>"; };
 		CEEC70871E943DC900EF788E /* TouchIdEnabledTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouchIdEnabledTests.swift; sourceTree = "<group>"; };
 		CEEC70891E945E3B00EF788E /* UnEditableTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UnEditableTextView.swift; path = src/Views/UnEditableTextView.swift; sourceTree = "<group>"; };
@@ -3089,7 +3091,7 @@
 				CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */,
 				CE6D0E5B1E14BFA600137DF1 /* KeyboardNotificationInfo.swift */,
 				CEE65DEF1E39056F0002994D /* Rate.swift */,
-				CEEC70821E90C07C00EF788E /* Setting.swift */,
+				CEEC70821E90C07C00EF788E /* MenuItem.swift */,
 				CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */,
 				7CA3BC2F2006864C00517BF7 /* Currency.swift */,
 				7CBC59BF20782D7E006EAE56 /* ERC20ABI.swift */,
@@ -3209,6 +3211,7 @@
 		CEC6AA471DEFCFCD00EE5AFD /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				7C40DE2C20E09207000E289D /* ToggleButton.swift */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -3238,7 +3241,7 @@
 		CEEC70841E90CCA600EF788E /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				CEEC707E1E8D6B4100EF788E /* SettingsViewController.swift */,
+				CEEC707E1E8D6B4100EF788E /* MenuViewController.swift */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -3927,7 +3930,7 @@
 				CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */,
 				CEE20C2F1EA3E5820086F724 /* BlinkingView.swift in Sources */,
 				CEC6AA441DEFCDE900EE5AFD /* ModalViewController.swift in Sources */,
-				CEEC70831E90C07C00EF788E /* Setting.swift in Sources */,
+				CEEC70831E90C07C00EF788E /* MenuItem.swift in Sources */,
 				CE45C1F91E74B400002C3847 /* ManageWalletViewController.swift in Sources */,
 				CE03EC721EF193810038E3A8 /* String+Keys.swift in Sources */,
 				CE92F9F01DED0C790046B516 /* PresentModalAnimator.swift in Sources */,
@@ -3972,7 +3975,7 @@
 				CEDB09331FEAA21C001AF56A /* TxDetailViewModel.swift in Sources */,
 				CEE20C361EA5B4620086F724 /* Constants.swift in Sources */,
 				CE65C663207B023F000C99C4 /* EditWalletsViewController.swift in Sources */,
-				CEEC707F1E8D6B4100EF788E /* SettingsViewController.swift in Sources */,
+				CEEC707F1E8D6B4100EF788E /* MenuViewController.swift in Sources */,
 				CEEE92F11EBA7CBA00B7AC9C /* RequestAmountViewController.swift in Sources */,
 				CE8CD8DF1E2E825100785E02 /* VerifyPinViewController.swift in Sources */,
 				CE916E331EDA800E00D641D6 /* UserDefaultsUpdater.swift in Sources */,
@@ -4045,6 +4048,7 @@
 				CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */,
 				CEA3626A1E01150D0061FC0E /* CGContext+Additions.swift in Sources */,
 				7C6ACCB41FEB34470028ABFA /* TxLabelCell.swift in Sources */,
+				7C40DE2D20E09207000E289D /* ToggleButton.swift in Sources */,
 				22A9A9541DF61945000F0016 /* BRReplicatedKVStore.swift in Sources */,
 				7C35E71B200AF8170064808F /* BtcTransaction.swift in Sources */,
 				CE6B6B4A1E54C0CB00B31405 /* SecurityCenterCell.swift in Sources */,
