@@ -637,14 +637,10 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func presentPlatformWebViewController(_ mountPoint: String) {
-        let vc: BRWebViewController
-        #if Debug || Testflight
-            vc = BRWebViewController(bundleName: "brd-web-staging", mountPoint: mountPoint, walletManagers: walletManagers)
-        #else
-            vc = BRWebViewController(bundleName: "brd-web", mountPoint: mountPoint, walletManagers: walletManagers)
-        #endif
+        let vc = BRWebViewController(bundleName: C.webBundle, mountPoint: mountPoint, walletManagers: walletManagers)
         vc.startServer()
         vc.preload()
+        vc.modalPresentationStyle = .overFullScreen
         self.topViewController?.present(vc, animated: true, completion: nil)
     }
 

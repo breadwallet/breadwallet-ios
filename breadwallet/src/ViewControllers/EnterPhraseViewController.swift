@@ -33,8 +33,8 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Tracka
     private let reason: PhraseEntryReason
     private let enterPhrase: EnterPhraseCollectionViewController
     private let errorLabel = UILabel.wrapping(font: .customBody(size: 16.0), color: .cameraGuideNegative)
-    private let instruction = UILabel(font: .customBold(size: 14.0), color: .darkText)
-    private let subheader = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
+    private let instruction = UILabel(font: .customBold(size: 14.0), color: .white)
+    private let subheader = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
     private let faq: UIButton
     private let scrollView = UIScrollView()
     private let container = UIView()
@@ -102,7 +102,7 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Tracka
     }
 
     private func setInitialData() {
-        view.backgroundColor = .secondaryButton
+        view.backgroundColor = .darkBackground
         errorLabel.text = S.RecoverWallet.invalid
         errorLabel.isHidden = true
         errorLabel.textAlignment = .center
@@ -110,6 +110,7 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Tracka
             self?.validatePhrase(phrase)
         }
         instruction.text = S.RecoverWallet.instruction
+        faq.tintColor = .white
         switch reason {
         case .setSeed(_):
             saveEvent("enterPhrase.setSeed")
@@ -178,6 +179,10 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Tracka
             contentInset.bottom = 0.0
         }
         scrollView.contentInset = contentInset
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 
     required init?(coder aDecoder: NSCoder) {

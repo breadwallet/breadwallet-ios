@@ -16,7 +16,7 @@ class NodeSelectorViewController : UIViewController, Trackable {
     private let node = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let statusLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
     private let status = UILabel(font: .customBody(size: 14.0), color: .darkText)
-    private let button: ShadowButton
+    private let button: BRDButton
     private let walletManager: BTCWalletManager
     private var okAction: UIAlertAction?
     private var timer: Timer?
@@ -25,9 +25,9 @@ class NodeSelectorViewController : UIViewController, Trackable {
     init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
         if UserDefaults.customNodeIP == nil {
-            button = ShadowButton(title: S.NodeSelector.manualButton, type: .primary)
+            button = BRDButton(title: S.NodeSelector.manualButton, type: .primary)
         } else {
-            button = ShadowButton(title: S.NodeSelector.automaticButton, type: .primary)
+            button = BRDButton(title: S.NodeSelector.automaticButton, type: .primary)
         }
         super.init(nibName: nil, bundle: nil)
     }

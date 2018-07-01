@@ -12,8 +12,8 @@ import SafariServices
 class AboutViewController : UIViewController {
 
     private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
-    private let logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout"))
-    private let logoBackground = GradientView()
+    private let logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout").withRenderingMode(.alwaysTemplate))
+    private let logoBackground = MotionGradientView()
     private let walletID = WalletIDCell()
     private let blog = AboutCell(text: S.About.blog)
     private let twitter = AboutCell(text: S.About.twitter)
@@ -47,7 +47,7 @@ class AboutViewController : UIViewController {
             logoBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoBackground.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: C.padding[3]),
             logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
-            logoBackground.heightAnchor.constraint(equalTo: logoBackground.widthAnchor, multiplier: 342.0/553.0) ])
+            logoBackground.heightAnchor.constraint(equalTo: logoBackground.widthAnchor, multiplier: logo.image!.size.height/logo.image!.size.width) ])
         logo.constrain(toSuperviewEdges: nil)
         walletID.constrain([
             walletID.topAnchor.constraint(equalTo: logoBackground.bottomAnchor, constant: C.padding[2]),
@@ -75,6 +75,7 @@ class AboutViewController : UIViewController {
 
     private func setData() {
         view.backgroundColor = .whiteTint
+        logo.tintColor = .whiteTint
         titleLabel.text = S.About.title
         privacy.setTitle(S.About.privacy, for: .normal)
         privacy.titleLabel?.font = UIFont.customBody(size: 13.0)
