@@ -22,9 +22,9 @@ class ConfirmPaperPhraseViewController : UIViewController {
 
     private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
 
-    lazy private var confirmFirstPhrase: ConfirmPhrase = { ConfirmPhrase(text: String(format:S.ConfirmPaperPhrase.word, "\(self.indices.0 + 1)"), word: self.words[self.indices.0]) }()
-    lazy private var confirmSecondPhrase: ConfirmPhrase = { ConfirmPhrase(text: String(format:S.ConfirmPaperPhrase.word, "\(self.indices.1 + 1)"), word: self.words[self.indices.1]) }()
-    private let submit = ShadowButton(title: S.Button.submit, type: .primary)
+    lazy private var confirmFirstPhrase: ConfirmPhraseView = { ConfirmPhraseView(text: String(format:S.ConfirmPaperPhrase.word, "\(self.indices.0 + 1)"), word: self.words[self.indices.0]) }()
+    lazy private var confirmSecondPhrase: ConfirmPhraseView = { ConfirmPhraseView(text: String(format:S.ConfirmPaperPhrase.word, "\(self.indices.1 + 1)"), word: self.words[self.indices.1]) }()
+    private let submit = BRDButton(title: S.Button.submit, type: .primary)
     private let header = RadialGradientView(backgroundColor: .pink)
     private let pin: String
     private let walletManager: BTCWalletManager
@@ -51,7 +51,7 @@ class ConfirmPaperPhraseViewController : UIViewController {
     }
 
     override func viewDidLoad() {
-        view.backgroundColor = .white
+        view.backgroundColor = .darkBackground
         label.text = S.ConfirmPaperPhrase.label
         label.textColor = .white
         

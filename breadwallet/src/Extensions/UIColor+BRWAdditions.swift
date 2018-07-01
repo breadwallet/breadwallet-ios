@@ -28,7 +28,7 @@ extension UIColor {
 
     // MARK: Buttons
     static var primaryButton: UIColor {
-        return UIColor(red: 76.0/255.0, green: 152.0/255.0, blue: 252.0/255.0, alpha: 1.0)
+        return .navigationTint
     }
     
     static var orangeButton: UIColor {
@@ -154,6 +154,10 @@ extension UIColor {
 
     static var transparentBlack: UIColor {
         return UIColor(white: 0.0, alpha: 0.3)
+    }
+    
+    static var transparentButton: UIColor {
+        return UIColor(white: 1.0, alpha: 0.2)
     }
 
     static var blueGradientStart: UIColor {

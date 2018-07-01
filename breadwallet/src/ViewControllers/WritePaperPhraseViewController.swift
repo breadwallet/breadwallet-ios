@@ -22,8 +22,8 @@ class WritePaperPhraseViewController: UIViewController {
         return words.map { PhraseView(phrase: $0) }
     }()
     //This is awkwardly named because nextResponder is now named next is swift 3 :(,
-    private let proceed = ShadowButton(title: S.WritePaperPhrase.next, type: .secondary)
-    private let previous = ShadowButton(title: S.WritePaperPhrase.previous, type: .secondary)
+    private let proceed = BRDButton(title: S.WritePaperPhrase.next, type: .primary)
+    private let previous = BRDButton(title: S.WritePaperPhrase.previous, type: .secondaryTransparent)
     private var proceedWidth: NSLayoutConstraint?
     private var previousWidth: NSLayoutConstraint?
 
@@ -52,7 +52,7 @@ class WritePaperPhraseViewController: UIViewController {
     }
 
     override func viewDidLoad() {
-        view.backgroundColor = .white
+        view.backgroundColor = .darkBackground
         
         label.text = S.WritePaperPhrase.instruction
         label.textAlignment = .center

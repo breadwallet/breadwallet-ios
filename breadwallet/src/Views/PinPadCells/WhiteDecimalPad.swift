@@ -10,18 +10,23 @@ import UIKit
 
 class WhiteDecimalPad : GenericPinPadCell {
 
+    override var style: PinPadStyle {
+        get { return .white }
+        set {}
+    }
+
     override func setAppearance() {
         if isHighlighted {
-            centerLabel.backgroundColor = .secondaryShadow
-            centerLabel.textColor = .darkText
+            label.backgroundColor = .secondaryShadow
+            label.textColor = .darkText
         } else {
-            centerLabel.backgroundColor = .white
-            centerLabel.textColor = .grayTextTint
+            label.backgroundColor = .white
+            label.textColor = .grayTextTint
         }
     }
 
     override func addConstraints() {
-        centerLabel.constrain(toSuperviewEdges: nil)
+        label.constrain(toSuperviewEdges: nil)
         imageView.constrain(toSuperviewEdges: nil)
     }
 }

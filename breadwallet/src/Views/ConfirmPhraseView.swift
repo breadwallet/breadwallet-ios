@@ -10,7 +10,7 @@ import UIKit
 
 private let circleRadius: CGFloat = 12.0
 
-class ConfirmPhrase: UIView {
+class ConfirmPhraseView: UIView {
 
     let textField = UITextField()
     var callback: (() -> Void)?
@@ -36,7 +36,7 @@ class ConfirmPhrase: UIView {
         textField.autocapitalizationType = .none
         textField.autocorrectionType = .no
         textField.font = UIFont.customBody(size: 16.0)
-        textField.textColor = .darkText
+        textField.textColor = .white
         textField.delegate = self
 
         addSubview(label)
@@ -74,7 +74,7 @@ class ConfirmPhrase: UIView {
     }
 
     @objc private func textFieldChanged() {
-        textField.textColor = .darkText
+        textField.textColor = .white
         guard textField.markedTextRange == nil else { return }
         if textField.text == word {
             circle.show()
@@ -90,13 +90,13 @@ class ConfirmPhrase: UIView {
     }
 }
 
-extension ConfirmPhrase : UITextFieldDelegate {
+extension ConfirmPhraseView : UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         validate()
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.textColor = .darkText
+        textField.textColor = .white
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
