@@ -10,37 +10,45 @@ import UIKit
 
 class ClearNumberPad : GenericPinPadCell {
 
+    override var style: PinPadStyle {
+        get { return .clear }
+        set {}
+    }
+
+    override var label: UILabel {
+        get { return cutoutLabel }
+        set {}
+    }
+
+    private let cutoutLabel = CutoutLabel(font: .customBody(size: 28.0))
+
     override func setAppearance() {
-
-        if text == "0" {
-            topLabel.isHidden = true
-            centerLabel.isHidden = false
-        } else {
-            topLabel.isHidden = false
-            centerLabel.isHidden = true
-        }
-
-        topLabel.textColor = .white
-        centerLabel.textColor = .white
-        sublabel.textColor = .white
-
+        label.textColor = .clear
         if isHighlighted {
             backgroundColor = .transparentBlack
         } else {
-            if text == "" || text == deleteKeyIdentifier {
+            if text == "" {
                 backgroundColor = .clear
-                imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
                 imageView.tintColor = .white
+                imageView.backgroundColor = .clear
+                label.isHidden = true
+                masks.forEach {
+                    $0.isHidden = false
+                }
+            } else if let text = text, PinPadViewController.SpecialKeys(rawValue: text) != nil {
+                backgroundColor = .clear
+                imageView.tintColor = .darkBackground
+                imageView.backgroundColor = .clear
+                label.isHidden = true
+                masks.forEach {
+                    $0.isHidden = false
+                }
             } else {
-                backgroundColor = .transparentWhite
+                backgroundColor = .clear
+                masks.forEach {
+                    $0.isHidden = true
+                }
             }
-        }
-    }
-
-    override func setSublabel() {
-        guard let text = self.text else { return }
-        if sublabels[text] != nil {
-            sublabel.text = sublabels[text]
         }
     }
 }

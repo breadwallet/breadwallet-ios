@@ -27,6 +27,5 @@ enum ArticleIds {
     static let importWallet = "import-wallet"
     static let writePhrase = "write-phrase"
     static let confirmPhrase = "confirm-phrase"
-    static let startView = "start-view"
     static let wipeWallet = "wipe-wallet"
 }

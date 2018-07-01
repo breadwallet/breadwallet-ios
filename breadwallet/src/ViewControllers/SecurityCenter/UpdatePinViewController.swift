@@ -33,11 +33,12 @@ class UpdatePinViewController : UIViewController, Subscriber {
     }
 
     //MARK: - Private
-    private let header = UILabel.wrapping(font: .customBold(size: 26.0), color: .darkText)
-    private let instruction = UILabel.wrapping(font: .customBody(size: 14.0), color: .darkText)
-    private let caption = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
+    private let header = UILabel.wrapping(font: .customBold(size: 26.0), color: .white)
+    private let instruction = UILabel.wrapping(font: .customBody(size: 14.0), color: .white)
+    private let caption = UILabel.wrapping(font: .customBody(size: 13.0), color: .white)
     private var pinView: PinView
-    private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad, maxDigits: 0)
+    private let pinPadBackground = UIView(color: .white)
+    private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0, shouldShowBiometrics: false)
     private let spacer = UIView()
     private let walletManager: BTCWalletManager
     private let faq: UIButton
@@ -93,6 +94,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
         view.addSubview(pinView)
         view.addSubview(faq)
         view.addSubview(spacer)
+        view.addSubview(pinPadBackground)
     }
 
     private func addConstraints() {
@@ -109,18 +111,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
             pinView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.width),
             pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
-        if E.isIPhoneX {
-            addChildViewController(pinPad, layout: {
-                pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
-                pinPad.view.constrain([pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height),
-                                       pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[3])])
-            })
-        } else {
-            addChildViewController(pinPad, layout: {
-                pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
-                pinPad.view.constrain([pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height)])
-            })
-        }
+        addPinPad()
         spacer.constrain([
             spacer.topAnchor.constraint(equalTo: instruction.bottomAnchor),
             spacer.bottomAnchor.constraint(equalTo: caption.topAnchor) ])
@@ -135,9 +126,22 @@ class UpdatePinViewController : UIViewController, Subscriber {
             caption.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
     }
 
+    private func addPinPad() {
+        addChildViewController(pinPad)
+        pinPadBackground.addSubview(pinPad.view)
+        pinPadBackground.constrain([
+            pinPadBackground.widthAnchor.constraint(equalToConstant: floor(view.bounds.width/3.0)*3.0),
+            pinPadBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pinPadBackground.heightAnchor.constraint(equalToConstant: pinPad.height),
+            pinPadBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[3] : 0.0) ])
+        pinPad.view.constrain(toSuperviewEdges: nil)
+        pinPad.didMove(toParentViewController: self)
+    }
+
     private func setData() {
         caption.text = S.UpdatePin.caption
-        view.backgroundColor = .whiteTint
+        view.backgroundColor = .darkBackground
+        faq.tintColor = .white
         header.text = isCreatingPin ? S.UpdatePin.createTitle : S.UpdatePin.updateTitle
         instruction.text = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterCurrent
         pinPad.ouputDidUpdate = { [weak self] text in
@@ -274,6 +278,10 @@ class UpdatePinViewController : UIViewController, Subscriber {
                 }
             }
         }
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 
     required init?(coder aDecoder: NSCoder) {

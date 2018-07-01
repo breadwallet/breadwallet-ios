@@ -10,39 +10,29 @@ import UIKit
 
 class WhiteNumberPad : GenericPinPadCell {
 
+    override var style: PinPadStyle {
+        get { return .white }
+        set {}
+    }
+
     override func setAppearance() {
-
-        if text == "0" {
-            topLabel.isHidden = true
-            centerLabel.isHidden = false
-        } else {
-            topLabel.isHidden = false
-            centerLabel.isHidden = true
-        }
-
         if isHighlighted {
             backgroundColor = .secondaryShadow
-            topLabel.textColor = .darkText
-            centerLabel.textColor = .darkText
-            sublabel.textColor = .darkText
+            label.textColor = .darkText
         } else {
-            if text == "" || text == deleteKeyIdentifier {
+            if text == "" || text == PinPadViewController.SpecialKeys.delete.rawValue {
                 backgroundColor = .whiteTint
                 imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
                 imageView.tintColor = .grayTextTint
             } else {
                 backgroundColor = .whiteTint
-                topLabel.textColor = .grayTextTint
-                centerLabel.textColor = .grayTextTint
-                sublabel.textColor = .grayTextTint
+                label.textColor = .grayTextTint
             }
         }
     }
 
-    override func setSublabel() {
-        guard let text = self.text else { return }
-        if sublabels[text] != nil {
-            sublabel.text = sublabels[text]
-        }
+    override func addConstraints() {
+        label.constrain(toSuperviewEdges: nil)
+        imageView.constrain(toSuperviewEdges: nil)
     }
 }
