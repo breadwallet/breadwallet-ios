@@ -38,8 +38,8 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     var cancelCallback: (() -> Void)?
 
     private let header = ModalHeaderView(title: S.Confirmation.title, style: .dark)
-    private let cancel = ShadowButton(title: S.Button.cancel, type: .secondary)
-    private let sendButton = ShadowButton(title: S.Confirmation.send, type: .primary, image: (LAContext.biometricType() == .face ? #imageLiteral(resourceName: "FaceId") : #imageLiteral(resourceName: "TouchId")))
+    private let cancel = BRDButton(title: S.Button.cancel, type: .secondary)
+    private let sendButton = BRDButton(title: S.Confirmation.send, type: .primary, image: (LAContext.biometricType() == .face ? #imageLiteral(resourceName: "FaceId") : #imageLiteral(resourceName: "TouchId")))
 
     private let payLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
     private let toLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)

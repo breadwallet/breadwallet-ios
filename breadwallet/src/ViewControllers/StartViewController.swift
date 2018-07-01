@@ -14,30 +14,27 @@ class StartViewController : UIViewController {
     init(didTapCreate: @escaping () -> Void, didTapRecover: @escaping () -> Void) {
         self.didTapRecover = didTapRecover
         self.didTapCreate = didTapCreate
-        self.faq = UIButton.buildFaqButton(articleId: ArticleIds.startView)
         super.init(nibName: nil, bundle: nil)
     }
 
     //MARK: - Private
-    private let message = UILabel(font: .customMedium(size: 18.0), color: .whiteTint)
-    private let create = ShadowButton(title: S.StartViewController.createButton, type: .primary)
-    private let recover = ShadowButton(title: S.StartViewController.recoverButton, type: .secondary)
+    private let logoBackground = MotionGradientView()
+    private let messageBackground = MotionGradientView()
+    private let message = CutoutLabel(font: .customMedium(size: 18.0), color: .whiteTint)
+    private let create = BRDButton(title: S.StartViewController.createButton, type: .primary)
+    private let recover = BRDButton(title: S.StartViewController.recoverButton, type: .secondaryTransparent)
     private let didTapRecover: () -> Void
     private let didTapCreate: () -> Void
-    private let background = LoginBackgroundView()
-    private var logo: UIImageView = {
-        let image = UIImageView(image: #imageLiteral(resourceName: "Logo"))
-        image.contentMode = .scaleAspectFit
-        return image
-    }()
-    private var faq: UIButton
+    private let background = UIView()
+    private var logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout").withRenderingMode(.alwaysTemplate))
 
     override func viewDidLoad() {
-        view.backgroundColor = .white
+        view.backgroundColor = .darkBackground
         setData()
         addSubviews()
         addConstraints()
         addButtonActions()
+        logo.tintColor = .darkBackground
     }
 
     private func setData() {
@@ -45,28 +42,32 @@ class StartViewController : UIViewController {
         message.lineBreakMode = .byWordWrapping
         message.numberOfLines = 0
         message.textAlignment = .center
-        faq.tintColor = .whiteTint
     }
 
     private func addSubviews() {
         view.addSubview(background)
-        view.addSubview(logo)
-        view.addSubview(message)
+        view.addSubview(logoBackground)
+        logoBackground.addSubview(logo)
+        view.addSubview(messageBackground)
+        messageBackground.addSubview(message)
         view.addSubview(create)
         view.addSubview(recover)
-        view.addSubview(faq)
     }
 
     private func addConstraints() {
         background.constrain(toSuperviewEdges: nil)
-        let yConstraint = NSLayoutConstraint(item: logo, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 0.5, constant: 0.0)
-        logo.constrain([
-            logo.constraint(.centerX, toView: view, constant: nil),
+        let yConstraint = NSLayoutConstraint(item: logoBackground, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 0.5, constant: 0.0)
+        logoBackground.constrain([
+            logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.38, constant: 1.0),
+            logoBackground.heightAnchor.constraint(equalTo: logoBackground.widthAnchor, multiplier: logo.image!.size.height/logo.image!.size.width, constant: 1.0),
+            logoBackground.constraint(.centerX, toView: view, constant: nil),
             yConstraint])
-        message.constrain([
-            message.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            message.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: C.padding[3]),
-            message.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
+        logo.constrain(toSuperviewEdges: nil)
+        messageBackground.constrain([
+            messageBackground.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
+            messageBackground.topAnchor.constraint(equalTo: logoBackground.bottomAnchor, constant: C.padding[1]),
+            messageBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
+        message.constrain(toSuperviewEdges: nil)
         recover.constrain([
             recover.constraint(.leading, toView: view, constant: C.padding[2]),
             recover.constraint(.bottom, toView: view, constant: -C.padding[3]),
@@ -77,11 +78,6 @@ class StartViewController : UIViewController {
             create.constraint(.centerX, toView: recover, constant: nil),
             create.constraint(.width, toView: recover, constant: nil),
             create.constraint(.height, constant: C.Sizes.buttonHeight) ])
-        faq.constrain([
-            faq.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2]),
-            faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            faq.widthAnchor.constraint(equalToConstant: 44.0),
-            faq.heightAnchor.constraint(equalToConstant: 44.0) ])
     }
 
     private func addButtonActions() {

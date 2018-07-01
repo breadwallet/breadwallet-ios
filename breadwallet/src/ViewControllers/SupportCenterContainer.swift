@@ -16,11 +16,7 @@ class SupportCenterContainer : UIViewController {
 
     init(walletManagers: [String: WalletManager], noAuthApiClient: BRAPIClient?) {
         let mountPoint = "/support"
-        #if Debug || Testflight
-            webView = BRWebViewController(bundleName: "brd-web-staging", mountPoint: mountPoint, walletManagers: walletManagers, noAuthApiClient: noAuthApiClient)
-        #else
-            webView = BRWebViewController(bundleName: "brd-web", mountPoint: mountPoint, walletManagers: walletManagers, noAuthApiClient: noAuthApiClient)
-        #endif
+        webView = BRWebViewController(bundleName: C.webBundle, mountPoint: mountPoint, walletManagers: walletManagers, noAuthApiClient: noAuthApiClient)
         webView.startServer()
         webView.preload()
         super.init(nibName: nil, bundle: nil)

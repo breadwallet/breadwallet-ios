@@ -21,7 +21,7 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
         self.bodyText = bodyText
         self.success = success
         self.pinLength = pinLength
-        self.pinView = PinView(style: .create, length: pinLength)
+        self.pinView = PinView(style: .verify, length: pinLength)
         self.walletManager = walletManager
         super.init(nibName: nil, bundle: nil)
     }
@@ -31,7 +31,7 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
     let effect = UIBlurEffect(style: .dark)
     let contentBox = UIView()
     private let success: (String) -> Void
-    private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad, maxDigits: 0)
+    private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad, maxDigits: 0, shouldShowBiometrics: false)
     private let titleLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
     private let body = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let pinView: PinView

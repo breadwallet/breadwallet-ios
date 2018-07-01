@@ -360,7 +360,7 @@ class ApplicationController : Subscriber, Trackable {
         }
         
         home.didTapTrade = {
-            Store.perform(action: RootModalActions.Present(modal: .buy(currency: Currencies.btc)))
+            Store.perform(action: RootModalActions.Present(modal: .trade))
         }
         
         home.didTapMenu = {

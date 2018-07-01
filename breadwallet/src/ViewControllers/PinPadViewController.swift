@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 enum PinPadStyle {
     case white
@@ -18,13 +19,28 @@ enum KeyboardType {
     case pinPad
 }
 
-let deleteKeyIdentifier = "del"
-
 class PinPadViewController : UICollectionViewController {
+
+    enum SpecialKeys : String {
+        case delete = "del"
+        case biometrics = "bio"
+
+        func image(forStyle: PinPadStyle) -> UIImage {
+            switch self {
+            case .delete:
+                return forStyle == .clear ? #imageLiteral(resourceName: "CutoutDelete") : #imageLiteral(resourceName: "Delete")
+            case .biometrics:
+                //accessibility: LAContext.biometricType() == .face ? S.UnlockScreen.faceIdText : S.UnlockScreen.touchIdText
+                return LAContext.biometricType() == .face ? #imageLiteral(resourceName: "CutoutFaceId").withRenderingMode(.alwaysTemplate) : #imageLiteral(resourceName: "TouchIDCutout").withRenderingMode(.alwaysTemplate)
+            }
+        }
+    }
 
     let currencyDecimalSeparator = NumberFormatter().currencyDecimalSeparator ?? "."
     var isAppendingDisabled = false
     var ouputDidUpdate: ((String) -> Void)?
+    var didTapBiometrics: (()->Void)?
+    var shouldShowBiometrics: Bool
 
     var height: CGFloat {
         switch keyboardType {
@@ -48,12 +64,13 @@ class PinPadViewController : UICollectionViewController {
         }
     }
 
-    init(style: PinPadStyle, keyboardType: KeyboardType, maxDigits: Int) {
+    init(style: PinPadStyle, keyboardType: KeyboardType, maxDigits: Int, shouldShowBiometrics: Bool) {
         self.style = style
         self.keyboardType = keyboardType
         self.maxDigits = maxDigits
+        self.shouldShowBiometrics = shouldShowBiometrics
         let layout = UICollectionViewFlowLayout()
-        let screenWidth = UIScreen.main.safeWidth
+        let itemWidth = floor(UIScreen.main.safeWidth/3.0)
 
         layout.minimumLineSpacing = 1.0
         layout.minimumInteritemSpacing = 1.0
@@ -61,11 +78,21 @@ class PinPadViewController : UICollectionViewController {
 
         switch keyboardType {
         case .decimalPad:
-            items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", currencyDecimalSeparator, "0", deleteKeyIdentifier]
-            layout.itemSize = CGSize(width: screenWidth/3.0 - 2.0/3.0, height: 48.0 - 1.0)
+            items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", currencyDecimalSeparator, "0", SpecialKeys.delete.rawValue]
+            layout.itemSize = CGSize(width: itemWidth - 2.0/3.0, height: 48.0 - 1.0)
         case .pinPad:
-            items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", deleteKeyIdentifier]
-            layout.itemSize = CGSize(width: screenWidth/3.0 - 2.0/3.0, height: 54.0 - 0.5)
+            if shouldShowBiometrics {
+                items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", SpecialKeys.delete.rawValue, "0", SpecialKeys.biometrics.rawValue]
+            } else {
+                items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", SpecialKeys.delete.rawValue]
+            }
+            if style == .clear {
+                layout.itemSize = CGSize(width: itemWidth, height: 54.0)
+                layout.minimumLineSpacing = 0.0
+                layout.minimumInteritemSpacing = 0.0
+            } else {
+                layout.itemSize = CGSize(width: itemWidth - 2.0/3.0, height: 54.0 - 0.5)
+            }
         }
 
         super.init(collectionViewLayout: layout)
@@ -121,13 +148,18 @@ class PinPadViewController : UICollectionViewController {
     //MARK: - UICollectionViewDelegate
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = items[indexPath.row]
-        if item == "del" {
-            if currentOutput.count > 0 {
-                if currentOutput == ("0" + currencyDecimalSeparator) {
-                    currentOutput = ""
-                } else {
-                    currentOutput.remove(at: currentOutput.index(before: currentOutput.endIndex))
+        if let specialKey = SpecialKeys(rawValue: item) {
+            switch specialKey {
+            case .delete:
+                if currentOutput.count > 0 {
+                    if currentOutput == ("0" + currencyDecimalSeparator) {
+                        currentOutput = ""
+                    } else {
+                        currentOutput.remove(at: currentOutput.index(before: currentOutput.endIndex))
+                    }
                 }
+            case .biometrics:
+                didTapBiometrics?()
             }
         } else {
             if shouldAppendChar(char: item) && !isAppendingDisabled {
