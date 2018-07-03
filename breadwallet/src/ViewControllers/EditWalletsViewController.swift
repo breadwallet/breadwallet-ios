@@ -121,10 +121,9 @@ class EditWalletsViewController : UIViewController {
             searchBar.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
             searchBar.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)])
         searchBar.searchBarStyle = .minimal
-        searchBar.isTranslucent = true
+        searchBar.barStyle = .black
+        searchBar.isTranslucent = false
         searchBar.barTintColor = .darkBackground
-        searchBar.backgroundImage = UIImage()
-        searchBar.tintColor = .white
         searchBar.placeholder = S.Search.search
     }
 

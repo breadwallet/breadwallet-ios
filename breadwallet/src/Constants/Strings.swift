@@ -185,8 +185,6 @@ enum S {
     }
 
     enum SecurityCenter {
-        static let title = NSLocalizedString("SecurityCenter.title", value:"Security Center", comment: "Security Center Title")
-        static let info = NSLocalizedString("SecurityCenter.info", value:"Enable all security features for maximum protection.", comment: "Security Center Info")
         enum Cells {
             static let pinTitle = NSLocalizedString("SecurityCenter.pinTitle", value:"6-Digit PIN", comment: "PIN button title")
             static let pinDescription = NSLocalizedString("SecurityCenter.pinDescription", value:"Protects your BRD from unauthorized users.", comment: "PIN button description")
@@ -404,9 +402,9 @@ enum S {
         static let totalAssets = NSLocalizedString("HomeScreen.totalAssets", value: "Total Assets", comment: "header")
         static let portfolio = NSLocalizedString("HomeScreen.portfolio", value: "Wallets", comment: "Section header")
         static let admin = NSLocalizedString("HomeScreen.admin", value: "Admin", comment: "Section header")
-        static let buy = NSLocalizedString("Button.buy", value: "Buy Bitcoin", comment: "home screen toolbar button")
-        static let trade = NSLocalizedString("Button.trade", value: "Trade", comment: "home screen toolbar button")
-        static let menu = NSLocalizedString("Button.menu", value: "Menu", comment: "home screen toolbar button")
+        static let buy = NSLocalizedString("HomeScreen.buy", value: "Buy Bitcoin", comment: "home screen toolbar button")
+        static let trade = NSLocalizedString("HomeScreen.trade", value: "Trade", comment: "home screen toolbar button")
+        static let menu = NSLocalizedString("HomeScreen.menu", value: "Menu", comment: "home screen toolbar button")
     }
 
     enum StartViewController {
