@@ -485,12 +485,6 @@ class ModalPresenter : Subscriber, Trackable {
         ]
         
         var rootItems: [MenuItem] = [
-            // Scan QR Code
-            MenuItem(title: S.MenuButton.scan, icon: #imageLiteral(resourceName: "scan")) { [unowned self] in
-                //TODO: universal scan
-                self.presentLoginScan()
-            },
-            
             // Manage Wallets
             MenuItem(title: S.MenuButton.manageWallets, icon: #imageLiteral(resourceName: "wallet")) {
                 guard let kvStore = btcWalletManager.apiClient?.kv else { return }
@@ -552,30 +546,6 @@ class ModalPresenter : Subscriber, Trackable {
             parent?.view.isFrameChangeBlocked = true
             parent?.present(vc, animated: true, completion: {})
         }
-    }
-
-    func presentSecurityCenter() {
-        let securityCenter = SecurityCenterViewController(walletManager: primaryWalletManager)
-        let nc = ModalNavigationController(rootViewController: securityCenter)
-        nc.setDefaultStyle()
-        nc.isNavigationBarHidden = true
-        nc.delegate = securityCenterNavigationDelegate
-        securityCenter.didTapPin = {
-            let updatePin = UpdatePinViewController(walletManager: self.primaryWalletManager, type: .update)
-            nc.pushViewController(updatePin, animated: true)
-        }
-        securityCenter.didTapBiometrics = strongify(self) { myself in
-            let biometricsSettings = BiometricsSettingsViewController(walletManager: self.primaryWalletManager)
-            biometricsSettings.presentSpendingLimit = {
-                myself.pushBiometricsSpendingLimit(onNc: nc)
-            }
-            nc.pushViewController(biometricsSettings, animated: true)
-        }
-        securityCenter.didTapPaperKey = { [weak self] in
-            self?.presentWritePaperKey(fromViewController: nc)
-        }
-
-        window.rootViewController?.present(nc, animated: true, completion: nil)
     }
 
     private func pushBiometricsSpendingLimit(onNc: UINavigationController) {
@@ -999,11 +969,7 @@ class SecurityCenterNavigationDelegate : NSObject, UINavigationControllerDelegat
     }
 
     func setStyle(navigationController: UINavigationController, viewController: UIViewController) {
-        if viewController is SecurityCenterViewController {
-            navigationController.isNavigationBarHidden = true
-        } else {
-            navigationController.isNavigationBarHidden = false
-        }
+        navigationController.isNavigationBarHidden = false
 
         if viewController is BiometricsSettingsViewController {
             navigationController.setWhiteStyle()
