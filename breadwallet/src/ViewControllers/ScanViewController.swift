@@ -40,6 +40,8 @@ class ScanViewController : UIViewController, Trackable {
     private let flash = UIButton.icon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
     fileprivate var currentUri = ""
     private let currency: CurrencyDef
+    private var toolbarHeightConstraint: NSLayoutConstraint?
+    private let toolbarHeight: CGFloat = 48.0
 
     init(currency: CurrencyDef, completion: @escaping ScanCompletion) {
         self.currency = currency
@@ -69,9 +71,9 @@ class ScanViewController : UIViewController, Trackable {
         view.addSubview(guide)
 
         toolbar.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
+        toolbarHeightConstraint = toolbar.heightAnchor.constraint(equalToConstant: toolbarHeight)
+        toolbar.constrain([toolbarHeightConstraint])
         if E.isIPhoneX {
-            toolbar.constrain([ toolbar.constraint(.height, constant: 60.0) ])
-            
             close.constrain([
                 close.constraint(.leading, toView: toolbar),
                 close.constraint(.top, toView: toolbar, constant: 2.0),
@@ -83,10 +85,7 @@ class ScanViewController : UIViewController, Trackable {
                 flash.constraint(.top, toView: toolbar, constant: 2.0),
                 flash.constraint(.width, constant: 44.0),
                 flash.constraint(.height, constant: 44.0) ])
-            
         } else {
-            toolbar.constrain([ toolbar.constraint(.height, constant: 48.0) ])
-            
             close.constrain([
                 close.constraint(.leading, toView: toolbar),
                 close.constraint(.top, toView: toolbar, constant: 2.0),
@@ -122,6 +121,11 @@ class ScanViewController : UIViewController, Trackable {
         UIView.spring(0.8, animations: {
             self.guide.transform = .identity
         }, completion: { _ in })
+    }
+    
+    @available(iOS 11.0, *)
+    override func viewSafeAreaInsetsDidChange() {
+        toolbarHeightConstraint?.constant = toolbarHeight + view.safeAreaInsets.bottom
     }
 
     private func addCameraPreview() {
