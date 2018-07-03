@@ -368,7 +368,8 @@ extension StoredTokenData {
             do {
                 let path = Bundle.main.path(forResource: "tokens", ofType: "json")
                 let data = try Data(contentsOf: URL(fileURLWithPath: path!))
-                var tokens = try JSONDecoder().decode([StoredTokenData].self, from: data)
+                var tokens: [StoredTokenData] = try JSONDecoder().decode([StoredTokenData].self, from: data)
+                tokens.sort(by: { $0.code.lowercased() < $1.code.lowercased() })
                 if E.isDebug {
                     tokens.append(StoredTokenData.tst)
                     tokens.append(StoredTokenData.viu)
