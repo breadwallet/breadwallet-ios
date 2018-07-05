@@ -73,7 +73,9 @@ class EthWalletManager : WalletManager {
         _ = node.wallet(Currencies.eth) // create eth wallet
         let address = node.address
         self.address = address
-        Store.perform(action: WalletChange(self.currency).set(self.currency.state!.mutate(receiveAddress: address)))
+        DispatchQueue.main.async {
+            Store.perform(action: WalletChange(self.currency).set(self.currency.state!.mutate(receiveAddress: address)))
+        }
         if let walletID = getWalletID() {
             self.walletID = walletID
             print("walletID:", walletID)
@@ -310,8 +312,9 @@ extension EthWalletManager: EthereumListener {
         print("\(wallet.currency.code) wallet event: \(event), status: \(status.rawValue)\(errorDesc != nil ? ", error: \(errorDesc!)" : "")")
         switch (event) {
         case .balanceUpdated:
-            Store.perform(action: WalletChange(wallet.currency).setBalance(wallet.balance))
-            
+            DispatchQueue.main.async {
+                Store.perform(action: WalletChange(wallet.currency).setBalance(wallet.balance))
+            }
         default:
             break
         }
@@ -368,8 +371,10 @@ extension EthWalletManager {
             
             for currency in currencies {
                 if currency.state?.syncState == .connecting {
-                    Store.perform(action: WalletChange(currency).setProgress(progress: 0.8, timestamp: 0))
-                    Store.perform(action: WalletChange(currency).setSyncingState(.syncing))
+                    DispatchQueue.main.async {
+                        Store.perform(action: WalletChange(currency).setProgress(progress: 0.8, timestamp: 0))
+                        Store.perform(action: WalletChange(currency).setSyncingState(.syncing))
+                    }
                 }
             }
             
@@ -389,9 +394,11 @@ extension EthWalletManager {
             
             let finishedCodes = currencies.map { $0.code }
             inProgress[request] = currenciesInProgress.filter({ !finishedCodes.contains($0.code) })
-            currencies.forEach {
-                Store.perform(action: WalletChange($0).setProgress(progress: success ? 1.0 : 0.0, timestamp: 0))
-                Store.perform(action: WalletChange($0).setSyncingState(success ? .success : .connecting))
+            currencies.forEach { currency in
+                DispatchQueue.main.async {
+                    Store.perform(action: WalletChange(currency).setProgress(progress: success ? 1.0 : 0.0, timestamp: 0))
+                    Store.perform(action: WalletChange(currency).setSyncingState(success ? .success : .connecting))
+                }
             }
             
             if allFinished {
@@ -416,8 +423,10 @@ extension EthWalletManager {
             guard firstTime else { return }
             
             for currency in inProgress.values.flatMap({ $0 }) {
-                Store.perform(action: WalletChange(currency).setProgress(progress: 0.8, timestamp: 0))
-                Store.perform(action: WalletChange(currency).setSyncingState(.syncing))
+                DispatchQueue.main.async {
+                    Store.perform(action: WalletChange(currency).setProgress(progress: 0.8, timestamp: 0))
+                    Store.perform(action: WalletChange(currency).setSyncingState(.syncing))
+                }
             }
         }
     }
