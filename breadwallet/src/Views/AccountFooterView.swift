@@ -59,8 +59,7 @@ class AccountFooterView: UIView, Subscriber, Trackable {
     private func setupToolbarButtons() {
         
         let buttons = [(S.Button.send, #selector(AccountFooterView.send)),
-                       (S.Button.receive, #selector(AccountFooterView.receive)),
-                       (S.Button.buy, #selector(AccountFooterView.buy))].map { (title, selector) -> UIBarButtonItem in
+                       (S.Button.receive, #selector(AccountFooterView.receive))].map { (title, selector) -> UIBarButtonItem in
                         let button = UIButton.rounded(title: title)
                         button.tintColor = .white
                         button.backgroundColor = .transparentWhite
@@ -70,14 +69,14 @@ class AccountFooterView: UIView, Subscriber, Trackable {
         
         let paddingWidth = C.padding[2]
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let fixedSpace = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        fixedSpace.width = C.padding[1]
         
         toolbar.items = [
             flexibleSpace,
             buttons[0],
-            flexibleSpace,
+            fixedSpace,
             buttons[1],
-            flexibleSpace,
-            buttons[2],
             flexibleSpace
         ]
         
