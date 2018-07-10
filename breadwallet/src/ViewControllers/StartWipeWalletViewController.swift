@@ -21,7 +21,6 @@ class StartWipeWalletViewController : UIViewController {
     private let message = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
     private let warning = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
     private let button = BRDButton(title: S.RecoverWallet.next, type: .primary)
-    private let bullet = UIImageView(image: #imageLiteral(resourceName: "deletecircle"))
 
     override func viewDidLoad() {
         addSubviews()
@@ -34,7 +33,6 @@ class StartWipeWalletViewController : UIViewController {
         header.addSubview(illustration)
         view.addSubview(message)
         view.addSubview(warning)
-        view.addSubview(bullet)
         view.addSubview(button)
     }
 
@@ -51,14 +49,9 @@ class StartWipeWalletViewController : UIViewController {
             message.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             message.topAnchor.constraint(equalTo: header.bottomAnchor, constant: C.padding[2]),
             message.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
-        bullet.constrain([
-            bullet.leadingAnchor.constraint(equalTo: message.leadingAnchor),
-            bullet.topAnchor.constraint(equalTo: message.bottomAnchor, constant: C.padding[4]),
-            bullet.widthAnchor.constraint(equalToConstant: 16.0),
-            bullet.heightAnchor.constraint(equalToConstant: 16.0) ])
         warning.constrain([
-            warning.leadingAnchor.constraint(equalTo: bullet.trailingAnchor, constant: C.padding[2]),
-            warning.topAnchor.constraint(equalTo: bullet.topAnchor, constant: 0.0),
+            warning.leadingAnchor.constraint(equalTo: message.leadingAnchor),
+            warning.topAnchor.constraint(equalTo: message.bottomAnchor, constant: C.padding[4]),
             warning.trailingAnchor.constraint(equalTo: message.trailingAnchor) ])
         button.constrain([
             button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[3]),
