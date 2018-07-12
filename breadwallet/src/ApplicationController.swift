@@ -262,26 +262,15 @@ class ApplicationController : Subscriber, Trackable {
             _ = urlController?.handleUrl(url)
             launchURL = nil
         }
-
-        if UIApplication.shared.applicationState != .background {
-            if primaryWalletManager.noWallet {
-                addWalletCreationListener()
-                Store.perform(action: ShowStartFlow())
-            } else {
-                DispatchQueue.walletQueue.async {
-                    self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
-                }
-                startDataFetchers()
-            }
-
-        //For when watch app launches app in background
+        
+        if primaryWalletManager.noWallet {
+            addWalletCreationListener()
+            Store.perform(action: ShowStartFlow())
         } else {
             DispatchQueue.walletQueue.async {
                 self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
-                if self.fetchCompletionHandler != nil {
-                    self.performBackgroundFetch()
-                }
             }
+            startDataFetchers()
         }
     }
     
