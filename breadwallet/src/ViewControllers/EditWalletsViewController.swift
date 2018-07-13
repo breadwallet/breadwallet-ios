@@ -147,8 +147,8 @@ class EditWalletsViewController : UIViewController {
 
     private func setManageModel(storedCurrencies: [CurrencyDef]) {
         let allCurrencies: [CurrencyDef] = storedCurrencies + localCurrencies
-        let enabledCurrencies = findCurrencies(fromList: metaData.enabledCurrencies, fromCurrencies: allCurrencies)
-        let hiddenCurrencies = findCurrencies(fromList: metaData.hiddenCurrencies, fromCurrencies: allCurrencies)
+        let enabledCurrencies = findCurrencies(inKeyList: metaData.enabledCurrencies, fromCurrencies: allCurrencies)
+        let hiddenCurrencies = findCurrencies(inKeyList: metaData.hiddenCurrencies, fromCurrencies: allCurrencies)
         model = enabledCurrencies.map { ($0, false) } + hiddenCurrencies.map { ($0, true) }
     }
 
@@ -326,8 +326,8 @@ extension EditWalletsViewController : UISearchBarDelegate {
 }
 
 extension EditWalletsViewController {
-    private func findCurrencies(fromList: [String], fromCurrencies: [CurrencyDef]) -> [CurrencyDef] {
-        return fromList.compactMap { codeOrAddress in
+    private func findCurrencies(inKeyList keys: [String], fromCurrencies: [CurrencyDef]) -> [CurrencyDef] {
+        return keys.compactMap { codeOrAddress in
             let codeOrAddress = codeOrAddress.replacingOccurrences(of: C.erc20Prefix, with: "")
             var currency: CurrencyDef? = nil
             fromCurrencies.forEach {
