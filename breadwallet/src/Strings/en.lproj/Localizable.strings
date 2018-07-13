@@ -222,14 +222,10 @@
 "FeeSelector.title" = "Processing Speed";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Admin";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Buy Bitcoin";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Wallets";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
-"HomeScreen.totalAssets" = "total assets";
+"HomeScreen.totalAssets" = "Total Assets";
 /* Checking private key balance progress view text */
 "Import.checking" = "Checking private key balance...";
 /* Sweep private key confirmation message */
@@ -277,9 +273,11 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Ignore";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access BRD's keychain data and steal your bitcoin! Wipe this wallet immediately and restore on a secure device.";
+"JailbreakWarnings.messageWithBalance" = "DEVICE SECURITY COMPROMISED\
+ Any 'jailbreak' app can access BRD's keychain data and steal your bitcoin! Wipe this wallet immediately and restore on a secure device.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access BRD's keychain data and steal your bitcoin. Please only use BRD on a non-jailbroken device.";
+"JailbreakWarnings.messageWithoutBalance" = "DEVICE SECURITY COMPROMISED\
+ Any 'jailbreak' app can access BRD's keychain data and steal your bitcoin. Please only use BRD on a non-jailbroken device.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "WARNING";
 /* Wipe wallet button */
@@ -300,10 +298,8 @@
 "MenuButton.addWallet" = "Add Wallet";
 /* Menu button title */
 "MenuButton.lock" = "Lock Wallet";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Manage Wallets";
 /* Menu button title */
-"MenuButton.security" = "Security Center";
+"MenuButton.security" = "Security Settings";
 /* Menu button title */
 "MenuButton.settings" = "Settings";
 /* Menu button title */
@@ -590,8 +586,6 @@
 "Settings.manage" = "Manage";
 /* Notifications label */
 "Settings.notifications" = "Notifications";
-/* Section header for "other settings". */
-"Settings.other" = "Other";
 /* Preferences settings section header */
 "Settings.preferences" = "Preferences";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -603,13 +597,13 @@
 /* Sync blockchain label */
 "Settings.sync" = "Sync Blockchain";
 /* Settings title */
-"Settings.title" = "Settings";
+"Settings.title" = "Menu";
 /* Touch ID spending limit label */
 "Settings.touchIdLimit" = "Touch ID Spending Limit";
 /* The fingerprint spending limit */
 "Settings.touchIdLimit.android" = "Fingerprint Authentication Spending Limit";
 /* Wallet Settings section header */
-"Settings.wallet" = "Wallet";
+"Settings.wallet" = "Wallets";
 /* Unlink/delete your wallet from the current device. */
 "Settings.wipe" = "Unlink from this device";
 /* Share data view body */
@@ -621,7 +615,9 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Write Down Paper Key Again";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
+"StartPaperPhrase.body" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\
+\
+We will show you a list of words to write down on a piece of paper and keep safe.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Write Down Paper Key";
 /* Argument is date */
@@ -629,7 +625,7 @@
 /* button label */
 "StartViewController.createButton" = "Create New Wallet";
 /* Start view message */
-"StartViewController.message" = "The easy and secure way to use bitcoin.";
+"StartViewController.message" = "Moving money forward.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Recover Wallet";
 /* Syncing view connectiong state header text */
@@ -889,7 +885,9 @@
 /* Updating webview message */
 "Webview.updating" = "Updating...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet has changed its name to BRD, with a brand new look and some new features.\n\nIf you need help, look for the (?) in the top right of most screens.";
+"Welcome.body" = "Breadwallet has changed its name to BRD, with a brand new look and some new features.\
+\
+If you need help, look for the (?) in the top right of most screens.";
 /* Top title of welcome screen */
 "Welcome.title" = "Welcome to BRD!";
 /* Wipe wallet alert message */
@@ -920,3 +918,19 @@
 "WritePaperPhrase.previous" = "Previous";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li of %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Other";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Manage Wallets";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Buy Bitcoin";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Trade";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Scan QR Code";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Sync Failed";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Synced through %1$@";

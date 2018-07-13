@@ -222,10 +222,6 @@
 "FeeSelector.title" = "Vitesse de traitement";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Admin";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Acheter des Bitcoins";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Portefeuilles";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
@@ -251,7 +247,8 @@
 /* Caption for graphics */
 "Import.leftCaption" = "Portefeuille à importer";
 /* Import wallet intro screen message */
-"Import.message" = "Importer un portefeuille signifie le transfert de tout son contenu dans votre portfeuille BRD en une seule transaction.\n";
+"Import.message" = "Importer un portefeuille signifie le transfert de tout son contenu dans votre portfeuille BRD en une seule transaction.\
+";
 /* Enter password alert view title */
 "Import.password" = "Cette clé privée est protégée par mot de passe.";
 /* password textfield placeholder */
@@ -277,9 +274,11 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Ignorer";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "SÉCURITÉ DU DISPOSITIF COMPROMISE\nToute application « évasive » peut accéder aux données du porte-clé de Bread et voler vos bitcoins ! Détruisez ce portefeuille immédiatement et restaurez-le sur un appareil sécurisé.";
+"JailbreakWarnings.messageWithBalance" = "SÉCURITÉ DU DISPOSITIF COMPROMISE\
+Toute application « évasive » peut accéder aux données du porte-clé de Bread et voler vos bitcoins ! Détruisez ce portefeuille immédiatement et restaurez-le sur un appareil sécurisé.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "SÉCURITÉ DU DISPOSITIF COMPROMISE\nToute application « évasive » peut accéder aux données du porte-clé de Bread et voler vos bitcoins. N'utilisez Bread que sur un appareil non évasif.";
+"JailbreakWarnings.messageWithoutBalance" = "SÉCURITÉ DU DISPOSITIF COMPROMISE\
+Toute application « évasive » peut accéder aux données du porte-clé de Bread et voler vos bitcoins. N'utilisez Bread que sur un appareil non évasif.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "AVERTISSEMENT";
 /* Wipe wallet button */
@@ -300,8 +299,6 @@
 "MenuButton.addWallet" = "Ajouter un portefeuille";
 /* Menu button title */
 "MenuButton.lock" = "Verrouiller le portefeuille";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Gérer les portefeuilles";
 /* Menu button title */
 "MenuButton.security" = "Centre de sécurité";
 /* Menu button title */
@@ -590,8 +587,6 @@
 "Settings.manage" = "Gérer";
 /* Notifications label */
 "Settings.notifications" = "Notifications";
-/* Section header for "other settings". */
-"Settings.other" = "Autre";
 /* Preferences settings section header */
 "Settings.preferences" = "Préférences";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -621,7 +616,9 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Enregistrez la clé papier à nouveau";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Votre clé papier est la seule façon de restaurer votre Bread si votre téléphone est perdu, volé, cassé ou mis à niveau.\n\nNous allons vous montrer une liste de mots à écrire sur un morceau de papier et à garder en sécurité.";
+"StartPaperPhrase.body" = "Votre clé papier est la seule façon de restaurer votre Bread si votre téléphone est perdu, volé, cassé ou mis à niveau.\
+\
+Nous allons vous montrer une liste de mots à écrire sur un morceau de papier et à garder en sécurité.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Écrire la clé papier";
 /* Argument is date */
@@ -889,7 +886,9 @@
 /* Updating webview message */
 "Webview.updating" = "Mise à jour...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet revient sous le nom de Bread, avec un nouveau design et de nouvelles fonctionnalités. \n\nSi vous avez besoin d'aide, cliquez sur le (?) en haut à droite de la plupart des écrans.";
+"Welcome.body" = "Breadwallet revient sous le nom de Bread, avec un nouveau design et de nouvelles fonctionnalités. \
+\
+Si vous avez besoin d'aide, cliquez sur le (?) en haut à droite de la plupart des écrans.";
 /* Top title of welcome screen */
 "Welcome.title" = "Bienvenue chez Bread !";
 /* Wipe wallet alert message */
@@ -903,7 +902,8 @@
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
 "WipeWallet.instruction" = "Pour commencer un nouveau portefeuille ou rétablir un portefeuille existant, vous devez d'abord supprimer le portefeuille actuellement installé. Pour continuer, saisissez la Clé Papier du portefeuille actuel.";
 /* Instructions for unlinking the wallet */
-"WipeWallet.startMessage" = "Démarrer ou récupérer un autre portefeuille vous permet d'accéder et de gérer un portefeuille Bread différent sur cet appareil.\n";
+"WipeWallet.startMessage" = "Démarrer ou récupérer un autre portefeuille vous permet d'accéder et de gérer un portefeuille Bread différent sur cet appareil.\
+";
 /* Start wipe wallet view warning */
 "WipeWallet.startWarning" = "Vous ne pourrez plus accéder à votre portefeuille courant depuis cet appareil. Si vous souhaitez le récupérer plus tard, vous devrais réentrer la clé papier.";
 /* Unlink this wallet from this device. */
@@ -920,3 +920,19 @@
 "WritePaperPhrase.previous" = "Précédent";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li de %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Autre";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Gérer les portefeuilles";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Acheter des Bitcoins";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Échanger";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Scanner le code QR";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Échec de la synchronisation";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Synchronisé jusqu'à %1$@";
