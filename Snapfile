@@ -13,19 +13,19 @@ devices([
 languages([
   "en-US",
   "da",
-  "de",
-  "es",
-  "fa",
-  "fr",
-  "it",
-  "ja",
-  "ko",
-  "nl",
-  "pt",
-  "ru",
-  "sv",
-  "zh-Hans",
-  "zh-Hant"
+  # "de",
+  # "es",
+  # "fa",
+  # "fr",
+  # "it",
+  # "ja",
+  # "ko",
+  # "nl",
+  # "pt",
+  # "ru",
+  # "sv",
+  # "zh-Hans",
+  # "zh-Hant"
 ])
 
 # The name of the scheme which contains the UI Tests
