@@ -404,7 +404,7 @@ enum S {
         static let admin = NSLocalizedString("HomeScreen.admin", value: "Admin", comment: "Section header")
         static let buy = NSLocalizedString("HomeScreen.buy", value: "Buy Bitcoin", comment: "home screen toolbar button")
         static let trade = NSLocalizedString("HomeScreen.trade", value: "Trade", comment: "home screen toolbar button")
-        static let menu = NSLocalizedString("HomeScreen.menu", value: "Menu", comment: "home screen toolbar button")
+        static let menu = NSLocalizedString("Button.menu", value: "Menu", comment: "home screen toolbar button")
     }
 
     enum StartViewController {
