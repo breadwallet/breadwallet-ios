@@ -222,10 +222,6 @@
 "FeeSelector.title" = "Verarbeitungsgeschwindigkeit";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Administrator";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Bitcoin kaufen";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menü";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Geldbörsen";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
@@ -277,9 +273,11 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Ignorieren";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "DAS GERÄT IST NICHT LÄNGER SICHER\nJede beliebige „Jailbreak“-App kann auf Breads Keychain-Daten zugreifen und deine Bitcoins stehlen! Lösche dieses Wallet unverzüglich und stelle es auf einem sicheren Gerät wieder her.";
+"JailbreakWarnings.messageWithBalance" = "DAS GERÄT IST NICHT LÄNGER SICHER\
+Jede beliebige „Jailbreak“-App kann auf Breads Keychain-Daten zugreifen und deine Bitcoins stehlen! Lösche dieses Wallet unverzüglich und stelle es auf einem sicheren Gerät wieder her.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "DAS GERÄT IST NICHT LÄNGER SICHER\nJede beliebige „Jailbreak“-App kann auf Breads Keychain-Daten zugreifen und deine Bitcoins stehlen. Bitte setze Bread ausschließlich auf Geräten ohne Jailbreak ein.";
+"JailbreakWarnings.messageWithoutBalance" = "DAS GERÄT IST NICHT LÄNGER SICHER\
+Jede beliebige „Jailbreak“-App kann auf Breads Keychain-Daten zugreifen und deine Bitcoins stehlen. Bitte setze Bread ausschließlich auf Geräten ohne Jailbreak ein.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "ACHTUNG";
 /* Wipe wallet button */
@@ -300,8 +298,6 @@
 "MenuButton.addWallet" = "Wallet hinzufügen";
 /* Menu button title */
 "MenuButton.lock" = "Wallet sperren";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Wallets verwalten";
 /* Menu button title */
 "MenuButton.security" = "Sicherheits-Center";
 /* Menu button title */
@@ -590,8 +586,6 @@
 "Settings.manage" = "Verwalten";
 /* Notifications label */
 "Settings.notifications" = "Benachrichtigungen";
-/* Section header for "other settings". */
-"Settings.other" = "Andere";
 /* Preferences settings section header */
 "Settings.preferences" = "Einstellungen";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -621,7 +615,9 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Offlineschlüssel erneut notieren";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Dein Offlineschlüssel ist die einzige Möglichkeit, dein Bread wiederherzustellen, falls du dein Smartphone verlierst, austauscht, es gestohlen wird oder kaputtgeht.\n\nHierfür zeigen wir dir eine Liste von Wörtern an, damit du sie dir auf ein Stück Papier notieren kannst, das es sicher aufzubewahren gilt.";
+"StartPaperPhrase.body" = "Dein Offlineschlüssel ist die einzige Möglichkeit, dein Bread wiederherzustellen, falls du dein Smartphone verlierst, austauscht, es gestohlen wird oder kaputtgeht.\
+\
+Hierfür zeigen wir dir eine Liste von Wörtern an, damit du sie dir auf ein Stück Papier notieren kannst, das es sicher aufzubewahren gilt.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Offlineschlüssel notieren";
 /* Argument is date */
@@ -889,7 +885,9 @@
 /* Updating webview message */
 "Webview.updating" = "Aktualisierung läuft …";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet heißt jetzt Bread und hat ein brandneues Erscheinungsbild sowie einige neue Funktionen.\n\nWenn Sie Hilfe benötigen, halten Sie Ausschau nach dem (?), das auf den meisten Bildschirm oben rechts zu finden ist.";
+"Welcome.body" = "Breadwallet heißt jetzt Bread und hat ein brandneues Erscheinungsbild sowie einige neue Funktionen.\
+\
+Wenn Sie Hilfe benötigen, halten Sie Ausschau nach dem (?), das auf den meisten Bildschirm oben rechts zu finden ist.";
 /* Top title of welcome screen */
 "Welcome.title" = "Willkommen bei Bread!";
 /* Wipe wallet alert message */
@@ -920,3 +918,19 @@
 "WritePaperPhrase.previous" = "Zurück";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li von %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Andere";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Wallets verwalten";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menü";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Bitcoin kaufen";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Handeln";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "QR-Code scannen";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Synchronisation fehlgeschlagen";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Synchronsiert durch %1$@";

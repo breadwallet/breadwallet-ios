@@ -222,10 +222,6 @@
 "FeeSelector.title" = "처리 속도";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "관리";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "비트코인 구매";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "메뉴";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "지갑";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
@@ -277,9 +273,11 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "무시";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "장치 보안 취약\n모든 'jailbreak' 앱이 Bread의 키체인 데이터에 접속하여 귀하의 비트코인을 훔칠 수 있습니다! 이 지갑을 바로 지우시고 안전한 장치에서 복구하세요.";
+"JailbreakWarnings.messageWithBalance" = "장치 보안 취약\
+모든 'jailbreak' 앱이 Bread의 키체인 데이터에 접속하여 귀하의 비트코인을 훔칠 수 있습니다! 이 지갑을 바로 지우시고 안전한 장치에서 복구하세요.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "장치 보안 취약\n모든 'jailbreak' 앱이 Bread의 키체인 데이터에 접속하여 귀하의 비트코인을 훔칠 수 있습니다! Bread를 비-jailbroken 장치에서만 사용해 주세요.";
+"JailbreakWarnings.messageWithoutBalance" = "장치 보안 취약\
+모든 'jailbreak' 앱이 Bread의 키체인 데이터에 접속하여 귀하의 비트코인을 훔칠 수 있습니다! Bread를 비-jailbroken 장치에서만 사용해 주세요.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "경고";
 /* Wipe wallet button */
@@ -300,8 +298,6 @@
 "MenuButton.addWallet" = "지갑 추가";
 /* Menu button title */
 "MenuButton.lock" = "지갑 잠그기";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "지갑 관리";
 /* Menu button title */
 "MenuButton.security" = "보안 센터";
 /* Menu button title */
@@ -590,8 +586,6 @@
 "Settings.manage" = "관리";
 /* Notifications label */
 "Settings.notifications" = "알림";
-/* Section header for "other settings". */
-"Settings.other" = "기타";
 /* Preferences settings section header */
 "Settings.preferences" = "환경 설정";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -621,7 +615,9 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "페이퍼 키를 다시 쓰기";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "페이퍼 키는 핸드폰을 분실하거나, 도난당하거나, 망가지거나, 업그레이드한 경우 브레드를 다시 살릴 수 있는 유일한 방법입니다.\n\n저희가 제시하는 단어 목록을 잘 적어서 안전하게 보관해 주세요.";
+"StartPaperPhrase.body" = "페이퍼 키는 핸드폰을 분실하거나, 도난당하거나, 망가지거나, 업그레이드한 경우 브레드를 다시 살릴 수 있는 유일한 방법입니다.\
+\
+저희가 제시하는 단어 목록을 잘 적어서 안전하게 보관해 주세요.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "페이퍼 키 작성하기";
 /* Argument is date */
@@ -889,7 +885,9 @@
 /* Updating webview message */
 "Webview.updating" = "업데이트 중...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet이 이름을 Bread로 바꾸고 새롭게 단장하였으며 새로운 기능도 갖췄습니다.\n\n도움이 필요하시면 대부분 화면에서 우측 상단에 있는 (?)을(를) 클릭하십시오.";
+"Welcome.body" = "Breadwallet이 이름을 Bread로 바꾸고 새롭게 단장하였으며 새로운 기능도 갖췄습니다.\
+\
+도움이 필요하시면 대부분 화면에서 우측 상단에 있는 (?)을(를) 클릭하십시오.";
 /* Top title of welcome screen */
 "Welcome.title" = "Bread에 환영합니다!";
 /* Wipe wallet alert message */
@@ -920,3 +918,19 @@
 "WritePaperPhrase.previous" = "이전";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%2$li의 %1$li";
+/* Section header for "other settings". */
+"Settings.other" = "기타";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "지갑 관리";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "메뉴";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "비트코인 구매";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "교환";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "QR코드 스캔";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "동기화 실패";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "%1$@ 전 동기화 됨";

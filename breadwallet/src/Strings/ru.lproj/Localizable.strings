@@ -222,10 +222,6 @@
 "FeeSelector.title" = "Скорость обработки";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Админ";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Купить Bitcoin";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Меню";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Кошельки";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
@@ -277,9 +273,11 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Игнорировать";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "БЕЗОПАСНОСТЬ УСТРОЙСТВА ПОДВЕРГНУТА РИСКУ\n Какое-либо приложение по снятию ограничений с файловой системы может получить доступ к данным цепочки ключей  Bread и украсть ваши биткойны! Немедленно очистите ваш кошелек и восстановите его на безопасном устройстве.";
+"JailbreakWarnings.messageWithBalance" = "БЕЗОПАСНОСТЬ УСТРОЙСТВА ПОДВЕРГНУТА РИСКУ\
+ Какое-либо приложение по снятию ограничений с файловой системы может получить доступ к данным цепочки ключей  Bread и украсть ваши биткойны! Немедленно очистите ваш кошелек и восстановите его на безопасном устройстве.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "БЕЗОПАСНОСТЬ УСТРОЙСТВА ПОДВЕРГНУТА РИСКУ\n Какое-либо приложение по снятию ограничений с файловой системы может получить доступ к данным цепочки ключей  Bread и украсть ваши биткойны. Пожалуйста, используйте Bread только на устройствах с не снятыми с файловой системы ограничениями.";
+"JailbreakWarnings.messageWithoutBalance" = "БЕЗОПАСНОСТЬ УСТРОЙСТВА ПОДВЕРГНУТА РИСКУ\
+ Какое-либо приложение по снятию ограничений с файловой системы может получить доступ к данным цепочки ключей  Bread и украсть ваши биткойны. Пожалуйста, используйте Bread только на устройствах с не снятыми с файловой системы ограничениями.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "ПРЕДУПРЕЖДЕНИЕ";
 /* Wipe wallet button */
@@ -300,8 +298,6 @@
 "MenuButton.addWallet" = "Добавить кошелек";
 /* Menu button title */
 "MenuButton.lock" = "Заблокировать кошелек";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Управлять кошельками";
 /* Menu button title */
 "MenuButton.security" = "Центр безопасности";
 /* Menu button title */
@@ -590,8 +586,6 @@
 "Settings.manage" = "Управление";
 /* Notifications label */
 "Settings.notifications" = "Уведомления";
-/* Section header for "other settings". */
-"Settings.other" = "Другие";
 /* Preferences settings section header */
 "Settings.preferences" = "Параметры";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -621,7 +615,9 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Выписать бумажный ключ снова";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Бумажный ключ – это единственный способ восстановить ваш Bread-кошелек в случае потери, кражи, поломки или замены вашего телефона.\n\nМы покажем вам список слов, которые необходимо записать на листе бумаги и хранить в надежном месте.";
+"StartPaperPhrase.body" = "Бумажный ключ – это единственный способ восстановить ваш Bread-кошелек в случае потери, кражи, поломки или замены вашего телефона.\
+\
+Мы покажем вам список слов, которые необходимо записать на листе бумаги и хранить в надежном месте.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Выписать бумажный ключ";
 /* Argument is date */
@@ -889,7 +885,9 @@
 /* Updating webview message */
 "Webview.updating" = "Идет обновление...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet сменил свое название на Bread и обзавелся новым дизайном и функциями.\n\nЕсли вам нужна помощь, то ищите иконку (?) в правом верхнем углу большинства экранов.";
+"Welcome.body" = "Breadwallet сменил свое название на Bread и обзавелся новым дизайном и функциями.\
+\
+Если вам нужна помощь, то ищите иконку (?) в правом верхнем углу большинства экранов.";
 /* Top title of welcome screen */
 "Welcome.title" = "Добро пожаловать в Bread!";
 /* Wipe wallet alert message */
@@ -920,3 +918,19 @@
 "WritePaperPhrase.previous" = "Назад";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li из %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Другие";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Управлять кошельками";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Меню";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Купить Bitcoin";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Обмен";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Сканировать QR код";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Ошибка синхронизации";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Синхронизированно до %1$@";
