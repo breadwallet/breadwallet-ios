@@ -58,6 +58,7 @@ class KVStoreCoordinator : Subscriber {
         let oldWallets = Store.state.wallets
         var newWallets = [String: WalletState]()
         var displayOrder = 0
+        var unknownTokensToRemove: [String] = []
 
         metaData.enabledCurrencies.forEach {
             if let walletState = oldWallets[$0] {
@@ -79,12 +80,20 @@ class KVStoreCoordinator : Subscriber {
                         }
                         displayOrder = displayOrder + 1
                     } else {
-                        assert(E.isTestnet, "unknown token")
+                        unknownTokensToRemove.append($0)
+                        print("unknown token \(tokenAddress) in metadata will be removed")
                     }
                 }
             }
         }
-
+        
+        //Remove any unknown tokens
+        if unknownTokensToRemove.count > 0 {
+            metaData.enabledCurrencies = metaData.enabledCurrencies.filter { !unknownTokensToRemove.contains($0) }
+            set(metaData)
+            try? kvStore.syncKey(tokenListMetaDataKey, completionHandler: {_ in })
+        }
+        
         //Re-add hidden default currencies
         CurrencyListMetaData.defaultCurrencies.forEach {
             if let walletState = oldWallets[$0] {
