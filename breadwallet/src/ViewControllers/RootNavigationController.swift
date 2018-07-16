@@ -27,12 +27,10 @@ class RootNavigationController : UINavigationController {
     }
 
     private var tempLoginView = LoginViewController(isPresentedForLock: false)
-    private let welcomeTransitingDelegate = PinTransitioningDelegate()
     private let loginTransitionDelegate = LoginTransitionDelegate()
 
     override func viewDidLoad() {
-        setLightStyle()
-        navigationBar.isTranslucent = false
+        setDarkStyle()
         self.addChildViewController(tempLoginView, layout: {
             tempLoginView.view.constrain(toSuperviewEdges: nil)
         })
@@ -52,32 +50,8 @@ class RootNavigationController : UINavigationController {
         self.delegate = self
     }
 
-    func attemptShowWelcomeView() {
-        if !UserDefaults.hasShownWelcome {
-            let welcome = WelcomeViewController()
-            welcome.transitioningDelegate = welcomeTransitingDelegate
-            welcome.modalPresentationStyle = .overFullScreen
-            welcome.modalPresentationCapturesStatusBarAppearance = true
-            welcomeTransitingDelegate.shouldShowMaskView = false
-            topViewController?.present(welcome, animated: true, completion: nil)
-            UserDefaults.hasShownWelcome = true
-        }
-    }
-
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        if topViewController is HomeScreenViewController || topViewController is EditWalletsViewController {
-            return .default
-        } else {
-            return .lightContent
-        }
-    }
-
-    func setLightStyle() {
-        navigationBar.tintColor = .white
-    }
-
-    func setDarkStyle() {
-        navigationBar.tintColor = .black
+        return .lightContent
     }
 }
 
@@ -85,17 +59,16 @@ extension RootNavigationController : UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
         if viewController is HomeScreenViewController {
             UserDefaults.selectedCurrencyCode = nil
+            navigationBar.tintColor = .navigationTint
         } else if let accountView = viewController as? AccountViewController {
             UserDefaults.selectedCurrencyCode = accountView.currency.code
             UserDefaults.mostRecentSelectedCurrencyCode = accountView.currency.code
         }
     }
-
+    
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        if viewController is EditWalletsViewController {
-            setDarkStyle()
-        } else {
-            setLightStyle()
+        if viewController is AccountViewController {
+            navigationBar.tintColor = .white
         }
     }
 }

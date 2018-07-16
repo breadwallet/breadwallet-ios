@@ -63,20 +63,8 @@ class Screenshots: XCTestCase {
             case security
             case support
         }
-        
-        let security = Rows.security.rawValue
-        
-        tablesQuery.cells.element(boundBy: Rows.addWallet.rawValue).tap()
-        snapshot("5AddWallet")
-        app.navigationBars.buttons.element(boundBy: 0).tap()
-        
-        tablesQuery.cells.element(boundBy: Rows.security.rawValue).tap()
-        snapshot("3Security")
-        app.scrollViews.otherElements.buttons["Close"].tap()
-        
-        // support
-        tablesQuery.cells.element(boundBy: Rows.support.rawValue).tap()
-        //snapshot("4Support") // TODO: this fails with "error getting main window"
+        tablesQuery.buttons["Add Wallet"].tap()
+        snapshot("3AddWallet")
     }
     
 }

@@ -10,9 +10,29 @@ import UIKit
 
 extension UIColor {
 
+    static var newGradientStart: UIColor {
+        return UIColor.fromHex("FB5491")
+    }
+
+    static var newGradientEnd: UIColor {
+        return UIColor.fromHex("FAA03F")
+    }
+
+    static var darkBackground: UIColor {
+        return UIColor.fromHex("302442")
+    }
+
+    static var orangeText: UIColor {
+        return UIColor.fromHex("FA724D")
+    }
+
     // MARK: Buttons
     static var primaryButton: UIColor {
-        return UIColor(red: 76.0/255.0, green: 152.0/255.0, blue: 252.0/255.0, alpha: 1.0)
+        return .navigationTint
+    }
+    
+    static var orangeButton: UIColor {
+        return UIColor.fromHex("E7AA41")
     }
 
     static var primaryText: UIColor {
@@ -28,7 +48,23 @@ extension UIColor {
     }
 
     static var darkText: UIColor {
-        return UIColor(red: 35.0/255.0, green: 37.0/255.0, blue: 38.0/255.0, alpha: 1.0)
+        return UIColor.fromHex("4F4F4F")
+    }
+
+    static var lightText: UIColor {
+        return UIColor.fromHex("828282")
+    }
+
+    static var lightHeaderBackground: UIColor {
+        return UIColor.fromHex("F9F9F9")
+    }
+
+    static var lightTableViewSectionHeaderBackground: UIColor {
+        return UIColor.fromHex("ECECEC")
+    }
+
+    static var syncingBackground: UIColor {
+        return UIColor.fromHex("E5E5E5")
     }
 
     static var darkLine: UIColor {
@@ -109,7 +145,7 @@ extension UIColor {
     }
     
     static var transparentWhiteText: UIColor {
-        return UIColor(white: 1.0, alpha: 0.7)
+        return UIColor(white: 1.0, alpha: 0.75)
     }
     
     static var disabledWhiteText: UIColor {
@@ -118,6 +154,10 @@ extension UIColor {
 
     static var transparentBlack: UIColor {
         return UIColor(white: 0.0, alpha: 0.3)
+    }
+    
+    static var transparentButton: UIColor {
+        return UIColor(white: 1.0, alpha: 0.2)
     }
 
     static var blueGradientStart: UIColor {
@@ -170,6 +210,22 @@ extension UIColor {
     
     static var separator: UIColor {
         return UIColor(red: 236.0/255.0, green: 236.0/255.0, blue: 236.0/255.0, alpha: 1.0)
+    }
+    
+    static var navigationTint: UIColor {
+        return UIColor.fromHex("29ABE2")
+    }
+    
+    static var navigationBackground: UIColor {
+        return UIColor.fromHex("251935")
+    }
+    
+    static var transparentCellBackground: UIColor {
+        return UIColor(white: 1.0, alpha: 0.03)
+    }
+    
+    static var transparentIconBackground: UIColor {
+        return UIColor(white: 1.0, alpha: 0.25)
     }
 }
 

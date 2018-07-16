@@ -13,20 +13,19 @@ class StartPaperPhraseViewController : UIViewController {
     init(callback: @escaping () -> Void) {
         self.callback = callback
         let buttonTitle = UserDefaults.walletRequiresBackup ? S.StartPaperPhrase.buttonTitle : S.StartPaperPhrase.againButtonTitle
-        button = ShadowButton(title: buttonTitle, type: .primary)
+        button = BRDButton(title: buttonTitle, type: .primary)
         super.init(nibName: nil, bundle: nil)
     }
 
-    private let button: ShadowButton
+    private let button: BRDButton
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "PaperKey"))
-    private let pencil = UIImageView(image: #imageLiteral(resourceName: "Pencil"))
-    private let explanation = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
+    private let explanation = UILabel.wrapping(font: UIFont.customBody(size: 16.0), color: .white)
     private let header = RadialGradientView(backgroundColor: .pink, offset: 64.0)
-    private let footer = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
+    private let footer = UILabel.wrapping(font: .customBody(size: 13.0), color: .white)
     private let callback: () -> Void
 
     override func viewDidLoad() {
-        view.backgroundColor = .white
+        view.backgroundColor = .darkBackground
         explanation.text = S.StartPaperPhrase.body
         addSubviews()
         addConstraints()
@@ -43,7 +42,6 @@ class StartPaperPhraseViewController : UIViewController {
     private func addSubviews() {
         view.addSubview(header)
         header.addSubview(illustration)
-        illustration.addSubview(pencil)
         view.addSubview(explanation)
         view.addSubview(button)
         view.addSubview(footer)
@@ -58,11 +56,6 @@ class StartPaperPhraseViewController : UIViewController {
             illustration.constraint(.height, constant: 84.0),
             illustration.constraint(.centerX, toView: header, constant: nil),
             illustration.constraint(.bottom, toView: header, constant: -C.padding[4]) ])
-        pencil.constrain([
-            pencil.constraint(.width, constant: 32.0),
-            pencil.constraint(.height, constant: 32.0),
-            pencil.constraint(.leading, toView: illustration, constant: 44.0),
-            pencil.constraint(.top, toView: illustration, constant: -4.0) ])
         explanation.constrain([
             explanation.constraint(toBottom: header, constant: C.padding[3]),
             explanation.constraint(.leading, toView: view, constant: C.padding[2]),

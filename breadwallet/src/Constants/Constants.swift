@@ -11,20 +11,23 @@ import UIKit
 let π: CGFloat = .pi
 
 struct Padding {
+    var increment: CGFloat
+    
     subscript(multiplier: Int) -> CGFloat {
         get {
-            return CGFloat(multiplier) * 8.0
+            return CGFloat(multiplier) * increment
         }
     }
 }
 
 struct C {
-    static let padding = Padding()
+    static let padding = Padding(increment: 8.0)
     struct Sizes {
         static let buttonHeight: CGFloat = 48.0
         static let headerHeight: CGFloat = 48.0
         static let largeHeaderHeight: CGFloat = 220.0
         static let logoAspectRatio: CGFloat = 125.0/417.0
+        static let cutoutLogoAspectRatio : CGFloat = 342.0/553.0
         static let roundedCornerRadius: CGFloat = 6.0
     }
     static var defaultTintColor: UIColor = {
@@ -53,6 +56,12 @@ struct C {
     }
     static let usdCurrencyCode = "USD"
     static let erc20Prefix = "erc20:"
+    
+    #if Debug || Testflight
+        static let webBundle = "brd-web-3-staging"
+    #else
+        static let webBundle = "brd-web-3" // should match AssetBundles.plist
+    #endif
 }
 
 enum Words {

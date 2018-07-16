@@ -21,13 +21,13 @@ class AmountViewController : UIViewController, Trackable {
         self.isPinPadExpandedAtLaunch = isPinPadExpandedAtLaunch
         self.isRequesting = isRequesting
         if let rate = currency.state?.currentRate, Store.state.isBtcSwapped {
-            self.currencyToggle = ShadowButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
+            self.currencyToggle = BRDButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
             let title = currency.unitName(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals)
-            self.currencyToggle = ShadowButton(title: title, type: .tertiary)
+            self.currencyToggle = BRDButton(title: title, type: .tertiary)
         }
         self.feeSelector = FeeSelector()
-        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: currency.state?.maxDigits ?? currency.commonUnit.decimals)
+        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: currency.state?.maxDigits ?? currency.commonUnit.decimals, shouldShowBiometrics: false)
         self.canEditFee = (currency is Bitcoin)
         super.init(nibName: nil, bundle: nil)
     }
@@ -73,7 +73,7 @@ class AmountViewController : UIViewController, Trackable {
     private let placeholder = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
     private let amountLabel = UILabel(font: .customBody(size: 26.0), color: .darkText)
     private let pinPad: PinPadViewController
-    private let currencyToggle: ShadowButton
+    private let currencyToggle: BRDButton
     private let border = UIView(color: .secondaryShadow)
     private let bottomBorder = UIView(color: .secondaryShadow)
     private let cursor = BlinkingView(blinkColor: C.defaultTintColor)

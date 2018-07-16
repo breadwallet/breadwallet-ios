@@ -21,16 +21,17 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
     private let assetList = AssetListTableView()
     private let subHeaderView = UIView()
     private let logo = UIImageView(image:#imageLiteral(resourceName: "LogoGradient"))
-    private let total = UILabel(font: .customBold(size: 28.0), color: .darkGray)
-    private let totalHeader = UILabel(font: .customMedium(size: 16.0), color: .mediumGray)
+    private let total = UILabel(font: .customBold(size: 30.0), color: .white)
+    private let totalHeader = UILabel(font: .customBody(size: 12.0), color: .white)
     private let prompt = UIView()
     private var promptHiddenConstraint: NSLayoutConstraint!
+    private let toolbar = UIToolbar()
 
     var didSelectCurrency : ((CurrencyDef) -> Void)?
-    var didTapSecurity: (() -> Void)?
-    var didTapSupport: (() -> Void)?
-    var didTapSettings: (() -> Void)?
     var didTapAddWallet: (() -> Void)?
+    var didTapBuy: (() -> Void)?
+    var didTapTrade: (() -> Void)?
+    var didTapMenu: (() -> Void)?
 
     // MARK: -
     
@@ -41,9 +42,6 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
 
     override func viewDidLoad() {
         assetList.didSelectCurrency = didSelectCurrency
-        assetList.didTapSecurity = didTapSecurity
-        assetList.didTapSupport = didTapSupport
-        assetList.didTapSettings = didTapSettings
         assetList.didTapAddWallet = didTapAddWallet
         addSubviews()
         addConstraints()
@@ -67,36 +65,42 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         subHeaderView.addSubview(total)
         subHeaderView.addSubview(logo)
         view.addSubview(prompt)
+        view.addSubview(toolbar)
     }
 
     private func addConstraints() {
-        let height: CGFloat = 46.0
+        let headerHeight: CGFloat = 46.0
+        let toolbarHeight: CGFloat = 74.0
+        
         if #available(iOS 11.0, *) {
             subHeaderView.constrain([
                 subHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 subHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
                 subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                subHeaderView.heightAnchor.constraint(equalToConstant: height) ])
+                subHeaderView.heightAnchor.constraint(equalToConstant: headerHeight) ])
         } else {
             subHeaderView.constrain([
                 subHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 subHeaderView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 0.0),
                 subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                subHeaderView.heightAnchor.constraint(equalToConstant: height) ])
+                subHeaderView.heightAnchor.constraint(equalToConstant: headerHeight) ])
         }
         
         logo.constrain([
             logo.leadingAnchor.constraint(equalTo: subHeaderView.leadingAnchor, constant: C.padding[2]),
             logo.bottomAnchor.constraint(equalTo: subHeaderView.bottomAnchor, constant: -C.padding[2]),
             logo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.25),
-            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: 230.0/772.0)])
+            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: 230.0/772.0)
+            ])
         
         total.constrain([
             total.trailingAnchor.constraint(equalTo: subHeaderView.trailingAnchor, constant: -C.padding[2]),
-            total.bottomAnchor.constraint(equalTo: subHeaderView.bottomAnchor, constant: -C.padding[2]) ])
+            total.centerYAnchor.constraint(equalTo: logo.centerYAnchor)
+            ])
         totalHeader.constrain([
             totalHeader.trailingAnchor.constraint(equalTo: total.trailingAnchor),
-            totalHeader.bottomAnchor.constraint(equalTo: total.topAnchor, constant: 0.0) ])
+            totalHeader.bottomAnchor.constraint(equalTo: total.topAnchor, constant: 0.0)
+            ])
         
         promptHiddenConstraint = prompt.heightAnchor.constraint(equalToConstant: 0.0)
         prompt.constrain([
@@ -109,15 +113,29 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         addChildViewController(assetList, layout: {
             assetList.view.constrain([
                 assetList.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                assetList.view.topAnchor.constraint(equalTo: prompt.bottomAnchor),
+                assetList.view.topAnchor.constraint(equalTo: prompt.bottomAnchor, constant: C.padding[1]),
                 assetList.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                assetList.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
+                assetList.view.bottomAnchor.constraint(equalTo: toolbar.topAnchor)])
         })
+        
+        if #available(iOS 11.0, *) {
+            toolbar.constrain([
+                toolbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                toolbar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -C.padding[1]),
+                toolbar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: C.padding[1]),
+                toolbar.heightAnchor.constraint(equalToConstant: toolbarHeight) ])
+        } else {
+            toolbar.constrain([
+                toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                toolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -C.padding[1]),
+                toolbar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: C.padding[1]),
+                toolbar.heightAnchor.constraint(equalToConstant: toolbarHeight) ])
+        }
     }
 
     private func setInitialData() {
-        view.backgroundColor = .whiteBackground
-        subHeaderView.backgroundColor = .whiteBackground
+        view.backgroundColor = .darkBackground
+        subHeaderView.backgroundColor = .darkBackground
         subHeaderView.clipsToBounds = false
         
         navigationItem.titleView = UIView()
@@ -131,25 +149,41 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         total.text = "0"
         title = ""
         
+        setupToolbar()
         updateTotalAssets()
     }
-
-    private func updateTotalAssets() {
-        let fiatTotal: Decimal = Store.state.displayCurrencies.map {
-            guard let balance = Store.state[$0]?.balance,
-                let rate = Store.state[$0]?.currentRate else { return 0.0 }
-            let amount = Amount(amount: balance,
-                                currency: $0,
-                                rate: rate)
-            return amount.fiatValue
-            }.reduce(0.0, +)
-        let format = NumberFormatter()
-        format.isLenient = true
-        format.numberStyle = .currency
-        format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencySymbol = Store.state[Currencies.btc]?.currentRate?.currencySymbol ?? ""
-        self.total.text = format.string(from: fiatTotal as NSDecimalNumber)
+    
+    private func setupToolbar() {
+        let buttons = [(S.HomeScreen.buy, #imageLiteral(resourceName: "buy"), #selector(buy)),
+                       (S.HomeScreen.trade, #imageLiteral(resourceName: "trade"), #selector(trade)),
+                       (S.HomeScreen.menu, #imageLiteral(resourceName: "menu"), #selector(menu))].map { (title, image, selector) -> UIBarButtonItem in
+                        let button = UIButton.vertical(title: title, image: image)
+                        button.tintColor = .navigationTint
+                        button.addTarget(self, action: selector, for: .touchUpInside)
+                        return UIBarButtonItem(customView: button)
+        }
+        
+        let paddingWidth = C.padding[2]
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        toolbar.items = [
+            flexibleSpace,
+            buttons[0],
+            flexibleSpace,
+            buttons[1],
+            flexibleSpace,
+            buttons[2],
+            flexibleSpace
+        ]
+        
+        let buttonWidth = (view.bounds.width - (paddingWidth * CGFloat(buttons.count+1))) / CGFloat(buttons.count)
+        let buttonHeight = CGFloat(44.0)
+        buttons.forEach {
+            $0.customView?.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonHeight)
+        }
+        
+        toolbar.isTranslucent = false
+        toolbar.barTintColor = .navigationBackground
     }
     
     private func setupSubscriptions() {
@@ -186,6 +220,38 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
             }
         })
     }
+    
+    private func updateTotalAssets() {
+        let fiatTotal: Decimal = Store.state.displayCurrencies.map {
+            guard let balance = Store.state[$0]?.balance,
+                let rate = Store.state[$0]?.currentRate else { return 0.0 }
+            let amount = Amount(amount: balance,
+                                currency: $0,
+                                rate: rate)
+            return amount.fiatValue
+            }.reduce(0.0, +)
+        let format = NumberFormatter()
+        format.isLenient = true
+        format.numberStyle = .currency
+        format.generatesDecimalNumbers = true
+        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+        format.currencySymbol = Store.state[Currencies.btc]?.currentRate?.currencySymbol ?? ""
+        self.total.text = format.string(from: fiatTotal as NSDecimalNumber)
+    }
+    
+    // MARK: Actions
+    
+    @objc private func buy() {
+        saveEvent("currency.didTapBuyBitcoin", attributes: [:])
+        didTapBuy?()
+    }
+    
+    @objc private func trade() {
+        saveEvent("currency.didTapTrade", attributes: [:])
+        didTapTrade?()
+    }
+    
+    @objc private func menu() { didTapMenu?() }
     
     // MARK: - Prompt
     
@@ -264,4 +330,3 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         fatalError("init(coder:) has not been implemented")
     }
 }
-

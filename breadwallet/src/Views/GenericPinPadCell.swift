@@ -12,30 +12,16 @@ class GenericPinPadCell : UICollectionViewCell {
 
     var text: String? {
         didSet {
-            if text == deleteKeyIdentifier {
-                imageView.image = #imageLiteral(resourceName: "Delete")
-                topLabel.text = ""
-                centerLabel.text = ""
+            if let specialKey = PinPadViewController.SpecialKeys(rawValue: text!) {
+                imageView.image = specialKey.image(forStyle: style)
+                label.text = ""
             } else {
                 imageView.image = nil
-                topLabel.text = text
-                centerLabel.text = text
+                label.text = text
             }
             setAppearance()
-            setSublabel()
         }
     }
-
-    let sublabels = [
-        "2": "ABC",
-        "3": "DEF",
-        "4": "GHI",
-        "5": "JKL",
-        "6": "MNO",
-        "7": "PORS",
-        "8": "TUV",
-        "9": "WXYZ"
-    ]
 
     override var isHighlighted: Bool {
         didSet {
@@ -49,33 +35,47 @@ class GenericPinPadCell : UICollectionViewCell {
         setup()
     }
 
-    internal let topLabel = UILabel(font: .customBody(size: 28.0))
-    internal let centerLabel = UILabel(font: .customBody(size: 28.0))
-    internal let sublabel = UILabel(font: .customBody(size: 11.0))
+    internal var label = UILabel(font: .customBody(size: 28.0))
     internal let imageView = UIImageView()
+    let masks: [UIView] = (0..<4).map { _ in UIView(color: .darkBackground) }
+    var style: PinPadStyle = .clear
 
     private func setup() {
         setAppearance()
-        topLabel.textAlignment = .center
-        centerLabel.textAlignment = .center
-        sublabel.textAlignment = .center
-        addSubview(topLabel)
-        addSubview(centerLabel)
-        addSubview(sublabel)
+        label.textAlignment = .center
+        addSubview(label)
         addSubview(imageView)
         imageView.contentMode = .center
+        masks.forEach { self.addSubview($0) }
         addConstraints()
     }
 
     func addConstraints() {
-        imageView.constrain(toSuperviewEdges: nil)
-        centerLabel.constrain(toSuperviewEdges: nil)
-        topLabel.constrain([
-            topLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            topLabel.topAnchor.constraint(equalTo: topAnchor, constant: 2.5) ])
-        sublabel.constrain([
-            sublabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            sublabel.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: -3.0) ])
+        imageView.constrain([
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: centerYAnchor)])
+        label.constrain(toSuperviewEdges: nil)
+
+        masks[0].constrain([
+            masks[0].leadingAnchor.constraint(equalTo: leadingAnchor),
+            masks[0].topAnchor.constraint(equalTo: topAnchor),
+            masks[0].bottomAnchor.constraint(equalTo: bottomAnchor),
+            masks[0].trailingAnchor.constraint(equalTo: imageView.leadingAnchor)])
+        masks[1].constrain([
+            masks[1].leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+            masks[1].topAnchor.constraint(equalTo: topAnchor),
+            masks[1].bottomAnchor.constraint(equalTo: imageView.topAnchor),
+            masks[1].trailingAnchor.constraint(equalTo: imageView.trailingAnchor)])
+        masks[2].constrain([
+            masks[2].leadingAnchor.constraint(equalTo: imageView.trailingAnchor),
+            masks[2].topAnchor.constraint(equalTo: topAnchor),
+            masks[2].bottomAnchor.constraint(equalTo: bottomAnchor),
+            masks[2].trailingAnchor.constraint(equalTo: trailingAnchor)])
+        masks[3].constrain([
+            masks[3].leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+            masks[3].topAnchor.constraint(equalTo: imageView.bottomAnchor),
+            masks[3].bottomAnchor.constraint(equalTo: bottomAnchor),
+            masks[3].trailingAnchor.constraint(equalTo: imageView.trailingAnchor)])
     }
 
     override var isAccessibilityElement: Bool {
@@ -87,7 +87,7 @@ class GenericPinPadCell : UICollectionViewCell {
 
     override var accessibilityLabel: String? {
         get {
-            return topLabel.text
+            return label.text
         }
         set { }
     }
@@ -100,7 +100,6 @@ class GenericPinPadCell : UICollectionViewCell {
     }
 
     func setAppearance() {}
-    func setSublabel() {}
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

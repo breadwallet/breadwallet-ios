@@ -13,14 +13,16 @@ extension UIButton {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.setImage(image, for: .normal)
-        button.titleLabel?.font = UIFont.customMedium(size: 11.0)
+        button.titleLabel?.font = UIFont.customMedium(size: 12.0)
+        button.contentMode = .center
+        button.imageView?.contentMode = .center
         if let imageSize = button.imageView?.image?.size,
             let font = button.titleLabel?.font {
             let spacing: CGFloat = C.padding[1]/2.0
             let titleSize = NSString(string: title).size(withAttributes: [NSAttributedStringKey.font : font])
 
-            //These edge insets place the image vertically above the title label
-            button.titleEdgeInsets = UIEdgeInsetsMake(0.0, -imageSize.width, -(imageSize.height + spacing), 0.0)
+            // These edge insets place the image vertically above the title label
+            button.titleEdgeInsets = UIEdgeInsetsMake(0.0, -imageSize.width, -(26.0 + spacing), 0.0)
             button.imageEdgeInsets = UIEdgeInsetsMake(-(titleSize.height + spacing), 0.0, 0.0, -titleSize.width)
         }
         return button
@@ -71,6 +73,15 @@ extension UIButton {
 
         button.tintColor = .darkText
         button.accessibilityLabel = accessibilityLabel
+        return button
+    }
+    
+    static func icon(image: UIImage, title: String) -> UIButton {
+        let button = UIButton(type: .custom)
+        button.setTitle(title, for: .normal)
+        button.setImage(image, for: .normal)
+        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: C.padding[2], bottom: 0, right: 0)
+        button.titleLabel?.font = UIFont.customBody(size: 14.0)
         return button
     }
 

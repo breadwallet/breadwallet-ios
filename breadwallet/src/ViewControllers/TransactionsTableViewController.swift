@@ -81,7 +81,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         emptyMessage.textAlignment = .center
         emptyMessage.text = S.TransactionDetails.emptyMessage
         
-        setContentInset()
+        //setContentInset()
 
         setupSubscriptions()
     }
@@ -114,12 +114,6 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                             self.allTransactions = state[self.currency]?.transactions ?? [Transaction]()
                             self.reload()
         })
-    }
-
-    private func setContentInset() {
-        let insets = UIEdgeInsets(top: accountHeaderHeight - 64.0 - (E.isIPhoneX ? 28.0 : 0.0), left: 0, bottom: accountFooterHeight + C.padding[2], right: 0)
-        tableView.contentInset = insets
-        tableView.scrollIndicatorInsets = insets
     }
 
     private func reload(txHash: String) {
@@ -181,7 +175,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                 tableView.addSubview(emptyMessage)
                 emptyMessage.constrain([
                     emptyMessage.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
-                    emptyMessage.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -accountHeaderHeight),
+                    emptyMessage.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -0), //TODO:UI
                     emptyMessage.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -C.padding[2]) ])
             }
         } else {

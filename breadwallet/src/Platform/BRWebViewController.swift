@@ -99,17 +99,18 @@ import WebKit
         config.processPool = wkProcessPool
         config.allowsInlineMediaPlayback = false
         config.allowsAirPlayForMediaPlayback = false
-        config.requiresUserActionForMediaPlayback = true
+        config.mediaTypesRequiringUserActionForPlayback = .all
         config.allowsPictureInPictureMediaPlayback = false
 
         let request = URLRequest(url: indexUrl)
         
         view = UIView(frame: CGRect.zero)
-        view.backgroundColor = UIColor(red:0.98, green:0.98, blue:0.98, alpha:1.0)
+        view.backgroundColor = .darkBackground
         
         webView = WKWebView(frame: CGRect.zero, configuration: config)
         webView?.navigationDelegate = self
-        webView?.backgroundColor = UIColor(red:0.98, green:0.98, blue:0.98, alpha:1.0)
+        webView?.backgroundColor = .darkBackground
+        webView?.alpha = 0.0
         _ = webView?.load(request)
         webView?.autoresizingMask = [UIViewAutoresizing.flexibleHeight, UIViewAutoresizing.flexibleWidth]
         if #available(iOS 11, *) {
@@ -134,16 +135,19 @@ import WebKit
     }
     
     override open func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         edgesForExtendedLayout = .all
         self.beginDidLoadCountdown()
     }
     
     override open func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         didAppear = true
         sendToAllSockets(data: webViewInfo)
     }
     
     override open func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         didAppear = false
         sendToAllSockets(data: webViewInfo)
     }
@@ -201,6 +205,9 @@ import WebKit
     // signal to the presenter that the webview content successfully loaded
     fileprivate func webviewDidLoad() {
         didLoad = true
+        UIView.animate(withDuration: 0.4) {
+            self.webView?.alpha = 1.0
+        }
         sendToAllSockets(data: webViewInfo)
     }
     

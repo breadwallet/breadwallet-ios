@@ -34,10 +34,10 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 14.0))
     private let addressPopout = InViewAlert(type: .primary)
-    private let share = ShadowButton(title: S.Receive.share, type: .tertiary, image: #imageLiteral(resourceName: "Share"))
+    private let share = BRDButton(title: S.Receive.share, type: .tertiary, image: #imageLiteral(resourceName: "Share"))
     private let sharePopout = InViewAlert(type: .secondary)
     private let border = UIView()
-    private let request = ShadowButton(title: S.Receive.request, type: .secondary)
+    private let request = BRDButton(title: S.Receive.request, type: .secondary)
     private let addressButton = UIButton(type: .system)
     private var topSharePopoutConstraint: NSLayoutConstraint?
     fileprivate let isRequestAmountVisible: Bool
@@ -170,8 +170,8 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     private func setupShareButtons() {
         let container = UIView()
         container.translatesAutoresizingMaskIntoConstraints = false
-        let email = ShadowButton(title: S.Receive.emailButton, type: .tertiary)
-        let text = ShadowButton(title: S.Receive.textButton, type: .tertiary)
+        let email = BRDButton(title: S.Receive.emailButton, type: .tertiary)
+        let text = BRDButton(title: S.Receive.textButton, type: .tertiary)
         container.addSubview(email)
         container.addSubview(text)
         email.constrain([

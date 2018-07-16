@@ -12,8 +12,11 @@ class SeparatorCell : UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         let separator = UIView()
-        separator.backgroundColor = .separator
+        separator.backgroundColor = .navigationBackground
         addSubview(separator)
+        contentView.backgroundColor = .clear
+        backgroundColor = .transparentCellBackground
+        selectedBackgroundView = UIView.init(color: UIColor.navigationTint.withAlphaComponent(0.7))
         separator.constrain([
             separator.leadingAnchor.constraint(equalTo: leadingAnchor),
             separator.bottomAnchor.constraint(equalTo: bottomAnchor),

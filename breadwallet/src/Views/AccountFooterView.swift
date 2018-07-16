@@ -9,6 +9,8 @@
 import UIKit
 
 class AccountFooterView: UIView, Subscriber, Trackable {
+    
+    static let height: CGFloat = 67.0
 
     var sendCallback: (() -> Void)?
     var receiveCallback: (() -> Void)?
@@ -36,11 +38,15 @@ class AccountFooterView: UIView, Subscriber, Trackable {
         addSubview(toolbar)
         addSubview(separator)
         
+        backgroundColor = currency.colors.1
+        
         toolbar.clipsToBounds = true // to remove separator line
         toolbar.isOpaque = true
+        toolbar.isTranslucent = false
+        toolbar.barTintColor = backgroundColor
         
         // constraints
-        toolbar.constrain(toSuperviewEdges: nil)
+        toolbar.constrainTopCorners(height: AccountFooterView.height)
         separator.constrainTopCorners(height: 0.5)
         
         setupToolbarButtons()
@@ -53,25 +59,24 @@ class AccountFooterView: UIView, Subscriber, Trackable {
     private func setupToolbarButtons() {
         
         let buttons = [(S.Button.send, #selector(AccountFooterView.send)),
-                       (S.Button.receive, #selector(AccountFooterView.receive)),
-                       (S.Button.buy, #selector(AccountFooterView.buy))].map { (title, selector) -> UIBarButtonItem in
+                       (S.Button.receive, #selector(AccountFooterView.receive))].map { (title, selector) -> UIBarButtonItem in
                         let button = UIButton.rounded(title: title)
                         button.tintColor = .white
-                        button.backgroundColor = currency.colors.1
+                        button.backgroundColor = .transparentWhite
                         button.addTarget(self, action: selector, for: .touchUpInside)
                         return UIBarButtonItem(customView: button)
         }
         
         let paddingWidth = C.padding[2]
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let fixedSpace = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        fixedSpace.width = C.padding[1]
         
         toolbar.items = [
             flexibleSpace,
             buttons[0],
-            flexibleSpace,
+            fixedSpace,
             buttons[1],
-            flexibleSpace,
-            buttons[2],
             flexibleSpace
         ]
         
