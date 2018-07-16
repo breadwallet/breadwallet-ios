@@ -222,10 +222,6 @@
 "FeeSelector.title" = "Bearbetningshastighet";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Admin";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Köp Bitcoin";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Meny";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Plånböcker";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
@@ -277,9 +273,11 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Ignorera";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "ENHETENS SÄKERHET ÄR ÄVENTYRAD\nEn \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina bitcoin! Töm denna plånbok direkt och återställ den på en säker enhet.";
+"JailbreakWarnings.messageWithBalance" = "ENHETENS SÄKERHET ÄR ÄVENTYRAD\
+En \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina bitcoin! Töm denna plånbok direkt och återställ den på en säker enhet.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "ENHETENS SÄKERHET ÄR ÄVENTYRAD\nEn \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina bitcoin! Använd Bread endast på en säker enhet.";
+"JailbreakWarnings.messageWithoutBalance" = "ENHETENS SÄKERHET ÄR ÄVENTYRAD\
+En \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina bitcoin! Använd Bread endast på en säker enhet.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "VARNING";
 /* Wipe wallet button */
@@ -300,8 +298,6 @@
 "MenuButton.addWallet" = "Lägg till plånbok";
 /* Menu button title */
 "MenuButton.lock" = "Lås plånbok";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Hantera plånböcker";
 /* Menu button title */
 "MenuButton.security" = "Säkerhetscenter";
 /* Menu button title */
@@ -590,8 +586,6 @@
 "Settings.manage" = "Hantera";
 /* Notifications label */
 "Settings.notifications" = "Meddelanden";
-/* Section header for "other settings". */
-"Settings.other" = "Andra";
 /* Preferences settings section header */
 "Settings.preferences" = "Preferenser";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -621,7 +615,9 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Skriv ner ordnyckel på nytt";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Din ordnyckel  är enda sättet att återställ Bread om du förlorat din telefon, blivit bestulen på den eller har uppgraderat den.\n\nVi visar dig en lista över ord som du kan skriva ner på ett papper och gömma undan.";
+"StartPaperPhrase.body" = "Din ordnyckel  är enda sättet att återställ Bread om du förlorat din telefon, blivit bestulen på den eller har uppgraderat den.\
+\
+Vi visar dig en lista över ord som du kan skriva ner på ett papper och gömma undan.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Skriv ner ordnyckel";
 /* Argument is date */
@@ -889,7 +885,9 @@
 /* Updating webview message */
 "Webview.updating" = "Uppdaterar...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadplånboken har bytt namn till Bread, med ett splitter nytt utseende och några nya funktioner.\n\nOm du behöver hjälp, leta efter (?)-tecknet i det övre högra hörnet på de flesta skärmar.";
+"Welcome.body" = "Breadplånboken har bytt namn till Bread, med ett splitter nytt utseende och några nya funktioner.\
+\
+Om du behöver hjälp, leta efter (?)-tecknet i det övre högra hörnet på de flesta skärmar.";
 /* Top title of welcome screen */
 "Welcome.title" = "Välkommen till Bread!";
 /* Wipe wallet alert message */
@@ -920,3 +918,19 @@
 "WritePaperPhrase.previous" = "Föregående";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li av %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Andra";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Hantera plånböcker";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Meny";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Köp Bitcoin";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Handla";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Skanna QR-kod";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Synkronisering misslyckades";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Synkroniserad genom %1$@";

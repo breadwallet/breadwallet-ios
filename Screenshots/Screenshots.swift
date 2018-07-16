@@ -63,7 +63,7 @@ class Screenshots: XCTestCase {
             case security
             case support
         }
-
+        tablesQuery.buttons["Add Wallet"].tap()
         snapshot("3AddWallet")
     }
     
