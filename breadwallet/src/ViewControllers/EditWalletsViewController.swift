@@ -43,7 +43,6 @@ enum TokenListType {
 class EditWalletsViewController : UIViewController {
 
     private let type: TokenListType
-    private let cellIdentifier = "CellIdentifier"
     private let kvStore: BRReplicatedKVStore
     private var metaData: CurrencyListMetaData
     private let localCurrencies: [CurrencyDef] = [Currencies.btc, Currencies.bch, Currencies.eth, Currencies.brd]
@@ -65,9 +64,12 @@ class EditWalletsViewController : UIViewController {
     }
 
     override func viewDidLoad() {
-        view.backgroundColor = .white
+        view.backgroundColor = .darkBackground
         view.addSubview(tableView)
+        tableView.backgroundColor = .darkBackground
         tableView.keyboardDismissMode = .interactive
+        tableView.separatorStyle = .none
+        tableView.rowHeight = 66.0
         tableView.constrain([
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -82,15 +84,13 @@ class EditWalletsViewController : UIViewController {
         }
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(TokenCell.self, forCellReuseIdentifier: cellIdentifier)
-        tableView.separatorStyle = .singleLine
-        tableView.separatorInset = UIEdgeInsetsMake(0, C.padding[2], 0, C.padding[2])
+        tableView.register(TokenCell.self, forCellReuseIdentifier: TokenCell.cellIdentifier)
 
         if type == .manage {
             tableView.setEditing(true, animated: true)
-            addMenuButton()
+            setupAddButton()
         }
-        addSearchBar()
+        setupSearchBar()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -108,28 +108,34 @@ class EditWalletsViewController : UIViewController {
         title = type.title
     }
 
-
-    private func addSearchBar() {
+    // MARK: - 
+    
+    private func setupSearchBar() {
         guard type == .add else { return }
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 48.0))
         tableView.tableHeaderView = headerView
         headerView.addSubview(searchBar)
         searchBar.delegate = self
         searchBar.constrain([
-            searchBar.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: C.padding[1]),
-            searchBar.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -C.padding[1]),
+            searchBar.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
             searchBar.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)])
-        searchBar.backgroundImage = UIImage()
+        searchBar.searchBarStyle = .minimal
+        searchBar.barStyle = .black
+        searchBar.isTranslucent = false
+        searchBar.barTintColor = .darkBackground
         searchBar.placeholder = S.Search.search
     }
 
-    private func addMenuButton() {
-        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 56.0))
+    private func setupAddButton() {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 70.0))
         tableView.tableFooterView = footerView
-        let menuButton = MenuButton(title: S.MenuButton.addWallet, icon: #imageLiteral(resourceName: "PlaylistPlus"))
-        footerView.addSubview(menuButton)
-        menuButton.constrain(toSuperviewEdges: UIEdgeInsetsMake(0, 0, 0, 0))
-        menuButton.tap = {
+        let addButton = UIButton.icon(image: #imageLiteral(resourceName: "add"), title: S.TokenList.addTitle)
+        addButton.tintColor = .disabledWhiteText
+        addButton.setTitleColor(.disabledWhiteText, for: .normal)
+        footerView.addSubview(addButton)
+        addButton.constrain(toSuperviewEdges: UIEdgeInsets.init(top: 10, left: 0, bottom: 10, right: 0))
+        addButton.tap = {
             self.pushAddWallets()
         }
     }
@@ -141,8 +147,8 @@ class EditWalletsViewController : UIViewController {
 
     private func setManageModel(storedCurrencies: [CurrencyDef]) {
         let allCurrencies: [CurrencyDef] = storedCurrencies + localCurrencies
-        let enabledCurrencies = findCurrencies(fromList: metaData.enabledCurrencies, fromCurrencies: allCurrencies)
-        let hiddenCurrencies = findCurrencies(fromList: metaData.hiddenCurrencies, fromCurrencies: allCurrencies)
+        let enabledCurrencies = findCurrencies(inKeyList: metaData.enabledCurrencies, fromCurrencies: allCurrencies)
+        let hiddenCurrencies = findCurrencies(inKeyList: metaData.hiddenCurrencies, fromCurrencies: allCurrencies)
         model = enabledCurrencies.map { ($0, false) } + hiddenCurrencies.map { ($0, true) }
     }
 
@@ -281,7 +287,7 @@ extension EditWalletsViewController : UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? TokenCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TokenCell.cellIdentifier, for: indexPath) as? TokenCell else { return UITableViewCell() }
         cell.set(currency: model[indexPath.row].0, listType: type, isHidden: model[indexPath.row].1)
         cell.didAddIdentifier = { [unowned self] identifier in
             self.editCurrency(identifier: identifier, isHidden: false)
@@ -320,8 +326,8 @@ extension EditWalletsViewController : UISearchBarDelegate {
 }
 
 extension EditWalletsViewController {
-    private func findCurrencies(fromList: [String], fromCurrencies: [CurrencyDef]) -> [CurrencyDef] {
-        return fromList.compactMap { codeOrAddress in
+    private func findCurrencies(inKeyList keys: [String], fromCurrencies: [CurrencyDef]) -> [CurrencyDef] {
+        return keys.compactMap { codeOrAddress in
             let codeOrAddress = codeOrAddress.replacingOccurrences(of: C.erc20Prefix, with: "")
             var currency: CurrencyDef? = nil
             fromCurrencies.forEach {
@@ -361,7 +367,8 @@ extension StoredTokenData {
             do {
                 let path = Bundle.main.path(forResource: "tokens", ofType: "json")
                 let data = try Data(contentsOf: URL(fileURLWithPath: path!))
-                var tokens = try JSONDecoder().decode([StoredTokenData].self, from: data)
+                var tokens: [StoredTokenData] = try JSONDecoder().decode([StoredTokenData].self, from: data)
+                tokens.sort(by: { $0.code.lowercased() < $1.code.lowercased() })
                 if E.isDebug {
                     tokens.append(StoredTokenData.tst)
                     tokens.append(StoredTokenData.viu)
@@ -370,7 +377,7 @@ extension StoredTokenData {
                     callback(tokens)
                 }
             } catch let e {
-                print("json errro: \(e)")
+                print("tokens json error: \(e)")
             }
         }
     }

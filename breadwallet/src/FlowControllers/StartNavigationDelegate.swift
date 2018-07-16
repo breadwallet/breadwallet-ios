@@ -23,20 +23,18 @@ class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
         }
 
         if viewController is EnterPhraseViewController {
-            navigationController.navigationBar.tintColor = .darkText
+            navigationController.navigationBar.tintColor = .navigationTint
             navigationController.navigationBar.titleTextAttributes = [
-                NSAttributedStringKey.foregroundColor: UIColor.darkText,
+                NSAttributedStringKey.foregroundColor: UIColor.white,
                 NSAttributedStringKey.font: UIFont.customBold(size: 17.0)
             ]
             navigationController.setClearNavbar()
-            navigationController.navigationBar.isTranslucent = false
-            navigationController.navigationBar.barTintColor = .whiteTint
         }
 
         if viewController is UpdatePinViewController {
-            navigationController.navigationBar.tintColor = .darkText
+            navigationController.navigationBar.tintColor = .navigationTint
             navigationController.navigationBar.titleTextAttributes = [
-                NSAttributedStringKey.foregroundColor: UIColor.darkText,
+                NSAttributedStringKey.foregroundColor: UIColor.white,
                 NSAttributedStringKey.font: UIFont.customBold(size: 17.0)
             ]
             navigationController.setClearNavbar()

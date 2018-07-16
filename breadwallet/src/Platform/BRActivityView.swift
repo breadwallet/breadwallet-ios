@@ -31,11 +31,7 @@ class BRActivityViewController: UIViewController {
     init(message: String) {
         super.init(nibName: nil, bundle: nil)
         modalTransitionStyle = .crossDissolve
-
-        if #available(iOS 8.0, *) {
-            modalPresentationStyle = .overFullScreen
-        }
-
+        modalPresentationStyle = .overFullScreen
         activityView.messageLabel.text = message
         view = activityView
     }

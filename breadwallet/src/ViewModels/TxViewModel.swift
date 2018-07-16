@@ -80,6 +80,12 @@ extension DateFormatter {
         df.setLocalizedDateFormatFromTemplate("MMM d")
         return df
     }()
+
+    static let mediumDateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.setLocalizedDateFormatFromTemplate("MMM d, YYYY")
+        return df
+    }()
 }
 
 private extension String {

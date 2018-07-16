@@ -27,9 +27,7 @@ class SentryClient {
     private func sendEvent(_ event: SentryEvent, completion: @escaping()->Void) {
         var request = sentryRequest
         let encoder = JSONEncoder()
-        if #available(iOS 10.0, *) {
-            encoder.dateEncodingStrategy = .iso8601
-        }
+        encoder.dateEncodingStrategy = .iso8601
         request.httpBody = try? encoder.encode(event)
 
         let task = URLSession.shared.dataTask(with: request, completionHandler: {data, response, error in

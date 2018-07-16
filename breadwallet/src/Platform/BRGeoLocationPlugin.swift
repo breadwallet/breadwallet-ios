@@ -135,7 +135,7 @@ open class BRGeoLocationPlugin: NSObject, BRHTTPRouterPlugin, CLLocationManagerD
         // geo availability to the app when the app is foregrounded, and "always" will request
         // full time geo availability to the app
         router.post("/_permissions/geo") { (request, match) -> BRHTTPResponse in
-            if let j = request.json(), let dict = j as? NSDictionary, let style = dict["style"] as? String {
+            if let j = request.json(), let dict = j as? NSDictionary, let _ = dict["style"] as? String {
                 return BRHTTPResponse(request: request, code: 500) // deprecated
             }
             return BRHTTPResponse(request: request, code: 400)

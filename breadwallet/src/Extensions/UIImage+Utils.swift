@@ -66,4 +66,15 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return image ?? UIImage()
     }
+    
+    func image(withInsets insets: UIEdgeInsets) -> UIImage? {
+        let width = self.size.width + insets.left + insets.right
+        let height = self.size.height + insets.top + insets.bottom
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: width, height: height), false, self.scale)
+        let origin = CGPoint(x: insets.left, y: insets.top)
+        self.draw(at: origin)
+        let imageWithInsets = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return imageWithInsets?.withRenderingMode(renderingMode)
+    }
 }

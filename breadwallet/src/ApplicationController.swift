@@ -262,27 +262,15 @@ class ApplicationController : Subscriber, Trackable {
             _ = urlController?.handleUrl(url)
             launchURL = nil
         }
-
-        if UIApplication.shared.applicationState != .background {
-            if primaryWalletManager.noWallet {
-                UserDefaults.hasShownWelcome = true
-                addWalletCreationListener()
-                Store.perform(action: ShowStartFlow())
-            } else {
-                DispatchQueue.walletQueue.async {
-                    self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
-                }
-                startDataFetchers()
-            }
-
-        //For when watch app launches app in background
+        
+        if primaryWalletManager.noWallet {
+            addWalletCreationListener()
+            Store.perform(action: ShowStartFlow())
         } else {
             DispatchQueue.walletQueue.async {
                 self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
-                if self.fetchCompletionHandler != nil {
-                    self.performBackgroundFetch()
-                }
             }
+            startDataFetchers()
         }
     }
     
@@ -334,6 +322,15 @@ class ApplicationController : Subscriber, Trackable {
 
     private func setupAppearance() {
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.font: UIFont.header]
+        let backImage = #imageLiteral(resourceName: "Back").image(withInsets: UIEdgeInsets(top: 0.0, left: 8.0, bottom: 2.0, right: 0.0))
+        UINavigationBar.appearance().backIndicatorImage = backImage
+        UINavigationBar.appearance().backIndicatorTransitionMaskImage = backImage
+        // hide back button text
+        if #available(iOS 11, *) {
+            UIBarButtonItem.appearance().setBackButtonBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .normal, barMetrics: .default)
+        } else {
+            UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffsetMake(-200, 0), for: .default)
+        }
     }
 
     private func setupRootViewController() {
@@ -347,21 +344,21 @@ class ApplicationController : Subscriber, Trackable {
             nc.pushViewController(accountViewController, animated: true)
         }
         
-        home.didTapSupport = {
-            self.modalPresenter?.presentFaq()
+        home.didTapBuy = {
+            Store.perform(action: RootModalActions.Present(modal: .buy(currency: Currencies.btc)))
         }
         
-        home.didTapSecurity = {
-            self.modalPresenter?.presentSecurityCenter()
+        home.didTapTrade = {
+            Store.perform(action: RootModalActions.Present(modal: .trade))
         }
         
-        home.didTapSettings = {
-            self.modalPresenter?.presentSettings()
+        home.didTapMenu = {
+            self.modalPresenter?.presentMenu()
         }
 
         home.didTapAddWallet = { [weak self] in
             guard let kvStore = self?.primaryWalletManager?.apiClient?.kv else { return }
-            let vc = EditWalletsViewController(type: .manage, kvStore: kvStore)
+            let vc = EditWalletsViewController(type: .add, kvStore: kvStore)
             nc.pushViewController(vc, animated: true)
         }
 
@@ -557,16 +554,14 @@ class ApplicationController : Subscriber, Trackable {
 //MARK: - Push notifications
 extension ApplicationController {
     func listenForPushNotificationRequest() {
-        Store.subscribe(self, name: .registerForPushNotificationToken, callback: { _ in
-            let settings = UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil)
-            self.application?.registerUserNotificationSettings(settings)
-        })
-    }
-
-    func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
-        if !notificationSettings.types.isEmpty {
-            application.registerForRemoteNotifications()
-        }
+        // TODO: notifications
+//        Store.subscribe(self, name: .registerForPushNotificationToken, callback: { _ in
+//            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+//                if granted {
+//                    self.application?.registerForRemoteNotifications()
+//                }
+//            }
+//        })
     }
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {

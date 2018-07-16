@@ -11,6 +11,7 @@ import UIKit
 enum PinViewStyle {
     case create
     case login
+    case verify
 }
 
 class PinView : UIView {
@@ -22,6 +23,8 @@ class PinView : UIView {
             return 24.0
         case .login:
             return 16.0
+        case .verify:
+            return 24.0
         }
     }
     var width: CGFloat {
@@ -35,11 +38,16 @@ class PinView : UIView {
         self.length = length
         switch style {
         case .create:
-            unFilled = (0...(length-1)).map { _ in Circle(color: .borderGray) }
+            filled = (0...(length-1)).map { _ in Circle(color: .white, style: .filled) }
+            unFilled = (0...(length-1)).map { _ in Circle(color: .white, style: .unfilled) }
         case .login:
-            unFilled = (0...(length-1)).map { _ in Circle(color: .white) }
+            filled = (0...(length-1)).map { _ in ClearCircle(style: .filled) }
+            unFilled = (0...(length-1)).map { _ in ClearCircle(style: .unfilled) }
+        case .verify:
+            filled = (0...(length-1)).map { _ in Circle(color: .black, style: .filled) }
+            unFilled = (0...(length-1)).map { _ in Circle(color: .borderGray, style: .filled) }
         }
-        filled = (0...(length-1)).map { _ in Circle(color: .black) }
+
         super.init(frame: CGRect())
         setupSubviews()
     }
@@ -47,6 +55,9 @@ class PinView : UIView {
     func fill(_ number: Int) {
         filled.enumerated().forEach { index, circle in
             circle.isHidden = index > number-1
+        }
+        unFilled.enumerated().forEach { index, circle in
+            circle.isHidden = index <= number-1
         }
     }
 
@@ -70,32 +81,39 @@ class PinView : UIView {
     }
 
     //MARK: - Private
-    private let unFilled: [Circle]
-    private var filled: [Circle]
+    private let unFilled: [UIView]
+    private var filled: [UIView]
     private let style: PinViewStyle
     private let length: Int
+    private let gradientView = MotionGradientView()
 
     private func toRadian(value: Int) -> CGFloat {
         return CGFloat(Double(value) / 180.0 * .pi)
     }
 
     private func setupSubviews() {
+        if style == .login {
+            addSubview(gradientView)
+            gradientView.constrain(toSuperviewEdges: nil)
+        }
         addCircleContraints(unFilled)
         addCircleContraints(filled)
         filled.forEach { $0.isHidden = true }
     }
 
-    private func addCircleContraints(_ circles: [Circle]) {
+    private func addCircleContraints(_ circles: [UIView]) {
+        let padding: CGFloat = style == .login ? 0.0 : 8.0
+        let extraWidth: CGFloat = style == .login ? 8.0 : 0.0
         circles.enumerated().forEach { index, circle in
             addSubview(circle)
             let leadingConstraint: NSLayoutConstraint?
             if index == 0 {
                 leadingConstraint = circle.constraint(.leading, toView: self, constant: 0.0)
             } else {
-                leadingConstraint = NSLayoutConstraint(item: circle, attribute: .leading, relatedBy: .equal, toItem: circles[index - 1], attribute: .trailing, multiplier: 1.0, constant: 8.0)
+                leadingConstraint = NSLayoutConstraint(item: circle, attribute: .leading, relatedBy: .equal, toItem: circles[index - 1], attribute: .trailing, multiplier: 1.0, constant: padding)
             }
             circle.constrain([
-                circle.constraint(.width, constant: itemSize),
+                circle.constraint(.width, constant: itemSize + extraWidth),
                 circle.constraint(.height, constant: itemSize),
                 circle.constraint(.centerY, toView: self, constant: nil),
                 leadingConstraint ])

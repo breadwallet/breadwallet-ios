@@ -13,13 +13,7 @@ enum S {
     enum Symbols {
         static let bits = "ƀ"
         static let eth = "Ξ"
-        static var btc: String {
-            if  #available(iOS 10, *) {
-                return "₿"
-            } else {
-                return "Ƀ"
-            }
-        }
+        static let btc = "₿"
         static let narrowSpace = "\u{2009}"
         static let lock = "\u{1F512}"
         static let redX = "\u{274C}"
@@ -127,8 +121,6 @@ enum S {
         static let scan = NSLocalizedString("UnlockScreen.scan", value:"Scan", comment: "Scan button title")
         static let touchIdText = NSLocalizedString("UnlockScreen.touchIdText", value:"Unlock with TouchID", comment: "Unlock with TouchID accessibility label")
         static let touchIdPrompt = NSLocalizedString("UnlockScreen.touchIdPrompt", value:"Unlock your BRD.", comment: "TouchID/FaceID prompt text")
-        static let subheader = NSLocalizedString("UnlockScreen.subheader", value:"Enter PIN", comment: "Unlock Screen sub-header")
-        static let unlocked = NSLocalizedString("UnlockScreen.unlocked", value:"Wallet Unlocked", comment: "Wallet unlocked message")
         static let disabled = NSLocalizedString("UnlockScreen.disabled", value:"Disabled until: %1$@", comment: "Disabled until date")
         static let resetPin = NSLocalizedString("UnlockScreen.resetPin", value:"Reset PIN", comment: "Reset PIN with Paper Key button label.")
         static let faceIdText = NSLocalizedString("UnlockScreen.faceIdText", value:"Unlock with FaceID", comment: "Unlock with FaceID accessibility label")
@@ -193,8 +185,6 @@ enum S {
     }
 
     enum SecurityCenter {
-        static let title = NSLocalizedString("SecurityCenter.title", value:"Security Center", comment: "Security Center Title")
-        static let info = NSLocalizedString("SecurityCenter.info", value:"Enable all security features for maximum protection.", comment: "Security Center Info")
         enum Cells {
             static let pinTitle = NSLocalizedString("SecurityCenter.pinTitle", value:"6-Digit PIN", comment: "PIN button title")
             static let pinDescription = NSLocalizedString("SecurityCenter.pinDescription", value:"Protects your BRD from unauthorized users.", comment: "PIN button description")
@@ -287,8 +277,8 @@ enum S {
     }
 
     enum Settings {
-        static let title = NSLocalizedString("Settings.title", value:"Settings", comment: "Settings title")
-        static let wallet = NSLocalizedString("Settings.wallet", value: "Wallet", comment: "Wallet Settings section header")
+        static let title = NSLocalizedString("Settings.title", value:"Menu", comment: "Settings title")
+        static let wallet = NSLocalizedString("Settings.wallet", value: "Wallets", comment: "Wallet Settings section header")
         static let preferences = NSLocalizedString("Settings.preferences", value: "Preferences", comment: "Preferences settings section header")
         static let currencySettings = NSLocalizedString("Settings.currencySettings", value: "Currency Settings", comment: "Currency settings section header")
         static let other = NSLocalizedString("Settings.other", value: "Other", comment: "Other settings section header")
@@ -337,6 +327,8 @@ enum S {
     enum SyncingView {
         static let syncing = NSLocalizedString("SyncingView.syncing", value:"Syncing", comment: "Syncing view syncing state header text")
         static let connecting = NSLocalizedString("SyncingView.connecting", value:"Connecting", comment: "Syncing view connectiong state header text")
+        static let syncedThrough = NSLocalizedString("SyncingView.syncedThrough", value: "Synced through %1$@", comment: "eg. Synced through <Jan 12, 2015>")
+        static let failed = NSLocalizedString("SyncingView.failed", value: "Sync Failed", comment: "Sync failed label")
     }
 
     enum ReScan {
@@ -396,24 +388,29 @@ enum S {
     }
 
     enum MenuButton {
-        static let security = NSLocalizedString("MenuButton.security", value:"Security Center", comment: "Menu button title")
+        static let security = NSLocalizedString("MenuButton.security", value:"Security Settings", comment: "Menu button title")
         static let support = NSLocalizedString("MenuButton.support", value:"Support", comment: "Menu button title")
         static let settings = NSLocalizedString("MenuButton.settings", value:"Settings", comment: "Menu button title")
         static let lock = NSLocalizedString("MenuButton.lock", value:"Lock Wallet", comment: "Menu button title")
         static let buy = NSLocalizedString("MenuButton.buy", value:"Buy Bitcoin", comment: "Buy bitcoin title")
-        static let addWallet = NSLocalizedString("MenuButton.addWallet", value: "Add Wallet", comment: "Add Wallet button title")
+        static let addWallet = NSLocalizedString("MenuButton.addWallet", value: "Add Wallet", comment: "Menu button title")
+        static let manageWallets = NSLocalizedString("MenuButton.manageWallets", value: "Manage Wallets", comment: "Menu button title")
+        static let scan = NSLocalizedString("MenuButton.scan", value: "Scan QR Code", comment: "Menu button title")
     }
     
     enum HomeScreen {
-        static let totalAssets = NSLocalizedString("HomeScreen.totalAssets", value: "total assets", comment: "header")
+        static let totalAssets = NSLocalizedString("HomeScreen.totalAssets", value: "Total Assets", comment: "header")
         static let portfolio = NSLocalizedString("HomeScreen.portfolio", value: "Wallets", comment: "Section header")
         static let admin = NSLocalizedString("HomeScreen.admin", value: "Admin", comment: "Section header")
+        static let buy = NSLocalizedString("HomeScreen.buy", value: "Buy Bitcoin", comment: "home screen toolbar button")
+        static let trade = NSLocalizedString("HomeScreen.trade", value: "Trade", comment: "home screen toolbar button")
+        static let menu = NSLocalizedString("Button.menu", value: "Menu", comment: "home screen toolbar button")
     }
 
     enum StartViewController {
         static let createButton = NSLocalizedString("StartViewController.createButton", value:"Create New Wallet", comment: "button label")
         static let recoverButton = NSLocalizedString("StartViewController.recoverButton", value:"Recover Wallet", comment: "button label")
-        static let message = NSLocalizedString("StartViewController.message", value: "The easy and secure way to use bitcoin.", comment: "Start view message")
+        static let message = NSLocalizedString("StartViewController.message", value: "Moving money forward.", comment: "Start view message")
     }
 
     enum AccessibilityLabels {

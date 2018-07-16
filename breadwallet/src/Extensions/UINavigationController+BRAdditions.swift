@@ -12,9 +12,9 @@ extension UINavigationController {
 
     func setDefaultStyle() {
         setClearNavbar()
-        navigationBar.tintColor = .mediumGray
+        navigationBar.tintColor = .darkText
         navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: UIFont.customBold(size: 16.0)
+            NSAttributedStringKey.font: UIFont.header
         ]
     }
 
@@ -22,18 +22,18 @@ extension UINavigationController {
         navigationBar.tintColor = .white
         navigationBar.titleTextAttributes = [
             NSAttributedStringKey.foregroundColor: UIColor.white,
-            NSAttributedStringKey.font: UIFont.customBold(size: 16.0)
+            NSAttributedStringKey.font: UIFont.header
         ]
     }
     
-    func setGrayStyle() {
-        navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationBar.shadowImage = UIImage()
+    func setDarkStyle() {
         navigationBar.isTranslucent = false
-        navigationBar.barTintColor = .whiteBackground
-        navigationBar.tintColor = .mediumGray
+        navigationBar.barStyle = .blackOpaque
+        navigationBar.barTintColor = .navigationBackground
+        navigationBar.tintColor = .navigationTint
         navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: UIFont.customBold(size: 16.0)
+            NSAttributedStringKey.foregroundColor: UIColor.white,
+            NSAttributedStringKey.font: UIFont.header
         ]
     }
 
@@ -41,10 +41,5 @@ extension UINavigationController {
         navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationBar.shadowImage = UIImage()
         navigationBar.isTranslucent = true
-    }
-
-    func setNormalNavbar() {
-        navigationBar.setBackgroundImage(nil, for: .default)
-        navigationBar.shadowImage = nil
     }
 }
