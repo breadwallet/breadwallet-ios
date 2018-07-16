@@ -222,10 +222,6 @@
 "FeeSelector.title" = "处理速度";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "管理";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "购买比特币";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "菜单";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "钱包";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
@@ -277,9 +273,11 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "忽略";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "设备安全性受损\n任何'越狱'应用都可能访问 Bread 的密钥链数据并盗取您的比特币！立即擦除这个钱包并在一台安全设备上进行恢复。";
+"JailbreakWarnings.messageWithBalance" = "设备安全性受损\
+任何'越狱'应用都可能访问 Bread 的密钥链数据并盗取您的比特币！立即擦除这个钱包并在一台安全设备上进行恢复。";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "设备安全性受损\n任何'越狱'应用都可能访问 Bread 的密钥链数据并盗取您的比特币！请您仅在未越狱设备上使用 Bread 。";
+"JailbreakWarnings.messageWithoutBalance" = "设备安全性受损\
+任何'越狱'应用都可能访问 Bread 的密钥链数据并盗取您的比特币！请您仅在未越狱设备上使用 Bread 。";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "警告";
 /* Wipe wallet button */
@@ -300,8 +298,6 @@
 "MenuButton.addWallet" = "添加钱包";
 /* Menu button title */
 "MenuButton.lock" = "锁住钱包";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "管理钱包";
 /* Menu button title */
 "MenuButton.security" = "安全中心";
 /* Menu button title */
@@ -590,8 +586,6 @@
 "Settings.manage" = "管理";
 /* Notifications label */
 "Settings.notifications" = "通知";
-/* Section header for "other settings". */
-"Settings.other" = "其他";
 /* Preferences settings section header */
 "Settings.preferences" = "选项";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -621,7 +615,10 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "再次书写纸键";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "如果您的手机丢失、被盗、损坏或升级，纸上密钥是恢复 Bread 的唯一方法。\n\n\n我们将向您显示一张单词表，请将其写在纸上并保存在安全的地方。";
+"StartPaperPhrase.body" = "如果您的手机丢失、被盗、损坏或升级，纸上密钥是恢复 Bread 的唯一方法。\
+\
+\
+我们将向您显示一张单词表，请将其写在纸上并保存在安全的地方。";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "写下纸键";
 /* Argument is date */
@@ -920,3 +917,19 @@
 "WritePaperPhrase.previous" = "上一步";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li / %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "其他";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "管理钱包";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "菜单";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "购买比特币";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "换";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "扫描QR";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "同步失败";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "从 %1$@ 同步";

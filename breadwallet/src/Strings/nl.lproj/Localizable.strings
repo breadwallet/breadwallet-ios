@@ -222,10 +222,6 @@
 "FeeSelector.title" = "Verwerkingssnelheid";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Beheerder";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Bitcoins Kopen";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Wallets";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
@@ -277,9 +273,11 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Negeren";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "APPARAAT BEVEILIGING BESCHADIGD\nElke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hiermee je Bitcoins stelen! Wis deze portemonnee direct en herstel het op een veilig apparaat.";
+"JailbreakWarnings.messageWithBalance" = "APPARAAT BEVEILIGING BESCHADIGD\
+Elke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hiermee je Bitcoins stelen! Wis deze portemonnee direct en herstel het op een veilig apparaat.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "APPARAAT BEVEILIGING BESCHADIGD\nElke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hiermee je Bitcoins stelen. Gebruik Bread a.u.b. alleen op een niet-gejailbreakt apparaat.";
+"JailbreakWarnings.messageWithoutBalance" = "APPARAAT BEVEILIGING BESCHADIGD\
+Elke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hiermee je Bitcoins stelen. Gebruik Bread a.u.b. alleen op een niet-gejailbreakt apparaat.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "WAARSCHUWING";
 /* Wipe wallet button */
@@ -300,8 +298,6 @@
 "MenuButton.addWallet" = "Voeg Wallet toe";
 /* Menu button title */
 "MenuButton.lock" = "Portemonnee Vergrendelen";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Beheer portemonnees";
 /* Menu button title */
 "MenuButton.security" = "Veiligheidscentrum";
 /* Menu button title */
@@ -590,8 +586,6 @@
 "Settings.manage" = "Beheer";
 /* Notifications label */
 "Settings.notifications" = "Notificaties";
-/* Section header for "other settings". */
-"Settings.other" = "Andere";
 /* Preferences settings section header */
 "Settings.preferences" = "Voorkeuren";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -621,7 +615,9 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Schrijf Papieren Sleutel Opnieuw Op";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Je papieren sleutel is de enige manier om je Bread te herstellen als je telefoon verloren, gestolen, kapot of geüpgrade is.\n\nWe zullen je een lijst met woorden laten zie die je op een papiertje moet schrijven en veilig moet bewaren.";
+"StartPaperPhrase.body" = "Je papieren sleutel is de enige manier om je Bread te herstellen als je telefoon verloren, gestolen, kapot of geüpgrade is.\
+\
+We zullen je een lijst met woorden laten zie die je op een papiertje moet schrijven en veilig moet bewaren.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Schrijf Papieren Sleutel Op";
 /* Argument is date */
@@ -889,7 +885,9 @@
 /* Updating webview message */
 "Webview.updating" = "Updaten...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet is omgedoopt tot Bread, met een gloednieuw uiterlijk en enkele nieuwe functies.\n\nAls u hulp nodig hebt, zoek naar de (?) rechtsboven in de meeste schermen.";
+"Welcome.body" = "Breadwallet is omgedoopt tot Bread, met een gloednieuw uiterlijk en enkele nieuwe functies.\
+\
+Als u hulp nodig hebt, zoek naar de (?) rechtsboven in de meeste schermen.";
 /* Top title of welcome screen */
 "Welcome.title" = "Welkom bij Brood!";
 /* Wipe wallet alert message */
@@ -920,3 +918,19 @@
 "WritePaperPhrase.previous" = "Vorige";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li van %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Andere";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Beheer portemonnees";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Bitcoins Kopen";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Handel";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Scan QR-code";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Synchronisatie mislukt";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Gesynchroniseerd via %1$@";

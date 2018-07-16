@@ -222,10 +222,6 @@
 "FeeSelector.title" = "処理速度";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "管理";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "ビットコインを購入";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "メニュー";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "ウォレット";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
@@ -257,7 +253,9 @@
 /* password textfield placeholder */
 "Import.passwordPlaceholder" = "パスワード";
 /* Caption for graphics */
-"Import.rightCaption" = "あなたの\nブレッドの\nウォレット";
+"Import.rightCaption" = "あなたの\
+ブレッドの\
+ウォレット";
 /* Scan Private key button label */
 "Import.scan" = "秘密鍵をスキャン";
 /* Import wallet success alert title */
@@ -277,9 +275,11 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "無視する";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "端末がセキュリティの危険にさらされている可能性があります\n 「脱獄」アプリはブレッドのキーチェーンデータにアクセスし、あなたのビットコインを盗む恐れがあります!  直ちにこのウォレットを完全削除して、安全な端末で復元して下さい。";
+"JailbreakWarnings.messageWithBalance" = "端末がセキュリティの危険にさらされている可能性があります\
+ 「脱獄」アプリはブレッドのキーチェーンデータにアクセスし、あなたのビットコインを盗む恐れがあります!  直ちにこのウォレットを完全削除して、安全な端末で復元して下さい。";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "端末がセキュリティの危険にさらされている可能性があります\n「脱獄」アプリはブレッドのキーチェーンデータにアクセスし、あなたのビットコインを盗む恐れがあります!  ブレッドは必ず脱獄端末以外で利用してください。";
+"JailbreakWarnings.messageWithoutBalance" = "端末がセキュリティの危険にさらされている可能性があります\
+「脱獄」アプリはブレッドのキーチェーンデータにアクセスし、あなたのビットコインを盗む恐れがあります!  ブレッドは必ず脱獄端末以外で利用してください。";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "警告";
 /* Wipe wallet button */
@@ -297,13 +297,11 @@
 /* Manage wallet modal title */
 "ManageWallet.title" = "ウォレットを管理";
 /* "Add [a] Wallet [to the home screen]" */
-"MenuButton.addWallet" = "ウォレットを追加する";
+"MenuButton.addWallet" = "ウォレットの追加";
 /* Menu button title */
 "MenuButton.lock" = "ウォレットにロックを設定する";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "ウォレットを管理する";
 /* Menu button title */
-"MenuButton.security" = "セキュリティセンター";
+"MenuButton.security" = "セキュリティ";
 /* Menu button title */
 "MenuButton.settings" = "設定";
 /* Menu button title */
@@ -590,8 +588,6 @@
 "Settings.manage" = "管理";
 /* Notifications label */
 "Settings.notifications" = "通知";
-/* Section header for "other settings". */
-"Settings.other" = "その他";
 /* Preferences settings section header */
 "Settings.preferences" = "設定";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -621,7 +617,9 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "復元フレーズをもう一度書き留めてください";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "復元フレーズは、スマートフォンを紛失したり、盗まれたり、壊れたり、アップグレードした場合に、ご自身のブレッドを元に戻せる唯一の方法です。\n\n単語の一覧を表示しますので、紙に書き留めて安全に保管してください。";
+"StartPaperPhrase.body" = "復元フレーズは、スマートフォンを紛失したり、盗まれたり、壊れたり、アップグレードした場合に、ご自身のブレッドを元に戻せる唯一の方法です。\
+\
+単語の一覧を表示しますので、紙に書き留めて安全に保管してください。";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "復元フレーズを書き留めてください";
 /* Argument is date */
@@ -889,7 +887,9 @@
 /* Updating webview message */
 "Webview.updating" = "更新中...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwalletは新しい機能や見た目を備えて、Breadという名前に生まれ変わりました。\n\nヘルプをご覧になるには、画面右上にある(?)からお探しください。";
+"Welcome.body" = "Breadwalletは新しい機能や見た目を備えて、Breadという名前に生まれ変わりました。\
+\
+ヘルプをご覧になるには、画面右上にある(?)からお探しください。";
 /* Top title of welcome screen */
 "Welcome.title" = "Breadへようこそ！";
 /* Wipe wallet alert message */
@@ -920,3 +920,19 @@
 "WritePaperPhrase.previous" = "前へ";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%2$liの%1$li";
+/* Section header for "other settings". */
+"Settings.other" = "その他";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "ウォレットの管理";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "メニュー";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "ビットコインを購入";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "取引";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "QRコードの読み込み";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "同期に失敗しました";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "%1$@まで同期完了";
