@@ -135,3 +135,22 @@ class URLController : Trackable {
         Store.trigger(name: .showAlert(alert))
     }
 }
+
+extension URL {
+    public var isDeepLink: Bool {
+        return host == "brd.com" && path.hasPrefix("/x/")
+    }
+    
+    public var queryParameters: [String: String]? {
+        guard let components = URLComponents(url: self, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
+            return nil
+        }
+        
+        var parameters = [String: String]()
+        for item in queryItems {
+            parameters[item.name] = item.value
+        }
+        
+        return parameters
+    }
+}

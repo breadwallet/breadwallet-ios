@@ -217,6 +217,7 @@
 		7C35E717200ADF450064808F /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C35E716200ADF450064808F /* Transaction.swift */; };
 		7C35E719200AF3940064808F /* TxListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C35E718200AF3940064808F /* TxListViewModel.swift */; };
 		7C35E71B200AF8170064808F /* BtcTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C35E70E200ABA190064808F /* BtcTransaction.swift */; };
+		7C377EC220F6C29E00E8CF1C /* UIAlertController+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C377EC120F6C29E00E8CF1C /* UIAlertController+Additions.swift */; };
 		7C40DE2D20E09207000E289D /* ToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C40DE2C20E09207000E289D /* ToggleButton.swift */; };
 		7C5AC8A6203B93D3001B221E /* TxListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5AC8A5203B93D3001B221E /* TxListCell.swift */; };
 		7C67B6362056FB13006487BE /* BRAPIClient+Ethereum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C67B6352056FB13006487BE /* BRAPIClient+Ethereum.swift */; };
@@ -230,6 +231,8 @@
 		7C705A1020C5E93B008E75D2 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C705A0920C5E935008E75D2 /* test.c */; };
 		7C7F18ED1FED9A3B0030230E /* TxStatusIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7F18EC1FED9A3B0030230E /* TxStatusIndicator.swift */; };
 		7C9724661FF07B9A004248C4 /* StatusPip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9724651FF07B9A004248C4 /* StatusPip.swift */; };
+		7CA1C47420EC25B9002E9E68 /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA1C47320EC25B9002E9E68 /* QRCode.swift */; };
+		7CA1C47620EC2BFA002E9E68 /* QRCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA1C47520EC2BFA002E9E68 /* QRCodeTests.swift */; };
 		7CA238142011A97C00A4A59D /* TxDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA238132011A97C00A4A59D /* TxDetailViewController.swift */; };
 		7CA3BC302006864C00517BF7 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA3BC2F2006864C00517BF7 /* Currency.swift */; };
 		7CB2286F20A2286700105FFF /* BREthereum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2286E20A2286700105FFF /* BREthereum.swift */; };
@@ -1319,6 +1322,7 @@
 		7C35E70E200ABA190064808F /* BtcTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BtcTransaction.swift; sourceTree = "<group>"; };
 		7C35E716200ADF450064808F /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		7C35E718200AF3940064808F /* TxListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TxListViewModel.swift; sourceTree = "<group>"; };
+		7C377EC120F6C29E00E8CF1C /* UIAlertController+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIAlertController+Additions.swift"; path = "src/Extensions/UIAlertController+Additions.swift"; sourceTree = "<group>"; };
 		7C40DE2C20E09207000E289D /* ToggleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ToggleButton.swift; path = src/Controls/ToggleButton.swift; sourceTree = "<group>"; };
 		7C5AC8A5203B93D3001B221E /* TxListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxListCell.swift; path = src/Views/TransactionCells/TxListCell.swift; sourceTree = "<group>"; };
 		7C67B6352056FB13006487BE /* BRAPIClient+Ethereum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Ethereum.swift"; path = "src/Platform/BRAPIClient+Ethereum.swift"; sourceTree = "<group>"; };
@@ -1336,6 +1340,8 @@
 		7C705A0D20C5E936008E75D2 /* BREthereumPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumPrivate.h; sourceTree = "<group>"; };
 		7C7F18EC1FED9A3B0030230E /* TxStatusIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxStatusIndicator.swift; path = src/Views/TxStatusIndicator.swift; sourceTree = "<group>"; };
 		7C9724651FF07B9A004248C4 /* StatusPip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StatusPip.swift; path = src/Views/StatusPip.swift; sourceTree = "<group>"; };
+		7CA1C47320EC25B9002E9E68 /* QRCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QRCode.swift; path = src/Models/QRCode.swift; sourceTree = "<group>"; };
+		7CA1C47520EC2BFA002E9E68 /* QRCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeTests.swift; sourceTree = "<group>"; };
 		7CA238132011A97C00A4A59D /* TxDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailViewController.swift; path = src/ViewControllers/TxDetailViewController.swift; sourceTree = "<group>"; };
 		7CA3BC2F2006864C00517BF7 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Currency.swift; path = src/Models/Currency.swift; sourceTree = "<group>"; };
 		7CB2286E20A2286700105FFF /* BREthereum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BREthereum.swift; path = src/BREthereum.swift; sourceTree = "<group>"; };
@@ -2675,18 +2681,19 @@
 			isa = PBXGroup;
 			children = (
 				75A2A7AA1DA5934300A983D8 /* Info.plist */,
-				CE4CA7B81EE0C89F00373F11 /* Platform */,
-				CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */,
-				CE6DCC281E63D0280044257B /* PhraseTests.swift */,
-				CE6DCC2A1E63D6290044257B /* WalletCreationTests.swift */,
-				CE6DCC2C1E63D6B10044257B /* TestHelpers.swift */,
-				CEC6F8461E8878B6000795B8 /* PaymentRequestTests.swift */,
-				CEF3D2D61E8AB9980070178E /* SpendingLimitTests.swift */,
-				CEEC70871E943DC900EF788E /* TouchIdEnabledTests.swift */,
-				CEEC70971E96BF8800EF788E /* DefaultCurrencyTests.swift */,
-				7CB3BCD42059B62200053687 /* UnitConversionTests.swift */,
-				CEA7E6751F057D77001F8C27 /* WalletInfoTest.swift */,
 				CEC7F929208803FA0083DF64 /* CurrencyMetaDataTests.swift */,
+				CEEC70971E96BF8800EF788E /* DefaultCurrencyTests.swift */,
+				CEC6F8461E8878B6000795B8 /* PaymentRequestTests.swift */,
+				CE6DCC281E63D0280044257B /* PhraseTests.swift */,
+				7CA1C47520EC2BFA002E9E68 /* QRCodeTests.swift */,
+				CEF3D2D61E8AB9980070178E /* SpendingLimitTests.swift */,
+				CE6DCC2C1E63D6B10044257B /* TestHelpers.swift */,
+				CEEC70871E943DC900EF788E /* TouchIdEnabledTests.swift */,
+				7CB3BCD42059B62200053687 /* UnitConversionTests.swift */,
+				CEDD8F0F1E575DD4007A4123 /* WalletAuthenticationTests.swift */,
+				CE6DCC2A1E63D6290044257B /* WalletCreationTests.swift */,
+				CEA7E6751F057D77001F8C27 /* WalletInfoTest.swift */,
+				CE4CA7B81EE0C89F00373F11 /* Platform */,
 			);
 			path = breadwalletTests;
 			sourceTree = "<group>";
@@ -2959,6 +2966,7 @@
 				CE6B82991FE3A7B6007A41B9 /* UIScrollView+Additions.swift */,
 				7CBF4B6320081BCE00E003AA /* KeyedDecodingContainer+Additions.swift */,
 				7CBABD9B20181D890077CB55 /* NSMutableAttributedString+Additions.swift */,
+				7C377EC120F6C29E00E8CF1C /* UIAlertController+Additions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -3086,13 +3094,14 @@
 		CE6D0E5A1E14BF8400137DF1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */,
-				CE6D0E5B1E14BFA600137DF1 /* KeyboardNotificationInfo.swift */,
-				CEE65DEF1E39056F0002994D /* Rate.swift */,
-				CEEC70821E90C07C00EF788E /* MenuItem.swift */,
-				CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */,
 				7CA3BC2F2006864C00517BF7 /* Currency.swift */,
 				7CBC59BF20782D7E006EAE56 /* ERC20ABI.swift */,
+				CE6D0E5B1E14BFA600137DF1 /* KeyboardNotificationInfo.swift */,
+				CEEC70821E90C07C00EF788E /* MenuItem.swift */,
+				7CA1C47320EC25B9002E9E68 /* QRCode.swift */,
+				CEE65DEF1E39056F0002994D /* Rate.swift */,
+				CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */,
+				CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -3942,6 +3951,7 @@
 				CECCE5AE1E04AD6300D99448 /* AddressCell.swift in Sources */,
 				CE2DC1391EBC36EE000FE727 /* Prompt.swift in Sources */,
 				CE83DE2A1E9EB7F600D07636 /* SendAmountCell.swift in Sources */,
+				7C377EC220F6C29E00E8CF1C /* UIAlertController+Additions.swift in Sources */,
 				22A9A9521DF61945000F0016 /* BRKVStorePlugin.swift in Sources */,
 				CEAFC8611E5D5B0500E4FD06 /* SegmentedButton.swift in Sources */,
 				7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */,
@@ -4035,6 +4045,7 @@
 				7CA3BC302006864C00517BF7 /* Currency.swift in Sources */,
 				CE3D4C571EF5D5740016B1C8 /* ReachabilityMonitor.swift in Sources */,
 				7CBA74E62022784D00FBBFA9 /* AssetListViewModel.swift in Sources */,
+				7CA1C47420EC25B9002E9E68 /* QRCode.swift in Sources */,
 				CEC7E594200D7C830056F410 /* Sentry.swift in Sources */,
 				22A9A9571DF61945000F0016 /* BRWebSocket.swift in Sources */,
 				CE4DFB2E1E9C26DA0014009E /* ShareDataViewController.swift in Sources */,
@@ -4072,6 +4083,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CA1C47620EC2BFA002E9E68 /* QRCodeTests.swift in Sources */,
 				22C4312E1DF89D970017CAEA /* BRHTTPServerTests.swift in Sources */,
 				CE6DCC2B1E63D6290044257B /* WalletCreationTests.swift in Sources */,
 				CEC6F8471E8878B6000795B8 /* PaymentRequestTests.swift in Sources */,

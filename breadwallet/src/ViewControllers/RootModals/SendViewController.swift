@@ -218,9 +218,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     @objc private func scanTapped() {
         memoCell.textView.resignFirstResponder()
         addressCell.textField.resignFirstResponder()
-        presentScan? { [weak self] paymentRequest in
+        presentScan? { [weak self] scanResult in
             self?.validatedProtoRequest = nil
-            guard let request = paymentRequest else { return }
+            guard case .paymentRequest(let request)? = scanResult else { return }
             self?.handleRequest(request)
         }
     }

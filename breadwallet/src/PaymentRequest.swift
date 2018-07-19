@@ -24,46 +24,52 @@ struct PaymentRequest {
 
                 if let scheme = url.scheme, let currencySchemes = currency.urlSchemes, currencySchemes.contains(scheme) {
                     let host = url.host
-                    if let host = host, currency.matches(Currencies.bch) {
-                        // BCH CashAddr includes the bitcoincash: prefix in the address format
-                        // the payment request stores the address in legacy address
-                        toAddress = "\(scheme):\(host)".bitcoinAddr
-                        if toAddress == "" {
+                    if let host = host {
+                        if currency.matches(Currencies.bch) {
+                            // BCH CashAddr includes the bitcoincash: prefix in the address format
+                            // the payment request stores the address in legacy address format
+                            let cashAddr = "\(scheme):\(host)"
+                            toAddress = cashAddr.bitcoinAddr
+                            if toAddress == "" {
+                                toAddress = host
+                                warningMessage = S.Send.legacyAddressWarning
+                            }
+                            guard currency.isValidAddress(toAddress!.bCashAddr) else { return nil }
+                        } else {
+                            guard currency.isValidAddress(host) else { return nil }
                             toAddress = host
-                            warningMessage = S.Send.legacyAddressWarning
                         }
-                    } else {
-                        toAddress = host
                     }
-                    guard let components = url.query?.components(separatedBy: "&") else { type = .local; return }
-                    for component in components {
-                        let pair = component.components(separatedBy: "=")
-                        if pair.count < 2 { continue }
-                        let key = pair[0]
-                        var value = String(component[component.index(key.endIndex, offsetBy: 1)...])
-                        value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
-
-                        switch key {
-                        case "amount":
-                            amount = Amount(tokenString: value, currency: currency, locale: Locale(identifier: "en_US"))
-                        case "label", "memo":
-                            label = value
-                        case "message":
-                            message = value
-                        case "r":
-                            r = URL(string: value)
-                        default:
-                            print("Key not found: \(key)")
+                    
+                    if let components = url.query?.components(separatedBy: "&") {
+                        for component in components {
+                            let pair = component.components(separatedBy: "=")
+                            if pair.count < 2 { continue }
+                            let key = pair[0]
+                            var value = String(component[component.index(key.endIndex, offsetBy: 1)...])
+                            value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
+                            
+                            switch key {
+                            case "amount":
+                                amount = Amount(tokenString: value, currency: currency, locale: Locale(identifier: "en_US"))
+                            case "label", "memo":
+                                label = value
+                            case "message":
+                                message = value
+                            case "r":
+                                r = URL(string: value)
+                            default:
+                                print("Key not found: \(key)")
+                            }
                         }
                     }
                     //Payment request must have either an r value or an address
                     if r == nil {
-                        if toAddress == nil {
-                            return nil
-                        }
+                        guard toAddress != nil else { return nil }
+                        type = .local
+                    } else {
+                        type = .remote
                     }
-
-                    type = r == nil ? .local : .remote
                     return
                 }
             } else if url.scheme == "http" || url.scheme == "https" {
