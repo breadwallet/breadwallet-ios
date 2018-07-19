@@ -224,15 +224,6 @@ class ApplicationController : Subscriber, Trackable {
         fetchCompletionHandler = completionHandler
     }
 
-    func open(url: URL) -> Bool {
-        if let urlController = urlController {
-            return urlController.handleUrl(url)
-        } else {
-            launchURL = url
-            return false
-        }
-    }
-
     private func didInitWalletManager() {
         guard let primaryWalletManager = primaryWalletManager else { return }
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
@@ -548,6 +539,24 @@ class ApplicationController : Subscriber, Trackable {
             ethWalletManager.tokens = tokens // triggers balance refresh
             self.exchangeUpdater?.refresh() {}
         })
+    }
+}
+
+extension ApplicationController {
+    func open(url: URL) -> Bool {
+        if let urlController = urlController {
+            return urlController.handleUrl(url)
+        } else {
+            launchURL = url
+            return false
+        }
+    }
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+        if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
+            return open(url: userActivity.webpageURL!)
+        }
+        return false
     }
 }
 

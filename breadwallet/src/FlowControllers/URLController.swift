@@ -62,11 +62,35 @@ class URLController : Trackable {
                 return handlePaymentRequestUri(uri, currency: Currencies.btc)
             }
             return true
+            
+        case "https" where url.isDeepLink:
+            guard url.pathComponents.count == 3 else { return false }
+            let target = url.pathComponents[2]
+            switch target {
+            case "scanqr":
+                Store.trigger(name: .scanQr)
+                
+            case "link-wallet":
+                if let params = url.queryParameters,
+                    let pubKey = params["publicKey"],
+                    let identifier = params["id"],
+                    let service = params["service"] {
+                    print("[EME] PAIRING REQUEST | pubKey: \(pubKey) | identifier: \(identifier) | service: \(service)")
+                    // TODO:PWB initiate pairing with remote wallet
+                }
+                
+            default:
+                print("unknown deep link: \(target)")
+                break
+            }
+            return true
+            
         case "bitid":
             if BRBitID.isBitIDURL(url) {
                 handleBitId(url)
+                return true
             }
-            return true
+            
         default:
             guard let currency = Store.state.currencies.first(where: {
                 var result = false
@@ -79,6 +103,8 @@ class URLController : Trackable {
             }) else { return false }
             return handlePaymentRequestUri(url, currency: currency)
         }
+        
+        return false
     }
 
     private func isBitcoinUri(url: URL, uri: String?) -> URL? {
