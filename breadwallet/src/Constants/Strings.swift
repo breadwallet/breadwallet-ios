@@ -44,6 +44,8 @@ enum S {
 
     enum Scanner {
         static let flashButtonLabel = NSLocalizedString("Scanner.flashButtonLabel", value:"Camera Flash", comment: "Scan bitcoin address camera flash toggle")
+        static let paymentPrompTitle = NSLocalizedString("Scanner.paymentPromptTitle", value:"Send Payment", comment: "alert dialog title")
+        static let paymentPromptMessage = NSLocalizedString("Scanner.paymentPromptMessage", value:"Would you like to send a %1$@ payment to this address?", comment: "(alert dialog message) Would you like to send a [Bitcoin / Bitcoin Cash / Ethereum] payment to this address?")
     }
 
     enum Send {
@@ -392,7 +394,6 @@ enum S {
         static let support = NSLocalizedString("MenuButton.support", value:"Support", comment: "Menu button title")
         static let settings = NSLocalizedString("MenuButton.settings", value:"Settings", comment: "Menu button title")
         static let lock = NSLocalizedString("MenuButton.lock", value:"Lock Wallet", comment: "Menu button title")
-        static let buy = NSLocalizedString("MenuButton.buy", value:"Buy Bitcoin", comment: "Buy bitcoin title")
         static let addWallet = NSLocalizedString("MenuButton.addWallet", value: "Add Wallet", comment: "Menu button title")
         static let manageWallets = NSLocalizedString("MenuButton.manageWallets", value: "Manage Wallets", comment: "Menu button title")
         static let scan = NSLocalizedString("MenuButton.scan", value: "Scan QR Code", comment: "Menu button title")

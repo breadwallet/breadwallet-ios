@@ -188,6 +188,7 @@ class Store {
 
     //MARK: - Private
     func perform(action: Action) {
+        assert(Thread.isMainThread)
         state = action.reduce(state)
     }
 
