@@ -9,8 +9,7 @@
 import UIKit
 import AVFoundation
 
-typealias ScanCompletion = (PaymentRequest?) -> Void
-typealias KeyScanCompletion = (String) -> Void
+typealias ScanCompletion = (QRCode?) -> Void
 
 class ScanViewController : UIViewController, Trackable {
 
@@ -29,35 +28,23 @@ class ScanViewController : UIViewController, Trackable {
         return AVCaptureDevice.authorizationStatus(for: AVMediaType.video) != .denied
     }
 
-    let completion: ScanCompletion?
-    let scanKeyCompletion: KeyScanCompletion?
-    let isValidURI: (String) -> Bool
-
+    private let completion: ScanCompletion
+    private let allowScanningPrivateKeysOnly: Bool
+    /// scanner only accepts currency-specific payment request
+    private let paymentRequestCurrencyRestriction: CurrencyDef?
     fileprivate let guide = CameraGuideView()
     fileprivate let session = AVCaptureSession()
     private let toolbar = UIView()
     private let close = UIButton.close
     private let flash = UIButton.icon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
     fileprivate var currentUri = ""
-    private let currency: CurrencyDef
     private var toolbarHeightConstraint: NSLayoutConstraint?
     private let toolbarHeight: CGFloat = 48.0
 
-    init(currency: CurrencyDef, completion: @escaping ScanCompletion) {
-        self.currency = currency
+    init(forPaymentRequestForCurrency currencyRestriction: CurrencyDef? = nil, forScanningPrivateKeys: Bool = false, completion: @escaping ScanCompletion) {
         self.completion = completion
-        self.scanKeyCompletion = nil
-        self.isValidURI = { address in
-            currency.isValidAddress(address)
-        }
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    init(scanKeyCompletion: @escaping KeyScanCompletion, isValidURI: @escaping (String) -> Bool) {
-        self.currency = Currencies.btc //TODO:BCH
-        self.scanKeyCompletion = scanKeyCompletion
-        self.completion = nil
-        self.isValidURI = isValidURI
+        self.paymentRequestCurrencyRestriction = currencyRestriction
+        self.allowScanningPrivateKeysOnly = forScanningPrivateKeys
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -106,10 +93,10 @@ class ScanViewController : UIViewController, Trackable {
             NSLayoutConstraint(item: guide, attribute: .width, relatedBy: .equal, toItem: guide, attribute: .height, multiplier: 1.0, constant: 0.0) ])
         guide.transform = CGAffineTransform(scaleX: 0.0, y: 0.0)
 
-        close.tap = { [weak self] in
-            self?.saveEvent("scan.dismiss")
-            self?.dismiss(animated: true, completion: {
-                self?.completion?(nil)
+        close.tap = { [unowned self] in
+            self.saveEvent("scan.dismiss")
+            self.dismiss(animated: true, completion: {
+                self.completion(nil)
             })
         }
 
@@ -187,11 +174,7 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
             } else {
                 data.forEach {
                     guard let uri = $0.stringValue else { return }
-                    if completion != nil {
-                        handleURI(uri)
-                    } else if scanKeyCompletion != nil {
-                        handleKey(uri)
-                    }
+                    handleURI(uri)
                 }
             }
         }
@@ -199,9 +182,33 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
 
     func handleURI(_ uri: String) {
         if self.currentUri != uri {
+            print("QR content detected: \(uri)")
             self.currentUri = uri
-            if let request = PaymentRequest(string: uri, currency: currency) {
-                switch currency.code {
+            let result = QRCode(content: uri)
+            guard .invalid != result else {
+                guide.state = .negative
+                return
+            }
+            
+            if allowScanningPrivateKeysOnly {
+                guard case .privateKey(_) = result else {
+                    guide.state = .negative
+                    return
+                }
+            }
+            
+            if let currencyRestriction = paymentRequestCurrencyRestriction {
+                guard case .paymentRequest(let request) = result, request.currency.matches(currencyRestriction) else {
+                    guide.state = .negative
+                    return
+                }
+            }
+            
+            guide.state = .positive
+            
+            switch result {
+            case .paymentRequest(let request):
+                switch request.currency.code {
                 case Currencies.bch.code:
                     saveEvent("scan.bCashAddr")
                 case Currencies.btc.code:
@@ -210,34 +217,27 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
                     saveEvent("scan.ethAddress")
                 default: break
                 }
-                createPaymentRequestSuccess(request: request)
-            } else {
-                guide.state = .negative
+                
+            case .privateKey(_):
+                saveEvent("scan.privateKey")
+                guard allowScanningPrivateKeysOnly else {
+                    //TODO:QR support key import from universal scan
+                    guide.state = .negative
+                    return
+                }
+                
+            case .deepLink(_):
+                saveEvent("scan.pairingRequest") // TODO: document
+            default:
+                assertionFailure("unexpected result")
             }
-        }
-    }
-
-    func createPaymentRequestSuccess(request: PaymentRequest) {
-        guide.state = .positive
-        //Add a small delay so the green guide will be seen
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-            self.dismiss(animated: true, completion: {
-                self.completion?(request)
-            })
-        })
-    }
-
-    func handleKey(_ address: String) {
-        if isValidURI(address) {
-            saveEvent("scan.privateKey")
-            guide.state = .positive
+            
+            // add a small delay so the green guide will be seen
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
                 self.dismiss(animated: true, completion: {
-                    self.scanKeyCompletion?(address)
+                    self.completion(result)
                 })
             })
-        } else {
-            guide.state = .negative
         }
     }
 }

@@ -153,7 +153,6 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
-        guard type != .loginScan else { return presentLoginScan() }
         guard let vc = rootModalViewController(type) else {
             Store.perform(action: RootModalActions.Present(modal: .none))
             return
@@ -240,7 +239,8 @@ class ModalPresenter : Subscriber, Trackable {
         case .receive(let currency):
             return receiveView(currency: currency, isRequestAmountVisible: (currency.urlSchemes != nil))
         case .loginScan:
-            return nil //The scan view needs a custom presentation
+            presentLoginScan()
+            return nil
         case .loginAddress:
             return receiveView(currency: Currencies.btc, isRequestAmountVisible: false)
         case .requestAmount(let currency):
@@ -343,15 +343,30 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func presentLoginScan() {
-        //TODO:BCH URL support
         guard let top = topViewController else { return }
-        let present = presentScan(parent: top, currency: Currencies.btc)
-        Store.perform(action: RootModalActions.Present(modal: .none))
-        present({ paymentRequest in
-            guard let request = paymentRequest else { return }
-            self.currentRequest = request
-            self.presentModal(.send(currency: Currencies.btc))
-        })
+        let present = presentScan(parent: top, currency: nil)
+        present { [unowned self] scanResult in
+            guard let scanResult = scanResult else { return }
+            switch scanResult {
+            case .paymentRequest(let request):
+                let message = String(format: S.Scanner.paymentPromptMessage, request.currency.name)
+                let alert = UIAlertController.confirmationAlert(title: S.Scanner.paymentPrompTitle, message: message) {
+                    self.currentRequest = request
+                    self.presentModal(.send(currency: request.currency))
+                }
+                top.present(alert, animated: true, completion: nil)
+                
+            case .privateKey(_):
+                //TODO:QR support key import from universal scanner
+                break
+                
+            case .deepLink(let url):
+                UIApplication.shared.open(url)
+                
+            case .invalid:
+                break
+            }
+        }
     }
     
     // MARK: Settings
@@ -485,6 +500,11 @@ class ModalPresenter : Subscriber, Trackable {
         ]
         
         var rootItems: [MenuItem] = [
+            // Scan QR Code
+            MenuItem(title: S.MenuButton.scan, icon: #imageLiteral(resourceName: "scan")) { [unowned self] in
+                self.presentLoginScan()
+            },
+            
             // Manage Wallets
             MenuItem(title: S.MenuButton.manageWallets, icon: #imageLiteral(resourceName: "wallet")) {
                 guard let kvStore = btcWalletManager.apiClient?.kv else { return }
@@ -530,7 +550,7 @@ class ModalPresenter : Subscriber, Trackable {
         top.present(menuNav, animated: true, completion: nil)
     }
 
-    private func presentScan(parent: UIViewController, currency: CurrencyDef) -> PresentScan {
+    private func presentScan(parent: UIViewController, currency: CurrencyDef?) -> PresentScan {
         return { [weak parent] scanCompletion in
             guard ScanViewController.isCameraAllowed else {
                 self.saveEvent("scan.cameraDenied")
@@ -539,8 +559,8 @@ class ModalPresenter : Subscriber, Trackable {
                 }
                 return
             }
-            let vc = ScanViewController(currency: currency, completion: { paymentRequest in
-                scanCompletion(paymentRequest)
+            let vc = ScanViewController(forPaymentRequestForCurrency: currency, completion: { scanResult in
+                scanCompletion(scanResult)
                 parent?.view.isFrameChangeBlocked = false
             })
             parent?.view.isFrameChangeBlocked = true
@@ -623,13 +643,15 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func wipeWallet() {
-        let alert = UIAlertController(title: S.WipeWallet.alertTitle, message: S.WipeWallet.alertMessage, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
-        alert.addAction(UIAlertAction(title: S.WipeWallet.wipe, style: .default, handler: { _ in
-            self.topViewController?.dismiss(animated: true, completion: {
-                self.wipeWalletNoPrompt()
-            })
-        }))
+        let alert = UIAlertController.confirmationAlert(title: S.WipeWallet.alertTitle,
+                                                        message: S.WipeWallet.alertMessage,
+                                                        okButtonTitle: S.WipeWallet.wipe,
+                                                        cancelButtonTitle: S.Button.cancel,
+                                                        isDestructiveAction: true) {
+                                                            self.topViewController?.dismiss(animated: true, completion: {
+                                                                self.wipeWalletNoPrompt()
+                                                            })
+        }
         topViewController?.present(alert, animated: true, completion: nil)
     }
 
@@ -657,11 +679,12 @@ class ModalPresenter : Subscriber, Trackable {
         }
     }
     
-    private func presentKeyImport(walletManager: BTCWalletManager) {
+    private func presentKeyImport(walletManager: BTCWalletManager, scanResult: QRCode? = nil) {
+        // TODO: auto-import to both BTC and BCH wallet managers
         let nc = ModalNavigationController()
         nc.setClearNavbar()
         nc.setWhiteStyle()
-        let start = StartImportViewController(walletManager: walletManager)
+        let start = StartImportViewController(walletManager: walletManager, scanResult: scanResult)
         start.addCloseNavigationItem(tintColor: .white)
         start.navigationItem.title = S.Import.title
         let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet, currency: walletManager.currency)
