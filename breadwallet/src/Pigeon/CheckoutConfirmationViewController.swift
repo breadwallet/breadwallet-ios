@@ -145,7 +145,7 @@ class CheckoutConfirmationViewController : UIViewController {
         guard case .ok = sender.createTransaction(address: request.address,
                                              amount: request.purchaseAmount.rawValue,
                                              comment: request.memo) else {
-                                                assert(false)
+                                                return assertionFailure()
         }
         let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
             self?.presentVerifyPin?(S.VerifyPin.authorize) { pin in
