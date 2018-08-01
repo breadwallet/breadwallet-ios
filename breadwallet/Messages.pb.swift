@@ -49,6 +49,14 @@ enum MessageStatus: SwiftProtobuf.Enum {
 
 }
 
+#if swift(>=4.2)
+
+extension MessageStatus: CaseIterable {
+  // Support synthesized by the compiler.
+}
+
+#endif  // swift(>=4.2)
+
 /// Error codes for response messages.
 enum MessageError: SwiftProtobuf.Enum {
   typealias RawValue = Int
@@ -99,6 +107,14 @@ enum MessageError: SwiftProtobuf.Enum {
   }
 
 }
+
+#if swift(>=4.2)
+
+extension MessageError: CaseIterable {
+  // Support synthesized by the compiler.
+}
+
+#endif  // swift(>=4.2)
 
 /// PushNotification is only recognized as a member of Envelope
 struct MessagePushNotification {
