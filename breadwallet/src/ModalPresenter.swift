@@ -312,7 +312,7 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func makeSendView(forRequest request: PigeonRequest) -> UIViewController? {
-        return makeSendView(currency: request.currency, pigeonRequest: request)
+        return CheckoutConfirmationViewController(request: request)
     }
 
     private func makeSendView(currency: CurrencyDef, pigeonRequest: PigeonRequest? = nil) -> UIViewController? {

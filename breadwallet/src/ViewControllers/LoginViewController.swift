@@ -220,6 +220,16 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         }) { completion in
             self.dismiss(animated: true, completion: {
                 Store.perform(action: LoginSuccess())
+
+                var request = MessageCallRequest()
+                request.address = "0xadrian"
+                request.amount = "100000000000000000"
+                request.abi = "asdfasdfasdfasdf"
+
+                let wrapper = MessageCallRequestWrapper(callRequest: request)
+
+                Store.perform(action: RootModalActions.Present(modal: .sendForRequest(request: wrapper)))
+
             })
             Store.trigger(name: .showStatusBar)
         }
