@@ -17,8 +17,8 @@ class CheckoutConfirmationViewController : UIViewController {
     private let footer = UIStackView()
     private let body = UIStackView()
     private let footerBackground = UIView(color: .darkerBackground)
-    private let buy = BRDButton(title: "Buy", type: .primary)
-    private let cancel = BRDButton(title: "Cancel", type: .secondary)
+    private let buy = BRDButton(title: S.Button.buy, type: .primary)
+    private let cancel = BRDButton(title: S.Button.cancel, type: .secondary)
     private let logo = UIImageView(image: #imageLiteral(resourceName: "CCCLogo"))
     private let coinName = UILabel(font: .customBody(size: 28.0), color: .white)
     private let amount = UILabel(font: .customBody(size: 16.0), color: .white)
@@ -81,9 +81,9 @@ class CheckoutConfirmationViewController : UIViewController {
     private func setInitialData() {
         view.backgroundColor = .darkBackground
         setupStackViews()
-        titleLabel.text = "Confirmation"
+        titleLabel.text = S.PaymentConfirmation.title
         coinName.text = "Container Crypto Coin"
-        amount.text = "Send \(request.purchaseAmount.description) to purchase CCC"
+        amount.text = String(format: S.PaymentConfirmation.amountText, request.purchaseAmount.description, "CCC")
         buy.tap = {
             self.sendTapped()
         }

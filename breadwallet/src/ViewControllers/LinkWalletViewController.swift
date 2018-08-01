@@ -120,7 +120,7 @@ class LinkWalletViewController : UIViewController {
         note3.text = S.LinkWallet.disclaimer
         note1.textAlignment = .center
         note3.textAlignment = .center
-        logoFooter.text = "Secure Checkout"
+        logoFooter.text = S.LinkWallet.logoFooter
     }
 
     private func setupStackViews() {
