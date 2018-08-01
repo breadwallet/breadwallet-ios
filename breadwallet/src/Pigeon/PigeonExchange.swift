@@ -220,15 +220,15 @@ class PigeonExchange: Subscriber {
             do {
                 let envelope = try MessageEnvelope(serializedData: messageData)
                 if self.processEnvelope(envelope) {
-                    
+                    apiClient.sendAck(forCursor: entry.cursor)
                 }
-                apiClient.sendAck(forCursor: entry.cursor)
             } catch (let decodeError) {
                 print("[EME] envelope decode error: \(decodeError)")
             }
         }
     }
-    
+
+    // returns: shouldSendAck: Bool
     private func processEnvelope(_ envelope: MessageEnvelope) -> Bool {
         guard let pairingKey = pairingKey(forRemotePubKey: envelope.senderPublicKey) else {
             print("[EME] remote entity not found!")
@@ -250,7 +250,7 @@ class PigeonExchange: Subscriber {
             switch type {
             case .link:
                 print("[EME] WARNING: received LINK message outside of pairing sequence.")
-                //assertionFailure()
+                return false
             case .ping:
                 let ping = try MessagePing(serializedData: decryptedData)
                 print("[EME] PING: \(ping.ping)")
