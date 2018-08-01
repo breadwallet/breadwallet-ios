@@ -331,7 +331,7 @@ class ModalPresenter : Subscriber, Trackable {
         return checkoutVC
     }
 
-    private func makeSendView(currency: CurrencyDef, pigeonRequest: PigeonRequest? = nil) -> UIViewController? {
+    private func makeSendView(currency: CurrencyDef) -> UIViewController? {
         guard !(currency.state?.isRescanning ?? false) else {
             let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
@@ -343,8 +343,7 @@ class ModalPresenter : Subscriber, Trackable {
         guard let sender = currency.createSender(walletManager: walletManager, kvStore: kvStore) else { return nil }
         let sendVC = SendViewController(sender: sender,
                                         currency: currency,
-                                        initialRequest: currentRequest,
-                                        initialPigeonRequest: pigeonRequest)
+                                        initialRequest: currentRequest)
         currentRequest = nil
 
         if Store.state.isLoginRequired {
