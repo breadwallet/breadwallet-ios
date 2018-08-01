@@ -162,7 +162,6 @@ class ModalPresenter : Subscriber, Trackable {
                 DispatchQueue.main.async {
                     if granted {
                         print("[PUSH] notification authorization granted")
-                        UIApplication.shared.registerForRemoteNotifications()
                     } else {
                         // TODO: log event
                         print("[PUSH] notification authorization denied")
