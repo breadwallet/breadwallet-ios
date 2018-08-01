@@ -25,11 +25,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     
     var isPresentedFromLock = false
 
-    init(sender: Sender, initialRequest: PaymentRequest? = nil, currency: CurrencyDef) {
+    init(sender: Sender, currency: CurrencyDef, initialRequest: PaymentRequest? = nil, initialPigeonRequest: PigeonRequest? = nil) {
         self.currency = currency
         self.sender = sender
         self.initialRequest = initialRequest
-        
+        self.initialPigeonRequest = initialPigeonRequest
         addressCell = AddressCell(currency: currency)
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
 
@@ -56,6 +56,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let sender: Sender
     private let currency: CurrencyDef
     private let initialRequest: PaymentRequest?
+    private let initialPigeonRequest: PigeonRequest?
     private var validatedProtoRequest: PaymentProtocolRequest?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
@@ -122,6 +123,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         super.viewDidAppear(animated)
         if let initialRequest = initialRequest {
             handleRequest(initialRequest)
+        } else if let initialPigeonRequest = initialPigeonRequest {
+            handlePigeonRequest(initialPigeonRequest)
         }
     }
 
@@ -343,6 +346,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
     }
 
+    private func handlePigeonRequest(_ request: PigeonRequest) {
+        addressCell.setContent(request.address)
+        addressCell.isEditable = false
+        amountView.forceUpdateAmount(amount: request.purchaseAmount)
+        memoCell.content = request.memo
+    }
+
     private func handleRequestWithWarning(_ request: PaymentRequest) {
         guard let message = request.warningMessage else { return }
         let alert = UIAlertController(title: S.Alert.warning, message: message, preferredStyle: .alert)
@@ -363,8 +373,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             }
         }
         
-        sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier) { [weak self] result in
+        sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier, abi: initialPigeonRequest?.abiData) { [weak self] result in
             guard let `self` = self else { return }
+            self.initialPigeonRequest?.responseCallback?(result)
             switch result {
             case .success:
                 self.dismiss(animated: true, completion: {

@@ -225,11 +225,28 @@ struct EthereumWallet : EthereumReference {
         } else {
             coreAmount = amountCreateEther(etherCreate(amount))
         }
-        
+
         let tid = ethereumWalletCreateTransaction (node.core,
                                                    identifier,
                                                    recvAddress,
                                                    coreAmount)
+        return EthereumTransaction (node: node, currency: currency, identifier: tid)
+    }
+    
+    /// Create a contract execution transaction. Amount is ETH (in wei) and data is the ABI payload (hex-encoded string)
+    /// Optionally specify gasPrice and gasLimit to use, otherwise defaults will be used.
+    func createContractTransaction (recvAddress: String, amount: UInt256, data: String, gasPrice: UInt256? = nil, gasLimit: UInt64? = 200000) -> EthereumTransaction {
+        let coreAmount = etherCreate(amount)
+        let gasPrice = gasPrice ?? UInt256(defaultGasPrice)
+        let gasLimit = gasLimit ?? defaultGasLimit
+        
+        let tid = ethereumWalletCreateTransactionGeneric (node.core,
+                                                          identifier,
+                                                          recvAddress,
+                                                          coreAmount,
+                                                          gasPriceCreate(etherCreate(gasPrice)),
+                                                          gasCreate(gasLimit),
+                                                          data)
         return EthereumTransaction (node: node, currency: currency, identifier: tid)
     }
     
