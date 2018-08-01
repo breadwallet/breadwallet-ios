@@ -18,7 +18,6 @@ class RootNavigationController : UINavigationController {
                 loginView.transitioningDelegate = loginTransitionDelegate
                 loginView.modalPresentationStyle = .overFullScreen
                 loginView.modalPresentationCapturesStatusBarAppearance = true
-                loginView.shouldSelfDismiss = true
                 present(loginView, animated: false, completion: {
                     self.tempLoginView.remove()
                 })

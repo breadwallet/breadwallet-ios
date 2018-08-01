@@ -181,9 +181,6 @@ class StartFlowPresenter : Subscriber {
 
     private func presentLoginFlow(isPresentedForLock: Bool) {
         let loginView = LoginViewController(isPresentedForLock: isPresentedForLock, walletManager: walletManager)
-        if isPresentedForLock {
-            loginView.shouldSelfDismiss = true
-        }
         loginView.transitioningDelegate = loginTransitionDelegate
         loginView.modalPresentationStyle = .overFullScreen
         loginView.modalPresentationCapturesStatusBarAppearance = true

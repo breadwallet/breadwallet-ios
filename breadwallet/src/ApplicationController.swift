@@ -27,6 +27,7 @@ class ApplicationController : Subscriber, Trackable {
     }
     
     private var kvStoreCoordinator: KVStoreCoordinator?
+    private var pigeonExchange: PigeonExchange?
     fileprivate var application: UIApplication?
     private var urlController: URLController?
     private var defaultsUpdater: UserDefaultsUpdater?
@@ -188,6 +189,11 @@ class ApplicationController : Subscriber, Trackable {
                 }
             }
         })
+        
+        Store.lazySubscribe(self,
+                            selector: { $0.isLoginRequired != $1.isLoginRequired && $1.isLoginRequired == false },
+                            callback: { _ in self.didUnlockWallet() }
+        )
     }
     
     func willEnterForeground() {
@@ -204,6 +210,9 @@ class ApplicationController : Subscriber, Trackable {
         feeUpdaters.values.forEach { $0.refresh() }
         walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
         walletManager.apiClient?.updateFeatureFlags()
+        if !Store.state.isLoginRequired {
+            pigeonExchange?.fetchInbox()
+        }
     }
 
     func didEnterBackground() {
@@ -219,6 +228,10 @@ class ApplicationController : Subscriber, Trackable {
         }
         primaryWalletManager?.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
     }
+    
+    func didUnlockWallet() {
+        pigeonExchange?.fetchInbox()
+    }
 
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         fetchCompletionHandler = completionHandler
@@ -229,6 +242,7 @@ class ApplicationController : Subscriber, Trackable {
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
         walletCoordinator = WalletCoordinator(walletManagers: walletManagers)
         primaryWalletManager.apiClient?.sendLaunchEvent()
+
         setupEthInitialState()
         addTokenCountChangeListener()
         Store.perform(action: PinLength.set(primaryWalletManager.pinLength))
@@ -367,6 +381,7 @@ class ApplicationController : Subscriber, Trackable {
         guard let primaryWalletManager = primaryWalletManager else { return }
         primaryWalletManager.apiClient?.updateFeatureFlags()
         initKVStoreCoordinator()
+        initPigeonExchange()
         feeUpdaters.values.forEach { $0.refresh() }
         defaultsUpdater?.refresh()
         primaryWalletManager.apiClient?.events?.up()
@@ -432,6 +447,16 @@ class ApplicationController : Subscriber, Trackable {
             self.kvStoreCoordinator?.setupStoredCurrencyList()
             self.kvStoreCoordinator?.retreiveStoredWalletInfo()
             self.kvStoreCoordinator?.listenForWalletChanges()
+        }
+    }
+    
+    private func initPigeonExchange() {
+        guard let apiClient = primaryWalletManager?.apiClient, apiClient.kv != nil else { return }
+        guard pigeonExchange == nil else { return assertionFailure() }
+        pigeonExchange = PigeonExchange(apiClient: apiClient)
+        // TODO:PWB only start polling if push disabled
+        if let pairedWallets = pigeonExchange?.pairedWallets, pairedWallets.hasPairedWallets {
+            pigeonExchange?.startPolling()
         }
     }
 

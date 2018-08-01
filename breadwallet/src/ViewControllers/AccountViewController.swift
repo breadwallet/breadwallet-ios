@@ -43,7 +43,6 @@ class AccountViewController : UIViewController, Subscriber {
     private var footerHeightConstraint: NSLayoutConstraint?
     private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
     private var transactionsTableView: TransactionsTableViewController!
-    private var isLoginRequired = false
     private let searchHeaderview: SearchHeaderView = {
         let view = SearchHeaderView()
         view.isHidden = true
@@ -155,7 +154,6 @@ class AccountViewController : UIViewController, Subscriber {
     }
 
     private func addSubscriptions() {
-        Store.subscribe(self, selector: { $0.isLoginRequired != $1.isLoginRequired }, callback: { self.isLoginRequired = $0.isLoginRequired })
         Store.subscribe(self, name: .showStatusBar, callback: { _ in
             self.shouldShowStatusBar = true
         })

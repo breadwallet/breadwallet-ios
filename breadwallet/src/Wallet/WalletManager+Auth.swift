@@ -384,7 +384,9 @@ extension BTCWalletManager : WalletAuthenticator {
     func changePin(newPin: String, pin: String) -> Bool {
         guard authenticate(pin: pin) else { return false }
         do {
-            Store.perform(action: PinLength.set(newPin.utf8.count))
+            DispatchQueue.main.async {
+                Store.perform(action: PinLength.set(newPin.utf8.count))
+            }
             try setKeychainItem(key: KeychainKey.pin, item: newPin)
             return true
         }
