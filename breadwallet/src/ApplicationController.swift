@@ -456,8 +456,7 @@ class ApplicationController : Subscriber, Trackable {
         guard let apiClient = primaryWalletManager?.apiClient, apiClient.kv != nil else { return }
         guard pigeonExchange == nil else { return assertionFailure() }
         pigeonExchange = PigeonExchange(apiClient: apiClient)
-        // TODO:PWB only start polling if push disabled
-        if let pairedWallets = pigeonExchange?.pairedWallets, pairedWallets.hasPairedWallets {
+        if !Store.state.isPushNotificationsEnabled {
             pigeonExchange?.startPolling()
         }
     }
@@ -522,13 +521,30 @@ class ApplicationController : Subscriber, Trackable {
 
     func willResignActive() {
         applyBlurEffect()
-        guard !Store.state.isPushNotificationsEnabled else { return }
-        guard let pushToken = UserDefaults.pushToken else { return }
-        primaryWalletManager?.apiClient?.deletePushNotificationToken(pushToken)
+        if !Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
+            primaryWalletManager?.apiClient?.deletePushNotificationToken(pushToken)
+        }
     }
     
     func didBecomeActive() {
         removeBlurEffect()
+        // check if notification settings changed
+        NotificationAuthorizer().areNotificationsAuthorized { authorized in
+            DispatchQueue.main.async {
+                if authorized {
+                    if !Store.state.isPushNotificationsEnabled {
+                        self.saveEvent("push.enabledSettings")
+                    }
+                    UIApplication.shared.registerForRemoteNotifications()
+                } else {
+                    if Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
+                        self.saveEvent("pushdisabledSettings")
+                        Store.perform(action: PushNotifications.setIsEnabled(false))
+                        self.primaryWalletManager?.apiClient?.deletePushNotificationToken(pushToken)
+                    }
+                }
+            }
+        }
     }
     
     private func applyBlurEffect() {
@@ -605,5 +621,6 @@ extension ApplicationController {
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("[PUSH] failed to register for remote notifications: \(error.localizedDescription)")
+        Store.perform(action: PushNotifications.setIsEnabled(false))
     }
 }

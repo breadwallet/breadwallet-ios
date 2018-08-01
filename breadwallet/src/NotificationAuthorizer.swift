@@ -10,11 +10,11 @@ import Foundation
 import UserNotifications
 import UIKit
 
-struct NotificationAuthorizer {
+struct NotificationAuthorizer: Trackable {
     
     typealias AuthorizationHandler = (_ granted: Bool) -> Void
     
-    let options: UNAuthorizationOptions = [.alert, .sound]
+    let options: UNAuthorizationOptions = [.alert, .sound, .badge]
     
     func requestAuthorization(fromViewController viewController: UIViewController, completion: @escaping AuthorizationHandler) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
@@ -28,6 +28,7 @@ struct NotificationAuthorizer {
                         settings.badgeSetting == .enabled) {
                         self.showAlertForDisabledNotifications(fromViewController: viewController, completion: completion)
                     } else {
+                        UIApplication.shared.registerForRemoteNotifications()
                         completion(true)
                     }
                 case .notDetermined:
@@ -35,6 +36,17 @@ struct NotificationAuthorizer {
                 case .denied:
                     self.showAlertForDisabledNotifications(fromViewController: viewController, completion: completion)
                 }
+            }
+        }
+    }
+    
+    func areNotificationsAuthorized(completion: @escaping AuthorizationHandler) {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .authorized:
+                completion(true)
+            case .notDetermined, .denied:
+                completion(false)
             }
         }
     }
@@ -47,10 +59,14 @@ struct NotificationAuthorizer {
         
         let enableAction = UIAlertAction(title: S.Button.ok, style: .default) { _ in
             UNUserNotificationCenter.current().requestAuthorization(options: self.options) { (granted, error) in
+                if !granted {
+                    self.saveEvent("push.systemPromptDenied")
+                }
                 completion(granted)
             }
         }
         let cancelAction = UIAlertAction(title: S.Button.cancel, style: .cancel) { _ in
+            self.saveEvent("push.firstPromptDenied")
             completion(false)
         }
         

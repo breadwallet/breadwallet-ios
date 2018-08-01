@@ -16,6 +16,7 @@ class NotificationHandler: NSObject, UNUserNotificationCenterDelegate {
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         print("received notification response: \(response)")
+        // inbox is always fetched after unlock
         completionHandler()
     }
 
@@ -25,6 +26,9 @@ class NotificationHandler: NSObject, UNUserNotificationCenterDelegate {
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
         print("received notification: \(notification)")
+        if !Store.state.isLoginRequired {
+            Store.trigger(name: .fetchInbox)
+        }
         completionHandler([])
     }
 }
