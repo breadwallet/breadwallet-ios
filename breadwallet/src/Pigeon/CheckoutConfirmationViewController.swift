@@ -8,6 +8,7 @@
 //
 
 import UIKit
+import BRCore
 
 class CheckoutConfirmationViewController : UIViewController {
 
@@ -22,10 +23,16 @@ class CheckoutConfirmationViewController : UIViewController {
     private let coinName = UILabel(font: .customBody(size: 28.0), color: .white)
     private let amount = UILabel(font: .customBody(size: 16.0), color: .white)
 
+    private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private let request: PigeonRequest
+    private let sender: Sender
 
-    init(request: PigeonRequest) {
+    var presentVerifyPin: ((String, @escaping ((String) -> Void))->Void)?
+    var onPublishSuccess: (()->Void)?
+
+    init(request: PigeonRequest, sender: Sender) {
         self.request = request
+        self.sender = sender
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -78,7 +85,7 @@ class CheckoutConfirmationViewController : UIViewController {
         coinName.text = "Container Crypto Coin"
         amount.text = "Send \(request.purchaseAmount.description) to purchase CCC"
         buy.tap = {
-            self.dismiss(animated: true, completion: nil)
+            self.sendTapped()
         }
         cancel.tap = {
             self.dismiss(animated: true, completion: nil)
@@ -98,6 +105,88 @@ class CheckoutConfirmationViewController : UIViewController {
         footer.spacing = C.padding[1]
         footer.layoutMargins = UIEdgeInsets(top: C.padding[1], left: C.padding[1], bottom: C.padding[1], right: C.padding[1])
         footer.isLayoutMarginsRelativeArrangement = true
+    }
+
+    private func sendTapped() {
+        let amount = request.purchaseAmount
+        let address = request.address
+        let currency = request.currency
+
+        let fee = sender.fee(forAmount: amount.rawValue) ?? UInt256(0)
+        let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
+
+        let displyAmount = Amount(amount: amount.rawValue,
+                                  currency: currency,
+                                  rate: nil,
+                                  maximumFractionDigits: Amount.highPrecisionDigits)
+        let feeAmount = Amount(amount: fee,
+                               currency: feeCurrency,
+                               rate: nil,
+                               maximumFractionDigits: Amount.highPrecisionDigits)
+
+        let confirm = ConfirmationViewController(amount: displyAmount,
+                                                 fee: feeAmount,
+                                                 feeType: .regular,
+                                                 address: address,
+                                                 isUsingBiometrics: sender.canUseBiometrics,
+                                                 currency: currency)
+        confirm.successCallback = send
+        confirm.cancelCallback = sender.reset
+
+        confirmTransitioningDelegate.shouldShowMaskView = false
+        confirm.transitioningDelegate = confirmTransitioningDelegate
+        confirm.modalPresentationStyle = .overFullScreen
+        confirm.modalPresentationCapturesStatusBarAppearance = true
+        present(confirm, animated: true, completion: nil)
+        return
+    }
+
+    private func send() {
+        guard case .ok = sender.createTransaction(address: request.address,
+                                             amount: request.purchaseAmount.rawValue,
+                                             comment: request.memo) else {
+                                                assert(false)
+        }
+        let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
+            self?.presentVerifyPin?(S.VerifyPin.authorize) { pin in
+                self?.parent?.view.isFrameChangeBlocked = false
+                pinValidationCallback(pin)
+            }
+        }
+
+        sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier, abi: request.abiData) { [weak self] result in
+            guard let `self` = self else { return }
+            self.request.responseCallback?(result)
+            switch result {
+            case .success:
+                self.dismiss(animated: true, completion: {
+                    Store.trigger(name: .showStatusBar)
+                    self.onPublishSuccess?()
+                })
+            case .creationError(let message):
+                self.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
+            case .publishFailure(let error):
+                if case .posixError(let code, let description) = error {
+                    self.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
+                }
+            case .insufficientGas(_):
+                self.showInsufficientGasError()
+            }
+        }
+    }
+
+    /// Insufficient gas for ERC20 token transfer
+    private func showInsufficientGasError() {
+        guard let fee = sender.fee(forAmount: request.purchaseAmount.rawValue) else { return assertionFailure() }
+        let feeAmount = Amount(amount: fee, currency: Currencies.eth, rate: nil)
+        let message = String(format: S.Send.insufficientGasMessage, feeAmount.description)
+
+        let alertController = UIAlertController(title: S.Send.insufficientGasTitle, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
+            Store.trigger(name: .showCurrency(Currencies.eth))
+        }))
+        alertController.addAction(UIAlertAction(title: S.Button.no, style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
