@@ -312,7 +312,23 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func makeSendView(forRequest request: PigeonRequest) -> UIViewController? {
-        return CheckoutConfirmationViewController(request: request)
+        guard let walletManager = walletManagers[request.currency.code] else { return nil }
+        guard let kvStore = walletManager.apiClient?.kv else { return nil }
+        guard let sender = request.currency.createSender(walletManager: walletManager, kvStore: kvStore) else { return nil }
+        let checkoutVC = CheckoutConfirmationViewController(request: request, sender: sender)
+        checkoutVC.presentVerifyPin = { [weak self, weak checkoutVC] bodyText, success in
+            guard let myself = self else { return }
+            let walletManager = myself.primaryWalletManager
+            let vc = VerifyPinViewController(bodyText: bodyText, pinLength: Store.state.pinLength, walletManager: walletManager, success: success)
+            vc.transitioningDelegate = self?.verifyPinTransitionDelegate
+            vc.modalPresentationStyle = .overFullScreen
+            vc.modalPresentationCapturesStatusBarAppearance = true
+            checkoutVC?.present(vc, animated: true, completion: nil)
+        }
+        checkoutVC.onPublishSuccess = { [weak self] in
+            self?.presentAlert(.sendSuccess, completion: {})
+        }
+        return checkoutVC
     }
 
     private func makeSendView(currency: CurrencyDef, pigeonRequest: PigeonRequest? = nil) -> UIViewController? {
