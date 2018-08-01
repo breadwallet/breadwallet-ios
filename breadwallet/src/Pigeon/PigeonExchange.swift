@@ -31,6 +31,20 @@ class PigeonExchange: Subscriber {
             guard case .linkWallet(let pubKey, let identifier, let service, let callback)? = $0 else { return }
             self.initiatePairing(ephemPubKey: pubKey, identifier: identifier, service: service, completionHandler: callback)
         }
+        
+        Store.subscribe(self, name: .fetchInbox) { [unowned self] _ in
+            self.fetchInbox()
+        }
+        
+        Store.lazySubscribe(self,
+                            selector: { $0.isPushNotificationsEnabled != $1.isPushNotificationsEnabled },
+                            callback: { [unowned self] state in
+                                if state.isPushNotificationsEnabled {
+                                    self.stopPolling()
+                                } else {
+                                    self.startPolling()
+                                }
+        })
     }
     
     deinit {
@@ -104,53 +118,65 @@ class PigeonExchange: Subscriber {
                             return true
                         }
 
-                        guard let entry = linkEntries.unacknowledged.last else {
+                        guard linkEntries.unacknowledged.count > 0 else {
                             if !timer.isValid {
                                 print("[EME] timed out waiting for link response. pairing aborted!")
                                 completionHandler(.error(message: "timed out waiting for link response. pairing aborted!"))
                             }
                             return
                         }
-                        // from this point on it will either succeed or fail, cancel the timer
-                        timer.invalidate()
                         
-                        guard let messageData = Data(base64Encoded: entry.message),
-                            let envelope = try? MessageEnvelope(serializedData: messageData) else {
-                                print("[EME] failed to decode link envelope. pairing aborted!")
-                                completionHandler(.error(message: "failed to decode link envelope. pairing aborted!"))
+                        for entry in linkEntries.unacknowledged {
+                            guard let messageData = Data(base64Encoded: entry.message),
+                                let envelope = try? MessageEnvelope(serializedData: messageData),
+                                let type = PigeonMessageType(rawValue: envelope.messageType), type == .link else {
+                                    print("[EME] failed to decode link envelope.")
+                                    //completionHandler(.error(message: "failed to decode link envelope. pairing aborted!"))
+                                    self.apiClient.sendAck(forCursor: entry.cursor)
+                                    continue // skip to next unacknowledged message
+                            }
+                            
+                            // from this point on it will either succeed or fail, cancel the timer
+                            timer.invalidate()
+                            
+                            guard envelope.verify(pairingKey: pairingKey) else {
+                                print("[EME] envelope verification failed!")
+                                //completionHandler(.error(message: "envelope verification failed! pairing aborted!"))
+                                self.apiClient.sendAck(forCursor: entry.cursor)
+                                continue
+                            }
+                            //                        guard let type = PigeonMessageType(rawValue: envelope.messageType), type == .link else {
+                            //                            print("[EME] unexpected envelope during pairing. aborted!")
+                            //                            completionHandler(.error(message: "unexpected envelope during pairing. aborted!"))
+                            //                            return
+                            //                        }
+                            self.apiClient.sendAck(forCursor: entry.cursor)
+                            let decryptedData = PigeonCrypto(privateKey: pairingKey).decrypt(envelope.encryptedMessage, nonce: envelope.nonce, senderPublicKey: envelope.senderPublicKey)
+                            guard let link = try? MessageLink(serializedData: decryptedData) else {
+                                print("[EME] failed to decode link message.")
+                                //completionHandler(.error(message: "failed to decode link message. pairing aborted!"))
+                                //return
+                                self.apiClient.sendAck(forCursor: entry.cursor)
+                                continue
+                            }
+                            guard link.status == .accepted else {
+                                print("[EME] remote rejected link request. pairing aborted!")
+                                completionHandler(.error(message: "remote rejected link request. pairing aborted!"))
                                 return
+                            }
+                            guard let remoteID = String(data: link.id, encoding: .utf8), remoteID == identifier else {
+                                print("[EME] link message identifier did not match pairing wallet identifier. aborted!")
+                                completionHandler(.error(message: "link message identifier did not match pairing wallet identifier. aborted!"))
+                                return
+                            }
+                            
+                            self.addRemoteEntity(remotePubKey: link.publicKey, identifier: remoteID, service: service)
+                            if !Store.state.isPushNotificationsEnabled {
+                                self.startPolling()
+                            }
+                            completionHandler(.success)
+                            break
                         }
-                        guard envelope.verify(pairingKey: pairingKey) else {
-                            print("[EME] envelope verification failed! pairing aborted!")
-                            completionHandler(.error(message: "envelope verification failed! pairing aborted!"))
-                            return
-                        }
-                        guard let type = PigeonMessageType(rawValue: envelope.messageType), type == .link else {
-                            print("[EME] unexpected envelope during pairing. aborted!")
-                            completionHandler(.error(message: "unexpected envelope during pairing. aborted!"))
-                            return
-                        }
-                        self.apiClient.sendAck(forCursor: entry.cursor)
-                        let decryptedData = PigeonCrypto(privateKey: pairingKey).decrypt(envelope.encryptedMessage, nonce: envelope.nonce, senderPublicKey: envelope.senderPublicKey)
-                        guard let link = try? MessageLink(serializedData: decryptedData) else {
-                            print("[EME] failed to decode link message. pairing aborted!")
-                            completionHandler(.error(message: "failed to decode link message. pairing aborted!"))
-                            return
-                        }
-                        guard link.status == .accepted else {
-                            print("[EME] remote rejected link request. pairing aborted!")
-                            completionHandler(.error(message: "remote rejected link request. pairing aborted!"))
-                            return
-                        }
-                        guard let remoteID = String(data: link.id, encoding: .utf8), remoteID == identifier else {
-                            print("[EME] link message identifier did not match pairing wallet identifier. aborted!")
-                            completionHandler(.error(message: "link message identifier did not match pairing wallet identifier. aborted!"))
-                            return
-                        }
-                        
-                        self.addRemoteEntity(remotePubKey: link.publicKey, identifier: remoteID, service: service)
-                        self.startPolling()
-                        completionHandler(.success)
                     })
                     
                     count += 1
@@ -204,6 +230,7 @@ class PigeonExchange: Subscriber {
     }
 
     func startPolling() {
+        guard let pairedWallets = pairedWallets, pairedWallets.hasPairedWallets else { return }
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: fetchInterval, repeats: true, block: { [weak self] _ in
             self?.fetchInbox()
@@ -232,11 +259,11 @@ class PigeonExchange: Subscriber {
     private func processEnvelope(_ envelope: MessageEnvelope) -> Bool {
         guard let pairingKey = pairingKey(forRemotePubKey: envelope.senderPublicKey) else {
             print("[EME] remote entity not found!")
-            return false
+            return true
         }
         guard envelope.verify(pairingKey: pairingKey) else {
             print("[EME] envelope \(envelope.identifier) verification failed!")
-            return false
+            return true
         }
         print("[EME] envelope \(envelope.identifier) verified. contains \(envelope.service) \(envelope.messageType) message")
         let crypto = PigeonCrypto(privateKey: pairingKey)
@@ -244,7 +271,7 @@ class PigeonExchange: Subscriber {
         do {
             guard let type = PigeonMessageType(rawValue: envelope.messageType) else {
                 print("[EME] ERROR: Unknown message type \(envelope.messageType)")
-                return false
+                return true
             }
             
             switch type {
