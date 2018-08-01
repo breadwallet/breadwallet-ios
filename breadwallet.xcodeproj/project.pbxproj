@@ -289,6 +289,7 @@
 		CE08B2A320F66822009FA568 /* BRAPIClient+Pigeon.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08B2A220F66822009FA568 /* BRAPIClient+Pigeon.swift */; };
 		CE0A68211FB651DA00EF31CD /* CoreDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0A68201FB651DA00EF31CD /* CoreDatabase.swift */; };
 		CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */; };
+		CE0F58A52111670E00ACF5F8 /* CheckoutConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F58A42111670E00ACF5F8 /* CheckoutConfirmationViewController.swift */; };
 		CE12289D20D3695400EC6F81 /* MotionGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12289C20D3695400EC6F81 /* MotionGradientView.swift */; };
 		CE124CF81E67A8E500DFA146 /* TransactionDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CF71E67A8E500DFA146 /* TransactionDirection.swift */; };
 		CE124CFC1E68932C00DFA146 /* FeeUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFB1E68932C00DFA146 /* FeeUpdater.swift */; };
@@ -1449,6 +1450,7 @@
 		CE08B2A220F66822009FA568 /* BRAPIClient+Pigeon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Pigeon.swift"; path = "src/Pigeon/BRAPIClient+Pigeon.swift"; sourceTree = "<group>"; };
 		CE0A68201FB651DA00EF31CD /* CoreDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CoreDatabase.swift; path = src/CoreDatabase.swift; sourceTree = "<group>"; };
 		CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = ModalPresenter.swift; path = src/ModalPresenter.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		CE0F58A42111670E00ACF5F8 /* CheckoutConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CheckoutConfirmationViewController.swift; path = src/Pigeon/CheckoutConfirmationViewController.swift; sourceTree = "<group>"; };
 		CE0FC0F81F72417200E7C626 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE0FC0F91F72417500E7C626 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE12289C20D3695400EC6F81 /* MotionGradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MotionGradientView.swift; path = src/Views/MotionGradientView.swift; sourceTree = "<group>"; };
@@ -2676,7 +2678,7 @@
 				CE45C1FC1E7650F5002C3847 /* KVStoreCoordinator.swift */,
 				CED82D4D1E575A5500507A9B /* main.swift */,
 				7C377EBD20F64C5900E8CF1C /* Messages.pb.swift */,
-                7C424A6D20FD34F20064557E /* NotificationHandler.swift */,
+				7C424A6D20FD34F20064557E /* NotificationHandler.swift */,
 				7C0A3ACD210A0E1D006C2783 /* NotificationAuthorizer.swift */,
 				7528D2971ECF655500925DBC /* PaymentProtocol.swift */,
 				CEC6F8441E886723000795B8 /* PaymentRequest.swift */,
@@ -2932,6 +2934,7 @@
 				7C6628382107B8D600ABCD10 /* PigeonExchange.swift */,
 				CE2A1C4D210B7BB7003E9B69 /* PigeonRequest.swift */,
 				CE77F201210E4C010092CC8F /* LinkStatusCircle.swift */,
+				CE0F58A42111670E00ACF5F8 /* CheckoutConfirmationViewController.swift */,
 			);
 			name = Pigeon;
 			sourceTree = "<group>";
@@ -3936,6 +3939,7 @@
 				CE0822641FCD1BD100EF371D /* HomeScreenViewController.swift in Sources */,
 				223DB2191DF691260076A151 /* BRSocketHelpers.c in Sources */,
 				CEF3E82D1DE528BF007C0A9E /* AlertView.swift in Sources */,
+				CE0F58A52111670E00ACF5F8 /* CheckoutConfirmationViewController.swift in Sources */,
 				CEF3E82B1DE51612007C0A9E /* GradientCircle.swift in Sources */,
 				7C35E715200AC26A0064808F /* EthTransaction.swift in Sources */,
 				7CCD9F6C1FEC1FA300175E64 /* TxAmountCell.swift in Sources */,
