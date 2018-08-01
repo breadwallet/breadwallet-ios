@@ -182,11 +182,20 @@ extension BRKey {
         }
     }
     
-    // DER encoded public key
+    /// DER encoded public key (byte-array)
     mutating func pubKey() -> [UInt8]? {
         var pubKey = [UInt8](repeating: 0, count: BRKeyPubKey(&self, nil, 0))
         guard pubKey.count > 0, BRKeyPubKey(&self, &pubKey, pubKey.count) == pubKey.count else { return nil }
         return pubKey
+    }
+    
+    /// DER encoded public key (Data)
+    public var publicKey: Data {
+        var k = self
+        let len = BRKeyPubKey(&k, nil, 0)
+        var data = Data(count: len)
+        BRKeyPubKey(&k, data.withUnsafeMutableBytes({ (d: UnsafeMutablePointer<UInt8>) -> UnsafeMutablePointer<UInt8> in d }), len)
+        return data
     }
     
     // ripemd160 hash of the sha256 hash of the public key

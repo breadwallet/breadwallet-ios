@@ -609,4 +609,13 @@ enum S {
         static let hide = NSLocalizedString("TokenList.hide", value: "Hide", comment: "Hide currency button label")
         static let manageTitle = NSLocalizedString("TokenList.manageTitle", value: "Manage Wallets", comment: "Manage Wallets view title")
     }
+
+    enum LinkWallet {
+        static let approve = NSLocalizedString("LinkWallet.approve", value: "Approve", comment: "Approve link wallet button label")
+        static let decline = NSLocalizedString("LinkWallet.decline", value: "Decline", comment: "Decline link wallet button label")
+        static let title = NSLocalizedString("LinkWallet.title", value: "Link Wallet", comment: "Link Wallet view title")
+        static let domainTitle = NSLocalizedString("LinkWallet.domainTitle", value: "Note: ONLY interact with this app when on one of the following domains", comment: "Link Wallet view title above domain list")
+        static let permissionsTitle = NSLocalizedString("LinkWallet.permissionsTitle", value: "This app will be able to:", comment: "Link Wallet view title above permissions list")
+        static let disclaimer = NSLocalizedString("LinkWallet.disclaimer", value: "External apps cannot send money without approval from this device", comment: "Link Wallet view dislaimer footer")
+    }
 }

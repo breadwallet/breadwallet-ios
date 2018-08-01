@@ -8,16 +8,34 @@
 
 import UIKit
 
-class URLController : Trackable {
+class URLController : Trackable, Subscriber {
 
     init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
     }
 
+    private var urlWaitingForUnlock: URL?
     private let walletManager: BTCWalletManager
     private var xSource, xSuccess, xError, uri: String?
 
     func handleUrl(_ url: URL) -> Bool {
+        guard !Store.state.isLoginRequired else {
+            // defer url handling until wallet is unlocked
+            urlWaitingForUnlock = url
+            Store.lazySubscribe(self,
+                                selector: { $0.isLoginRequired != $1.isLoginRequired },
+                                callback: { state in
+                                    DispatchQueue.main.async {
+                                        if !state.isLoginRequired, let url = self.urlWaitingForUnlock {
+                                            self.urlWaitingForUnlock = nil
+                                            _ = self.handleUrl(url)
+                                            Store.unsubscribe(self)
+                                        }
+                                    }
+            })
+            return false
+        }
+        
         saveEvent("send.handleURL", attributes: [
             "scheme" : url.scheme ?? C.null,
             "host" : url.host ?? C.null,
@@ -76,7 +94,7 @@ class URLController : Trackable {
                     let identifier = params["id"],
                     let service = params["service"] {
                     print("[EME] PAIRING REQUEST | pubKey: \(pubKey) | identifier: \(identifier) | service: \(service)")
-                    // TODO:PWB initiate pairing with remote wallet
+                    Store.trigger(name: .promptLinkWallet(pubKey, identifier, service))
                 }
                 
             default:
