@@ -8,6 +8,7 @@
 
 import UIKit
 import BRCore
+import UserNotifications
 
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
@@ -37,6 +38,7 @@ class ApplicationController : Subscriber, Trackable {
     private var launchURL: URL?
     private var hasPerformedWalletDependentInitialization = false
     private var didInitWallet = false
+    private let notificationHandler = NotificationHandler()
 
     // MARK: -
 
@@ -152,8 +154,8 @@ class ApplicationController : Subscriber, Trackable {
 
     func launch(application: UIApplication, options: [UIApplicationLaunchOptionsKey: Any]?) {
         self.application = application
-        //application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalNever)
+        UNUserNotificationCenter.current().delegate = notificationHandler
         setup()
         handleLaunchOptions(options)
         if reachability.isReachable {
@@ -178,7 +180,6 @@ class ApplicationController : Subscriber, Trackable {
         setupAppearance()
         setupRootViewController()
         window.makeKeyAndVisible()
-        listenForPushNotificationRequest()
         offMainInitialization()
         
         Store.subscribe(self, name: .reinitWalletManager(nil), callback: {
@@ -288,6 +289,7 @@ class ApplicationController : Subscriber, Trackable {
             self.feeUpdaters.removeAll()
             self.walletManagers.values.forEach({ $0.resetForWipe() })
             self.walletManagers.removeAll()
+            self.pigeonExchange = nil
             self.initWallet {
                 DispatchQueue.main.async {
                     self.didInitWalletManager()
@@ -587,25 +589,21 @@ extension ApplicationController {
 
 //MARK: - Push notifications
 extension ApplicationController {
-    func listenForPushNotificationRequest() {
-        // TODO: notifications
-//        Store.subscribe(self, name: .registerForPushNotificationToken, callback: { _ in
-//            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
-//                if granted {
-//                    self.application?.registerForRemoteNotifications()
-//                }
-//            }
-//        })
-    }
-
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-//        guard let apiClient = walletManager?.apiClient else { return }
-//        guard UserDefaults.pushToken != deviceToken else { return }
-//        UserDefaults.pushToken = deviceToken
-//        apiClient.savePushNotificationToken(deviceToken)
+        guard let apiClient = primaryWalletManager?.apiClient else { return }
+        guard UserDefaults.pushToken != deviceToken else { return }
+        UserDefaults.pushToken = deviceToken
+        apiClient.savePushNotificationToken(deviceToken)
+        Store.perform(action: PushNotifications.setIsEnabled(true))
+        
+        let tokenParts = deviceToken.map { data -> String in
+            return String(format: "%02.2hhx", data)
+        }
+        let token = tokenParts.joined()
+        print("[PUSH] registerd device token: \(token)")
     }
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("didFailToRegisterForRemoteNotification: \(error)")
+        print("[PUSH] failed to register for remote notifications: \(error.localizedDescription)")
     }
 }

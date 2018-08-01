@@ -34,6 +34,7 @@ class PigeonExchange: Subscriber {
     }
     
     deinit {
+        stopPolling()
         Store.unsubscribe(self)
     }
     
@@ -106,7 +107,7 @@ class PigeonExchange: Subscriber {
                         guard let entry = linkEntries.unacknowledged.last else {
                             if !timer.isValid {
                                 print("[EME] timed out waiting for link response. pairing aborted!")
-                                completionHandler(.error(message: "[EME] timed out waiting for link response. pairing aborted!"))
+                                completionHandler(.error(message: "timed out waiting for link response. pairing aborted!"))
                             }
                             return
                         }
