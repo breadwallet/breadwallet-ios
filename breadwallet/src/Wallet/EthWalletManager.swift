@@ -182,7 +182,7 @@ class EthWalletManager : WalletManager {
             viewModels = txs.map { EthTransaction(tx: $0, accountAddress: accountAddress, kvStore: self.kvStore, rate: currency.state?.currentRate) }
         }
         viewModels.sort(by: { $0.timestamp > $1.timestamp })
-        print("processed \(txs.count) \(currency.code) transactions")
+        //print("processed \(txs.count) \(currency.code) transactions")
         Store.perform(action: WalletChange(currency).setTransactions(viewModels))
     }
 }
@@ -314,7 +314,7 @@ extension EthWalletManager: EthereumListener {
                            event: EthereumWalletEvent,
                            status: BREthereumStatus,
                            errorDesc: String?) {
-        print("\(wallet.currency.code) wallet event: \(event), status: \(status.rawValue)\(errorDesc != nil ? ", error: \(errorDesc!)" : "")")
+        //print("\(wallet.currency.code) wallet event: \(event), status: \(status.rawValue)\(errorDesc != nil ? ", error: \(errorDesc!)" : "")")
         switch (event) {
         case .balanceUpdated:
             DispatchQueue.main.async {
