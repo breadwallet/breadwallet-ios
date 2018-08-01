@@ -150,6 +150,10 @@ class ModalPresenter : Subscriber, Trackable {
                 self.showAccountView(currency: currency, animated: true, completion: nil)
             }
         })
+        Store.subscribe(self, name: .promptLinkWallet("","","")) { [unowned self] in
+            guard case .promptLinkWallet(let pubKey, let identifier, let service)? = $0 else { return }
+            self.linkWallet(pubKey: pubKey, identifier: identifier, service: service)
+        }
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
@@ -236,6 +240,8 @@ class ModalPresenter : Subscriber, Trackable {
             return nil
         case .send(let currency):
             return makeSendView(currency: currency)
+        case .sendForRequest(let request):
+            return makeSendView(forRequest: request)
         case .receive(let currency):
             return receiveView(currency: currency, isRequestAmountVisible: (currency.urlSchemes != nil))
         case .loginScan:
@@ -289,7 +295,11 @@ class ModalPresenter : Subscriber, Trackable {
         }
     }
 
-    private func makeSendView(currency: CurrencyDef) -> UIViewController? {
+    private func makeSendView(forRequest request: PigeonRequest) -> UIViewController? {
+        return makeSendView(currency: request.currency, pigeonRequest: request)
+    }
+
+    private func makeSendView(currency: CurrencyDef, pigeonRequest: PigeonRequest? = nil) -> UIViewController? {
         guard !(currency.state?.isRescanning ?? false) else {
             let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
@@ -300,8 +310,9 @@ class ModalPresenter : Subscriber, Trackable {
         guard let kvStore = walletManager.apiClient?.kv else { return nil }
         guard let sender = currency.createSender(walletManager: walletManager, kvStore: kvStore) else { return nil }
         let sendVC = SendViewController(sender: sender,
+                                        currency: currency,
                                         initialRequest: currentRequest,
-                                        currency: currency)
+                                        initialPigeonRequest: pigeonRequest)
         currentRequest = nil
 
         if Store.state.isLoginRequired {
@@ -361,8 +372,14 @@ class ModalPresenter : Subscriber, Trackable {
                 break
                 
             case .deepLink(let url):
-                UIApplication.shared.open(url)
-                
+                //UIApplication.shared.open(url)
+                if let params = url.queryParameters,
+                    let pubKey = params["publicKey"],
+                    let identifier = params["id"],
+                    let service = params["service"] {
+                    print("[EME] PAIRING REQUEST | pubKey: \(pubKey) | identifier: \(identifier) | service: \(service)")
+                    Store.trigger(name: .promptLinkWallet(pubKey, identifier, service))
+                }
             case .invalid:
                 break
             }
@@ -969,6 +986,20 @@ class ModalPresenter : Subscriber, Trackable {
     private func showEmailLogsModal() {
         self.messagePresenter.presenter = self.topViewController
         self.messagePresenter.presentEmailLogs()
+    }
+    
+    private func linkWallet(pubKey: String, identifier: String, service: String) {
+        guard let apiClient = primaryWalletManager.apiClient,
+            let top = topViewController else { return }
+        apiClient.fetchServiceInfo(serviceID: service, callback: { serviceDefinition in
+            guard let serviceDefinition = serviceDefinition else { return self.showLightWeightAlert(message: "Could not retreive Service definition"); }
+            DispatchQueue.main.async {
+                let alert = LinkWalletViewController(service: serviceDefinition, approvalCallback: { pairingCallback in
+                    Store.trigger(name: .linkWallet(pubKey, identifier, service, pairingCallback))
+                })
+                top.present(alert, animated: true, completion: nil)
+            }
+        })
     }
 }
 

@@ -60,6 +60,7 @@ protocol Sender: class {
     
     func sendTransaction(allowBiometrics: Bool,
                          pinVerifier: @escaping PinVerifier,
+                         abi: String?,
                          completion: @escaping SendCompletion)
     
     func reset()
@@ -210,7 +211,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         super.reset()
     }
     
-    func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
+    func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, abi: String? = nil, completion: @escaping SendCompletion) {
         guard readyToSend, let tx = transaction else { return completion(.creationError("not ready")) }
         
         if allowBiometrics && UserDefaults.isBiometricsEnabled && walletManager.canUseBiometrics(forTx: tx) {
@@ -444,7 +445,7 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
         return walletManager.gasPrice * UInt256(walletManager.defaultGasLimit(currency: currency))
     }
     
-    func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
+    func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, abi: String? = nil, completion: @escaping SendCompletion) {
         guard readyToSend,
             let address = address,
             let amount = amount else {
@@ -452,7 +453,7 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
         }
         
         pinVerifier { pin in
-            self.walletManager.sendTransaction(currency: self.currency, toAddress: address, amount: amount) { result in
+            self.walletManager.sendTransaction(currency: self.currency, toAddress: address, amount: amount, abi: abi) { result in
                 switch result {
                 case .success(let pendingTx, nil, let rawTx):
                     self.setMetaData(tx: pendingTx)
@@ -503,7 +504,7 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
         return walletManager.gasPrice * UInt256(walletManager.defaultGasLimit(currency: currency))
     }
     
-    func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
+    func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, abi: String? = nil, completion: @escaping SendCompletion) {
         guard readyToSend,
             let address = address,
             let amount = amount else {

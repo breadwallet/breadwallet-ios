@@ -20,7 +20,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             pinView = PinView(style: .login, length: Store.state.pinLength)
         }
     }
-    var shouldSelfDismiss = false
+    
     init(isPresentedForLock: Bool, walletManager: BTCWalletManager? = nil) {
         self.walletManager = walletManager
         self.isPresentedForLock = isPresentedForLock
@@ -101,6 +101,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard UIApplication.shared.applicationState != .background else { return }
+
         if shouldUseBiometrics && !hasAttemptedToShowBiometrics && !isPresentedForLock {
             hasAttemptedToShowBiometrics = true
             biometricsTapped()
@@ -217,10 +218,9 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             self.pinView?.alpha = 0.0
             self.view.layoutIfNeeded()
         }) { completion in
-            if self.shouldSelfDismiss {
-                self.dismiss(animated: true, completion: {})
-            }
-            Store.perform(action: LoginSuccess())
+            self.dismiss(animated: true, completion: {
+                Store.perform(action: LoginSuccess())
+            })
             Store.trigger(name: .showStatusBar)
         }
     }
