@@ -154,6 +154,22 @@ class ModalPresenter : Subscriber, Trackable {
             guard case .promptLinkWallet(let pubKey, let identifier, let service)? = $0 else { return }
             self.linkWallet(pubKey: pubKey, identifier: identifier, service: service)
         }
+        
+        // Push Notifications Permission Request
+        Store.subscribe(self, name: .registerForPushNotificationToken) { [weak self]  _ in
+            guard let top = self?.topViewController else { return }
+            NotificationAuthorizer().requestAuthorization(fromViewController: top, completion: { granted in
+                DispatchQueue.main.async {
+                    if granted {
+                        print("[PUSH] notification authorization granted")
+                        UIApplication.shared.registerForRemoteNotifications()
+                    } else {
+                        // TODO: log event
+                        print("[PUSH] notification authorization denied")
+                    }
+                }
+            })
+        }
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
@@ -394,8 +410,6 @@ class ModalPresenter : Subscriber, Trackable {
         menuNav.setDarkStyle()
         
         var btcItems: [MenuItem] = [
-            // Touch ID Spending Limit // TODO: verify if this applies to BCH or not
-            
             // Rescan
             MenuItem(title: S.Settings.sync, callback: {
                 menuNav.pushViewController(ReScanViewController(currency: Currencies.btc), animated: true)

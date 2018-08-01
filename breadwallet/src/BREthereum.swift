@@ -691,7 +691,7 @@ class EthereumLightNode: EthereumPointer {
                 guard let this = this.map ({ Unmanaged<EthereumLightNode>.fromOpaque($0).takeUnretainedValue() }) else { return }
                 this.client?.getTransactions(address: asUTF8String(address!), completion: { txs in
                     txs.forEach {
-                        print("announcing tx: \($0.hash)")
+//                        print("announcing tx: \($0.hash)")
                         lightNodeAnnounceTransaction(core,
                                                      rid,
                                                      $0.hash,
