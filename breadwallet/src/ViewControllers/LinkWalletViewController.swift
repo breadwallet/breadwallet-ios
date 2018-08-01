@@ -202,7 +202,9 @@ class LinkWalletViewController : UIViewController {
     private func showSuccess() {
         DispatchQueue.main.async {
             self.circle.drawCheckBox()
-            self.dismissAfterDelay()
+            self.dismissAfterDelay() {
+                Store.trigger(name: .registerForPushNotificationToken)
+            }
         }
     }
 
@@ -216,10 +218,10 @@ class LinkWalletViewController : UIViewController {
         dismissAfterDelay()
     }
 
-    private func dismissAfterDelay() {
+    private func dismissAfterDelay(completion: (() -> Void)? = nil) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 4.0, execute: {
             self.stopAnimators()
-            self.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true, completion: completion)
         })
     }
 
