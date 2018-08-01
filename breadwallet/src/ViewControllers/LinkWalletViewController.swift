@@ -19,13 +19,14 @@ class LinkWalletViewController : UIViewController {
     private let bodyBackground = UIView(color: .darkerBackground)
     private let approve = BRDButton(title: S.LinkWallet.approve, type: .primary)
     private let decline = BRDButton(title: S.LinkWallet.decline, type: .secondary)
-    private let logo = UIImageView(image: #imageLiteral(resourceName: "SecureTokenSaleLogo").withRenderingMode(.alwaysTemplate))
+    private let logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout").withRenderingMode(.alwaysTemplate))
     private let logoBackground = MotionGradientView()
-    private let titleLabel = UILabel(font: .customBody(size: 14.0), color: .newWhite)
+    private let logoFooter = UILabel(font: .customBold(size: 20.0), color: UIColor.fromHex("FAA43A"))
+    private let titleLabel = UILabel(font: .customBody(size: 14.0), color: .white)
     private let note1 = UILabel.wrapping(font: .customBody(size: 14.0), color: .newWhite)
-    private let note2 = UILabel(font: .customBody(size: 14.0), color: .newWhite)
+    private let note2 = UILabel(font: .customBold(size: 18.0), color: .white)
     private let note3 = UILabel.wrapping(font: .customBody(size: 14.0), color: .newWhite)
-    private let info1 = UILabel(font: .customBody(size: 14.0), color: .white)
+    private let info1 = UILabel(font: .customBold(size: 14.0), color: .white)
     private let info2 = UILabel.wrapping(font: .customBody(size: 14.0), color: .white)
     private let scrollView = UIScrollView()
     private let header = UIStackView()
@@ -55,6 +56,7 @@ class LinkWalletViewController : UIViewController {
         scrollView.addSubview(body)
         header.addArrangedSubview(titleLabel)
         header.addArrangedSubview(logoBackground)
+        header.addArrangedSubview(logoFooter)
         header.addArrangedSubview(note1)
         header.addArrangedSubview(info1)
         body.addSubview(bodyBackground)
@@ -84,11 +86,11 @@ class LinkWalletViewController : UIViewController {
             body.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             body.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             body.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            body.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 44.0),
+            body.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 30.0),
             body.widthAnchor.constraint(equalTo: scrollView.widthAnchor),])
         logoBackground.constrain([
             logoBackground.heightAnchor.constraint(equalTo: logoBackground.widthAnchor, multiplier: logo.image!.size.height/logo.image!.size.width),
-            logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.38)])
+            logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.36)])
         logo.constrain(toSuperviewEdges: nil)
         footer.constrain([
             footer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -110,15 +112,15 @@ class LinkWalletViewController : UIViewController {
     }
 
     private func setupLabels() {
-        titleLabel.text = S.LinkWallet.title
+        titleLabel.text = S.LinkWallet.title.uppercased()
         note1.text = S.LinkWallet.domainTitle
         info1.text = service.domains.joined(separator: ",")
         note2.text = S.LinkWallet.permissionsTitle
-        info2.text = service.capabilities.map { "-" + $0.description }.joined(separator: "\n")
+        info2.text = service.capabilities.map { "•" + $0.description }.joined(separator: "\n")
         note3.text = S.LinkWallet.disclaimer
         note1.textAlignment = .center
-        note2.textAlignment = .center
         note3.textAlignment = .center
+        logoFooter.text = "Secure Checkout"
     }
 
     private func setupStackViews() {
@@ -128,10 +130,15 @@ class LinkWalletViewController : UIViewController {
         header.layoutMargins = UIEdgeInsets(top: C.padding[2], left: C.padding[6], bottom: C.padding[1], right: C.padding[6])
         header.isLayoutMarginsRelativeArrangement = true
 
+        if #available(iOS 11.0, *) {
+            header.setCustomSpacing(C.padding[1], after: logoBackground)
+            header.setCustomSpacing(C.padding[1], after: note1)
+        }
+
         body.axis = .vertical
         body.alignment = .center
         body.spacing = C.padding[1]
-        body.layoutMargins = UIEdgeInsets(top: C.padding[1], left: C.padding[6], bottom: C.padding[2], right: C.padding[6])
+        body.layoutMargins = UIEdgeInsets(top: C.padding[2], left: C.padding[3], bottom: C.padding[2], right: C.padding[3])
         body.isLayoutMarginsRelativeArrangement = true
 
         buttonStack.distribution = .fillEqually
@@ -246,7 +253,7 @@ extension LinkWalletViewController : UIScrollViewDelegate {
             animator?.fractionComplete = 0.0
             return
         }
-        let full: CGFloat = 75.0
+        let full: CGFloat = 40.0
         let progress = min(yOffset/full, 1.0)
         addAnimator()
         animator?.fractionComplete = progress
@@ -255,7 +262,7 @@ extension LinkWalletViewController : UIScrollViewDelegate {
     private func addAnimator() {
         guard animator == nil else { return }
         animator = UIViewPropertyAnimator(duration: 2, curve: .easeInOut) {
-            [self.titleLabel, self.note1, self.info1].forEach { view in
+            [self.titleLabel, self.note1, self.info1, self.logoFooter].forEach { view in
                 view.alpha = 0.0
                 view.isHidden = true
             }
