@@ -63,7 +63,7 @@ struct PigeonCrypto {
 
     private func genNonce() -> [UInt8] {
         var randomBytes: [UInt8] = [UInt8](repeating: 0, count: 12)
-        guard SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes) == 0 else { assert(false) }
+        guard SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes) == 0 else { assertionFailure(); return [] }
         return randomBytes
     }
 }
