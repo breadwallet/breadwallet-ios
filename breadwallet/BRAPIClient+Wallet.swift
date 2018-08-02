@@ -133,7 +133,7 @@ extension BRAPIClient {
             return
         }
         dataTaskWithRequest(req as URLRequest, authenticated: true, retryCount: 0) { (dat, resp, er) in
-            let dat2 = String(data: dat ?? Data(), encoding: .utf8)
+            //let dat2 = String(data: dat ?? Data(), encoding: .utf8)
             //self.log("save push token resp: \(String(describing: resp)) data: \(String(describing: dat2))")
         }.resume()
     }
