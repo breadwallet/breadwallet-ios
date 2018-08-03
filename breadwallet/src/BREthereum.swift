@@ -234,7 +234,7 @@ struct EthereumWallet : EthereumReference {
     
     /// Create a contract execution transaction. Amount is ETH (in wei) and data is the ABI payload (hex-encoded string)
     /// Optionally specify gasPrice and gasLimit to use, otherwise defaults will be used.
-    func createContractTransaction (recvAddress: String, amount: UInt256, data: String, gasPrice: UInt256? = nil, gasLimit: UInt64? = 200000) -> EthereumTransaction {
+    func createContractTransaction (recvAddress: String, amount: UInt256, data: String, gasPrice: UInt256? = nil, gasLimit: UInt64? = nil) -> EthereumTransaction {
         let coreAmount = etherCreate(amount)
         let gasPrice = gasPrice ?? UInt256(defaultGasPrice)
         let gasLimit = gasLimit ?? defaultGasLimit
