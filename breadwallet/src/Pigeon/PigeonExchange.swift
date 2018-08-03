@@ -38,11 +38,11 @@ class PigeonExchange: Subscriber {
         
         Store.lazySubscribe(self,
                             selector: { $0.isPushNotificationsEnabled != $1.isPushNotificationsEnabled },
-                            callback: { [unowned self] state in
+                            callback: { [weak self] state in
                                 if state.isPushNotificationsEnabled {
-                                    self.stopPolling()
+                                    self?.stopPolling()
                                 } else {
-                                    self.startPolling()
+                                    self?.startPolling()
                                 }
         })
     }

@@ -147,9 +147,8 @@ enum EthereumNetwork: EthereumPointer {
 
 extension ERC20Token: EthereumPointer {
     var core: BREthereumToken {
-        guard !E.isTestnet else { return tokenBRD }
         let token = tokenLookup(self.address)
-        assert(token != nil, "missing token in core: \(self.code)")
+        assert(token != nil || E.isTestnet, "missing token in core: \(self.code)")
         return token!
     }
 }
