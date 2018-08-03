@@ -531,6 +531,7 @@ class ApplicationController : Subscriber, Trackable {
         // check if notification settings changed
         NotificationAuthorizer().areNotificationsAuthorized { authorized in
             DispatchQueue.main.async {
+                guard let apiClient = self.primaryWalletManager?.apiClient else { return }
                 if authorized {
                     if !Store.state.isPushNotificationsEnabled {
                         self.saveEvent("push.enabledSettings")
@@ -540,7 +541,7 @@ class ApplicationController : Subscriber, Trackable {
                     if Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
                         self.saveEvent("pushdisabledSettings")
                         Store.perform(action: PushNotifications.setIsEnabled(false))
-                        self.primaryWalletManager?.apiClient?.deletePushNotificationToken(pushToken)
+                        apiClient.deletePushNotificationToken(pushToken)
                     }
                 }
             }
@@ -616,7 +617,7 @@ extension ApplicationController {
             return String(format: "%02.2hhx", data)
         }
         let token = tokenParts.joined()
-        print("[PUSH] registerd device token: \(token)")
+        print("[PUSH] registered device token: \(token)")
     }
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
