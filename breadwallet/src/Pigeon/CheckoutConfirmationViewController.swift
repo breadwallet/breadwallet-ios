@@ -140,13 +140,28 @@ class CheckoutConfirmationViewController : UIViewController {
         present(confirm, animated: true, completion: nil)
         return
     }
+    
+    private func validateTransaction() -> Bool {
+        let validationResult = sender.createTransaction(address: request.address,
+                                                        amount: request.purchaseAmount.rawValue,
+                                                        comment: request.memo)
+        switch validationResult {
+        case .ok, .noExchangeRate:
+            return true
+        case .insufficientFunds:
+            showErrorMessageAndDismiss(S.Send.insufficientFunds)
+        case .insufficientGas:
+            showInsufficientGasError()
+        default:
+            showErrorMessageAndDismiss(S.Send.createTransactionError)
+        }
+        return false
+    }
 
     private func send() {
-        guard case .ok = sender.createTransaction(address: request.address,
-                                                  amount: request.purchaseAmount.rawValue,
-                                                  comment: request.memo) else {
-                                                    return assertionFailure()
-        }
+        
+        guard validateTransaction() else { return }
+        
         let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
             self?.presentVerifyPin?(S.VerifyPin.authorize) { pin in
                 self?.parent?.view.isFrameChangeBlocked = false
@@ -164,10 +179,10 @@ class CheckoutConfirmationViewController : UIViewController {
                     self.onPublishSuccess?()
                 })
             case .creationError(let message):
-                self.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
+                self.showAlertAndDismiss(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
             case .publishFailure(let error):
                 if case .posixError(let code, let description) = error {
-                    self.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
+                    self.showAlertAndDismiss(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
                 }
             case .insufficientGas(_):
                 self.showInsufficientGasError()
@@ -183,9 +198,13 @@ class CheckoutConfirmationViewController : UIViewController {
 
         let alertController = UIAlertController(title: S.Send.insufficientGasTitle, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
-            Store.trigger(name: .showCurrency(Currencies.eth))
+            self.dismiss(animated: true) {
+                Store.trigger(name: .showCurrency(Currencies.eth))
+            }
         }))
-        alertController.addAction(UIAlertAction(title: S.Button.no, style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: S.Button.no, style: .cancel, handler: { _ in
+            self.dismiss(animated: true, completion: nil)
+        }))
         present(alertController, animated: true, completion: nil)
     }
 
