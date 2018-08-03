@@ -526,6 +526,26 @@ struct MessagePaymentRequest {
   /// Clears the value of `memo`. Subsequent reads from it will return its default value.
   mutating func clearMemo() {self._memo = nil}
 
+  /// the transaction size limit, expressed as integer (e.g. gas limit for ETH)
+  var transactionSize: String {
+    get {return _transactionSize ?? String()}
+    set {_transactionSize = newValue}
+  }
+  /// Returns true if `transactionSize` has been explicitly set.
+  var hasTransactionSize: Bool {return self._transactionSize != nil}
+  /// Clears the value of `transactionSize`. Subsequent reads from it will return its default value.
+  mutating func clearTransactionSize() {self._transactionSize = nil}
+
+  /// the transaction fee amount, expressed as integer in lowest currency denomination (e.g. gas price for ETH)
+  var transactionFee: String {
+    get {return _transactionFee ?? String()}
+    set {_transactionFee = newValue}
+  }
+  /// Returns true if `transactionFee` has been explicitly set.
+  var hasTransactionFee: Bool {return self._transactionFee != nil}
+  /// Clears the value of `transactionFee`. Subsequent reads from it will return its default value.
+  mutating func clearTransactionFee() {self._transactionFee = nil}
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -535,6 +555,8 @@ struct MessagePaymentRequest {
   fileprivate var _address: String? = nil
   fileprivate var _amount: String? = nil
   fileprivate var _memo: String? = nil
+  fileprivate var _transactionSize: String? = nil
+  fileprivate var _transactionFee: String? = nil
 }
 
 /// PaymentResponse responds to a PaymentRequest
@@ -663,6 +685,26 @@ struct MessageCallRequest {
   /// Clears the value of `memo`. Subsequent reads from it will return its default value.
   mutating func clearMemo() {self._memo = nil}
 
+  /// the transaction size limit, expressed as integer (e.g. gas limit for ETH)
+  var transactionSize: String {
+    get {return _transactionSize ?? String()}
+    set {_transactionSize = newValue}
+  }
+  /// Returns true if `transactionSize` has been explicitly set.
+  var hasTransactionSize: Bool {return self._transactionSize != nil}
+  /// Clears the value of `transactionSize`. Subsequent reads from it will return its default value.
+  mutating func clearTransactionSize() {self._transactionSize = nil}
+
+  /// the transaction fee amount, expressed as integer in lowest currency denomination (e.g. gas price for ETH)
+  var transactionFee: String {
+    get {return _transactionFee ?? String()}
+    set {_transactionFee = newValue}
+  }
+  /// Returns true if `transactionFee` has been explicitly set.
+  var hasTransactionFee: Bool {return self._transactionFee != nil}
+  /// Clears the value of `transactionFee`. Subsequent reads from it will return its default value.
+  mutating func clearTransactionFee() {self._transactionFee = nil}
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -673,6 +715,8 @@ struct MessageCallRequest {
   fileprivate var _abi: String? = nil
   fileprivate var _amount: String? = nil
   fileprivate var _memo: String? = nil
+  fileprivate var _transactionSize: String? = nil
+  fileprivate var _transactionFee: String? = nil
 }
 
 /// CallResponse responds to a CallRequest
@@ -1171,6 +1215,8 @@ extension MessagePaymentRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     3: .same(proto: "address"),
     4: .same(proto: "amount"),
     5: .same(proto: "memo"),
+    6: .standard(proto: "transaction_size"),
+    7: .standard(proto: "transaction_fee"),
   ]
 
   public var isInitialized: Bool {
@@ -1188,6 +1234,8 @@ extension MessagePaymentRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
       case 3: try decoder.decodeSingularStringField(value: &self._address)
       case 4: try decoder.decodeSingularStringField(value: &self._amount)
       case 5: try decoder.decodeSingularStringField(value: &self._memo)
+      case 6: try decoder.decodeSingularStringField(value: &self._transactionSize)
+      case 7: try decoder.decodeSingularStringField(value: &self._transactionFee)
       default: break
       }
     }
@@ -1209,6 +1257,12 @@ extension MessagePaymentRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     if let v = self._memo {
       try visitor.visitSingularStringField(value: v, fieldNumber: 5)
     }
+    if let v = self._transactionSize {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 6)
+    }
+    if let v = self._transactionFee {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 7)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1218,6 +1272,8 @@ extension MessagePaymentRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     if self._address != other._address {return false}
     if self._amount != other._amount {return false}
     if self._memo != other._memo {return false}
+    if self._transactionSize != other._transactionSize {return false}
+    if self._transactionFee != other._transactionFee {return false}
     if unknownFields != other.unknownFields {return false}
     return true
   }
@@ -1284,6 +1340,8 @@ extension MessageCallRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     4: .same(proto: "abi"),
     5: .same(proto: "amount"),
     6: .same(proto: "memo"),
+    7: .standard(proto: "transaction_size"),
+    8: .standard(proto: "transaction_fee"),
   ]
 
   public var isInitialized: Bool {
@@ -1303,6 +1361,8 @@ extension MessageCallRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
       case 4: try decoder.decodeSingularStringField(value: &self._abi)
       case 5: try decoder.decodeSingularStringField(value: &self._amount)
       case 6: try decoder.decodeSingularStringField(value: &self._memo)
+      case 7: try decoder.decodeSingularStringField(value: &self._transactionSize)
+      case 8: try decoder.decodeSingularStringField(value: &self._transactionFee)
       default: break
       }
     }
@@ -1327,6 +1387,12 @@ extension MessageCallRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     if let v = self._memo {
       try visitor.visitSingularStringField(value: v, fieldNumber: 6)
     }
+    if let v = self._transactionSize {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 7)
+    }
+    if let v = self._transactionFee {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 8)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1337,6 +1403,8 @@ extension MessageCallRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     if self._abi != other._abi {return false}
     if self._amount != other._amount {return false}
     if self._memo != other._memo {return false}
+    if self._transactionSize != other._transactionSize {return false}
+    if self._transactionFee != other._transactionFee {return false}
     if unknownFields != other.unknownFields {return false}
     return true
   }

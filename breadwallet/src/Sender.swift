@@ -439,10 +439,21 @@ class EthSenderBase<CurrencyType: CurrencyDef> : SenderBase<CurrencyType, EthWal
 
 class EthereumSender: EthSenderBase<Ethereum>, Sender {
     
+    var customGasPrice: UInt256?
+    var customGasLimit: UInt256?
+    
+    private var gasPrice: UInt256 {
+        return customGasPrice ?? walletManager.gasPrice
+    }
+    
+    private var gasLimit: UInt256 {
+        return customGasLimit ?? UInt256(walletManager.defaultGasLimit(currency: currency))
+    }
+    
     // MARK: Sender
     
     func fee(forAmount: UInt256) -> UInt256? {
-        return walletManager.gasPrice * UInt256(walletManager.defaultGasLimit(currency: currency))
+        return gasPrice * gasLimit
     }
     
     func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, abi: String? = nil, completion: @escaping SendCompletion) {
@@ -453,7 +464,7 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
         }
         
         pinVerifier { pin in
-            self.walletManager.sendTransaction(currency: self.currency, toAddress: address, amount: amount, abi: abi) { result in
+            self.walletManager.sendTransaction(currency: self.currency, toAddress: address, amount: amount, abi: abi, gasPrice: self.gasPrice, gasLimit: self.gasLimit) { result in
                 switch result {
                 case .success(let pendingTx, nil, let rawTx):
                     self.setMetaData(tx: pendingTx)
