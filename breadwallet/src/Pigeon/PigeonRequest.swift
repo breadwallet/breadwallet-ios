@@ -21,8 +21,8 @@ protocol PigeonRequest {
     var memo: String { get }
     var type: PigeonRequestType { get }
     var abiData: String? { get }
-    var txSize: UInt256? { get }
-    var txFee: Amount? { get }
+    var txSize: UInt256? { get } // gas limit
+    var txFee: Amount? { get } // gas price
 }
 
 private struct AssociatedKeys {
@@ -76,7 +76,7 @@ extension MessagePaymentRequest: PigeonRequest {
     }
     
     var txSize: UInt256? {
-        return hasTransactionSize ? UInt256(string: transactionSize) : nil
+        return hasTransactionSize ? UInt256(string: transactionSize) : UInt256(100000)
     }
     
     var txFee: Amount? {
@@ -103,7 +103,7 @@ extension MessageCallRequest: PigeonRequest {
     }
     
     var txSize: UInt256? {
-        return hasTransactionSize ? UInt256(string: transactionSize) : nil
+        return hasTransactionSize ? UInt256(string: transactionSize) : UInt256(200000)
     }
     
     var txFee: Amount? {
