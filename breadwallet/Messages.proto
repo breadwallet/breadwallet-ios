@@ -100,6 +100,8 @@ message PaymentRequest {
     required string address = 3;    // the receive address for the desired payment
     required string amount = 4;     // the desired amount expressed as an integer in the lowest currency denomination
     optional string memo = 5;       // optionally a request may include a memo, the receiver can retain if necessary
+    optional string transaction_size = 6; // the transaction size limit, expressed as integer (e.g. gas limit for ETH)
+    optional string transaction_fee = 7;  // the transaction fee amount, expressed as integer in lowest currency denomination (e.g. gas price for ETH)
 }
 
 // PaymentResponse responds to a PaymentRequest
@@ -122,6 +124,8 @@ message CallRequest {
     required string abi = 4;        // the abi-encoded parameters to send to the smart contract
     required string amount = 5;     // the desired amount expressed as an integer in the lowest currency denomination
     optional string memo = 6;       // optionally a request may include a memo, the receiver can retain if necessary
+    optional string transaction_size = 7; // the transaction size limit, expressed as integer (e.g. gas limit for ETH)
+    optional string transaction_fee = 8;  // the transaction fee amount, expressed as integer in lowest currency denomination (e.g. gas price for ETH)
 }
 
 // CallResponse responds to a CallRequest

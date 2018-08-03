@@ -89,7 +89,8 @@ class EthWalletManager : WalletManager {
     
     /// Creates, signs and submits an ETH transaction or ERC20 token transfer
     /// Caller must authenticate
-    func sendTransaction(currency: CurrencyDef, toAddress: String, amount: UInt256, abi: String? = nil, callback: @escaping (SendTransactionResult) -> Void) {
+    /// gasPrice and gasLimit parameters are only used for contract transactions
+    func sendTransaction(currency: CurrencyDef, toAddress: String, amount: UInt256, abi: String? = nil, gasPrice: UInt256? = nil, gasLimit: UInt256? = nil, callback: @escaping (SendTransactionResult) -> Void) {
         guard let accountAddress = address, let apiClient = apiClient else { return assertionFailure() }
         
         guard ethPrivKey != nil, var privKey = BRKey(privKey: ethPrivKey!) else { return }
@@ -99,7 +100,7 @@ class EthWalletManager : WalletManager {
         let wallet = node.wallet(currency)
         let tx: EthereumTransaction
         if let abi = abi {
-            tx = wallet.createContractTransaction(recvAddress: toAddress, amount: amount, data: abi) //TODO:PWB - set gas prices
+            tx = wallet.createContractTransaction(recvAddress: toAddress, amount: amount, data: abi, gasPrice: gasPrice, gasLimit: gasLimit?.asUInt64)
         } else {
             tx = wallet.createTransaction(currency: currency, recvAddress: toAddress, amount: amount)
         }
