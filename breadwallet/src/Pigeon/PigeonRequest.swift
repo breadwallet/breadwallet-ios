@@ -21,6 +21,8 @@ protocol PigeonRequest {
     var memo: String { get }
     var type: PigeonRequestType { get }
     var abiData: String? { get }
+    var txSize: UInt256? { get }
+    var txFee: Amount? { get }
 }
 
 private struct AssociatedKeys {
@@ -55,19 +57,14 @@ extension PigeonRequest {
     }
 }
 
-class MessagePaymentRequestWrapper: PigeonRequest {
-    private let paymentRequest: MessagePaymentRequest
-
-    init(paymentRequest: MessagePaymentRequest) {
-        self.paymentRequest = paymentRequest
-    }
+extension MessagePaymentRequest: PigeonRequest {
 
     var currency: CurrencyDef {
         return Currencies.eth
     }
 
     var purchaseAmount: Amount {
-        return Amount(amount: UInt256(string: paymentRequest.amount), currency: currency)
+        return Amount(amount: UInt256(string: amount), currency: currency)
     }
 
     var type: PigeonRequestType {
@@ -77,30 +74,24 @@ class MessagePaymentRequestWrapper: PigeonRequest {
     var abiData: String? {
         return nil
     }
-
-    var address: String {
-        return paymentRequest.address
+    
+    var txSize: UInt256? {
+        return hasTransactionSize ? UInt256(string: transactionSize) : nil
     }
-
-    var memo: String {
-        return paymentRequest.memo
+    
+    var txFee: Amount? {
+        return hasTransactionFee ? Amount(amount: UInt256(string: transactionFee), currency: currency) : nil
     }
 }
 
-class MessageCallRequestWrapper: PigeonRequest {
-
-    private let callRequest: MessageCallRequest
-
-    init(callRequest: MessageCallRequest) {
-        self.callRequest = callRequest
-    }
+extension MessageCallRequest: PigeonRequest {
 
     var currency: CurrencyDef {
         return Currencies.eth
     }
 
     var purchaseAmount: Amount {
-        return Amount(amount: UInt256(string: callRequest.amount), currency: currency)
+        return Amount(amount: UInt256(string: amount), currency: currency)
     }
 
     var type: PigeonRequestType {
@@ -108,14 +99,14 @@ class MessageCallRequestWrapper: PigeonRequest {
     }
 
     var abiData: String? {
-        return callRequest.abi
+        return abi
     }
-
-    var address: String {
-        return callRequest.address
+    
+    var txSize: UInt256? {
+        return hasTransactionSize ? UInt256(string: transactionSize) : nil
     }
-
-    var memo: String {
-        return callRequest.memo
+    
+    var txFee: Amount? {
+        return hasTransactionFee ? Amount(amount: UInt256(string: transactionFee), currency: currency) : nil
     }
 }

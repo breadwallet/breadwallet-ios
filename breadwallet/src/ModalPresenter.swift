@@ -314,6 +314,10 @@ class ModalPresenter : Subscriber, Trackable {
         guard let walletManager = walletManagers[request.currency.code] else { return nil }
         guard let kvStore = walletManager.apiClient?.kv else { return nil }
         guard let sender = request.currency.createSender(walletManager: walletManager, kvStore: kvStore) else { return nil }
+        if let ethSender = sender as? EthereumSender {
+            ethSender.customGasPrice = request.txFee?.rawValue
+            ethSender.customGasLimit = request.txSize
+        }
         let checkoutVC = CheckoutConfirmationViewController(request: request, sender: sender)
         checkoutVC.presentVerifyPin = { [weak self, weak checkoutVC] bodyText, success in
             guard let myself = self else { return }

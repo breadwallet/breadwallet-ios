@@ -331,7 +331,7 @@ class PigeonExchange: Subscriber {
     // MARK: - Purchase/Call Request
     
     private func handlePaymentRequest(_ paymentRequest: MessagePaymentRequest, from requestEnvelope: MessageEnvelope) {
-        var request = MessagePaymentRequestWrapper(paymentRequest: paymentRequest)
+        var request = paymentRequest as PigeonRequest
         request.responseCallback = { result in
             self.sendPaymentResponse(result: result, forRequest: paymentRequest, from: requestEnvelope)
         }
@@ -339,7 +339,7 @@ class PigeonExchange: Subscriber {
     }
     
     private func handleCallRequest(_ callRequest: MessageCallRequest, from requestEnvelope: MessageEnvelope) {
-        var request = MessageCallRequestWrapper(callRequest: callRequest)
+        var request = callRequest as PigeonRequest
         request.responseCallback = { result in
             self.sendCallResponse(result: result, forRequest: callRequest, from: requestEnvelope)
         }
