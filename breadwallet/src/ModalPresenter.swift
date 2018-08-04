@@ -1026,9 +1026,7 @@ class ModalPresenter : Subscriber, Trackable {
         apiClient.fetchServiceInfo(serviceID: service, callback: { serviceDefinition in
             guard let serviceDefinition = serviceDefinition else { return self.showLightWeightAlert(message: "Could not retreive Service definition"); }
             DispatchQueue.main.async {
-                let alert = LinkWalletViewController(service: serviceDefinition, approvalCallback: { pairingCallback in
-                    Store.trigger(name: .linkWallet(pubKey, identifier, service, pairingCallback))
-                })
+                let alert = LinkWalletViewController(pairingRequest: WalletPairingRequest(publicKey: pubKey, identifier: identifier, service: service), serviceDefinition: serviceDefinition)
                 top.present(alert, animated: true, completion: nil)
             }
         })

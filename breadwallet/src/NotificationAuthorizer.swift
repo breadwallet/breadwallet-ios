@@ -59,12 +59,14 @@ struct NotificationAuthorizer: Trackable {
         
         let enableAction = UIAlertAction(title: S.Button.ok, style: .default) { _ in
             UNUserNotificationCenter.current().requestAuthorization(options: self.options) { (granted, error) in
-                if granted {
-                    UIApplication.shared.registerForRemoteNotifications()
-                } else {
-                    self.saveEvent("push.systemPromptDenied")
+                DispatchQueue.main.async {
+                    if granted {
+                        UIApplication.shared.registerForRemoteNotifications()
+                    } else {
+                        self.saveEvent("push.systemPromptDenied")
+                    }
+                    completion(granted)
                 }
-                completion(granted)
             }
         }
         let cancelAction = UIAlertAction(title: S.Button.cancel, style: .cancel) { _ in
