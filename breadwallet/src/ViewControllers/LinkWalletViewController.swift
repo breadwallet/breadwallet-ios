@@ -117,7 +117,14 @@ class LinkWalletViewController : UIViewController {
         note1.text = S.LinkWallet.domainTitle
         info1.text = serviceDefinition.domains.joined(separator: ",")
         note2.text = S.LinkWallet.permissionsTitle
-        info2.text = serviceDefinition.capabilities.map { "•" + $0.description }.joined(separator: "\n")
+        
+        let capabilitiesList: [String] = serviceDefinition.capabilities.filter { !$0.description.isEmpty }.map {
+            let scopes = $0.scopes.map { $0.description }.joined(separator: ", ")
+            let format = Bundle.main.localizedString(forKey: $0.description, value: $0.description, table: nil)
+            return "• " + String(format: format, scopes)
+        }
+        
+        info2.text = capabilitiesList.joined(separator: "\n")
         note3.text = S.LinkWallet.disclaimer
         note1.textAlignment = .center
         note3.textAlignment = .center

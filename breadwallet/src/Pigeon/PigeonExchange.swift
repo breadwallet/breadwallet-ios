@@ -171,7 +171,7 @@ class PigeonExchange: Subscriber {
                             }
                             
                             self.addRemoteEntity(remotePubKey: link.publicKey, identifier: remoteID, service: pairingRequest.service)
-                            self.startPolling()
+                            self.startPolling() // poll until account request is processed
                             completionHandler(.success)
                             break
                         }
@@ -286,6 +286,9 @@ class PigeonExchange: Subscriber {
             case .accountRequest:
                 let request = try MessageAccountRequest(serializedData: decryptedData)
                 sendAccountResponse(for: request, to: envelope)
+                if Store.state.isPushNotificationsEnabled {
+                    stopPolling()
+                }
             case .paymentRequest:
                 let request = try MessagePaymentRequest(serializedData: decryptedData)
                 handlePaymentRequest(request, from: envelope)

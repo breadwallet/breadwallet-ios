@@ -626,4 +626,12 @@ enum S {
         static let title = NSLocalizedString("PaymentConfirmation.title", value: "Confirmation", comment: "Payment confirmation view title")
         static let amountText = NSLocalizedString("PaymentConfirmation.amountText", value: "Send %1$@ to purchase %2$@", comment: "Eg. Send 1.0Eth to purchase CCC")
     }
+    
+    enum EME {
+        enum permissions {
+            static let accountRequest = NSLocalizedString("EME.permissions.accountRequest", value: "Request %1$@ account information", comment: "Service capabilities description")
+            static let paymentRequest = NSLocalizedString("EME.permissions.paymentRequest", value: "Request %1$@ payment", comment: "Service capabilities description")
+            static let callRequest = NSLocalizedString("EME.permissions.callRequest", value: "Request %1$@ smart contract call", comment: "Service capabilities description")
+        }
+    }
 }
