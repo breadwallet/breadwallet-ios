@@ -10,6 +10,7 @@ import Foundation
 import SwiftProtobuf
 import BRCore
 
+
 enum PigeonMessageType : String {
     case link = "LINK"
     case ping = "PING"
@@ -69,5 +70,18 @@ extension MessageEnvelope {
         envelope.signature = Data()
         let data = try! envelope.serializedData()
         return crypto.verify(data: data, signature: self.signature, pubKey: envelope.senderPublicKey)
+    }
+}
+
+extension InboxEntry {
+    var envelope: MessageEnvelope? {
+        guard let messageData = Data(base64Encoded: message) else { return nil }
+        do {
+            let envelope = try MessageEnvelope(serializedData: messageData)
+            return envelope
+        } catch let decodeError {
+            print("[EME] envelope decode error: \(decodeError)")
+            return nil
+        }
     }
 }

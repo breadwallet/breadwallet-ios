@@ -30,16 +30,17 @@ class LinkWalletViewController : UIViewController {
     private let info2 = UILabel.wrapping(font: .customBody(size: 14.0), color: .white)
     private let scrollView = UIScrollView()
     private let header = UIStackView()
-    private let service: ServiceDefinition
-    private let approvalCallback: (@escaping PairingCompletionHandler) -> Void
     private var animator: UIViewPropertyAnimator? = nil
     private let statusView = UIView()
     private let errorMessage = UILabel.wrapping(font: .customBody(size: 15.0), color: .white)
     private let circle = LinkStatusCircle(colour: .white)
+    
+    private let pairingRequest: WalletPairingRequest
+    private let serviceDefinition: ServiceDefinition
 
-    init(service: ServiceDefinition, approvalCallback: @escaping (@escaping PairingCompletionHandler) -> Void) {
-        self.service = service
-        self.approvalCallback = approvalCallback
+    init(pairingRequest: WalletPairingRequest, serviceDefinition: ServiceDefinition) {
+        self.pairingRequest = pairingRequest
+        self.serviceDefinition = serviceDefinition
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -114,9 +115,9 @@ class LinkWalletViewController : UIViewController {
     private func setupLabels() {
         titleLabel.text = S.LinkWallet.title.uppercased()
         note1.text = S.LinkWallet.domainTitle
-        info1.text = service.domains.joined(separator: ",")
+        info1.text = serviceDefinition.domains.joined(separator: ",")
         note2.text = S.LinkWallet.permissionsTitle
-        info2.text = service.capabilities.map { "•" + $0.description }.joined(separator: "\n")
+        info2.text = serviceDefinition.capabilities.map { "•" + $0.description }.joined(separator: "\n")
         note3.text = S.LinkWallet.disclaimer
         note1.textAlignment = .center
         note3.textAlignment = .center
@@ -157,21 +158,23 @@ class LinkWalletViewController : UIViewController {
     }
 
     private func setButtonActions() {
-        approve.tap = { [weak self] in
-            self?.showStatusView()
-            self?.approvalCallback( { result in
+        approve.tap = { [unowned self] in
+            self.showStatusView()
+            Store.trigger(name: .linkWallet(self.pairingRequest, true, { result in
                 switch result {
                 case .success:
-                    self?.showSuccess()
+                    self.showSuccess()
                 case .error(let message):
-                    self?.showFailure(message: message)
+                    self.showFailure(message: message)
                 }
-            })
+            }))
         }
 
-        decline.tap = { [weak self] in
-            self?.stopAnimators()
-            self?.dismiss(animated: true, completion: nil)
+        decline.tap = { [unowned self] in
+            Store.trigger(name: .linkWallet(self.pairingRequest, false, { _ in
+                self.stopAnimators()
+                self.dismiss(animated: true, completion: nil)
+            }))
         }
     }
 

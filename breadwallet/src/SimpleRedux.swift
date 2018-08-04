@@ -71,7 +71,7 @@ enum TriggerName {
     case showCurrency(CurrencyDef)
     case resetDisplayCurrencies
     case promptLinkWallet(String, String, String) // pubkey, identifier, service
-    case linkWallet(String, String, String, PairingCompletionHandler) // pubkey, identifier, service, callback
+    case linkWallet(WalletPairingRequest, Bool, PairingCompletionHandler) // pubkey, identifier, service, accepted, callback
     case fetchInbox
 } //NB : remember to add to triggers to == fuction below
 
@@ -147,7 +147,7 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.promptLinkWallet(_,_,_), .promptLinkWallet(_,_,_)):
         return true
-    case (.linkWallet(_,_,_,_), .linkWallet(_,_,_,_)):
+    case (.linkWallet(_,_,_), .linkWallet(_,_,_)):
         return true
     case (.fetchInbox, .fetchInbox):
         return true
