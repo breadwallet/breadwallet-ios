@@ -1411,6 +1411,7 @@
 		7CBF4B6320081BCE00E003AA /* KeyedDecodingContainer+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "KeyedDecodingContainer+Additions.swift"; path = "src/Extensions/KeyedDecodingContainer+Additions.swift"; sourceTree = "<group>"; };
 		7CBF4B6A2008899100E003AA /* TxAddressCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TxAddressCell.swift; path = src/Views/TransactionCells/TxAddressCell.swift; sourceTree = "<group>"; };
 		7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TxAmountCell.swift; path = src/Views/TransactionCells/TxAmountCell.swift; sourceTree = "<group>"; };
+		7CE19FF221166B27008C55CE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailRowCell.swift; path = src/Views/TransactionCells/TxDetailRowCell.swift; sourceTree = "<group>"; };
 		7CF115EE205C943400C03D42 /* BREthereum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereum.h; sourceTree = "<group>"; };
 		7CF115FA205C943500C03D42 /* BREthereumToken.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumToken.c; sourceTree = "<group>"; };
@@ -4353,6 +4354,7 @@
 				CEE659EE1F68AAB9001FF29D /* zh-Hans */,
 				CE0FC0F81F72417200E7C626 /* ko */,
 				CE0FC0F91F72417500E7C626 /* sv */,
+				7CE19FF221166B27008C55CE /* en */,
 			);
 			name = Localizable.strings;
 			path = src/Strings;
