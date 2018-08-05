@@ -58,8 +58,7 @@ extension BRAPIClient {
     }
     
     /// Fetches Bitcoin exchange rates in all available fiat currencies
-    func bitcoinExchangeRates(isFallback: Bool = false, _ handler: @escaping (RatesResult) -> Void) {
-        let code = Currencies.btc.code
+    func exchangeRates(currencyCode code: String, isFallback: Bool = false, _ handler: @escaping (RatesResult) -> Void) {
         let param = "?currency=\(code.lowercased())"
         let request = isFallback ? URLRequest(url: URL(string: fallbackRatesURL)!) : URLRequest(url: url("/rates\(param)"))
         let task = dataTaskWithRequest(request) { (data, response, error) in
@@ -73,7 +72,7 @@ extension BRAPIClient {
                 } else {
                     guard let dict = parsedData as? [String: Any],
                         let array = dict["body"] as? [Any] else {
-                            return self.bitcoinExchangeRates(isFallback: true, handler)
+                            return self.exchangeRates(currencyCode: code, isFallback: true, handler)
                     }
                     handler(.success(array.compactMap { Rate(data: $0, reciprocalCode: code) }))
                 }
@@ -81,7 +80,7 @@ extension BRAPIClient {
                 if isFallback {
                     handler(.error("Error fetching from fallback url"))
                 } else {
-                    self.bitcoinExchangeRates(isFallback: true, handler)
+                    self.exchangeRates(currencyCode: code, isFallback: true, handler)
                 }
             }
         }
