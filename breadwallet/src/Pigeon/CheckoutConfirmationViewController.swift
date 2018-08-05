@@ -88,6 +88,7 @@ class CheckoutConfirmationViewController : UIViewController {
             self.sendTapped()
         }
         cancel.tap = {
+            self.request.responseCallback?(CheckoutResult.declined)
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -171,7 +172,7 @@ class CheckoutConfirmationViewController : UIViewController {
 
         sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier, abi: request.abiData) { [weak self] result in
             guard let `self` = self else { return }
-            self.request.responseCallback?(result)
+            self.request.responseCallback?(CheckoutResult.accepted(result: result))
             switch result {
             case .success:
                 self.dismiss(animated: true, completion: {

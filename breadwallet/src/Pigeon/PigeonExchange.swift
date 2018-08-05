@@ -21,6 +21,11 @@ enum WalletPairingResult {
     case error(message: String)
 }
 
+enum CheckoutResult {
+    case accepted(result: SendResult)
+    case declined
+}
+
 typealias PairingCompletionHandler = (WalletPairingResult) -> Void
 
 class PigeonExchange: Subscriber {
@@ -347,54 +352,68 @@ class PigeonExchange: Subscriber {
         Store.perform(action: RootModalActions.Present(modal: .sendForRequest(request: request)))
     }
 
-    private func sendPaymentResponse(result: SendResult, forRequest: MessagePaymentRequest, from requestEnvelope: MessageEnvelope) {
+    private func sendPaymentResponse(result: CheckoutResult, forRequest: MessagePaymentRequest, from requestEnvelope: MessageEnvelope) {
         guard let pairingKey = pairingKey(forRemotePubKey: requestEnvelope.senderPublicKey) else {
             print("[EME] remote entity not found!")
             return
         }
         var response = MessagePaymentResponse()
         switch result {
-        case .success(let txHash, _):
-            response.scope = forRequest.scope
-            response.status = .accepted
-            response.transactionID = txHash ?? "unknown txHash"
-        case .creationError(_):
+        case .accepted(let sendResult):
+            switch sendResult {
+            case .success(let txHash, _):
+                response.scope = forRequest.scope
+                response.status = .accepted
+                response.transactionID = txHash ?? "unknown txHash"
+            case .creationError(_):
+                response.status = .rejected
+                response.error = .transactionFailed
+            case .publishFailure(_):
+                response.status = .rejected
+                response.error = .transactionFailed
+            case .insufficientGas(_):
+                response.status = .rejected
+                response.error = .transactionFailed
+            }
+        case .declined:
             response.status = .rejected
-            response.error = .transactionFailed
-        case .publishFailure(_):
-            response.status = .rejected
-            response.error = .transactionFailed
-        case .insufficientGas(_):
-            response.status = .rejected
-            response.error = .transactionFailed
+            response.error = .userDenied
         }
+        
         guard let envelope = try? MessageEnvelope(replyTo: requestEnvelope, message: response, type: .paymentResponse, crypto: PigeonCrypto(privateKey: pairingKey)) else {
             return print("[EME] envelope construction failed!")
         }
         apiClient.sendMessage(envelope: envelope)
     }
 
-    private func sendCallResponse(result: SendResult, forRequest: MessageCallRequest, from requestEnvelope: MessageEnvelope) {
+    private func sendCallResponse(result: CheckoutResult, forRequest: MessageCallRequest, from requestEnvelope: MessageEnvelope) {
         guard let pairingKey = pairingKey(forRemotePubKey: requestEnvelope.senderPublicKey) else {
             print("[EME] remote entity not found!")
             return
         }
         var response = MessageCallResponse()
         switch result {
-        case .success(let txHash, _):
-            response.scope = forRequest.scope
-            response.status = .accepted
-            response.transactionID = txHash ?? "unknown txHash"
-        case .creationError(_):
+        case .accepted(let sendResult):
+            switch sendResult {
+            case .success(let txHash, _):
+                response.scope = forRequest.scope
+                response.status = .accepted
+                response.transactionID = txHash ?? "unknown txHash"
+            case .creationError(_):
+                response.status = .rejected
+                response.error = .transactionFailed
+            case .publishFailure(_):
+                response.status = .rejected
+                response.error = .transactionFailed
+            case .insufficientGas(_):
+                response.status = .rejected
+                response.error = .transactionFailed
+            }
+        case .declined:
             response.status = .rejected
-            response.error = .transactionFailed
-        case .publishFailure(_):
-            response.status = .rejected
-            response.error = .transactionFailed
-        case .insufficientGas(_):
-            response.status = .rejected
-            response.error = .transactionFailed
+            response.error = .userDenied
         }
+            
         guard let envelope = try? MessageEnvelope(replyTo: requestEnvelope, message: response, type: .callResponse, crypto: PigeonCrypto(privateKey: pairingKey)) else {
             return print("[EME] envelope construction failed!")
         }

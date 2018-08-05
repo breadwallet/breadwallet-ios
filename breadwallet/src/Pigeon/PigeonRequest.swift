@@ -31,11 +31,11 @@ private struct AssociatedKeys {
 
 private class CallbackWrapper : NSObject, NSCopying {
 
-    init(_ callback: @escaping (SendResult) -> Void) {
+    init(_ callback: @escaping (CheckoutResult) -> Void) {
         self.callback = callback
     }
 
-    let callback: (SendResult) -> Void
+    let callback: (CheckoutResult) -> Void
 
     func copy(with zone: NSZone? = nil) -> Any {
         return CallbackWrapper(callback)
@@ -45,7 +45,7 @@ private class CallbackWrapper : NSObject, NSCopying {
 
 extension PigeonRequest {
 
-    var responseCallback: ((SendResult) -> Void)? {
+    var responseCallback: ((CheckoutResult) -> Void)? {
         get {
             guard let callbackWrapper = objc_getAssociatedObject(self, &AssociatedKeys.responseCallback) as? CallbackWrapper else { return nil }
             return callbackWrapper.callback
