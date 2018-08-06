@@ -132,8 +132,9 @@ extension BRAPIClient {
             return
         }
         dataTaskWithRequest(req as URLRequest, authenticated: true, retryCount: 0) { (dat, resp, er) in
-            //let dat2 = String(data: dat ?? Data(), encoding: .utf8)
-            //self.log("save push token resp: \(String(describing: resp)) data: \(String(describing: dat2))")
+            print("[PUSH] registered device token: \(reqJson)")
+            let datString = String(data: dat ?? Data(), encoding: .utf8)
+            self.log("save push token resp: \(resp?.statusCode ?? 0) data: \(String(describing: datString))")
         }.resume()
     }
 
