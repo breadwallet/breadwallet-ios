@@ -612,12 +612,6 @@ extension ApplicationController {
         UserDefaults.pushToken = deviceToken
         apiClient.savePushNotificationToken(deviceToken)
         Store.perform(action: PushNotifications.setIsEnabled(true))
-        
-        let tokenParts = deviceToken.map { data -> String in
-            return String(format: "%02.2hhx", data)
-        }
-        let token = tokenParts.joined()
-        print("[PUSH] registered device token: \(token)")
     }
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
