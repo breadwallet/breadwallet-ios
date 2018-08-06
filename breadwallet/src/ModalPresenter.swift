@@ -608,7 +608,8 @@ class ModalPresenter : Subscriber, Trackable {
                 }
                 return
             }
-            let vc = ScanViewController(forPaymentRequestForCurrency: currency, completion: { scanResult in
+            let scanCurrency = (currency is ERC20Token) ? Currencies.eth : currency
+            let vc = ScanViewController(forPaymentRequestForCurrency: scanCurrency, completion: { scanResult in
                 scanCompletion(scanResult)
                 parent?.view.isFrameChangeBlocked = false
             })
