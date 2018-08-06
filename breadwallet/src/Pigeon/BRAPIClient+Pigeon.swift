@@ -133,7 +133,7 @@ extension BRAPIClient {
                 print("[EME] /associated-keys error: \(error?.localizedDescription ?? "nil repsonse")")
                 return callback(false)
             }
-            guard response.statusCode == 201 else {
+            guard response.statusCode == 201 || ((E.isTestFlight || E.isDebug) && response.statusCode < 500) else {
                 print("[EME] /associated-keys response: \(response.statusCode)")
                 return callback(false)
             }
