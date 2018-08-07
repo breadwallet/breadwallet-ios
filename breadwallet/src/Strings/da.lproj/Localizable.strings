@@ -121,7 +121,7 @@
 /* Ignore button label */
 "Button.ignore" = "Ignorer";
 /* menu button */
-"Button.menu" = "menu";
+"Button.menu" = "Menu";
 /* No button */
 "Button.no" = "Nej";
 /* OK button label */
@@ -176,6 +176,12 @@
 "DefaultCurrency.rateLabel" = "Valutakurs";
 /* The wallet is disabled. */
 "Disabled.title" = "Pung deaktiveret";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Anmod om %1$@-kontooplysninger";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Anmod om %1$@ \"smart contract\"-kald";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Anmod om betaling af %1$@";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Denne enhed er ikke konfigureret til at sende e-mail med iOS mailappen.";
 /* Email unavailable alert title */
@@ -222,10 +228,16 @@
 "FeeSelector.title" = "Behandlingshastighed";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Administration";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Køb Bitcoin";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Tegnebøger";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "samlet antal aktiver";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Køb og sælg";
 /* Checking private key balance progress view text */
 "Import.checking" = "Tjekker beløb på privat nøgle...";
 /* Sweep private key confirmation message */
@@ -273,15 +285,27 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Ignorer";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "ENHEDENS SIKKERHED ER KOMPROMITTERET\
- Enhver 'jailbreak' app kan få adgang til Breads nøgledata og stjæle dine bitcoin! Ryd straks denne pung og gendan på en sikker enhed.";
+"JailbreakWarnings.messageWithBalance" = "ENHEDENS SIKKERHED ER KOMPROMITTERET\n Enhver 'jailbreak' app kan få adgang til Breads nøgledata og stjæle dine bitcoin! Ryd straks denne pung og gendan på en sikker enhed.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "ENHEDENS SIKKERHED ER KOMPROMITTERET\
- Enhver 'jailbreak' app kan få adgang til Breads nøgledata og stjæle dine bitcoin. Brug kun Bread på en ikke jailbreaket enhed.";
+"JailbreakWarnings.messageWithoutBalance" = "ENHEDENS SIKKERHED ER KOMPROMITTERET\n Enhver 'jailbreak' app kan få adgang til Breads nøgledata og stjæle dine bitcoin. Brug kun Bread på en ikke jailbreaket enhed.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "ADVARSEL";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Ryd";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Godkend";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Afvis";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Eksterne apps kan ikke sende penge uden godkendelse fra denne enhed";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Bemærk: brug KUN denne app, når du er på et af følgende domæner";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Sikker betaling";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Denne app vil være i stand til at:";
+/* Link Wallet view title */
+"LinkWallet.title" = "Forbind tegnebog";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Placeringstjenester er deaktiveret.";
 /* No permissions for location services */
@@ -298,6 +322,10 @@
 "MenuButton.addWallet" = "Tilføj pung";
 /* Menu button title */
 "MenuButton.lock" = "Lås pung";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Administrer Tegnebøger";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Scan QR-kode";
 /* Menu button title */
 "MenuButton.security" = "Sikkerhedscenter";
 /* Menu button title */
@@ -330,6 +358,10 @@
 "NodeSelector.statusLabel" = "Node forbindelsesstatus";
 /* Node Selector view title */
 "NodeSelector.title" = "Bitcoin-nodes";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Send %1$@ for at købe %2$@";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Bekræftelse";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Dårlig betalingsanmodning";
 /* Error opening payment protocol file message */
@@ -388,6 +420,10 @@
 "Prompts.UpgradePin.title" = "Opgader PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Slå notifikationer til for at modtage særlige meddelelser fra Bread i fremtiden.";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Notifikationer deaktiveret";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Slå notifikationer til i Indstillinger for at modtage advarsler";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push notifikationer";
 /* Push notifications are off label */
@@ -472,8 +508,6 @@
 "Search.sent" = "sendt";
 /* Face ID button title */
 "SecurityCenter.faceIdTitle" = "Face ID";
-/* Security Center Info */
-"SecurityCenter.info" = "Aktiver alle sikkerhedsfunktioner for maksimal beskyttelse.";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "Den eneste måde at få adgang til dine bitcoin på, hvis du mister eller opgraderer din telefon.";
 /* Paper Key button title */
@@ -482,8 +516,6 @@
 "SecurityCenter.pinDescription" = "Beskytter dit Bread mod uberettigede brugere.";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "6-cifret PIN";
-/* Security Center Title */
-"SecurityCenter.title" = "Sikkerhedscenter";
 /* Touch ID button description */
 "SecurityCenter.touchIdDescription" = "Lås dit Break op og send penge op til en vis grænse.";
 /* Touch ID button title */
@@ -586,6 +618,8 @@
 "Settings.manage" = "Administrer";
 /* Notifications label */
 "Settings.notifications" = "Notifikationer";
+/* Section header for "other settings". */
+"Settings.other" = "Andet";
 /* Preferences settings section header */
 "Settings.preferences" = "Indstillinger";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -615,9 +649,7 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Skriv paper key ned igen";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Din paper key er den eneste måde at gendanne dit Bread på, hvis din telefon mistes, stjæles, går i stykker eller opgraderes.\
-\
-Vi viser dig en liste over word du skal skrive ned på et papir, og holde sikkert.";
+"StartPaperPhrase.body" = "Din paper key er den eneste måde at gendanne dit Bread på, hvis din telefon mistes, stjæles, går i stykker eller opgraderes.\n\nVi viser dig en liste over word du skal skrive ned på et papir, og holde sikkert.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Skriv paper key ned";
 /* Argument is date */
@@ -630,10 +662,14 @@ Vi viser dig en liste over word du skal skrive ned på et papir, og holde sikker
 "StartViewController.recoverButton" = "Gendan tegnebog";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Tilslutter";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Synkronisering mislykkedes";
 /* Syncing view header text */
 "SyncingView.header" = "Synkroniserer";
 /* Retry button label */
 "SyncingView.retry" = "Prøv igen";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Synkroniseret via %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Synkroniserer";
 /* 6 d (6 days) */
@@ -826,8 +862,6 @@ Vi viser dig en liste over word du skal skrive ned på et papir, og holde sikker
 "UnlockScreen.resetPin" = "Nulstil PIN";
 /* Scan button title */
 "UnlockScreen.scan" = "Scan";
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "Indtast PIN";
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "Touch sensor";
 /* TouchID prompt text */
@@ -838,8 +872,6 @@ Vi viser dig en liste over word du skal skrive ned på et papir, og holde sikker
 "UnlockScreen.touchIdText" = "Lås op med Touch ID";
 /* Device authentication title */
 "UnlockScreen.touchIdTitle.android" = "Autentificering påkrævet";
-/* Wallet unlocked message */
-"UnlockScreen.unlocked" = "Pung låst op";
 /* Update PIN caption text */
 "UpdatePin.caption" = "Husk denne PIN. Hvis du glemmer den, vil du ikke kunne få adgang til dine bitcoin.";
 /* PIN creation info. */
@@ -885,9 +917,7 @@ Vi viser dig en liste over word du skal skrive ned på et papir, og holde sikker
 /* Updating webview message */
 "Webview.updating" = "Opdaterer...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet har skiftet navn til Bread med et helt nyt look og nogle nye funktioner.\
-\
-Hvis du har brug for hjælp, led efter (?) øverst til højre på de fleste skærme.";
+"Welcome.body" = "Breadwallet har skiftet navn til Bread med et helt nyt look og nogle nye funktioner.\n\nHvis du har brug for hjælp, led efter (?) øverst til højre på de fleste skærme.";
 /* Top title of welcome screen */
 "Welcome.title" = "Velkommen til Bread!";
 /* Wipe wallet alert message */
@@ -918,19 +948,3 @@ Hvis du har brug for hjælp, led efter (?) øverst til højre på de fleste skæ
 "WritePaperPhrase.previous" = "Forrige";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li af %2$li";
-/* Section header for "other settings". */
-"Settings.other" = "Andet";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Administrer Tegnebøger";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Køb Bitcoin";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Køb og sælg";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Scan QR-kode";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Synkronisering mislykkedes";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Synkroniseret via %1$@";
