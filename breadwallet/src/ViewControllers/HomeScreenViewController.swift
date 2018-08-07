@@ -23,6 +23,7 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
     private let logo = UIImageView(image:#imageLiteral(resourceName: "LogoGradient"))
     private let total = UILabel(font: .customBold(size: 30.0), color: .white)
     private let totalHeader = UILabel(font: .customBody(size: 12.0), color: .white)
+    private let debugLabel = UILabel(font: .customBody(size: 12.0), color: .transparentWhiteText) // debug info
     private let prompt = UIView()
     private var promptHiddenConstraint: NSLayoutConstraint!
     private let toolbar = UIToolbar()
@@ -64,6 +65,7 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         subHeaderView.addSubview(totalHeader)
         subHeaderView.addSubview(total)
         subHeaderView.addSubview(logo)
+        subHeaderView.addSubview(debugLabel)
         view.addSubview(prompt)
         view.addSubview(toolbar)
     }
@@ -100,6 +102,11 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         totalHeader.constrain([
             totalHeader.trailingAnchor.constraint(equalTo: total.trailingAnchor),
             totalHeader.bottomAnchor.constraint(equalTo: total.topAnchor, constant: 0.0)
+            ])
+        
+        debugLabel.constrain([
+            debugLabel.leadingAnchor.constraint(equalTo: logo.leadingAnchor),
+            debugLabel.bottomAnchor.constraint(equalTo: totalHeader.bottomAnchor)
             ])
         
         promptHiddenConstraint = prompt.heightAnchor.constraint(equalToConstant: 0.0)
@@ -148,6 +155,13 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
         total.textAlignment = .left
         total.text = "0"
         title = ""
+        
+        if E.isTestnet && !E.isScreenshots {
+            debugLabel.text = "(Testnet)"
+            debugLabel.isHidden = false
+        } else {
+            debugLabel.isHidden = true
+        }
         
         setupToolbar()
         updateTotalAssets()
