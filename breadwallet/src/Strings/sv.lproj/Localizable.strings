@@ -121,7 +121,7 @@
 /* Ignore button label */
 "Button.ignore" = "Ignorera";
 /* menu button */
-"Button.menu" = "meny";
+"Button.menu" = "Meny";
 /* No button */
 "Button.no" = "Nej";
 /* OK button label */
@@ -176,6 +176,12 @@
 "DefaultCurrency.rateLabel" = "Växelkurs";
 /* The wallet is disabled. */
 "Disabled.title" = "Plånbok inaktiverad";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Begär %1$@ betalning";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Begär %1$@ smart kontraktsamtal";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Begär %1$@ kontoinformation";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Enheten är inte konfigurerad för att skicka e-post med post-appen i iOS.";
 /* Email unavailable alert title */
@@ -222,10 +228,16 @@
 "FeeSelector.title" = "Bearbetningshastighet";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Admin";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Köp Bitcoin";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Meny";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Plånböcker";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "totala tillgångar";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Handla";
 /* Checking private key balance progress view text */
 "Import.checking" = "Kontrollerar privat nyckelsaldo...";
 /* Sweep private key confirmation message */
@@ -273,15 +285,27 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Ignorera";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "ENHETENS SÄKERHET ÄR ÄVENTYRAD\
-En \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina bitcoin! Töm denna plånbok direkt och återställ den på en säker enhet.";
+"JailbreakWarnings.messageWithBalance" = "ENHETENS SÄKERHET ÄR ÄVENTYRAD\nEn \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina bitcoin! Töm denna plånbok direkt och återställ den på en säker enhet.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "ENHETENS SÄKERHET ÄR ÄVENTYRAD\
-En \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina bitcoin! Använd Bread endast på en säker enhet.";
+"JailbreakWarnings.messageWithoutBalance" = "ENHETENS SÄKERHET ÄR ÄVENTYRAD\nEn \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina bitcoin! Använd Bread endast på en säker enhet.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "VARNING";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Töm";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Godkänn";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Avböj";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Externa appar kan inte skicka pengar utan godkännande från denna enhet";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "OBS: Interagera BARA med denna app från en av följande domäner";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Säker kassa";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Denna app kommer att kunna:";
+/* Link Wallet view title */
+"LinkWallet.title" = "Länka plånbok";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Platstjänster är inaktiverade.";
 /* No permissions for location services */
@@ -298,6 +322,10 @@ En \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina b
 "MenuButton.addWallet" = "Lägg till plånbok";
 /* Menu button title */
 "MenuButton.lock" = "Lås plånbok";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Hantera plånböcker";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Skanna QR-kod";
 /* Menu button title */
 "MenuButton.security" = "Säkerhetscenter";
 /* Menu button title */
@@ -330,6 +358,10 @@ En \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina b
 "NodeSelector.statusLabel" = "Nodens anslutningsstatus";
 /* Node Selector view title */
 "NodeSelector.title" = "Bitcoin-noder";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Skicka %1$@ för att köpa %2$@";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Bekräftelse";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Felaktig utbetalningsbegäran";
 /* Error opening payment protocol file message */
@@ -388,6 +420,10 @@ En \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina b
 "Prompts.UpgradePin.title" = "Uppgradera PIN-kod";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Slå på aviseringar för att få särskilda meddelanden från Bread i framtiden.";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Meddelanden avaktiverade";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Aktivera meddelanden i inställningar för att ta emot larm";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push-meddelanden";
 /* Push notifications are off label */
@@ -472,8 +508,6 @@ En \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina b
 "Search.sent" = "skickat";
 /* Face ID button title */
 "SecurityCenter.faceIdTitle" = "Face ID";
-/* Security Center Info */
-"SecurityCenter.info" = "Aktivera alla säkerhetsfunktioner för maximal säkerhet.";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "Det enda sättet att komma åt dina bitcoin om du förlorar eller uppgraderar din telefon.";
 /* Paper Key button title */
@@ -482,8 +516,6 @@ En \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina b
 "SecurityCenter.pinDescription" = "Skyddar ditt Bread från obehöriga användare.";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "6-siffrig PIN-kod";
-/* Security Center Title */
-"SecurityCenter.title" = "Säkerhetscenter";
 /* Touch ID button description */
 "SecurityCenter.touchIdDescription" = "Lås enkelt upp ditt Bread och skicka pengar upp till en inställd gräns.";
 /* Touch ID button title */
@@ -586,6 +618,8 @@ En \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina b
 "Settings.manage" = "Hantera";
 /* Notifications label */
 "Settings.notifications" = "Meddelanden";
+/* Section header for "other settings". */
+"Settings.other" = "Andra";
 /* Preferences settings section header */
 "Settings.preferences" = "Preferenser";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -615,9 +649,7 @@ En \"intrångs\"-app kan få tillgång till Breads nyckeldata och stjäla dina b
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Skriv ner ordnyckel på nytt";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Din ordnyckel  är enda sättet att återställ Bread om du förlorat din telefon, blivit bestulen på den eller har uppgraderat den.\
-\
-Vi visar dig en lista över ord som du kan skriva ner på ett papper och gömma undan.";
+"StartPaperPhrase.body" = "Din ordnyckel  är enda sättet att återställ Bread om du förlorat din telefon, blivit bestulen på den eller har uppgraderat den.\n\nVi visar dig en lista över ord som du kan skriva ner på ett papper och gömma undan.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Skriv ner ordnyckel";
 /* Argument is date */
@@ -630,10 +662,14 @@ Vi visar dig en lista över ord som du kan skriva ner på ett papper och gömma 
 "StartViewController.recoverButton" = "Återställ plånbok";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Ansluter";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Synkronisering misslyckades";
 /* Syncing view header text */
 "SyncingView.header" = "Synkar";
 /* Retry button label */
 "SyncingView.retry" = "Försök igen";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Synkroniserad genom %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Synkroniserar";
 /* 6 d (6 days) */
@@ -826,8 +862,6 @@ Vi visar dig en lista över ord som du kan skriva ner på ett papper och gömma 
 "UnlockScreen.resetPin" = "Återställ PIN-kod";
 /* Scan button title */
 "UnlockScreen.scan" = "Läs av";
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "Ange PIN-kod";
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "Touchsensor";
 /* TouchID prompt text */
@@ -838,8 +872,6 @@ Vi visar dig en lista över ord som du kan skriva ner på ett papper och gömma 
 "UnlockScreen.touchIdText" = "Lås upp med TouchID";
 /* Device authentication title */
 "UnlockScreen.touchIdTitle.android" = "Autentisering krävs";
-/* Wallet unlocked message */
-"UnlockScreen.unlocked" = "Plånbok upplåst";
 /* Update PIN caption text */
 "UpdatePin.caption" = "Kom ihåg PIN-koden. Om du glömmer den, kommer du inte åt dina bitcoin.";
 /* PIN creation info. */
@@ -885,9 +917,7 @@ Vi visar dig en lista över ord som du kan skriva ner på ett papper och gömma 
 /* Updating webview message */
 "Webview.updating" = "Uppdaterar...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadplånboken har bytt namn till Bread, med ett splitter nytt utseende och några nya funktioner.\
-\
-Om du behöver hjälp, leta efter (?)-tecknet i det övre högra hörnet på de flesta skärmar.";
+"Welcome.body" = "Breadplånboken har bytt namn till Bread, med ett splitter nytt utseende och några nya funktioner.\n\nOm du behöver hjälp, leta efter (?)-tecknet i det övre högra hörnet på de flesta skärmar.";
 /* Top title of welcome screen */
 "Welcome.title" = "Välkommen till Bread!";
 /* Wipe wallet alert message */
@@ -918,19 +948,3 @@ Om du behöver hjälp, leta efter (?)-tecknet i det övre högra hörnet på de 
 "WritePaperPhrase.previous" = "Föregående";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li av %2$li";
-/* Section header for "other settings". */
-"Settings.other" = "Andra";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Hantera plånböcker";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Meny";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Köp Bitcoin";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Handla";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Skanna QR-kod";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Synkronisering misslyckades";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Synkroniserad genom %1$@";

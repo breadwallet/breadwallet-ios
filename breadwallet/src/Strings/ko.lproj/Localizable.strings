@@ -176,6 +176,12 @@
 "DefaultCurrency.rateLabel" = "환율";
 /* The wallet is disabled. */
 "Disabled.title" = "월렛이 비활성화됨";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "%1$@ 계정 정보를 요청합니다";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "%1$@ 스마트계약 콜을 요청합니다";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "%1$@ 계정 정보를 요청합니다";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "이 장치는 iOS 메일 앱으로 이메일을 전송하도록 설정되지 않았습니다.";
 /* Email unavailable alert title */
@@ -222,10 +228,16 @@
 "FeeSelector.title" = "처리 속도";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "관리";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "비트코인 구매";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "메뉴";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "지갑";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "총 자산";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "교환";
 /* Checking private key balance progress view text */
 "Import.checking" = "개인 열쇠 잔고 확인 중...";
 /* Sweep private key confirmation message */
@@ -273,15 +285,27 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "무시";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "장치 보안 취약\
-모든 'jailbreak' 앱이 Bread의 키체인 데이터에 접속하여 귀하의 비트코인을 훔칠 수 있습니다! 이 지갑을 바로 지우시고 안전한 장치에서 복구하세요.";
+"JailbreakWarnings.messageWithBalance" = "장치 보안 취약\n모든 'jailbreak' 앱이 Bread의 키체인 데이터에 접속하여 귀하의 비트코인을 훔칠 수 있습니다! 이 지갑을 바로 지우시고 안전한 장치에서 복구하세요.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "장치 보안 취약\
-모든 'jailbreak' 앱이 Bread의 키체인 데이터에 접속하여 귀하의 비트코인을 훔칠 수 있습니다! Bread를 비-jailbroken 장치에서만 사용해 주세요.";
+"JailbreakWarnings.messageWithoutBalance" = "장치 보안 취약\n모든 'jailbreak' 앱이 Bread의 키체인 데이터에 접속하여 귀하의 비트코인을 훔칠 수 있습니다! Bread를 비-jailbroken 장치에서만 사용해 주세요.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "경고";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "초기화";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "승인";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "거절";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "외부 앱은 이 장치의 승인 없이 돈을 전송할 수 없습니다";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "주의: 다음 도메인의 경우에만 이 앱이 연동됨";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "안전한 체크아웃";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "이 앱의 기능:";
+/* Link Wallet view title */
+"LinkWallet.title" = "연결 지갑";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "위치 서비스가 꺼졌습니다.";
 /* No permissions for location services */
@@ -298,6 +322,10 @@
 "MenuButton.addWallet" = "지갑 추가";
 /* Menu button title */
 "MenuButton.lock" = "지갑 잠그기";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "지갑 관리";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "QR코드 스캔";
 /* Menu button title */
 "MenuButton.security" = "보안 센터";
 /* Menu button title */
@@ -330,6 +358,10 @@
 "NodeSelector.statusLabel" = "노드 연결 상태";
 /* Node Selector view title */
 "NodeSelector.title" = "비트코인 노드";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "%2$@ 구매를 위해 %1$@ 전송";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "확인";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "틀린 결제 요청";
 /* Error opening payment protocol file message */
@@ -388,6 +420,10 @@
 "Prompts.UpgradePin.title" = "PIN 업그레이드";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "알림을 켜두시면, 향후 브레드의 특별 메시지를 수신할 수 있습니다.";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "알림 비활성";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "알림을 받으려면 설정에서 알림을 켜세요";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "푸시 알림";
 /* Push notifications are off label */
@@ -472,8 +508,6 @@
 "Search.sent" = "송금";
 /* Face ID button title */
 "SecurityCenter.faceIdTitle" = "페이스 ID";
-/* Security Center Info */
-"SecurityCenter.info" = "최대한의 보호를 위해 모든 보안 기능을 사용하시기 바랍니다.";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "전화를 분실하거나 업그레이드하는 경우, 비트코인에 액세스할 수 있는 유일한 방법입니다.";
 /* Paper Key button title */
@@ -482,8 +516,6 @@
 "SecurityCenter.pinDescription" = "허가받지 않은 사용자로부터 브레드를 보호하세요.";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "6자리 PIN";
-/* Security Center Title */
-"SecurityCenter.title" = "보안 센터";
 /* Touch ID button description */
 "SecurityCenter.touchIdDescription" = "편리하게 브레드의 잠금을 해제하고 최대한도까지 송금해 보세요.";
 /* Touch ID button title */
@@ -586,6 +618,8 @@
 "Settings.manage" = "관리";
 /* Notifications label */
 "Settings.notifications" = "알림";
+/* Section header for "other settings". */
+"Settings.other" = "기타";
 /* Preferences settings section header */
 "Settings.preferences" = "환경 설정";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -615,9 +649,7 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "페이퍼 키를 다시 쓰기";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "페이퍼 키는 핸드폰을 분실하거나, 도난당하거나, 망가지거나, 업그레이드한 경우 브레드를 다시 살릴 수 있는 유일한 방법입니다.\
-\
-저희가 제시하는 단어 목록을 잘 적어서 안전하게 보관해 주세요.";
+"StartPaperPhrase.body" = "페이퍼 키는 핸드폰을 분실하거나, 도난당하거나, 망가지거나, 업그레이드한 경우 브레드를 다시 살릴 수 있는 유일한 방법입니다.\n\n저희가 제시하는 단어 목록을 잘 적어서 안전하게 보관해 주세요.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "페이퍼 키 작성하기";
 /* Argument is date */
@@ -630,10 +662,14 @@
 "StartViewController.recoverButton" = "지갑 복구하기";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "연결 중";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "동기화 실패";
 /* Syncing view header text */
 "SyncingView.header" = "동기화 중";
 /* Retry button label */
 "SyncingView.retry" = "다시 시도";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "%1$@ 전 동기화 됨";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "동기화 중";
 /* 6 d (6 days) */
@@ -826,8 +862,6 @@
 "UnlockScreen.resetPin" = "PIN 재설정";
 /* Scan button title */
 "UnlockScreen.scan" = "스캔";
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "PIN 입력";
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "터치 센서";
 /* TouchID prompt text */
@@ -838,8 +872,6 @@
 "UnlockScreen.touchIdText" = "Touch ID로 잠금 해제";
 /* Device authentication title */
 "UnlockScreen.touchIdTitle.android" = "본인확인 필요";
-/* Wallet unlocked message */
-"UnlockScreen.unlocked" = "월렛의 잠금이 해제됨";
 /* Update PIN caption text */
 "UpdatePin.caption" = "이 PIN 코드를 기억하세요. PIN 코드를 잊어버리면 자신의 비트코인을 사용할 수 없게 됩니다.";
 /* PIN creation info. */
@@ -885,9 +917,7 @@
 /* Updating webview message */
 "Webview.updating" = "업데이트 중...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet이 이름을 Bread로 바꾸고 새롭게 단장하였으며 새로운 기능도 갖췄습니다.\
-\
-도움이 필요하시면 대부분 화면에서 우측 상단에 있는 (?)을(를) 클릭하십시오.";
+"Welcome.body" = "Breadwallet이 이름을 Bread로 바꾸고 새롭게 단장하였으며 새로운 기능도 갖췄습니다.\n\n도움이 필요하시면 대부분 화면에서 우측 상단에 있는 (?)을(를) 클릭하십시오.";
 /* Top title of welcome screen */
 "Welcome.title" = "Bread에 환영합니다!";
 /* Wipe wallet alert message */
@@ -918,19 +948,3 @@
 "WritePaperPhrase.previous" = "이전";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%2$li의 %1$li";
-/* Section header for "other settings". */
-"Settings.other" = "기타";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "지갑 관리";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "메뉴";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "비트코인 구매";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "교환";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "QR코드 스캔";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "동기화 실패";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "%1$@ 전 동기화 됨";

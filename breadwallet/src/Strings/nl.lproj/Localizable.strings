@@ -121,7 +121,7 @@
 /* Ignore button label */
 "Button.ignore" = "Negeren";
 /* menu button */
-"Button.menu" = "menu";
+"Button.menu" = "Menu";
 /* No button */
 "Button.no" = "Nee";
 /* OK button label */
@@ -176,6 +176,12 @@
 "DefaultCurrency.rateLabel" = "Wisselkoers";
 /* The wallet is disabled. */
 "Disabled.title" = "Wallet uitgeschakeld";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Vraag %1$@ accountgegevens aan";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Verzoek %1$@ smart contract oproep";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Verzoek %1$@ betaling";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Dit apparaat is niet geconfigureerd om e-mails te sturen via de iOS Mail app.";
 /* Email unavailable alert title */
@@ -222,10 +228,16 @@
 "FeeSelector.title" = "Verwerkingssnelheid";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Beheerder";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Bitcoins Kopen";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Wallets";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "Totale Prijs:";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Handel";
 /* Checking private key balance progress view text */
 "Import.checking" = "Private key balans checken...";
 /* Sweep private key confirmation message */
@@ -273,15 +285,27 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Negeren";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "APPARAAT BEVEILIGING BESCHADIGD\
-Elke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hiermee je Bitcoins stelen! Wis deze portemonnee direct en herstel het op een veilig apparaat.";
+"JailbreakWarnings.messageWithBalance" = "APPARAAT BEVEILIGING BESCHADIGD\nElke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hiermee je Bitcoins stelen! Wis deze portemonnee direct en herstel het op een veilig apparaat.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "APPARAAT BEVEILIGING BESCHADIGD\
-Elke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hiermee je Bitcoins stelen. Gebruik Bread a.u.b. alleen op een niet-gejailbreakt apparaat.";
+"JailbreakWarnings.messageWithoutBalance" = "APPARAAT BEVEILIGING BESCHADIGD\nElke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hiermee je Bitcoins stelen. Gebruik Bread a.u.b. alleen op een niet-gejailbreakt apparaat.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "WAARSCHUWING";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Wissen";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Goedkeuren";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Afwijzen";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Externe apps kunnen geen geld versturen zonder goedkeuring vanaf dit toestel";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Let op: werk alleen met deze app wanneer je je op één van de volgende domeinen bevind";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Beveiligde Betalingspagina";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Deze app zal in staat zijn om:";
+/* Link Wallet view title */
+"LinkWallet.title" = "Portefeuille Koppelen";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Locatievoorzieningen zijn uitgeschakeld.";
 /* No permissions for location services */
@@ -298,6 +322,10 @@ Elke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hi
 "MenuButton.addWallet" = "Voeg Wallet toe";
 /* Menu button title */
 "MenuButton.lock" = "Portemonnee Vergrendelen";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Beheer wallets";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Scan QR-code";
 /* Menu button title */
 "MenuButton.security" = "Veiligheidscentrum";
 /* Menu button title */
@@ -330,6 +358,10 @@ Elke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hi
 "NodeSelector.statusLabel" = "Connectiestatus van de node";
 /* Node Selector view title */
 "NodeSelector.title" = "Bitcoin-nodes";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "%1$@ versturen om %2$@ te kopen";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Bevestiging";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Slecht Betalingsverzoek";
 /* Error opening payment protocol file message */
@@ -388,6 +420,10 @@ Elke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hi
 "Prompts.UpgradePin.title" = "PIN Upgraden";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Zet notificaties aan om in de toekomst speciale berichten van Brood te ontvangen.";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Meldingen Uitgeschakeld";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Schakel meldingen in in Instellingen om notificaties te ontvangen";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push Meldingen";
 /* Push notifications are off label */
@@ -472,8 +508,6 @@ Elke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hi
 "Search.sent" = "verstuurd";
 /* Face ID button title */
 "SecurityCenter.faceIdTitle" = "Face-ID";
-/* Security Center Info */
-"SecurityCenter.info" = "Activeer alle veiligheidsmaatregelen voor maximale bescherming.";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "De enige manier om toegang te hebben tot je Bitcoins is als je je telefoon verliest of upgrade.";
 /* Paper Key button title */
@@ -482,8 +516,6 @@ Elke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hi
 "SecurityCenter.pinDescription" = "Beschermt je Bread van ongeautoriseerde gebruikers.";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "6-cijferige PIN";
-/* Security Center Title */
-"SecurityCenter.title" = "Veiligheidscentrum";
 /* Touch ID button description */
 "SecurityCenter.touchIdDescription" = "Ontgrendel je Bread handig en stuur geld tot een bepaalde ingestelde limiet.";
 /* Touch ID button title */
@@ -586,6 +618,8 @@ Elke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hi
 "Settings.manage" = "Beheer";
 /* Notifications label */
 "Settings.notifications" = "Notificaties";
+/* Section header for "other settings". */
+"Settings.other" = "Andere";
 /* Preferences settings section header */
 "Settings.preferences" = "Voorkeuren";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -615,9 +649,7 @@ Elke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hi
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Schrijf Papieren Sleutel Opnieuw Op";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Je papieren sleutel is de enige manier om je Bread te herstellen als je telefoon verloren, gestolen, kapot of geüpgrade is.\
-\
-We zullen je een lijst met woorden laten zie die je op een papiertje moet schrijven en veilig moet bewaren.";
+"StartPaperPhrase.body" = "Je papieren sleutel is de enige manier om je Bread te herstellen als je telefoon verloren, gestolen, kapot of geüpgrade is.\n\nWe zullen je een lijst met woorden laten zie die je op een papiertje moet schrijven en veilig moet bewaren.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Schrijf Papieren Sleutel Op";
 /* Argument is date */
@@ -630,10 +662,14 @@ We zullen je een lijst met woorden laten zie die je op een papiertje moet schrij
 "StartViewController.recoverButton" = "Wallet herstellen";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Aan het verbinden";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Synchronisatie mislukt";
 /* Syncing view header text */
 "SyncingView.header" = "Synchroniseren";
 /* Retry button label */
 "SyncingView.retry" = "Opnieuw proberen";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Gesynchroniseerd via %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Aan het synchroniseren";
 /* 6 d (6 days) */
@@ -826,8 +862,6 @@ We zullen je een lijst met woorden laten zie die je op een papiertje moet schrij
 "UnlockScreen.resetPin" = "PIN Resetten";
 /* Scan button title */
 "UnlockScreen.scan" = "Scannen";
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "PIN Invoeren";
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "Aanraaksensor";
 /* TouchID prompt text */
@@ -838,8 +872,6 @@ We zullen je een lijst met woorden laten zie die je op een papiertje moet schrij
 "UnlockScreen.touchIdText" = "Ontgrendel met Touch ID";
 /* Device authentication title */
 "UnlockScreen.touchIdTitle.android" = "Authenticatie vereist";
-/* Wallet unlocked message */
-"UnlockScreen.unlocked" = "Portemonnee Ontgrendeld";
 /* Update PIN caption text */
 "UpdatePin.caption" = "Onthoud deze PIN. Als je deze vergeet, zul je niet in staat zijn om bij je Bitcoins te kunnen.";
 /* PIN creation info. */
@@ -885,9 +917,7 @@ We zullen je een lijst met woorden laten zie die je op een papiertje moet schrij
 /* Updating webview message */
 "Webview.updating" = "Updaten...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet is omgedoopt tot Bread, met een gloednieuw uiterlijk en enkele nieuwe functies.\
-\
-Als u hulp nodig hebt, zoek naar de (?) rechtsboven in de meeste schermen.";
+"Welcome.body" = "Breadwallet is omgedoopt tot Bread, met een gloednieuw uiterlijk en enkele nieuwe functies.\n\nAls u hulp nodig hebt, zoek naar de (?) rechtsboven in de meeste schermen.";
 /* Top title of welcome screen */
 "Welcome.title" = "Welkom bij Brood!";
 /* Wipe wallet alert message */
@@ -918,19 +948,3 @@ Als u hulp nodig hebt, zoek naar de (?) rechtsboven in de meeste schermen.";
 "WritePaperPhrase.previous" = "Vorige";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li van %2$li";
-/* Section header for "other settings". */
-"Settings.other" = "Andere";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Beheer portemonnees";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Bitcoins Kopen";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Handel";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Scan QR-code";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Synchronisatie mislukt";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Gesynchroniseerd via %1$@";
