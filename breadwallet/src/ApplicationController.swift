@@ -207,6 +207,7 @@ class ApplicationController : Subscriber, Trackable {
         DispatchQueue.walletQueue.async {
             self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
         }
+        updateAssetBundles()
         exchangeUpdater?.refresh(completion: {})
         feeUpdaters.values.forEach { $0.refresh() }
         walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
