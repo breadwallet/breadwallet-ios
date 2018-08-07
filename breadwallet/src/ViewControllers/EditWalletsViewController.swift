@@ -372,7 +372,8 @@ extension StoredTokenData {
                 if E.isDebug {
                     tokens.append(StoredTokenData.tst)
                     tokens.append(StoredTokenData.viu)
-
+                }
+                if E.isTestnet {
                     //on testnet builds, remove the bundled ccc token as tokens.json doesn't support testnet
                     tokens = tokens.filter { $0.code.lowercased() != StoredTokenData.ccc.code.lowercased()}
                     //at the hardcoded ccc token for testnet builds
@@ -390,13 +391,25 @@ extension StoredTokenData {
 
 extension StoredTokenData {
     static var tst: StoredTokenData {
-        return StoredTokenData(address: E.isTestnet ?  "0x722dd3f80bac40c951b51bdd28dd19d435762180" : "0x3efd578b271d034a69499e4a2d933c631d44b9ad", name: "Test Token", code: "TST", colors: ["2FB8E6", "2FB8E6"], decimal: "18")
+        return StoredTokenData(address: E.isTestnet ?  "0x722dd3f80bac40c951b51bdd28dd19d435762180" : "0x3efd578b271d034a69499e4a2d933c631d44b9ad",
+                               name: "Test Token",
+                               code: "TST",
+                               colors: ["2FB8E6", "2FB8E6"],
+                               decimal: "18")
     }
     static var ccc: StoredTokenData {
-        return StoredTokenData(address: E.isTestnet ?  "0x6e67ccd648244b3b8e2f56149b40ba8de9d79b09" : "0x9e3359f862b6c7f5c660cfd6d1aa6909b1d9504d", name: "Container Crypto Coin Test", code: "CCC", colors: ["95C121", "95C121"], decimal: "18")
+        return StoredTokenData(address: E.isTestnet ?  "0x6e67ccd648244b3b8e2f56149b40ba8de9d79b09" : "0x9e3359f862b6c7f5c660cfd6d1aa6909b1d9504d",
+                               name: E.isTestnet ? "Container Crypto Coin Test" : "Container Crypto Coin",
+                               code: "CCC",
+                               colors: ["95C121", "95C121"],
+                               decimal: "18")
     }
     //this is a random token I was airdropped...using for testing
     static var viu: StoredTokenData {
-        return StoredTokenData(address: "0x519475b31653e46d20cd09f9fdcf3b12bdacb4f5", name: "VIU Token", code: "VIU", colors: ["2FB8E6", "2FB8E6"], decimal: "18")
+        return StoredTokenData(address: "0x519475b31653e46d20cd09f9fdcf3b12bdacb4f5",
+                               name: "VIU Token",
+                               code: "VIU",
+                               colors: ["2FB8E6", "2FB8E6"],
+                               decimal: "18")
     }
 }
