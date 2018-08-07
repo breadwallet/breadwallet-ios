@@ -585,12 +585,16 @@ class ModalPresenter : Subscriber, Trackable {
             },
         ]
         
-        // TODO: cleanup
-        if E.isTestFlight {
-            let sendLogs = MenuItem(title: S.Settings.sendLogs, callback: { [unowned self] in
-                self.showEmailLogsModal()
-            })
-            rootItems.append(sendLogs)
+        if E.isTestFlight || E.isDebug {
+            let debugItems: [MenuItem] = [
+                MenuItem(title: S.Settings.sendLogs) { [unowned self] in
+                    self.showEmailLogsModal()
+                },
+                MenuItem(title: "Unlink Wallet (no prompt)") { [unowned self] in
+                    self.wipeWalletNoPrompt()
+                }
+            ]
+            rootItems.append(contentsOf: debugItems)
         }
         
         let settings = MenuViewController(items: rootItems, title: S.Settings.title)
