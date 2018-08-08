@@ -423,6 +423,7 @@ class ApplicationController : Subscriber, Trackable {
             DispatchQueue.walletQueue.async {
                 self.initWallet(completion: self.didInitWalletManager)
             }
+            Store.perform(action: LoginSuccess())
         })
     }
     
