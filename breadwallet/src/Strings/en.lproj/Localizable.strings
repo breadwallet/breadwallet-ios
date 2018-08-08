@@ -121,7 +121,7 @@
 /* Ignore button label */
 "Button.ignore" = "Ignore";
 /* menu button */
-"Button.menu" = "menu";
+"Button.menu" = "Menu";
 /* No button */
 "Button.no" = "No";
 /* OK button label */
