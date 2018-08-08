@@ -150,9 +150,9 @@ class ModalPresenter : Subscriber, Trackable {
                 self.showAccountView(currency: currency, animated: true, completion: nil)
             }
         })
-        Store.subscribe(self, name: .promptLinkWallet("","","")) { [unowned self] in
-            guard case .promptLinkWallet(let pubKey, let identifier, let service)? = $0 else { return }
-            self.linkWallet(pubKey: pubKey, identifier: identifier, service: service)
+        Store.subscribe(self, name: .promptLinkWallet(WalletPairingRequest.empty)) { [unowned self] in
+            guard case .promptLinkWallet(let pairingRequest)? = $0 else { return }
+            self.linkWallet(pairingRequest: pairingRequest)
         }
         
         // Push Notifications Permission Request
@@ -406,13 +406,12 @@ class ModalPresenter : Subscriber, Trackable {
                 break
                 
             case .deepLink(let url):
-                //UIApplication.shared.open(url)
                 if let params = url.queryParameters,
                     let pubKey = params["publicKey"],
                     let identifier = params["id"],
                     let service = params["service"] {
                     print("[EME] PAIRING REQUEST | pubKey: \(pubKey) | identifier: \(identifier) | service: \(service)")
-                    Store.trigger(name: .promptLinkWallet(pubKey, identifier, service))
+                    Store.trigger(name: .promptLinkWallet(WalletPairingRequest(publicKey: pubKey, identifier: identifier, service: service, returnToURL: nil)))
                 }
             case .invalid:
                 break
@@ -1025,13 +1024,13 @@ class ModalPresenter : Subscriber, Trackable {
         self.messagePresenter.presentEmailLogs()
     }
     
-    private func linkWallet(pubKey: String, identifier: String, service: String) {
+    private func linkWallet(pairingRequest: WalletPairingRequest) {
         guard let apiClient = primaryWalletManager.apiClient,
             let top = topViewController else { return }
-        apiClient.fetchServiceInfo(serviceID: service, callback: { serviceDefinition in
+        apiClient.fetchServiceInfo(serviceID: pairingRequest.service, callback: { serviceDefinition in
             guard let serviceDefinition = serviceDefinition else { return self.showLightWeightAlert(message: "Could not retreive service definition"); }
             DispatchQueue.main.async {
-                let alert = LinkWalletViewController(pairingRequest: WalletPairingRequest(publicKey: pubKey, identifier: identifier, service: service), serviceDefinition: serviceDefinition)
+                let alert = LinkWalletViewController(pairingRequest: pairingRequest, serviceDefinition: serviceDefinition)
                 top.present(alert, animated: true, completion: nil)
             }
         })
