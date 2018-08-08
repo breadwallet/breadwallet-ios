@@ -92,9 +92,11 @@ class URLController : Trackable, Subscriber {
                 if let params = url.queryParameters,
                     let pubKey = params["publicKey"],
                     let identifier = params["id"],
-                    let service = params["service"] {
+                    let service = params["service"],
+                    let returnToString = params["return-to"],
+                    let returnToURL = URL(string: returnToString) {
                     print("[EME] PAIRING REQUEST | pubKey: \(pubKey) | identifier: \(identifier) | service: \(service)")
-                    Store.trigger(name: .promptLinkWallet(pubKey, identifier, service))
+                    Store.trigger(name: .promptLinkWallet(WalletPairingRequest(publicKey: pubKey, identifier: identifier, service: service, returnToURL: returnToURL)))
                 }
                 
             default:
