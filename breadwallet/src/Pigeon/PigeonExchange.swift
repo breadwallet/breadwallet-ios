@@ -14,6 +14,9 @@ struct WalletPairingRequest {
     let publicKey: String
     let identifier: String
     let service: String
+    let returnToURL: URL?
+    
+    static var empty: WalletPairingRequest = WalletPairingRequest(publicKey: "", identifier: "", service: "", returnToURL: nil)
 }
 
 enum WalletPairingResult {
@@ -38,7 +41,7 @@ class PigeonExchange: Subscriber {
         self.apiClient = apiClient
         self.kvStore = apiClient.kv!
         
-        Store.subscribe(self, name: .linkWallet(WalletPairingRequest(publicKey: "", identifier: "", service: ""),false,{_ in})) { [unowned self] in
+        Store.subscribe(self, name: .linkWallet(WalletPairingRequest.empty, false, {_ in})) { [unowned self] in
             guard case .linkWallet(let pairingRequest, let accepted, let callback)? = $0 else { return }
             if accepted {
                 self.acceptPairingRequest(pairingRequest, completionHandler: callback)
@@ -96,16 +99,39 @@ class PigeonExchange: Subscriber {
         
         print("[EME] initiate LINK! remote pubkey: \(remotePubKey.base58), local pubkey: \(localPubKey.base58)")
         
+        var finished = false
+        let backgroundTask = UIApplication.shared.beginBackgroundTask(withName: "EME Pairing") {
+            // background time expired
+            if !finished {
+                completionHandler(.error(message: "timed out waiting for link response. pairing aborted!"))
+            }
+        }
+        
+        let finish: PairingCompletionHandler = { result in
+            finished = true
+            completionHandler(result)
+            UIApplication.shared.endBackgroundTask(backgroundTask)
+        }
+        
+        // register public key
+        // send link message
+        // wait for link response
+        // add remote wallet info to KV store
         apiClient.addAssociatedKey(localPubKey) { success in
             guard success else {
                 print("[EME] associated key could not be added. pairing aborted!")
-                return completionHandler(.error(message: "associated key could not be added. pairing aborted!"))
+                return finish(.error(message: "associated key could not be added. pairing aborted!"))
             }
 
             self.apiClient.sendMessage(envelope: envelope, callback: { (success) in
                 guard success else {
                     print("[EME] failed to send LINK message. pairing aborted!")
-                    return completionHandler(.error(message: "failed to send LINK message. pairing aborted!"))
+                    return finish(.error(message: "failed to send LINK message. pairing aborted!"))
+                }
+                
+                // if pairing from a moble browser, open the browser to complete the handshake
+                if let returnToURL = pairingRequest.returnToURL {
+                    UIApplication.shared.open(returnToURL)
                 }
                 
                 // poll inbox and wait for LINK response
@@ -118,7 +144,7 @@ class PigeonExchange: Subscriber {
                         guard case .success(let entries) = result else {
                             print("[EME] /inbox fetch error. pairing aborted!")
                             timer.invalidate()
-                            completionHandler(.error(message: "EME fetch error. Pairing aborted!"))
+                            finish(.error(message: "EME fetch error. Pairing aborted!"))
                             return
                         }
 
@@ -141,7 +167,7 @@ class PigeonExchange: Subscriber {
                         guard linkEntries.count > 0 else {
                             if !timer.isValid {
                                 print("[EME] timed out waiting for link response. pairing aborted!")
-                                completionHandler(.error(message: "timed out waiting for link response. pairing aborted!"))
+                                finish(.error(message: "timed out waiting for link response. pairing aborted!"))
                             }
                             return
                         }
@@ -166,18 +192,18 @@ class PigeonExchange: Subscriber {
                             }
                             guard link.status == .accepted else {
                                 print("[EME] remote rejected link request. pairing aborted!")
-                                completionHandler(.error(message: "remote rejected link request. pairing aborted!"))
+                                finish(.error(message: "remote rejected link request. pairing aborted!"))
                                 return
                             }
                             guard let remoteID = String(data: link.id, encoding: .utf8), remoteID == pairingRequest.identifier else {
                                 print("[EME] link message identifier did not match pairing wallet identifier. aborted!")
-                                completionHandler(.error(message: "link message identifier did not match pairing wallet identifier. aborted!"))
+                                finish(.error(message: "link message identifier did not match pairing wallet identifier. aborted!"))
                                 return
                             }
                             
                             self.addRemoteEntity(remotePubKey: link.publicKey, identifier: remoteID, service: pairingRequest.service)
                             self.startPolling() // poll until account request is processed
-                            completionHandler(.success)
+                            finish(.success)
                             break
                         }
                     })
