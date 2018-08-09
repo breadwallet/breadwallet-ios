@@ -773,7 +773,9 @@
 /* Amount section header */
 "TransactionDetails.amountHeader" = "金額";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenReceived" = "寄出時為 %1$@，現為 %2$@";
+"TransactionDetails.amountWhenReceived" = "接收時為%1$@，現在則為%2$@";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "寄出時為 %1$@，現為 %2$@";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "已在區塊確認";
 /* Memo section header */

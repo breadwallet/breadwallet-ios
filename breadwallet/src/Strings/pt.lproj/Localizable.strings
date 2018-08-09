@@ -773,7 +773,9 @@
 /* Amount section header */
 "TransactionDetails.amountHeader" = "Quantia";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenReceived" = "%1$@ ao ser enviado, %2$@ agora";
+"TransactionDetails.amountWhenReceived" = "%1$@ quando recebido, %2$@ agora";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ ao ser enviado, %2$@ agora";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Confirmado no bloco";
 /* Memo section header */
