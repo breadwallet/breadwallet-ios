@@ -50,6 +50,13 @@ class LinkWalletViewController : UIViewController {
         addConstraints()
         setInitialData()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if pairingRequest.returnToURL != nil {
+            Store.trigger(name: .registerForPushNotificationToken)
+        }
+    }
 
     private func addSubviews() {
         view.addSubview(header)
@@ -220,7 +227,9 @@ class LinkWalletViewController : UIViewController {
         DispatchQueue.main.async {
             self.circle.drawCheckBox()
             self.dismissAfterDelay() {
-                Store.trigger(name: .registerForPushNotificationToken)
+                if self.pairingRequest.returnToURL == nil {
+                    Store.trigger(name: .registerForPushNotificationToken)
+                }
             }
         }
     }
