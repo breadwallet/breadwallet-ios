@@ -773,7 +773,9 @@
 /* Amount section header */
 "TransactionDetails.amountHeader" = "금액";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenReceived" = "전송 시 %1$@, 현재 %2$@";
+"TransactionDetails.amountWhenReceived" = "받았을 때 %1$@, 지금은 %2$@";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "전송 시 %1$@, 현재 %2$@";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "차단 확인";
 /* Memo section header */

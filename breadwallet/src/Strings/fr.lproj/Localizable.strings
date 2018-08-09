@@ -773,7 +773,9 @@
 /* Amount section header */
 "TransactionDetails.amountHeader" = "Montant";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenReceived" = "%1$@ au moment de l'envoi, %2$@ à présent";
+"TransactionDetails.amountWhenReceived" = "%1$@ à la réception, %2$@ maintenant";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ au moment de l'envoi, %2$@ à présent";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Confirmé en bloc";
 /* Memo section header */

@@ -773,7 +773,9 @@
 /* Amount section header */
 "TransactionDetails.amountHeader" = "Belopp";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenReceived" = "%1$@ när det skickades, %2$@ nu";
+"TransactionDetails.amountWhenReceived" = "%1$@ vid mottagande, %2$@ nu";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ när det skickades, %2$@ nu";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Bekräftad i block";
 /* Memo section header */

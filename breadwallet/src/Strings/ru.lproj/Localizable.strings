@@ -773,7 +773,9 @@
 /* Amount section header */
 "TransactionDetails.amountHeader" = "Сумма";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenReceived" = "%1$@ когда отправлено, %2$@ сейчас";
+"TransactionDetails.amountWhenReceived" = "%1$@ при получении, %2$@ сейчас";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ когда отправлено, %2$@ сейчас";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Подтверждено в блоке";
 /* Memo section header */
