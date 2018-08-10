@@ -89,7 +89,8 @@ class EthWalletManager : WalletManager {
     
     /// Creates, signs and submits an ETH transaction or ERC20 token transfer
     /// Caller must authenticate
-    func sendTransaction(currency: CurrencyDef, toAddress: String, amount: UInt256, callback: @escaping (SendTransactionResult) -> Void) {
+    /// gasPrice and gasLimit parameters are only used for contract transactions
+    func sendTransaction(currency: CurrencyDef, toAddress: String, amount: UInt256, abi: String? = nil, gasPrice: UInt256? = nil, gasLimit: UInt256? = nil, callback: @escaping (SendTransactionResult) -> Void) {
         guard let accountAddress = address, let apiClient = apiClient else { return assertionFailure() }
         
         guard ethPrivKey != nil, var privKey = BRKey(privKey: ethPrivKey!) else { return }
@@ -97,7 +98,12 @@ class EthWalletManager : WalletManager {
         defer { privKey.clean() }
         
         let wallet = node.wallet(currency)
-        let tx = wallet.createTransaction(currency: currency, recvAddress: toAddress, amount: amount)
+        let tx: EthereumTransaction
+        if let abi = abi {
+            tx = wallet.createContractTransaction(recvAddress: toAddress, amount: amount, data: abi, gasPrice: gasPrice, gasLimit: gasLimit?.asUInt64)
+        } else {
+            tx = wallet.createTransaction(currency: currency, recvAddress: toAddress, amount: amount)
+        }
         wallet.sign(transaction: tx, privateKey: privKey)
         
         let txRawHex = wallet.rawTransactionHexEncoded(tx)
@@ -177,7 +183,7 @@ class EthWalletManager : WalletManager {
             viewModels = txs.map { EthTransaction(tx: $0, accountAddress: accountAddress, kvStore: self.kvStore, rate: currency.state?.currentRate) }
         }
         viewModels.sort(by: { $0.timestamp > $1.timestamp })
-        print("processed \(txs.count) \(currency.code) transactions")
+        //print("processed \(txs.count) \(currency.code) transactions")
         Store.perform(action: WalletChange(currency).setTransactions(viewModels))
     }
 }
@@ -309,7 +315,7 @@ extension EthWalletManager: EthereumListener {
                            event: EthereumWalletEvent,
                            status: BREthereumStatus,
                            errorDesc: String?) {
-        print("\(wallet.currency.code) wallet event: \(event), status: \(status.rawValue)\(errorDesc != nil ? ", error: \(errorDesc!)" : "")")
+        //print("\(wallet.currency.code) wallet event: \(event), status: \(status.rawValue)\(errorDesc != nil ? ", error: \(errorDesc!)" : "")")
         switch (event) {
         case .balanceUpdated:
             DispatchQueue.main.async {

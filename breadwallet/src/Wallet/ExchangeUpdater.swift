@@ -28,7 +28,7 @@ class ExchangeUpdater : Subscriber {
 
     func refresh(completion: @escaping () -> Void) {
         // get btc/fiat rates
-        apiClient.bitcoinExchangeRates() { [weak self] result in
+        apiClient.exchangeRates(currencyCode: Currencies.btc.code) { [weak self] result in
             guard let `self` = self,
                 case .success(let btcFiatRates) = result else { return }
             
@@ -49,6 +49,22 @@ class ExchangeUpdater : Subscriber {
                         return Rate(code: btcFiatRate.code, name: btcFiatRate.name, rate: tokenFiatRate, reciprocalCode: currency.code.lowercased())
                     }
                     Store.perform(action: WalletChange(currency).setExchangeRates(currentRate: self.findCurrentRate(rates: fiatRates), rates: fiatRates))
+                }
+                
+                // TODO: HACK for CCC (based on price in ETH)
+                let tokenCode = StoredTokenData.ccc.code
+                guard let token = Store.state.currencies.filter({ $0.code.caseInsensitiveCompare(tokenCode) == .orderedSame }).first else { return }
+                self.apiClient.exchangeRates(currencyCode: tokenCode) { [weak self] result in
+                    guard let `self` = self,
+                        case .success(let tokenEthRates) = result,
+                        let tokenEthRate = tokenEthRates.first, tokenEthRate.code.caseInsensitiveCompare(Currencies.eth.code) == .orderedSame,
+                        let ethFiatRates = Store.state[Currencies.eth]?.rates else { return }
+                    
+                    let tokenFiatRates: [Rate] = ethFiatRates.map { ethFiatRate in
+                        let tokenFiatRate = ethFiatRate.rate * tokenEthRate.rate
+                        return Rate(code: ethFiatRate.code, name: ethFiatRate.name, rate: tokenFiatRate, reciprocalCode: tokenCode.lowercased())
+                    }
+                    Store.perform(action: WalletChange(token).setExchangeRates(currentRate: self.findCurrentRate(rates: tokenFiatRates), rates: tokenFiatRates))
                 }
             }
         }

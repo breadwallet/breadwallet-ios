@@ -139,6 +139,7 @@ class HomeScreenCell : UITableViewCell, Subscriber {
             tokenBalance.bottomAnchor.constraint(equalTo: price.bottomAnchor)
             ])
         fiatBalance.setContentCompressionResistancePriority(.required, for: .vertical)
+        fiatBalance.setContentCompressionResistancePriority(.required, for: .horizontal)
         
         syncIndicator.constrain([
             syncIndicator.trailingAnchor.constraint(equalTo: fiatBalance.trailingAnchor),

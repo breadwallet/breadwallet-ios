@@ -76,6 +76,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         return applicationController.open(url: url)
     }
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+        return applicationController.application(application, continue: userActivity, restorationHandler: restorationHandler)
+    }
 
     //stdout is redirected to C.logFilePath for testflight builds
     private func redirectStdOut() {

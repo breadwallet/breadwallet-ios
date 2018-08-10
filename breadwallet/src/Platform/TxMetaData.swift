@@ -74,23 +74,8 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
     }
     
     /// Find metadata object based on the txHash
-    public init?(txHash: UInt256, store: BRReplicatedKVStore) {
-        var ver: UInt64
-        var date: Date
-        var del: Bool
-        var bytes: [UInt8]
-
-        //print("[BRTxMetadataObject] find \(txHash.txKey)")
-        do {
-            (ver, date, del, bytes) = try store.get(txHash.txKey)
-            let bytesDat = Data(bytes: &bytes, count: bytes.count)
-            super.init(key: txHash.txKey, version: ver, lastModified: date, deleted: del, data: bytesDat)
-            return
-        } catch _ {
-            //print("[BRTxMetadataObject] Unable to initialize BRTxMetadataObject: \(String(describing: e))")
-        }
-
-        return nil
+    public convenience init?(txHash: UInt256, store: BRReplicatedKVStore) {
+        self.init(txKey: txHash.txKey, store: store)
     }
 
     /// Find metadata object based on the txKey
@@ -181,7 +166,7 @@ extension UInt256 {
             return (bd.hexString)
         }
     }
-    
+
     var txKey: String {
         return "txn2-\(sha256)"
     }

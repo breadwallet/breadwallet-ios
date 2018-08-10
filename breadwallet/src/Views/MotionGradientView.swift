@@ -38,6 +38,11 @@ class MotionGradientLayer : CAGradientLayer {
         super.init()
         setup()
     }
+    
+    override init(layer: Any) {
+        super.init(layer: layer)
+        setup()
+    }
 
     private func setup() {
         startPoint = CGPoint(x: 1.0, y: 0.0) //top right

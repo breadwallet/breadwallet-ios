@@ -121,7 +121,7 @@
 /* Ignore button label */
 "Button.ignore" = "Ignorar";
 /* menu button */
-"Button.menu" = "menu";
+"Button.menu" = "Menu";
 /* No button */
 "Button.no" = "Não";
 /* OK button label */
@@ -176,6 +176,12 @@
 "DefaultCurrency.rateLabel" = "Taxa de Câmbio";
 /* The wallet is disabled. */
 "Disabled.title" = "Carteira desativada";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Requisitar %1$@ dados da conta";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Requisitar %1$@ ligação de contrato inteligente";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Requisitar %1$@ pagamento";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Este dispositivo não está configurado para enviar emails com a app Mail do iOS.";
 /* Email unavailable alert title */
@@ -222,10 +228,16 @@
 "FeeSelector.title" = "Velocidade de processamento";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Administrador";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Comprar Bitcoins";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Carteiras";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "ativos totais";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Comércio";
 /* Checking private key balance progress view text */
 "Import.checking" = "A verificar o saldo da chave privada...";
 /* Sweep private key confirmation message */
@@ -273,15 +285,27 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Ignorar";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "SEGURANÇA DO DISPOSITIVO COMPROMETIDA\
- Qualquer aplicação com \"jailbreak\" consegue aceder aos seus dados de porta-chaves e roubar as suas bitcoins! Apague esta carteira imediatamente e restaure-a num dispositivo seguro.";
+"JailbreakWarnings.messageWithBalance" = "SEGURANÇA DO DISPOSITIVO COMPROMETIDA\n Qualquer aplicação com \"jailbreak\" consegue aceder aos seus dados de porta-chaves e roubar as suas bitcoins! Apague esta carteira imediatamente e restaure-a num dispositivo seguro.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "SEGURANÇA DO DISPOSITIVO COMPROMETIDA\
- Qualquer aplicação com \"jailbreak\" consegue aceder aos seus dados de porta-chaves da Bread e roubar as suas bitcoins. Por favor, use a Bread somente num dispositivo não desbloqueado.";
+"JailbreakWarnings.messageWithoutBalance" = "SEGURANÇA DO DISPOSITIVO COMPROMETIDA\n Qualquer aplicação com \"jailbreak\" consegue aceder aos seus dados de porta-chaves da Bread e roubar as suas bitcoins. Por favor, use a Bread somente num dispositivo não desbloqueado.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "AVISO";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Apagar";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Aprovar";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Recusar";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "As aplicações externas não podem enviar dinheiro   sem a aprovação deste dispositivo";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Nota: interaja com esta aplicação APENAS quando se encontrar num dos seguintes domínios";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Pagamento Seguro";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Esta aplicação poderá:";
+/* Link Wallet view title */
+"LinkWallet.title" = "Relacionar Carteira";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Os serviços de localização estão desativados.";
 /* No permissions for location services */
@@ -298,6 +322,10 @@
 "MenuButton.addWallet" = "Adicionar Carteira";
 /* Menu button title */
 "MenuButton.lock" = "Bloquear Carteira";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Gerir Carteiras";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Escanear o código QR";
 /* Menu button title */
 "MenuButton.security" = "Centro de Segurança";
 /* Menu button title */
@@ -330,6 +358,10 @@
 "NodeSelector.statusLabel" = "Estado da ligação do nó";
 /* Node Selector view title */
 "NodeSelector.title" = "Nós de bitcoin";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Enviar %1$@ para comprar %2$@";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Confirmação";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Pedido de Pagamento Inválido";
 /* Error opening payment protocol file message */
@@ -388,6 +420,10 @@
 "Prompts.UpgradePin.title" = "Atualizar PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Ative as notificações para receber mensagens especiais da Bread no futuro.";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Notificações Desativadas";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Para receber alertas, ative as notificações nas Definições";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Notificações Push";
 /* Push notifications are off label */
@@ -472,8 +508,6 @@
 "Search.sent" = "enviado";
 /* Face ID button title */
 "SecurityCenter.faceIdTitle" = "Face ID";
-/* Security Center Info */
-"SecurityCenter.info" = "Ativar todos os recursos de segurança para máxima proteção.";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "A única forma de aceder às suas bitcoins se perder ou atualizar o seu telefone.";
 /* Paper Key button title */
@@ -482,8 +516,6 @@
 "SecurityCenter.pinDescription" = "Protege a sua Bread de utilizadores não autorizados.";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "PIN de 6-Dígitos";
-/* Security Center Title */
-"SecurityCenter.title" = "Centro de Segurança";
 /* Touch ID button description */
 "SecurityCenter.touchIdDescription" = "Desbloqueie convenientemente a sua Bread e envie dinheiro até um limite definido";
 /* Touch ID button title */
@@ -586,6 +618,8 @@
 "Settings.manage" = "Gerir";
 /* Notifications label */
 "Settings.notifications" = "Notificações";
+/* Section header for "other settings". */
+"Settings.other" = "Outro";
 /* Preferences settings section header */
 "Settings.preferences" = "Preferências";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -615,9 +649,7 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Escrever Novamente Chave de Papel";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "A chave de papel é a única forma de restaurar a sua Bread se o seu telefone for perdido, roubado, partido ou atualizado.\
-\
-Vamos mostrar-lhe uma lista de palavras para escrever numa folha de papel e manter em segurança.";
+"StartPaperPhrase.body" = "A chave de papel é a única forma de restaurar a sua Bread se o seu telefone for perdido, roubado, partido ou atualizado.\n\nVamos mostrar-lhe uma lista de palavras para escrever numa folha de papel e manter em segurança.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Escrever Chave de Papel";
 /* Argument is date */
@@ -630,10 +662,14 @@ Vamos mostrar-lhe uma lista de palavras para escrever numa folha de papel e mant
 "StartViewController.recoverButton" = "Recuperar Carteira";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Conectando";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "A sincronização falhou";
 /* Syncing view header text */
 "SyncingView.header" = "A Sincronizar";
 /* Retry button label */
 "SyncingView.retry" = "Tentar Novamente";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Sincronizado por %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Sincronizando";
 /* 6 d (6 days) */
@@ -737,7 +773,9 @@ Vamos mostrar-lhe uma lista de palavras para escrever numa folha de papel e mant
 /* Amount section header */
 "TransactionDetails.amountHeader" = "Quantia";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenReceived" = "%1$@ ao ser enviado, %2$@ agora";
+"TransactionDetails.amountWhenReceived" = "%1$@ quando recebido, %2$@ agora";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ ao ser enviado, %2$@ agora";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Confirmado no bloco";
 /* Memo section header */
@@ -826,8 +864,6 @@ Vamos mostrar-lhe uma lista de palavras para escrever numa folha de papel e mant
 "UnlockScreen.resetPin" = "Redefinir PIN";
 /* Scan button title */
 "UnlockScreen.scan" = "Digitalizar";
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "Introduzir PIN";
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "Sensor de Toque";
 /* TouchID prompt text */
@@ -838,8 +874,6 @@ Vamos mostrar-lhe uma lista de palavras para escrever numa folha de papel e mant
 "UnlockScreen.touchIdText" = "Desbloquear com Touch ID";
 /* Device authentication title */
 "UnlockScreen.touchIdTitle.android" = "Autenticação necessária";
-/* Wallet unlocked message */
-"UnlockScreen.unlocked" = "Carteira Desbloqueada";
 /* Update PIN caption text */
 "UpdatePin.caption" = "Lembre-se deste PIN. Se o esquecer, não será capaz de aceder às suas bitcoins.";
 /* PIN creation info. */
@@ -885,9 +919,7 @@ Vamos mostrar-lhe uma lista de palavras para escrever numa folha de papel e mant
 /* Updating webview message */
 "Webview.updating" = "A Atualizar...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "As Breadwallets mudaram de nome para Bread, com um visual completamente novo e algumas características novas. \
-\
-Se precisar de ajuda, procure o (?) no canto superior direito da maioria das telas.";
+"Welcome.body" = "As Breadwallets mudaram de nome para Bread, com um visual completamente novo e algumas características novas. \n\nSe precisar de ajuda, procure o (?) no canto superior direito da maioria das telas.";
 /* Top title of welcome screen */
 "Welcome.title" = "Bem-vindo ao Bread!";
 /* Wipe wallet alert message */
@@ -918,19 +950,3 @@ Se precisar de ajuda, procure o (?) no canto superior direito da maioria das tel
 "WritePaperPhrase.previous" = "Anterior";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li de %2$li";
-/* Section header for "other settings". */
-"Settings.other" = "Outro";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Gerir Carteiras";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Comprar Bitcoins";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Comércio";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Escanear o código QR";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "A sincronização falhou";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Sincronizado por %1$@";

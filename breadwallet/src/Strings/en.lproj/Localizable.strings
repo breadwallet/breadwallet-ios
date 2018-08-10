@@ -121,7 +121,7 @@
 /* Ignore button label */
 "Button.ignore" = "Ignore";
 /* menu button */
-"Button.menu" = "menu";
+"Button.menu" = "Menu";
 /* No button */
 "Button.no" = "No";
 /* OK button label */
@@ -176,6 +176,12 @@
 "DefaultCurrency.rateLabel" = "Exchange Rate";
 /* The wallet is disabled. */
 "Disabled.title" = "Wallet disabled";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Request %1$@ account information";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Request %1$@ smart contract call";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Request %1$@ payment";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "This device isn't configured to send email with the iOS mail app.";
 /* Email unavailable alert title */
@@ -222,10 +228,16 @@
 "FeeSelector.title" = "Processing Speed";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Admin";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Buy Bitcoin";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Wallets";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "Total Assets";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Trade";
 /* Checking private key balance progress view text */
 "Import.checking" = "Checking private key balance...";
 /* Sweep private key confirmation message */
@@ -273,15 +285,27 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Ignore";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "DEVICE SECURITY COMPROMISED\
- Any 'jailbreak' app can access BRD's keychain data and steal your bitcoin! Wipe this wallet immediately and restore on a secure device.";
+"JailbreakWarnings.messageWithBalance" = "DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access BRD's keychain data and steal your bitcoin! Wipe this wallet immediately and restore on a secure device.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "DEVICE SECURITY COMPROMISED\
- Any 'jailbreak' app can access BRD's keychain data and steal your bitcoin. Please only use BRD on a non-jailbroken device.";
+"JailbreakWarnings.messageWithoutBalance" = "DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access BRD's keychain data and steal your bitcoin. Please only use BRD on a non-jailbroken device.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "WARNING";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Wipe";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Approve";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Decline";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "External apps cannot send money without approval from this device";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Note: ONLY interact with this app when on one of the following domains";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Secure Checkout";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "This app will be able to:";
+/* Link Wallet view title */
+"LinkWallet.title" = "Link Wallet";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Location services are disabled.";
 /* No permissions for location services */
@@ -298,6 +322,10 @@
 "MenuButton.addWallet" = "Add Wallet";
 /* Menu button title */
 "MenuButton.lock" = "Lock Wallet";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Manage Wallets";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Scan QR Code";
 /* Menu button title */
 "MenuButton.security" = "Security Settings";
 /* Menu button title */
@@ -330,6 +358,10 @@
 "NodeSelector.statusLabel" = "Node Connection Status";
 /* Node Selector view title */
 "NodeSelector.title" = "Bitcoin Nodes";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Send %1$@ to purchase %2$@";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Confirmation";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Bad Payment Request";
 /* Error opening payment protocol file message */
@@ -388,6 +420,10 @@
 "Prompts.UpgradePin.title" = "Upgrade PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Turn on notifications to receive special messages from BRD in the future.";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Notifications Disabled";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Turn on notifications in Settings to receive alerts";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push Notifications";
 /* Push notifications are off label */
@@ -472,8 +508,6 @@
 "Search.sent" = "sent";
 /* Face ID button title */
 "SecurityCenter.faceIdTitle" = "Face ID";
-/* Security Center Info */
-"SecurityCenter.info" = "Enable all security features for maximum protection.";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "The only way to access your assets if you lose or upgrade your phone.";
 /* Paper Key button title */
@@ -482,8 +516,6 @@
 "SecurityCenter.pinDescription" = "Protects your BRD from unauthorized users.";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "6-Digit PIN";
-/* Security Center Title */
-"SecurityCenter.title" = "Security Center";
 /* Touch ID button description */
 "SecurityCenter.touchIdDescription" = "Conveniently unlock your BRD and send money up to a set limit.";
 /* Touch ID button title */
@@ -586,6 +618,8 @@
 "Settings.manage" = "Manage";
 /* Notifications label */
 "Settings.notifications" = "Notifications";
+/* Section header for "other settings". */
+"Settings.other" = "Other";
 /* Preferences settings section header */
 "Settings.preferences" = "Preferences";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -615,9 +649,7 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Write Down Paper Key Again";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\
-\
-We will show you a list of words to write down on a piece of paper and keep safe.";
+"StartPaperPhrase.body" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Write Down Paper Key";
 /* Argument is date */
@@ -630,10 +662,14 @@ We will show you a list of words to write down on a piece of paper and keep safe
 "StartViewController.recoverButton" = "Recover Wallet";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Connecting";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Sync Failed";
 /* Syncing view header text */
 "SyncingView.header" = "Syncing";
 /* Retry button label */
 "SyncingView.retry" = "Retry";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Synced through %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Syncing";
 /* 6 d (6 days) */
@@ -737,7 +773,9 @@ We will show you a list of words to write down on a piece of paper and keep safe
 /* Amount section header */
 "TransactionDetails.amountHeader" = "Amount";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenReceived" = "%1$@ when sent, %2$@ now";
+"TransactionDetails.amountWhenReceived" = "%1$@ when received, %2$@ now";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ when sent, %2$@ now";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Confirmed in Block";
 /* Memo section header */
@@ -826,8 +864,6 @@ We will show you a list of words to write down on a piece of paper and keep safe
 "UnlockScreen.resetPin" = "Reset PIN";
 /* Scan button title */
 "UnlockScreen.scan" = "Scan";
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "Enter PIN";
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "Touch Sensor";
 /* TouchID prompt text */
@@ -838,8 +874,6 @@ We will show you a list of words to write down on a piece of paper and keep safe
 "UnlockScreen.touchIdText" = "Unlock with TouchID";
 /* Device authentication title */
 "UnlockScreen.touchIdTitle.android" = "Authentication required";
-/* Wallet unlocked message */
-"UnlockScreen.unlocked" = "Wallet Unlocked";
 /* Update PIN caption text */
 "UpdatePin.caption" = "Remember this PIN. If you forget it, you won't be able to access your assets.";
 /* PIN creation info. */
@@ -885,9 +919,7 @@ We will show you a list of words to write down on a piece of paper and keep safe
 /* Updating webview message */
 "Webview.updating" = "Updating...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet has changed its name to BRD, with a brand new look and some new features.\
-\
-If you need help, look for the (?) in the top right of most screens.";
+"Welcome.body" = "Breadwallet has changed its name to BRD, with a brand new look and some new features.\n\nIf you need help, look for the (?) in the top right of most screens.";
 /* Top title of welcome screen */
 "Welcome.title" = "Welcome to BRD!";
 /* Wipe wallet alert message */
@@ -918,19 +950,3 @@ If you need help, look for the (?) in the top right of most screens.";
 "WritePaperPhrase.previous" = "Previous";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li of %2$li";
-/* Section header for "other settings". */
-"Settings.other" = "Other";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Manage Wallets";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Buy Bitcoin";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Trade";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Scan QR Code";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Sync Failed";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Synced through %1$@";

@@ -22,8 +22,16 @@ extension UIColor {
         return UIColor.fromHex("302442")
     }
 
+    static var darkerBackground: UIColor {
+        return UIColor.fromHex("251935")
+    }
+
     static var orangeText: UIColor {
         return UIColor.fromHex("FA724D")
+    }
+
+    static var newWhite: UIColor {
+        return UIColor.fromHex("BDBDBD")
     }
 
     // MARK: Buttons

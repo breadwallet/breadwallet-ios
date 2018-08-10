@@ -97,7 +97,7 @@ extension String {
 // MARK: - Hex String conversions
 extension String {
     var hexToData: Data? {
-        let scalars = unicodeScalars
+        let scalars = withoutHexPrefix.unicodeScalars
         var bytes = Array<UInt8>(repeating: 0, count: (scalars.count + 1) >> 1)
         for (index, scalar) in scalars.enumerated() {
             guard var nibble = scalar.nibble else { return nil }

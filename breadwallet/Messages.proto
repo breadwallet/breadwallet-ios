@@ -1,0 +1,138 @@
+syntax = "proto2";
+
+// VERSION: 1.0
+
+package messages;
+option java_package = "com.breadwallet.protocols.messageexchange";
+option java_outer_classname = "Protos";
+option swift_prefix = "Message";
+
+//
+// UNENCRYPTED PROTOCOL MESSAGES
+//
+
+// PushNotification is only recognized as a member of Envelope
+message PushNotification {
+    required string message = 1;
+    optional string action = 2;
+    optional string title = 3;
+}
+
+// Envelope encapsulates one of the below message types
+message Envelope {
+    required int32 version = 1;             // The version of this message. Versioning accomodates future additions
+    optional string service = 2;            // Optional Service to which this message applies
+    optional string expiration = 3;         // Optional UTC expiration date. ISO-8601-formatted.
+    required string message_type = 4;       // One of below messages's commented `message_type`
+    required bytes encrypted_message = 5;   // ChaCha20-Poly1305-encrypted message
+    required bytes sender_public_key = 6;   // DER-encoded sender public key
+    required bytes receiver_public_key = 7; // DER-encoded receiver public key
+    required string identifier = 8;         // requestor-originated UUID, useful for multi-plexing messages
+    required bytes nonce = 9;               // 96 bits unique random data, must never be reused
+    optional PushNotification push_notification = 10;   // optionally, a push notification if supported
+    required bytes signature = 11;          // compact recoverable signature
+}
+
+//
+// ENCRYPTED MESSAGES
+//
+
+// Generalized status enumeration for request-response messages
+enum Status {
+    UNKNOWN = 0;
+    ACCEPTED = 1;
+    REJECTED = 2;
+}
+
+// Error codes for response messages.
+enum Error {
+    UNKNOWN_ERROR = 0;              // Unknown error
+    USER_DENIED = 1;                // User denied the request.
+    SCOPE_UNKNOWN = 2;              // Scope does not exist.
+    REMOTE_ID_MISMATCH = 3;         // For link request, if the remote entity's wallet id does not match wallet id from the initial pairing.
+    NO_ADDRESS_FOUND = 4;           // For account request, address not found.
+    TRANSACTION_FAILED = 5;         // For payment/call request, transaction failed.
+}
+
+// Link two wallets. This establishes a communication channel for the encrypted message exchange.
+// In the case of status=UNKNOWN or status=REJECTED, public_key and id should be omitted.
+// message_type = "LINK"
+message Link {
+    optional bytes public_key = 1;        // a pairing key's public key
+    optional bytes id = 2;                // the static, public ID of the remote entity's wallet
+    required Status status = 3;           // status of pairing request
+    optional Error error = 4;             // if status=REJECTED, an error code.
+}
+
+// Ping another wallet, to test the protocol and wallet link is established
+// message_type = "PING"
+message Ping {
+    required string ping = 1;       // can be any string. only used for testing
+}
+
+// Pong responds to a Ping from another wallet. It is courteous to respond to a Ping with a Pong by not mandatory
+// message_type = "PONG"
+message Pong {
+    required string pong = 1;       // should be the content of the Ping messages .ping attribute
+}
+
+// AccountRequest requests an account for a given scope
+// message_type = "ACCOUNT_REQUEST"
+message AccountRequest {
+    required string scope = 1;      // should be a currency code eg "ETH" or "BRD"
+}
+
+// AccountResponse responds to an AccountRequest
+// message_type = "ACCOUNT_RESPONSE"
+message AccountResponse {
+    optional string scope = 1;            // if status=ACCEPTED, should be the same scope as the request
+    optional string address = 2;          // if status=ACCEPTED, the receive address
+    required Status status = 3;           // any status response
+    optional Error error = 4;             // if status=REJECTED, an error code.
+}
+
+// PaymentRequest requests a payment from a given scope.
+// Apps should show a payment dialog to confirm this transaction.
+// message_type = "PAYMENT_REQUEST"
+message PaymentRequest {
+    required string scope = 1;      // should be a currency code eg "ETH" or "BRD"
+    optional string network = 2 [default = "mainnet"];  // a network designation
+    required string address = 3;    // the receive address for the desired payment
+    required string amount = 4;     // the desired amount expressed as an integer in the lowest currency denomination
+    optional string memo = 5;       // optionally a request may include a memo, the receiver can retain if necessary
+    optional string transaction_size = 6; // the transaction size limit, expressed as integer (e.g. gas limit for ETH)
+    optional string transaction_fee = 7;  // the transaction fee amount, expressed as integer in lowest currency denomination (e.g. gas price for ETH)
+}
+
+// PaymentResponse responds to a PaymentRequest
+// message_type = "PAYMENT_RESPONSE"
+message PaymentResponse {
+    optional string scope = 1;            // if status=ACCEPTED, should be the same scope as the request
+    required Status status = 2;           // any status response
+    optional string transaction_id = 3;   // if status=ACCEPTED, the transaction ID
+    optional Error error = 4;             // if status=REJECTED, an error code.
+}
+
+// CallRequest requests a smart contract call for a given scope
+// Apps should show a payment dialog to confirm this transaction.
+// NOTE: This is currently disabled for ERC20 send operations, use PaymentRequest instead
+// message_type = "CALL_REQUEST"
+message CallRequest {
+    required string scope = 1;      // should be a currency code eg "ETH" or "BRD"
+    optional string network = 2 [default = "mainnet"];  // a network designation
+    required string address = 3;    // the smart contract address
+    required string abi = 4;        // the abi-encoded parameters to send to the smart contract
+    required string amount = 5;     // the desired amount expressed as an integer in the lowest currency denomination
+    optional string memo = 6;       // optionally a request may include a memo, the receiver can retain if necessary
+    optional string transaction_size = 7; // the transaction size limit, expressed as integer (e.g. gas limit for ETH)
+    optional string transaction_fee = 8;  // the transaction fee amount, expressed as integer in lowest currency denomination (e.g. gas price for ETH)
+}
+
+// CallResponse responds to a CallRequest
+// message_type = "CALL_RESPONSE"
+message CallResponse {
+    optional string scope = 1;            // if status=ACCEPTED, should be the same scope as the request
+    required Status status = 2;           // any status response
+    optional string transaction_id = 3;   // if status=ACCEPTED, the transaction ID
+    optional Error error = 4;             // if status=REJECTED, an error code.
+}

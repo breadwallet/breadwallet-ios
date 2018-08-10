@@ -147,9 +147,8 @@ enum EthereumNetwork: EthereumPointer {
 
 extension ERC20Token: EthereumPointer {
     var core: BREthereumToken {
-        guard !E.isTestnet else { return tokenBRD }
         let token = tokenLookup(self.address)
-        assert(token != nil, "missing token in core: \(self.code)")
+        assert(token != nil || E.isTestnet, "missing token in core: \(self.code)")
         return token!
     }
 }
@@ -225,11 +224,28 @@ struct EthereumWallet : EthereumReference {
         } else {
             coreAmount = amountCreateEther(etherCreate(amount))
         }
-        
+
         let tid = ethereumWalletCreateTransaction (node.core,
                                                    identifier,
                                                    recvAddress,
                                                    coreAmount)
+        return EthereumTransaction (node: node, currency: currency, identifier: tid)
+    }
+    
+    /// Create a contract execution transaction. Amount is ETH (in wei) and data is the ABI payload (hex-encoded string)
+    /// Optionally specify gasPrice and gasLimit to use, otherwise defaults will be used.
+    func createContractTransaction (recvAddress: String, amount: UInt256, data: String, gasPrice: UInt256? = nil, gasLimit: UInt64? = nil) -> EthereumTransaction {
+        let coreAmount = etherCreate(amount)
+        let gasPrice = gasPrice ?? UInt256(defaultGasPrice)
+        let gasLimit = gasLimit ?? defaultGasLimit
+        
+        let tid = ethereumWalletCreateTransactionGeneric (node.core,
+                                                          identifier,
+                                                          recvAddress,
+                                                          coreAmount,
+                                                          gasPriceCreate(etherCreate(gasPrice)),
+                                                          gasCreate(gasLimit),
+                                                          data)
         return EthereumTransaction (node: node, currency: currency, identifier: tid)
     }
     
@@ -674,7 +690,7 @@ class EthereumLightNode: EthereumPointer {
                 guard let this = this.map ({ Unmanaged<EthereumLightNode>.fromOpaque($0).takeUnretainedValue() }) else { return }
                 this.client?.getTransactions(address: asUTF8String(address!), completion: { txs in
                     txs.forEach {
-                        print("announcing tx: \($0.hash)")
+//                        print("announcing tx: \($0.hash)")
                         lightNodeAnnounceTransaction(core,
                                                      rid,
                                                      $0.hash,

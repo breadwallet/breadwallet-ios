@@ -8,16 +8,34 @@
 
 import UIKit
 
-class URLController : Trackable {
+class URLController : Trackable, Subscriber {
 
     init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
     }
 
+    private var urlWaitingForUnlock: URL?
     private let walletManager: BTCWalletManager
     private var xSource, xSuccess, xError, uri: String?
 
     func handleUrl(_ url: URL) -> Bool {
+        guard !Store.state.isLoginRequired else {
+            // defer url handling until wallet is unlocked
+            urlWaitingForUnlock = url
+            Store.lazySubscribe(self,
+                                selector: { $0.isLoginRequired != $1.isLoginRequired },
+                                callback: { state in
+                                    DispatchQueue.main.async {
+                                        if !state.isLoginRequired, let url = self.urlWaitingForUnlock {
+                                            self.urlWaitingForUnlock = nil
+                                            _ = self.handleUrl(url)
+                                            Store.unsubscribe(self)
+                                        }
+                                    }
+            })
+            return false
+        }
+        
         saveEvent("send.handleURL", attributes: [
             "scheme" : url.scheme ?? C.null,
             "host" : url.host ?? C.null,
@@ -62,11 +80,36 @@ class URLController : Trackable {
                 return handlePaymentRequestUri(uri, currency: Currencies.btc)
             }
             return true
+            
+        case "https" where url.isDeepLink:
+            guard url.pathComponents.count == 3 else { return false }
+            let target = url.pathComponents[2]
+            switch target {
+            case "scanqr":
+                Store.trigger(name: .scanQr)
+                
+            case "link-wallet":
+                if let params = url.queryParameters,
+                    let pubKey = params["publicKey"],
+                    let identifier = params["id"],
+                    let service = params["service"] {
+                    let returnToURL = URL(string: params["return-to"] ?? "")
+                    print("[EME] PAIRING REQUEST | pubKey: \(pubKey) | identifier: \(identifier) | service: \(service)")
+                    Store.trigger(name: .promptLinkWallet(WalletPairingRequest(publicKey: pubKey, identifier: identifier, service: service, returnToURL: returnToURL)))
+                }
+                
+            default:
+                print("unknown deep link: \(target)")
+                break
+            }
+            return true
+            
         case "bitid":
             if BRBitID.isBitIDURL(url) {
                 handleBitId(url)
+                return true
             }
-            return true
+            
         default:
             guard let currency = Store.state.currencies.first(where: {
                 var result = false
@@ -79,6 +122,8 @@ class URLController : Trackable {
             }) else { return false }
             return handlePaymentRequestUri(url, currency: currency)
         }
+        
+        return false
     }
 
     private func isBitcoinUri(url: URL, uri: String?) -> URL? {
@@ -133,5 +178,24 @@ class URLController : Trackable {
 
     private func present(alert: UIAlertController) {
         Store.trigger(name: .showAlert(alert))
+    }
+}
+
+extension URL {
+    public var isDeepLink: Bool {
+        return host == "brd.com" && path.hasPrefix("/x/")
+    }
+    
+    public var queryParameters: [String: String]? {
+        guard let components = URLComponents(url: self, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
+            return nil
+        }
+        
+        var parameters = [String: String]()
+        for item in queryItems {
+            parameters[item.name] = item.value
+        }
+        
+        return parameters
     }
 }
