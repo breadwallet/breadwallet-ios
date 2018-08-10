@@ -332,7 +332,7 @@ public extension Data {
             return CFSwapInt64LittleToHost(ptr.pointee)
         }
     }
-    
+
     public func compactSign(key: BRKey) -> Data {
         return self.withUnsafeBytes({ (selfBytes: UnsafePointer<UInt8>) -> Data in
             var data = Data(count: 65)
@@ -494,16 +494,6 @@ public extension Date {
     
     func RFC1123String() -> String? {
         return Date.RFC1123DateFormatter().string(from: self)
-    }
-}
-
-public extension BRKey {
-    public var publicKey: Data {
-        var k = self
-        let len = BRKeyPubKey(&k, nil, 0)
-        var data = Data(count: len)
-        BRKeyPubKey(&k, data.withUnsafeMutableBytes({ (d: UnsafeMutablePointer<UInt8>) -> UnsafeMutablePointer<UInt8> in d }), len)
-        return data
     }
 }
 

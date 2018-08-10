@@ -25,11 +25,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     
     var isPresentedFromLock = false
 
-    init(sender: Sender, initialRequest: PaymentRequest? = nil, currency: CurrencyDef) {
+    init(sender: Sender, currency: CurrencyDef, initialRequest: PaymentRequest? = nil) {
         self.currency = currency
         self.sender = sender
         self.initialRequest = initialRequest
-        
         addressCell = AddressCell(currency: currency)
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
 
@@ -218,9 +217,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     @objc private func scanTapped() {
         memoCell.textView.resignFirstResponder()
         addressCell.textField.resignFirstResponder()
-        presentScan? { [weak self] paymentRequest in
+        presentScan? { [weak self] scanResult in
             self?.validatedProtoRequest = nil
-            guard let request = paymentRequest else { return }
+            guard case .paymentRequest(let request)? = scanResult else { return }
             self?.handleRequest(request)
         }
     }
@@ -363,7 +362,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             }
         }
         
-        sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier) { [weak self] result in
+        sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier, abi: nil) { [weak self] result in
             guard let `self` = self else { return }
             switch result {
             case .success:

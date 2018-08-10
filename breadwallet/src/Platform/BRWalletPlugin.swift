@@ -414,7 +414,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                             self.isPresentingAuth = false
                             guard confirmed else { return request.queue.async { asyncResp.provide(403) } }
                             
-                            sender.sendTransaction(allowBiometrics: false, pinVerifier: pinVerifier, completion: { result in
+                            sender.sendTransaction(allowBiometrics: false, pinVerifier: pinVerifier, abi: nil, completion: { result in
                                 switch result {
                                 case .success(let hash, let rawTx):
                                     guard let hash = hash, let rawTx = rawTx else { return request.queue.async { asyncResp.provide(500) } }

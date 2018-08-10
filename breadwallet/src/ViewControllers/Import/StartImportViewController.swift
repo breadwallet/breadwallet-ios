@@ -11,9 +11,10 @@ import BRCore
 
 class StartImportViewController : UIViewController {
 
-    init(walletManager: BTCWalletManager) {
+    init(walletManager: BTCWalletManager, scanResult: QRCode? = nil) {
         self.walletManager = walletManager
         self.currency = walletManager.currency
+        self.scanResult = scanResult
         assert(walletManager.currency is Bitcoin, "Importing only supports bitcoin")
         super.init(nibName: nil, bundle: nil)
     }
@@ -31,6 +32,7 @@ class StartImportViewController : UIViewController {
     private let balanceActivity = BRActivityViewController(message: S.Import.checking)
     private let importingActivity = BRActivityViewController(message: S.Import.importing)
     private let unlockingActivity = BRActivityViewController(message: S.Import.unlockingActivity)
+    private let scanResult: QRCode?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +47,10 @@ class StartImportViewController : UIViewController {
             DispatchQueue.walletQueue.async { [weak self] in
                 self?.walletManager.peerManager?.connect()
             }
+        }
+        
+        if let scanResult = scanResult {
+            handleScanResult(scanResult)
         }
     }
 
@@ -107,12 +113,21 @@ class StartImportViewController : UIViewController {
         warning.text = S.Import.importWarning
 
         button.tap = strongify(self) { myself in
-            let scan = ScanViewController(scanKeyCompletion: { address in
-                myself.didReceiveAddress(address)
-            }, isValidURI: { (string) -> Bool in
-                return string.isValidPrivateKey || string.isValidBip38Key
+            let scan = ScanViewController(forScanningPrivateKeys: true, completion: { result in
+                if let result = result {
+                    myself.handleScanResult(result)
+                }
             })
             myself.parent?.present(scan, animated: true, completion: nil)
+        }
+    }
+    
+    private func handleScanResult(_ result: QRCode) {
+        switch result {
+        case .privateKey(let key):
+            didReceiveAddress(key)
+        default:
+            break
         }
     }
 

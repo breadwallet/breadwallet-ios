@@ -8,6 +8,7 @@
 
 import UIKit
 import BRCore
+import UserNotifications
 
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
@@ -27,6 +28,7 @@ class ApplicationController : Subscriber, Trackable {
     }
     
     private var kvStoreCoordinator: KVStoreCoordinator?
+    private var pigeonExchange: PigeonExchange?
     fileprivate var application: UIApplication?
     private var urlController: URLController?
     private var defaultsUpdater: UserDefaultsUpdater?
@@ -36,6 +38,7 @@ class ApplicationController : Subscriber, Trackable {
     private var launchURL: URL?
     private var hasPerformedWalletDependentInitialization = false
     private var didInitWallet = false
+    private let notificationHandler = NotificationHandler()
 
     // MARK: -
 
@@ -151,8 +154,8 @@ class ApplicationController : Subscriber, Trackable {
 
     func launch(application: UIApplication, options: [UIApplicationLaunchOptionsKey: Any]?) {
         self.application = application
-        //application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalNever)
+        UNUserNotificationCenter.current().delegate = notificationHandler
         setup()
         handleLaunchOptions(options)
         if reachability.isReachable {
@@ -177,7 +180,6 @@ class ApplicationController : Subscriber, Trackable {
         setupAppearance()
         setupRootViewController()
         window.makeKeyAndVisible()
-        listenForPushNotificationRequest()
         offMainInitialization()
         
         Store.subscribe(self, name: .reinitWalletManager(nil), callback: {
@@ -188,6 +190,11 @@ class ApplicationController : Subscriber, Trackable {
                 }
             }
         })
+        
+        Store.lazySubscribe(self,
+                            selector: { $0.isLoginRequired != $1.isLoginRequired && $1.isLoginRequired == false },
+                            callback: { _ in self.didUnlockWallet() }
+        )
     }
     
     func willEnterForeground() {
@@ -200,10 +207,14 @@ class ApplicationController : Subscriber, Trackable {
         DispatchQueue.walletQueue.async {
             self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
         }
+        updateAssetBundles()
         exchangeUpdater?.refresh(completion: {})
         feeUpdaters.values.forEach { $0.refresh() }
         walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
         walletManager.apiClient?.updateFeatureFlags()
+        if !Store.state.isLoginRequired {
+            pigeonExchange?.fetchInbox()
+        }
     }
 
     func didEnterBackground() {
@@ -219,18 +230,13 @@ class ApplicationController : Subscriber, Trackable {
         }
         primaryWalletManager?.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
     }
+    
+    func didUnlockWallet() {
+        pigeonExchange?.fetchInbox()
+    }
 
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         fetchCompletionHandler = completionHandler
-    }
-
-    func open(url: URL) -> Bool {
-        if let urlController = urlController {
-            return urlController.handleUrl(url)
-        } else {
-            launchURL = url
-            return false
-        }
     }
 
     private func didInitWalletManager() {
@@ -238,6 +244,7 @@ class ApplicationController : Subscriber, Trackable {
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
         walletCoordinator = WalletCoordinator(walletManagers: walletManagers)
         primaryWalletManager.apiClient?.sendLaunchEvent()
+
         setupEthInitialState()
         addTokenCountChangeListener()
         Store.perform(action: PinLength.set(primaryWalletManager.pinLength))
@@ -283,6 +290,7 @@ class ApplicationController : Subscriber, Trackable {
             self.feeUpdaters.removeAll()
             self.walletManagers.values.forEach({ $0.resetForWipe() })
             self.walletManagers.removeAll()
+            self.pigeonExchange = nil
             self.initWallet {
                 DispatchQueue.main.async {
                     self.didInitWalletManager()
@@ -376,6 +384,7 @@ class ApplicationController : Subscriber, Trackable {
         guard let primaryWalletManager = primaryWalletManager else { return }
         primaryWalletManager.apiClient?.updateFeatureFlags()
         initKVStoreCoordinator()
+        initPigeonExchange()
         feeUpdaters.values.forEach { $0.refresh() }
         defaultsUpdater?.refresh()
         primaryWalletManager.apiClient?.events?.up()
@@ -414,6 +423,7 @@ class ApplicationController : Subscriber, Trackable {
             DispatchQueue.walletQueue.async {
                 self.initWallet(completion: self.didInitWalletManager)
             }
+            Store.perform(action: LoginSuccess())
         })
     }
     
@@ -441,6 +451,15 @@ class ApplicationController : Subscriber, Trackable {
             self.kvStoreCoordinator?.setupStoredCurrencyList()
             self.kvStoreCoordinator?.retreiveStoredWalletInfo()
             self.kvStoreCoordinator?.listenForWalletChanges()
+        }
+    }
+    
+    private func initPigeonExchange() {
+        guard let apiClient = primaryWalletManager?.apiClient, apiClient.kv != nil else { return }
+        guard pigeonExchange == nil else { return assertionFailure() }
+        pigeonExchange = PigeonExchange(apiClient: apiClient)
+        if !Store.state.isPushNotificationsEnabled {
+            pigeonExchange?.startPolling()
         }
     }
 
@@ -504,13 +523,31 @@ class ApplicationController : Subscriber, Trackable {
 
     func willResignActive() {
         applyBlurEffect()
-        guard !Store.state.isPushNotificationsEnabled else { return }
-        guard let pushToken = UserDefaults.pushToken else { return }
-        primaryWalletManager?.apiClient?.deletePushNotificationToken(pushToken)
+        if !Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
+            primaryWalletManager?.apiClient?.deletePushNotificationToken(pushToken)
+        }
     }
     
     func didBecomeActive() {
         removeBlurEffect()
+        // check if notification settings changed
+        NotificationAuthorizer().areNotificationsAuthorized { authorized in
+            DispatchQueue.main.async {
+                guard let apiClient = self.primaryWalletManager?.apiClient else { return }
+                if authorized {
+                    if !Store.state.isPushNotificationsEnabled {
+                        self.saveEvent("push.enabledSettings")
+                    }
+                    UIApplication.shared.registerForRemoteNotifications()
+                } else {
+                    if Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
+                        self.saveEvent("pushdisabledSettings")
+                        Store.perform(action: PushNotifications.setIsEnabled(false))
+                        apiClient.deletePushNotificationToken(pushToken)
+                    }
+                }
+            }
+        }
     }
     
     private func applyBlurEffect() {
@@ -551,27 +588,36 @@ class ApplicationController : Subscriber, Trackable {
     }
 }
 
+extension ApplicationController {
+    func open(url: URL) -> Bool {
+        if let urlController = urlController {
+            return urlController.handleUrl(url)
+        } else {
+            launchURL = url
+            return false
+        }
+    }
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+        if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
+            return open(url: userActivity.webpageURL!)
+        }
+        return false
+    }
+}
+
 //MARK: - Push notifications
 extension ApplicationController {
-    func listenForPushNotificationRequest() {
-        // TODO: notifications
-//        Store.subscribe(self, name: .registerForPushNotificationToken, callback: { _ in
-//            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
-//                if granted {
-//                    self.application?.registerForRemoteNotifications()
-//                }
-//            }
-//        })
-    }
-
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-//        guard let apiClient = walletManager?.apiClient else { return }
-//        guard UserDefaults.pushToken != deviceToken else { return }
-//        UserDefaults.pushToken = deviceToken
-//        apiClient.savePushNotificationToken(deviceToken)
+        guard let apiClient = primaryWalletManager?.apiClient else { return }
+        guard UserDefaults.pushToken != deviceToken else { return }
+        UserDefaults.pushToken = deviceToken
+        apiClient.savePushNotificationToken(deviceToken)
+        Store.perform(action: PushNotifications.setIsEnabled(true))
     }
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("didFailToRegisterForRemoteNotification: \(error)")
+        print("[PUSH] failed to register for remote notifications: \(error.localizedDescription)")
+        Store.perform(action: PushNotifications.setIsEnabled(false))
     }
 }

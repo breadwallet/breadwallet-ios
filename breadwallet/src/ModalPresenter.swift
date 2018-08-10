@@ -150,10 +150,28 @@ class ModalPresenter : Subscriber, Trackable {
                 self.showAccountView(currency: currency, animated: true, completion: nil)
             }
         })
+        Store.subscribe(self, name: .promptLinkWallet(WalletPairingRequest.empty)) { [unowned self] in
+            guard case .promptLinkWallet(let pairingRequest)? = $0 else { return }
+            self.linkWallet(pairingRequest: pairingRequest)
+        }
+        
+        // Push Notifications Permission Request
+        Store.subscribe(self, name: .registerForPushNotificationToken) { [weak self]  _ in
+            guard let top = self?.topViewController else { return }
+            NotificationAuthorizer().requestAuthorization(fromViewController: top, completion: { granted in
+                DispatchQueue.main.async {
+                    if granted {
+                        print("[PUSH] notification authorization granted")
+                    } else {
+                        // TODO: log event
+                        print("[PUSH] notification authorization denied")
+                    }
+                }
+            })
+        }
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
-        guard type != .loginScan else { return presentLoginScan() }
         guard let vc = rootModalViewController(type) else {
             Store.perform(action: RootModalActions.Present(modal: .none))
             return
@@ -237,10 +255,13 @@ class ModalPresenter : Subscriber, Trackable {
             return nil
         case .send(let currency):
             return makeSendView(currency: currency)
+        case .sendForRequest(let request):
+            return makeSendView(forRequest: request)
         case .receive(let currency):
             return receiveView(currency: currency, isRequestAmountVisible: (currency.urlSchemes != nil))
         case .loginScan:
-            return nil //The scan view needs a custom presentation
+            presentLoginScan()
+            return nil
         case .loginAddress:
             return receiveView(currency: Currencies.btc, isRequestAmountVisible: false)
         case .requestAmount(let currency):
@@ -289,6 +310,30 @@ class ModalPresenter : Subscriber, Trackable {
         }
     }
 
+    private func makeSendView(forRequest request: PigeonRequest) -> UIViewController? {
+        guard let walletManager = walletManagers[request.currency.code] else { return nil }
+        guard let kvStore = walletManager.apiClient?.kv else { return nil }
+        guard let sender = request.currency.createSender(walletManager: walletManager, kvStore: kvStore) else { return nil }
+        if let ethSender = sender as? EthereumSender {
+            ethSender.customGasPrice = request.txFee?.rawValue
+            ethSender.customGasLimit = request.txSize
+        }
+        let checkoutVC = CheckoutConfirmationViewController(request: request, sender: sender)
+        checkoutVC.presentVerifyPin = { [weak self, weak checkoutVC] bodyText, success in
+            guard let myself = self else { return }
+            let walletManager = myself.primaryWalletManager
+            let vc = VerifyPinViewController(bodyText: bodyText, pinLength: Store.state.pinLength, walletManager: walletManager, success: success)
+            vc.transitioningDelegate = self?.verifyPinTransitionDelegate
+            vc.modalPresentationStyle = .overFullScreen
+            vc.modalPresentationCapturesStatusBarAppearance = true
+            checkoutVC?.present(vc, animated: true, completion: nil)
+        }
+        checkoutVC.onPublishSuccess = { [weak self] in
+            self?.presentAlert(.sendSuccess, completion: {})
+        }
+        return checkoutVC
+    }
+
     private func makeSendView(currency: CurrencyDef) -> UIViewController? {
         guard !(currency.state?.isRescanning ?? false) else {
             let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
@@ -300,8 +345,8 @@ class ModalPresenter : Subscriber, Trackable {
         guard let kvStore = walletManager.apiClient?.kv else { return nil }
         guard let sender = currency.createSender(walletManager: walletManager, kvStore: kvStore) else { return nil }
         let sendVC = SendViewController(sender: sender,
-                                        initialRequest: currentRequest,
-                                        currency: currency)
+                                        currency: currency,
+                                        initialRequest: currentRequest)
         currentRequest = nil
 
         if Store.state.isLoginRequired {
@@ -343,15 +388,35 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func presentLoginScan() {
-        //TODO:BCH URL support
         guard let top = topViewController else { return }
-        let present = presentScan(parent: top, currency: Currencies.btc)
-        Store.perform(action: RootModalActions.Present(modal: .none))
-        present({ paymentRequest in
-            guard let request = paymentRequest else { return }
-            self.currentRequest = request
-            self.presentModal(.send(currency: Currencies.btc))
-        })
+        let present = presentScan(parent: top, currency: nil)
+        present { [unowned self] scanResult in
+            guard let scanResult = scanResult else { return }
+            switch scanResult {
+            case .paymentRequest(let request):
+                let message = String(format: S.Scanner.paymentPromptMessage, request.currency.name)
+                let alert = UIAlertController.confirmationAlert(title: S.Scanner.paymentPrompTitle, message: message) {
+                    self.currentRequest = request
+                    self.presentModal(.send(currency: request.currency))
+                }
+                top.present(alert, animated: true, completion: nil)
+                
+            case .privateKey(_):
+                //TODO:QR support key import from universal scanner
+                break
+                
+            case .deepLink(let url):
+                if let params = url.queryParameters,
+                    let pubKey = params["publicKey"],
+                    let identifier = params["id"],
+                    let service = params["service"] {
+                    print("[EME] PAIRING REQUEST | pubKey: \(pubKey) | identifier: \(identifier) | service: \(service)")
+                    Store.trigger(name: .promptLinkWallet(WalletPairingRequest(publicKey: pubKey, identifier: identifier, service: service, returnToURL: nil)))
+                }
+            case .invalid:
+                break
+            }
+        }
     }
     
     // MARK: Settings
@@ -362,8 +427,6 @@ class ModalPresenter : Subscriber, Trackable {
         menuNav.setDarkStyle()
         
         var btcItems: [MenuItem] = [
-            // Touch ID Spending Limit // TODO: verify if this applies to BCH or not
-            
             // Rescan
             MenuItem(title: S.Settings.sync, callback: {
                 menuNav.pushViewController(ReScanViewController(currency: Currencies.btc), animated: true)
@@ -485,6 +548,11 @@ class ModalPresenter : Subscriber, Trackable {
         ]
         
         var rootItems: [MenuItem] = [
+            // Scan QR Code
+            MenuItem(title: S.MenuButton.scan, icon: #imageLiteral(resourceName: "scan")) { [unowned self] in
+                self.presentLoginScan()
+            },
+            
             // Manage Wallets
             MenuItem(title: S.MenuButton.manageWallets, icon: #imageLiteral(resourceName: "wallet")) {
                 guard let kvStore = btcWalletManager.apiClient?.kv else { return }
@@ -516,12 +584,16 @@ class ModalPresenter : Subscriber, Trackable {
             },
         ]
         
-        // TODO: cleanup
-        if E.isTestFlight {
-            let sendLogs = MenuItem(title: S.Settings.sendLogs, callback: { [unowned self] in
-                self.showEmailLogsModal()
-            })
-            rootItems.append(sendLogs)
+        if E.isTestFlight || E.isDebug {
+            let debugItems: [MenuItem] = [
+                MenuItem(title: S.Settings.sendLogs) { [unowned self] in
+                    self.showEmailLogsModal()
+                },
+                MenuItem(title: "Unlink Wallet (no prompt)") { [unowned self] in
+                    self.wipeWalletNoPrompt()
+                }
+            ]
+            rootItems.append(contentsOf: debugItems)
         }
         
         let settings = MenuViewController(items: rootItems, title: S.Settings.title)
@@ -530,7 +602,7 @@ class ModalPresenter : Subscriber, Trackable {
         top.present(menuNav, animated: true, completion: nil)
     }
 
-    private func presentScan(parent: UIViewController, currency: CurrencyDef) -> PresentScan {
+    private func presentScan(parent: UIViewController, currency: CurrencyDef?) -> PresentScan {
         return { [weak parent] scanCompletion in
             guard ScanViewController.isCameraAllowed else {
                 self.saveEvent("scan.cameraDenied")
@@ -539,8 +611,9 @@ class ModalPresenter : Subscriber, Trackable {
                 }
                 return
             }
-            let vc = ScanViewController(currency: currency, completion: { paymentRequest in
-                scanCompletion(paymentRequest)
+            let scanCurrency = (currency is ERC20Token) ? Currencies.eth : currency
+            let vc = ScanViewController(forPaymentRequestForCurrency: scanCurrency, completion: { scanResult in
+                scanCompletion(scanResult)
                 parent?.view.isFrameChangeBlocked = false
             })
             parent?.view.isFrameChangeBlocked = true
@@ -623,13 +696,15 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func wipeWallet() {
-        let alert = UIAlertController(title: S.WipeWallet.alertTitle, message: S.WipeWallet.alertMessage, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
-        alert.addAction(UIAlertAction(title: S.WipeWallet.wipe, style: .default, handler: { _ in
-            self.topViewController?.dismiss(animated: true, completion: {
-                self.wipeWalletNoPrompt()
-            })
-        }))
+        let alert = UIAlertController.confirmationAlert(title: S.WipeWallet.alertTitle,
+                                                        message: S.WipeWallet.alertMessage,
+                                                        okButtonTitle: S.WipeWallet.wipe,
+                                                        cancelButtonTitle: S.Button.cancel,
+                                                        isDestructiveAction: true) {
+                                                            self.topViewController?.dismiss(animated: true, completion: {
+                                                                self.wipeWalletNoPrompt()
+                                                            })
+        }
         topViewController?.present(alert, animated: true, completion: nil)
     }
 
@@ -657,11 +732,12 @@ class ModalPresenter : Subscriber, Trackable {
         }
     }
     
-    private func presentKeyImport(walletManager: BTCWalletManager) {
+    private func presentKeyImport(walletManager: BTCWalletManager, scanResult: QRCode? = nil) {
+        // TODO: auto-import to both BTC and BCH wallet managers
         let nc = ModalNavigationController()
         nc.setClearNavbar()
         nc.setWhiteStyle()
-        let start = StartImportViewController(walletManager: walletManager)
+        let start = StartImportViewController(walletManager: walletManager, scanResult: scanResult)
         start.addCloseNavigationItem(tintColor: .white)
         start.navigationItem.title = S.Import.title
         let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet, currency: walletManager.currency)
@@ -946,6 +1022,18 @@ class ModalPresenter : Subscriber, Trackable {
     private func showEmailLogsModal() {
         self.messagePresenter.presenter = self.topViewController
         self.messagePresenter.presentEmailLogs()
+    }
+    
+    private func linkWallet(pairingRequest: WalletPairingRequest) {
+        guard let apiClient = primaryWalletManager.apiClient,
+            let top = topViewController else { return }
+        apiClient.fetchServiceInfo(serviceID: pairingRequest.service, callback: { serviceDefinition in
+            guard let serviceDefinition = serviceDefinition else { return self.showLightWeightAlert(message: "Could not retreive service definition"); }
+            DispatchQueue.main.async {
+                let alert = LinkWalletViewController(pairingRequest: pairingRequest, serviceDefinition: serviceDefinition)
+                top.present(alert, animated: true, completion: nil)
+            }
+        })
     }
 }
 

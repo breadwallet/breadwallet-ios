@@ -44,6 +44,8 @@ enum S {
 
     enum Scanner {
         static let flashButtonLabel = NSLocalizedString("Scanner.flashButtonLabel", value:"Camera Flash", comment: "Scan bitcoin address camera flash toggle")
+        static let paymentPrompTitle = NSLocalizedString("Scanner.paymentPromptTitle", value:"Send Payment", comment: "alert dialog title")
+        static let paymentPromptMessage = NSLocalizedString("Scanner.paymentPromptMessage", value:"Would you like to send a %1$@ payment to this address?", comment: "(alert dialog message) Would you like to send a [Bitcoin / Bitcoin Cash / Ethereum] payment to this address?")
     }
 
     enum Send {
@@ -163,7 +165,7 @@ enum S {
         static let exchangeRateHeader = NSLocalizedString("TransactionDetails.exchangeRateHeader", value:"Exchange Rate", comment: "Exchange rate section header")
         
         static let amountWhenReceived = NSLocalizedString("TransactionDetails.amountWhenReceived", value: "%1$@ when received %2$@ now", comment: "$100 when received $200 now")
-        static let amountWhenSent = NSLocalizedString("TransactionDetails.amountWhenReceived", value: "%1$@ when sent %2$@ now", comment: "$100 when sent $200 now")
+        static let amountWhenSent = NSLocalizedString("TransactionDetails.amountWhenSent", value: "%1$@ when sent %2$@ now", comment: "$100 when sent $200 now")
         
         static let emptyMessage = NSLocalizedString("TransactionDetails.emptyMessage", value:"Your transactions will appear here.", comment: "Empty transaction list message.")
         static let sent = NSLocalizedString("TransactionDetails.sent", value:"Sent %1$@", comment: "Sent $5.00 (sent title 1/2)")
@@ -317,6 +319,8 @@ enum S {
         static let label = NSLocalizedString("PushNotifications.label", value:"Push Notifications", comment: "Push notifications toggle switch label")
         static let on = NSLocalizedString("PushNotifications.on", value: "On", comment: "Push notifications are on label")
         static let off = NSLocalizedString("PushNotifications.off", value: "Off", comment: "Push notifications are off label")
+        static let disabled = NSLocalizedString("PushNotifications.disabled", value: "Notifications Disabled", comment: "Push notifications are disabled alert title")
+        static let enableInstructions = NSLocalizedString("PushNotifications.enableInstructions", value: "Turn on notifications in Settings to receive alerts", comment: "Push notifications settings instructions")
     }
 
     enum DefaultCurrency {
@@ -392,7 +396,6 @@ enum S {
         static let support = NSLocalizedString("MenuButton.support", value:"Support", comment: "Menu button title")
         static let settings = NSLocalizedString("MenuButton.settings", value:"Settings", comment: "Menu button title")
         static let lock = NSLocalizedString("MenuButton.lock", value:"Lock Wallet", comment: "Menu button title")
-        static let buy = NSLocalizedString("MenuButton.buy", value:"Buy Bitcoin", comment: "Buy bitcoin title")
         static let addWallet = NSLocalizedString("MenuButton.addWallet", value: "Add Wallet", comment: "Menu button title")
         static let manageWallets = NSLocalizedString("MenuButton.manageWallets", value: "Manage Wallets", comment: "Menu button title")
         static let scan = NSLocalizedString("MenuButton.scan", value: "Scan QR Code", comment: "Menu button title")
@@ -607,5 +610,28 @@ enum S {
         static let remove = NSLocalizedString("TokenList.remove", value: "Remove", comment: "Remove currency button label")
         static let hide = NSLocalizedString("TokenList.hide", value: "Hide", comment: "Hide currency button label")
         static let manageTitle = NSLocalizedString("TokenList.manageTitle", value: "Manage Wallets", comment: "Manage Wallets view title")
+    }
+
+    enum LinkWallet {
+        static let approve = NSLocalizedString("LinkWallet.approve", value: "Approve", comment: "Approve link wallet button label")
+        static let decline = NSLocalizedString("LinkWallet.decline", value: "Decline", comment: "Decline link wallet button label")
+        static let title = NSLocalizedString("LinkWallet.title", value: "Link Wallet", comment: "Link Wallet view title")
+        static let domainTitle = NSLocalizedString("LinkWallet.domainTitle", value: "Note: ONLY interact with this app when on one of the following domains", comment: "Link Wallet view title above domain list")
+        static let permissionsTitle = NSLocalizedString("LinkWallet.permissionsTitle", value: "This app will be able to:", comment: "Link Wallet view title above permissions list")
+        static let disclaimer = NSLocalizedString("LinkWallet.disclaimer", value: "External apps cannot send money without approval from this device", comment: "Link Wallet view dislaimer footer")
+        static let logoFooter = NSLocalizedString("LinkWallet.logoFooter", value: "Secure Checkout", comment: "Link wallet logo footer text")
+    }
+
+    enum PaymentConfirmation {
+        static let title = NSLocalizedString("PaymentConfirmation.title", value: "Confirmation", comment: "Payment confirmation view title")
+        static let amountText = NSLocalizedString("PaymentConfirmation.amountText", value: "Send %1$@ to purchase %2$@", comment: "Eg. Send 1.0Eth to purchase CCC")
+    }
+    
+    enum EME {
+        enum permissions {
+            static let accountRequest = NSLocalizedString("EME.permissions.accountRequest", value: "Request %1$@ account information", comment: "Service capabilities description")
+            static let paymentRequest = NSLocalizedString("EME.permissions.paymentRequest", value: "Request %1$@ payment", comment: "Service capabilities description")
+            static let callRequest = NSLocalizedString("EME.permissions.callRequest", value: "Request %1$@ smart contract call", comment: "Service capabilities description")
+        }
     }
 }

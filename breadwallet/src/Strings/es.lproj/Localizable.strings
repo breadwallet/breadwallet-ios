@@ -121,7 +121,7 @@
 /* Ignore button label */
 "Button.ignore" = "Ignorar";
 /* menu button */
-"Button.menu" = "menú";
+"Button.menu" = "Menú";
 /* No button */
 "Button.no" = "No";
 /* OK button label */
@@ -176,6 +176,12 @@
 "DefaultCurrency.rateLabel" = "Tasa de cambio";
 /* The wallet is disabled. */
 "Disabled.title" = "Monedero bloqueado";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Solicitar %1$@ información de la cuenta";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Solicitar %1$@ llamada de contrato inteligente";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Solicitar %1$@ pago";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Este dispositivo no está configurado para enviar correo electrónico mediante una aplicación de iOS";
 /* Email unavailable alert title */
@@ -222,10 +228,16 @@
 "FeeSelector.title" = "Velocidad de procesamiento";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Administrador";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Comprar bitcoins";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menú";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Monederos";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "activos totales";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Comercio";
 /* Checking private key balance progress view text */
 "Import.checking" = "Averiguando el saldo de la clave privada...";
 /* Sweep private key confirmation message */
@@ -273,15 +285,27 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Ignorar";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "SEGURIDAD DEL DISPOSITIVO COMPROMETIDA\
-Cualquier aplicación \"jailbreak\" puede acceder a los datos del llavero de Bread y robar tus bitcoins. Borra esta cartera de inmediato y restáurala en un dispositivo seguro.";
+"JailbreakWarnings.messageWithBalance" = "SEGURIDAD DEL DISPOSITIVO COMPROMETIDA\nCualquier aplicación \"jailbreak\" puede acceder a los datos del llavero de Bread y robar tus bitcoins. Borra esta cartera de inmediato y restáurala en un dispositivo seguro.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "SEGURIDAD DEL DISPOSITIVO COMPROMETIDA\
-Cualquier aplicación \"jailbreak\" puede acceder a los datos del llavero de Bread y robar tus bitcoins. Usa Bread únicamente en un dispositivo sin jailbreak.";
+"JailbreakWarnings.messageWithoutBalance" = "SEGURIDAD DEL DISPOSITIVO COMPROMETIDA\nCualquier aplicación \"jailbreak\" puede acceder a los datos del llavero de Bread y robar tus bitcoins. Usa Bread únicamente en un dispositivo sin jailbreak.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "AVISO";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Borrar";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Aprobar";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Declinar";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Las aplicaciones externas no pueden enviar dinero sin la aprobación en este dispositivo";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Nota: interactúa con esta aplicación SOLO cuando estés en uno de los siguientes dominios";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Pago seguro";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Esta aplicación podrá:";
+/* Link Wallet view title */
+"LinkWallet.title" = "Vincular cartera";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Los servicios de ubicación están desactivados.";
 /* No permissions for location services */
@@ -298,6 +322,10 @@ Cualquier aplicación \"jailbreak\" puede acceder a los datos del llavero de Bre
 "MenuButton.addWallet" = "Añadir billetera";
 /* Menu button title */
 "MenuButton.lock" = "Bloquear cartera";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Gestionar las carteras";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Escanee el código QR";
 /* Menu button title */
 "MenuButton.security" = "Centro de seguridad";
 /* Menu button title */
@@ -330,6 +358,10 @@ Cualquier aplicación \"jailbreak\" puede acceder a los datos del llavero de Bre
 "NodeSelector.statusLabel" = "Estado de la conexión del nodo";
 /* Node Selector view title */
 "NodeSelector.title" = "Nodos Bitcoin";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Envía %1$@ para comprar %2$@";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Confirmación";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Solicitud de pago incorrecta";
 /* Error opening payment protocol file message */
@@ -388,6 +420,10 @@ Cualquier aplicación \"jailbreak\" puede acceder a los datos del llavero de Bre
 "Prompts.UpgradePin.title" = "Actualizar PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Activa las notificaciones para recibir mensajes especiales de Bread en el futuro.";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Notificaciones deshabilitadas";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Habilita las notificaciones en los ajustes para recibir alertas";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Notificaciones push";
 /* Push notifications are off label */
@@ -472,8 +508,6 @@ Cualquier aplicación \"jailbreak\" puede acceder a los datos del llavero de Bre
 "Search.sent" = "enviado";
 /* Face ID button title */
 "SecurityCenter.faceIdTitle" = "Face ID";
-/* Security Center Info */
-"SecurityCenter.info" = "Activa todas las funciones de seguridad para una protección máxima.";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "La única manera de acceder a tu bitcoin si pierdes o actualizas tu teléfono.";
 /* Paper Key button title */
@@ -482,8 +516,6 @@ Cualquier aplicación \"jailbreak\" puede acceder a los datos del llavero de Bre
 "SecurityCenter.pinDescription" = "Protege tu Bread de usuarios no autorizados.";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "PIN de 6 dígitos";
-/* Security Center Title */
-"SecurityCenter.title" = "Centro de seguridad";
 /* Touch ID button description */
 "SecurityCenter.touchIdDescription" = "Desbloquea tu Bread de forma cómoda y envía dinero hasta un límite establecido.";
 /* Touch ID button title */
@@ -586,6 +618,8 @@ Cualquier aplicación \"jailbreak\" puede acceder a los datos del llavero de Bre
 "Settings.manage" = "Gestionar";
 /* Notifications label */
 "Settings.notifications" = "Notificaciones";
+/* Section header for "other settings". */
+"Settings.other" = "Otro";
 /* Preferences settings section header */
 "Settings.preferences" = "Preferencias";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -615,9 +649,7 @@ Cualquier aplicación \"jailbreak\" puede acceder a los datos del llavero de Bre
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Apunta nuevamente la clave en papel";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Tu clave de papel es la única manera de restaurar tu Bread si pierdes tu teléfono, o te lo roban, se rompe o se actualiza.\
-\
-Te mostraremos una lista de palabras para apuntar en un trozo de papel y guardarlo en un sitio seguro.";
+"StartPaperPhrase.body" = "Tu clave de papel es la única manera de restaurar tu Bread si pierdes tu teléfono, o te lo roban, se rompe o se actualiza.\n\nTe mostraremos una lista de palabras para apuntar en un trozo de papel y guardarlo en un sitio seguro.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Apuntar la clave en papel";
 /* Argument is date */
@@ -630,10 +662,14 @@ Te mostraremos una lista de palabras para apuntar en un trozo de papel y guardar
 "StartViewController.recoverButton" = "Recuperar monedero";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Conectando";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Sincronización vencida";
 /* Syncing view header text */
 "SyncingView.header" = "Sincronizando";
 /* Retry button label */
 "SyncingView.retry" = "Reintentar";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Sincronizado desde %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Sincronizando";
 /* 6 d (6 days) */
@@ -737,7 +773,9 @@ Te mostraremos una lista de palabras para apuntar en un trozo de papel y guardar
 /* Amount section header */
 "TransactionDetails.amountHeader" = "Cantidad";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenReceived" = "%1$@ cuando se envió, %2$@ ahora";
+"TransactionDetails.amountWhenReceived" = "%1$@ cuando recibido, %2$@ ahora";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ cuando se envió, %2$@ ahora";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Confirmado en bloque";
 /* Memo section header */
@@ -826,8 +864,6 @@ Te mostraremos una lista de palabras para apuntar en un trozo de papel y guardar
 "UnlockScreen.resetPin" = "Restablecer PIN";
 /* Scan button title */
 "UnlockScreen.scan" = "Escanear";
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "Introduce tu PIN";
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "Toca el sensor";
 /* TouchID prompt text */
@@ -838,8 +874,6 @@ Te mostraremos una lista de palabras para apuntar en un trozo de papel y guardar
 "UnlockScreen.touchIdText" = "Desbloquear con TouchID";
 /* Device authentication title */
 "UnlockScreen.touchIdTitle.android" = "Se requiere autenticación";
-/* Wallet unlocked message */
-"UnlockScreen.unlocked" = "Cartera desbloqueada";
 /* Update PIN caption text */
 "UpdatePin.caption" = "Recuerda este PIN. Si lo olvidas, no podrás acceder a tu bitcoin.";
 /* PIN creation info. */
@@ -885,9 +919,7 @@ Te mostraremos una lista de palabras para apuntar en un trozo de papel y guardar
 /* Updating webview message */
 "Webview.updating" = "Actualizando...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet ha cambiado su nombre por el de Bread, con un nuevo aspecto y algunas características nuevas.\
-\
-Si necesitas ayuda, busca el (?) en la parte superior derecha de la mayoría de las pantallas.";
+"Welcome.body" = "Breadwallet ha cambiado su nombre por el de Bread, con un nuevo aspecto y algunas características nuevas.\n\nSi necesitas ayuda, busca el (?) en la parte superior derecha de la mayoría de las pantallas.";
 /* Top title of welcome screen */
 "Welcome.title" = "¡Bienvenido a Bread!";
 /* Wipe wallet alert message */
@@ -918,19 +950,3 @@ Si necesitas ayuda, busca el (?) en la parte superior derecha de la mayoría de 
 "WritePaperPhrase.previous" = "Anterior";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li de %2$li";
-/* Section header for "other settings". */
-"Settings.other" = "Otro";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Gestionar las carteras";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menú";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Comprar bitcoins";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Comercio";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Escanee el código QR";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Sincronización vencida";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Sincronizado desde %1$@";

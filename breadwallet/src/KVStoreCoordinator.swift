@@ -125,7 +125,6 @@ class KVStoreCoordinator : Subscriber {
     func retreiveStoredWalletInfo() {
         guard !hasRetreivedInitialWalletInfo else { return }
         if let walletInfo = WalletInfo(kvStore: kvStore) {
-            //TODO:BCH
             Store.perform(action: WalletChange(Currencies.btc).setWalletName(walletInfo.name))
             Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(walletInfo.creationDate))
         } else {

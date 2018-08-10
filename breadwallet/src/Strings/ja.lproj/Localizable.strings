@@ -176,6 +176,12 @@
 "DefaultCurrency.rateLabel" = "為替レート";
 /* The wallet is disabled. */
 "Disabled.title" = "ウォレットが無効になっています";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "%1$@ のアカウント情報をリクエスト";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "%1$@ のスマートコントラクトのコールをリクエスト";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "%1$@ のアカウント情報をリクエスト";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "この端末は、iOSのメールアプリを使用してメールを送信する設定がされていません。";
 /* Email unavailable alert title */
@@ -222,10 +228,16 @@
 "FeeSelector.title" = "処理速度";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "管理";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "ビットコインを購入";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "メニュー";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "ウォレット";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "総資産";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "取引";
 /* Checking private key balance progress view text */
 "Import.checking" = "秘密鍵の残高確認中...";
 /* Sweep private key confirmation message */
@@ -253,9 +265,7 @@
 /* password textfield placeholder */
 "Import.passwordPlaceholder" = "パスワード";
 /* Caption for graphics */
-"Import.rightCaption" = "あなたの\
-ブレッドの\
-ウォレット";
+"Import.rightCaption" = "あなたの\nブレッドの\nウォレット";
 /* Scan Private key button label */
 "Import.scan" = "秘密鍵をスキャン";
 /* Import wallet success alert title */
@@ -275,15 +285,27 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "無視する";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "端末がセキュリティの危険にさらされている可能性があります\
- 「脱獄」アプリはブレッドのキーチェーンデータにアクセスし、あなたのビットコインを盗む恐れがあります!  直ちにこのウォレットを完全削除して、安全な端末で復元して下さい。";
+"JailbreakWarnings.messageWithBalance" = "端末がセキュリティの危険にさらされている可能性があります\n 「脱獄」アプリはブレッドのキーチェーンデータにアクセスし、あなたのビットコインを盗む恐れがあります!  直ちにこのウォレットを完全削除して、安全な端末で復元して下さい。";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "端末がセキュリティの危険にさらされている可能性があります\
-「脱獄」アプリはブレッドのキーチェーンデータにアクセスし、あなたのビットコインを盗む恐れがあります!  ブレッドは必ず脱獄端末以外で利用してください。";
+"JailbreakWarnings.messageWithoutBalance" = "端末がセキュリティの危険にさらされている可能性があります\n「脱獄」アプリはブレッドのキーチェーンデータにアクセスし、あなたのビットコインを盗む恐れがあります!  ブレッドは必ず脱獄端末以外で利用してください。";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "警告";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "完全削除";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "承認する";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "拒否する";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "外部のアプリは,このデバイスの承認がないと送金できません";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "ご注意:以下のいずれかのドメインに属している場合は,このアプリとのみ情報をやり取りしてください";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "安全なチェックアウト";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "このアプリでできること:";
+/* Link Wallet view title */
+"LinkWallet.title" = "リンクウォレット";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "位置情報サービスが無効化されています。";
 /* No permissions for location services */
@@ -300,6 +322,10 @@
 "MenuButton.addWallet" = "ウォレットの追加";
 /* Menu button title */
 "MenuButton.lock" = "ウォレットにロックを設定する";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "ウォレットの管理";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "QRコードの読み込み";
 /* Menu button title */
 "MenuButton.security" = "セキュリティ";
 /* Menu button title */
@@ -332,6 +358,10 @@
 "NodeSelector.statusLabel" = "ノードの接続状況";
 /* Node Selector view title */
 "NodeSelector.title" = "ビットコインノード";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "%2$@を購入するために%1$@を送金する";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "確認";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "不正な支払い要求";
 /* Error opening payment protocol file message */
@@ -390,6 +420,10 @@
 "Prompts.UpgradePin.title" = "PINコードを更新する";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "今後、Breadからの特別なメッセージを受け取るために通知をオンにしてください。";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "通知が無効になっています";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "アラートを受け取るには,設定で通知をオンにしてください";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "プッシュ通知";
 /* Push notifications are off label */
@@ -474,8 +508,6 @@
 "Search.sent" = "送信済";
 /* Face ID button title */
 "SecurityCenter.faceIdTitle" = "Face ID";
-/* Security Center Info */
-"SecurityCenter.info" = "セキュリティを最大限に高めるため、すべてのセキュリティ設定を有効にしてください。";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "あなたが携帯電話を紛失したり、アップグレードした場合にご自身のビットコインへアクセスできる唯一の方法です。";
 /* Paper Key button title */
@@ -484,8 +516,6 @@
 "SecurityCenter.pinDescription" = "アクセス権限のないユーザーからあなたのブレッドを守ります。";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "6桁のPINコード";
-/* Security Center Title */
-"SecurityCenter.title" = "セキュリティセンター";
 /* Touch ID button description */
 "SecurityCenter.touchIdDescription" = "Breadロック解除の他、設定した限度額までの送金も指紋認証で出来ます。";
 /* Touch ID button title */
@@ -588,6 +618,8 @@
 "Settings.manage" = "管理";
 /* Notifications label */
 "Settings.notifications" = "通知";
+/* Section header for "other settings". */
+"Settings.other" = "その他";
 /* Preferences settings section header */
 "Settings.preferences" = "設定";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -617,9 +649,7 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "復元フレーズをもう一度書き留めてください";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "復元フレーズは、スマートフォンを紛失したり、盗まれたり、壊れたり、アップグレードした場合に、ご自身のブレッドを元に戻せる唯一の方法です。\
-\
-単語の一覧を表示しますので、紙に書き留めて安全に保管してください。";
+"StartPaperPhrase.body" = "復元フレーズは、スマートフォンを紛失したり、盗まれたり、壊れたり、アップグレードした場合に、ご自身のブレッドを元に戻せる唯一の方法です。\n\n単語の一覧を表示しますので、紙に書き留めて安全に保管してください。";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "復元フレーズを書き留めてください";
 /* Argument is date */
@@ -632,10 +662,14 @@
 "StartViewController.recoverButton" = "ウォレットを復元する";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "接続中";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "同期に失敗しました";
 /* Syncing view header text */
 "SyncingView.header" = "同期中";
 /* Retry button label */
 "SyncingView.retry" = "再試行";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "%1$@まで同期完了";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "同期中";
 /* 6 d (6 days) */
@@ -739,7 +773,9 @@
 /* Amount section header */
 "TransactionDetails.amountHeader" = "金額";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenReceived" = "送金時%1$@、現在%2$@";
+"TransactionDetails.amountWhenReceived" = "%1$@ を受領したので、%2$@ になります";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "送金時%1$@、現在%2$@";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "ブロックチェーンで承認済み";
 /* Memo section header */
@@ -828,8 +864,6 @@
 "UnlockScreen.resetPin" = "PINコードをリセット";
 /* Scan button title */
 "UnlockScreen.scan" = "スキャン";
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "PINコードを入力してください";
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "タッチセンサー";
 /* TouchID prompt text */
@@ -840,8 +874,6 @@
 "UnlockScreen.touchIdText" = "Touch IDでロックを解除する";
 /* Device authentication title */
 "UnlockScreen.touchIdTitle.android" = "認証が必要です";
-/* Wallet unlocked message */
-"UnlockScreen.unlocked" = "ウォレットのロックが解除されました";
 /* Update PIN caption text */
 "UpdatePin.caption" = "このPINコードは覚えておいてください。忘れた場合、ご自身のビットコインへアクセスできなくなります。";
 /* PIN creation info. */
@@ -887,9 +919,7 @@
 /* Updating webview message */
 "Webview.updating" = "更新中...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwalletは新しい機能や見た目を備えて、Breadという名前に生まれ変わりました。\
-\
-ヘルプをご覧になるには、画面右上にある(?)からお探しください。";
+"Welcome.body" = "Breadwalletは新しい機能や見た目を備えて、Breadという名前に生まれ変わりました。\n\nヘルプをご覧になるには、画面右上にある(?)からお探しください。";
 /* Top title of welcome screen */
 "Welcome.title" = "Breadへようこそ！";
 /* Wipe wallet alert message */
@@ -920,19 +950,3 @@
 "WritePaperPhrase.previous" = "前へ";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%2$liの%1$li";
-/* Section header for "other settings". */
-"Settings.other" = "その他";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "ウォレットの管理";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "メニュー";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "ビットコインを購入";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "取引";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "QRコードの読み込み";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "同期に失敗しました";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "%1$@まで同期完了";

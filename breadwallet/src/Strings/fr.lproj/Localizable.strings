@@ -121,7 +121,7 @@
 /* Ignore button label */
 "Button.ignore" = "Rejeter";
 /* menu button */
-"Button.menu" = "menu";
+"Button.menu" = "Menu";
 /* No button */
 "Button.no" = "Non";
 /* OK button label */
@@ -176,6 +176,12 @@
 "DefaultCurrency.rateLabel" = "Taux de change";
 /* The wallet is disabled. */
 "Disabled.title" = "Portefeuille désactivé";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Demande %1$@ des informations de compte";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Demande %1$@ d'appel de contrat intelligent";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Demande %1$@ de paiement";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Cet appareil n'est pas configuré pour envoyer un e-mail avec l'application e-mail pour iOS.";
 /* Email unavailable alert title */
@@ -222,10 +228,16 @@
 "FeeSelector.title" = "Vitesse de traitement";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Admin";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Acheter des Bitcoins";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Portefeuilles";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "Capital total";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Échanger";
 /* Checking private key balance progress view text */
 "Import.checking" = "Vérification du solde des clés privées...";
 /* Sweep private key confirmation message */
@@ -247,8 +259,7 @@
 /* Caption for graphics */
 "Import.leftCaption" = "Portefeuille à importer";
 /* Import wallet intro screen message */
-"Import.message" = "Importer un portefeuille signifie le transfert de tout son contenu dans votre portfeuille BRD en une seule transaction.\
-";
+"Import.message" = "Importer un portefeuille signifie le transfert de tout son contenu dans votre portfeuille BRD en une seule transaction.\n";
 /* Enter password alert view title */
 "Import.password" = "Cette clé privée est protégée par mot de passe.";
 /* password textfield placeholder */
@@ -274,15 +285,27 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Ignorer";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "SÉCURITÉ DU DISPOSITIF COMPROMISE\
-Toute application « évasive » peut accéder aux données du porte-clé de Bread et voler vos bitcoins ! Détruisez ce portefeuille immédiatement et restaurez-le sur un appareil sécurisé.";
+"JailbreakWarnings.messageWithBalance" = "SÉCURITÉ DU DISPOSITIF COMPROMISE\nToute application « évasive » peut accéder aux données du porte-clé de Bread et voler vos bitcoins ! Détruisez ce portefeuille immédiatement et restaurez-le sur un appareil sécurisé.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "SÉCURITÉ DU DISPOSITIF COMPROMISE\
-Toute application « évasive » peut accéder aux données du porte-clé de Bread et voler vos bitcoins. N'utilisez Bread que sur un appareil non évasif.";
+"JailbreakWarnings.messageWithoutBalance" = "SÉCURITÉ DU DISPOSITIF COMPROMISE\nToute application « évasive » peut accéder aux données du porte-clé de Bread et voler vos bitcoins. N'utilisez Bread que sur un appareil non évasif.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "AVERTISSEMENT";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Supprimer";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Accepter";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Refuser ";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Les applis externes ne peuvent pas envoyer de l'argent sans l'autorisation de cet appareil ";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Note : Interagir SEULEMENT avec cette application lorsque vous êtes dans l'un des domaines suivants";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Paiement sécurisé";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Cette appli pourra : ";
+/* Link Wallet view title */
+"LinkWallet.title" = "Relier le porte-monnaie ";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Les services de localisation sont désactivés.";
 /* No permissions for location services */
@@ -299,6 +322,10 @@ Toute application « évasive » peut accéder aux données du porte-clé de Bre
 "MenuButton.addWallet" = "Ajouter un portefeuille";
 /* Menu button title */
 "MenuButton.lock" = "Verrouiller le portefeuille";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Gérer les portefeuilles";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Scanner le code QR";
 /* Menu button title */
 "MenuButton.security" = "Centre de sécurité";
 /* Menu button title */
@@ -331,6 +358,10 @@ Toute application « évasive » peut accéder aux données du porte-clé de Bre
 "NodeSelector.statusLabel" = "Statut de connexion du nœud";
 /* Node Selector view title */
 "NodeSelector.title" = "Nœuds Bitcoin";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Envoyer %1$@ pour acheter %2$@";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Confirmation ";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Mauvaise demande de paiement";
 /* Error opening payment protocol file message */
@@ -389,6 +420,10 @@ Toute application « évasive » peut accéder aux données du porte-clé de Bre
 "Prompts.UpgradePin.title" = "Mettre à jour le code PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Activez les notifications pour recevoir des messages spéciaux de Bread à l'avenir.";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Notifications désactivées";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Activer les notifications dans Paramètres pour recevoir des alertes";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Notifications push";
 /* Push notifications are off label */
@@ -473,8 +508,6 @@ Toute application « évasive » peut accéder aux données du porte-clé de Bre
 "Search.sent" = "envoyé";
 /* Face ID button title */
 "SecurityCenter.faceIdTitle" = "Face ID";
-/* Security Center Info */
-"SecurityCenter.info" = "Activez toutes les fonctionnalités de sécurité pour une protection maximale.";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "La seule façon d'accéder à votre bitcoin si vous perdez ou mettez à niveau votre téléphone.";
 /* Paper Key button title */
@@ -483,8 +516,6 @@ Toute application « évasive » peut accéder aux données du porte-clé de Bre
 "SecurityCenter.pinDescription" = "Protège vos Bread contre les utilisateurs non autorisés.";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "PIN à six chiffres";
-/* Security Center Title */
-"SecurityCenter.title" = "Centre de sécurité";
 /* Touch ID button description */
 "SecurityCenter.touchIdDescription" = "Débloquez convenablement vos Bread et envoyez de l'argent jusqu'à une limite définie.";
 /* Touch ID button title */
@@ -587,6 +618,8 @@ Toute application « évasive » peut accéder aux données du porte-clé de Bre
 "Settings.manage" = "Gérer";
 /* Notifications label */
 "Settings.notifications" = "Notifications";
+/* Section header for "other settings". */
+"Settings.other" = "Autre";
 /* Preferences settings section header */
 "Settings.preferences" = "Préférences";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -616,9 +649,7 @@ Toute application « évasive » peut accéder aux données du porte-clé de Bre
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Enregistrez la clé papier à nouveau";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Votre clé papier est la seule façon de restaurer votre Bread si votre téléphone est perdu, volé, cassé ou mis à niveau.\
-\
-Nous allons vous montrer une liste de mots à écrire sur un morceau de papier et à garder en sécurité.";
+"StartPaperPhrase.body" = "Votre clé papier est la seule façon de restaurer votre Bread si votre téléphone est perdu, volé, cassé ou mis à niveau.\n\nNous allons vous montrer une liste de mots à écrire sur un morceau de papier et à garder en sécurité.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Écrire la clé papier";
 /* Argument is date */
@@ -631,10 +662,14 @@ Nous allons vous montrer une liste de mots à écrire sur un morceau de papier e
 "StartViewController.recoverButton" = "Récupérer le portefeuille";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Connexion";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Échec de la synchronisation";
 /* Syncing view header text */
 "SyncingView.header" = "Synchronisation";
 /* Retry button label */
 "SyncingView.retry" = "Réessayer";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Synchronisé jusqu'à %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Synchronisation";
 /* 6 d (6 days) */
@@ -738,7 +773,9 @@ Nous allons vous montrer une liste de mots à écrire sur un morceau de papier e
 /* Amount section header */
 "TransactionDetails.amountHeader" = "Montant";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenReceived" = "%1$@ au moment de l'envoi, %2$@ à présent";
+"TransactionDetails.amountWhenReceived" = "%1$@ à la réception, %2$@ maintenant";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ au moment de l'envoi, %2$@ à présent";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Confirmé en bloc";
 /* Memo section header */
@@ -827,8 +864,6 @@ Nous allons vous montrer une liste de mots à écrire sur un morceau de papier e
 "UnlockScreen.resetPin" = "Réinitialiser le PIN";
 /* Scan button title */
 "UnlockScreen.scan" = "Scanner";
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "Entrer le PIN";
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "Appuyez sur le capteur";
 /* TouchID prompt text */
@@ -839,8 +874,6 @@ Nous allons vous montrer une liste de mots à écrire sur un morceau de papier e
 "UnlockScreen.touchIdText" = "Déverrouiller avec TouchID";
 /* Device authentication title */
 "UnlockScreen.touchIdTitle.android" = "Identification nécessaire";
-/* Wallet unlocked message */
-"UnlockScreen.unlocked" = "Portefeuille déverrouillé";
 /* Update PIN caption text */
 "UpdatePin.caption" = "Souvenez-vous de ce code PIN. Si vous l'oubliez, vous ne pourrez pas accéder à votre bitcoin.";
 /* PIN creation info. */
@@ -886,9 +919,7 @@ Nous allons vous montrer une liste de mots à écrire sur un morceau de papier e
 /* Updating webview message */
 "Webview.updating" = "Mise à jour...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet revient sous le nom de Bread, avec un nouveau design et de nouvelles fonctionnalités. \
-\
-Si vous avez besoin d'aide, cliquez sur le (?) en haut à droite de la plupart des écrans.";
+"Welcome.body" = "Breadwallet revient sous le nom de Bread, avec un nouveau design et de nouvelles fonctionnalités. \n\nSi vous avez besoin d'aide, cliquez sur le (?) en haut à droite de la plupart des écrans.";
 /* Top title of welcome screen */
 "Welcome.title" = "Bienvenue chez Bread !";
 /* Wipe wallet alert message */
@@ -902,8 +933,7 @@ Si vous avez besoin d'aide, cliquez sur le (?) en haut à droite de la plupart d
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
 "WipeWallet.instruction" = "Pour commencer un nouveau portefeuille ou rétablir un portefeuille existant, vous devez d'abord supprimer le portefeuille actuellement installé. Pour continuer, saisissez la Clé Papier du portefeuille actuel.";
 /* Instructions for unlinking the wallet */
-"WipeWallet.startMessage" = "Démarrer ou récupérer un autre portefeuille vous permet d'accéder et de gérer un portefeuille Bread différent sur cet appareil.\
-";
+"WipeWallet.startMessage" = "Démarrer ou récupérer un autre portefeuille vous permet d'accéder et de gérer un portefeuille Bread différent sur cet appareil.\n";
 /* Start wipe wallet view warning */
 "WipeWallet.startWarning" = "Vous ne pourrez plus accéder à votre portefeuille courant depuis cet appareil. Si vous souhaitez le récupérer plus tard, vous devrais réentrer la clé papier.";
 /* Unlink this wallet from this device. */
@@ -920,19 +950,3 @@ Si vous avez besoin d'aide, cliquez sur le (?) en haut à droite de la plupart d
 "WritePaperPhrase.previous" = "Précédent";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li de %2$li";
-/* Section header for "other settings". */
-"Settings.other" = "Autre";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Gérer les portefeuilles";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Acheter des Bitcoins";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Échanger";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Scanner le code QR";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Échec de la synchronisation";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Synchronisé jusqu'à %1$@";

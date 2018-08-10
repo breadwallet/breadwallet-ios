@@ -176,6 +176,12 @@
 "DefaultCurrency.rateLabel" = "汇率";
 /* The wallet is disabled. */
 "Disabled.title" = "钱包已禁用";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "请求%1$@ 帐户信息";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "请求%1$@智能合约呼叫";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "请求%1$@付款";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "此设备未进行配置，无法用 iOS 邮件应用发送电子邮件。";
 /* Email unavailable alert title */
@@ -222,10 +228,16 @@
 "FeeSelector.title" = "处理速度";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "管理";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "购买比特币";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "菜单";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "钱包";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "总资产";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "换";
 /* Checking private key balance progress view text */
 "Import.checking" = "正在查看私人密钥余额...";
 /* Sweep private key confirmation message */
@@ -273,15 +285,27 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "忽略";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "设备安全性受损\
-任何'越狱'应用都可能访问 Bread 的密钥链数据并盗取您的比特币！立即擦除这个钱包并在一台安全设备上进行恢复。";
+"JailbreakWarnings.messageWithBalance" = "设备安全性受损\n任何'越狱'应用都可能访问 Bread 的密钥链数据并盗取您的比特币！立即擦除这个钱包并在一台安全设备上进行恢复。";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "设备安全性受损\
-任何'越狱'应用都可能访问 Bread 的密钥链数据并盗取您的比特币！请您仅在未越狱设备上使用 Bread 。";
+"JailbreakWarnings.messageWithoutBalance" = "设备安全性受损\n任何'越狱'应用都可能访问 Bread 的密钥链数据并盗取您的比特币！请您仅在未越狱设备上使用 Bread 。";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "警告";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "擦除";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "同意";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "拒绝";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "外部应用没有本设备的许可将不能汇钱";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "注意:仅在如下域名时才使用本应用";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "安全结账";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "该应用将能够:";
+/* Link Wallet view title */
+"LinkWallet.title" = "关联钱包";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "位置服务被禁用。";
 /* No permissions for location services */
@@ -298,6 +322,10 @@
 "MenuButton.addWallet" = "添加钱包";
 /* Menu button title */
 "MenuButton.lock" = "锁住钱包";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "管理钱包";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "扫描QR";
 /* Menu button title */
 "MenuButton.security" = "安全中心";
 /* Menu button title */
@@ -330,6 +358,10 @@
 "NodeSelector.statusLabel" = "节点连接状态";
 /* Node Selector view title */
 "NodeSelector.title" = "比特币节点";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "发送%1$@以购买%2$@";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "确认";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "假的付款请求";
 /* Error opening payment protocol file message */
@@ -388,6 +420,10 @@
 "Prompts.UpgradePin.title" = "升级 PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "打开推送通知，以便将来从 Bread 接收特殊消息。";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "提示已禁用";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "在设置里开启提示以接收提醒";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "推送通知";
 /* Push notifications are off label */
@@ -472,8 +508,6 @@
 "Search.sent" = "已发送";
 /* Face ID button title */
 "SecurityCenter.faceIdTitle" = "面部识别";
-/* Security Center Info */
-"SecurityCenter.info" = "启用所有安全功能以获得最大保护。";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "若您丢失或升级您的手机，访问您的比特币的唯一方法。";
 /* Paper Key button title */
@@ -482,8 +516,6 @@
 "SecurityCenter.pinDescription" = "保护您的 Bread 免遭未授权用户盗用。";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "6 位 PIN";
-/* Security Center Title */
-"SecurityCenter.title" = "安全中心";
 /* Touch ID button description */
 "SecurityCenter.touchIdDescription" = "方便地解锁 Bread，在设定限额下汇钱。";
 /* Touch ID button title */
@@ -586,6 +618,8 @@
 "Settings.manage" = "管理";
 /* Notifications label */
 "Settings.notifications" = "通知";
+/* Section header for "other settings". */
+"Settings.other" = "其他";
 /* Preferences settings section header */
 "Settings.preferences" = "选项";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -615,10 +649,7 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "再次书写纸键";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "如果您的手机丢失、被盗、损坏或升级，纸上密钥是恢复 Bread 的唯一方法。\
-\
-\
-我们将向您显示一张单词表，请将其写在纸上并保存在安全的地方。";
+"StartPaperPhrase.body" = "如果您的手机丢失、被盗、损坏或升级，纸上密钥是恢复 Bread 的唯一方法。\n\n\n我们将向您显示一张单词表，请将其写在纸上并保存在安全的地方。";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "写下纸键";
 /* Argument is date */
@@ -631,10 +662,14 @@
 "StartViewController.recoverButton" = "恢复钱包";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "连接中";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "同步失败";
 /* Syncing view header text */
 "SyncingView.header" = "正在同步";
 /* Retry button label */
 "SyncingView.retry" = "重试";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "从 %1$@ 同步";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "同步中";
 /* 6 d (6 days) */
@@ -738,7 +773,9 @@
 /* Amount section header */
 "TransactionDetails.amountHeader" = "金额";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenReceived" = "发送时 %1$@，现在 %2$@";
+"TransactionDetails.amountWhenReceived" = "收到时%1$@]，现在%2$@";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "发送时 %1$@，现在 %2$@";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "已在区块中确认";
 /* Memo section header */
@@ -827,8 +864,6 @@
 "UnlockScreen.resetPin" = "复位 PIN";
 /* Scan button title */
 "UnlockScreen.scan" = "扫描";
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "输入 PIN 码";
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "触控感应器";
 /* TouchID prompt text */
@@ -839,8 +874,6 @@
 "UnlockScreen.touchIdText" = "使用 TouchID 解锁";
 /* Device authentication title */
 "UnlockScreen.touchIdTitle.android" = "需要身份认证";
-/* Wallet unlocked message */
-"UnlockScreen.unlocked" = "钱包已解锁";
 /* Update PIN caption text */
 "UpdatePin.caption" = "请牢记此 PIN 码。如果您忘记，您将无法访问您的比特币。";
 /* PIN creation info. */
@@ -917,19 +950,3 @@
 "WritePaperPhrase.previous" = "上一步";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li / %2$li";
-/* Section header for "other settings". */
-"Settings.other" = "其他";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "管理钱包";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "菜单";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "购买比特币";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "换";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "扫描QR";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "同步失败";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "从 %1$@ 同步";
