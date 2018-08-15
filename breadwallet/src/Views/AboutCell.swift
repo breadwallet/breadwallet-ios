@@ -19,7 +19,7 @@ class AboutCell : UIView {
         setup()
     }
 
-    private let label = UILabel(font: .customBody(size: 16.0), color: .darkText)
+    private let label = UILabel(font: .customBody(size: 16.0), color: .white)
     private let separator = UIView(color: .secondaryShadow)
 
     private func setup() {
@@ -39,7 +39,7 @@ class AboutCell : UIView {
             separator.trailingAnchor.constraint(equalTo: button.trailingAnchor),
             separator.bottomAnchor.constraint(equalTo: bottomAnchor),
             separator.heightAnchor.constraint(equalToConstant: 1.0) ])
-        button.tintColor = C.defaultTintColor
+        button.tintColor = .primaryButton
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -56,7 +56,7 @@ class WalletIDCell: UIView {
     }
     
     private let button: UIButton
-    private let label = UILabel(font: .customBody(size: 16.0), color: .darkText)
+    private let label = UILabel(font: .customBody(size: 16.0), color: .white)
     private let separator = UIView(color: .secondaryShadow)
     
     private func setup() {
@@ -77,7 +77,7 @@ class WalletIDCell: UIView {
             separator.trailingAnchor.constraint(equalTo: button.trailingAnchor),
             separator.bottomAnchor.constraint(equalTo: bottomAnchor),
             separator.heightAnchor.constraint(equalToConstant: 1.0) ])
-        button.tintColor = C.defaultTintColor
+        button.tintColor = .primaryButton
         
         // properties
         button.setTitle(S.URLHandling.copy, for: .normal)
