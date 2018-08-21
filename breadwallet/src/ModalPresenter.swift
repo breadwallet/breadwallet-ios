@@ -27,6 +27,9 @@ class ModalPresenter : Subscriber, Trackable {
         self.wipeNavigationDelegate = StartNavigationDelegate()
         self.noAuthApiClient = apiClient
         addSubscriptions()
+        if !Reachability.isReachable {
+            showNotReachable()
+        }
     }
     
     deinit {
@@ -42,7 +45,6 @@ class ModalPresenter : Subscriber, Trackable {
     private let verifyPinTransitionDelegate = PinTransitioningDelegate()
     private let noAuthApiClient: BRAPIClient
     private var currentRequest: PaymentRequest?
-    private var reachability = ReachabilityMonitor()
     private var notReachableAlert: InAppAlert?
     private let wipeNavigationDelegate: StartNavigationDelegate
 
@@ -120,13 +122,13 @@ class ModalPresenter : Subscriber, Trackable {
                 self.confirmTransaction(currency: currency, amount: amount, fee: fee, address: address, callback: callback)
             }
         })
-        reachability.didChange = { [weak self] isReachable in
+        Reachability.addDidChangeCallback({ [weak self] isReachable in
             if isReachable {
                 self?.hideNotReachable()
             } else {
                 self?.showNotReachable()
             }
-        }
+        })
         Store.subscribe(self, name: .lightWeightAlert(""), callback: { [weak self] in
             guard let trigger = $0 else { return }
             if case let .lightWeightAlert(message) = trigger {

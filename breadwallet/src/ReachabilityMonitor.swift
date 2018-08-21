@@ -12,36 +12,41 @@ import SystemConfiguration
 
 private func callback(reachability:SCNetworkReachability, flags: SCNetworkReachabilityFlags, info: UnsafeMutableRawPointer?) {
     guard let info = info else { return }
-    let reachability = Unmanaged<ReachabilityMonitor>.fromOpaque(info).takeUnretainedValue()
+    let reachability = Unmanaged<Reachability>.fromOpaque(info).takeUnretainedValue()
     reachability.notify()
 }
 
-class ReachabilityMonitor : Trackable {
+class Reachability {
 
-    init() {
+    private static let shared = Reachability()
+    private var didChangeCallbacks = [((Bool) -> Void)]()
+    private var networkReachability: SCNetworkReachability?
+    private let reachabilitySerialQueue = DispatchQueue(label: "com.breadwallet.reachabilityQueue")
+
+    private init() {
         networkReachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "google.com")
         start()
     }
 
-    var didChange: ((Bool) -> Void)?
+    static func addDidChangeCallback(_ callback: @escaping (Bool) -> Void) {
+        shared.didChangeCallbacks.append(callback)
+    }
 
-    private var networkReachability: SCNetworkReachability?
-    private let reachabilitySerialQueue = DispatchQueue(label: "com.breadwallet.reachabilityQueue")
+    static var isReachable: Bool {
+        return shared.flags.contains(.reachable)
+    }
 
     func notify() {
         DispatchQueue.main.async {
-            self.didChange?(self.isReachable)
-            self.saveEvent(self.isReachable ? "reachability.isReachble" : "reachability.isNotReachable")
+            self.didChangeCallbacks.forEach {
+                $0(Reachability.isReachable)
+            }
         }
-    }
-
-    var isReachable: Bool {
-        return flags.contains(.reachable)
     }
 
     private func start() {
         var context = SCNetworkReachabilityContext()
-        context.info = UnsafeMutableRawPointer(Unmanaged<ReachabilityMonitor>.passUnretained(self).toOpaque())
+        context.info = UnsafeMutableRawPointer(Unmanaged<Reachability>.passUnretained(self).toOpaque())
         guard let reachability = networkReachability else { return }
         SCNetworkReachabilitySetCallback(reachability, callback, &context)
         SCNetworkReachabilitySetDispatchQueue(reachability, reachabilitySerialQueue)
