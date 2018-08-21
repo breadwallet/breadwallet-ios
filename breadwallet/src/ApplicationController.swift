@@ -32,17 +32,23 @@ class ApplicationController : Subscriber, Trackable {
     fileprivate var application: UIApplication?
     private var urlController: URLController?
     private var defaultsUpdater: UserDefaultsUpdater?
-    private var reachability = ReachabilityMonitor()
     private let noAuthApiClient = BRAPIClient(authenticator: NoAuthAuthenticator())
     private var fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)?
     private var launchURL: URL?
     private var hasPerformedWalletDependentInitialization = false
     private var didInitWallet = false
     private let notificationHandler = NotificationHandler()
-
+    private var isReachable = true {
+        didSet {
+            if oldValue == false && isReachable {
+                self.retryAfterIsReachable()
+            }
+        }
+    }
     // MARK: -
 
     init() {
+        isReachable = Reachability.isReachable
         guardProtected(queue: DispatchQueue.walletQueue) {
             if UserDefaults.hasBchConnected {
                 self.initWallet(completion: self.didAttemptInitWallet)
@@ -158,17 +164,9 @@ class ApplicationController : Subscriber, Trackable {
         UNUserNotificationCenter.current().delegate = notificationHandler
         setup()
         handleLaunchOptions(options)
-        if reachability.isReachable {
-            reachability.didChange = handleReachabilityLost
-        } else {
-            // app not reachable at launch
-            self.reachability.didChange = { isReachable in
-                if isReachable {
-                    self.retryAfterIsReachable()
-                    self.reachability.didChange = self.handleReachabilityLost
-                }
-            }
-        }
+        Reachability.addDidChangeCallback({ isReachable in
+            self.isReachable = isReachable
+        })
         updateAssetBundles()
         if !hasPerformedWalletDependentInitialization && didInitWallet {
             didInitWalletManager()
@@ -388,16 +386,6 @@ class ApplicationController : Subscriber, Trackable {
         feeUpdaters.values.forEach { $0.refresh() }
         defaultsUpdater?.refresh()
         primaryWalletManager.apiClient?.events?.up()
-    }
-    
-    private func handleReachabilityLost(isReachable: Bool) {
-        if !isReachable {
-            self.reachability.didChange = { isReachable in
-                if isReachable {
-                    self.retryAfterIsReachable()
-                }
-            }
-        }
     }
     
     private func retryAfterIsReachable() {
