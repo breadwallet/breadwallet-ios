@@ -281,7 +281,16 @@ class CoreDatabase {
         }
     }
 
-    func saveBlocks(_ replace: Bool, _ blocks: [BRBlockRef?]) {
+    func saveBlocks(_ replace: Bool, _ blockRefs: [BRBlockRef?]) {
+        // make a copy before crossing thread boundary
+        let blocks: [BRBlockRef?] = blockRefs.map { blockRef in
+            if let b = blockRef {
+                return BRMerkleBlockCopy(&b.pointee)
+            } else {
+                return nil
+            }
+        }
+        
         queue.async {
             var pk: Int32 = 0
             sqlite3_exec(self.db, "begin exclusive", nil, nil, nil)
@@ -345,6 +354,8 @@ class CoreDatabase {
                 }
 
                 sqlite3_reset(sql2)
+                
+                BRMerkleBlockFree(b)
             }
 
             sqlite3_exec(self.db, "update or rollback Z_PRIMARYKEY set Z_MAX = \(pk) where Z_ENT = \(self.blockEnt)",
