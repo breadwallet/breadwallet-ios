@@ -17,10 +17,10 @@ class ReScanViewController : UIViewController, Subscriber {
     }
 
     private let currency: CurrencyDef
-    private let header = UILabel(font: .customBold(size: 26.0), color: .darkText)
+    private let header = UILabel(font: .customBold(size: 26.0), color: .white)
     private let body = UILabel.wrapping(font: .systemFont(ofSize: 15.0))
     private let button = BRDButton(title: S.ReScan.buttonTitle, type: .primary)
-    private let footer = UILabel.wrapping(font: .customBody(size: 16.0), color: .secondaryGrayText)
+    private let footer = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
     private let faq: UIButton
 
     deinit {
@@ -74,7 +74,8 @@ class ReScanViewController : UIViewController, Subscriber {
     }
 
     private func setInitialData() {
-        view.backgroundColor = .whiteTint
+        view.backgroundColor = .darkBackground
+        faq.tintColor = .navigationTint
         header.text = S.ReScan.header
         body.attributedText = bodyText
         footer.text = S.ReScan.footer
@@ -96,9 +97,9 @@ class ReScanViewController : UIViewController, Subscriber {
     private var bodyText: NSAttributedString {
         let body = NSMutableAttributedString()
         let headerAttributes = [ NSAttributedStringKey.font: UIFont.customBold(size: 16.0),
-                                 NSAttributedStringKey.foregroundColor: UIColor.darkText ]
+                                 NSAttributedStringKey.foregroundColor: UIColor.white ]
         let bodyAttributes = [ NSAttributedStringKey.font: UIFont.customBody(size: 16.0),
-                               NSAttributedStringKey.foregroundColor: UIColor.darkText ]
+                               NSAttributedStringKey.foregroundColor: UIColor.white ]
 
         body.append(NSAttributedString(string: "\(S.ReScan.subheader2)\n", attributes: headerAttributes))
         body.append(NSAttributedString(string: "\(S.ReScan.body2)\n\n\(S.ReScan.body3)", attributes: bodyAttributes))
