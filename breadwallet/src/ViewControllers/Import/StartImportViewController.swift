@@ -23,8 +23,8 @@ class StartImportViewController : UIViewController {
     private let currency: CurrencyDef
     private let header = RadialGradientView(backgroundColor: .blue, offset: 64.0)
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "ImportIllustration"))
-    private let message = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
-    private let warning = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
+    private let message = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
+    private let warning = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
     private let button = BRDButton(title: S.Import.scan, type: .primary)
     private let bullet = UIImageView(image: #imageLiteral(resourceName: "deletecircle"))
     private let leftCaption = UILabel.wrapping(font: .customMedium(size: 13.0), color: .darkText)
@@ -103,7 +103,7 @@ class StartImportViewController : UIViewController {
     }
 
     private func setInitialData() {
-        view.backgroundColor = .white
+        view.backgroundColor = .darkBackground
         illustration.contentMode = .scaleAspectFill
         message.text = S.Import.importMessage
         leftCaption.text = S.Import.leftCaption
