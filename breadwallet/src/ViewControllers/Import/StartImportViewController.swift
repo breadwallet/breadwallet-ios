@@ -172,9 +172,19 @@ class StartImportViewController : UIViewController {
     private func checkBalance(key: BRKey) {
         present(balanceActivity, animated: true, completion: {
             var key = key
-            guard let address = key.address() else { return }
+            guard let address = key.address() else {
+                self.balanceActivity.dismiss(animated: true) {
+                    self.showErrorMessage(S.Import.Error.notValid)
+                }
+                return
+            }
             self.walletManager.apiClient?.fetchUTXOS(address: address, currency: self.currency, completion: { data in
-                guard let data = data else { return }
+                guard let data = data else {
+                    self.balanceActivity.dismiss(animated: true) {
+                        self.showErrorMessage(S.Alert.timedOut)
+                    }
+                    return
+                }
                 self.handleData(data: data, key: key)
             })
         })
