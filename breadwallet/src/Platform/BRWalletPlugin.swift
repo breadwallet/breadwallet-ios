@@ -350,7 +350,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             }
             
             guard let walletManager = self.walletManagers[currency.code],
-                let kvStore = walletManager.apiClient?.kv,
+                let kvStore = Backend.kvStore,
                 let sender = currency.createSender(walletManager: walletManager, kvStore: kvStore) else {
                     return BRHTTPResponse(request: request, code: 500)
             }

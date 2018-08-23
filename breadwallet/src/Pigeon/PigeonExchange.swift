@@ -32,14 +32,15 @@ enum CheckoutResult {
 typealias PairingCompletionHandler = (WalletPairingResult) -> Void
 
 class PigeonExchange: Subscriber {
-    private let apiClient: BRAPIClient
-    private let kvStore: BRReplicatedKVStore
+    private unowned let apiClient: BRAPIClient
+    private unowned let kvStore: BRReplicatedKVStore
     private var timer: Timer?
     private let fetchInterval: TimeInterval = 3.0
 
-    init(apiClient: BRAPIClient) {
-        self.apiClient = apiClient
-        self.kvStore = apiClient.kv!
+    init?() {
+        guard let kvStore = Backend.kvStore else { return nil }
+        self.apiClient = Backend.apiClient
+        self.kvStore = kvStore
         
         Store.subscribe(self, name: .linkWallet(WalletPairingRequest.empty, false, {_ in})) { [unowned self] in
             guard case .linkWallet(let pairingRequest, let accepted, let callback)? = $0 else { return }

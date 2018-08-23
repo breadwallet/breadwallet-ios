@@ -97,7 +97,7 @@ class FeeUpdater : Trackable {
         let minFeePerKB: UInt64 = txFeePerKb
         let maxFeePerKB: UInt64 = ((txFeePerKb*1000100 + 190)/191) // slightly higher than a 10,000bit fee on a 191byte tx
         
-        walletManager.apiClient?.feePerKb(code: walletManager.currency.code) { [weak self] newFees, error in
+        Backend.apiClient.feePerKb(code: walletManager.currency.code) { [weak self] newFees, error in
             guard let `self` = self else { return }
             guard error == nil else { print("feePerKb error: \(String(describing: error))"); completion(); return }
             print("\(self.walletManager.currency.code) fees updated: \(newFees.regular) / \(newFees.economy)")
@@ -113,7 +113,7 @@ class FeeUpdater : Trackable {
     }
     
     private func refreshEthereum(completion: @escaping () -> Void) {
-        walletManager.apiClient?.getGasPrice { [weak self] result in
+        Backend.apiClient.getGasPrice { [weak self] result in
             guard let `self` = self else { return }
             if case .success(let gasPrice) = result {
                 let newFees = Fees(gasPrice: gasPrice, timestamp: Date().timeIntervalSince1970)
