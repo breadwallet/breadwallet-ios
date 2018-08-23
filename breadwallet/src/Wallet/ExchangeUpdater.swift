@@ -13,9 +13,8 @@ class ExchangeUpdater : Subscriber {
     let currencies: [CurrencyDef]
     
     //MARK: - Public
-    init(currencies: [CurrencyDef], apiClient: BRAPIClient) {
+    init(currencies: [CurrencyDef]) {
         self.currencies = currencies
-        self.apiClient = apiClient
         currencies.forEach { currency in
             Store.subscribe(self,
                             selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode },
@@ -28,14 +27,14 @@ class ExchangeUpdater : Subscriber {
 
     func refresh(completion: @escaping () -> Void) {
         // get btc/fiat rates
-        apiClient.exchangeRates(currencyCode: Currencies.btc.code) { [weak self] result in
+        Backend.apiClient.exchangeRates(currencyCode: Currencies.btc.code) { [weak self] result in
             guard let `self` = self,
                 case .success(let btcFiatRates) = result else { return }
             
             Store.perform(action: WalletChange(Currencies.btc).setExchangeRates(currentRate: self.findCurrentRate(rates: btcFiatRates), rates: btcFiatRates))
             
             // get token/btc rates
-            self.apiClient.tokenExchangeRates() { [weak self] result in
+            Backend.apiClient.tokenExchangeRates() { [weak self] result in
                 guard let `self` = self,
                     case .success(let tokenBtcRates) = result else { return }
                 
@@ -54,7 +53,7 @@ class ExchangeUpdater : Subscriber {
                 // TODO: HACK for CCC (based on price in ETH)
                 let tokenCode = StoredTokenData.ccc.code
                 guard let token = Store.state.currencies.filter({ $0.code.caseInsensitiveCompare(tokenCode) == .orderedSame }).first else { return }
-                self.apiClient.exchangeRates(currencyCode: tokenCode) { [weak self] result in
+                Backend.apiClient.exchangeRates(currencyCode: tokenCode) { [weak self] result in
                     guard let `self` = self,
                         case .success(let tokenEthRates) = result,
                         let tokenEthRate = tokenEthRates.first, tokenEthRate.code.caseInsensitiveCompare(Currencies.eth.code) == .orderedSame,
@@ -77,7 +76,4 @@ class ExchangeUpdater : Subscriber {
         }
         return currentRate
     }
-
-    //MARK: - Private
-    let apiClient: BRAPIClient
 }

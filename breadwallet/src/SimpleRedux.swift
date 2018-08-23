@@ -159,6 +159,7 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
 class Store {
 
     private static let shared = Store()
+    private init() { }
     
     private var isClearingSubscriptions = false
 

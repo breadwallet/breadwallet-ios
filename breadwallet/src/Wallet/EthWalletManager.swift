@@ -27,7 +27,7 @@ class EthWalletManager : WalletManager {
 
     let currency: CurrencyDef = Currencies.eth
     var kvStore: BRReplicatedKVStore?
-    var apiClient: BRAPIClient? {
+    weak var apiClient: BRAPIClient? {
         didSet {
             self.node.connect()
         }
