@@ -36,8 +36,6 @@ protocol WalletManager: class {
     var currency: CurrencyDef { get }
     var peerManager: BRPeerManager? { get }
     var wallet: BRWallet? { get }
-    var kvStore: BRReplicatedKVStore? { get set }
-    var apiClient: BRAPIClient? { get }
     
     func resetForWipe()
     func canUseBiometrics(forTx: BRTxRef) -> Bool

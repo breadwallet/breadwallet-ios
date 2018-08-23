@@ -19,6 +19,7 @@ class BTCWalletManager : WalletManager {
     var earliestKeyTime: TimeInterval = 0
     var db: CoreDatabase?
     var wallet: BRWallet?
+    var peerManager: BRPeerManager?
     private let progressUpdateInterval: TimeInterval = 0.5
     private let updateDebounceInterval: TimeInterval = 0.4
     private var progressTimer: Timer?
@@ -36,13 +37,12 @@ class BTCWalletManager : WalletManager {
     }
 
     func initWallet(callback: @escaping (Bool) -> Void) {
-        db?.loadTransactions { txns in
-            guard self.masterPubKey != BRMasterPubKey() else {
-                #if !Debug
-                self.db?.delete()
-                #endif
-                return callback(false)
-            }
+        guard let db = db else { return callback(false) }
+        guard self.masterPubKey != BRMasterPubKey() else {
+            assert(false)
+            return callback(false)
+        }
+        db.loadTransactions { txns in
             self.wallet = BRWallet(transactions: txns, masterPubKey: self.masterPubKey, listener: self)
             if let wallet = self.wallet {
                 Store.perform(action: WalletChange(self.currency).setBalance(UInt256(wallet.balance)))
@@ -54,10 +54,7 @@ class BTCWalletManager : WalletManager {
 
     func initWallet(transactions: [BRTxRef]) {
         guard self.masterPubKey != BRMasterPubKey() else {
-            #if !Debug
-            self.db?.delete()
-            #endif
-            return
+            return assert(false)
         }
         self.wallet = BRWallet(transactions: transactions, masterPubKey: self.masterPubKey, listener: self)
         if let wallet = self.wallet {
@@ -83,22 +80,11 @@ class BTCWalletManager : WalletManager {
         }
     }
 
-    var apiClient: BRAPIClient? {
-        guard self.masterPubKey != BRMasterPubKey() else { return nil }
-        return lazyAPIClient
-    }
-
-    var peerManager: BRPeerManager?
-
-    private lazy var lazyAPIClient: BRAPIClient? = {
-        guard let wallet = self.wallet else { return nil }
-        return BRAPIClient(authenticator: self)
-    }()
-
     init(currency: CurrencyDef, masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
         self.currency = currency
         self.masterPubKey = masterPubKey
         self.earliestKeyTime = earliestKeyTime
+        guard self.masterPubKey != BRMasterPubKey() else { return }
         if let path = dbPath {
             self.db = CoreDatabase(dbPath: path)
         } else {

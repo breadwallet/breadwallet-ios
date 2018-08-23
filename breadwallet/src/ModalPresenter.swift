@@ -16,16 +16,15 @@ class ModalPresenter : Subscriber, Trackable {
     let primaryWalletManager: BTCWalletManager
     var walletManagers: [String: WalletManager]
     lazy var supportCenter: SupportCenterContainer = {
-        return SupportCenterContainer(walletManagers: self.walletManagers, noAuthApiClient: Store.state.isLoginRequired ? self.noAuthApiClient : nil)
+        return SupportCenterContainer(walletManagers: self.walletManagers)
     }()
     
-    init(walletManagers: [String: WalletManager], window: UIWindow, apiClient: BRAPIClient) {
+    init(walletManagers: [String: WalletManager], window: UIWindow) {
         self.window = window
         self.walletManagers = walletManagers
         self.primaryWalletManager = walletManagers[Currencies.btc.code]! as! BTCWalletManager
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular)
         self.wipeNavigationDelegate = StartNavigationDelegate()
-        self.noAuthApiClient = apiClient
         addSubscriptions()
         if !Reachability.isReachable {
             showNotReachable()
@@ -43,7 +42,6 @@ class ModalPresenter : Subscriber, Trackable {
     private let messagePresenter = MessageUIPresenter()
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
     private let verifyPinTransitionDelegate = PinTransitioningDelegate()
-    private let noAuthApiClient: BRAPIClient
     private var currentRequest: PaymentRequest?
     private var notReachableAlert: InAppAlert?
     private let wipeNavigationDelegate: StartNavigationDelegate
@@ -85,10 +83,10 @@ class ModalPresenter : Subscriber, Trackable {
             }
         })
         
-        for walletManager in walletManagers.values {
+        walletManagers.values.map({ $0.currency }).filter({ $0 is Bitcoin }).forEach { currency in
             // TODO: show alert and automatic rescan instead of showing the rescan screen
-            Store.subscribe(self, name: .recommendRescan(walletManager.currency), callback: { [weak self] _ in
-                self?.presentRescan(currency: walletManager.currency)
+            Store.subscribe(self, name: .recommendRescan(currency), callback: { [weak self] _ in
+                self?.presentRescan(currency: currency)
             })
         }
 
@@ -314,7 +312,7 @@ class ModalPresenter : Subscriber, Trackable {
 
     private func makeSendView(forRequest request: PigeonRequest) -> UIViewController? {
         guard let walletManager = walletManagers[request.currency.code] else { return nil }
-        guard let kvStore = walletManager.apiClient?.kv else { return nil }
+        guard let kvStore = Backend.kvStore else { return nil }
         guard let sender = request.currency.createSender(walletManager: walletManager, kvStore: kvStore) else { return nil }
         if let ethSender = sender as? EthereumSender {
             ethSender.customGasPrice = request.txFee?.rawValue
@@ -344,7 +342,7 @@ class ModalPresenter : Subscriber, Trackable {
             return nil
         }
         guard let walletManager = walletManagers[currency.code] else { return nil }
-        guard let kvStore = walletManager.apiClient?.kv else { return nil }
+        guard let kvStore = Backend.kvStore else { return nil }
         guard let sender = currency.createSender(walletManager: walletManager, kvStore: kvStore) else { return nil }
         let sendVC = SendViewController(sender: sender,
                                         currency: currency,
@@ -557,7 +555,7 @@ class ModalPresenter : Subscriber, Trackable {
             
             // Manage Wallets
             MenuItem(title: S.MenuButton.manageWallets, icon: #imageLiteral(resourceName: "wallet")) {
-                guard let kvStore = btcWalletManager.apiClient?.kv else { return }
+                guard let kvStore = Backend.kvStore else { return }
                 let vc = EditWalletsViewController(type: .manage, kvStore: kvStore)
                 menuNav.pushViewController(vc, animated: true)
             },
@@ -717,6 +715,7 @@ class ModalPresenter : Subscriber, Trackable {
             self.walletManagers.values.forEach({ $0.peerManager?.disconnect() })
             DispatchQueue.walletQueue.asyncAfter(deadline: .now() + 2.0, execute: {
                 let success = self.primaryWalletManager.wipeWallet(pin: "forceWipe")
+                Backend.disconnectWallet()
                 DispatchQueue.main.async {
                     activity.dismiss(animated: true) {
                         if success {
@@ -1027,9 +1026,8 @@ class ModalPresenter : Subscriber, Trackable {
     }
     
     private func linkWallet(pairingRequest: WalletPairingRequest) {
-        guard let apiClient = primaryWalletManager.apiClient,
-            let top = topViewController else { return }
-        apiClient.fetchServiceInfo(serviceID: pairingRequest.service, callback: { serviceDefinition in
+        guard let top = topViewController else { return }
+        Backend.apiClient.fetchServiceInfo(serviceID: pairingRequest.service, callback: { serviceDefinition in
             guard let serviceDefinition = serviceDefinition else { return self.showLightWeightAlert(message: "Could not retreive service definition"); }
             DispatchQueue.main.async {
                 let alert = LinkWalletViewController(pairingRequest: pairingRequest, serviceDefinition: serviceDefinition)
