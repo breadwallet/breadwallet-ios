@@ -178,7 +178,7 @@ class StartImportViewController : UIViewController {
                 }
                 return
             }
-            self.walletManager.apiClient?.fetchUTXOS(address: address, currency: self.currency, completion: { data in
+            Backend.apiClient.fetchUTXOS(address: address, currency: self.currency, completion: { data in
                 guard let data = data else {
                     self.balanceActivity.dismiss(animated: true) {
                         self.showErrorMessage(S.Alert.timedOut)
