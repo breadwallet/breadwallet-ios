@@ -183,7 +183,8 @@ class URLController : Trackable, Subscriber {
 
 extension URL {
     public var isDeepLink: Bool {
-        return host == "brd.com" && path.hasPrefix("/x/")
+        guard let domain = host?.split(separator: ".").suffix(2).joined(separator: "."), domain == "brd.com" else { return false }
+        return path.hasPrefix("/x/")
     }
     
     public var queryParameters: [String: String]? {

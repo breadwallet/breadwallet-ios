@@ -82,7 +82,7 @@ class AboutViewController : UIViewController {
         privacy.tintColor = .primaryButton
         footer.textAlignment = .center
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-            footer.text = String(format: S.About.footer, "\(version) (\(build))")
+            footer.text = String(format: S.About.footer, version, build)
         }
     }
 
@@ -97,7 +97,7 @@ class AboutViewController : UIViewController {
             myself.presentURL(string: "https://reddit.com/r/brdapp/")
         }
         privacy.tap = strongify(self) { myself in
-            myself.presentURL(string: "https://brd.com/privacy-policy")
+            myself.presentURL(string: "https://brd.com/privacy")
         }
     }
 
