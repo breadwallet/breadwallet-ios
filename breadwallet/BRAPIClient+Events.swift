@@ -76,10 +76,10 @@ class EventManager {
         let attributes: Attributes
         
         var dictionary: [String: Any] {
-            return [ "sessionId":    sessionId,
-                     "time":        time,
-                     "eventName":    eventName,
-                     "metadata":     attributes ]
+            return [ "sessionId":   sessionId,
+                     "time":        Int(time),
+                     "eventName":   eventName,
+                     "metadata":    attributes.map({ [$0: $1] }) ]
         }
     }
     
@@ -147,7 +147,7 @@ class EventManager {
             guard let myself = self else { return }
             print("[EventManager] pushEvent name=\(eventName) attributes=\(attributes)")
             myself.buffer.append(  Event(sessionId:     myself.sessionId,
-                                         time:          Date().timeIntervalSince1970 * 1000.0,
+                                         time:          Date().timeIntervalSince1970,
                                          eventName:     eventName,
                                          attributes:    attributes))
         }
