@@ -41,6 +41,11 @@ enum TokenListType {
 }
 
 class EditWalletsViewController : UIViewController {
+    
+    struct Wallet {
+        var currency: CurrencyDef
+        var isHidden: Bool
+    }
 
     private let type: TokenListType
     private let kvStore: BRReplicatedKVStore
@@ -49,12 +54,11 @@ class EditWalletsViewController : UIViewController {
     private let tableView = UITableView()
     private let searchBar = UISearchBar()
 
-    //(Currency, isHidden)
-    private var model = [(CurrencyDef, Bool)]() {
+    private var wallets = [Wallet]() {
         didSet { tableView.reloadData() }
     }
 
-    private var allModels = [(CurrencyDef, Bool)]()
+    private var allWallets = [Wallet]()
 
     init(type: TokenListType, kvStore: BRReplicatedKVStore) {
         self.type = type
@@ -149,12 +153,12 @@ class EditWalletsViewController : UIViewController {
         let allCurrencies: [CurrencyDef] = storedCurrencies + localCurrencies
         let enabledCurrencies = findCurrencies(inKeyList: metaData.enabledCurrencies, fromCurrencies: allCurrencies)
         let hiddenCurrencies = findCurrencies(inKeyList: metaData.hiddenCurrencies, fromCurrencies: allCurrencies)
-        model = enabledCurrencies.map { ($0, false) } + hiddenCurrencies.map { ($0, true) }
+        wallets = enabledCurrencies.map { Wallet(currency: $0, isHidden: false) } + hiddenCurrencies.map { Wallet(currency: $0, isHidden: true) }
     }
 
     private func setAddModel(storedCurrencies: [CurrencyDef]) {
-        model = storedCurrencies.filter { !self.metaData.previouslyAddedTokenAddresses.contains(($0 as! ERC20Token).address)}.map{($0, true)}
-        allModels = model
+        wallets = storedCurrencies.filter { !self.metaData.previouslyAddedTokenAddresses.contains(($0 as! ERC20Token).address)}.map{ Wallet(currency: $0, isHidden: true) }
+        allWallets = wallets
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -163,10 +167,6 @@ class EditWalletsViewController : UIViewController {
         title = ""
     }
 
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
     private func reconcileChanges() {
         switch type {
         case .add:
@@ -177,24 +177,24 @@ class EditWalletsViewController : UIViewController {
     }
 
     private func editCurrency(identifier: String, isHidden: Bool) {
-        model = model.map { row in
-            if currencyMatchesCode(currency: row.0, identifier: identifier) {
-                return (row.0, isHidden)
+        wallets = wallets.map { wallet in
+            if currencyMatchesCode(currency: wallet.currency, identifier: identifier) {
+                return Wallet(currency: wallet.currency, isHidden: isHidden)
             } else {
-                return row
+                return wallet
             }
         }
-        allModels = allModels.map { row in
-            if currencyMatchesCode(currency: row.0, identifier: identifier) {
-                return (row.0, isHidden)
+        allWallets = allWallets.map { wallet in
+            if currencyMatchesCode(currency: wallet.currency, identifier: identifier) {
+                return Wallet(currency: wallet.currency, isHidden: isHidden)
             } else {
-                return row
+                return wallet
             }
         }
     }
 
     private func addAddedTokens() {
-        let tokensToBeAdded: [ERC20Token] = model.filter { $0.1 == false }.map{ $0.0 as! ERC20Token }
+        let tokensToBeAdded: [ERC20Token] = allWallets.filter { $0.isHidden == false }.map{ $0.currency as! ERC20Token }
         var displayOrder = Store.state.displayCurrencies.count
         let newWallets: [String: WalletState] = tokensToBeAdded.reduce([String: WalletState]()) { (dictionary, currency) -> [String: WalletState] in
             var dictionary = dictionary
@@ -212,54 +212,56 @@ class EditWalletsViewController : UIViewController {
         let oldWallets = Store.state.wallets
         var newWallets = [String: WalletState]()
         var displayOrder = 0
-        model.forEach { currency in
-
+        wallets.forEach { entry in
+            let currency = entry.currency
+            let isHidden = entry.isHidden
+            
             //Hidden local wallets get a displayOrder of -1
             let localCurrencyCodes = localCurrencies.map { $0.code.lowercased() }
-            if localCurrencyCodes.contains(currency.0.code.lowercased()) {
-                var walletState = oldWallets[currency.0.code]!
-                if currency.1 {
+            if localCurrencyCodes.contains(currency.code.lowercased()) {
+                var walletState = oldWallets[currency.code]!
+                if isHidden {
                     walletState = walletState.mutate(displayOrder: -1)
                 } else {
                     walletState = walletState.mutate(displayOrder: displayOrder)
                     displayOrder = displayOrder + 1
                 }
-                newWallets[currency.0.code] = walletState
+                newWallets[currency.code] = walletState
 
             //Hidden tokens, except for brd, get removed from the wallet state
             } else {
-                if let walletState = oldWallets[currency.0.code] {
-                    if currency.1 {
-                        newWallets[currency.0.code] = nil
+                if let walletState = oldWallets[currency.code] {
+                    if isHidden {
+                        newWallets[currency.code] = nil
                     } else {
-                        newWallets[currency.0.code] = walletState.mutate(displayOrder: displayOrder)
+                        newWallets[currency.code] = walletState.mutate(displayOrder: displayOrder)
                         displayOrder = displayOrder + 1
                     }
                 } else {
-                    if currency.1 == false {
-                        let newWalletState = WalletState.initial(currency.0, displayOrder: displayOrder)
+                    if isHidden == false {
+                        let newWalletState = WalletState.initial(currency, displayOrder: displayOrder)
                         displayOrder = displayOrder + 1
-                        newWallets[currency.0.code] = newWalletState
+                        newWallets[currency.code] = newWalletState
                     }
                 }
             }
         }
 
         //Save new metadata
-        metaData.enabledCurrencies = model.compactMap {
-            guard $0.1 == false else { return nil}
-            if let token = $0.0 as? ERC20Token {
+        metaData.enabledCurrencies = wallets.compactMap {
+            guard $0.isHidden == false else { return nil}
+            if let token = $0.currency as? ERC20Token {
                 return C.erc20Prefix + token.address
             } else {
-                return $0.0.code
+                return $0.currency.code
             }
         }
-        metaData.hiddenCurrencies = model.compactMap {
-            guard $0.1 == true else { return nil}
-            if let token = $0.0 as? ERC20Token {
+        metaData.hiddenCurrencies = wallets.compactMap {
+            guard $0.isHidden == true else { return nil}
+            if let token = $0.currency as? ERC20Token {
                 return C.erc20Prefix + token.address
             } else {
-                return $0.0.code
+                return $0.currency.code
             }
         }
         save()
@@ -282,13 +284,17 @@ class EditWalletsViewController : UIViewController {
 }
 
 extension EditWalletsViewController : UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return model.count
+        return wallets.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TokenCell.cellIdentifier, for: indexPath) as? TokenCell else { return UITableViewCell() }
-        cell.set(currency: model[indexPath.row].0, listType: type, isHidden: model[indexPath.row].1)
+        cell.set(currency: wallets[indexPath.row].currency, listType: type, isHidden: wallets[indexPath.row].isHidden)
         cell.didAddIdentifier = { [unowned self] identifier in
             self.editCurrency(identifier: identifier, isHidden: false)
         }
@@ -307,19 +313,19 @@ extension EditWalletsViewController : UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let movedObject = model[sourceIndexPath.row]
-        model.remove(at: sourceIndexPath.row)
-        model.insert(movedObject, at: destinationIndexPath.row)
+        let movedObject = wallets[sourceIndexPath.row]
+        wallets.remove(at: sourceIndexPath.row)
+        wallets.insert(movedObject, at: destinationIndexPath.row)
     }
 }
 
 extension EditWalletsViewController : UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText == "" {
-            model = allModels
+            wallets = allWallets
         } else {
-            model = allModels.filter {
-                return $0.0.name.lowercased().contains(searchText.lowercased()) || $0.0.code.lowercased().contains(searchText.lowercased())
+            wallets = allWallets.filter {
+                return $0.currency.name.lowercased().contains(searchText.lowercased()) || $0.currency.code.lowercased().contains(searchText.lowercased())
             }
         }
     }
