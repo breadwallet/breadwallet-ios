@@ -15,7 +15,7 @@ open class AssetArchive {
     private let archivePath: String
     private let extractedPath: String
     let extractedUrl: URL
-    private let apiClient: BRAPIClient
+    private unowned let apiClient: BRAPIClient
     
     private var archiveExists: Bool {
         return fileManager.fileExists(atPath: archivePath)

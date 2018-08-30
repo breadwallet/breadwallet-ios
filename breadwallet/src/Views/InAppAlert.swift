@@ -39,7 +39,7 @@ class InAppAlert : UIView {
         addSubview(image)
         addSubview(message)
         close.constrain([
-            close.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[2]),
+            close.topAnchor.constraint(equalTo: topAnchor, constant: E.isIPhoneX ? C.padding[4] : C.padding[2]),
             close.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
             close.widthAnchor.constraint(equalToConstant: 44.0),
             close.heightAnchor.constraint(equalToConstant: 44.0) ])

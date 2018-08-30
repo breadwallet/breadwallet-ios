@@ -40,7 +40,6 @@ import WebKit
     var btcWalletManager: WalletManager? {
         return walletManagers[Currencies.btc.code]
     }
-    let noAuthApiClient: BRAPIClient?
 
     // bonjour debug endpoint establishment - this will configure the debugEndpoint 
     // over bonjour if debugOverBonjour is set to true. this MUST be set to false 
@@ -73,12 +72,11 @@ import WebKit
     
     private let messageUIPresenter = MessageUIPresenter()
     
-    init(bundleName: String, mountPoint: String = "/", walletManagers: [String: WalletManager], noAuthApiClient: BRAPIClient? = nil) {
+    init(bundleName: String, mountPoint: String = "/", walletManagers: [String: WalletManager]) {
         wkProcessPool = WKProcessPool()
         self.bundleName = bundleName
         self.mountPoint = mountPoint
         self.walletManagers = walletManagers
-        self.noAuthApiClient = noAuthApiClient
         super.init(nibName: nil, bundle: nil)
         if debugOverBonjour {
             setupBonjour()
@@ -164,8 +162,7 @@ import WebKit
                 // update can fail, so this update should fetch an entirely new copy
                 let activity = BRActivityViewController(message: S.Webview.dismiss)
                 myself.present(activity, animated: true, completion: nil)
-                guard let apiClient = self?.btcWalletManager?.apiClient else { return }
-                apiClient.updateBundles(completionHandler: { results in
+                Backend.apiClient.updateBundles(completionHandler: { results in
                     results.forEach({ message, err in
                         if err != nil {
                             print("[BRWebViewController] error updating bundle: \(String(describing: err))")
@@ -270,17 +267,15 @@ import WebKit
     }
     
     fileprivate func setupIntegrations() {
-        let client: BRAPIClient? = noAuthApiClient != nil ? noAuthApiClient : btcWalletManager?.apiClient
-        guard let apiClient = client else { return }
         // proxy api for signing and verification
-        let apiProxy = BRAPIProxy(mountAt: "/_api", client: apiClient)
+        let apiProxy = BRAPIProxy(mountAt: "/_api", client: Backend.apiClient)
         server.prependMiddleware(middleware: apiProxy)
         
         // http router for native functionality
         let router = BRHTTPRouter()
         server.prependMiddleware(middleware: router)
         
-        if let archive = AssetArchive(name: bundleName, apiClient: apiClient) {
+        if let archive = AssetArchive(name: bundleName, apiClient: Backend.apiClient) {
             // basic file server for static assets
             let fileMw = BRHTTPFileMiddleware(baseURL: archive.extractedUrl)
             server.prependMiddleware(middleware: fileMw)
@@ -310,7 +305,7 @@ import WebKit
         router.plugin(BRLinkPlugin(fromViewController: self))
         
         // kvstore plugin provides access to the shared replicated kv store
-        router.plugin(BRKVStorePlugin(client: apiClient))
+        router.plugin(BRKVStorePlugin(client: Backend.apiClient))
         
         // GET /_close closes the browser modal
         router.get("/_close") { [weak self] (request, match) -> BRHTTPResponse in

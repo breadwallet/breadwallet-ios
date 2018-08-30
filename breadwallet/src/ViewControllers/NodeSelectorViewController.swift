@@ -11,11 +11,11 @@ import BRCore
 
 class NodeSelectorViewController : UIViewController, Trackable {
 
-    let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
-    private let nodeLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
-    private let node = UILabel(font: .customBody(size: 14.0), color: .darkText)
-    private let statusLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
-    private let status = UILabel(font: .customBody(size: 14.0), color: .darkText)
+    private let titleLabel = UILabel(font: .customBold(size: 22.0), color: .white)
+    private let nodeLabel = UILabel(font: .customBody(size: 14.0), color: .white)
+    private let node = UILabel(font: .customBody(size: 14.0), color: .white)
+    private let statusLabel = UILabel(font: .customBody(size: 14.0), color: .white)
+    private let status = UILabel(font: .customBody(size: 14.0), color: .white)
     private let button: BRDButton
     private let walletManager: BTCWalletManager
     private var okAction: UIAlertAction?
@@ -51,8 +51,7 @@ class NodeSelectorViewController : UIViewController, Trackable {
         titleLabel.constrain([
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[6]),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2])
-            ])
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
         nodeLabel.pinTopLeft(toView: titleLabel, topPadding: C.padding[2])
         node.pinTopLeft(toView: nodeLabel, topPadding: 0)
         statusLabel.pinTopLeft(toView: node, topPadding: C.padding[2])
@@ -65,9 +64,8 @@ class NodeSelectorViewController : UIViewController, Trackable {
     }
 
     private func setInitialData() {
-        view.backgroundColor = .whiteTint
+        view.backgroundColor = .darkBackground
         titleLabel.text = S.NodeSelector.title
-        titleLabel.textAlignment = .right
         nodeLabel.text = S.NodeSelector.nodeLabel
         statusLabel.text = S.NodeSelector.statusLabel
         button.tap = strongify(self) { myself in

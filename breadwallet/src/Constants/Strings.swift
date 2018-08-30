@@ -40,6 +40,7 @@ enum S {
         static let warning = NSLocalizedString("Alert.warning", value: "Warning", comment: "Warning alert title")
         static let error = NSLocalizedString("Alert.error", value: "Error", comment: "Error alert title")
         static let noInternet = NSLocalizedString("Alert.noInternet", value: "No internet connection found. Check your connection and try again.", comment: "No internet alert message")
+        static let timedOut = NSLocalizedString("Alert.timedOut", value: "Request timed out. Check your connection and try again.", comment: "Request timed out error message")
     }
 
     enum Scanner {
@@ -310,7 +311,7 @@ enum S {
         static let reddit = NSLocalizedString("About.reddit", value:"Reddit", comment: "About screen reddit label")
         static let privacy = NSLocalizedString("About.privacy", value:"Privacy Policy", comment: "Privay Policy button label")
         static let walletID = NSLocalizedString("About.walletID", value:"BRD Rewards ID", comment: "About screen wallet ID label")
-        static let footer = NSLocalizedString("About.footer", value:"Made by the global BRD team. Version %1$@", comment: "About screen footer")
+        static let footer = NSLocalizedString("About.footer", value:"Made by the global BRD team. Version %1$@ Build %2$@", comment: "About screen footer")
     }
 
     enum PushNotifications {

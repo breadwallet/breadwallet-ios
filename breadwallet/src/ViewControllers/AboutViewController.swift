@@ -11,7 +11,7 @@ import SafariServices
 
 class AboutViewController : UIViewController {
 
-    private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
+    private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .white)
     private let logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout").withRenderingMode(.alwaysTemplate))
     private let logoBackground = MotionGradientView()
     private let walletID = WalletIDCell()
@@ -19,7 +19,7 @@ class AboutViewController : UIViewController {
     private let twitter = AboutCell(text: S.About.twitter)
     private let reddit = AboutCell(text: S.About.reddit)
     private let privacy = UIButton(type: .system)
-    private let footer = UILabel(font: .customBody(size: 13.0), color: .secondaryGrayText)
+    private let footer = UILabel(font: .customBody(size: 13.0), color: .white)
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
@@ -74,29 +74,30 @@ class AboutViewController : UIViewController {
     }
 
     private func setData() {
-        view.backgroundColor = .whiteTint
-        logo.tintColor = .whiteTint
+        view.backgroundColor = .darkBackground
+        logo.tintColor = .darkBackground
         titleLabel.text = S.About.title
         privacy.setTitle(S.About.privacy, for: .normal)
         privacy.titleLabel?.font = UIFont.customBody(size: 13.0)
+        privacy.tintColor = .primaryButton
         footer.textAlignment = .center
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-            footer.text = String(format: S.About.footer, "\(version) (\(build))")
+            footer.text = String(format: S.About.footer, version, build)
         }
     }
 
     private func setActions() {
         blog.button.tap = strongify(self) { myself in
-            myself.presentURL(string: "https://breadapp.com/blog/")
+            myself.presentURL(string: "https://brd.com/blog/")
         }
         twitter.button.tap = strongify(self) { myself in
-            myself.presentURL(string: "https://twitter.com/breadapp")
+            myself.presentURL(string: "https://twitter.com/brdhq")
         }
         reddit.button.tap = strongify(self) { myself in
             myself.presentURL(string: "https://reddit.com/r/brdapp/")
         }
         privacy.tap = strongify(self) { myself in
-            myself.presentURL(string: "https://breadapp.com/privacy-policy")
+            myself.presentURL(string: "https://brd.com/privacy")
         }
     }
 

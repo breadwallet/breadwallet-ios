@@ -23,8 +23,8 @@ class StartImportViewController : UIViewController {
     private let currency: CurrencyDef
     private let header = RadialGradientView(backgroundColor: .blue, offset: 64.0)
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "ImportIllustration"))
-    private let message = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
-    private let warning = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
+    private let message = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
+    private let warning = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
     private let button = BRDButton(title: S.Import.scan, type: .primary)
     private let bullet = UIImageView(image: #imageLiteral(resourceName: "deletecircle"))
     private let leftCaption = UILabel.wrapping(font: .customMedium(size: 13.0), color: .darkText)
@@ -103,7 +103,7 @@ class StartImportViewController : UIViewController {
     }
 
     private func setInitialData() {
-        view.backgroundColor = .white
+        view.backgroundColor = .darkBackground
         illustration.contentMode = .scaleAspectFill
         message.text = S.Import.importMessage
         leftCaption.text = S.Import.leftCaption
@@ -172,9 +172,19 @@ class StartImportViewController : UIViewController {
     private func checkBalance(key: BRKey) {
         present(balanceActivity, animated: true, completion: {
             var key = key
-            guard let address = key.address() else { return }
-            self.walletManager.apiClient?.fetchUTXOS(address: address, currency: self.currency, completion: { data in
-                guard let data = data else { return }
+            guard let address = key.address() else {
+                self.balanceActivity.dismiss(animated: true) {
+                    self.showErrorMessage(S.Import.Error.notValid)
+                }
+                return
+            }
+            Backend.apiClient.fetchUTXOS(address: address, currency: self.currency, completion: { data in
+                guard let data = data else {
+                    self.balanceActivity.dismiss(animated: true) {
+                        self.showErrorMessage(S.Alert.timedOut)
+                    }
+                    return
+                }
                 self.handleData(data: data, key: key)
             })
         })
