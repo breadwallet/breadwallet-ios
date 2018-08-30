@@ -3,7 +3,7 @@
 /* About screen blog label */
 "About.blog" = "Blog";
 /* About screen footer */
-"About.footer" = "Made by the global BRD team. Version %1$@";
+"About.footer" = "Made by the global BRD team. Version %1$@ Build %2$@";
 /* Privay Policy button label */
 "About.privacy" = "Privacy Policy";
 /* About screen reddit label */

@@ -17,7 +17,6 @@ class WalletCoordinator : Subscriber, Trackable {
     private let incrementalRescanInterval: TimeInterval = (24*60*60)
 
     private var backgroundTaskId: UIBackgroundTaskIdentifier?
-    private var reachability = ReachabilityMonitor()
     private var walletManagers: [String: WalletManager]
 
     init(walletManagers: [String: WalletManager]) {
@@ -26,9 +25,9 @@ class WalletCoordinator : Subscriber, Trackable {
     }
 
     private func addSubscriptions() {
-        reachability.didChange = { [weak self] isReachable in
+        Reachability.addDidChangeCallback({ [weak self] isReachable in
             self?.reachabilityDidChange(isReachable: isReachable)
-        }
+        })
 
         //Listen for sync state changes in all wallets
         Store.subscribe(self, selector: {

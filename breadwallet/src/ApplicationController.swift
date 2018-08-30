@@ -21,28 +21,30 @@ class ApplicationController : Subscriber, Trackable {
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var walletManagers = [String: WalletManager]()
     private var walletCoordinator: WalletCoordinator?
-    private var exchangeUpdater: ExchangeUpdater?
-    private var feeUpdaters = [String: FeeUpdater]()
     private var primaryWalletManager: BTCWalletManager? {
         return walletManagers[Currencies.btc.code] as? BTCWalletManager
     }
     
     private var kvStoreCoordinator: KVStoreCoordinator?
-    private var pigeonExchange: PigeonExchange?
     fileprivate var application: UIApplication?
     private var urlController: URLController?
     private var defaultsUpdater: UserDefaultsUpdater?
-    private var reachability = ReachabilityMonitor()
-    private let noAuthApiClient = BRAPIClient(authenticator: NoAuthAuthenticator())
     private var fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)?
     private var launchURL: URL?
     private var hasPerformedWalletDependentInitialization = false
     private var didInitWallet = false
     private let notificationHandler = NotificationHandler()
-
+    private var isReachable = true {
+        didSet {
+            if oldValue == false && isReachable {
+                self.retryAfterIsReachable()
+            }
+        }
+    }
     // MARK: -
 
     init() {
+        isReachable = Reachability.isReachable
         guardProtected(queue: DispatchQueue.walletQueue) {
             if UserDefaults.hasBchConnected {
                 self.initWallet(completion: self.didAttemptInitWallet)
@@ -64,7 +66,6 @@ class ApplicationController : Subscriber, Trackable {
                 return
             }
 
-            self.exchangeUpdater = ExchangeUpdater(currencies: Store.state.currencies, apiClient: self.primaryWalletManager!.apiClient!)
             btcWalletManager.initPeerManager {
                 btcWalletManager.db?.loadTransactions { txns in
                     btcWalletManager.db?.loadBlocks { blocks in
@@ -127,15 +128,10 @@ class ApplicationController : Subscriber, Trackable {
             guard success else {
                 // always keep BTC wallet manager, even if not initialized, since it the primaryWalletManager and needed for onboarding
                 if !currency.matches(Currencies.btc) {
-                    walletManager.db?.close()
-                    walletManager.db?.delete()
                     self.walletManagers[currency.code] = nil
                 }
                 dispatchGroup.leave()
                 return
-            }
-            if currency.matches(Currencies.btc) {
-                self.exchangeUpdater = ExchangeUpdater(currencies: Store.state.currencies, apiClient: self.primaryWalletManager!.apiClient!)
             }
             walletManager.initPeerManager {
                 dispatchGroup.leave()
@@ -158,17 +154,9 @@ class ApplicationController : Subscriber, Trackable {
         UNUserNotificationCenter.current().delegate = notificationHandler
         setup()
         handleLaunchOptions(options)
-        if reachability.isReachable {
-            reachability.didChange = handleReachabilityLost
-        } else {
-            // app not reachable at launch
-            self.reachability.didChange = { isReachable in
-                if isReachable {
-                    self.retryAfterIsReachable()
-                    self.reachability.didChange = self.handleReachabilityLost
-                }
-            }
-        }
+        Reachability.addDidChangeCallback({ isReachable in
+            self.isReachable = isReachable
+        })
         updateAssetBundles()
         if !hasPerformedWalletDependentInitialization && didInitWallet {
             didInitWalletManager()
@@ -200,7 +188,7 @@ class ApplicationController : Subscriber, Trackable {
     func willEnterForeground() {
         guard let walletManager = primaryWalletManager,
             !walletManager.noWallet else { return }
-        walletManager.apiClient?.sendLaunchEvent()
+        Backend.apiClient.sendLaunchEvent()
         if shouldRequireLogin() {
             Store.perform(action: RequireLogin())
         }
@@ -208,12 +196,12 @@ class ApplicationController : Subscriber, Trackable {
             self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
         }
         updateAssetBundles()
-        exchangeUpdater?.refresh(completion: {})
-        feeUpdaters.values.forEach { $0.refresh() }
-        walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
-        walletManager.apiClient?.updateFeatureFlags()
+        Backend.updateExchangeRates()
+        Backend.updateFees()
+        Backend.kvStore?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
+        Backend.apiClient.updateFeatureFlags()
         if !Store.state.isLoginRequired {
-            pigeonExchange?.fetchInbox()
+            Backend.pigeonExchange?.fetchInbox()
         }
     }
 
@@ -228,11 +216,11 @@ class ApplicationController : Subscriber, Trackable {
         if !Store.state.isLoginRequired {
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
         }
-        primaryWalletManager?.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
+        Backend.kvStore?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
     }
     
     func didUnlockWallet() {
-        pigeonExchange?.fetchInbox()
+        Backend.pigeonExchange?.fetchInbox()
     }
 
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -243,7 +231,8 @@ class ApplicationController : Subscriber, Trackable {
         guard let primaryWalletManager = primaryWalletManager else { return }
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
         walletCoordinator = WalletCoordinator(walletManagers: walletManagers)
-        primaryWalletManager.apiClient?.sendLaunchEvent()
+        Backend.connectWallet(primaryWalletManager, currencies: Store.state.currencies, walletManagers: walletManagers.map { $0.1 })
+        Backend.apiClient.sendLaunchEvent()
 
         setupEthInitialState()
         addTokenCountChangeListener()
@@ -256,12 +245,8 @@ class ApplicationController : Subscriber, Trackable {
         if modalPresenter != nil {
             Store.unsubscribe(modalPresenter!)
         }
-        modalPresenter = ModalPresenter(walletManagers: walletManagers, window: window, apiClient: noAuthApiClient)
+        modalPresenter = ModalPresenter(walletManagers: walletManagers, window: window)
         startFlowController = StartFlowPresenter(walletManager: primaryWalletManager, rootViewController: rootViewController)
-        
-        walletManagers.values.forEach { walletManager in
-            feeUpdaters[walletManager.currency.code] = FeeUpdater(walletManager: walletManager)
-        }
 
         defaultsUpdater = UserDefaultsUpdater(walletManager: primaryWalletManager)
         urlController = URLController(walletManager: primaryWalletManager)
@@ -286,11 +271,10 @@ class ApplicationController : Subscriber, Trackable {
         self.setup()
         
         DispatchQueue.walletQueue.async {
-            self.feeUpdaters.values.forEach({ $0.stop() })
-            self.feeUpdaters.removeAll()
+            Backend.disconnectWallet()
+            self.kvStoreCoordinator = nil
             self.walletManagers.values.forEach({ $0.resetForWipe() })
             self.walletManagers.removeAll()
-            self.pigeonExchange = nil
             self.initWallet {
                 DispatchQueue.main.async {
                     self.didInitWalletManager()
@@ -302,7 +286,7 @@ class ApplicationController : Subscriber, Trackable {
 
     private func setupEthInitialState() {
         guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
-        ethWalletManager.apiClient = primaryWalletManager?.apiClient
+        ethWalletManager.apiClient = Backend.apiClient
         Store.perform(action: WalletChange(Currencies.eth).setSyncingState(.connecting))
         Store.perform(action: WalletChange(Currencies.eth).setMaxDigits(Currencies.eth.commonUnit.decimals))
         Store.perform(action: WalletID.set(ethWalletManager.walletID))
@@ -364,15 +348,16 @@ class ApplicationController : Subscriber, Trackable {
             self.modalPresenter?.presentMenu()
         }
 
-        home.didTapAddWallet = { [weak self] in
-            guard let kvStore = self?.primaryWalletManager?.apiClient?.kv else { return }
+        home.didTapAddWallet = {
+            guard let kvStore = Backend.kvStore else { return }
             let vc = EditWalletsViewController(type: .add, kvStore: kvStore)
             nc.pushViewController(vc, animated: true)
         }
 
         //State restoration
         if let currency = Store.state.currencies.first(where: { $0.code == UserDefaults.selectedCurrencyCode }),
-            let walletManager = self.walletManagers[currency.code] {
+            let walletManager = self.walletManagers[currency.code],
+            primaryWalletManager?.noWallet == false {
             let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
             nc.pushViewController(accountViewController, animated: true)
         }
@@ -381,22 +366,14 @@ class ApplicationController : Subscriber, Trackable {
     }
 
     private func startDataFetchers() {
-        guard let primaryWalletManager = primaryWalletManager else { return }
-        primaryWalletManager.apiClient?.updateFeatureFlags()
+        Backend.apiClient.updateFeatureFlags()
         initKVStoreCoordinator()
-        initPigeonExchange()
-        feeUpdaters.values.forEach { $0.refresh() }
+        Backend.updateFees()
+        Backend.updateExchangeRates()
         defaultsUpdater?.refresh()
-        primaryWalletManager.apiClient?.events?.up()
-    }
-    
-    private func handleReachabilityLost(isReachable: Bool) {
-        if !isReachable {
-            self.reachability.didChange = { isReachable in
-                if isReachable {
-                    self.retryAfterIsReachable()
-                }
-            }
+        Backend.apiClient.events?.up()
+        if !Store.state.isPushNotificationsEnabled {
+            Backend.pigeonExchange?.startPolling()
         }
     }
     
@@ -410,10 +387,10 @@ class ApplicationController : Subscriber, Trackable {
         DispatchQueue.walletQueue.async {
             self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
         }
-        exchangeUpdater?.refresh(completion: {})
-        feeUpdaters.values.forEach { $0.refresh() }
-        walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
-        walletManager.apiClient?.updateFeatureFlags()
+        Backend.updateExchangeRates()
+        Backend.updateFees()
+        Backend.kvStore?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
+        Backend.apiClient.updateFeatureFlags()
     }
 
     /// Handles new wallet creation or recovery
@@ -429,37 +406,27 @@ class ApplicationController : Subscriber, Trackable {
     
     private func updateAssetBundles() {
         DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let myself = self else { return }
-            myself.noAuthApiClient.updateBundles { errors in
+            guard let `self` = self else { return }
+            Backend.apiClient.updateBundles { errors in
                 for (n, e) in errors {
                     print("Bundle \(n) ran update. err: \(String(describing: e))")
                 }
                 DispatchQueue.main.async {
-                    let _ = myself.modalPresenter?.supportCenter // Initialize support center
+                    let _ = self.modalPresenter?.supportCenter // Initialize support center
                 }
             }
         }
     }
 
     private func initKVStoreCoordinator() {
-        guard let kvStore = primaryWalletManager?.apiClient?.kv else { return }
+        guard let kvStore = Backend.kvStore else { return }
         guard kvStoreCoordinator == nil else { return }
         self.kvStoreCoordinator = KVStoreCoordinator(kvStore: kvStore)
-        self.walletManagers.values.forEach({ $0.kvStore = kvStore })
         kvStore.syncAllKeys { [unowned self] error in
             print("KV finished syncing. err: \(String(describing: error))")
             self.kvStoreCoordinator?.setupStoredCurrencyList()
             self.kvStoreCoordinator?.retreiveStoredWalletInfo()
             self.kvStoreCoordinator?.listenForWalletChanges()
-        }
-    }
-    
-    private func initPigeonExchange() {
-        guard let apiClient = primaryWalletManager?.apiClient, apiClient.kv != nil else { return }
-        guard pigeonExchange == nil else { return assertionFailure() }
-        pigeonExchange = PigeonExchange(apiClient: apiClient)
-        if !Store.state.isPushNotificationsEnabled {
-            pigeonExchange?.startPolling()
         }
     }
 
@@ -482,49 +449,10 @@ class ApplicationController : Subscriber, Trackable {
         }
     }
 
-    func performBackgroundFetch() {
-//        saveEvent("appController.performBackgroundFetch")
-//        let group = DispatchGroup()
-//        if let peerManager = walletManager?.peerManager, peerManager.syncProgress(fromStartHeight: peerManager.lastBlockHeight) < 1.0 {
-//            group.enter()
-//            store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { state in
-//                if self.fetchCompletionHandler != nil {
-//                    if state.walletState.syncState == .success {
-//                        DispatchQueue.walletQueue.async {
-//                            peerManager.disconnect()
-//                            group.leave()
-//                        }
-//                    }
-//                }
-//            })
-//        }
-//
-//        group.enter()
-//        Async.parallel(callbacks: [
-//            { self.exchangeUpdater?.refresh(completion: $0) },
-//            { self.feeUpdater?.refresh(completion: $0) },
-//            { self.walletManager?.apiClient?.events?.sync(completion: $0) },
-//            { self.walletManager?.apiClient?.updateFeatureFlags(); $0() }
-//            ], completion: {
-//                group.leave()
-//        })
-//
-//        DispatchQueue.global(qos: .utility).async {
-//            if group.wait(timeout: .now() + 25.0) == .timedOut {
-//                self.saveEvent("appController.backgroundFetchFailed")
-//                self.fetchCompletionHandler?(.failed)
-//            } else {
-//                self.saveEvent("appController.backgroundFetchNewData")
-//                self.fetchCompletionHandler?(.newData)
-//            }
-//            self.fetchCompletionHandler = nil
-//        }
-    }
-
     func willResignActive() {
         applyBlurEffect()
         if !Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
-            primaryWalletManager?.apiClient?.deletePushNotificationToken(pushToken)
+            Backend.apiClient.deletePushNotificationToken(pushToken)
         }
     }
     
@@ -533,7 +461,6 @@ class ApplicationController : Subscriber, Trackable {
         // check if notification settings changed
         NotificationAuthorizer().areNotificationsAuthorized { authorized in
             DispatchQueue.main.async {
-                guard let apiClient = self.primaryWalletManager?.apiClient else { return }
                 if authorized {
                     if !Store.state.isPushNotificationsEnabled {
                         self.saveEvent("push.enabledSettings")
@@ -543,7 +470,7 @@ class ApplicationController : Subscriber, Trackable {
                     if Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
                         self.saveEvent("pushdisabledSettings")
                         Store.perform(action: PushNotifications.setIsEnabled(false))
-                        apiClient.deletePushNotificationToken(pushToken)
+                        Backend.apiClient.deletePushNotificationToken(pushToken)
                     }
                 }
             }
@@ -583,7 +510,7 @@ class ApplicationController : Subscriber, Trackable {
                 Store.perform(action: WalletChange(token).set(state.mutate(receiveAddress: ethWalletManager.address)))
             }
             ethWalletManager.tokens = tokens // triggers balance refresh
-            self.exchangeUpdater?.refresh() {}
+            Backend.updateExchangeRates()
         })
     }
 }
@@ -609,10 +536,9 @@ extension ApplicationController {
 //MARK: - Push notifications
 extension ApplicationController {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        guard let apiClient = primaryWalletManager?.apiClient else { return }
         guard UserDefaults.pushToken != deviceToken else { return }
         UserDefaults.pushToken = deviceToken
-        apiClient.savePushNotificationToken(deviceToken)
+        Backend.apiClient.savePushNotificationToken(deviceToken)
         Store.perform(action: PushNotifications.setIsEnabled(true))
     }
 
