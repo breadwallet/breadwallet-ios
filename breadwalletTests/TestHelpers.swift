@@ -36,6 +36,9 @@ func deleteKvStoreDb() {
 
 func initWallet(walletManager: BTCWalletManager) {
     guard walletManager.wallet == nil else { return }
+    if walletManager.db == nil {
+        walletManager.db = CoreDatabase()
+    }
     var didInitWallet = false
     walletManager.initWallet { success in
         didInitWallet = success
