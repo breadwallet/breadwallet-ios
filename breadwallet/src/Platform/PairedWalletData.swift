@@ -9,6 +9,7 @@
 import Foundation
 import BRCore
 
+/// Metadata for an EME paired wallet
 class PairedWalletData: BRKVStoreObject, BRCoding {
     var classVersion: Int = 1
     var identifier: String = ""
