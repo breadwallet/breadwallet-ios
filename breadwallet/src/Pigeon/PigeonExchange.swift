@@ -124,7 +124,7 @@ class PigeonExchange: Subscriber {
                 return finish(.error(message: "associated key could not be added. pairing aborted!"))
             }
 
-            self.apiClient.sendMessage(envelope: envelope, callback: { (success) in
+            self.apiClient.sendMessage(envelope: envelope) { (success) in
                 guard success else {
                     print("[EME] failed to send LINK message. pairing aborted!")
                     return finish(.error(message: "failed to send LINK message. pairing aborted!"))
@@ -141,7 +141,7 @@ class PigeonExchange: Subscriber {
                 var count = 0
                 
                 Timer.scheduledTimer(withTimeInterval: fetchInterval, repeats: true) { (timer) in
-                    self.apiClient.fetchInbox(callback: { result in
+                    self.apiClient.fetchInbox(afterCursor: self.lastCursor) { result in
                         guard case .success(let entries) = result else {
                             print("[EME] /inbox fetch error. pairing aborted!")
                             timer.invalidate()
@@ -207,14 +207,14 @@ class PigeonExchange: Subscriber {
                             finish(.success)
                             break
                         }
-                    })
+                    } // fetchInbox
                     
                     count += 1
                     if count >= maxTries {
                         timer.invalidate()
                     }
-                }
-            })
+                } // scheduledTimer
+            } // sendMessage
         }
     }
     
@@ -247,15 +247,22 @@ class PigeonExchange: Subscriber {
     // MARK: - Inbox
     
     func fetchInbox() {
-        apiClient.fetchInbox(callback: { result in
+        let limit = 100
+        apiClient.fetchInbox(afterCursor: lastCursor, limit: limit) { [weak self] result in
+            guard let `self` = self else { return }
             switch result {
             case .success(let entries):
                 print("[EME] /inbox fetched \(entries.unacknowledged.count) new entries")
-                self.processEntries(entries)
+                if let lastCursor = self.processEntries(entries) {
+                    self.updateLastCursor(lastCursor)
+                    if entries.count == limit {
+                        self.fetchInbox()
+                    }
+                }
             case .error:
                 print("[EME] fetch error")
             }
-        })
+        }
     }
 
     func startPolling() {
@@ -272,17 +279,46 @@ class PigeonExchange: Subscriber {
         timer?.invalidate()
     }
     
-    private func processEntries(_ entries: [InboxEntry]) {
+    /// returns the cursor of the last processed entry
+    private func processEntries(_ entries: [InboxEntry]) -> String? {
+        var lastCursor: String? = nil
+        var hasSkippedEntry = false
         entries.unacknowledged.forEach { entry in
             guard let envelope = entry.envelope else {
                 // unable to decode envelope -- ack to avoid future processing
                 apiClient.sendAck(forCursor: entry.cursor)
+                if !hasSkippedEntry {
+                    lastCursor = entry.cursor
+                }
                 return
             }
             if self.processEnvelope(envelope) {
                 apiClient.sendAck(forCursor: entry.cursor)
+                if !hasSkippedEntry {
+                    lastCursor = entry.cursor
+                }
+            } else {
+                // skipped entry, do not update cursor for any further entries
+                hasSkippedEntry = true
             }
         }
+        return lastCursor
+    }
+    
+    private func updateLastCursor(_ cursor: String) {
+        let inboxMetadata = InboxMetaData(store: kvStore) ?? InboxMetaData(cursor: cursor)
+        inboxMetadata.lastCursor = cursor
+        
+        do {
+            try _ = kvStore.set(inboxMetadata)
+            print("[EME] inbox cursor updated: \(cursor)")
+        } catch let error {
+            print("[EME] error saving inbox metadata: \(error.localizedDescription)")
+        }
+    }
+    
+    private var lastCursor: String? {
+        return InboxMetaData(store: kvStore)?.lastCursor
     }
 
     // returns: shouldSendAck: Bool
