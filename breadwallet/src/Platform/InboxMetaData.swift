@@ -1,26 +1,22 @@
 //
-//  PairedWalletIndex.swift
+//  InboxMetaData.swift
 //  breadwallet
 //
-//  Created by Ehsan Rezaie on 2018-07-24.
+//  Created by Ehsan Rezaie on 2018-09-04.
 //  Copyright © 2018 breadwallet LLC. All rights reserved.
 //
 
 import Foundation
 import BRCore
 
-/// Index of all EME paired wallets
-class PairedWalletIndex: BRKVStoreObject, BRCoding {
-    static let storeKey = "paired-wallet-index"
+/// Metadata for the EME inbox
+class InboxMetaData: BRKVStoreObject, BRCoding {
+    static let storeKey = "encrypted-message-inbox-metadata"
     
     var classVersion: Int = 1
-    var pubKeys = [String]()
-    var services = [String]()
-    var hasPairedWallets: Bool {
-        return pubKeys.count > 0
-    }
-
-    /// Find existing
+    var lastCursor: String = ""
+    
+    /// Find existing paired wallet object based on the remote public key
     init?(store: BRReplicatedKVStore) {
         var ver: UInt64
         var date: Date
@@ -28,23 +24,24 @@ class PairedWalletIndex: BRKVStoreObject, BRCoding {
         var bytes: [UInt8]
         
         do {
-            (ver, date, del, bytes) = try store.get(PairedWalletIndex.storeKey)
+            (ver, date, del, bytes) = try store.get(InboxMetaData.storeKey)
         } catch let error {
-            print("Unable to initialize PairedWalletIndex: \(error.localizedDescription)")
+            print("Unable to initialize InboxMetaData: \(error.localizedDescription)")
             return nil
         }
         
-        let bytesData = Data(bytes: &bytes, count: bytes.count)
-        super.init(key: PairedWalletIndex.storeKey, version: ver, lastModified: date, deleted: del, data: bytesData)
+        let bytesDat = Data(bytes: &bytes, count: bytes.count)
+        super.init(key: InboxMetaData.storeKey, version: ver, lastModified: date, deleted: del, data: bytesDat)
     }
     
     /// Create new
-    init() {
-        super.init(key: PairedWalletIndex.storeKey,
+    init(cursor: String) {
+        super.init(key: InboxMetaData.storeKey,
                    version: 0,
                    lastModified: Date(),
                    deleted: false,
                    data: Data())
+        self.lastCursor = cursor
     }
     
     // MARK: - BRKVStoreObject
@@ -54,9 +51,8 @@ class PairedWalletIndex: BRKVStoreObject, BRCoding {
     }
     
     override func dataWasSet(_ value: Data) {
-        guard let s: PairedWalletIndex = BRKeyedUnarchiver.unarchiveObjectWithData(value) else { return }
-        pubKeys = s.pubKeys
-        services = s.services
+        guard let s: InboxMetaData = BRKeyedUnarchiver.unarchiveObjectWithData(value) else { return }
+        lastCursor = s.lastCursor
     }
     
     // MARK: - BRCoding
@@ -66,14 +62,12 @@ class PairedWalletIndex: BRKVStoreObject, BRCoding {
         guard classVersion != Int.zeroValue() else {
             return nil
         }
-        pubKeys = decoder.decode("pubKeys")
-        services = decoder.decode("services")
+        lastCursor = decoder.decode("lastCursor")
         super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
     }
     
     func encode(_ coder: BRCoder) {
         coder.encode(classVersion, key: "classVersion")
-        coder.encode(pubKeys, key: "pubKeys")
-        coder.encode(services, key: "services")
+        coder.encode(lastCursor, key: "lastCursor")
     }
 }

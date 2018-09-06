@@ -64,8 +64,12 @@ struct ServiceCapability : Codable {
 
 extension BRAPIClient {
     
-    func fetchInbox(callback: @escaping (InboxFetchResult) -> Void) {
-        var req = URLRequest(url: url("/inbox"))
+    func fetchInbox(afterCursor cursor: String? = nil, limit: Int = 100, callback: @escaping (InboxFetchResult) -> Void) {
+        var params = ""
+        if let cursor = cursor {
+            params = "?after=\(cursor)&limit=\(limit)"
+        }
+        var req = URLRequest(url: url("/inbox\(params)"))
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.setValue("application/json", forHTTPHeaderField: "Accept")
         dataTaskWithRequest(req, authenticated: true, handler: { data, response, error in
