@@ -32,7 +32,6 @@ import WebKit
 @objc open class BRWebViewController : UIViewController, WKNavigationDelegate, BRWebSocketClient {
     var wkProcessPool: WKProcessPool
     var webView: WKWebView?
-    var bundleName: String
     var server = BRHTTPServer()
     var debugEndpoint: String?
     var mountPoint: String
@@ -67,10 +66,22 @@ import WebKit
     
     var indexUrl: URL {
         switch mountPoint {
-        // MARK (losh11): - cleanup switch below
             case "/buy":
-                let addr = "https://api.loafwallet.org/buy?address=" + (walletManager.wallet?.receiveAddress)!
-                return URL(string: addr)!
+                var appInstallDate: Date {
+                    if let documentsFolder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last {
+                        if let installDate = try! FileManager.default.attributesOfItem(atPath: documentsFolder.path)[.creationDate] as? Date {
+                            return installDate
+                        }
+                    }
+                    return Date()
+                }
+                let walletAddress = walletManager.wallet?.receiveAddress
+                let currencyCode = Locale.current.currencyCode
+                let uuid = UIDevice.current.identifierForVendor!.uuidString
+
+                let address = getAddress(appInstallDate: appInstallDate, walletAddress: walletAddress, currencyCode: currencyCode, uuid: uuid)
+                print(address)
+                return URL(string: address)!
             case "/support":
                 return URL(string: "https://api.loafwallet.org/support")!
             case "/ea":
@@ -80,28 +91,31 @@ import WebKit
         }
     }
     
+    private func getAddress(appInstallDate: Date?, walletAddress: String?, currencyCode: String?, uuid: String?) -> String {
+        guard let appInstallDate = appInstallDate else { return "" }
+        guard let walletAddress = walletAddress else { return "" }
+        guard let currencyCode = currencyCode else { return "" }
+        guard let uuid = uuid else { return "" }
+        
+        let timestamp = Int(appInstallDate.timeIntervalSince1970)
+        
+        return "https://buy.loafwallet.org/?address=\(walletAddress)&code=\(currencyCode)&idate=\(timestamp)&uid=\(uuid)"
+    }
+    
     private let messageUIPresenter = MessageUIPresenter()
     
-    init(bundleName: String, mountPoint: String = "/", walletManager: WalletManager, store: Store, noAuthApiClient: BRAPIClient? = nil) {
+    init(mountPoint: String = "/", walletManager: WalletManager, store: Store, noAuthApiClient: BRAPIClient? = nil) {
         wkProcessPool = WKProcessPool()
-        self.bundleName = bundleName
         self.mountPoint = mountPoint
         self.walletManager = walletManager
         self.store = store
         self.noAuthApiClient = noAuthApiClient
         super.init(nibName: nil, bundle: nil)
-//        if debugOverBonjour {
-//            setupBonjour()
-//        }
     }
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-//    deinit {
-//        stopServer()
-//    }
     
     override open func loadView() {
         didLoad = false
@@ -142,11 +156,6 @@ import WebKit
         }
     }
     
-    override open func viewWillAppear(_ animated: Bool) {
-        edgesForExtendedLayout = .all
-//        self.beginDidLoadCountdown()
-    }
-    
     override open func viewDidAppear(_ animated: Bool) {
         didAppear = true
         sendToAllSockets(data: webViewInfo)
@@ -156,54 +165,6 @@ import WebKit
         didAppear = false
         sendToAllSockets(data: webViewInfo)
     }
-    
-    // this should be called when the webview is expected to load content. if the content has not signaled
-    // that is has loaded by didLoadTimeout then an alert will be shown allowing the user to back out
-    // of the faulty webview
-//    fileprivate func beginDidLoadCountdown() {
-//        let timeout = DispatchTime.now() + .milliseconds(self.didLoadTimeout)
-//        DispatchQueue.main.asyncAfter(deadline: timeout) { [weak self] in
-//            guard let myself = self else { return }
-//            if myself.didAppear && !myself.didLoad {
-//                // if the webview did not load the first time lets refresh the bundle. occasionally the bundle
-//                // update can fail, so this update should fetch an entirely new copy
-//                let activity = BRActivityViewController(message: S.Webview.dismiss)
-//                myself.present(activity, animated: true, completion: nil)
-//                guard let apiClient = self?.walletManager.apiClient else { return }
-//                apiClient.updateBundles(completionHandler: { results in
-//                    results.forEach({ message, err in
-//                        if err != nil {
-//                            print("[BRWebViewController] error updating bundle: \(String(describing: err))")
-//                        }
-//                        // give the webview another chance to load
-//                        self?.refresh()
-//                        // XXX(sam): log this event so we know how frequently it happens
-//                        DispatchQueue.main.asyncAfter(deadline: timeout) {
-//                            self?.store.trigger(name: .showStatusBar)
-//                            self?.dismiss(animated: true) {
-//                                self?.notifyUserOfLoadFailure()
-//                            }
-//                        }
-//                    })
-//                })
-//            }
-//        }
-//    }
-
-//    fileprivate func notifyUserOfLoadFailure() {
-//        if self.didAppear && !self.didLoad {
-//            let alert = UIAlertController.init(
-//                title: S.Alert.error,
-//                message: S.Webview.errorMessage,
-//                preferredStyle: .alert
-//            )
-//            let action = UIAlertAction(title: S.Webview.dismiss, style: .default) { [weak self] _ in
-//                self?.closeNow()
-//            }
-//            alert.addAction(action)
-//            self.present(alert, animated: true, completion: nil)
-//        }
-//    }
 
     // signal to the presenter that the webview content successfully loaded
     fileprivate func webviewDidLoad() {
@@ -214,139 +175,6 @@ import WebKit
     fileprivate func closeNow() {
         store.trigger(name: .showStatusBar)
         dismiss(animated: true, completion: nil)
-    }
-    
-//    open func startServer() {
-//        do {
-//            if !server.isStarted {
-//                try server.start()
-//                setupIntegrations()
-//            }
-//        } catch let e {
-//            print("\n\n\nSERVER ERROR! \(e)\n\n\n")
-//        }
-//    }
-//
-//    open func stopServer() {
-//        if server.isStarted {
-//            server.stop()
-//            server.resetMiddleware()
-//        }
-//    }
-
-//    func navigate(to: String) {
-//        let js = "window.location = '\(to)';"
-//        webView?.evaluateJavaScript(js, completionHandler: { result, error in
-//            if let error = error {
-//                print("WEBVIEW navigate to error: \(String(describing: error))")
-//            }
-//        })
-//    }
-    
-    // this will look on the network for any _http._tcp bonjour services whose name
-    // contains th string "webpack" and will set our debugEndpoint to whatever that 
-    // resolves to. this allows us to debug bundles over the network without complicated setup
-//    fileprivate func setupBonjour() {
-//        let _ = bonjourBrowser.findService("_http._tcp") { [weak self] (services) in
-//            for svc in services {
-//                if !svc.name.lowercased().contains("webpack") {
-//                    continue
-//                }
-//                self?.debugNetService = svc
-//                svc.resolve(withTimeout: 1.0)
-//                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { [weak self] in
-//                    guard let netService = self?.debugNetService else {
-//                        return
-//                    }
-//                    self?.debugEndpoint = "http://\(netService.hostName ?? ""):\(netService.port)"
-//                    print("[BRWebViewController] discovered bonjour debugging service \(String(describing: self?.debugEndpoint))")
-//                    self?.server.resetMiddleware()
-//                    self?.setupIntegrations()
-//                    self?.refresh()
-//                }
-//                break
-//            }
-//        }
-//    }
-    
-    fileprivate func setupIntegrations() {
-        //let client: BRAPIClient? = noAuthApiClient != nil ? noAuthApiClient : walletManager.apiClient
-        //guard let apiClient = client else { return }
-        // proxy api for signing and verification
-        //let apiProxy = BRAPIProxy(mountAt: "/_api", client: apiClient)
-        //server.prependMiddleware(middleware: apiProxy)
-        
-        // http router for native functionality
-        //let router = BRHTTPRouter()
-        //server.prependMiddleware(middleware: router)
-        
-        //if let archive = AssetArchive(name: bundleName, apiClient: apiClient) {
-            // basic file server for static assets
-            //let fileMw = BRHTTPFileMiddleware(baseURL: archive.extractedUrl)
-            //server.prependMiddleware(middleware: fileMw)
-            
-            // middleware to always return index.html for any unknown GET request (facilitates window.history style SPAs)
-            //let indexMw = BRHTTPIndexMiddleware(baseURL: fileMw.baseURL)
-            //server.prependMiddleware(middleware: indexMw)
-            
-            // enable debug if it is turned on
-            //if let debugUrl = debugEndpoint {
-                //let url = URL(string: debugUrl)
-                //fileMw.debugURL = url
-                //indexMw.debugURL = url
-            //}
-        //}
-        
-        // geo plugin provides access to onboard geo location functionality
-        //router.plugin(BRGeoLocationPlugin())
-        
-        // camera plugin 
-        //router.plugin(BRCameraPlugin(fromViewController: self))
-        
-        // wallet plugin provides access to the wallet
-        //router.plugin(BRWalletPlugin(walletManager: walletManager, store: store))
-        
-        // link plugin which allows opening links to other apps
-        //router.plugin(BRLinkPlugin(fromViewController: self))
-        
-        // kvstore plugin provides access to the shared replicated kv store
-        //router.plugin(BRKVStorePlugin(client: apiClient))
-        
-        // GET /_close closes the browser modal
-//        router.get("/_close") { [weak self] (request, match) -> BRHTTPResponse in
-//            DispatchQueue.main.async {
-//                self?.closeNow()
-//            }
-//            return BRHTTPResponse(request: request, code: 204)
-//        }
-
-        //GET /_email opens system email dialog
-        // Status codes:
-        //   - 200: Presented email UI
-        //   - 400: No address param provided
-//        router.get("_email") { [weak self] (request, match) -> BRHTTPResponse in
-//            if let email = request.query["address"], email.count == 1 {
-//                DispatchQueue.main.async {
-//                    self?.messageUIPresenter.presentMailCompose(emailAddress: email[0])
-//                }
-//                return BRHTTPResponse(request: request, code: 200)
-//            } else {
-//                return BRHTTPResponse(request: request, code: 400)
-//            }
-//        }
-        
-        // GET /_didload signals to the presenter that the content successfully loaded
-//        router.get("/_didload") { [weak self] (request, _) -> BRHTTPResponse in
-//            DispatchQueue.main.async {
-//                self?.webviewDidLoad()
-//            }
-//            return BRHTTPResponse(request: request, code: 204)
-//        }
-        
-        // socket /_webviewinfo will send info about the webview state to client
-//        router.websocket("/_webviewinfo", client: self)
-//        
-//        router.printDebug()
     }
     
     open func preload() {
@@ -362,18 +190,11 @@ import WebKit
     
     open func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
                         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        //if let url = navigationAction.request.url, let host = url.host, let port = (url as NSURL).port {
-        //    if host == server.listenAddress || port.int32Value == Int32(server.port) {
-        //        return decisionHandler(.allow)
-        //    }
-        //}
-        //print("[BRWebViewController disallowing navigation: \(navigationAction)")
-        //decisionHandler(.cancel)
         
         //MARK (losh11): - improve code which closes webView
         if let url = navigationAction.request.url?.absoluteString{
             let mutableurl = url
-            if mutableurl == "https://api.loafwallet.org/close" {
+            if mutableurl.contains("/close") {
                 DispatchQueue.main.async {
                     let request = URLRequest(url: URL(string: "https://api.loafwallet.org/support")!)
                     _ = webView.load(request)
