@@ -252,7 +252,7 @@ class ApplicationController : Subscriber, Trackable {
 
     private func startDataFetchers() {
         //walletManager?.apiClient?.updateFeatureFlags()
-        //initKVStoreCoordinator()
+        initKVStoreCoordinator()
         feeUpdater?.refresh()
         defaultsUpdater?.refresh()
         //walletManager?.apiClient?.events?.up()
@@ -283,17 +283,17 @@ class ApplicationController : Subscriber, Trackable {
 //        }
 //    }
 
-//    private func initKVStoreCoordinator() {
-//        guard let kvStore = walletManager?.apiClient?.kv else { return }
-//        guard kvStoreCoordinator == nil else { return }
-//        kvStore.syncAllKeys { error in
-//            print("KV finished syncing. err: \(String(describing: error))")
-//            self.walletCoordinator?.kvStore = kvStore
-//            self.kvStoreCoordinator = KVStoreCoordinator(store: self.store, kvStore: kvStore)
-//            self.kvStoreCoordinator?.retreiveStoredWalletInfo()
-//            self.kvStoreCoordinator?.listenForWalletChanges()
-//        }
-//    }
+    private func initKVStoreCoordinator() {
+        guard let kvStore = walletManager?.apiClient?.kv else { return }
+        guard kvStoreCoordinator == nil else { return }
+        kvStore.syncAllKeys { error in
+            print("KV finished syncing. err: \(String(describing: error))")
+            self.walletCoordinator?.kvStore = kvStore
+            self.kvStoreCoordinator = KVStoreCoordinator(store: self.store, kvStore: kvStore)
+            self.kvStoreCoordinator?.retreiveStoredWalletInfo()
+            self.kvStoreCoordinator?.listenForWalletChanges()
+        }
+    }
 
     private func offMainInitialization() {
         DispatchQueue.global(qos: .background).async {
