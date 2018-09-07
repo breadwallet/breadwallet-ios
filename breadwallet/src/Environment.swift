@@ -53,6 +53,9 @@ struct E {
     static var isIPhoneX: Bool {
         return (UIScreen.main.bounds.size.height == 812.0)
     }
+    static var isIPad: Bool {
+        return (UIDevice.current.userInterfaceIdiom == .pad)
+    }
     static let is32Bit: Bool = {
         return MemoryLayout<Int>.size == MemoryLayout<UInt32>.size
     }()
