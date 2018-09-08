@@ -8,7 +8,7 @@
 
 import Foundation
 
-private let ratesURL = "https://litecoin.com/api/v1/rates"
+private let ratesURL = "https://api.loafwallet.com/api/rates"
 private let fallbackRatesURL = "https://api.loshan.co.uk/api/v1/rates"
 
 extension BRAPIClient {
