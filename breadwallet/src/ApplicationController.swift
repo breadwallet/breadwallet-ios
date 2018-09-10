@@ -188,7 +188,7 @@ class ApplicationController : Subscriber, Trackable {
     func willEnterForeground() {
         guard let walletManager = primaryWalletManager,
             !walletManager.noWallet else { return }
-        Backend.apiClient.sendLaunchEvent()
+        Backend.sendLaunchEvent()
         if shouldRequireLogin() {
             Store.perform(action: RequireLogin())
         }
@@ -232,7 +232,7 @@ class ApplicationController : Subscriber, Trackable {
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
         walletCoordinator = WalletCoordinator(walletManagers: walletManagers)
         Backend.connectWallet(primaryWalletManager, currencies: Store.state.currencies, walletManagers: walletManagers.map { $0.1 })
-        Backend.apiClient.sendLaunchEvent()
+        Backend.sendLaunchEvent()
 
         setupEthInitialState()
         addTokenCountChangeListener()
@@ -469,7 +469,7 @@ class ApplicationController : Subscriber, Trackable {
                     UIApplication.shared.registerForRemoteNotifications()
                 } else {
                     if Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
-                        self.saveEvent("pushdisabledSettings")
+                        self.saveEvent("push.disabledSettings")
                         Store.perform(action: PushNotifications.setIsEnabled(false))
                         Backend.apiClient.deletePushNotificationToken(pushToken)
                     }
