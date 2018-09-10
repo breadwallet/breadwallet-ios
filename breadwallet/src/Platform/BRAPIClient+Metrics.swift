@@ -7,17 +7,18 @@
 //
 
 import Foundation
+import UIKit
 
 extension BRAPIClient {
 
-    func sendLaunchEvent() {
+    func sendLaunchEvent(userAgent: String) {
         DispatchQueue.global(qos: .background).async { [weak self] in
             guard let `self` = self else { return }
             var req = URLRequest(url: self.url("/me/metrics"))
             req.httpMethod = "POST"
             req.setValue("application/json", forHTTPHeaderField: "Content-Type")
             req.setValue("application/json", forHTTPHeaderField: "Accept")
-            let data = LaunchData(data: BundleData(bundles: self.bundles))
+            let data = LaunchPayload(data: LaunchData(bundles: self.bundles, userAgent: userAgent))
             req.httpBody = try? JSONEncoder().encode(data)
             self.dataTaskWithRequest(req, authenticated: true, handler: { data, response, error in
             }).resume()
@@ -40,11 +41,21 @@ extension BRAPIClient {
     }
 }
 
-private struct LaunchData : Codable {
+private struct LaunchPayload : Codable {
     let metric = "launch"
-    let data: BundleData
+    let data: LaunchData
 }
 
-private struct BundleData: Codable {
+private struct LaunchData: Codable {
     let bundles: [String: String]
+    let userAgent: String
+    let osVersion: String = E.osVersion
+    let deviceType: String = UIDevice.current.model + (E.isSimulator ? "-simulator" : "")
+    
+    enum CodingKeys: String, CodingKey {
+        case bundles
+        case userAgent = "user_agent"
+        case osVersion = "os_version"
+        case deviceType = "device_type"
+    }
 }
