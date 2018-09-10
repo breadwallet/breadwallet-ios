@@ -67,6 +67,7 @@ class ShareDataViewController : UIViewController {
             if myself.toggle.isOn {
                 Store.trigger(name: .didEnableShareData)
             }
+            Backend.apiClient.events?.sync {}
         }
     }
 }
