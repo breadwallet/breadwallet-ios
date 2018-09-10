@@ -161,7 +161,6 @@ struct WalletChange: Trackable {
         if self.currency is Bitcoin {
             UserDefaults.maxDigits = maxDigits
         }
-        saveEvent("maxDigits.set", attributes: ["maxDigits": "\(maxDigits)"])
         return WalletAction(reduce: {
             guard let state = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: state.mutate(maxDigits: maxDigits)) })

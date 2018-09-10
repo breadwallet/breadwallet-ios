@@ -9,7 +9,7 @@
 import UIKit
 import BRCore
 
-class DefaultCurrencyViewController : UITableViewController, Subscriber {
+class DefaultCurrencyViewController : UITableViewController, Subscriber, Trackable {
 
     init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
@@ -140,13 +140,10 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
 
         bitcoinSwitch.valueChanged = strongify(self) { myself in
             let newIndex = myself.bitcoinSwitch.selectedSegmentIndex
-            if newIndex == 1 {
-                Store.perform(action: WalletChange(Currencies.btc).setMaxDigits(8))
-                Store.perform(action: WalletChange(Currencies.bch).setMaxDigits(8))
-            } else {
-                Store.perform(action: WalletChange(Currencies.btc).setMaxDigits(2))
-                Store.perform(action: WalletChange(Currencies.bch).setMaxDigits(2))
-            }
+            let value = (newIndex == 1) ? 8 : 2
+            Store.perform(action: WalletChange(Currencies.btc).setMaxDigits(value))
+            Store.perform(action: WalletChange(Currencies.bch).setMaxDigits(value))
+            myself.saveEvent("maxDigits.set", attributes: ["maxDigits": "\(value)"])
         }
 
         bitcoinLabel.text = S.DefaultCurrency.bitcoinLabel
