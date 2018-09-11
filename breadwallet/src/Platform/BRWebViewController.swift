@@ -80,7 +80,6 @@ import WebKit
                 let uuid = UIDevice.current.identifierForVendor!.uuidString
 
                 let address = getAddress(appInstallDate: appInstallDate, walletAddress: walletAddress, currencyCode: currencyCode, uuid: uuid)
-                print(address)
                 return URL(string: address)!
             case "/support":
                 return URL(string: "https://api.loafwallet.org/support")!
