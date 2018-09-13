@@ -4004,7 +4004,7 @@
 				75A2A8031DA5935F00A983D8 /* Embed App Extensions */,
 				22A9A9831DF63288000F0016 /* Embed Frameworks */,
 				CEE0EF531EBF8C8A0018DB36 /* Icon Versioning */,
-				1BA74B89206AD75E0083BD2A /* ShellScript */,
+				1BA74B89206AD75E0083BD2A /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -4529,13 +4529,14 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PROJECT_DIR}/Fabric.framework/run\" 78c3ed0b9b087639aa7e73b6164c0f48ad274d01 ff62ab2e24be9a2dc54861dbc6746397e2d27b707af424fde890d98fb71b127f";
 		};
-		1BA74B89206AD75E0083BD2A /* ShellScript */ = {
+		1BA74B89206AD75E0083BD2A /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
