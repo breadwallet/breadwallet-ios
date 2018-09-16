@@ -20,7 +20,7 @@ struct NotificationAuthorizer: Trackable {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             DispatchQueue.main.async {
                 switch settings.authorizationStatus {
-                case .authorized:
+                case .authorized, .provisional:
                     if !(settings.alertSetting == .enabled ||
                         settings.soundSetting == .enabled ||
                         settings.notificationCenterSetting == .enabled ||
@@ -43,7 +43,7 @@ struct NotificationAuthorizer: Trackable {
     func areNotificationsAuthorized(completion: @escaping AuthorizationHandler) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             switch settings.authorizationStatus {
-            case .authorized:
+            case .authorized, .provisional:
                 completion(true)
             case .notDetermined, .denied:
                 completion(false)
