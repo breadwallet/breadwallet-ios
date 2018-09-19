@@ -46,6 +46,7 @@ class BRDButton: UIControl {
     }
     var image: UIImage? {
         didSet {
+            imageView = imageView ?? UIImageView()
             imageView?.image = image
         }
     }
