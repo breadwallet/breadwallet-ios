@@ -20,12 +20,14 @@ class AddressCell : UIView {
         return contentLabel.text
     }
 
+    var textDidChange: ((String?) -> Void)?
     var didBeginEditing: (() -> Void)?
     var didReceivePaymentRequest: ((PaymentRequest) -> Void)?
 
     func setContent(_ content: String?) {
         contentLabel.text = content
         textField.text = content
+        textDidChange?(content)
     }
 
     var isEditable = false {
@@ -102,6 +104,7 @@ class AddressCell : UIView {
         textField.autocorrectionType = .no
         textField.autocapitalizationType = .none
         textField.keyboardType = .asciiCapable
+        textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         label.textColor = .grayTextTint
         contentLabel.lineBreakMode = .byTruncatingMiddle
 
@@ -118,6 +121,10 @@ class AddressCell : UIView {
         textField.becomeFirstResponder()
         contentLabel.isHidden = true
         textField.isHidden = false
+    }
+    
+    @objc private func textFieldDidChange() {
+        textDidChange?(textField.text)
     }
 
     required init?(coder aDecoder: NSCoder) {
