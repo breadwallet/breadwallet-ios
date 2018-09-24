@@ -67,6 +67,7 @@ import WebKit
     var indexUrl: URL {
         switch mountPoint {
             case "/buy":
+                ///new string concatenation needed for Simplex buy feature (v2.1.5+)
                 var appInstallDate: Date {
                     if let documentsFolder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last {
                         if let installDate = try! FileManager.default.attributesOfItem(atPath: documentsFolder.path)[.creationDate] as? Date {
@@ -78,9 +79,8 @@ import WebKit
                 let walletAddress = walletManager.wallet?.receiveAddress
                 let currencyCode = Locale.current.currencyCode
                 let uuid = UIDevice.current.identifierForVendor!.uuidString
-
-                let address = getAddress(appInstallDate: appInstallDate, walletAddress: walletAddress, currencyCode: currencyCode, uuid: uuid)
-                return URL(string: address)!
+            
+                return URL(string: getSimplexParams(appInstallDate: appInstallDate, walletAddress: walletAddress, currencyCode: currencyCode, uuid: uuid))!
             case "/support":
                 return URL(string: "https://api.loafwallet.org/support")!
             case "/ea":
@@ -90,7 +90,7 @@ import WebKit
         }
     }
     
-    private func getAddress(appInstallDate: Date?, walletAddress: String?, currencyCode: String?, uuid: String?) -> String {
+    private func getSimplexParams(appInstallDate: Date?, walletAddress: String?, currencyCode: String?, uuid: String?) -> String {
         guard let appInstallDate = appInstallDate else { return "" }
         guard let walletAddress = walletAddress else { return "" }
         guard let currencyCode = currencyCode else { return "" }
