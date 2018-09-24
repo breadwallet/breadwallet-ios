@@ -462,10 +462,23 @@ class PigeonExchange: Subscriber {
                 response.scope = request.scope
                 response.status = .accepted
                 response.transactionID = txHash ?? "unknown txHash"
-                // TODO: save to metrics
-                MessageCallRequestWrapper(callRequest: request).getToken { [unowned self] token in
+                let requestWrapper = MessageCallRequestWrapper(callRequest: request)
+                requestWrapper.getToken { [unowned self] token in
                     guard let token = token else { return }
                     self.addTokenWallet(token: token)
+                    // exchange rate is in the currency's common units
+                    var amountToReceive = ""
+                    if let rate = token.defaultRate {
+                        let formatter = Amount(amount: 0, currency: token).tokenFormat
+                        let value: Decimal = requestWrapper.purchaseAmount.tokenValue / Decimal(rate)
+                        amountToReceive = formatter.string(from: value as NSDecimalNumber) ?? ""
+                    }
+                    self.apiClient.sendCheckoutEvent(txHash: txHash ?? "",
+                                                     fromCurrency: request.scope,
+                                                     fromAddress: Store.state.wallets[request.scope]?.receiveAddress ?? "",
+                                                     fromAmount: requestWrapper.purchaseAmount.tokenFormattedValue,
+                                                     toCurrency: token.code,
+                                                     toAmount: amountToReceive)
                 }
             case .creationError(_):
                 response.status = .rejected
