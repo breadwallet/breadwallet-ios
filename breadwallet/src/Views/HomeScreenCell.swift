@@ -54,7 +54,7 @@ class HomeScreenCell : UITableViewCell, Subscriber {
     func set(viewModel: AssetListViewModel) {
         accessibilityIdentifier = viewModel.currency.name
         container.currency = viewModel.currency
-        icon.image = UIImage(named: "no-bg/" + viewModel.currency.code.lowercased())
+        icon.image = viewModel.currency.imageNoBackground
         currencyName.text = viewModel.currency.name
         price.text = viewModel.exchangeRate
         fiatBalance.text = viewModel.fiatBalance

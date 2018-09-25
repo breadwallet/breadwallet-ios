@@ -69,6 +69,7 @@ enum ManageWallets {
             }
         }
     }
+    
     struct removeTokenAddresses : Action {
         let reduce: Reducer
         init(_ removedTokenAddresses: [String]) {
@@ -78,6 +79,15 @@ enum ManageWallets {
                     return !removedTokenAddresses.contains(token.address)
                 }
                 return $0.mutate(wallets: newWallets)
+            }
+        }
+    }
+    
+    struct setAvailableTokens: Action {
+        let reduce: Reducer
+        init(_ availableTokens: [ERC20Token]) {
+            reduce = {
+                return $0.mutate(availableTokens: availableTokens)
             }
         }
     }
