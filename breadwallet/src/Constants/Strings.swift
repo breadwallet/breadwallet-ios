@@ -406,7 +406,7 @@ enum S {
         static let totalAssets = NSLocalizedString("HomeScreen.totalAssets", value: "Total Assets", comment: "header")
         static let portfolio = NSLocalizedString("HomeScreen.portfolio", value: "Wallets", comment: "Section header")
         static let admin = NSLocalizedString("HomeScreen.admin", value: "Admin", comment: "Section header")
-        static let buy = NSLocalizedString("HomeScreen.buy", value: "Buy Bitcoin", comment: "home screen toolbar button")
+        static let buy = NSLocalizedString("HomeScreen.buy", value: "Buy", comment: "home screen toolbar button")
         static let trade = NSLocalizedString("HomeScreen.trade", value: "Trade", comment: "home screen toolbar button")
         static let menu = NSLocalizedString("Button.menu", value: "Menu", comment: "home screen toolbar button")
     }
