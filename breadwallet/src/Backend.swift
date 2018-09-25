@@ -28,6 +28,10 @@ class Backend {
     
     // MARK: - Public
     
+    static var isConnected: Bool {
+        return (apiClient.authKey != nil)
+    }
+    
     static var apiClient: BRAPIClient {
         return shared.apiClient
     }
