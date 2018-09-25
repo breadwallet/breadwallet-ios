@@ -22,6 +22,7 @@ struct State {
     let pinLength: Int
     let walletID: String?
     let wallets: [String: WalletState]
+    let availableTokens: [ERC20Token]
     
     subscript(currency: CurrencyDef) -> WalletState? {
         guard let walletState = wallets[currency.code] else {
@@ -45,6 +46,10 @@ struct State {
     var displayCurrencies: [CurrencyDef] {
         return orderedWallets.filter { $0.displayOrder >= 0 }.map { $0.currency }
     }
+    
+    var supportedTokens: [ERC20Token] {
+        return availableTokens.filter { $0.isSupported }
+    }
 }
 
 extension State {
@@ -63,8 +68,9 @@ extension State {
                         wallets: [Currencies.btc.code: WalletState.initial(Currencies.btc, displayOrder: -1),
                                   Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: -1),
                                   Currencies.eth.code: WalletState.initial(Currencies.eth, displayOrder: -1),
-                                  Currencies.brd.code: WalletState.initial(Currencies.brd, displayOrder: -1),
-            ])
+                                  Currencies.brd.code: WalletState.initial(Currencies.brd, displayOrder: -1)],
+                        availableTokens: [Currencies.brd]
+        )
     }
     
     func mutate(   isStartFlowVisible: Bool? = nil,
@@ -78,7 +84,8 @@ extension State {
                    isPromptingBiometrics: Bool? = nil,
                    pinLength: Int? = nil,
                    walletID: String? = nil,
-                   wallets: [String: WalletState]? = nil) -> State {
+                   wallets: [String: WalletState]? = nil,
+                   availableTokens: [ERC20Token]? = nil) -> State {
         return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible,
                      isLoginRequired: isLoginRequired ?? self.isLoginRequired,
                      rootModal: rootModal ?? self.rootModal,
@@ -90,7 +97,8 @@ extension State {
                      isPromptingBiometrics: isPromptingBiometrics ?? self.isPromptingBiometrics,
                      pinLength: pinLength ?? self.pinLength,
                      walletID: walletID ?? self.walletID,
-                     wallets: wallets ?? self.wallets)
+                     wallets: wallets ?? self.wallets,
+                     availableTokens: availableTokens ?? self.availableTokens)
     }
     
     func mutate(walletState: WalletState) -> State {

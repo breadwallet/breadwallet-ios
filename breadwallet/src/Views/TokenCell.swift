@@ -34,7 +34,7 @@ class TokenCell : SeparatorCell {
     func set(currency: CurrencyDef, listType: TokenListType, isHidden: Bool) {
         header.text = currency.name
         subheader.text = currency.code
-        icon.image = UIImage(named: currency.code.lowercased())
+        icon.image = currency.imageSquareBackground
         self.isCurrencyHidden = isHidden
         if let token = currency as? ERC20Token {
             self.identifier = token.address

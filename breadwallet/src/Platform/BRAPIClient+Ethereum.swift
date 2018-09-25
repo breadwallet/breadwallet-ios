@@ -55,6 +55,18 @@ extension BRAPIClient {
         let req = URLRequest(url: url("/ethq/\(network)/query?module=logs&action=getLogs&fromBlock=0&toBlock=latest\(tokenAddressParam)&topic0=\(ERC20Token.transferEventSignature)&topic1=\(accountAddress)&topic1_2_opr=or&topic2=\(accountAddress)"))
         send(apiRequest: req, handler: handler)
     }
+    
+    // MARK: Token List
+    
+    public func getTokenList(handler: @escaping (APIResult<[ERC20Token]>) -> Void) {
+        let req = URLRequest(url: url("/currencies"))
+        send(request: req, handler: handler)
+    }
+    
+    public func getToken(withSaleAddress saleAddress: String, handler: @escaping (APIResult<[ERC20Token]>) -> Void) {
+        let req = URLRequest(url: url("/currencies?saleAddress=\(saleAddress.lowercased())"))
+        send(request: req, handler: handler)
+    }
 
     // MARK: -
     
@@ -99,10 +111,33 @@ extension BRAPIClient {
                 print("[API] HTTP error: \(error!)")
                 return handler(APIResult<ResultType>.error(error!))
             }
+            guard let statusCode = response?.statusCode, statusCode >= 200 && statusCode < 300 else {
+                return handler(APIResult<ResultType>.error(HTTPError(code: response?.statusCode ?? 0)))
+            }
             
             do {
                 let apiResponse = try APIResponse<ResultType>.from(data: data)
                 handler(APIResult<ResultType>.success(apiResponse.result))
+            } catch (let jsonError) {
+                print("[API] JSON error: \(jsonError)")
+                handler(APIResult<ResultType>.error(jsonError))
+            }
+        }).resume()
+    }
+    
+    private func send<ResultType>(request: URLRequest, handler: @escaping (APIResult<ResultType>) -> Void) {
+        dataTaskWithRequest(request, authenticated: true, retryCount: 0, handler: { data, response, error in
+            guard error == nil, let data = data else {
+                print("[API] HTTP error: \(error!)")
+                return handler(APIResult<ResultType>.error(error!))
+            }
+            guard let statusCode = response?.statusCode, statusCode >= 200 && statusCode < 300 else {
+                return handler(APIResult<ResultType>.error(HTTPError(code: response?.statusCode ?? 0)))
+            }
+            
+            do {
+                let result = try JSONDecoder().decode(ResultType.self, from: data)
+                handler(APIResult<ResultType>.success(result))
             } catch (let jsonError) {
                 print("[API] JSON error: \(jsonError)")
                 handler(APIResult<ResultType>.error(jsonError))

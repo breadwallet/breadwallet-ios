@@ -29,7 +29,12 @@ class EthWalletManager : WalletManager {
     var kvStore: BRReplicatedKVStore?
     weak var apiClient: BRAPIClient? {
         didSet {
-            self.node.connect()
+            if let apiClient = apiClient {
+                assert(apiClient.authKey != nil)
+                self.node.connect()
+            } else {
+                self.node.disconnect()
+            }
         }
     }
     
@@ -51,9 +56,10 @@ class EthWalletManager : WalletManager {
     var tokens: [ERC20Token] = [] {
         didSet {
             tokens.forEach { token in
-                // creates the core wallet if needed
-                let wallet = node.wallet(token)
-                wallet.updateBalance()
+                if node.findWallet(forCurrency: token) == nil {
+                    let wallet = node.wallet(token) // creates the core wallet
+                    wallet.updateBalance() // trigger initial balance update to skip core refresh interval delay
+                }
             }
         }
     }
@@ -80,6 +86,11 @@ class EthWalletManager : WalletManager {
             self.walletID = walletID
             print("walletID:", walletID)
         }
+    }
+    
+    /// Sets the token definitions in Core Ethereum
+    func setAvailableTokens(_ tokens: [ERC20Token]) {
+        node.setTokens(tokens)
     }
     
     func defaultGasLimit(currency: CurrencyDef) -> UInt64 {

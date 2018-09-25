@@ -32,6 +32,11 @@ public protocol CurrencyDef {
     /// Returns a URI with the given address
     func addressURI(_ address: String) -> String?
     
+    /// Icon image with square color background
+    var imageSquareBackground: UIImage? { get }
+    /// Icon image with no background using template rendering mode
+    var imageNoBackground: UIImage? { get }
+    
     /// Returns the unit associated with the number of decimals
     func unit(forDecimals decimals: Int) -> CurrencyUnit?
     /// Returns the abbreviated name for given unit
@@ -79,6 +84,38 @@ public extension CurrencyDef {
     func unitName(forDecimals decimals: Int) -> String {
         guard let unit = unit(forDecimals: decimals) else { return "" }
         return name(forUnit: unit)
+    }
+}
+
+// MARK: - Images
+
+extension CurrencyDef {
+    public var imageSquareBackground: UIImage? {
+        if let baseURL = AssetArchive(name: imageBundleName, apiClient: Backend.apiClient)?.extractedUrl {
+            let path = baseURL.appendingPathComponent("white-square-bg").appendingPathComponent(code.lowercased()).appendingPathExtension("png")
+            if let data = try? Data(contentsOf: path) {
+                return UIImage(data: data)
+            }
+        }
+        // fallback -- generate token icon
+        // TODO:tokens
+        return UIImage.imageForColor(colors.0)
+    }
+    
+    public var imageNoBackground: UIImage? {
+        if let baseURL = AssetArchive(name: imageBundleName, apiClient: Backend.apiClient)?.extractedUrl {
+            let path = baseURL.appendingPathComponent("white-no-bg").appendingPathComponent(code.lowercased()).appendingPathExtension("png")
+            if let data = try? Data(contentsOf: path) {
+                return UIImage(data: data)?.withRenderingMode(.alwaysTemplate)
+            }
+        }
+        // fallback -- generate token icon
+        // TODO:tokens
+        return UIImage.imageForColor(colors.0)
+    }
+    
+    private var imageBundleName: String {
+        return (E.isDebug || E.isTestFlight) ? "brd-tokens-staging" : "brd-tokens"
     }
 }
 
@@ -220,6 +257,10 @@ public struct ERC20Token: CurrencyDef {
     public let abi: String
     public let decimals: Int
     
+    public let isSupported: Bool
+    public let saleAddress: String?
+    public let defaultRate: Double? // TODO: in BTC ?
+    
     public var commonUnit: CurrencyUnit {
         return TokenUnit(decimals: decimals, name: code)
     }
@@ -233,15 +274,50 @@ public struct ERC20Token: CurrencyDef {
     }
 }
 
-extension ERC20Token {
-    init(tokenData: StoredTokenData) {
-        self.init(name: tokenData.name,
-                   code: tokenData.code,
-                   symbol: tokenData.code,
-                   colors: (UIColor.fromHex(tokenData.colors[0]), UIColor.fromHex(tokenData.colors[1])),
-                   address: tokenData.address,
-                   abi: ERC20Token.standardAbi,
-                   decimals: Int(tokenData.decimal) ?? 18)
+extension ERC20Token: Codable {
+    enum CodingKeys: String, CodingKey {
+        case code
+        case address = "contract_address"
+        case name
+        case decimals = "scale"
+        case isSupported = "is_supported"
+        case saleAddress = "sale_address"
+        case defaultEthRate = "contract_initial_value"
+        case colors
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        // on testnet all tokens get the BRD testnet address
+        address = E.isTestnet ? Currencies.brd.address : try container.decode(String.self, forKey: .address)
+        name = try container.decode(String.self, forKey: .name)
+        code = try container.decode(String.self, forKey: .code)
+        symbol = code
+        abi = ERC20Token.standardAbi
+        decimals = try container.decode(Int.self, forKey: .decimals)
+        var colorValues = try container.decode([String].self, forKey: .colors)
+        guard colorValues.count == 2 else {
+            throw DecodingError.dataCorruptedError(forKey: .colors, in: container, debugDescription: "Invalid color values")
+        }
+        colors = (UIColor.fromHex(colorValues[0]), UIColor.fromHex(colorValues[1]))
+        isSupported = try container.decode(Bool.self, forKey: .isSupported)
+        saleAddress = (try? container.decode(String.self, forKey: .saleAddress)) ?? nil
+        defaultRate = (try? container.decode(Double.self, forKey: .defaultEthRate)) ?? nil
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(address, forKey: .address)
+        try container.encode(name, forKey: .name)
+        try container.encode(code, forKey: .code)
+        try container.encode(String(decimals), forKey: .decimals)
+        var colorValues = [String]()
+        colorValues.append(colors.0.toHex)
+        colorValues.append(colors.1.toHex)
+        try container.encode(colorValues, forKey: .colors)
+        try container.encode(isSupported, forKey: .isSupported)
+        try container.encode(saleAddress, forKey: .saleAddress)
+        try container.encode(defaultRate, forKey: .defaultEthRate)
     }
 }
 
@@ -255,6 +331,7 @@ public struct Currencies {
                              dbPath: "BreadWallet.sqlite",
                              forkId: 0,
                              urlSchemes: ["bitcoin"])
+    
     static let bch = Bitcoin(name: "Bitcoin Cash",
                              code: "BCH",
                              symbol: S.Symbols.btc,
@@ -262,16 +339,32 @@ public struct Currencies {
                              dbPath: "BreadWallet-bch.sqlite",
                              forkId: 0x40,
                              urlSchemes: E.isTestnet ? ["bchtest", "bitcoincash"] :  ["bitcoincash"])
+    
     static let eth = Ethereum(name: "Ethereum",
                               code: "ETH",
                               symbol: S.Symbols.eth,
                               colors: (UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0), UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0)),
                               urlSchemes: ["ethereum", "ether"])
+    
     static let brd = ERC20Token(name: "BRD",
                                 code: "BRD",
                                 symbol: "🍞",
                                 colors: (UIColor.fromHex("ff5193"), UIColor.fromHex("f9a43a")),
-                                address: E.isTestnet ? "0x7108ca7c4718efa810457f228305c9c71390931a" :  "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6",
+                                address: E.isTestnet ? "0x7108ca7c4718efa810457f228305c9c71390931a" : "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6",
                                 abi: ERC20Token.standardAbi,
-                                decimals: 18)
+                                decimals: 18,
+                                isSupported: true,
+                                saleAddress: nil,
+                                defaultRate: nil)
+    
+    static let tst = ERC20Token(name: "Test Token",
+                                code: "TST",
+                                symbol: "TST",
+                                colors: (UIColor.fromHex("2FB8E6"), UIColor.fromHex("2FB8E6")),
+                                address: E.isTestnet ?  "0x722dd3f80bac40c951b51bdd28dd19d435762180" : "0x3efd578b271d034a69499e4a2d933c631d44b9ad",
+                                abi: ERC20Token.standardAbi,
+                                decimals: 18,
+                                isSupported: true,
+                                saleAddress: nil,
+                                defaultRate: nil)
 }

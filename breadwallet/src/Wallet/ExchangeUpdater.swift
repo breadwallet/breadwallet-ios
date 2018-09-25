@@ -50,21 +50,7 @@ class ExchangeUpdater : Subscriber {
                     Store.perform(action: WalletChange(currency).setExchangeRates(currentRate: self.findCurrentRate(rates: fiatRates), rates: fiatRates))
                 }
                 
-                // TODO: HACK for CCC (based on price in ETH)
-                let tokenCode = StoredTokenData.ccc.code
-                guard let token = Store.state.currencies.filter({ $0.code.caseInsensitiveCompare(tokenCode) == .orderedSame }).first else { return }
-                Backend.apiClient.exchangeRates(currencyCode: tokenCode) { [weak self] result in
-                    guard let `self` = self,
-                        case .success(let tokenEthRates) = result,
-                        let tokenEthRate = tokenEthRates.first, tokenEthRate.code.caseInsensitiveCompare(Currencies.eth.code) == .orderedSame,
-                        let ethFiatRates = Store.state[Currencies.eth]?.rates else { return }
-                    
-                    let tokenFiatRates: [Rate] = ethFiatRates.map { ethFiatRate in
-                        let tokenFiatRate = ethFiatRate.rate * tokenEthRate.rate
-                        return Rate(code: ethFiatRate.code, name: ethFiatRate.name, rate: tokenFiatRate, reciprocalCode: tokenCode.lowercased())
-                    }
-                    Store.perform(action: WalletChange(token).setExchangeRates(currentRate: self.findCurrentRate(rates: tokenFiatRates), rates: tokenFiatRates))
-                }
+                // TODO: tokenlist will include ICO tokens with a default exchange rate
             }
         }
     }
