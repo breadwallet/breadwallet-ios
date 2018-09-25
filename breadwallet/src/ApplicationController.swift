@@ -355,7 +355,7 @@ class ApplicationController : Subscriber, Trackable {
         }
         
         home.didTapBuy = {
-            Store.perform(action: RootModalActions.Present(modal: .buy(currency: Currencies.btc)))
+            Store.perform(action: RootModalActions.Present(modal: .buy(currency: nil)))
         }
         
         home.didTapTrade = {
