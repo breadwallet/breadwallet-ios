@@ -449,7 +449,7 @@ class PigeonExchange: Subscriber {
         apiClient.sendMessage(envelope: envelope)
     }
 
-    private func sendCallResponse(result: CheckoutResult, forRequest: MessageCallRequest, from requestEnvelope: MessageEnvelope) {
+    private func sendCallResponse(result: CheckoutResult, forRequest request: MessageCallRequest, from requestEnvelope: MessageEnvelope) {
         guard let pairingKey = pairingKey(forRemotePubKey: requestEnvelope.senderPublicKey) else {
             print("[EME] remote entity not found!")
             return
@@ -459,9 +459,14 @@ class PigeonExchange: Subscriber {
         case .accepted(let sendResult):
             switch sendResult {
             case .success(let txHash, _):
-                response.scope = forRequest.scope
+                response.scope = request.scope
                 response.status = .accepted
                 response.transactionID = txHash ?? "unknown txHash"
+                // TODO: save to metrics
+                MessageCallRequestWrapper(callRequest: request).getToken { [unowned self] token in
+                    guard let token = token else { return }
+                    self.addTokenWallet(token: token)
+                }
             case .creationError(_):
                 response.status = .rejected
                 response.error = .transactionFailed
@@ -481,7 +486,6 @@ class PigeonExchange: Subscriber {
             return print("[EME] envelope construction failed!")
         }
         apiClient.sendMessage(envelope: envelope)
-        addToken()
     }
     
     // MARK: - Ping
@@ -547,21 +551,19 @@ class PigeonExchange: Subscriber {
         return PigeonCrypto.pairingKey(forIdentifier: pwd.identifier, authKey: apiClient.authKey!)
     }
 
-    private func addToken() {
-        let storedToken = StoredTokenData.ccc
-        let tokenToBeAdded = ERC20Token(name: storedToken.name, code: storedToken.code, symbol: storedToken.code, colors: (UIColor.fromHex(storedToken.colors[0]), UIColor.fromHex(storedToken.colors[1])), address: storedToken.address, abi: ERC20Token.standardAbi, decimals: 18)
-        var displayOrder = Store.state.displayCurrencies.count
-        guard !Store.state.displayCurrencies.contains(where: {$0.code.lowercased() == tokenToBeAdded.code.lowercased()}) else { return }
-        var dictionary = [String: WalletState]()
-        dictionary[tokenToBeAdded.code] = WalletState.initial(tokenToBeAdded, displayOrder: displayOrder)
-        displayOrder = displayOrder + 1
-        let metaData = CurrencyListMetaData(kvStore: kvStore)!
-        metaData.addTokenAddresses(addresses: [tokenToBeAdded.address])
+    private func addTokenWallet(token: ERC20Token) {
+        guard !Store.state.displayCurrencies.contains(where: {$0.code.lowercased() == token.code.lowercased()}) else { return }
+        var walletDict = [String: WalletState]()
+        walletDict[token.code] = WalletState.initial(token, displayOrder: Store.state.displayCurrencies.count)
+        let metaData = CurrencyListMetaData(kvStore: self.kvStore)!
+        metaData.addTokenAddresses(addresses: [token.address])
         do {
-            let _ = try kvStore.set(metaData)
+            let _ = try self.kvStore.set(metaData)
         } catch let error {
             print("error setting wallet info: \(error)")
         }
-        Store.perform(action: ManageWallets.addWallets(dictionary))
+        DispatchQueue.main.async {
+            Store.perform(action: ManageWallets.addWallets(walletDict))
+        }
     }
 }
