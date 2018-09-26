@@ -294,6 +294,7 @@
 		CE08B2A020F667B1009FA568 /* SwiftProtobuf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7C377EBF20F64ECE00E8CF1C /* SwiftProtobuf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CE08B2A320F66822009FA568 /* BRAPIClient+Pigeon.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08B2A220F66822009FA568 /* BRAPIClient+Pigeon.swift */; };
 		CE0A68211FB651DA00EF31CD /* CoreDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0A68201FB651DA00EF31CD /* CoreDatabase.swift */; };
+		CE0BC980215ACBE100E68B2B /* TokenImageNoBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0BC97F215ACBE100E68B2B /* TokenImageNoBackground.swift */; };
 		CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */; };
 		CE0F58A52111670E00ACF5F8 /* CheckoutConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F58A42111670E00ACF5F8 /* CheckoutConfirmationViewController.swift */; };
 		CE12289D20D3695400EC6F81 /* MotionGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12289C20D3695400EC6F81 /* MotionGradientView.swift */; };
@@ -1460,6 +1461,7 @@
 		CE0822651FCE059A00EF371D /* HomeScreenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenCell.swift; path = src/Views/HomeScreenCell.swift; sourceTree = "<group>"; };
 		CE08B2A220F66822009FA568 /* BRAPIClient+Pigeon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Pigeon.swift"; path = "src/Pigeon/BRAPIClient+Pigeon.swift"; sourceTree = "<group>"; };
 		CE0A68201FB651DA00EF31CD /* CoreDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CoreDatabase.swift; path = src/CoreDatabase.swift; sourceTree = "<group>"; };
+		CE0BC97F215ACBE100E68B2B /* TokenImageNoBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TokenImageNoBackground.swift; path = src/Views/TokenImageNoBackground.swift; sourceTree = "<group>"; };
 		CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = ModalPresenter.swift; path = src/ModalPresenter.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CE0F58A42111670E00ACF5F8 /* CheckoutConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CheckoutConfirmationViewController.swift; path = src/Pigeon/CheckoutConfirmationViewController.swift; sourceTree = "<group>"; };
 		CE0FC0F81F72417200E7C626 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -3115,6 +3117,7 @@
 				CEA9178520C07FBB00F29B31 /* SyncingHeaderView.swift */,
 				CE12289C20D3695400EC6F81 /* MotionGradientView.swift */,
 				CE3CDB9620D443CE007059F6 /* CutoutLabel.swift */,
+				CE0BC97F215ACBE100E68B2B /* TokenImageNoBackground.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -4193,6 +4196,7 @@
 				CE6DCC271E6108D50044257B /* EnterPhraseCell.swift in Sources */,
 				CE760EDD1E561DF900EFAC2B /* UpdatePinViewController.swift in Sources */,
 				22A9A9481DF61945000F0016 /* BRBitID.swift in Sources */,
+				CE0BC980215ACBE100E68B2B /* TokenImageNoBackground.swift in Sources */,
 				7C0F3DC42124A81100531E54 /* Backend.swift in Sources */,
 				CEBF32F41DDCE12900348FC6 /* AccountFooterView.swift in Sources */,
 				CE9057181DFF0FA8006BA848 /* String+Additions.swift in Sources */,
