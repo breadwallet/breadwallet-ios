@@ -97,9 +97,7 @@ extension CurrencyDef {
                 return UIImage(data: data)
             }
         }
-        // fallback -- generate token icon
-        // TODO:tokens
-        return UIImage.imageForColor(colors.0)
+        return TokenImageSquareBackground(currency: self).renderedImage
     }
     
     public var imageNoBackground: UIImage? {
@@ -109,9 +107,8 @@ extension CurrencyDef {
                 return UIImage(data: data)?.withRenderingMode(.alwaysTemplate)
             }
         }
-        // fallback -- generate token icon
-        // TODO:tokens
-        return UIImage.imageForColor(colors.0)
+        
+        return TokenImageNoBackground(currency: self).renderedImage
     }
     
     private var imageBundleName: String {
