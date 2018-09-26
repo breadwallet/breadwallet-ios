@@ -1,5 +1,5 @@
 //
-//  SupportCenterContainer.swift
+//  WebViewContainer.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-05-02.
@@ -8,20 +8,14 @@
 
 import UIKit
 
-class SupportCenterContainer : UIViewController {
+class WebViewContainer : UIViewController {
 
-    func navigate(to: String) {
-//        webView.navigate(to: to)
-    }
-
-    init(walletManager: WalletManager, store: Store, apiClient: BRAPIClient) {
-        let mountPoint = "/support"
+    init(mountPoint: String, walletManager: WalletManager, store: Store, apiClient: BRAPIClient) {
         #if Debug || Testflight
-      webView = BRWebViewController(partner: "", bundleName: "bread-frontend-staging", mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: apiClient)
+            webView = BRWebViewController(partner: "", bundleName: "bread-frontend-staging", mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: apiClient)
         #else
             webView = BRWebViewController(partner: "", bundleName: "bread-frontend", mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: apiClient)
         #endif
-//        webView.startServer()
         webView.preload()
         super.init(nibName: nil, bundle: nil)
     }
@@ -57,7 +51,7 @@ class SupportCenterContainer : UIViewController {
     }
 }
 
-extension SupportCenterContainer : UIViewControllerTransitioningDelegate {
+extension WebViewContainer : UIViewControllerTransitioningDelegate {
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return DismissSupportCenterAnimator()
     }
@@ -74,7 +68,7 @@ class PresentSupportCenterAnimator : NSObject, UIViewControllerAnimatedTransitio
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let duration = transitionDuration(using: transitionContext)
-        guard let toViewController = transitionContext.viewController(forKey: .to) as? SupportCenterContainer else { assert(false, "Missing to view controller"); return }
+        guard let toViewController = transitionContext.viewController(forKey: .to) as? WebViewContainer else { assert(false, "Missing to view controller"); return }
         guard let toView = transitionContext.view(forKey: .to) else { assert(false, "Missing to view"); return }
         let container = transitionContext.containerView
 
@@ -106,7 +100,7 @@ class DismissSupportCenterAnimator : NSObject, UIViewControllerAnimatedTransitio
         guard transitionContext.isAnimated else { return }
         let duration = transitionDuration(using: transitionContext)
         guard let fromView = transitionContext.view(forKey: .from) else { assert(false, "Missing from view"); return }
-        guard let fromViewController = transitionContext.viewController(forKey: .from) as? SupportCenterContainer else { assert(false, "Missing to view controller"); return }
+        guard let fromViewController = transitionContext.viewController(forKey: .from) as? WebViewContainer else { assert(false, "Missing to view controller"); return }
         let originalFrame = fromView.frame
         UIView.animate(withDuration: duration, animations: {
             fromViewController.blur.effect = nil

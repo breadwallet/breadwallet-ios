@@ -33,13 +33,6 @@ class ModalPresenter : Subscriber, Trackable {
     private let verifyPinTransitionDelegate = PinTransitioningDelegate()
     private let noAuthApiClient: BRAPIClient
 
-    var supportCenter: SupportCenterContainer? {
-        guard walletManager != nil else { return nil }
-        return _supportCenter
-    }
-    private lazy var _supportCenter: SupportCenterContainer = {
-        return SupportCenterContainer(walletManager: self.walletManager!, store: self.store, apiClient: self.noAuthApiClient)
-    }()
     private var currentRequest: PaymentRequest?
     private var reachability = ReachabilityMonitor()
     private var notReachableAlert: InAppAlert?
@@ -52,12 +45,6 @@ class ModalPresenter : Subscriber, Trackable {
         store.subscribe(self,
                         selector: { $0.alert != $1.alert && $1.alert != nil },
                         callback: { self.handleAlertChange($0.alert) })
-        store.subscribe(self, name: .presentFaq(""), callback: {
-            guard let trigger = $0 else { return }
-            if case .presentFaq(let articleId) = trigger {
-                self.presentFaq(articleId: articleId)
-            }
-        })
 
         //Subscribe to prompt actions
         store.subscribe(self, name: .promptUpgradePin, callback: { _ in
@@ -191,14 +178,25 @@ class ModalPresenter : Subscriber, Trackable {
         })
     }
 
-    private func presentFaq(articleId: String? = nil) {
-        guard let supportCenter = supportCenter else { return }
-        supportCenter.modalPresentationStyle = .overFullScreen
-        supportCenter.modalPresentationCapturesStatusBarAppearance = true
-        supportCenter.transitioningDelegate = supportCenter
-        let url = articleId == nil ? "/support" : "/support?id=\(articleId!)"
-        supportCenter.navigate(to: url)
-        topViewController?.present(supportCenter, animated: true, completion: {})
+//    private func presentFaq(articleId: String? = nil) {
+//        guard let supportCenter = supportCenter else { return }
+//        supportCenter.modalPresentationStyle = .overFullScreen
+//        supportCenter.modalPresentationCapturesStatusBarAppearance = true
+//        supportCenter.transitioningDelegate = supportCenter
+//        let url = articleId == nil ? "/support" : "/support?id=\(articleId!)"
+//        supportCenter.navigate(to: url)
+//        topViewController?.present(supportCenter, animated: true, completion: {})
+//    }
+    
+    private func presentWebView(_ mountPoint: String) {
+        guard let walletManager = self.walletManager else { return }
+        let vc = WebViewContainer(mountPoint: mountPoint, walletManager: walletManager, store: store, apiClient: self.noAuthApiClient)
+        
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalPresentationCapturesStatusBarAppearance = true
+        vc.transitioningDelegate = vc
+        
+        topViewController?.present(vc, animated: true, completion: {})
     }
 
     private func rootModalViewController(_ type: RootModal) -> UIViewController? {
@@ -293,7 +291,7 @@ class ModalPresenter : Subscriber, Trackable {
         }
         menu.didTapSupport = { [weak self, weak menu] in
             menu?.dismiss(animated: true, completion: {
-                self?.presentFaq()
+                self?.presentWebView("/support")
             })
         }
         menu.didTapLock = { [weak self, weak menu] in
@@ -308,7 +306,7 @@ class ModalPresenter : Subscriber, Trackable {
         }
         menu.didTapBuy = { [weak self, weak menu] in
             menu?.dismiss(animated: true, completion: {
-                self?.presentBuyController("/buy")
+                self?.presentWebView("/buy")
             })
         }
         return root
@@ -438,7 +436,7 @@ class ModalPresenter : Subscriber, Trackable {
         if BRAPIClient.featureEnabled(.earlyAccess) {
             rows["LoafWallet"]?.insert(Setting(title: S.Settings.earlyAccess, callback: {
                 settingsNav.dismiss(animated: true, completion: {
-                    self.presentBuyController("/ea")
+                    self.presentWebView("/ea")
                 })
             }), at: 1)
         }

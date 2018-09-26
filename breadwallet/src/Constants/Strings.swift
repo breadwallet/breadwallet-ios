@@ -120,7 +120,7 @@ enum S {
         static let myAddress = NSLocalizedString("UnlockScreen.myAddress", value:"My Address", comment: "My Address button title")
         static let scan = NSLocalizedString("UnlockScreen.scan", value:"Scan", comment: "Scan button title")
         static let touchIdText = NSLocalizedString("UnlockScreen.touchIdText", value:"Unlock with TouchID", comment: "Unlock with TouchID accessibility label")
-        static let touchIdPrompt = NSLocalizedString("UnlockScreen.touchIdPrompt", value:"Unlock your Bread.", comment: "TouchID/FaceID prompt text")
+        static let touchIdPrompt = NSLocalizedString("UnlockScreen.touchIdPrompt", value:"Unlock your LoafWallet.", comment: "TouchID/FaceID prompt text")
         static let subheader = NSLocalizedString("UnlockScreen.subheader", value:"Enter PIN", comment: "Unlock Screen sub-header")
         static let unlocked = NSLocalizedString("UnlockScreen.unlocked", value:"Wallet Unlocked", comment: "Wallet unlocked message")
         static let disabled = NSLocalizedString("UnlockScreen.disabled", value:"Disabled until: %1$@", comment: "Disabled until date")
@@ -181,9 +181,9 @@ enum S {
             static let pinTitle = NSLocalizedString("SecurityCenter.pinTitle", value:"6-Digit PIN", comment: "PIN button title")
             static let pinDescription = NSLocalizedString("SecurityCenter.pinDescription", value:"Protects your LoafWallet from unauthorized users.", comment: "PIN button description")
             static let touchIdTitle = NSLocalizedString("SecurityCenter.touchIdTitle", value:"Touch ID", comment: "Touch ID button title")
-            static let touchIdDescription = NSLocalizedString("SecurityCenter.touchIdDescription", value:"Conveniently unlock your Bread and send money up to a set limit.", comment: "Touch ID/FaceID button description")
+            static let touchIdDescription = NSLocalizedString("SecurityCenter.touchIdDescription", value:"Conveniently unlock your LoafWallet and send money up to a set limit.", comment: "Touch ID/FaceID button description")
             static let paperKeyTitle = NSLocalizedString("SecurityCenter.paperKeyTitle", value:"Paper Key", comment: "Paper Key button title")
-            static let paperKeyDescription = NSLocalizedString("SecurityCenter.paperKeyDescription", value:"The only way to access your bitcoin if you lose or upgrade your phone.", comment: "Paper Key button description")
+            static let paperKeyDescription = NSLocalizedString("SecurityCenter.paperKeyDescription", value:"The only way to access your Litecoin if you lose or upgrade your phone.", comment: "Paper Key button description")
             static let faceIdTitle = NSLocalizedString("SecurityCenter.faceIdTitle", value:"Face ID", comment: "Face ID button title")
         }
     }
@@ -250,8 +250,8 @@ enum S {
 
     enum FaceIDSettings {
         static let title = NSLocalizedString("FaceIDSettings.title", value:"Face ID", comment: "Face ID settings view title")
-        static let label = NSLocalizedString("FaceIDSettings.label", value:"Use your face to unlock your Bread and send money up to a set limit.", comment: "Face Id screen label")
-        static let switchLabel = NSLocalizedString("FaceIDSettings.switchLabel", value:"Enable Face ID for Bread", comment: "Face id switch label.")
+        static let label = NSLocalizedString("FaceIDSettings.label", value:"Use your face to unlock your LoafWallet and send money up to a set limit.", comment: "Face ID screen label")
+        static let switchLabel = NSLocalizedString("FaceIDSettings.switchLabel", value:"Enable Face ID for LoafWallet", comment: "Face id switch label.")
         static let unavailableAlertTitle = NSLocalizedString("FaceIDSettings.unavailableAlertTitle", value:"Face ID Not Set Up", comment: "Face ID unavailable alert title")
         static let unavailableAlertMessage = NSLocalizedString("FaceIDSettings.unavailableAlertMessage", value:"You have not set up Face ID on this device. Go to Settings->Face ID & Passcode to set it up now.", comment: "Face ID unavailable alert message")
         static let customizeText = NSLocalizedString("FaceIDSettings.customizeText", value: "You can customize your Face ID spending limit from the %1$@.", comment: "You can customize your Face ID Spending Limit from the [TouchIdSettings.linkText gets added here as a button]")
