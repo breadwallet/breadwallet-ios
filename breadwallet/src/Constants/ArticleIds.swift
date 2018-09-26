@@ -13,6 +13,7 @@ enum ArticleIds {
     static let recoverWallet = "recover-wallet"
     static let reScan = "re-scan"
     static let securityCenter = "security-center"
+    static let buyCenter = "buy-center"
     static let paperKey = "paper-key"
     static let enableTouchId = "enable-fingerprint-authentication"
     static let touchIdSpendingLimit = "fingerprint-spending-limit"

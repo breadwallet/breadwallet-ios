@@ -103,6 +103,8 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         }, callback: { _ in
             self.setPinAndPhraseChecks() //When paper phrase is confirmed, we need to update the check mark status
         })
+      
+      
     }
 
     private func addSubviews() {

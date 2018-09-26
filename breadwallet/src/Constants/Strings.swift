@@ -163,6 +163,16 @@ enum S {
         static let blockHeightLabel = NSLocalizedString("TransactionDetails.blockHeightLabel", value: "Confirmed in Block", comment: "Block height label")
         static let notConfirmedBlockHeightLabel = NSLocalizedString("TransactionDetails.notConfirmedBlockHeightLabel", value: "Not Confirmed", comment: "eg. Confirmed in Block: Not Confirmed")
     }
+  
+    enum BuyCenter {
+      static let title = NSLocalizedString("BuyCenter.title", value:"Buy Litecoin", comment: "Buy Center Title")
+      enum Cells {
+        static let simplexTitle = NSLocalizedString("BuyCenter.simplexTitle", value: "Simplex", comment: "Simplex Title")
+        static let simplexFinancialDetails = NSLocalizedString("BuyCenter.simplexFinancialDetails", value: "$50 - $20,000 US per day", comment: "Simplex buy financial details")
+        static let changellyTitle = NSLocalizedString("BuyCenter.changellyTitle", value: "Changelly", comment: "Changelly Title")
+        static let changellyFinancialDetails = NSLocalizedString("BuyCenter.changellyFinancialDetails", value: "Daily max: --", comment: "Changelly buy financial details")
+      }
+    }
 
     enum SecurityCenter {
         static let title = NSLocalizedString("SecurityCenter.title", value:"Security Center", comment: "Security Center Title")

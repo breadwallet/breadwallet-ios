@@ -39,6 +39,7 @@ import WebKit
     var walletManager: WalletManager
     let store: Store
     let noAuthApiClient: BRAPIClient?
+    let partner : String?
 
     // bonjour debug endpoint establishment - this will configure the debugEndpoint 
     // over bonjour if debugOverBonjour is set to true. this MUST be set to false 
@@ -82,13 +83,14 @@ import WebKit
     
     private let messageUIPresenter = MessageUIPresenter()
     
-    init(bundleName: String, mountPoint: String = "/", walletManager: WalletManager, store: Store, noAuthApiClient: BRAPIClient? = nil) {
+  init(partner: String?, bundleName: String, mountPoint: String = "/", walletManager: WalletManager, store: Store, noAuthApiClient: BRAPIClient? = nil) {
         wkProcessPool = WKProcessPool()
         self.bundleName = bundleName
         self.mountPoint = mountPoint
         self.walletManager = walletManager
         self.store = store
         self.noAuthApiClient = noAuthApiClient
+        self.partner = partner ?? ""
         super.init(nibName: nil, bundle: nil)
 //        if debugOverBonjour {
 //            setupBonjour()

@@ -52,8 +52,8 @@ class MenuViewController : UIViewController, Trackable {
 
         view.backgroundColor = .white
 
-        //if BRAPIClient.featureEnabled(.buyBitcoin) {
-            saveEvent("menu.buyBitcoinIsVisible")
+        //if BRAPIClient.featureEnabled(.buyLitecoin) {
+            saveEvent("menu.buyLitecoinIsVisible")
         //}
     }
 
@@ -68,7 +68,7 @@ class MenuViewController : UIViewController, Trackable {
         case .lock:
             didTapLock?()
         case .buy:
-            saveEvent("menu.didTapBuyBitcoin")
+            saveEvent("menu.didTapBuyLitecoin")
             didTapBuy?()
         }
     }
