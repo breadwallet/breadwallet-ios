@@ -323,6 +323,10 @@
 		22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431331DF89DFE0017CAEA /* BRCoderTests.swift */; };
 		22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */; };
 		22E773041EE7813000397E0E /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E773031EE7813000397E0E /* Bonjour.swift */; };
+		24C5165221588250007CE038 /* BuyCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C5165121588250007CE038 /* BuyCenterViewController.swift */; };
+		24C5165921588A52007CE038 /* BuyCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C5165121588250007CE038 /* BuyCenterViewController.swift */; };
+		24D6C0CD215ADB8000E080D2 /* BuyPartnerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D6C0CC215ADB8000E080D2 /* BuyPartnerCell.swift */; };
+		24D6C0CE215ADB8000E080D2 /* BuyPartnerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D6C0CC215ADB8000E080D2 /* BuyPartnerCell.swift */; };
 		7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */; };
 		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
 		752438751DAAC50800844BEC /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6761DAA0E400075898E /* alloc.c */; };
@@ -1142,6 +1146,8 @@
 		22C431331DF89DFE0017CAEA /* BRCoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRCoderTests.swift; sourceTree = "<group>"; };
 		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bonjour.swift; sourceTree = "<group>"; };
+		24C5165121588250007CE038 /* BuyCenterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyCenterViewController.swift; sourceTree = "<group>"; };
+		24D6C0CC215ADB8000E080D2 /* BuyPartnerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyPartnerCell.swift; sourceTree = "<group>"; };
 		7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WalletManager+Auth.swift"; path = "src/WalletManager+Auth.swift"; sourceTree = "<group>"; };
 		7528D2971ECF655500925DBC /* PaymentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentProtocol.swift; path = src/PaymentProtocol.swift; sourceTree = "<group>"; };
 		752FB03B1DF8BE4B009086FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -2495,6 +2501,14 @@
 			path = libbz2;
 			sourceTree = "<group>";
 		};
+		24C516502158820E007CE038 /* BuyCenter */ = {
+			isa = PBXGroup;
+			children = (
+				24C5165121588250007CE038 /* BuyCenterViewController.swift */,
+			);
+			name = BuyCenter;
+			sourceTree = "<group>";
+		};
 		755CD3831DAA0E3E0075898E /* unbound */ = {
 			isa = PBXGroup;
 			children = (
@@ -3440,6 +3454,7 @@
 				CEB909F81E5FF20A001804DC /* Recover */,
 				CEC6AA3E1DEFC85700EE5AFD /* RootModals */,
 				CE6D0F951DE8B6B600BD4BCF /* ViewControllerTransitions */,
+				24C516502158820E007CE038 /* BuyCenter */,
 				CE760ED71E55F9E000EFAC2B /* SecurityCenter */,
 				CEBF32EF1DDCD30600348FC6 /* AccountViewController.swift */,
 				CE20C9061DBC587200C8397A /* StartViewController.swift */,
@@ -3561,6 +3576,7 @@
 				CECB9DB51E4985CE0081A172 /* LoginBackgroundView.swift */,
 				CE14E40A1E4D881500AEA83A /* TransactionDetailCollectionViewCell.swift */,
 				CE6B6B491E54C0CA00B31405 /* SecurityCenterCell.swift */,
+				24D6C0CC215ADB8000E080D2 /* BuyPartnerCell.swift */,
 				CE6DCC261E6108D50044257B /* EnterPhraseCell.swift */,
 				CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */,
 				CE6DCC2F1E6666470044257B /* NonScrollingCollectionView.swift */,
@@ -4586,6 +4602,7 @@
 				1B86CDDE2091528B00BCE82E /* Async.swift in Sources */,
 				1B86CDDF2091528B00BCE82E /* BRAPIClient+Assets.swift in Sources */,
 				1B86CDE02091528B00BCE82E /* BRAPIClient+Features.swift in Sources */,
+				24C5165921588A52007CE038 /* BuyCenterViewController.swift in Sources */,
 				1B86CDE12091528B00BCE82E /* BRHTTPFileMiddleware.swift in Sources */,
 				1B86CDE22091528B00BCE82E /* ConfirmationViewController.swift in Sources */,
 				1B86CDE32091528B00BCE82E /* BCashTransactionViewController.swift in Sources */,
@@ -4653,6 +4670,7 @@
 				1B86CE212091528B00BCE82E /* Prompt.swift in Sources */,
 				1B86CE222091528B00BCE82E /* SendAmountCell.swift in Sources */,
 				1B86CE232091528B00BCE82E /* BRKVStorePlugin.swift in Sources */,
+				24D6C0CE215ADB8000E080D2 /* BuyPartnerCell.swift in Sources */,
 				1B86CE242091528B00BCE82E /* SegmentedButton.swift in Sources */,
 				1B86CE252091528B00BCE82E /* PhoneWCSessionManager.swift in Sources */,
 				1B86CE262091528B00BCE82E /* WalletManager+Auth.swift in Sources */,
@@ -4952,6 +4970,7 @@
 				CE124CFE1E68F57700DFA146 /* Async.swift in Sources */,
 				2218BD771E8F55430091D5E8 /* BRAPIClient+Assets.swift in Sources */,
 				2228734D1E916F7C0044BA15 /* BRAPIClient+Features.swift in Sources */,
+				24C5165221588250007CE038 /* BuyCenterViewController.swift in Sources */,
 				22A9A94D1DF61945000F0016 /* BRHTTPFileMiddleware.swift in Sources */,
 				CE8644251F2C160200033129 /* ConfirmationViewController.swift in Sources */,
 				CE44BA1D1F35102D00392A1A /* BCashTransactionViewController.swift in Sources */,
@@ -5019,6 +5038,7 @@
 				CE2DC1391EBC36EE000FE727 /* Prompt.swift in Sources */,
 				CE83DE2A1E9EB7F600D07636 /* SendAmountCell.swift in Sources */,
 				22A9A9521DF61945000F0016 /* BRKVStorePlugin.swift in Sources */,
+				24D6C0CD215ADB8000E080D2 /* BuyPartnerCell.swift in Sources */,
 				CEAFC8611E5D5B0500E4FD06 /* SegmentedButton.swift in Sources */,
 				CE30F0E61EB27844004B8EE5 /* PhoneWCSessionManager.swift in Sources */,
 				7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */,
