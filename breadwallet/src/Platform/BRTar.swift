@@ -138,11 +138,6 @@ class BRTar {
                 log("got new directory name \(name)")
                 let dirPath = (path as NSString).appendingPathComponent(name)
                 log("will create directory at \(dirPath)")
-                
-                if fm.fileExists(atPath: dirPath) {
-                    try fm.removeItem(atPath: dirPath) // will automatically recursively remove directories if exists
-                }
-                
                 try fm.createDirectory(atPath: dirPath, withIntermediateDirectories: true, attributes: nil)
                 log("success creating directory")
                 break
