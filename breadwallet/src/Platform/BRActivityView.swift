@@ -26,7 +26,7 @@
 import UIKit
 
 class BRActivityViewController: UIViewController {
-    open let activityView = BRActivityView()
+    public let activityView = BRActivityView()
     
     init(message: String) {
         super.init(nibName: nil, bundle: nil)
@@ -42,9 +42,9 @@ class BRActivityViewController: UIViewController {
 }
 
 @objc open class BRActivityView: UIView {
-    open let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    public let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     let boundingBoxView = UIView(frame: CGRect.zero)
-    open let messageLabel = UILabel(frame: CGRect.zero)
+    public let messageLabel = UILabel(frame: CGRect.zero)
     
     init() {
         super.init(frame: CGRect.zero)
