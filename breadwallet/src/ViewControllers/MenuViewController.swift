@@ -10,14 +10,16 @@ import UIKit
 
 class MenuViewController : UITableViewController {
     
-    init(items: [MenuItem], title: String) {
+    init(items: [MenuItem], title: String, faqButton: UIButton? = nil) {
         self.items = items
+        self.faqButton = faqButton
         super.init(style: .plain)
         self.title = title
     }
 
     private let items: [MenuItem]
-
+    private let faqButton: UIButton?
+    
     override func viewDidLoad() {
         tableView.register(MenuCell.self, forCellReuseIdentifier: MenuCell.cellIdentifier)
         tableView.tableFooterView = UIView()
@@ -26,6 +28,11 @@ class MenuViewController : UITableViewController {
         tableView.rowHeight = 48.0
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        
+        if let button = faqButton {
+            button.tintColor = .navigationTint
+            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
