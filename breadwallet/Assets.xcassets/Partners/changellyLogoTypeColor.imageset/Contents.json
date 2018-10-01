@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "simplexlogo_140.png",
+      "filename" : "ltcfdfrontv7@1x.png",
       "scale" : "1x"
     },
     {
@@ -11,6 +11,7 @@
     },
     {
       "idiom" : "universal",
+      "filename" : "ltcfdfrontv7@3x.png",
       "scale" : "3x"
     }
   ],

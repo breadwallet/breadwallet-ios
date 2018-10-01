@@ -32,6 +32,7 @@ import WebKit
 @objc open class BRWebViewController : UIViewController, WKNavigationDelegate, BRWebSocketClient {
     var wkProcessPool: WKProcessPool
     var webView: WKWebView?
+  var testView: UIView?
     var server = BRHTTPServer()
     var debugEndpoint: String?
     var mountPoint: String
@@ -131,7 +132,9 @@ import WebKit
         
         view = UIView(frame: CGRect.zero)
         view.backgroundColor = UIColor(red:0.98, green:0.98, blue:0.98, alpha:1.0)
-        
+      
+
+      
         webView = WKWebView(frame: CGRect.zero, configuration: config)
         webView?.navigationDelegate = self
         webView?.backgroundColor = UIColor(red:0.98, green:0.98, blue:0.98, alpha:1.0)
@@ -141,7 +144,7 @@ import WebKit
             webView?.scrollView.contentInsetAdjustmentBehavior = .never
         }
         view.addSubview(webView!)
-        
+      
         let center = NotificationCenter.default
         center.addObserver(forName: .UIApplicationDidBecomeActive, object: nil, queue: .main) { [weak self] (_) in
             self?.didAppear = true

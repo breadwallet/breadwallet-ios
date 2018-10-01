@@ -324,10 +324,14 @@
 		22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431331DF89DFE0017CAEA /* BRCoderTests.swift */; };
 		22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */; };
 		22E773041EE7813000397E0E /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E773031EE7813000397E0E /* Bonjour.swift */; };
-		24C5165221588250007CE038 /* BuyCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C5165121588250007CE038 /* BuyCenterViewController.swift */; };
-		24C5165921588A52007CE038 /* BuyCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C5165121588250007CE038 /* BuyCenterViewController.swift */; };
-		24D6C0CD215ADB8000E080D2 /* BuyPartnerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D6C0CC215ADB8000E080D2 /* BuyPartnerCell.swift */; };
-		24D6C0CE215ADB8000E080D2 /* BuyPartnerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D6C0CC215ADB8000E080D2 /* BuyPartnerCell.swift */; };
+		24B8FAC12160497C00A155B1 /* BuyCenterTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC02160497B00A155B1 /* BuyCenterTableViewController.swift */; };
+		24B8FAC22160497C00A155B1 /* BuyCenterTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC02160497B00A155B1 /* BuyCenterTableViewController.swift */; };
+		24B8FAC4216128A000A155B1 /* ParnterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC3216128A000A155B1 /* ParnterData.swift */; };
+		24B8FAC5216128A000A155B1 /* ParnterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC3216128A000A155B1 /* ParnterData.swift */; };
+		24B8FAC721615E3D00A155B1 /* BuyCenterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC621615E3D00A155B1 /* BuyCenterTableViewCell.swift */; };
+		24B8FAC821615E3D00A155B1 /* BuyCenterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC621615E3D00A155B1 /* BuyCenterTableViewCell.swift */; };
+		24B8FACA2161632C00A155B1 /* BuyCenterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC92161632C00A155B1 /* BuyCenterHeaderView.swift */; };
+		24B8FACB2161632C00A155B1 /* BuyCenterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC92161632C00A155B1 /* BuyCenterHeaderView.swift */; };
 		7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */; };
 		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
 		752438751DAAC50800844BEC /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6761DAA0E400075898E /* alloc.c */; };
@@ -1147,8 +1151,10 @@
 		22C431331DF89DFE0017CAEA /* BRCoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRCoderTests.swift; sourceTree = "<group>"; };
 		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bonjour.swift; sourceTree = "<group>"; };
-		24C5165121588250007CE038 /* BuyCenterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyCenterViewController.swift; sourceTree = "<group>"; };
-		24D6C0CC215ADB8000E080D2 /* BuyPartnerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyPartnerCell.swift; sourceTree = "<group>"; };
+		24B8FAC02160497B00A155B1 /* BuyCenterTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyCenterTableViewController.swift; sourceTree = "<group>"; };
+		24B8FAC3216128A000A155B1 /* ParnterData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParnterData.swift; sourceTree = "<group>"; };
+		24B8FAC621615E3D00A155B1 /* BuyCenterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyCenterTableViewCell.swift; sourceTree = "<group>"; };
+		24B8FAC92161632C00A155B1 /* BuyCenterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyCenterHeaderView.swift; sourceTree = "<group>"; };
 		7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WalletManager+Auth.swift"; path = "src/WalletManager+Auth.swift"; sourceTree = "<group>"; };
 		7528D2971ECF655500925DBC /* PaymentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentProtocol.swift; path = src/PaymentProtocol.swift; sourceTree = "<group>"; };
 		752FB03B1DF8BE4B009086FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -2504,7 +2510,9 @@
 		24C516502158820E007CE038 /* BuyCenter */ = {
 			isa = PBXGroup;
 			children = (
-				24C5165121588250007CE038 /* BuyCenterViewController.swift */,
+				24B8FAC92161632C00A155B1 /* BuyCenterHeaderView.swift */,
+				24B8FAC02160497B00A155B1 /* BuyCenterTableViewController.swift */,
+				24B8FAC621615E3D00A155B1 /* BuyCenterTableViewCell.swift */,
 			);
 			name = BuyCenter;
 			sourceTree = "<group>";
@@ -3576,7 +3584,6 @@
 				CECB9DB51E4985CE0081A172 /* LoginBackgroundView.swift */,
 				CE14E40A1E4D881500AEA83A /* TransactionDetailCollectionViewCell.swift */,
 				CE6B6B491E54C0CA00B31405 /* SecurityCenterCell.swift */,
-				24D6C0CC215ADB8000E080D2 /* BuyPartnerCell.swift */,
 				CE6DCC261E6108D50044257B /* EnterPhraseCell.swift */,
 				CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */,
 				CE6DCC2F1E6666470044257B /* NonScrollingCollectionView.swift */,
@@ -3650,6 +3657,7 @@
 				CEEC70821E90C07C00EF788E /* Setting.swift */,
 				CEF61B131ED0D10000C7EA6A /* Types.swift */,
 				CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */,
+				24B8FAC3216128A000A155B1 /* ParnterData.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -4604,7 +4612,6 @@
 				1BEA7DDC2142CAA00081602F /* WebViewContainer.swift in Sources */,
 				1B86CDDF2091528B00BCE82E /* BRAPIClient+Assets.swift in Sources */,
 				1B86CDE02091528B00BCE82E /* BRAPIClient+Features.swift in Sources */,
-				24C5165921588A52007CE038 /* BuyCenterViewController.swift in Sources */,
 				1B86CDE12091528B00BCE82E /* BRHTTPFileMiddleware.swift in Sources */,
 				1B86CDE22091528B00BCE82E /* ConfirmationViewController.swift in Sources */,
 				1B86CDE32091528B00BCE82E /* BCashTransactionViewController.swift in Sources */,
@@ -4649,10 +4656,12 @@
 				1B86CE0B2091528B00BCE82E /* WritePaperPhraseViewController.swift in Sources */,
 				1B86CE0C2091528B00BCE82E /* UIView+AnimationAdditions.swift in Sources */,
 				1B86CE0D2091528B00BCE82E /* DefaultCurrencyViewController.swift in Sources */,
+				24B8FAC5216128A000A155B1 /* ParnterData.swift in Sources */,
 				1B86CE0E2091528B00BCE82E /* LoginBackgroundView.swift in Sources */,
 				1B86CE0F2091528B00BCE82E /* DispatchQueue+Additions.swift in Sources */,
 				1B86CE102091528B00BCE82E /* RadialGradientView.swift in Sources */,
 				1B86CE112091528B00BCE82E /* GradientSwitch.swift in Sources */,
+				24B8FAC22160497C00A155B1 /* BuyCenterTableViewController.swift in Sources */,
 				1B86CE122091528B00BCE82E /* ModalPresenter.swift in Sources */,
 				1B86CE132091528B00BCE82E /* BlinkingView.swift in Sources */,
 				1B86CE142091528B00BCE82E /* ModalViewController.swift in Sources */,
@@ -4671,7 +4680,6 @@
 				1B86CE212091528B00BCE82E /* Prompt.swift in Sources */,
 				1B86CE222091528B00BCE82E /* SendAmountCell.swift in Sources */,
 				1B86CE232091528B00BCE82E /* BRKVStorePlugin.swift in Sources */,
-				24D6C0CE215ADB8000E080D2 /* BuyPartnerCell.swift in Sources */,
 				1B86CE242091528B00BCE82E /* SegmentedButton.swift in Sources */,
 				1B86CE252091528B00BCE82E /* PhoneWCSessionManager.swift in Sources */,
 				1B86CE262091528B00BCE82E /* WalletManager+Auth.swift in Sources */,
@@ -4685,6 +4693,8 @@
 				1B86CE2E2091528B00BCE82E /* ConfirmPhrase.swift in Sources */,
 				1B86CE2F2091528B00BCE82E /* AppDelegate.swift in Sources */,
 				1B86CE302091528B00BCE82E /* PushNotificationsViewController.swift in Sources */,
+				24B8FACB2161632C00A155B1 /* BuyCenterHeaderView.swift in Sources */,
+				24B8FAC821615E3D00A155B1 /* BuyCenterTableViewCell.swift in Sources */,
 				1B86CE312091528B00BCE82E /* BRAPIClient+KV.swift in Sources */,
 				1B86CE322091528B00BCE82E /* WalletDisabledView.swift in Sources */,
 				1B86CE332091528B00BCE82E /* AnimatableIcon.swift in Sources */,
@@ -4972,7 +4982,6 @@
 				1BEA7DDB2142CAA00081602F /* WebViewContainer.swift in Sources */,
 				2218BD771E8F55430091D5E8 /* BRAPIClient+Assets.swift in Sources */,
 				2228734D1E916F7C0044BA15 /* BRAPIClient+Features.swift in Sources */,
-				24C5165221588250007CE038 /* BuyCenterViewController.swift in Sources */,
 				22A9A94D1DF61945000F0016 /* BRHTTPFileMiddleware.swift in Sources */,
 				CE8644251F2C160200033129 /* ConfirmationViewController.swift in Sources */,
 				CE44BA1D1F35102D00392A1A /* BCashTransactionViewController.swift in Sources */,
@@ -5017,10 +5026,12 @@
 				CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */,
 				CE92F9F41DED59E80046B516 /* UIView+AnimationAdditions.swift in Sources */,
 				CEEC70941E96A24F00EF788E /* DefaultCurrencyViewController.swift in Sources */,
+				24B8FAC4216128A000A155B1 /* ParnterData.swift in Sources */,
 				CECB9DB61E4985CE0081A172 /* LoginBackgroundView.swift in Sources */,
 				CEE6282A1EA98B6D001035AA /* DispatchQueue+Additions.swift in Sources */,
 				CEC6AA3D1DEE687000EE5AFD /* RadialGradientView.swift in Sources */,
 				CEEC70921E95DA4400EF788E /* GradientSwitch.swift in Sources */,
+				24B8FAC12160497C00A155B1 /* BuyCenterTableViewController.swift in Sources */,
 				CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */,
 				CEE20C2F1EA3E5820086F724 /* BlinkingView.swift in Sources */,
 				CEC6AA441DEFCDE900EE5AFD /* ModalViewController.swift in Sources */,
@@ -5039,7 +5050,6 @@
 				CE2DC1391EBC36EE000FE727 /* Prompt.swift in Sources */,
 				CE83DE2A1E9EB7F600D07636 /* SendAmountCell.swift in Sources */,
 				22A9A9521DF61945000F0016 /* BRKVStorePlugin.swift in Sources */,
-				24D6C0CD215ADB8000E080D2 /* BuyPartnerCell.swift in Sources */,
 				CEAFC8611E5D5B0500E4FD06 /* SegmentedButton.swift in Sources */,
 				CE30F0E61EB27844004B8EE5 /* PhoneWCSessionManager.swift in Sources */,
 				7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */,
@@ -5053,6 +5063,8 @@
 				CEAA9E9B1DC2B9320066731D /* ConfirmPhrase.swift in Sources */,
 				75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */,
 				CEEC70901E95D5C100EF788E /* PushNotificationsViewController.swift in Sources */,
+				24B8FACA2161632C00A155B1 /* BuyCenterHeaderView.swift in Sources */,
+				24B8FAC721615E3D00A155B1 /* BuyCenterTableViewCell.swift in Sources */,
 				222C42501E90492800078EB5 /* BRAPIClient+KV.swift in Sources */,
 				CE5E6C941EB7964900A476DB /* WalletDisabledView.swift in Sources */,
 				CEF3E8341DE57166007C0A9E /* AnimatableIcon.swift in Sources */,
