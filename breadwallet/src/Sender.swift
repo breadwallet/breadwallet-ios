@@ -13,7 +13,7 @@ import BRCore
 // MARK: Types/Constants
 
 enum SendResult {
-    case success(String?, String?)
+    case success(String?, String?) // tx hash, raw tx data
     case creationError(String)
     case publishFailure(BRPeerManagerError)
     case insufficientGas(String) // for ERC20 token transfers
