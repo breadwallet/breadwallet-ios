@@ -256,7 +256,7 @@ public struct ERC20Token: CurrencyDef {
     
     public let isSupported: Bool
     public let saleAddress: String?
-    public let defaultRate: Double? // TODO: in BTC ?
+    public let defaultRate: Double?
     
     public var commonUnit: CurrencyUnit {
         return TokenUnit(decimals: decimals, name: code)
@@ -279,7 +279,7 @@ extension ERC20Token: Codable {
         case decimals = "scale"
         case isSupported = "is_supported"
         case saleAddress = "sale_address"
-        case defaultEthRate = "contract_initial_value"
+        case defaultRate = "contract_initial_value"
         case colors
     }
 
@@ -299,7 +299,12 @@ extension ERC20Token: Codable {
         colors = (UIColor.fromHex(colorValues[0]), UIColor.fromHex(colorValues[1]))
         isSupported = try container.decode(Bool.self, forKey: .isSupported)
         saleAddress = (try? container.decode(String.self, forKey: .saleAddress)) ?? nil
-        defaultRate = (try? container.decode(Double.self, forKey: .defaultEthRate)) ?? nil
+        // contains currency code prefix e.g. "ETH 0.00125000"
+        if let rateText = (try? container.decode(String.self, forKey: .defaultRate)) {
+            defaultRate = Double(String(rateText.trimmingCharacters(in: CharacterSet(charactersIn: "01234567890.").inverted)))
+        } else {
+            defaultRate = nil
+        }
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -314,7 +319,7 @@ extension ERC20Token: Codable {
         try container.encode(colorValues, forKey: .colors)
         try container.encode(isSupported, forKey: .isSupported)
         try container.encode(saleAddress, forKey: .saleAddress)
-        try container.encode(defaultRate, forKey: .defaultEthRate)
+        try container.encode(defaultRate, forKey: .defaultRate)
     }
 }
 
