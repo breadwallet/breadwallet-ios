@@ -46,4 +46,5 @@ extension UINavigationController {
         navigationBar.backIndicatorImage = #imageLiteral(resourceName: "Back")
         navigationBar.backIndicatorTransitionMaskImage = #imageLiteral(resourceName: "Back")
     }
+
 }

@@ -168,9 +168,11 @@ enum S {
       static let title = NSLocalizedString("BuyCenter.title", value:"Buy Litecoin", comment: "Buy Center Title")
       enum Cells {
         static let simplexTitle = NSLocalizedString("BuyCenter.simplexTitle", value: "Simplex", comment: "Simplex Title")
-        static let simplexFinancialDetails = NSLocalizedString("BuyCenter.simplexFinancialDetails", value: "$50 - $20,000 US per day", comment: "Simplex buy financial details")
+        static let simplexFinancialDetails = NSLocalizedString("BuyCenter.simplexFinancialDetails", value: "• No ID Required\n• $50 - $20,000 USD per day\n• $50,000 USD per month\n• Buy Litecoin via credit card", comment: "Simplex buy financial details")
         static let changellyTitle = NSLocalizedString("BuyCenter.changellyTitle", value: "Changelly", comment: "Changelly Title")
-        static let changellyFinancialDetails = NSLocalizedString("BuyCenter.changellyFinancialDetails", value: "Daily max: --", comment: "Changelly buy financial details")
+        static let changellyFinancialDetails = NSLocalizedString("BuyCenter.changellyFinancialDetails", value: "• Change Litecoin for other cryptos\n• No ID Required\n• Buy via credit card\n• Global coverage", comment: "Changelly buy financial details")
+        static let partner3Title = NSLocalizedString("BuyCenter.partner3Title", value: "Partner 3", comment: "Partner 3 Title")
+        static let partner3FinancialDetails = NSLocalizedString("BuyCenter.partner3FinancialDetails", value: "• Buy Crypto gift cards\n• No ID Required\n• Buy via Loafwallet\n• Use anywhere", comment: "Partner buy financial details")
       }
     }
 

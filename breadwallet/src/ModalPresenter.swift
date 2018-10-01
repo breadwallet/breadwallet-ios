@@ -595,11 +595,12 @@ class ModalPresenter : Subscriber, Trackable {
 
     private func presentBuyController(_ mountPoint: String) {
         guard let walletManager = self.walletManager else { return }
-      let vc: BuyCenterViewController
+      
+      let vc : BuyCenterTableViewController
         #if Debug || Testflight
-          vc = BuyCenterViewController(store: store, walletManager: walletManager, mountPoint: mountPoint, bundleName: "bread-frontend-staging")
+         vc = BuyCenterTableViewController(store: store, walletManager: walletManager, mountPoint: mountPoint, bundleName: "bread-frontend-staging")
         #else
-          vc = BuyCenterViewController(store: store, walletManager: walletManager, mountPoint: mountPoint, bundleName: "bread-frontend")
+         vc = BuyCenterTableViewController(store: store, walletManager: walletManager, mountPoint: mountPoint, bundleName: "bread-frontend")
         #endif
       
          topViewController?.present(vc, animated: true, completion: nil)
