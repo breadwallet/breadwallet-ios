@@ -85,6 +85,14 @@ public extension CurrencyDef {
         guard let unit = unit(forDecimals: decimals) else { return "" }
         return name(forUnit: unit)
     }
+    
+    var supportCurrencyCode: String {
+        if self is ERC20Token {
+            return "erc20"
+        } else {
+            return code.lowercased()
+        }
+    }
 }
 
 // MARK: - Images

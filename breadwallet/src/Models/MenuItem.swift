@@ -13,7 +13,8 @@ struct MenuItem {
     let icon: UIImage?
     let accessoryText: (() -> String)?
     let callback: () -> Void
-
+    let faqButton: UIButton? = nil
+    
     init(title: String, icon: UIImage? = nil, accessoryText: (() -> String)? = nil, callback: @escaping () -> Void) {
         self.title = title
         self.icon = icon?.withRenderingMode(.alwaysTemplate)
@@ -21,8 +22,8 @@ struct MenuItem {
         self.callback = callback
     }
     
-    init(title: String, icon: UIImage? = nil, subMenu: [MenuItem], rootNav: UINavigationController) {
-        let subMenuVC = MenuViewController(items: subMenu, title: title)
+    init(title: String, icon: UIImage? = nil, subMenu: [MenuItem], rootNav: UINavigationController, faqButton: UIButton? = nil) {
+        let subMenuVC = MenuViewController(items: subMenu, title: title, faqButton: faqButton)
         self.init(title: title, icon: icon, accessoryText: nil) {
             rootNav.pushViewController(subMenuVC, animated: true)
         }

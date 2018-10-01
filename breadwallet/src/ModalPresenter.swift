@@ -240,7 +240,7 @@ class ModalPresenter : Subscriber, Trackable {
         if let articleId = articleId {
             url = "/support/article?slug=\(articleId)"
             if let currency = currency {
-                url += "&currency=\(currency.code.lowercased())"
+                url += "&currency=\(currency.supportCurrencyCode)"
             }
         } else {
             url = "/support?"
@@ -564,7 +564,7 @@ class ModalPresenter : Subscriber, Trackable {
             MenuItem(title: S.Settings.preferences, icon: #imageLiteral(resourceName: "prefs"), subMenu: preferencesItems, rootNav: menuNav),
             
             // Security
-            MenuItem(title: S.MenuButton.security, icon: #imageLiteral(resourceName: "security"), subMenu: securityItems, rootNav: menuNav),
+            MenuItem(title: S.MenuButton.security, icon: #imageLiteral(resourceName: "security"), subMenu: securityItems, rootNav: menuNav, faqButton: UIButton.buildFaqButton(articleId: ArticleIds.securityCenter)),
             
             // Support
             MenuItem(title: S.MenuButton.support, icon: #imageLiteral(resourceName: "support")) { [unowned self] in
