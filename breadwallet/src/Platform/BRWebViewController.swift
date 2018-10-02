@@ -32,7 +32,6 @@ import WebKit
 @objc open class BRWebViewController : UIViewController, WKNavigationDelegate, BRWebSocketClient {
     var wkProcessPool: WKProcessPool
     var webView: WKWebView?
-  var testView: UIView?
     var server = BRHTTPServer()
     var debugEndpoint: String?
     var mountPoint: String
@@ -81,8 +80,8 @@ import WebKit
                 let walletAddress = walletManager.wallet?.receiveAddress
                 let currencyCode = Locale.current.currencyCode
                 let uuid = UIDevice.current.identifierForVendor!.uuidString
-            
-                return URL(string: getSimplexParams(appInstallDate: appInstallDate, walletAddress: walletAddress, currencyCode: currencyCode, uuid: uuid))!
+          
+                return URL(string: getSimplexParams(appInstallDate: appInstallDate,  walletAddress: walletAddress, currencyCode: currencyCode, uuid: uuid))!
             case "/support":
                 return URL(string: "https://api.loafwallet.org/support")!
             case "/ea":
@@ -99,7 +98,7 @@ import WebKit
         guard let uuid = uuid else { return "" }
         
         let timestamp = Int(appInstallDate.timeIntervalSince1970)
-        
+      
         return "https://buy.loafwallet.org/?address=\(walletAddress)&code=\(currencyCode)&idate=\(timestamp)&uid=\(uuid)"
     }
     
@@ -132,8 +131,6 @@ import WebKit
         
         view = UIView(frame: CGRect.zero)
         view.backgroundColor = UIColor(red:0.98, green:0.98, blue:0.98, alpha:1.0)
-      
-
       
         webView = WKWebView(frame: CGRect.zero, configuration: config)
         webView?.navigationDelegate = self

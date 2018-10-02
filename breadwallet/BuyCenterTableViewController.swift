@@ -17,7 +17,8 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
     private let walletManager: WalletManager
     private let mountPoint: String, bundleName: String
     private let partnerArray = Partner.dataArray()
-    private let headerHeight : CGFloat = 200.0
+    private let headerHeight : CGFloat = 140
+  
     init(store: Store, walletManager: WalletManager, mountPoint: String, bundleName: String?) {
       self.store = store
       self.walletManager = walletManager
@@ -38,6 +39,7 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
       self.tableView.register(BuyCenterTableViewCell.self, forCellReuseIdentifier: buyCellReuseIdentifier)
       self.tableView.backgroundColor = #colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1)
       self.clearsSelectionOnViewWillAppear = false
+    
     }
 
     override func didReceiveMemoryWarning() {
@@ -81,7 +83,7 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
     
     switch partner {
       case "Simplex":
-        let simplexWebviewVC = BRWebViewController(partner: "Simplex", bundleName: bundleName, walletManager: walletManager, store: store)
+        let simplexWebviewVC = BRWebViewController(partner: "Simplex", bundleName: bundleName, mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: nil)
         let nc = UINavigationController(rootViewController: simplexWebviewVC)
           nc.topViewController?.title = "Buy Litecoin"
         let backButton = UIBarButtonItem(image: #imageLiteral(resourceName: "Close"), style: .plain, target: self, action:#selector(dismissWebContainer))
@@ -92,7 +94,10 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
       case "Changelly":
         print("Changelly No Code Placeholder")
       case "Partner 3":
-        print("Partner No Code Placeholder")
+        let partner3 = BuyCenterWebViewController(nibName: nil, bundle: nil)
+        present(partner3, animated: true) {
+          //
+       }
       default:
         fatalError("No Partner Chosen")
     }

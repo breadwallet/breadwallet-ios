@@ -306,7 +306,7 @@ class ModalPresenter : Subscriber, Trackable {
         }
         menu.didTapBuy = { [weak self, weak menu] in
             menu?.dismiss(animated: true, completion: {
-               self?.presentBuyController("buy")
+               self?.presentBuyController("/buy")
             })
         }
         return root
