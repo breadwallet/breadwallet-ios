@@ -799,7 +799,9 @@ open class BRReplicatedKVStore: NSObject {
         self.lastModified = lastModified
         self.deleted = deleted
         super.init()
-        self.data = data
+        if !data.isEmpty {
+            self.data = data
+        }
     }
     
     func getData() -> Data? { return nil }
