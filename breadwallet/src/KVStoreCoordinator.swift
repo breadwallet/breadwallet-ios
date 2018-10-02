@@ -32,6 +32,11 @@ class KVStoreCoordinator : Subscriber {
         }
 
         assert(Store.state.availableTokens.count > 1, "missing token list")
+        if currencyMetaData.enabledCurrencies.count == 0 {
+            print("no wallets enabled in metadata, reverting to default")
+            currencyMetaData.enabledCurrencies = CurrencyListMetaData.defaultCurrencies
+            set(currencyMetaData)
+        }
         self.setInitialDisplayWallets(metaData: currencyMetaData, tokens: Store.state.availableTokens)
 
         Store.subscribe(self, name: .resetDisplayCurrencies, callback: { _ in
