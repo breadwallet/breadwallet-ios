@@ -332,6 +332,12 @@
 		24B8FAC821615E3D00A155B1 /* BuyCenterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC621615E3D00A155B1 /* BuyCenterTableViewCell.swift */; };
 		24B8FACA2161632C00A155B1 /* BuyCenterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC92161632C00A155B1 /* BuyCenterHeaderView.swift */; };
 		24B8FACB2161632C00A155B1 /* BuyCenterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC92161632C00A155B1 /* BuyCenterHeaderView.swift */; };
+		24B8FAD22162B10200A155B1 /* BuyCenterWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAD12162B10200A155B1 /* BuyCenterWebViewController.swift */; };
+		24B8FAD32162B10200A155B1 /* BuyCenterWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAD12162B10200A155B1 /* BuyCenterWebViewController.swift */; };
+		24B8FAD72162B6FB00A155B1 /* bitrefill_index.html in Resources */ = {isa = PBXBuildFile; fileRef = 24B8FAD62162B6FB00A155B1 /* bitrefill_index.html */; };
+		24B8FAD82162B6FB00A155B1 /* bitrefill_index.html in Resources */ = {isa = PBXBuildFile; fileRef = 24B8FAD62162B6FB00A155B1 /* bitrefill_index.html */; };
+		24B8FADC2162D29100A155B1 /* general.css in Resources */ = {isa = PBXBuildFile; fileRef = 24B8FADB2162D29100A155B1 /* general.css */; };
+		24B8FADD2162D29100A155B1 /* general.css in Resources */ = {isa = PBXBuildFile; fileRef = 24B8FADB2162D29100A155B1 /* general.css */; };
 		7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */; };
 		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
 		752438751DAAC50800844BEC /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6761DAA0E400075898E /* alloc.c */; };
@@ -1155,6 +1161,9 @@
 		24B8FAC3216128A000A155B1 /* ParnterData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParnterData.swift; sourceTree = "<group>"; };
 		24B8FAC621615E3D00A155B1 /* BuyCenterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyCenterTableViewCell.swift; sourceTree = "<group>"; };
 		24B8FAC92161632C00A155B1 /* BuyCenterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyCenterHeaderView.swift; sourceTree = "<group>"; };
+		24B8FAD12162B10200A155B1 /* BuyCenterWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyCenterWebViewController.swift; sourceTree = "<group>"; };
+		24B8FAD62162B6FB00A155B1 /* bitrefill_index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = bitrefill_index.html; sourceTree = "<group>"; };
+		24B8FADB2162D29100A155B1 /* general.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = general.css; sourceTree = "<group>"; };
 		7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WalletManager+Auth.swift"; path = "src/WalletManager+Auth.swift"; sourceTree = "<group>"; };
 		7528D2971ECF655500925DBC /* PaymentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentProtocol.swift; path = src/PaymentProtocol.swift; sourceTree = "<group>"; };
 		752FB03B1DF8BE4B009086FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -2507,12 +2516,38 @@
 			path = libbz2;
 			sourceTree = "<group>";
 		};
+		24B8FAD52162B6D400A155B1 /* Bitrefill_Web */ = {
+			isa = PBXGroup;
+			children = (
+				24B8FAD62162B6FB00A155B1 /* bitrefill_index.html */,
+				24B8FADA2162CF7600A155B1 /* css */,
+				24B8FAD92162CF7000A155B1 /* js */,
+			);
+			name = Bitrefill_Web;
+			sourceTree = "<group>";
+		};
+		24B8FAD92162CF7000A155B1 /* js */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = js;
+			sourceTree = "<group>";
+		};
+		24B8FADA2162CF7600A155B1 /* css */ = {
+			isa = PBXGroup;
+			children = (
+				24B8FADB2162D29100A155B1 /* general.css */,
+			);
+			name = css;
+			sourceTree = "<group>";
+		};
 		24C516502158820E007CE038 /* BuyCenter */ = {
 			isa = PBXGroup;
 			children = (
 				24B8FAC92161632C00A155B1 /* BuyCenterHeaderView.swift */,
 				24B8FAC02160497B00A155B1 /* BuyCenterTableViewController.swift */,
 				24B8FAC621615E3D00A155B1 /* BuyCenterTableViewCell.swift */,
+				24B8FAD12162B10200A155B1 /* BuyCenterWebViewController.swift */,
 			);
 			name = BuyCenter;
 			sourceTree = "<group>";
@@ -3285,6 +3320,7 @@
 				CE20C90F1DBE5B5100C8397A /* Views */,
 				CEBF33021DDE177F00348FC6 /* ViewModels */,
 				CE6D0E5A1E14BF8400137DF1 /* Models */,
+				24B8FAD52162B6D400A155B1 /* Bitrefill_Web */,
 				CE20C8F01DBAF6E100C8397A /* Extensions */,
 				22A9A9311DF61930000F0016 /* Platform */,
 				CEAA9E9C1DC2F8270066731D /* Fonts */,
@@ -4373,12 +4409,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				1B86CE9E2091528B00BCE82E /* BIP39Words.plist in Resources */,
+				24B8FAD82162B6FB00A155B1 /* bitrefill_index.html in Resources */,
 				1B86CE9F2091528B00BCE82E /* LaunchScreen.storyboard in Resources */,
 				1B86CEA02091528B00BCE82E /* CircularPro-Book.otf in Resources */,
 				1B86CEA12091528B00BCE82E /* POSTBouncer.html in Resources */,
 				1B86CEA22091528B00BCE82E /* coinflip.aiff in Resources */,
 				1B86CEA32091528B00BCE82E /* Icon.xcassets in Resources */,
 				1B86CEA42091528B00BCE82E /* Localizable.strings in Resources */,
+				24B8FADD2162D29100A155B1 /* general.css in Resources */,
 				1B86CEA62091528B00BCE82E /* CircularPro-Medium.otf in Resources */,
 				1B86CEA72091528B00BCE82E /* CircularPro-Bold.otf in Resources */,
 				1B86CEA92091528B00BCE82E /* Assets.xcassets in Resources */,
@@ -4447,12 +4485,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE4C1CD01ED8BCC70063E184 /* BIP39Words.plist in Resources */,
+				24B8FAD72162B6FB00A155B1 /* bitrefill_index.html in Resources */,
 				75A2A79E1DA5934300A983D8 /* LaunchScreen.storyboard in Resources */,
 				CEAA9EA31DC2FC700066731D /* CircularPro-Book.otf in Resources */,
 				222319B21F279B3C00008F20 /* POSTBouncer.html in Resources */,
 				CE473D7C1F042F1E00C0ACFD /* coinflip.aiff in Resources */,
 				CE5E6C9A1EB9135000A476DB /* Icon.xcassets in Resources */,
 				CE29901A1EFD6DE50093A0F2 /* Localizable.strings in Resources */,
+				24B8FADC2162D29100A155B1 /* general.css in Resources */,
 				CEAA9EA41DC2FC700066731D /* CircularPro-Medium.otf in Resources */,
 				CEAA9E9E1DC2F90C0066731D /* CircularPro-Bold.otf in Resources */,
 				75A2A79B1DA5934300A983D8 /* Assets.xcassets in Resources */,
@@ -4754,6 +4794,7 @@
 				1B86CE692091528B00BCE82E /* AmountViewController.swift in Sources */,
 				1B86CE6A2091528B00BCE82E /* AccountHeaderView.swift in Sources */,
 				1B86CE6B2091528B00BCE82E /* SendCell.swift in Sources */,
+				24B8FAD32162B10200A155B1 /* BuyCenterWebViewController.swift in Sources */,
 				1B86CE6C2091528B00BCE82E /* NonScrollingCollectionView.swift in Sources */,
 				1B86CE6D2091528B00BCE82E /* BRAPIProxy.swift in Sources */,
 				1B86CE6E2091528B00BCE82E /* Actions.swift in Sources */,
@@ -5124,6 +5165,7 @@
 				CEF61B121ECF52C700C7EA6A /* AmountViewController.swift in Sources */,
 				CEBF32F21DDCE10D00348FC6 /* AccountHeaderView.swift in Sources */,
 				CECCE5B21E04B00D00D99448 /* SendCell.swift in Sources */,
+				24B8FAD22162B10200A155B1 /* BuyCenterWebViewController.swift in Sources */,
 				CE6DCC301E6666470044257B /* NonScrollingCollectionView.swift in Sources */,
 				22A9A9471DF61945000F0016 /* BRAPIProxy.swift in Sources */,
 				CE20C9011DBBFFF800C8397A /* Actions.swift in Sources */,
