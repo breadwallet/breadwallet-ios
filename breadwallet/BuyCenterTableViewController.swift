@@ -37,9 +37,8 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
       self.tableView.dataSource = self
       self.tableView.delegate = self
       self.tableView.register(BuyCenterTableViewCell.self, forCellReuseIdentifier: buyCellReuseIdentifier)
-      self.tableView.backgroundColor = #colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1)
+      self.tableView.backgroundColor = #colorLiteral(red: 0.9529411765, green: 0.9529411765, blue: 0.9529411765, alpha: 1) // #colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1)
       self.clearsSelectionOnViewWillAppear = false
-    
     }
 
     override func didReceiveMemoryWarning() {
@@ -48,7 +47,7 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
     }
 
     // MARK: - Table view data source
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { return 160}
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { return 150 }
 
     override func numberOfSections(in tableView: UITableView) -> Int { return 1 }
 
@@ -69,9 +68,8 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       let cell = tableView.dequeueReusableCell(withIdentifier: buyCellReuseIdentifier, for: indexPath) as! BuyCenterTableViewCell
       let partnerData = partnerArray[indexPath.row]
-      
         cell.partnerLabel.text = partnerData["title"] as? String
-        cell.financialDetailsLabel.text = partnerData["details"] as? String
+        cell.financialDetailsLabel.text = (partnerData["details"] as? String)! + Currency.simplexRanges()
         cell.logoImageView.image = partnerData["logo"] as? UIImage
         cell.frameView.backgroundColor = (partnerData["baseColor"] as? UIColor)!
         cell.delegate = self
@@ -106,7 +104,7 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
 //   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 //
 //   }
-  
+   
   @objc func dismissWebContainer() {
     dismiss(animated: true, completion: nil)
   }
