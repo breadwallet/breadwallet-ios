@@ -22,12 +22,13 @@ class Partner {
        "details":S.BuyCenter.Cells.changellyFinancialDetails,
        "logo":UIImage(named:"changellyLogo") ?? " ",
        "baseColor":#colorLiteral(red: 0.07058823529, green: 0.7882352941, blue: 0.4274509804, alpha: 1)] as [String : AnyObject]
-    let partner3Dictionary =
-      ["title":S.BuyCenter.Cells.partner3Title as AnyObject,
-       "details":S.BuyCenter.Cells.partner3FinancialDetails,
-       "logo":UIImage(named:"partner3logo") ?? " ",
+    let bitrefillDictionary =
+      ["title":S.BuyCenter.Cells.bitrefillTitle as AnyObject,
+       "details":S.BuyCenter.Cells.bitrefillFinancialDetails,
+       "logo":UIImage(named:"bitrefillLogo") ?? " ",
        "baseColor":#colorLiteral(red: 0.2235294118, green: 0.5490196078, blue: 0.9333333333, alpha: 1)] as [String : AnyObject]
     
-    return [simplexDictionary,changellyDictionary,partner3Dictionary]
+    return [simplexDictionary,changellyDictionary,bitrefillDictionary]
   }
+  
 }

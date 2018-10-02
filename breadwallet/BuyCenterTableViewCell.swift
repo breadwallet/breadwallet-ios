@@ -61,7 +61,7 @@ class BuyCenterTableViewCell : UITableViewCell {
     partnerLabel.textColor = UIColor.white
     
     financialDetailsLabel.translatesAutoresizingMaskIntoConstraints = false
-    financialDetailsLabel.font = UIFont.customMedium(size: 13)
+    financialDetailsLabel.font = UIFont.customBody(size: 14)
     financialDetailsLabel.textColor = UIColor.white
     financialDetailsLabel.textAlignment = .left
     financialDetailsLabel.numberOfLines = 0
@@ -69,7 +69,7 @@ class BuyCenterTableViewCell : UITableViewCell {
     
     selectButton.setImage(#imageLiteral(resourceName: "whiteRightArrow"), for: .normal)
     selectButton.imageView?.contentMode = .scaleAspectFit
-    selectButton.imageEdgeInsets = UIEdgeInsetsMake(20, 10, 20, 8)
+    selectButton.imageEdgeInsets = UIEdgeInsetsMake(20, 15, 20, 10)
     selectButton.addTarget(self, action: #selector(selectButtonPressed), for: .touchUpInside)
     
   }
@@ -78,8 +78,8 @@ class BuyCenterTableViewCell : UITableViewCell {
     let margins = self.layoutMarginsGuide
     
     frameView.constrain([
-      frameView.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 2),
-      frameView.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -5),
+      frameView.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 0),
+      frameView.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: 0),
       frameView.topAnchor.constraint(equalTo: margins.topAnchor, constant: 10),
       frameView.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: 10)
       ])
@@ -102,7 +102,7 @@ class BuyCenterTableViewCell : UITableViewCell {
       partnerLabel.leadingAnchor.constraint(equalTo: colorFrameView.trailingAnchor, constant: 10),
       partnerLabel.widthAnchor.constraint(equalToConstant: 160),
       partnerLabel.topAnchor.constraint(equalTo: frameView.topAnchor, constant: 10),
-      partnerLabel.heightAnchor.constraint(equalToConstant: 25)
+      partnerLabel.heightAnchor.constraint(equalToConstant: 24)
       ])
     
     financialDetailsLabel.constrain([

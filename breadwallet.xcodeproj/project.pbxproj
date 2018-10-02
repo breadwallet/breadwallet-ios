@@ -326,8 +326,8 @@
 		22E773041EE7813000397E0E /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E773031EE7813000397E0E /* Bonjour.swift */; };
 		24B8FAC12160497C00A155B1 /* BuyCenterTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC02160497B00A155B1 /* BuyCenterTableViewController.swift */; };
 		24B8FAC22160497C00A155B1 /* BuyCenterTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC02160497B00A155B1 /* BuyCenterTableViewController.swift */; };
-		24B8FAC4216128A000A155B1 /* ParnterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC3216128A000A155B1 /* ParnterData.swift */; };
-		24B8FAC5216128A000A155B1 /* ParnterData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC3216128A000A155B1 /* ParnterData.swift */; };
+		24B8FAC4216128A000A155B1 /* PartnerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC3216128A000A155B1 /* PartnerData.swift */; };
+		24B8FAC5216128A000A155B1 /* PartnerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC3216128A000A155B1 /* PartnerData.swift */; };
 		24B8FAC721615E3D00A155B1 /* BuyCenterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC621615E3D00A155B1 /* BuyCenterTableViewCell.swift */; };
 		24B8FAC821615E3D00A155B1 /* BuyCenterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC621615E3D00A155B1 /* BuyCenterTableViewCell.swift */; };
 		24B8FACA2161632C00A155B1 /* BuyCenterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC92161632C00A155B1 /* BuyCenterHeaderView.swift */; };
@@ -338,6 +338,8 @@
 		24B8FAD82162B6FB00A155B1 /* bitrefill_index.html in Resources */ = {isa = PBXBuildFile; fileRef = 24B8FAD62162B6FB00A155B1 /* bitrefill_index.html */; };
 		24B8FADC2162D29100A155B1 /* general.css in Resources */ = {isa = PBXBuildFile; fileRef = 24B8FADB2162D29100A155B1 /* general.css */; };
 		24B8FADD2162D29100A155B1 /* general.css in Resources */ = {isa = PBXBuildFile; fileRef = 24B8FADB2162D29100A155B1 /* general.css */; };
+		24B8FADF2163C4D400A155B1 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FADE2163C4D400A155B1 /* Currency.swift */; };
+		24B8FAE02163C4D400A155B1 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FADE2163C4D400A155B1 /* Currency.swift */; };
 		7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */; };
 		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
 		752438751DAAC50800844BEC /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6761DAA0E400075898E /* alloc.c */; };
@@ -1158,12 +1160,13 @@
 		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bonjour.swift; sourceTree = "<group>"; };
 		24B8FAC02160497B00A155B1 /* BuyCenterTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyCenterTableViewController.swift; sourceTree = "<group>"; };
-		24B8FAC3216128A000A155B1 /* ParnterData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParnterData.swift; sourceTree = "<group>"; };
+		24B8FAC3216128A000A155B1 /* PartnerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerData.swift; sourceTree = "<group>"; };
 		24B8FAC621615E3D00A155B1 /* BuyCenterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyCenterTableViewCell.swift; sourceTree = "<group>"; };
 		24B8FAC92161632C00A155B1 /* BuyCenterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyCenterHeaderView.swift; sourceTree = "<group>"; };
 		24B8FAD12162B10200A155B1 /* BuyCenterWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyCenterWebViewController.swift; sourceTree = "<group>"; };
 		24B8FAD62162B6FB00A155B1 /* bitrefill_index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = bitrefill_index.html; sourceTree = "<group>"; };
 		24B8FADB2162D29100A155B1 /* general.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = general.css; sourceTree = "<group>"; };
+		24B8FADE2163C4D400A155B1 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WalletManager+Auth.swift"; path = "src/WalletManager+Auth.swift"; sourceTree = "<group>"; };
 		7528D2971ECF655500925DBC /* PaymentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentProtocol.swift; path = src/PaymentProtocol.swift; sourceTree = "<group>"; };
 		752FB03B1DF8BE4B009086FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -3693,7 +3696,8 @@
 				CEEC70821E90C07C00EF788E /* Setting.swift */,
 				CEF61B131ED0D10000C7EA6A /* Types.swift */,
 				CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */,
-				24B8FAC3216128A000A155B1 /* ParnterData.swift */,
+				24B8FAC3216128A000A155B1 /* PartnerData.swift */,
+				24B8FADE2163C4D400A155B1 /* Currency.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -4696,7 +4700,7 @@
 				1B86CE0B2091528B00BCE82E /* WritePaperPhraseViewController.swift in Sources */,
 				1B86CE0C2091528B00BCE82E /* UIView+AnimationAdditions.swift in Sources */,
 				1B86CE0D2091528B00BCE82E /* DefaultCurrencyViewController.swift in Sources */,
-				24B8FAC5216128A000A155B1 /* ParnterData.swift in Sources */,
+				24B8FAC5216128A000A155B1 /* PartnerData.swift in Sources */,
 				1B86CE0E2091528B00BCE82E /* LoginBackgroundView.swift in Sources */,
 				1B86CE0F2091528B00BCE82E /* DispatchQueue+Additions.swift in Sources */,
 				1B86CE102091528B00BCE82E /* RadialGradientView.swift in Sources */,
@@ -4734,6 +4738,7 @@
 				1B86CE2F2091528B00BCE82E /* AppDelegate.swift in Sources */,
 				1B86CE302091528B00BCE82E /* PushNotificationsViewController.swift in Sources */,
 				24B8FACB2161632C00A155B1 /* BuyCenterHeaderView.swift in Sources */,
+				24B8FAE02163C4D400A155B1 /* Currency.swift in Sources */,
 				24B8FAC821615E3D00A155B1 /* BuyCenterTableViewCell.swift in Sources */,
 				1B86CE312091528B00BCE82E /* BRAPIClient+KV.swift in Sources */,
 				1B86CE322091528B00BCE82E /* WalletDisabledView.swift in Sources */,
@@ -5067,7 +5072,7 @@
 				CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */,
 				CE92F9F41DED59E80046B516 /* UIView+AnimationAdditions.swift in Sources */,
 				CEEC70941E96A24F00EF788E /* DefaultCurrencyViewController.swift in Sources */,
-				24B8FAC4216128A000A155B1 /* ParnterData.swift in Sources */,
+				24B8FAC4216128A000A155B1 /* PartnerData.swift in Sources */,
 				CECB9DB61E4985CE0081A172 /* LoginBackgroundView.swift in Sources */,
 				CEE6282A1EA98B6D001035AA /* DispatchQueue+Additions.swift in Sources */,
 				CEC6AA3D1DEE687000EE5AFD /* RadialGradientView.swift in Sources */,
@@ -5105,6 +5110,7 @@
 				75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */,
 				CEEC70901E95D5C100EF788E /* PushNotificationsViewController.swift in Sources */,
 				24B8FACA2161632C00A155B1 /* BuyCenterHeaderView.swift in Sources */,
+				24B8FADF2163C4D400A155B1 /* Currency.swift in Sources */,
 				24B8FAC721615E3D00A155B1 /* BuyCenterTableViewCell.swift in Sources */,
 				222C42501E90492800078EB5 /* BRAPIClient+KV.swift in Sources */,
 				CE5E6C941EB7964900A476DB /* WalletDisabledView.swift in Sources */,
