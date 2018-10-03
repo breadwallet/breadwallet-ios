@@ -28,7 +28,7 @@ class Partner {
        "logo":UIImage(named:"bitrefillLogo") ?? " ",
        "baseColor":#colorLiteral(red: 0.2235294118, green: 0.5490196078, blue: 0.9333333333, alpha: 1)] as [String : AnyObject]
     
-    return [simplexDictionary,changellyDictionary,bitrefillDictionary]
+    return [simplexDictionary]
   }
   
 }

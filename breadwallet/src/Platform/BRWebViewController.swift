@@ -1,35 +1,15 @@
 //
 //  BRWebViewController.swift
 //  BreadWallet
-//
-//  Created by Samuel Sutch on 12/10/15.
-//  Copyright (c) 2016 breadwallet LLC
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
+
 
 import Foundation
 import UIKit
 import WebKit
 
-
+let reactEvents = ["documentReady","onClick","err","load", "close", "submit"]
 @available(iOS 8.0, *)
-@objc open class BRWebViewController : UIViewController, WKNavigationDelegate, BRWebSocketClient {
+@objc open class BRWebViewController : UIViewController, WKNavigationDelegate, BRWebSocketClient, WKScriptMessageHandler {
     var wkProcessPool: WKProcessPool
     var webView: WKWebView?
     var server = BRHTTPServer()
@@ -39,22 +19,15 @@ import WebKit
     let store: Store
     let noAuthApiClient: BRAPIClient?
     let partner : String?
-
-    // bonjour debug endpoint establishment - this will configure the debugEndpoint 
-    // over bonjour if debugOverBonjour is set to true. this MUST be set to false 
-    // for production deploy targets
-    let debugOverBonjour = false
-    let bonjourBrowser = Bonjour()
-    var debugNetService: NetService?
-    
-    // didLoad should be set to true within didLoadTimeout otherwise a view will be shown which
-    // indicates some error. this is to prevent the white-screen-of-death where there is some
-    // javascript exception (or other error) that prevents the content from loading
+  
     var didLoad = false
     var didAppear = false
     var didLoadTimeout = 2500
     
     // we are also a socket server which sends didview/didload events to the listening client(s)
+  
+    var userController: WKUserContentController?
+  
     var sockets = [String: BRWebSocket]()
     
     // this is the data that occasionally gets sent to the above connected sockets
@@ -98,7 +71,7 @@ import WebKit
         guard let uuid = uuid else { return "" }
         
         let timestamp = Int(appInstallDate.timeIntervalSince1970)
-      
+      print("++++++++++++++++https://buy.loafwallet.org/?address=\(walletAddress)&code=\(currencyCode)&idate=\(timestamp)&uid=\(uuid)")
         return "https://buy.loafwallet.org/?address=\(walletAddress)&code=\(currencyCode)&idate=\(timestamp)&uid=\(uuid)"
     }
     
@@ -120,6 +93,9 @@ import WebKit
     
     override open func loadView() {
         didLoad = false
+      
+        setupPlayerAndEventDelegation()
+ 
         let config = WKWebViewConfiguration()
         config.processPool = wkProcessPool
         config.allowsInlineMediaPlayback = false
@@ -165,6 +141,17 @@ import WebKit
     override open func viewDidDisappear(_ animated: Bool) {
         didAppear = false
         sendToAllSockets(data: webViewInfo)
+    }
+  
+    //WKWebView Setup
+  
+    private func setupPlayerAndEventDelegation() {
+     userController = WKUserContentController()
+     webView?.configuration.userContentController = userController!
+      
+      for eventName in reactEvents {
+        userController?.add(self, name: eventName)
+      }
     }
 
     // signal to the presenter that the webview content successfully loaded
@@ -245,4 +232,10 @@ import WebKit
     public func socket(_ socket: BRWebSocket, didReceiveData data: Data) {
         print("WEBVIEW SOCKET RECV TEXT \(data.hexString)")
     }
+  
+  public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage)
+  {
+    print(message.name)
+  }
+  
 }

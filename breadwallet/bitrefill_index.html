@@ -1,14 +1,37 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>TODO supply a title</title>
+    <title>Bitrefill</title>
     <meta charset="UTF-8">
       <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
         </head>
   <body>
     <div>
-      TEST CODE
-       <script src="https://cdn.airfill.com/widget.js"></script> <div id="widget" /> <script> AirfillWidget('#widget', { key: 'XbDCEXRGc9mLJhMY', billingCurrency: 'XBT' }); </script>
+       <script src="https://cdn.airfill.com/widget.js"></script> <div id="widget" /> <script> AirfillWidget('#widget', { key: 'XbDCEXRGc9mLJhMY', billingCurrency: 'LTC' }); </script>
     </div>
   </body>
 </html>
+
+<!--<script src="https://cdn.airfill.com/widget.js"></script>-->
+<!--<script>-->
+<!--  AirfillWidget('#app', {-->
+<!--                key: 'XbDCEXRGc9mLJhMY', // Airfill Widget API key (required)-->
+<!--                paymentButtons: [{-->
+<!--                                 title: 'Pay With Account Balance',-->
+<!--                                 callback: function (order) {-->
+<!--                                 fetch('/api/order_callback', { body: order, method: 'POST' })-->
+<!--                                 .then(function (response) { return response.json(); })-->
+<!--                                 .then(-->
+<!--                                       function(success) {-->
+<!--                                       // No need to do anything here, the widget will update as soon-->
+<!--                                       // as the order accept call has been completed-->
+<!--                                       },-->
+<!--                                       function(error) {-->
+<!--                                       // Notify the user that something went wrong-->
+<!--                                       alert(error.message);-->
+<!--                                       }-->
+<!--                                       );-->
+<!--                                 }-->
+<!--                                 }]-->
+<!--                });-->
+<!--  </script>-->

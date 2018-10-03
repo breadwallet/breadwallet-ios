@@ -82,12 +82,7 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
     switch partner {
       case "Simplex":
         let simplexWebviewVC = BRWebViewController(partner: "Simplex", bundleName: bundleName, mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: nil)
-        let nc = UINavigationController(rootViewController: simplexWebviewVC)
-          nc.topViewController?.title = "Buy Litecoin"
-        let backButton = UIBarButtonItem(image: #imageLiteral(resourceName: "Close"), style: .plain, target: self, action:#selector(dismissWebContainer))
-          backButton.tintColor = UIColor.black
-          nc.topViewController?.navigationItem.leftBarButtonItem = backButton
-        present(nc, animated: true
+        present(simplexWebviewVC, animated: true
         , completion: nil)
       case "Changelly":
         print("Changelly No Code Placeholder")
