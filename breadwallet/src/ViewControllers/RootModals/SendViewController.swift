@@ -545,7 +545,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
 extension SendViewController : ModalDisplayable {
     var faqArticleId: String? {
-        return ArticleIds.sendBitcoin
+        return ArticleIds.sendTx
     }
     
     var faqCurrency: CurrencyDef? {
