@@ -397,21 +397,58 @@ class ApplicationController : Subscriber, Trackable {
     
     private func updateTokenList(completion: @escaping () -> Void) {
         guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return assertionFailure() }
+        let processTokens: ([ERC20Token]) -> Void = { tokens in
+            var tokens = tokens.sorted(by: { $0.code.lowercased() < $1.code.lowercased() })
+            if E.isDebug {
+                tokens.append(Currencies.tst)
+            }
+            ethWalletManager.setAvailableTokens(tokens)
+            DispatchQueue.main.async {
+                Store.perform(action: ManageWallets.setAvailableTokens(tokens))
+            }
+            print("[TokenList] tokens updated: \(tokens.count) tokens")
+            completion()
+        }
+        
+        let fm = FileManager.default
+        let documentsDir = try! fm.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        let cachedFilePath = documentsDir.appendingPathComponent("tokens.json").path
+        
+        if let embeddedFilePath = Bundle.main.path(forResource: "tokens", ofType: "json"), !fm.fileExists(atPath: cachedFilePath) {
+            do {
+                try fm.copyItem(atPath: embeddedFilePath, toPath: cachedFilePath)
+                print("[TokenList] copied bundle tokens list to cache")
+            } catch let e {
+                print("[TokenList] unable to copy bundled \(embeddedFilePath) -> \(cachedFilePath): \(e)")
+            }
+        }
+        // fetch from network and update cached copy on success or return the cached copy if fetch fails
         Backend.apiClient.getTokenList() { result in
             switch result {
             case .success(let tokens):
-                var tokens = tokens.sorted(by: { $0.code.lowercased() < $1.code.lowercased() })
-                if E.isDebug {
-                    tokens.append(Currencies.tst)
+                DispatchQueue.global(qos: .utility).async {
+                    // update cache
+                    do {
+                        let data = try JSONEncoder().encode(tokens)
+                        try data.write(to: URL(fileURLWithPath: cachedFilePath))
+                    } catch let e {
+                        print("[TokenList] failed to write to cache: \(e.localizedDescription)")
+                    }
                 }
-                ethWalletManager.setAvailableTokens(tokens)
-                DispatchQueue.main.async {
-                    Store.perform(action: ManageWallets.setAvailableTokens(tokens))
-                }
-                print("Token list updated: \(tokens.count) tokens")
-                completion()
+                processTokens(tokens)
+                
             case .error(let error):
-                print("Error fetching token list: \(error)")
+                print("[TokenList] error fetching tokens: \(error)")
+                var tokens = [ERC20Token]()
+                do {
+                    print("[TokenList] using cached token list")
+                    let cachedData = try Data(contentsOf: URL(fileURLWithPath: cachedFilePath))
+                    tokens = try JSONDecoder().decode([ERC20Token].self, from: cachedData)
+                } catch let e {
+                    print("[TokenList] error reading from cache: \(e)")
+                    assertionFailure()
+                }
+                processTokens(tokens)
             }
         }
     }
