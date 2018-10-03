@@ -33,6 +33,8 @@ class BuyCenterHeaderView : UIView {
     header.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: height)
     configureViews()
     layoutCustomViews()
+    
+   // , constant: E.isIPhoneX ? 0 : 0.0
   }
   
   required init?(coder aDecoder: NSCoder) {
@@ -66,10 +68,10 @@ class BuyCenterHeaderView : UIView {
     header.constrain([
       header.leadingAnchor.constraint(equalTo: self.leadingAnchor),
       header.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-      header.topAnchor.constraint(equalTo: self.topAnchor),
+      header.topAnchor.constraint(equalTo: self.topAnchor, constant: E.isIPhoneX ? -45 : -20.0),
       header.bottomAnchor.constraint(equalTo: self.bottomAnchor)
       ])
-    
+ 
     titleLabel.constrain([
       titleLabel.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: 15),
       titleLabel.trailingAnchor.constraint(equalTo: header.trailingAnchor),
@@ -88,7 +90,7 @@ class BuyCenterHeaderView : UIView {
       dismissButton.leadingAnchor.constraint(equalTo: header.leadingAnchor),
       dismissButton.widthAnchor.constraint(equalToConstant: buttonSize),
       dismissButton.heightAnchor.constraint(equalToConstant: buttonSize),
-      dismissButton.topAnchor.constraint(equalTo: header.topAnchor, constant: 15)
+      dismissButton.topAnchor.constraint(equalTo: header.topAnchor, constant: E.isIPhoneX ? 45 : 20)
       ])
   }
 }
