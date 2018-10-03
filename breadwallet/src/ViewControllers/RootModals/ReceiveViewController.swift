@@ -260,7 +260,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
 
 extension ReceiveViewController : ModalDisplayable {
     var faqArticleId: String? {
-        return ArticleIds.receiveBitcoin
+        return ArticleIds.receiveTx
     }
     
     var faqCurrency: CurrencyDef? {
