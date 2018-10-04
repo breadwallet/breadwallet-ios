@@ -320,7 +320,7 @@ extension ERC20Token: Codable {
         try container.encode(address, forKey: .address)
         try container.encode(name, forKey: .name)
         try container.encode(code, forKey: .code)
-        try container.encode(String(decimals), forKey: .decimals)
+        try container.encode(decimals, forKey: .decimals)
         var colorValues = [String]()
         colorValues.append(colors.0.toHex)
         colorValues.append(colors.1.toHex)
