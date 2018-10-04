@@ -17,7 +17,7 @@
                BlueprintIdentifier = "75A2A78F1DA5934300A983D8"
                BuildableName = "loafwallet.app"
                BlueprintName = "loafwallet"
-               ReferencedContainer = "container:breadwallet.xcodeproj">
+               ReferencedContainer = "container:loafwallet.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "75A2A7A31DA5934300A983D8"
                BuildableName = "loafwalletTests.xctest"
                BlueprintName = "loafwalletTests"
-               ReferencedContainer = "container:breadwallet.xcodeproj">
+               ReferencedContainer = "container:loafwallet.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -45,7 +45,7 @@
                BlueprintIdentifier = "75A2A7AE1DA5934300A983D8"
                BuildableName = "loafwalletUITests.xctest"
                BlueprintName = "loafwalletUITests"
-               ReferencedContainer = "container:breadwallet.xcodeproj">
+               ReferencedContainer = "container:loafwallet.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -55,7 +55,7 @@
                BlueprintIdentifier = "CEA7E67A1F09A9D2001F8C27"
                BuildableName = "Screenshots.xctest"
                BlueprintName = "Screenshots"
-               ReferencedContainer = "container:breadwallet.xcodeproj">
+               ReferencedContainer = "container:loafwallet.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -65,7 +65,7 @@
             BlueprintIdentifier = "75A2A78F1DA5934300A983D8"
             BuildableName = "loafwallet.app"
             BlueprintName = "loafwallet"
-            ReferencedContainer = "container:breadwallet.xcodeproj">
+            ReferencedContainer = "container:loafwallet.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -89,7 +89,7 @@
             BlueprintIdentifier = "75A2A78F1DA5934300A983D8"
             BuildableName = "loafwallet.app"
             BlueprintName = "loafwallet"
-            ReferencedContainer = "container:breadwallet.xcodeproj">
+            ReferencedContainer = "container:loafwallet.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
@@ -115,7 +115,7 @@
             BlueprintIdentifier = "75A2A78F1DA5934300A983D8"
             BuildableName = "loafwallet.app"
             BlueprintName = "loafwallet"
-            ReferencedContainer = "container:breadwallet.xcodeproj">
+            ReferencedContainer = "container:loafwallet.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
