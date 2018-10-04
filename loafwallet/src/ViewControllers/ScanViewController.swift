@@ -19,7 +19,8 @@ class ScanViewController : UIViewController, Trackable {
         alertController.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         alertController.addAction(UIAlertAction(title: S.Button.settings, style: .`default`, handler: { _ in
             if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.openURL(appSettings)
+              UIApplication.shared.open(appSettings, options: [:] , completionHandler: nil)
+               
             }
         }))
         fromRoot.present(alertController, animated: true, completion: nil)
