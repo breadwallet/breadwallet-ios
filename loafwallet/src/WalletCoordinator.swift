@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import AVFoundation
+import AVFoundation 
 
 private let lastBlockHeightKey = "LastBlockHeightKey"
 private let progressUpdateInterval: TimeInterval = 0.5
@@ -227,7 +227,8 @@ class WalletCoordinator : Subscriber, Trackable {
         guard UIApplication.shared.applicationState == .background || UIApplication.shared.applicationState == .inactive else { return }
         guard store.state.isPushNotificationsEnabled else { return }
         UIApplication.shared.applicationIconBadgeNumber = UIApplication.shared.applicationIconBadgeNumber + 1
-        let notification = UILocalNotification()
+        let notification =
+      UILocalNotification()
         notification.alertBody = message
         notification.soundName = "coinflip.aiff"
         UIApplication.shared.presentLocalNotificationNow(notification)

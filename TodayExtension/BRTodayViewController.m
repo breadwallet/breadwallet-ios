@@ -138,14 +138,7 @@
 
     self.addressLabel.text = [self.appGroupUserDefault objectForKey:APP_GROUP_RECEIVE_ADDRESS_KEY];
 }
-
-// MARK: - NCWidgetProviding
-
-- (UIEdgeInsets)widgetMarginInsetsForProposedMarginInsets:(UIEdgeInsets)defaultMarginInsets
-{
-    return UIEdgeInsetsZero;
-}
-
+ 
 // MARK: - UI Events
 
 - (IBAction)scanButtonTapped:(UIButton *)sender

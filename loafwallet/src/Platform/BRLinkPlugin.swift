@@ -42,7 +42,7 @@ class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate
             if let encodedUrls = request.query["url"] , encodedUrls.count == 1 {
                 if let decodedUrl = encodedUrls[0].removingPercentEncoding, let url = URL(string: decodedUrl) {
                     print("[BRLinkPlugin] /_open_url \(decodedUrl)")
-                    UIApplication.shared.openURL(url)
+                  UIApplication.shared.open(url, options: [:], completionHandler: nil)
                     return BRHTTPResponse(request: request, code: 204)
                 }
             }
@@ -64,7 +64,7 @@ class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate
                 print("[BRLinkPlugin] /_open_maps unable to construct url")
                 return invalidResp
             }
-            UIApplication.shared.openURL(url)
+          UIApplication.shared.open(url, options: [:], completionHandler: nil)
             return BRHTTPResponse(request: request, code: 204)
         }
         

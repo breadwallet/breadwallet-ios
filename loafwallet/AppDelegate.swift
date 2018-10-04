@@ -73,7 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         applicationController.application(application, didRegister: notificationSettings)
     }
 
-    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+  func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         applicationController.application(application, didFailToRegisterForRemoteNotificationsWithError: error)
     }
 
