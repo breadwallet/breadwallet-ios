@@ -43,6 +43,7 @@ enum TriggerName {
     case rescan(CurrencyDef)
     case lock
     case promptBiometrics
+    case promptEmail
     case promptPaperKey
     case promptUpgradePin
     case loginFromSend

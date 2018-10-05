@@ -25,7 +25,10 @@ extension UIFont {
         guard let font = UIFont(name: "CircularPro-Medium", size: size) else { return UIFont.preferredFont(forTextStyle: .body) }
         return font
     }
-
+    static func emailPlaceholder() -> UIFont {
+        guard let font = UIFont(name: "CircularPro-Book", size: 15.0) else { return UIFont.preferredFont(forTextStyle: .body) }
+        return font
+    }
     static var regularAttributes: [NSAttributedStringKey: Any] {
         return [
             NSAttributedStringKey.font: UIFont.customBody(size: 14.0),

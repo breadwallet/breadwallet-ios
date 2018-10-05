@@ -15,6 +15,7 @@ private let hasAquiredShareDataPermissionKey = "has_acquired_permission"
 private let legacyWalletNeedsBackupKey = "WALLET_NEEDS_BACKUP"
 private let writePaperPhraseDateKey = "writepaperphrasedatekey"
 private let hasPromptedBiometricsKey = "haspromptedtouched"
+private let hasPromptedForEmailKey = "hasPromptedForEmail"
 private let isBtcSwappedKey = "isBtcSwappedKey"
 private let maxDigitsKey = "SETTINGS_MAX_DIGITS"
 private let pushTokenKey = "pushTokenKey"
@@ -205,6 +206,11 @@ extension UserDefaults {
     static var hasPromptedBiometrics: Bool {
         get { return defaults.bool(forKey: hasPromptedBiometricsKey) }
         set { defaults.set(newValue, forKey: hasPromptedBiometricsKey) }
+    }
+    
+    static var hasPromptedForEmail: Bool {
+        get { return defaults.bool(forKey: hasPromptedForEmailKey ) }
+        set { defaults.set(newValue, forKey: hasPromptedForEmailKey ) }
     }
 }
 
