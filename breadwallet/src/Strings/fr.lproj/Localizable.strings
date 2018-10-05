@@ -176,12 +176,6 @@
 "DefaultCurrency.rateLabel" = "Taux de change";
 /* The wallet is disabled. */
 "Disabled.title" = "Portefeuille désactivé";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "Demande %1$@ des informations de compte";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "Demande %1$@ d'appel de contrat intelligent";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "Demande %1$@ de paiement";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Cet appareil n'est pas configuré pour envoyer un e-mail avec l'application e-mail pour iOS.";
 /* Email unavailable alert title */
@@ -228,16 +222,10 @@
 "FeeSelector.title" = "Vitesse de traitement";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Admin";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Acheter des Bitcoins";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Portefeuilles";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "Capital total";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Échanger";
 /* Checking private key balance progress view text */
 "Import.checking" = "Vérification du solde des clés privées...";
 /* Sweep private key confirmation message */
@@ -292,20 +280,6 @@
 "JailbreakWarnings.title" = "AVERTISSEMENT";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Supprimer";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "Accepter";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "Refuser ";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "Les applis externes ne peuvent pas envoyer de l'argent sans l'autorisation de cet appareil ";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "Note : Interagir SEULEMENT avec cette application lorsque vous êtes dans l'un des domaines suivants";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "Paiement sécurisé";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "Cette appli pourra : ";
-/* Link Wallet view title */
-"LinkWallet.title" = "Relier le porte-monnaie ";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Les services de localisation sont désactivés.";
 /* No permissions for location services */
@@ -322,10 +296,6 @@
 "MenuButton.addWallet" = "Ajouter un portefeuille";
 /* Menu button title */
 "MenuButton.lock" = "Verrouiller le portefeuille";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Gérer les portefeuilles";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Scanner le code QR";
 /* Menu button title */
 "MenuButton.security" = "Centre de sécurité";
 /* Menu button title */
@@ -358,10 +328,6 @@
 "NodeSelector.statusLabel" = "Statut de connexion du nœud";
 /* Node Selector view title */
 "NodeSelector.title" = "Nœuds Bitcoin";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "Envoyer %1$@ pour acheter %2$@";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "Confirmation ";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Mauvaise demande de paiement";
 /* Error opening payment protocol file message */
@@ -420,10 +386,6 @@
 "Prompts.UpgradePin.title" = "Mettre à jour le code PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Activez les notifications pour recevoir des messages spéciaux de Bread à l'avenir.";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "Notifications désactivées";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Activer les notifications dans Paramètres pour recevoir des alertes";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Notifications push";
 /* Push notifications are off label */
@@ -618,8 +580,6 @@
 "Settings.manage" = "Gérer";
 /* Notifications label */
 "Settings.notifications" = "Notifications";
-/* Section header for "other settings". */
-"Settings.other" = "Autre";
 /* Preferences settings section header */
 "Settings.preferences" = "Préférences";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -662,14 +622,10 @@
 "StartViewController.recoverButton" = "Récupérer le portefeuille";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Connexion";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Échec de la synchronisation";
 /* Syncing view header text */
 "SyncingView.header" = "Synchronisation";
 /* Retry button label */
 "SyncingView.retry" = "Réessayer";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Synchronisé jusqu'à %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Synchronisation";
 /* 6 d (6 days) */
@@ -774,8 +730,6 @@
 "TransactionDetails.amountHeader" = "Montant";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "%1$@ à la réception, %2$@ maintenant";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "%1$@ au moment de l'envoi, %2$@ à présent";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Confirmé en bloc";
 /* Memo section header */
@@ -950,3 +904,51 @@
 "WritePaperPhrase.previous" = "Précédent";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li de %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Autre";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Gérer les portefeuilles";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Acheter";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Échanger";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Scanner le code QR";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Échec de la synchronisation";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Synchronisé jusqu'à %1$@";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Notifications désactivées";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Activer les notifications dans Paramètres pour recevoir des alertes";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Accepter";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Refuser ";
+/* Link Wallet view title */
+"LinkWallet.title" = "Relier le porte-monnaie ";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Note : Interagir SEULEMENT avec cette application lorsque vous êtes dans l'un des domaines suivants";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Cette appli pourra : ";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Les applis externes ne peuvent pas envoyer de l'argent sans l'autorisation de cet appareil ";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Paiement sécurisé";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Confirmation ";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Envoyer %1$@ pour acheter %2$@";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Demande %1$@ des informations de compte";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Demande %1$@ d'appel de contrat intelligent";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Demande %1$@ de paiement";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ au moment de l'envoi, %2$@ à présent";
+/* Request timed out error message */
+"Alert.timedOut" = "Demande expirée. Vérifiez votre connexion et réessayez.";

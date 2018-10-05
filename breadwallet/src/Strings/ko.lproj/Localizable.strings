@@ -176,12 +176,6 @@
 "DefaultCurrency.rateLabel" = "환율";
 /* The wallet is disabled. */
 "Disabled.title" = "월렛이 비활성화됨";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "%1$@ 계정 정보를 요청합니다";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "%1$@ 스마트계약 콜을 요청합니다";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "%1$@ 계정 정보를 요청합니다";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "이 장치는 iOS 메일 앱으로 이메일을 전송하도록 설정되지 않았습니다.";
 /* Email unavailable alert title */
@@ -228,16 +222,10 @@
 "FeeSelector.title" = "처리 속도";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "관리";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "비트코인 구매";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "메뉴";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "지갑";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "총 자산";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "교환";
 /* Checking private key balance progress view text */
 "Import.checking" = "개인 열쇠 잔고 확인 중...";
 /* Sweep private key confirmation message */
@@ -292,20 +280,6 @@
 "JailbreakWarnings.title" = "경고";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "초기화";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "승인";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "거절";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "외부 앱은 이 장치의 승인 없이 돈을 전송할 수 없습니다";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "주의: 다음 도메인의 경우에만 이 앱이 연동됨";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "안전한 체크아웃";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "이 앱의 기능:";
-/* Link Wallet view title */
-"LinkWallet.title" = "연결 지갑";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "위치 서비스가 꺼졌습니다.";
 /* No permissions for location services */
@@ -322,10 +296,6 @@
 "MenuButton.addWallet" = "지갑 추가";
 /* Menu button title */
 "MenuButton.lock" = "지갑 잠그기";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "지갑 관리";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "QR코드 스캔";
 /* Menu button title */
 "MenuButton.security" = "보안 센터";
 /* Menu button title */
@@ -358,10 +328,6 @@
 "NodeSelector.statusLabel" = "노드 연결 상태";
 /* Node Selector view title */
 "NodeSelector.title" = "비트코인 노드";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "%2$@ 구매를 위해 %1$@ 전송";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "확인";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "틀린 결제 요청";
 /* Error opening payment protocol file message */
@@ -420,10 +386,6 @@
 "Prompts.UpgradePin.title" = "PIN 업그레이드";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "알림을 켜두시면, 향후 브레드의 특별 메시지를 수신할 수 있습니다.";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "알림 비활성";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "알림을 받으려면 설정에서 알림을 켜세요";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "푸시 알림";
 /* Push notifications are off label */
@@ -618,8 +580,6 @@
 "Settings.manage" = "관리";
 /* Notifications label */
 "Settings.notifications" = "알림";
-/* Section header for "other settings". */
-"Settings.other" = "기타";
 /* Preferences settings section header */
 "Settings.preferences" = "환경 설정";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -662,14 +622,10 @@
 "StartViewController.recoverButton" = "지갑 복구하기";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "연결 중";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "동기화 실패";
 /* Syncing view header text */
 "SyncingView.header" = "동기화 중";
 /* Retry button label */
 "SyncingView.retry" = "다시 시도";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "%1$@ 전 동기화 됨";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "동기화 중";
 /* 6 d (6 days) */
@@ -774,8 +730,6 @@
 "TransactionDetails.amountHeader" = "금액";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "받았을 때 %1$@, 지금은 %2$@";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "전송 시 %1$@, 현재 %2$@";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "차단 확인";
 /* Memo section header */
@@ -950,3 +904,51 @@
 "WritePaperPhrase.previous" = "이전";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%2$li의 %1$li";
+/* Section header for "other settings". */
+"Settings.other" = "기타";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "지갑 관리";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "메뉴";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "사다";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "교환";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "QR코드 스캔";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "동기화 실패";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "%1$@ 전 동기화 됨";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "알림 비활성";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "알림을 받으려면 설정에서 알림을 켜세요";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "승인";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "거절";
+/* Link Wallet view title */
+"LinkWallet.title" = "연결 지갑";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "주의: 다음 도메인의 경우에만 이 앱이 연동됨";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "이 앱의 기능:";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "외부 앱은 이 장치의 승인 없이 돈을 전송할 수 없습니다";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "안전한 체크아웃";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "확인";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "%2$@ 구매를 위해 %1$@ 전송";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "%1$@ 계정 정보를 요청합니다";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "%1$@ 스마트계약 콜을 요청합니다";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "%1$@ 계정 정보를 요청합니다";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "전송 시 %1$@, 현재 %2$@";
+/* Request timed out error message */
+"Alert.timedOut" = "요청이 시간 초과 되었습니다. 인터넷 연결을 확인하고 다시 시도하세요.";

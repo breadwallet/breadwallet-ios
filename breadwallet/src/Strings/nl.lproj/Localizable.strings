@@ -176,12 +176,6 @@
 "DefaultCurrency.rateLabel" = "Wisselkoers";
 /* The wallet is disabled. */
 "Disabled.title" = "Wallet uitgeschakeld";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "Vraag %1$@ accountgegevens aan";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "Verzoek %1$@ smart contract oproep";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "Verzoek %1$@ betaling";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Dit apparaat is niet geconfigureerd om e-mails te sturen via de iOS Mail app.";
 /* Email unavailable alert title */
@@ -228,16 +222,10 @@
 "FeeSelector.title" = "Verwerkingssnelheid";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Beheerder";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Bitcoins Kopen";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Wallets";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "Totale Prijs:";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Handel";
 /* Checking private key balance progress view text */
 "Import.checking" = "Private key balans checken...";
 /* Sweep private key confirmation message */
@@ -292,20 +280,6 @@
 "JailbreakWarnings.title" = "WAARSCHUWING";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Wissen";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "Goedkeuren";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "Afwijzen";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "Externe apps kunnen geen geld versturen zonder goedkeuring vanaf dit toestel";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "Let op: werk alleen met deze app wanneer je je op één van de volgende domeinen bevind";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "Beveiligde Betalingspagina";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "Deze app zal in staat zijn om:";
-/* Link Wallet view title */
-"LinkWallet.title" = "Portefeuille Koppelen";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Locatievoorzieningen zijn uitgeschakeld.";
 /* No permissions for location services */
@@ -322,10 +296,6 @@
 "MenuButton.addWallet" = "Voeg Wallet toe";
 /* Menu button title */
 "MenuButton.lock" = "Portemonnee Vergrendelen";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Beheer wallets";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Scan QR-code";
 /* Menu button title */
 "MenuButton.security" = "Veiligheidscentrum";
 /* Menu button title */
@@ -358,10 +328,6 @@
 "NodeSelector.statusLabel" = "Connectiestatus van de node";
 /* Node Selector view title */
 "NodeSelector.title" = "Bitcoin-nodes";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "%1$@ versturen om %2$@ te kopen";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "Bevestiging";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Slecht Betalingsverzoek";
 /* Error opening payment protocol file message */
@@ -420,10 +386,6 @@
 "Prompts.UpgradePin.title" = "PIN Upgraden";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Zet notificaties aan om in de toekomst speciale berichten van Brood te ontvangen.";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "Meldingen Uitgeschakeld";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Schakel meldingen in in Instellingen om notificaties te ontvangen";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push Meldingen";
 /* Push notifications are off label */
@@ -618,8 +580,6 @@
 "Settings.manage" = "Beheer";
 /* Notifications label */
 "Settings.notifications" = "Notificaties";
-/* Section header for "other settings". */
-"Settings.other" = "Andere";
 /* Preferences settings section header */
 "Settings.preferences" = "Voorkeuren";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -662,14 +622,10 @@
 "StartViewController.recoverButton" = "Wallet herstellen";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Aan het verbinden";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Synchronisatie mislukt";
 /* Syncing view header text */
 "SyncingView.header" = "Synchroniseren";
 /* Retry button label */
 "SyncingView.retry" = "Opnieuw proberen";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Gesynchroniseerd via %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Aan het synchroniseren";
 /* 6 d (6 days) */
@@ -774,8 +730,6 @@
 "TransactionDetails.amountHeader" = "Bedrag";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "%1$@ wanneer ontvangen, %2$@ nu";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "%1$@ tijdens versturen, %2$@ nu";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Bevestigd in block";
 /* Memo section header */
@@ -950,3 +904,51 @@
 "WritePaperPhrase.previous" = "Vorige";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li van %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Andere";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Beheer wallets";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Kopen";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Handel";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Scan QR-code";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Synchronisatie mislukt";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Gesynchroniseerd via %1$@";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Meldingen Uitgeschakeld";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Schakel meldingen in in Instellingen om notificaties te ontvangen";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Goedkeuren";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Afwijzen";
+/* Link Wallet view title */
+"LinkWallet.title" = "Portefeuille Koppelen";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Let op: werk alleen met deze app wanneer je je op één van de volgende domeinen bevind";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Deze app zal in staat zijn om:";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Externe apps kunnen geen geld versturen zonder goedkeuring vanaf dit toestel";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Beveiligde Betalingspagina";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Bevestiging";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "%1$@ versturen om %2$@ te kopen";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Vraag %1$@ accountgegevens aan";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Verzoek %1$@ smart contract oproep";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Verzoek %1$@ betaling";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ tijdens versturen, %2$@ nu";
+/* Request timed out error message */
+"Alert.timedOut" = "Verzoek loopt af. Controleer uw verbinding en probeer het opnieuw.";
