@@ -176,12 +176,6 @@
 "DefaultCurrency.rateLabel" = "Växelkurs";
 /* The wallet is disabled. */
 "Disabled.title" = "Plånbok inaktiverad";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "Begär %1$@ betalning";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "Begär %1$@ smart kontraktsamtal";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "Begär %1$@ kontoinformation";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Enheten är inte konfigurerad för att skicka e-post med post-appen i iOS.";
 /* Email unavailable alert title */
@@ -228,16 +222,10 @@
 "FeeSelector.title" = "Bearbetningshastighet";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Admin";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Köp Bitcoin";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Meny";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Plånböcker";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "totala tillgångar";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Handla";
 /* Checking private key balance progress view text */
 "Import.checking" = "Kontrollerar privat nyckelsaldo...";
 /* Sweep private key confirmation message */
@@ -292,20 +280,6 @@
 "JailbreakWarnings.title" = "VARNING";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Töm";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "Godkänn";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "Avböj";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "Externa appar kan inte skicka pengar utan godkännande från denna enhet";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "OBS: Interagera BARA med denna app från en av följande domäner";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "Säker kassa";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "Denna app kommer att kunna:";
-/* Link Wallet view title */
-"LinkWallet.title" = "Länka plånbok";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Platstjänster är inaktiverade.";
 /* No permissions for location services */
@@ -322,10 +296,6 @@
 "MenuButton.addWallet" = "Lägg till plånbok";
 /* Menu button title */
 "MenuButton.lock" = "Lås plånbok";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Hantera plånböcker";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Skanna QR-kod";
 /* Menu button title */
 "MenuButton.security" = "Säkerhetscenter";
 /* Menu button title */
@@ -358,10 +328,6 @@
 "NodeSelector.statusLabel" = "Nodens anslutningsstatus";
 /* Node Selector view title */
 "NodeSelector.title" = "Bitcoin-noder";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "Skicka %1$@ för att köpa %2$@";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "Bekräftelse";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Felaktig utbetalningsbegäran";
 /* Error opening payment protocol file message */
@@ -420,10 +386,6 @@
 "Prompts.UpgradePin.title" = "Uppgradera PIN-kod";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Slå på aviseringar för att få särskilda meddelanden från Bread i framtiden.";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "Meddelanden avaktiverade";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Aktivera meddelanden i inställningar för att ta emot larm";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push-meddelanden";
 /* Push notifications are off label */
@@ -618,8 +580,6 @@
 "Settings.manage" = "Hantera";
 /* Notifications label */
 "Settings.notifications" = "Meddelanden";
-/* Section header for "other settings". */
-"Settings.other" = "Andra";
 /* Preferences settings section header */
 "Settings.preferences" = "Preferenser";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -662,14 +622,10 @@
 "StartViewController.recoverButton" = "Återställ plånbok";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Ansluter";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Synkronisering misslyckades";
 /* Syncing view header text */
 "SyncingView.header" = "Synkar";
 /* Retry button label */
 "SyncingView.retry" = "Försök igen";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Synkroniserad genom %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Synkroniserar";
 /* 6 d (6 days) */
@@ -774,8 +730,6 @@
 "TransactionDetails.amountHeader" = "Belopp";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "%1$@ vid mottagande, %2$@ nu";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "%1$@ när det skickades, %2$@ nu";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Bekräftad i block";
 /* Memo section header */
@@ -950,3 +904,51 @@
 "WritePaperPhrase.previous" = "Föregående";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li av %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Andra";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Hantera plånböcker";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Meny";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Köpa";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Handla";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Skanna QR-kod";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Synkronisering misslyckades";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Synkroniserad genom %1$@";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Meddelanden avaktiverade";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Aktivera meddelanden i inställningar för att ta emot larm";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Godkänn";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Avböj";
+/* Link Wallet view title */
+"LinkWallet.title" = "Länka plånbok";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "OBS: Interagera BARA med denna app från en av följande domäner";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Denna app kommer att kunna:";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Externa appar kan inte skicka pengar utan godkännande från denna enhet";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Säker kassa";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Bekräftelse";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Skicka %1$@ för att köpa %2$@";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Begär %1$@ betalning";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Begär %1$@ smart kontraktsamtal";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Begär %1$@ kontoinformation";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ när det skickades, %2$@ nu";
+/* Request timed out error message */
+"Alert.timedOut" = "Begärde time-out. Kontrollera din anslutning och försök igen.";
