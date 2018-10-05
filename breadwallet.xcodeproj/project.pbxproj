@@ -480,6 +480,8 @@
 		CEF3E8341DE57166007C0A9E /* AnimatableIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8331DE57166007C0A9E /* AnimatableIcon.swift */; };
 		CEF3E8361DE60222007C0A9E /* ModalNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8351DE60222007C0A9E /* ModalNavigationController.swift */; };
 		CEF61B121ECF52C700C7EA6A /* AmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF61B111ECF52C700C7EA6A /* AmountViewController.swift */; };
+		E89C0611216A8BE70012CE0D /* GetUserEmailPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89C0610216A8BE70012CE0D /* GetUserEmailPrompt.swift */; };
+		E89C0613216D79550012CE0D /* BRAPIClient+EmailSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89C0612216D79550012CE0D /* BRAPIClient+EmailSubscription.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1669,6 +1671,8 @@
 		CEF3E8331DE57166007C0A9E /* AnimatableIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnimatableIcon.swift; path = src/Views/AnimatedIcons/AnimatableIcon.swift; sourceTree = "<group>"; };
 		CEF3E8351DE60222007C0A9E /* ModalNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalNavigationController.swift; path = src/ViewControllers/ModalNavigationController.swift; sourceTree = "<group>"; };
 		CEF61B111ECF52C700C7EA6A /* AmountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = AmountViewController.swift; path = src/ViewControllers/AmountViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		E89C0610216A8BE70012CE0D /* GetUserEmailPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GetUserEmailPrompt.swift; path = src/Views/GetUserEmailPrompt.swift; sourceTree = "<group>"; };
+		E89C0612216D79550012CE0D /* BRAPIClient+EmailSubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+EmailSubscription.swift"; path = "src/Platform/BRAPIClient+EmailSubscription.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1789,6 +1793,7 @@
 				222319B11F279B3C00008F20 /* POSTBouncer.html */,
 				7C67B6352056FB13006487BE /* BRAPIClient+Ethereum.swift */,
 				7C67B6372056FBFA006487BE /* JSONRPC.swift */,
+				E89C0612216D79550012CE0D /* BRAPIClient+EmailSubscription.swift */,
 			);
 			name = Platform;
 			sourceTree = "<group>";
@@ -3121,6 +3126,7 @@
 				CE12289C20D3695400EC6F81 /* MotionGradientView.swift */,
 				CE3CDB9620D443CE007059F6 /* CutoutLabel.swift */,
 				CE0BC97F215ACBE100E68B2B /* TokenImageNoBackground.swift */,
+				E89C0610216A8BE70012CE0D /* GetUserEmailPrompt.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -4018,6 +4024,7 @@
 				CE4B6C1A1E219CA600CF935B /* WalletCoordinator.swift in Sources */,
 				CE6D0E5C1E14BFA700137DF1 /* KeyboardNotificationInfo.swift in Sources */,
 				CEA05CC31F21B53C00D850F0 /* FeeSelector.swift in Sources */,
+				E89C0611216A8BE70012CE0D /* GetUserEmailPrompt.swift in Sources */,
 				CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */,
 				CEC4CF071F0C48DD00E5C82E /* StartWipeWalletViewController.swift in Sources */,
 				7528D2981ECF655500925DBC /* PaymentProtocol.swift in Sources */,
@@ -4103,6 +4110,7 @@
 				CEF3D2DB1E8B55C80070178E /* UISlider+Gradient.swift in Sources */,
 				CE65C66A207D41BB000C99C4 /* CurrencyListMetaData.swift in Sources */,
 				CE4CA7BC1EE3649100373F11 /* BRActivityView.swift in Sources */,
+				E89C0613216D79550012CE0D /* BRAPIClient+EmailSubscription.swift in Sources */,
 				7CBABD9C20181D890077CB55 /* NSMutableAttributedString+Additions.swift in Sources */,
 				CEC6AA421DEFC88F00EE5AFD /* ReceiveViewController.swift in Sources */,
 				CEE20C2D1EA288FA0086F724 /* UpdatingLabel.swift in Sources */,

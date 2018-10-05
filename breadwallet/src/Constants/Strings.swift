@@ -41,6 +41,7 @@ enum S {
         static let error = NSLocalizedString("Alert.error", value: "Error", comment: "Error alert title")
         static let noInternet = NSLocalizedString("Alert.noInternet", value: "No internet connection found. Check your connection and try again.", comment: "No internet alert message")
         static let timedOut = NSLocalizedString("Alert.timedOut", value: "Request timed out. Check your connection and try again.", comment: "Request timed out error message")
+        static let somethingWentWrong = NSLocalizedString("Alert.somethingWentWrong", value: "Something went wrong. Please try again.", comment: "General error message with 'Try again'")
     }
 
     enum Scanner {
@@ -458,6 +459,22 @@ enum S {
         enum FaceId {
             static let title = NSLocalizedString("Prompts.FaceId.title", value: "Enable Face ID", comment: "Enable face ID prompt title")
             static let body = NSLocalizedString("Prompts.FaceId.body", value: "Tap Continue to enable Face ID", comment: "Enable face ID prompt body")
+        }
+        enum Email {
+            static let title = NSLocalizedString("Prompts.Email.title", value: "Get in the loop", comment: "Get user email address prompt title")
+            static let body = NSLocalizedString("Prompts.Email.body", 
+                                                value: "Be the first to receive important support and product updates",
+                                                comment: "Get user email address prompt body")
+            static let emailPlaceholder = NSLocalizedString("Prompts.Email.placeholder", value: "enter your email", comment: "user email input placeholder")
+            static let successTitle = NSLocalizedString("Prompts.Email.successTitle", 
+                                                        value: "Thank you!", 
+                                                        comment: "Get user email address prompt title upon success")
+            static let successBody = NSLocalizedString("Prompts.Email.successBody", 
+                                                        value: "You have successfully subscribed to receive updates", 
+                                                        comment: "body text show after the user successfully submits an email address for updates")
+            static let successFootnote = NSLocalizedString("Prompts.Email.successFootnote", 
+                                                           value: "We appreciate your continued support", 
+                                                           comment: "shown after the user successfully submits an email address for updates")
         }
     }
 

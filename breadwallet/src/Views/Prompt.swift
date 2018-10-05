@@ -14,9 +14,10 @@ enum PromptType {
     case paperKey
     case upgradePin
     case noPasscode
+    case email
 
     static var defaultOrder: [PromptType] = {
-        return [.upgradePin, .paperKey, .noPasscode, .biometrics]
+        return [.upgradePin, .paperKey, .noPasscode, .biometrics, .email]
     }()
     
     static func nextPrompt(walletManager: BTCWalletManager) -> PromptType? {
@@ -29,6 +30,7 @@ enum PromptType {
         case .paperKey: return S.Prompts.PaperKey.title
         case .upgradePin: return S.Prompts.UpgradePin.title
         case .noPasscode: return S.Prompts.NoPasscode.title
+        case .email: return S.Prompts.Email.title
         }
     }
     
@@ -38,6 +40,7 @@ enum PromptType {
         case .paperKey: return "paperKeyPrompt"
         case .upgradePin: return "upgradePinPrompt"
         case .noPasscode: return "noPasscodePrompt"
+        case .email: return "emailPrompt"
         }
     }
 
@@ -47,20 +50,22 @@ enum PromptType {
         case .paperKey: return S.Prompts.PaperKey.body
         case .upgradePin: return S.Prompts.UpgradePin.body
         case .noPasscode: return S.Prompts.NoPasscode.body
+        case .email: return S.Prompts.Email.body
         }
     }
 
-    //This is the trigger that happens when the prompt is tapped
+    // This is the trigger that happens when the prompt is tapped
     func trigger(currency: CurrencyDef) -> TriggerName? {
         switch self {
         case .biometrics: return .promptBiometrics
         case .paperKey: return .promptPaperKey
         case .upgradePin: return .promptUpgradePin
         case .noPasscode: return nil
+        case .email: return .promptEmail
         }
     }
 
-    private func shouldPrompt(walletManager: BTCWalletManager) -> Bool {
+    func shouldPrompt(walletManager: BTCWalletManager) -> Bool {
         switch self {
         case .biometrics:
             return !UserDefaults.hasPromptedBiometrics && LAContext.canUseBiometrics && !UserDefaults.isBiometricsEnabled
@@ -70,12 +75,31 @@ enum PromptType {
             return walletManager.pinLength != 6
         case .noPasscode:
             return !LAContext.isPasscodeEnabled
+        case .email:
+            return !UserDefaults.hasPromptedForEmail
+        }
+    }
+}
+
+// Creates prompt views based on a given type. The 'email' type requires a more
+// sophisticated view with an email input field.
+class PromptFactory {
+    static func createPrompt(type: PromptType, presenter: UIViewController?) -> Prompt {
+        switch type {
+        case .email:
+            let prompt = GetUserEmailPrompt()
+            if let presenter = presenter {
+                prompt.presenter = presenter
+            }
+            return prompt
+        default:
+            return Prompt(type: type)
         }
     }
 }
 
 class Prompt : UIView {
-
+    
     init(type: PromptType) {
         self.type = type
         super.init(frame: .zero)
@@ -86,11 +110,15 @@ class Prompt : UIView {
     let continueButton = UIButton.rounded(title: S.Button.continueAction)
     let type: PromptType
     
-    private let title = UILabel(font: .customBold(size: 16.0), color: .darkGray)
-    private let body = UILabel.wrapping(font: .customBody(size: 14.0), color: .darkGray)
-    private let container = UIView()
+    let title = UILabel(font: .customBold(size: 16.0), color: .darkGray)
+    let body = UILabel.wrapping(font: .customBody(size: 14.0), color: .darkGray)
+    let container = UIView()
 
-    private func setup() {
+    var shouldHandleTap: Bool {
+        return false
+    }
+    
+    func setup() {
         addSubviews()
         setupConstraints()
         setupStyle()
@@ -99,7 +127,11 @@ class Prompt : UIView {
         body.text = type.body
     }
     
-    private func addSubviews() {
+    var containerBackgroundColor: UIColor {
+        return .whiteBackground
+    }
+            
+    func addSubviews() {
         addSubview(container)
         container.addSubview(title)
         container.addSubview(body)
@@ -107,7 +139,7 @@ class Prompt : UIView {
         container.addSubview(continueButton)
     }
     
-    private func setupConstraints() {
+    func setupConstraints() {
         container.constrain(toSuperviewEdges: UIEdgeInsets(top: C.padding[1],
                                                            left: 10.0,
                                                            bottom: -C.padding[1],
@@ -133,13 +165,21 @@ class Prompt : UIView {
             continueButton.bottomAnchor.constraint(equalTo: dismissButton.bottomAnchor)])
     }
     
-    private func setupStyle() {
+    func styleDismissButton() {
         dismissButton.backgroundColor = .lightGray
         dismissButton.setTitleColor(.white, for: .normal)
+    }
+
+    func styleContinueButton() {
         continueButton.backgroundColor = .statusIndicatorActive
         continueButton.setTitleColor(.white, for: .normal)
+    }
+    
+    private func setupStyle() {
+        styleDismissButton()
+        styleContinueButton()
         
-        container.backgroundColor = .whiteBackground
+        container.backgroundColor = containerBackgroundColor
         container.layer.cornerRadius = 4.0
         container.layer.shadowRadius = 4.0
         container.layer.shadowColor = UIColor.black.cgColor
