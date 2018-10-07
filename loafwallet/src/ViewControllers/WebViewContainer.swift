@@ -12,9 +12,9 @@ class WebViewContainer : UIViewController {
 
     init(mountPoint: String, walletManager: WalletManager, store: Store, apiClient: BRAPIClient) {
         #if Debug || Testflight
-            webView = BRWebViewController(partner: "", bundleName: "bread-frontend-staging", mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: apiClient)
+            webView = BRWebViewController(partner: "Simplex", mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: apiClient)
         #else
-            webView = BRWebViewController(partner: "", bundleName: "bread-frontend", mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: apiClient)
+            webView = BRWebViewController(partner: "Simplex", mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: apiClient)
         #endif
         webView.preload()
         super.init(nibName: nil, bundle: nil)

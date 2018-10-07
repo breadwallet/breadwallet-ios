@@ -72,7 +72,7 @@ class ApplicationController : Subscriber, Trackable {
                 }
             }
         }
-        updateAssetBundles()
+        //updateAssetBundles()
         if !hasPerformedWalletDependentInitialization && didInitWallet {
             didInitWalletManager()
         }
@@ -268,21 +268,21 @@ class ApplicationController : Subscriber, Trackable {
             self.startDataFetchers()
         })
     }
-    //TODO: What are we losing by not updating these assets?
-    private func updateAssetBundles() {
-        DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let myself = self else { return }
-            myself.noAuthApiClient.updateBundles { errors in
-                for (n, e) in errors {
-                    print("Bundle \(n) ran update. err: \(String(describing: e))")
-                }
-                DispatchQueue.main.async {
+
+//    private func updateAssetBundles() {
+//        DispatchQueue.global(qos: .utility).async { [weak self] in
+//            guard let myself = self else { return }
+//            myself.noAuthApiClient.updateBundles { errors in
+//                for (n, e) in errors {
+//                    print("Bundle \(n) ran update. err: \(String(describing: e))")
+//                }
+//                DispatchQueue.main.async {
 //                    let _ = myself.modalPresenter?.supportCenter // Initialize support center
-                    print("Support center disabled")
-                }
-            }
-        }
-    }
+//                    print("Support center disabled")
+//                }
+//            }
+//        }
+//    }
 
     private func initKVStoreCoordinator() {
         guard let kvStore = walletManager?.apiClient?.kv else { return }
