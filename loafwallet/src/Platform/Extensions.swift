@@ -61,7 +61,7 @@ public extension String {
             assert(false, "couldnt encode string as utf8 data")
             return ""
         }
-        
+
         var result = Data(count: 128/8)
         return result.withUnsafeMutableBytes { (resultBytes: UnsafeMutablePointer<CUnsignedChar>) -> String in
             data.withUnsafeBytes { (dataBytes) -> Void in
@@ -74,6 +74,7 @@ public extension String {
             return hash
         }
     }
+
     
     func base58DecodedData() -> Data {
         let len = BRBase58Decode(nil, 0, self)
