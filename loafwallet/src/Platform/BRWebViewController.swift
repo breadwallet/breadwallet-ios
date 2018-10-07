@@ -9,6 +9,10 @@ import WebKit
 
 @available(iOS 8.0, *)
 @objc open class BRWebViewController : UIViewController, WKNavigationDelegate, BRWebSocketClient, WKScriptMessageHandler {
+  public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+    //
+  }
+  
     var wkProcessPool: WKProcessPool
     var webView: WKWebView?
     var server = BRHTTPServer()
@@ -94,7 +98,6 @@ import WebKit
         config.processPool = wkProcessPool
         config.allowsInlineMediaPlayback = false
         config.allowsAirPlayForMediaPlayback = false
-        config.requiresUserActionForMediaPlayback = true
         config.allowsPictureInPictureMediaPlayback = false
 
         let request = URLRequest(url: indexUrl)
@@ -162,17 +165,14 @@ import WebKit
     open func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
                         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         
-        if let url = navigationAction.request.url?.absoluteString{
+        if let url = navigationAction.request.url?.absoluteString {
             let mutableurl = url
-            if mutableurl.contains("/close") {
-                DispatchQueue.main.async {
-                    let request = URLRequest(url: URL(string: "https://api.loafwallet.org/support")!)
-                    _ = webView.load(request)
+          if mutableurl.contains("/close") {//TODO: kcw-grunt, works currently with any domain. will need refactor
+            DispatchQueue.main.async {
                     self.closeNow()
-                }
             }
+          }
         }
-        
         return decisionHandler(.allow)
     }
     

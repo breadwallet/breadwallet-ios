@@ -89,7 +89,7 @@ class URLController : Trackable {
             let queryLength = url.query?.utf8.count ?? 0
             let callback = callback.appendingFormat("%@address=%@", queryLength > 0 ? "&" : "?", wallet.receiveAddress)
             if let callbackURL = URL(string: callback) {
-                UIApplication.shared.openURL(callbackURL)
+              UIApplication.shared.open(callbackURL, options: [:], completionHandler: nil)
             }
         }
     }

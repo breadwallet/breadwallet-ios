@@ -449,7 +449,7 @@ class ModalPresenter : Subscriber, Trackable {
                 }))
                 alert.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
                     if let url = URL(string: C.reviewLink) {
-                        UIApplication.shared.openURL(url)
+                      UIApplication.shared.open(url, options: [:], completionHandler: nil)
                     }
                 }))
                 self.topViewController?.present(alert, animated: true, completion: nil)
