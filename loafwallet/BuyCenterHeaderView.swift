@@ -28,13 +28,10 @@ class BuyCenterHeaderView : UIView {
   }
   
   init(frame: CGRect, height: CGFloat) {
-
     super.init(frame: frame)
     header.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: height)
     configureViews()
     layoutCustomViews()
-    
-   // , constant: E.isIPhoneX ? 0 : 0.0
   }
   
   required init?(coder aDecoder: NSCoder) {

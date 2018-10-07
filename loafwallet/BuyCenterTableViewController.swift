@@ -15,15 +15,14 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
     fileprivate let litecoinLogo = UIImageView(image:#imageLiteral(resourceName: "litecoinLogo"))
     private let store: Store
     private let walletManager: WalletManager
-    private let mountPoint: String, bundleName: String
+    private let mountPoint: String
     private let partnerArray = Partner.dataArray()
     private let headerHeight : CGFloat = 140
   
-    init(store: Store, walletManager: WalletManager, mountPoint: String, bundleName: String?) {
+    init(store: Store, walletManager: WalletManager, mountPoint: String) {
       self.store = store
       self.walletManager = walletManager
       self.mountPoint = mountPoint
-      self.bundleName = bundleName ?? ""
       super.init(nibName: nil, bundle: nil)
     }
   
@@ -81,7 +80,7 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
     
     switch partner {
       case "Simplex":
-        let simplexWebviewVC = BRWebViewController(partner: "Simplex", bundleName: bundleName, mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: nil)
+        let simplexWebviewVC = BRWebViewController(partner: "Simplex", mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: nil)
         present(simplexWebviewVC, animated: true
         , completion: nil)
       case "Changelly":

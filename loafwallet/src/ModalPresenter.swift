@@ -598,9 +598,9 @@ class ModalPresenter : Subscriber, Trackable {
       
       let vc : BuyCenterTableViewController
         #if Debug || Testflight
-         vc = BuyCenterTableViewController(store: store, walletManager: walletManager, mountPoint: mountPoint, bundleName: "bread-frontend-staging")
+         vc = BuyCenterTableViewController(store: store, walletManager: walletManager, mountPoint: mountPoint)
         #else
-         vc = BuyCenterTableViewController(store: store, walletManager: walletManager, mountPoint: mountPoint, bundleName: "bread-frontend")
+         vc = BuyCenterTableViewController(store: store, walletManager: walletManager, mountPoint: mountPoint)
         #endif
       
          topViewController?.present(vc, animated: true, completion: nil)

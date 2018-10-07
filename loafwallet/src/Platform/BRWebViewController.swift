@@ -7,7 +7,6 @@ import Foundation
 import UIKit
 import WebKit
 
-let reactEvents = ["documentReady","onClick","err","load", "close", "submit"]
 @available(iOS 8.0, *)
 @objc open class BRWebViewController : UIViewController, WKNavigationDelegate, BRWebSocketClient, WKScriptMessageHandler {
     var wkProcessPool: WKProcessPool
@@ -25,9 +24,6 @@ let reactEvents = ["documentReady","onClick","err","load", "close", "submit"]
     var didLoadTimeout = 2500
     
     // we are also a socket server which sends didview/didload events to the listening client(s)
-  
-    var userController: WKUserContentController?
-  
     var sockets = [String: BRWebSocket]()
     
     // this is the data that occasionally gets sent to the above connected sockets
@@ -51,10 +47,10 @@ let reactEvents = ["documentReady","onClick","err","load", "close", "submit"]
                     return Date()
                 }
                 let walletAddress = walletManager.wallet?.receiveAddress
-                let currencyCode = Locale.current.currencyCode
+                let currencyCode = Locale.current.currencyCode ?? "USD"
                 let uuid = UIDevice.current.identifierForVendor!.uuidString
-          
-                return URL(string: getSimplexParams(appInstallDate: appInstallDate,  walletAddress: walletAddress, currencyCode: currencyCode, uuid: uuid))!
+
+                return URL(string: getSimplexParams(appInstallDate: appInstallDate, walletAddress: walletAddress, currencyCode: currencyCode, uuid: uuid))!
             case "/support":
                 return URL(string: "https://api.loafwallet.org/support")!
             case "/ea":
@@ -71,13 +67,13 @@ let reactEvents = ["documentReady","onClick","err","load", "close", "submit"]
         guard let uuid = uuid else { return "" }
         
         let timestamp = Int(appInstallDate.timeIntervalSince1970)
-      print("++++++++++++++++https://buy.loafwallet.org/?address=\(walletAddress)&code=\(currencyCode)&idate=\(timestamp)&uid=\(uuid)")
+        
         return "https://buy.loafwallet.org/?address=\(walletAddress)&code=\(currencyCode)&idate=\(timestamp)&uid=\(uuid)"
     }
     
     private let messageUIPresenter = MessageUIPresenter()
     
-  init(partner: String?, bundleName: String, mountPoint: String = "/", walletManager: WalletManager, store: Store, noAuthApiClient: BRAPIClient? = nil) {
+  init(partner: String?, mountPoint: String = "/", walletManager: WalletManager, store: Store, noAuthApiClient: BRAPIClient? = nil) {
         wkProcessPool = WKProcessPool()
         self.mountPoint = mountPoint
         self.walletManager = walletManager
@@ -93,9 +89,7 @@ let reactEvents = ["documentReady","onClick","err","load", "close", "submit"]
     
     override open func loadView() {
         didLoad = false
-      
-        setupPlayerAndEventDelegation()
- 
+
         let config = WKWebViewConfiguration()
         config.processPool = wkProcessPool
         config.allowsInlineMediaPlayback = false
@@ -142,17 +136,6 @@ let reactEvents = ["documentReady","onClick","err","load", "close", "submit"]
         didAppear = false
         sendToAllSockets(data: webViewInfo)
     }
-  
-    //WKWebView Setup
-  
-    private func setupPlayerAndEventDelegation() {
-     userController = WKUserContentController()
-     webView?.configuration.userContentController = userController!
-      
-      for eventName in reactEvents {
-        userController?.add(self, name: eventName)
-      }
-    }
 
     // signal to the presenter that the webview content successfully loaded
     fileprivate func webviewDidLoad() {
@@ -179,7 +162,6 @@ let reactEvents = ["documentReady","onClick","err","load", "close", "submit"]
     open func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
                         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         
-        //MARK (losh11): - improve code which closes webView
         if let url = navigationAction.request.url?.absoluteString{
             let mutableurl = url
             if mutableurl.contains("/close") {
@@ -232,10 +214,4 @@ let reactEvents = ["documentReady","onClick","err","load", "close", "submit"]
     public func socket(_ socket: BRWebSocket, didReceiveData data: Data) {
         print("WEBVIEW SOCKET RECV TEXT \(data.hexString)")
     }
-  
-  public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage)
-  {
-    print(message.name)
-  }
-  
 }
