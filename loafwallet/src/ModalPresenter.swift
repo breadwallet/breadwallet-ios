@@ -756,7 +756,7 @@ class ModalPresenter : Subscriber, Trackable {
                     view.dismiss(animated: true, completion: {
                         self?.store.perform(action: Alert.Show(.addressesCopied))
                         if let success = success, let url = URL(string: success) {
-                            UIApplication.shared.openURL(url)
+                          UIApplication.shared.open(url, options: [:], completionHandler: nil)
                         }
                     })
                     return true

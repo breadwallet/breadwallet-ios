@@ -2,14 +2,14 @@
 use_frameworks!
 
 workspace 'loafwallet.xcworkspace'
-project 'loafwallet.xcodeproj'
+project 'loafwallet.xcodeproj', 'Development' => :debug
 
 
 #Shared Cocopods
 def shared_pods
   #Add when they debug for iOS v12: pod 'Mixpanel-swift' | KCW Oct 4,2018
-  pod 'Crashlytics'
-  pod 'Alamofire'
+ pod 'Crashlytics', '~>  3.10'
+ pod 'Alamofire'
 end
 
 def shared_watchOS_pods

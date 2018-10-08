@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let applicationController = ApplicationController()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Initialise Crashlytics (only on debug builds)
+        // Initialise Crashlytics (only on debug (development) builds)
         #if Debug || Testflight
             Fabric.with([Crashlytics.self])
         #endif
