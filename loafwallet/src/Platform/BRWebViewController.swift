@@ -90,7 +90,11 @@ import WebKit
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+  
+    override open var preferredStatusBarStyle: UIStatusBarStyle {
+      return .lightContent
+    }
+  
     override open func loadView() {
         didLoad = false
 

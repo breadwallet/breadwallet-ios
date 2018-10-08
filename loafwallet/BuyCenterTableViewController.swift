@@ -45,6 +45,10 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+  
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+      return .lightContent
+    }
 
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { return 150 }
