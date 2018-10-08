@@ -17,8 +17,9 @@ protocol BuyCenterTableViewCellDelegate : class {
 class BuyCenterTableViewCell : UITableViewCell {
   
   private let colorFrameView = UIView()
-  private let selectButton = UIButton()
-  
+  private let selectImage = UIImageView()
+  private let cellButton = UIButton()
+
   var logoImageView = UIImageView()
   var partnerLabel = UILabel()
   var financialDetailsLabel = UILabel()
@@ -36,8 +37,7 @@ class BuyCenterTableViewCell : UITableViewCell {
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
-  
+   
   func configureViews() {
     
     self.addSubview(frameView)
@@ -45,7 +45,8 @@ class BuyCenterTableViewCell : UITableViewCell {
     colorFrameView.addSubview(logoImageView)
     frameView.addSubview(partnerLabel)
     frameView.addSubview(financialDetailsLabel)
-    frameView.addSubview(selectButton)
+    frameView.addSubview(selectImage)
+    frameView.addSubview(cellButton)
     
     frameView.translatesAutoresizingMaskIntoConstraints = false
     frameView.layer.cornerRadius = 5
@@ -67,10 +68,11 @@ class BuyCenterTableViewCell : UITableViewCell {
     financialDetailsLabel.numberOfLines = 0
     financialDetailsLabel.lineBreakMode = .byWordWrapping
     
-    selectButton.setImage(#imageLiteral(resourceName: "whiteRightArrow"), for: .normal)
-    selectButton.imageView?.contentMode = .scaleAspectFit
-    selectButton.imageEdgeInsets = UIEdgeInsetsMake(20, 15, 20, 10)
-    selectButton.addTarget(self, action: #selector(selectButtonPressed), for: .touchUpInside)
+    selectImage.image = #imageLiteral(resourceName: "whiteRightArrow")
+    selectImage.contentMode = .scaleAspectFit
+    
+    cellButton.setTitle(" ", for: .normal)
+    cellButton.addTarget(self, action: #selector(cellButtonPressed), for: .touchUpInside)
     
   }
   
@@ -78,8 +80,8 @@ class BuyCenterTableViewCell : UITableViewCell {
     let margins = self.layoutMarginsGuide
     
     frameView.constrain([
-      frameView.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 0),
-      frameView.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: 0),
+      frameView.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: -3),
+      frameView.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: 3),
       frameView.topAnchor.constraint(equalTo: margins.topAnchor, constant: 10),
       frameView.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: 10)
       ])
@@ -112,21 +114,26 @@ class BuyCenterTableViewCell : UITableViewCell {
       financialDetailsLabel.heightAnchor.constraint(equalToConstant: 80)
       ])
     
-    selectButton.constrain([
-      selectButton.widthAnchor.constraint(equalToConstant: 40),
-      selectButton.trailingAnchor.constraint(equalTo: frameView.trailingAnchor),
-      selectButton.topAnchor.constraint(equalTo: frameView.topAnchor),
-      selectButton.bottomAnchor.constraint(equalTo: frameView.bottomAnchor)
+    selectImage.constrain([
+      selectImage.widthAnchor.constraint(equalToConstant: 18),
+      selectImage.trailingAnchor.constraint(equalTo: frameView.trailingAnchor, constant:-3),
+      selectImage.heightAnchor.constraint(equalToConstant: 18),
+      selectImage.centerYAnchor.constraint(equalTo: frameView.centerYAnchor)
       ])
     
+    cellButton.constrain([
+      cellButton.widthAnchor.constraint(equalTo: frameView.widthAnchor),
+      cellButton.trailingAnchor.constraint(equalTo: frameView.trailingAnchor),
+      cellButton.topAnchor.constraint(equalTo: frameView.topAnchor),
+      cellButton.bottomAnchor.constraint(equalTo: frameView.bottomAnchor)
+      ])
   }
   
-  @objc func selectButtonPressed(selector: UIButton) {
-    if let partner = partnerLabel.text {
-      delegate?.didClickPartnerCell(partner: partner)
+  @objc func cellButtonPressed(selector: UIButton) {
+    if let partnerName = partnerLabel.text {
+      delegate?.didClickPartnerCell(partner: partnerName)
     }
   }
-  
   
 }
 
