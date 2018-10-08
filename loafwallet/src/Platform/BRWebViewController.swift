@@ -22,11 +22,12 @@ import WebKit
     let store: Store
     let noAuthApiClient: BRAPIClient?
     let partner : String?
+    //var waitTimer : NSTimer?
   
     var didLoad = false
     var didAppear = false
     var didLoadTimeout = 2500
-    
+    var waitTimeout = 90
     // we are also a socket server which sends didview/didload events to the listening client(s)
     var sockets = [String: BRWebSocket]()
     
@@ -97,6 +98,7 @@ import WebKit
   
     override open func loadView() {
         didLoad = false
+       // waitTimer = NSTimer()
 
         let config = WKWebViewConfiguration()
         config.processPool = wkProcessPool
