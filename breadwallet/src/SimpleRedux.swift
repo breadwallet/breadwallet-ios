@@ -64,7 +64,6 @@ enum TriggerName {
     case didUpgradePin
     case txMemoUpdated(String)
     case promptShareData
-    case didEnableShareData
     case didWritePaperKey
     case wipeWalletNoPrompt
     case didUpdateFeatureFlags
@@ -132,8 +131,6 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.txMemoUpdated(_), .txMemoUpdated(_)):
         return true
     case (.promptShareData, .promptShareData):
-        return true
-    case (.didEnableShareData, .didEnableShareData):
         return true
     case (.didWritePaperKey, .didWritePaperKey):
         return true

@@ -223,11 +223,6 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
                 self.currentPrompt = nil
             }
         })
-        Store.subscribe(self, name: .didEnableShareData, callback: { _ in
-            if self.currentPrompt?.type == .shareData {
-                self.currentPrompt = nil
-            }
-        })
         Store.subscribe(self, name: .didWritePaperKey, callback: { _ in
             if self.currentPrompt?.type == .paperKey {
                 self.currentPrompt = nil
@@ -329,9 +324,6 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
             }
             if type == .biometrics {
                 UserDefaults.hasPromptedBiometrics = true
-            }
-            if type == .shareData {
-                UserDefaults.hasPromptedShareData = true
             }
         } else {
             currentPrompt = nil
