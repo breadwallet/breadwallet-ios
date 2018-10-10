@@ -73,7 +73,9 @@ class BuyCenterTableViewCell : UITableViewCell {
     
     cellButton.setTitle(" ", for: .normal)
     cellButton.addTarget(self, action: #selector(cellButtonPressed), for: .touchUpInside)
-    
+    cellButton.addTarget(self, action: #selector(cellButtonImageChanged), for: .touchDown)
+    cellButton.addTarget(self, action: #selector(cellButtonImageChanged), for: .touchUpOutside)
+
   }
   
   func layoutCustomViews() {
@@ -130,10 +132,17 @@ class BuyCenterTableViewCell : UITableViewCell {
   }
   
   @objc func cellButtonPressed(selector: UIButton) {
+    selectImage.image = #imageLiteral(resourceName: "whiteRightArrow")
     if let partnerName = partnerLabel.text {
       delegate?.didClickPartnerCell(partner: partnerName)
     }
   }
+  
+  @objc func cellButtonImageChanged(selector: UIButton) {
+    selectImage.image = #imageLiteral(resourceName: "simplexRightArrow")
+  }
+  
+  
   
 }
 

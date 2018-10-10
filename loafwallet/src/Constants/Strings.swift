@@ -168,11 +168,13 @@ enum S {
       static let title = NSLocalizedString("BuyCenter.title", value:"Buy Litecoin", comment: "Buy Center Title")
       enum Cells {
         static let simplexTitle = NSLocalizedString("BuyCenter.simplexTitle", value: "Simplex", comment: "Simplex Title")
-        static let simplexFinancialDetails = NSLocalizedString("BuyCenter.simplexFinancialDetails", value: "• No ID Required\n• Buy Litecoin via credit card\n• Buy with USD, EUR, GBP or PLN", comment: "Simplex buy financial details")
+        static let simplexFinancialDetails = NSLocalizedString("BuyCenter.simplexFinancialDetails", value: "• Use ID or Passport\n• Buy Litecoin via credit card\n• Buy with USD or EUR", comment: "Simplex buy financial details")
         static let changellyTitle = NSLocalizedString("BuyCenter.changellyTitle", value: "Changelly", comment: "Changelly Title")
         static let changellyFinancialDetails = NSLocalizedString("BuyCenter.changellyFinancialDetails", value: "• Change Litecoin for other cryptos\n• No ID Required\n• Buy via credit card\n• Global coverage", comment: "Changelly buy financial details")
         static let bitrefillTitle = NSLocalizedString("BuyCenter.BitrefillTitle", value: "Bitrefill", comment: "Bitrefill Title")
         static let bitrefillFinancialDetails = NSLocalizedString("BuyCenter.bitrefillFinancialDetails", value: "• Buy gift cards\n• Refill prepaid phones\n• Steam, Amazon, Hotels.com\n• Works in 170 countries", comment: "Bitrefill buy financial details")
+        static let coinbaseTitle = NSLocalizedString("BuyCenter.CoinbaseTitle", value: "Coinbase", comment: "Coinbase Title")
+        static let coinbaseFinancialDetails = NSLocalizedString("BuyCenter.coinbaseFinancialDetails", value: "• Buy Litecoin\n• Available in 33 countries\n• Trade and Store your Litecoin\n• Easy for cryptocurrency novices", comment: "Coinbase buy financial details")
       }
     }
 

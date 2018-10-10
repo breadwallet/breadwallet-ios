@@ -17,8 +17,17 @@ class Partner {
        "details":S.BuyCenter.Cells.simplexFinancialDetails,
        "logo":UIImage(named: "simplexLogo") ?? " ",
        "baseColor":#colorLiteral(red: 0.4156862745, green: 0.4274509804, blue: 0.4431372549, alpha: 1)] as [String : AnyObject]
+    
+    
+//TODO: Uncomment as integration progresses, kcw-grunt
 
-    //TODO: Uncomment as integration progresses, kcw-grunt
+    
+//    let coinbaseDictionary =
+//      ["title":S.BuyCenter.Cells.coinbaseTitle as AnyObject,
+//       "details":S.BuyCenter.Cells.coinbaseFinancialDetails,
+//       "logo":UIImage(named: "coinbaseLogo") ?? " ",
+//       "baseColor":#colorLiteral(red: 0.07843137255, green: 0.4156862745, blue: 0.8039215686, alpha: 1)] as [String : AnyObject]
+
 //    let changellyDictionary =
 //      ["title":S.BuyCenter.Cells.changellyTitle as AnyObject,
 //       "details":S.BuyCenter.Cells.changellyFinancialDetails,
