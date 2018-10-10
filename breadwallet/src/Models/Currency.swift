@@ -294,7 +294,11 @@ extension ERC20Token: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         // on testnet all tokens get the BRD testnet address
-        address = E.isTestnet ? Currencies.brd.address : try container.decode(String.self, forKey: .address)
+        let contractAddress = E.isTestnet ? Currencies.brd.address : try container.decode(String.self, forKey: .address)
+        guard contractAddress.count > 0 else {
+            throw DecodingError.dataCorruptedError(forKey: .address, in: container, debugDescription: "Invalid contract address")
+        }
+        address = contractAddress
         name = try container.decode(String.self, forKey: .name)
         code = try container.decode(String.self, forKey: .code)
         symbol = code
@@ -302,7 +306,7 @@ extension ERC20Token: Codable {
         decimals = try container.decode(Int.self, forKey: .decimals)
         var colorValues = try container.decode([String].self, forKey: .colors)
         guard colorValues.count == 2 else {
-            throw DecodingError.dataCorruptedError(forKey: .colors, in: container, debugDescription: "Invalid color values")
+            throw DecodingError.dataCorruptedError(forKey: .colors, in: container, debugDescription: "Invalid/missing color values")
         }
         colors = (UIColor.fromHex(colorValues[0]), UIColor.fromHex(colorValues[1]))
         isSupported = try container.decode(Bool.self, forKey: .isSupported)
