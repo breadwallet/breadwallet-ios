@@ -14,10 +14,9 @@ enum PromptType {
     case paperKey
     case upgradePin
     case noPasscode
-    case shareData
 
     static var defaultOrder: [PromptType] = {
-        return [.upgradePin, .paperKey, .noPasscode, .biometrics, .shareData]
+        return [.upgradePin, .paperKey, .noPasscode, .biometrics]
     }()
     
     static func nextPrompt(walletManager: BTCWalletManager) -> PromptType? {
@@ -30,7 +29,6 @@ enum PromptType {
         case .paperKey: return S.Prompts.PaperKey.title
         case .upgradePin: return S.Prompts.UpgradePin.title
         case .noPasscode: return S.Prompts.NoPasscode.title
-        case .shareData: return S.Prompts.ShareData.title
         }
     }
     
@@ -40,7 +38,6 @@ enum PromptType {
         case .paperKey: return "paperKeyPrompt"
         case .upgradePin: return "upgradePinPrompt"
         case .noPasscode: return "noPasscodePrompt"
-        case .shareData: return "shareDataPrompt"
         }
     }
 
@@ -50,7 +47,6 @@ enum PromptType {
         case .paperKey: return S.Prompts.PaperKey.body
         case .upgradePin: return S.Prompts.UpgradePin.body
         case .noPasscode: return S.Prompts.NoPasscode.body
-        case .shareData: return S.Prompts.ShareData.body
         }
     }
 
@@ -61,7 +57,6 @@ enum PromptType {
         case .paperKey: return .promptPaperKey
         case .upgradePin: return .promptUpgradePin
         case .noPasscode: return nil
-        case .shareData: return .promptShareData
         }
     }
 
@@ -75,8 +70,6 @@ enum PromptType {
             return walletManager.pinLength != 6
         case .noPasscode:
             return !LAContext.isPasscodeEnabled
-        case .shareData:
-            return !UserDefaults.hasAquiredShareDataPermission && !UserDefaults.hasPromptedShareData
         }
     }
 }
