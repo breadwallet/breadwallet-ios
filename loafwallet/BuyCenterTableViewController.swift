@@ -85,15 +85,15 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
     
     switch partner {
       case "Simplex":
-        let simplexWebviewVC = BRWebViewController(partner: "Simplex", mountPoint: mountPoint, walletManager: walletManager, store: store, noAuthApiClient: nil)
+        let simplexWebviewVC = BRWebViewController(partner: "Simplex", mountPoint: mountPoint + "_simplex", walletManager: walletManager, store: store, noAuthApiClient: nil)
         registerLogEvent(name:"OPEN_SIMPLEX_STORE")
         present(simplexWebviewVC, animated: true
         , completion: nil)
       case "Changelly":
         print("Changelly No Code Placeholder")
-      case "Partner 3":
-        let partner3 = BuyCenterWebViewController(nibName: nil, bundle: nil)
-        present(partner3, animated: true) {
+      case "Coinbase":
+        let coinbaseWebViewWC = BRWebViewController(partner: "Coinbase", mountPoint: mountPoint + "_coinbase", walletManager: walletManager, store: store, noAuthApiClient: nil)
+        present(coinbaseWebViewWC, animated: true) {
           //
        }
       default:

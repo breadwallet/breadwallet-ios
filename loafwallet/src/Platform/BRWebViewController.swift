@@ -9,9 +9,7 @@ import WebKit
 
 @available(iOS 8.0, *)
 @objc open class BRWebViewController : UIViewController, WKNavigationDelegate, BRWebSocketClient, WKScriptMessageHandler {
-  public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-    //
-  }
+
   
     var wkProcessPool: WKProcessPool
     var webView: WKWebView?
@@ -22,8 +20,7 @@ import WebKit
     let store: Store
     let noAuthApiClient: BRAPIClient?
     let partner : String?
-    //var waitTimer : NSTimer?
-  
+    let activityIndicator : UIActivityIndicatorView
     var didLoad = false
     var didAppear = false
     var didLoadTimeout = 2500
@@ -41,8 +38,7 @@ import WebKit
     
     var indexUrl: URL {
         switch mountPoint {
-            case "/buy":
-                ///new string concatenation needed for Simplex buy feature (v2.1.5+)
+            case "/buy_simplex":
                 var appInstallDate: Date {
                     if let documentsFolder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last {
                         if let installDate = try! FileManager.default.attributesOfItem(atPath: documentsFolder.path)[.creationDate] as? Date {
@@ -56,6 +52,8 @@ import WebKit
                 let uuid = UIDevice.current.identifierForVendor!.uuidString
 
                 return URL(string: getSimplexParams(appInstallDate: appInstallDate, walletAddress: walletAddress, currencyCode: currencyCode, uuid: uuid))!
+            case "/buy_coinbase":
+                return URL(string: "https://api.loafwallet.org/buy")!
             case "/support":
                 return URL(string: "https://api.loafwallet.org/support")!
             case "/ea":
@@ -68,23 +66,23 @@ import WebKit
     private func getSimplexParams(appInstallDate: Date?, walletAddress: String?, currencyCode: String?, uuid: String?) -> String {
         guard let appInstallDate = appInstallDate else { return "" }
         guard let walletAddress = walletAddress else { return "" }
-        guard let currencyCode = currencyCode else { return "" }
+        guard let currencyCode = Currency.checkSimplexFiatSupport(givenCode: currencyCode!) else { return "USD" }
         guard let uuid = uuid else { return "" }
         
         let timestamp = Int(appInstallDate.timeIntervalSince1970)
-        
         return "https://buy.loafwallet.org/?address=\(walletAddress)&code=\(currencyCode)&idate=\(timestamp)&uid=\(uuid)"
     }
     
     private let messageUIPresenter = MessageUIPresenter()
     
-  init(partner: String?, mountPoint: String = "/", walletManager: WalletManager, store: Store, noAuthApiClient: BRAPIClient? = nil) {
+    init(partner: String?, mountPoint: String = "/", walletManager: WalletManager, store: Store, noAuthApiClient: BRAPIClient? = nil) {
         wkProcessPool = WKProcessPool()
         self.mountPoint = mountPoint
         self.walletManager = walletManager
         self.store = store
         self.noAuthApiClient = noAuthApiClient
         self.partner = partner ?? ""
+        self.activityIndicator = UIActivityIndicatorView()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -98,7 +96,6 @@ import WebKit
   
     override open func loadView() {
         didLoad = false
-       // waitTimer = NSTimer()
 
         let config = WKWebViewConfiguration()
         config.processPool = wkProcessPool
@@ -134,8 +131,16 @@ import WebKit
                 self?.sendToAllSockets(data: info)
             }
         }
+      
+      activityIndicator.activityIndicatorViewStyle = .white
+      activityIndicator.color = .darkGray
+      activityIndicator.startAnimating()
+      activityIndicator.isHidden = false
+      activityIndicator.bounds = CGRect(x: 0, y: 0, width: 15, height: 15)
+      activityIndicator.autoresizingMask = [UIViewAutoresizing.flexibleHeight, UIViewAutoresizing.flexibleWidth]
+      view.addSubview(activityIndicator)
     }
-    
+  
     override open func viewDidAppear(_ animated: Bool) {
         didAppear = true
         sendToAllSockets(data: webViewInfo)
@@ -145,6 +150,8 @@ import WebKit
         didAppear = false
         sendToAllSockets(data: webViewInfo)
     }
+  
+  
 
     // signal to the presenter that the webview content successfully loaded
     fileprivate func webviewDidLoad() {
@@ -170,7 +177,7 @@ import WebKit
     
     open func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
                         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        
+ 
         if let url = navigationAction.request.url?.absoluteString {
             let mutableurl = url
           if mutableurl.contains("/close") {//TODO: kcw-grunt, works currently with any domain. will need refactor
@@ -181,7 +188,15 @@ import WebKit
         }
         return decisionHandler(.allow)
     }
-    
+  
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+      activityIndicator.stopAnimating()
+      activityIndicator.isHidden = true
+    }
+  
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+      //
+    }
     // MARK: - socket delegate
     func sendTo(socket: BRWebSocket, data: [String: Any]) {
         do {

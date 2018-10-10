@@ -12,7 +12,7 @@ import UIKit
 class Currency {
 
   class func simplexDailyLimits() -> [String:[String]] {
-    return ["GBP":["25","14.000"],"EUR":["30","16.000"],"USD":["30","18,500"],"PLN":["120","70.000"]]
+    return ["EUR":["30","16.000"],"USD":["30","18,500"]]
   }
   
   class func getSymbolForCurrencyCode(code: String) -> String? {
@@ -21,6 +21,13 @@ class Currency {
   }
   
   
+  class func checkSimplexFiatSupport(givenCode:String) -> String? {
+    if (givenCode == "USD" || givenCode == "EUR") {
+      return givenCode
+    }
+    return "USD"
+  }
+  
   class func simplexRanges() -> String {
     
     if let code  = Locale.current.currencyCode, let symbol = Currency.getSymbolForCurrencyCode(code: code), let range = Currency.simplexDailyLimits()[code] {
@@ -28,10 +35,6 @@ class Currency {
       case "USD":
         return "\n• Exchange" + " \(symbol)\(range[0]) - \(symbol)\(range[1])" + " daily"
       case "EUR":
-        return "\n• Exchange" + " \(range[0])\(symbol) - \(range[1])\(symbol)" + " daily"
-      case "GBP":
-        return "\n• Exchange" + " \(symbol)\(range[0]) - \(symbol)\(range[1])" + " daily"
-      case "PLN":
         return "\n• Exchange" + " \(range[0])\(symbol) - \(range[1])\(symbol)" + " daily"
       default:
         return "\n• Exchange" + " \(symbol)\(range[0]) - \(symbol)\(range[1])" + " daily"
