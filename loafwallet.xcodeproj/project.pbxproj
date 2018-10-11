@@ -245,6 +245,7 @@
 		1BA74B88206AD60A0083BD2A /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BA74B86206AD60A0083BD2A /* Crashlytics.framework */; };
 		1BA9C99C20916186005ADF44 /* TodayExtension-dev.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1B86CF0C209154FA00BCE82E /* TodayExtension-dev.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1BA9C99D20916191005ADF44 /* NotificationServiceExtension-dev.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1B86CF19209154FB00BCE82E /* NotificationServiceExtension-dev.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1BA9FE3D216F68A700BB2DE8 /* BRBech32.c in Sources */ = {isa = PBXBuildFile; fileRef = 1BA9FE3C216F68A700BB2DE8 /* BRBech32.c */; };
 		1BBAEC841F8025C10047DEA8 /* BRTransaction.c in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAEC051F80237B0047DEA8 /* BRTransaction.c */; };
 		1BBAEC851F8025C90047DEA8 /* BRPeer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAEBFF1F80237B0047DEA8 /* BRPeer.c */; };
 		1BBAEC861F8025D20047DEA8 /* BRBIP38Key.c in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAEBEF1F80237B0047DEA8 /* BRBIP38Key.c */; };
@@ -936,6 +937,8 @@
 		1B86CF1F2091560700BCE82E /* Dev.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.info; path = Dev.plist; sourceTree = "<group>"; };
 		1BA74B85206AD60A0083BD2A /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		1BA74B86206AD60A0083BD2A /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		1BA9FE3B216F68A600BB2DE8 /* BRBech32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRBech32.h; sourceTree = "<group>"; };
+		1BA9FE3C216F68A700BB2DE8 /* BRBech32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRBech32.c; sourceTree = "<group>"; };
 		1BBAEBE81F80237B0047DEA8 /* BRAddress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = BRAddress.c; sourceTree = "<group>"; };
 		1BBAEBE91F80237B0047DEA8 /* BRAddress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BRAddress.h; sourceTree = "<group>"; };
 		1BBAEBEA1F80237B0047DEA8 /* BRArray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BRArray.h; sourceTree = "<group>"; };
@@ -2185,6 +2188,8 @@
 				1BBAEBEA1F80237B0047DEA8 /* BRArray.h */,
 				1BBAEBEB1F80237B0047DEA8 /* BRBase58.c */,
 				1BBAEBEC1F80237B0047DEA8 /* BRBase58.h */,
+				1BA9FE3C216F68A700BB2DE8 /* BRBech32.c */,
+				1BA9FE3B216F68A600BB2DE8 /* BRBech32.h */,
 				1BBAEBED1F80237B0047DEA8 /* BRBIP32Sequence.c */,
 				1BBAEBEE1F80237B0047DEA8 /* BRBIP32Sequence.h */,
 				1BBAEBEF1F80237B0047DEA8 /* BRBIP38Key.c */,
@@ -4057,7 +4062,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 75A2A7E61DA5934400A983D8 /* Build configuration list for PBXNativeTarget "loafwalletTests" */;
 			buildPhases = (
-				3908A4CAFC1EB76364DAD56E /* [CP] Check Pods Manifest.lock */,
+				C2D145FEF189677123B830F8 /* [CP] Check Pods Manifest.lock */,
 				75A2A7A01DA5934300A983D8 /* Sources */,
 				75A2A7A11DA5934300A983D8 /* Frameworks */,
 				75A2A7A21DA5934300A983D8 /* Resources */,
@@ -4312,6 +4317,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 				fr,
@@ -4326,6 +4332,12 @@
 				pt,
 				ko,
 				"zh-Hant",
+				sv,
+				nb,
+				pl,
+				tr,
+				hu,
+				el,
 			);
 			mainGroup = 75A2A7871DA5934300A983D8;
 			productRefGroup = 75A2A7911DA5934300A983D8 /* Products */;
@@ -4624,24 +4636,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3908A4CAFC1EB76364DAD56E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-loafwalletTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		9126BA99543FFAA0490C7102 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4658,6 +4652,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-loafwallet-dev/Pods-loafwallet-dev-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C2D145FEF189677123B830F8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-loafwalletTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		CEE0EF531EBF8C8A0018DB36 /* Icon Versioning */ = {
@@ -5038,6 +5054,7 @@
 				1BBAEC8F1F8026130047DEA8 /* BRSet.c in Sources */,
 				1BBAEC8E1F8026090047DEA8 /* BRCrypto.c in Sources */,
 				1BBAEC8D1F8026030047DEA8 /* BRPaymentProtocol.c in Sources */,
+				1BA9FE3D216F68A700BB2DE8 /* BRBech32.c in Sources */,
 				1BBAEC8C1F8025FC0047DEA8 /* BRPeerManager.c in Sources */,
 				1BBAEC8B1F8025F60047DEA8 /* BRKey.c in Sources */,
 				1BBAEC8A1F8025EF0047DEA8 /* BRBIP39Mnemonic.c in Sources */,
