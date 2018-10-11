@@ -9,8 +9,6 @@ import WebKit
 
 @available(iOS 8.0, *)
 @objc open class BRWebViewController : UIViewController, WKNavigationDelegate, BRWebSocketClient, WKScriptMessageHandler {
-
-  
     var wkProcessPool: WKProcessPool
     var webView: WKWebView?
     var server = BRHTTPServer()
@@ -91,17 +89,21 @@ import WebKit
     }
   
     override open var preferredStatusBarStyle: UIStatusBarStyle {
-      return .lightContent
+        return .lightContent
     }
   
     override open func loadView() {
         didLoad = false
+        
+        let contentController = WKUserContentController()
+        contentController.add(self, name: "callback")
 
         let config = WKWebViewConfiguration()
         config.processPool = wkProcessPool
         config.allowsInlineMediaPlayback = false
         config.allowsAirPlayForMediaPlayback = false
         config.allowsPictureInPictureMediaPlayback = false
+        config.userContentController = contentController
 
         let request = URLRequest(url: indexUrl)
         
@@ -132,13 +134,13 @@ import WebKit
             }
         }
       
-      activityIndicator.activityIndicatorViewStyle = .white
-      activityIndicator.color = .darkGray
-      activityIndicator.startAnimating()
-      activityIndicator.isHidden = false
-      activityIndicator.bounds = CGRect(x: 0, y: 0, width: 15, height: 15)
-      activityIndicator.autoresizingMask = [UIViewAutoresizing.flexibleHeight, UIViewAutoresizing.flexibleWidth]
-      view.addSubview(activityIndicator)
+        activityIndicator.activityIndicatorViewStyle = .white
+        activityIndicator.color = .darkGray
+        activityIndicator.startAnimating()
+        activityIndicator.isHidden = false
+        activityIndicator.bounds = CGRect(x: 0, y: 0, width: 15, height: 15)
+        activityIndicator.autoresizingMask = [UIViewAutoresizing.flexibleHeight, UIViewAutoresizing.flexibleWidth]
+        view.addSubview(activityIndicator)
     }
   
     override open func viewDidAppear(_ animated: Bool) {
@@ -150,8 +152,6 @@ import WebKit
         didAppear = false
         sendToAllSockets(data: webViewInfo)
     }
-  
-  
 
     // signal to the presenter that the webview content successfully loaded
     fileprivate func webviewDidLoad() {
@@ -174,29 +174,41 @@ import WebKit
     }
     
     // MARK: - navigation delegate
-    
     open func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
-                        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
- 
+                      decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url?.absoluteString {
             let mutableurl = url
-          if mutableurl.contains("/close") {//TODO: kcw-grunt, works currently with any domain. will need refactor
-            DispatchQueue.main.async {
+            if mutableurl.contains("/close") {
+                DispatchQueue.main.async {
                     self.closeNow()
+                }
             }
-          }
         }
         return decisionHandler(.allow)
     }
   
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-      activityIndicator.stopAnimating()
-      activityIndicator.isHidden = true
+        activityIndicator.stopAnimating()
+        activityIndicator.isHidden = true
     }
   
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-      //
+        guard let response = message.body as? String else { return }
+
+        let URLString = URL(string: "https://sandbox.test-simplexcc.com/payments/new")
+        
+        var req = URLRequest(url: URLString!)
+        req.httpBody = Data(response.utf8)
+        req.httpMethod = "POST"
+        
+        DispatchQueue.main.async {
+            let browser = BRBrowserViewController()
+            browser.load(req)
+            self.present(browser, animated: true, completion: nil)
+        }
+        
     }
+    
     // MARK: - socket delegate
     func sendTo(socket: BRWebSocket, data: [String: Any]) {
         do {
