@@ -305,10 +305,14 @@ extension ERC20Token: Codable {
         abi = ERC20Token.standardAbi
         decimals = try container.decode(Int.self, forKey: .decimals)
         var colorValues = try container.decode([String].self, forKey: .colors)
-        guard colorValues.count == 2 else {
-            throw DecodingError.dataCorruptedError(forKey: .colors, in: container, debugDescription: "Invalid/missing color values")
+        if colorValues.count == 2 {
+            colors = (UIColor.fromHex(colorValues[0]), UIColor.fromHex(colorValues[1]))
+        } else {
+            if E.isDebug {
+                throw DecodingError.dataCorruptedError(forKey: .colors, in: container, debugDescription: "Invalid/missing color values")
+            }
+            colors = (UIColor.black, UIColor.black)
         }
-        colors = (UIColor.fromHex(colorValues[0]), UIColor.fromHex(colorValues[1]))
         isSupported = try container.decode(Bool.self, forKey: .isSupported)
         saleAddress = (try? container.decode(String.self, forKey: .saleAddress)) ?? nil
         // contains currency code prefix e.g. "ETH 0.00125000"
