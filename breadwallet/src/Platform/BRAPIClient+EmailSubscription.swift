@@ -30,12 +30,12 @@ extension BRAPIClient {
         
         dataTaskWithRequest(req, authenticated: true, handler: { data, response, error in
             guard error == nil, let response = response else {
-                print("[EME] /mailing-list-subscribe error: \(error?.localizedDescription ?? "nil repsonse")")
+                print("/mailing-list-subscribe error: \(error?.localizedDescription ?? "nil repsonse")")
                 return callback(false)
             }
 
             guard response.statusCode == 200 else {
-                print("[EME] /mailing-list-subscribe response: \(response.statusCode)")
+                print("/mailing-list-subscribe response: \(response.statusCode)")
                 return callback(false)
             }
             

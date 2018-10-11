@@ -16,7 +16,6 @@ class GetUserEmailPrompt : Prompt {
     let emailInputHeight: CGFloat = 36.0
     let continueButtonHeight: CGFloat = 36.0
     let continueButtonWidth: CGFloat = 90.0
-    let imageViewBottomMargin: CGFloat = -20.0
     let imageViewTrailingMargin: CGFloat = -50.0
     
     let emailInput: UITextField = UITextField()
@@ -51,7 +50,7 @@ class GetUserEmailPrompt : Prompt {
         dismissButton.setTitle("", for: .normal)
         
         // The continue button is disabled until the user enters a valid email address.
-        continueButton.isEnabled = false
+        enableDisableSubmitButton(enable: false)
         
         // Override the continue (Submit) button tap handler
         continueButton.tap = { [unowned self] in
@@ -61,16 +60,17 @@ class GetUserEmailPrompt : Prompt {
             guard let emailAddress = self.emailInput.text else { return }
 
             // disable the submit button while we're hitting the API
-            self.continueButton.isEnabled = false
+            self.enableDisableSubmitButton(enable: false)
             
-            Backend.apiClient.subscribeToEmailUpdates(emailAddress: emailAddress,
-                                                callback: { (successful) in
-                                                    self.updateViewOnEmailSubmissionResult(successful: successful)
+            Backend.apiClient.subscribeToEmailUpdates(emailAddress: emailAddress,callback: { [unowned self] (successful) in
+                UserDefaults.hasSubscribedToEmailUpdates = successful
 
-                                                    if !successful  {
-                                                        self.showErrorOnEmailSubscriptionFailure()
-                                                    }
-                                                })
+                self.updateViewOnEmailSubmissionResult(successful: successful)
+                
+                if !successful  {
+                    self.showErrorOnEmailSubscriptionFailure()
+                }
+            })
         }// continue tap handler
         
         setUpEmailInput()
@@ -80,13 +80,13 @@ class GetUserEmailPrompt : Prompt {
     private func showErrorOnEmailSubscriptionFailure() {
         if let presenter = self.presenter {
             presenter.showErrorMessage(S.Alert.somethingWentWrong)
-        }        
+        }
     }
         
     private func updateViewOnEmailSubmissionResult(successful: Bool) {
         guard successful else {
             // Unsuccessful, so re-enable the Submit button.
-            continueButton.isEnabled = true
+            enableDisableSubmitButton(enable: true)
             return
         }
         
@@ -121,8 +121,7 @@ class GetUserEmailPrompt : Prompt {
     private func setUpEmailInput() {
         emailInput.delegate = self
         
-        // this is a one-off color from the Figma spec
-        emailInput.backgroundColor = UIColor.init(red: 248.0/255.0, green: 247.0/255.0, blue: 252.0/255.0, alpha: 0.05)
+        emailInput.backgroundColor = UIColor.emailInputBackgroundColor
         emailInput.layer.cornerRadius = 2.0
         emailInput.textColor = .primaryText
         emailInput.font = UIFont.emailPlaceholder()
@@ -211,13 +210,19 @@ class GetUserEmailPrompt : Prompt {
         continueButton.setBackgroundImage(UIImage(), for: .disabled)
         continueButton.setBackgroundImage(UIImage.imageForColor(.submitButtonEnabledBlue), for: .normal)
         continueButton.setTitleColor(.white, for: .normal)
+    }
+
+    private func enableDisableSubmitButton(enable: Bool) {
+        // Note: In the email prompt, the inherited continue button is labeled 'Submit'.
+
+        continueButton.isEnabled = enable
         
         continueButton.layer.borderWidth = 0.5
-        continueButton.layer.borderColor = UIColor.white.cgColor
+        continueButton.layer.borderColor = enable ? UIColor.clear.cgColor : UIColor.white.cgColor
         continueButton.layer.cornerRadius = 2.0
-        continueButton.layer.masksToBounds = true
+        continueButton.layer.masksToBounds = true                
     }
-    
+        
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -229,11 +234,11 @@ extension GetUserEmailPrompt : UITextFieldDelegate {
     
     private func enableOrDisableSubmitButton(emailAddressText: String?) {
         guard let text = emailAddressText, text.count > 0 else {
-            continueButton.isEnabled = false
+            enableDisableSubmitButton(enable: false)
             return
         }
         
-        continueButton.isEnabled = text.isValidEmailAddress
+        enableDisableSubmitButton(enable: text.isValidEmailAddress)
     }
     
     func textField(_ textField: UITextField, 

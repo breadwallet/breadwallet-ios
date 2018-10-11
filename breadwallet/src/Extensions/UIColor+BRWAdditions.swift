@@ -38,6 +38,10 @@ extension UIColor {
         return UIColor.fromHex("A1A9BC")
     }
     
+    static var emailInputBackgroundColor: UIColor {
+        return UIColor.fromHex("F8F7FC").withAlphaComponent(0.05)
+    }
+    
     static var submitButtonEnabledBlue: UIColor {
         return UIColor.fromHex("29ABE2")
     }
