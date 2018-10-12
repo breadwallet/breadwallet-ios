@@ -59,6 +59,8 @@ class GetUserEmailPrompt : Prompt {
             // email address. Guard anyway so we don't have to force unwrap the text field's text.
             guard let emailAddress = self.emailInput.text else { return }
 
+            self.emailInput.resignFirstResponder()
+            
             // disable the submit button while we're hitting the API
             self.enableDisableSubmitButton(enable: false)
             
@@ -69,12 +71,24 @@ class GetUserEmailPrompt : Prompt {
                 
                 if !successful  {
                     self.showErrorOnEmailSubscriptionFailure()
+                } else {
+                    self.scheduleAutoDismiss()
                 }
             })
         }// continue tap handler
         
         setUpEmailInput()
         setUpImageView()
+    }
+    
+    private func scheduleAutoDismiss() {
+        let autoDismissDelay = 5.0
+        DispatchQueue.main.asyncAfter(deadline: .now() + autoDismissDelay ) { [weak self] in
+            guard let dismissBtn = self?.dismissButton, let tapHandler = dismissBtn.tap else {
+                return
+            }
+            tapHandler()
+        }
     }
     
     private func showErrorOnEmailSubscriptionFailure() {
