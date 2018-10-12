@@ -307,6 +307,11 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
             currentPrompt = nil
             return
         }
+        
+        guard currentPrompt == nil else {
+            return
+        }
+        
         if let type = PromptType.nextPrompt(walletManager: walletManager) {
             self.saveEvent("prompt.\(type.name).displayed")
             currentPrompt = PromptFactory.createPrompt(type: type, presenter: self)

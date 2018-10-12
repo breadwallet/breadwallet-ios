@@ -76,7 +76,7 @@ enum PromptType {
         case .noPasscode:
             return !LAContext.isPasscodeEnabled
         case .email:
-            return !UserDefaults.hasPromptedForEmail
+            return !UserDefaults.hasPromptedForEmail && !UserDefaults.hasSubscribedToEmailUpdates
         }
     }
 }
