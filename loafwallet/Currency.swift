@@ -12,7 +12,7 @@ import UIKit
 class Currency {
 
   class func simplexDailyLimits() -> [String:[String]] {
-    return ["EUR":["30","16.000"],"USD":["30","18,500"]]
+    return ["EUR":["40","16.000"],"USD":["40","18,500"]]
   }
   
   class func getSymbolForCurrencyCode(code: String) -> String? {
@@ -33,13 +33,13 @@ class Currency {
     if let code  = Locale.current.currencyCode, let symbol = Currency.getSymbolForCurrencyCode(code: code), let range = Currency.simplexDailyLimits()[code] {
       switch code {
       case "USD":
-        return "\n• Exchange" + " \(symbol)\(range[0]) - \(symbol)\(range[1])" + " daily"
+        return "\n• Swap" + " \(symbol)\(range[0])~\(symbol)\(range[1])" + " + fees daily"
       case "EUR":
-        return "\n• Exchange" + " \(range[0])\(symbol) - \(range[1])\(symbol)" + " daily"
+        return "\n• Swap" + " \(range[0])\(symbol)~\(range[1])\(symbol)" + " + fees daily"
       default:
-        return "\n• Exchange" + " \(symbol)\(range[0]) - \(symbol)\(range[1])" + " daily"
+        return "\n• Swap" + " \(symbol)\(range[0])~\(symbol)\(range[1])" + " + fees daily"
       }
     }
-    return "\n• Exchange $30 - $18,500 daily"
+    return "\n• Swap $40~$18,500 + fees daily"
   }
 }
