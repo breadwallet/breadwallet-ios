@@ -59,7 +59,7 @@ extension BRAPIClient {
     // MARK: Token List
     
     public func getTokenList(handler: @escaping (APIResult<[ERC20Token]>) -> Void) {
-        let req = URLRequest(url: url("/currencies"))
+        let req = URLRequest(url: url("/currencies?type=erc20"))
         send(request: req, handler: handler)
     }
     

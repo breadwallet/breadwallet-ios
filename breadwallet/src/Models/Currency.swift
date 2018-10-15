@@ -294,17 +294,25 @@ extension ERC20Token: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         // on testnet all tokens get the BRD testnet address
-        address = E.isTestnet ? Currencies.brd.address : try container.decode(String.self, forKey: .address)
+        let contractAddress = E.isTestnet ? Currencies.brd.address : try container.decode(String.self, forKey: .address)
+        guard contractAddress.count > 0 else {
+            throw DecodingError.dataCorruptedError(forKey: .address, in: container, debugDescription: "Invalid contract address")
+        }
+        address = contractAddress
         name = try container.decode(String.self, forKey: .name)
         code = try container.decode(String.self, forKey: .code)
         symbol = code
         abi = ERC20Token.standardAbi
         decimals = try container.decode(Int.self, forKey: .decimals)
         var colorValues = try container.decode([String].self, forKey: .colors)
-        guard colorValues.count == 2 else {
-            throw DecodingError.dataCorruptedError(forKey: .colors, in: container, debugDescription: "Invalid color values")
+        if colorValues.count == 2 {
+            colors = (UIColor.fromHex(colorValues[0]), UIColor.fromHex(colorValues[1]))
+        } else {
+            if E.isDebug {
+                throw DecodingError.dataCorruptedError(forKey: .colors, in: container, debugDescription: "Invalid/missing color values")
+            }
+            colors = (UIColor.black, UIColor.black)
         }
-        colors = (UIColor.fromHex(colorValues[0]), UIColor.fromHex(colorValues[1]))
         isSupported = try container.decode(Bool.self, forKey: .isSupported)
         saleAddress = (try? container.decode(String.self, forKey: .saleAddress)) ?? nil
         // contains currency code prefix e.g. "ETH 0.00125000"
