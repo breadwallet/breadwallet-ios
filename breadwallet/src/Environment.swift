@@ -16,6 +16,7 @@ struct E {
             return false
         #endif
     }()
+    
     static let isTestFlight: Bool = {
         #if Testflight
             return true
@@ -23,6 +24,7 @@ struct E {
             return false
         #endif
     }()
+    
     static let isSimulator: Bool = {
         #if targetEnvironment(simulator)
             return true
@@ -30,6 +32,7 @@ struct E {
             return false
         #endif
     }()
+    
     static let isDebug: Bool = {
         #if Debug
             return true
@@ -37,6 +40,7 @@ struct E {
             return false
         #endif
     }()
+    
     static let isScreenshots: Bool = {
         #if Screenshots
             return true
@@ -44,6 +48,7 @@ struct E {
             return false
         #endif
     }()
+    
     static let isRunningTests: Bool = {
         #if Debug
             return ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
@@ -51,16 +56,17 @@ struct E {
             return false
         #endif
     }()
+    
     static var isIPhone4: Bool {
         return UIApplication.shared.keyWindow?.bounds.height == 480.0
     }
-    static var isIPhone5: Bool {
-        return (UIApplication.shared.keyWindow?.bounds.height == 568.0) && (E.is32Bit)
-    }
+    
     static let isIPhoneX: Bool = {
-        return (UIScreen.main.bounds.size.height == 812.0)
+        return (UIScreen.main.bounds.size.height == 812.0) || (UIScreen.main.bounds.size.height == 896.0)
     }()
-    static let is32Bit: Bool = {
-        return MemoryLayout<Int>.size == MemoryLayout<UInt32>.size
+    
+    static let osVersion: String = {
+        let os = ProcessInfo().operatingSystemVersion
+        return String(os.majorVersion) + "." + String(os.minorVersion) + "." + String(os.patchVersion)
     }()
 }

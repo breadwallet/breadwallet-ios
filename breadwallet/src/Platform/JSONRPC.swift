@@ -115,3 +115,6 @@ public enum APIResult<ResultType: Codable> {
     case error(Error)
 }
 
+public struct HTTPError: Error {
+    let code: Int
+}

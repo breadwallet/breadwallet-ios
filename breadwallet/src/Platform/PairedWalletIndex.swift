@@ -9,6 +9,7 @@
 import Foundation
 import BRCore
 
+/// Index of all EME paired wallets
 class PairedWalletIndex: BRKVStoreObject, BRCoding {
     static let storeKey = "paired-wallet-index"
     

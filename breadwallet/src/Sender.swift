@@ -13,7 +13,7 @@ import BRCore
 // MARK: Types/Constants
 
 enum SendResult {
-    case success(String?, String?)
+    case success(String?, String?) // tx hash, raw tx data
     case creationError(String)
     case publishFailure(BRPeerManagerError)
     case insufficientGas(String) // for ERC20 token transfers
@@ -70,6 +70,10 @@ extension Sender {
     var canUseBiometrics: Bool { return false }
 }
 
+protocol GasEstimator {
+    func hasFeeForAddress(_ address: String, amount: Amount) -> Bool
+    func estimateGas(toAddress: String, amount: Amount)
+}
 // MARK: - Base Class
 
 class SenderBase<CurrencyType: CurrencyDef, WalletType: WalletManager> {
@@ -400,7 +404,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
 // MARK: -
 
 /// Base class for sending Ethereum-network transactions
-class EthSenderBase<CurrencyType: CurrencyDef> : SenderBase<CurrencyType, EthWalletManager> {
+class EthSenderBase<CurrencyType: CurrencyDef> : SenderBase<CurrencyType, EthWalletManager>, GasEstimator {
     
     fileprivate var address: String?
     fileprivate var amount: UInt256?
@@ -435,19 +439,63 @@ class EthSenderBase<CurrencyType: CurrencyDef> : SenderBase<CurrencyType, EthWal
         // must override
         return .failed
     }
+    
+    // MARK: GasEstimator
+    
+    fileprivate struct GasEstimate {
+        let address: String
+        let amount: Amount
+        let estimate: UInt256
+    }
+    
+    fileprivate var estimate: GasEstimate? = nil
+    
+    func hasFeeForAddress(_ address: String, amount: Amount) -> Bool {
+        return estimate?.address == address && estimate?.amount.rawValue == amount.rawValue
+    }
+    
+    func estimateGas(toAddress: String, amount: Amount) {
+        estimate = nil
+        guard let fromAddress = self.walletManager.address else { return }
+        let params = transactionParams(fromAddress: fromAddress, toAddress: toAddress, forAmount: amount)
+        Backend.apiClient.estimateGas(transaction: params, handler: { [weak self] result in
+            guard let `self` = self else { return }
+            switch result {
+            case .success(let value):
+                self.estimate = GasEstimate(address: toAddress, amount: amount, estimate: value)
+            case .error(let error):
+                print("estimate gas error: \(error)")
+                self.estimate = nil
+            }
+        })
+    }
+    
+    func transactionParams(fromAddress: String, toAddress: String, forAmount: Amount) -> TransactionParams {
+        var params = TransactionParams(from: fromAddress, to: toAddress)
+        params.value = forAmount.amount
+        return params
+    }
 }
 
 class EthereumSender: EthSenderBase<Ethereum>, Sender {
     
-    var customGasPrice: UInt256?
-    var customGasLimit: UInt256?
+    // customGasPrice and customGasLimit parameters are only used for contract transactions
+    // only used for che checkout feature
+    var checkoutCustomGasPrice: UInt256?
+    var checkoutCustomGasLimit: UInt256?
     
     private var gasPrice: UInt256 {
-        return customGasPrice ?? walletManager.gasPrice
+        return checkoutCustomGasPrice ?? walletManager.gasPrice
     }
     
     private var gasLimit: UInt256 {
-        return customGasLimit ?? UInt256(walletManager.defaultGasLimit(currency: currency))
+        if let limit = checkoutCustomGasLimit {
+            return limit
+        } else if let limit = estimate?.estimate {
+            return limit
+        } else {
+            return UInt256(walletManager.defaultGasLimit(currency: currency))
+        }
     }
     
     // MARK: Sender
@@ -510,6 +558,13 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
 class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
     
     // MARK: Sender
+    private var gasLimit: UInt256 {
+        if let limit = estimate?.estimate {
+            return limit
+        } else {
+            return UInt256(walletManager.defaultGasLimit(currency: currency))
+        }
+    }
     
     func fee(forAmount: UInt256) -> UInt256? {
         return walletManager.gasPrice * UInt256(walletManager.defaultGasLimit(currency: currency))
@@ -523,7 +578,7 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
         }
 
         pinVerifier { pin in
-            self.walletManager.sendTransaction(currency: self.currency, toAddress: address, amount: amount) { result in
+            self.walletManager.sendTransaction(currency: self.currency, toAddress: address, amount: amount, gasLimit: self.gasLimit) { result in
                 switch result {
                 case .success(let pendingEthTx, let pendingTokenTx?, let rawTx):
                     self.setMetaData(ethTx: pendingEthTx, tokenTx: pendingTokenTx)
@@ -575,6 +630,20 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
         ethTx.createMetaData(rate: ethRate, tokenTransfer: currency.code)
         tokenTx.createMetaData(rate: tokenRate, comment: comment)
     }
+    
+    // MARK: GasEstimator override
+    
+    override func transactionParams(fromAddress: String, toAddress: String, forAmount: Amount) -> TransactionParams {
+        var params = TransactionParams(from: fromAddress, to: self.currency.address)
+        let sig = "0xa9059cbb"
+        let to = toAddress.withoutHexPrefix
+        let amountString = forAmount.rawValue.hexString.withoutHexPrefix
+        let addressPadding = Array(repeating: "0", count: 24).joined()
+        let amountPadding = Array(repeating: "0", count: (66 - amountString.utf8.count)).joined()
+        params.data = "\(sig)\(addressPadding)\(to)\(amountPadding)\(amountString)"
+        return params
+    }
+    
 }
 
 // MARK: -

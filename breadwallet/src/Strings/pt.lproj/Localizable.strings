@@ -176,12 +176,6 @@
 "DefaultCurrency.rateLabel" = "Taxa de Câmbio";
 /* The wallet is disabled. */
 "Disabled.title" = "Carteira desativada";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "Requisitar %1$@ dados da conta";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "Requisitar %1$@ ligação de contrato inteligente";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "Requisitar %1$@ pagamento";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Este dispositivo não está configurado para enviar emails com a app Mail do iOS.";
 /* Email unavailable alert title */
@@ -228,16 +222,10 @@
 "FeeSelector.title" = "Velocidade de processamento";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Administrador";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Comprar Bitcoins";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Carteiras";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "ativos totais";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Comércio";
 /* Checking private key balance progress view text */
 "Import.checking" = "A verificar o saldo da chave privada...";
 /* Sweep private key confirmation message */
@@ -292,20 +280,6 @@
 "JailbreakWarnings.title" = "AVISO";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Apagar";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "Aprovar";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "Recusar";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "As aplicações externas não podem enviar dinheiro   sem a aprovação deste dispositivo";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "Nota: interaja com esta aplicação APENAS quando se encontrar num dos seguintes domínios";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "Pagamento Seguro";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "Esta aplicação poderá:";
-/* Link Wallet view title */
-"LinkWallet.title" = "Relacionar Carteira";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Os serviços de localização estão desativados.";
 /* No permissions for location services */
@@ -322,10 +296,6 @@
 "MenuButton.addWallet" = "Adicionar Carteira";
 /* Menu button title */
 "MenuButton.lock" = "Bloquear Carteira";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Gerir Carteiras";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Escanear o código QR";
 /* Menu button title */
 "MenuButton.security" = "Centro de Segurança";
 /* Menu button title */
@@ -358,10 +328,6 @@
 "NodeSelector.statusLabel" = "Estado da ligação do nó";
 /* Node Selector view title */
 "NodeSelector.title" = "Nós de bitcoin";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "Enviar %1$@ para comprar %2$@";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "Confirmação";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Pedido de Pagamento Inválido";
 /* Error opening payment protocol file message */
@@ -420,10 +386,6 @@
 "Prompts.UpgradePin.title" = "Atualizar PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Ative as notificações para receber mensagens especiais da Bread no futuro.";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "Notificações Desativadas";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Para receber alertas, ative as notificações nas Definições";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Notificações Push";
 /* Push notifications are off label */
@@ -618,8 +580,6 @@
 "Settings.manage" = "Gerir";
 /* Notifications label */
 "Settings.notifications" = "Notificações";
-/* Section header for "other settings". */
-"Settings.other" = "Outro";
 /* Preferences settings section header */
 "Settings.preferences" = "Preferências";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -662,14 +622,10 @@
 "StartViewController.recoverButton" = "Recuperar Carteira";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Conectando";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "A sincronização falhou";
 /* Syncing view header text */
 "SyncingView.header" = "A Sincronizar";
 /* Retry button label */
 "SyncingView.retry" = "Tentar Novamente";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Sincronizado por %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Sincronizando";
 /* 6 d (6 days) */
@@ -774,8 +730,6 @@
 "TransactionDetails.amountHeader" = "Quantia";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "%1$@ quando recebido, %2$@ agora";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "%1$@ ao ser enviado, %2$@ agora";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Confirmado no bloco";
 /* Memo section header */
@@ -950,3 +904,51 @@
 "WritePaperPhrase.previous" = "Anterior";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li de %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Outro";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Gerir Carteiras";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Comprar";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Comércio";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Escanear o código QR";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "A sincronização falhou";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Sincronizado por %1$@";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Notificações Desativadas";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Para receber alertas, ative as notificações nas Definições";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Aprovar";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Recusar";
+/* Link Wallet view title */
+"LinkWallet.title" = "Relacionar Carteira";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Nota: interaja com esta aplicação APENAS quando se encontrar num dos seguintes domínios";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Esta aplicação poderá:";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "As aplicações externas não podem enviar dinheiro   sem a aprovação deste dispositivo";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Pagamento Seguro";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Confirmação";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Enviar %1$@ para comprar %2$@";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Requisitar %1$@ dados da conta";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Requisitar %1$@ ligação de contrato inteligente";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Requisitar %1$@ pagamento";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ ao ser enviado, %2$@ agora";
+/* Request timed out error message */
+"Alert.timedOut" = "Tempo limite da solicitação esgotado. Verifique sua conexão e tente novamente.";

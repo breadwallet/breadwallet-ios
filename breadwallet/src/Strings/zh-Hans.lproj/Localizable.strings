@@ -176,12 +176,6 @@
 "DefaultCurrency.rateLabel" = "汇率";
 /* The wallet is disabled. */
 "Disabled.title" = "钱包已禁用";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "请求%1$@ 帐户信息";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "请求%1$@智能合约呼叫";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "请求%1$@付款";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "此设备未进行配置，无法用 iOS 邮件应用发送电子邮件。";
 /* Email unavailable alert title */
@@ -228,16 +222,10 @@
 "FeeSelector.title" = "处理速度";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "管理";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "购买比特币";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "菜单";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "钱包";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "总资产";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "换";
 /* Checking private key balance progress view text */
 "Import.checking" = "正在查看私人密钥余额...";
 /* Sweep private key confirmation message */
@@ -292,20 +280,6 @@
 "JailbreakWarnings.title" = "警告";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "擦除";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "同意";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "拒绝";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "外部应用没有本设备的许可将不能汇钱";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "注意:仅在如下域名时才使用本应用";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "安全结账";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "该应用将能够:";
-/* Link Wallet view title */
-"LinkWallet.title" = "关联钱包";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "位置服务被禁用。";
 /* No permissions for location services */
@@ -322,10 +296,6 @@
 "MenuButton.addWallet" = "添加钱包";
 /* Menu button title */
 "MenuButton.lock" = "锁住钱包";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "管理钱包";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "扫描QR";
 /* Menu button title */
 "MenuButton.security" = "安全中心";
 /* Menu button title */
@@ -358,10 +328,6 @@
 "NodeSelector.statusLabel" = "节点连接状态";
 /* Node Selector view title */
 "NodeSelector.title" = "比特币节点";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "发送%1$@以购买%2$@";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "确认";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "假的付款请求";
 /* Error opening payment protocol file message */
@@ -420,10 +386,6 @@
 "Prompts.UpgradePin.title" = "升级 PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "打开推送通知，以便将来从 Bread 接收特殊消息。";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "提示已禁用";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "在设置里开启提示以接收提醒";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "推送通知";
 /* Push notifications are off label */
@@ -618,8 +580,6 @@
 "Settings.manage" = "管理";
 /* Notifications label */
 "Settings.notifications" = "通知";
-/* Section header for "other settings". */
-"Settings.other" = "其他";
 /* Preferences settings section header */
 "Settings.preferences" = "选项";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -662,14 +622,10 @@
 "StartViewController.recoverButton" = "恢复钱包";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "连接中";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "同步失败";
 /* Syncing view header text */
 "SyncingView.header" = "正在同步";
 /* Retry button label */
 "SyncingView.retry" = "重试";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "从 %1$@ 同步";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "同步中";
 /* 6 d (6 days) */
@@ -774,8 +730,6 @@
 "TransactionDetails.amountHeader" = "金额";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "收到时%1$@]，现在%2$@";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "发送时 %1$@，现在 %2$@";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "已在区块中确认";
 /* Memo section header */
@@ -950,3 +904,51 @@
 "WritePaperPhrase.previous" = "上一步";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li / %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "其他";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "管理钱包";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "菜单";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "购买";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "换";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "扫描QR";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "同步失败";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "从 %1$@ 同步";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "提示已禁用";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "在设置里开启提示以接收提醒";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "同意";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "拒绝";
+/* Link Wallet view title */
+"LinkWallet.title" = "关联钱包";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "注意:仅在如下域名时才使用本应用";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "该应用将能够:";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "外部应用没有本设备的许可将不能汇钱";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "安全结账";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "确认";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "发送%1$@以购买%2$@";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "请求%1$@ 帐户信息";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "请求%1$@智能合约呼叫";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "请求%1$@付款";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "发送时 %1$@，现在 %2$@";
+/* Request timed out error message */
+"Alert.timedOut" = "请求超时。请检查您的连接，然后重试。";

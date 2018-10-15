@@ -69,6 +69,7 @@ enum ManageWallets {
             }
         }
     }
+    
     struct removeTokenAddresses : Action {
         let reduce: Reducer
         init(_ removedTokenAddresses: [String]) {
@@ -78,6 +79,15 @@ enum ManageWallets {
                     return !removedTokenAddresses.contains(token.address)
                 }
                 return $0.mutate(wallets: newWallets)
+            }
+        }
+    }
+    
+    struct setAvailableTokens: Action {
+        let reduce: Reducer
+        init(_ availableTokens: [ERC20Token]) {
+            reduce = {
+                return $0.mutate(availableTokens: availableTokens)
             }
         }
     }
@@ -161,7 +171,6 @@ struct WalletChange: Trackable {
         if self.currency is Bitcoin {
             UserDefaults.maxDigits = maxDigits
         }
-        saveEvent("maxDigits.set", attributes: ["maxDigits": "\(maxDigits)"])
         return WalletAction(reduce: {
             guard let state = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: state.mutate(maxDigits: maxDigits)) })

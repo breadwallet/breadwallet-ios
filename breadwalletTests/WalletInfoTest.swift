@@ -20,7 +20,7 @@ class WalletInfoTest : XCTestCase {
         walletManager = try! BTCWalletManager(currency: Currencies.btc, dbPath: nil)
         let _ = walletManager?.setRandomSeedPhrase()
         initWallet(walletManager: walletManager!)
-        client = walletManager?.apiClient
+        client = BRAPIClient(authenticator: walletManager!)
     }
 
     func testRecoverWalletInfo() {

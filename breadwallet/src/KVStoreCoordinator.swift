@@ -21,7 +21,7 @@ class KVStoreCoordinator : Subscriber {
             let newCurrencyListMetaData = CurrencyListMetaData()
             newCurrencyListMetaData.enabledCurrencies = CurrencyListMetaData.defaultCurrencies
             set(newCurrencyListMetaData)
-            setInitialDisplayWallets(metaData: newCurrencyListMetaData, tokenData: [])
+            setInitialDisplayWallets(metaData: newCurrencyListMetaData, tokens: [])
             return
         }
 
@@ -31,9 +31,13 @@ class KVStoreCoordinator : Subscriber {
             try? kvStore.syncKey(tokenListMetaDataKey, completionHandler: {_ in })
         }
 
-        StoredTokenData.fetchTokens(callback: { tokenData in
-            self.setInitialDisplayWallets(metaData: currencyMetaData, tokenData: tokenData.map { ERC20Token(tokenData: $0) })
-        })
+        assert(Store.state.availableTokens.count > 1, "missing token list")
+        if currencyMetaData.enabledCurrencies.count == 0 {
+            print("no wallets enabled in metadata, reverting to default")
+            currencyMetaData.enabledCurrencies = CurrencyListMetaData.defaultCurrencies
+            set(currencyMetaData)
+        }
+        self.setInitialDisplayWallets(metaData: currencyMetaData, tokens: Store.state.availableTokens)
 
         Store.subscribe(self, name: .resetDisplayCurrencies, callback: { _ in
             self.resetDisplayCurrencies()
@@ -48,10 +52,10 @@ class KVStoreCoordinator : Subscriber {
         currencyMetaData.hiddenCurrencies = []
         set(currencyMetaData)
         try? kvStore.syncKey(tokenListMetaDataKey, completionHandler: {_ in })
-        setInitialDisplayWallets(metaData: currencyMetaData, tokenData: [])
+        setInitialDisplayWallets(metaData: currencyMetaData, tokens: [])
     }
 
-    private func setInitialDisplayWallets(metaData: CurrencyListMetaData, tokenData: [ERC20Token]) {
+    private func setInitialDisplayWallets(metaData: CurrencyListMetaData, tokens: [ERC20Token]) {
         //skip this setup if stored wallets are the same as wallets in the state
         guard walletsHaveChanged(displayCurrencies: Store.state.displayCurrencies, enabledCurrencies: metaData.enabledCurrencies) else { return }
 
@@ -71,7 +75,7 @@ class KVStoreCoordinator : Subscriber {
                     newWallets[Currencies.brd.code] = oldWallets[Currencies.brd.code]!.mutate(displayOrder: displayOrder)
                     displayOrder = displayOrder + 1
                 } else {
-                    let filteredTokens = tokenData.filter { $0.address.lowercased() == tokenAddress.lowercased() }
+                    let filteredTokens = tokens.filter { $0.address.lowercased() == tokenAddress.lowercased() }
                     if let token = filteredTokens.first {
                         if let oldWallet = oldWallets[token.code] {
                             newWallets[token.code] = oldWallet.mutate(displayOrder: displayOrder)

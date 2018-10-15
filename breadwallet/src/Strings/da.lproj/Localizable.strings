@@ -176,12 +176,6 @@
 "DefaultCurrency.rateLabel" = "Valutakurs";
 /* The wallet is disabled. */
 "Disabled.title" = "Pung deaktiveret";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "Anmod om %1$@-kontooplysninger";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "Anmod om %1$@ \"smart contract\"-kald";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "Anmod om betaling af %1$@";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Denne enhed er ikke konfigureret til at sende e-mail med iOS mailappen.";
 /* Email unavailable alert title */
@@ -228,16 +222,10 @@
 "FeeSelector.title" = "Behandlingshastighed";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Administration";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Køb Bitcoin";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Tegnebøger";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "samlet antal aktiver";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Køb og sælg";
 /* Checking private key balance progress view text */
 "Import.checking" = "Tjekker beløb på privat nøgle...";
 /* Sweep private key confirmation message */
@@ -292,20 +280,6 @@
 "JailbreakWarnings.title" = "ADVARSEL";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Ryd";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "Godkend";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "Afvis";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "Eksterne apps kan ikke sende penge uden godkendelse fra denne enhed";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "Bemærk: brug KUN denne app, når du er på et af følgende domæner";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "Sikker betaling";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "Denne app vil være i stand til at:";
-/* Link Wallet view title */
-"LinkWallet.title" = "Forbind tegnebog";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Placeringstjenester er deaktiveret.";
 /* No permissions for location services */
@@ -322,10 +296,6 @@
 "MenuButton.addWallet" = "Tilføj pung";
 /* Menu button title */
 "MenuButton.lock" = "Lås pung";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Administrer Tegnebøger";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Scan QR-kode";
 /* Menu button title */
 "MenuButton.security" = "Sikkerhedscenter";
 /* Menu button title */
@@ -358,10 +328,6 @@
 "NodeSelector.statusLabel" = "Node forbindelsesstatus";
 /* Node Selector view title */
 "NodeSelector.title" = "Bitcoin-nodes";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "Send %1$@ for at købe %2$@";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "Bekræftelse";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Dårlig betalingsanmodning";
 /* Error opening payment protocol file message */
@@ -420,10 +386,6 @@
 "Prompts.UpgradePin.title" = "Opgader PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Slå notifikationer til for at modtage særlige meddelelser fra Bread i fremtiden.";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "Notifikationer deaktiveret";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Slå notifikationer til i Indstillinger for at modtage advarsler";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push notifikationer";
 /* Push notifications are off label */
@@ -618,8 +580,6 @@
 "Settings.manage" = "Administrer";
 /* Notifications label */
 "Settings.notifications" = "Notifikationer";
-/* Section header for "other settings". */
-"Settings.other" = "Andet";
 /* Preferences settings section header */
 "Settings.preferences" = "Indstillinger";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -662,14 +622,10 @@
 "StartViewController.recoverButton" = "Gendan tegnebog";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Tilslutter";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Synkronisering mislykkedes";
 /* Syncing view header text */
 "SyncingView.header" = "Synkroniserer";
 /* Retry button label */
 "SyncingView.retry" = "Prøv igen";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Synkroniseret via %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Synkroniserer";
 /* 6 d (6 days) */
@@ -774,8 +730,6 @@
 "TransactionDetails.amountHeader" = "Beløb";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "%1$@ ved modtagelsen, %2$@ nu";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "%1$@ da de blev sendt, %2$@ nu";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Bekræftet i blok";
 /* Memo section header */
@@ -950,3 +904,51 @@
 "WritePaperPhrase.previous" = "Forrige";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li af %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Andet";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Administrer Tegnebøger";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Køb";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Køb og sælg";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Scan QR-kode";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Synkronisering mislykkedes";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Synkroniseret via %1$@";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Notifikationer deaktiveret";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Slå notifikationer til i Indstillinger for at modtage advarsler";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Godkend";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Afvis";
+/* Link Wallet view title */
+"LinkWallet.title" = "Forbind tegnebog";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Bemærk: brug KUN denne app, når du er på et af følgende domæner";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Denne app vil være i stand til at:";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Eksterne apps kan ikke sende penge uden godkendelse fra denne enhed";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Sikker betaling";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Bekræftelse";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Send %1$@ for at købe %2$@";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Anmod om %1$@-kontooplysninger";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Anmod om %1$@ \"smart contract\"-kald";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Anmod om betaling af %1$@";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ da de blev sendt, %2$@ nu";
+/* Request timed out error message */
+"Alert.timedOut" = "Anmodingen er udløbet. Tjek din forbindelse og prøv igen.";
