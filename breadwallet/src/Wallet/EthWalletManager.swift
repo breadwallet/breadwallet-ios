@@ -29,7 +29,12 @@ class EthWalletManager : WalletManager {
     var kvStore: BRReplicatedKVStore?
     weak var apiClient: BRAPIClient? {
         didSet {
-            self.node.connect()
+            if let apiClient = apiClient {
+                assert(apiClient.authKey != nil)
+                self.node.connect()
+            } else {
+                self.node.disconnect()
+            }
         }
     }
     
@@ -51,9 +56,10 @@ class EthWalletManager : WalletManager {
     var tokens: [ERC20Token] = [] {
         didSet {
             tokens.forEach { token in
-                // creates the core wallet if needed
-                let wallet = node.wallet(token)
-                wallet.updateBalance()
+                if node.findWallet(forCurrency: token) == nil {
+                    let wallet = node.wallet(token) // creates the core wallet
+                    wallet.updateBalance() // trigger initial balance update to skip core refresh interval delay
+                }
             }
         }
     }
@@ -82,6 +88,11 @@ class EthWalletManager : WalletManager {
         }
     }
     
+    /// Sets the token definitions in Core Ethereum
+    func setAvailableTokens(_ tokens: [ERC20Token]) {
+        node.setTokens(tokens)
+    }
+    
     func defaultGasLimit(currency: CurrencyDef) -> UInt64 {
         let wallet = node.wallet(currency)
         return wallet.defaultGasLimit
@@ -90,7 +101,7 @@ class EthWalletManager : WalletManager {
     /// Creates, signs and submits an ETH transaction or ERC20 token transfer
     /// Caller must authenticate
     /// gasPrice and gasLimit parameters are only used for contract transactions
-    func sendTransaction(currency: CurrencyDef, toAddress: String, amount: UInt256, abi: String? = nil, gasPrice: UInt256? = nil, gasLimit: UInt256? = nil, callback: @escaping (SendTransactionResult) -> Void) {
+    func sendTransaction(currency: CurrencyDef, toAddress: String, amount: UInt256, abi: String? = nil, gasPrice: UInt256? = nil, gasLimit: UInt256, callback: @escaping (SendTransactionResult) -> Void) {
         guard let accountAddress = address, let apiClient = apiClient else { return assertionFailure() }
         
         guard ethPrivKey != nil, var privKey = BRKey(privKey: ethPrivKey!) else { return }
@@ -100,9 +111,10 @@ class EthWalletManager : WalletManager {
         let wallet = node.wallet(currency)
         let tx: EthereumTransaction
         if let abi = abi {
-            tx = wallet.createContractTransaction(recvAddress: toAddress, amount: amount, data: abi, gasPrice: gasPrice, gasLimit: gasLimit?.asUInt64)
+            tx = wallet.createContractTransaction(recvAddress: toAddress, amount: amount, data: abi, gasPrice: gasPrice, gasLimit: gasLimit.asUInt64)
         } else {
             tx = wallet.createTransaction(currency: currency, recvAddress: toAddress, amount: amount)
+            lightNodeAnnounceGasEstimate(node.core, wallet.identifier, tx.identifier, gasLimit.hexString, 0)
         }
         wallet.sign(transaction: tx, privateKey: privKey)
         

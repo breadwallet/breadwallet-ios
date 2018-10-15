@@ -240,7 +240,7 @@ class ModalPresenter : Subscriber, Trackable {
         if let articleId = articleId {
             url = "/support/article?slug=\(articleId)"
             if let currency = currency {
-                url += "&currency=\(currency.code.lowercased())"
+                url += "&currency=\(currency.supportCurrencyCode)"
             }
         } else {
             url = "/support?"
@@ -315,8 +315,8 @@ class ModalPresenter : Subscriber, Trackable {
         guard let kvStore = Backend.kvStore else { return nil }
         guard let sender = request.currency.createSender(walletManager: walletManager, kvStore: kvStore) else { return nil }
         if let ethSender = sender as? EthereumSender {
-            ethSender.customGasPrice = request.txFee?.rawValue
-            ethSender.customGasLimit = request.txSize
+            ethSender.checkoutCustomGasPrice = request.txFee?.rawValue
+            ethSender.checkoutCustomGasLimit = request.txSize
         }
         let checkoutVC = CheckoutConfirmationViewController(request: request, sender: sender)
         checkoutVC.presentVerifyPin = { [weak self, weak checkoutVC] bodyText, success in
@@ -564,7 +564,7 @@ class ModalPresenter : Subscriber, Trackable {
             MenuItem(title: S.Settings.preferences, icon: #imageLiteral(resourceName: "prefs"), subMenu: preferencesItems, rootNav: menuNav),
             
             // Security
-            MenuItem(title: S.MenuButton.security, icon: #imageLiteral(resourceName: "security"), subMenu: securityItems, rootNav: menuNav),
+            MenuItem(title: S.MenuButton.security, icon: #imageLiteral(resourceName: "security"), subMenu: securityItems, rootNav: menuNav, faqButton: UIButton.buildFaqButton(articleId: ArticleIds.securityCenter)),
             
             // Support
             MenuItem(title: S.MenuButton.support, icon: #imageLiteral(resourceName: "support")) { [unowned self] in

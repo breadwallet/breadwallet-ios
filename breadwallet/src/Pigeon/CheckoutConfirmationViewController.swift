@@ -19,13 +19,20 @@ class CheckoutConfirmationViewController : UIViewController {
     private let footerBackground = UIView(color: .darkerBackground)
     private let buy = BRDButton(title: S.Button.buy, type: .primary)
     private let cancel = BRDButton(title: S.Button.cancel, type: .secondary)
-    private let logo = UIImageView(image: #imageLiteral(resourceName: "CCCLogo"))
+    private let logo = UIImageView()
     private let coinName = UILabel(font: .customBody(size: 28.0), color: .white)
     private let amount = UILabel(font: .customBody(size: 16.0), color: .white)
 
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private let request: PigeonRequest
     private let sender: Sender
+    private var token: ERC20Token? {
+        didSet {
+            coinName.text = token?.name ?? S.LinkWallet.logoFooter
+            amount.text = String(format: S.PaymentConfirmation.amountText, request.purchaseAmount.description, token?.code ?? "")
+            logo.image = token?.imageSquareBackground
+        }
+    }
 
     var presentVerifyPin: ((String, @escaping ((String) -> Void))->Void)?
     var onPublishSuccess: (()->Void)?
@@ -34,6 +41,9 @@ class CheckoutConfirmationViewController : UIViewController {
         self.request = request
         self.sender = sender
         super.init(nibName: nil, bundle: nil)
+        request.getToken { [weak self] token in
+            self?.token = token
+        }
     }
 
     override func viewDidLoad() {
@@ -57,8 +67,10 @@ class CheckoutConfirmationViewController : UIViewController {
     }
 
     private func addConstraints() {
-        header.constrainTopCorners(sidePadding: 0.0, topPadding: 0.0)
         header.constrain([
+            header.topAnchor.constraint(equalTo: safeTopAnchor),
+            header.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            header.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             header.heightAnchor.constraint(equalToConstant: 64.0)])
         titleLabel.constrain([
             titleLabel.centerXAnchor.constraint(equalTo: header.centerXAnchor),
@@ -68,7 +80,7 @@ class CheckoutConfirmationViewController : UIViewController {
             body.topAnchor.constraint(equalTo: header.bottomAnchor),
             body.trailingAnchor.constraint(equalTo: view.trailingAnchor)])
         logo.constrain([
-            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: logo.image!.size.height/logo.image!.size.width),
+            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: 1.0),
             logo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.34)])
         footer.constrain([
             footer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -82,8 +94,7 @@ class CheckoutConfirmationViewController : UIViewController {
         view.backgroundColor = .darkBackground
         setupStackViews()
         titleLabel.text = S.PaymentConfirmation.title
-        coinName.text = "Container Crypto Coin"
-        amount.text = String(format: S.PaymentConfirmation.amountText, request.purchaseAmount.description, "CCC")
+        logo.contentMode = .scaleAspectFill
         buy.tap = {
             self.sendTapped()
         }

@@ -55,6 +55,17 @@ extension PigeonRequest {
             objc_setAssociatedObject(self, &AssociatedKeys.responseCallback, CallbackWrapper(newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
+    
+    func getToken(completion: @escaping (ERC20Token?) -> Void) {
+        Backend.apiClient.getToken(withSaleAddress: address) { result in
+            guard case .success(let data) = result, let token = data.first else {
+                print("[EME] error fetching token by sale address")
+                completion(nil)
+                return
+            }
+            completion(token)
+        }
+    }
 }
 
 class MessagePaymentRequestWrapper: PigeonRequest {

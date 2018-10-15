@@ -18,9 +18,9 @@ enum ArticleIds {
     static let touchIdSpendingLimit = "fingerprint-spending-limit"
     static let transactionDetails = "transaction-details"
     static let manageWallet = "manage-wallet"
-    static let receiveBitcoin = "receive-bitcoin"
     static let requestAmount = "request-amount"
-    static let sendBitcoin = "send-bitcoin"
+    static let sendTx = "send-tx"
+    static let receiveTx = "receive-tx"
     static let walletDisabled = "wallet-disabled"
     static let resetPinWithPaperKey = "reset-pin-paper-key"
     static let setPin = "set-pin"
@@ -28,4 +28,5 @@ enum ArticleIds {
     static let writePhrase = "write-phrase"
     static let confirmPhrase = "confirm-phrase"
     static let wipeWallet = "wipe-wallet"
+    static let startView = "start-view"
 }

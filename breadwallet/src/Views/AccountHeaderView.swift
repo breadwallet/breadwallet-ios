@@ -266,8 +266,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     private func setCryptoOnlyBalance() {
-        //This is a temporary hack for the CCC token
-        guard currency.code.lowercased() == "ccc" else { return }
         let amount = Amount(amount: balance, currency: currency, rate: nil)
         primaryBalance.text = amount.description
         secondaryBalance.isHidden = true

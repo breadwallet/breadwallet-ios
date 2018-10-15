@@ -124,7 +124,7 @@ class PigeonExchange: Subscriber {
                 return finish(.error(message: "associated key could not be added. pairing aborted!"))
             }
 
-            self.apiClient.sendMessage(envelope: envelope, callback: { (success) in
+            self.apiClient.sendMessage(envelope: envelope) { (success) in
                 guard success else {
                     print("[EME] failed to send LINK message. pairing aborted!")
                     return finish(.error(message: "failed to send LINK message. pairing aborted!"))
@@ -141,7 +141,7 @@ class PigeonExchange: Subscriber {
                 var count = 0
                 
                 Timer.scheduledTimer(withTimeInterval: fetchInterval, repeats: true) { (timer) in
-                    self.apiClient.fetchInbox(callback: { result in
+                    self.apiClient.fetchInbox(afterCursor: self.lastCursor) { result in
                         guard case .success(let entries) = result else {
                             print("[EME] /inbox fetch error. pairing aborted!")
                             timer.invalidate()
@@ -207,14 +207,14 @@ class PigeonExchange: Subscriber {
                             finish(.success)
                             break
                         }
-                    })
+                    } // fetchInbox
                     
                     count += 1
                     if count >= maxTries {
                         timer.invalidate()
                     }
-                }
-            })
+                } // scheduledTimer
+            } // sendMessage
         }
     }
     
@@ -247,15 +247,22 @@ class PigeonExchange: Subscriber {
     // MARK: - Inbox
     
     func fetchInbox() {
-        apiClient.fetchInbox(callback: { result in
+        let limit = 100
+        apiClient.fetchInbox(afterCursor: lastCursor, limit: limit) { [weak self] result in
+            guard let `self` = self else { return }
             switch result {
             case .success(let entries):
                 print("[EME] /inbox fetched \(entries.unacknowledged.count) new entries")
-                self.processEntries(entries)
+                if let lastCursor = self.processEntries(entries) {
+                    self.updateLastCursor(lastCursor)
+                    if entries.count == limit {
+                        self.fetchInbox()
+                    }
+                }
             case .error:
                 print("[EME] fetch error")
             }
-        })
+        }
     }
 
     func startPolling() {
@@ -272,17 +279,46 @@ class PigeonExchange: Subscriber {
         timer?.invalidate()
     }
     
-    private func processEntries(_ entries: [InboxEntry]) {
+    /// returns the cursor of the last processed entry
+    private func processEntries(_ entries: [InboxEntry]) -> String? {
+        var lastCursor: String? = nil
+        var hasSkippedEntry = false
         entries.unacknowledged.forEach { entry in
             guard let envelope = entry.envelope else {
                 // unable to decode envelope -- ack to avoid future processing
                 apiClient.sendAck(forCursor: entry.cursor)
+                if !hasSkippedEntry {
+                    lastCursor = entry.cursor
+                }
                 return
             }
             if self.processEnvelope(envelope) {
                 apiClient.sendAck(forCursor: entry.cursor)
+                if !hasSkippedEntry {
+                    lastCursor = entry.cursor
+                }
+            } else {
+                // skipped entry, do not update cursor for any further entries
+                hasSkippedEntry = true
             }
         }
+        return lastCursor
+    }
+    
+    private func updateLastCursor(_ cursor: String) {
+        let inboxMetadata = InboxMetaData(store: kvStore) ?? InboxMetaData(cursor: cursor)
+        inboxMetadata.lastCursor = cursor
+        
+        do {
+            try _ = kvStore.set(inboxMetadata)
+            print("[EME] inbox cursor updated: \(cursor)")
+        } catch let error {
+            print("[EME] error saving inbox metadata: \(error.localizedDescription)")
+        }
+    }
+    
+    private var lastCursor: String? {
+        return InboxMetaData(store: kvStore)?.lastCursor
     }
 
     // returns: shouldSendAck: Bool
@@ -413,7 +449,7 @@ class PigeonExchange: Subscriber {
         apiClient.sendMessage(envelope: envelope)
     }
 
-    private func sendCallResponse(result: CheckoutResult, forRequest: MessageCallRequest, from requestEnvelope: MessageEnvelope) {
+    private func sendCallResponse(result: CheckoutResult, forRequest request: MessageCallRequest, from requestEnvelope: MessageEnvelope) {
         guard let pairingKey = pairingKey(forRemotePubKey: requestEnvelope.senderPublicKey) else {
             print("[EME] remote entity not found!")
             return
@@ -423,9 +459,27 @@ class PigeonExchange: Subscriber {
         case .accepted(let sendResult):
             switch sendResult {
             case .success(let txHash, _):
-                response.scope = forRequest.scope
+                response.scope = request.scope
                 response.status = .accepted
                 response.transactionID = txHash ?? "unknown txHash"
+                let requestWrapper = MessageCallRequestWrapper(callRequest: request)
+                requestWrapper.getToken { [unowned self] token in
+                    guard let token = token else { return }
+                    self.addTokenWallet(token: token)
+                    // exchange rate is in the currency's common units
+                    var amountToReceive = ""
+                    if let rate = token.defaultRate {
+                        let formatter = Amount(amount: 0, currency: token).tokenFormat
+                        let value: Decimal = requestWrapper.purchaseAmount.tokenValue / Decimal(rate)
+                        amountToReceive = formatter.string(from: value as NSDecimalNumber) ?? ""
+                    }
+                    self.apiClient.sendCheckoutEvent(txHash: txHash ?? "",
+                                                     fromCurrency: request.scope,
+                                                     fromAddress: Store.state.wallets[request.scope]?.receiveAddress ?? "",
+                                                     fromAmount: requestWrapper.purchaseAmount.tokenFormattedValue,
+                                                     toCurrency: token.code,
+                                                     toAmount: amountToReceive)
+                }
             case .creationError(_):
                 response.status = .rejected
                 response.error = .transactionFailed
@@ -445,7 +499,6 @@ class PigeonExchange: Subscriber {
             return print("[EME] envelope construction failed!")
         }
         apiClient.sendMessage(envelope: envelope)
-        addToken()
     }
     
     // MARK: - Ping
@@ -511,21 +564,19 @@ class PigeonExchange: Subscriber {
         return PigeonCrypto.pairingKey(forIdentifier: pwd.identifier, authKey: apiClient.authKey!)
     }
 
-    private func addToken() {
-        let storedToken = StoredTokenData.ccc
-        let tokenToBeAdded = ERC20Token(name: storedToken.name, code: storedToken.code, symbol: storedToken.code, colors: (UIColor.fromHex(storedToken.colors[0]), UIColor.fromHex(storedToken.colors[1])), address: storedToken.address, abi: ERC20Token.standardAbi, decimals: 18)
-        var displayOrder = Store.state.displayCurrencies.count
-        guard !Store.state.displayCurrencies.contains(where: {$0.code.lowercased() == tokenToBeAdded.code.lowercased()}) else { return }
-        var dictionary = [String: WalletState]()
-        dictionary[tokenToBeAdded.code] = WalletState.initial(tokenToBeAdded, displayOrder: displayOrder)
-        displayOrder = displayOrder + 1
-        let metaData = CurrencyListMetaData(kvStore: kvStore)!
-        metaData.addTokenAddresses(addresses: [tokenToBeAdded.address])
+    private func addTokenWallet(token: ERC20Token) {
+        guard !Store.state.displayCurrencies.contains(where: {$0.code.lowercased() == token.code.lowercased()}) else { return }
+        var walletDict = [String: WalletState]()
+        walletDict[token.code] = WalletState.initial(token, displayOrder: Store.state.displayCurrencies.count)
+        let metaData = CurrencyListMetaData(kvStore: self.kvStore)!
+        metaData.addTokenAddresses(addresses: [token.address])
         do {
-            let _ = try kvStore.set(metaData)
+            let _ = try self.kvStore.set(metaData)
         } catch let error {
             print("error setting wallet info: \(error)")
         }
-        Store.perform(action: ManageWallets.addWallets(dictionary))
+        DispatchQueue.main.async {
+            Store.perform(action: ManageWallets.addWallets(walletDict))
+        }
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import WebKit
 
 class Backend {
     
@@ -23,8 +24,13 @@ class Backend {
     private var pigeonExchange: PigeonExchange?
     private var exchangeUpdater: ExchangeUpdater?
     private var feeUpdaters = [FeeUpdater]()
+    private let userAgentFetcher = UserAgentFetcher()
     
     // MARK: - Public
+    
+    static var isConnected: Bool {
+        return (apiClient.authKey != nil)
+    }
     
     static var apiClient: BRAPIClient {
         return shared.apiClient
@@ -46,6 +52,14 @@ class Backend {
 
     static func updateFees() {
         shared.feeUpdaters.forEach { $0.refresh() }
+    }
+    
+    static func sendLaunchEvent() {
+        DispatchQueue.main.async { // WKWebView creation must be on main thread
+            shared.userAgentFetcher.getUserAgent { userAgent in
+                shared.apiClient.sendLaunchEvent(userAgent: userAgent)
+            }
+        }
     }
     
     // MARK: Setup
@@ -71,5 +85,22 @@ class Backend {
         shared.exchangeUpdater = nil
         shared.pigeonExchange = nil
         shared.apiClient = BRAPIClient(authenticator: NoAuthAuthenticator())
+    }
+}
+
+// MARK: - 
+
+class UserAgentFetcher {
+    lazy var webView: WKWebView = { return WKWebView(frame: .zero) }()
+    
+    func getUserAgent(completion: @escaping (String) -> Void) {
+        webView.loadHTMLString("<html></html>", baseURL: nil)
+        webView.evaluateJavaScript("navigator.userAgent") { (result, error) in
+            guard let agent = result as? String else {
+                print(String(describing: error))
+                return completion("")
+            }
+            completion(agent)
+        }
     }
 }

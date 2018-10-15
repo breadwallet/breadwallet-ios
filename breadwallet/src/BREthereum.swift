@@ -301,7 +301,7 @@ struct EthereumWallet : EthereumReference {
     }
 }
 
-// MAKR: - Block
+// MARK: - Block
 
 ///
 /// An `EthereumBlock` represents a  ...
@@ -512,14 +512,35 @@ class EthereumLightNode: EthereumPointer {
     }
     
     //
+    // MARK: Tokens
+    //
+    func setTokens(_ tokens: [ERC20Token]) {
+        for token in tokens {
+            lightNodeAnnounceToken(core,
+                                   token.address,
+                                   token.symbol,
+                                   token.code,
+                                   token.name,
+                                   Int32(token.decimals),
+                                   nil, // gas limit
+                                   nil, // gas price
+                                   0)
+        }
+    }
+    
+    //
     // MARK: Wallets
     //
-    internal func findWallet(identifier: EthereumWalletId) -> EthereumWallet? {
+    private var walletsByTicker: [String: EthereumWallet] = [:]
+    private var walletsById: [EthereumWalletId: EthereumWallet] = [:]
+    
+    func findWallet(withIdentifier identifier: EthereumWalletId) -> EthereumWallet? {
         return walletsById[identifier]
     }
     
-    private var walletsByTicker: [String: EthereumWallet] = [:]
-    private var walletsById: [EthereumWalletId: EthereumWallet] = [:]
+    func findWallet(forCurrency currency: CurrencyDef) -> EthereumWallet? {
+        return walletsByTicker[currency.code]
+    }
     
     func wallet(_ currency: CurrencyDef) -> EthereumWallet {
         if let wallet = walletsByTicker[currency.code] {
@@ -584,7 +605,7 @@ class EthereumLightNode: EthereumPointer {
             { (this, core, wid, event, status, error) in
                 if let this = this.map ({ Unmanaged<EthereumLightNode>.fromOpaque($0).takeUnretainedValue() }) {
                     assert (this.core == core)
-                    guard let wallet = this.findWallet(identifier: wid) else { return }
+                    guard let wallet = this.findWallet(withIdentifier: wid) else { return }
                     this.listener?.handleWalletEvent (wallet: wallet,
                                                       event: EthereumWalletEvent(event),
                                                       status: status,
@@ -608,7 +629,7 @@ class EthereumLightNode: EthereumPointer {
             { (this, core, wid, tid, event, status, error) in
                 if let this = this.map ({ Unmanaged<EthereumLightNode>.fromOpaque($0).takeUnretainedValue() }) {
                     assert (this.core == core)
-                    guard let wallet = this.findWallet(identifier: wid) else { return }
+                    guard let wallet = this.findWallet(withIdentifier: wid) else { return }
                     this.listener?.handleTransactionEvent (wallet: wallet,
                                                            transaction: this.findTransaction(currency: wallet.currency, identifier: tid),
                                                            event: EthereumTransactionEvent(event),
@@ -645,7 +666,7 @@ class EthereumLightNode: EthereumPointer {
             //  JsonRpcGetBalance funcGetBalance,
             { (this, core, wid, address, rid) in
                 guard let this = this.map ({ Unmanaged<EthereumLightNode>.fromOpaque($0).takeUnretainedValue() }),
-                    let wallet = this.findWallet(identifier: wid) else { return }
+                    let wallet = this.findWallet(withIdentifier: wid) else { return }
                 this.client?.getBalance(wallet: wallet, address: asUTF8String(address!), completion: { balance in
                     lightNodeAnnounceBalance (this.core, wid, balance, rid)
                 })
@@ -655,7 +676,7 @@ class EthereumLightNode: EthereumPointer {
             //JsonRpcGetGasPrice functGetGasPrice
             { (this, core, wid, rid) in
                 guard let this = this.map ({ Unmanaged<EthereumLightNode>.fromOpaque($0).takeUnretainedValue() }),
-                    let wallet = this.findWallet(identifier: wid) else { return }
+                    let wallet = this.findWallet(withIdentifier: wid) else { return }
                 this.client?.getGasPrice (wallet: wallet, completion: { gasPrice in
                     lightNodeAnnounceGasPrice (this.core, wid, gasPrice, rid)
                 })
@@ -664,7 +685,7 @@ class EthereumLightNode: EthereumPointer {
             // JsonRpcEstimateGas funcEstimateGas,
             { (this, core, wid, tid, to, amount, data, rid)  in
                 guard let this = this.map ({ Unmanaged<EthereumLightNode>.fromOpaque($0).takeUnretainedValue() }),
-                    let wallet = this.findWallet(identifier: wid) else { return }
+                    let wallet = this.findWallet(withIdentifier: wid) else { return }
                 this.client?.getGasEstimate(wallet: wallet, tid: tid,
                                             to: asUTF8String(to!),
                                             amount: asUTF8String(amount!),
@@ -677,7 +698,7 @@ class EthereumLightNode: EthereumPointer {
             // JsonRpcSubmitTransaction funcSubmitTransaction,
             { (this, core, wid, tid, transaction, rid)  in
                 guard let this = this.map ({ Unmanaged<EthereumLightNode>.fromOpaque($0).takeUnretainedValue() }),
-                    let wallet = this.findWallet(identifier: wid) else { return }
+                    let wallet = this.findWallet(withIdentifier: wid) else { return }
                 this.client?.submitTransaction(wallet: wallet, tid: tid,
                                                rawTransaction: asUTF8String(transaction!),
                                                completion: { hash in

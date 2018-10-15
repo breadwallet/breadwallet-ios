@@ -22,7 +22,7 @@ class PigeonTests : XCTestCase {
 
     func testEncryptDecrypt() {
         let (encryptedData, nonce) = crypto.encrypt(sampleInputData, receiverPublicKey: testPubKey)
-        let decryptedData = crypto.decrypt(encryptedData, senderPublicKey: testPubKey, nonce: nonce)
+        let decryptedData = crypto.decrypt(encryptedData, nonce: nonce, senderPublicKey: testPubKey)
         XCTAssert(decryptedData.hexString == sampleInputData.hexString)
     }
 
@@ -43,7 +43,7 @@ class PigeonTests : XCTestCase {
         guard let envelope = try? MessageEnvelope(to: receiverKey.publicKey, from: senderKey.publicKey, message: ping, type: .ping, crypto: crypto) else { return XCTFail() }
         XCTAssert(envelope.verify(pairingKey: receiverKey), "Envelope should pass verification")
         let receiverCrypto = PigeonCrypto(privateKey: receiverKey)
-        let decryptedData = receiverCrypto.decrypt(envelope.encryptedMessage, senderPublicKey: senderKey.publicKey, nonce: envelope.nonce)
+        let decryptedData = receiverCrypto.decrypt(envelope.encryptedMessage, nonce: envelope.nonce, senderPublicKey: senderKey.publicKey)
         if let deconstructedPing = try? MessagePing(serializedData: decryptedData) {
             XCTAssert(deconstructedPing.ping == "Hi Sam")
         } else {

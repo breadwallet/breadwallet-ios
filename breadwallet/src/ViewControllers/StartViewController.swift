@@ -27,7 +27,8 @@ class StartViewController : UIViewController {
     private let didTapCreate: () -> Void
     private let background = UIView()
     private var logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout").withRenderingMode(.alwaysTemplate))
-
+    private let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.startView)
+    
     override func viewDidLoad() {
         view.backgroundColor = .darkBackground
         setData()
@@ -42,6 +43,7 @@ class StartViewController : UIViewController {
         message.lineBreakMode = .byWordWrapping
         message.numberOfLines = 0
         message.textAlignment = .center
+        faqButton.tintColor = .navigationTint
     }
 
     private func addSubviews() {
@@ -52,6 +54,7 @@ class StartViewController : UIViewController {
         messageBackground.addSubview(message)
         view.addSubview(create)
         view.addSubview(recover)
+        view.addSubview(faqButton)
     }
 
     private func addConstraints() {
@@ -78,6 +81,12 @@ class StartViewController : UIViewController {
             create.constraint(.centerX, toView: recover, constant: nil),
             create.constraint(.width, toView: recover, constant: nil),
             create.constraint(.height, constant: C.Sizes.buttonHeight) ])
+        faqButton.constrain([
+            faqButton.topAnchor.constraint(equalTo: safeTopAnchor, constant: C.padding[2]),
+            faqButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+            faqButton.widthAnchor.constraint(equalToConstant: 44.0),
+            faqButton.heightAnchor.constraint(equalToConstant: 44.0)
+            ])
     }
 
     private func addButtonActions() {

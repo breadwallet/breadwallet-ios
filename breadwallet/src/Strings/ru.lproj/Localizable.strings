@@ -176,12 +176,6 @@
 "DefaultCurrency.rateLabel" = "Обменный курс";
 /* The wallet is disabled. */
 "Disabled.title" = "Кошелек отключен";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "Запросить %1$@ информацию об учётной записи";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "Запросить %1$@ вызов смарт-контракта";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "Запросить %1$@ платёж";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Для этого устройства не настроена отправка электронных писем через почтовое приложение iOS.";
 /* Email unavailable alert title */
@@ -228,16 +222,10 @@
 "FeeSelector.title" = "Скорость обработки";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Админ";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Купить Bitcoin";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Меню";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Кошельки";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "итого активов";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Обмен";
 /* Checking private key balance progress view text */
 "Import.checking" = "Проверяем баланс по персональному ключу...";
 /* Sweep private key confirmation message */
@@ -292,20 +280,6 @@
 "JailbreakWarnings.title" = "ПРЕДУПРЕЖДЕНИЕ";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Очистить";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "Одобрить";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "Отклонить";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "Внешние приложения не могут отправлять деньги без согласия с этого устройства";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "Примечание: взаимодействуйте ТОЛЬКО с этим приложением, когда находитесь на одном из следующих доменов";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "Защищенная Оплата Покупок";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "Это приложение способно:";
-/* Link Wallet view title */
-"LinkWallet.title" = "Прикрепить Кошелек";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Сервисы определения местоположения отключены.";
 /* No permissions for location services */
@@ -322,10 +296,6 @@
 "MenuButton.addWallet" = "Добавить кошелек";
 /* Menu button title */
 "MenuButton.lock" = "Заблокировать кошелек";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Управлять кошельками";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Сканировать QR код";
 /* Menu button title */
 "MenuButton.security" = "Центр безопасности";
 /* Menu button title */
@@ -358,10 +328,6 @@
 "NodeSelector.statusLabel" = "Состояние подключения узла";
 /* Node Selector view title */
 "NodeSelector.title" = "Биткойн-узлы";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "Отправить %1$@, чтобы купить %2$@";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "Подтверждение";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Неверный запрос на совершение платежа";
 /* Error opening payment protocol file message */
@@ -420,10 +386,6 @@
 "Prompts.UpgradePin.title" = "Обновить PIN-код";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Включите уведомления, чтобы в будущем получать от Bread важные сообщения.";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "Уведомления Отключены";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Включить уведомления в Настройках, чтобы получать оповещения";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push-уведомления";
 /* Push notifications are off label */
@@ -618,8 +580,6 @@
 "Settings.manage" = "Управление";
 /* Notifications label */
 "Settings.notifications" = "Уведомления";
-/* Section header for "other settings". */
-"Settings.other" = "Другие";
 /* Preferences settings section header */
 "Settings.preferences" = "Параметры";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -662,14 +622,10 @@
 "StartViewController.recoverButton" = "Восстановить кошелек";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Соединение";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Ошибка синхронизации";
 /* Syncing view header text */
 "SyncingView.header" = "Синхронизация";
 /* Retry button label */
 "SyncingView.retry" = "Повторить";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Синхронизированно до %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Синхронизация";
 /* 6 d (6 days) */
@@ -774,8 +730,6 @@
 "TransactionDetails.amountHeader" = "Сумма";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "%1$@ при получении, %2$@ сейчас";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "%1$@ когда отправлено, %2$@ сейчас";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Подтверждено в блоке";
 /* Memo section header */
@@ -950,3 +904,51 @@
 "WritePaperPhrase.previous" = "Назад";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li из %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Другие";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Управлять кошельками";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Меню";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Купить";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Обмен";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Сканировать QR код";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Ошибка синхронизации";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Синхронизированно до %1$@";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Уведомления Отключены";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Включить уведомления в Настройках, чтобы получать оповещения";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Одобрить";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Отклонить";
+/* Link Wallet view title */
+"LinkWallet.title" = "Прикрепить Кошелек";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Примечание: взаимодействуйте ТОЛЬКО с этим приложением, когда находитесь на одном из следующих доменов";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Это приложение способно:";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Внешние приложения не могут отправлять деньги без согласия с этого устройства";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Защищенная Оплата Покупок";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Подтверждение";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Отправить %1$@, чтобы купить %2$@";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Запросить %1$@ информацию об учётной записи";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Запросить %1$@ вызов смарт-контракта";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Запросить %1$@ платёж";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ когда отправлено, %2$@ сейчас";
+/* Request timed out error message */
+"Alert.timedOut" = "Истекло время запроса. Проверьте подключение и повторите попытку.";

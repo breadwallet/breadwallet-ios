@@ -148,7 +148,7 @@ class ScanViewController : UIViewController, Trackable {
                     if device.torchMode == .on {
                         self?.saveEvent("scan.torchOn")
                     } else {
-                        self?.saveEvent("scan.torchOn")
+                        self?.saveEvent("scan.torchOff")
                     }
                 } catch let error {
                     print("Camera Torch error: \(error)")
@@ -227,7 +227,7 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
                 }
                 
             case .deepLink(_):
-                saveEvent("scan.pairingRequest") // TODO: document
+                saveEvent("scan.deepLink")
             default:
                 assertionFailure("unexpected result")
             }
