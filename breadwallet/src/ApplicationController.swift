@@ -446,7 +446,7 @@ class ApplicationController : Subscriber, Trackable {
                     tokens = try JSONDecoder().decode([ERC20Token].self, from: cachedData)
                 } catch let e {
                     print("[TokenList] error reading from cache: \(e)")
-                    assertionFailure()
+                    fatalError("unable to read token list!")
                 }
                 processTokens(tokens)
             }
