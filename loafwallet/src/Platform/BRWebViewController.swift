@@ -195,7 +195,7 @@ import WebKit
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let response = message.body as? String else { return }
 
-        let URLString = URL(string: "https://sandbox.test-simplexcc.com/payments/new")
+        let URLString = URL(string: "https://checkout.simplexcc.com/payments/new")
         
         var req = URLRequest(url: URLString!)
         req.httpBody = Data(response.utf8)
