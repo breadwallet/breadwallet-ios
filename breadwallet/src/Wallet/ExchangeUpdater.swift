@@ -41,16 +41,23 @@ class ExchangeUpdater : Subscriber {
                 // calculate token/fiat rates
                 var tokenBtcDict = [String: Double]()
                 tokenBtcRates.forEach { tokenBtcDict[$0.reciprocalCode] = $0.rate }
+                let ethBtcRate = tokenBtcDict[Currencies.eth.code.lowercased()]
                 Store.state.currencies.filter({ !$0.matches(Currencies.btc) }).forEach { currency in
-                    guard let tokenBtcRate = tokenBtcDict[currency.code.lowercased()] else { return }
-                    let fiatRates: [Rate] = btcFiatRates.map { btcFiatRate in
-                        let tokenFiatRate = btcFiatRate.rate * tokenBtcRate
-                        return Rate(code: btcFiatRate.code, name: btcFiatRate.name, rate: tokenFiatRate, reciprocalCode: currency.code.lowercased())
+                    var tokenBtcRate = tokenBtcDict[currency.code.lowercased()]
+                    if tokenBtcRate == nil, let token = currency as? ERC20Token, let tokenEthRate = token.defaultRate, let ethBtcRate = ethBtcRate {
+                        tokenBtcRate = tokenEthRate * ethBtcRate
                     }
-                    Store.perform(action: WalletChange(currency).setExchangeRates(currentRate: self.findCurrentRate(rates: fiatRates), rates: fiatRates))
+                    if let tokenBtcRate = tokenBtcRate {
+                        let fiatRates: [Rate] = btcFiatRates.map { btcFiatRate in
+                            let tokenFiatRate = btcFiatRate.rate * tokenBtcRate
+                            return Rate(code: btcFiatRate.code, name: btcFiatRate.name, rate: tokenFiatRate, reciprocalCode: currency.code.lowercased())
+                        }
+                        Store.perform(action: WalletChange(currency).setExchangeRates(currentRate: self.findCurrentRate(rates: fiatRates), rates: fiatRates))
+                    } else {
+                        assert(false, "missing exchange rate")
+                        print("ERROR: missing exchange rate for \(currency.code)")
+                    }
                 }
-                
-                // TODO: tokenlist will include ICO tokens with a default exchange rate
             }
         }
     }
