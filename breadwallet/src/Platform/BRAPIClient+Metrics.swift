@@ -8,14 +8,22 @@
 
 import Foundation
 import UIKit
+import iAd
+import AdSupport
 
 extension BRAPIClient {
     
     func sendLaunchEvent(userAgent: String) {
         DispatchQueue.global(qos: .background).async { [weak self] in
             guard let `self` = self else { return }
-            let payload = MetricsPayload(data: MetricsPayloadData.launch(LaunchData(bundles: self.bundles, userAgent: userAgent)))
-            self.sendMetrics(payload: payload)
+            self.getAttributionDetails() { attributionInfo in
+                let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString
+                let payload = MetricsPayload(data: MetricsPayloadData.launch(LaunchData(bundles: self.bundles,
+                                                                                        userAgent: userAgent,
+                                                                                        idfa: idfa,
+                                                                                        attributionInfo: attributionInfo)))
+                self.sendMetrics(payload: payload)
+            }
         }
     }
     
@@ -63,6 +71,24 @@ extension BRAPIClient {
             return [:]
         }
     }
+    
+    private func getAttributionDetails(completion: @escaping (String) -> Void) {
+        ADClient.shared().requestAttributionDetails({ (attributionDetails, error) in
+            if let error = error {
+                print("error fetching attribution details: \(error.localizedDescription)")
+            }
+            var attributionInfo = ""
+            if let attributionDetails = attributionDetails {
+                do {
+                    let data = try JSONSerialization.data(withJSONObject: attributionDetails, options: [])
+                    attributionInfo = String(data: data, encoding: .utf8) ?? ""
+                } catch let e {
+                    print("error parsing attribution details: \(e.localizedDescription)")
+                }
+            }
+            completion(attributionInfo)
+        })
+    }
 }
 
 fileprivate struct MetricsPayload : Encodable {
@@ -102,14 +128,18 @@ fileprivate enum MetricsPayloadData: Encodable {
 fileprivate struct LaunchData: Encodable {
     let bundles: [String: String]
     let userAgent: String
+    let idfa: String
+    let attributionInfo: String
     let osVersion: String = E.osVersion
     let deviceType: String = UIDevice.current.model + (E.isSimulator ? "-simulator" : "")
     
     enum CodingKeys: String, CodingKey {
         case bundles
         case userAgent = "user_agent"
+        case idfa
         case osVersion = "os_version"
         case deviceType = "device_type"
+        case attributionInfo = "apple_search_ads"
     }
 }
 
