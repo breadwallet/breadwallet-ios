@@ -50,7 +50,16 @@ class WalletCoordinator : Subscriber, Trackable {
 
             Store.subscribe(self, name: .rescan(currency), callback: { [weak self] _ in
                 guard Store.state[currency]?.isRescanning == false else { return }
-                Store.perform(action: WalletChange(currency).setRecommendScan(false))
+                Store.perform(action: WalletChange(currency).setIsRescanning(true))
+                DispatchQueue.walletQueue.async {
+                    self?.initiateRescan(currency: currency)
+                }
+            })
+            
+            // this is triggered by the wallet manager after a rejected transaction is detected (only applies to SPV wallets)
+            Store.subscribe(self, name: .automaticRescan(currency), callback: { [weak self] _ in
+                guard Store.state[currency]?.isRescanning == false else { return }
+                print("[\(currency.code)] automatic rescan triggered")
                 Store.perform(action: WalletChange(currency).setIsRescanning(true))
                 DispatchQueue.walletQueue.async {
                     self?.initiateRescan(currency: currency)
@@ -88,7 +97,9 @@ class WalletCoordinator : Subscriber, Trackable {
         
         // clear pending transactions
         if let txs = Store.state[currency]?.transactions {
-            Store.perform(action: WalletChange(currency).setTransactions(txs.filter({ $0.status != .pending })))
+            DispatchQueue.main.async {
+                Store.perform(action: WalletChange(currency).setTransactions(txs.filter({ $0.status != .pending })))
+            }
         }
         
         switch startingPoint {
