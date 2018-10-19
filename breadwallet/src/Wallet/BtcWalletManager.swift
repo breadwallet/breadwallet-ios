@@ -201,11 +201,11 @@ extension BTCWalletManager : BRWalletListener {
     }
 
     func txDeleted(_ txHash: UInt256, notifyUser: Bool, recommendRescan: Bool) {
-        if notifyUser {
-            if recommendRescan {
-                DispatchQueue.main.async { [weak self] in
-                    guard let myself = self else { return }
-                    Store.perform(action: WalletChange(myself.currency).setRecommendScan(recommendRescan)) }
+        if notifyUser && recommendRescan {
+            DispatchQueue.main.async { [weak self] in
+                guard let `self` = self else { return }
+                self.saveEvent("event.recommendRescan")
+                Store.trigger(name: .automaticRescan(self.currency))
             }
         }
         DispatchQueue.main.async { [weak self] in

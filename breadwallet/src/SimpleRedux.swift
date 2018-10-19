@@ -49,7 +49,7 @@ enum TriggerName {
     case blockModalDismissal
     case unblockModalDismissal
     case openFile(Data)
-    case recommendRescan(CurrencyDef)
+    case automaticRescan(CurrencyDef)
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
     case copyWalletAddresses(String?, String?)
@@ -102,7 +102,7 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.openFile(_), .openFile(_)):
         return true
-    case (.recommendRescan(let lhsCurrency), .recommendRescan(let rhsCurrency)):
+    case (.automaticRescan(let lhsCurrency), .automaticRescan(let rhsCurrency)):
         return lhsCurrency.code == rhsCurrency.code
     case (.receivedPaymentRequest(_), .receivedPaymentRequest(_)):
         return true
