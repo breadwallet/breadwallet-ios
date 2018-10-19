@@ -159,13 +159,6 @@ struct WalletChange: Trackable {
             guard let state = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: state.mutate(fees: fees)) })
     }
-    
-    func setRecommendScan(_ recommendRescan: Bool) -> WalletAction {
-        saveEvent("event.recommendRescan")
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(recommendRescan: recommendRescan)) })
-    }
 
     func setMaxDigits(_ maxDigits: Int) -> WalletAction {
         if self.currency is Bitcoin {

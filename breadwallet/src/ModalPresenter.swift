@@ -82,13 +82,6 @@ class ModalPresenter : Subscriber, Trackable {
                 self?.handleFile(file)
             }
         })
-        
-        walletManagers.values.map({ $0.currency }).filter({ $0 is Bitcoin }).forEach { currency in
-            // TODO: show alert and automatic rescan instead of showing the rescan screen
-            Store.subscribe(self, name: .recommendRescan(currency), callback: { [weak self] _ in
-                self?.presentRescan(currency: currency)
-            })
-        }
 
         //URLs
         Store.subscribe(self, name: .receivedPaymentRequest(nil), callback: { [weak self] in
