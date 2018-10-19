@@ -268,6 +268,7 @@
 		7CBA74E820227D1300FBBFA9 /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBA74E720227D1300FBBFA9 /* MenuCell.swift */; };
 		7CBABD9C20181D890077CB55 /* NSMutableAttributedString+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBABD9B20181D890077CB55 /* NSMutableAttributedString+Additions.swift */; };
 		7CBC59C020782D7E006EAE56 /* ERC20ABI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBC59BF20782D7E006EAE56 /* ERC20ABI.swift */; };
+		7CBC6B2E21751ECA00899AFB /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CBC6B2D21751ECA00899AFB /* iAd.framework */; };
 		7CBD578F2107EB560042C388 /* PairedWalletData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD578E2107EB560042C388 /* PairedWalletData.swift */; };
 		7CBD57912107FAFA0042C388 /* PairedWalletIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD57902107FAFA0042C388 /* PairedWalletIndex.swift */; };
 		7CBF4B6420081BCE00E003AA /* KeyedDecodingContainer+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBF4B6320081BCE00E003AA /* KeyedDecodingContainer+Additions.swift */; };
@@ -1414,6 +1415,7 @@
 		7CBA74E720227D1300FBBFA9 /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuCell.swift; path = src/Views/MenuCell.swift; sourceTree = "<group>"; };
 		7CBABD9B20181D890077CB55 /* NSMutableAttributedString+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "NSMutableAttributedString+Additions.swift"; path = "src/Extensions/NSMutableAttributedString+Additions.swift"; sourceTree = "<group>"; };
 		7CBC59BF20782D7E006EAE56 /* ERC20ABI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ERC20ABI.swift; sourceTree = "<group>"; };
+		7CBC6B2D21751ECA00899AFB /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		7CBD578E2107EB560042C388 /* PairedWalletData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PairedWalletData.swift; path = src/Platform/PairedWalletData.swift; sourceTree = "<group>"; };
 		7CBD57902107FAFA0042C388 /* PairedWalletIndex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PairedWalletIndex.swift; path = src/Platform/PairedWalletIndex.swift; sourceTree = "<group>"; };
 		7CBF4B5B2007DB5300E003AA /* EthTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthTransaction.swift; sourceTree = "<group>"; };
@@ -1714,6 +1716,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CBC6B2E21751ECA00899AFB /* iAd.framework in Frameworks */,
 				22A9A9661DF61FEE000F0016 /* WebKit.framework in Frameworks */,
 				22A9A9641DF61FE7000F0016 /* Security.framework in Frameworks */,
 				22A9A9621DF61FE0000F0016 /* SystemConfiguration.framework in Frameworks */,
@@ -2756,6 +2759,7 @@
 		75A2A7F11DA5935F00A983D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7CBC6B2D21751ECA00899AFB /* iAd.framework */,
 				22A9A95F1DF61FD8000F0016 /* CoreLocation.framework */,
 				22A9A9671DF61FF8000F0016 /* libbz2.tbd */,
 				75FEFD1B1DAED56E00203D3A /* libsqlite3.tbd */,
