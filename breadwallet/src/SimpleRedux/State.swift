@@ -146,7 +146,6 @@ struct WalletState {
     let rates: [Rate]
     let currentRate: Rate?
     let fees: Fees?
-    let recommendRescan: Bool
     let maxDigits: Int // this is bits vs bitcoin setting
     let connectionStatus: BRPeerStatus
     
@@ -166,7 +165,6 @@ struct WalletState {
                            rates: [],
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
                            fees: nil,
-                           recommendRescan: false,
                            maxDigits: (currency is Bitcoin) ? UserDefaults.maxDigits : currency.commonUnit.decimals,
                            connectionStatus: BRPeerStatusDisconnected)
     }
@@ -184,7 +182,6 @@ struct WalletState {
                     currentRate: Rate? = nil,
                     rates: [Rate]? = nil,
                     fees: Fees? = nil,
-                    recommendRescan: Bool? = nil,
                     maxDigits: Int? = nil,
                     connectionStatus: BRPeerStatus? = nil) -> WalletState {
 
@@ -202,7 +199,6 @@ struct WalletState {
                            rates: rates ?? self.rates,
                            currentRate: currentRate ?? self.currentRate,
                            fees: fees ?? self.fees,
-                           recommendRescan: recommendRescan ?? self.recommendRescan,
                            maxDigits: maxDigits ?? self.maxDigits,
                            connectionStatus: connectionStatus ?? self.connectionStatus)
     }
@@ -222,7 +218,6 @@ func ==(lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.rates == rhs.rates &&
         lhs.currentRate == rhs.currentRate &&
         lhs.fees == rhs.fees &&
-        lhs.recommendRescan == rhs.recommendRescan &&
         lhs.maxDigits == rhs.maxDigits &&
         lhs.connectionStatus == rhs.connectionStatus
 }
