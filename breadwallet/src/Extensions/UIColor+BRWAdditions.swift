@@ -25,7 +25,27 @@ extension UIColor {
     static var darkerBackground: UIColor {
         return UIColor.fromHex("251935")
     }
+    
+    static var darkPromptBackground: UIColor {
+        return UIColor.fromHex("1E1C41")
+    }
 
+    static var darkPromptTitleColor: UIColor {
+        return .white
+    }
+
+    static var darkPromptBodyColor: UIColor {
+        return UIColor.fromHex("A1A9BC")
+    }
+    
+    static var emailInputBackgroundColor: UIColor {
+        return UIColor.fromHex("F8F7FC").withAlphaComponent(0.05)
+    }
+    
+    static var submitButtonEnabledBlue: UIColor {
+        return UIColor.fromHex("29ABE2")
+    }
+    
     static var orangeText: UIColor {
         return UIColor.fromHex("FA724D")
     }
@@ -115,7 +135,11 @@ extension UIColor {
     static var secondaryGrayText: UIColor {
         return UIColor(red: 101.0/255.0, green: 105.0/255.0, blue: 110.0/255.0, alpha: 1.0)
     }
-
+    
+    static var emailPlaceholderText: UIColor {
+        return UIColor.fromHex("828092")
+    }
+    
     static var grayBackgroundTint: UIColor {
         return UIColor(red: 250.0/255.0, green: 251.0/255.0, blue: 252.0/255.0, alpha: 1.0)
     }

@@ -40,6 +40,8 @@
 "Alert.keystore.title.android" = "Android KeyStore Error";
 /* No internet alert message */
 "Alert.noInternet" = "No internet connection found. Check your connection and try again.";
+/* General error message with try again. */
+"Alert.somethingWentWrong" = "Something went wrong. Please try again.";
 /* Warning alert title */
 "Alert.warning" = "Warning";
 /* 'the addresses were copied'' Alert title */
@@ -346,6 +348,16 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "unsupported signature type";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "untrusted certificate";
+/* Get email address prompt body */
+"Prompts.Email.body" = "Be the first to receive important support and product updates.";
+/* Get email address prompt title */
+"Prompts.Email.title" = "Get in the loop";
+/* Get email prompt title after email successfully submitted */
+"Prompts.Email.successTitle" = "Thank you!";
+/* Get email prompt body after email successfully submitted */
+"Prompts.Email.successBody" = "You have successfully subscribed to receive updates";
+/* Get email prompt footnote after email successfully submitted */
+"Prompts.Email.successFootnote" = "We appreciate your continued support";
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "Tap Continue to enable Face ID";
 /* Enable face ID prompt title */
