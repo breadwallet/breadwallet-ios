@@ -13,7 +13,7 @@ import UIKit
 
 // A WalletManger instance manages a single wallet, and that wallet's individual connection to the bitcoin network.
 // After instantiating a WalletManager object, call myWalletManager.peerManager.connect() to begin syncing.
-class BTCWalletManager : WalletManager {
+class BTCWalletManager : WalletManager, Subscriber {
     let currency: CurrencyDef
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
@@ -43,10 +43,10 @@ class BTCWalletManager : WalletManager {
             return callback(false)
         }
         db.loadTransactions { txns in
-            self.wallet = BRWallet(transactions: txns, masterPubKey: self.masterPubKey, listener: self)
+            self.wallet = BRWallet(transactions: txns, masterPubKey: self.masterPubKey, listener: self, currency: self.currency)
             if let wallet = self.wallet {
                 Store.perform(action: WalletChange(self.currency).setBalance(UInt256(wallet.balance)))
-                Store.perform(action: WalletChange(self.currency).set(self.currency.state!.mutate(receiveAddress: wallet.receiveAddress)))
+                Store.perform(action: WalletChange(self.currency).set(self.currency.state!.mutate(receiveAddress: wallet.receiveAddress, legacyReceiveAddress: wallet.legacyReceiveAddress)))
             }
             callback(self.wallet != nil)
         }
@@ -56,10 +56,10 @@ class BTCWalletManager : WalletManager {
         guard self.masterPubKey != BRMasterPubKey() else {
             return assert(false)
         }
-        self.wallet = BRWallet(transactions: transactions, masterPubKey: self.masterPubKey, listener: self)
+        self.wallet = BRWallet(transactions: transactions, masterPubKey: self.masterPubKey, listener: self, currency: self.currency)
         if let wallet = self.wallet {
             Store.perform(action: WalletChange(self.currency).setBalance(UInt256(wallet.balance)))
-            Store.perform(action: WalletChange(self.currency).set(self.currency.state!.mutate(receiveAddress: wallet.receiveAddress)))
+            Store.perform(action: WalletChange(self.currency).set(self.currency.state!.mutate(receiveAddress: wallet.receiveAddress, legacyReceiveAddress: wallet.legacyReceiveAddress)))
         }
     }
 
@@ -90,11 +90,23 @@ class BTCWalletManager : WalletManager {
         } else {
             self.db = CoreDatabase()
         }
+        listenForSegwitOptIn()
     }
 
     var isWatchOnly: Bool {
         let mpkData = Data(masterPubKey: masterPubKey)
         return mpkData.count == 0
+    }
+    
+    func listenForSegwitOptIn() {
+        guard currency.matches(Currencies.btc) else { return }
+        Store.subscribe(self, name: .optInSegWit, callback: { [weak self] _ in
+            guard let `self` = self else { return }
+            UserDefaults.hasOptedInSegwit = true
+            if let receiveAddress = self.wallet?.receiveAddress {
+                Store.perform(action: WalletChange(self.currency).set(self.currency.state!.mutate(receiveAddress: receiveAddress)))
+            }
+        })
     }
 }
 
@@ -219,7 +231,7 @@ extension BTCWalletManager : BRWalletListener {
         if let oldBalance = currency.state?.balance?.asUInt64 {
             if newBalance > oldBalance {
                 if let walletState = currency.state {
-                    Store.perform(action: WalletChange(currency).set(walletState.mutate(receiveAddress: wallet?.receiveAddress)))
+                    Store.perform(action: WalletChange(currency).set(walletState.mutate(receiveAddress: wallet?.receiveAddress, legacyReceiveAddress: wallet?.legacyReceiveAddress)))
                     if currency.state?.syncState == .success {
                         showReceived(amount: newBalance - oldBalance)
                     }

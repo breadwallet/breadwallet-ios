@@ -303,6 +303,8 @@ enum S {
         static let faceIdLimit = NSLocalizedString("Settings.faceIdLimit", value:"Face ID Spending Limit", comment: "Face ID spending limit label")
         static let sendLogs = NSLocalizedString("Settings.sendLogs", value: "Send Logs", comment: "Send Logs option")
         static let resetCurrencies = NSLocalizedString("Settings.resetCurrencies", value: "Reset to Default Currencies", comment: "Reset currencies button")
+        static let viewLegacyAddress = NSLocalizedString("Settings.ViewLegacyAddress", value: "View Legacy Receive Address", comment: "")
+        static let enableSegwit = NSLocalizedString("Settings.EnableSegwit", value: "Enable Segwit", comment: "")
     }
 
     enum About {
@@ -643,5 +645,16 @@ enum S {
             static let paymentRequest = NSLocalizedString("EME.permissions.paymentRequest", value: "Request %1$@ payment", comment: "Service capabilities description")
             static let callRequest = NSLocalizedString("EME.permissions.callRequest", value: "Request %1$@ smart contract call", comment: "Service capabilities description")
         }
+    }
+    
+    
+    
+    enum Segwit {
+        static let confirmChoiceLayout = NSLocalizedString("Segwit.ConfirmChoiceLayout", value: "Enabling SegWit is an irreversible feature. Are you sure you want to continue?", comment: "")
+        static let confirmationConfirmationTitle = NSLocalizedString("Segwit.ConfirmationConfirmationTitle", value: "You have enabled SegWit!", comment: "")
+        static let confirmationInstructionsDescription = NSLocalizedString("Segwit.ConfirmationInstructionsDescription", value: "Thank you for helping move bitcoin forward.", comment: "")
+        static let confirmationInstructionsInstructions = NSLocalizedString("Segwit.ConfirmationInstructionsInstructions" , value: "SegWit support is still a beta feature.\n\nOnce SegWit is enabled, it will not be possible to disable it. You will be able to find the legacy address under Settings. \n\nSome third-party services, including crypto trading, may be unavailable to users who have enabled SegWit. In case of emergency, you will be able to generate a legacy address from Preferences > Bitcoin Settings. \n\nSegWit will automatically be enabled for all users in a future update.", comment: "")
+        static let homeButton = NSLocalizedString("Segwit.HomeButton", value: "To the Moon", comment: "")
+        static let enable = NSLocalizedString("Segwit.Enable", value: "Enable", comment: "")
     }
 }
