@@ -19,6 +19,15 @@ extension String {
         return bitcoinAddr.isValidAddress
     }
 
+    var isValidEmailAddress: Bool {
+        guard count > 0 else { return false }
+        
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,10}"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        
+        return emailPredicate.evaluate(with: self)
+    }
+    
     var bCashAddr: String {
         var addr = [CChar](repeating: 0, count: 55)
         BRBCashAddrEncode(&addr, self)
