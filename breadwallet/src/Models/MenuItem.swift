@@ -14,6 +14,7 @@ struct MenuItem {
     let accessoryText: (() -> String)?
     let callback: () -> Void
     let faqButton: UIButton? = nil
+    var shouldShow: ()->Bool = { return true }
     
     init(title: String, icon: UIImage? = nil, accessoryText: (() -> String)? = nil, callback: @escaping () -> Void) {
         self.title = title

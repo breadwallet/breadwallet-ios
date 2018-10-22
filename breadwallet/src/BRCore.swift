@@ -325,7 +325,7 @@ extension UnsafeMutablePointer where Pointee == BRTransaction {
     // adds an input to tx
     func addInput(txHash: UInt256, index: UInt32, amount: UInt64, script: [UInt8],
                   signature: [UInt8]? = nil, sequence: UInt32 = TXIN_SEQUENCE) {
-        BRTransactionAddInput(self, txHash, index, amount, script, script.count, signature, signature?.count ?? 0, sequence)
+        BRTransactionAddInput(self, txHash, index, amount, script, script.count, signature, signature?.count ?? 0, [], 0, sequence)
     }
     
     // adds an output to tx
@@ -379,12 +379,14 @@ protocol BRWalletListener {
 class BRWallet {
     let cPtr: OpaquePointer
     let listener: BRWalletListener
+    let currency: CurrencyDef
     
-    init?(transactions: [BRTxRef?], masterPubKey: BRMasterPubKey, listener: BRWalletListener) {
+    init?(transactions: [BRTxRef?], masterPubKey: BRMasterPubKey, listener: BRWalletListener, currency: CurrencyDef) {
         var txRefs = transactions
         guard let cPtr = BRWalletNew(&txRefs, txRefs.count, masterPubKey) else { return nil }
         self.listener = listener
         self.cPtr = cPtr
+        self.currency = currency
         
         BRWalletSetCallbacks(cPtr, Unmanaged.passUnretained(self).toOpaque(),
         { (info, balance) in // balanceChanged
@@ -411,8 +413,16 @@ class BRWallet {
     }
     
     // the first unused external address
-    var receiveAddress: String {
-        return BRWalletReceiveAddress(cPtr).description
+    var receiveAddress:  String {
+        if currency.matches(Currencies.bch) {
+            return BRWalletLegacyAddress(cPtr).description
+        } else {
+            return UserDefaults.hasOptedInSegwit ? BRWalletReceiveAddress(cPtr).description : BRWalletLegacyAddress(cPtr).description
+        }
+    }
+    
+    var legacyReceiveAddress: String {
+        return BRWalletLegacyAddress(cPtr).description
     }
     
     // all previously genereated internal and external addresses
