@@ -121,6 +121,7 @@ enum RootModal {
     case buy(currency: CurrencyDef?)
     case sell(currency: CurrencyDef?)
     case trade
+    case receiveLegacy
 }
 
 enum SyncState {
@@ -143,6 +144,7 @@ struct WalletState {
     let creationDate: Date
     let isRescanning: Bool
     let receiveAddress: String?
+    let legacyReceiveAddress: String?
     let rates: [Rate]
     let currentRate: Rate?
     let fees: Fees?
@@ -162,6 +164,7 @@ struct WalletState {
                            creationDate: Date.zeroValue(),
                            isRescanning: false,
                            receiveAddress: nil,
+                           legacyReceiveAddress: nil,
                            rates: [],
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
                            fees: nil,
@@ -179,6 +182,7 @@ struct WalletState {
                     creationDate: Date? = nil,
                     isRescanning: Bool? = nil,
                     receiveAddress: String? = nil,
+                    legacyReceiveAddress: String? = nil,
                     currentRate: Rate? = nil,
                     rates: [Rate]? = nil,
                     fees: Fees? = nil,
@@ -196,6 +200,7 @@ struct WalletState {
                            creationDate: creationDate ?? self.creationDate,
                            isRescanning: isRescanning ?? self.isRescanning,
                            receiveAddress: receiveAddress ?? self.receiveAddress,
+                           legacyReceiveAddress: legacyReceiveAddress ?? self.legacyReceiveAddress,
                            rates: rates ?? self.rates,
                            currentRate: currentRate ?? self.currentRate,
                            fees: fees ?? self.fees,
@@ -219,7 +224,8 @@ func ==(lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.currentRate == rhs.currentRate &&
         lhs.fees == rhs.fees &&
         lhs.maxDigits == rhs.maxDigits &&
-        lhs.connectionStatus == rhs.connectionStatus
+        lhs.connectionStatus == rhs.connectionStatus &&
+        lhs.legacyReceiveAddress == rhs.legacyReceiveAddress
 }
 
 extension RootModal : Equatable {}
@@ -249,6 +255,8 @@ func ==(lhs: RootModal, rhs: RootModal) -> Bool {
     case (.sell(nil), .sell(nil)):
         return true
     case (.trade, .trade):
+        return true
+    case (.receiveLegacy, .receiveLegacy):
         return true
     default:
         return false

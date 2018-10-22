@@ -32,6 +32,7 @@ private let mostRecentSelectedCurrencyCodeKey = "mostRecentSelectedCurrencyCodeK
 private let hasSetSelectedCurrencyKey = "hasSetSelectedCurrencyKey"
 private let hasBchConnectedKey = "hasBchConnectedKey"
 private let rescanStateKeyPrefix = "lastRescan" // append uppercased currency code for key
+private let hasOptedInSegwitKey = "hasOptedInSegwitKey"
 
 extension UserDefaults {
 
@@ -167,6 +168,15 @@ extension UserDefaults {
     static func setRescanState(for currency: CurrencyDef, to state: RescanState) {
         let key = rescanStateKeyPrefix + currency.code.uppercased()
         defaults.set(try? PropertyListEncoder().encode(state), forKey: key)
+    }
+    
+    static var hasOptedInSegwit: Bool {
+        get {
+            return defaults.bool(forKey: hasOptedInSegwitKey)
+        }
+        set {
+            defaults.set(newValue, forKey: hasOptedInSegwitKey)
+        }
     }
 }
 

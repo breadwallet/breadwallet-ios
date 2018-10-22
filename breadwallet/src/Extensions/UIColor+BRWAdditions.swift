@@ -53,6 +53,10 @@ extension UIColor {
     static var newWhite: UIColor {
         return UIColor.fromHex("BDBDBD")
     }
+    
+    static var greenCheck: UIColor {
+        return UIColor.fromHex("06C441")
+    }
 
     // MARK: Buttons
     static var primaryButton: UIColor {

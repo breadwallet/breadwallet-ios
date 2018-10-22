@@ -18,6 +18,9 @@ class MenuViewController : UITableViewController {
     }
 
     private let items: [MenuItem]
+    private var visibleItems: [MenuItem] {
+        return items.filter { $0.shouldShow() }
+    }
     private let faqButton: UIButton?
     
     override func viewDidLoad() {
@@ -45,17 +48,17 @@ class MenuViewController : UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        return visibleItems.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MenuCell.cellIdentifier, for: indexPath) as? MenuCell else { return UITableViewCell() }
-        cell.set(item: items[indexPath.row])
+        cell.set(item: visibleItems[indexPath.row])
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        items[indexPath.row].callback()
+        visibleItems[indexPath.row].callback()
         tableView.deselectRow(at: indexPath, animated: true)
     }
 

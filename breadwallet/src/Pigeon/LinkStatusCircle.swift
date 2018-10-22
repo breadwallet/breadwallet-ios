@@ -62,6 +62,10 @@ class LinkStatusCircle : UIView {
         circleLayer.add(strokeStartAnimation(), forKey: "strokeStart")
         circleLayer.add(rotationAnimation(), forKey: "transform.rotation.z")
     }
+    
+    func drawCircle() {
+        circleLayer.strokeEnd = 1.0
+    }
 
     func drawCheckBox() {
 
