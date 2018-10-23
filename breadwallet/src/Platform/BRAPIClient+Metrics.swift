@@ -46,6 +46,14 @@ extension BRAPIClient {
         }
     }
     
+    func sendEnableSegwit() {
+        sendMetrics(payload: MetricsPayload.enableSegWit)
+    }
+    
+    func sendViewLegacyAddress() {
+        sendMetrics(payload: MetricsPayload.viewLegacyAddress)
+    }
+    
     private func sendMetrics(payload: MetricsPayload) {
         guard let data = try? JSONEncoder().encode(payload) else { return }
         var req = URLRequest(url: self.url("/me/metrics"))
@@ -104,6 +112,8 @@ fileprivate struct MetricsPayload : Encodable {
 fileprivate enum MetricsPayloadData: Encodable {
     case launch(LaunchData)
     case checkout(CheckoutData)
+    case enableSegWit(SegWitData)
+    case viewLegacyAddress(SegWitData)
     
     var metric: String {
         switch self {
@@ -111,6 +121,10 @@ fileprivate enum MetricsPayloadData: Encodable {
             return "launch"
         case .checkout(_):
             return "pigeon-transaction"
+        case .enableSegWit(_):
+            return "enableSegWit"
+        case .viewLegacyAddress(_):
+            return "viewLegacyAddress"
         }
     }
     
@@ -121,7 +135,21 @@ fileprivate enum MetricsPayloadData: Encodable {
             try container.encode(value)
         case .checkout(let value):
             try container.encode(value)
+        case .enableSegWit(let value):
+            try container.encode(value)
+        case .viewLegacyAddress(let value):
+            try container.encode(value)
         }
+    }
+}
+
+extension MetricsPayload {
+    static var enableSegWit : MetricsPayload {
+        return MetricsPayload(data: MetricsPayloadData.enableSegWit(SegWitData()))
+    }
+    
+    static var viewLegacyAddress : MetricsPayload {
+        return MetricsPayload(data: MetricsPayloadData.viewLegacyAddress(SegWitData()))
     }
 }
 
@@ -151,4 +179,8 @@ fileprivate struct CheckoutData: Encodable {
     let toCurrency: String
     let toAmount: String
     let timestamp: Int
+}
+
+fileprivate struct SegWitData: Encodable {
+    let timestamp = Int(Date().timeIntervalSince1970)
 }
