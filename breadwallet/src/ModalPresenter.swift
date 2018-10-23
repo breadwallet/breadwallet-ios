@@ -427,6 +427,7 @@ class ModalPresenter : Subscriber, Trackable {
         })
         enableSegwit.shouldShow = { return !UserDefaults.hasOptedInSegwit }
         var viewLegacyAddress = MenuItem(title: S.Settings.viewLegacyAddress, callback: {
+            Backend.apiClient.sendViewLegacyAddress()
             Store.perform(action: RootModalActions.Present(modal: .receiveLegacy))
         })
         viewLegacyAddress.shouldShow = { return UserDefaults.hasOptedInSegwit }
