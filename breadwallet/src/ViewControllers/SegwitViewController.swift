@@ -99,6 +99,7 @@ class SegwitViewController : UIViewController {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
         Store.trigger(name: .optInSegWit)
+        Backend.apiClient.sendEnableSegwit()
         UIView.spring(0.6, animations: {
             self.confirmXConstraintEnd?.isActive = false
             self.enabledYConstraintStart?.isActive = false
