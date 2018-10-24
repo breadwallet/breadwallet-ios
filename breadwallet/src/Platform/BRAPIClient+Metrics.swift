@@ -160,6 +160,7 @@ fileprivate struct LaunchData: Encodable {
     let attributionInfo: String
     let osVersion: String = E.osVersion
     let deviceType: String = UIDevice.current.model + (E.isSimulator ? "-simulator" : "")
+    let applicationId: String = Bundle.main.bundleIdentifier ?? "unknown"
     
     enum CodingKeys: String, CodingKey {
         case bundles
@@ -168,6 +169,7 @@ fileprivate struct LaunchData: Encodable {
         case osVersion = "os_version"
         case deviceType = "device_type"
         case attributionInfo = "apple_search_ads"
+        case applicationId = "application_id"
     }
 }
 
