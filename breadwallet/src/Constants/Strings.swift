@@ -34,6 +34,7 @@ enum S {
         static let continueAction = NSLocalizedString("Button.continueAction", value: "Continue", comment: "prompt continue button")
         static let dismiss = NSLocalizedString("Button.dismiss", value: "Dismiss", comment: "prompt dismiss button")
         static let home = NSLocalizedString("Button.home", value: "Home", comment: "prompt home button")
+        static let moreInfo = NSLocalizedString("Button.moreInfo", value: "More info", comment: "More information button")
     }
 
     enum Alert {
@@ -99,8 +100,8 @@ enum S {
     }
 
     enum Account {
-        static let loadingMessage = NSLocalizedString("Account.loadingMessage", value:"Loading Wallet", comment: "Loading Wallet Message")
         static let balance = NSLocalizedString("Account.balance", value:"Balance", comment: "Account header balance label")
+        static let delistedToken = NSLocalizedString("Account.delistedToken", value: "This token has been delisted because the issuer decided to move to their own blockchain.\n\nDon’t worry! You will be able to send these tokens out from the BRD app to another platform that supports the token swap.\n\nFor more details, please visit our support page.", comment: "Delisted token alert banner message")
     }
 
     enum JailbreakWarnings {

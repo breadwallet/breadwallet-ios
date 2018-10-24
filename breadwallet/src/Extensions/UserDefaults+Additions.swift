@@ -33,6 +33,7 @@ private let hasSetSelectedCurrencyKey = "hasSetSelectedCurrencyKey"
 private let hasBchConnectedKey = "hasBchConnectedKey"
 private let rescanStateKeyPrefix = "lastRescan" // append uppercased currency code for key
 private let hasOptedInSegwitKey = "hasOptedInSegwitKey"
+private let hasScannedForTokenBalancesKey = "hasScannedForTokenBalances"
 
 extension UserDefaults {
 
@@ -176,6 +177,15 @@ extension UserDefaults {
         }
         set {
             defaults.set(newValue, forKey: hasOptedInSegwitKey)
+        }
+    }
+    
+    static var hasScannedForTokenBalances: Bool {
+        get {
+            return defaults.bool(forKey: hasScannedForTokenBalancesKey)
+        }
+        set {
+            defaults.set(newValue, forKey: hasScannedForTokenBalancesKey)
         }
     }
 }

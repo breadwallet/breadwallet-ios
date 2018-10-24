@@ -57,6 +57,10 @@ extension UIColor {
     static var greenCheck: UIColor {
         return UIColor.fromHex("06C441")
     }
+    
+    static var disabledBackground: UIColor {
+        return UIColor.fromHex("3E3C61")
+    }
 
     // MARK: Buttons
     static var primaryButton: UIColor {
@@ -175,6 +179,10 @@ extension UIColor {
     static var whiteTint: UIColor {
         return UIColor(red: 245.0/255.0, green: 247.0/255.0, blue: 250.0/255.0, alpha: 1.0)
     }
+    
+    static var outlineButtonBackground: UIColor {
+        return UIColor(red: 174.0/255.0, green: 174.0/255.0, blue: 174.0/255.0, alpha: 0.3)
+    }
 
     static var transparentWhite: UIColor {
         return UIColor(white: 1.0, alpha: 0.3)
@@ -262,6 +270,10 @@ extension UIColor {
     
     static var transparentIconBackground: UIColor {
         return UIColor(white: 1.0, alpha: 0.25)
+    }
+    
+    static var disabledCellBackground: UIColor {
+        return UIColor.fromHex("190C2A")
     }
 }
 
