@@ -269,6 +269,7 @@
 		7CBABD9C20181D890077CB55 /* NSMutableAttributedString+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBABD9B20181D890077CB55 /* NSMutableAttributedString+Additions.swift */; };
 		7CBC59C020782D7E006EAE56 /* ERC20ABI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBC59BF20782D7E006EAE56 /* ERC20ABI.swift */; };
 		7CBC6B2E21751ECA00899AFB /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CBC6B2D21751ECA00899AFB /* iAd.framework */; };
+		7CBC6B302177D72600899AFB /* DelistedTokenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBC6B2F2177D72600899AFB /* DelistedTokenView.swift */; };
 		7CBD578F2107EB560042C388 /* PairedWalletData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD578E2107EB560042C388 /* PairedWalletData.swift */; };
 		7CBD57912107FAFA0042C388 /* PairedWalletIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBD57902107FAFA0042C388 /* PairedWalletIndex.swift */; };
 		7CBF4B6420081BCE00E003AA /* KeyedDecodingContainer+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBF4B6320081BCE00E003AA /* KeyedDecodingContainer+Additions.swift */; };
@@ -1421,6 +1422,7 @@
 		7CBABD9B20181D890077CB55 /* NSMutableAttributedString+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "NSMutableAttributedString+Additions.swift"; path = "src/Extensions/NSMutableAttributedString+Additions.swift"; sourceTree = "<group>"; };
 		7CBC59BF20782D7E006EAE56 /* ERC20ABI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ERC20ABI.swift; sourceTree = "<group>"; };
 		7CBC6B2D21751ECA00899AFB /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		7CBC6B2F2177D72600899AFB /* DelistedTokenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DelistedTokenView.swift; path = src/Views/DelistedTokenView.swift; sourceTree = "<group>"; };
 		7CBD578E2107EB560042C388 /* PairedWalletData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PairedWalletData.swift; path = src/Platform/PairedWalletData.swift; sourceTree = "<group>"; };
 		7CBD57902107FAFA0042C388 /* PairedWalletIndex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PairedWalletIndex.swift; path = src/Platform/PairedWalletIndex.swift; sourceTree = "<group>"; };
 		7CBF4B5B2007DB5300E003AA /* EthTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthTransaction.swift; sourceTree = "<group>"; };
@@ -3140,6 +3142,7 @@
 				E89C0610216A8BE70012CE0D /* GetUserEmailPrompt.swift */,
 				CE97710A216FB50B00B9F621 /* EnableSegwitView.swift */,
 				CE97710C216FF20F00B9F621 /* SegwitEnabledView.swift */,
+				7CBC6B2F2177D72600899AFB /* DelistedTokenView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -4005,6 +4008,7 @@
 				CE45C1FB1E74F89C002C3847 /* WalletInfo.swift in Sources */,
 				CEE659E71F65A936001FF29D /* RetryTimer.swift in Sources */,
 				CE90571A1DFF18B2006BA848 /* ScanViewController.swift in Sources */,
+				7CBC6B302177D72600899AFB /* DelistedTokenView.swift in Sources */,
 				7CB2286F20A2286700105FFF /* BREthereum.swift in Sources */,
 				7C6ACCB61FEB345E0028ABFA /* TxStatusCell.swift in Sources */,
 				CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */,

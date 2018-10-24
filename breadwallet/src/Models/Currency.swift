@@ -36,6 +36,8 @@ public protocol CurrencyDef {
     var imageSquareBackground: UIImage? { get }
     /// Icon image with no background using template rendering mode
     var imageNoBackground: UIImage? { get }
+    /// False if ERC20 token has been delisted, true otherwise
+    var isSupported: Bool { get }
     
     /// Returns the unit associated with the number of decimals
     func unit(forDecimals decimals: Int) -> CurrencyUnit?
@@ -164,6 +166,10 @@ public struct Bitcoin: CurrencyDef {
     let forkId: Int
     public let urlSchemes: [String]?
     
+    public var isSupported: Bool {
+        return true
+    }
+    
     public var commonUnit: CurrencyUnit {
         return Units.bitcoin
     }
@@ -236,6 +242,10 @@ public struct Ethereum: CurrencyDef {
     public let symbol: String
     public let colors: (UIColor, UIColor)
     public let urlSchemes: [String]?
+    
+    public var isSupported: Bool {
+        return true
+    }
     
     public var commonUnit: CurrencyUnit {
         return Units.eth
