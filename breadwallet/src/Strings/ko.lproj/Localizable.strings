@@ -1,9 +1,9 @@
 /* App name */
-"About.appName.android" = "Bread";
+"About.appName.android" = "BRD";
 /* About screen blog label */
 "About.blog" = "블로그";
 /* About screen footer */
-"About.footer" = "글로벌 Bread 팀 제작. 버전 %1$@";
+"About.footer" = "글로벌 BRD 팀 제작. 버전 %1$@ 빌드 %2$@";
 /* Privay Policy button label */
 "About.privacy" = "개인정보 보호정책";
 /* About screen reddit label */
@@ -27,7 +27,7 @@
 /* Loading Wallet Message */
 "Account.loadingMessage" = "지갑 로딩";
 /* Default wallet name */
-"AccountHeader.defaultWalletName" = "나의 Bread";
+"AccountHeader.defaultWalletName" = "나의 BRD";
 /* Third party keyboard warning */
 "Alert.customKeyboard.android" = "제3자가 제공한 키보드를 사용하고 계신 것 같습니다, 귀하의 입력을 기록하고 귀하의 페이퍼 키가 도난 당할 수 있습니다. 추가적인 보호를 위해 기본 안드로이드 키보드로 전환해 주세요.";
 /* Error alert title */
@@ -40,6 +40,8 @@
 "Alert.keystore.title.android" = "안드로이드 키스토어 오류";
 /* No internet alert message */
 "Alert.noInternet" = "인터넷이 연결되지 않았습니다. 연결을 확인하시고 다시 시도해 주세요.";
+/* Request timed out error message */
+"Alert.timedOut" = "요청이 시간 초과 되었습니다. 인터넷 연결을 확인하고 다시 시도하세요.";
 /* Warning alert title */
 "Alert.warning" = "경고";
 /* 'the addresses were copied'' Alert title */
@@ -176,12 +178,18 @@
 "DefaultCurrency.rateLabel" = "환율";
 /* The wallet is disabled. */
 "Disabled.title" = "월렛이 비활성화됨";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "%1$@ 계정 정보를 요청합니다";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "%1$@ 스마트계약 콜을 요청합니다";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "%1$@ 계정 정보를 요청합니다";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "이 장치는 iOS 메일 앱으로 이메일을 전송하도록 설정되지 않았습니다.";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableTitle" = "이메일 사용불가";
 /* Message that gets shown when we've detected the user has encountered the looping lock-screen bug. (preserve [ ] characters) */
-"ErrorMessages.loopingLockScreen.android" = "현재 이용 중인 안드로이드 버전의 버그로 인해 Bread가 인증될 수 없습니다. [Please tap here for more information.]";
+"ErrorMessages.loopingLockScreen.android" = "현재 이용 중인 안드로이드 버전의 버그로 인해 BRD가 인증될 수 없습니다. [Please tap here for more information.]";
 /* Messaging unavailable alert title */
 "ErrorMessages.messagingUnavailableMessage" = "이 장치는 메시지를 보내도록 설정되지 않았습니다.";
 /* Messaging unavailable alert title */
@@ -222,10 +230,16 @@
 "FeeSelector.title" = "처리 속도";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "관리";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "사다";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "메뉴";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "지갑";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "총 자산";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "교환";
 /* Checking private key balance progress view text */
 "Import.checking" = "개인 열쇠 잔고 확인 중...";
 /* Sweep private key confirmation message */
@@ -247,13 +261,13 @@
 /* Caption for graphics */
 "Import.leftCaption" = "개인 키";
 /* Import wallet intro screen message */
-"Import.message" = "개인 키는 QR코드로 종이에 출력되기도 하며, 오프라인에서자금을 적립하기 위해 사용됩니다. 개인 키 교환으로 한 번의 거래를 이용해 자신의 Bread로 모든 돈을 이전하세요.";
+"Import.message" = "개인 키는 QR코드로 종이에 출력되기도 하며, 오프라인에서자금을 적립하기 위해 사용됩니다. 개인 키 교환으로 한 번의 거래를 이용해 자신의 BRD로 모든 돈을 이전하세요.";
 /* Enter password alert view title */
 "Import.password" = "이 개인 열쇠는 비밀번호로 보호됩니다.";
 /* password textfield placeholder */
 "Import.passwordPlaceholder" = "비밀번호";
 /* Caption for graphics */
-"Import.rightCaption" = "귀하의 Bread 지갑";
+"Import.rightCaption" = "귀하의 BRD 지갑";
 /* Scan Private key button label */
 "Import.scan" = "개인 열쇠 스캔";
 /* Import wallet success alert title */
@@ -273,17 +287,31 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "무시";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "장치 보안 취약\n모든 'jailbreak' 앱이 Bread의 키체인 데이터에 접속하여 귀하의 비트코인을 훔칠 수 있습니다! 이 지갑을 바로 지우시고 안전한 장치에서 복구하세요.";
+"JailbreakWarnings.messageWithBalance" = "장치 보안 취약\n모든 'jailbreak' 앱이 BRD의 키체인 데이터에 접속하여 귀하의 비트코인을 훔칠 수 있습니다! 이 지갑을 바로 지우시고 안전한 장치에서 복구하세요.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "장치 보안 취약\n모든 'jailbreak' 앱이 Bread의 키체인 데이터에 접속하여 귀하의 비트코인을 훔칠 수 있습니다! Bread를 비-jailbroken 장치에서만 사용해 주세요.";
+"JailbreakWarnings.messageWithoutBalance" = "장치 보안 취약\n모든 'jailbreak' 앱이 BRD의 키체인 데이터에 접속하여 귀하의 비트코인을 훔칠 수 있습니다! BRD를 비-jailbroken 장치에서만 사용해 주세요.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "경고";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "초기화";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "승인";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "거절";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "외부 앱은 이 장치의 승인 없이 돈을 전송할 수 없습니다";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "주의: 다음 도메인의 경우에만 이 앱이 연동됨";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "안전한 체크아웃";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "이 앱의 기능:";
+/* Link Wallet view title */
+"LinkWallet.title" = "연결 지갑";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "위치 서비스가 꺼졌습니다.";
 /* No permissions for location services */
-"LocationPlugin.notAuthorized" = "Bread가 위치 서비스 접속 권한이 없습니다.";
+"LocationPlugin.notAuthorized" = "BRD가 위치 서비스 접속 권한이 없습니다.";
 /* Wallet creation date prefix */
 "ManageWallet.creationDatePrefix" = "귀하께서는 %1$@ 에 지갑을 만들었습니다";
 /* Manage wallet description text */
@@ -296,6 +324,10 @@
 "MenuButton.addWallet" = "지갑 추가";
 /* Menu button title */
 "MenuButton.lock" = "지갑 잠그기";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "지갑 관리";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "QR코드 스캔";
 /* Menu button title */
 "MenuButton.security" = "보안 센터";
 /* Menu button title */
@@ -328,6 +360,10 @@
 "NodeSelector.statusLabel" = "노드 연결 상태";
 /* Node Selector view title */
 "NodeSelector.title" = "비트코인 노드";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "%2$@ 구매를 위해 %1$@ 전송";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "확인";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "틀린 결제 요청";
 /* Error opening payment protocol file message */
@@ -367,7 +403,7 @@
 /* Transaction rejected prompt title */
 "Prompts.RecommendRescan.title" = "거래 거절됨";
 /* Share data prompt body */
-"Prompts.ShareData.body" = "Bread가 발전할 수 있도록 익명 데이터를 공유해주십시오";
+"Prompts.ShareData.body" = "BRD가 발전할 수 있도록 익명 데이터를 공유해주십시오";
 /* Share data prompt title */
 "Prompts.ShareData.title" = "익명 데이터 공유";
 /* Enable touch ID prompt body */
@@ -386,6 +422,10 @@
 "Prompts.UpgradePin.title" = "PIN 업그레이드";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "알림을 켜두시면, 향후 브레드의 특별 메시지를 수신할 수 있습니다.";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "알림 비활성";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "알림을 받으려면 설정에서 알림을 켜세요";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "푸시 알림";
 /* Push notifications are off label */
@@ -489,9 +529,9 @@
 /* Balance: $4.00 */
 "Send.balance" = "잔액: %1$@";
 /* Instructions how to allow the camera access for the app */
-"Send.cameraUnavailabeMessage.android" = "\"설정\" > \"앱\" > \"Bread\" > \"허용\"에서 카메라 접속을 허용해 주세요";
+"Send.cameraUnavailabeMessage.android" = "\"설정\" > \"앱\" > \"BRD\" > \"허용\"에서 카메라 접속을 허용해 주세요";
 /* Permission required to access camera */
-"Send.cameraUnavailabeTitle.android" = "Bread의 카메라 접속이 허용되지 않았습니다";
+"Send.cameraUnavailabeTitle.android" = "BRD의 카메라 접속이 허용되지 않았습니다";
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "설정에서 카메라 액세스를 허가해 주세요.";
 /* Camera not allowed alert title */
@@ -580,6 +620,8 @@
 "Settings.manage" = "관리";
 /* Notifications label */
 "Settings.notifications" = "알림";
+/* Section header for "other settings". */
+"Settings.other" = "기타";
 /* Preferences settings section header */
 "Settings.preferences" = "환경 설정";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -622,10 +664,14 @@
 "StartViewController.recoverButton" = "지갑 복구하기";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "연결 중";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "동기화 실패";
 /* Syncing view header text */
 "SyncingView.header" = "동기화 중";
 /* Retry button label */
 "SyncingView.retry" = "다시 시도";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "%1$@ 전 동기화 됨";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "동기화 중";
 /* 6 d (6 days) */
@@ -730,6 +776,8 @@
 "TransactionDetails.amountHeader" = "금액";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "받았을 때 %1$@, 지금은 %2$@";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "전송 시 %1$@, 현재 %2$@";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "차단 확인";
 /* Memo section header */
@@ -821,7 +869,7 @@
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "터치 센서";
 /* TouchID prompt text */
-"UnlockScreen.touchIdPrompt" = "Bread의 잠금을 해제하세요.";
+"UnlockScreen.touchIdPrompt" = "BRD의 잠금을 해제하세요.";
 /* Device authentication body */
 "UnlockScreen.touchIdPrompt.android" = "계속하시려면 귀하의 안드로이드 장치 잠금을 해제해 주세요.";
 /* Unlock with TouchID accessibility label */
@@ -831,7 +879,7 @@
 /* Update PIN caption text */
 "UpdatePin.caption" = "이 PIN 코드를 기억하세요. PIN 코드를 잊어버리면 자신의 비트코인을 사용할 수 없게 됩니다.";
 /* PIN creation info. */
-"UpdatePin.createInstruction" = "귀하의 PIN 코드는 Bread의 잠금을 해제하고 돈을 송금하는 데 사용됩니다.";
+"UpdatePin.createInstruction" = "귀하의 PIN 코드는 BRD의 잠금을 해제하고 돈을 송금하는 데 사용됩니다.";
 /* Update PIN title */
 "UpdatePin.createTitle" = "PIN 설정";
 /* Update PIN title */
@@ -865,7 +913,7 @@
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "이 거래 승인";
 /* 'No wallet' warning for watch app */
-"Watch.noWalletWarning" = "귀하의 월렛을 설정하려면 Bread 앱을 열어 주세요.";
+"Watch.noWalletWarning" = "귀하의 월렛을 설정하려면 BRD 앱을 열어 주세요.";
 /* Dismiss button label */
 "Webview.dismiss" = "무시";
 /* Webview loading error message */
@@ -873,9 +921,9 @@
 /* Updating webview message */
 "Webview.updating" = "업데이트 중...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet이 이름을 Bread로 바꾸고 새롭게 단장하였으며 새로운 기능도 갖췄습니다.\n\n도움이 필요하시면 대부분 화면에서 우측 상단에 있는 (?)을(를) 클릭하십시오.";
+"Welcome.body" = "Breadwallet이 이름을 BRD로 바꾸고 새롭게 단장하였으며 새로운 기능도 갖췄습니다.\n\n도움이 필요하시면 대부분 화면에서 우측 상단에 있는 (?)을(를) 클릭하십시오.";
 /* Top title of welcome screen */
-"Welcome.title" = "Bread에 환영합니다!";
+"Welcome.title" = "BRD에 환영합니다!";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "정말 이 월렛을 삭제할까요?";
 /* Wipe wallet alert title */
@@ -889,7 +937,7 @@
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "지갑의 연결을 해제하여 이 기기에서 제거하세요. 이 지갑의 연결이 해제되면, 새로운 지갑을 시작하거나 이 기기에 다른 지갑을 복구할 수 있습니다.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "이장치에서 현재 Bread 지갑을 더는 이용할 수 없게 됩니다. 잔고는 남아 있게 됩니다.";
+"WipeWallet.startWarning" = "이장치에서 현재 BRD 지갑을 더는 이용할 수 없게 됩니다. 잔고는 남아 있게 됩니다.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "지갑 연결 해제";
 /* Wipe wallet button title */
@@ -904,51 +952,3 @@
 "WritePaperPhrase.previous" = "이전";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%2$li의 %1$li";
-/* Section header for "other settings". */
-"Settings.other" = "기타";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "지갑 관리";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "메뉴";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "사다";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "교환";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "QR코드 스캔";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "동기화 실패";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "%1$@ 전 동기화 됨";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "알림 비활성";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "알림을 받으려면 설정에서 알림을 켜세요";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "승인";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "거절";
-/* Link Wallet view title */
-"LinkWallet.title" = "연결 지갑";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "주의: 다음 도메인의 경우에만 이 앱이 연동됨";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "이 앱의 기능:";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "외부 앱은 이 장치의 승인 없이 돈을 전송할 수 없습니다";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "안전한 체크아웃";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "확인";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "%2$@ 구매를 위해 %1$@ 전송";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "%1$@ 계정 정보를 요청합니다";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "%1$@ 스마트계약 콜을 요청합니다";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "%1$@ 계정 정보를 요청합니다";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "전송 시 %1$@, 현재 %2$@";
-/* Request timed out error message */
-"Alert.timedOut" = "요청이 시간 초과 되었습니다. 인터넷 연결을 확인하고 다시 시도하세요.";
