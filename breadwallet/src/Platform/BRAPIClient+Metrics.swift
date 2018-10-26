@@ -112,8 +112,8 @@ fileprivate struct MetricsPayload : Encodable {
 fileprivate enum MetricsPayloadData: Encodable {
     case launch(LaunchData)
     case checkout(CheckoutData)
-    case enableSegWit(SegWitData)
-    case viewLegacyAddress(SegWitData)
+    case enableSegWit(EnableSegWitData)
+    case viewLegacyAddress(ViewLegacyAddressData)
     
     var metric: String {
         switch self {
@@ -122,9 +122,9 @@ fileprivate enum MetricsPayloadData: Encodable {
         case .checkout(_):
             return "pigeon-transaction"
         case .enableSegWit(_):
-            return "enableSegWit"
+            return "segWit"
         case .viewLegacyAddress(_):
-            return "viewLegacyAddress"
+            return "segWit"
         }
     }
     
@@ -145,11 +145,11 @@ fileprivate enum MetricsPayloadData: Encodable {
 
 extension MetricsPayload {
     static var enableSegWit : MetricsPayload {
-        return MetricsPayload(data: MetricsPayloadData.enableSegWit(SegWitData()))
+        return MetricsPayload(data: MetricsPayloadData.enableSegWit(EnableSegWitData()))
     }
     
     static var viewLegacyAddress : MetricsPayload {
-        return MetricsPayload(data: MetricsPayloadData.viewLegacyAddress(SegWitData()))
+        return MetricsPayload(data: MetricsPayloadData.viewLegacyAddress(ViewLegacyAddressData()))
     }
 }
 
@@ -183,6 +183,12 @@ fileprivate struct CheckoutData: Encodable {
     let timestamp: Int
 }
 
-fileprivate struct SegWitData: Encodable {
+fileprivate struct EnableSegWitData: Encodable {
+    let eventType = "enableSegWit"
+    let timestamp = Int(Date().timeIntervalSince1970)
+}
+
+fileprivate struct ViewLegacyAddressData: Encodable {
+    let eventType = "viewLegacyAddress"
     let timestamp = Int(Date().timeIntervalSince1970)
 }
