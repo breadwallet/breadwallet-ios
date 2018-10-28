@@ -93,7 +93,7 @@ class PigeonExchange: Subscriber {
         link.id = localIdentifier
         link.publicKey = localPubKey
         link.status = .accepted
-        guard let envelope = try? MessageEnvelope(to: remotePubKey, from: localPubKey, message: link, type: .link, crypto: PigeonCrypto(privateKey: pairingKey)) else {
+        guard let envelope = try? MessageEnvelope(to: remotePubKey, from: localPubKey, message: link, type: .link, service: pairingRequest.service, crypto: PigeonCrypto(privateKey: pairingKey)) else {
             print("[EME] envelope construction failed!")
             return completionHandler(.error(message: "envelope construction failed"))
         }
@@ -228,7 +228,7 @@ class PigeonExchange: Subscriber {
         var link = MessageLink()
         link.status = .rejected
         link.error = .userDenied
-        guard let envelope = try? MessageEnvelope(to: remotePubKey, from: pairingKey.publicKey, message: link, type: .link, crypto: PigeonCrypto(privateKey: pairingKey)) else {
+        guard let envelope = try? MessageEnvelope(to: remotePubKey, from: pairingKey.publicKey, message: link, type: .link, service: pairingRequest.service, crypto: PigeonCrypto(privateKey: pairingKey)) else {
             print("[EME] envelope construction failed!")
             return completionHandler(.error(message: "envelope construction failed!"))
         }
@@ -505,12 +505,12 @@ class PigeonExchange: Subscriber {
     
     func sendPing(remotePubKey: Data) {
         guard let pairingKey = pairingKey(forRemotePubKey: remotePubKey) else { return }
-        
+
         let crypto = PigeonCrypto(privateKey: pairingKey)
-        
+
         var ping = MessagePing()
         ping.ping = "Hello from BC"
-        guard let envelope = try? MessageEnvelope(to: remotePubKey, from: pairingKey.publicKey, message: ping, type: .ping, crypto: crypto) else {
+        guard let envelope = try? MessageEnvelope(to: remotePubKey, from: pairingKey.publicKey, message: ping, type: .ping, service: "PWB", crypto: crypto) else {
             return print("[EME] envelope construction failed!")
         }
         apiClient.sendMessage(envelope: envelope)
