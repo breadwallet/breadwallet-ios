@@ -64,8 +64,22 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Tracka
         enterPhrase.didMove(toParentViewController: self)
     }
 
+    private var navBarHeight: CGFloat {
+        guard let height = self.navigationController?.navigationBar.frame.height else {
+            return 44
+        }
+        return height
+    }
+    
+    private var statusBarHeight: CGFloat {
+        return UIApplication.shared.statusBarFrame.height
+    }
+    
     private func addConstraints() {
-        scrollView.constrain(toSuperviewEdges: nil)
+        // Prevent the scroll view content from being visible behind the clear-background
+        // nav bar by setting its top constraint to account for the nav bar and status bar.
+        scrollView.constrain(toSuperviewEdges: UIEdgeInsets(top: navBarHeight + statusBarHeight, left: 0, bottom: 0, right: 0))
+        
         scrollView.constrain([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
