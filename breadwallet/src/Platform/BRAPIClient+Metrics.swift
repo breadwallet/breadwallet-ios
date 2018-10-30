@@ -80,20 +80,12 @@ extension BRAPIClient {
         }
     }
     
-    private func getAttributionDetails(completion: @escaping (String) -> Void) {
+    private func getAttributionDetails(completion: @escaping (AnyCodable) -> Void) {
         ADClient.shared().requestAttributionDetails({ (attributionDetails, error) in
             if let error = error {
                 print("error fetching attribution details: \(error.localizedDescription)")
             }
-            var attributionInfo = ""
-            if let attributionDetails = attributionDetails {
-                do {
-                    let data = try JSONSerialization.data(withJSONObject: attributionDetails, options: [])
-                    attributionInfo = String(data: data, encoding: .utf8) ?? ""
-                } catch let e {
-                    print("error parsing attribution details: \(e.localizedDescription)")
-                }
-            }
+            let attributionInfo = AnyCodable(value: attributionDetails ?? "")
             completion(attributionInfo)
         })
     }
@@ -157,7 +149,7 @@ fileprivate struct LaunchData: Encodable {
     let bundles: [String: String]
     let userAgent: String
     let idfa: String
-    let attributionInfo: String
+    let attributionInfo: AnyCodable
     let osVersion: String = E.osVersion
     let deviceType: String = UIDevice.current.model + (E.isSimulator ? "-simulator" : "")
     let applicationId: String = Bundle.main.bundleIdentifier ?? "unknown"
