@@ -274,14 +274,12 @@ class ModalPresenter : Subscriber, Trackable {
             }
             guard let receiveAddress = address else { return nil }
             let requestVc = RequestAmountViewController(currency: currency, receiveAddress: receiveAddress)
-            requestVc.presentEmail = { [weak self] bitcoinURL, image in
+            
+            requestVc.shareAddress = { [weak self] walletAddress, image in
                 self?.messagePresenter.presenter = self?.topViewController
-                self?.messagePresenter.presentMailCompose(bitcoinURL: bitcoinURL, image: image)
+                self?.messagePresenter.presentShareSheet(uri: walletAddress, image: image)
             }
-            requestVc.presentText = { [weak self] bitcoinURL, image in
-                self?.messagePresenter.presenter = self?.topViewController
-                self?.messagePresenter.presentMessageCompose(bitcoinURL: bitcoinURL, image: image)
-            }
+                        
             return ModalViewController(childViewController: requestVc)
         case .buy(let currency):
             var url = "/buy"
@@ -369,16 +367,13 @@ class ModalPresenter : Subscriber, Trackable {
     private func makeReceiveView(currency: CurrencyDef, isRequestAmountVisible: Bool, isBTCLegacy: Bool = false) -> UIViewController? {
         let receiveVC = ReceiveViewController(currency: currency, isRequestAmountVisible: isRequestAmountVisible, isBTCLegacy: isBTCLegacy)
         let root = ModalViewController(childViewController: receiveVC)
-        receiveVC.presentEmail = { [weak self, weak root] address, image in
+        
+        receiveVC.shareAddress = { [weak self, weak root] address, image in
             guard let root = root, let uri = currency.addressURI(address) else { return }
             self?.messagePresenter.presenter = root
-            self?.messagePresenter.presentMailCompose(uri: uri, image: image)
+            self?.messagePresenter.presentShareSheet(uri: uri, image: image)
         }
-        receiveVC.presentText = { [weak self, weak root] address, image in
-            guard let root = root, let uri = currency.addressURI(address) else { return }
-            self?.messagePresenter.presenter = root
-            self?.messagePresenter.presentMessageCompose(uri: uri, image: image)
-        }
+        
         return root
     }
 
