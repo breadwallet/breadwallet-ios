@@ -131,23 +131,21 @@ class PinPadViewController : UICollectionViewController {
         //from listening for scroll events
         //This prevents a delay in cells highlighting right when they are tapped
         collectionView?.isScrollEnabled = false
-    }
 
-    //MARK: - UICollectionViewDataSource
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return items.count
+#if targetEnvironment(simulator) || Debug || Testflight
+        if UserDefaults.debugShouldAutoEnterPIN {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                for _ in 0...5 {
+                    self.handleInputAtItemIndex(index: 0)
+                }
+            }
+        }
+#endif
     }
-
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
-        guard let pinPadCell = item as? GenericPinPadCell else { return item }
-        pinPadCell.text = items[indexPath.item]
-        return pinPadCell
-    }
-
-    //MARK: - UICollectionViewDelegate
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = items[indexPath.row]
+    
+    private func handleInputAtItemIndex(index: Int) {
+        let item = items[index]
+        
         if let specialKey = SpecialKeys(rawValue: item) {
             switch specialKey {
             case .delete:
@@ -166,8 +164,25 @@ class PinPadViewController : UICollectionViewController {
                 currentOutput = currentOutput + item
             }
         }
+        
+        ouputDidUpdate?(currentOutput)        
+    }
 
-        ouputDidUpdate?(currentOutput)
+    //MARK: - UICollectionViewDataSource
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return items.count
+    }
+
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
+        guard let pinPadCell = item as? GenericPinPadCell else { return item }
+        pinPadCell.text = items[indexPath.item]
+        return pinPadCell
+    }
+
+    //MARK: - UICollectionViewDelegate
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        handleInputAtItemIndex(index: indexPath.item)
     }
 
     func shouldAppendChar(char: String) -> Bool {

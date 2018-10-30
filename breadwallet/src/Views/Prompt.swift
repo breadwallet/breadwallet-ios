@@ -70,7 +70,7 @@ enum PromptType {
         case .biometrics:
             return !UserDefaults.hasPromptedBiometrics && LAContext.canUseBiometrics && !UserDefaults.isBiometricsEnabled
         case .paperKey:
-            return UserDefaults.walletRequiresBackup
+            return UserDefaults.walletRequiresBackup && !UserDefaults.debugShouldSuppressPaperKeyPrompt
         case .upgradePin:
             return walletManager.pinLength != 6
         case .noPasscode:

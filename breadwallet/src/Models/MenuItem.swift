@@ -8,11 +8,14 @@
 
 import UIKit
 
+typealias GetMenuItemUpdatedTitle = () -> String
+
 struct MenuItem {
-    let title: String
+    var title: String
     let icon: UIImage?
     let accessoryText: (() -> String)?
     let callback: () -> Void
+    var getUpdatedTitle: GetMenuItemUpdatedTitle? = nil
     let faqButton: UIButton? = nil
     var shouldShow: ()->Bool = { return true }
     
