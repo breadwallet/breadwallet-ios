@@ -22,6 +22,8 @@
 "AccessibilityLabels.faq" = "Справочный центр";
 /* Account balance */
 "Account.balance" = "Баланс";
+/* Delisted token alert banner message */
+"Account.delistedToken" = "Этот токен был удален из списка, так как эмитент решил перейти на свой собственный блокчейн.\nНе беспокойтесь! Вы сможете отправить эти токены из приложения BRD на другую платформу, которая поддерживает своп токенов.\nДополнительную информацию вы можете получить, посетив нашу страницу поддержки.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ за %2$@";
 /* Loading Wallet Message */
@@ -40,6 +42,8 @@
 "Alert.keystore.title.android" = "Ошибка хранилища ключей Android";
 /* No internet alert message */
 "Alert.noInternet" = "Интернет-подключение не обнаружено. Проверьте подключение и повторите попытку.";
+/* General error message */
+"Alert.somethingWentWrong" = "Что-то пошло не так. Повторите попытку.";
 /* Request timed out error message */
 "Alert.timedOut" = "Истекло время запроса. Проверьте подключение и повторите попытку.";
 /* Warning alert title */
@@ -124,6 +128,8 @@
 "Button.ignore" = "Игнорировать";
 /* menu button */
 "Button.menu" = "Меню";
+/* More information button */
+"Button.moreInfo" = "Подробнее";
 /* No button */
 "Button.no" = "Нет";
 /* OK button label */
@@ -382,6 +388,18 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "неподдерживаемый тип подписи";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "недостоверный сертификат";
+/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.body" = "Станьте первым, кто получит существенную поддержку и обновления продукта";
+/* Placeholder text for an email address text field. */
+"Prompts.Email.placeholder" = "введите ваш адрес электронной почты";
+/* Body text that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successBody" = "Вы успешно подписались на получение обновлений";
+/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
+"Prompts.Email.successFootnote" = "Мы ценим вашу непрерывную поддержку";
+/* Title that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successTitle" = "Спасибо!";
+/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.title" = "Войти в узкий круг";
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "Нажмите \"Продолжить\", чтобы включить Идентификацию по лицу";
 /* Enable face ID prompt title */
@@ -524,6 +542,16 @@
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
 "SecurityCenter.touchIdTitle.android" = "Аутентификация по отпечаткам пальцев";
+/* Segwit enabled confirmation title */
+"Segwit.ConfirmationConfirmationTitle" = "Вы активировали SegWit!";
+/* Segwit enabled confirmation description */
+"Segwit.ConfirmationInstructionsDescription" = "Благодарим вас за продвижение биткоина.";
+/* Segwit instructions */
+"Segwit.ConfirmationInstructionsInstructions" = "Поддержка SegWit еще является бета-функцией.\nС момента активации функции SegWit ее нельзя будет отключить. Вы сможете найти унаследованный адрес в Настройках. \nНекоторые услуги третьей стороны, включая крипто-трейдинг, могут быть недоступными для пользователей, которые активировали SegWit. В случае крайней необходимости, вы сможете генерировать унаследованный адрес, зайдя в Preferences (Параметры) > Bitcoin Settings (Настройки биткоина). \nВ будущем обновлении SegWit будет автоматически активирована для всех пользователей.";
+/* Segwit extra confirmation title. */
+"Segwit.ConfirmChoiceLayout" = "Активация SegWit является необратимой функцией. Вы уверены, что хотите продолжить?";
+/* Segwit enableButton */
+"Segwit.Enable" = "Активировать";
 /* Send money amount label */
 "Send.amountLabel" = "Сумма";
 /* Balance: $4.00 */
@@ -610,6 +638,8 @@
 "Settings.currencySettings" = "Настройки валюты";
 /* Join Early access label */
 "Settings.earlyAccess" = "Присоединитесь к пользователям с ранним доступом";
+/* Enable segwit. */
+"Settings.EnableSegwit" = "Активировать Segwit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "Нравится ли вам использовать BRD?";
 /* Face ID spending limit label */
@@ -638,6 +668,12 @@
 "Settings.touchIdLimit" = "Лимит на расходы Touch ID";
 /* The fingerprint spending limit */
 "Settings.touchIdLimit.android" = "Расходный лимит с аутентификацией по отпечаткам пальцев";
+/* View legacy address (old format). */
+"Settings.ViewLegacyAddress" = "Просмотреть унаследованный адрес";
+/* Receive Bitcoin instructions */
+"Settings.ViewLegacyAddressReceiveDescription" = "Отправляйте на этот адрес только биткоин (BTC). Любые другие активы, отправленные на этот адрес, будут безвозвратно потеряны.";
+/* Receive Bitcoin */
+"Settings.ViewLegacyAddressReceiveTitle" = "Получить биткоин";
 /* Wallet Settings section header */
 "Settings.wallet" = "Кошелек";
 /* Unlink/delete your wallet from the current device. */

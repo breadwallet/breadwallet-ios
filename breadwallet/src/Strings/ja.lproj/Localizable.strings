@@ -22,6 +22,8 @@
 "AccessibilityLabels.faq" = "サポートセンター";
 /* Account balance */
 "Account.balance" = "残高";
+/* Delisted token alert banner message */
+"Account.delistedToken" = "このトークンは,発行者が自身のブロックチェーンへの移動を決定したため,取り扱いリストから除外されました。\nご心配なく！BRDアプリから,トークン・スワップに対応した別のプラットホームにこれらのトークンを送ることができます。\n詳細については,当社サポートページでご確認ください。";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%2$@あたり%1$@";
 /* Loading Wallet Message */
@@ -40,6 +42,8 @@
 "Alert.keystore.title.android" = "Android KeyStoreエラー";
 /* No internet alert message */
 "Alert.noInternet" = "インターネット接続が見つかりません。接続を確認してから、もう一度お試しください。";
+/* General error message */
+"Alert.somethingWentWrong" = "何か問題が生じました。再度お試しください。";
 /* Request timed out error message */
 "Alert.timedOut" = "リクエストはタイムアウトしました。接続を確認して、もう一度お試しください。";
 /* Warning alert title */
@@ -124,6 +128,8 @@
 "Button.ignore" = "無視する";
 /* menu button */
 "Button.menu" = "メニュー";
+/* More information button */
+"Button.moreInfo" = "さらなる情報";
 /* No button */
 "Button.no" = "いいえ";
 /* OK button label */
@@ -382,6 +388,18 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "サポートされていないタイプの署名です";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "信頼できない証明書";
+/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.body" = "誰よりも早く重要なサポートを受け,製品をアップデートしましょう";
+/* Placeholder text for an email address text field. */
+"Prompts.Email.placeholder" = "メールアドレスを入力してください";
+/* Body text that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successBody" = "アップデートを受け取るための申し込みが完了しました";
+/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
+"Prompts.Email.successFootnote" = "継続的なサポートに感謝いたします";
+/* Title that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successTitle" = "ありがとうございます！";
+/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.title" = "輪に加わりましょう";
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "Face IDを有効にするには続行をタップして下さい";
 /* Enable face ID prompt title */
@@ -524,6 +542,16 @@
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
 "SecurityCenter.touchIdTitle.android" = "指紋認証";
+/* Segwit enabled confirmation title */
+"Segwit.ConfirmationConfirmationTitle" = "SegWitを有効化しました！";
+/* Segwit enabled confirmation description */
+"Segwit.ConfirmationInstructionsDescription" = "Bitcoinの前進にご協力いただきありがとうございます。";
+/* Segwit instructions */
+"Segwit.ConfirmationInstructionsInstructions" = "SegWit対応はまだベータ版の機能です。\n一度SegWitが有効化されると取り消しはできません。設定画面の下でレガシーアドレスをご確認いただけます。\nSegWitを有効化したユーザーは,第三者のサービス（仮想通貨取引を含む）を利用できない場合があります。緊急の場合は,プリファレンス > Bitcoin設定から,レガシーアドレスを作成することができます。\n将来のアップデートでは,全ユーザーに対して自動的にSegWitが有効化されます。";
+/* Segwit extra confirmation title. */
+"Segwit.ConfirmChoiceLayout" = "「SegWitの有効化」は取り消しできない機能です。継続してよろしいですか？";
+/* Segwit enableButton */
+"Segwit.Enable" = "有効化する";
 /* Send money amount label */
 "Send.amountLabel" = "金額";
 /* Balance: $4.00 */
@@ -610,6 +638,8 @@
 "Settings.currencySettings" = "通貨設定";
 /* Join Early access label */
 "Settings.earlyAccess" = "早期アクセスに参加";
+/* Enable segwit. */
+"Settings.EnableSegwit" = "Segwitを有効にする";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "ブレッドをお楽しみいただいていますか?";
 /* Face ID spending limit label */
@@ -638,6 +668,12 @@
 "Settings.touchIdLimit" = "Touch IDの利用限度額";
 /* The fingerprint spending limit */
 "Settings.touchIdLimit.android" = "指紋認証利用上限";
+/* View legacy address (old format). */
+"Settings.ViewLegacyAddress" = "受取用レガシーアドレスを表示";
+/* Receive Bitcoin instructions */
+"Settings.ViewLegacyAddressReceiveDescription" = "このアドレスにはBitcoin（BTC）だけを送信してください。このアドレスに送信された他の資産は,いかなるものも永久に失われます。";
+/* Receive Bitcoin */
+"Settings.ViewLegacyAddressReceiveTitle" = "Bitcoinを受け取りましょう";
 /* Wallet Settings section header */
 "Settings.wallet" = "ウォレット";
 /* Unlink/delete your wallet from the current device. */

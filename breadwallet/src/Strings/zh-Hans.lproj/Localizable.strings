@@ -22,6 +22,8 @@
 "AccessibilityLabels.faq" = "支持中心";
 /* Account balance */
 "Account.balance" = "余额";
+/* Delisted token alert banner message */
+"Account.delistedToken" = "此代币已退出清单,因为发行方决定转移至自己的区块链。\n不要担心！您可以从 BRD app 将这些代币发送至支持代币交换的其他平台。\n有关更多详情,请访问我们的支持页面。";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ / %2$@";
 /* Loading Wallet Message */
@@ -40,6 +42,8 @@
 "Alert.keystore.title.android" = "安卓系统密钥库错误";
 /* No internet alert message */
 "Alert.noInternet" = "未发现互联网连接。检查您的连接并重试。";
+/* General error message */
+"Alert.somethingWentWrong" = "出错了。请重试。";
 /* Request timed out error message */
 "Alert.timedOut" = "请求超时。请检查您的连接，然后重试。";
 /* Warning alert title */
@@ -124,6 +128,8 @@
 "Button.ignore" = "忽略";
 /* menu button */
 "Button.menu" = "菜单";
+/* More information button */
+"Button.moreInfo" = "更多信息";
 /* No button */
 "Button.no" = "不";
 /* OK button label */
@@ -382,6 +388,18 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "不受支持的签名类型";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "不可信证书";
+/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.body" = "率先接收重要支持和产品更新";
+/* Placeholder text for an email address text field. */
+"Prompts.Email.placeholder" = "输入您的电子邮箱";
+/* Body text that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successBody" = "您已成功订阅接收更新";
+/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
+"Prompts.Email.successFootnote" = "我们感谢您的持续支持";
+/* Title that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successTitle" = "谢谢！";
+/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.title" = "加入";
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "点击继续开启面部识别";
 /* Enable face ID prompt title */
@@ -524,6 +542,16 @@
 "SecurityCenter.touchIdTitle" = "触摸 ID";
 /* Security center fingerprint authentication button */
 "SecurityCenter.touchIdTitle.android" = "指纹认证";
+/* Segwit enabled confirmation title */
+"Segwit.ConfirmationConfirmationTitle" = "您已启用 SegWit！";
+/* Segwit enabled confirmation description */
+"Segwit.ConfirmationInstructionsDescription" = "感谢您帮助比特币发展。";
+/* Segwit instructions */
+"Segwit.ConfirmationInstructionsInstructions" = "SegWit 支持还是一项不成熟的测试功能。\n启用 SegWit 后,将无法将其禁用。\n您可以在\"设置\"下找到传统地址。\n启用了 SegWit 的用户可能无法使用包括加密货币交易在内的部分第三方服务。如果出现紧急情况,您可以通过\"首选项\"(Preferences) >\"比特币设置\"(Bitcoin Settings) 生成一个传统地址。\n在将来的更新中,将自动为所有用户\n启用 SegWit。";
+/* Segwit extra confirmation title. */
+"Segwit.ConfirmChoiceLayout" = "启用 SegWit 是不可逆转的功能。是否确定要继续？";
+/* Segwit enableButton */
+"Segwit.Enable" = "启用";
 /* Send money amount label */
 "Send.amountLabel" = "金额";
 /* Balance: $4.00 */
@@ -610,6 +638,8 @@
 "Settings.currencySettings" = "货币设置";
 /* Join Early access label */
 "Settings.earlyAccess" = "加入早期访问";
+/* Enable segwit. */
+"Settings.EnableSegwit" = "启用 SegWit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "您喜欢 BRD 吗？";
 /* Face ID spending limit label */
@@ -638,6 +668,12 @@
 "Settings.touchIdLimit" = "触摸 ID 支出限制";
 /* The fingerprint spending limit */
 "Settings.touchIdLimit.android" = "指纹认证支出限额";
+/* View legacy address (old format). */
+"Settings.ViewLegacyAddress" = "查看传统接收地址";
+/* Receive Bitcoin instructions */
+"Settings.ViewLegacyAddressReceiveDescription" = "请仅发送比特币 (BTC) 至此地址。发送至此地址的任何其他资产将永久丢失。";
+/* Receive Bitcoin */
+"Settings.ViewLegacyAddressReceiveTitle" = "接收比特币";
 /* Wallet Settings section header */
 "Settings.wallet" = "钱包";
 /* Unlink/delete your wallet from the current device. */
