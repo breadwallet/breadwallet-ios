@@ -22,6 +22,8 @@
 "AccessibilityLabels.faq" = "Supportcenter";
 /* Account balance */
 "Account.balance" = "Saldo";
+/* Delisted token alert banner message */
+"Account.delistedToken" = "Denne token er blevet afnoteret, fordi udstederen besluttede at flytte til deres egen blockchain.\nBare rolig! Du vil kunne sende disse tokens ud fra BRD-appen til en anden platform, der understøtter token-swap.\nFor flere detaljer, besøg vores supportside.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ per %2$@";
 /* Loading Wallet Message */
@@ -40,6 +42,8 @@
 "Alert.keystore.title.android" = "Android KeyStore fejl";
 /* No internet alert message */
 "Alert.noInternet" = "Ingen internetforbindelse fundet. Tjek din forbindelse og prøv igen.";
+/* General error message */
+"Alert.somethingWentWrong" = "Noget gik galt. Prøv igen.";
 /* Request timed out error message */
 "Alert.timedOut" = "Anmodingen er udløbet. Tjek din forbindelse og prøv igen.";
 /* Warning alert title */
@@ -124,6 +128,8 @@
 "Button.ignore" = "Ignorer";
 /* menu button */
 "Button.menu" = "Menu";
+/* More information button */
+"Button.moreInfo" = "Mere info";
 /* No button */
 "Button.no" = "Nej";
 /* OK button label */
@@ -382,6 +388,18 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "ikke understøttet signaturtype";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "certifikat der ikke er tillid til";
+/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.body" = "Vær den første til at modtage vigtige support- og produktopdateringer";
+/* Placeholder text for an email address text field. */
+"Prompts.Email.placeholder" = "Indtast din e-mail";
+/* Body text that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successBody" = "Du har abonneret på at modtage opdateringer";
+/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
+"Prompts.Email.successFootnote" = "Vi værdsætter din fortsatte støtte";
+/* Title that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successTitle" = "Tak skal du have!";
+/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.title" = "Hold dig opdateret";
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "Tryk Fortsæt for at aktivere Face ID";
 /* Enable face ID prompt title */
@@ -524,6 +542,16 @@
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
 "SecurityCenter.touchIdTitle.android" = "Autentificering via fingeraftryk";
+/* Segwit enabled confirmation title */
+"Segwit.ConfirmationConfirmationTitle" = "Du har aktiveret SegWit!";
+/* Segwit enabled confirmation description */
+"Segwit.ConfirmationInstructionsDescription" = "Tak for at hjælpe med at skubbe bitcoin fremad.";
+/* Segwit instructions */
+"Segwit.ConfirmationInstructionsInstructions" = "SegWit-support er stadig en beta funktion.\nNår SegWit er aktiveret, vil det ikke være muligt\nat deaktivere det. Du kan finde legacy-adressen under Indstillinger.\nNogle tredjepartstjenester, herunder kryptohandel, kan være utilgængelige for brugere, der har aktiveret SegWit. I tilfælde af en nødsituation vil du kunne generere en lecacy-adresse fra Indstillinger > Bitcoin-Indstillinger.\nSegWit vil automatisk blive aktiveret for alle\nbrugere i en fremtidig opdatering.";
+/* Segwit extra confirmation title. */
+"Segwit.ConfirmChoiceLayout" = "Aktivering af SegWit er en irreversibel funktion. Er du sikker på, at du vil fortsætte?";
+/* Segwit enableButton */
+"Segwit.Enable" = "Aktiver";
 /* Send money amount label */
 "Send.amountLabel" = "Beløb";
 /* Balance: $4.00 */
@@ -610,6 +638,8 @@
 "Settings.currencySettings" = "Valutaindstillinger";
 /* Join Early access label */
 "Settings.earlyAccess" = "Tilmeld dig Early Access";
+/* Enable segwit. */
+"Settings.EnableSegwit" = "Aktivér Segwit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "Nyder du BRD?";
 /* Face ID spending limit label */
@@ -638,6 +668,12 @@
 "Settings.touchIdLimit" = "Touch ID brugsgrænse";
 /* The fingerprint spending limit */
 "Settings.touchIdLimit.android" = "Brugsgrænse for autentificering via fingeraftryk";
+/* View legacy address (old format). */
+"Settings.ViewLegacyAddress" = "Vis Legacy Modtagelsesadresse";
+/* Receive Bitcoin instructions */
+"Settings.ViewLegacyAddressReceiveDescription" = "Send kun Bitcoin (BTC) til denne adresse. Ethvert andet aktiv, der sendes til denne adresse, vil gå tabt permanent.";
+/* Receive Bitcoin */
+"Settings.ViewLegacyAddressReceiveTitle" = "Modtag Bitcoin";
 /* Wallet Settings section header */
 "Settings.wallet" = "Wallet";
 /* Unlink/delete your wallet from the current device. */

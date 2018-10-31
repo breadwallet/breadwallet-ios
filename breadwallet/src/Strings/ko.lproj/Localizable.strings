@@ -22,6 +22,8 @@
 "AccessibilityLabels.faq" = "고객지원 센터";
 /* Account balance */
 "Account.balance" = "잔액";
+/* Delisted token alert banner message */
+"Account.delistedToken" = "발행인이 자신만의 블록체인으로 옮겨가기로 결정한 관계로 이 토큰은 상장이 폐지되었습니다. 걱정하지 마세요. BRD 앱에서 토큰 교환을 지원하는 다른 플랫폼으로 이 토큰을 전송할 수 있게 됩니다.\n자세한 정보는 저희의 지원 페이지를 방문해 주세요.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%2$@ 당 %1$@";
 /* Loading Wallet Message */
@@ -40,6 +42,8 @@
 "Alert.keystore.title.android" = "안드로이드 키스토어 오류";
 /* No internet alert message */
 "Alert.noInternet" = "인터넷이 연결되지 않았습니다. 연결을 확인하시고 다시 시도해 주세요.";
+/* General error message */
+"Alert.somethingWentWrong" = "뭔가 잘못됐습니다. 다시 시도해 주세요.";
 /* Request timed out error message */
 "Alert.timedOut" = "요청이 시간 초과 되었습니다. 인터넷 연결을 확인하고 다시 시도하세요.";
 /* Warning alert title */
@@ -124,6 +128,8 @@
 "Button.ignore" = "무시";
 /* menu button */
 "Button.menu" = "메뉴";
+/* More information button */
+"Button.moreInfo" = "자세한 정보";
 /* No button */
 "Button.no" = "아니오";
 /* OK button label */
@@ -382,6 +388,18 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "지원되지 않는 서명 형태";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "신용할 수 없는 증명서";
+/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.body" = "주요 지원 및 제품 업데이트르 받을 첫 주인공이 되어 보세요.";
+/* Placeholder text for an email address text field. */
+"Prompts.Email.placeholder" = "이메일 입력";
+/* Body text that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successBody" = "업데이트를 받기 위한 구독이 완료되었습니다.";
+/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
+"Prompts.Email.successFootnote" = "계속해서 지지해 주셔서 감사합니다.";
+/* Title that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successTitle" = "감사합니다!";
+/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.title" = "일원 되기";
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "페이스 ID를 사용하시려면 계속하기를 탭하세요";
 /* Enable face ID prompt title */
@@ -524,6 +542,16 @@
 "SecurityCenter.touchIdTitle" = "터치 ID";
 /* Security center fingerprint authentication button */
 "SecurityCenter.touchIdTitle.android" = "지문 본인확인";
+/* Segwit enabled confirmation title */
+"Segwit.ConfirmationConfirmationTitle" = "SegWit을 활성화했습니다!";
+/* Segwit enabled confirmation description */
+"Segwit.ConfirmationInstructionsDescription" = "Bitcoin 발전에 일조해 주셔서 감사합니다.";
+/* Segwit instructions */
+"Segwit.ConfirmationInstructionsInstructions" = "SegWit 지원은 아직 베타 기능입니다.\nSegWit이 활성화되면 비활성화할 수\n없습니다. 유산 주소는 아래 설정에서 찾을 수 있습니다.\nSegWit를 활성화하면 암호화 거래 등 일부 제3자 서비스를 이용할 수 없을 수도 있습니다. 비상 시에는 선호도 > Bitcoin 설정에서 유산 주소를 생성할 수 있습니다.\nSegWit는 향후 업데이트 시 모든 사용자에게 \n자동으로 활성화됩니다.";
+/* Segwit extra confirmation title. */
+"Segwit.ConfirmChoiceLayout" = "SegWit을 활성화는 취소할 수 없는 기능입니다. 계속하시겠습니까?";
+/* Segwit enableButton */
+"Segwit.Enable" = "활성화";
 /* Send money amount label */
 "Send.amountLabel" = "금액";
 /* Balance: $4.00 */
@@ -610,6 +638,8 @@
 "Settings.currencySettings" = "통화 설정";
 /* Join Early access label */
 "Settings.earlyAccess" = "초기 버전을 사용해 보세요";
+/* Enable segwit. */
+"Settings.EnableSegwit" = "Segwit 활성화";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "브레드를 사용하고 있으신가요?";
 /* Face ID spending limit label */
@@ -638,6 +668,12 @@
 "Settings.touchIdLimit" = "Touch ID 지출 한도";
 /* The fingerprint spending limit */
 "Settings.touchIdLimit.android" = "지문 본인확인 사용 한계";
+/* View legacy address (old format). */
+"Settings.ViewLegacyAddress" = "유산 수령 주소 보기";
+/* Receive Bitcoin instructions */
+"Settings.ViewLegacyAddressReceiveDescription" = "이 주소에는 Bitcoin(BTC)만 보낼 수 있습니다. 이 주소로 다른 자산을 보낼 경우 모두 영구 소실됩니다.";
+/* Receive Bitcoin */
+"Settings.ViewLegacyAddressReceiveTitle" = "Bitcoin 수령";
 /* Wallet Settings section header */
 "Settings.wallet" = "지갑";
 /* Unlink/delete your wallet from the current device. */

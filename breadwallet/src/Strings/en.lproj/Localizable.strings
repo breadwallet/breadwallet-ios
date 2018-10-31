@@ -22,6 +22,8 @@
 "AccessibilityLabels.faq" = "Support Center";
 /* Account balance */
 "Account.balance" = "Balance";
+/* Delisted token alert banner message */
+"Account.delistedToken" = "This token has been delisted because the issuer decided to move to their own blockchain.\nDon’t worry! You will be able to send these tokens out from the BRD app to another platform that supports the token swap.\nFor more details, please visit our support page.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ per %2$@";
 /* Loading Wallet Message */
@@ -40,6 +42,8 @@
 "Alert.keystore.title.android" = "Android KeyStore Error";
 /* No internet alert message */
 "Alert.noInternet" = "No internet connection found. Check your connection and try again.";
+/* General error message */
+"Alert.somethingWentWrong" = "Something went wrong. Please try again.";
 /* Request timed out error message */
 "Alert.timedOut" = "Request timed out. Check your connection and try again.";
 /* Warning alert title */
@@ -124,6 +128,8 @@
 "Button.ignore" = "Ignore";
 /* menu button */
 "Button.menu" = "Menu";
+/* More information button */
+"Button.moreInfo" = "More info";
 /* No button */
 "Button.no" = "No";
 /* OK button label */
@@ -382,6 +388,18 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "unsupported signature type";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "untrusted certificate";
+/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.body" = "Be the first to receive important support and product updates";
+/* Placeholder text for an email address text field. */
+"Prompts.Email.placeholder" = "enter your email";
+/* Body text that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successBody" = "You have successfully subscribed to receive updates";
+/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
+"Prompts.Email.successFootnote" = "We appreciate your continued support";
+/* Title that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successTitle" = "Thank you!";
+/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.title" = "Get in the loop";
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "Tap Continue to enable Face ID";
 /* Enable face ID prompt title */
@@ -524,6 +542,16 @@
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
 "SecurityCenter.touchIdTitle.android" = "Fingerprint Authentication";
+/* Segwit enabled confirmation title */
+"Segwit.ConfirmationConfirmationTitle" = "You have enabled SegWit!";
+/* Segwit enabled confirmation description */
+"Segwit.ConfirmationInstructionsDescription" = "Thank you for helping move bitcoin forward.";
+/* Segwit instructions */
+"Segwit.ConfirmationInstructionsInstructions" = "SegWit support is still a beta feature.\nOnce SegWit is enabled, it will not be possible\nto disable it. You will be able to find the legacy address under Settings. \nSome third-party services, including crypto trading, may be unavailable to users who have enabled SegWit. In case of emergency, you will be able to generate a lecacy address from Preferences > Bitcoin Settings. \nSegWit will automatically be enabled for all\nusers in a future update.";
+/* Segwit extra confirmation title. */
+"Segwit.ConfirmChoiceLayout" = "Enabling SegWit is an irreversible feature. Are you sure you want to continue?";
+/* Segwit enableButton */
+"Segwit.Enable" = "Enable";
 /* Send money amount label */
 "Send.amountLabel" = "Amount";
 /* Balance: $4.00 */
@@ -610,6 +638,8 @@
 "Settings.currencySettings" = "Currency Settings";
 /* Join Early access label */
 "Settings.earlyAccess" = "Join Early Access";
+/* Enable segwit. */
+"Settings.EnableSegwit" = "Enable Segwit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "Are you enjoying BRD?";
 /* Face ID spending limit label */
@@ -638,6 +668,12 @@
 "Settings.touchIdLimit" = "Touch ID Spending Limit";
 /* The fingerprint spending limit */
 "Settings.touchIdLimit.android" = "Fingerprint Authentication Spending Limit";
+/* View legacy address (old format). */
+"Settings.ViewLegacyAddress" = "View Legacy Receive Address";
+/* Receive Bitcoin instructions */
+"Settings.ViewLegacyAddressReceiveDescription" = "Only send Bitcoin (BTC) to this address. Any other asset sent to this address will be lost permanently.";
+/* Receive Bitcoin */
+"Settings.ViewLegacyAddressReceiveTitle" = "Receive Bitcoin";
 /* Wallet Settings section header */
 "Settings.wallet" = "Wallets";
 /* Unlink/delete your wallet from the current device. */

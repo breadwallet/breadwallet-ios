@@ -22,6 +22,8 @@
 "AccessibilityLabels.faq" = "Centro Assistenza";
 /* Account balance */
 "Account.balance" = "Saldo";
+/* Delisted token alert banner message */
+"Account.delistedToken" = "Questo token è stato tolto dalla lista perchè l'emittente ha deciso di muoversi verso la sua blockchain. Non ti preoccupare! Sarai in grado di inviare questi token dall'app BRD ad un'altra piattaforma che supporta la conversione dei token. Per ulteriori dettagli, per favore visita la nostra pagina di supporto.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ per %2$@";
 /* Loading Wallet Message */
@@ -40,6 +42,8 @@
 "Alert.keystore.title.android" = "Errore KeyStore Android";
 /* No internet alert message */
 "Alert.noInternet" = "Non è stata trovata alcuna connessione internet. Controlla la connessione e riprova.";
+/* General error message */
+"Alert.somethingWentWrong" = "Qualcosa è andato storto. Per favore riprova.";
 /* Request timed out error message */
 "Alert.timedOut" = "Richiesta scaduta. Controlla la tua connessione e riprova.";
 /* Warning alert title */
@@ -124,6 +128,8 @@
 "Button.ignore" = "Ignora";
 /* menu button */
 "Button.menu" = "Menu";
+/* More information button */
+"Button.moreInfo" = "Più informazioni";
 /* No button */
 "Button.no" = "No";
 /* OK button label */
@@ -382,6 +388,18 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "tipo di firma non supportato";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "certificato non attendibile";
+/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.body" = "Sii il primo a ricevere un importante supporto e gli aggiornamenti del prodotto";
+/* Placeholder text for an email address text field. */
+"Prompts.Email.placeholder" = "inserisci la tua email";
+/* Body text that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successBody" = "Hai aderito con successo alla ricezione degli aggiornamenti";
+/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
+"Prompts.Email.successFootnote" = "Apprezziamo il tuo continuo supporto";
+/* Title that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successTitle" = "Grazie!";
+/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.title" = "Entra nel circuito";
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "Tocca Continua per abilitare Face ID";
 /* Enable face ID prompt title */
@@ -524,6 +542,16 @@
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
 "SecurityCenter.touchIdTitle.android" = "Autenticazione Impronta Digitale";
+/* Segwit enabled confirmation title */
+"Segwit.ConfirmationConfirmationTitle" = "Hai abilitato SegWit!";
+/* Segwit enabled confirmation description */
+"Segwit.ConfirmationInstructionsDescription" = "Grazie per aver contribuito alla progressione dei bitcoin.";
+/* Segwit instructions */
+"Segwit.ConfirmationInstructionsInstructions" = "Il supporto di SegWit è ancora un elemento in beta. Una volta che SegWit verrà abilitato, non sarà più possibile disabilitarlo. Troverai l'indirizzo del patrimonio nelle Impostazioni. \nAlcuni servizi di terze parti, commercio crittografico incluso, possono risultare indisponibili agli utenti che hanno abilitato SegWit. In caso di emergenza, sarai in grado di generare un indirizzo per il patrimonio da Preferenze > Impostazioni Bitcoin. \nSegWit verrà abilitato automaticamente per tutti gli utenti in un futuro aggiornamento.";
+/* Segwit extra confirmation title. */
+"Segwit.ConfirmChoiceLayout" = "L'abilitazione di SegWit è una funzionalità irreversibile. Sei sicuro di voler continuare?";
+/* Segwit enableButton */
+"Segwit.Enable" = "Abilita";
 /* Send money amount label */
 "Send.amountLabel" = "Importo";
 /* Balance: $4.00 */
@@ -610,6 +638,8 @@
 "Settings.currencySettings" = "Impostazioni valuta";
 /* Join Early access label */
 "Settings.earlyAccess" = "Iscriviti all'Accesso Anticipato";
+/* Enable segwit. */
+"Settings.EnableSegwit" = "Abilita SegWit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "Ti piace BRD?";
 /* Face ID spending limit label */
@@ -638,6 +668,12 @@
 "Settings.touchIdLimit" = "Limite di Spesa Touch ID";
 /* The fingerprint spending limit */
 "Settings.touchIdLimit.android" = "Autenticazione Impronta per il Limite di Spesa";
+/* View legacy address (old format). */
+"Settings.ViewLegacyAddress" = "Visualizza l'Indirizzo di Ricezione del Patrimonio";
+/* Receive Bitcoin instructions */
+"Settings.ViewLegacyAddressReceiveDescription" = "Invia i Bitcoin (BTC) solamente a questo indirizzo. Qualsiasi altra risorsa inviata a questo indirizzo verrà persa per sempre.";
+/* Receive Bitcoin */
+"Settings.ViewLegacyAddressReceiveTitle" = "Ricevi Bitcoin";
 /* Wallet Settings section header */
 "Settings.wallet" = "Portafoglio";
 /* Unlink/delete your wallet from the current device. */
