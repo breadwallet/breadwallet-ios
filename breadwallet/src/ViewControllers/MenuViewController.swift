@@ -24,24 +24,9 @@ class MenuViewController : UITableViewController {
     private let faqButton: UIButton?
     
     func reloadMenu() {
-        var index: Int = 0
-        for item: MenuItem in items {
-            updateMenuItem(item: item, index: index)
-            index += 1
-        }
+        tableView.reloadData()
     }
-    
-    private func updateMenuItem(item: MenuItem, index: Int) {
-        guard let updateTitle = item.getUpdatedTitle else { return }
-        let newTitle = updateTitle()
-        
-        var menuItem = item
-        menuItem.title = newTitle
-        
-        guard let cell = tableView.cellForRow(at: IndexPath(item: index, section: 0)) as? MenuCell else { return }
-        cell.textLabel?.text = newTitle
-    }
-    
+
     override func viewDidLoad() {
         tableView.register(MenuCell.self, forCellReuseIdentifier: MenuCell.cellIdentifier)
         tableView.tableFooterView = UIView()
@@ -77,12 +62,8 @@ class MenuViewController : UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let menuItem = visibleItems[indexPath.row]
-        menuItem.callback()
-                
+        visibleItems[indexPath.row].callback()
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        updateMenuItem(item: menuItem, index: indexPath.row)
     }
 
     required init?(coder aDecoder: NSCoder) {
