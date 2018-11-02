@@ -17,12 +17,14 @@ enum RatesResult {
 
 extension BRAPIClient {
 
-    func me() {
+    func me(handler: @escaping (_ success: Bool, _ response: Data?, _ error: Error?) -> Void) {
         let req = URLRequest(url: url("/me"))
         let task = dataTaskWithRequest(req, authenticated: true, handler: { data, response, err in
             if let data = data {
                 print("me: \(String(describing: String(data: data, encoding: .utf8)))")
             }
+            let success = response?.statusCode == 200
+            handler(success, data, err)
         })
         task.resume()
     }
