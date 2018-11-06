@@ -587,9 +587,10 @@ class ModalPresenter : Subscriber, Trackable {
             },
         ]
 
+        // MARK: Developer/QA Menu
 #if targetEnvironment(simulator) || Debug || TestFlight
         var developerItems = [MenuItem]()
-        
+
         developerItems.append(MenuItem(title: S.Settings.sendLogs) { [unowned self] in
             self.showEmailLogsModal()
         })
@@ -597,90 +598,72 @@ class ModalPresenter : Subscriber, Trackable {
         developerItems.append(MenuItem(title: "Unlink Wallet (no prompt)") { [unowned self] in
             self.wipeWalletNoPrompt()
         })
-        
-        // For test wallets with a PIN of 111111, the PIN is auto entered on startup.
-        developerItems.append(autoEnterPINMenuItem)
+
+        if E.isDebug { // for dev/debugging use only
+            // For test wallets with a PIN of 111111, the PIN is auto entered on startup.
+            developerItems.append(MenuItem(title: "Auto-enter PIN", accessoryText: { UserDefaults.debugShouldAutoEnterPIN ? "ON" : "OFF" }) {
+                _ = UserDefaults.toggleAutoEnterPIN()
+                (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+            })
+        }
         
         // For test wallets, suppresses the paper key prompt on the home screen.
-        developerItems.append(suppressPaperKeyPromptMenuItem)
+        developerItems.append(MenuItem(title: "Suppress paper key prompt", accessoryText: { UserDefaults.debugShouldSuppressPaperKeyPrompt ? "ON" : "OFF" }) {
+            _ = UserDefaults.toggleSuppressPaperKeyPrompt()
+            (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+        })
         
         // Shows a preview of the paper key.
         if let paperKey = self.primaryWalletManager.seedPhrase(pin: "111111") {
-            developerItems.append(makePaperKeyPreviewMenuItem(paperKey: paperKey))
+            let words = paperKey.components(separatedBy: " ")
+            let preview = "\(words[0]) \(words[1])..."
+            developerItems.append(MenuItem(title: "Paper key preview", accessoryText: { UserDefaults.debugShouldShowPaperKeyPreview ? preview : "" }) {
+                _ = UserDefaults.togglePaperKeyPreview()
+                (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+            })
         }
         
         developerItems.append(MenuItem(title: "Reset User Defaults") {
             UserDefaults.resetAll()
             menuNav.showAlert(title: "", message: "User defaults reset")
-            
-            // Reload the menu since some of the developer item titles depend
-            // on the UserDefaults settings.
-            guard let menuVC = menuNav.topViewController as? MenuViewController else {
-                return
-            }
-            menuVC.reloadMenu()
+            (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+        })
+
+        developerItems.append(MenuItem(title: "API Host", accessoryText: { Backend.apiClient.host }) {
+            let alert = UIAlertController(title: "Set API Host", message: nil, preferredStyle: .alert)
+            alert.addTextField(configurationHandler: { textField in
+                textField.text = Backend.apiClient.host
+                textField.keyboardType = .URL
+                textField.clearButtonMode = .always
+            })
+
+            alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { (action) in
+                guard let newHost = alert.textFields?.first?.text else { return }
+                let originalHost = Backend.apiClient.host
+                Backend.apiClient.host = newHost
+                Backend.apiClient.me(handler: { (success, _, _) in
+                    if success {
+                        (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                    } else {
+                        Backend.apiClient.host = originalHost
+                    }
+                })
+            }))
+
+            alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+
+            menuNav.present(alert, animated: true, completion: nil)
         })
         
         rootItems.append(MenuItem(title: "Developer Options", icon: nil, subMenu: developerItems, rootNav: menuNav, faqButton: nil))
 #endif
         
-        let settings = MenuViewController(items: rootItems, 
+        let rootMenu = MenuViewController(items: rootItems,
                                           title: S.Settings.title)
-        settings.addCloseNavigationItem(side: .right)
-        menuNav.viewControllers = [settings]
+        rootMenu.addCloseNavigationItem(side: .right)
+        menuNav.viewControllers = [rootMenu]
         top.present(menuNav, animated: true, completion: nil)
     }
-
-#if targetEnvironment(simulator) || Debug || Testflight
-    private func makePaperKeyPreviewMenuItem(paperKey: String) -> MenuItem {
-        let words = paperKey.components(separatedBy: " ")
-        let enabledTitle = "Paper key preview: " + words[0] + " " + words[1] + "..."
-        let disabledTitle = "Paper key preview (tap to show)"
-        
-        let menuTitle = UserDefaults.debugShouldShowPaperKeyPreview ? enabledTitle : disabledTitle                
-        var paperKeyPreview: MenuItem = MenuItem(title: menuTitle) {
-            _ = UserDefaults.togglePaperKeyPreview()
-        }
-        
-        paperKeyPreview.getUpdatedTitle = {
-            return (UserDefaults.debugShouldShowPaperKeyPreview ? enabledTitle : disabledTitle)
-        }
-
-        return paperKeyPreview
-    }
-    
-    private var autoEnterPINMenuItem: MenuItem {
-        let autoEnterPINTitle: () -> String = {
-            return "Auto-enter PIN " + (UserDefaults.debugShouldAutoEnterPIN ? "(ON)" : "(OFF)")
-        }
-        
-        var autoEnterPINItem = MenuItem(title: autoEnterPINTitle()) {
-            _ = UserDefaults.toggleAutoEnterPIN()
-        }
-        
-        autoEnterPINItem.getUpdatedTitle = {
-            return autoEnterPINTitle()
-        }
-        
-        return autoEnterPINItem
-    }
-    
-    private var suppressPaperKeyPromptMenuItem: MenuItem {
-        let suppressPaperKeyPromptTitle: () -> String = {
-            return "Suppress paper key prompt " + (UserDefaults.debugShouldSuppressPaperKeyPrompt ? "(ON)" : "(OFF)")
-        }
-        
-        var suppressPaperKeyPromptItem = MenuItem(title: suppressPaperKeyPromptTitle()) {
-            _ = UserDefaults.toggleSuppressPaperKeyPrompt()
-        }
-        
-        suppressPaperKeyPromptItem.getUpdatedTitle = {
-            return suppressPaperKeyPromptTitle()
-        }
-        
-        return suppressPaperKeyPromptItem
-    }
-#endif
     
     private func presentScan(parent: UIViewController, currency: CurrencyDef?) -> PresentScan {
         return { [weak parent] scanCompletion in
