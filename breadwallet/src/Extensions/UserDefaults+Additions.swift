@@ -346,11 +346,11 @@ extension UserDefaults {
         
         get {
             // always return false for release builds
-#if targetEnvironment(simulator) || Debug || Testflight
-            return defaults.bool(forKey: debugShouldAutoEnterPinKey) 
-#else
-            return false
-#endif
+            if E.isSimulator || E.isDebug || E.isTestFlight {
+                return defaults.bool(forKey: debugShouldAutoEnterPinKey)
+            } else {
+                return false
+            }
         }
         
         set { 
@@ -362,11 +362,11 @@ extension UserDefaults {
         
         get {
             // always return false for release builds
-#if targetEnvironment(simulator) || Debug || Testflight
-            return defaults.bool(forKey: debugShouldSuppressPaperKeyPromptKey)
-#else
-            return false
-#endif
+            if E.isSimulator || E.isDebug || E.isTestFlight {
+                return defaults.bool(forKey: debugShouldSuppressPaperKeyPromptKey)
+            } else {
+                return false
+            }
         }
         
         set {
@@ -378,11 +378,11 @@ extension UserDefaults {
         
         get {
             // always return false for release builds
-#if targetEnvironment(simulator) || Debug || Testflight
-            return defaults.bool(forKey: debugShouldShowPaperKeyPreviewKey)
-#else
-            return false
-#endif
+            if E.isSimulator || E.isDebug || E.isTestFlight {
+                return defaults.bool(forKey: debugShouldShowPaperKeyPreviewKey)
+            } else {
+                return false
+            }
         }
         
         set {
