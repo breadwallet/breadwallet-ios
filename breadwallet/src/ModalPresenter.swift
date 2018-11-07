@@ -588,75 +588,75 @@ class ModalPresenter : Subscriber, Trackable {
         ]
 
         // MARK: Developer/QA Menu
-#if targetEnvironment(simulator) || Debug || TestFlight
-        var developerItems = [MenuItem]()
-
-        developerItems.append(MenuItem(title: S.Settings.sendLogs) { [unowned self] in
-            self.showEmailLogsModal()
-        })
-        
-        developerItems.append(MenuItem(title: "Unlink Wallet (no prompt)") { [unowned self] in
-            self.wipeWalletNoPrompt()
-        })
-
-        if E.isDebug { // for dev/debugging use only
-            // For test wallets with a PIN of 111111, the PIN is auto entered on startup.
-            developerItems.append(MenuItem(title: "Auto-enter PIN", accessoryText: { UserDefaults.debugShouldAutoEnterPIN ? "ON" : "OFF" }) {
-                _ = UserDefaults.toggleAutoEnterPIN()
-                (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+        if E.isSimulator || E.isDebug || E.isTestFlight {
+            var developerItems = [MenuItem]()
+            
+            developerItems.append(MenuItem(title: S.Settings.sendLogs) { [unowned self] in
+                self.showEmailLogsModal()
             })
-        }
-        
-        // For test wallets, suppresses the paper key prompt on the home screen.
-        developerItems.append(MenuItem(title: "Suppress paper key prompt", accessoryText: { UserDefaults.debugShouldSuppressPaperKeyPrompt ? "ON" : "OFF" }) {
-            _ = UserDefaults.toggleSuppressPaperKeyPrompt()
-            (menuNav.topViewController as? MenuViewController)?.reloadMenu()
-        })
-        
-        // Shows a preview of the paper key.
-        if let paperKey = self.primaryWalletManager.seedPhrase(pin: "111111") {
-            let words = paperKey.components(separatedBy: " ")
-            let preview = "\(words[0]) \(words[1])..."
-            developerItems.append(MenuItem(title: "Paper key preview", accessoryText: { UserDefaults.debugShouldShowPaperKeyPreview ? preview : "" }) {
-                _ = UserDefaults.togglePaperKeyPreview()
-                (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+            
+            developerItems.append(MenuItem(title: "Unlink Wallet (no prompt)") { [unowned self] in
+                self.wipeWalletNoPrompt()
             })
-        }
-        
-        developerItems.append(MenuItem(title: "Reset User Defaults") {
-            UserDefaults.resetAll()
-            menuNav.showAlert(title: "", message: "User defaults reset")
-            (menuNav.topViewController as? MenuViewController)?.reloadMenu()
-        })
-
-        developerItems.append(MenuItem(title: "API Host", accessoryText: { Backend.apiClient.host }) {
-            let alert = UIAlertController(title: "Set API Host", message: nil, preferredStyle: .alert)
-            alert.addTextField(configurationHandler: { textField in
-                textField.text = Backend.apiClient.host
-                textField.keyboardType = .URL
-                textField.clearButtonMode = .always
-            })
-
-            alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { (action) in
-                guard let newHost = alert.textFields?.first?.text else { return }
-                let originalHost = Backend.apiClient.host
-                Backend.apiClient.host = newHost
-                Backend.apiClient.me(handler: { (success, _, _) in
-                    if success {
-                        (menuNav.topViewController as? MenuViewController)?.reloadMenu()
-                    } else {
-                        Backend.apiClient.host = originalHost
-                    }
+            
+            if E.isDebug { // for dev/debugging use only
+                // For test wallets with a PIN of 111111, the PIN is auto entered on startup.
+                developerItems.append(MenuItem(title: "Auto-enter PIN", accessoryText: { UserDefaults.debugShouldAutoEnterPIN ? "ON" : "OFF" }) {
+                    _ = UserDefaults.toggleAutoEnterPIN()
+                    (menuNav.topViewController as? MenuViewController)?.reloadMenu()
                 })
-            }))
-
-            alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
-
-            menuNav.present(alert, animated: true, completion: nil)
-        })
-        
-        rootItems.append(MenuItem(title: "Developer Options", icon: nil, subMenu: developerItems, rootNav: menuNav, faqButton: nil))
-#endif
+            }
+            
+            // For test wallets, suppresses the paper key prompt on the home screen.
+            developerItems.append(MenuItem(title: "Suppress paper key prompt", accessoryText: { UserDefaults.debugShouldSuppressPaperKeyPrompt ? "ON" : "OFF" }) {
+                _ = UserDefaults.toggleSuppressPaperKeyPrompt()
+                (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+            })
+            
+            // Shows a preview of the paper key.
+            if let paperKey = self.primaryWalletManager.seedPhrase(pin: "111111") {
+                let words = paperKey.components(separatedBy: " ")
+                let preview = "\(words[0]) \(words[1])..."
+                developerItems.append(MenuItem(title: "Paper key preview", accessoryText: { UserDefaults.debugShouldShowPaperKeyPreview ? preview : "" }) {
+                    _ = UserDefaults.togglePaperKeyPreview()
+                    (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                })
+            }
+            
+            developerItems.append(MenuItem(title: "Reset User Defaults") {
+                UserDefaults.resetAll()
+                menuNav.showAlert(title: "", message: "User defaults reset")
+                (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+            })
+            
+            developerItems.append(MenuItem(title: "API Host", accessoryText: { Backend.apiClient.host }) {
+                let alert = UIAlertController(title: "Set API Host", message: nil, preferredStyle: .alert)
+                alert.addTextField(configurationHandler: { textField in
+                    textField.text = Backend.apiClient.host
+                    textField.keyboardType = .URL
+                    textField.clearButtonMode = .always
+                })
+                
+                alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { (action) in
+                    guard let newHost = alert.textFields?.first?.text else { return }
+                    let originalHost = Backend.apiClient.host
+                    Backend.apiClient.host = newHost
+                    Backend.apiClient.me(handler: { (success, _, _) in
+                        if success {
+                            (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                        } else {
+                            Backend.apiClient.host = originalHost
+                        }
+                    })
+                }))
+                
+                alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+                
+                menuNav.present(alert, animated: true, completion: nil)
+            })
+            
+            rootItems.append(MenuItem(title: "Developer Options", icon: nil, subMenu: developerItems, rootNav: menuNav, faqButton: nil))
+        }
         
         let rootMenu = MenuViewController(items: rootItems,
                                           title: S.Settings.title)
