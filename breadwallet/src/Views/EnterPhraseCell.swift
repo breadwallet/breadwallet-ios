@@ -47,6 +47,7 @@ class EnterPhraseCell : UICollectionViewCell {
 
     var didEnterSpace: (() -> Void)?
     var isWordValid: ((String) -> Bool)?
+    var didPasteWords: (([String]) -> Bool)?
 
     func disablePreviousButton() {
         previousField.tintColor = .secondaryShadow
@@ -155,6 +156,19 @@ extension EnterPhraseCell : UITextFieldDelegate {
         if hasDisplayedInvalidState {
             setColors(textField: textField)
         }
+    }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard E.isDebug || E.isTestFlight else { return true }
+        if string.count == UIPasteboard.general.string?.count,
+            let didPasteWords = didPasteWords,
+            string == UIPasteboard.general.string?.replacingOccurrences(of: "\n", with: " ") {
+            let words = string.components(separatedBy: " ")
+            if didPasteWords(words) {
+                return false
+            }
+        }
+        return true
     }
 
     private func setColors(textField: UITextField) {
