@@ -15,17 +15,20 @@ typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
 
-class SendViewController : UIViewController, Subscriber, ModalPresentable, Trackable {
+// TODO: refactor
+// swiftlint:disable type_body_length
 
-    //MARK - Public
+class SendViewController: UIViewController, Subscriber, ModalPresentable, Trackable {
+
+    // MARK: - Public
     var presentScan: PresentScan?
-    var presentVerifyPin: ((String, @escaping ((String) -> Void))->Void)?
-    var onPublishSuccess: (()->Void)?
+    var presentVerifyPin: ((String, @escaping ((String) -> Void)) -> Void)?
+    var onPublishSuccess: (() -> Void)?
     var parentView: UIView? //ModalPresentable
     
     var isPresentedFromLock = false
 
-    init(sender: Sender, currency: CurrencyDef, initialRequest: PaymentRequest? = nil) {
+    init(sender: Sender, currency: Currency, initialRequest: PaymentRequest? = nil) {
         self.currency = currency
         self.sender = sender
         self.initialRequest = initialRequest
@@ -37,7 +40,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
     }
 
-    //MARK - Private
+    // MARK: - Private
     deinit {
         Store.unsubscribe(self)
         NotificationCenter.default.removeObserver(self)
@@ -53,12 +56,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
     
     private let sender: Sender
-    private let currency: CurrencyDef
+    private let currency: Currency
     private let initialRequest: PaymentRequest?
     private var validatedProtoRequest: PaymentProtocolRequest?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
-    private var feeSelection: FeeLevel? = nil
+    private var feeSelection: FeeLevel?
     private var balance: UInt256 = 0
     private var amount: Amount? {
         didSet {
@@ -231,7 +234,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
     
     @objc private func pasteTapped() {
-        guard let pasteboard = UIPasteboard.general.string, pasteboard.utf8.count > 0 else {
+        guard let pasteboard = UIPasteboard.general.string, !pasteboard.utf8.isEmpty else {
             return showAlert(title: S.Alert.error, message: S.Send.emptyPasteboard, buttonLabel: S.Button.ok)
         }
 
@@ -254,7 +257,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
     
     private func validateSendForm() -> Bool {
-        guard let address = address, address.count > 0 else {
+        guard let address = address, !address.isEmpty else {
             showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             return false
         }
@@ -460,7 +463,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             
         case .ok:
             self.validatedProtoRequest = protoReq
-            break
             
         default:
             // unhandled error
@@ -520,7 +522,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         present(alertController, animated: true, completion: nil)
     }
 
-    //MARK: - Keyboard Notifications
+    // MARK: - Keyboard Notifications
     @objc private func keyboardWillShow(notification: Notification) {
         copyKeyboardChangeAnimation(notification: notification)
     }
@@ -543,12 +545,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 }
 
-extension SendViewController : ModalDisplayable {
+extension SendViewController: ModalDisplayable {
     var faqArticleId: String? {
         return ArticleIds.sendTx
     }
     
-    var faqCurrency: CurrencyDef? {
+    var faqCurrency: Currency? {
         return currency
     }
 

@@ -10,9 +10,9 @@ import UIKit
 
 private let buttonSize: CGFloat = 16.0
 
-class SecurityCenterCell : UIControl {
+class SecurityCenterCell: UIControl {
 
-    //MARK: - Public
+    // MARK: - Public
     var isCheckHighlighted: Bool = false {
         didSet {
             check.tintColor = isCheckHighlighted ? .primaryButton : .grayTextTint
@@ -26,7 +26,7 @@ class SecurityCenterCell : UIControl {
         setup()
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private func setup() {
         addSubview(title)
         addSubview(descriptionLabel)

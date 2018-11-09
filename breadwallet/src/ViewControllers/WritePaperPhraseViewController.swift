@@ -35,6 +35,8 @@ class WritePaperPhraseViewController: UIViewController {
             stepLabel.text = String(format: S.WritePaperPhrase.step, currentPhraseIndex + 1, phraseViews.count)
         }
     }
+    
+    private var notificationObservers = [String: NSObjectProtocol]()
 
     var lastWordSeen: (() -> Void)?
 
@@ -48,7 +50,9 @@ class WritePaperPhraseViewController: UIViewController {
     private let callback: () -> Void
 
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        notificationObservers.values.forEach { observer in
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     override func viewDidLoad() {
@@ -66,8 +70,9 @@ class WritePaperPhraseViewController: UIViewController {
         addConstraints()
         addButtonTargets()
 
-        NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { [weak self] note in
-            self?.dismiss(animated: true, completion: nil)
+        notificationObservers[NSNotification.Name.UIApplicationWillResignActive.rawValue] =
+            NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { [weak self] _ in
+                self?.dismiss(animated: true, completion: nil)
         }
 
         let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.writePhrase)
@@ -98,7 +103,13 @@ class WritePaperPhraseViewController: UIViewController {
         phraseViews.enumerated().forEach { index, phraseView in
             //The first phrase should initially be on the screen
             let constant = index == 0 ? 0.0 : phraseOffscreenOffset
-            let xConstraint = NSLayoutConstraint(item: phraseView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: constant)
+            let xConstraint = NSLayoutConstraint(item: phraseView,
+                                                 attribute: .centerX,
+                                                 relatedBy: .equal,
+                                                 toItem: view,
+                                                 attribute: .centerX,
+                                                 multiplier: 1.0,
+                                                 constant: constant)
             phraseView.xConstraint = xConstraint
             phraseView.constrain([
                 phraseView.widthAnchor.constraint(greaterThanOrEqualToConstant: PhraseView.defaultSize.width),
@@ -109,7 +120,13 @@ class WritePaperPhraseViewController: UIViewController {
         }
 
         stepLabel.constrain([
-                NSLayoutConstraint(item: stepLabel, attribute: .top, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: PhraseView.defaultSize.height/2.0 + C.padding[1]),
+                NSLayoutConstraint(item: stepLabel,
+                                   attribute: .top,
+                                   relatedBy: .equal,
+                                   toItem: view,
+                                   attribute: .centerY,
+                                   multiplier: 1.0,
+                                   constant: PhraseView.defaultSize.height/2.0 + C.padding[1]),
                 stepLabel.constraint(.centerX, toView: view, constant: 0.0),
                 stepLabel.constraint(.width, constant: 200.0) //The transitions are smoother if this view is forced to be wider than it needs to be
             ])

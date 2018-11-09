@@ -90,7 +90,7 @@ class ConfirmPhraseView: UIView {
     }
 }
 
-extension ConfirmPhraseView : UITextFieldDelegate {
+extension ConfirmPhraseView: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         validate()
     }

@@ -8,12 +8,12 @@
 
 import UIKit
 
-class SyncingHeaderView : UIView, Subscriber {
+class SyncingHeaderView: UIView, Subscriber {
 
     static let height: CGFloat = 40.0
     let syncIndicator = SyncingIndicator(style: .account)
     private let date = UILabel(font: .customBody(size: 12.0), color: .lightText)
-    private let currency: CurrencyDef
+    private let currency: Currency
     private var syncState: SyncState = .success {
         didSet {
             updateText()
@@ -24,7 +24,7 @@ class SyncingHeaderView : UIView, Subscriber {
             updateText()
         }
     }
-    init(currency: CurrencyDef) {
+    init(currency: Currency) {
         self.currency = currency
         super.init(frame: .zero)
         setupViews()

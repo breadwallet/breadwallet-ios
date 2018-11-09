@@ -1,4 +1,3 @@
-    
 //
 //  Main.swift
 //  breadwallet

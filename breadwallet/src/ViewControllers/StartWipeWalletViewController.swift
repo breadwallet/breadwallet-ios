@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StartWipeWalletViewController : UIViewController {
+class StartWipeWalletViewController: UIViewController {
 
     init(didTapNext: @escaping () -> Void) {
         self.didTapNext = didTapNext

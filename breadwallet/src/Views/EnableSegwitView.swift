@@ -8,16 +8,16 @@
 
 import UIKit
 
-class EnableSegwitView : UIView {
+class EnableSegwitView: UIView {
     
     private let label = UILabel.wrapping(font: .customBody(size: 13.0), color: .white)
     private let cancel = BRDButton(title: S.Button.cancel, type: .secondary)
     private let continueButton = BRDButton(title: S.Button.continueAction, type: .primary)
     
-    var didCancel: (()->Void)? {
+    var didCancel: (() -> Void)? {
         didSet { cancel.tap = didCancel }
     }
-    var didContinue: (()->Void)? {
+    var didContinue: (() -> Void)? {
         didSet { continueButton.tap = didContinue }
     }
     

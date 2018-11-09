@@ -8,9 +8,9 @@
 
 import UIKit
 
-class ModalViewController : UIViewController, Subscriber {
+class ModalViewController: UIViewController, Subscriber {
 
-    //MARK: - Public
+    // MARK: - Public
     var childViewController: UIViewController
 
     init<T: UIViewController>(childViewController: T) where T: ModalDisplayable {
@@ -25,7 +25,7 @@ class ModalViewController : UIViewController, Subscriber {
         super.init(nibName: nil, bundle: nil)
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let modalInfo: ModalDisplayable
     private let headerHeight: CGFloat = 49.0
     fileprivate let header: ModalHeaderView
@@ -153,7 +153,7 @@ class ModalViewController : UIViewController, Subscriber {
     }
 }
 
-extension ModalViewController : UIGestureRecognizerDelegate {
+extension ModalViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         let location = gestureRecognizer.location(in: view)
         if location.y < header.frame.minY {

@@ -33,7 +33,7 @@ extension NSNotification.Name {
 }
 
 protocol WalletManager: class {
-    var currency: CurrencyDef { get }
+    var currency: Currency { get }
     var peerManager: BRPeerManager? { get }
     var wallet: BRWallet? { get }
     var kvStore: BRReplicatedKVStore? { get set }
@@ -43,7 +43,7 @@ protocol WalletManager: class {
     func isOwnAddress(_ address: String) -> Bool
 }
 
-//MARK: - Wallet
+// MARK: - Wallet
 extension WalletManager {
 
     var peerManager: BRPeerManager? { return nil }
@@ -54,7 +54,7 @@ extension WalletManager {
     }
 }
 
-//MARK: - Phrases
+// MARK: - Phrases
 private struct AssociatedKeys {
     static var allWordsLists = "allWordsLists"
     static var allWords = "allWords"
@@ -62,30 +62,26 @@ private struct AssociatedKeys {
 
 extension WalletManager {
     var allWordsLists: [[NSString]] {
-        get {
-            guard let array = objc_getAssociatedObject(self, &AssociatedKeys.allWordsLists) as? [[NSString]]  else {
-                var array: [[NSString]] = []
-                addWords { array.append($0) }
-                objc_setAssociatedObject(self, &AssociatedKeys.allWordsLists, array, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-                return array
-            }
+        guard let array = objc_getAssociatedObject(self, &AssociatedKeys.allWordsLists) as? [[NSString]]  else {
+            var array: [[NSString]] = []
+            addWords { array.append($0) }
+            objc_setAssociatedObject(self, &AssociatedKeys.allWordsLists, array, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return array
         }
+        return array
     }
 
     var allWords: Set<String> {
-        get {
-            guard let array = objc_getAssociatedObject(self, &AssociatedKeys.allWords) as? Set<String>  else {
-                var set: Set<String> = Set()
-                addWords { set.formUnion($0.map { $0 as String }) }
-                objc_setAssociatedObject(self, &AssociatedKeys.allWords, set, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-                return set
-            }
-            return array
+        guard let array = objc_getAssociatedObject(self, &AssociatedKeys.allWords) as? Set<String>  else {
+            var set: Set<String> = Set()
+            addWords { set.formUnion($0.map { $0 as String }) }
+            objc_setAssociatedObject(self, &AssociatedKeys.allWords, set, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return set
         }
+        return array
     }
 
-    private func addWords(callback: (([NSString])->Void)){
+    private func addWords(callback: (([NSString]) -> Void)) {
         Bundle.main.localizations.forEach { lang in
             if let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist", inDirectory: nil, forLocalization: lang) {
                 if let words = NSArray(contentsOfFile: path) as? [NSString] {
@@ -112,12 +108,12 @@ extension WalletManager {
     }
 }
 
-//MARK: - Sounds
+// MARK: - Sounds
 extension WalletManager {
     func ping() {
         guard let url = Bundle.main.url(forResource: "coinflip", withExtension: "aiff") else { return }
         var id: SystemSoundID = 0
-        AudioServicesCreateSystemSoundID(url as CFURL , &id)
+        AudioServicesCreateSystemSoundID(url as CFURL, &id)
         AudioServicesAddSystemSoundCompletion(id, nil, nil, { soundId, _ in
             AudioServicesDisposeSystemSoundID(soundId)
         }, nil)

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MenuViewController : UITableViewController {
+class MenuViewController: UITableViewController {
     
     init(items: [MenuItem], title: String, faqButton: UIButton? = nil) {
         self.items = items

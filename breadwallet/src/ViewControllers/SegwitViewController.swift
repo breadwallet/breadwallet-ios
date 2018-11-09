@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SegwitViewController : UIViewController {
+class SegwitViewController: UIViewController {
     
     let logo = UIImageView(image: UIImage(named: "SegWitLogo"))
     let label = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
@@ -105,7 +105,7 @@ class SegwitViewController : UIViewController {
             self.enabledYConstraintStart?.isActive = false
             NSLayoutConstraint.activate([self.confirmXConstraintFinal!, self.enabledYConstraintEnd!])
             self.view.layoutIfNeeded()
-        }, completion: { completed in
+        }, completion: { _ in
             self.enabled.checkView.drawCircle()
             self.enabled.checkView.drawCheckBox()
         })
@@ -118,7 +118,7 @@ class SegwitViewController : UIViewController {
             self.buttonXConstraintEnd?.isActive = false
             NSLayoutConstraint.activate([self.confirmXConstraintStart!, self.buttonXConstraintStart!])
             self.view.layoutIfNeeded()
-        }, completion: { completed in
+        }, completion: { _ in
         })
     }
     
@@ -128,7 +128,7 @@ class SegwitViewController : UIViewController {
             self.confirmXConstraintStart?.isActive = false
             NSLayoutConstraint.activate([self.confirmXConstraintEnd!, self.buttonXConstraintEnd!])
             self.view.layoutIfNeeded()
-        }, completion: { completed in
+        }, completion: { _ in
         })
     }
     

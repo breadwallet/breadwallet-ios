@@ -26,6 +26,8 @@
 import Foundation
 import SafariServices
 
+// swiftlint:disable cyclomatic_complexity
+
 class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate {
     weak var controller: UIViewController?
     var hasBrowser = false
@@ -38,8 +40,8 @@ class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate
     func hook(_ router: BRHTTPRouter) {
         // opens any url that UIApplication.openURL can open
         // arg: "url" - the url to open
-        router.get("/_open_url") { (request, match) -> BRHTTPResponse in
-            if let encodedUrls = request.query["url"] , encodedUrls.count == 1 {
+        router.get("/_open_url") { (request, _) -> BRHTTPResponse in
+            if let encodedUrls = request.query["url"], encodedUrls.count == 1 {
                 if let decodedUrl = encodedUrls[0].removingPercentEncoding, let url = URL(string: decodedUrl) {
                     print("[BRLinkPlugin] /_open_url \(decodedUrl)")
                     UIApplication.shared.open(url)
@@ -52,12 +54,12 @@ class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate
         // opens the maps app for directions
         // arg: "address" - the destination address
         // arg: "from_point" - the origination point as a comma separated pair of floats - latitude,longitude
-        router.get("/_open_maps") { (request, match) -> BRHTTPResponse in
+        router.get("/_open_maps") { (request, _) -> BRHTTPResponse in
             let invalidResp = BRHTTPResponse(request: request, code: 400)
-            guard let toAddress = request.query["address"] , toAddress.count == 1 else {
+            guard let toAddress = request.query["address"], toAddress.count == 1 else {
                 return invalidResp
             }
-            guard let fromPoint = request.query["from_point"] , fromPoint.count == 1 else {
+            guard let fromPoint = request.query["from_point"], fromPoint.count == 1 else {
                 return invalidResp
             }
             guard let url = URL(string: "http://maps.apple.com/?daddr=\(toAddress[0])&spn=\(fromPoint[0])") else {

@@ -14,7 +14,7 @@ struct Amount {
     static let highPrecisionDigits = 8
     
     let amount: UInt256
-    let currency: CurrencyDef
+    let currency: Currency
     let rate: Rate?
     let minimumFractionDigits: Int?
     let maximumFractionDigits: Int
@@ -25,7 +25,7 @@ struct Amount {
     // MARK: - Init
     
     init(amount: UInt256,
-         currency: CurrencyDef,
+         currency: Currency,
          rate: Rate? = nil,
          minimumFractionDigits: Int? = nil,
          maximumFractionDigits: Int = Amount.normalPrecisionDigits,
@@ -39,7 +39,7 @@ struct Amount {
     }
     
     init(tokenString: String,
-         currency: CurrencyDef,
+         currency: Currency,
          locale: Locale = Locale.current,
          unit: CurrencyUnit? = nil,
          rate: Rate? = nil,
@@ -56,7 +56,7 @@ struct Amount {
     }
     
     init?(fiatString: String,
-          currency: CurrencyDef,
+          currency: Currency,
           rate: Rate,
           minimumFractionDigits: Int? = nil,
           maximumFractionDigits: Int = Amount.normalPrecisionDigits,
@@ -122,7 +122,7 @@ struct Amount {
         guard var formattedValue = tokenFormat.string(from: value as NSDecimalNumber) else { return "" }
         if amount > UInt256(0) && Double(formattedValue) == 0.0 {
             // small value requires more precision to be displayed
-            let formatter = tokenFormat.copy() as! NumberFormatter
+            guard let formatter = tokenFormat.copy() as? NumberFormatter else { return "" }
             formatter.maximumFractionDigits = unit.decimals
             formattedValue = formatter.string(from: value as NSDecimalNumber) ?? formattedValue
         }

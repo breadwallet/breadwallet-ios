@@ -19,7 +19,7 @@ struct TxListViewModel: TxViewModel {
     var shortDescription: String {
         let isComplete = tx.status == .complete
         
-        if let comment = comment, comment.count > 0, isComplete {
+        if let comment = comment, !comment.isEmpty, isComplete {
             return comment
         } else if let tokenCode = tokenTransferCode {
             return String(format: S.Transaction.tokenTransfer, tokenCode.uppercased())

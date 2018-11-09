@@ -11,7 +11,7 @@ import Foundation
 /// Representation of a transaction
 protocol TxViewModel {
     var tx: Transaction { get }
-    var currency: CurrencyDef { get }
+    var currency: Currency { get }
     var blockHeight: String { get }
     var longTimestamp: String { get }
     var status: TransactionStatus { get }
@@ -24,7 +24,7 @@ protocol TxViewModel {
 // Default and passthru values
 extension TxViewModel {
 
-    var currency: CurrencyDef { return tx.currency }
+    var currency: Currency { return tx.currency }
     var status: TransactionStatus { return tx.status }
     var direction: TransactionDirection { return tx.direction }
     var comment: String? { return tx.comment }
@@ -61,7 +61,7 @@ extension TxViewModel {
     }
     
     var tokenTransferCode: String? {
-        guard let code = tx.metaData?.tokenTransfer, code.count > 0 else { return nil }
+        guard let code = tx.metaData?.tokenTransfer, !code.isEmpty else { return nil }
         return code
     }
 }

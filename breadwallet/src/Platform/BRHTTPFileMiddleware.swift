@@ -25,7 +25,6 @@
 
 import Foundation
 
-
 open class BRHTTPFileMiddleware: BRHTTPMiddleware {
     var baseURL: URL
     var debugURL: URL?
@@ -38,7 +37,7 @@ open class BRHTTPFileMiddleware: BRHTTPMiddleware {
     open func handle(_ request: BRHTTPRequest, next: @escaping (BRHTTPMiddlewareResponse) -> Void) {
         var fileURL: URL!
         var body: Data!
-        var contentTypeHint: String? = nil
+        var contentTypeHint: String?
         var headers = [String: [String]]()
         if debugURL == nil {
             // fetch the file locally
@@ -54,7 +53,7 @@ open class BRHTTPFileMiddleware: BRHTTPMiddleware {
             headers["ETag"] = [etag]
             var modified = true
             // if the client sends an if-none-match header, determine if we have a newer version of the file
-            if let etagHeaders = request.headers["if-none-match"] , etagHeaders.count > 0 {
+            if let etagHeaders = request.headers["if-none-match"], !etagHeaders.isEmpty {
                 let etagHeader = etagHeaders[0]
                 if etag == etagHeader {
                     modified = false
@@ -97,7 +96,7 @@ open class BRHTTPFileMiddleware: BRHTTPMiddleware {
         headers["Content-Type"] = [contentTypeHint ?? fileURL.contentType]
         
         do {
-            let privReq = request as! BRHTTPRequestImpl
+            guard let privReq = request as? BRHTTPRequestImpl else { return assertionFailure() }
             let rangeHeader = try privReq.rangeHeader()
             if rangeHeader != nil {
                 let (end, start) = rangeHeader!

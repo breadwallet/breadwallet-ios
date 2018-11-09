@@ -16,23 +16,23 @@ private let largeSharePadding: CGFloat = 20.0
 
 typealias PresentShare = (String, UIImage) -> Void
 
-class ReceiveViewController : UIViewController, Subscriber, Trackable {
+class ReceiveViewController: UIViewController, Subscriber, Trackable {
 
-    //MARK - Public
+    // MARK: - Public
     
     // Invoked with a wallet address and optional QR code image. This var is set by the
     // ModalPresenter when the ReceiveViewController is created.
     var shareAddress: PresentShare?
     
-    init(currency: CurrencyDef, isRequestAmountVisible: Bool, isBTCLegacy: Bool = false) {
+    init(currency: Currency, isRequestAmountVisible: Bool, isBTCLegacy: Bool = false) {
         self.currency = currency
         self.isRequestAmountVisible = isRequestAmountVisible
         self.isBTCLegacy = isBTCLegacy
         super.init(nibName: nil, bundle: nil)
     }
 
-    //MARK - Private
-    private let currency: CurrencyDef
+    // MARK: - Private
+    private let currency: Currency
     private let isBTCLegacy: Bool
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 14.0))
@@ -234,12 +234,12 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     }
 }
 
-extension ReceiveViewController : ModalDisplayable {
+extension ReceiveViewController: ModalDisplayable {
     var faqArticleId: String? {
         return ArticleIds.receiveTx
     }
     
-    var faqCurrency: CurrencyDef? {
+    var faqCurrency: Currency? {
         return currency
     }
 

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ManageWalletViewController : UIViewController, ModalPresentable, Subscriber {
+class ManageWalletViewController: UIViewController, ModalPresentable, Subscriber {
 
     var parentView: UIView? //ModalPresentable
     private let textFieldLabel = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
@@ -83,7 +83,7 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
         }
     }
 
-    //MARK: - Keyboard Notifications
+    // MARK: - Keyboard Notifications
     @objc private func keyboardWillShow(notification: Notification) {
         copyKeyboardChangeAnimation(notification: notification)
     }
@@ -114,7 +114,7 @@ class ManageWalletViewController : UIViewController, ModalPresentable, Subscribe
     }
 }
 
-extension ManageWalletViewController : UITextFieldDelegate {
+extension ManageWalletViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         saveWalletName()
     }
@@ -134,12 +134,12 @@ extension ManageWalletViewController : UITextFieldDelegate {
     }
 }
 
-extension ManageWalletViewController : ModalDisplayable {
+extension ManageWalletViewController: ModalDisplayable {
     var faqArticleId: String? {
         return ArticleIds.manageWallet
     }
     
-    var faqCurrency: CurrencyDef? {
+    var faqCurrency: Currency? {
         return nil
     }
 

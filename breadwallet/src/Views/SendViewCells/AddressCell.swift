@@ -8,9 +8,9 @@
 
 import UIKit
 
-class AddressCell : UIView {
+class AddressCell: UIView {
 
-    init(currency: CurrencyDef) {
+    init(currency: Currency) {
         self.currency = currency
         super.init(frame: .zero)
         setupViews()
@@ -45,7 +45,7 @@ class AddressCell : UIView {
     fileprivate let tapView = UIView()
     private let border = UIView(color: .secondaryShadow)
     
-    fileprivate let currency: CurrencyDef
+    fileprivate let currency: Currency
 
     private func setupViews() {
         addSubviews()
@@ -132,7 +132,7 @@ class AddressCell : UIView {
     }
 }
 
-extension AddressCell : UITextFieldDelegate {
+extension AddressCell: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         didBeginEditing?()
         contentLabel.isHidden = true

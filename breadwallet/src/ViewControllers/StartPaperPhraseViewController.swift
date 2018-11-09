@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StartPaperPhraseViewController : UIViewController {
+class StartPaperPhraseViewController: UIViewController {
 
     init(callback: @escaping () -> Void) {
         self.callback = callback

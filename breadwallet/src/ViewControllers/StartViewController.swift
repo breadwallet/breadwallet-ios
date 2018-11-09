@@ -8,16 +8,16 @@
 
 import UIKit
 
-class StartViewController : UIViewController {
+class StartViewController: UIViewController {
 
-    //MARK: - Public
+    // MARK: - Public
     init(didTapCreate: @escaping () -> Void, didTapRecover: @escaping () -> Void) {
         self.didTapRecover = didTapRecover
         self.didTapCreate = didTapCreate
         super.init(nibName: nil, bundle: nil)
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let logoBackground = MotionGradientView()
     private let messageBackground = MotionGradientView()
     private let message = CutoutLabel(font: .customMedium(size: 18.0), color: .whiteTint)
@@ -59,7 +59,13 @@ class StartViewController : UIViewController {
 
     private func addConstraints() {
         background.constrain(toSuperviewEdges: nil)
-        let yConstraint = NSLayoutConstraint(item: logoBackground, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 0.5, constant: 0.0)
+        let yConstraint = NSLayoutConstraint(item: logoBackground,
+                                             attribute: .centerY,
+                                             relatedBy: .equal,
+                                             toItem: view,
+                                             attribute: .centerY,
+                                             multiplier: 0.5,
+                                             constant: 0.0)
         logoBackground.constrain([
             logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.38, constant: 1.0),
             logoBackground.heightAnchor.constraint(equalTo: logoBackground.widthAnchor, multiplier: logo.image!.size.height/logo.image!.size.width, constant: 1.0),

@@ -107,7 +107,7 @@ class SyncingIndicator: UIView {
     }
 }
 
-class ProgressCircle : UIView {
+class ProgressCircle: UIView {
     private let circle = CAShapeLayer()
     private var hasPerformedLayout = false
     private let lineWidth: CGFloat = 2.0

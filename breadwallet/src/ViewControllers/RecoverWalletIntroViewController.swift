@@ -8,15 +8,15 @@
 
 import UIKit
 
-class RecoverWalletIntroViewController : UIViewController {
+class RecoverWalletIntroViewController: UIViewController {
 
-    //MARK: - Public
+    // MARK: - Public
     init(didTapNext: @escaping () -> Void) {
         self.didTapNext = didTapNext
         super.init(nibName: nil, bundle: nil)
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let didTapNext: () -> Void
     private let header = RadialGradientView(backgroundColor: .purple)
     private let nextButton = BRDButton(title: S.RecoverWallet.next, type: .primary)

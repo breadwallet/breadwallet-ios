@@ -25,7 +25,6 @@
 
 import Foundation
 
-
 enum BRTarError: Error {
     case unknown
     case fileDoesntExist
@@ -124,7 +123,7 @@ class BRTar {
                 tarFh.seek(toFileOffset: loc + tarBlockSize)
                 let maxSize = tarMaxBlockLoadInMemory * tarBlockSize
                 while size > maxSize {
-                    autoreleasepool(invoking: { () -> () in
+                    autoreleasepool(invoking: { () -> Void in
                         destFh.write(tarFh.readData(ofLength: Int(maxSize)))
                         size -= maxSize
                     })
@@ -132,7 +131,6 @@ class BRTar {
                 destFh.write(tarFh.readData(ofLength: Int(size)))
                 destFh.closeFile()
                 log("success writing file")
-                break
             case .directory:
                 let name = try readNameAtLocation(loc, fromHandle: tarFh)
                 log("got new directory name \(name)")
@@ -140,16 +138,13 @@ class BRTar {
                 log("will create directory at \(dirPath)")
                 try fm.createDirectory(atPath: dirPath, withIntermediateDirectories: true, attributes: nil)
                 log("success creating directory")
-                break
             case .nullBlock:
                 break
             case .headerBlock:
                 blockCount += 1
-                break
             case .unsupported:
                 let size = readSizeAtLocation(loc, fromHandle: tarFh)
                 blockCount += size / tarBlockSize
-                break
             case .invalid:
                 log("Invalid block encountered")
                 throw BRTarError.unknown

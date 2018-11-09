@@ -8,21 +8,21 @@
 
 import UIKit
 
-class PresentModalAnimator : NSObject {
+class PresentModalAnimator: NSObject {
 
-    //MARK: - Public
+    // MARK: - Public
     init(shouldCoverBottomGap: Bool, completion: @escaping () -> Void) {
         self.completion = completion
         self.shouldCoverBottomGap = shouldCoverBottomGap
     }
 
-    //MARK: - Private
+    // MARK: - Private
     fileprivate let completion: () -> Void
     fileprivate let shouldCoverBottomGap: Bool
 
 }
 
-extension PresentModalAnimator : UIViewControllerAnimatedTransitioning {
+extension PresentModalAnimator: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.4
     }

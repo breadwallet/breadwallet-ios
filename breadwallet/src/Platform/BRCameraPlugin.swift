@@ -33,7 +33,7 @@ UINavigationControllerDelegate, CameraOverlayDelegate {
         //   - 404: Camera is not available on this device
         //   - 423: Multiple concurrent take_picture requests. Only one take_picture request may be in flight at once.
         //
-        router.get("/_camera/take_picture") { (request, match) -> BRHTTPResponse in
+        router.get("/_camera/take_picture") { (request, _) -> BRHTTPResponse in
             if self.response != nil {
                 print("[BRCameraPlugin] already taking a picture")
                 return BRHTTPResponse(request: request, code: 423)
@@ -56,7 +56,7 @@ UINavigationControllerDelegate, CameraOverlayDelegate {
                 picker.cameraCaptureMode = .photo
                 
                 // set overlay
-                if let overlay = request.query["overlay"] , overlay.count == 1 {
+                if let overlay = request.query["overlay"], overlay.count == 1 {
                     print(["BRCameraPlugin] overlay = \(overlay)"])
                     let screenBounds = UIScreen.main.bounds
                     if overlay[0] == "id" {
@@ -88,7 +88,7 @@ UINavigationControllerDelegate, CameraOverlayDelegate {
         //
         router.get("/_camera/picture/(id)") { (request, match) -> BRHTTPResponse in
             var id: String!
-            if let ids = match["id"] , ids.count == 1 {
+            if let ids = match["id"], ids.count == 1 {
                 id = ids[0]
             } else {
                 return BRHTTPResponse(request: request, code: 500)
@@ -96,9 +96,12 @@ UINavigationControllerDelegate, CameraOverlayDelegate {
             let resp = BRHTTPResponse(async: request)
             do {
                 // read img
-                var imgDat: [UInt8]
+                var imgDat: [UInt8] = []
                 if id == "test" {
-                    imgDat = [UInt8](try! Data(contentsOf: URL(string: "http://i.imgur.com/VG2UvcY.jpg")!))
+                    if let url = URL(string: "http://i.imgur.com/VG2UvcY.jpg"),
+                        let data = try? Data(contentsOf: url) {
+                        imgDat = [UInt8](data)
+                    }
                 } else {
                     imgDat = try self.readImage(id)
                 }
@@ -113,7 +116,7 @@ UINavigationControllerDelegate, CameraOverlayDelegate {
                 imgDat = [UInt8](scaledImageDat)
                 // return img to client
                 var contentType = "image/jpeg"
-                if let b64opt = request.query["base64"], b64opt.count > 0 {
+                if let b64opt = request.query["base64"], !b64opt.isEmpty {
                     contentType = "text/plain"
                     let b64 = "data:image/jpeg;base64," + Data(imgDat).base64EncodedString()
                     guard let b64encoded = b64.data(using: .utf8) else {
@@ -145,7 +148,7 @@ UINavigationControllerDelegate, CameraOverlayDelegate {
     }
     
     open func imagePickerController(_ picker: UIImagePickerController,
-                                    didFinishPickingMediaWithInfo info: [String : Any]) {
+                                    didFinishPickingMediaWithInfo info: [String: Any]) {
         defer {
             DispatchQueue.main.async {
                 picker.dismiss(animated: true, completion: nil)
@@ -228,7 +231,7 @@ enum ImageError: Error {
     case couldntRead
 }
 
-protocol CameraOverlayDelegate {
+protocol CameraOverlayDelegate: class {
     func takePhoto()
     func cancelPhoto()
 }
@@ -238,7 +241,7 @@ protocol CameraOverlay {
 }
 
 class IDCameraOverlay: UIView, CameraOverlay {
-    var delegate: CameraOverlayDelegate?
+    weak var delegate: CameraOverlayDelegate?
     let takePhotoButton: UIButton
     let cancelButton: UIButton
     let overlayRect: CGRect
@@ -301,7 +304,7 @@ class IDCameraOverlay: UIView, CameraOverlay {
         
         let str = S.CameraPlugin.centerInstruction as NSString
         
-        let style = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+        let style = NSMutableParagraphStyle()
         style.alignment = .center
         let attr = [
             NSAttributedStringKey.paragraphStyle: style,

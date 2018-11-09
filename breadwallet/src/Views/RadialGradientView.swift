@@ -8,16 +8,16 @@
 
 import UIKit
 
-class RadialGradientView : UIView {
+class RadialGradientView: UIView {
 
-    //MARK: - Public
+    // MARK: - Public
     init(backgroundColor: UIColor, offset: CGFloat = 0.0) {
         self.offset = offset
         super.init(frame: .zero)
         self.backgroundColor = backgroundColor
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let offset: CGFloat
 
     override func draw(_ rect: CGRect) {
