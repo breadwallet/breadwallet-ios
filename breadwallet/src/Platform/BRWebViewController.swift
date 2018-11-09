@@ -27,9 +27,8 @@ import Foundation
 import UIKit
 import WebKit
 
-
 @available(iOS 8.0, *)
-@objc open class BRWebViewController : UIViewController, WKNavigationDelegate, BRWebSocketClient {
+@objc open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSocketClient {
     var wkProcessPool: WKProcessPool
     var webView: WKWebView?
     var bundleName: String
@@ -62,7 +61,7 @@ import WebKit
     var webViewInfo: [String: Any] {
         return [
             "visible": didAppear,
-            "loaded": didLoad,
+            "loaded": didLoad
         ]
     }
     
@@ -71,6 +70,8 @@ import WebKit
     }
     
     private let messageUIPresenter = MessageUIPresenter()
+
+    private var notificationObservers = [String: NSObjectProtocol]()
     
     init(bundleName: String, mountPoint: String = "/", walletManagers: [String: WalletManager]) {
         wkProcessPool = WKProcessPool()
@@ -88,6 +89,9 @@ import WebKit
     }
     
     deinit {
+        notificationObservers.values.forEach { observer in
+            NotificationCenter.default.removeObserver(observer)
+        }
         stopServer()
     }
     
@@ -117,17 +121,19 @@ import WebKit
         view.addSubview(webView!)
         
         let center = NotificationCenter.default
-        center.addObserver(forName: .UIApplicationDidBecomeActive, object: nil, queue: .main) { [weak self] (_) in
-            self?.didAppear = true
-            if let info = self?.webViewInfo {
-                self?.sendToAllSockets(data: info)
-            }
+        notificationObservers[Notification.Name.UIApplicationDidBecomeActive.rawValue] =
+            center.addObserver(forName: .UIApplicationDidBecomeActive, object: nil, queue: .main) { [weak self] (_) in
+                self?.didAppear = true
+                if let info = self?.webViewInfo {
+                    self?.sendToAllSockets(data: info)
+                }
         }
-        center.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: .main) { [weak self] (_) in
-            self?.didAppear = false
-            if let info = self?.webViewInfo {
-                self?.sendToAllSockets(data: info)
-            }
+        notificationObservers[Notification.Name.UIApplicationWillResignActive.rawValue] =
+            center.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: .main) { [weak self] (_) in
+                self?.didAppear = false
+                if let info = self?.webViewInfo {
+                    self?.sendToAllSockets(data: info)
+                }
         }
         self.messageUIPresenter.presenter = self
     }
@@ -163,7 +169,7 @@ import WebKit
                 let activity = BRActivityViewController(message: S.Webview.dismiss)
                 myself.present(activity, animated: true, completion: nil)
                 Backend.apiClient.updateBundles(completionHandler: { results in
-                    results.forEach({ message, err in
+                    results.forEach({ _, err in
                         if err != nil {
                             print("[BRWebViewController] error updating bundle: \(String(describing: err))")
                         }
@@ -233,7 +239,7 @@ import WebKit
 
     func navigate(to: String) {
         let js = "window.location = '\(to)';"
-        webView?.evaluateJavaScript(js, completionHandler: { result, error in
+        webView?.evaluateJavaScript(js, completionHandler: { _, error in
             if let error = error {
                 print("WEBVIEW navigate to error: \(String(describing: error))")
             }
@@ -244,7 +250,7 @@ import WebKit
     // contains th string "webpack" and will set our debugEndpoint to whatever that 
     // resolves to. this allows us to debug bundles over the network without complicated setup
     fileprivate func setupBonjour() {
-        let _ = bonjourBrowser.findService("_http._tcp") { [weak self] (services) in
+        _ = bonjourBrowser.findService("_http._tcp") { [weak self] (services) in
             for svc in services {
                 if !svc.name.lowercased().contains("webpack") {
                     continue
@@ -308,7 +314,7 @@ import WebKit
         router.plugin(BRKVStorePlugin(client: Backend.apiClient))
         
         // GET /_close closes the browser modal
-        router.get("/_close") { [weak self] (request, match) -> BRHTTPResponse in
+        router.get("/_close") { [weak self] (request, _) -> BRHTTPResponse in
             DispatchQueue.main.async {
                 self?.closeNow()
             }
@@ -319,7 +325,7 @@ import WebKit
         // Status codes:
         //   - 200: Presented email UI
         //   - 400: No address param provided
-        router.get("_email") { [weak self] (request, match) -> BRHTTPResponse in
+        router.get("_email") { [weak self] (request, _) -> BRHTTPResponse in
             if let email = request.query["address"], email.count == 1 {
                 DispatchQueue.main.async {
                     self?.messageUIPresenter.presentMailCompose(emailAddress: email[0])
@@ -355,8 +361,9 @@ import WebKit
     
     // MARK: - navigation delegate
     
-    open func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
-                        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+    open func webView(_ webView: WKWebView,
+                      decidePolicyFor navigationAction: WKNavigationAction,
+                      decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url, let host = url.host, let port = (url as NSURL).port {
             if host == server.listenAddress || port.int32Value == Int32(server.port) {
                 return decisionHandler(.allow)

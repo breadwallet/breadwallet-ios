@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RootNavigationController : UINavigationController {
+class RootNavigationController: UINavigationController {
 
     var walletManager: BTCWalletManager? {
         didSet {
@@ -54,7 +54,7 @@ class RootNavigationController : UINavigationController {
     }
 }
 
-extension RootNavigationController : UINavigationControllerDelegate {
+extension RootNavigationController: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
         if viewController is HomeScreenViewController {
             UserDefaults.selectedCurrencyCode = nil

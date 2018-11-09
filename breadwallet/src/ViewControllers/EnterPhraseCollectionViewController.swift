@@ -10,9 +10,9 @@ import UIKit
 
 private let itemHeight: CGFloat = 50.0
 
-class EnterPhraseCollectionViewController : UICollectionViewController {
+class EnterPhraseCollectionViewController: UICollectionViewController {
 
-    //MARK: - Public
+    // MARK: - Public
     var didFinishPhraseEntry: ((String) -> Void)?
     var height: CGFloat {
         return itemHeight * 4.0
@@ -29,7 +29,7 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         super.init(collectionViewLayout: layout)
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let cellIdentifier = "CellIdentifier"
     private let walletManager: BTCWalletManager
     private var phrase: String {
@@ -54,7 +54,7 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         becomeFirstResponder(atIndex: 0)
     }
 
-    //MARK: - UICollectionViewDataSource
+    // MARK: - UICollectionViewDataSource
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 12
     }
@@ -98,7 +98,7 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         return item
     }
 
-    //MARK: - Extras
+    // MARK: - Extras
     private func becomeFirstResponder(atIndex: Int) {
         guard let phraseCell = collectionView?.cellForItem(at: IndexPath(item: atIndex, section: 0)) as? EnterPhraseCell else { return }
         phraseCell.textField.becomeFirstResponder()

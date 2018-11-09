@@ -13,7 +13,7 @@ import UIKit
 // MARK: - Protocols
 
 /// Represents common properties of cryptocurrency types
-public protocol CurrencyDef {
+public protocol Currency {
     /// Ticker code -- assumed to be unique
     var code: String { get }
     /// Primary unit symbol
@@ -26,7 +26,7 @@ public protocol CurrencyDef {
     /// URL scheme for payment requests
     var urlSchemes: [String]? { get }
     /// Returns true if the currency ticker codes match
-    func matches(_ other: CurrencyDef) -> Bool
+    func matches(_ other: Currency) -> Bool
     /// Checks address validity in currency-specific format
     func isValidAddress(_ address: String) -> Bool
     /// Returns a URI with the given address
@@ -49,17 +49,17 @@ public protocol CurrencyDef {
     func symbol(forUnit unit: CurrencyUnit) -> String
 }
 
-public extension CurrencyDef {
+public extension Currency {
     var urlSchemes: [String]? {
         return nil
     }
     
-    func matches(_ other: CurrencyDef) -> Bool {
+    func matches(_ other: Currency) -> Bool {
         return self.code == other.code
     }
     
     func addressURI(_ address: String) -> String? {
-        guard let schemes = urlSchemes, schemes.count > 0, isValidAddress(address) else { return nil }
+        guard let schemes = urlSchemes, !schemes.isEmpty, isValidAddress(address) else { return nil }
         return "\(schemes[0]):\(address)"
     }
     
@@ -99,7 +99,7 @@ public extension CurrencyDef {
 
 // MARK: - Images
 
-extension CurrencyDef {
+extension Currency {
     public var imageSquareBackground: UIImage? {
         if let baseURL = AssetArchive(name: imageBundleName, apiClient: Backend.apiClient)?.extractedUrl {
             let path = baseURL.appendingPathComponent("white-square-bg").appendingPathComponent(code.lowercased()).appendingPathExtension("png")
@@ -149,7 +149,7 @@ public struct TokenUnit: CurrencyUnit {
 /// MARK: - Currency Definitions
 
 /// Bitcoin-compatible currency type
-public struct Bitcoin: CurrencyDef {
+public struct Bitcoin: Currency {
     
     public enum Units: Int, CurrencyUnit {
         case satoshi = 0
@@ -225,7 +225,7 @@ public struct Bitcoin: CurrencyDef {
 }
 
 /// Ethereum-compatible currency type
-public struct Ethereum: CurrencyDef {
+public struct Ethereum: Currency {
     
     enum Units: Int, CurrencyUnit {
         case wei = 0
@@ -261,7 +261,7 @@ public struct Ethereum: CurrencyDef {
 }
 
 /// Ethereum ERC20 token currency type
-public struct ERC20Token: CurrencyDef {
+public struct ERC20Token: Currency {
     public let name: String
     public let code: String
     public let symbol: String
@@ -305,7 +305,7 @@ extension ERC20Token: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         // on testnet all tokens get the BRD testnet address
         let contractAddress = E.isTestnet ? Currencies.brd.address : try container.decode(String.self, forKey: .address)
-        guard contractAddress.count > 0 else {
+        guard !contractAddress.isEmpty else {
             throw DecodingError.dataCorruptedError(forKey: .address, in: container, debugDescription: "Invalid contract address")
         }
         address = contractAddress
@@ -355,7 +355,8 @@ public struct Currencies {
     static let btc = Bitcoin(name: "Bitcoin",
                              code: "BTC",
                              symbol: S.Symbols.btc,
-                             colors: (UIColor(red:0.972549, green:0.623529, blue:0.200000, alpha:1.0), UIColor(red:0.898039, green:0.505882, blue:0.031373, alpha:1.0)),
+                             colors: (UIColor(red: 0.972549, green: 0.623529, blue: 0.200000, alpha: 1.0),
+                                      UIColor(red: 0.898039, green: 0.505882, blue: 0.031373, alpha: 1.0)),
                              dbPath: "BreadWallet.sqlite",
                              forkId: 0,
                              urlSchemes: ["bitcoin"])
@@ -363,7 +364,8 @@ public struct Currencies {
     static let bch = Bitcoin(name: "Bitcoin Cash",
                              code: "BCH",
                              symbol: S.Symbols.btc,
-                             colors: (UIColor(red:0.278431, green:0.521569, blue:0.349020, alpha:1.0), UIColor(red:0.278431, green:0.521569, blue:0.349020, alpha:1.0)),
+                             colors: (UIColor(red: 0.278431, green: 0.521569, blue: 0.349020, alpha: 1.0),
+                                      UIColor(red: 0.278431, green: 0.521569, blue: 0.349020, alpha: 1.0)),
                              dbPath: "BreadWallet-bch.sqlite",
                              forkId: 0x40,
                              urlSchemes: E.isTestnet ? ["bchtest", "bitcoincash"] :  ["bitcoincash"])
@@ -371,7 +373,8 @@ public struct Currencies {
     static let eth = Ethereum(name: "Ethereum",
                               code: "ETH",
                               symbol: S.Symbols.eth,
-                              colors: (UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0), UIColor(red:0.37, green:0.44, blue:0.64, alpha:1.0)),
+                              colors: (UIColor(red: 0.37, green: 0.44, blue: 0.64, alpha: 1.0),
+                                       UIColor(red: 0.37, green: 0.44, blue: 0.64, alpha: 1.0)),
                               urlSchemes: ["ethereum", "ether"])
     
     static let brd = ERC20Token(name: "BRD",

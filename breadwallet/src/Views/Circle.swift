@@ -46,7 +46,7 @@ enum CircleStyle {
     case unfilled
 }
 
-class ClearCircle : UIView {
+class ClearCircle: UIView {
 
     private var didLayout = false
     private let style: CircleStyle

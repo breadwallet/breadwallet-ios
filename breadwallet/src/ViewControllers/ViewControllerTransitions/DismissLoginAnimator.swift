@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DismissLoginAnimator : NSObject, UIViewControllerAnimatedTransitioning {
+class DismissLoginAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.4
@@ -20,8 +20,8 @@ class DismissLoginAnimator : NSObject, UIViewControllerAnimatedTransitioning {
         guard let fromView = transitionContext.view(forKey: .from) else { assert(false, "Missing from view"); return }
         UIView.animate(withDuration: duration, animations: {
             fromView.alpha = 0.0
-        }) { _ in
+        }, completion: { _ in
             transitionContext.completeTransition(true)
-        }
+        })
     }
 }

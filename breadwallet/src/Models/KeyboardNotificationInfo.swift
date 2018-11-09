@@ -18,7 +18,7 @@ struct KeyboardNotificationInfo {
     }
     let animationDuration: Double
 
-    init?(_ userInfo: [AnyHashable : Any]?) {
+    init?(_ userInfo: [AnyHashable: Any]?) {
         guard let userInfo = userInfo else { return nil }
         guard let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue,
             let startFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue,

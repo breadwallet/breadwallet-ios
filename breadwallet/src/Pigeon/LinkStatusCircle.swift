@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LinkStatusCircle : UIView {
+class LinkStatusCircle: UIView {
 
     private let circleLayer = CAShapeLayer()
     private let checkLayer = CAShapeLayer()

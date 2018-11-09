@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CheckView : UIView, AnimatableIcon {
+class CheckView: UIView, AnimatableIcon {
 
     public func animate() {
         let check = UIBezierPath()

@@ -16,7 +16,7 @@ extension BRAPIClient {
     func sendLaunchEvent(userAgent: String) {
         DispatchQueue.global(qos: .background).async { [weak self] in
             guard let `self` = self else { return }
-            self.getAttributionDetails() { attributionInfo in
+            self.getAttributionDetails { attributionInfo in
                 let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString
                 let payload = MetricsPayload(data: MetricsPayloadData.launch(LaunchData(bundles: self.bundles,
                                                                                         userAgent: userAgent,
@@ -61,7 +61,7 @@ extension BRAPIClient {
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.setValue("application/json", forHTTPHeaderField: "Accept")
         req.httpBody = data
-        self.dataTaskWithRequest(req, authenticated: true, handler: { data, response, error in
+        self.dataTaskWithRequest(req, authenticated: true, handler: { _, _, _ in
         }).resume()
     }
     
@@ -91,7 +91,7 @@ extension BRAPIClient {
     }
 }
 
-fileprivate struct MetricsPayload : Encodable {
+private struct MetricsPayload: Encodable {
     let metric: String
     let data: MetricsPayloadData
     
@@ -101,7 +101,7 @@ fileprivate struct MetricsPayload : Encodable {
     }
 }
 
-fileprivate enum MetricsPayloadData: Encodable {
+private enum MetricsPayloadData: Encodable {
     case launch(LaunchData)
     case checkout(CheckoutData)
     case enableSegWit(EnableSegWitData)
@@ -109,13 +109,13 @@ fileprivate enum MetricsPayloadData: Encodable {
     
     var metric: String {
         switch self {
-        case .launch(_):
+        case .launch:
             return "launch"
-        case .checkout(_):
+        case .checkout:
             return "pigeon-transaction"
-        case .enableSegWit(_):
+        case .enableSegWit:
             return "segWit"
-        case .viewLegacyAddress(_):
+        case .viewLegacyAddress:
             return "segWit"
         }
     }
@@ -136,16 +136,16 @@ fileprivate enum MetricsPayloadData: Encodable {
 }
 
 extension MetricsPayload {
-    static var enableSegWit : MetricsPayload {
+    static var enableSegWit: MetricsPayload {
         return MetricsPayload(data: MetricsPayloadData.enableSegWit(EnableSegWitData()))
     }
     
-    static var viewLegacyAddress : MetricsPayload {
+    static var viewLegacyAddress: MetricsPayload {
         return MetricsPayload(data: MetricsPayloadData.viewLegacyAddress(ViewLegacyAddressData()))
     }
 }
 
-fileprivate struct LaunchData: Encodable {
+private struct LaunchData: Encodable {
     let bundles: [String: String]
     let userAgent: String
     let idfa: String
@@ -165,7 +165,7 @@ fileprivate struct LaunchData: Encodable {
     }
 }
 
-fileprivate struct CheckoutData: Encodable {
+private struct CheckoutData: Encodable {
     let transactionHash: String
     let fromCurrency: String
     let fromAmount: String
@@ -175,12 +175,12 @@ fileprivate struct CheckoutData: Encodable {
     let timestamp: Int
 }
 
-fileprivate struct EnableSegWitData: Encodable {
+private struct EnableSegWitData: Encodable {
     let eventType = "enableSegWit"
     let timestamp = Int(Date().timeIntervalSince1970)
 }
 
-fileprivate struct ViewLegacyAddressData: Encodable {
+private struct ViewLegacyAddressData: Encodable {
     let eventType = "viewLegacyAddress"
     let timestamp = Int(Date().timeIntervalSince1970)
 }

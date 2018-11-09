@@ -54,7 +54,7 @@ class TxAmountCell: UITableViewCell, Subscriber {
         tokenAmountLabel.constrain([
             tokenAmountLabel.constraint(.top, toView: container),
             tokenAmountLabel.constraint(.leading, toView: container),
-            tokenAmountLabel.constraint(.trailing, toView: container),
+            tokenAmountLabel.constraint(.trailing, toView: container)
             ])
         fiatAmountLabel.constrain([
             fiatAmountLabel.constraint(toBottom: tokenAmountLabel, constant: 0),
@@ -82,7 +82,6 @@ class TxAmountCell: UITableViewCell, Subscriber {
                                                    attributes: [.font: largeFont,
                                                                 .foregroundColor: tokenColor])
         tokenAmountLabel.attributedText = amountText
-        
         
         // fiat amount label
         

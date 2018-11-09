@@ -12,11 +12,11 @@ import BRCore
 private let currencyHeight: CGFloat = 80.0
 private let feeHeight: CGFloat = 130.0
 
-class AmountViewController : UIViewController, Trackable {
+class AmountViewController: UIViewController, Trackable {
     
-    private let currency: CurrencyDef
+    private let currency: Currency
 
-    init(currency: CurrencyDef, isPinPadExpandedAtLaunch: Bool, isRequesting: Bool = false) {
+    init(currency: Currency, isPinPadExpandedAtLaunch: Bool, isRequesting: Bool = false) {
         self.currency = currency
         self.isPinPadExpandedAtLaunch = isPinPadExpandedAtLaunch
         self.isRequesting = isRequesting
@@ -27,7 +27,10 @@ class AmountViewController : UIViewController, Trackable {
             self.currencyToggle = BRDButton(title: title, type: .tertiary)
         }
         self.feeSelector = FeeSelector()
-        self.pinPad = PinPadViewController(style: .white, keyboardType: .decimalPad, maxDigits: currency.state?.maxDigits ?? currency.commonUnit.decimals, shouldShowBiometrics: false)
+        self.pinPad = PinPadViewController(style: .white,
+                                           keyboardType: .decimalPad,
+                                           maxDigits: currency.state?.maxDigits ?? currency.commonUnit.decimals,
+                                           shouldShowBiometrics: false)
         self.canEditFee = (currency is Bitcoin)
         super.init(nibName: nil, bundle: nil)
     }
@@ -137,7 +140,9 @@ class AmountViewController : UIViewController, Trackable {
             feeContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         feeContainer.arrowXLocation = C.padding[4]
 
-        let borderTop = isRequesting ? border.topAnchor.constraint(equalTo: currencyToggle.bottomAnchor, constant: C.padding[2]) : border.topAnchor.constraint(equalTo: feeContainer.bottomAnchor)
+        let borderTop = isRequesting
+            ? border.topAnchor.constraint(equalTo: currencyToggle.bottomAnchor, constant: C.padding[2])
+            : border.topAnchor.constraint(equalTo: feeContainer.bottomAnchor)
         border.constrain([
             border.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             borderTop,
@@ -208,7 +213,7 @@ class AmountViewController : UIViewController, Trackable {
             self?.toggleFeeSelector()
         }
         editFee.setImage(#imageLiteral(resourceName: "Edit"), for: .normal)
-        editFee.imageEdgeInsets = UIEdgeInsetsMake(15.0, 15.0, 15.0, 15.0)
+        editFee.imageEdgeInsets = UIEdgeInsets(top: 15.0, left: 15.0, bottom: 15.0, right: 15.0)
         editFee.tintColor = .grayTextTint
         editFee.isHidden = true
         feeLabel.numberOfLines = 0
@@ -231,7 +236,7 @@ class AmountViewController : UIViewController, Trackable {
 
     private func handlePinPadUpdate(output: String) {
         let currencyDecimalSeparator = NumberFormatter().currencyDecimalSeparator ?? "."
-        placeholder.isHidden = output.utf8.count > 0 ? true : false
+        placeholder.isHidden = output.utf8.isEmpty ? false : true
         minimumFractionDigits = 0 //set default
         if let decimalLocation = output.range(of: currencyDecimalSeparator)?.upperBound {
             let locationValue = output.distance(from: output.endIndex, to: decimalLocation)
@@ -271,7 +276,7 @@ class AmountViewController : UIViewController, Trackable {
             output = output.appending(NumberFormatter().currencyDecimalSeparator)
         }
         amountLabel.text = output
-        placeholder.isHidden = output.utf8.count > 0 ? true : false
+        placeholder.isHidden = output.utf8.isEmpty ? false : true
     }
 
     func updateBalanceLabel() {
@@ -306,7 +311,7 @@ class AmountViewController : UIViewController, Trackable {
         UIView.spring(C.animationDuration, animations: {
             self.togglePinPad()
             self.parent?.parent?.view.layoutIfNeeded()
-        }, completion: { completed in })
+        }, completion: { _ in })
     }
 
     func closePinPad() {
@@ -368,8 +373,8 @@ class AmountViewController : UIViewController, Trackable {
     }
 }
 
-extension Fees : Equatable {}
+extension Fees: Equatable {}
 
-func ==(lhs: Fees, rhs: Fees) -> Bool {
+func == (lhs: Fees, rhs: Fees) -> Bool {
     return lhs.regular == rhs.regular && lhs.economy == rhs.economy
 }

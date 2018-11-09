@@ -14,21 +14,21 @@ private let buttonPadding: CGFloat = 20.0
 private let smallSharePadding: CGFloat = 12.0
 private let largeSharePadding: CGFloat = 20.0
 
-class RequestAmountViewController : UIViewController {
+class RequestAmountViewController: UIViewController {
 
     // Invoked with a wallet address and optional QR code image. This var is set by the
     // ModalPresenter when the RequestAmountViewController is created.
     var shareAddress: PresentShare?
 
-    init(currency: CurrencyDef, receiveAddress: String) {
+    init(currency: Currency, receiveAddress: String) {
         self.currency = currency
         self.receiveAddress = receiveAddress
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: true, isRequesting: true)
         super.init(nibName: nil, bundle: nil)
     }
 
-    //MARK - Private
-    private let currency: CurrencyDef
+    // MARK: - Private
+    private let currency: Currency
     private let amountView: AmountViewController
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 14.0))
@@ -39,7 +39,7 @@ class RequestAmountViewController : UIViewController {
     private var topSharePopoutConstraint: NSLayoutConstraint?
     private let receiveAddress: String
     
-    //MARK - PinPad State
+    // MARK: - PinPad State
     private var amount: Amount? {
         didSet {
             setQrCode()
@@ -127,7 +127,7 @@ class RequestAmountViewController : UIViewController {
         }
     }
 
-    private func setQrCode(){
+    private func setQrCode() {
         guard let amount = amount else { return }
         let request = PaymentRequest.requestString(withAddress: receiveAddress, forAmount: amount.rawValue, currency: currency)
         qrCode.image = UIImage.qrCode(data: request.data(using: .utf8)!, color: CIColor(color: .black))?
@@ -201,12 +201,12 @@ class RequestAmountViewController : UIViewController {
     }
 }
 
-extension RequestAmountViewController : ModalDisplayable {
+extension RequestAmountViewController: ModalDisplayable {
     var faqArticleId: String? {
         return ArticleIds.requestAmount
     }
     
-    var faqCurrency: CurrencyDef? {
+    var faqCurrency: Currency? {
         return currency
     }
 

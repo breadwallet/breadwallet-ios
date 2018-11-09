@@ -9,7 +9,7 @@
 import UIKit
 import SafariServices
 
-class AboutViewController : UIViewController {
+class AboutViewController: UIViewController {
 
     private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .white)
     private let logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout").withRenderingMode(.alwaysTemplate))

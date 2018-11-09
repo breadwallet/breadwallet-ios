@@ -19,9 +19,9 @@ enum KeyboardType {
     case pinPad
 }
 
-class PinPadViewController : UICollectionViewController {
+class PinPadViewController: UICollectionViewController {
 
-    enum SpecialKeys : String {
+    enum SpecialKeys: String {
         case delete = "del"
         case biometrics = "bio"
 
@@ -39,7 +39,7 @@ class PinPadViewController : UICollectionViewController {
     let currencyDecimalSeparator = NumberFormatter().currencyDecimalSeparator ?? "."
     var isAppendingDisabled = false
     var ouputDidUpdate: ((String) -> Void)?
-    var didTapBiometrics: (()->Void)?
+    var didTapBiometrics: (() -> Void)?
     var shouldShowBiometrics: Bool
 
     var height: CGFloat {
@@ -59,7 +59,7 @@ class PinPadViewController : UICollectionViewController {
     }
 
     func removeLast() {
-        if currentOutput.utf8.count > 0 {
+        if !currentOutput.utf8.isEmpty {
             currentOutput = String(currentOutput[..<currentOutput.index(currentOutput.startIndex, offsetBy: currentOutput.utf8.count - 1)])
         }
     }
@@ -149,7 +149,7 @@ class PinPadViewController : UICollectionViewController {
         if let specialKey = SpecialKeys(rawValue: item) {
             switch specialKey {
             case .delete:
-                if currentOutput.count > 0 {
+                if !currentOutput.isEmpty {
                     if currentOutput == ("0" + currencyDecimalSeparator) {
                         currentOutput = ""
                     } else {
@@ -161,14 +161,14 @@ class PinPadViewController : UICollectionViewController {
             }
         } else {
             if shouldAppendChar(char: item) && !isAppendingDisabled {
-                currentOutput = currentOutput + item
+                currentOutput += item
             }
         }
         
         ouputDidUpdate?(currentOutput)        
     }
 
-    //MARK: - UICollectionViewDataSource
+    // MARK: - UICollectionViewDataSource
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
     }
@@ -180,7 +180,7 @@ class PinPadViewController : UICollectionViewController {
         return pinPadCell
     }
 
-    //MARK: - UICollectionViewDelegate
+    // MARK: - UICollectionViewDelegate
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         handleInputAtItemIndex(index: indexPath.item)
     }
@@ -222,7 +222,7 @@ class PinPadViewController : UICollectionViewController {
         if char == currencyDecimalSeparator {
             if decimalLocation == nil {
                 //Prepend a 0 if the first character is a decimal point
-                if currentOutput.count == 0 {
+                if currentOutput.isEmpty {
                     currentOutput = "0"
                 }
                 return true

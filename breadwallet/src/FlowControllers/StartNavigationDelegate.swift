@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StartNavigationDelegate : NSObject, UINavigationControllerDelegate {
+class StartNavigationDelegate: NSObject, UINavigationControllerDelegate {
 
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
 

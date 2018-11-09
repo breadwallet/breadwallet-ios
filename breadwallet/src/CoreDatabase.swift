@@ -10,6 +10,8 @@ import Foundation
 import BRCore
 import sqlite3
 
+// swiftlint:disable type_body_length
+
 internal let SQLITE_STATIC = unsafeBitCast(0, to: sqlite3_destructor_type.self)
 internal let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
 
@@ -25,15 +27,19 @@ private func SafeSqlite3ColumnBlob<T>(statement: OpaquePointer, iCol: Int32) -> 
 class CoreDatabase {
 
     private let dbPath: String
-    private var db: OpaquePointer? = nil
+    private var db: OpaquePointer?
     private var txEnt: Int32 = 0
     private var blockEnt: Int32 = 0
     private var peerEnt: Int32 = 0
     private let queue = DispatchQueue(label: "com.breadwallet.corecbqueue")
 
     init(dbPath: String = "BreadWallet.sqlite") {
-        self.dbPath = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil,
-                                    create: false).appendingPathComponent(dbPath).path
+        let docsUrl = try? FileManager.default.url(for: .documentDirectory,
+                                                   in: .userDomainMask,
+                                                   appropriateFor: nil,
+                                                   create: false)
+        self.dbPath = docsUrl?.appendingPathComponent(dbPath).path ?? ""
+
         queue.async {
             try? self.openDatabase()
         }
@@ -150,15 +156,19 @@ class CoreDatabase {
             "select 3, Z_NAME, 0, 0 from Z_PRIMARYKEY where Z_NAME = 'BRPeerEntity'", nil, nil, nil)
         if sqlite3_errcode(db) != SQLITE_OK { print(String(cString: sqlite3_errmsg(db))) }
 
-        var sql: OpaquePointer? = nil
+        var sql: OpaquePointer?
         sqlite3_prepare_v2(db, "select Z_ENT, Z_NAME from Z_PRIMARYKEY", -1, &sql, nil)
         defer { sqlite3_finalize(sql) }
 
         while sqlite3_step(sql) == SQLITE_ROW {
             let name = String(cString: sqlite3_column_text(sql, 1))
-            if name == "BRTxMetadataEntity" { txEnt = sqlite3_column_int(sql, 0) }
-            else if name == "BRMerkleBlockEntity" { blockEnt = sqlite3_column_int(sql, 0) }
-            else if name == "BRPeerEntity" { peerEnt = sqlite3_column_int(sql, 0) }
+            if name == "BRTxMetadataEntity" {
+                txEnt = sqlite3_column_int(sql, 0)
+            } else if name == "BRMerkleBlockEntity" {
+                blockEnt = sqlite3_column_int(sql, 0)
+            } else if name == "BRPeerEntity" {
+                peerEnt = sqlite3_column_int(sql, 0)
+            }
         }
 
         if sqlite3_errcode(db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(db))) }
@@ -172,7 +182,7 @@ class CoreDatabase {
             [tx.pointee.blockHeight.littleEndian, timestamp.littleEndian].withUnsafeBytes { buf.append(contentsOf: $0) }
             sqlite3_exec(self.db, "begin exclusive", nil, nil, nil)
 
-            var sql: OpaquePointer? = nil
+            var sql: OpaquePointer?
             sqlite3_prepare_v2(self.db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(self.txEnt)", -1, &sql, nil)
             defer { sqlite3_finalize(sql) }
 
@@ -183,7 +193,7 @@ class CoreDatabase {
             }
 
             let pk = sqlite3_column_int(sql, 0)
-            var sql2: OpaquePointer? = nil
+            var sql2: OpaquePointer?
             sqlite3_prepare_v2(self.db, "insert or rollback into ZBRTXMETADATAENTITY " +
                 "(Z_PK, Z_ENT, Z_OPT, ZTYPE, ZBLOB, ZTXHASH) " +
                 "values (\(pk + 1), \(self.txEnt), 1, 1, ?, ?)", -1, &sql2, nil)
@@ -226,7 +236,7 @@ class CoreDatabase {
 
     func txUpdated(_ txHashes: [UInt256], blockHeight: UInt32, timestamp: UInt32) {
         queue.async {
-            guard txHashes.count > 0 else { return }
+            guard !txHashes.isEmpty else { return }
             let timestamp = (timestamp > UInt32(NSTimeIntervalSince1970)) ? timestamp - UInt32(NSTimeIntervalSince1970) : 0
             var sql: OpaquePointer? = nil, sql2: OpaquePointer? = nil, count = 0
             sqlite3_prepare_v2(self.db, "select ZTXHASH, ZBLOB from ZBRTXMETADATAENTITY where ZTYPE = 1 and " +
@@ -255,7 +265,7 @@ class CoreDatabase {
                     }
                 }
                 
-                count = count + 1
+                count += 1
             }
 
             if sqlite3_errcode(self.db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(self.db))) }
@@ -269,7 +279,7 @@ class CoreDatabase {
 
     func txDeleted(_ txHash: UInt256, notifyUser: Bool, recommendRescan: Bool) {
         queue.async {
-            var sql: OpaquePointer? = nil
+            var sql: OpaquePointer?
             sqlite3_prepare_v2(self.db, "delete from ZBRTXMETADATAENTITY where ZTYPE = 1 and ZTXHASH = ?", -1, &sql, nil)
             defer { sqlite3_finalize(sql) }
             sqlite3_bind_blob(sql, 1, [txHash], Int32(MemoryLayout<UInt256>.size), SQLITE_TRANSIENT)
@@ -297,9 +307,8 @@ class CoreDatabase {
 
             if replace { // delete existing blocks and replace
                 sqlite3_exec(self.db, "delete from ZBRMERKLEBLOCKENTITY", nil, nil, nil)
-            }
-            else { // add to existing blocks
-                var sql: OpaquePointer? = nil
+            } else { // add to existing blocks
+                var sql: OpaquePointer?
                 sqlite3_prepare_v2(self.db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(self.blockEnt)", -1, &sql, nil)
                 defer { sqlite3_finalize(sql) }
 
@@ -312,7 +321,7 @@ class CoreDatabase {
                 pk = sqlite3_column_int(sql, 0) // get last primary key
             }
 
-            var sql2: OpaquePointer? = nil
+            var sql2: OpaquePointer?
             sqlite3_prepare_v2(self.db, "insert or rollback into ZBRMERKLEBLOCKENTITY (Z_PK, Z_ENT, Z_OPT, ZHEIGHT, " +
                 "ZNONCE, ZTARGET, ZTOTALTRANSACTIONS, ZVERSION, ZTIMESTAMP, ZBLOCKHASH, ZFLAGS, ZHASHES, " +
                 "ZMERKLEROOT, ZPREVBLOCK) values (?, \(self.blockEnt), 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", -1, &sql2, nil)
@@ -333,7 +342,7 @@ class CoreDatabase {
                     continue
                 }
 
-                pk = pk + 1
+                pk += 1
                 sqlite3_bind_int(sql2, 1, pk)
                 sqlite3_bind_int(sql2, 2, Int32(bitPattern: b.pointee.height))
                 sqlite3_bind_int(sql2, 3, Int32(bitPattern: b.pointee.nonce))
@@ -377,9 +386,8 @@ class CoreDatabase {
 
             if replace { // delete existing peers and replace
                 sqlite3_exec(self.db, "delete from ZBRPEERENTITY", nil, nil, nil)
-            }
-            else { // add to existing peers
-                var sql: OpaquePointer? = nil
+            } else { // add to existing peers
+                var sql: OpaquePointer?
                 sqlite3_prepare_v2(self.db, "select Z_MAX from Z_PRIMARYKEY where Z_ENT = \(self.peerEnt)", -1, &sql, nil)
                 defer { sqlite3_finalize(sql) }
 
@@ -392,14 +400,14 @@ class CoreDatabase {
                 pk = sqlite3_column_int(sql, 0) // get last primary key
             }
 
-            var sql2: OpaquePointer? = nil
+            var sql2: OpaquePointer?
             sqlite3_prepare_v2(self.db, "insert or rollback into ZBRPEERENTITY " +
                 "(Z_PK, Z_ENT, Z_OPT, ZADDRESS, ZMISBEHAVIN, ZPORT, ZSERVICES, ZTIMESTAMP) " +
                 "values (?, \(self.peerEnt), 1, ?, 0, ?, ?, ?)", -1, &sql2, nil)
             defer { sqlite3_finalize(sql2) }
 
             for p in peers {
-                pk = pk + 1
+                pk += 1
                 sqlite3_bind_int(sql2, 1, pk)
                 sqlite3_bind_int(sql2, 2, Int32(bitPattern: p.address.u32.3.bigEndian))
                 sqlite3_bind_int(sql2, 3, Int32(p.port))
@@ -426,11 +434,10 @@ class CoreDatabase {
         }
     }
 
-
-    func loadTransactions(callback: @escaping ([BRTxRef?])->Void) {
+    func loadTransactions(callback: @escaping ([BRTxRef?]) -> Void) {
         queue.async {
             var transactions = [BRTxRef?]()
-            var sql: OpaquePointer? = nil
+            var sql: OpaquePointer?
             sqlite3_prepare_v2(self.db, "select ZBLOB from ZBRTXMETADATAENTITY where ZTYPE = 1", -1, &sql, nil)
             defer { sqlite3_finalize(sql) }
 
@@ -442,7 +449,7 @@ class CoreDatabase {
                 guard let tx = BRTransactionParse(buf, off) else { return DispatchQueue.main.async { callback(transactions) }}
                 tx.pointee.blockHeight =
                     UnsafeRawPointer(buf).advanced(by: off).assumingMemoryBound(to: UInt32.self).pointee.littleEndian
-                off = off + MemoryLayout<UInt32>.size
+                off += MemoryLayout<UInt32>.size
                 let timestamp = UnsafeRawPointer(buf).advanced(by: off).assumingMemoryBound(to: UInt32.self).pointee.littleEndian
                 tx.pointee.timestamp = (timestamp == 0) ? timestamp : timestamp + UInt32(NSTimeIntervalSince1970)
                 transactions.append(tx)
@@ -455,10 +462,10 @@ class CoreDatabase {
         }
     }
 
-    func loadBlocks(callback: @escaping ([BRBlockRef?])->Void) {
+    func loadBlocks(callback: @escaping ([BRBlockRef?]) -> Void) {
         queue.async {
             var blocks = [BRBlockRef?]()
-            var sql: OpaquePointer? = nil
+            var sql: OpaquePointer?
             sqlite3_prepare_v2(self.db, "select ZHEIGHT, ZNONCE, ZTARGET, ZTOTALTRANSACTIONS, ZVERSION, ZTIMESTAMP, " +
                 "ZBLOCKHASH, ZFLAGS, ZHASHES, ZMERKLEROOT, ZPREVBLOCK from ZBRMERKLEBLOCKENTITY", -1, &sql, nil)
             defer { sqlite3_finalize(sql) }
@@ -500,10 +507,10 @@ class CoreDatabase {
         }
     }
 
-    func loadPeers(callback: @escaping ([BRPeer])->Void) {
+    func loadPeers(callback: @escaping ([BRPeer]) -> Void) {
         queue.async {
             var peers = [BRPeer]()
-            var sql: OpaquePointer? = nil
+            var sql: OpaquePointer?
             sqlite3_prepare_v2(self.db, "select ZADDRESS, ZPORT, ZSERVICES, ZTIMESTAMP from ZBRPEERENTITY", -1, &sql, nil)
             defer { sqlite3_finalize(sql) }
 

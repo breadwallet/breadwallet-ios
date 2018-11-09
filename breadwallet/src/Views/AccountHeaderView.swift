@@ -12,7 +12,7 @@ import BRCore
 private let largeFontSize: CGFloat = 28.0
 private let smallFontSize: CGFloat = 14.0
 
-class AccountHeaderView : UIView, GradientDrawable, Subscriber {
+class AccountHeaderView: UIView, GradientDrawable, Subscriber {
 
     // MARK: - Views
     
@@ -31,7 +31,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private var delistedTokenView: DelistedTokenView?
 
     // MARK: Properties
-    private let currency: CurrencyDef
+    private let currency: Currency
     private var hasInitialized = false
     private var hasSetup = false
     
@@ -88,7 +88,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     // MARK: -
     
-    init(currency: CurrencyDef) {
+    init(currency: Currency) {
         self.currency = currency
         self.syncView =  SyncingHeaderView(currency: currency)
         self.isBtcSwapped = Store.state.isBtcSwapped
@@ -344,9 +344,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             NSLayoutConstraint.deactivate(!self.isBtcSwapped ? self.regularConstraints : self.swappedConstraints)
             NSLayoutConstraint.activate(!self.isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
             self.layoutIfNeeded()
-        }) { _ in }
+        }, completion: { _ in })
 
-        Store.perform(action: CurrencyChange.toggle())
+        Store.perform(action: CurrencyChange.Toggle())
     }
 
     required init?(coder aDecoder: NSCoder) {

@@ -13,7 +13,7 @@ struct ERC20Transaction: EthLikeTransaction {
     
     // MARK: Transaction Properties
     
-    let currency: CurrencyDef
+    let currency: Currency
     let hash: String
     let status: TransactionStatus
     let direction: TransactionDirection

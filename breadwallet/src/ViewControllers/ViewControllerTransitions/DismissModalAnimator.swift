@@ -11,7 +11,7 @@ import UIKit
 //TODO - figure out who should own this
 let blurView = UIVisualEffectView()
 
-class DismissModalAnimator : NSObject, UIViewControllerAnimatedTransitioning {
+class DismissModalAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.4

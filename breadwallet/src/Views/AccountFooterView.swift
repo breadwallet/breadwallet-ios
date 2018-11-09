@@ -18,10 +18,10 @@ class AccountFooterView: UIView, Subscriber, Trackable {
     var sellCallback: (() -> Void)?
     
     private var hasSetup = false
-    private let currency: CurrencyDef
+    private let currency: Currency
     private let toolbar = UIToolbar()
     
-    init(currency: CurrencyDef) {
+    init(currency: Currency) {
         self.currency = currency
         super.init(frame: .zero)
     }

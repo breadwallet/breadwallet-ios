@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ClearNumberPad : GenericPinPadCell {
+class ClearNumberPad: GenericPinPadCell {
 
     override var style: PinPadStyle {
         get { return .clear }
@@ -27,7 +27,7 @@ class ClearNumberPad : GenericPinPadCell {
         if isHighlighted {
             backgroundColor = .transparentBlack
         } else {
-            if text == "" {
+            if text?.isEmpty ?? false {
                 backgroundColor = .clear
                 imageView.tintColor = .white
                 imageView.backgroundColor = .clear

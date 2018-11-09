@@ -23,7 +23,6 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-
 import Foundation
 import BRCore
 
@@ -31,14 +30,14 @@ let BRAPIClientErrorDomain = "BRApiClientErrorDomain"
 
 // these flags map to api feature flag name values
 // eg "buy-bitcoin-with-cash" is a persistent name in the /me/features list
-@objc public enum BRFeatureFlags : Int, CustomStringConvertible {
+@objc public enum BRFeatureFlags: Int, CustomStringConvertible {
     case buyBitcoin
     case earlyAccess
     
     public var description: String {
         switch self {
-        case .buyBitcoin: return "buy-bitcoin";
-        case .earlyAccess: return "early-access";
+        case .buyBitcoin: return "buy-bitcoin"
+        case .earlyAccess: return "early-access"
         }
     }
 }
@@ -54,15 +53,15 @@ public typealias URLSessionChallengeHandler = (URLSession.AuthChallengeDispositi
 // an object which implements BRAPIAdaptor can execute API Requests on the current wallet's behalf
 public protocol BRAPIAdaptor {
     // execute an API request against the current wallet
-    func dataTaskWithRequest(
-        _ request: URLRequest, authenticated: Bool, retryCount: Int,
-        handler: @escaping URLSessionTaskHandler
-    ) -> URLSessionDataTask
+    func dataTaskWithRequest(_ request: URLRequest,
+                             authenticated: Bool,
+                             retryCount: Int,
+                             handler: @escaping URLSessionTaskHandler) -> URLSessionDataTask
     
-    func url(_ path: String, args: Dictionary<String, String>?) -> URL
+    func url(_ path: String, args: [String: String]?) -> URL
 }
 
-open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, BRAPIAdaptor {
+open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BRAPIAdaptor {
     private var authenticator: WalletAuthenticator
     
     // whether or not to emit log messages from this instance of the client
@@ -129,7 +128,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
     // MARK: Networking functions
     
     // Constructs a full NSURL for a given path and url parameters
-    public func url(_ path: String, args: Dictionary<String, String>? =  nil) -> URL {
+    public func url(_ path: String, args: [String: String]? =  nil) -> URL {
         func joinPath(_ k: String...) -> URL {
             return URL(string: ([baseUrl] + k).joined(separator: ""))!
         }
@@ -170,8 +169,10 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
         return actualRequest
     }
     
-    public func dataTaskWithRequest(_ request: URLRequest, authenticated: Bool = false,
-                             retryCount: Int = 0, handler: @escaping URLSessionTaskHandler) -> URLSessionDataTask {
+    public func dataTaskWithRequest(_ request: URLRequest,
+                                    authenticated: Bool = false,
+                                    retryCount: Int = 0,
+                                    handler: @escaping URLSessionTaskHandler) -> URLSessionDataTask {
         let start = Date()
         var logLine = ""
         if let meth = request.httpMethod, let u = request.url {
@@ -307,9 +308,12 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
     
     // MARK: URLSession Delegate
 
-    public func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+    public func urlSession(_ session: URLSession,
+                           task: URLSessionTask,
+                           didReceive challenge: URLAuthenticationChallenge,
+                           completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-            if (challenge.protectionSpace.host == host && challenge.protectionSpace.serverTrust != nil) {
+            if challenge.protectionSpace.host == host && challenge.protectionSpace.serverTrust != nil {
                 log("URLSession challenge accepted!")
                 completionHandler(.useCredential,
                     URLCredential(trust: challenge.protectionSpace.serverTrust!))
@@ -320,7 +324,11 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
         }
     }
     
-    public func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+    public func urlSession(_ session: URLSession,
+                           task: URLSessionTask,
+                           willPerformHTTPRedirection response: HTTPURLResponse,
+                           newRequest request: URLRequest,
+                           completionHandler: @escaping (URLRequest?) -> Void) {
         var actualRequest = request
         if let currentReq = task.currentRequest, var curHost = currentReq.url?.host, let curScheme = currentReq.url?.scheme {
             if let curPort = currentReq.url?.port, curPort != 443 && curPort != 80 {
@@ -369,7 +377,7 @@ fileprivate extension URLRequest {
         if let meth = httpMethod {
             switch meth {
             case "POST", "PUT", "PATCH":
-                if let d = httpBody , d.count > 0 {
+                if let d = httpBody, !d.isEmpty {
                     parts[1] = d.sha256.base58
                 }
             default: break

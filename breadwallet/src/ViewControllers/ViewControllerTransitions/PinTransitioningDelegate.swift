@@ -10,7 +10,7 @@ import UIKit
 
 private let duration: TimeInterval = 0.4
 
-class PinTransitioningDelegate : NSObject , UIViewControllerTransitioningDelegate {
+class PinTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
 
     var shouldShowMaskView = true
 
@@ -23,7 +23,7 @@ class PinTransitioningDelegate : NSObject , UIViewControllerTransitioningDelegat
     }
 }
 
-class PresentPinAnimator : NSObject, UIViewControllerAnimatedTransitioning {
+class PresentPinAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
     init(shouldShowMaskView: Bool) {
         self.shouldShowMaskView = shouldShowMaskView
@@ -68,14 +68,14 @@ class PresentPinAnimator : NSObject, UIViewControllerAnimatedTransitioning {
             blurView.effect = toVc.effect
             toView.frame = finalToViewFrame
             toVc.contentBox.transform = .identity
-        }, completion: { completed in
+        }, completion: { _ in
             maskView.removeFromSuperview()
             transitionContext.completeTransition(true)
         })
     }
 }
 
-class DismissPinAnimator : NSObject, UIViewControllerAnimatedTransitioning {
+class DismissPinAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return duration
     }

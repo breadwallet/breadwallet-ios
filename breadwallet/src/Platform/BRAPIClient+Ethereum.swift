@@ -37,7 +37,7 @@ extension BRAPIClient {
         send(rpcRequest: JSONRPCRequest(method: "eth_sendRawTransaction", params: JSONRPCParams([rawTx])), handler: handler)
     }
 
-    public func getEthTxList(address: EthAddress, handler: @escaping (APIResult<[EthTxJSON]>)->Void) {
+    public func getEthTxList(address: EthAddress, handler: @escaping (APIResult<[EthTxJSON]>) -> Void) {
         let req = URLRequest(url: url("/ethq/\(network)/query?module=account&action=txlist&address=\(address)&sort=desc"))
         send(apiRequest: req, handler: handler)
     }
@@ -52,7 +52,9 @@ extension BRAPIClient {
     public func getTokenTransferLogs(address: EthAddress, contractAddress: String?, handler: @escaping (APIResult<[EthLogEventJSON]>) -> Void) {
         let accountAddress = address.paddedHexString
         let tokenAddressParam = (contractAddress != nil) ? "&address=\(contractAddress!)" : ""
-        let req = URLRequest(url: url("/ethq/\(network)/query?module=logs&action=getLogs&fromBlock=0&toBlock=latest\(tokenAddressParam)&topic0=\(ERC20Token.transferEventSignature)&topic1=\(accountAddress)&topic1_2_opr=or&topic2=\(accountAddress)"))
+        let blockParams = "&fromBlock=0&toBlock=latest"
+        let topicParams = "&topic0=\(ERC20Token.transferEventSignature)&topic1=\(accountAddress)&topic1_2_opr=or&topic2=\(accountAddress)"
+        let req = URLRequest(url: url("/ethq/\(network)/query?module=logs&action=getLogs\(blockParams)\(tokenAddressParam)\(topicParams)"))
         send(apiRequest: req, handler: handler)
     }
     
@@ -74,7 +76,7 @@ extension BRAPIClient {
         var encodedData: Data
         do {
             encodedData = try JSONEncoder().encode(rpcRequest)
-        } catch (let jsonError) {
+        } catch let jsonError {
             return handler(.error(.jsonError(error: jsonError)))
         }
         
@@ -84,7 +86,7 @@ extension BRAPIClient {
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.setValue("application/json", forHTTPHeaderField: "Accept")
         
-        dataTaskWithRequest(req, authenticated: true, retryCount: 0) { (data, response, error) in
+        dataTaskWithRequest(req, authenticated: true, retryCount: 0) { (data, _, error) in
             guard error == nil else {
                 return handler(.error(.httpError(error: error)))
             }
@@ -99,7 +101,7 @@ extension BRAPIClient {
                 } else {
                     handler(.success(rpcResponse.result!))
                 }
-            } catch (let jsonError) {
+            } catch let jsonError {
                 handler(.error(.jsonError(error: jsonError)))
             }
             }.resume()
@@ -118,7 +120,7 @@ extension BRAPIClient {
             do {
                 let apiResponse = try APIResponse<ResultType>.from(data: data)
                 handler(APIResult<ResultType>.success(apiResponse.result))
-            } catch (let jsonError) {
+            } catch let jsonError {
                 print("[API] JSON error: \(jsonError)")
                 handler(APIResult<ResultType>.error(jsonError))
             }
@@ -138,7 +140,7 @@ extension BRAPIClient {
             do {
                 let result = try JSONDecoder().decode(ResultType.self, from: data)
                 handler(APIResult<ResultType>.success(result))
-            } catch (let jsonError) {
+            } catch let jsonError {
                 print("[API] JSON error: \(jsonError)")
                 handler(APIResult<ResultType>.error(jsonError))
             }

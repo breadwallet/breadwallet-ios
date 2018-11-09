@@ -1,4 +1,3 @@
-
 //
 //  CheckoutConfirmationViewController.swift
 //  breadwallet
@@ -10,7 +9,7 @@
 import UIKit
 import BRCore
 
-class CheckoutConfirmationViewController : UIViewController {
+class CheckoutConfirmationViewController: UIViewController {
 
     private let header = UIView(color: .darkerBackground)
     private let titleLabel = UILabel(font: .customBold(size: 18.0), color: .white)
@@ -34,8 +33,8 @@ class CheckoutConfirmationViewController : UIViewController {
         }
     }
 
-    var presentVerifyPin: ((String, @escaping ((String) -> Void))->Void)?
-    var onPublishSuccess: (()->Void)?
+    var presentVerifyPin: ((String, @escaping ((String) -> Void)) -> Void)?
+    var onPublishSuccess: (() -> Void)?
 
     init(request: PigeonRequest, sender: Sender) {
         self.request = request
@@ -196,7 +195,7 @@ class CheckoutConfirmationViewController : UIViewController {
                 if case .posixError(let code, let description) = error {
                     self.showAlertAndDismiss(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
                 }
-            case .insufficientGas(_):
+            case .insufficientGas:
                 self.showInsufficientGasError()
             }
         }

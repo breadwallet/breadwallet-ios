@@ -10,9 +10,9 @@ import Foundation
 import BRCore
 import BRCore.Ethereum
 
-class EthWalletManager : WalletManager {
+class EthWalletManager: WalletManager {
     
-    // MARK:
+    // MARK: 
 
     private static let defaultGasPrice = etherCreateNumber(1, GWEI).valueInWEI
     private static let maxGasPrice = etherCreateNumber(100, GWEI).valueInWEI
@@ -25,7 +25,7 @@ class EthWalletManager : WalletManager {
     
     // MARK: WalletManager
 
-    let currency: CurrencyDef = Currencies.eth
+    let currency: Currency = Currencies.eth
     var kvStore: BRReplicatedKVStore?
     weak var apiClient: BRAPIClient? {
         didSet {
@@ -135,22 +135,22 @@ class EthWalletManager : WalletManager {
         let newWallets: [String: WalletState] = tokensToBeAdded.reduce([String: WalletState]()) { (dictionary, currency) -> [String: WalletState] in
             var dictionary = dictionary
             dictionary[currency.code] = WalletState.initial(currency, displayOrder: displayOrder)
-            displayOrder = displayOrder + 1
+            displayOrder += 1
             return dictionary
         }
         
-        metaData.addTokenAddresses(addresses: tokensToBeAdded.map{ $0.address })
+        metaData.addTokenAddresses(addresses: tokensToBeAdded.map { $0.address })
         do {
-            let _ = try kvStore.set(metaData)
+            _ = try kvStore.set(metaData)
         } catch let error {
             print("error setting wallet info: \(error)")
         }
         DispatchQueue.main.async {
-            Store.perform(action: ManageWallets.addWallets(newWallets))
+            Store.perform(action: ManageWallets.AddWallets(newWallets))
         }
     }
     
-    func defaultGasLimit(currency: CurrencyDef) -> UInt64 {
+    func defaultGasLimit(currency: Currency) -> UInt64 {
         let wallet = node.wallet(currency)
         return wallet.defaultGasLimit
     }
@@ -158,7 +158,13 @@ class EthWalletManager : WalletManager {
     /// Creates, signs and submits an ETH transaction or ERC20 token transfer
     /// Caller must authenticate
     /// gasPrice and gasLimit parameters are only used for contract transactions
-    func sendTransaction(currency: CurrencyDef, toAddress: String, amount: UInt256, abi: String? = nil, gasPrice: UInt256? = nil, gasLimit: UInt256, callback: @escaping (SendTransactionResult) -> Void) {
+    func sendTransaction(currency: Currency,
+                         toAddress: String,
+                         amount: UInt256,
+                         abi: String? = nil,
+                         gasPrice: UInt256? = nil,
+                         gasLimit: UInt256,
+                         callback: @escaping (SendTransactionResult) -> Void) {
         guard let accountAddress = address, let apiClient = apiClient else { return assertionFailure() }
         
         guard ethPrivKey != nil, var privKey = BRKey(privKey: ethPrivKey!) else { return }
@@ -241,7 +247,7 @@ class EthWalletManager : WalletManager {
     }
     
     /// Updates wallet state with transactions from core
-    private func updateTransactions(_ currency: CurrencyDef) {
+    private func updateTransactions(_ currency: Currency) {
         guard let accountAddress = address else { return assertionFailure() }
         let txs = self.node.wallet(currency).transactions
         var viewModels: [Transaction]
@@ -351,7 +357,7 @@ extension EthWalletManager: EthereumClient {
     
     func getBlockNumber(completion: @escaping EthereumClient.AmountHandler) {
         guard let apiClient = apiClient else { return assertionFailure() }
-        apiClient.getLastBlockNumber() { result in
+        apiClient.getLastBlockNumber { result in
             switch result {
             case .success(let blockNumber):
                 completion(blockNumber)
@@ -382,7 +388,7 @@ extension EthWalletManager: EthereumListener {
                            status: BREthereumStatus,
                            errorDesc: String?) {
         //print("\(wallet.currency.code) wallet event: \(event), status: \(status.rawValue)\(errorDesc != nil ? ", error: \(errorDesc!)" : "")")
-        switch (event) {
+        switch event {
         case .balanceUpdated:
             DispatchQueue.main.async {
                 Store.perform(action: WalletChange(wallet.currency).setBalance(wallet.balance))
@@ -429,7 +435,7 @@ extension EthWalletManager {
         }
         
         /// Call before initiating a fetch. Returns false if a fetch of this type is already in progress, true otherwise.
-        func willBeginRequest(_ request: Request, currencies: [CurrencyDef]) -> Bool {
+        func willBeginRequest(_ request: Request, currencies: [Currency]) -> Bool {
             guard let currenciesInProgress = inProgress[request] else {
                 assertionFailure()
                 return false
@@ -441,12 +447,10 @@ extension EthWalletManager {
             
             inProgress[request] = currenciesInProgress + currencies
             
-            for currency in currencies {
-                if currency.state?.syncState == .connecting {
-                    DispatchQueue.main.async {
-                        Store.perform(action: WalletChange(currency).setProgress(progress: 0.8, timestamp: 0))
-                        Store.perform(action: WalletChange(currency).setSyncingState(.syncing))
-                    }
+            for currency in currencies where currency.state?.syncState == .connecting {
+                DispatchQueue.main.async {
+                    Store.perform(action: WalletChange(currency).setProgress(progress: 0.8, timestamp: 0))
+                    Store.perform(action: WalletChange(currency).setSyncingState(.syncing))
                 }
             }
             
@@ -461,7 +465,7 @@ extension EthWalletManager {
         }
         
         /// Call after a fetch has completed
-        func didEndRequest(_ request: Request, currencies: [CurrencyDef], success: Bool) {
+        func didEndRequest(_ request: Request, currencies: [Currency], success: Bool) {
             guard let currenciesInProgress = inProgress[request] else { return assertionFailure() }
             
             let finishedCodes = currencies.map { $0.code }
@@ -485,9 +489,9 @@ extension EthWalletManager {
         private var firstTime: Bool = true
         private var timeoutTimer: Timer?
         private var timeoutInterval: TimeInterval
-        private var inProgress: [Request: [CurrencyDef]] = [:]
+        private var inProgress: [Request: [Currency]] = [:]
         private var allFinished: Bool {
-            return inProgress.values.filter({ !$0.isEmpty }).count == 0
+            return inProgress.values.filter({ !$0.isEmpty }).isEmpty
         }
         
         @objc private func timeout() {

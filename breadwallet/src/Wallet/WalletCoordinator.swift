@@ -11,7 +11,7 @@ import UIKit
 
 /// Coordinates the sync state of all wallet managers to
 /// display the activity indicator and control backtround tasks
-class WalletCoordinator : Subscriber, Trackable {
+class WalletCoordinator: Subscriber, Trackable {
     
     // 24-hours until incremental rescan is reset
     private let incrementalRescanInterval: TimeInterval = (24*60*60)
@@ -31,10 +31,8 @@ class WalletCoordinator : Subscriber, Trackable {
 
         //Listen for sync state changes in all wallets
         Store.subscribe(self, selector: {
-            for (key, val) in $0.wallets {
-                if val.syncState != $1.wallets[key]?.syncState {
-                    return true
-                }
+            for (key, val) in $0.wallets where val.syncState != $1.wallets[key]?.syncState {
+                return true
             }
             return false
         }, callback: { [weak self] state in
@@ -68,12 +66,12 @@ class WalletCoordinator : Subscriber, Trackable {
         }
     }
     
-    private func initiateRescan(currency: CurrencyDef) {
+    private func initiateRescan(currency: Currency) {
         guard let peerManager = self.walletManagers[currency.code]?.peerManager else { return assertionFailure() }
         peerManager.connect()
         
         var startingPoint = RescanState.StartingPoint.lastSentTx
-        var blockHeight: UInt64? = nil
+        var blockHeight: UInt64?
         
         if let prevRescan = UserDefaults.rescanState(for: currency) {
             if abs(prevRescan.startTime.timeIntervalSinceNow) > incrementalRescanInterval {

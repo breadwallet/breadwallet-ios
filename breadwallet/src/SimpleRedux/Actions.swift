@@ -9,38 +9,38 @@
 import UIKit
 import BRCore
 
-//MARK: - Startup Modals
-struct ShowStartFlow : Action {
+// MARK: - Startup Modals
+struct ShowStartFlow: Action {
     let reduce: Reducer = {
         return $0.mutate(isStartFlowVisible: true)
     }
 }
 
-struct HideStartFlow : Action {
+struct HideStartFlow: Action {
     let reduce: Reducer = { state in
         return state.mutate(isStartFlowVisible: false, rootModal: .none)
     }
 }
 
-struct Reset : Action {
+struct Reset: Action {
     let reduce: Reducer = { _ in
         return State.initial.mutate(isLoginRequired: false)
     }
 }
 
-struct RequireLogin : Action {
+struct RequireLogin: Action {
     let reduce: Reducer = {
         return $0.mutate(isLoginRequired: true)
     }
 }
 
-struct LoginSuccess : Action {
+struct LoginSuccess: Action {
     let reduce: Reducer = {
         return $0.mutate(isLoginRequired: false)
     }
 }
 
-//MARK: - Root Modals
+// MARK: - Root Modals
 struct RootModalActions {
     struct Present: Action {
         let reduce: Reducer
@@ -52,7 +52,7 @@ struct RootModalActions {
 
 enum ManageWallets {
 
-    struct setWallets : Action {
+    struct SetWallets: Action {
         let reduce: Reducer
         init(_ newWallets: [String: WalletState]) {
             reduce = {
@@ -61,7 +61,7 @@ enum ManageWallets {
         }
     }
 
-    struct addWallets : Action {
+    struct AddWallets: Action {
         let reduce: Reducer
         init(_ newWallets: [String: WalletState]) {
             reduce = {
@@ -70,7 +70,7 @@ enum ManageWallets {
         }
     }
     
-    struct removeTokenAddresses : Action {
+    struct RemoveTokenAddresses: Action {
         let reduce: Reducer
         init(_ removedTokenAddresses: [String]) {
             reduce = {
@@ -83,7 +83,7 @@ enum ManageWallets {
         }
     }
     
-    struct setAvailableTokens: Action {
+    struct SetAvailableTokens: Action {
         let reduce: Reducer
         init(_ availableTokens: [ERC20Token]) {
             reduce = {
@@ -93,15 +93,15 @@ enum ManageWallets {
     }
 }
 
-//MARK: - Wallet State
+// MARK: - Wallet State
 struct WalletChange: Trackable {
     struct WalletAction: Action {
         let reduce: Reducer
     }
     
-    let currency: CurrencyDef
+    let currency: Currency
     
-    init(_ currency: CurrencyDef) {
+    init(_ currency: Currency) {
         self.currency = currency
     }
     
@@ -174,16 +174,16 @@ struct WalletChange: Trackable {
     }
 }
 
-//MARK: - Currency
+// MARK: - Currency
 enum CurrencyChange {
-    struct toggle: Action {
+    struct Toggle: Action {
         let reduce: Reducer = {
             UserDefaults.isBtcSwapped = !$0.isBtcSwapped
             return $0.mutate(isBtcSwapped: !$0.isBtcSwapped)
         }
     }
 
-    struct setIsSwapped: Action {
+    struct SetIsSwapped: Action {
         let reduce: Reducer
         init(_ isBtcSwapped: Bool) {
             reduce = { $0.mutate(isBtcSwapped: isBtcSwapped) }
@@ -191,15 +191,15 @@ enum CurrencyChange {
     }
 }
 
-//MARK: - Alerts
+// MARK: - Alerts
 enum Alert {
-    struct Show : Action {
+    struct Show: Action {
         let reduce: Reducer
         init(_ type: AlertType) {
             reduce = { $0.mutate(alert: type) }
         }
     }
-    struct Hide : Action {
+    struct Hide: Action {
         let reduce: Reducer = {
             let newState = $0.mutate(alert: AlertType.none)
             return newState
@@ -208,7 +208,7 @@ enum Alert {
 }
 
 enum Biometrics {
-    struct setIsEnabled : Action, Trackable {
+    struct SetIsEnabled: Action, Trackable {
         let reduce: Reducer
         init(_ isBiometricsEnabled: Bool) {
             UserDefaults.isBiometricsEnabled = isBiometricsEnabled
@@ -219,7 +219,7 @@ enum Biometrics {
 }
 
 enum DefaultCurrency {
-    struct setDefault : Action, Trackable {
+    struct SetDefault: Action, Trackable {
         let reduce: Reducer
         init(_ defaultCurrencyCode: String) {
             UserDefaults.defaultCurrencyCode = defaultCurrencyCode
@@ -230,7 +230,7 @@ enum DefaultCurrency {
 }
 
 enum PushNotifications {
-    struct setIsEnabled : Action {
+    struct SetIsEnabled: Action {
         let reduce: Reducer
         init(_ isEnabled: Bool) {
             reduce = { $0.mutate(isPushNotificationsEnabled: isEnabled) }
@@ -238,8 +238,8 @@ enum PushNotifications {
     }
 }
 
-enum biometricsActions {
-    struct setIsPrompting : Action {
+enum BiometricsActions {
+    struct SetIsPrompting: Action {
         let reduce: Reducer
         init(_ isPrompting: Bool) {
             reduce = { $0.mutate(isPromptingBiometrics: isPrompting) }
@@ -248,7 +248,7 @@ enum biometricsActions {
 }
 
 enum PinLength {
-    struct set : Action {
+    struct Set: Action {
         let reduce: Reducer
         init(_ pinLength: Int) {
             reduce = { $0.mutate(pinLength: pinLength) }
@@ -257,7 +257,7 @@ enum PinLength {
 }
 
 enum WalletID {
-    struct set: Action {
+    struct Set: Action {
         let reduce: Reducer
         init(_ walletID: String?) {
             reduce = { $0.mutate(walletID: walletID) }

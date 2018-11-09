@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct SentryEvent : Codable {
+struct SentryEvent: Codable {
     let event_id: String = UUID().uuidString.replacingOccurrences(of: "-", with: "")
     let timestamp = Date()
     let logger = "com.breadwallet.ios.logger"
@@ -20,17 +20,17 @@ class SentryClient {
 
     static let shared = SentryClient()
 
-    func sendMessage(_ message: String, completion: @escaping()->Void) {
+    func sendMessage(_ message: String, completion: @escaping() -> Void) {
         sendEvent(SentryEvent(message: message), completion: completion)
     }
 
-    private func sendEvent(_ event: SentryEvent, completion: @escaping()->Void) {
+    private func sendEvent(_ event: SentryEvent, completion: @escaping() -> Void) {
         var request = sentryRequest
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         request.httpBody = try? encoder.encode(event)
 
-        let task = URLSession.shared.dataTask(with: request, completionHandler: {data, response, error in
+        let task = URLSession.shared.dataTask(with: request, completionHandler: {_, response, _ in
             if let response = response as? HTTPURLResponse {
                 if response.statusCode == 200 {
                     print("Send Event")

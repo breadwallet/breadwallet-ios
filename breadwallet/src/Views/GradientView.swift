@@ -32,7 +32,7 @@ extension UIView {
     }
 }
 
-class GradientView : UIView {
+class GradientView: UIView {
     override func draw(_ rect: CGRect) {
         drawGradient(rect)
     }

@@ -11,10 +11,10 @@ import SafariServices
 
 private let promptDelay: TimeInterval = 0.6
 
-class TransactionsTableViewController : UITableViewController, Subscriber, Trackable {
+class TransactionsTableViewController: UITableViewController, Subscriber, Trackable {
 
-    //MARK: - Public
-    init(currency: CurrencyDef, walletManager: WalletManager, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
+    // MARK: - Public
+    init(currency: Currency, walletManager: WalletManager, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
         self.currency = currency
         self.walletManager = walletManager
         self.didSelectTransaction = didSelectTransaction
@@ -31,9 +31,9 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         }
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let walletManager: WalletManager
-    private let currency: CurrencyDef
+    private let currency: Currency
     
     private let headerCellIdentifier = "HeaderCellIdentifier"
     private let transactionCellIdentifier = "TransactionCellIdentifier"
@@ -170,7 +170,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
 
     private func reload() {
         tableView.reloadData()
-        if transactions.count == 0 {
+        if transactions.isEmpty {
             if emptyMessage.superview == nil {
                 tableView.addSubview(emptyMessage)
                 emptyMessage.constrain([
@@ -188,7 +188,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     }
 }
 
-//MARK: - Cell Builders
+// MARK: - Cell Builders
 extension TransactionsTableViewController {
 
     private func headerCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
@@ -203,7 +203,9 @@ extension TransactionsTableViewController {
     }
 
     private func transactionCell(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath) as! TxListCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier,
+                                                       for: indexPath) as? TxListCell
+            else { assertionFailure(); return UITableViewCell() }
         let rate = self.rate ?? Rate.empty
         let viewModel = TxListViewModel(tx: transactions[indexPath.row])
         cell.setTransaction(viewModel,

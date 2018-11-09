@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TokenCell : SeparatorCell {
+class TokenCell: SeparatorCell {
     
     static let cellIdentifier = "TokenCell"
     
@@ -23,15 +23,15 @@ class TokenCell : SeparatorCell {
     private var listType: TokenListType = .add
     private var isCurrencyHidden = false
 
-    var didAddIdentifier:((String)->Void)?
-    var didRemoveIdentifier:((String)->Void)?
+    var didAddIdentifier: ((String) -> Void)?
+    var didRemoveIdentifier: ((String) -> Void)?
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
 
-    func set(currency: CurrencyDef, listType: TokenListType, isHidden: Bool) {
+    func set(currency: Currency, listType: TokenListType, isHidden: Bool) {
         header.text = currency.name
         subheader.text = currency.code
         icon.image = currency.imageSquareBackground
@@ -116,4 +116,3 @@ class TokenCell : SeparatorCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
-

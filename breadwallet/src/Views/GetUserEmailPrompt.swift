@@ -11,7 +11,7 @@ import UIKit
 //
 // Extends the Prompt view to provide an email input field and custom image.
 //
-class GetUserEmailPrompt : Prompt {
+class GetUserEmailPrompt: Prompt {
     
     let emailInputHeight: CGFloat = 36.0
     let continueButtonHeight: CGFloat = 36.0
@@ -64,12 +64,12 @@ class GetUserEmailPrompt : Prompt {
             // disable the submit button while we're hitting the API
             self.enableDisableSubmitButton(enable: false)
             
-            Backend.apiClient.subscribeToEmailUpdates(emailAddress: emailAddress,callback: { [unowned self] (successful) in
+            Backend.apiClient.subscribeToEmailUpdates(emailAddress: emailAddress, callback: { [unowned self] (successful) in
                 UserDefaults.hasSubscribedToEmailUpdates = successful
 
                 self.updateViewOnEmailSubmissionResult(successful: successful)
                 
-                if !successful  {
+                if !successful {
                     self.showErrorOnEmailSubscriptionFailure()
                 } else {
                     self.scheduleAutoDismiss()
@@ -175,7 +175,7 @@ class GetUserEmailPrompt : Prompt {
             dismissButton.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
             dismissButton.rightAnchor.constraint(equalTo: container.rightAnchor, constant: -8),
             dismissButton.widthAnchor.constraint(equalToConstant: 24),
-            dismissButton.heightAnchor.constraint(equalToConstant: 24),
+            dismissButton.heightAnchor.constraint(equalToConstant: 24)
             ])
         
         continueButton.constrain([
@@ -193,7 +193,7 @@ class GetUserEmailPrompt : Prompt {
             emailInput.topAnchor.constraint(equalTo: body.bottomAnchor, constant: C.padding[2]),
             emailInput.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
             emailInput.trailingAnchor.constraint(equalTo: continueButton.leadingAnchor, constant: -10),
-            emailInput.heightAnchor.constraint(equalToConstant: emailInputHeight),
+            emailInput.heightAnchor.constraint(equalToConstant: emailInputHeight)
             ])
         
         // The icon (defaults to loudspeaker) goes above the Submit button, slightly offset to the left.
@@ -203,12 +203,12 @@ class GetUserEmailPrompt : Prompt {
             imageView.heightAnchor.constraint(equalToConstant: 60),
             imageView.bottomAnchor.constraint(equalTo: body.bottomAnchor),
             imageView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: imageViewTrailingMargin),
-            imageView.leadingAnchor.constraint(equalTo: continueButton.leadingAnchor, constant: -(C.padding[1])),
+            imageView.leadingAnchor.constraint(equalTo: continueButton.leadingAnchor, constant: -(C.padding[1]))
             ])
         
         successFootnoteLabel.constrain([
             successFootnoteLabel.leftAnchor.constraint(equalTo: emailInput.leftAnchor, constant: 0),
-            successFootnoteLabel.centerYAnchor.constraint(equalTo: emailInput.centerYAnchor, constant: 0),
+            successFootnoteLabel.centerYAnchor.constraint(equalTo: emailInput.centerYAnchor, constant: 0)
             ])
     }
     
@@ -244,10 +244,10 @@ class GetUserEmailPrompt : Prompt {
 
 // The main task of this extension is to enable or disable the Submit button
 // as the user types, based on whether a valid email address has been entered.
-extension GetUserEmailPrompt : UITextFieldDelegate {
+extension GetUserEmailPrompt: UITextFieldDelegate {
     
     private func enableOrDisableSubmitButton(emailAddressText: String?) {
-        guard let text = emailAddressText, text.count > 0 else {
+        guard let text = emailAddressText, !text.isEmpty else {
             enableDisableSubmitButton(enable: false)
             return
         }

@@ -8,9 +8,9 @@
 
 import UIKit
 
-class Background : UIView, GradientDrawable {
+class Background: UIView, GradientDrawable {
 
-    var currency: CurrencyDef?
+    var currency: Currency?
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -27,7 +27,7 @@ class Background : UIView, GradientDrawable {
     }
 }
 
-class HomeScreenCell : UITableViewCell, Subscriber {
+class HomeScreenCell: UITableViewCell, Subscriber {
     
     static let cellIdentifier = "CurrencyCell"
 
@@ -135,7 +135,7 @@ class HomeScreenCell : UITableViewCell, Subscriber {
         fiatBalance.constrain([
             fiatBalance.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -padding[2]),
             fiatBalance.leadingAnchor.constraint(greaterThanOrEqualTo: currencyName.trailingAnchor, constant: padding[2]),
-            fiatBalance.topAnchor.constraint(equalTo: currencyName.topAnchor),
+            fiatBalance.topAnchor.constraint(equalTo: currencyName.topAnchor)
             ])
         tokenBalance.constrain([
             tokenBalance.trailingAnchor.constraint(equalTo: fiatBalance.trailingAnchor),

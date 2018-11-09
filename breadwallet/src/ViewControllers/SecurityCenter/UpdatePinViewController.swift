@@ -15,9 +15,9 @@ enum UpdatePinType {
     case update
 }
 
-class UpdatePinViewController : UIViewController, Subscriber {
+class UpdatePinViewController: UIViewController, Subscriber {
 
-    //MARK: - Public
+    // MARK: - Public
     var setPinSuccess: ((String) -> Void)?
     var resetFromDisabledSuccess: (() -> Void)?
     var resetFromDisabledWillSucceed: (() -> Void)?
@@ -32,7 +32,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
         super.init(nibName: nil, bundle: nil)
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let header = UILabel.wrapping(font: .customBold(size: 26.0), color: .white)
     private let instruction = UILabel.wrapping(font: .customBody(size: 14.0), color: .white)
     private let caption = UILabel.wrapping(font: .customBody(size: 13.0), color: .white)

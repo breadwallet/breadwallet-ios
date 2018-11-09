@@ -64,7 +64,7 @@ class Backend {
     
     // MARK: Setup
     
-    static func connectWallet(_ authenticator: WalletAuthenticator, currencies: [CurrencyDef], walletManagers: [WalletManager]) {
+    static func connectWallet(_ authenticator: WalletAuthenticator, currencies: [Currency], walletManagers: [WalletManager]) {
         shared.apiClient = BRAPIClient(authenticator: authenticator)
         shared.pigeonExchange = PigeonExchange()
         

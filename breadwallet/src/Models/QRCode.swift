@@ -27,7 +27,7 @@ enum QRCode: Equatable {
     }
     
     private static func detectPaymentRequest(fromURI uri: String) -> PaymentRequest? {
-        let currencies: [CurrencyDef] = [Currencies.btc, Currencies.bch, Currencies.eth]
+        let currencies: [Currency] = [Currencies.btc, Currencies.bch, Currencies.eth]
         for currency in currencies {
             if let request = PaymentRequest(string: uri, currency: currency) {
                 return request
