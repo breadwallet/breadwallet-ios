@@ -46,7 +46,6 @@ class TxStatusCell: UITableViewCell, Subscriber {
                                                            bottom: -C.padding[2],
                                                            right: -C.padding[1]))
         
-        
         statusIndicator.constrain([
             statusIndicator.topAnchor.constraint(equalTo: container.topAnchor),
             statusIndicator.centerXAnchor.constraint(equalTo: container.centerXAnchor),

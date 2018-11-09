@@ -11,7 +11,7 @@ import AVFoundation
 
 typealias ScanCompletion = (QRCode?) -> Void
 
-class ScanViewController : UIViewController, Trackable {
+class ScanViewController: UIViewController, Trackable {
 
     static func presentCameraUnavailableAlert(fromRoot: UIViewController) {
         let alertController = UIAlertController(title: S.Send.cameraUnavailableTitle, message: S.Send.cameraUnavailableMessage, preferredStyle: .alert)
@@ -31,7 +31,7 @@ class ScanViewController : UIViewController, Trackable {
     private let completion: ScanCompletion
     private let allowScanningPrivateKeysOnly: Bool
     /// scanner only accepts currency-specific payment request
-    private let paymentRequestCurrencyRestriction: CurrencyDef?
+    private let paymentRequestCurrencyRestriction: Currency?
     fileprivate let guide = CameraGuideView()
     fileprivate let session = AVCaptureSession()
     private let toolbar = UIView()
@@ -41,7 +41,7 @@ class ScanViewController : UIViewController, Trackable {
     private var toolbarHeightConstraint: NSLayoutConstraint?
     private let toolbarHeight: CGFloat = 48.0
 
-    init(forPaymentRequestForCurrency currencyRestriction: CurrencyDef? = nil, forScanningPrivateKeys: Bool = false, completion: @escaping ScanCompletion) {
+    init(forPaymentRequestForCurrency currencyRestriction: Currency? = nil, forScanningPrivateKeys: Bool = false, completion: @escaping ScanCompletion) {
         self.completion = completion
         self.paymentRequestCurrencyRestriction = currencyRestriction
         self.allowScanningPrivateKeysOnly = forScanningPrivateKeys
@@ -166,10 +166,10 @@ class ScanViewController : UIViewController, Trackable {
     }
 }
 
-extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
+extension ScanViewController: AVCaptureMetadataOutputObjectsDelegate {
     func metadataOutput(_ captureOutput: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         if let data = metadataObjects as? [AVMetadataMachineReadableCodeObject] {
-            if data.count == 0 {
+            if data.isEmpty {
                 guide.state = .normal
             } else {
                 data.forEach {
@@ -218,7 +218,7 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
                 default: break
                 }
                 
-            case .privateKey(_):
+            case .privateKey:
                 saveEvent("scan.privateKey")
                 guard allowScanningPrivateKeysOnly else {
                     //TODO:QR support key import from universal scan
@@ -226,7 +226,7 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
                     return
                 }
                 
-            case .deepLink(_):
+            case .deepLink:
                 saveEvent("scan.deepLink")
             default:
                 assertionFailure("unexpected result")

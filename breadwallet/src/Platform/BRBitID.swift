@@ -27,8 +27,7 @@ import Foundation
 import Security
 import BRCore
 
-
-open class BRBitID : NSObject {
+open class BRBitID: NSObject {
     static let SCHEME = "bitid"
     static let PARAM_NONCE = "x"
     static let PARAM_UNSECURE = "u"
@@ -79,8 +78,8 @@ open class BRBitID : NSObject {
         
         // load previous nonces. we save all nonces generated for each service
         // so they are not used twice from the same device
-        if let existingNonces = defs.object(forKey: BRBitID.USER_DEFAULTS_NONCE_KEY) {
-            allNonces = existingNonces as! [String: [String]]
+        if let existingNonces = defs.object(forKey: BRBitID.USER_DEFAULTS_NONCE_KEY) as? [String: [String]] {
+            allNonces = existingNonces
         }
         if let existingSpecificNonces = allNonces[nonceKey] {
             specificNonces = existingSpecificNonces
@@ -125,10 +124,10 @@ open class BRBitID : NSObject {
                 }
                 return
             }
-            if let u = query[BRBitID.PARAM_UNSECURE] , u.count == 1 && u[0] == "1" {
+            if let u = query[BRBitID.PARAM_UNSECURE], u.count == 1 && u[0] == "1" {
                 scheme = "http"
             }
-            if let x = query[BRBitID.PARAM_NONCE] , x.count == 1 {
+            if let x = query[BRBitID.PARAM_NONCE], x.count == 1 {
                 nonce = x[0] // service is providing a nonce
             } else {
                 nonce = newNonce() // we are generating our own nonce
@@ -147,7 +146,7 @@ open class BRBitID : NSObject {
                 "signature": signature,
                 "uri": uriWithNonce
             ]
-            let json = try! JSONSerialization.data(withJSONObject: payload, options: [])
+            guard let json = try? JSONSerialization.data(withJSONObject: payload, options: []) else { return }
 
             // send off said payload
             var req = URLRequest(url: URL(string: "\(uri)?x=\(nonce)")!)

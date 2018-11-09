@@ -21,7 +21,7 @@ extension BRAPIClient {
                     let defaults = UserDefaults.standard
                     do {
                         let j = try JSONSerialization.jsonObject(with: data, options: [])
-                        let features = j as! [[String: AnyObject]]
+                        guard let features = j as? [[String: AnyObject]] else { return }
                         for feat in features {
                             if let fn = feat["name"], let fname = fn as? String,
                                 let fe = feat["enabled"], let fenabled = fe as? Bool {

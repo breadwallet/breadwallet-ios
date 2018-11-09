@@ -59,7 +59,7 @@ class QRCodeTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func assertPaymentRequest(fromContent content: String, currency: CurrencyDef, file: StaticString = #file, line: UInt = #line) {
+    private func assertPaymentRequest(fromContent content: String, currency: Currency, file: StaticString = #file, line: UInt = #line) {
         if case QRCode.paymentRequest(let request) = QRCode(content: content) {
             XCTAssertEqual(request.currency.code, currency.code, file: file, line: line)
         } else {

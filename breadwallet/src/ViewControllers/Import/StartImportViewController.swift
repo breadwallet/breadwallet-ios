@@ -9,7 +9,7 @@
 import UIKit
 import BRCore
 
-class StartImportViewController : UIViewController {
+class StartImportViewController: UIViewController {
 
     init(walletManager: BTCWalletManager, scanResult: QRCode? = nil) {
         self.walletManager = walletManager
@@ -20,7 +20,7 @@ class StartImportViewController : UIViewController {
     }
 
     private let walletManager: BTCWalletManager
-    private let currency: CurrencyDef
+    private let currency: Currency
     private let header = RadialGradientView(backgroundColor: .blue, offset: 64.0)
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "ImportIllustration"))
     private let message = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
@@ -209,7 +209,7 @@ class StartImportViewController : UIViewController {
         walletManager.wallet?.feePerKb = fees.regular
         let fee = wallet.feeForTxSize(tx.size + 34 + (pubKeyLength - 34)*tx.inputs.count)
         balanceActivity.dismiss(animated: true, completion: {
-            guard outputs.count > 0 && balance > 0 else {
+            guard !outputs.isEmpty && balance > 0 else {
                 return self.showErrorMessage(S.Import.Error.empty)
             }
             guard fee + wallet.minOutputAmount <= balance else {
@@ -231,20 +231,20 @@ class StartImportViewController : UIViewController {
     }
 
     private func publish(tx: UnsafeMutablePointer<BRTransaction>, balance: UInt64, fee: UInt64, key: BRKey) {
-        guard let wallet = walletManager.wallet else { return }
+        guard let wallet = walletManager.wallet, let currency = currency as? Bitcoin else { return }
         guard let script = BRAddress(string: wallet.receiveAddress)?.scriptPubKey else { return }
         guard walletManager.peerManager?.connectionStatus != BRPeerStatusDisconnected else { return }
         present(importingActivity, animated: true, completion: {
             tx.addOutput(amount: balance - fee, script: script)
             var keys = [key]
-            let _ = tx.sign(forkId: (self.currency as! Bitcoin).forkId, keys: &keys)
+            _ = tx.sign(forkId: currency.forkId, keys: &keys)
                 guard tx.isSigned else {
                     self.importingActivity.dismiss(animated: true, completion: {
                         self.showErrorMessage(S.Import.Error.signing)
                     })
                     return
                 }
-                self.walletManager.peerManager?.publishTx(tx, completion: { [weak self] success, error in
+                self.walletManager.peerManager?.publishTx(tx, completion: { [weak self] _, error in
                     guard let myself = self else { return }
                     myself.importingActivity.dismiss(animated: true, completion: {
                         DispatchQueue.main.async {

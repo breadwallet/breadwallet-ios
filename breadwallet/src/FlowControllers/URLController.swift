@@ -8,7 +8,9 @@
 
 import UIKit
 
-class URLController : Trackable, Subscriber {
+// swiftlint:disable cyclomatic_complexity
+
+class URLController: Trackable, Subscriber {
 
     init(walletManager: BTCWalletManager) {
         self.walletManager = walletManager
@@ -37,9 +39,9 @@ class URLController : Trackable, Subscriber {
         }
         
         saveEvent("send.handleURL", attributes: [
-            "scheme" : url.scheme ?? C.null,
-            "host" : url.host ?? C.null,
-            "path" : url.path
+            "scheme": url.scheme ?? C.null,
+            "host": url.host ?? C.null,
+            "path": url.path
         ])
 
         guard let scheme = url.scheme else { return false }
@@ -100,7 +102,6 @@ class URLController : Trackable, Subscriber {
                 
             default:
                 print("unknown deep link: \(target)")
-                break
             }
             return true
             
@@ -146,7 +147,7 @@ class URLController : Trackable, Subscriber {
         }
     }
 
-    private func handlePaymentRequestUri(_ uri: URL, currency: CurrencyDef) -> Bool {
+    private func handlePaymentRequestUri(_ uri: URL, currency: Currency) -> Bool {
         if let request = PaymentRequest(string: uri.absoluteString, currency: currency) {
             Store.trigger(name: .receivedPaymentRequest(request))
             return true
@@ -161,7 +162,7 @@ class URLController : Trackable, Subscriber {
         let alert = UIAlertController(title: S.BitID.title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.BitID.deny, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: S.BitID.approve, style: .default, handler: { _ in
-            bitid.runCallback() { data, response, error in
+            bitid.runCallback { _, response, error in
                 if let resp = response as? HTTPURLResponse, error == nil && resp.statusCode >= 200 && resp.statusCode < 300 {
                     let alert = UIAlertController(title: S.BitID.success, message: nil, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))

@@ -14,7 +14,7 @@ enum FeeLevel {
     case economy
 }
 
-struct Fees : Codable {
+struct Fees: Codable {
     let regular: UInt64
     let economy: UInt64
     let gasPrice: UInt256
@@ -44,9 +44,9 @@ struct Fees : Codable {
     }
 }
 
-class FeeUpdater : Trackable {
+class FeeUpdater: Trackable {
 
-    //MARK: - Public
+    // MARK: - Public
     
     init(walletManager: WalletManager) {
         self.walletManager = walletManager
@@ -85,7 +85,7 @@ class FeeUpdater : Trackable {
         timer = nil
     }
 
-    //MARK: - Private
+    // MARK: - Private
     
     private let walletManager: WalletManager
     private var timer: Timer?
@@ -122,7 +122,7 @@ class FeeUpdater : Trackable {
                 Store.perform(action: WalletChange(self.walletManager.currency).setFees(newFees))
                 completion()
             } else if case .error(let error) = result {
-                print("getGasPrice error: \(String(describing: error))");
+                print("getGasPrice error: \(String(describing: error))")
                 completion()
             }
         }

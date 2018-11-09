@@ -11,9 +11,9 @@ import LocalAuthentication
 
 private let topControlHeight: CGFloat = 32.0
 
-class LoginViewController : UIViewController, Subscriber, Trackable {
+class LoginViewController: UIViewController, Subscriber, Trackable {
 
-    //MARK: - Public
+    // MARK: - Public
     var walletManager: BTCWalletManager? {
         didSet {
             guard walletManager != nil else { return }
@@ -26,7 +26,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         self.isPresentedForLock = isPresentedForLock
         self.disabledView = WalletDisabledView()
         var shouldUseBiometrics = false
-        if let walletManager = walletManager, LAContext.canUseBiometrics && !walletManager.pinLoginRequired && Store.state.isBiometricsEnabled{
+        if let walletManager = walletManager, LAContext.canUseBiometrics && !walletManager.pinLoginRequired && Store.state.isBiometricsEnabled {
             shouldUseBiometrics = true
         }
         self.pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0, shouldShowBiometrics: shouldUseBiometrics)
@@ -40,7 +40,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         Store.unsubscribe(self)
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let backgroundView = UIView()
     private let pinPad: PinPadViewController
     private let pinViewContainer = UIView()
@@ -142,7 +142,11 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         backgroundView.constrain(toSuperviewEdges: nil)
         backgroundView.backgroundColor = .darkBackground
         pinViewContainer.constrain(toSuperviewEdges: nil)
-        topControlTop = logoBackground.topAnchor.constraint(equalTo: view.topAnchor, constant: topControlHeight + (E.isIPhoneX ? C.padding[9] + 35.0 : C.padding[9] + 20.0))
+        topControlTop = logoBackground.topAnchor.constraint(equalTo: view.topAnchor,
+                                                            constant: topControlHeight
+                                                                + (E.isIPhoneX
+                                                                    ? C.padding[9] + 35.0
+                                                                    : C.padding[9] + 20.0))
         logoBackground.constrain([
             topControlTop,
             logoBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -217,12 +221,12 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             label.alpha = 1.0
             self.pinView?.alpha = 0.0
             self.view.layoutIfNeeded()
-        }) { completion in
+        }, completion: { _ in
             self.dismiss(animated: true, completion: {
                 Store.perform(action: LoginSuccess())
             })
             Store.trigger(name: .showStatusBar)
-        }
+        })
     }
 
     private func authenticationFailed() {

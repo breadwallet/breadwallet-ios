@@ -117,20 +117,20 @@ open class BRHTTPMiddlewareResponse {
         addr.sin_family = sa_family_t(AF_INET)
         addr.sin_port = Int(OSHostByteOrder()) == OSLittleEndian ? _OSSwapInt16(port) : port
         addr.sin_addr = in_addr(s_addr: inet_addr(listenAddress))
-        addr.sin_zero = (0, 0, 0, 0, 0, 0, 0 ,0)
+        addr.sin_zero = (0, 0, 0, 0, 0, 0, 0, 0)
         
         var bind_addr = sockaddr()
         memcpy(&bind_addr, &addr, Int(MemoryLayout<sockaddr_in>.size))
         
         if bind(sfd, &bind_addr, socklen_t(MemoryLayout<sockaddr_in>.size)) == -1 {
-            perror("bind error");
+            perror("bind error")
             _ = Darwin.shutdown(sfd, SHUT_RDWR)
             close(sfd)
             throw BRHTTPServerError.socketBindFailed
         }
         
         if listen(sfd, maxPendingConnections) == -1 {
-            perror("listen error");
+            perror("listen error")
             _ = Darwin.shutdown(sfd, SHUT_RDWR)
             close(sfd)
             throw BRHTTPServerError.socketListenFailed
@@ -168,7 +168,7 @@ open class BRHTTPMiddlewareResponse {
             objc_sync_enter(self)
             defer { objc_sync_exit(self) }
             isShutdownCancelled = false
-            if self.clients.count == 0 {
+            if self.clients.isEmpty {
                 shutdownServer()
                 print("[BRHTTPServer] suspended")
             } else {
@@ -230,7 +230,7 @@ open class BRHTTPMiddlewareResponse {
                 self.addClient(cli_fd)
                 self.Q.async {
                     while let req = try? BRHTTPRequestImpl(readFromFd: cli_fd, queue: self.Q) {
-                        self.dispatch(middleware: self.middleware, req: req) { resp in
+                        self.dispatch(middleware: self.middleware, req: req) { _ in
                             _ = Darwin.shutdown(cli_fd, SHUT_RDWR)
                             close(cli_fd)
                             self.rmClient(cli_fd)
@@ -312,7 +312,7 @@ open class BRHTTPRequestImpl: BRHTTPRequest {
             && headers["connection"]![0] == "keep-alive")
     }
     
-    static let rangeRe = try! NSRegularExpression(pattern: "bytes=(\\d*)-(\\d*)", options: .caseInsensitive)
+    static let rangeRe = (try? NSRegularExpression(pattern: "bytes=(\\d*)-(\\d*)", options: .caseInsensitive)) ?? NSRegularExpression()
     
     public required init(fromRequest r: BRHTTPRequest) {
         fd = r.fd
@@ -378,7 +378,7 @@ open class BRHTTPRequestImpl: BRHTTPRequest {
         var n = 0
         repeat {
             n = self.read()
-            if (n > 13 /* CR */) { chars.append(Character(UnicodeScalar(n)!)) }
+            if n > 13 /* CR */ { chars.append(Character(UnicodeScalar(n)!)) }
         } while n > 0 && n != 10 /* NL */
         if n == -1 {
             throw BRHTTPServerError.socketRecvFailed
@@ -400,7 +400,7 @@ open class BRHTTPRequestImpl: BRHTTPRequest {
     }
     
     open var contentLength: Int {
-        if let hdrs = headers["content-length"] , hasBody && hdrs.count > 0 {
+        if let hdrs = headers["content-length"], hasBody && !hdrs.isEmpty {
             if let i = Int(hdrs[0]) {
                 return i
             }
@@ -409,7 +409,7 @@ open class BRHTTPRequestImpl: BRHTTPRequest {
     }
     
     open var contentType: String {
-        if let hdrs = headers["content-type"] , hdrs.count > 0 { return hdrs[0] }
+        if let hdrs = headers["content-type"], !hdrs.isEmpty { return hdrs[0] }
         return "application/octet-stream"
     }
     
@@ -458,8 +458,7 @@ open class BRHTTPRequestImpl: BRHTTPRequest {
         }
         guard let rngHeader = headers["range"]?[0],
             let match = BRHTTPRequestImpl.rangeRe.matches(in: rngHeader, options: .anchored, range:
-                NSRange(location: 0, length: rngHeader.count)).first
-            , match.numberOfRanges == 3 else {
+                NSRange(location: 0, length: rngHeader.count)).first, match.numberOfRanges == 3 else {
                 throw BRHTTPServerError.invalidRangeHeader
         }
         let startStr = (rngHeader as NSString).substring(with: match.range(at: 1))
@@ -543,7 +542,7 @@ open class BRHTTPResponse {
         507: "Insufficient Storage",
         508: "Loop Detected",
         510: "Not Extended",
-        511: "Network Authentication Required",
+        511: "Network Authentication Required"
         
     ]
     

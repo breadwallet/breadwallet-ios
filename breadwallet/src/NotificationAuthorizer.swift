@@ -51,14 +51,13 @@ struct NotificationAuthorizer: Trackable {
         }
     }
     
-    private func showAlertForInitialAuthorization(fromViewController viewController:
-        UIViewController, completion: @escaping AuthorizationHandler) {
+    private func showAlertForInitialAuthorization(fromViewController viewController: UIViewController, completion: @escaping AuthorizationHandler) {
         let alert = UIAlertController(title: S.PushNotifications.title,
                                       message: S.PushNotifications.body,
                                       preferredStyle: .alert)
         
         let enableAction = UIAlertAction(title: S.Button.ok, style: .default) { _ in
-            UNUserNotificationCenter.current().requestAuthorization(options: self.options) { (granted, error) in
+            UNUserNotificationCenter.current().requestAuthorization(options: self.options) { (granted, _) in
                 DispatchQueue.main.async {
                     if granted {
                         UIApplication.shared.registerForRemoteNotifications()
@@ -79,8 +78,7 @@ struct NotificationAuthorizer: Trackable {
         viewController.present(alert, animated: true, completion: nil)
     }
     
-    private func showAlertForDisabledNotifications(fromViewController viewController:
-        UIViewController, completion: @escaping AuthorizationHandler) {
+    private func showAlertForDisabledNotifications(fromViewController viewController: UIViewController, completion: @escaping AuthorizationHandler) {
         let alert = UIAlertController(title: S.PushNotifications.disabled,
                                       message: S.PushNotifications.enableInstructions,
                                       preferredStyle: .alert)

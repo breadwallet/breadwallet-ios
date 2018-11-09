@@ -19,7 +19,7 @@ class BRCoreTests: XCTestCase {
     }
     
     func testCore() {
-        XCTAssert(1 == BRRunTests());
+        XCTAssert(1 == BRRunTests())
     }
     
     func testCoreEthereum () {

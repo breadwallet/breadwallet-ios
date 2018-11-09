@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DrawableCircle : UIView {
+class DrawableCircle: UIView {
 
     private let circleLayer = CAShapeLayer()
     private let checkLayer = CAShapeLayer()

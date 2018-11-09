@@ -8,13 +8,13 @@
 
 import UIKit
 
-class DelistedTokenView : UIView {
+class DelistedTokenView: UIView {
     
-    private let currency: CurrencyDef
+    private let currency: Currency
     private let label = UILabel(font: .customBody(size: 14.0), color: .white)
     private let button = UIButton.outline(title: S.Button.moreInfo)
     
-    init(currency: CurrencyDef) {
+    init(currency: Currency) {
         self.currency = currency
         super.init(frame: .zero)
         self.translatesAutoresizingMaskIntoConstraints = false

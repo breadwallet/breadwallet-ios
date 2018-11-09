@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UnEditableTextView : UITextView {
+class UnEditableTextView: UITextView {
     override var canBecomeFirstResponder: Bool {
         return false
     }

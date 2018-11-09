@@ -9,6 +9,8 @@
 import Foundation
 import BRCore
 
+// swiftlint:disable cyclomatic_complexity
+
 enum PaymentRequestType {
     case local
     case remote
@@ -16,7 +18,7 @@ enum PaymentRequestType {
 
 struct PaymentRequest {
 
-    init?(string: String, currency: CurrencyDef) {
+    init?(string: String, currency: Currency) {
         self.currency = currency
         if var url = NSURL(string: string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")) {
             if let scheme = url.scheme, let resourceSpecifier = url.resourceSpecifier, url.host == nil {
@@ -30,7 +32,7 @@ struct PaymentRequest {
                             // the payment request stores the address in legacy address format
                             let cashAddr = "\(scheme):\(host)"
                             toAddress = cashAddr.bitcoinAddr
-                            if toAddress == "" {
+                            if toAddress.isNilOrEmpty {
                                 toAddress = host
                                 warningMessage = S.Send.legacyAddressWarning
                             }
@@ -93,13 +95,13 @@ struct PaymentRequest {
         return nil
     }
 
-    init?(data: Data, currency: CurrencyDef) {
+    init?(data: Data, currency: Currency) {
         self.currency = currency
         self.paymentProtocolRequest = PaymentProtocolRequest(data: data)
         type = .local
     }
 
-    init?(json: String, currency: CurrencyDef) {
+    init?(json: String, currency: Currency) {
         self.currency = currency
         self.paymentProtocolRequest = PaymentProtocolRequest(json: json)
         type = .local
@@ -116,8 +118,7 @@ struct PaymentRequest {
         if self.currency.matches(Currencies.btc) {
             request.setValue("application/bitcoin-paymentrequest", forHTTPHeaderField: "Accept")
             //request.addValue("application/payment-request", forHTTPHeaderField: "Accept") // this breaks bitpay :(
-        }
-        else {
+        } else {
             request.setValue("application/payment-request", forHTTPHeaderField: "Accept")
         }
 
@@ -128,14 +129,12 @@ struct PaymentRequest {
 
             if response.mimeType?.lowercased() == "application/bitcoin-paymentrequest" {
                 completion(PaymentRequest(data: data, currency: Currencies.btc))
-            }
-            else if response.mimeType?.lowercased() == "application/payment-request" {
+            } else if response.mimeType?.lowercased() == "application/payment-request" {
                 // TODO: XXX validate hash from response header
                 let req = PaymentRequest(json: String(data: data, encoding: .utf8) ?? "", currency: self.currency)
                 // TODO: XXX populate the certified common name from the https response
                 completion(req)
-            }
-            else if response.mimeType?.lowercased() == "text/uri-list" {
+            } else if response.mimeType?.lowercased() == "text/uri-list" {
                 for line in (String(data: data, encoding: .utf8)?.components(separatedBy: "\n"))! {
                     if line.hasPrefix("#") { continue }
                     completion(PaymentRequest(string: line, currency: self.currency))
@@ -150,13 +149,13 @@ struct PaymentRequest {
         }.resume()
     }
 
-    static func requestString(withAddress address: String, forAmount amount: UInt256, currency: CurrencyDef) -> String {
+    static func requestString(withAddress address: String, forAmount amount: UInt256, currency: Currency) -> String {
         let amountString = amount.string(decimals: currency.commonUnit.decimals)
         guard let uri = currency.addressURI(address) else { return "" }
         return "\(uri)?amount=\(amountString)"
     }
 
-    let currency: CurrencyDef
+    let currency: Currency
     var toAddress: String?
     var displayAddress: String? {
         if currency.matches(Currencies.bch) {

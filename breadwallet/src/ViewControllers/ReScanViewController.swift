@@ -8,15 +8,15 @@
 
 import UIKit
 
-class ReScanViewController : UIViewController, Subscriber {
+class ReScanViewController: UIViewController, Subscriber {
 
-    init(currency: CurrencyDef) {
+    init(currency: Currency) {
         self.currency = currency
         self.faq = .buildFaqButton(articleId: ArticleIds.reScan, currency: currency)
         super.init(nibName: nil, bundle: nil)
     }
 
-    private let currency: CurrencyDef
+    private let currency: Currency
     private let header = UILabel(font: .customBold(size: 26.0), color: .white)
     private let body = UILabel.wrapping(font: .systemFont(ofSize: 15.0))
     private let button = BRDButton(title: S.ReScan.buttonTitle, type: .primary)

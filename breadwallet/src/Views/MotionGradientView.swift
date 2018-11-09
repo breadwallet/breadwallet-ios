@@ -9,7 +9,7 @@
 import UIKit
 import CoreMotion
 
-class MotionGradientView : UIView {
+class MotionGradientView: UIView {
 
     private let motionLayer = MotionGradientLayer()
 
@@ -29,7 +29,7 @@ class MotionGradientView : UIView {
     }
 }
 
-class MotionGradientLayer : CAGradientLayer {
+class MotionGradientLayer: CAGradientLayer {
 
     private var gradientColors = [UIColor.newGradientEnd.cgColor, UIColor.newGradientStart.cgColor]
     private var motion: CMMotionManager?
@@ -60,7 +60,7 @@ class MotionGradientLayer : CAGradientLayer {
 
         let motion = CMMotionManager()
         if motion.isAccelerometerAvailable {
-            motion.startAccelerometerUpdates(to: OperationQueue.main, withHandler: { [weak self] (data, error) in
+            motion.startAccelerometerUpdates(to: OperationQueue.main, withHandler: { [weak self] (data, _) in
                 guard let data = data else { return }
                 var x = data.acceleration.x + 0.5
                 x = max(min(x, 1), 0)
@@ -85,4 +85,3 @@ fileprivate extension CABasicAnimation {
         return animation
     }
 }
-

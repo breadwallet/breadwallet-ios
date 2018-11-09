@@ -10,7 +10,7 @@ import UIKit
 
 private let progressHeight: CGFloat = 8.0
 
-class SyncingView : UIView {
+class SyncingView: UIView {
 
     init() {
         super.init(frame: .zero)

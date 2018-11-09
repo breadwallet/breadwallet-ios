@@ -55,19 +55,19 @@ enum AlertType {
     }
 }
 
-extension AlertType : Equatable {}
+extension AlertType: Equatable {}
 
-func ==(lhs: AlertType, rhs: AlertType) -> Bool {
+func == (lhs: AlertType, rhs: AlertType) -> Bool {
     switch (lhs, rhs) {
-    case (.pinSet(_), .pinSet(_)):
+    case (.pinSet, .pinSet):
         return true
-    case (.paperKeySet(_), .paperKeySet(_)):
+    case (.paperKeySet, .paperKeySet):
         return true
     case (.sendSuccess, .sendSuccess):
         return true
     case (.addressesCopied, .addressesCopied):
         return true
-    case (.sweepSuccess(_), .sweepSuccess(_)):
+    case (.sweepSuccess, .sweepSuccess):
         return true
     case (.none, .none):
         return true
@@ -76,7 +76,7 @@ func ==(lhs: AlertType, rhs: AlertType) -> Bool {
     }
 }
 
-class AlertView : UIView, GradientDrawable {
+class AlertView: UIView, GradientDrawable {
 
     private let type: AlertType
     private let header = UILabel()

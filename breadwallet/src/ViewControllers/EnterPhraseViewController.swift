@@ -16,7 +16,7 @@ enum PhraseEntryReason {
 
 typealias EnterPhraseCallback = (String) -> Void
 
-class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Trackable {
+class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackable {
 
     init(walletManager: BTCWalletManager, reason: PhraseEntryReason) {
         self.walletManager = walletManager
@@ -28,7 +28,7 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Tracka
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let walletManager: BTCWalletManager
     private let reason: PhraseEntryReason
     private let enterPhrase: EnterPhraseCollectionViewController
@@ -111,12 +111,12 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Tracka
         instruction.text = S.RecoverWallet.instruction
         faq.tintColor = .white
         switch reason {
-        case .setSeed(_):
+        case .setSeed:
             saveEvent("enterPhrase.setSeed")
             title = S.RecoverWallet.header
             subheader.text = S.RecoverWallet.subheader
             moreInfoButton.isHidden = true
-        case .validateForResettingPin(_):
+        case .validateForResettingPin:
             saveEvent("enterPhrase.resettingPin")
             title = S.RecoverWallet.headerResetPin
             subheader.text = S.RecoverWallet.subheaderResetPin
@@ -126,7 +126,7 @@ class EnterPhraseViewController : UIViewController, UIScrollViewDelegate, Tracka
                 Store.trigger(name: .presentFaq(ArticleIds.resetPinWithPaperKey, nil))
             }
             faq.isHidden = true
-        case .validateForWipingWallet(_):
+        case .validateForWipingWallet:
             saveEvent("enterPhrase.wipeWallet")
             title = S.WipeWallet.title
             subheader.text = S.WipeWallet.instruction

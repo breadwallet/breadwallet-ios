@@ -28,11 +28,10 @@ import BRCore
 import libbz2
 import UIKit
 
-
 public extension String {
     static func buildQueryString(_ options: [String: [String]]?, includeQ: Bool = false) -> String {
         var s = ""
-        if let options = options , options.count > 0 {
+        if let options = options, !options.isEmpty {
             s = includeQ ? "?" : ""
             var i = 0
             for (k, vals) in options {
@@ -128,23 +127,20 @@ let VAR_INT64_HEADER: UInt64 = 0xff
 extension NSMutableData {
 
     func appendVarInt(i: UInt64) {
-        if (i < VAR_INT16_HEADER) {
+        if i < VAR_INT16_HEADER {
             var payload = UInt8(i)
             append(&payload, length: MemoryLayout<UInt8>.size)
-        }
-        else if (Int32(i) <= UINT16_MAX) {
+        } else if Int32(i) <= UINT16_MAX {
             var header = UInt8(VAR_INT16_HEADER)
             var payload = CFSwapInt16HostToLittle(UInt16(i))
             append(&header, length: MemoryLayout<UInt8>.size)
             append(&payload, length: MemoryLayout<UInt16>.size)
-        }
-        else if (UInt32(i) <= UINT32_MAX) {
+        } else if UInt32(i) <= UINT32_MAX {
             var header = UInt8(VAR_INT32_HEADER)
             var payload = CFSwapInt32HostToLittle(UInt32(i))
             append(&header, length: MemoryLayout<UInt8>.size)
             append(&payload, length: MemoryLayout<UInt32>.size)
-        }
-        else {
+        } else {
             var header = UInt8(VAR_INT64_HEADER)
             var payload = CFSwapInt64HostToLittle(i)
             append(&header, length: MemoryLayout<UInt8>.size)
@@ -181,47 +177,45 @@ public extension Data {
     }
 
     var bzCompressedData: Data? {
-        get {
-            guard !self.isEmpty else {
-                return self
+        guard !self.isEmpty else {
+            return self
+        }
+
+        var compressed = Data()
+        var stream = bz_stream()
+        var mself = self
+        var success = true
+        mself.withUnsafeMutableBytes { (selfBuff: UnsafeMutablePointer<Int8>) -> Void in
+            let outBuff = UnsafeMutablePointer<Int8>.allocate(capacity: Int(BZCompressionBufferSize))
+            defer { outBuff.deallocate() }
+
+            stream.next_in = selfBuff
+            stream.avail_in = UInt32(self.count)
+            stream.next_out = outBuff
+            stream.avail_out = BZCompressionBufferSize
+
+            var bzret = BZ2_bzCompressInit(&stream, BZDefaultBlockSize, 0, BZDefaultWorkFactor)
+            guard bzret == BZ_OK else {
+                print("failed compression init")
+                success = false
+                return
             }
-            
-            var compressed = Data()
-            var stream = bz_stream()
-            var mself = self
-            var success = true
-            mself.withUnsafeMutableBytes { (selfBuff: UnsafeMutablePointer<Int8>) -> Void in
-                let outBuff = UnsafeMutablePointer<Int8>.allocate(capacity: Int(BZCompressionBufferSize))
-                defer { outBuff.deallocate() }
-                
-                stream.next_in = selfBuff
-                stream.avail_in = UInt32(self.count)
-                stream.next_out = outBuff
-                stream.avail_out = BZCompressionBufferSize
-                
-                var bzret = BZ2_bzCompressInit(&stream, BZDefaultBlockSize, 0, BZDefaultWorkFactor)
-                guard bzret == BZ_OK else {
-                    print("failed compression init")
+            repeat {
+                bzret = BZ2_bzCompress(&stream, stream.avail_in > 0 ? BZ_RUN : BZ_FINISH)
+                guard bzret >= BZ_OK else {
+                    print("failed compress")
                     success = false
                     return
                 }
-                repeat {
-                    bzret = BZ2_bzCompress(&stream, stream.avail_in > 0 ? BZ_RUN : BZ_FINISH)
-                    guard bzret >= BZ_OK else {
-                        print("failed compress")
-                        success = false
-                        return
-                    }
-                    let bpp = UnsafeBufferPointer(start: outBuff, count: (Int(BZCompressionBufferSize) - Int(stream.avail_out)))
-                    compressed.append(bpp)
-                    stream.next_out = outBuff
-                    stream.avail_out = BZCompressionBufferSize
-                } while bzret != BZ_STREAM_END
-            }
-            BZ2_bzCompressEnd(&stream)
-            guard success else { return nil }
-            return compressed
+                let bpp = UnsafeBufferPointer(start: outBuff, count: (Int(BZCompressionBufferSize) - Int(stream.avail_out)))
+                compressed.append(bpp)
+                stream.next_out = outBuff
+                stream.avail_out = BZCompressionBufferSize
+            } while bzret != BZ_STREAM_END
         }
+        BZ2_bzCompressEnd(&stream)
+        guard success else { return nil }
+        return compressed
     }
 
     init?(bzCompressedData data: Data) {
@@ -334,7 +328,7 @@ public extension Data {
     }
 
     public func compactSign(key: BRKey) -> Data {
-        return self.withUnsafeBytes({ (selfBytes: UnsafePointer<UInt8>) -> Data in
+        return self.withUnsafeBytes({ (_: UnsafePointer<UInt8>) -> Data in
             var data = Data(count: 65)
             var k = key
             _ = data.withUnsafeMutableBytes({ BRKeyCompactSign(&k, $0, 65, self.uInt256) })
@@ -423,10 +417,9 @@ public extension Date {
     // Copyright © 2015 Foster Yin. All rights reserved.
     fileprivate static func cachedThreadLocalObjectWithKey<T: AnyObject>(_ key: String, create: () -> T) -> T {
         let threadDictionary = Thread.current.threadDictionary
-        if let cachedObject = threadDictionary[key] as! T? {
+        if let cachedObject = threadDictionary[key] as? T {
             return cachedObject
-        }
-        else {
+        } else {
             let newObject = create()
             threadDictionary[key] = newObject
             return newObject
@@ -559,10 +552,8 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
     var flattened: [Key: String] {
         var ret = [Key: String]()
         for (k, v) in self {
-            if let v = v as? [String] {
-                if v.count > 0 {
-                    ret[k] = v[0]
-                }
+            if let v = v as? [String], !v.isEmpty {
+                ret[k] = v[0]
             }
         }
         return ret
@@ -609,8 +600,7 @@ typealias Quintet = UInt8
 typealias EncodedChar = UInt8
 
 func quintetsFromBytes(_ firstByte: Byte, _ secondByte: Byte, _ thirdByte: Byte, _ fourthByte: Byte, _ fifthByte: Byte)
-    -> (Quintet, Quintet, Quintet, Quintet, Quintet, Quintet, Quintet, Quintet)
-{
+    -> (Quintet, Quintet, Quintet, Quintet, Quintet, Quintet, Quintet, Quintet) {
     return (
         firstQuintet(firstByte: firstByte),
         secondQuintet(firstByte: firstByte, secondByte: secondByte),
@@ -624,8 +614,7 @@ func quintetsFromBytes(_ firstByte: Byte, _ secondByte: Byte, _ thirdByte: Byte,
 }
 
 func quintetsFromBytes(_ firstByte: Byte, _ secondByte: Byte, _ thirdByte: Byte, _ fourthByte: Byte)
-    -> (Quintet, Quintet, Quintet, Quintet, Quintet, Quintet, Quintet)
-{
+    -> (Quintet, Quintet, Quintet, Quintet, Quintet, Quintet, Quintet) {
     return (
         firstQuintet(firstByte: firstByte),
         secondQuintet(firstByte: firstByte, secondByte: secondByte),
@@ -638,8 +627,7 @@ func quintetsFromBytes(_ firstByte: Byte, _ secondByte: Byte, _ thirdByte: Byte,
 }
 
 func quintetsFromBytes(_ firstByte: Byte, _ secondByte: Byte, _ thirdByte: Byte)
-    -> (Quintet, Quintet, Quintet, Quintet, Quintet)
-{
+    -> (Quintet, Quintet, Quintet, Quintet, Quintet) {
     return (
         firstQuintet(firstByte: firstByte),
         secondQuintet(firstByte: firstByte, secondByte: secondByte),
@@ -650,8 +638,7 @@ func quintetsFromBytes(_ firstByte: Byte, _ secondByte: Byte, _ thirdByte: Byte)
 }
 
 func quintetsFromBytes(_ firstByte: Byte, _ secondByte: Byte)
-    -> (Quintet, Quintet, Quintet, Quintet)
-{
+    -> (Quintet, Quintet, Quintet, Quintet) {
     return (
         firstQuintet(firstByte: firstByte),
         secondQuintet(firstByte: firstByte, secondByte: secondByte),
@@ -661,8 +648,7 @@ func quintetsFromBytes(_ firstByte: Byte, _ secondByte: Byte)
 }
 
 func quintetsFromBytes(_ firstByte: Byte)
-    -> (Quintet, Quintet)
-{
+    -> (Quintet, Quintet) {
     return (
         firstQuintet(firstByte: firstByte),
         secondQuintet(firstByte: firstByte, secondByte: 0)

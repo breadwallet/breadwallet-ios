@@ -20,8 +20,8 @@ extension UISlider {
         layer.cornerRadius = bounds.height/2.0
         layer.frame = CGRect(x: bounds.minX, y: bounds.minY, width: bounds.width - offset, height: bounds.height)
         layer.colors = colors
-        layer.endPoint = CGPoint(x: 1.0, y:  1.0)
-        layer.startPoint = CGPoint(x: 0.0, y:  1.0)
+        layer.endPoint = CGPoint(x: 1.0, y: 1.0)
+        layer.startPoint = CGPoint(x: 0.0, y: 1.0)
 
         UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, 0.0)
         layer.render(in: UIGraphicsGetCurrentContext()!)

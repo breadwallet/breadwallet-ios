@@ -13,9 +13,9 @@ enum SegmentedButtonType {
     case right
 }
 
-class SegmentedButton : UIControl {
+class SegmentedButton: UIControl {
 
-    //MARK: - Public
+    // MARK: - Public
     init(title: String, type: SegmentedButtonType) {
         self.title = title
         self.type = type
@@ -24,7 +24,7 @@ class SegmentedButton : UIControl {
         setupViews()
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let title: String
     private let type: SegmentedButtonType
     private let label = UILabel(font: .customMedium(size: 13.0), color: .white)

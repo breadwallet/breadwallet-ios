@@ -14,14 +14,14 @@ enum ModalHeaderViewStyle {
     case transaction
 }
 
-class ModalHeaderView : UIView {
+class ModalHeaderView: UIView {
 
-    //MARK - Public
+    // MARK: - Public
     var closeCallback: (() -> Void)? {
         didSet { close.tap = closeCallback }
     }
     
-    init(title: String, style: ModalHeaderViewStyle, faqInfo: String? = nil, currency: CurrencyDef? = nil) {
+    init(title: String, style: ModalHeaderViewStyle, faqInfo: String? = nil, currency: Currency? = nil) {
         self.titleLabel.text = title
         self.style = style
         
@@ -38,10 +38,10 @@ class ModalHeaderView : UIView {
         self.titleLabel.text = title
     }
 
-    //MARK - Private
+    // MARK: - Private
     private let titleLabel = UILabel(font: .customBold(size: 17.0))
     private let close = UIButton.close
-    private var faq: UIButton? = nil
+    private var faq: UIButton?
     private let border = UIView()
     private let buttonSize: CGFloat = 44.0
     private let style: ModalHeaderViewStyle
