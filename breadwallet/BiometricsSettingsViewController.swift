@@ -10,7 +10,7 @@ import UIKit
 import LocalAuthentication
 import BRCore
 
-class BiometricsSettingsViewController : UIViewController, Subscriber {
+class BiometricsSettingsViewController: UIViewController, Subscriber {
 
     var presentSpendingLimit: (() -> Void)?
 
@@ -109,7 +109,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
             guard let myself = self else { return }
             
             if LAContext.canUseBiometrics {
-                Store.perform(action: Biometrics.setIsEnabled(myself.toggle.isOn))
+                Store.perform(action: Biometrics.SetIsEnabled(myself.toggle.isOn))
                 myself.textView.attributedText = myself.textViewText
             } else {
                 myself.presentCantUseBiometricsAlert()
@@ -138,7 +138,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
             ])
         let linkAttributes = [
                 NSAttributedStringKey.font: UIFont.customMedium(size: 13.0),
-                NSAttributedStringKey.link: NSURL(string:"http://spending-limit")!]
+                NSAttributedStringKey.link: NSURL(string: "http://spending-limit")!]
 
         if let range = string.range(of: linkText, options: [], range: nil, locale: nil) {
             let from = range.lowerBound.samePosition(in: string.utf16)!
@@ -167,7 +167,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
     }
 }
 
-extension BiometricsSettingsViewController : UITextViewDelegate {
+extension BiometricsSettingsViewController: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
         if LAContext.canUseBiometrics {
             guard navigationController?.presentedViewController == nil else { return false }

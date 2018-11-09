@@ -10,7 +10,7 @@ import Foundation
 
 let tokenListMetaDataKey = "token-list-metadata-2"
 
-class CurrencyListMetaData : BRKVStoreObject, BRCoding {
+class CurrencyListMetaData: BRKVStoreObject, BRCoding {
     
     var classVersion = 2
     var enabledCurrencies = [String]()
@@ -104,11 +104,11 @@ extension CurrencyListMetaData {
     //eg. address = ["0x722dd3f80bac40c951b51bdd28dd19d435762180", "0x3efd578b271d034a69499e4a2d933c631d44b9ad"]
     func addTokenAddresses(addresses: [String]) {
         hiddenCurrencies = hiddenNonTokenCurrencies + hiddenTokenAddresses.filter { return !addresses.contains($0) }.map { C.erc20Prefix + $0 }
-        enabledCurrencies = enabledCurrencies + addresses.map { C.erc20Prefix + $0 }
+        enabledCurrencies += addresses.map { C.erc20Prefix + $0 }
     }
     
     func removeTokenAddresses(addresses: [String]) {
         enabledCurrencies = enabledNonTokenCurrencies + enabledTokenAddresses.filter { return !addresses.contains($0) }.map { C.erc20Prefix + $0 }
-        hiddenCurrencies = hiddenCurrencies + addresses.map { C.erc20Prefix + $0 }
+        hiddenCurrencies += addresses.map { C.erc20Prefix + $0 }
     }
 }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SendCell : UIView {
+class SendCell: UIView {
 
     static let defaultHeight: CGFloat = 72.0
 
@@ -34,4 +34,3 @@ class SendCell : UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
-

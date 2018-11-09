@@ -26,7 +26,6 @@
 import Foundation
 import libbz2
 
-
 enum BRBSPatchError: Error {
     case unknown
     case corruptPatch
@@ -34,10 +33,10 @@ enum BRBSPatchError: Error {
     case oldFileDoesntExist
 }
 
-
 class BRBSPatch {
     static let patchLogEnabled = true
-    
+
+    // swiftlint:disable cyclomatic_complexity
     static func patch(_ oldFilePath: String, newFilePath: String, patchFilePath: String)
                       throws -> UnsafeMutablePointer<CUnsignedChar> {
         func offtin(_ b: UnsafePointer<CUnsignedChar>) -> off_t {
@@ -151,7 +150,7 @@ class BRBSPatch {
         var oldPos: off_t = 0, newPos: off_t = 0
         let new = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: Int(newSize) + 1)
         let buf = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: 8)
-        var crtl = Array<off_t>(repeating: 0, count: 3)
+        var crtl = [off_t](repeating: 0, count: 3)
         while newPos < newSize {
             // read control data
             for i in 0...2 {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MenuButton : UIControl {
+class MenuButton: UIControl {
 
     private let container = UIView(color: .grayBackground)
     private let iconView = UIImageView()

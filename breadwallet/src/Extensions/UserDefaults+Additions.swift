@@ -38,27 +38,27 @@ private let debugShouldAutoEnterPinKey = "shouldAutoEnterPIN"
 private let debugShouldSuppressPaperKeyPromptKey = "shouldSuppressPaperKeyPrompt"
 private let debugShouldShowPaperKeyPreviewKey = "debugShouldShowPaperKeyPreviewKey"
 
-typealias ResettableBooleanSetting = Dictionary<String, Bool>
+typealias ResettableBooleanSetting = [String: Bool]
 typealias ResettableObjectSetting = String
 
 extension UserDefaults {
     
     // Add any keys here that you want to be able to reset without having
     // to reset the simulator settings.
-    static let resettableBooleans:[ResettableBooleanSetting] = [
-        [hasPromptedForEmailKey : false],
-        [hasSubscribedToEmailUpdatesKey : false],
-        [hasPromptedBiometricsKey : false],
-        [isBiometricsEnabledKey : false],
-        [hasPromptedShareDataKey : false],
-        [hasOptedInSegwitKey : false],
-        [debugShouldAutoEnterPinKey : false],
-        [debugShouldSuppressPaperKeyPromptKey : false],
-        [debugShouldShowPaperKeyPreviewKey : false],
+    static let resettableBooleans: [ResettableBooleanSetting] = [
+        [hasPromptedForEmailKey: false],
+        [hasSubscribedToEmailUpdatesKey: false],
+        [hasPromptedBiometricsKey: false],
+        [isBiometricsEnabledKey: false],
+        [hasPromptedShareDataKey: false],
+        [hasOptedInSegwitKey: false],
+        [debugShouldAutoEnterPinKey: false],
+        [debugShouldSuppressPaperKeyPromptKey: false],
+        [debugShouldShowPaperKeyPreviewKey: false]
     ]
     
-    static let resettableObjects:[ResettableObjectSetting] = [
-        writePaperPhraseDateKey,
+    static let resettableObjects: [ResettableObjectSetting] = [
+        writePaperPhraseDateKey
     ]
     
     // Called from the Reset User Defaults menu item.
@@ -192,26 +192,26 @@ extension UserDefaults {
     static var fees: Fees? {
         //Returns nil if feeCacheTimeout exceeded
         get {
-            if let feeData = defaults.data(forKey: feesKey), let fees = try? JSONDecoder().decode(Fees.self, from: feeData){
+            if let feeData = defaults.data(forKey: feesKey), let fees = try? JSONDecoder().decode(Fees.self, from: feeData) {
                 return (Date().timeIntervalSince1970 - fees.timestamp) <= C.feeCacheTimeout ? fees : nil
             } else {
                 return nil
             }
         }
         set {
-            if let fees = newValue, let data = try? JSONEncoder().encode(fees){
+            if let fees = newValue, let data = try? JSONEncoder().encode(fees) {
                 defaults.set(data, forKey: feesKey)
             }
         }
     }
     
-    static func rescanState(for currency: CurrencyDef) -> RescanState? {
+    static func rescanState(for currency: Currency) -> RescanState? {
         let key = rescanStateKeyPrefix + currency.code.uppercased()
         guard let data = defaults.object(forKey: key) as? Data else { return nil }
         return try? PropertyListDecoder().decode(RescanState.self, from: data)
     }
     
-    static func setRescanState(for currency: CurrencyDef, to state: RescanState) {
+    static func setRescanState(for currency: Currency, to state: RescanState) {
         let key = rescanStateKeyPrefix + currency.code.uppercased()
         defaults.set(try? PropertyListEncoder().encode(state), forKey: key)
     }
@@ -235,7 +235,7 @@ extension UserDefaults {
     }
 }
 
-//MARK: - Wallet Requires Backup
+// MARK: - Wallet Requires Backup
 extension UserDefaults {
     static var legacyWalletNeedsBackup: Bool? {
         guard defaults.object(forKey: legacyWalletNeedsBackupKey) != nil else {
@@ -249,7 +249,7 @@ extension UserDefaults {
     }
 
     static var writePaperPhraseDate: Date? {
-        get { return defaults.object(forKey: writePaperPhraseDateKey) as! Date? }
+        get { return defaults.object(forKey: writePaperPhraseDateKey) as? Date }
         set { defaults.set(newValue, forKey: writePaperPhraseDateKey) }
     }
 
@@ -267,7 +267,7 @@ extension UserDefaults {
     }
 }
 
-//MARK: - Prompts
+// MARK: - Prompts
 extension UserDefaults {
     static var hasPromptedBiometrics: Bool {
         get { return defaults.bool(forKey: hasPromptedBiometricsKey) }
@@ -285,7 +285,7 @@ extension UserDefaults {
     }
 }
 
-//MARK: - State Restoration
+// MARK: - State Restoration
 extension UserDefaults {
     static var selectedCurrencyCode: String? {
         get {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UpdatingLabel : UILabel {
+class UpdatingLabel: UILabel {
 
     var formatter: NumberFormatter {
         didSet {
@@ -61,7 +61,7 @@ class UpdatingLabel : UILabel {
 
     @objc private func update() {
         let now = CACurrentMediaTime()
-        progress = progress + (now - lastUpdate)
+        progress += (now - lastUpdate)
         lastUpdate = now
         if progress >= duration {
             timer?.invalidate()

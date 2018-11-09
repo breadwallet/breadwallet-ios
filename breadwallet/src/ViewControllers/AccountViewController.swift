@@ -10,13 +10,12 @@ import UIKit
 import BRCore
 import MachO
 
+class AccountViewController: UIViewController, Subscriber {
 
-class AccountViewController : UIViewController, Subscriber {
-
-    //MARK: - Public
-    let currency: CurrencyDef
+    // MARK: - Public
+    let currency: Currency
     
-    init(currency: CurrencyDef, walletManager: WalletManager) {
+    init(currency: Currency, walletManager: WalletManager) {
         self.walletManager = walletManager
         self.currency = currency
         self.headerView = AccountHeaderView(currency: currency)
@@ -36,7 +35,7 @@ class AccountViewController : UIViewController, Subscriber {
         footerView.sellCallback = { Store.perform(action: RootModalActions.Present(modal: .sell(currency: self.currency))) }
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let walletManager: WalletManager
     private let headerView: AccountHeaderView
     private let footerView: AccountFooterView
@@ -59,6 +58,7 @@ class AccountViewController : UIViewController, Subscriber {
             }
         }
     }
+    private var notificationObservers = [String: NSObjectProtocol]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,7 +73,8 @@ class AccountViewController : UIViewController, Subscriber {
                     isJailbroken = true
                 }
             }
-            NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: nil) { note in
+            notificationObservers[NSNotification.Name.UIApplicationWillEnterForeground.rawValue] =
+                NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: nil) { _ in
                 self.showJailbreakWarnings(isJailbroken: isJailbroken)
             }
             showJailbreakWarnings(isJailbroken: isJailbroken)
@@ -188,7 +189,7 @@ class AccountViewController : UIViewController, Subscriber {
         })
     }
     
-    private func didSelectTransaction(transactions: [Transaction], selectedIndex: Int) -> Void {
+    private func didSelectTransaction(transactions: [Transaction], selectedIndex: Int) {
         let transactionDetails = TxDetailViewController(transaction: transactions[selectedIndex])
         transactionDetails.modalPresentationStyle = .overCurrentContext
         transactionDetails.transitioningDelegate = transitionDelegate
@@ -256,6 +257,12 @@ class AccountViewController : UIViewController, Subscriber {
 
     override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
         return .slide
+    }
+
+    deinit {
+        notificationObservers.values.forEach { observer in
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {

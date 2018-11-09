@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PushNotificationsViewController : UIViewController {
+class PushNotificationsViewController: UIViewController {
 
     private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
     private let body = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
@@ -62,7 +62,7 @@ class PushNotificationsViewController : UIViewController {
         
         toggle.valueChanged = { [weak self] in
             guard let myself = self else { return }
-            Store.perform(action: PushNotifications.setIsEnabled(myself.toggle.isOn))
+            Store.perform(action: PushNotifications.SetIsEnabled(myself.toggle.isOn))
             if myself.toggle.isOn {
                 Store.trigger(name: .registerForPushNotificationToken)
             }

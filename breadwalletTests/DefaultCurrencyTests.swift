@@ -30,7 +30,7 @@ class DefaultCurrencyTests : XCTestCase {
 
     func testAction() {
         UserDefaults.defaultCurrencyCode = "USD"
-        Store.perform(action: DefaultCurrency.setDefault("CAD"))
+        Store.perform(action: DefaultCurrency.SetDefault("CAD"))
         XCTAssertTrue(UserDefaults.defaultCurrencyCode == "CAD", "Actions should persist new value")
     }
     

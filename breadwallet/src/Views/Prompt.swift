@@ -55,7 +55,7 @@ enum PromptType {
     }
 
     // This is the trigger that happens when the prompt is tapped
-    func trigger(currency: CurrencyDef) -> TriggerName? {
+    func trigger(currency: Currency) -> TriggerName? {
         switch self {
         case .biometrics: return .promptBiometrics
         case .paperKey: return .promptPaperKey
@@ -98,7 +98,7 @@ class PromptFactory {
     }
 }
 
-class Prompt : UIView {
+class Prompt: UIView {
     
     init(type: PromptType) {
         self.type = type

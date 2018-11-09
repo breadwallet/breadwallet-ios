@@ -8,12 +8,12 @@
 
 import Foundation
 
-class ExchangeUpdater : Subscriber {
+class ExchangeUpdater: Subscriber {
 
-    let currencies: [CurrencyDef]
+    let currencies: [Currency]
     
-    //MARK: - Public
-    init(currencies: [CurrencyDef]) {
+    // MARK: - Public
+    init(currencies: [Currency]) {
         self.currencies = currencies
         currencies.forEach { currency in
             Store.subscribe(self,
@@ -34,7 +34,7 @@ class ExchangeUpdater : Subscriber {
             Store.perform(action: WalletChange(Currencies.btc).setExchangeRates(currentRate: self.findCurrentRate(rates: btcFiatRates), rates: btcFiatRates))
             
             // get token/btc rates
-            Backend.apiClient.tokenExchangeRates() { [weak self] result in
+            Backend.apiClient.tokenExchangeRates { [weak self] result in
                 guard let `self` = self,
                     case .success(let tokenBtcRates) = result else { return }
                 
@@ -64,7 +64,7 @@ class ExchangeUpdater : Subscriber {
 
     private func findCurrentRate(rates: [Rate]) -> Rate {
         guard let currentRate = rates.first( where: { $0.code == Store.state.defaultCurrencyCode }) else {
-            Store.perform(action: DefaultCurrency.setDefault(C.usdCurrencyCode))
+            Store.perform(action: DefaultCurrency.SetDefault(C.usdCurrencyCode))
             return rates.first( where: { $0.code == C.usdCurrencyCode })!
         }
         return currentRate

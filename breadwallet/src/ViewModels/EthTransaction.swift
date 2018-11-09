@@ -13,7 +13,7 @@ struct EthTransaction: EthLikeTransaction {
     
     // MARK: Transaction Properties
     
-    let currency: CurrencyDef = Currencies.eth
+    let currency: Currency = Currencies.eth
     let hash: String
     let status: TransactionStatus
     let direction: TransactionDirection

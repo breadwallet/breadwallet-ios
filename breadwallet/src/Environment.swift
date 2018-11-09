@@ -8,6 +8,9 @@
 
 import UIKit
 
+// swiftlint:disable type_name
+
+/// Environment Flags
 struct E {
     static let isTestnet: Bool = {
         #if Testnet

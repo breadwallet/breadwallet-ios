@@ -15,8 +15,8 @@ extension CGRect {
 
     func expandVertically(_ deltaY: CGFloat) -> CGRect {
         var newFrame = self
-        newFrame.origin.y = newFrame.origin.y - deltaY
-        newFrame.size.height = newFrame.size.height + deltaY
+        newFrame.origin.y -= deltaY
+        newFrame.size.height += deltaY
         return newFrame
     }
 }

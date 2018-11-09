@@ -76,7 +76,7 @@ protocol GasEstimator {
 }
 // MARK: - Base Class
 
-class SenderBase<CurrencyType: CurrencyDef, WalletType: WalletManager> {
+class SenderBase<CurrencyType: Currency, WalletType: WalletManager> {
     
     fileprivate let currency: CurrencyType
     fileprivate let walletManager: WalletType
@@ -206,7 +206,6 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         
         comment = req.details.memo
         
-        
         return result
     }
     
@@ -300,7 +299,9 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
                 return self.postProtocolPaymentIfNeeded(completion: completion)
             }
             
-            guard let peerManager = self.walletManager.peerManager else { return completion(.publishFailure(BRPeerManagerError.posixError(errorCode: -1, description: "network not connected")))}
+            guard let peerManager = self.walletManager.peerManager else {
+                return completion(.publishFailure(BRPeerManagerError.posixError(errorCode: -1, description: "network not connected")))
+            }
             
             peerManager.publishTx(tx) { success, error in
                 DispatchQueue.main.async {
@@ -341,12 +342,11 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         let request = NSMutableURLRequest(url: url, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: protocolPaymentTimeout)
         request.httpMethod = "POST"
         
-        if (protoReq.mimeType == "application/payment-request") {
+        if protoReq.mimeType == "application/payment-request" {
             request.setValue("application/payment", forHTTPHeaderField: "Content-Type")
             request.addValue("application/payment-ack", forHTTPHeaderField: "Accept")
             request.httpBody = payment?.json?.data(using: .utf8)
-        }
-        else {
+        } else {
             request.setValue("application/bitcoin-payment", forHTTPHeaderField: "Content-Type")
             request.addValue("application/bitcoin-paymentack", forHTTPHeaderField: "Accept")
             request.httpBody = Data(bytes: payment!.bytes)
@@ -357,40 +357,36 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         URLSession.shared.dataTask(with: request as URLRequest) { [weak self] data, response, error in
             DispatchQueue.main.async {
                 guard error == nil else {
-                    print("payment error: \(error!)");
+                    print("payment error: \(error!)")
                     return completion(.publishFailure(.posixError(errorCode: 74, description: "\(error!)")))
                 }
                 
                 guard let response = response, let data = data else {
-                    print("no response or data");
+                    print("no response or data")
                     return completion(.publishFailure(.posixError(errorCode: 74, description: "no response or data")))
                 }
                 
                 if response.mimeType == "application/bitcoin-paymentack" && data.count <= 50000 {
                     if let ack = PaymentProtocolACK(data: data) {
                         print("received ack: \(ack)") //TODO - show memo to user
-                        completion(.success(nil,nil))
-                    }
-                    else {
+                        completion(.success(nil, nil))
+                    } else {
                         print("ack failed to deserialize")
                         completion(.publishFailure(.posixError(errorCode: 74, description: "ack failed to deserialize")))
                     }
-                }
-                else if response.mimeType == "application/payment-ack" && data.count <= 50000 {
+                } else if response.mimeType == "application/payment-ack" && data.count <= 50000 {
                     if let ack = PaymentProtocolACK(json: String(data: data, encoding: .utf8) ?? "") {
                         print("received ack: \(ack)") //TODO - show memo to user
                         
                         if let tx = self?.transaction {
                             self?.setMetaData(btcTx: tx)
-                            completion(.success(nil,nil))
+                            completion(.success(nil, nil))
                         }
-                    }
-                    else {
+                    } else {
                         print("ack failed to deserialize")
                         completion(.publishFailure(.posixError(errorCode: 74, description: "ack failed to deserialize")))
                     }
-                }
-                else {
+                } else {
                     print("invalid data")
                     completion(.publishFailure(.posixError(errorCode: 74, description: "invalid data")))
                 }
@@ -404,7 +400,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
 // MARK: -
 
 /// Base class for sending Ethereum-network transactions
-class EthSenderBase<CurrencyType: CurrencyDef> : SenderBase<CurrencyType, EthWalletManager>, GasEstimator {
+class EthSenderBase<CurrencyType: Currency> : SenderBase<CurrencyType, EthWalletManager>, GasEstimator {
     
     fileprivate var address: String?
     fileprivate var amount: UInt256?
@@ -448,7 +444,7 @@ class EthSenderBase<CurrencyType: CurrencyDef> : SenderBase<CurrencyType, EthWal
         let estimate: UInt256
     }
     
-    fileprivate var estimate: GasEstimate? = nil
+    fileprivate var estimate: GasEstimate?
     
     func hasFeeForAddress(_ address: String, amount: Amount) -> Bool {
         return estimate?.address == address && estimate?.amount.rawValue == amount.rawValue
@@ -511,24 +507,29 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
                 return completion(.creationError("not ready"))
         }
         
-        pinVerifier { pin in
-            self.walletManager.sendTransaction(currency: self.currency, toAddress: address, amount: amount, abi: abi, gasPrice: self.gasPrice, gasLimit: self.gasLimit) { result in
-                switch result {
-                case .success(let pendingTx, nil, let rawTx):
-                    self.setMetaData(tx: pendingTx)
-                    completion(.success(pendingTx.hash, rawTx))
-                case .error(let error):
-                    switch error {
-                    case .httpError(let e):
-                        completion(.creationError(e?.localizedDescription ?? ""))
-                    case .jsonError(let e):
-                        completion(.creationError(e?.localizedDescription ?? ""))
-                    case .rpcError(let e):
-                        completion(.creationError(e.message))
-                    }
-                default:
-                    assertionFailure("invalid parameters")
-                }
+        pinVerifier { _ in
+            self.walletManager.sendTransaction(currency: self.currency,
+                                               toAddress: address,
+                                               amount: amount,
+                                               abi: abi,
+                                               gasPrice: self.gasPrice,
+                                               gasLimit: self.gasLimit) { result in
+                                                switch result {
+                                                case .success(let pendingTx, nil, let rawTx):
+                                                    self.setMetaData(tx: pendingTx)
+                                                    completion(.success(pendingTx.hash, rawTx))
+                                                case .error(let error):
+                                                    switch error {
+                                                    case .httpError(let e):
+                                                        completion(.creationError(e?.localizedDescription ?? ""))
+                                                    case .jsonError(let e):
+                                                        completion(.creationError(e?.localizedDescription ?? ""))
+                                                    case .rpcError(let e):
+                                                        completion(.creationError(e.message))
+                                                    }
+                                                default:
+                                                    assertionFailure("invalid parameters")
+                                                }
             }
         }
     }
@@ -577,7 +578,7 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
                 return completion(.creationError("not ready"))
         }
 
-        pinVerifier { pin in
+        pinVerifier { _ in
             self.walletManager.sendTransaction(currency: self.currency, toAddress: address, amount: amount, gasLimit: self.gasLimit) { result in
                 switch result {
                 case .success(let pendingEthTx, let pendingTokenTx?, let rawTx):
@@ -648,16 +649,16 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
 
 // MARK: -
 
-extension CurrencyDef {
+extension Currency {
     func createSender(walletManager: WalletManager, kvStore: BRReplicatedKVStore) -> Sender? {
         
         switch (self, walletManager) {
-        case (is Bitcoin, is BTCWalletManager):
-            return BitcoinSender(currency: self as! Bitcoin, walletManager: walletManager as! BTCWalletManager, kvStore: kvStore)
-        case (is Ethereum, is EthWalletManager):
-            return EthereumSender(currency: self as! Ethereum, walletManager: walletManager as! EthWalletManager, kvStore: kvStore)
-        case (is ERC20Token, is EthWalletManager):
-            return ERC20Sender(currency: self as! ERC20Token, walletManager: walletManager as! EthWalletManager, kvStore: kvStore)
+        case (let currency as Bitcoin, let btcWalletManager as BTCWalletManager):
+            return BitcoinSender(currency: currency, walletManager: btcWalletManager, kvStore: kvStore)
+        case (let currency as Ethereum, let ethWalletManager as EthWalletManager):
+            return EthereumSender(currency: currency, walletManager: ethWalletManager, kvStore: kvStore)
+        case (let currency as ERC20Token, let ethWalletManager as EthWalletManager):
+            return ERC20Sender(currency: currency, walletManager: ethWalletManager, kvStore: kvStore)
         default:
             assertionFailure("unsupporeted currency/wallet")
             return nil

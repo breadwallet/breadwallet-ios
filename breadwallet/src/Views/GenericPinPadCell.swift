@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GenericPinPadCell : UICollectionViewCell {
+class GenericPinPadCell: UICollectionViewCell {
 
     var text: String? {
         didSet {
@@ -25,7 +25,7 @@ class GenericPinPadCell : UICollectionViewCell {
 
     override var isHighlighted: Bool {
         didSet {
-            guard text != "" else { return } //We don't want the blank cell to highlight
+            guard !text.isNilOrEmpty else { return } //We don't want the blank cell to highlight
             setAppearance()
         }
     }

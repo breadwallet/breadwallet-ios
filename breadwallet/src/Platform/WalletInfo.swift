@@ -10,7 +10,7 @@ import Foundation
 
 let walletInfoKey = "wallet-info"
 
-class WalletInfo : BRKVStoreObject, BRCoding {
+class WalletInfo: BRKVStoreObject, BRCoding {
     var classVersion = 2
     var name = ""
     var creationDate = Date.zeroValue()

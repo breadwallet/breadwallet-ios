@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DescriptionSendCell : SendCell {
+class DescriptionSendCell: SendCell {
 
     init(placeholder: String) {
         super.init()
@@ -52,13 +52,13 @@ class DescriptionSendCell : SendCell {
     }
 }
 
-extension DescriptionSendCell : UITextViewDelegate {
+extension DescriptionSendCell: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         didBeginEditing?()
     }
 
     func textViewDidChange(_ textView: UITextView) {
-        placeholder.isHidden = textView.text.utf8.count > 0
+        placeholder.isHidden = !textView.text.utf8.isEmpty
         if let text = textView.text {
             didChange?(text)
         }

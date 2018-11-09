@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SeparatorCell : UITableViewCell {
+class SeparatorCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         let separator = UIView()
