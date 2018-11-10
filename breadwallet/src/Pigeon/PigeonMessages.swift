@@ -26,11 +26,11 @@ enum PigeonMessageType : String {
 extension MessageEnvelope {
 
     /// Create an envelope for a new message to the specified public key.
-    init(to receiverPubKey: Data, from senderPubKey: Data, message: SwiftProtobuf.Message, type: PigeonMessageType, crypto: PigeonCrypto) throws {
+    init(to receiverPubKey: Data, from senderPubKey: Data, message: SwiftProtobuf.Message, type: PigeonMessageType, service: String, crypto: PigeonCrypto) throws {
         self.init()
 
         self.version = 1
-        self.service = "PWB"
+        self.service = service
         self.messageType = type.rawValue
         self.senderPublicKey = senderPubKey
         self.receiverPublicKey = receiverPubKey

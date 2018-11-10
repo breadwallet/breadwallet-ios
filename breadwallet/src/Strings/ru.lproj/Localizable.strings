@@ -1,9 +1,9 @@
 /* App name */
-"About.appName.android" = "Bread";
+"About.appName.android" = "BRD";
 /* About screen blog label */
 "About.blog" = "Блог";
 /* About screen footer */
-"About.footer" = "Создано международной командой Bread. Версия %1$@";
+"About.footer" = "Создано международной командой BRD. Версия %1$@ Сборка %2$@";
 /* Privay Policy button label */
 "About.privacy" = "Политика конфиденциальности";
 /* About screen reddit label */
@@ -27,7 +27,7 @@
 /* Loading Wallet Message */
 "Account.loadingMessage" = "Загружаем кошелек";
 /* Default wallet name */
-"AccountHeader.defaultWalletName" = "Мой Bread";
+"AccountHeader.defaultWalletName" = "Мой BRD";
 /* Third party keyboard warning */
 "Alert.customKeyboard.android" = "Похоже, что вы пользуетесь клавиатурой третьей стороны, которая может записывать последовательность нажимаемых клавиш и похитить ваш Бумажный ключ. Переключитесь на клавиатуру Android по умолчанию для дополнительной защиты.";
 /* Error alert title */
@@ -35,11 +35,13 @@
 /* Keystore error */
 "Alert.keystore.generic.android" = "Имеется проблема с хранилищем ключей в вашей ОС Android, обратитесь по адресу: support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
-"Alert.keystore.invalidated.android" = "Ваши зашифрованные данные приложения Bread были недавно аннулированы, так как была отключена блокировка экрана вашего устройства Android.";
+"Alert.keystore.invalidated.android" = "Ваши зашифрованные данные приложения BRD были недавно аннулированы, так как была отключена блокировка экрана вашего устройства Android.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Ошибка хранилища ключей Android";
 /* No internet alert message */
 "Alert.noInternet" = "Интернет-подключение не обнаружено. Проверьте подключение и повторите попытку.";
+/* Request timed out error message */
+"Alert.timedOut" = "Истекло время запроса. Проверьте подключение и повторите попытку.";
 /* Warning alert title */
 "Alert.warning" = "Предупреждение";
 /* 'the addresses were copied'' Alert title */
@@ -176,12 +178,18 @@
 "DefaultCurrency.rateLabel" = "Обменный курс";
 /* The wallet is disabled. */
 "Disabled.title" = "Кошелек отключен";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Запросить %1$@ информацию об учётной записи";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Запросить %1$@ вызов смарт-контракта";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Запросить %1$@ платёж";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Для этого устройства не настроена отправка электронных писем через почтовое приложение iOS.";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableTitle" = "Электронное письмо недоступно";
 /* Message that gets shown when we've detected the user has encountered the looping lock-screen bug. (preserve [ ] characters) */
-"ErrorMessages.loopingLockScreen.android" = "Bread невозможно аутентифицировать из-за ошибки в вашей версии Android. [Пожалуйста, нажмите сюда, чтобы узнать подробности.]";
+"ErrorMessages.loopingLockScreen.android" = "BRD невозможно аутентифицировать из-за ошибки в вашей версии Android. [Пожалуйста, нажмите сюда, чтобы узнать подробности.]";
 /* Messaging unavailable alert title */
 "ErrorMessages.messagingUnavailableMessage" = "Для этого устройства отправка сообщений не настроена.";
 /* Messaging unavailable alert title */
@@ -222,10 +230,16 @@
 "FeeSelector.title" = "Скорость обработки";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Админ";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Купить";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Меню";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Кошельки";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "итого активов";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Обмен";
 /* Checking private key balance progress view text */
 "Import.checking" = "Проверяем баланс по персональному ключу...";
 /* Sweep private key confirmation message */
@@ -247,13 +261,13 @@
 /* Caption for graphics */
 "Import.leftCaption" = "Секретный ключ";
 /* Import wallet intro screen message */
-"Import.message" = "Секретные ключи часто печатаются на бумаге в виде QR-кода и используются для хранения средств в автономном режиме. Восстановите секретный ключ, чтобы перенести все деньги, которые он контролирует, в Bread с помощью одной транзакции.";
+"Import.message" = "Секретные ключи часто печатаются на бумаге в виде QR-кода и используются для хранения средств в автономном режиме. Восстановите секретный ключ, чтобы перенести все деньги, которые он контролирует, в BRD с помощью одной транзакции.";
 /* Enter password alert view title */
 "Import.password" = "Этот персональный ключ защищен паролем.";
 /* password textfield placeholder */
 "Import.passwordPlaceholder" = "пароль";
 /* Caption for graphics */
-"Import.rightCaption" = "Ваш кошелек Bread";
+"Import.rightCaption" = "Ваш кошелек BRD";
 /* Scan Private key button label */
 "Import.scan" = "Сканировать персональный ключ";
 /* Import wallet success alert title */
@@ -273,17 +287,31 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Игнорировать";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "БЕЗОПАСНОСТЬ УСТРОЙСТВА ПОДВЕРГНУТА РИСКУ\n Какое-либо приложение по снятию ограничений с файловой системы может получить доступ к данным цепочки ключей  Bread и украсть ваши биткойны! Немедленно очистите ваш кошелек и восстановите его на безопасном устройстве.";
+"JailbreakWarnings.messageWithBalance" = "БЕЗОПАСНОСТЬ УСТРОЙСТВА ПОДВЕРГНУТА РИСКУ\n Какое-либо приложение по снятию ограничений с файловой системы может получить доступ к данным цепочки ключей  BRD и украсть ваши биткойны! Немедленно очистите ваш кошелек и восстановите его на безопасном устройстве.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "БЕЗОПАСНОСТЬ УСТРОЙСТВА ПОДВЕРГНУТА РИСКУ\n Какое-либо приложение по снятию ограничений с файловой системы может получить доступ к данным цепочки ключей  Bread и украсть ваши биткойны. Пожалуйста, используйте Bread только на устройствах с не снятыми с файловой системы ограничениями.";
+"JailbreakWarnings.messageWithoutBalance" = "БЕЗОПАСНОСТЬ УСТРОЙСТВА ПОДВЕРГНУТА РИСКУ\n Какое-либо приложение по снятию ограничений с файловой системы может получить доступ к данным цепочки ключей  BRD и украсть ваши биткойны. Пожалуйста, используйте BRD только на устройствах с не снятыми с файловой системы ограничениями.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "ПРЕДУПРЕЖДЕНИЕ";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Очистить";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Одобрить";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Отклонить";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Внешние приложения не могут отправлять деньги без согласия с этого устройства";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Примечание: взаимодействуйте ТОЛЬКО с этим приложением, когда находитесь на одном из следующих доменов";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Защищенная Оплата Покупок";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Это приложение способно:";
+/* Link Wallet view title */
+"LinkWallet.title" = "Прикрепить Кошелек";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Сервисы определения местоположения отключены.";
 /* No permissions for location services */
-"LocationPlugin.notAuthorized" = "У Bread не разрешения на доступ к сервисам определения местоположения.";
+"LocationPlugin.notAuthorized" = "У BRD не разрешения на доступ к сервисам определения местоположения.";
 /* Wallet creation date prefix */
 "ManageWallet.creationDatePrefix" = "Вы создали ваш кошелек %1$@";
 /* Manage wallet description text */
@@ -296,6 +324,10 @@
 "MenuButton.addWallet" = "Добавить кошелек";
 /* Menu button title */
 "MenuButton.lock" = "Заблокировать кошелек";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Управлять кошельками";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Сканировать QR код";
 /* Menu button title */
 "MenuButton.security" = "Центр безопасности";
 /* Menu button title */
@@ -328,6 +360,10 @@
 "NodeSelector.statusLabel" = "Состояние подключения узла";
 /* Node Selector view title */
 "NodeSelector.title" = "Биткойн-узлы";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Отправить %1$@, чтобы купить %2$@";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Подтверждение";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Неверный запрос на совершение платежа";
 /* Error opening payment protocol file message */
@@ -367,7 +403,7 @@
 /* Transaction rejected prompt title */
 "Prompts.RecommendRescan.title" = "Транзакция отклонена";
 /* Share data prompt body */
-"Prompts.ShareData.body" = "Помогите улучшить Bread, поделившись с нами своими анонимными данными";
+"Prompts.ShareData.body" = "Помогите улучшить BRD, поделившись с нами своими анонимными данными";
 /* Share data prompt title */
 "Prompts.ShareData.title" = "Поделиться анонимными данными";
 /* Enable touch ID prompt body */
@@ -381,11 +417,15 @@
 /* Button on fingerprint prompt so the user can enter their PIN instead */
 "Prompts.TouchId.usePin.android" = "PIN-код";
 /* Upgrade PIN prompt body. */
-"Prompts.UpgradePin.body" = "Bread обновил свой интерфейс до использования 6-цифрового PIN-кода. Коснитесь здесь для обновления.";
+"Prompts.UpgradePin.body" = "BRD обновил свой интерфейс до использования 6-цифрового PIN-кода. Коснитесь здесь для обновления.";
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "Обновить PIN-код";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
-"PushNotifications.body" = "Включите уведомления, чтобы в будущем получать от Bread важные сообщения.";
+"PushNotifications.body" = "Включите уведомления, чтобы в будущем получать от BRD важные сообщения.";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Уведомления Отключены";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Включить уведомления в Настройках, чтобы получать оповещения";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push-уведомления";
 /* Push notifications are off label */
@@ -415,7 +455,7 @@
 /* Enter paper key instruction */
 "RecoverWallet.instruction" = "Введите бумажный ключ";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Восстановите Ваш Bread-кошелек с помощью бумажного ключа.";
+"RecoverWallet.intro" = "Восстановите Ваш BRD-кошелек с помощью бумажного ключа.";
 /* Invalid paper key message */
 "RecoverWallet.invalid" = "Введенный вами бумажный ключ недействителен. Пожалуйста, внимательно перепроверьте каждое слово и повторите попытку.";
 /* Previous button accessibility label */
@@ -443,7 +483,7 @@
 /* extimated time */
 "ReScan.body1" = "20-45 минут";
 /* Syncing explanation */
-"ReScan.body2" = "Если транзакция описывается как \"выполненная\" в биткойн-сети, но не в вашем Bread-кошельке.";
+"ReScan.body2" = "Если транзакция описывается как \"выполненная\" в биткойн-сети, но не в вашем BRD-кошельке.";
 /* Syncing explanation */
 "ReScan.body3" = "Вы несколько раз получили ошибку о том, что транзакция отвергнута.";
 /* Start Sync button label */
@@ -475,11 +515,11 @@
 /* Paper Key button title */
 "SecurityCenter.paperKeyTitle" = "Бумажный ключ";
 /* PIN button description */
-"SecurityCenter.pinDescription" = "Защищает ваш Bread от несанкционированных пользователей.";
+"SecurityCenter.pinDescription" = "Защищает ваш BRD от несанкционированных пользователей.";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "6-цифровой PIN-код";
 /* Touch ID button description */
-"SecurityCenter.touchIdDescription" = "Легко и просто разблокируйте ваш Bread-кошелек и отправляйте суммы, не превышающие ваш лимит на расходы.";
+"SecurityCenter.touchIdDescription" = "Легко и просто разблокируйте ваш BRD-кошелек и отправляйте суммы, не превышающие ваш лимит на расходы.";
 /* Touch ID button title */
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
@@ -489,13 +529,13 @@
 /* Balance: $4.00 */
 "Send.balance" = "Баланс: %1$@";
 /* Instructions how to allow the camera access for the app */
-"Send.cameraUnavailabeMessage.android" = "Разрешить доступ к камере в: \"Настройки\" > \"Приложения\" > \"Bread\" > \"Разрешения\"";
+"Send.cameraUnavailabeMessage.android" = "Разрешить доступ к камере в: \"Настройки\" > \"Приложения\" > \"BRD\" > \"Разрешения\"";
 /* Permission required to access camera */
-"Send.cameraUnavailabeTitle.android" = "Приложению Bread не разрешен доступ к камере";
+"Send.cameraUnavailabeTitle.android" = "Приложению BRD не разрешен доступ к камере";
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "Перейдите в \"Настройки\", чтобы разрешить доступ к камере.";
 /* Camera not allowed alert title */
-"Send.cameraUnavailableTitle" = "Bread не имеет разрешения на доступ к камере";
+"Send.cameraUnavailableTitle" = "BRD не имеет разрешения на доступ к камере";
 /* Warning when sending to self. */
 "Send.containsAddress" = "Место назначения является вашим собственным адресом. Вы не можете отправить деньги самому себе.";
 /* Could not create transaction alert title */
@@ -571,7 +611,7 @@
 /* Join Early access label */
 "Settings.earlyAccess" = "Присоединитесь к пользователям с ранним доступом";
 /* Are you enjoying bread alert message body */
-"Settings.enjoying" = "Нравится ли вам использовать Bread?";
+"Settings.enjoying" = "Нравится ли вам использовать BRD?";
 /* Face ID spending limit label */
 "Settings.faceIdLimit" = "Лимит расходов Face ID";
 /* Redeem the funds stored on this private key. */
@@ -580,6 +620,8 @@
 "Settings.manage" = "Управление";
 /* Notifications label */
 "Settings.notifications" = "Уведомления";
+/* Section header for "other settings". */
+"Settings.other" = "Другие";
 /* Preferences settings section header */
 "Settings.preferences" = "Параметры";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -601,7 +643,7 @@
 /* Unlink/delete your wallet from the current device. */
 "Settings.wipe" = "Отвязать от этого устройства";
 /* Share data view body */
-"ShareData.body" = "Помогите нам улучшить Bread, поделившись своими анонимными данными. Такие данные не включают какую-либо финансовую информацию. Мы уважаем вашу финансовую конфиденциальность.";
+"ShareData.body" = "Помогите нам улучшить BRD, поделившись своими анонимными данными. Такие данные не включают какую-либо финансовую информацию. Мы уважаем вашу финансовую конфиденциальность.";
 /* Share data header */
 "ShareData.header" = "Поделиться данными?";
 /* Share data switch label. */
@@ -609,7 +651,7 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Выписать бумажный ключ снова";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Бумажный ключ – это единственный способ восстановить ваш Bread-кошелек в случае потери, кражи, поломки или замены вашего телефона.\n\nМы покажем вам список слов, которые необходимо записать на листе бумаги и хранить в надежном месте.";
+"StartPaperPhrase.body" = "Бумажный ключ – это единственный способ восстановить ваш BRD-кошелек в случае потери, кражи, поломки или замены вашего телефона.\n\nМы покажем вам список слов, которые необходимо записать на листе бумаги и хранить в надежном месте.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Выписать бумажный ключ";
 /* Argument is date */
@@ -622,10 +664,14 @@
 "StartViewController.recoverButton" = "Восстановить кошелек";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Соединение";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Ошибка синхронизации";
 /* Syncing view header text */
 "SyncingView.header" = "Синхронизация";
 /* Retry button label */
 "SyncingView.retry" = "Повторить";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Синхронизированно до %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Синхронизация";
 /* 6 d (6 days) */
@@ -657,13 +703,13 @@
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "Аутентификация по отпечаткам пальцев не включена";
 /* Touch Id screen label */
-"TouchIdSettings.label" = "Используйте отпечатки ваших пальцев для разблокирования Bread-кошелька и отправки сумм, не превышающих ваш лимит на расходы.";
+"TouchIdSettings.label" = "Используйте отпечатки ваших пальцев для разблокирования BRD-кошелька и отправки сумм, не превышающих ваш лимит на расходы.";
 /* Link Text (see TouchIdSettings.customizeText) */
 "TouchIdSettings.linkText" = "Экран лимита расходов Touch ID";
 /* Spending Limit: b100,000 ($100) */
 "TouchIdSettings.spendingLimit" = "Лимит на расходы: %1$@ (%2$@)";
 /* Touch id switch label. */
-"TouchIdSettings.switchLabel" = "Активировать функцию Touch ID для Bread";
+"TouchIdSettings.switchLabel" = "Активировать функцию Touch ID для BRD";
 /* Enable fingerprint for this wallet called Bread */
 "TouchIdSettings.switchLabel.android" = "Включить аутентификацию по отпечаткам пальцев";
 /* Touch ID settings view title */
@@ -730,6 +776,8 @@
 "TransactionDetails.amountHeader" = "Сумма";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "%1$@ при получении, %2$@ сейчас";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ когда отправлено, %2$@ сейчас";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Подтверждено в блоке";
 /* Memo section header */
@@ -821,7 +869,7 @@
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "Датчик касания";
 /* TouchID prompt text */
-"UnlockScreen.touchIdPrompt" = "Разблокируйте ваш Bread-кошелек.";
+"UnlockScreen.touchIdPrompt" = "Разблокируйте ваш BRD-кошелек.";
 /* Device authentication body */
 "UnlockScreen.touchIdPrompt.android" = "Разблокируйте ваше устройство Android, чтобы продолжить.";
 /* Unlock with TouchID accessibility label */
@@ -831,7 +879,7 @@
 /* Update PIN caption text */
 "UpdatePin.caption" = "Запомните этот PIN-код. Если вы его забудете, что не сможете получить доступ к вашим биткойнам.";
 /* PIN creation info. */
-"UpdatePin.createInstruction" = "Ваш PIN-код будет использоваться для разблокировки кошелька Bread и отправки денег.";
+"UpdatePin.createInstruction" = "Ваш PIN-код будет использоваться для разблокировки кошелька BRD и отправки денег.";
 /* Update PIN title */
 "UpdatePin.createTitle" = "Задайте PIN-код";
 /* Update PIN title */
@@ -865,7 +913,7 @@
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "Разрешить эту транзакцию";
 /* 'No wallet' warning for watch app */
-"Watch.noWalletWarning" = "Запустите Bread-приложение для iPhone, чтобы настроить ваш кошелек.";
+"Watch.noWalletWarning" = "Запустите BRD-приложение для iPhone, чтобы настроить ваш кошелек.";
 /* Dismiss button label */
 "Webview.dismiss" = "Отклонить";
 /* Webview loading error message */
@@ -873,9 +921,9 @@
 /* Updating webview message */
 "Webview.updating" = "Идет обновление...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet сменил свое название на Bread и обзавелся новым дизайном и функциями.\n\nЕсли вам нужна помощь, то ищите иконку (?) в правом верхнем углу большинства экранов.";
+"Welcome.body" = "Breadwallet сменил свое название на BRD и обзавелся новым дизайном и функциями.\n\nЕсли вам нужна помощь, то ищите иконку (?) в правом верхнем углу большинства экранов.";
 /* Top title of welcome screen */
-"Welcome.title" = "Добро пожаловать в Bread!";
+"Welcome.title" = "Добро пожаловать в BRD!";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Вы действительно хотите удалить этот кошелек?";
 /* Wipe wallet alert title */
@@ -889,7 +937,7 @@
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Отвязать ваш кошелек, чтобы удалить его с этого устройства. Как только вы отвяжете этот кошелек, вы сможете открыть новый кошелек или восстановить другой на этом устройстве.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "Вы больше не сможете получить доступ к текущему кошельку Bread с этого устройства. Ваш баланс останется на этой фразе.";
+"WipeWallet.startWarning" = "Вы больше не сможете получить доступ к текущему кошельку BRD с этого устройства. Ваш баланс останется на этой фразе.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "Отвязать кошелек";
 /* Wipe wallet button title */
@@ -904,51 +952,3 @@
 "WritePaperPhrase.previous" = "Назад";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li из %2$li";
-/* Section header for "other settings". */
-"Settings.other" = "Другие";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Управлять кошельками";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Меню";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Купить";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Обмен";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Сканировать QR код";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Ошибка синхронизации";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Синхронизированно до %1$@";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "Уведомления Отключены";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Включить уведомления в Настройках, чтобы получать оповещения";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "Одобрить";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "Отклонить";
-/* Link Wallet view title */
-"LinkWallet.title" = "Прикрепить Кошелек";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "Примечание: взаимодействуйте ТОЛЬКО с этим приложением, когда находитесь на одном из следующих доменов";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "Это приложение способно:";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "Внешние приложения не могут отправлять деньги без согласия с этого устройства";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "Защищенная Оплата Покупок";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "Подтверждение";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "Отправить %1$@, чтобы купить %2$@";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "Запросить %1$@ информацию об учётной записи";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "Запросить %1$@ вызов смарт-контракта";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "Запросить %1$@ платёж";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "%1$@ когда отправлено, %2$@ сейчас";
-/* Request timed out error message */
-"Alert.timedOut" = "Истекло время запроса. Проверьте подключение и повторите попытку.";

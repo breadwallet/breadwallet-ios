@@ -1,9 +1,9 @@
 /* App name */
-"About.appName.android" = "Bread";
+"About.appName.android" = "BRD";
 /* About screen blog label */
 "About.blog" = "Blog";
 /* About screen footer */
-"About.footer" = "Lavet af det globale Bread hold. Version %1$@";
+"About.footer" = "Lavet af det globale BRD hold. Version %1$@. Build %2$@";
 /* Privay Policy button label */
 "About.privacy" = "Privatlivspolitik";
 /* About screen reddit label */
@@ -27,7 +27,7 @@
 /* Loading Wallet Message */
 "Account.loadingMessage" = "Indlæser pung";
 /* Default wallet name */
-"AccountHeader.defaultWalletName" = "Mit Bread";
+"AccountHeader.defaultWalletName" = "Mit BRD";
 /* Third party keyboard warning */
 "Alert.customKeyboard.android" = "Det ser ud til at du bruger et tastatur fra en tredjepart, som kan optage det du skriver og stjæle din Paper Key. Skift til standard Android-tastaturet for ekstra beskyttelse.";
 /* Error alert title */
@@ -35,11 +35,13 @@
 /* Keystore error */
 "Alert.keystore.generic.android" = "Der er et problem med din Android OS keystore, kontakt venligst support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
-"Alert.keystore.invalidated.android" = "Dine Bread-krypterede data blev for nyligt ugyldiggjort, eftersom din Android skærmlås blev deaktiveret.";
+"Alert.keystore.invalidated.android" = "Dine BRD-krypterede data blev for nyligt ugyldiggjort, eftersom din Android skærmlås blev deaktiveret.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android KeyStore fejl";
 /* No internet alert message */
 "Alert.noInternet" = "Ingen internetforbindelse fundet. Tjek din forbindelse og prøv igen.";
+/* Request timed out error message */
+"Alert.timedOut" = "Anmodingen er udløbet. Tjek din forbindelse og prøv igen.";
 /* Warning alert title */
 "Alert.warning" = "Advarsel";
 /* 'the addresses were copied'' Alert title */
@@ -176,12 +178,18 @@
 "DefaultCurrency.rateLabel" = "Valutakurs";
 /* The wallet is disabled. */
 "Disabled.title" = "Pung deaktiveret";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Anmod om %1$@-kontooplysninger";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Anmod om %1$@ \"smart contract\"-kald";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Anmod om betaling af %1$@";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Denne enhed er ikke konfigureret til at sende e-mail med iOS mailappen.";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableTitle" = "E-mail utilgængelig";
 /* Message that gets shown when we've detected the user has encountered the looping lock-screen bug. (preserve [ ] characters) */
-"ErrorMessages.loopingLockScreen.android" = "Bread kan ikke godkendes grundet en fejl i din version af Android. [Tryk her for flere oplysninger.]";
+"ErrorMessages.loopingLockScreen.android" = "BRD kan ikke godkendes grundet en fejl i din version af Android. [Tryk her for flere oplysninger.]";
 /* Messaging unavailable alert title */
 "ErrorMessages.messagingUnavailableMessage" = "Denne enhed er ikke konfigureret til at sende beskeder.";
 /* Messaging unavailable alert title */
@@ -222,10 +230,16 @@
 "FeeSelector.title" = "Behandlingshastighed";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Administration";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Køb";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Tegnebøger";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "samlet antal aktiver";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Køb og sælg";
 /* Checking private key balance progress view text */
 "Import.checking" = "Tjekker beløb på privat nøgle...";
 /* Sweep private key confirmation message */
@@ -247,13 +261,13 @@
 /* Caption for graphics */
 "Import.leftCaption" = "Privat nøgle";
 /* Import wallet intro screen message */
-"Import.message" = "Private nøgler printes ofte på papir som en QR-kode og bruges til at opbevare midler offline. Indløs en privat nøgle for at overføre alle pengene den indeholder til din Bread, med en enkelt transaktion.";
+"Import.message" = "Private nøgler printes ofte på papir som en QR-kode og bruges til at opbevare midler offline. Indløs en privat nøgle for at overføre alle pengene den indeholder til din BRD, med en enkelt transaktion.";
 /* Enter password alert view title */
 "Import.password" = "Denne private nøgle er beskyttet med et kodeord.";
 /* password textfield placeholder */
 "Import.passwordPlaceholder" = "adgangskode";
 /* Caption for graphics */
-"Import.rightCaption" = "Din Bread pung";
+"Import.rightCaption" = "Din BRD pung";
 /* Scan Private key button label */
 "Import.scan" = "Scan privat nøgle";
 /* Import wallet success alert title */
@@ -273,17 +287,31 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Ignorer";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "ENHEDENS SIKKERHED ER KOMPROMITTERET\n Enhver 'jailbreak' app kan få adgang til Breads nøgledata og stjæle dine bitcoin! Ryd straks denne pung og gendan på en sikker enhed.";
+"JailbreakWarnings.messageWithBalance" = "ENHEDENS SIKKERHED ER KOMPROMITTERET\n Enhver 'jailbreak' app kan få adgang til BRDs nøgledata og stjæle dine bitcoin! Ryd straks denne pung og gendan på en sikker enhed.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "ENHEDENS SIKKERHED ER KOMPROMITTERET\n Enhver 'jailbreak' app kan få adgang til Breads nøgledata og stjæle dine bitcoin. Brug kun Bread på en ikke jailbreaket enhed.";
+"JailbreakWarnings.messageWithoutBalance" = "ENHEDENS SIKKERHED ER KOMPROMITTERET\n Enhver 'jailbreak' app kan få adgang til BRDs nøgledata og stjæle dine bitcoin. Brug kun BRD på en ikke jailbreaket enhed.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "ADVARSEL";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Ryd";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Godkend";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Afvis";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Eksterne apps kan ikke sende penge uden godkendelse fra denne enhed";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Bemærk: brug KUN denne app, når du er på et af følgende domæner";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Sikker betaling";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Denne app vil være i stand til at:";
+/* Link Wallet view title */
+"LinkWallet.title" = "Forbind tegnebog";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Placeringstjenester er deaktiveret.";
 /* No permissions for location services */
-"LocationPlugin.notAuthorized" = "Bread har ikke adgang til placeringstjenester.";
+"LocationPlugin.notAuthorized" = "BRD har ikke adgang til placeringstjenester.";
 /* Wallet creation date prefix */
 "ManageWallet.creationDatePrefix" = "Du lavede din pung den %1$@";
 /* Manage wallet description text */
@@ -296,6 +324,10 @@
 "MenuButton.addWallet" = "Tilføj pung";
 /* Menu button title */
 "MenuButton.lock" = "Lås pung";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Administrer Tegnebøger";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Scan QR-kode";
 /* Menu button title */
 "MenuButton.security" = "Sikkerhedscenter";
 /* Menu button title */
@@ -328,6 +360,10 @@
 "NodeSelector.statusLabel" = "Node forbindelsesstatus";
 /* Node Selector view title */
 "NodeSelector.title" = "Bitcoin-nodes";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Send %1$@ for at købe %2$@";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Bekræftelse";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Dårlig betalingsanmodning";
 /* Error opening payment protocol file message */
@@ -367,7 +403,7 @@
 /* Transaction rejected prompt title */
 "Prompts.RecommendRescan.title" = "Transaktion afvist";
 /* Share data prompt body */
-"Prompts.ShareData.body" = "Hjælp med at forbedre Bread ved at dele dine anonyme data med os";
+"Prompts.ShareData.body" = "Hjælp med at forbedre BRD ved at dele dine anonyme data med os";
 /* Share data prompt title */
 "Prompts.ShareData.title" = "Del anonyme data";
 /* Enable touch ID prompt body */
@@ -381,11 +417,15 @@
 /* Button on fingerprint prompt so the user can enter their PIN instead */
 "Prompts.TouchId.usePin.android" = "PIN";
 /* Upgrade PIN prompt body. */
-"Prompts.UpgradePin.body" = "Bread er blevet opgraderet til at bruge en 6-cifret PIN. Tryk her for at opgradere.";
+"Prompts.UpgradePin.body" = "BRD er blevet opgraderet til at bruge en 6-cifret PIN. Tryk her for at opgradere.";
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "Opgader PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
-"PushNotifications.body" = "Slå notifikationer til for at modtage særlige meddelelser fra Bread i fremtiden.";
+"PushNotifications.body" = "Slå notifikationer til for at modtage særlige meddelelser fra BRD i fremtiden.";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Notifikationer deaktiveret";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Slå notifikationer til i Indstillinger for at modtage advarsler";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push notifikationer";
 /* Push notifications are off label */
@@ -415,7 +455,7 @@
 /* Enter paper key instruction */
 "RecoverWallet.instruction" = "Indtast paper key";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Gendan dit Bread med din paper key.";
+"RecoverWallet.intro" = "Gendan dit BRD med din paper key.";
 /* Invalid paper key message */
 "RecoverWallet.invalid" = "Den paper key du indtastede er ugyldig. Dobbelttjek hvert ord og prøv igen.";
 /* Previous button accessibility label */
@@ -443,7 +483,7 @@
 /* extimated time */
 "ReScan.body1" = "20-45 minutter";
 /* Syncing explanation */
-"ReScan.body2" = "Hvis en transaktion vises som gennemført i bitcoin netværket, men ikke i dit Bread.";
+"ReScan.body2" = "Hvis en transaktion vises som gennemført i bitcoin netværket, men ikke i dit BRD.";
 /* Syncing explanation */
 "ReScan.body3" = "Du modtager gentagne gange en fejlmeddelelse om at din transaktion er blevet afvist.";
 /* Start Sync button label */
@@ -475,7 +515,7 @@
 /* Paper Key button title */
 "SecurityCenter.paperKeyTitle" = "Paper key";
 /* PIN button description */
-"SecurityCenter.pinDescription" = "Beskytter dit Bread mod uberettigede brugere.";
+"SecurityCenter.pinDescription" = "Beskytter dit BRD mod uberettigede brugere.";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "6-cifret PIN";
 /* Touch ID button description */
@@ -489,13 +529,13 @@
 /* Balance: $4.00 */
 "Send.balance" = "Balance: %1$@";
 /* Instructions how to allow the camera access for the app */
-"Send.cameraUnavailabeMessage.android" = "Tillad adgang under \"Indstillinger\" > \"Apps\" > \"Bread\" > \"Tilladelser\"";
+"Send.cameraUnavailabeMessage.android" = "Tillad adgang under \"Indstillinger\" > \"Apps\" > \"BRD\" > \"Tilladelser\"";
 /* Permission required to access camera */
-"Send.cameraUnavailabeTitle.android" = "Bread har ikke tilladelse til at få adgang til kameraet";
+"Send.cameraUnavailabeTitle.android" = "BRD har ikke tilladelse til at få adgang til kameraet";
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "Gå til Indstillinger og giv adgang til kamera.";
 /* Camera not allowed alert title */
-"Send.cameraUnavailableTitle" = "Bread har ikke adgang til kameraet";
+"Send.cameraUnavailableTitle" = "BRD har ikke adgang til kameraet";
 /* Warning when sending to self. */
 "Send.containsAddress" = "Destinationen er din egen adresse. Du kan ikke sende til dig selv.";
 /* Could not create transaction alert title */
@@ -571,7 +611,7 @@
 /* Join Early access label */
 "Settings.earlyAccess" = "Tilmeld dig Early Access";
 /* Are you enjoying bread alert message body */
-"Settings.enjoying" = "Nyder du Bread?";
+"Settings.enjoying" = "Nyder du BRD?";
 /* Face ID spending limit label */
 "Settings.faceIdLimit" = "Face ID betalingsgrænse";
 /* Redeem the funds stored on this private key. */
@@ -580,6 +620,8 @@
 "Settings.manage" = "Administrer";
 /* Notifications label */
 "Settings.notifications" = "Notifikationer";
+/* Section header for "other settings". */
+"Settings.other" = "Andet";
 /* Preferences settings section header */
 "Settings.preferences" = "Indstillinger";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -601,7 +643,7 @@
 /* Unlink/delete your wallet from the current device. */
 "Settings.wipe" = "Fjern link fra denne enhed";
 /* Share data view body */
-"ShareData.body" = "Hjælp med at forbedre Bread ved at dele dine anonyme data med os. Dette inkluderer ikke finansielle oplysninger. Vi respekterer dit finansielle privatliv.";
+"ShareData.body" = "Hjælp med at forbedre BRD ved at dele dine anonyme data med os. Dette inkluderer ikke finansielle oplysninger. Vi respekterer dit finansielle privatliv.";
 /* Share data header */
 "ShareData.header" = "Del data?";
 /* Share data switch label. */
@@ -609,7 +651,7 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Skriv paper key ned igen";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Din paper key er den eneste måde at gendanne dit Bread på, hvis din telefon mistes, stjæles, går i stykker eller opgraderes.\n\nVi viser dig en liste over word du skal skrive ned på et papir, og holde sikkert.";
+"StartPaperPhrase.body" = "Din paper key er den eneste måde at gendanne dit BRD på, hvis din telefon mistes, stjæles, går i stykker eller opgraderes.\n\nVi viser dig en liste over word du skal skrive ned på et papir, og holde sikkert.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Skriv paper key ned";
 /* Argument is date */
@@ -622,10 +664,14 @@
 "StartViewController.recoverButton" = "Gendan tegnebog";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Tilslutter";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Synkronisering mislykkedes";
 /* Syncing view header text */
 "SyncingView.header" = "Synkroniserer";
 /* Retry button label */
 "SyncingView.retry" = "Prøv igen";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Synkroniseret via %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Synkroniserer";
 /* 6 d (6 days) */
@@ -657,13 +703,13 @@
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "Autentificering via fingeraftryk ikke aktiveret";
 /* Touch Id screen label */
-"TouchIdSettings.label" = "Brug dit fingeraftryk til at låse op for dit Bread og sende penge op til en vis grænse.";
+"TouchIdSettings.label" = "Brug dit fingeraftryk til at låse op for dit BRD og sende penge op til en vis grænse.";
 /* Link Text (see TouchIdSettings.customizeText) */
 "TouchIdSettings.linkText" = "Touch ID forbrugsgrænseside";
 /* Spending Limit: b100,000 ($100) */
 "TouchIdSettings.spendingLimit" = "Brugsgrænse: %1$@ (%2$@)";
 /* Touch id switch label. */
-"TouchIdSettings.switchLabel" = "Aktiver Touch ID til Bread";
+"TouchIdSettings.switchLabel" = "Aktiver Touch ID til BRD";
 /* Enable fingerprint for this wallet called Bread */
 "TouchIdSettings.switchLabel.android" = "Aktiver autentificering via fingeraftryk";
 /* Touch ID settings view title */
@@ -730,6 +776,8 @@
 "TransactionDetails.amountHeader" = "Beløb";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "%1$@ ved modtagelsen, %2$@ nu";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ da de blev sendt, %2$@ nu";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Bekræftet i blok";
 /* Memo section header */
@@ -821,7 +869,7 @@
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "Touch sensor";
 /* TouchID prompt text */
-"UnlockScreen.touchIdPrompt" = "Lås op for dit Bread.";
+"UnlockScreen.touchIdPrompt" = "Lås op for dit BRD.";
 /* Device authentication body */
 "UnlockScreen.touchIdPrompt.android" = "Lås op for din Android enhed for at fortsætte";
 /* Unlock with TouchID accessibility label */
@@ -831,7 +879,7 @@
 /* Update PIN caption text */
 "UpdatePin.caption" = "Husk denne PIN. Hvis du glemmer den, vil du ikke kunne få adgang til dine bitcoin.";
 /* PIN creation info. */
-"UpdatePin.createInstruction" = "Din PIN bliver brugt til at låse op for dit Bread og sende penge.";
+"UpdatePin.createInstruction" = "Din PIN bliver brugt til at låse op for dit BRD og sende penge.";
 /* Update PIN title */
 "UpdatePin.createTitle" = "Indstil PIN";
 /* Update PIN title */
@@ -865,7 +913,7 @@
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "Godkend denne transaktion";
 /* 'No wallet' warning for watch app */
-"Watch.noWalletWarning" = "Åben Bread iPhone appen for at konfigurere din pung.";
+"Watch.noWalletWarning" = "Åben BRD iPhone appen for at konfigurere din pung.";
 /* Dismiss button label */
 "Webview.dismiss" = "Afvis";
 /* Webview loading error message */
@@ -873,9 +921,9 @@
 /* Updating webview message */
 "Webview.updating" = "Opdaterer...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet har skiftet navn til Bread med et helt nyt look og nogle nye funktioner.\n\nHvis du har brug for hjælp, led efter (?) øverst til højre på de fleste skærme.";
+"Welcome.body" = "Breadwallet har skiftet navn til BRD med et helt nyt look og nogle nye funktioner.\n\nHvis du har brug for hjælp, led efter (?) øverst til højre på de fleste skærme.";
 /* Top title of welcome screen */
-"Welcome.title" = "Velkommen til Bread!";
+"Welcome.title" = "Velkommen til BRD!";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Er du sikker på at du vil slette denne wallet?";
 /* Wipe wallet alert title */
@@ -889,7 +937,7 @@
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Fjern link til pung for at fjerne den fra denne enhed. Når linket til denne pung er fjernet, kan du starte en ny pung eller gendanne en anden pung på denne enhed.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "Du vil ikke længere være i stand til at få adgang til din nuværende Bread tegnebog fra denne enhed. Saldoen vil forblive på frasen.";
+"WipeWallet.startWarning" = "Du vil ikke længere være i stand til at få adgang til din nuværende BRD tegnebog fra denne enhed. Saldoen vil forblive på frasen.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "Fjern link til pung";
 /* Wipe wallet button title */
@@ -904,51 +952,3 @@
 "WritePaperPhrase.previous" = "Forrige";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li af %2$li";
-/* Section header for "other settings". */
-"Settings.other" = "Andet";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Administrer Tegnebøger";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Køb";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Køb og sælg";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Scan QR-kode";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Synkronisering mislykkedes";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Synkroniseret via %1$@";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "Notifikationer deaktiveret";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Slå notifikationer til i Indstillinger for at modtage advarsler";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "Godkend";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "Afvis";
-/* Link Wallet view title */
-"LinkWallet.title" = "Forbind tegnebog";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "Bemærk: brug KUN denne app, når du er på et af følgende domæner";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "Denne app vil være i stand til at:";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "Eksterne apps kan ikke sende penge uden godkendelse fra denne enhed";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "Sikker betaling";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "Bekræftelse";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "Send %1$@ for at købe %2$@";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "Anmod om %1$@-kontooplysninger";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "Anmod om %1$@ \"smart contract\"-kald";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "Anmod om betaling af %1$@";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "%1$@ da de blev sendt, %2$@ nu";
-/* Request timed out error message */
-"Alert.timedOut" = "Anmodingen er udløbet. Tjek din forbindelse og prøv igen.";

@@ -22,15 +22,16 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     var presentEmail: PresentShare?
     var presentText: PresentShare?
 
-    init(currency: CurrencyDef, isRequestAmountVisible: Bool) {
+    init(currency: CurrencyDef, isRequestAmountVisible: Bool, isBTCLegacy: Bool = false) {
         self.currency = currency
         self.isRequestAmountVisible = isRequestAmountVisible
+        self.isBTCLegacy = isBTCLegacy
         super.init(nibName: nil, bundle: nil)
     }
 
     //MARK - Private
     private let currency: CurrencyDef
-    
+    private let isBTCLegacy: Bool
     private let qrCode = UIImageView()
     private let address = UILabel(font: .customBody(size: 14.0))
     private let addressPopout = InViewAlert(type: .primary)
@@ -51,9 +52,15 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
         addActions()
         setupCopiedMessage()
         setupShareButtons()
-        Store.subscribe(self, selector: { $0[self.currency]?.receiveAddress != $1[self.currency]?.receiveAddress }, callback: { _ in
-            self.setReceiveAddress()
-        })
+        if isBTCLegacy {
+            Store.subscribe(self, selector: { $0[self.currency]?.legacyReceiveAddress != $1[self.currency]?.legacyReceiveAddress }, callback: { _ in
+                self.setReceiveAddress()
+            })
+        } else {
+            Store.subscribe(self, selector: { $0[self.currency]?.receiveAddress != $1[self.currency]?.receiveAddress }, callback: { _ in
+                self.setReceiveAddress()
+            })
+        }
     }
 
     private func addSubviews() {
@@ -139,7 +146,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
     }
 
     private func setReceiveAddress() {
-        guard let addressText = currency.state?.receiveAddress else { return }
+        guard let addressText = isBTCLegacy ? currency.state?.legacyReceiveAddress : currency.state?.receiveAddress else { return }
         address.text = currency.matches(Currencies.bch) ? addressText.bCashAddr : addressText
         qrCode.image = UIImage.qrCode(data: "\(address.text!)".data(using: .utf8)!, color: CIColor(color: .black))?
             .resize(CGSize(width: qrSize, height: qrSize))!

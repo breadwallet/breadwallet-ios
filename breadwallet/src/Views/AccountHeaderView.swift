@@ -28,6 +28,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private var regularConstraints: [NSLayoutConstraint] = []
     private var swappedConstraints: [NSLayoutConstraint] = []
     private var syncViewHeight: NSLayoutConstraint?
+    private var delistedTokenView: DelistedTokenView?
 
     // MARK: Properties
     private let currency: CurrencyDef
@@ -100,6 +101,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             self.secondaryBalance = UpdatingLabel(formatter: NumberFormatter())
             self.primaryBalance = UpdatingLabel(formatter: NumberFormatter())
         }
+        if let token = currency as? ERC20Token, token.isSupported == false {
+            self.delistedTokenView = DelistedTokenView(currency: currency)
+        }
         super.init(frame: CGRect())
         
         setup()
@@ -147,6 +151,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         addSubview(modeLabel)
         addSubview(currencyTapView)
         addSubview(syncView)
+        if let delistedTokenView = delistedTokenView {
+            addSubview(delistedTokenView)
+        }
     }
 
     private func showSyncView() {
@@ -203,12 +210,20 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             modeLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
             modeLabel.centerYAnchor.constraint(equalTo: balanceLabel.centerYAnchor)])
         syncViewHeight = syncView.heightAnchor.constraint(equalToConstant: 40.0)
-        syncView.constrain([
-            syncView.topAnchor.constraint(equalTo: primaryBalance.firstBaselineAnchor, constant: C.padding[2]),
-            syncView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            syncView.widthAnchor.constraint(equalTo: widthAnchor),
-            syncView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            syncViewHeight])
+        if let delistedTokenView = delistedTokenView {
+            delistedTokenView.constrain([
+                delistedTokenView.topAnchor.constraint(equalTo: primaryBalance.firstBaselineAnchor, constant: C.padding[2]),
+                delistedTokenView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                delistedTokenView.widthAnchor.constraint(equalTo: widthAnchor),
+                delistedTokenView.leadingAnchor.constraint(equalTo: leadingAnchor)])
+        } else {
+            syncView.constrain([
+                syncView.topAnchor.constraint(equalTo: primaryBalance.firstBaselineAnchor, constant: C.padding[2]),
+                syncView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                syncView.widthAnchor.constraint(equalTo: widthAnchor),
+                syncView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                syncViewHeight])
+        }
     }
 
     private func addSubscriptions() {

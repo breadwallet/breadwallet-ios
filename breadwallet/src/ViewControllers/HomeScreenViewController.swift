@@ -223,11 +223,6 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
                 self.currentPrompt = nil
             }
         })
-        Store.subscribe(self, name: .didEnableShareData, callback: { _ in
-            if self.currentPrompt?.type == .shareData {
-                self.currentPrompt = nil
-            }
-        })
         Store.subscribe(self, name: .didWritePaperKey, callback: { _ in
             if self.currentPrompt?.type == .paperKey {
                 self.currentPrompt = nil
@@ -312,26 +307,38 @@ class HomeScreenViewController : UIViewController, Subscriber, Trackable {
             currentPrompt = nil
             return
         }
+        
+        guard currentPrompt == nil else {
+            return
+        }
+        
         if let type = PromptType.nextPrompt(walletManager: walletManager) {
             self.saveEvent("prompt.\(type.name).displayed")
-            currentPrompt = Prompt(type: type)
-            currentPrompt!.dismissButton.tap = { [unowned self] in
+            currentPrompt = PromptFactory.createPrompt(type: type, presenter: self)
+            
+            guard let prompt = currentPrompt else { return }
+            
+            prompt.dismissButton.tap = { [unowned self] in
                 self.saveEvent("prompt.\(type.name).dismissed")
                 self.currentPrompt = nil
             }
-            currentPrompt!.continueButton.tap = { [unowned self] in
-                // TODO:BCH move out of home screen
-                if let trigger = type.trigger(currency: Currencies.btc) {
-                    Store.trigger(name: trigger)
-                }
-                self.saveEvent("prompt.\(type.name).trigger")
-                self.currentPrompt = nil
+            
+            if !prompt.shouldHandleTap {
+                prompt.continueButton.tap = { [unowned self] in
+                    // TODO:BCH move out of home screen
+                    if let trigger = type.trigger(currency: Currencies.btc) {
+                        Store.trigger(name: trigger)
+                    }
+                    self.saveEvent("prompt.\(type.name).trigger")
+                    self.currentPrompt = nil
+                }                
             }
+            
             if type == .biometrics {
                 UserDefaults.hasPromptedBiometrics = true
             }
-            if type == .shareData {
-                UserDefaults.hasPromptedShareData = true
+            if type == .email {
+                UserDefaults.hasPromptedForEmail = true
             }
         } else {
             currentPrompt = nil

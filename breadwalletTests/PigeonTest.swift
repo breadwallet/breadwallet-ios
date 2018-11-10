@@ -40,7 +40,7 @@ class PigeonTests : XCTestCase {
         let receiverKey = BRKey(privKey: testPrivKey2)!
         var ping = MessagePing()
         ping.ping = "Hi Sam"
-        guard let envelope = try? MessageEnvelope(to: receiverKey.publicKey, from: senderKey.publicKey, message: ping, type: .ping, crypto: crypto) else { return XCTFail() }
+        guard let envelope = try? MessageEnvelope(to: receiverKey.publicKey, from: senderKey.publicKey, message: ping, type: .ping, service: "PWB", crypto: crypto) else { return XCTFail() }
         XCTAssert(envelope.verify(pairingKey: receiverKey), "Envelope should pass verification")
         let receiverCrypto = PigeonCrypto(privateKey: receiverKey)
         let decryptedData = receiverCrypto.decrypt(envelope.encryptedMessage, nonce: envelope.nonce, senderPublicKey: senderKey.publicKey)
@@ -56,7 +56,7 @@ class PigeonTests : XCTestCase {
         let remotePairingKey = BRKey(privKey: testPrivKey2)!
         var ping = MessagePing()
         ping.ping = "Hi Sam"
-        guard let envelope = try? MessageEnvelope(to: remotePairingKey.publicKey, from: localPairingKey.publicKey, message: ping, type: .ping, crypto: crypto) else { return XCTFail() }
+        guard let envelope = try? MessageEnvelope(to: remotePairingKey.publicKey, from: localPairingKey.publicKey, message: ping, type: .ping, service: "PWB", crypto: crypto) else { return XCTFail() }
         XCTAssert(envelope.verify(pairingKey: remotePairingKey), "Envelope should pass verification")
     }
 

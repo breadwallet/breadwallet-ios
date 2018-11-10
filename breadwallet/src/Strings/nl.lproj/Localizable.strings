@@ -1,9 +1,9 @@
 /* App name */
-"About.appName.android" = "Bread";
+"About.appName.android" = "BRD";
 /* About screen blog label */
 "About.blog" = "Blog";
 /* About screen footer */
-"About.footer" = "Gemaakt door het globale Bread team. Versie %1$@";
+"About.footer" = "Gemaakt door het globale BRD team. Versie %1$@ Bouw %2$@";
 /* Privay Policy button label */
 "About.privacy" = "Privacyverklaring";
 /* About screen reddit label */
@@ -35,11 +35,13 @@
 /* Keystore error */
 "Alert.keystore.generic.android" = "Er is een probleem met uw Android OS keystore, neem alstublieft contact op met support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
-"Alert.keystore.invalidated.android" = "Uw door Bread geëncrypteerde data is onlangs ongeldig gemaakt omdat uw Android schermvergrendeling is uitgeschakeld.";
+"Alert.keystore.invalidated.android" = "Uw door BRD geëncrypteerde data is onlangs ongeldig gemaakt omdat uw Android schermvergrendeling is uitgeschakeld.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android KeyStore fout";
 /* No internet alert message */
 "Alert.noInternet" = "Er is geen internetconnectie gevonden. Controleer je connectie en probeer opnieuw.";
+/* Request timed out error message */
+"Alert.timedOut" = "Verzoek loopt af. Controleer uw verbinding en probeer het opnieuw.";
 /* Warning alert title */
 "Alert.warning" = "Waarschuwing";
 /* 'the addresses were copied'' Alert title */
@@ -176,12 +178,18 @@
 "DefaultCurrency.rateLabel" = "Wisselkoers";
 /* The wallet is disabled. */
 "Disabled.title" = "Wallet uitgeschakeld";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Vraag %1$@ accountgegevens aan";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Verzoek %1$@ smart contract oproep";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Verzoek %1$@ betaling";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Dit apparaat is niet geconfigureerd om e-mails te sturen via de iOS Mail app.";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableTitle" = "E-mail niet beschikbaar";
 /* Message that gets shown when we've detected the user has encountered the looping lock-screen bug. (preserve [ ] characters) */
-"ErrorMessages.loopingLockScreen.android" = "Bread kan niet gewaarmerkt worden vanwege een fout in uw versie van Android. [Klik hier voor meer informatie.]";
+"ErrorMessages.loopingLockScreen.android" = "BRD kan niet gewaarmerkt worden vanwege een fout in uw versie van Android. [Klik hier voor meer informatie.]";
 /* Messaging unavailable alert title */
 "ErrorMessages.messagingUnavailableMessage" = "Dit apparaat is niet geconfigureerd om berichten te sturen.";
 /* Messaging unavailable alert title */
@@ -222,10 +230,16 @@
 "FeeSelector.title" = "Verwerkingssnelheid";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Beheerder";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Kopen";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Wallets";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "Totale Prijs:";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Handel";
 /* Checking private key balance progress view text */
 "Import.checking" = "Private key balans checken...";
 /* Sweep private key confirmation message */
@@ -247,13 +261,13 @@
 /* Caption for graphics */
 "Import.leftCaption" = "Wallet om te importeren";
 /* Import wallet intro screen message */
-"Import.message" = "Private keys worden vaak afgedrukt op papier als een QR-code en gebruikt om middelen online op te slaan. Wissel een persoonlijke sleutel in om al het geld dat het beheert over te schrijven naar je Bread via een enkele transactie.";
+"Import.message" = "Private keys worden vaak afgedrukt op papier als een QR-code en gebruikt om middelen online op te slaan. Wissel een persoonlijke sleutel in om al het geld dat het beheert over te schrijven naar je BRD via een enkele transactie.";
 /* Enter password alert view title */
 "Import.password" = "Deze private key is beveiligd met een wachtwoord.";
 /* password textfield placeholder */
 "Import.passwordPlaceholder" = "wachtwoord";
 /* Caption for graphics */
-"Import.rightCaption" = "Jouw Bread Portemonnee";
+"Import.rightCaption" = "Jouw BRD Portemonnee";
 /* Scan Private key button label */
 "Import.scan" = "Scan private key ";
 /* Import wallet success alert title */
@@ -273,17 +287,31 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Negeren";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "APPARAAT BEVEILIGING BESCHADIGD\nElke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hiermee je Bitcoins stelen! Wis deze portemonnee direct en herstel het op een veilig apparaat.";
+"JailbreakWarnings.messageWithBalance" = "APPARAAT BEVEILIGING BESCHADIGD\nElke 'jailbreak' app heeft toegang tot de sleutelhanger data van BRD en kan hiermee je Bitcoins stelen! Wis deze portemonnee direct en herstel het op een veilig apparaat.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "APPARAAT BEVEILIGING BESCHADIGD\nElke 'jailbreak' app heeft toegang tot de sleutelhanger data van Bread en kan hiermee je Bitcoins stelen. Gebruik Bread a.u.b. alleen op een niet-gejailbreakt apparaat.";
+"JailbreakWarnings.messageWithoutBalance" = "APPARAAT BEVEILIGING BESCHADIGD\nElke 'jailbreak' app heeft toegang tot de sleutelhanger data van BRD en kan hiermee je Bitcoins stelen. Gebruik BRD a.u.b. alleen op een niet-gejailbreakt apparaat.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "WAARSCHUWING";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Wissen";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Goedkeuren";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Afwijzen";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Externe apps kunnen geen geld versturen zonder goedkeuring vanaf dit toestel";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Let op: werk alleen met deze app wanneer je je op één van de volgende domeinen bevind";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Beveiligde Betalingspagina";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Deze app zal in staat zijn om:";
+/* Link Wallet view title */
+"LinkWallet.title" = "Portefeuille Koppelen";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Locatievoorzieningen zijn uitgeschakeld.";
 /* No permissions for location services */
-"LocationPlugin.notAuthorized" = "Bread heeft geen toestemming om locatievoorzieningen te gebruiken.";
+"LocationPlugin.notAuthorized" = "BRD heeft geen toestemming om locatievoorzieningen te gebruiken.";
 /* Wallet creation date prefix */
 "ManageWallet.creationDatePrefix" = "Je hebt je portemonnee gecreëerd op %1$@";
 /* Manage wallet description text */
@@ -296,6 +324,10 @@
 "MenuButton.addWallet" = "Voeg Wallet toe";
 /* Menu button title */
 "MenuButton.lock" = "Portemonnee Vergrendelen";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Beheer wallets";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Scan QR-code";
 /* Menu button title */
 "MenuButton.security" = "Veiligheidscentrum";
 /* Menu button title */
@@ -328,6 +360,10 @@
 "NodeSelector.statusLabel" = "Connectiestatus van de node";
 /* Node Selector view title */
 "NodeSelector.title" = "Bitcoin-nodes";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "%1$@ versturen om %2$@ te kopen";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Bevestiging";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Slecht Betalingsverzoek";
 /* Error opening payment protocol file message */
@@ -367,7 +403,7 @@
 /* Transaction rejected prompt title */
 "Prompts.RecommendRescan.title" = "Transactie Geweigerd";
 /* Share data prompt body */
-"Prompts.ShareData.body" = "Help ons bij het verbeteren van Bread door je anonieme data met ons te delen";
+"Prompts.ShareData.body" = "Help ons bij het verbeteren van BRD door je anonieme data met ons te delen";
 /* Share data prompt title */
 "Prompts.ShareData.title" = "Deel Anonieme Data";
 /* Enable touch ID prompt body */
@@ -381,11 +417,15 @@
 /* Button on fingerprint prompt so the user can enter their PIN instead */
 "Prompts.TouchId.usePin.android" = "PIN";
 /* Upgrade PIN prompt body. */
-"Prompts.UpgradePin.body" = "Bread is geüpgrade naar een 6-cijferige PIN. Tik hier om te upgraden.";
+"Prompts.UpgradePin.body" = "BRD is geüpgrade naar een 6-cijferige PIN. Tik hier om te upgraden.";
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "PIN Upgraden";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Zet notificaties aan om in de toekomst speciale berichten van Brood te ontvangen.";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Meldingen Uitgeschakeld";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "Schakel meldingen in in Instellingen om notificaties te ontvangen";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push Meldingen";
 /* Push notifications are off label */
@@ -415,7 +455,7 @@
 /* Enter paper key instruction */
 "RecoverWallet.instruction" = "Papieren Sleutel Invoeren";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Herstel je Bread met je papieren sleutel.";
+"RecoverWallet.intro" = "Herstel je BRD met je papieren sleutel.";
 /* Invalid paper key message */
 "RecoverWallet.invalid" = "De papieren sleutel die je hebt ingevoerd is ongeldig. Check ieder woord a.u.b. en probeer het opnieuw.";
 /* Previous button accessibility label */
@@ -443,7 +483,7 @@
 /* extimated time */
 "ReScan.body1" = "20-45 minuten";
 /* Syncing explanation */
-"ReScan.body2" = "Als een transactie als voltooid staat op het Bitcoin netwerk maar niet in je Bread.";
+"ReScan.body2" = "Als een transactie als voltooid staat op het Bitcoin netwerk maar niet in je BRD.";
 /* Syncing explanation */
 "ReScan.body3" = "Je kreeg herhaaldelijk een foutmelding die zei dat je transactie werd afgewezen.";
 /* Start Sync button label */
@@ -475,11 +515,11 @@
 /* Paper Key button title */
 "SecurityCenter.paperKeyTitle" = "Papieren Sleutel";
 /* PIN button description */
-"SecurityCenter.pinDescription" = "Beschermt je Bread van ongeautoriseerde gebruikers.";
+"SecurityCenter.pinDescription" = "Beschermt je BRD van ongeautoriseerde gebruikers.";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "6-cijferige PIN";
 /* Touch ID button description */
-"SecurityCenter.touchIdDescription" = "Ontgrendel je Bread handig en stuur geld tot een bepaalde ingestelde limiet.";
+"SecurityCenter.touchIdDescription" = "Ontgrendel je BRD handig en stuur geld tot een bepaalde ingestelde limiet.";
 /* Touch ID button title */
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
@@ -489,13 +529,13 @@
 /* Balance: $4.00 */
 "Send.balance" = "Balans: %1$@";
 /* Instructions how to allow the camera access for the app */
-"Send.cameraUnavailabeMessage.android" = "Sta cameratoegang toe via \"Instellingen\" > \"Apps\" > \"Bread\" > \"Toestemmingen\"";
+"Send.cameraUnavailabeMessage.android" = "Sta cameratoegang toe via \"Instellingen\" > \"Apps\" > \"BRD\" > \"Toestemmingen\"";
 /* Permission required to access camera */
-"Send.cameraUnavailabeTitle.android" = "Bread heeft geen toegang tot de camera";
+"Send.cameraUnavailabeTitle.android" = "BRD heeft geen toegang tot de camera";
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "Ga naar Instellingen om camera gebruik toe te staan.";
 /* Camera not allowed alert title */
-"Send.cameraUnavailableTitle" = "Bread heeft geen toestemming voor het gebruik van de camera";
+"Send.cameraUnavailableTitle" = "BRD heeft geen toestemming voor het gebruik van de camera";
 /* Warning when sending to self. */
 "Send.containsAddress" = "De bestemming is je eigen adres. Je kunt het niet naar jezelf sturen.";
 /* Could not create transaction alert title */
@@ -571,7 +611,7 @@
 /* Join Early access label */
 "Settings.earlyAccess" = "Doe Mee aan Early Access";
 /* Are you enjoying bread alert message body */
-"Settings.enjoying" = "Vind je Bread leuk?";
+"Settings.enjoying" = "Vind je BRD leuk?";
 /* Face ID spending limit label */
 "Settings.faceIdLimit" = "Bestedingslimiet Face-ID";
 /* Redeem the funds stored on this private key. */
@@ -580,6 +620,8 @@
 "Settings.manage" = "Beheer";
 /* Notifications label */
 "Settings.notifications" = "Notificaties";
+/* Section header for "other settings". */
+"Settings.other" = "Andere";
 /* Preferences settings section header */
 "Settings.preferences" = "Voorkeuren";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -601,7 +643,7 @@
 /* Unlink/delete your wallet from the current device. */
 "Settings.wipe" = "Ontkoppelen van dit toestel";
 /* Share data view body */
-"ShareData.body" = "Help om Bread te verbeteren door je anonieme data met ons te delen. Dit bevat geen financiële informatie. We respecteren je financiële privacy.";
+"ShareData.body" = "Help om BRD te verbeteren door je anonieme data met ons te delen. Dit bevat geen financiële informatie. We respecteren je financiële privacy.";
 /* Share data header */
 "ShareData.header" = "Data Delen?";
 /* Share data switch label. */
@@ -609,7 +651,7 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Schrijf Papieren Sleutel Opnieuw Op";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Je papieren sleutel is de enige manier om je Bread te herstellen als je telefoon verloren, gestolen, kapot of geüpgrade is.\n\nWe zullen je een lijst met woorden laten zie die je op een papiertje moet schrijven en veilig moet bewaren.";
+"StartPaperPhrase.body" = "Je papieren sleutel is de enige manier om je BRD te herstellen als je telefoon verloren, gestolen, kapot of geüpgrade is.\n\nWe zullen je een lijst met woorden laten zie die je op een papiertje moet schrijven en veilig moet bewaren.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Schrijf Papieren Sleutel Op";
 /* Argument is date */
@@ -622,10 +664,14 @@
 "StartViewController.recoverButton" = "Wallet herstellen";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Aan het verbinden";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Synchronisatie mislukt";
 /* Syncing view header text */
 "SyncingView.header" = "Synchroniseren";
 /* Retry button label */
 "SyncingView.retry" = "Opnieuw proberen";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Gesynchroniseerd via %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Aan het synchroniseren";
 /* 6 d (6 days) */
@@ -657,13 +703,13 @@
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "Authenticatie met vingerafdruk niet ingesteld";
 /* Touch Id screen label */
-"TouchIdSettings.label" = "Gebruik je vingerafdruk om je Bread te ontgrendelen en geld tot een ingestelde limiet te versturen.";
+"TouchIdSettings.label" = "Gebruik je vingerafdruk om je BRD te ontgrendelen en geld tot een ingestelde limiet te versturen.";
 /* Link Text (see TouchIdSettings.customizeText) */
 "TouchIdSettings.linkText" = "Touch-ID uitgavenlimietscherm";
 /* Spending Limit: b100,000 ($100) */
 "TouchIdSettings.spendingLimit" = "Bestedingslimiet: %1$@ (%2$@)";
 /* Touch id switch label. */
-"TouchIdSettings.switchLabel" = "Schakel Touch ID in voor Bread";
+"TouchIdSettings.switchLabel" = "Schakel Touch ID in voor BRD";
 /* Enable fingerprint for this wallet called Bread */
 "TouchIdSettings.switchLabel.android" = "Stel authenticatie met vingerafdruk";
 /* Touch ID settings view title */
@@ -730,6 +776,8 @@
 "TransactionDetails.amountHeader" = "Bedrag";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "%1$@ wanneer ontvangen, %2$@ nu";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ tijdens versturen, %2$@ nu";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Bevestigd in block";
 /* Memo section header */
@@ -821,7 +869,7 @@
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "Aanraaksensor";
 /* TouchID prompt text */
-"UnlockScreen.touchIdPrompt" = "Ontgrendel je Bread.";
+"UnlockScreen.touchIdPrompt" = "Ontgrendel je BRD.";
 /* Device authentication body */
 "UnlockScreen.touchIdPrompt.android" = "Ontgrendel alstublieft uw Android-apparaat om door te gaan.";
 /* Unlock with TouchID accessibility label */
@@ -831,7 +879,7 @@
 /* Update PIN caption text */
 "UpdatePin.caption" = "Onthoud deze PIN. Als je deze vergeet, zul je niet in staat zijn om bij je Bitcoins te kunnen.";
 /* PIN creation info. */
-"UpdatePin.createInstruction" = "Je PIN zal worden gebruikt om je Bread te ontgrendelen en geld te versturen.";
+"UpdatePin.createInstruction" = "Je PIN zal worden gebruikt om je BRD te ontgrendelen en geld te versturen.";
 /* Update PIN title */
 "UpdatePin.createTitle" = "PIN Instellen";
 /* Update PIN title */
@@ -865,7 +913,7 @@
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "Autoriseer deze transactie";
 /* 'No wallet' warning for watch app */
-"Watch.noWalletWarning" = "Open de Bread iPhone app om je portemonnee in te stellen.";
+"Watch.noWalletWarning" = "Open de BRD iPhone app om je portemonnee in te stellen.";
 /* Dismiss button label */
 "Webview.dismiss" = "Verwerpen";
 /* Webview loading error message */
@@ -873,9 +921,9 @@
 /* Updating webview message */
 "Webview.updating" = "Updaten...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet is omgedoopt tot Bread, met een gloednieuw uiterlijk en enkele nieuwe functies.\n\nAls u hulp nodig hebt, zoek naar de (?) rechtsboven in de meeste schermen.";
+"Welcome.body" = "Breadwallet is omgedoopt tot BRD, met een gloednieuw uiterlijk en enkele nieuwe functies.\n\nAls u hulp nodig hebt, zoek naar de (?) rechtsboven in de meeste schermen.";
 /* Top title of welcome screen */
-"Welcome.title" = "Welkom bij Brood!";
+"Welcome.title" = "Welkom bij BRD!";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Weet je zeker dat je deze portomonnee wilt verwijderen?";
 /* Wipe wallet alert title */
@@ -889,7 +937,7 @@
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Ontkoppel je portemonnee om het te verwijderen van dit toestel. Wanneer deze portemonnee ontkoppeld is kunt u een nieuwe portemonnee beginnen of een andere portemonnee laden op dit toestel.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "U zal niet langer uw huidige Bread portemonnee kunnen bereiken vanaf dit apparaat. Uw saldo zal hetzelfde blijven.";
+"WipeWallet.startWarning" = "U zal niet langer uw huidige BRD portemonnee kunnen bereiken vanaf dit apparaat. Uw saldo zal hetzelfde blijven.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "Portemonnee Ontkoppelen";
 /* Wipe wallet button title */
@@ -904,51 +952,3 @@
 "WritePaperPhrase.previous" = "Vorige";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li van %2$li";
-/* Section header for "other settings". */
-"Settings.other" = "Andere";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Beheer wallets";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Kopen";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Handel";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Scan QR-code";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Synchronisatie mislukt";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Gesynchroniseerd via %1$@";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "Meldingen Uitgeschakeld";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Schakel meldingen in in Instellingen om notificaties te ontvangen";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "Goedkeuren";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "Afwijzen";
-/* Link Wallet view title */
-"LinkWallet.title" = "Portefeuille Koppelen";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "Let op: werk alleen met deze app wanneer je je op één van de volgende domeinen bevind";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "Deze app zal in staat zijn om:";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "Externe apps kunnen geen geld versturen zonder goedkeuring vanaf dit toestel";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "Beveiligde Betalingspagina";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "Bevestiging";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "%1$@ versturen om %2$@ te kopen";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "Vraag %1$@ accountgegevens aan";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "Verzoek %1$@ smart contract oproep";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "Verzoek %1$@ betaling";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "%1$@ tijdens versturen, %2$@ nu";
-/* Request timed out error message */
-"Alert.timedOut" = "Verzoek loopt af. Controleer uw verbinding en probeer het opnieuw.";

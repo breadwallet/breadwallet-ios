@@ -64,9 +64,6 @@ class ShareDataViewController : UIViewController {
 
         toggle.valueChanged = strongify(self) { myself in
             UserDefaults.hasAquiredShareDataPermission = myself.toggle.isOn
-            if myself.toggle.isOn {
-                Store.trigger(name: .didEnableShareData)
-            }
             Backend.apiClient.events?.sync {}
         }
     }

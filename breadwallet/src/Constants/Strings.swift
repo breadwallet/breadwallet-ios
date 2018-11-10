@@ -34,6 +34,7 @@ enum S {
         static let continueAction = NSLocalizedString("Button.continueAction", value: "Continue", comment: "prompt continue button")
         static let dismiss = NSLocalizedString("Button.dismiss", value: "Dismiss", comment: "prompt dismiss button")
         static let home = NSLocalizedString("Button.home", value: "Home", comment: "prompt home button")
+        static let moreInfo = NSLocalizedString("Button.moreInfo", value: "More info", comment: "More information button")
     }
 
     enum Alert {
@@ -41,6 +42,7 @@ enum S {
         static let error = NSLocalizedString("Alert.error", value: "Error", comment: "Error alert title")
         static let noInternet = NSLocalizedString("Alert.noInternet", value: "No internet connection found. Check your connection and try again.", comment: "No internet alert message")
         static let timedOut = NSLocalizedString("Alert.timedOut", value: "Request timed out. Check your connection and try again.", comment: "Request timed out error message")
+        static let somethingWentWrong = NSLocalizedString("Alert.somethingWentWrong", value: "Something went wrong. Please try again.", comment: "General error message with 'Try again'")
     }
 
     enum Scanner {
@@ -98,8 +100,8 @@ enum S {
     }
 
     enum Account {
-        static let loadingMessage = NSLocalizedString("Account.loadingMessage", value:"Loading Wallet", comment: "Loading Wallet Message")
         static let balance = NSLocalizedString("Account.balance", value:"Balance", comment: "Account header balance label")
+        static let delistedToken = NSLocalizedString("Account.delistedToken", value: "This token has been delisted because the issuer decided to move to their own blockchain.\n\nDon’t worry! You will be able to send these tokens out from the BRD app to another platform that supports the token swap.\n\nFor more details, please visit our support page.", comment: "Delisted token alert banner message")
     }
 
     enum JailbreakWarnings {
@@ -302,6 +304,8 @@ enum S {
         static let faceIdLimit = NSLocalizedString("Settings.faceIdLimit", value:"Face ID Spending Limit", comment: "Face ID spending limit label")
         static let sendLogs = NSLocalizedString("Settings.sendLogs", value: "Send Logs", comment: "Send Logs option")
         static let resetCurrencies = NSLocalizedString("Settings.resetCurrencies", value: "Reset to Default Currencies", comment: "Reset currencies button")
+        static let viewLegacyAddress = NSLocalizedString("Settings.ViewLegacyAddress", value: "View Legacy Receive Address", comment: "")
+        static let enableSegwit = NSLocalizedString("Settings.EnableSegwit", value: "Enable Segwit", comment: "")
     }
 
     enum About {
@@ -447,21 +451,29 @@ enum S {
             static let title = NSLocalizedString("Prompts.UpgradePin.title", value: "Upgrade PIN", comment: "Upgrade PIN prompt title.")
             static let body = NSLocalizedString("Prompts.UpgradePin.body", value: "BRD has upgraded to using a 6-digit PIN. Tap Continue to upgrade.", comment: "Upgrade PIN prompt body.")
         }
-        enum RecommendRescan {
-            static let title = NSLocalizedString("Prompts.RecommendRescan.title", value: "Transaction Rejected", comment: "Transaction rejected prompt title")
-            static let body = NSLocalizedString("Prompts.RecommendRescan.body", value: "Your wallet may be out of sync. This can often be fixed by rescanning the blockchain.", comment: "Transaction rejected prompt body")
-        }
         enum NoPasscode {
             static let title = NSLocalizedString("Prompts.NoPasscode.title", value: "Turn device passcode on", comment: "No Passcode set warning title")
             static let body = NSLocalizedString("Prompts.NoPasscode.body", value: "A device passcode is needed to safeguard your wallet. Go to settings and turn passcode on.", comment: "No passcode set warning body")
         }
-        enum ShareData {
-            static let title = NSLocalizedString("Prompts.ShareData.title", value: "Share Anonymous Data", comment: "Share data prompt title")
-            static let body = NSLocalizedString("Prompts.ShareData.body", value: "Help improve BRD by sharing your anonymous data with us", comment: "Share data prompt body")
-        }
         enum FaceId {
             static let title = NSLocalizedString("Prompts.FaceId.title", value: "Enable Face ID", comment: "Enable face ID prompt title")
             static let body = NSLocalizedString("Prompts.FaceId.body", value: "Tap Continue to enable Face ID", comment: "Enable face ID prompt body")
+        }
+        enum Email {
+            static let title = NSLocalizedString("Prompts.Email.title", value: "Get in the loop", comment: "Get user email address prompt title")
+            static let body = NSLocalizedString("Prompts.Email.body", 
+                                                value: "Be the first to receive important support and product updates",
+                                                comment: "Get user email address prompt body")
+            static let emailPlaceholder = NSLocalizedString("Prompts.Email.placeholder", value: "enter your email", comment: "user email input placeholder")
+            static let successTitle = NSLocalizedString("Prompts.Email.successTitle", 
+                                                        value: "Thank you!", 
+                                                        comment: "Get user email address prompt title upon success")
+            static let successBody = NSLocalizedString("Prompts.Email.successBody", 
+                                                        value: "You have successfully subscribed to receive updates", 
+                                                        comment: "body text show after the user successfully submits an email address for updates")
+            static let successFootnote = NSLocalizedString("Prompts.Email.successFootnote", 
+                                                           value: "We appreciate your continued support", 
+                                                           comment: "shown after the user successfully submits an email address for updates")
         }
     }
 
@@ -634,5 +646,16 @@ enum S {
             static let paymentRequest = NSLocalizedString("EME.permissions.paymentRequest", value: "Request %1$@ payment", comment: "Service capabilities description")
             static let callRequest = NSLocalizedString("EME.permissions.callRequest", value: "Request %1$@ smart contract call", comment: "Service capabilities description")
         }
+    }
+    
+    
+    
+    enum Segwit {
+        static let confirmChoiceLayout = NSLocalizedString("Segwit.ConfirmChoiceLayout", value: "Enabling SegWit is an irreversible feature. Are you sure you want to continue?", comment: "")
+        static let confirmationConfirmationTitle = NSLocalizedString("Segwit.ConfirmationConfirmationTitle", value: "You have enabled SegWit!", comment: "")
+        static let confirmationInstructionsDescription = NSLocalizedString("Segwit.ConfirmationInstructionsDescription", value: "Thank you for helping move bitcoin forward.", comment: "")
+        static let confirmationInstructionsInstructions = NSLocalizedString("Segwit.ConfirmationInstructionsInstructions" , value: "SegWit support is still a beta feature.\n\nOnce SegWit is enabled, it will not be possible to disable it. You will be able to find the legacy address under Settings. \n\nSome third-party services, including crypto trading, may be unavailable to users who have enabled SegWit. In case of emergency, you will be able to generate a legacy address from Preferences > Bitcoin Settings. \n\nSegWit will automatically be enabled for all users in a future update.", comment: "")
+        static let homeButton = NSLocalizedString("Segwit.HomeButton", value: "To the Moon", comment: "")
+        static let enable = NSLocalizedString("Segwit.Enable", value: "Enable", comment: "")
     }
 }
