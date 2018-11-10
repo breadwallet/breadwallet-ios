@@ -1,9 +1,9 @@
 /* App name */
-"About.appName.android" = "Bread";
+"About.appName.android" = "BRD";
 /* About screen blog label */
 "About.blog" = "博客";
 /* About screen footer */
-"About.footer" = "由全球 Bread 团队制作。版本%1$@";
+"About.footer" = "由全球 BRD 团队制作。版本%1$@构建%2$@";
 /* Privay Policy button label */
 "About.privacy" = "隐私政策";
 /* About screen reddit label */
@@ -27,7 +27,7 @@
 /* Loading Wallet Message */
 "Account.loadingMessage" = "正在加载钱包";
 /* Default wallet name */
-"AccountHeader.defaultWalletName" = "我的 Bread";
+"AccountHeader.defaultWalletName" = "我的 BRD";
 /* Third party keyboard warning */
 "Alert.customKeyboard.android" = "看起来您正在使用第三方键盘，它可以记录您键入的内容并窃取您的密钥（Paper Key）。请切换到默认的安卓键盘以便获得额外保护。";
 /* Error alert title */
@@ -35,11 +35,13 @@
 /* Keystore error */
 "Alert.keystore.generic.android" = "您的安卓操作系统密钥库存在问题，请联系support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
-"Alert.keystore.invalidated.android" = "您的 Bread 加密数据最近因为您的安卓系统屏幕锁定被禁用而失效。";
+"Alert.keystore.invalidated.android" = "您的 BRD 加密数据最近因为您的安卓系统屏幕锁定被禁用而失效。";
 /* Keystore error title */
 "Alert.keystore.title.android" = "安卓系统密钥库错误";
 /* No internet alert message */
 "Alert.noInternet" = "未发现互联网连接。检查您的连接并重试。";
+/* Request timed out error message */
+"Alert.timedOut" = "请求超时。请检查您的连接，然后重试。";
 /* Warning alert title */
 "Alert.warning" = "警告";
 /* 'the addresses were copied'' Alert title */
@@ -176,12 +178,18 @@
 "DefaultCurrency.rateLabel" = "汇率";
 /* The wallet is disabled. */
 "Disabled.title" = "钱包已禁用";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "请求%1$@ 帐户信息";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "请求%1$@智能合约呼叫";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "请求%1$@付款";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "此设备未进行配置，无法用 iOS 邮件应用发送电子邮件。";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableTitle" = "电子邮箱不可用";
 /* Message that gets shown when we've detected the user has encountered the looping lock-screen bug. (preserve [ ] characters) */
-"ErrorMessages.loopingLockScreen.android" = "由于您的 Android 版本错误，Bread 无法验证。[Please tap here for more information.]";
+"ErrorMessages.loopingLockScreen.android" = "由于您的 Android 版本错误，BRD 无法验证。[Please tap here for more information.]";
 /* Messaging unavailable alert title */
 "ErrorMessages.messagingUnavailableMessage" = "本设备未被配置来发送消息。";
 /* Messaging unavailable alert title */
@@ -222,10 +230,16 @@
 "FeeSelector.title" = "处理速度";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "管理";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "购买";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "菜单";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "钱包";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "总资产";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "换";
 /* Checking private key balance progress view text */
 "Import.checking" = "正在查看私人密钥余额...";
 /* Sweep private key confirmation message */
@@ -247,13 +261,13 @@
 /* Caption for graphics */
 "Import.leftCaption" = "私钥";
 /* Import wallet intro screen message */
-"Import.message" = "私钥通常以 QR 码形式打印在纸上，用于离线存储资金。 兑换私钥，用一笔交易将其控制的全部资金转入 Bread。";
+"Import.message" = "私钥通常以 QR 码形式打印在纸上，用于离线存储资金。 兑换私钥，用一笔交易将其控制的全部资金转入 BRD。";
 /* Enter password alert view title */
 "Import.password" = "本私钥受到密码保护。";
 /* password textfield placeholder */
 "Import.passwordPlaceholder" = "密码";
 /* Caption for graphics */
-"Import.rightCaption" = "您的 Bread 钱包";
+"Import.rightCaption" = "您的 BRD 钱包";
 /* Scan Private key button label */
 "Import.scan" = "扫描私钥";
 /* Import wallet success alert title */
@@ -273,17 +287,31 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "忽略";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "设备安全性受损\n任何'越狱'应用都可能访问 Bread 的密钥链数据并盗取您的比特币！立即擦除这个钱包并在一台安全设备上进行恢复。";
+"JailbreakWarnings.messageWithBalance" = "设备安全性受损\n任何'越狱'应用都可能访问 BRD 的密钥链数据并盗取您的比特币！立即擦除这个钱包并在一台安全设备上进行恢复。";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "设备安全性受损\n任何'越狱'应用都可能访问 Bread 的密钥链数据并盗取您的比特币！请您仅在未越狱设备上使用 Bread 。";
+"JailbreakWarnings.messageWithoutBalance" = "设备安全性受损\n任何'越狱'应用都可能访问 BRD 的密钥链数据并盗取您的比特币！请您仅在未越狱设备上使用 BRD 。";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "警告";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "擦除";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "同意";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "拒绝";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "外部应用没有本设备的许可将不能汇钱";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "注意:仅在如下域名时才使用本应用";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "安全结账";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "该应用将能够:";
+/* Link Wallet view title */
+"LinkWallet.title" = "关联钱包";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "位置服务被禁用。";
 /* No permissions for location services */
-"LocationPlugin.notAuthorized" = "Bread 无权限访问位置服务。";
+"LocationPlugin.notAuthorized" = "BRD 无权限访问位置服务。";
 /* Wallet creation date prefix */
 "ManageWallet.creationDatePrefix" = "您在%1$@上创建了您的钱包";
 /* Manage wallet description text */
@@ -296,6 +324,10 @@
 "MenuButton.addWallet" = "添加钱包";
 /* Menu button title */
 "MenuButton.lock" = "锁住钱包";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "管理钱包";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "扫描QR";
 /* Menu button title */
 "MenuButton.security" = "安全中心";
 /* Menu button title */
@@ -328,6 +360,10 @@
 "NodeSelector.statusLabel" = "节点连接状态";
 /* Node Selector view title */
 "NodeSelector.title" = "比特币节点";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "发送%1$@以购买%2$@";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "确认";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "假的付款请求";
 /* Error opening payment protocol file message */
@@ -367,7 +403,7 @@
 /* Transaction rejected prompt title */
 "Prompts.RecommendRescan.title" = "交易被拒";
 /* Share data prompt body */
-"Prompts.ShareData.body" = "与我们分享您的匿名数据来帮助改善 Bread。";
+"Prompts.ShareData.body" = "与我们分享您的匿名数据来帮助改善 BRD。";
 /* Share data prompt title */
 "Prompts.ShareData.title" = "分享匿名数据";
 /* Enable touch ID prompt body */
@@ -381,11 +417,15 @@
 /* Button on fingerprint prompt so the user can enter their PIN instead */
 "Prompts.TouchId.usePin.android" = "密码";
 /* Upgrade PIN prompt body. */
-"Prompts.UpgradePin.body" = "Bread 已升级到使用 6 位 PIN。点击此处升级。";
+"Prompts.UpgradePin.body" = "BRD 已升级到使用 6 位 PIN。点击此处升级。";
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "升级 PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
-"PushNotifications.body" = "打开推送通知，以便将来从 Bread 接收特殊消息。";
+"PushNotifications.body" = "打开推送通知，以便将来从 BRD 接收特殊消息。";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "提示已禁用";
+/* Push notifications settings instructions */
+"PushNotifications.enableInstructions" = "在设置里开启提示以接收提醒";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "推送通知";
 /* Push notifications are off label */
@@ -415,7 +455,7 @@
 /* Enter paper key instruction */
 "RecoverWallet.instruction" = "输入纸键";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "用您的纸键恢复您的 Bread。";
+"RecoverWallet.intro" = "用您的纸键恢复您的 BRD。";
 /* Invalid paper key message */
 "RecoverWallet.invalid" = "您输入的纸键无效。请仔细检查每个单词并重试。";
 /* Previous button accessibility label */
@@ -443,7 +483,7 @@
 /* extimated time */
 "ReScan.body1" = "20-45 分钟";
 /* Syncing explanation */
-"ReScan.body2" = "如果某次交易在比特币网络上显示为已完成，却不在您的 Bread 里。";
+"ReScan.body2" = "如果某次交易在比特币网络上显示为已完成，却不在您的 BRD 里。";
 /* Syncing explanation */
 "ReScan.body3" = "你反复得到交易被拒绝的出错信息。";
 /* Start Sync button label */
@@ -475,11 +515,11 @@
 /* Paper Key button title */
 "SecurityCenter.paperKeyTitle" = "纸键";
 /* PIN button description */
-"SecurityCenter.pinDescription" = "保护您的 Bread 免遭未授权用户盗用。";
+"SecurityCenter.pinDescription" = "保护您的 BRD 免遭未授权用户盗用。";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "6 位 PIN";
 /* Touch ID button description */
-"SecurityCenter.touchIdDescription" = "方便地解锁 Bread，在设定限额下汇钱。";
+"SecurityCenter.touchIdDescription" = "方便地解锁 BRD，在设定限额下汇钱。";
 /* Touch ID button title */
 "SecurityCenter.touchIdTitle" = "触摸 ID";
 /* Security center fingerprint authentication button */
@@ -489,13 +529,13 @@
 /* Balance: $4.00 */
 "Send.balance" = "余额：%1$@";
 /* Instructions how to allow the camera access for the app */
-"Send.cameraUnavailabeMessage.android" = "在“设置”>“应用”>“Bread”>“权限”中允许访问相机";
+"Send.cameraUnavailabeMessage.android" = "在“设置”>“应用”>“BRD”>“权限”中允许访问相机";
 /* Permission required to access camera */
-"Send.cameraUnavailabeTitle.android" = "Bread 没有访问相机的权限";
+"Send.cameraUnavailabeTitle.android" = "BRD 没有访问相机的权限";
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "前往“设置”以允许访问照相机。";
 /* Camera not allowed alert title */
-"Send.cameraUnavailableTitle" = "Bread 不允许访问照相机";
+"Send.cameraUnavailableTitle" = "BRD 不允许访问照相机";
 /* Warning when sending to self. */
 "Send.containsAddress" = "目标是您自己的地址。您不能发送给您自己。";
 /* Could not create transaction alert title */
@@ -571,7 +611,7 @@
 /* Join Early access label */
 "Settings.earlyAccess" = "加入早期访问";
 /* Are you enjoying bread alert message body */
-"Settings.enjoying" = "您喜欢 Bread 吗？";
+"Settings.enjoying" = "您喜欢 BRD 吗？";
 /* Face ID spending limit label */
 "Settings.faceIdLimit" = "面部识别支出限额";
 /* Redeem the funds stored on this private key. */
@@ -580,6 +620,8 @@
 "Settings.manage" = "管理";
 /* Notifications label */
 "Settings.notifications" = "通知";
+/* Section header for "other settings". */
+"Settings.other" = "其他";
 /* Preferences settings section header */
 "Settings.preferences" = "选项";
 /* Tap here to reset the list of currencies to the default settings. */
@@ -601,7 +643,7 @@
 /* Unlink/delete your wallet from the current device. */
 "Settings.wipe" = "取消与此设备的链接";
 /* Share data view body */
-"ShareData.body" = "同我们分享您的匿名数据来帮助改善 Bread。这不包括任何财务信息。我们尊重您的财务隐私。";
+"ShareData.body" = "同我们分享您的匿名数据来帮助改善 BRD。这不包括任何财务信息。我们尊重您的财务隐私。";
 /* Share data header */
 "ShareData.header" = "共享数据？";
 /* Share data switch label. */
@@ -609,7 +651,7 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "再次书写纸键";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "如果您的手机丢失、被盗、损坏或升级，纸上密钥是恢复 Bread 的唯一方法。\n\n\n我们将向您显示一张单词表，请将其写在纸上并保存在安全的地方。";
+"StartPaperPhrase.body" = "如果您的手机丢失、被盗、损坏或升级，纸上密钥是恢复 BRD 的唯一方法。\n\n\n我们将向您显示一张单词表，请将其写在纸上并保存在安全的地方。";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "写下纸键";
 /* Argument is date */
@@ -622,10 +664,14 @@
 "StartViewController.recoverButton" = "恢复钱包";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "连接中";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "同步失败";
 /* Syncing view header text */
 "SyncingView.header" = "正在同步";
 /* Retry button label */
 "SyncingView.retry" = "重试";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "从 %1$@ 同步";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "同步中";
 /* 6 d (6 days) */
@@ -657,13 +703,13 @@
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "指纹认证未启用";
 /* Touch Id screen label */
-"TouchIdSettings.label" = "请用指纹解锁 Bread 并在设定限额下汇钱。";
+"TouchIdSettings.label" = "请用指纹解锁 BRD 并在设定限额下汇钱。";
 /* Link Text (see TouchIdSettings.customizeText) */
 "TouchIdSettings.linkText" = "Touch ID 支出限额屏幕";
 /* Spending Limit: b100,000 ($100) */
 "TouchIdSettings.spendingLimit" = "支出限制：%1$@ (%2$@)";
 /* Touch id switch label. */
-"TouchIdSettings.switchLabel" = "针对 Bread 启用触摸 ID";
+"TouchIdSettings.switchLabel" = "针对 BRD 启用触摸 ID";
 /* Enable fingerprint for this wallet called Bread */
 "TouchIdSettings.switchLabel.android" = "指纹认证";
 /* Touch ID settings view title */
@@ -730,6 +776,8 @@
 "TransactionDetails.amountHeader" = "金额";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "收到时%1$@]，现在%2$@";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "发送时 %1$@，现在 %2$@";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "已在区块中确认";
 /* Memo section header */
@@ -821,7 +869,7 @@
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "触控感应器";
 /* TouchID prompt text */
-"UnlockScreen.touchIdPrompt" = "解锁您的 Bread。";
+"UnlockScreen.touchIdPrompt" = "解锁您的 BRD。";
 /* Device authentication body */
 "UnlockScreen.touchIdPrompt.android" = "请解锁您的安卓设备以便继续。";
 /* Unlock with TouchID accessibility label */
@@ -831,7 +879,7 @@
 /* Update PIN caption text */
 "UpdatePin.caption" = "请牢记此 PIN 码。如果您忘记，您将无法访问您的比特币。";
 /* PIN creation info. */
-"UpdatePin.createInstruction" = "您的 PIN 码将用于解锁您的 Bread 并发送款项。";
+"UpdatePin.createInstruction" = "您的 PIN 码将用于解锁您的 BRD 并发送款项。";
 /* Update PIN title */
 "UpdatePin.createTitle" = "设置 PIN 码";
 /* Update PIN title */
@@ -865,7 +913,7 @@
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "授权此交易";
 /* 'No wallet' warning for watch app */
-"Watch.noWalletWarning" = "打开 Bread iPhone app 以设置您的钱包。";
+"Watch.noWalletWarning" = "打开 BRD iPhone app 以设置您的钱包。";
 /* Dismiss button label */
 "Webview.dismiss" = "忽略";
 /* Webview loading error message */
@@ -873,9 +921,9 @@
 /* Updating webview message */
 "Webview.updating" = "正在更新...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet 更名为 Bread， 并增加了全新的界面和功能。如果您需要帮助，请使用在大多数设备屏幕右上角的(?)";
+"Welcome.body" = "Breadwallet 更名为 BRD， 并增加了全新的界面和功能。如果您需要帮助，请使用在大多数设备屏幕右上角的(?)";
 /* Top title of welcome screen */
-"Welcome.title" = "欢迎使用bread！";
+"Welcome.title" = "欢迎使用BRD！";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "您确认要删除此钱包吗？";
 /* Wipe wallet alert title */
@@ -889,7 +937,7 @@
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "取消钱包链接可将其从本设备移除。一旦钱包链接被取消，您可以启用新钱包，或恢复本设备的其他钱包。";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "您无法再在这个设备上使用现在的Bread钱包。 现在的一切资金都留在纸键上。";
+"WipeWallet.startWarning" = "您无法再在这个设备上使用现在的BRD钱包。 现在的一切资金都留在纸键上。";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "取消钱包的链接";
 /* Wipe wallet button title */
@@ -904,51 +952,3 @@
 "WritePaperPhrase.previous" = "上一步";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li / %2$li";
-/* Section header for "other settings". */
-"Settings.other" = "其他";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "管理钱包";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "菜单";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "购买";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "换";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "扫描QR";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "同步失败";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "从 %1$@ 同步";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "提示已禁用";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "在设置里开启提示以接收提醒";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "同意";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "拒绝";
-/* Link Wallet view title */
-"LinkWallet.title" = "关联钱包";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "注意:仅在如下域名时才使用本应用";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "该应用将能够:";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "外部应用没有本设备的许可将不能汇钱";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "安全结账";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "确认";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "发送%1$@以购买%2$@";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "请求%1$@ 帐户信息";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "请求%1$@智能合约呼叫";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "请求%1$@付款";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "发送时 %1$@，现在 %2$@";
-/* Request timed out error message */
-"Alert.timedOut" = "请求超时。请检查您的连接，然后重试。";

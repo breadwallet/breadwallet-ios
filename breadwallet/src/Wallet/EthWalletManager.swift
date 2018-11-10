@@ -93,6 +93,63 @@ class EthWalletManager : WalletManager {
         node.setTokens(tokens)
     }
     
+    /// Fetches balances for all specified tokens and adds any that have a non-zero balance to the users's wallet.
+    func discoverAndAddTokensWithBalance(in availableTokens: [ERC20Token], completion: @escaping () -> Void) {
+        findTokensWithBalance(in: availableTokens) { tokensWithBalance in
+            self.addTokenWallets(tokensWithBalance)
+            completion()
+        }
+    }
+    
+    private func findTokensWithBalance(in tokens: [ERC20Token], completion: @escaping ([ERC20Token]) -> Void) {
+        guard let apiClient = apiClient, let address = address else { return assertionFailure() }
+        var tokensWithBalance = [ERC20Token]()
+        let group = DispatchGroup()
+        let queue = DispatchQueue.global(qos: .utility)
+        queue.async {
+            for token in tokens {
+                group.enter()
+                apiClient.getTokenBalance(address: address, token: token) { result in
+                    if case .success(let value) = result {
+                        let balance = UInt256(hexString: value)
+                        if balance > UInt256(0) {
+                            tokensWithBalance.append(token)
+                        }
+                    }
+                    group.leave()
+                }
+            }
+            group.notify(queue: queue) {
+                completion(tokensWithBalance)
+            }
+        }
+    }
+    
+    private func addTokenWallets(_ tokens: [ERC20Token]) {
+        guard let kvStore = kvStore, let metaData = CurrencyListMetaData(kvStore: kvStore) else { return assertionFailure() }
+        let hiddenTokenAddresses = metaData.hiddenTokenAddresses
+        let tokensToBeAdded = tokens.filter {
+            return Store.state.wallets[$0.code] == nil && !hiddenTokenAddresses.contains($0.code)
+        }
+        var displayOrder = Store.state.displayCurrencies.count
+        let newWallets: [String: WalletState] = tokensToBeAdded.reduce([String: WalletState]()) { (dictionary, currency) -> [String: WalletState] in
+            var dictionary = dictionary
+            dictionary[currency.code] = WalletState.initial(currency, displayOrder: displayOrder)
+            displayOrder = displayOrder + 1
+            return dictionary
+        }
+        
+        metaData.addTokenAddresses(addresses: tokensToBeAdded.map{ $0.address })
+        do {
+            let _ = try kvStore.set(metaData)
+        } catch let error {
+            print("error setting wallet info: \(error)")
+        }
+        DispatchQueue.main.async {
+            Store.perform(action: ManageWallets.addWallets(newWallets))
+        }
+    }
+    
     func defaultGasLimit(currency: CurrencyDef) -> UInt64 {
         let wallet = node.wallet(currency)
         return wallet.defaultGasLimit
@@ -208,10 +265,7 @@ extension EthWalletManager: EthereumClient {
     }
     
     func getGasEstimate(wallet: EthereumWallet, tid: EthereumTransactionId, to: String, amount: String, data: String, completion: @escaping (String) -> Void) {
-        //guard let apiClient = apiClient else { return assertionFailure() }
-        let currency = wallet.currency
-        print("getGasEstimate \(currency.code)")
-        //TODO
+        // unused - gas limit estimate is triggerd by the Sender (GasEstimator)
     }
     
     func getBalance(wallet: EthereumWallet, address: String, completion: @escaping (String) -> Void) {

@@ -82,13 +82,6 @@ class ModalPresenter : Subscriber, Trackable {
                 self?.handleFile(file)
             }
         })
-        
-        walletManagers.values.map({ $0.currency }).filter({ $0 is Bitcoin }).forEach { currency in
-            // TODO: show alert and automatic rescan instead of showing the rescan screen
-            Store.subscribe(self, name: .recommendRescan(currency), callback: { [weak self] _ in
-                self?.presentRescan(currency: currency)
-            })
-        }
 
         //URLs
         Store.subscribe(self, name: .receivedPaymentRequest(nil), callback: { [weak self] in
@@ -258,12 +251,12 @@ class ModalPresenter : Subscriber, Trackable {
         case .sendForRequest(let request):
             return makeSendView(forRequest: request)
         case .receive(let currency):
-            return receiveView(currency: currency, isRequestAmountVisible: (currency.urlSchemes != nil))
+            return makeReceiveView(currency: currency, isRequestAmountVisible: (currency.urlSchemes != nil))
         case .loginScan:
             presentLoginScan()
             return nil
         case .loginAddress:
-            return receiveView(currency: Currencies.btc, isRequestAmountVisible: false)
+            return makeReceiveView(currency: Currencies.btc, isRequestAmountVisible: false)
         case .requestAmount(let currency):
             guard let walletManager = walletManagers[currency.code] else { return nil }
             var address: String?
@@ -307,6 +300,8 @@ class ModalPresenter : Subscriber, Trackable {
         case .trade:
             presentPlatformWebViewController("/trade")
             return nil
+        case .receiveLegacy:
+            return makeReceiveView(currency: Currencies.btc, isRequestAmountVisible: false, isBTCLegacy: true)
         }
     }
 
@@ -371,8 +366,8 @@ class ModalPresenter : Subscriber, Trackable {
         return root
     }
 
-    private func receiveView(currency: CurrencyDef, isRequestAmountVisible: Bool) -> UIViewController? {
-        let receiveVC = ReceiveViewController(currency: currency, isRequestAmountVisible: isRequestAmountVisible)
+    private func makeReceiveView(currency: CurrencyDef, isRequestAmountVisible: Bool, isBTCLegacy: Bool = false) -> UIViewController? {
+        let receiveVC = ReceiveViewController(currency: currency, isRequestAmountVisible: isRequestAmountVisible, isBTCLegacy: isBTCLegacy)
         let root = ModalViewController(childViewController: receiveVC)
         receiveVC.presentEmail = { [weak self, weak root] address, image in
             guard let root = root, let uri = currency.addressURI(address) else { return }
@@ -426,6 +421,17 @@ class ModalPresenter : Subscriber, Trackable {
         let menuNav = UINavigationController()
         menuNav.setDarkStyle()
         
+        var enableSegwit = MenuItem(title: S.Settings.enableSegwit, callback: {
+            let segwitView = SegwitViewController()
+            menuNav.pushViewController(segwitView, animated: true)
+        })
+        enableSegwit.shouldShow = { return !UserDefaults.hasOptedInSegwit }
+        var viewLegacyAddress = MenuItem(title: S.Settings.viewLegacyAddress, callback: {
+            Backend.apiClient.sendViewLegacyAddress()
+            Store.perform(action: RootModalActions.Present(modal: .receiveLegacy))
+        })
+        viewLegacyAddress.shouldShow = { return UserDefaults.hasOptedInSegwit }
+        
         var btcItems: [MenuItem] = [
             // Rescan
             MenuItem(title: S.Settings.sync, callback: {
@@ -443,7 +449,9 @@ class ModalPresenter : Subscriber, Trackable {
                         self.presentKeyImport(walletManager: walletManager)
                     }
                 })
-            })
+            }),
+            enableSegwit,
+            viewLegacyAddress
         ]
         
         if UserDefaults.isBiometricsEnabled {

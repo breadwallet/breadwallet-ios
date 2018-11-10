@@ -43,13 +43,14 @@ enum TriggerName {
     case rescan(CurrencyDef)
     case lock
     case promptBiometrics
+    case promptEmail
     case promptPaperKey
     case promptUpgradePin
     case loginFromSend
     case blockModalDismissal
     case unblockModalDismissal
     case openFile(Data)
-    case recommendRescan(CurrencyDef)
+    case automaticRescan(CurrencyDef)
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
     case copyWalletAddresses(String?, String?)
@@ -64,7 +65,6 @@ enum TriggerName {
     case didUpgradePin
     case txMemoUpdated(String)
     case promptShareData
-    case didEnableShareData
     case didWritePaperKey
     case wipeWalletNoPrompt
     case didUpdateFeatureFlags
@@ -73,6 +73,7 @@ enum TriggerName {
     case promptLinkWallet(WalletPairingRequest)
     case linkWallet(WalletPairingRequest, Bool, PairingCompletionHandler) // request, accepted, callback
     case fetchInbox
+    case optInSegWit
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName : Equatable {}
@@ -103,7 +104,7 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.openFile(_), .openFile(_)):
         return true
-    case (.recommendRescan(let lhsCurrency), .recommendRescan(let rhsCurrency)):
+    case (.automaticRescan(let lhsCurrency), .automaticRescan(let rhsCurrency)):
         return lhsCurrency.code == rhsCurrency.code
     case (.receivedPaymentRequest(_), .receivedPaymentRequest(_)):
         return true
@@ -133,8 +134,6 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.promptShareData, .promptShareData):
         return true
-    case (.didEnableShareData, .didEnableShareData):
-        return true
     case (.didWritePaperKey, .didWritePaperKey):
         return true
     case (.wipeWalletNoPrompt, .wipeWalletNoPrompt):
@@ -150,6 +149,8 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.linkWallet(_,_,_), .linkWallet(_,_,_)):
         return true
     case (.fetchInbox, .fetchInbox):
+        return true
+    case (.optInSegWit, .optInSegWit):
         return true
     default:
         return false

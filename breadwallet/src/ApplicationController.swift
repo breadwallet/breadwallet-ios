@@ -254,6 +254,11 @@ class ApplicationController : Subscriber, Trackable {
 
         if let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager {
             ethWalletManager.apiClient = Backend.apiClient
+            if !UserDefaults.hasScannedForTokenBalances {
+                ethWalletManager.discoverAndAddTokensWithBalance(in: Store.state.availableTokens) {
+                    UserDefaults.hasScannedForTokenBalances = true
+                }
+            }
         }
         
         addTokenCountChangeListener()

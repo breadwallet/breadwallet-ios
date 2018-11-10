@@ -122,7 +122,8 @@ class LinkWalletViewController : UIViewController {
     private func setupLabels() {
         titleLabel.text = S.LinkWallet.title.uppercased()
         note1.text = S.LinkWallet.domainTitle
-        info1.text = serviceDefinition.domains.joined(separator: ",")
+        info1.text = serviceDefinition.domains.joined(separator: ", ")
+        info1.numberOfLines = 0  // make sure the list of domains is not truncated
         note2.text = S.LinkWallet.permissionsTitle
         
         let capabilitiesList: [String] = serviceDefinition.capabilities.filter { !$0.description.isEmpty }.map {

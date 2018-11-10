@@ -15,6 +15,8 @@ private let hasAquiredShareDataPermissionKey = "has_acquired_permission"
 private let legacyWalletNeedsBackupKey = "WALLET_NEEDS_BACKUP"
 private let writePaperPhraseDateKey = "writepaperphrasedatekey"
 private let hasPromptedBiometricsKey = "haspromptedtouched"
+private let hasPromptedForEmailKey = "hasPromptedForEmail"
+private let hasSubscribedToEmailUpdatesKey = "hasSubscribedToEmailUpdates"
 private let isBtcSwappedKey = "isBtcSwappedKey"
 private let maxDigitsKey = "SETTINGS_MAX_DIGITS"
 private let pushTokenKey = "pushTokenKey"
@@ -30,6 +32,8 @@ private let mostRecentSelectedCurrencyCodeKey = "mostRecentSelectedCurrencyCodeK
 private let hasSetSelectedCurrencyKey = "hasSetSelectedCurrencyKey"
 private let hasBchConnectedKey = "hasBchConnectedKey"
 private let rescanStateKeyPrefix = "lastRescan" // append uppercased currency code for key
+private let hasOptedInSegwitKey = "hasOptedInSegwitKey"
+private let hasScannedForTokenBalancesKey = "hasScannedForTokenBalances"
 
 extension UserDefaults {
 
@@ -54,7 +58,13 @@ extension UserDefaults {
     }
 
     static var hasAquiredShareDataPermission: Bool {
-        get { return defaults.bool(forKey: hasAquiredShareDataPermissionKey) }
+        get {
+            //If user's haven't set this key, default to true
+            if defaults.object(forKey: hasAquiredShareDataPermissionKey) == nil {
+                return true
+            }
+            return defaults.bool(forKey: hasAquiredShareDataPermissionKey)
+        }
         set { defaults.set(newValue, forKey: hasAquiredShareDataPermissionKey) }
     }
 
@@ -160,6 +170,24 @@ extension UserDefaults {
         let key = rescanStateKeyPrefix + currency.code.uppercased()
         defaults.set(try? PropertyListEncoder().encode(state), forKey: key)
     }
+    
+    static var hasOptedInSegwit: Bool {
+        get {
+            return defaults.bool(forKey: hasOptedInSegwitKey)
+        }
+        set {
+            defaults.set(newValue, forKey: hasOptedInSegwitKey)
+        }
+    }
+    
+    static var hasScannedForTokenBalances: Bool {
+        get {
+            return defaults.bool(forKey: hasScannedForTokenBalancesKey)
+        }
+        set {
+            defaults.set(newValue, forKey: hasScannedForTokenBalancesKey)
+        }
+    }
 }
 
 //MARK: - Wallet Requires Backup
@@ -199,6 +227,16 @@ extension UserDefaults {
     static var hasPromptedBiometrics: Bool {
         get { return defaults.bool(forKey: hasPromptedBiometricsKey) }
         set { defaults.set(newValue, forKey: hasPromptedBiometricsKey) }
+    }
+    
+    static var hasPromptedForEmail: Bool {
+        get { return defaults.bool(forKey: hasPromptedForEmailKey ) }
+        set { defaults.set(newValue, forKey: hasPromptedForEmailKey ) }
+    }
+    
+    static var hasSubscribedToEmailUpdates: Bool {
+        get { return defaults.bool(forKey: hasSubscribedToEmailUpdatesKey ) }
+        set { defaults.set(newValue, forKey: hasSubscribedToEmailUpdatesKey ) }
     }
 }
 

@@ -29,4 +29,5 @@ enum ArticleIds {
     static let confirmPhrase = "confirm-phrase"
     static let wipeWallet = "wipe-wallet"
     static let startView = "start-view"
+    static let unsupportedToken = "unsupported-token"
 }
