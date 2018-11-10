@@ -454,7 +454,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         let sig = BRBitID.signMessage(stringToSign, usingKey: key)
         let json: [String: Any] = [
             "signature": sig,
-            "address": key.address() ?? ""
+            "address": key.address(legacy: true) ?? ""
         ]
         request.queue.async {
             asyncResp.provide(200, json: json)
@@ -499,7 +499,7 @@ extension BRWalletPlugin {
         guard let walletManager = btcWalletManager else { return d }
         d["no_wallet"] = walletManager.noWallet
         if let wallet = walletManager.wallet {
-            d["receive_address"] = wallet.legacyReceiveAddress ?? wallet.receiveAddress
+            d["receive_address"] = wallet.legacyReceiveAddress // TODO: use segwit address when platform adds support
             //d["watch_only"] = TODO - add watch only
         }
         d["btc_denomination_digits"] = walletManager.currency.state?.maxDigits

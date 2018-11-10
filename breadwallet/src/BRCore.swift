@@ -206,9 +206,13 @@ extension BRKey {
     }
     
     // pay-to-pubkey-hash bitcoin address
-    mutating func address() -> String? {
+    mutating func address(legacy: Bool = false) -> String? {
         var addr = [CChar](repeating: 0, count: MemoryLayout<BRAddress>.size)
-        guard BRKeyAddress(&self, &addr, addr.count) > 0 else { return nil }
+        if legacy {
+            guard BRKeyLegacyAddr(&self, &addr, addr.count) > 0 else { return nil }
+        } else {
+            guard BRKeyAddress(&self, &addr, addr.count) > 0 else { return nil }
+        }
         return String(cString: addr)
     }
     
