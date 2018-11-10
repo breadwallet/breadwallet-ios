@@ -31,7 +31,15 @@ extension String {
     var bCashAddr: String {
         var addr = [CChar](repeating: 0, count: 55)
         BRBCashAddrEncode(&addr, self)
-        return String(cString: addr)
+        let prefixedAddr = String(cString: addr)
+        var cashAddr = prefixedAddr
+        // drop "bitcoincash:" prefix
+        if let prefixes = Currencies.bch.urlSchemes {
+            for prefix in prefixes where prefixedAddr.hasPrefix(prefix) {
+                cashAddr = String(prefixedAddr.dropFirst(prefix.count+1)) // +1 for :
+            }
+        }
+        return cashAddr
     }
     
     var bitcoinAddr: String {
