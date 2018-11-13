@@ -299,8 +299,11 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             var response = [[String: Any]]()
             let currencies = Store.state.currencies.filter { code == nil || $0.code.lowercased() == code!.lowercased() }
             for currency in currencies {
-                response.append(["currency": currency.code,
-                                 "address": Store.state[currency]?.receiveAddress ?? ""])
+                // prefer legacy addresses for now until platforms support segwit
+                if let address = Store.state[currency]?.legacyReceiveAddress ?? Store.state[currency]?.receiveAddress {
+                    response.append(["currency": currency.code,
+                                     "address": address])
+                }
             }
             return try BRHTTPResponse(request: req, code: 200, json: (response.count == 1) ? response.first! : response)
         }
@@ -453,7 +456,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         let sig = BRBitID.signMessage(stringToSign, usingKey: key)
         let json: [String: Any] = [
             "signature": sig,
-            "address": key.address() ?? ""
+            "address": key.address(legacy: true) ?? ""
         ]
         request.queue.async {
             asyncResp.provide(200, json: json)
@@ -498,7 +501,7 @@ extension BRWalletPlugin {
         guard let walletManager = btcWalletManager else { return d }
         d["no_wallet"] = walletManager.noWallet
         if let wallet = walletManager.wallet {
-            d["receive_address"] = wallet.receiveAddress
+            d["receive_address"] = wallet.legacyReceiveAddress // TODO: use segwit address when platform adds support
             //d["watch_only"] = TODO - add watch only
         }
         d["btc_denomination_digits"] = walletManager.currency.state?.maxDigits
