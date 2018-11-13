@@ -236,7 +236,6 @@ extension BTCWalletManager: BRWalletListener {
     }
 
     private func checkForReceived(newBalance: UInt64) {
-        //TODO:ETH
         if let oldBalance = currency.state?.balance?.asUInt64 {
             if newBalance > oldBalance {
                 if let walletState = currency.state {

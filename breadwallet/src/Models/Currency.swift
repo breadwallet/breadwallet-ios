@@ -183,12 +183,8 @@ public struct Bitcoin: Currency {
     }
     
     public func addressURI(_ address: String) -> String? {
-        guard let schemes = urlSchemes, isValidAddress(address) else { return nil }
-        if self.matches(Currencies.bch) {
-            return address
-        } else {
-            return "\(schemes[0]):\(address)"
-        }
+        guard let scheme = urlSchemes?.first, isValidAddress(address) else { return nil }
+        return "\(scheme):\(address)"
     }
     
     public func unit(forDecimals decimals: Int) -> CurrencyUnit? {
