@@ -386,8 +386,9 @@ class BRWallet {
     let currency: CurrencyDef
     
     init?(transactions: [BRTxRef?], masterPubKey: BRMasterPubKey, listener: BRWalletListener, currency: CurrencyDef) {
+        guard let currency = currency as? Bitcoin else { assertionFailure(); return nil }
         var txRefs = transactions
-        guard let cPtr = BRWalletNew(&txRefs, txRefs.count, masterPubKey) else { return nil }
+        guard let cPtr = BRWalletNew(&txRefs, txRefs.count, masterPubKey, Int32(currency.forkId)) else { return nil }
         self.listener = listener
         self.cPtr = cPtr
         self.currency = currency
@@ -483,11 +484,10 @@ class BRWallet {
     }
     
     // signs any inputs in tx that can be signed using private keys from the wallet
-    // forkId is 0 for bitcoin, 0x40 for b-cash
     // seed is the master private key (wallet seed) corresponding to the master public key given when wallet was created
     // returns true if all inputs were signed, or false if there was an error or not all inputs were able to be signed
-    func signTransaction(_ tx: BRTxRef, forkId: Int, seed: inout UInt512) -> Bool {
-        return BRWalletSignTransaction(cPtr, tx, Int32(forkId), &seed, MemoryLayout<UInt512>.stride) != 0
+    func signTransaction(_ tx: BRTxRef, seed: inout UInt512) -> Bool {
+        return BRWalletSignTransaction(cPtr, tx, &seed, MemoryLayout<UInt512>.stride) != 0
     }
     
     // true if no previous wallet transaction spends any of the given transaction's inputs, and no inputs are invalid
