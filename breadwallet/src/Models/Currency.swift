@@ -58,9 +58,9 @@ public extension Currency {
         return self.code == other.code
     }
     
-    func addressURI(_ address: String) -> String? {
-        guard let schemes = urlSchemes, !schemes.isEmpty, isValidAddress(address) else { return nil }
-        return "\(schemes[0]):\(address)"
+    public func addressURI(_ address: String) -> String? {
+        guard let scheme = urlSchemes?.first, isValidAddress(address) else { return nil }
+        return "\(scheme):\(address)"
     }
     
     func unit(forDecimals decimals: Int) -> CurrencyUnit? {
@@ -180,11 +180,6 @@ public struct Bitcoin: Currency {
         } else {
             return address.isValidAddress
         }
-    }
-    
-    public func addressURI(_ address: String) -> String? {
-        guard let scheme = urlSchemes?.first, isValidAddress(address) else { return nil }
-        return "\(scheme):\(address)"
     }
     
     public func unit(forDecimals decimals: Int) -> CurrencyUnit? {
