@@ -117,7 +117,7 @@ enum RootModal {
     case receive(currency: Currency)
     case loginAddress
     case loginScan
-    case requestAmount(currency: Currency)
+    case requestAmount(currency: Currency, address: String)
     case buy(currency: Currency?)
     case sell(currency: Currency?)
     case trade
@@ -243,8 +243,8 @@ func == (lhs: RootModal, rhs: RootModal) -> Bool {
         return true
     case (.loginScan, .loginScan):
         return true
-    case (.requestAmount(let lhsCurrency), .requestAmount(let rhsCurrency)):
-        return lhsCurrency.code == rhsCurrency.code
+    case (.requestAmount(let lhsCurrency, let lhsAddress), .requestAmount(let rhsCurrency, let rhsAddress)):
+        return lhsCurrency.code == rhsCurrency.code && lhsAddress == rhsAddress
     case (.buy(let lhsCurrency?), .buy(let rhsCurrency?)):
         return lhsCurrency.code == rhsCurrency.code
     case (.buy(nil), .buy(nil)):

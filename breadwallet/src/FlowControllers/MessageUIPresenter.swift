@@ -14,8 +14,12 @@ class MessageUIPresenter: NSObject, Trackable {
     weak var presenter: UIViewController?
 
     /** Allows the user to share a wallet address and QR code image using the iOS system share action sheet. */
-    func presentShareSheet(uri: String, image: UIImage) {
-        presentShareSheet(address: uri, image: image)
+    func presentShareSheet(text: String, image: UIImage) {
+        let shareItems = [text, image] as [Any]
+        let shareVC = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
+
+        shareVC.excludedActivityTypes = shareAddressExclusions
+        present(shareVC)
     }
     
     func presentEmailLogs() {
@@ -30,21 +34,6 @@ class MessageUIPresenter: NSObject, Trackable {
         emailView.addAttachmentData(logData, mimeType: "text/plain", fileName: "brd_logs.txt")
         emailView.mailComposeDelegate = self
         present(emailView)
-    }
-    
-    // Filters out the sharing options that don't make sense for sharing a wallet
-    // address and QR code. `saveToCameraRoll` is excluded because it crashes
-    // without adding `NSPhotoLibraryAddUsageDescription` to the plist.
-    private var shareAddressExclusions: [UIActivityType] {
-        return [.airDrop, .openInIBooks, .addToReadingList, .saveToCameraRoll, .assignToContact]
-    }
-
-    private func presentShareSheet(address: String, image: UIImage) {
-        let shareItems = [address, image] as [Any]
-        let shareVC = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
-        
-        shareVC.excludedActivityTypes = shareAddressExclusions
-        present(shareVC)
     }
     
     func presentFeedbackCompose() {
@@ -68,7 +57,16 @@ class MessageUIPresenter: NSObject, Trackable {
         present(emailView)
     }
 
-    fileprivate var originalTitleTextAttributes: [NSAttributedStringKey: Any]?
+    // MARK: - Private
+
+    // Filters out the sharing options that don't make sense for sharing a wallet
+    // address and QR code. `saveToCameraRoll` is excluded because it crashes
+    // without adding `NSPhotoLibraryAddUsageDescription` to the plist.
+    private var shareAddressExclusions: [UIActivityType] {
+        return [.airDrop, .openInIBooks, .addToReadingList, .saveToCameraRoll, .assignToContact]
+    }
+
+    private var originalTitleTextAttributes: [NSAttributedStringKey: Any]?
 
     private func present(_ viewController: UIViewController) {
         presenter?.view.isFrameChangeBlocked = true

@@ -148,10 +148,16 @@ class ReceiveViewController: UIViewController, Subscriber, Trackable {
     }
 
     private func setReceiveAddress() {
-        guard let addressText = isBTCLegacy ? currency.state?.legacyReceiveAddress : currency.state?.receiveAddress else { return }
-        address.text = currency.matches(Currencies.bch) ? addressText.bCashAddr : addressText
-        qrCode.image = UIImage.qrCode(data: "\(address.text!)".data(using: .utf8)!, color: CIColor(color: .black))?
-            .resize(CGSize(width: qrSize, height: qrSize))!
+        guard var addressText = isBTCLegacy ? currency.state?.legacyReceiveAddress : currency.state?.receiveAddress else { return }
+        if currency.matches(Currencies.bch) {
+            addressText = addressText.bCashAddr
+        }
+        address.text = addressText
+        if let uri = currency.addressURI(addressText),
+            let uriData = uri.data(using: .utf8),
+            let qrImage = UIImage.qrCode(data: uriData) {
+            qrCode.image = qrImage.resize(CGSize(width: qrSize, height: qrSize))
+        }
     }
 
     private func addActions() {
@@ -159,10 +165,12 @@ class ReceiveViewController: UIViewController, Subscriber, Trackable {
             self?.addressTapped()
         }
         request.tap = { [weak self] in
-            guard let `self` = self, let modalTransitionDelegate = self.parent?.transitioningDelegate as? ModalTransitionDelegate else { return }
+            guard let `self` = self,
+                let modalTransitionDelegate = self.parent?.transitioningDelegate as? ModalTransitionDelegate,
+                let address = self.address.text else { return }
             modalTransitionDelegate.reset()
             self.dismiss(animated: true, completion: {
-                Store.perform(action: RootModalActions.Present(modal: .requestAmount(currency: self.currency)))
+                Store.perform(action: RootModalActions.Present(modal: .requestAmount(currency: self.currency, address: address)))
             })
         }
         share.addTarget(self, action: #selector(ReceiveViewController.shareTapped), for: .touchUpInside)
@@ -177,7 +185,8 @@ class ReceiveViewController: UIViewController, Subscriber, Trackable {
     }
     
     @objc private func shareTapped() {
-        shareAddress?(address.text!, qrCode.image!)
+        guard let text = address.text, let image = qrCode.image else { return }
+        shareAddress?(text, image)
     }
 
     @objc private func addressTapped() {
