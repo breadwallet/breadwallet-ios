@@ -258,7 +258,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         
         DispatchQueue.walletQueue.async { [weak self] in
             guard let `self` = self else { return }
-            self.walletManager.signTransaction(tx, forkId: self.currency.forkId, biometricsPrompt: biometricsPrompt, completion: { result in
+            self.walletManager.signTransaction(tx, biometricsPrompt: biometricsPrompt, completion: { result in
                 switch result {
                 case .success:
                     self.publish(tx: tx, completion: completion)
@@ -280,7 +280,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
             let group = DispatchGroup()
             group.enter()
             DispatchQueue.walletQueue.async {
-                if self.walletManager.signTransaction(tx, forkId: self.currency.forkId, pin: pin) {
+                if self.walletManager.signTransaction(tx, pin: pin) {
                     self.publish(tx: tx, completion: completion)
                 }
                 group.leave()
