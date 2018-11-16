@@ -166,6 +166,7 @@ class CheckoutConfirmationViewController: UIViewController {
         default:
             showErrorMessageAndDismiss(S.Send.createTransactionError)
         }
+        self.request.responseCallback?(CheckoutResult.accepted(result: .creationError("")))
         return false
     }
 
