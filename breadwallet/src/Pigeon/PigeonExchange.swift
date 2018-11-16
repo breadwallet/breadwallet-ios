@@ -480,6 +480,7 @@ class PigeonExchange: Subscriber {
             return
         }
         var response = MessageCallResponse()
+        var responseTxHash: String?
         switch result {
         case .accepted(let sendResult):
             switch sendResult {
@@ -487,24 +488,7 @@ class PigeonExchange: Subscriber {
                 response.scope = request.scope
                 response.status = .accepted
                 response.transactionID = txHash ?? "unknown txHash"
-                let requestWrapper = MessageCallRequestWrapper(callRequest: request)
-                requestWrapper.getToken { [unowned self] token in
-                    guard let token = token else { return }
-                    self.addTokenWallet(token: token)
-                    // exchange rate is in the currency's common units
-                    var amountToReceive = ""
-                    if let rate = token.defaultRate {
-                        let formatter = Amount(amount: 0, currency: token).tokenFormat
-                        let value: Decimal = requestWrapper.purchaseAmount.tokenValue / Decimal(rate)
-                        amountToReceive = formatter.string(from: value as NSDecimalNumber) ?? ""
-                    }
-                    self.apiClient.sendCheckoutEvent(txHash: txHash ?? "",
-                                                     fromCurrency: request.scope,
-                                                     fromAddress: Store.state.wallets[request.scope]?.receiveAddress ?? "",
-                                                     fromAmount: requestWrapper.purchaseAmount.tokenFormattedValue,
-                                                     toCurrency: token.code,
-                                                     toAmount: amountToReceive)
-                }
+                responseTxHash = txHash
             case .creationError:
                 response.status = .rejected
                 response.error = .transactionFailed
@@ -524,6 +508,33 @@ class PigeonExchange: Subscriber {
             return print("[EME] envelope construction failed!")
         }
         apiClient.sendMessage(envelope: envelope)
+
+        let requestWrapper = MessageCallRequestWrapper(callRequest: request)
+        requestWrapper.getToken { [unowned self] token in
+            var amountToReceive = ""
+            var tokenCode = ""
+            if let token = token {
+                self.addTokenWallet(token: token)
+                tokenCode = token.code
+                if let rate = token.defaultRate {
+                    // exchange rate is in the currency's common units
+                    let formatter = Amount(amount: 0, currency: token).tokenFormat
+                    let value: Decimal = requestWrapper.purchaseAmount.tokenValue / Decimal(rate)
+                    amountToReceive = formatter.string(from: value as NSDecimalNumber) ?? ""
+                }
+            }
+            self.apiClient.sendCheckoutEvent(status: response.status.rawValue,
+                                             identifier: requestEnvelope.identifier,
+                                             service: requestEnvelope.service,
+                                             fromCurrency: request.scope,
+                                             fromAddress: Store.state.wallets[request.scope]?.receiveAddress ?? "",
+                                             fromAmount: requestWrapper.purchaseAmount.tokenFormattedValue,
+                                             toCurrency: tokenCode,
+                                             toAmount: amountToReceive,
+                                             toAddress: request.address,
+                                             txHash: responseTxHash,
+                                             error: (response.status == .rejected ) ? response.error.rawValue : nil)
+        }
     }
     
     // MARK: - Ping
