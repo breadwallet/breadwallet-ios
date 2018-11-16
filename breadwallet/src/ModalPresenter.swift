@@ -260,27 +260,12 @@ class ModalPresenter: Subscriber, Trackable {
             return nil
         case .loginAddress:
             return makeReceiveView(currency: Currencies.btc, isRequestAmountVisible: false)
-        case .requestAmount(let currency):
-            guard let walletManager = walletManagers[currency.code] else { return nil }
-            var address: String?
-            switch currency.code {
-            case Currencies.btc.code:
-                address = walletManager.wallet?.receiveAddress
-            case Currencies.bch.code:
-                address = walletManager.wallet?.receiveAddress.bCashAddr
-            case Currencies.eth.code:
-                address = (walletManager as? EthWalletManager)?.address
-            default:
-                if currency is ERC20Token {
-                    address = (walletManager as? EthWalletManager)?.address
-                }
-            }
-            guard let receiveAddress = address else { return nil }
-            let requestVc = RequestAmountViewController(currency: currency, receiveAddress: receiveAddress)
+        case .requestAmount(let currency, let address):
+            let requestVc = RequestAmountViewController(currency: currency, receiveAddress: address)
             
-            requestVc.shareAddress = { [weak self] walletAddress, image in
+            requestVc.shareAddress = { [weak self] uri, qrCode in
                 self?.messagePresenter.presenter = self?.topViewController
-                self?.messagePresenter.presentShareSheet(uri: walletAddress, image: image)
+                self?.messagePresenter.presentShareSheet(text: uri, image: qrCode)
             }
                         
             return ModalViewController(childViewController: requestVc)
@@ -371,10 +356,10 @@ class ModalPresenter: Subscriber, Trackable {
         let receiveVC = ReceiveViewController(currency: currency, isRequestAmountVisible: isRequestAmountVisible, isBTCLegacy: isBTCLegacy)
         let root = ModalViewController(childViewController: receiveVC)
         
-        receiveVC.shareAddress = { [weak self, weak root] address, image in
-            guard let root = root, let uri = currency.addressURI(address) else { return }
-            self?.messagePresenter.presenter = root
-            self?.messagePresenter.presentShareSheet(uri: uri, image: image)
+        receiveVC.shareAddress = { [weak self, weak root] address, qrCode in
+            guard let `self` = self, let root = root else { return }
+            self.messagePresenter.presenter = root
+            self.messagePresenter.presentShareSheet(text: address, image: qrCode)
         }
         
         return root
