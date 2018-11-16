@@ -11,6 +11,8 @@ import UIKit
 import iAd
 import AdSupport
 
+// swiftlint:disable function_parameter_count
+
 extension BRAPIClient {
     
     func sendLaunchEvent(userAgent: String) {
@@ -26,21 +28,31 @@ extension BRAPIClient {
             }
         }
     }
-    
-    func sendCheckoutEvent(txHash: String,
+
+    func sendCheckoutEvent(status: Int,
+                           identifier: String,
+                           service: String,
                            fromCurrency: String,
                            fromAddress: String,
                            fromAmount: String,
                            toCurrency: String,
-                           toAmount: String) {
+                           toAmount: String,
+                           toAddress: String,
+                           txHash: String?,
+                           error: Int?) {
         DispatchQueue.global(qos: .background).async { [weak self] in
             let payload = MetricsPayload(data:
-                MetricsPayloadData.checkout(CheckoutData(transactionHash: txHash,
+                MetricsPayloadData.checkout(CheckoutData(status: status,
+                                                         identifier: identifier,
+                                                         service: service,
+                                                         transactionHash: txHash,
                                                          fromCurrency: fromCurrency,
                                                          fromAmount: fromAmount,
                                                          fromAddress: fromAddress,
                                                          toCurrency: toCurrency,
                                                          toAmount: toAmount,
+                                                         toAddress: toAddress,
+                                                         error: error,
                                                          timestamp: Int(Date().timeIntervalSince1970))))
             self?.sendMetrics(payload: payload)
         }
@@ -166,12 +178,17 @@ private struct LaunchData: Encodable {
 }
 
 private struct CheckoutData: Encodable {
-    let transactionHash: String
+    let status: Int
+    let identifier: String
+    let service: String
+    let transactionHash: String?
     let fromCurrency: String
     let fromAmount: String
     let fromAddress: String
     let toCurrency: String
     let toAmount: String
+    let toAddress: String
+    let error: Int?
     let timestamp: Int
 }
 
