@@ -172,7 +172,7 @@ class StartImportViewController : UIViewController {
     private func checkBalance(key: BRKey) {
         present(balanceActivity, animated: true, completion: {
             var key = key
-            guard let address = key.address() else {
+            guard let address = key.address(legacy: true) else {
                 self.balanceActivity.dismiss(animated: true) {
                     self.showErrorMessage(S.Import.Error.notValid)
                 }

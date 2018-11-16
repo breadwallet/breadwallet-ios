@@ -143,7 +143,7 @@ open class BRBitID : NSObject {
             let uriWithNonce = "bitid://\(url.host!)\(url.path)?x=\(nonce)"
             let signature = BRBitID.signMessage(uriWithNonce, usingKey: priv)
             let payload: [String: String] = [
-                "address": priv.address()!,
+                "address": priv.address(legacy: true) ?? "",
                 "signature": signature,
                 "uri": uriWithNonce
             ]
