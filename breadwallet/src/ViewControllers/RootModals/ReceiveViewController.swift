@@ -135,10 +135,10 @@ class ReceiveViewController: UIViewController, Subscriber, Trackable {
         if !isRequestAmountVisible {
             border.isHidden = true
             request.isHidden = true
+            request.isEnabled = false
             request.constrain([
                 request.heightAnchor.constraint(equalToConstant: 0.0) ])
             requestTop?.constant = 0.0
-            requestBottom?.constant = 0.0
         }
         sharePopout.clipsToBounds = true
         addressButton.setBackgroundImage(UIImage.imageForColor(.secondaryShadow), for: .highlighted)
