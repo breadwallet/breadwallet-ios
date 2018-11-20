@@ -220,11 +220,6 @@ extension ScanViewController: AVCaptureMetadataOutputObjectsDelegate {
                 
             case .privateKey:
                 saveEvent("scan.privateKey")
-                guard allowScanningPrivateKeysOnly else {
-                    //TODO:QR support key import from universal scan
-                    guide.state = .negative
-                    return
-                }
                 
             case .deepLink:
                 saveEvent("scan.deepLink")

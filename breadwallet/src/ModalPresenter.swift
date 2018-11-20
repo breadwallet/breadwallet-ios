@@ -380,8 +380,9 @@ class ModalPresenter: Subscriber, Trackable {
                 top.present(alert, animated: true, completion: nil)
                 
             case .privateKey:
-                //TODO:QR support key import from universal scanner
-                break
+                if let walletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager {
+                    self.presentKeyImport(walletManager: walletManager, scanResult: scanResult)
+                }
                 
             case .deepLink(let url):
                 if let params = url.queryParameters,
