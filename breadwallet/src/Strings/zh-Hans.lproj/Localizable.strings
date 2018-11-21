@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "余额";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "此代币已退出清单,因为发行方决定转移至自己的区块链。\n不要担心！您可以从 BRD app 将这些代币发送至支持代币交换的其他平台。\n有关更多详情,请访问我们的支持页面。";
+"Account.delistedToken" = "这种代币已被摘牌，因为发行者决定停止支持 ERC20。\n\n您仍然可以将这些代币汇到别的平台。请访问我们的支持页面获取更多细节。";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ / %2$@";
 /* Loading Wallet Message */
@@ -614,6 +614,8 @@
 "Send.scanLabel" = "扫描";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "发送";
+/* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
+"Send.sendMaximum" = "发送最高金额?";
 /* Send screen title (as in "this is the screen for sending money") */
 "Send.title" = "发送";
 /* Send money to label */

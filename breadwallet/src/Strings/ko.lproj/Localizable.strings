@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "잔액";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "발행인이 자신만의 블록체인으로 옮겨가기로 결정한 관계로 이 토큰은 상장이 폐지되었습니다. 걱정하지 마세요. BRD 앱에서 토큰 교환을 지원하는 다른 플랫폼으로 이 토큰을 전송할 수 있게 됩니다.\n자세한 정보는 저희의 지원 페이지를 방문해 주세요.";
+"Account.delistedToken" = "발행자가 ERC20 지원을 중단하기로 결정했기 때문에 이 토큰은 목록에서 제외되었습니다. \n\n하지만 이 토큰을 다른 플랫폼으로 보낼 수는 있습니다. 자세한 내용은 지원 페이지를 방문하십시오.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%2$@ 당 %1$@";
 /* Loading Wallet Message */
@@ -614,6 +614,8 @@
 "Send.scanLabel" = "스캔";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "보내기";
+/* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
+"Send.sendMaximum" = "최고 한도 금액을 보내겠습니까?";
 /* Send screen title (as in "this is the screen for sending money") */
 "Send.title" = "보내기";
 /* Send money to label */

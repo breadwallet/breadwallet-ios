@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "Saldo";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "Questo token è stato tolto dalla lista perchè l'emittente ha deciso di muoversi verso la sua blockchain. Non ti preoccupare! Sarai in grado di inviare questi token dall'app BRD ad un'altra piattaforma che supporta la conversione dei token. Per ulteriori dettagli, per favore visita la nostra pagina di supporto.";
+"Account.delistedToken" = "Questo token è stato eliminato dalla lista perché l'emittente ha deciso di cessare il supporto di ERC20. \n\nTi sarà comunque possibile inviare questi token a un'altra piattaforma. Per ulteriori informazioni, visita la nostra pagina di assistenza.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ per %2$@";
 /* Loading Wallet Message */
@@ -614,6 +614,8 @@
 "Send.scanLabel" = "Acquisisci";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "Invia";
+/* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
+"Send.sendMaximum" = "Inviare importo massimo?";
 /* Send screen title (as in "this is the screen for sending money") */
 "Send.title" = "Invia";
 /* Send money to label */
