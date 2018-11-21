@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "残高";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "このトークンは,発行者が自身のブロックチェーンへの移動を決定したため,取り扱いリストから除外されました。\nご心配なく！BRDアプリから,トークン・スワップに対応した別のプラットホームにこれらのトークンを送ることができます。\n詳細については,当社サポートページでご確認ください。";
+"Account.delistedToken" = "発行者がERC20のサポートを終了することを決定した為、このトークンはリストから外れています。 \n\nそれらのトークンを他のプラットフォームに転送することは依然可能かもしれません。詳しくは、サポートページをご覧ください。";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%2$@あたり%1$@";
 /* Loading Wallet Message */
@@ -614,6 +614,8 @@
 "Send.scanLabel" = "スキャン";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "送金する";
+/* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
+"Send.sendMaximum" = "限度額を送金しますか？";
 /* Send screen title (as in "this is the screen for sending money") */
 "Send.title" = "送金";
 /* Send money to label */

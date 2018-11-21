@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "Balance";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "This token has been delisted because the issuer decided to move to their own blockchain.\nDon’t worry! You will be able to send these tokens out from the BRD app to another platform that supports the token swap.\nFor more details, please visit our support page.";
+"Account.delistedToken" = "This token has been delisted because the issuer decided to cease ERC20 support. \n\nYou may still be able to send these tokens to another platform. For more details, visit our support page.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ per %2$@";
 /* Loading Wallet Message */
@@ -547,7 +547,7 @@
 /* Segwit enabled confirmation description */
 "Segwit.ConfirmationInstructionsDescription" = "Thank you for helping move bitcoin forward.";
 /* Segwit instructions */
-"Segwit.ConfirmationInstructionsInstructions" = "SegWit support is still a beta feature.\nOnce SegWit is enabled, it will not be possible\nto disable it. You will be able to find the legacy address under Settings. \nSome third-party services, including crypto trading, may be unavailable to users who have enabled SegWit. In case of emergency, you will be able to generate a lecacy address from Preferences > Bitcoin Settings. \nSegWit will automatically be enabled for all\nusers in a future update.";
+"Segwit.ConfirmationInstructionsInstructions" = "SegWit support is still a beta feature.\nOnce SegWit is enabled, it will not be possible\nto disable it. You will be able to find the legacy address under Settings. \nSome third-party services, including crypto trading, may be unavailable to users who have enabled SegWit. In case of emergency, you will be able to generate a legacy address from Preferences > Bitcoin Settings. \nSegWit will automatically be enabled for all\nusers in a future update.";
 /* Segwit extra confirmation title. */
 "Segwit.ConfirmChoiceLayout" = "Enabling SegWit is an irreversible feature. Are you sure you want to continue?";
 /* Segwit enableButton */
@@ -614,6 +614,8 @@
 "Send.scanLabel" = "Scan";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "Send";
+/* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
+"Send.sendMaximum" = "Send maximum amount?";
 /* Send screen title (as in "this is the screen for sending money") */
 "Send.title" = "Send";
 /* Send money to label */
