@@ -7,3 +7,6 @@
 [submodule "Modules/nettle"]
 	path = Modules/nettle
 	url = https://github.com/breadwallet/nettle.git
+[submodule "Modules/Buglife"]
+	path = Modules/Buglife
+	url = https://github.com/Buglife/Buglife-iOS.git
