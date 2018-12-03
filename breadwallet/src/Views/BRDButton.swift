@@ -13,6 +13,7 @@ enum ButtonType {
     case secondary
     case tertiary
     case blackTransparent
+    case darkOpaque
     case secondaryTransparent
     case search
 }
@@ -57,16 +58,23 @@ class BRDButton: UIControl {
 
     override var isHighlighted: Bool {
         didSet {
+            // Shrinks the button to 97% and drops it down 4 points to give a 3D press-down effect.
+            let duration = 0.21
+            let scale: CGFloat = 0.97
+            let drop: CGFloat = 4.0
+            
             if isHighlighted {
-                UIView.animate(withDuration: 0.04, animations: {
-                    let shrink = CATransform3DMakeScale(0.97, 0.97, 1.0)
-                    let translate = CATransform3DTranslate(shrink, 0, 4.0, 0)
-                    self.container.layer.transform = translate
-                })
+                let shrink = CATransform3DMakeScale(scale, scale, 1.0)
+                let translate = CATransform3DTranslate(shrink, 0, drop, 0)
+
+                UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut, animations: { 
+                    self.container.layer.transform = translate                    
+                }, completion: nil)
+                
             } else {
-                UIView.animate(withDuration: 0.04, animations: {
-                    self.container.transform = CGAffineTransform.identity
-                })
+                UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut, animations: { 
+                    self.container.transform = CGAffineTransform.identity                  
+                }, completion: nil)
             }
         }
     }
@@ -170,6 +178,9 @@ class BRDButton: UIControl {
             container.layer.borderColor = UIColor.darkText.cgColor
             container.layer.borderWidth = 1.0
             imageView?.tintColor = .grayTextTint
+        case .darkOpaque:
+            container.backgroundColor = .darkOpaqueButton
+            label.textColor = .white
         case .secondaryTransparent:
             container.backgroundColor = .transparentButton
             label.textColor = .white

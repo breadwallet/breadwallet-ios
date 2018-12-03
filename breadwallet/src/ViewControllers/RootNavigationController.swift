@@ -28,8 +28,7 @@ class RootNavigationController: UINavigationController {
     private var tempLoginView = LoginViewController(isPresentedForLock: false)
     private let loginTransitionDelegate = LoginTransitionDelegate()
 
-    override func viewDidLoad() {
-        setDarkStyle()
+    private func addTempLoginAndStartViews() {
         self.addChildViewController(tempLoginView, layout: {
             tempLoginView.view.constrain(toSuperviewEdges: nil)
         })
@@ -46,6 +45,18 @@ class RootNavigationController: UINavigationController {
                 })
             }
         }
+    }
+    
+    override func viewDidLoad() {
+        setDarkStyle()
+        
+        view.backgroundColor = .navigationBackground
+        
+        // The temp views are not required when we're presenting the onboarding startup flow.
+        if !Store.state.shouldShowOnboarding {
+            addTempLoginAndStartViews()
+        }
+        
         self.delegate = self
     }
 
@@ -70,4 +81,5 @@ extension RootNavigationController: UINavigationControllerDelegate {
             navigationBar.tintColor = .white
         }
     }
+    
 }

@@ -39,6 +39,8 @@ import WebKit
     var btcWalletManager: WalletManager? {
         return walletManagers[Currencies.btc.code]
     }
+    
+    var didClose: (() -> Void)?
 
     // bonjour debug endpoint establishment - this will configure the debugEndpoint 
     // over bonjour if debugOverBonjour is set to true. this MUST be set to false 
@@ -112,6 +114,7 @@ import WebKit
         webView = WKWebView(frame: CGRect.zero, configuration: config)
         webView?.navigationDelegate = self
         webView?.backgroundColor = .darkBackground
+        webView?.isOpaque = false   // prevents white background flash before web content is rendered  
         webView?.alpha = 0.0
         _ = webView?.load(request)
         webView?.autoresizingMask = [UIViewAutoresizing.flexibleHeight, UIViewAutoresizing.flexibleWidth]
@@ -138,10 +141,15 @@ import WebKit
         self.messageUIPresenter.presenter = self
     }
     
+    override open var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         edgesForExtendedLayout = .all
         self.beginDidLoadCountdown()
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     override open func viewDidAppear(_ animated: Bool) {
@@ -182,6 +190,9 @@ import WebKit
                             Store.trigger(name: .showStatusBar)
                             self?.dismiss(animated: true) {
                                 self?.notifyUserOfLoadFailure()
+                                if let didClose = self?.didClose {
+                                    didClose()
+                                }
                             }
                         }
                     })
@@ -216,7 +227,14 @@ import WebKit
     
     fileprivate func closeNow() {
         Store.trigger(name: .showStatusBar)
-        dismiss(animated: true, completion: nil)
+        
+        let didClose = self.didClose
+        
+        dismiss(animated: true, completion: {
+            if let didClose = didClose {
+                didClose()
+            }
+        })
     }
     
     open func startServer() {
