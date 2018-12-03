@@ -200,6 +200,8 @@ class ApplicationController : Subscriber, Trackable {
                             selector: { $0.isLoginRequired != $1.isLoginRequired && $1.isLoginRequired == false },
                             callback: { _ in self.didUnlockWallet() }
         )
+        
+        setupBuglife()
     }
     
     func willEnterForeground() {
@@ -618,5 +620,21 @@ extension ApplicationController {
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("[PUSH] failed to register for remote notifications: \(error.localizedDescription)")
         Store.perform(action: PushNotifications.setIsEnabled(false))
+    }
+}
+
+import Buglife
+
+//MARK: - Buglife bug reporting
+extension ApplicationController {
+    private func setupBuglife() {
+        Buglife.shared().start(withEmail: "adamz@breadwallet.com")
+        Buglife.shared().appearance.tintColor = .navigationTint
+        Buglife.shared().appearance.barTintColor = .navigationBackground
+        Buglife.shared().appearance.statusBarStyle = .lightContent
+        Buglife.shared().appearance.titleTextAttributes = [
+            NSAttributedStringKey.font.rawValue: UIFont.header,
+            NSAttributedStringKey.foregroundColor.rawValue : UIColor.white
+        ]
     }
 }
