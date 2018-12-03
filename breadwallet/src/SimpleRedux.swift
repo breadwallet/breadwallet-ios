@@ -176,7 +176,7 @@ class Store {
     static var state: State {
         return shared.state
     }
-
+    
     static func subscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> Void) {
         Store.shared.subscribe(subscriber, selector: selector, callback: callback)
     }

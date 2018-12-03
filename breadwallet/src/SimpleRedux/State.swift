@@ -11,6 +11,7 @@ import BRCore
 
 struct State {
     let isStartFlowVisible: Bool
+    let isOnboardingEnabled: Bool
     let isLoginRequired: Bool
     let rootModal: RootModal
     let isBtcSwapped: Bool //move to CurrencyState
@@ -50,11 +51,16 @@ struct State {
     var supportedTokens: [ERC20Token] {
         return availableTokens.filter { $0.isSupported }
     }
+    
+    var shouldShowOnboarding: Bool {
+        return isOnboardingEnabled && BTCWalletManager.staticNoWallet
+    }
 }
 
 extension State {
     static var initial: State {
         return State(   isStartFlowVisible: false,
+                        isOnboardingEnabled: true,
                         isLoginRequired: true,
                         rootModal: .none,
                         isBtcSwapped: UserDefaults.isBtcSwapped,
@@ -74,6 +80,7 @@ extension State {
     }
     
     func mutate(   isStartFlowVisible: Bool? = nil,
+                   isOnboardingEnabled: Bool? = nil,
                    isLoginRequired: Bool? = nil,
                    rootModal: RootModal? = nil,
                    isBtcSwapped: Bool? = nil,
@@ -87,6 +94,7 @@ extension State {
                    wallets: [String: WalletState]? = nil,
                    availableTokens: [ERC20Token]? = nil) -> State {
         return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible,
+                     isOnboardingEnabled: isOnboardingEnabled ?? self.isOnboardingEnabled,
                      isLoginRequired: isLoginRequired ?? self.isLoginRequired,
                      rootModal: rootModal ?? self.rootModal,
                      isBtcSwapped: isBtcSwapped ?? self.isBtcSwapped,
