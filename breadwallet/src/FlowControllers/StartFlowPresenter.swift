@@ -10,11 +10,15 @@ import UIKit
 
 class StartFlowPresenter: Subscriber {
 
-    // MARK: - Public
-    init(walletManager: BTCWalletManager, rootViewController: RootNavigationController) {
+    init(walletManager: BTCWalletManager, 
+         rootViewController: RootNavigationController, 
+         createHomeScreen: @escaping (UINavigationController) -> HomeScreenViewController,
+         createBuyScreen: @escaping () -> BRWebViewController) {
         self.walletManager = walletManager
         self.rootViewController = rootViewController
         self.navigationControllerDelegate = StartNavigationDelegate()
+        self.createHomeScreen = createHomeScreen
+        self.createBuyScreen = createBuyScreen
         addSubscriptions()
     }
 
@@ -25,7 +29,10 @@ class StartFlowPresenter: Subscriber {
     private let walletManager: BTCWalletManager
     private var loginViewController: UIViewController?
     private let loginTransitionDelegate = LoginTransitionDelegate()
-
+    private var createHomeScreen: ((UINavigationController) -> HomeScreenViewController)?
+    private var createBuyScreen: (() -> BRWebViewController)?
+    private var shouldBuyCoinAfterOnboarding: Bool = false
+    
     private var closeButton: UIButton {
         let button = UIButton.close
         button.tintColor = .white
@@ -51,7 +58,11 @@ class StartFlowPresenter: Subscriber {
     private func handleStartFlowChange(state: State) {
         if state.isStartFlowVisible {
             guardProtected(queue: DispatchQueue.main) { [weak self] in
-                self?.presentStartFlow()
+                if Store.state.shouldShowOnboarding {
+                    self?.presentOnboardingFlow() 
+                } else {
+                    self?.presentStartFlow()
+                }
             }
         } else {
             dismissStartFlow()
@@ -66,17 +77,58 @@ class StartFlowPresenter: Subscriber {
         }
     }
 
-    private func presentStartFlow() {
-        let startViewController = StartViewController(didTapCreate: { [weak self] in
-                                                        self?.pushPinCreationViewControllerForNewWallet()
-        },
-                                                      didTapRecover: { [weak self] in
-            guard let myself = self else { return }
-            let recoverIntro = RecoverWalletIntroViewController(didTapNext: myself.pushRecoverWalletView)
-            myself.navigationController?.setClearNavbar()
-            myself.navigationController?.setNavigationBarHidden(false, animated: false)
-            myself.navigationController?.pushViewController(recoverIntro, animated: true)
+    private func enterRecoverWalletFlow() {
+        let recoverIntro = RecoverWalletIntroViewController(didTapNext: self.pushRecoverWalletView)
+        navigationController?.setClearNavbar()
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.pushViewController(recoverIntro, animated: true)
+    }
+
+    // Displays the onboarding screen (app landing page) that allows the user to either create
+    // a new wallet or restore an existing wallet. 
+    private func presentOnboardingFlow() {
+        let onboardingScreen = OnboardingViewController(didExitOnboarding: { [weak self] (action) in
+            guard let `self` = self else { return }
+            
+            switch action {
+            case .restoreWallet:
+                self.enterRecoverWalletFlow()
+            case .createWallet:
+                self.enterCreateWalletFlow()
+            case .createWalletBuyCoin:
+                // This will be checked in dismissStartFlow(), which is called after the PIN
+                // and paper key flows are finished.
+                self.shouldBuyCoinAfterOnboarding = true
+                self.enterCreateWalletFlow()
+            }
         })
+        
+        navigationController = ModalNavigationController(rootViewController: onboardingScreen)
+        navigationController?.delegate = navigationControllerDelegate
+
+        if let onboardingFlow = navigationController {            
+            onboardingFlow.setNavigationBarHidden(true, animated: false)
+            
+            // This will be set to true if the user exits onboarding with the `createWalletBuyCoin` action.
+            shouldBuyCoinAfterOnboarding = false
+            
+            rootViewController.present(onboardingFlow, animated: false, completion: {
+                
+                // Stuff the home screen in as the root view controller so that when
+                // the onboarding flow is finished, the home screen will be present. If 
+                // we push it before the present() call you can briefly see the home screen
+                // before the onboarding screen is displayed -- not good.
+                if let createHomeScreen = self.createHomeScreen {
+                    let homeScreen = createHomeScreen(self.rootViewController)
+                    self.rootViewController.pushViewController(homeScreen, animated: false)
+                }                
+            })
+        }
+    }
+    
+    private func presentStartFlow() {
+        let startViewController = StartViewController(didTapCreate: enterCreateWalletFlow,
+                                                      didTapRecover: enterRecoverWalletFlow)
 
         navigationController = ModalNavigationController(rootViewController: startViewController)
         navigationController?.delegate = navigationControllerDelegate
@@ -110,13 +162,29 @@ class StartFlowPresenter: Subscriber {
         }
     }
 
+    private func presentPostOnboardingBuyScreen() {
+        guard let createBuyScreen = createBuyScreen else { return }
+        
+        let buyScreen = createBuyScreen()
+        
+        buyScreen.didClose = { [unowned self] in
+            self.navigationController = nil
+        }
+                
+        self.navigationController?.pushViewController(buyScreen, animated: true)
+    }
+    
     private func dismissStartFlow() {
-        navigationController?.dismiss(animated: true) { [weak self] in
-            self?.navigationController = nil
+        if self.shouldBuyCoinAfterOnboarding {
+            self.presentPostOnboardingBuyScreen()
+        } else {
+            navigationController?.dismiss(animated: true) { [unowned self] in
+                self.navigationController = nil
+            }
         }
     }
 
-    private func pushPinCreationViewControllerForNewWallet() {
+    private func enterCreateWalletFlow() {
         let pinCreationViewController = UpdatePinViewController(walletManager: walletManager, type: .creationNoPhrase, showsBackButton: true, phrase: nil)
         pinCreationViewController.setPinSuccess = { [weak self] pin in
             autoreleasepool {
@@ -131,8 +199,8 @@ class StartFlowPresenter: Subscriber {
             }
         }
 
-        navigationController?.setNavigationBarHidden(false, animated: false)
         navigationController?.setClearNavbar()
+        navigationController?.setNavigationBarHidden(false, animated: false)
         navigationController?.pushViewController(pinCreationViewController, animated: true)
     }
 
@@ -141,7 +209,7 @@ class StartFlowPresenter: Subscriber {
         alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
         navigationController?.present(alert, animated: true, completion: nil)
     }
-
+    
     private func pushStartPaperPhraseCreationViewController(pin: String) {
         let paperPhraseViewController = StartPaperPhraseViewController(callback: { [weak self] in
             self?.pushWritePaperPhraseViewController(pin: pin)
