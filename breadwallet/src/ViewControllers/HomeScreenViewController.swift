@@ -167,6 +167,27 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         updateTotalAssets()
     }
     
+    private func addBuyNotificationIndicatorIfNeeded(buyButton: UIButton) {
+        guard BRAPIClient.featureEnabled(.buyNotification) else { return }
+        guard let buyImageView = buyButton.imageView else { return }
+
+        let buyImageFrame = buyImageView.frame
+        let bellImage = UIImage(named: "notification-bell")
+
+        let bellImageView = UIImageView(image: bellImage)
+        bellImageView.contentMode = .center
+
+        let bellWidth = bellImage?.size.width ?? 0
+        let bellHeight = bellImage?.size.height ?? 0
+        
+        let bellXOffset = buyImageFrame.center.x + 4
+        let bellYOffset = buyImageFrame.center.y - bellHeight + 2.0
+        
+        bellImageView.frame = CGRect(x: bellXOffset, y: bellYOffset, width: bellWidth, height: bellHeight)
+        
+        buyButton.addSubview(bellImageView)
+    }
+    
     private func setupToolbar() {
         let buttons = [(S.HomeScreen.buy, #imageLiteral(resourceName: "buy"), #selector(buy)),
                        (S.HomeScreen.trade, #imageLiteral(resourceName: "trade"), #selector(trade)),
@@ -194,6 +215,10 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         let buttonHeight = CGFloat(44.0)
         buttons.forEach {
             $0.customView?.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonHeight)
+        }
+              
+        if let buyButton = buttons[0].customView as? UIButton {
+            addBuyNotificationIndicatorIfNeeded(buyButton: buyButton)
         }
         
         toolbar.isTranslucent = false
