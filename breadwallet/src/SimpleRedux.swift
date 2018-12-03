@@ -74,6 +74,7 @@ enum TriggerName {
     case linkWallet(WalletPairingRequest, Bool, PairingCompletionHandler) // request, accepted, callback
     case fetchInbox
     case optInSegWit
+    case openPlatformUrl(String)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName: Equatable {}
@@ -151,6 +152,8 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.fetchInbox, .fetchInbox):
         return true
     case (.optInSegWit, .optInSegWit):
+        return true
+    case (.openPlatformUrl, .openPlatformUrl):
         return true
     default:
         return false

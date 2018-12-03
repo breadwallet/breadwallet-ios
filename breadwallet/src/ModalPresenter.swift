@@ -165,6 +165,13 @@ class ModalPresenter: Subscriber, Trackable {
                 }
             })
         }
+        
+        Store.subscribe(self, name: .openPlatformUrl("")) { [unowned self] in
+            guard let trigger = $0 else { return }
+            if case let .openPlatformUrl(url) = trigger {
+                self.presentPlatformWebViewController(url)
+            }
+        }
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
