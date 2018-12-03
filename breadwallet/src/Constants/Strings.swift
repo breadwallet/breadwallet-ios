@@ -298,6 +298,7 @@ enum S {
         static let earlyAccess = NSLocalizedString("Settings.earlyAccess", value:"Join Early Access", comment: "Join Early access label")
         static let about = NSLocalizedString("Settings.about", value:"About", comment: "About label")
         static let review = NSLocalizedString("Settings.review", value: "Leave us a Review", comment: "Leave review button label")
+        static let rewards = NSLocalizedString("Settings.rewards", value: "Rewards", comment: "Rewards menu item text")
         static let enjoying = NSLocalizedString("Settings.enjoying", value: "Are you enjoying BRD?", comment: "Are you enjoying BRD alert message body")
         static let wipe = NSLocalizedString("Settings.wipe", value: "Unlink from this device", comment: "Unlink wallet menu label.")
         static let advancedTitle = NSLocalizedString("Settings.advancedTitle", value: "Advanced Settings", comment: "Advanced Settings title")

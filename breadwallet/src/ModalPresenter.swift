@@ -586,6 +586,11 @@ class ModalPresenter: Subscriber, Trackable {
                 }
             },
             
+            // Rewards
+            MenuItem(title: S.Settings.rewards, icon: #imageLiteral(resourceName: "Star")) {
+                self.presentPlatformWebViewController("/rewards")
+            },
+            
             // About
             MenuItem(title: S.Settings.about, icon: #imageLiteral(resourceName: "about")) {
                 menuNav.pushViewController(AboutViewController(), animated: true)

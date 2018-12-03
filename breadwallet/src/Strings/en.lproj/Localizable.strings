@@ -684,6 +684,8 @@
 "Settings.resetCurrencies" = "Reset to Default Currencies";
 /* Leave review button label */
 "Settings.review" = "Leave us a Review";
+/* Rewards menu item label */
+"Settings.rewards" = "Rewards";
 /* Share anonymous data label */
 "Settings.shareData" = "Share Anonymous Data";
 /* Sync blockchain label */
