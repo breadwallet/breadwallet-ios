@@ -9,6 +9,7 @@
 import UIKit
 import LocalAuthentication
 import BRCore
+import Buglife
 
 class ModalPresenter : Subscriber, Trackable {
 
@@ -596,6 +597,9 @@ class ModalPresenter : Subscriber, Trackable {
             let debugItems: [MenuItem] = [
                 MenuItem(title: S.Settings.sendLogs) { [unowned self] in
                     self.showEmailLogsModal()
+                },
+                MenuItem(title: "Report a Bug") {
+                    Buglife.shared().presentReporter()
                 },
                 MenuItem(title: "Unlink Wallet (no prompt)") { [unowned self] in
                     self.wipeWalletNoPrompt()
