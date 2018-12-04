@@ -34,6 +34,7 @@ class ApplicationController : Subscriber, Trackable {
     private var hasPerformedWalletDependentInitialization = false
     private var didInitWallet = false
     private let notificationHandler = NotificationHandler()
+    private let buglifeController = BuglifeController()
     private var isReachable = true {
         didSet {
             if oldValue == false && isReachable {
@@ -201,7 +202,7 @@ class ApplicationController : Subscriber, Trackable {
                             callback: { _ in self.didUnlockWallet() }
         )
         
-        setupBuglife()
+        buglifeController.setupBuglife()
     }
     
     func willEnterForeground() {
@@ -625,10 +626,12 @@ extension ApplicationController {
 
 import Buglife
 
-//MARK: - Buglife bug reporting
-extension ApplicationController {
-    private func setupBuglife() {
-        Buglife.shared().start(withEmail: "adamz@breadwallet.com")
+class BuglifeController: NSObject, BuglifeDelegate {
+
+    func setupBuglife() {
+        Buglife.shared().start(withEmail: "adamz@breadapp.com")
+        Buglife.shared().invocationOptions = [.shake]
+        Buglife.shared().delegate = self
         Buglife.shared().appearance.tintColor = .navigationTint
         Buglife.shared().appearance.barTintColor = .navigationBackground
         Buglife.shared().appearance.statusBarStyle = .lightContent
@@ -636,5 +639,30 @@ extension ApplicationController {
             NSAttributedStringKey.font.rawValue: UIFont.header,
             NSAttributedStringKey.foregroundColor.rawValue : UIColor.white
         ]
+    }
+    
+    //MARK: - BuglifeDelegate
+    
+    func buglife(_ buglife: Buglife, handleAttachmentRequestWithCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        // Automatically attach recent logs whenever a user submits a bug report
+        let logData: Data?
+        
+        do {
+            logData = try Data(contentsOf: C.logFilePath)
+        } catch {
+            logData = nil
+            print("Error extracting log data: \(error)")
+        }
+        
+        if let logData = logData {
+            do {
+                try Buglife.shared().addAttachment(with: logData, type: LIFEAttachmentTypeIdentifierText, filename: "brd_logs.txt")
+            } catch {
+                print("Error attaching logs to Buglife: \(error)")
+            }
+        }
+        
+        completionHandler()
     }
 }
