@@ -55,6 +55,18 @@ struct State {
     var shouldShowOnboarding: Bool {
         return isOnboardingEnabled && BTCWalletManager.staticNoWallet
     }
+    
+    var shouldShowBuyNotificationForDefaultCurrency: Bool {
+        switch defaultCurrencyCode {
+        // Currencies eligible for Coinify.
+        case C.euroCurrencyCode,
+             C.britishPoundCurrencyCode,
+             C.danishKroneCurrencyCode:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 extension State {

@@ -27,7 +27,17 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     private let prompt = UIView()
     private var promptHiddenConstraint: NSLayoutConstraint!
     private let toolbar = UIToolbar()
-
+    private var toolbarButtons = [UIButton]()
+    
+    private let buyButtonIndex = 0
+    private let tradeButtonIndex = 1
+    private let menuButtonIndex = 2
+    
+    private var buyButton: UIButton? {
+        guard toolbarButtons.count == 3 else { return nil }
+        return toolbarButtons[buyButtonIndex]
+    }
+    
     var didSelectCurrency: ((Currency) -> Void)?
     var didTapAddWallet: (() -> Void)?
     var didTapBuy: (() -> Void)?
@@ -167,11 +177,11 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         updateTotalAssets()
     }
     
-    private func addBuyNotificationIndicatorIfNeeded(buyButton: UIButton) {
-        guard BRAPIClient.featureEnabled(.buyNotification) else { return }
-        guard let buyImageView = buyButton.imageView else { return }
+    private func addNotificationIndicatorToButton(button: UIButton) {
+        guard let buttonImageView = button.imageView else { return }
+        guard (buttonImageView.subviews.last as? UIImageView) == nil else { return }    // make sure we didn't already add the bell
 
-        let buyImageFrame = buyImageView.frame
+        let buyImageFrame = buttonImageView.frame
         let bellImage = UIImage(named: "notification-bell")
 
         let bellImageView = UIImageView(image: bellImage)
@@ -185,7 +195,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         
         bellImageView.frame = CGRect(x: bellXOffset, y: bellYOffset, width: bellWidth, height: bellHeight)
         
-        buyButton.addSubview(bellImageView)
+        button.addSubview(bellImageView)
     }
     
     private func setupToolbar() {
@@ -197,7 +207,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
                         button.addTarget(self, action: selector, for: .touchUpInside)
                         return UIBarButtonItem(customView: button)
         }
-        
+                
         let paddingWidth = C.padding[2]
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         
@@ -216,10 +226,15 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         buttons.forEach {
             $0.customView?.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonHeight)
         }
-              
-        if let buyButton = buttons[0].customView as? UIButton {
-            addBuyNotificationIndicatorIfNeeded(buyButton: buyButton)
+        
+        // Stash the UIButton's wrapped by the toolbar items in case we need add a badge later.
+        buttons.forEach { (toolbarButtonItem) in
+            if let button = toolbarButtonItem.customView as? UIButton {
+                self.toolbarButtons.append(button)
+            }
         }
+
+        self.addBuyNotificationIndicatorIfNeeded()
         
         toolbar.isTranslucent = false
         toolbar.barTintColor = .navigationBackground
@@ -253,6 +268,18 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
                 self.currentPrompt = nil
             }
         })
+        
+        Store.subscribe(self, name: .didUpdateFeatureFlags, callback: { [unowned self] _ in
+            self.addBuyNotificationIndicatorIfNeeded()
+        })
+    }
+    
+    private func addBuyNotificationIndicatorIfNeeded() {
+        guard let buy = buyButton else { return }
+        guard BRAPIClient.featureEnabled(.buyNotification) else { return }
+        guard Store.state.shouldShowBuyNotificationForDefaultCurrency else { return }
+        
+        self.addNotificationIndicatorToButton(button: buy)
     }
     
     private func updateTotalAssets() {
