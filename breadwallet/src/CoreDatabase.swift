@@ -33,6 +33,10 @@ class CoreDatabase {
     private var peerEnt: Int32 = 0
     private let queue = DispatchQueue(label: "com.breadwallet.corecbqueue")
 
+    private var currency: Currency {
+        return [Currencies.btc, Currencies.bch].first { $0.dbPath == dbPath } ?? Currencies.btc
+    }
+
     init(dbPath: String = "BreadWallet.sqlite") {
         let docsUrl = try? FileManager.default.url(for: .documentDirectory,
                                                    in: .userDomainMask,
@@ -446,7 +450,13 @@ class CoreDatabase {
                 let buf = sqlite3_column_blob(sql, 0).assumingMemoryBound(to: UInt8.self)
                 guard len >= MemoryLayout<UInt32>.size*2 else { return DispatchQueue.main.async { callback(transactions) }}
                 var off = len - MemoryLayout<UInt32>.size*2
-                guard let tx = BRTransactionParse(buf, off) else { return DispatchQueue.main.async { callback(transactions) }}
+
+                guard let tx = BRTransactionParse(buf, off) else {
+                    // unable to parse tx in db -- rescan from last sent (or earlier)
+                    print("failed to parse transaction from db")
+                    Store.trigger(name: .automaticRescan(self.currency))
+                    continue
+                }
                 tx.pointee.blockHeight =
                     UnsafeRawPointer(buf).advanced(by: off).assumingMemoryBound(to: UInt32.self).pointee.littleEndian
                 off += MemoryLayout<UInt32>.size
