@@ -80,7 +80,7 @@ class CurrencyListMetaData: BRKVStoreObject, BRCoding {
 }
 
 extension CurrencyListMetaData {
-
+    
     var previouslyAddedTokenAddresses: [String] {
         return (enabledCurrencies + hiddenCurrencies).filter { $0.hasPrefix(C.erc20Prefix) }.map { $0.replacingOccurrences(of: C.erc20Prefix, with: "") }
     }
@@ -111,4 +111,10 @@ extension CurrencyListMetaData {
         enabledCurrencies = enabledNonTokenCurrencies + enabledTokenAddresses.filter { return !addresses.contains($0) }.map { C.erc20Prefix + $0 }
         hiddenCurrencies += addresses.map { C.erc20Prefix + $0 }
     }
+    
+    func isAddressAlreadyAdded(address: String) -> Bool {
+        return previouslyAddedTokenAddresses.contains(where: { (addr) -> Bool in
+            addr.lowercased() == address.lowercased()
+        })
+    }    
 }
