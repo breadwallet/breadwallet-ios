@@ -277,17 +277,14 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
                                          pinVerifier: PinVerifier,
                                          completion: @escaping SendCompletion) {
         pinVerifier { pin in
-            let group = DispatchGroup()
-            group.enter()
             DispatchQueue.walletQueue.async {
                 if self.walletManager.signTransaction(tx, pin: pin) {
                     self.publish(tx: tx, completion: completion)
+                } else {
+                    DispatchQueue.main.async {
+                        completion(.creationError("authentication error"))
+                    }
                 }
-                group.leave()
-            }
-            let result = group.wait(timeout: .now() + 4.0)
-            if result == .timedOut {
-                fatalError("send-tx-timeout")
             }
         }
     }
@@ -300,7 +297,10 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
             }
             
             guard let peerManager = self.walletManager.peerManager else {
-                return completion(.publishFailure(BRPeerManagerError.posixError(errorCode: -1, description: "network not connected")))
+                DispatchQueue.main.async {
+                    completion(.publishFailure(BRPeerManagerError.posixError(errorCode: -1, description: "network not connected")))                    
+                }
+                return
             }
             
             peerManager.publishTx(tx) { success, error in
