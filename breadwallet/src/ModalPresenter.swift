@@ -404,12 +404,7 @@ class ModalPresenter: Subscriber, Trackable {
             }
         }
     }
-    
-    func presentOnboardingFlow() {
-        let onboardingVC = OnboardingViewController(didExitOnboarding: nil)
-        self.topViewController?.present(onboardingVC, animated: false, completion: nil)
-    }
-    
+        
     // MARK: Settings
     func presentMenu() {
         guard let top = topViewController else { return }
@@ -638,12 +633,7 @@ class ModalPresenter: Subscriber, Trackable {
                                                 (menuNav.topViewController as? MenuViewController)?.reloadMenu()
                 }))
             }
-            
-            // Launches the new onboarding flow.
-            developerItems.append(MenuItem(title: "Launch New Onboarding Flow", callback: {
-                self.presentOnboardingFlow()
-            }))
-            
+                        
             developerItems.append(MenuItem(title: "Reset User Defaults",
                                            callback: {
                                             UserDefaults.resetAll()
