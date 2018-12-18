@@ -130,6 +130,16 @@ class OnboardingViewController: UIViewController {
     let coinsPageIndex = 2
     let finalPageIndex = 3
     
+    // Whenever we're animating from page to page this is set to true
+    // to prevent additional taps on the Next button during the transition.
+    var isPaging: Bool = false {
+        didSet {
+            [topButton, bottomButton, skipButton, backButton].forEach { (button) in
+                button.isUserInteractionEnabled = !isPaging
+            }
+        }
+    }
+    
     var pageIndex: Int = 0 {
         didSet {
             // Show/hide the Back and Skip buttons.
@@ -626,9 +636,11 @@ class OnboardingViewController: UIViewController {
     }
         
     private func animateToNextPage() {
-        guard pageIndex >= 0, pageIndex + 1 < pageCount else {
+        guard !isPaging, pageIndex >= 0, pageIndex + 1 < pageCount else {
             return
         }
+        
+        isPaging = true
         
         let nextIndex = pageIndex + 1
         
@@ -702,17 +714,26 @@ class OnboardingViewController: UIViewController {
                                     
             }, completion: { [weak self] _ in
                 guard let `self` = self else { return }
+
+                let nextIndex = min(self.pageIndex + 1, self.pageCount - 1)
                 
-                self.pageIndex += 1
+                let finishTransition: () -> Void  = {
+                    self.pageIndex = nextIndex
+                    self.isPaging = false
+                }
                 
                 // Animate the Next button after the other animations are finished to give the video
                 // clip a bit more time to finish. The first clip is a bit longer than the others and
                 // includes a slick bitcoin transfer animation at the end.
-                if self.pageIndex == 1 {
+                if nextIndex == 1 {
                     UIView.animate(withDuration: 0.5, delay: self.firstTransitionDelay, options: .curveEaseInOut, animations: { 
                         self.nextButtonAnimationConstraint?.constant = self.nextButtonVisibleYOffset
                         self.view.layoutIfNeeded()                    
+                    }, completion: { _ in
+                        finishTransition()
                     })
+                } else {
+                    finishTransition()
                 }
         })
     }
