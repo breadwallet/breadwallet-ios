@@ -366,6 +366,30 @@
 "NodeSelector.statusLabel" = "Stato della connessione del nodo";
 /* Node Selector view title */
 "NodeSelector.title" = "Nodi bitcoin";
+/* Onboarding screen 'I'll browse first' button */
+"Onboarding.browseFirst" = "Navigherò prima";
+/* Onboarding screen 'Buy some coin' button */
+"Onboarding.buyCoin" = "Acquista delle monete";
+/* Onboarding screen 'Get started' (create new wallet) button */
+"Onboarding.getStarted" = "Inizia";
+/* Onboarding screen 'Next' button */
+"Onboarding.next" = "Successivo";
+/* Onboarding screen restore an existing wallet. */
+"Onboarding.restoreWallet" = "Ripristina il portafoglio";
+/* Onboarding screen Skip button title that allows the user to exit the onboarding process. */
+"Onboarding.skip" = "Salta";
+/* Onboarding screen Page 4 title */
+"OnboardingPageFour.title" = "Inizia ad investire oggi con soli $ 50!";
+/* Onboarding screen Page 1 title */
+"OnboardingPageOne.title" = "Benvenuto nel tuo nuovo portafoglio globale!";
+/* Onboarding screen Page 3 subtitle */
+"OnboardingPageThree.subtitle" = "Investi e diversifica con BRD, facilmente ed in maniera sicura.";
+/* Onboarding screen Page 3 title */
+"OnboardingPageThree.title" = "Acquista e scambia bitcoin, token e altre valute digitali.";
+/* Onboarding screen Page 2 subtitle */
+"OnboardingPageTwo.subtitle" = "Abbiamo un patrimonio di oltre $ 6 miliardi sotto protezione.";
+/* Onboarding screen Page 2 title */
+"OnboardingPageTwo.title" = "Unisciti a 1,5 milioni di persone nel mondo che hanno fiducia in BRD.";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "Invia %1$@ per acquistare %2$@";
 /* Payment confirmation view title */
