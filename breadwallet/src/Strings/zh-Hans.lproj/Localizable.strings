@@ -366,6 +366,30 @@
 "NodeSelector.statusLabel" = "节点连接状态";
 /* Node Selector view title */
 "NodeSelector.title" = "比特币节点";
+/* Onboarding screen 'I'll browse first' button */
+"Onboarding.browseFirst" = "我要先浏览一下";
+/* Onboarding screen 'Buy some coin' button */
+"Onboarding.buyCoin" = "购买一些钱币";
+/* Onboarding screen 'Get started' (create new wallet) button */
+"Onboarding.getStarted" = "开始";
+/* Onboarding screen 'Next' button */
+"Onboarding.next" = "下一步";
+/* Onboarding screen restore an existing wallet. */
+"Onboarding.restoreWallet" = "恢复钱包";
+/* Onboarding screen Skip button title that allows the user to exit the onboarding process. */
+"Onboarding.skip" = "跳过";
+/* Onboarding screen Page 4 title */
+"OnboardingPageFour.title" = "今天就开始投资吧,只需 50 美元！";
+/* Onboarding screen Page 1 title */
+"OnboardingPageOne.title" = "欢迎来到你新的世界钱包！";
+/* Onboarding screen Page 3 subtitle */
+"OnboardingPageThree.subtitle" = "轻松又安全地与 BRD 进行投资和多样化";
+/* Onboarding screen Page 3 title */
+"OnboardingPageThree.title" = "购买并交易比特币,代币和其他数字货币。";
+/* Onboarding screen Page 2 subtitle */
+"OnboardingPageTwo.subtitle" = "我们有价值超过 600 亿美元的资产受到保护。";
+/* Onboarding screen Page 2 title */
+"OnboardingPageTwo.title" = "成为全世界信任 BRD 的 150 万人中的一员。";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "发送%1$@以购买%2$@";
 /* Payment confirmation view title */
