@@ -104,7 +104,7 @@
 "BitID.deny" = "Deny";
 /* BitID error alert title */
 "BitID.error" = "Authentication Error";
-/* BitID error alert messaage (The payment service you are trying to use isn't working. Please contact them, as you may need to try again) */
+/* BitID error alert message (The payment service you are trying to use isn't working. Please contact them, as you may need to try again) */
 "BitID.errorMessage" = "Please check with the service. You may need to try again.";
 /* BitID success alert title */
 "BitID.success" = "Successfully Authenticated";
@@ -298,7 +298,7 @@
 "LinkWallet.approve" = "Approve";
 /* Decline link wallet button label */
 "LinkWallet.decline" = "Decline";
-/* Link Wallet view dislaimer footer */
+/* Link Wallet view disclaimer footer */
 "LinkWallet.disclaimer" = "External apps cannot send money without approval from this device";
 /* Link Wallet view title above domain list */
 "LinkWallet.domainTitle" = "Note: ONLY interact with this app when on one of the following domains";
@@ -542,7 +542,7 @@
 "Send.creatTransactionError" = "Could not create transaction.";
 /* Description for sending money label */
 "Send.descriptionLabel" = "Memo";
-/* Emtpy pasteboard error message */
+/* Empty pasteboard error message */
 "Send.emptyPasteboard" = "Pasteboard is empty";
 /* "(you) can't send (to your)self" */
 "Send.ethSendSelf" = "Can't send to self.";
@@ -568,7 +568,7 @@
 "Send.legacyAddressWarning" = "Warning: this is a legacy bitcoin address. Are you sure you want to send Bitcoin Cash to it?";
 /* We are loading the request (now) */
 "Send.loadingRequest" = "Loading Request";
-/* Transaction fee could not be be caluculated error. */
+/* Transaction fee could not be calculated error. */
 "Send.nilFeeError" = "Insufficient funds to cover the transaction fee.";
 /* Empty address alert message */
 "Send.noAddress" = "Please enter the recipient's address.";
@@ -590,11 +590,11 @@
 "Send.title" = "Send";
 /* Send money to label */
 "Send.toLabel" = "To";
-/* Adress already used alert message - first part */
+/* Address already used alert message - first part */
 "Send.UsedAddress.firstLine" = "Bitcoin addresses are intended for single use only.";
-/* Adress already used alert message - second part */
+/* Address already used alert message - second part */
 "Send.UsedAddress.secondLIne" = "Re-use reduces privacy for both you and the recipient and can result in loss if the recipient doesn't directly control the address.";
-/* Adress already used alert title */
+/* Address already used alert title */
 "Send.UsedAddress.title" = "Address Already Used";
 /* About label */
 "Settings.about" = "About";
@@ -662,7 +662,7 @@
 "StartViewController.message" = "Moving money forward.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Recover Wallet";
-/* Syncing view connectiong state header text */
+/* Syncing view connecting state header text */
 "SyncingView.connecting" = "Connecting";
 /* The sync has failed (to complete) */
 "SyncingView.failed" = "Sync Failed";
@@ -684,7 +684,7 @@
 "TimeSince.seconds" = "%1$@ s";
 /* Add [this item to the list] */
 "TokenList.add" = "Add";
-/* Add Wallets  [to your home screen] */
+/* Add Wallets [to your home screen] */
 "TokenList.addTitle" = "Add Wallets";
 /* Hide [this token from view] */
 "TokenList.hide" = "Hide";
@@ -788,7 +788,7 @@
 "TransactionDetails.completeTimestampHeader" = "Complete";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Your transactions will appear here.";
-/* e.g. the users balance after the transaction was compeleted */
+/* e.g. the users balance after the transaction was completed */
 "TransactionDetails.endingBalanceHeader" = "Ending Balance";
 /* Exchange rate section header */
 "TransactionDetails.exchangeRateHeader" = "Exchange Rate";
