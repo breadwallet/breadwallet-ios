@@ -15,7 +15,7 @@ enum PigeonRequestType {
 }
 
 protocol PigeonRequest {
-    var currency: CurrencyDef { get }
+    var currency: Currency { get }
     var address: String { get }
     var purchaseAmount: Amount { get }
     var memo: String { get }
@@ -29,7 +29,7 @@ private struct AssociatedKeys {
     static var responseCallback = "responseCallback"
 }
 
-private class CallbackWrapper : NSObject, NSCopying {
+private class CallbackWrapper: NSObject, NSCopying {
 
     init(_ callback: @escaping (CheckoutResult) -> Void) {
         self.callback = callback
@@ -41,7 +41,6 @@ private class CallbackWrapper : NSObject, NSCopying {
         return CallbackWrapper(callback)
     }
 }
-
 
 extension PigeonRequest {
 
@@ -75,7 +74,7 @@ class MessagePaymentRequestWrapper: PigeonRequest {
         self.paymentRequest = paymentRequest
     }
 
-    var currency: CurrencyDef {
+    var currency: Currency {
         return Currencies.eth
     }
 
@@ -116,7 +115,7 @@ class MessageCallRequestWrapper: PigeonRequest {
         self.callRequest = callRequest
     }
 
-    var currency: CurrencyDef {
+    var currency: Currency {
         return Currencies.eth
     }
 

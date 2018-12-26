@@ -26,6 +26,8 @@
 import Foundation
 import BRCore
 
+// swiftlint:disable cyclomatic_complexity
+
 enum PlatformAuthResult {
     case success(String?)
     case cancelled
@@ -58,16 +60,16 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             print("[BRWalletPlugin] announce() could not encode payload: \(json)")
         }
     }
- 
+
     func hook(_ router: BRHTTPRouter) {
         router.websocket("/_wallet/_socket", client: self)
 
-        router.get("/_wallet/info") { (request, match) -> BRHTTPResponse in
+        router.get("/_wallet/info") { (request, _) -> BRHTTPResponse in
             return try BRHTTPResponse(request: request, code: 200, json: self.walletInfo())
         }
  
-        router.get("/_wallet/format") { (request, match) -> BRHTTPResponse in
-            if let amounts = request.query["amount"] , amounts.count > 0 {
+        router.get("/_wallet/format") { (request, _) -> BRHTTPResponse in
+            if let amounts = request.query["amount"], !amounts.isEmpty {
                 let amount = amounts[0]
                 
                 //TODO: multi-currency support
@@ -103,8 +105,8 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         //      {
         //          "signature": "oibwaeofbawoefb" // base64-encoded signature
         //      }
-        router.post("/_wallet/sign_bitid") { (request, match) -> BRHTTPResponse in
-            guard let cts = request.headers["content-type"] , cts.count == 1 && cts[0] == "application/json" else {
+        router.post("/_wallet/sign_bitid") { (request, _) -> BRHTTPResponse in
+            guard let cts = request.headers["content-type"], cts.count == 1 && cts[0] == "application/json" else {
                 return BRHTTPResponse(request: request, code: 400)
             }
             guard !self.isPresentingAuth else {
@@ -176,8 +178,8 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         //          "authenticated": true|false
         //      }
 
-        router.post("/_wallet/authenticate") { (request, match) -> BRHTTPResponse in
-            guard let cts = request.headers["content-type"] , cts.count == 1 && cts[0] == "application/json" else {
+        router.post("/_wallet/authenticate") { (request, _) -> BRHTTPResponse in
+            guard let cts = request.headers["content-type"], cts.count == 1 && cts[0] == "application/json" else {
                 return BRHTTPResponse(request: request, code: 400)
             }
             guard !self.isPresentingAuth else {
@@ -229,7 +231,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 return BRHTTPResponse(request: req, code: 400)
             }
             let name = nameArray[0]
-            if let body = req.body(), body.count > 0 {
+            if let body = req.body(), !body.isEmpty {
                 if let json = try? JSONSerialization.jsonObject(with: body, options: []) as? [String: String] {
                     self.saveEvent(name, attributes: json ?? [:])
                 } else {
@@ -241,7 +243,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             return BRHTTPResponse(request: req, code: 200)
         }
         
-        router.get("/_wallet/version") { (req, m) -> BRHTTPResponse in
+        router.get("/_wallet/version") { (req, _) -> BRHTTPResponse in
             let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? ""
             let build = Bundle.main.infoDictionary?["CFBundleVersion"] ?? ""
             return try BRHTTPResponse(request: req, code: 200, json: ["version": version, "build": build])
@@ -268,7 +270,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         //          }
         //          "colors": ["#000000","#ffffff"] // array of 2 colors in hex
         //      }
-        router.get("/_wallet/currencies") { (req, m) -> BRHTTPResponse in
+        router.get("/_wallet/currencies") { (req, _) -> BRHTTPResponse in
             let fiatCode = req.query["fiat"]?.first
             var response = [[String: Any]]()
             for currency in Store.state.currencies {
@@ -329,7 +331,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         //          "transaction: "0xffff..." // raw transaction hex encoded
         //          "transmitted": true
         //      }
-        router.post("/_wallet/transaction") { (request, m) -> BRHTTPResponse in
+        router.post("/_wallet/transaction") { (request, _) -> BRHTTPResponse in
             guard !self.isPresentingAuth else {
                 return BRHTTPResponse(request: request, code: 423)
             }
@@ -369,7 +371,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             
             if !(currency is ERC20Token) && (amount <= balance) && (amount + fee) > balance {
                 // amount is close to balance and fee puts it over, subtract the fee
-                amount = amount - fee
+                amount -= fee
             }
             
             let result = sender.createTransaction(address: toAddress, amount: amount, comment: comment)
@@ -403,11 +405,11 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
                 let confirmAmount = Amount(amount: amount,
                                            currency: currency,
-                                           rate: nil,//currency.state?.currentRate,
+                                           rate: nil, //currency.state?.currentRate,
                                            maximumFractionDigits: Amount.highPrecisionDigits)
                 let feeAmount = Amount(amount: fee,
                                        currency: feeCurrency,
-                                       rate: nil,//feeCurrency.state?.currentRate,
+                                       rate: nil, //feeCurrency.state?.currentRate,
                                        maximumFractionDigits: Amount.highPrecisionDigits)
                 
                 DispatchQueue.main.sync {
@@ -449,7 +451,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         }
     }
 
-    private func sendBitIDResponse(_ stringToSign: String, usingKey key: BRKey, request: BRHTTPRequest, asyncResp: BRHTTPResponse) -> Void {
+    private func sendBitIDResponse(_ stringToSign: String, usingKey key: BRKey, request: BRHTTPRequest, asyncResp: BRHTTPResponse) {
         var key = key
         let sig = BRBitID.signMessage(stringToSign, usingKey: key)
         let json: [String: Any] = [
@@ -524,7 +526,7 @@ extension BRWalletPlugin {
         return d
     }
     
-    func currencyInfo(_ currency: CurrencyDef, fiatCode: String?) -> [String: Any] {
+    func currencyInfo(_ currency: Currency, fiatCode: String?) -> [String: Any] {
         var d = [String: Any]()
         d["id"] = currency.code
         d["ticker"] = currency.code
@@ -547,7 +549,7 @@ extension BRWalletPlugin {
             if let rate = rate {
                 let amount = Amount(amount: balance, currency: currency, rate: currency.state?.currentRate)
                 let decimals = amount.localFormat.maximumFractionDigits
-                let denominatorValue = (pow(10,decimals) as NSDecimalNumber).doubleValue
+                let denominatorValue = (pow(10, decimals) as NSDecimalNumber).doubleValue
                 
                 let fiatValue = (amount.fiatValue as NSDecimalNumber).doubleValue
                 numerator = String(Int(fiatValue * denominatorValue))

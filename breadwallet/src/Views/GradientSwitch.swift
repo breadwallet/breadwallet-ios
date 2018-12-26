@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GradientSwitch : UISwitch {
+class GradientSwitch: UISwitch {
 
     init() {
         super.init(frame: .zero)

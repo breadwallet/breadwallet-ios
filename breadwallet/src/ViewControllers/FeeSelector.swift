@@ -8,8 +8,7 @@
 
 import UIKit
 
-
-class FeeSelector : UIView {
+class FeeSelector: UIView {
 
     init() {
         super.init(frame: .zero)

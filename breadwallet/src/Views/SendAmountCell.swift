@@ -8,13 +8,13 @@
 
 import UIKit
 
-class SendAmountCell : SendCell {
+class SendAmountCell: SendCell {
 
     init(placeholder: String) {
         super.init()
         let attributes: [NSAttributedStringKey: Any] = [
             NSAttributedStringKey.foregroundColor: UIColor.grayTextTint,
-            NSAttributedStringKey.font : placeholderFont
+            NSAttributedStringKey.font: placeholderFont
         ]
         textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: attributes)
         textField.delegate = self
@@ -30,8 +30,7 @@ class SendAmountCell : SendCell {
         didSet {
             textField.text = content
             textField.sendActions(for: .editingChanged)
-            guard let count = content?.count else { return }
-            textField.font = count > 0 ? textFieldFont : placeholderFont
+            textField.font = content.isNilOrEmpty ? placeholderFont : textFieldFont
         }
     }
     
@@ -41,7 +40,7 @@ class SendAmountCell : SendCell {
     }
 
     func setAmountLabel(text: String) {
-        textField.isHidden = text.utf8.count > 0 //Textfield should be hidden if amount label has text
+        textField.isHidden = !text.utf8.isEmpty //Textfield should be hidden if amount label has text
         cursor.isHidden = !textField.isHidden
         amountLabel.text = text
     }
@@ -97,7 +96,7 @@ class SendAmountCell : SendCell {
     }
 }
 
-extension SendAmountCell : UITextFieldDelegate {
+extension SendAmountCell: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textFieldDidBeginEditing?()
     }

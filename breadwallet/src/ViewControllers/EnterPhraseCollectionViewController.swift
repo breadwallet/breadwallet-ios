@@ -10,9 +10,9 @@ import UIKit
 
 private let itemHeight: CGFloat = 50.0
 
-class EnterPhraseCollectionViewController : UICollectionViewController {
+class EnterPhraseCollectionViewController: UICollectionViewController {
 
-    //MARK: - Public
+    // MARK: - Public
     var didFinishPhraseEntry: ((String) -> Void)?
     var height: CGFloat {
         return itemHeight * 4.0
@@ -29,7 +29,7 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         super.init(collectionViewLayout: layout)
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let cellIdentifier = "CellIdentifier"
     private let walletManager: BTCWalletManager
     private var phrase: String {
@@ -54,7 +54,7 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         becomeFirstResponder(atIndex: 0)
     }
 
-    //MARK: - UICollectionViewDataSource
+    // MARK: - UICollectionViewDataSource
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 12
     }
@@ -81,6 +81,14 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         enterPhraseCell.didEnterSpace = {
             enterPhraseCell.didTapNext?()
         }
+        enterPhraseCell.didPasteWords = { [weak self] words in
+            guard E.isDebug || E.isTestFlight else { return false }
+            guard enterPhraseCell.index == 0, words.count <= 12, let `self` = self else { return false }
+            for (index, word) in words.enumerated() {
+                self.setText(word, atIndex: index)
+            }
+            return true
+        }
 
         if indexPath.item == 0 {
             enterPhraseCell.disablePreviousButton()
@@ -90,10 +98,15 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
         return item
     }
 
-    //MARK: - Extras
+    // MARK: - Extras
     private func becomeFirstResponder(atIndex: Int) {
         guard let phraseCell = collectionView?.cellForItem(at: IndexPath(item: atIndex, section: 0)) as? EnterPhraseCell else { return }
         phraseCell.textField.becomeFirstResponder()
+    }
+
+    private func setText(_ text: String, atIndex: Int) {
+        guard let phraseCell = collectionView?.cellForItem(at: IndexPath(item: atIndex, section: 0)) as? EnterPhraseCell else { return }
+        phraseCell.textField.text = text
     }
 
     required init?(coder aDecoder: NSCoder) {

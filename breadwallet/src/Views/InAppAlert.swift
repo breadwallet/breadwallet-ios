@@ -8,7 +8,7 @@
 
 import UIKit
 
-class InAppAlert : UIView {
+class InAppAlert: UIView {
 
     init(message: String, image: UIImage) {
         super.init(frame: .zero)

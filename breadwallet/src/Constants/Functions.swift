@@ -16,7 +16,7 @@ func guardProtected(queue: DispatchQueue, callback: @escaping () -> Void) {
         }
     } else {
         var observer: Any?
-        observer = NotificationCenter.default.addObserver(forName: .UIApplicationProtectedDataDidBecomeAvailable, object: nil, queue: nil) { note in
+        observer = NotificationCenter.default.addObserver(forName: .UIApplicationProtectedDataDidBecomeAvailable, object: nil, queue: nil) { _ in
             queue.async {
                 callback()
             }

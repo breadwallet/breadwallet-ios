@@ -20,7 +20,7 @@ extension String {
     }
 
     var isValidEmailAddress: Bool {
-        guard count > 0 else { return false }
+        guard !isEmpty else { return false }
         
         let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,10}"
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
@@ -31,7 +31,15 @@ extension String {
     var bCashAddr: String {
         var addr = [CChar](repeating: 0, count: 55)
         BRBCashAddrEncode(&addr, self)
-        return String(cString: addr)
+        let prefixedAddr = String(cString: addr)
+        var cashAddr = prefixedAddr
+        // drop "bitcoincash:" prefix
+        if let prefixes = Currencies.bch.urlSchemes {
+            for prefix in prefixes where prefixedAddr.hasPrefix(prefix) {
+                cashAddr = String(prefixedAddr.dropFirst(prefix.count+1)) // +1 for :
+            }
+        }
+        return cashAddr
     }
     
     var bitcoinAddr: String {
@@ -107,7 +115,7 @@ extension String {
 extension String {
     var hexToData: Data? {
         let scalars = withoutHexPrefix.unicodeScalars
-        var bytes = Array<UInt8>(repeating: 0, count: (scalars.count + 1) >> 1)
+        var bytes = [UInt8](repeating: 0, count: (scalars.count + 1) >> 1)
         for (index, scalar) in scalars.enumerated() {
             guard var nibble = scalar.nibble else { return nil }
             if index & 1 == 0 {
@@ -130,7 +138,7 @@ extension String {
     
     var trimmedLeadingZeros: String {
         let trimmed = self.ltrim(["0"])
-        return trimmed.count > 0 ? trimmed : "0"
+        return trimmed.isEmpty ? "0" : trimmed
     }
     
     func leftPadding(toLength: Int, withPad character: Character) -> String {
@@ -157,15 +165,19 @@ extension String {
     }
 }
 
+extension Optional where Wrapped == String {
+    var isNilOrEmpty: Bool {
+        return self?.isEmpty ?? true
+    }
+}
+
 extension UnicodeScalar {
     var nibble: UInt8? {
         if 48 <= value && value <= 57 {
             return UInt8(value - 48)
-        }
-        else if 65 <= value && value <= 70 {
+        } else if 65 <= value && value <= 70 {
             return UInt8(value - 55)
-        }
-        else if 97 <= value && value <= 102 {
+        } else if 97 <= value && value <= 102 {
             return UInt8(value - 87)
         }
         return nil

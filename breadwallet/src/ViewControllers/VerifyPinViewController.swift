@@ -10,12 +10,12 @@ import UIKit
 import LocalAuthentication
 
 protocol ContentBoxPresenter {
-    var contentBox : UIView { get }
+    var contentBox: UIView { get }
     var blurView: UIVisualEffectView { get }
     var effect: UIBlurEffect { get }
 }
 
-class VerifyPinViewController : UIViewController, ContentBoxPresenter {
+class VerifyPinViewController: UIViewController, ContentBoxPresenter {
 
     init(bodyText: String, pinLength: Int, walletManager: BTCWalletManager, success: @escaping (String) -> Void) {
         self.bodyText = bodyText
@@ -26,7 +26,7 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
         super.init(nibName: nil, bundle: nil)
     }
 
-    var didCancel: (()->Void)?
+    var didCancel: (() -> Void)?
     let blurView = UIVisualEffectView()
     let effect = UIBlurEffect(style: .dark)
     let contentBox = UIView()

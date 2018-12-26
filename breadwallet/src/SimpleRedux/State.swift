@@ -24,7 +24,7 @@ struct State {
     let wallets: [String: WalletState]
     let availableTokens: [ERC20Token]
     
-    subscript(currency: CurrencyDef) -> WalletState? {
+    subscript(currency: Currency) -> WalletState? {
         guard let walletState = wallets[currency.code] else {
             return nil
         }
@@ -35,7 +35,7 @@ struct State {
         return wallets.values.sorted(by: { $0.displayOrder < $1.displayOrder })
     }
     
-    var currencies: [CurrencyDef] {
+    var currencies: [Currency] {
         return orderedWallets.map { $0.currency }
     }
     
@@ -43,7 +43,7 @@ struct State {
         return wallets[Currencies.btc.code]!
     }
 
-    var displayCurrencies: [CurrencyDef] {
+    var displayCurrencies: [Currency] {
         return orderedWallets.filter { $0.displayOrder >= 0 }.map { $0.currency }
     }
     
@@ -112,14 +112,14 @@ extension State {
 
 enum RootModal {
     case none
-    case send(currency: CurrencyDef)
+    case send(currency: Currency)
     case sendForRequest(request: PigeonRequest)
-    case receive(currency: CurrencyDef)
+    case receive(currency: Currency)
     case loginAddress
     case loginScan
-    case requestAmount(currency: CurrencyDef)
-    case buy(currency: CurrencyDef?)
-    case sell(currency: CurrencyDef?)
+    case requestAmount(currency: Currency, address: String)
+    case buy(currency: Currency?)
+    case sell(currency: Currency?)
     case trade
     case receiveLegacy
 }
@@ -133,7 +133,7 @@ enum SyncState {
 // MARK: -
 
 struct WalletState {
-    let currency: CurrencyDef
+    let currency: Currency
     let displayOrder: Int // -1 for hidden
     let syncProgress: Double
     let syncState: SyncState
@@ -151,8 +151,7 @@ struct WalletState {
     let maxDigits: Int // this is bits vs bitcoin setting
     let connectionStatus: BRPeerStatus
     
-    
-    static func initial(_ currency: CurrencyDef, displayOrder: Int) -> WalletState {
+    static func initial(_ currency: Currency, displayOrder: Int) -> WalletState {
         return WalletState(currency: currency,
                            displayOrder: displayOrder,
                            syncProgress: 0.0,
@@ -209,9 +208,9 @@ struct WalletState {
     }
 }
 
-extension WalletState : Equatable {}
+extension WalletState: Equatable {}
 
-func ==(lhs: WalletState, rhs: WalletState) -> Bool {
+func == (lhs: WalletState, rhs: WalletState) -> Bool {
     return lhs.currency.code == rhs.currency.code &&
         lhs.syncProgress == rhs.syncProgress &&
         lhs.syncState == rhs.syncState &&
@@ -228,9 +227,9 @@ func ==(lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.legacyReceiveAddress == rhs.legacyReceiveAddress
 }
 
-extension RootModal : Equatable {}
+extension RootModal: Equatable {}
 
-func ==(lhs: RootModal, rhs: RootModal) -> Bool {
+func == (lhs: RootModal, rhs: RootModal) -> Bool {
     switch(lhs, rhs) {
     case (.none, .none):
         return true
@@ -244,8 +243,8 @@ func ==(lhs: RootModal, rhs: RootModal) -> Bool {
         return true
     case (.loginScan, .loginScan):
         return true
-    case (.requestAmount(let lhsCurrency), .requestAmount(let rhsCurrency)):
-        return lhsCurrency.code == rhsCurrency.code
+    case (.requestAmount(let lhsCurrency, let lhsAddress), .requestAmount(let rhsCurrency, let rhsAddress)):
+        return lhsCurrency.code == rhsCurrency.code && lhsAddress == rhsAddress
     case (.buy(let lhsCurrency?), .buy(let rhsCurrency?)):
         return lhsCurrency.code == rhsCurrency.code
     case (.buy(nil), .buy(nil)):
@@ -263,8 +262,7 @@ func ==(lhs: RootModal, rhs: RootModal) -> Bool {
     }
 }
 
-
-extension CurrencyDef {
+extension Currency {
     var state: WalletState? {
         return Store.state[self]
     }

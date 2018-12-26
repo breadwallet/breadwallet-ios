@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BlinkingView : UIView {
+class BlinkingView: UIView {
 
     init(blinkColor: UIColor) {
         self.blinkColor = blinkColor

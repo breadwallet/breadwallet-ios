@@ -13,9 +13,9 @@ enum ModalType {
     case transactionDetail
 }
 
-class ModalTransitionDelegate : NSObject, Subscriber {
+class ModalTransitionDelegate: NSObject, Subscriber {
 
-    //MARK: - Public
+    // MARK: - Public
     init(type: ModalType) {
         self.type = type
         super.init()
@@ -31,7 +31,7 @@ class ModalTransitionDelegate : NSObject, Subscriber {
     }
 
     var shouldDismissInteractively = true
-    //MARK: - Private
+    // MARK: - Private
     fileprivate let type: ModalType
     fileprivate var isInteractive: Bool = false
     fileprivate let interactiveTransition = UIPercentDrivenInteractiveTransition()
@@ -83,7 +83,7 @@ class ModalTransitionDelegate : NSObject, Subscriber {
     }
 }
 
-extension ModalTransitionDelegate : UIViewControllerTransitioningDelegate {
+extension ModalTransitionDelegate: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         presentedViewController = presented
         return PresentModalAnimator(shouldCoverBottomGap: type == .regular, completion: {

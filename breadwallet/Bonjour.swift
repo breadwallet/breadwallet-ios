@@ -60,7 +60,7 @@ public class Bonjour: NSObject, NetServiceBrowserDelegate {
         }
     }
     
-    public func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String : NSNumber]) {
+    public func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String: NSNumber]) {
         print("[Bonjour] netServiceBrowser didNotSearch errors = \(errorDict)")
         noServicesFound()
     }

@@ -383,9 +383,9 @@ protocol BRWalletListener {
 class BRWallet {
     let cPtr: OpaquePointer
     let listener: BRWalletListener
-    let currency: CurrencyDef
+    let currency: Currency
     
-    init?(transactions: [BRTxRef?], masterPubKey: BRMasterPubKey, listener: BRWalletListener, currency: CurrencyDef) {
+    init?(transactions: [BRTxRef?], masterPubKey: BRMasterPubKey, listener: BRWalletListener, currency: Currency) {
         guard let currency = currency as? Bitcoin else { assertionFailure(); return nil }
         var txRefs = transactions
         guard let cPtr = BRWalletNew(&txRefs, txRefs.count, masterPubKey, Int32(currency.forkId)) else { return nil }
@@ -581,9 +581,9 @@ class BRPeerManager {
     let bcashParams = [BRBCashParams]
     let testNetParams = [BRTestNetParams]
     let bcashTestNetParams = [BRBCashTestNetParams]
-    let currency: CurrencyDef
+    let currency: Currency
 
-    init?(currency: CurrencyDef, wallet: BRWallet, earliestKeyTime: TimeInterval, blocks: [BRBlockRef?], peers: [BRPeer],
+    init?(currency: Currency, wallet: BRWallet, earliestKeyTime: TimeInterval, blocks: [BRBlockRef?], peers: [BRPeer],
           listener: BRPeerManagerListener) {
         var blockRefs = blocks
         guard let cPtr = BRPeerManagerNew(currency.code == Currencies.btc.code ? (E.isTestnet ? testNetParams: mainNetParams) : (E.isTestnet ? bcashTestNetParams : bcashParams),
@@ -838,6 +838,10 @@ extension UInt256 {
     
     public static func += (l: inout UInt256, r: UInt256) {
         l = l + r
+    }
+
+    public static func -= (l: inout UInt256, r: UInt256) {
+        l = l - r
     }
 }
 

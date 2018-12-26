@@ -59,7 +59,7 @@ open class BRAPIProxy: BRHTTPMiddleware {
         if request.path.hasPrefix(mountPoint) {
             let idx = request.path.index(request.path.startIndex, offsetBy: mountPoint.count)
             var path = String(request.path[idx...])
-            if request.queryString.utf8.count > 0 {
+            if !request.queryString.utf8.isEmpty {
                 path += "?\(request.queryString)"
             }
             var nsReq = URLRequest(url: apiInstance.url(path))
@@ -77,7 +77,7 @@ open class BRAPIProxy: BRHTTPMiddleware {
             }
             
             var auth = false
-            if let authHeader = request.headers[shouldAuthHeader], authHeader.count > 0 {
+            if let authHeader = request.headers[shouldAuthHeader], !authHeader.isEmpty {
                 if authHeader[0].lowercased() == "yes" || authHeader[0].lowercased() == "true" {
                     auth = true
                 }
@@ -89,7 +89,7 @@ open class BRAPIProxy: BRHTTPMiddleware {
                             if self.bannedReceiveHeaders.contains(k.lowercased()) { continue }
                             hdrs[k] = [v]
                         }
-                        var body: [UInt8]? = nil
+                        var body: [UInt8]?
                         if let bod = data {
                             body = [UInt8](bod)
                         }

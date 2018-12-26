@@ -25,7 +25,7 @@ enum SearchFilterType {
             return S.Search.pending
         case .complete:
             return S.Search.complete
-        case .text(_):
+        case .text:
             return ""
         }
     }
@@ -60,9 +60,9 @@ enum SearchFilterType {
     }
 }
 
-extension SearchFilterType : Equatable {}
+extension SearchFilterType: Equatable {}
 
-func ==(lhs: SearchFilterType, rhs: SearchFilterType) -> Bool {
+func == (lhs: SearchFilterType, rhs: SearchFilterType) -> Bool {
     switch (lhs, rhs) {
     case (.sent, .sent):
         return true
@@ -72,17 +72,16 @@ func ==(lhs: SearchFilterType, rhs: SearchFilterType) -> Bool {
         return true
     case (.complete, .complete):
         return true
-    case (.text(_), .text(_)):
+    case (.text, .text):
         return true
     default:
         return false
     }
 }
 
-
 typealias TransactionFilter = (Transaction) -> Bool
 
-class SearchHeaderView : UIView {
+class SearchHeaderView: UIView {
 
     init() {
         super.init(frame: .zero)
@@ -131,7 +130,7 @@ class SearchHeaderView : UIView {
 
     private func addConstraints() {
         cancel.setTitle(S.Button.cancel, for: .normal)
-        let titleSize = NSString(string: cancel.titleLabel!.text!).size(withAttributes: [NSAttributedStringKey.font : cancel.titleLabel!.font])
+        let titleSize = NSString(string: cancel.titleLabel!.text!).size(withAttributes: [NSAttributedStringKey.font: cancel.titleLabel!.font])
         cancel.constrain([
             cancel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
             cancel.centerYAnchor.constraint(equalTo: searchBar.centerYAnchor),
@@ -227,13 +226,13 @@ class SearchHeaderView : UIView {
     }
 }
 
-extension SearchHeaderView : UISearchBarDelegate {
+extension SearchHeaderView: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         let filter: SearchFilterType = .text(searchText)
         if let index = filters.index(of: filter) {
             filters.remove(at: index)
         }
-        if searchText != "" {
+        if !searchText.isEmpty {
             filters.append(filter)
         }
     }

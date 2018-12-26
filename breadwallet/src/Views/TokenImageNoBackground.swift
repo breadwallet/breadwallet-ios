@@ -8,13 +8,13 @@
 
 import UIKit
 
-class RenderedIconBase : UIView {
+class RenderedIconBase: UIView {
     
     fileprivate let label = UILabel()
-    fileprivate let currency: CurrencyDef
+    fileprivate let currency: Currency
     fileprivate var didLayout = false
     
-    init(currency: CurrencyDef) {
+    init(currency: Currency) {
         self.currency = currency
         super.init(frame: CGRect(x: 0, y: 0, width: 216.0/UIScreen.main.scale, height: 216.0/UIScreen.main.scale))
     }
@@ -34,7 +34,7 @@ class RenderedIconBase : UIView {
     }
 }
 
-class TokenImageNoBackground : RenderedIconBase {
+class TokenImageNoBackground: RenderedIconBase {
     
     static var cache = NSMutableDictionary()
     
@@ -47,7 +47,7 @@ class TokenImageNoBackground : RenderedIconBase {
     }
 }
 
-class TokenImageSquareBackground : RenderedIconBase {
+class TokenImageSquareBackground: RenderedIconBase {
     
     static var cache = NSMutableDictionary()
     

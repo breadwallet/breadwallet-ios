@@ -36,13 +36,13 @@ private let BIP39CreationTime = TimeInterval(BIP39_CREATION_TIME) - NSTimeInterv
 public protocol WalletAuthenticator {
     var noWallet: Bool { get }
     var apiAuthKey: String? { get }
-    var userAccount: Dictionary<AnyHashable, Any>? { get set }
+    var userAccount: [AnyHashable: Any]? { get set }
 }
 
-struct NoAuthAuthenticator : WalletAuthenticator {
+struct NoAuthAuthenticator: WalletAuthenticator {
     let noWallet = true
     let apiAuthKey: String? = nil
-    var userAccount: Dictionary<AnyHashable, Any>? = nil
+    var userAccount: [AnyHashable: Any]?
 }
 
 enum BiometricsResult {
@@ -52,10 +52,10 @@ enum BiometricsResult {
     case failure
 }
 
-extension BTCWalletManager : WalletAuthenticator {
+extension BTCWalletManager: WalletAuthenticator {
     static private var failedPins = [String]()
     
-    convenience init(currency: CurrencyDef, dbPath: String? = nil, earliestKeyTimeOverride: TimeInterval? = nil) throws {
+    convenience init(currency: Currency, dbPath: String? = nil, earliestKeyTimeOverride: TimeInterval? = nil) throws {
         // caller must ensure isProtectedDataAvailable is true before initializing WalletManager if this is done on another (non-main) thread
         if Thread.isMainThread && !UIApplication.shared.isProtectedDataAvailable {
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(errSecNotAvailable))
@@ -98,8 +98,7 @@ extension BTCWalletManager : WalletAuthenticator {
             if try keychainItem(key: KeychainKey.masterPubKey) as Data? != nil { return false }
             if try keychainItem(key: KeychainKey.seed) as Data? != nil { return false } // check for old keychain scheme
             return true
-        }
-        catch { return false }
+        } catch { return false }
     }
 
     //Login with pin should be required if the pin hasn't been used within a week
@@ -118,8 +117,7 @@ extension BTCWalletManager : WalletAuthenticator {
             let spendLimit: Int64 = try keychainItem(key: KeychainKey.spendLimit) ?? 0
             guard let wallet = wallet else { assert(false, "No wallet!"); return false }
             return wallet.amountSentByTx(forTx) - wallet.amountReceivedFromTx(forTx) + wallet.totalSent <= UInt64(spendLimit)
-        }
-        catch { return false }
+        } catch { return false }
     }
 
     var spendingLimit: UInt64 {
@@ -145,8 +143,7 @@ extension BTCWalletManager : WalletAuthenticator {
         do {
             let failCount: Int64 = try keychainItem(key: KeychainKey.pinFailCount) ?? 0
             return Int(8 - failCount)
-        }
-        catch { return -1 }
+        } catch { return -1 }
     }
 
     var walletIsDisabled: Bool {
@@ -161,8 +158,7 @@ extension BTCWalletManager : WalletAuthenticator {
             guard failCount >= 3 else { return 0 }
             let failTime: Int64 = try keychainItem(key: KeychainKey.pinFailTime) ?? 0
             return Double(failTime) + pow(6, Double(failCount - 3))*60
-        }
-        catch let error {
+        } catch let error {
             assert(false, "Error: \(error)")
             return 0
         }
@@ -204,11 +200,10 @@ extension BTCWalletManager : WalletAuthenticator {
             if try pin == keychainItem(key: KeychainKey.pin) { // successful pin attempt
                 try authenticationSuccess()
                 return true
-            }
-            else if !BTCWalletManager.failedPins.contains(pin) { // unique failed attempt
+            } else if !BTCWalletManager.failedPins.contains(pin) { // unique failed attempt
                 BTCWalletManager.failedPins.append(pin)
                 
-                if (failCount >= 8) { // wipe wallet after 8 failed pin attempts and 24+ hours of lockout
+                if failCount >= 8 { // wipe wallet after 8 failed pin attempts and 24+ hours of lockout
                     Store.trigger(name: .wipeWalletNoPrompt)
                     return false
                 }
@@ -219,8 +214,7 @@ extension BTCWalletManager : WalletAuthenticator {
             }
             
             return false
-        }
-        catch let error {
+        } catch let error {
             assert(false, "Error: \(error)")
             return false
         }
@@ -259,7 +253,7 @@ extension BTCWalletManager : WalletAuthenticator {
     }
 
     // show biometric dialog and call completion block with success or failure
-    func authenticate(biometricsPrompt: String, completion: @escaping (BiometricsResult) -> ()) {
+    func authenticate(biometricsPrompt: String, completion: @escaping (BiometricsResult) -> Void) {
         let policy = LAPolicy.deviceOwnerAuthenticationWithBiometrics
         LAContext().evaluatePolicy(policy, localizedReason: biometricsPrompt,
                                    reply: { success, error in
@@ -282,17 +276,16 @@ extension BTCWalletManager : WalletAuthenticator {
     }
     
     // sign the given transaction using biometric authentication
-    func signTransaction(_ tx: BRTxRef, biometricsPrompt: String, completion: @escaping (BiometricsResult) -> ()) {
+    func signTransaction(_ tx: BRTxRef, biometricsPrompt: String, completion: @escaping (BiometricsResult) -> Void) {
         do {
             let spendLimit: Int64 = try keychainItem(key: KeychainKey.spendLimit) ?? 0
             guard let wallet = wallet, wallet.amountSentByTx(tx) - wallet.amountReceivedFromTx(tx) + wallet.totalSent <= UInt64(spendLimit) else {
                 return completion(.failure)
             }
-        }
-        catch { return completion(.failure) }
-        Store.perform(action: biometricsActions.setIsPrompting(true))
+        } catch { return completion(.failure) }
+        Store.perform(action: BiometricsActions.SetIsPrompting(true))
         authenticate(biometricsPrompt: biometricsPrompt) { result in
-            Store.perform(action: biometricsActions.setIsPrompting(false))
+            Store.perform(action: BiometricsActions.SetIsPrompting(false))
             guard result == .success else { return completion(result) }
             completion(self.signTx(tx) == true ? .success : .failure)
         }
@@ -320,8 +313,7 @@ extension BTCWalletManager : WalletAuthenticator {
         
         do {
             return try keychainItem(key: KeychainKey.mnemonic)
-        }
-        catch { return nil }
+        } catch { return nil }
     }
 
     // recover an existing wallet using 12 word wallet recovery phrase
@@ -341,8 +333,7 @@ extension BTCWalletManager : WalletAuthenticator {
             if self.earliestKeyTime < BIP39CreationTime { self.earliestKeyTime = BIP39CreationTime }
             try setKeychainItem(key: KeychainKey.masterPubKey, item: Data(masterPubKey: self.masterPubKey))
             return true
-        }
-        catch { return false }
+        } catch { return false }
     }
     
     // create a new wallet and return the 12 word wallet recovery phrase
@@ -357,8 +348,7 @@ extension BTCWalletManager : WalletAuthenticator {
             try setKeychainItem(key: KeychainKey.creationTime,
                                 item: [time].withUnsafeBufferPointer { Data(buffer: $0) })
             self.earliestKeyTime = time
-        }
-        catch { return nil }
+        } catch { return nil }
 
         // wrapping in an autorelease pool ensures sensitive memory is wiped and released immediately
         return autoreleasepool {
@@ -385,12 +375,11 @@ extension BTCWalletManager : WalletAuthenticator {
         guard authenticate(pin: pin) else { return false }
         do {
             DispatchQueue.main.async {
-                Store.perform(action: PinLength.set(newPin.utf8.count))
+                Store.perform(action: PinLength.Set(newPin.utf8.count))
             }
             try setKeychainItem(key: KeychainKey.pin, item: newPin)
             return true
-        }
-        catch { return false }
+        } catch { return false }
     }
     
     // change wallet authentication pin using the wallet recovery phrase
@@ -407,18 +396,16 @@ extension BTCWalletManager : WalletAuthenticator {
                 seed = UInt512() // clear seed
                 let mpkData: Data? = try keychainItem(key: KeychainKey.masterPubKey)
                 guard mpkData?.masterPubKey == mpk else { return false }
-            }
-            else if try keychainItem(key: KeychainKey.pin) as String? != nil {
+            } else if try keychainItem(key: KeychainKey.pin) as String? != nil {
                 return authenticate(pin: newPin)
             }
             DispatchQueue.main.async {
-                Store.perform(action: PinLength.set(newPin.utf8.count))
+                Store.perform(action: PinLength.Set(newPin.utf8.count))
             }
             try setKeychainItem(key: KeychainKey.pin, item: newPin)
             try authenticationSuccess()
             return true
-        }
-        catch { return false }
+        } catch { return false }
     }
     
     // wipe the existing wallet from the keychain
@@ -450,8 +437,7 @@ extension BTCWalletManager : WalletAuthenticator {
             try setKeychainItem(key: KeychainKey.mnemonic, item: nil as String?, authenticated: true)
             NotificationCenter.default.post(name: .WalletDidWipe, object: nil)
             return true
-        }
-        catch let error {
+        } catch let error {
             print("Wipe wallet error: \(error)")
             return false
         }
@@ -491,8 +477,7 @@ extension BTCWalletManager : WalletAuthenticator {
                                                                        CFStringBuiltInEncodings.UTF8.rawValue) as String
                 try setKeychainItem(key: KeychainKey.apiAuthKey, item: privKey)
                 return privKey
-            }
-            catch let error {
+            } catch let error {
                 print("apiAuthKey error: \(error)")
                 return nil
             }
@@ -500,19 +485,17 @@ extension BTCWalletManager : WalletAuthenticator {
     }
 
     // sensitive user information stored on the keychain
-    var userAccount: Dictionary<AnyHashable, Any>? {
+    var userAccount: [AnyHashable: Any]? {
         get {
             do {
                 return try keychainItem(key: KeychainKey.userAccount)
-            }
-            catch { return nil }
+            } catch { return nil }
         }
 
         set (value) {
             do {
                 try setKeychainItem(key: KeychainKey.userAccount, item: value)
-            }
-            catch { }
+            } catch { }
         }
     }
     
@@ -530,8 +513,7 @@ extension BTCWalletManager : WalletAuthenticator {
                 guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return false }
                 BRBIP39DeriveKey(&seed, phrase, nil)
                 return wallet.signTransaction(tx, seed: &seed)
-            }
-            catch { return false }
+            } catch { return false }
         }
     }
 }
@@ -560,8 +542,7 @@ extension EthWalletManager {
                                                                        CFStringBuiltInEncodings.UTF8.rawValue) as String
                 try setKeychainItem(key: KeychainKey.ethPrivKey, item: privKey)
                 return privKey
-            }
-            catch let error {
+            } catch let error {
                 print("apiAuthKey error: \(error)")
                 return nil
             }
@@ -594,12 +575,12 @@ private struct KeychainKey {
 }
 
 private func keychainItem<T>(key: String) throws -> T? {
-    let query = [kSecClass as String : kSecClassGenericPassword as String,
-                 kSecAttrService as String : WalletSecAttrService,
-                 kSecAttrAccount as String : key,
-                 kSecReturnData as String : true as Any]
-    var result: CFTypeRef? = nil
-    let status = SecItemCopyMatching(query as CFDictionary, &result);
+    let query = [kSecClass as String: kSecClassGenericPassword as String,
+                 kSecAttrService as String: WalletSecAttrService,
+                 kSecAttrAccount as String: key,
+                 kSecReturnData as String: true as Any]
+    var result: CFTypeRef?
+    let status = SecItemCopyMatching(query as CFDictionary, &result)
     guard status == noErr || status == errSecItemNotFound else {
         throw NSError(domain: NSOSStatusErrorDomain, code: Int(status))
     }
@@ -624,22 +605,22 @@ private func keychainItem<T>(key: String) throws -> T? {
 private func setKeychainItem<T>(key: String, item: T?, authenticated: Bool = false) throws {
     let accessible = (authenticated) ? kSecAttrAccessibleWhenUnlockedThisDeviceOnly as String
                                      : kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly as String
-    let query = [kSecClass as String : kSecClassGenericPassword as String,
-                 kSecAttrService as String : WalletSecAttrService,
-                 kSecAttrAccount as String : key]
+    let query = [kSecClass as String: kSecClassGenericPassword as String,
+                 kSecAttrService as String: WalletSecAttrService,
+                 kSecAttrAccount as String: key]
     var status = noErr
-    var data: Data? = nil
+    var data: Data?
     if let item = item {
-        switch T.self {
-        case is Data.Type:
-            data = item as? Data
-        case is String.Type:
-            data = CFStringCreateExternalRepresentation(secureAllocator, (item as! CFString),
+        switch item {
+        case let item as Data:
+            data = item
+        case let item as String:
+            data = CFStringCreateExternalRepresentation(secureAllocator, item as CFString,
                                                         CFStringBuiltInEncodings.UTF8.rawValue, 0) as Data
-        case is Int64.Type:
+        case let item as Int64:
             data = CFDataCreateMutable(secureAllocator, MemoryLayout<T>.stride) as Data
             [item].withUnsafeBufferPointer { data?.append($0) }
-        case is Dictionary<AnyHashable, Any>.Type:
+        case let item as [AnyHashable: Any]:
             data = NSKeyedArchiver.archivedData(withRootObject: item)
         default:
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(errSecParam))
@@ -650,18 +631,16 @@ private func setKeychainItem<T>(key: String, item: T?, authenticated: Bool = fal
         if SecItemCopyMatching(query as CFDictionary, nil) != errSecItemNotFound {
             status = SecItemDelete(query as CFDictionary)
         }
-    }
-    else if SecItemCopyMatching(query as CFDictionary, nil) != errSecItemNotFound { // update existing item
-        let update = [kSecAttrAccessible as String : accessible,
-                      kSecValueData as String : data as Any]
+    } else if SecItemCopyMatching(query as CFDictionary, nil) != errSecItemNotFound { // update existing item
+        let update = [kSecAttrAccessible as String: accessible,
+                      kSecValueData as String: data as Any]
         status = SecItemUpdate(query as CFDictionary, update as CFDictionary)
-    }
-    else { // add new item
-        let item = [kSecClass as String : kSecClassGenericPassword as String,
-                    kSecAttrService as String : WalletSecAttrService,
-                    kSecAttrAccount as String : key,
-                    kSecAttrAccessible as String : accessible,
-                    kSecValueData as String : data as Any]
+    } else { // add new item
+        let item = [kSecClass as String: kSecClassGenericPassword as String,
+                    kSecAttrService as String: WalletSecAttrService,
+                    kSecAttrAccount as String: key,
+                    kSecAttrAccessible as String: accessible,
+                    kSecValueData as String: data as Any]
         status = SecItemAdd(item as CFDictionary, nil)
     }
     
@@ -669,4 +648,3 @@ private func setKeychainItem<T>(key: String, item: T?, authenticated: Bool = fal
         throw NSError(domain: NSOSStatusErrorDomain, code: Int(status))
     }
 }
-

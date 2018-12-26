@@ -10,8 +10,7 @@ import Foundation
 import SwiftProtobuf
 import BRCore
 
-
-enum PigeonMessageType : String {
+enum PigeonMessageType: String {
     case link = "LINK"
     case ping = "PING"
     case pong = "PONG"
@@ -68,7 +67,7 @@ extension MessageEnvelope {
         let crypto = PigeonCrypto(privateKey: pairingKey)
         var envelope = self
         envelope.signature = Data()
-        let data = try! envelope.serializedData()
+        guard let data = try? envelope.serializedData() else { return false }
         return crypto.verify(data: data, signature: self.signature, pubKey: envelope.senderPublicKey)
     }
 }

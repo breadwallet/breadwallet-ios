@@ -1,0 +1,47 @@
+disabled_rules:
+  - trailing_whitespace
+  - identifier_name
+  - large_tuple
+  - weak_delegate
+  - todo
+
+opt_in_rules:
+  - empty_count
+  - empty_string
+  - multiline_parameters
+
+excluded:
+  - Modules
+  - Screenshots
+  - breadwalletTests
+  - breadwalletUITests
+  - breadwallet/src/Constants/Strings.swift
+  - breadwallet/*.pb.swift # ProtoBuf generated files
+  - breadwallet/src/BRCore.swift
+
+line_length:
+    warning: 170
+    ignores_comments: true
+    ignores_urls: true
+function_body_length:
+    warning: 300
+    error: 500
+function_parameter_count:
+    warning: 6
+    error: 8
+type_body_length:
+    warning: 300
+    error: 500
+file_length:
+    warning: 1000
+    error: 1500
+    ignore_comment_only_lines: true
+cyclomatic_complexity:
+    warning: 15
+    error: 25
+    ignores_case_statements: true
+nesting:
+    type_level: 2
+    statement_level: 5
+
+reporter: "xcode"

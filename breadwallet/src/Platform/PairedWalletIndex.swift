@@ -17,7 +17,7 @@ class PairedWalletIndex: BRKVStoreObject, BRCoding {
     var pubKeys = [String]()
     var services = [String]()
     var hasPairedWallets: Bool {
-        return pubKeys.count > 0
+        return !pubKeys.isEmpty
     }
 
     /// Find existing

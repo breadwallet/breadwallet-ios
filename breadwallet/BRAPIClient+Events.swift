@@ -29,15 +29,13 @@ extension Trackable {
     }
 }
 
-fileprivate var emKey: UInt8 = 1
+private var emKey: UInt8 = 1
 
 // EventManager is attached to BRAPIClient
 extension BRAPIClient {
     var events: EventManager? {
-        get {
-            return lazyAssociatedObject(self, key: &emKey) {
-                return EventManager(adaptor: self)
-            }
+        return lazyAssociatedObject(self, key: &emKey) {
+            return EventManager(adaptor: self)
         }
     }
     
@@ -68,6 +66,8 @@ class EventManager {
     ]
     private var buffer = [Event]()
     private let adaptor: BRAPIAdaptor
+
+    private var notificationObservers = [String: NSObjectProtocol]()
     
     struct Event {
         let sessionId: String
@@ -76,10 +76,10 @@ class EventManager {
         let attributes: Attributes
         
         var dictionary: [String: Any] {
-            return [ "sessionId":   sessionId,
-                     "time":        Int(time),
-                     "eventName":   eventName,
-                     "metadata":    attributes.map({ [$0: $1] }) ]
+            return [ "sessionId": sessionId,
+                     "time": Int(time),
+                     "eventName": eventName,
+                     "metadata": attributes.map({ [$0: $1] }) ]
         }
     }
     
@@ -102,34 +102,41 @@ class EventManager {
         
         // slurp up app lifecycle events and save them as events
         eventToNotifications.forEach { key, value in
-            NotificationCenter.default.addObserver(forName: value, object: nil, queue: self.queue, using: { [weak self] note in
-                self?.saveEvent(key)
-                if note.name == .UIApplicationDidEnterBackground {
-                    self?.persistToDisk()
-                    self?.sendToServer()
-                }
-            })
+            notificationObservers[key] =
+                NotificationCenter.default
+                    .addObserver(forName: value,
+                                 object: nil,
+                                 queue: self.queue) { [weak self] note in
+                                    self?.saveEvent(key)
+                                    if note.name == .UIApplicationDidEnterBackground {
+                                        self?.persistToDisk()
+                                        self?.sendToServer()
+                                    }
+            }
         }
         
         // slurp up events sent as notifications
-        NotificationCenter.default.addObserver(
-            forName: EventManager.eventNotification, object: nil, queue: self.queue) { [weak self] note in
-                guard let eventName = note.userInfo?[EventManager.eventNameKey] as? String else {
-                    print("[EventManager] received invalid userInfo dict: \(String(describing: note.userInfo))")
-                    return
-                }
-                if let eventAttributes = note.userInfo?[EventManager.eventAttributesKey] as? Attributes {
-                    self?.saveEvent(eventName, attributes: eventAttributes)
-                } else {
-                    self?.saveEvent(eventName)
-                }
-            }
+        notificationObservers[EventManager.eventNotification.rawValue] =
+            NotificationCenter.default
+                .addObserver(forName: EventManager.eventNotification,
+                             object: nil,
+                             queue: self.queue) { [weak self] note in
+                                guard let eventName = note.userInfo?[EventManager.eventNameKey] as? String else {
+                                    print("[EventManager] received invalid userInfo dict: \(String(describing: note.userInfo))")
+                                    return
+                                }
+                                if let eventAttributes = note.userInfo?[EventManager.eventAttributesKey] as? Attributes {
+                                    self?.saveEvent(eventName, attributes: eventAttributes)
+                                } else {
+                                    self?.saveEvent(eventName)
+                                }
+        }
     }
     
     func down() {
         guard isSubscribed else { return }
-        eventToNotifications.forEach { key, value in
-            NotificationCenter.default.removeObserver(self, name: value, object: nil)
+        notificationObservers.values.forEach { observer in
+            NotificationCenter.default.removeObserver(observer)
         }
     }
     
@@ -146,10 +153,10 @@ class EventManager {
         queue.addOperation { [weak self] in
             guard let myself = self else { return }
             print("[EventManager] pushEvent name=\(eventName) attributes=\(attributes)")
-            myself.buffer.append(  Event(sessionId:     myself.sessionId,
-                                         time:          Date().timeIntervalSince1970,
-                                         eventName:     eventName,
-                                         attributes:    attributes))
+            myself.buffer.append(  Event(sessionId: myself.sessionId,
+                                         time: Date().timeIntervalSince1970,
+                                         eventName: eventName,
+                                         attributes: attributes))
         }
     }
     
@@ -214,11 +221,17 @@ class EventManager {
                     if let resp = resp {
                         if resp.statusCode != 200 {
                             if let data = data {
-                                print("[EventManager] Error uploading event data to server: STATUS=\(resp.statusCode), connErr=\(String(describing: err)), data=\(String(describing: String(data: data, encoding: .utf8)))")
+                                print("""
+                                    [EventManager] Error uploading event data to server: STATUS=\(resp.statusCode), connErr=\(String(describing: err)), \
+                                    data=\(String(describing: String(data: data, encoding: .utf8)))
+                                    """)
                             }
                         } else {
                             if let data = data {
-                                print("[EventManager] Successfully sent \(eventDump.count) events to server \(fileName) => \(resp.statusCode) data=\(String(describing: String(data: data, encoding: .utf8)))")
+                                print("""
+                                    [EventManager] Successfully sent \(eventDump.count) events to server \(fileName) => \(resp.statusCode), \
+                                    data=\(String(describing: String(data: data, encoding: .utf8)))
+                                    """)
                             }
                         }
                     }
@@ -254,9 +267,9 @@ class EventManager {
     }
     
     private func eventTupleArrayToDictionary(_ events: [[String: Any]]) -> [String: Any] {
-        return [    "deviceType":   0,
-                    "appVersion":   Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? -1,
-                    "events":       events ]
+        return [    "deviceType": 0,
+                    "appVersion": Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? -1,
+                    "events": events ]
     }
     
     private var unsentDataDirectory: String {

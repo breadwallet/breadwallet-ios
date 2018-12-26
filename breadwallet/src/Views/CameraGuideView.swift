@@ -24,7 +24,7 @@ enum CameraGuideState {
     }
 }
 
-class CameraGuideView : UIView {
+class CameraGuideView: UIView {
 
     var state: CameraGuideState = .normal {
         didSet {

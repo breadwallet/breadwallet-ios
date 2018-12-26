@@ -22,6 +22,8 @@
 "AccessibilityLabels.faq" = "支援中心";
 /* Account balance */
 "Account.balance" = "餘額";
+/* Delisted token alert banner message */
+"Account.delistedToken" = "這個令牌已遭摘牌，因為發行人決定停止ERC20支援。\n\n您仍然能夠將這些令牌發送至另一個平台。關於進一步細節，請訪問我們的支援網頁。";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ 每 %2$@";
 /* Loading Wallet Message */
@@ -40,6 +42,8 @@
 "Alert.keystore.title.android" = "Android 金鑰儲存區錯誤";
 /* No internet alert message */
 "Alert.noInternet" = "找不到網路連線。請檢查您的連線，然後再試一次。";
+/* General error message */
+"Alert.somethingWentWrong" = "發生錯誤。請再試一次。";
 /* Request timed out error message */
 "Alert.timedOut" = "請求暫停。請檢查您的連接並再次嘗試。";
 /* Warning alert title */
@@ -124,6 +128,8 @@
 "Button.ignore" = "略過";
 /* menu button */
 "Button.menu" = "選單";
+/* More information button */
+"Button.moreInfo" = "更多資訊";
 /* No button */
 "Button.no" = "不要";
 /* OK button label */
@@ -382,6 +388,18 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "不受支援的簽章類型";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "不受信任的憑證";
+/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.body" = "搶先收到重要支援與產品新消息";
+/* Placeholder text for an email address text field. */
+"Prompts.Email.placeholder" = "輸入您的電子信箱";
+/* Body text that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successBody" = "您已成功訂閱接收新消息";
+/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
+"Prompts.Email.successFootnote" = "感謝您一直以來的支持";
+/* Title that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successTitle" = "謝謝您！";
+/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.title" = "進入循環";
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "點擊繼續來啟用 Face ID";
 /* Enable face ID prompt title */
@@ -524,6 +542,16 @@
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
 "SecurityCenter.touchIdTitle.android" = "指紋驗證";
+/* Segwit enabled confirmation title */
+"Segwit.ConfirmationConfirmationTitle" = "您已啟用 SegWit！";
+/* Segwit enabled confirmation description */
+"Segwit.ConfirmationInstructionsDescription" = "感謝您協助推動比特幣向前發展。";
+/* Segwit instructions */
+"Segwit.ConfirmationInstructionsInstructions" = "SegWit 支援仍為測試功能。\n一旦 SegWit 被啟用,將無法停用。您將能夠在設定中找到舊版位址。\n啟用 SegWit 的使用者可能無法使用某些第三方服務,包括加密貨幣交易。在緊急情況下,您可以在偏好選項 > 比特幣設定中產生一個舊版位址。\n在未來更新中,SegWit 將自動為所有使用者啟用。";
+/* Segwit extra confirmation title. */
+"Segwit.ConfirmChoiceLayout" = "啟用 SegWit 是不可逆轉的功能。確定要繼續嗎？";
+/* Segwit enableButton */
+"Segwit.Enable" = "啟用";
 /* Send money amount label */
 "Send.amountLabel" = "金額";
 /* Balance: $4.00 */
@@ -586,6 +614,8 @@
 "Send.scanLabel" = "掃描";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "寄送";
+/* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
+"Send.sendMaximum" = "匯出最大金額?";
 /* Send screen title (as in "this is the screen for sending money") */
 "Send.title" = "寄送";
 /* Send money to label */
@@ -610,6 +640,8 @@
 "Settings.currencySettings" = "貨幣設定";
 /* Join Early access label */
 "Settings.earlyAccess" = "參加「先行體驗」";
+/* Enable segwit. */
+"Settings.EnableSegwit" = "啟用 Segwit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "您喜歡 BRD 嗎？";
 /* Face ID spending limit label */
@@ -638,6 +670,12 @@
 "Settings.touchIdLimit" = "Touch ID 花費上限";
 /* The fingerprint spending limit */
 "Settings.touchIdLimit.android" = "指紋驗證花費限制";
+/* View legacy address (old format). */
+"Settings.ViewLegacyAddress" = "查看舊版接收位址";
+/* Receive Bitcoin instructions */
+"Settings.ViewLegacyAddressReceiveDescription" = "請只發送比特幣（BTC）至此位址。任何發送到此位址的資產將永久遺失。";
+/* Receive Bitcoin */
+"Settings.ViewLegacyAddressReceiveTitle" = "接收比特幣";
 /* Wallet Settings section header */
 "Settings.wallet" = "錢包";
 /* Unlink/delete your wallet from the current device. */

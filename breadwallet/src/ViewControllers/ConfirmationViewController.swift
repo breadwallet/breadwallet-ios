@@ -10,9 +10,9 @@ import UIKit
 import LocalAuthentication
 import BRCore
 
-class ConfirmationViewController : UIViewController, ContentBoxPresenter {
+class ConfirmationViewController: UIViewController, ContentBoxPresenter {
 
-    init(amount: Amount, fee: Amount, feeType: FeeLevel, address: String, isUsingBiometrics: Bool, currency: CurrencyDef) {
+    init(amount: Amount, fee: Amount, feeType: FeeLevel, address: String, isUsingBiometrics: Bool, currency: Currency) {
         self.amount = amount
         self.feeAmount = fee
         self.feeType = feeType
@@ -27,7 +27,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private let feeType: FeeLevel
     private let addressText: String
     private let isUsingBiometrics: Bool
-    private let currency: CurrencyDef
+    private let currency: Currency
 
     //ContentBoxPresenter
     let contentBox = UIView(color: .white)

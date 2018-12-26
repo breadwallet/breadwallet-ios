@@ -40,7 +40,7 @@ public protocol BRWebSocketClient: class {
     func socketDidDisconnect(_ socket: BRWebSocket)
 }
 
-let GID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+let GID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
 
 enum SocketState {
     case headerb1
@@ -60,7 +60,7 @@ enum SocketOpcode: UInt8, CustomStringConvertible {
     case pong = 0xA
     
     var description: String {
-        switch (self) {
+        switch self {
         case .stream: return "STREAM"
         case .text: return "TEXT"
         case .binary: return "BINARY"
@@ -92,7 +92,7 @@ enum SocketCloseEventCode: UInt16 {
 
 class BRWebSocketServer {
     var sockets = [Int32: BRWebSocketImpl]()
-    var thread: pthread_t? = nil
+    var thread: pthread_t?
     var waiter: UnsafeMutablePointer<pthread_cond_t>
     var mutex: UnsafeMutablePointer<pthread_mutex_t>
     
@@ -141,11 +141,11 @@ class BRWebSocketServer {
             // log("awaiting select")
             
             // all fds should be available for a read
-            let readFds = sockets.map({ (ws) -> Int32 in return ws.0 });
+            let readFds = sockets.map({ (ws) -> Int32 in return ws.0 })
             
             // only fds which have items in the send queue are available for a write
-            let writeFds = sockets.map({
-                (ws) -> Int32 in return ws.1.sendq.count > 0 ? ws.0 : -1
+            let writeFds = sockets.map({ (ws) -> Int32 in
+                return ws.1.sendq.isEmpty ? -1 : ws.0
             }).filter({ i in return i != -1 })
             
             // build the select request and execute it, checking the result for an error
@@ -153,7 +153,7 @@ class BRWebSocketServer {
                 write_fd_len: Int32(writeFds.count),
                 read_fd_len: Int32(readFds.count),
                 write_fds: UnsafeMutablePointer(mutating: writeFds),
-                read_fds: UnsafeMutablePointer(mutating: readFds));
+                read_fds: UnsafeMutablePointer(mutating: readFds))
             
             let resp = bw_select(req)
             
@@ -251,6 +251,8 @@ class BRWebSocketServer {
     }
 }
 
+// swiftlint:disable type_body_length
+
 class BRWebSocketImpl: BRWebSocket {
     var request: BRHTTPRequest
     var response: BRHTTPResponse
@@ -299,10 +301,10 @@ class BRWebSocketImpl: BRWebSocket {
     
     func handshake() -> Bool {
         log("handshake initiated")
-        if let upgrades = request.headers["upgrade"] , upgrades.count > 0 {
+        if let upgrades = request.headers["upgrade"], !upgrades.isEmpty {
             let upgrade = upgrades[0]
             if upgrade.lowercased() == "websocket" {
-                if let ks = request.headers["sec-websocket-key"], let vs = request.headers["sec-websocket-version"], ks.count > 0 && vs.count > 0 {
+                if let ks = request.headers["sec-websocket-key"], let vs = request.headers["sec-websocket-version"], !ks.isEmpty && !vs.isEmpty {
                     key = ks[0]
                     version = vs[0]
                     do {
@@ -352,7 +354,8 @@ class BRWebSocketImpl: BRWebSocket {
         }
         parseMessage(buf[0])
     }
-    
+
+    // swiftlint:disable cyclomatic_complexity
     func parseMessage(_ byte: UInt8) {
         if state == .headerb1 {
             fin = byte & UInt8(0x80)
@@ -550,7 +553,7 @@ class BRWebSocketImpl: BRWebSocket {
                     status = .close_PROTOCOL_ERROR
                 }
                 let lr = Array(data.suffix(from: 2))
-                if lr.count > 0 {
+                if !lr.isEmpty {
                     if let rr = String(bytes: lr, encoding: String.Encoding.utf8) {
                         reason = rr
                     } else {
@@ -573,13 +576,13 @@ class BRWebSocketImpl: BRWebSocket {
                 // start of fragments
                 fragType = opcode
                 fragStart = true
-                fragBuffer = fragBuffer + data
+                fragBuffer += data
             } else {
                 if !fragStart {
                     log("error: fragmentation protocol error y")
                     return
                 }
-                fragBuffer = fragBuffer + data
+                fragBuffer += data
             }
         } else {
             if opcode == .stream {

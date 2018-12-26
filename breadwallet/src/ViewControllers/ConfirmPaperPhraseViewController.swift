@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ConfirmPaperPhraseViewController : UIViewController {
+class ConfirmPaperPhraseViewController: UIViewController {
 
     init(walletManager: BTCWalletManager, pin: String, callback: @escaping () -> Void) {
         self.pin = pin
@@ -22,8 +22,14 @@ class ConfirmPaperPhraseViewController : UIViewController {
 
     private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
 
-    lazy private var confirmFirstPhrase: ConfirmPhraseView = { ConfirmPhraseView(text: String(format:S.ConfirmPaperPhrase.word, "\(self.indices.0 + 1)"), word: self.words[self.indices.0]) }()
-    lazy private var confirmSecondPhrase: ConfirmPhraseView = { ConfirmPhraseView(text: String(format:S.ConfirmPaperPhrase.word, "\(self.indices.1 + 1)"), word: self.words[self.indices.1]) }()
+    lazy private var confirmFirstPhrase: ConfirmPhraseView = {
+        ConfirmPhraseView(text: String(format: S.ConfirmPaperPhrase.word, "\(self.indices.0 + 1)"),
+                          word: self.words[self.indices.0])
+    }()
+    lazy private var confirmSecondPhrase: ConfirmPhraseView = {
+        ConfirmPhraseView(text: String(format: S.ConfirmPaperPhrase.word, "\(self.indices.1 + 1)"),
+                          word: self.words[self.indices.1])
+    }()
     private let submit = BRDButton(title: S.Button.submit, type: .primary)
     private let header = RadialGradientView(backgroundColor: .pink)
     private let pin: String
@@ -46,8 +52,12 @@ class ConfirmPaperPhraseViewController : UIViewController {
         return phraseString.components(separatedBy: " ")
     }()
 
+    private var notificationObservers = [String: NSObjectProtocol]()
+
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        notificationObservers.values.forEach { observer in
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     override func viewDidLoad() {
@@ -61,7 +71,8 @@ class ConfirmPaperPhraseViewController : UIViewController {
 
         confirmFirstPhrase.textField.becomeFirstResponder()
 
-        NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { [weak self] note in
+        notificationObservers[NSNotification.Name.UIApplicationWillResignActive.rawValue] =
+            NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
         }
 
@@ -112,7 +123,13 @@ class ConfirmPaperPhraseViewController : UIViewController {
 
     private func addSubmitButtonConstraints(keyboardHeight: CGFloat) {
         submit.constrain([
-            NSLayoutConstraint(item: submit, attribute: .bottom, relatedBy: .equal, toItem: bottomLayoutGuide, attribute: .top, multiplier: 1.0, constant: -C.padding[1] - keyboardHeight),
+            NSLayoutConstraint(item: submit,
+                               attribute: .bottom,
+                               relatedBy: .equal,
+                               toItem: bottomLayoutGuide,
+                               attribute: .top,
+                               multiplier: 1.0,
+                               constant: -C.padding[1] - keyboardHeight),
             submit.constraint(.leading, toView: view, constant: C.padding[2]),
             submit.constraint(.trailing, toView: view, constant: -C.padding[2]),
             submit.constraint(.height, constant: C.Sizes.buttonHeight) ])

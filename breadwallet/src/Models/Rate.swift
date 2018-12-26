@@ -18,7 +18,7 @@ struct Rate {
         if let symbol = Rate.symbolMap[code] {
             return symbol
         } else {
-            let components: [String : String] = [NSLocale.Key.currencyCode.rawValue : code]
+            let components: [String: String] = [NSLocale.Key.currencyCode.rawValue: code]
             let identifier = Locale.identifier(fromComponents: components)
             return Locale(identifier: identifier).currencySymbol ?? code
         }
@@ -43,7 +43,7 @@ struct Rate {
     }()
 
     var locale: Locale {
-        let components: [String : String] = [NSLocale.Key.currencyCode.rawValue : code]
+        let components: [String: String] = [NSLocale.Key.currencyCode.rawValue: code]
         let identifier = Locale.identifier(fromComponents: components)
         return Locale(identifier: identifier)
     }
@@ -86,8 +86,8 @@ extension Rate {
     }
 }
 
-extension Rate : Equatable {}
+extension Rate: Equatable {}
 
-func ==(lhs: Rate, rhs: Rate) -> Bool {
+func == (lhs: Rate, rhs: Rate) -> Bool {
     return lhs.code == rhs.code && lhs.name == rhs.name && lhs.rate == rhs.rate && lhs.reciprocalCode == rhs.reciprocalCode
 }

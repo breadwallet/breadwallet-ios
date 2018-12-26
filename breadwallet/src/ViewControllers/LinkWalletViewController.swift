@@ -10,7 +10,7 @@ import UIKit
 
 private let circleRadius: CGFloat = 40.0
 
-class LinkWalletViewController : UIViewController {
+class LinkWalletViewController: UIViewController {
 
     private let body = UIStackView()
     private let footer = UIStackView()
@@ -30,7 +30,7 @@ class LinkWalletViewController : UIViewController {
     private let info2 = UILabel.wrapping(font: .customBody(size: 14.0), color: .white)
     private let scrollView = UIScrollView()
     private let header = UIStackView()
-    private var animator: UIViewPropertyAnimator? = nil
+    private var animator: UIViewPropertyAnimator?
     private let statusView = UIView()
     private let errorMessage = UILabel.wrapping(font: .customBody(size: 15.0), color: .white)
     private let circle = LinkStatusCircle(colour: .white)
@@ -95,7 +95,7 @@ class LinkWalletViewController : UIViewController {
             body.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             body.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             body.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 30.0),
-            body.widthAnchor.constraint(equalTo: scrollView.widthAnchor),])
+            body.widthAnchor.constraint(equalTo: scrollView.widthAnchor) ])
         logoBackground.constrain([
             logoBackground.heightAnchor.constraint(equalTo: logoBackground.widthAnchor, multiplier: logo.image!.size.height/logo.image!.size.width),
             logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.36)])
@@ -106,7 +106,7 @@ class LinkWalletViewController : UIViewController {
             footer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             footer.heightAnchor.constraint(equalToConstant: 140.0)])
         footerBackground.constrain(toSuperviewEdges: nil)
-        bodyBackground.constrain(toSuperviewEdges: UIEdgeInsetsMake(0, C.padding[2], 0, -C.padding[2]))
+        bodyBackground.constrain(toSuperviewEdges: UIEdgeInsets(top: 0, left: C.padding[2], bottom: 0, right: -C.padding[2]))
     }
 
     private func setInitialData() {
@@ -227,7 +227,7 @@ class LinkWalletViewController : UIViewController {
     private func showSuccess() {
         DispatchQueue.main.async {
             self.circle.drawCheckBox()
-            self.dismissAfterDelay() {
+            self.dismissAfterDelay {
                 if self.pairingRequest.returnToURL == nil {
                     Store.trigger(name: .registerForPushNotificationToken)
                 }
@@ -266,7 +266,7 @@ class LinkWalletViewController : UIViewController {
     }
 }
 
-extension LinkWalletViewController : UIScrollViewDelegate {
+extension LinkWalletViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let yOffset = scrollView.contentOffset.y
         guard yOffset > 0  else {

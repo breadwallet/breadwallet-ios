@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MenuViewController : UITableViewController {
+class MenuViewController: UITableViewController {
     
     init(items: [MenuItem], title: String, faqButton: UIButton? = nil) {
         self.items = items
@@ -23,6 +23,10 @@ class MenuViewController : UITableViewController {
     }
     private let faqButton: UIButton?
     
+    func reloadMenu() {
+        tableView.reloadData()
+    }
+
     override func viewDidLoad() {
         tableView.register(MenuCell.self, forCellReuseIdentifier: MenuCell.cellIdentifier)
         tableView.tableFooterView = UIView()

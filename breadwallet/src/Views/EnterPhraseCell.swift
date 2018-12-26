@@ -8,9 +8,9 @@
 
 import UIKit
 
-class EnterPhraseCell : UICollectionViewCell {
+class EnterPhraseCell: UICollectionViewCell {
 
-    //MARK: - Public
+    // MARK: - Public
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -47,6 +47,7 @@ class EnterPhraseCell : UICollectionViewCell {
 
     var didEnterSpace: (() -> Void)?
     var isWordValid: ((String) -> Bool)?
+    var didPasteWords: (([String]) -> Bool)?
 
     func disablePreviousButton() {
         previousField.tintColor = .secondaryShadow
@@ -58,7 +59,7 @@ class EnterPhraseCell : UICollectionViewCell {
         nextField.isEnabled = false
     }
 
-    //MARK: - Private
+    // MARK: - Private
     let textField = UITextField()
     private let label = UILabel(font: .customBody(size: 13.0), color: .white)
     private let nextField = UIButton.icon(image: #imageLiteral(resourceName: "RightArrow"), accessibilityLabel: S.RecoverWallet.rightArrow)
@@ -138,7 +139,7 @@ class EnterPhraseCell : UICollectionViewCell {
     }
 }
 
-extension EnterPhraseCell : UITextFieldDelegate {
+extension EnterPhraseCell: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         setColors(textField: textField)
     }
@@ -148,6 +149,8 @@ extension EnterPhraseCell : UITextFieldDelegate {
             if text.last == " " {
                 textField.text = text.replacingOccurrences(of: " ", with: "")
                 didEnterSpace?()
+            } else {
+                textField.text = textField.text?.lowercased()
             }
         }
         if hasDisplayedInvalidState {
@@ -155,10 +158,23 @@ extension EnterPhraseCell : UITextFieldDelegate {
         }
     }
 
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard E.isDebug || E.isTestFlight else { return true }
+        if string.count == UIPasteboard.general.string?.count,
+            let didPasteWords = didPasteWords,
+            string == UIPasteboard.general.string?.replacingOccurrences(of: "\n", with: " ") {
+            let words = string.components(separatedBy: " ")
+            if didPasteWords(words) {
+                return false
+            }
+        }
+        return true
+    }
+
     private func setColors(textField: UITextField) {
         guard let isWordValid = isWordValid else { return }
         guard let word = textField.text else { return }
-        if isWordValid(word) || word == "" {
+        if isWordValid(word) || word.isEmpty {
             textField.textColor = .white
             separator.backgroundColor = .secondaryShadow
         } else {

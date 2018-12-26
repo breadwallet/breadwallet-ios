@@ -10,19 +10,22 @@ import UIKit
 import LocalAuthentication
 import BRCore
 
-class ModalPresenter : Subscriber, Trackable {
+// swiftlint:disable type_body_length
+// swiftlint:disable cyclomatic_complexity
 
-    //MARK: - Public
+class ModalPresenter: Subscriber, Trackable {
+
+    // MARK: - Public
     let primaryWalletManager: BTCWalletManager
     var walletManagers: [String: WalletManager]
     lazy var supportCenter: SupportCenterContainer = {
         return SupportCenterContainer(walletManagers: self.walletManagers)
     }()
     
-    init(walletManagers: [String: WalletManager], window: UIWindow) {
+    init(primaryWalletManager: BTCWalletManager, walletManagers: [String: WalletManager], window: UIWindow) {
         self.window = window
         self.walletManagers = walletManagers
-        self.primaryWalletManager = walletManagers[Currencies.btc.code]! as! BTCWalletManager
+        self.primaryWalletManager = primaryWalletManager
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular)
         self.wipeNavigationDelegate = StartNavigationDelegate()
         addSubscriptions()
@@ -35,7 +38,7 @@ class ModalPresenter : Subscriber, Trackable {
         Store.unsubscribe(self)
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let window: UIWindow
     private let alertHeight: CGFloat = 260.0
     private let modalTransitionDelegate: ModalTransitionDelegate
@@ -186,7 +189,7 @@ class ModalPresenter : Subscriber, Trackable {
         })
     }
 
-    private func presentAlert(_ type: AlertType, completion: @escaping ()->Void) {
+    private func presentAlert(_ type: AlertType, completion: @escaping () -> Void) {
         let alertView = AlertView(type: type)
         let window = UIApplication.shared.keyWindow!
         let size = window.bounds.size
@@ -225,7 +228,7 @@ class ModalPresenter : Subscriber, Trackable {
         })
     }
 
-    func presentFaq(articleId: String? = nil, currency: CurrencyDef? = nil) {
+    func presentFaq(articleId: String? = nil, currency: Currency? = nil) {
         supportCenter.modalPresentationStyle = .overFullScreen
         supportCenter.modalPresentationCapturesStatusBarAppearance = true
         supportCenter.transitioningDelegate = supportCenter
@@ -257,31 +260,14 @@ class ModalPresenter : Subscriber, Trackable {
             return nil
         case .loginAddress:
             return makeReceiveView(currency: Currencies.btc, isRequestAmountVisible: false)
-        case .requestAmount(let currency):
-            guard let walletManager = walletManagers[currency.code] else { return nil }
-            var address: String?
-            switch currency.code {
-            case Currencies.btc.code:
-                address = walletManager.wallet?.receiveAddress
-            case Currencies.bch.code:
-                address = walletManager.wallet?.receiveAddress.bCashAddr
-            case Currencies.eth.code:
-                address = (walletManager as? EthWalletManager)?.address
-            default:
-                if currency is ERC20Token {
-                    address = (walletManager as? EthWalletManager)?.address
-                }
-            }
-            guard let receiveAddress = address else { return nil }
-            let requestVc = RequestAmountViewController(currency: currency, receiveAddress: receiveAddress)
-            requestVc.presentEmail = { [weak self] bitcoinURL, image in
+        case .requestAmount(let currency, let address):
+            let requestVc = RequestAmountViewController(currency: currency, receiveAddress: address)
+            
+            requestVc.shareAddress = { [weak self] uri, qrCode in
                 self?.messagePresenter.presenter = self?.topViewController
-                self?.messagePresenter.presentMailCompose(bitcoinURL: bitcoinURL, image: image)
+                self?.messagePresenter.presentShareSheet(text: uri, image: qrCode)
             }
-            requestVc.presentText = { [weak self] bitcoinURL, image in
-                self?.messagePresenter.presenter = self?.topViewController
-                self?.messagePresenter.presentMessageCompose(bitcoinURL: bitcoinURL, image: image)
-            }
+                        
             return ModalViewController(childViewController: requestVc)
         case .buy(let currency):
             var url = "/buy"
@@ -329,7 +315,7 @@ class ModalPresenter : Subscriber, Trackable {
         return checkoutVC
     }
 
-    private func makeSendView(currency: CurrencyDef) -> UIViewController? {
+    private func makeSendView(currency: Currency) -> UIViewController? {
         guard !(currency.state?.isRescanning ?? false) else {
             let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
@@ -366,19 +352,16 @@ class ModalPresenter : Subscriber, Trackable {
         return root
     }
 
-    private func makeReceiveView(currency: CurrencyDef, isRequestAmountVisible: Bool, isBTCLegacy: Bool = false) -> UIViewController? {
+    private func makeReceiveView(currency: Currency, isRequestAmountVisible: Bool, isBTCLegacy: Bool = false) -> UIViewController? {
         let receiveVC = ReceiveViewController(currency: currency, isRequestAmountVisible: isRequestAmountVisible, isBTCLegacy: isBTCLegacy)
         let root = ModalViewController(childViewController: receiveVC)
-        receiveVC.presentEmail = { [weak self, weak root] address, image in
-            guard let root = root, let uri = currency.addressURI(address) else { return }
-            self?.messagePresenter.presenter = root
-            self?.messagePresenter.presentMailCompose(uri: uri, image: image)
+        
+        receiveVC.shareAddress = { [weak self, weak root] address, qrCode in
+            guard let `self` = self, let root = root else { return }
+            self.messagePresenter.presenter = root
+            self.messagePresenter.presentShareSheet(text: address, image: qrCode)
         }
-        receiveVC.presentText = { [weak self, weak root] address, image in
-            guard let root = root, let uri = currency.addressURI(address) else { return }
-            self?.messagePresenter.presenter = root
-            self?.messagePresenter.presentMessageCompose(uri: uri, image: image)
-        }
+        
         return root
     }
 
@@ -396,9 +379,10 @@ class ModalPresenter : Subscriber, Trackable {
                 }
                 top.present(alert, animated: true, completion: nil)
                 
-            case .privateKey(_):
-                //TODO:QR support key import from universal scanner
-                break
+            case .privateKey:
+                if let walletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager {
+                    self.presentKeyImport(walletManager: walletManager, scanResult: scanResult)
+                }
                 
             case .deepLink(let url):
                 if let params = url.queryParameters,
@@ -484,7 +468,7 @@ class ModalPresenter : Subscriber, Trackable {
             // Display Currency
             MenuItem(title: S.Settings.currency, accessoryText: {
                 let code = Store.state.defaultCurrencyCode
-                let components: [String : String] = [NSLocale.Key.currencyCode.rawValue : code]
+                let components: [String : String] = [NSLocale.Key.currencyCode.rawValue: code]
                 let identifier = Locale.identifier(fromComponents: components)
                 return Locale(identifier: identifier).currencyCode ?? ""
             }, callback: {
@@ -552,7 +536,7 @@ class ModalPresenter : Subscriber, Trackable {
             // Paper key
             MenuItem(title: S.SecurityCenter.Cells.paperKeyTitle) { [unowned self] in
                 self.presentWritePaperKey(fromViewController: menuNav)
-            },
+            }
         ]
         
         var rootItems: [MenuItem] = [
@@ -572,7 +556,11 @@ class ModalPresenter : Subscriber, Trackable {
             MenuItem(title: S.Settings.preferences, icon: #imageLiteral(resourceName: "prefs"), subMenu: preferencesItems, rootNav: menuNav),
             
             // Security
-            MenuItem(title: S.MenuButton.security, icon: #imageLiteral(resourceName: "security"), subMenu: securityItems, rootNav: menuNav, faqButton: UIButton.buildFaqButton(articleId: ArticleIds.securityCenter)),
+            MenuItem(title: S.MenuButton.security,
+                     icon: #imageLiteral(resourceName: "security"),
+                     subMenu: securityItems,
+                     rootNav: menuNav,
+                     faqButton: UIButton.buildFaqButton(articleId: ArticleIds.securityCenter)),
             
             // Support
             MenuItem(title: S.MenuButton.support, icon: #imageLiteral(resourceName: "support")) { [unowned self] in
@@ -589,28 +577,97 @@ class ModalPresenter : Subscriber, Trackable {
             // About
             MenuItem(title: S.Settings.about, icon: #imageLiteral(resourceName: "about")) {
                 menuNav.pushViewController(AboutViewController(), animated: true)
-            },
+            }
         ]
-        
-        if E.isTestFlight || E.isDebug {
-            let debugItems: [MenuItem] = [
-                MenuItem(title: S.Settings.sendLogs) { [unowned self] in
-                    self.showEmailLogsModal()
-                },
-                MenuItem(title: "Unlink Wallet (no prompt)") { [unowned self] in
-                    self.wipeWalletNoPrompt()
-                }
-            ]
-            rootItems.append(contentsOf: debugItems)
+
+        // MARK: Developer/QA Menu
+        if E.isSimulator || E.isDebug || E.isTestFlight {
+            var developerItems = [MenuItem]()
+            
+            developerItems.append(MenuItem(title: S.Settings.sendLogs) { [unowned self] in
+                self.showEmailLogsModal()
+            })
+            
+            developerItems.append(MenuItem(title: "Unlink Wallet (no prompt)") { [unowned self] in
+                self.wipeWalletNoPrompt()
+            })
+            
+            if E.isDebug { // for dev/debugging use only
+                // For test wallets with a PIN of 111111, the PIN is auto entered on startup.
+                developerItems.append(MenuItem(title: "Auto-enter PIN",
+                                               accessoryText: { UserDefaults.debugShouldAutoEnterPIN ? "ON" : "OFF" },
+                                               callback: {
+                                                _ = UserDefaults.toggleAutoEnterPIN()
+                                                (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                }))
+            }
+            
+            // For test wallets, suppresses the paper key prompt on the home screen.
+            developerItems.append(MenuItem(title: "Suppress paper key prompt",
+                                           accessoryText: { UserDefaults.debugShouldSuppressPaperKeyPrompt ? "ON" : "OFF" },
+                                           callback: {
+                                            _ = UserDefaults.toggleSuppressPaperKeyPrompt()
+                                            (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+            }))
+            
+            // Shows a preview of the paper key.
+            if let paperKey = self.primaryWalletManager.seedPhrase(pin: "111111") {
+                let words = paperKey.components(separatedBy: " ")
+                let preview = "\(words[0]) \(words[1])..."
+                developerItems.append(MenuItem(title: "Paper key preview",
+                                               accessoryText: { UserDefaults.debugShouldShowPaperKeyPreview ? preview : "" },
+                                               callback: {
+                                                _ = UserDefaults.togglePaperKeyPreview()
+                                                (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                }))
+            }
+            
+            developerItems.append(MenuItem(title: "Reset User Defaults",
+                                           callback: {
+                                            UserDefaults.resetAll()
+                                            menuNav.showAlert(title: "", message: "User defaults reset")
+                                            (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+            }))
+            
+            developerItems.append(
+                MenuItem(title: "API Host",
+                         accessoryText: { Backend.apiClient.host }, callback: {
+                            let alert = UIAlertController(title: "Set API Host", message: nil, preferredStyle: .alert)
+                            alert.addTextField(configurationHandler: { textField in
+                                textField.text = Backend.apiClient.host
+                                textField.keyboardType = .URL
+                                textField.clearButtonMode = .always
+                            })
+
+                            alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { (_) in
+                                guard let newHost = alert.textFields?.first?.text else { return }
+                                let originalHost = Backend.apiClient.host
+                                Backend.apiClient.host = newHost
+                                Backend.apiClient.me(handler: { (success, _, _) in
+                                    if success {
+                                        (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                                    } else {
+                                        Backend.apiClient.host = originalHost
+                                    }
+                                })
+                            }))
+
+                            alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+
+                            menuNav.present(alert, animated: true, completion: nil)
+                }))
+            
+            rootItems.append(MenuItem(title: "Developer Options", icon: nil, subMenu: developerItems, rootNav: menuNav, faqButton: nil))
         }
         
-        let settings = MenuViewController(items: rootItems, title: S.Settings.title)
-        settings.addCloseNavigationItem(side: .right)
-        menuNav.viewControllers = [settings]
+        let rootMenu = MenuViewController(items: rootItems,
+                                          title: S.Settings.title)
+        rootMenu.addCloseNavigationItem(side: .right)
+        menuNav.viewControllers = [rootMenu]
         top.present(menuNav, animated: true, completion: nil)
     }
-
-    private func presentScan(parent: UIViewController, currency: CurrencyDef?) -> PresentScan {
+    
+    private func presentScan(parent: UIViewController, currency: Currency?) -> PresentScan {
         return { [weak parent] scanCompletion in
             guard ScanViewController.isCameraAllowed else {
                 self.saveEvent("scan.cameraDenied")
@@ -630,7 +687,7 @@ class ModalPresenter : Subscriber, Trackable {
     }
 
     private func pushBiometricsSpendingLimit(onNc: UINavigationController) {
-        let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: Store.state.pinLength, walletManager: primaryWalletManager, success: { pin in
+        let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: Store.state.pinLength, walletManager: primaryWalletManager, success: { _ in
             let spendingLimit = BiometricsSpendingLimitViewController(walletManager: self.primaryWalletManager)
             onNc.pushViewController(spendingLimit, animated: true)
         })
@@ -647,8 +704,12 @@ class ModalPresenter : Subscriber, Trackable {
         paperPhraseNavigationController.modalPresentationStyle = .overFullScreen
         let start = StartPaperPhraseViewController(callback: { [weak self] in
             guard let `self` = self else { return }
-            let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody, pinLength: Store.state.pinLength, walletManager: self.primaryWalletManager, success: { pin in
-                self.pushWritePaperPhrase(navigationController: paperPhraseNavigationController, pin: pin)
+            let verify = VerifyPinViewController(
+                bodyText: S.VerifyPin.continueBody,
+                pinLength: Store.state.pinLength,
+                walletManager: self.primaryWalletManager,
+                success: { pin in
+                    self.pushWritePaperPhrase(navigationController: paperPhraseNavigationController, pin: pin)
             })
             verify.transitioningDelegate = self.verifyPinTransitionDelegate
             verify.modalPresentationStyle = .overFullScreen
@@ -695,7 +756,7 @@ class ModalPresenter : Subscriber, Trackable {
         self.topViewController?.present(vc, animated: true, completion: nil)
     }
 
-    private func presentRescan(currency: CurrencyDef) {
+    private func presentRescan(currency: Currency) {
         let vc = ReScanViewController(currency: currency)
         let nc = UINavigationController(rootViewController: vc)
         nc.setClearNavbar()
@@ -756,7 +817,7 @@ class ModalPresenter : Subscriber, Trackable {
         topViewController?.present(nc, animated: true, completion: nil)
     }
 
-    //MARK: - Prompts
+    // MARK: - Prompts
     func presentBiometricsMenuItem() {
         let walletManager = primaryWalletManager
         let biometricsSettings = BiometricsSettingsViewController(walletManager: walletManager)
@@ -813,7 +874,7 @@ class ModalPresenter : Subscriber, Trackable {
                         //TODO:BCH
                         Store.perform(action: RootModalActions.Present(modal: .send(currency: Currencies.btc)))
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { //This is a hack because present has no callback
-                            let _ = attemptConfirmRequest()
+                            _ = attemptConfirmRequest()
                         })
                     })
                 }
@@ -841,7 +902,7 @@ class ModalPresenter : Subscriber, Trackable {
         }
     }
     
-    private func showAccountView(currency: CurrencyDef, animated: Bool, completion: (() -> Void)?) {
+    private func showAccountView(currency: Currency, animated: Bool, completion: (() -> Void)?) {
         let pushAccountView = {
             guard let nc = self.topViewController?.navigationController as? RootNavigationController,
                 nc.viewControllers.count == 1 else { return }
@@ -892,13 +953,16 @@ class ModalPresenter : Subscriber, Trackable {
         let alert = UIAlertController(title: S.URLHandling.addressListAlertTitle, message: S.URLHandling.addressListAlertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: S.URLHandling.copy, style: .default, handler: { [weak self] _ in
-            let verify = VerifyPinViewController(bodyText: S.URLHandling.addressListVerifyPrompt, pinLength: Store.state.pinLength, walletManager: walletManager, success: { [weak self] pin in
-                self?.copyAllAddressesToClipboard()
-                Store.perform(action: Alert.Show(.addressesCopied))
-                if let success = success, let url = URL(string: success) {
-                    UIApplication.shared.open(url)
-                }
-            })
+            let verify = VerifyPinViewController(
+                bodyText: S.URLHandling.addressListVerifyPrompt,
+                pinLength: Store.state.pinLength,
+                walletManager: walletManager) { [weak self] _ in
+                    self?.copyAllAddressesToClipboard()
+                    Store.perform(action: Alert.Show(.addressesCopied))
+                    if let success = success, let url = URL(string: success) {
+                        UIApplication.shared.open(url)
+                    }
+            }
             verify.transitioningDelegate = self?.verifyPinTransitionDelegate
             verify.modalPresentationStyle = .overFullScreen
             verify.modalPresentationCapturesStatusBarAppearance = true
@@ -937,7 +1001,7 @@ class ModalPresenter : Subscriber, Trackable {
         topViewController?.present(verify, animated: true, completion: nil)
     }
     
-    private func confirmTransaction(currency: CurrencyDef, amount: Amount, fee: Amount, address: String, callback: @escaping (Bool) -> Void) {
+    private func confirmTransaction(currency: Currency, amount: Amount, fee: Amount, address: String, callback: @escaping (Bool) -> Void) {
         let confirm = ConfirmationViewController(amount: amount,
                                                  fee: fee,
                                                  feeType: .regular,
@@ -1045,7 +1109,7 @@ class ModalPresenter : Subscriber, Trackable {
     }
 }
 
-class SecurityCenterNavigationDelegate : NSObject, UINavigationControllerDelegate {
+class SecurityCenterNavigationDelegate: NSObject, UINavigationControllerDelegate {
 
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
 

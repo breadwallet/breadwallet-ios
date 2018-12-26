@@ -22,6 +22,8 @@
 "AccessibilityLabels.faq" = "Centre d'assistance";
 /* Account balance */
 "Account.balance" = "Solde";
+/* Delisted token alert banner message */
+"Account.delistedToken" = "Ce jeton a été retiré de la liste car l'émetteur a décidé de cesser le support ERC20. \n\nVous pourrez peut-être encore envoyer ces jetons sur une autre plate-forme. Pour plus de détails, visitez notre page de support.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ par %2$@";
 /* Loading Wallet Message */
@@ -40,6 +42,8 @@
 "Alert.keystore.title.android" = "Erreur avec le KeyStore Android";
 /* No internet alert message */
 "Alert.noInternet" = "Aucune connexion Internet n'a été trouvée. Vérifiez votre connexion et réessayez.";
+/* General error message */
+"Alert.somethingWentWrong" = "Quelque chose a échoué. Veuillez s'il vous plaît réessayer.";
 /* Request timed out error message */
 "Alert.timedOut" = "Demande expirée. Vérifiez votre connexion et réessayez.";
 /* Warning alert title */
@@ -124,6 +128,8 @@
 "Button.ignore" = "Rejeter";
 /* menu button */
 "Button.menu" = "Menu";
+/* More information button */
+"Button.moreInfo" = "Plus d'informations";
 /* No button */
 "Button.no" = "Non";
 /* OK button label */
@@ -382,6 +388,18 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "type de signature non pris en charge";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "certificat non approuvé";
+/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.body" = "Soyez le premier/la première à recevoir des mises à jour importantes sur l'assistance et les produits";
+/* Placeholder text for an email address text field. */
+"Prompts.Email.placeholder" = "saisissez votre e-mail";
+/* Body text that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successBody" = "Vous vous êtes inscrit avec succès pour recevoir les mises à jour";
+/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
+"Prompts.Email.successFootnote" = "Nous apprécions votre soutien continu";
+/* Title that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successTitle" = "Merci !";
+/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.title" = "Tenez-vous au courant";
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "Touchez Continuer pour activer Face ID";
 /* Enable face ID prompt title */
@@ -524,6 +542,16 @@
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
 "SecurityCenter.touchIdTitle.android" = "Identification par empreinte digitale";
+/* Segwit enabled confirmation title */
+"Segwit.ConfirmationConfirmationTitle" = "Vous avez activé SegWit !";
+/* Segwit enabled confirmation description */
+"Segwit.ConfirmationInstructionsDescription" = "Merci de nous aider à faire progresser le bitcoin.";
+/* Segwit instructions */
+"Segwit.ConfirmationInstructionsInstructions" = "La prise en charge de SegWit est toujours une fonctionnalité bêta.\nUne fois que SegWit est activé, il ne sera plus possible de le désactiver. Vous trouverez l'adresse du patrimoine sous Paramètres. \nCertains services tiers, y compris l'échange de cryptomonnaies, peuvent ne pas être disponibles pour les utilisateurs qui ont activé SegWit. En cas d'urgence, vous pourrez créer une adresse de patrimoine depuis Préférences > Bitcoin > Paramètres . \nSegWit sera automatiquement activé pour tous les utilisateurs lors d'une future mise à jour.";
+/* Segwit extra confirmation title. */
+"Segwit.ConfirmChoiceLayout" = "L'activation de SegWit est une fonctionnalité irréversible. Êtes-vous sûr(e) de vouloir continuer ?";
+/* Segwit enableButton */
+"Segwit.Enable" = "Activer";
 /* Send money amount label */
 "Send.amountLabel" = "Montant";
 /* Balance: $4.00 */
@@ -586,6 +614,8 @@
 "Send.scanLabel" = "Scanner";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "Envoyer";
+/* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
+"Send.sendMaximum" = "Envoyer le montant maximum?";
 /* Send screen title (as in "this is the screen for sending money") */
 "Send.title" = "Envoyer";
 /* Send money to label */
@@ -610,6 +640,8 @@
 "Settings.currencySettings" = "Paramètres de devises";
 /* Join Early access label */
 "Settings.earlyAccess" = "Rejoignez l'accès anticipé";
+/* Enable segwit. */
+"Settings.EnableSegwit" = "Activer Segwit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "Vous aimez BRD ?";
 /* Face ID spending limit label */
@@ -638,6 +670,12 @@
 "Settings.touchIdLimit" = "Limite de dépenses avec le Touch ID";
 /* The fingerprint spending limit */
 "Settings.touchIdLimit.android" = "Limite de dépenses par identification avec empreinte digitale";
+/* View legacy address (old format). */
+"Settings.ViewLegacyAddress" = "Voir l'adresse de réception du patrimoine";
+/* Receive Bitcoin instructions */
+"Settings.ViewLegacyAddressReceiveDescription" = "N'envoyez de bitcoins (BTC) qu'à cette adresse. Tout autre actif envoyé à cette adresse sera définitivement perdu.";
+/* Receive Bitcoin */
+"Settings.ViewLegacyAddressReceiveTitle" = "Recevoir des bitcoins";
 /* Wallet Settings section header */
 "Settings.wallet" = "Portefeuille";
 /* Unlink/delete your wallet from the current device. */

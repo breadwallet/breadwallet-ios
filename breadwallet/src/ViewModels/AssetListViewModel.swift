@@ -9,7 +9,7 @@
 import Foundation
 
 struct AssetListViewModel {
-    let currency: CurrencyDef
+    let currency: Currency
     
     var exchangeRate: String {
         guard let rate = currency.state?.currentRate else { return "" }
