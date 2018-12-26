@@ -49,7 +49,7 @@ extension UIColor {
     static var orangeText: UIColor {
         return UIColor.fromHex("FA724D")
     }
-
+    
     static var newWhite: UIColor {
         return UIColor.fromHex("BDBDBD")
     }
@@ -204,6 +204,10 @@ extension UIColor {
         return UIColor(white: 1.0, alpha: 0.2)
     }
 
+    static var darkOpaqueButton: UIColor {
+        return UIColor(white: 1.0, alpha: 0.05)
+    }
+    
     static var blueGradientStart: UIColor {
         return UIColor(red: 99.0/255.0, green: 188.0/255.0, blue: 255.0/255.0, alpha: 1.0)
     }
@@ -274,6 +278,30 @@ extension UIColor {
     
     static var disabledCellBackground: UIColor {
         return UIColor.fromHex("190C2A")
+    }
+    
+    static var pageIndicatorDotBackground: UIColor {
+        return UIColor.fromHex("1F1E3D")
+    }
+    
+    static var pageIndicatorDot: UIColor {
+        return  UIColor.fromHex("027AFF")
+    }
+    
+    static var onboardingHeadingText: UIColor {
+        return .white
+    }
+    
+    static var onboardingSubheadingText: UIColor {
+        return UIColor.fromHex("8B89A1")
+    }
+    
+    static var onboardingSkipButtonTitle: UIColor {
+        return UIColor.fromHex("8B89A1")
+    }
+    
+    static var onboardingOrangeText: UIColor {
+        return UIColor.fromHex("EA8017")
     }
 }
 
