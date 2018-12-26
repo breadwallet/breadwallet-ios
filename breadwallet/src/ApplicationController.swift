@@ -27,6 +27,20 @@ class ApplicationController: Subscriber, Trackable {
         return walletManagers[Currencies.btc.code] as? BTCWalletManager
     }
     
+    var rootNavigationController: RootNavigationController? {
+        guard let root = window.rootViewController as? RootNavigationController else { return nil }
+        return root
+    }
+    
+    var homeScreenViewController: HomeScreenViewController? {
+        guard   let rootNavController = rootNavigationController,
+                let homeScreen = rootNavController.viewControllers.first as? HomeScreenViewController
+        else {
+                return nil
+        }
+        return homeScreen
+    }
+        
     private var kvStoreCoordinator: KVStoreCoordinator?
     fileprivate var application: UIApplication?
     private var urlController: URLController?
@@ -281,16 +295,22 @@ class ApplicationController: Subscriber, Trackable {
         addTokenCountChangeListener()
         Store.perform(action: PinLength.Set(primaryWalletManager.pinLength))
         rootViewController.walletManager = primaryWalletManager
+        
         if let homeScreen = rootViewController.viewControllers.first as? HomeScreenViewController {
             homeScreen.primaryWalletManager = primaryWalletManager
         }
+        
         hasPerformedWalletDependentInitialization = true
         if modalPresenter != nil {
             Store.unsubscribe(modalPresenter!)
         }
-        modalPresenter = ModalPresenter(primaryWalletManager: primaryWalletManager, walletManagers: walletManagers, window: window)
-        startFlowController = StartFlowPresenter(walletManager: primaryWalletManager, rootViewController: rootViewController)
 
+        modalPresenter = ModalPresenter(primaryWalletManager: primaryWalletManager, walletManagers: walletManagers, window: window)
+        startFlowController = StartFlowPresenter(walletManager: primaryWalletManager, 
+                                                 rootViewController: rootViewController,
+                                                 createHomeScreen: createHomeScreen,
+                                                 createBuyScreen: createBuyScreen)
+        
         defaultsUpdater = UserDefaultsUpdater(walletManager: primaryWalletManager)
         urlController = URLController(walletManager: primaryWalletManager)
         if let url = launchURL {
@@ -374,45 +394,77 @@ class ApplicationController: Subscriber, Trackable {
             UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffset(horizontal: -200, vertical: 0), for: .default)
         }
     }
-
-    private func setupRootViewController() {
-        let home = HomeScreenViewController(primaryWalletManager: walletManagers[Currencies.btc.code] as? BTCWalletManager)
-        let nc = RootNavigationController()
-        nc.pushViewController(home, animated: false)
+    
+    private func addHomeScreenHandlers(homeScreen: HomeScreenViewController, 
+                                       navigationController: UINavigationController) {
         
-        home.didSelectCurrency = { currency in
+        homeScreen.didSelectCurrency = { [unowned self] currency in
             guard let walletManager = self.walletManagers[currency.code] else { return }
             let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
-            nc.pushViewController(accountViewController, animated: true)
+            navigationController.pushViewController(accountViewController, animated: true)
         }
         
-        home.didTapBuy = {
+        homeScreen.didTapBuy = {
             Store.perform(action: RootModalActions.Present(modal: .buy(currency: nil)))
         }
         
-        home.didTapTrade = {
+        homeScreen.didTapTrade = {
             Store.perform(action: RootModalActions.Present(modal: .trade))
         }
         
-        home.didTapMenu = {
+        homeScreen.didTapMenu = {
             self.modalPresenter?.presentMenu()
         }
-
-        home.didTapAddWallet = {
+        
+        homeScreen.didTapAddWallet = {
             guard let kvStore = Backend.kvStore else { return }
             let vc = EditWalletsViewController(type: .add, kvStore: kvStore)
-            nc.pushViewController(vc, animated: true)
+            navigationController.pushViewController(vc, animated: true)
         }
+    }
+        
+    // Creates an instance of the buy screen. This may be invoked from the StartFlowPresenter if the user
+    // goes through onboarding and decides to buy coin right away.
+    private func createBuyScreen() -> BRWebViewController {
+        let buyScreen = BRWebViewController(bundleName: C.webBundle, 
+                                            mountPoint: "/buy",
+                                            walletManagers: walletManagers)
+        buyScreen.startServer()
+        buyScreen.preload()
 
-        //State restoration
-        if let currency = Store.state.currencies.first(where: { $0.code == UserDefaults.selectedCurrencyCode }),
-            let walletManager = self.walletManagers[currency.code],
-            primaryWalletManager?.noWallet == false {
-            let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
-            nc.pushViewController(accountViewController, animated: true)
+        return buyScreen
+    }
+    
+    // Creates an instance of the home screen. This may be invoked from StartFlowPresenter.presentOnboardingFlow().
+    private func createHomeScreen(navigationController: UINavigationController) -> HomeScreenViewController {
+        let homeScreen = HomeScreenViewController(primaryWalletManager: walletManagers[Currencies.btc.code] as? BTCWalletManager)
+                
+        addHomeScreenHandlers(homeScreen: homeScreen, navigationController: navigationController)
+        
+        return homeScreen
+    }
+    
+    private func setupRootViewController() {
+        let navigationController = RootNavigationController()
+                
+        // If we're going to show the onboarding screen, the home screen will be created later
+        // in StartFlowPresenter.presentOnboardingFlow(). Pushing the home screen here causes
+        // the home screen to appear briefly before the onboarding screen is pushed.
+        if !Store.state.shouldShowOnboarding {
+            let homeScreen = createHomeScreen(navigationController: navigationController)
+            
+            navigationController.pushViewController(homeScreen, animated: false)
+            
+            // State restoration
+            if let currency = Store.state.currencies.first(where: { $0.code == UserDefaults.selectedCurrencyCode }),
+                let walletManager = self.walletManagers[currency.code],
+                primaryWalletManager?.noWallet == false {
+                let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
+                navigationController.pushViewController(accountViewController, animated: true)
+            }
         }
-
-        window.rootViewController = nc
+                
+        window.rootViewController = navigationController
     }
 
     private func startDataFetchers() {

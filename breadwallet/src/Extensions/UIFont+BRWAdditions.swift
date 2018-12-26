@@ -29,6 +29,22 @@ extension UIFont {
         guard let font = UIFont(name: "CircularPro-Book", size: 15.0) else { return UIFont.preferredFont(forTextStyle: .body) }
         return font
     }
+    static func onboardingHeading() -> UIFont {
+        guard let font = UIFont(name: "CircularPro-Book", size: 24.0) else { return UIFont.preferredFont(forTextStyle: .headline) }
+        return font        
+    }
+    static func onboardingSmallHeading() -> UIFont {
+        guard let font = UIFont(name: "CircularPro-Book", size: 18.0) else { return UIFont.preferredFont(forTextStyle: .headline) }
+        return font        
+    }
+    static func onboardingSubheading() -> UIFont {
+        guard let font = UIFont(name: "CircularPro-Book", size: 14.0) else { return UIFont.preferredFont(forTextStyle: .body) }
+        return font                
+    }
+    static func onboardingSkipButton() -> UIFont {
+        guard let font = UIFont(name: "CircularPro-Book", size: 14.0) else { return UIFont.preferredFont(forTextStyle: .body) }
+        return font                
+    }
     static var regularAttributes: [NSAttributedStringKey: Any] {
         return [
             NSAttributedStringKey.font: UIFont.customBody(size: 14.0),

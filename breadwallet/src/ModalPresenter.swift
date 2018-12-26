@@ -165,6 +165,13 @@ class ModalPresenter: Subscriber, Trackable {
                 }
             })
         }
+        
+        Store.subscribe(self, name: .openPlatformUrl("")) { [unowned self] in
+            guard let trigger = $0 else { return }
+            if case let .openPlatformUrl(url) = trigger {
+                self.presentPlatformWebViewController(url)
+            }
+        }
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
@@ -398,6 +405,11 @@ class ModalPresenter: Subscriber, Trackable {
         }
     }
     
+    func presentOnboardingFlow() {
+        let onboardingVC = OnboardingViewController(didExitOnboarding: nil)
+        self.topViewController?.present(onboardingVC, animated: false, completion: nil)
+    }
+    
     // MARK: Settings
     func presentMenu() {
         guard let top = topViewController else { return }
@@ -574,6 +586,11 @@ class ModalPresenter: Subscriber, Trackable {
                 }
             },
             
+            // Rewards
+            MenuItem(title: S.Settings.rewards, icon: #imageLiteral(resourceName: "Star")) {
+                self.presentPlatformWebViewController("/rewards")
+            },
+            
             // About
             MenuItem(title: S.Settings.about, icon: #imageLiteral(resourceName: "about")) {
                 menuNav.pushViewController(AboutViewController(), animated: true)
@@ -621,6 +638,11 @@ class ModalPresenter: Subscriber, Trackable {
                                                 (menuNav.topViewController as? MenuViewController)?.reloadMenu()
                 }))
             }
+            
+            // Launches the new onboarding flow.
+            developerItems.append(MenuItem(title: "Launch New Onboarding Flow", callback: {
+                self.presentOnboardingFlow()
+            }))
             
             developerItems.append(MenuItem(title: "Reset User Defaults",
                                            callback: {

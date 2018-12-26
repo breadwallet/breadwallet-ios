@@ -9,7 +9,11 @@
 import Foundation
 
 private enum AppGroup {
+    #if Internal
+    static let id = "group.com.brd.internalQA"
+    #else
     static let id = "group.org.voisine.breadwallet"
+    #endif
     static let requestDataKey = "kBRSharedContainerDataWalletRequestDataKey"
     static let receiveAddressKey = "kBRSharedContainerDataWalletReceiveAddressKey"
 }

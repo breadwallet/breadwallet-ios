@@ -74,6 +74,7 @@ enum TriggerName {
     case linkWallet(WalletPairingRequest, Bool, PairingCompletionHandler) // request, accepted, callback
     case fetchInbox
     case optInSegWit
+    case openPlatformUrl(String)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName: Equatable {}
@@ -152,6 +153,8 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.optInSegWit, .optInSegWit):
         return true
+    case (.openPlatformUrl, .openPlatformUrl):
+        return true
     default:
         return false
     }
@@ -176,7 +179,7 @@ class Store {
     static var state: State {
         return shared.state
     }
-
+    
     static func subscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> Void) {
         Store.shared.subscribe(subscriber, selector: selector, callback: callback)
     }
