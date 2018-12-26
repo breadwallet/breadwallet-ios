@@ -25,6 +25,8 @@
 
 import Foundation
 
+// swiftlint:disable cyclomatic_complexity
+
 /// Provides KV Store access to the HTML5 platform
 @objc class BRKVStorePlugin: NSObject, BRHTTPRouterPlugin {
     let client: BRAPIClient
@@ -81,7 +83,7 @@ import Foundation
         // If you are retrieving a key that was replaced after having deleted it, you may have to instruct your client
         // to ignore its cache (using Pragma: no-cache and Cache-Control: no-cache headers)
         router.get("/_kv/(key)") { (request, match) -> BRHTTPResponse in
-            guard let key = match["key"] , key.count == 1 else {
+            guard let key = match["key"], key.count == 1 else {
                 print("[BRKVStorePlugin] missing key argument")
                 return BRHTTPResponse(request: request, code: 400)
             }
@@ -149,7 +151,7 @@ import Foundation
         // Successful response is a 204 no content with the ETag set to the new version and Last-Modified header
         // set to that version's date
         router.put("/_kv/(key)") { (request, match) -> BRHTTPResponse in
-            guard let key = match["key"] , key.count == 1 else {
+            guard let key = match["key"], key.count == 1 else {
                 print("[BRKVStorePlugin] missing key argument")
                 return BRHTTPResponse(request: request, code: 400)
             }
@@ -157,11 +159,11 @@ import Foundation
                 print("[BRKVStorePlugin] kv store is not yet set up on  client")
                 return BRHTTPResponse(request: request, code: 500)
             }
-            guard let ct = request.headers["content-type"] , ct.count == 1 && ct[0] == "application/json" else {
+            guard let ct = request.headers["content-type"], ct.count == 1 && ct[0] == "application/json" else {
                 print("[BRKVStorePlugin] can only set application/json request bodies")
                 return BRHTTPResponse(request: request, code: 400)
             }
-            guard let vs = request.headers["if-none-match"] , vs.count == 1 && Int(vs[0]) != nil else {
+            guard let vs = request.headers["if-none-match"], vs.count == 1 && Int(vs[0]) != nil else {
                 print("[BRKVStorePlugin] missing If-None-Match header, set to `0` if creating a new key")
                 return BRHTTPResponse(request: request, code: 400)
             }
@@ -199,7 +201,7 @@ import Foundation
         // Keys may not actually be removed from the database, and can be restored by PUTing a new version. This is
         // called a tombstone and is used to replicate deletes to other databases
         router.delete("/_kv/(key)") { (request, match) -> BRHTTPResponse in
-            guard let key = match["key"] , key.count == 1 else {
+            guard let key = match["key"], key.count == 1 else {
                 print("[BRKVStorePlugin] missing key argument")
                 return BRHTTPResponse(request: request, code: 400)
             }
@@ -207,7 +209,7 @@ import Foundation
                 print("[BRKVStorePlugin] kv store is not yet set up on  client")
                 return BRHTTPResponse(request: request, code: 500)
             }
-            guard let vs = request.headers["if-none-match"] , vs.count == 1 && Int(vs[0]) != nil else {
+            guard let vs = request.headers["if-none-match"], vs.count == 1 && Int(vs[0]) != nil else {
                 print("[BRKVStorePlugin] missing If-None-Match header")
                 return BRHTTPResponse(request: request, code: 400)
             }

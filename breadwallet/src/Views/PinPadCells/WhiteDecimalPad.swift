@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WhiteDecimalPad : GenericPinPadCell {
+class WhiteDecimalPad: GenericPinPadCell {
 
     override var style: PinPadStyle {
         get { return .white }

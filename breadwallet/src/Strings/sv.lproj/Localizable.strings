@@ -22,6 +22,8 @@
 "AccessibilityLabels.faq" = "Support Center";
 /* Account balance */
 "Account.balance" = "Saldo";
+/* Delisted token alert banner message */
+"Account.delistedToken" = "Denna token har avförts eftersom utfärdaren har beslutat att sluta stödja ERC20. \n\nDu kan eventuellt skicka dessa tokens till en annan plattform. Besök vår supportsida för mer information.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ per %2$@";
 /* Loading Wallet Message */
@@ -40,6 +42,8 @@
 "Alert.keystore.title.android" = "KeyStore-fel för Android";
 /* No internet alert message */
 "Alert.noInternet" = "Ingen anslutning till internet hittades. Kontrollera din anslutning och försök igen.";
+/* General error message */
+"Alert.somethingWentWrong" = "Något gick fel. Försök igen, tack. ";
 /* Request timed out error message */
 "Alert.timedOut" = "Begärde time-out. Kontrollera din anslutning och försök igen.";
 /* Warning alert title */
@@ -124,6 +128,8 @@
 "Button.ignore" = "Ignorera";
 /* menu button */
 "Button.menu" = "Meny";
+/* More information button */
+"Button.moreInfo" = "Mer info";
 /* No button */
 "Button.no" = "Nej";
 /* OK button label */
@@ -382,6 +388,18 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "signaturtypen saknar stöd";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "opålitligt certifikat";
+/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.body" = "Var först med att få viktiga support- och produktuppdateringar ";
+/* Placeholder text for an email address text field. */
+"Prompts.Email.placeholder" = "ange din e-post";
+/* Body text that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successBody" = "Du prenumererar nu på uppdateringar";
+/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
+"Prompts.Email.successFootnote" = "Vi uppskattar ditt fortsatta stöd";
+/* Title that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successTitle" = "Tack!";
+/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.title" = "Häng med i utvecklingen";
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "Klicka Fortsätt för att aktivera Face ID";
 /* Enable face ID prompt title */
@@ -524,6 +542,16 @@
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
 "SecurityCenter.touchIdTitle.android" = "Fingeravtrycksautentisering";
+/* Segwit enabled confirmation title */
+"Segwit.ConfirmationConfirmationTitle" = "Du aktiverade Segwit!";
+/* Segwit enabled confirmation description */
+"Segwit.ConfirmationInstructionsDescription" = "Tack för att du hjälper bitcoin framåt. ";
+/* Segwit instructions */
+"Segwit.ConfirmationInstructionsInstructions" = "Segwit-support är fortfarande på betastadiet. \nNär Segwit väl har aktiverats är det inte möjligt att avaktivera det. Du kan hitta den gamla adressen under Inställningar. \nVissa tredjepartstjänster, inklusive kryptohandel, kanske inte är tillgängliga för användare som har aktiverat Segwit. I nödfall har du möjlighet att skapa en gammal adress i Preferenser > Bitcoininställningar. \nSegwit kommer automatiskt att vara aktiverat för alla användare i en framtida uppdatering. ";
+/* Segwit extra confirmation title. */
+"Segwit.ConfirmChoiceLayout" = "En aktivering av Segwit är oåterkallelig. Är du säker på att du vill fortsätta?";
+/* Segwit enableButton */
+"Segwit.Enable" = "Aktivera";
 /* Send money amount label */
 "Send.amountLabel" = "Belopp";
 /* Balance: $4.00 */
@@ -586,6 +614,8 @@
 "Send.scanLabel" = "Läs av";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "Skicka";
+/* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
+"Send.sendMaximum" = "Skicka maxbeloppet?";
 /* Send screen title (as in "this is the screen for sending money") */
 "Send.title" = "Skicka";
 /* Send money to label */
@@ -610,6 +640,8 @@
 "Settings.currencySettings" = "Valutainställningar";
 /* Join Early access label */
 "Settings.earlyAccess" = "Använd Snabb tillgång";
+/* Enable segwit. */
+"Settings.EnableSegwit" = "Aktivera Segwit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "Gillar du BRD?";
 /* Face ID spending limit label */
@@ -638,6 +670,12 @@
 "Settings.touchIdLimit" = "Touch ID utnyttjandegräns";
 /* The fingerprint spending limit */
 "Settings.touchIdLimit.android" = "Maxbelopp med fingeravtrycksautentisering";
+/* View legacy address (old format). */
+"Settings.ViewLegacyAddress" = "Visa mottagaradress i gamla formatet";
+/* Receive Bitcoin instructions */
+"Settings.ViewLegacyAddressReceiveDescription" = "Skicka endast bitcoin (BTC) till denna adress. Alla andra tillgångar som skickas till denna adress går förlorade permanent.";
+/* Receive Bitcoin */
+"Settings.ViewLegacyAddressReceiveTitle" = "Erhåll bitcoin";
 /* Wallet Settings section header */
 "Settings.wallet" = "Plånbok";
 /* Unlink/delete your wallet from the current device. */

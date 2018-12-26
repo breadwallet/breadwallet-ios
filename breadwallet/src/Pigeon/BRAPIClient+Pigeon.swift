@@ -10,11 +10,11 @@ import Foundation
 import SwiftProtobuf
 import BRCore
 
-struct Inbox : Codable {
+struct Inbox: Codable {
     let entries: [InboxEntry]
 }
 
-struct InboxEntry : Codable {
+struct InboxEntry: Codable {
     let received_time: String
     let acknowledged: Bool
     let acknowledged_time: String
@@ -39,7 +39,7 @@ enum SendMessageResult {
     case error
 }
 
-struct ServiceDefinition : Codable {
+struct ServiceDefinition: Codable {
     let url: String
     let name: String
     let hash: String
@@ -51,8 +51,8 @@ struct ServiceDefinition : Codable {
     let capabilities: [ServiceCapability]
 }
 
-struct ServiceCapability : Codable {
-    struct ServiceScope : Codable {
+struct ServiceCapability: Codable {
+    struct ServiceScope: Codable {
         let name: String
         let description: String
     }
@@ -84,7 +84,7 @@ extension BRAPIClient {
             do {
                 let inbox = try JSONDecoder().decode(Inbox.self, from: data)
                 callback(.success(inbox.entries))
-            } catch (let error) {
+            } catch let error {
                 print("[EME] /inbox decoding error: \(error)")
                 callback(.error)
             }
@@ -97,7 +97,7 @@ extension BRAPIClient {
         req.httpBody = try? JSONEncoder().encode([cursor])
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.setValue("application/json", forHTTPHeaderField: "Accept")
-        dataTaskWithRequest(req, authenticated: true, handler: { data, response, error in
+        dataTaskWithRequest(req, authenticated: true, handler: { _, response, _ in
             print("[EME] ACK(\(cursor)) response: \(response?.statusCode ?? 0)")
         }).resume()
     }
@@ -116,7 +116,7 @@ extension BRAPIClient {
             }
             guard response.statusCode == 201 else {
                 print("[EME] /message status code: \(response.statusCode)")
-                if let data = data, data.count > 0 {
+                if let data = data, !data.isEmpty {
                     print("[EME] /message response: \(String(data: data, encoding: .utf8) ?? "")")
                     // TODO: decode and handle error response: err_too_many_unacknowledged_messages
                 }
@@ -132,7 +132,7 @@ extension BRAPIClient {
         req.httpMethod = "POST"
         req.httpBody = pubKey.base58.data(using: .utf8)
         req.setValue("text/plain", forHTTPHeaderField: "Content-Type")
-        dataTaskWithRequest(req, authenticated: true, handler: { data, response, error in
+        dataTaskWithRequest(req, authenticated: true, handler: { _, response, error in
             guard error == nil, let response = response else {
                 print("[EME] /associated-keys error: \(error?.localizedDescription ?? "nil repsonse")")
                 return callback(false)
@@ -148,7 +148,7 @@ extension BRAPIClient {
     func getAssociatedKeys() {
         var req = URLRequest(url: url("/me/associated-keys"))
         req.httpMethod = "GET"
-        dataTaskWithRequest(req, authenticated: true, handler: { data, response, error in
+        dataTaskWithRequest(req, authenticated: true, handler: { data, _, _ in
             guard let data = data else { return }
             print("[EME] associated-keys: \(String(data: data, encoding: .utf8) ?? ""))")
         }).resume()
@@ -158,7 +158,7 @@ extension BRAPIClient {
         var req = URLRequest(url: url("/external/service/\(serviceID)"))
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.setValue("application/json", forHTTPHeaderField: "Accept")
-        dataTaskWithRequest(req, authenticated: true, handler: { data, response, error in
+        dataTaskWithRequest(req, authenticated: true, handler: { data, _, _ in
             guard let data = data else { return callback(nil) }
             do {
                 let definition = try JSONDecoder().decode(ServiceDefinition.self, from: data)

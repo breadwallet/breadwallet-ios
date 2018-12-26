@@ -14,7 +14,7 @@ struct BtcTransaction: Transaction {
     
     // MARK: Transaction Properties
     
-    let currency: CurrencyDef
+    let currency: Currency
     let hash: String
     let status: TransactionStatus
     let direction: TransactionDirection

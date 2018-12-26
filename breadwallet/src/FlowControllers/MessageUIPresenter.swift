@@ -13,14 +13,15 @@ class MessageUIPresenter: NSObject, Trackable {
 
     weak var presenter: UIViewController?
 
-    func presentMailCompose(uri: String, image: UIImage) {
-        presentMailCompose(string: uri, image: image)
-    }
+    /** Allows the user to share a wallet address and QR code image using the iOS system share action sheet. */
+    func presentShareSheet(text: String, image: UIImage) {
+        let shareItems = [text, image] as [Any]
+        let shareVC = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
 
-    func presentMailCompose(bitcoinURL: String, image: UIImage) {
-        presentMailCompose(string: bitcoinURL, image: image)
+        shareVC.excludedActivityTypes = shareAddressExclusions
+        present(shareVC)
     }
-
+    
     func presentEmailLogs() {
         guard MFMailComposeViewController.canSendMail() else { showEmailUnavailableAlert(); return }
         guard let logData = try? Data(contentsOf: C.logFilePath) else { showErrorMessage(S.ErrorMessages.noLogsFound); return }
@@ -34,20 +35,7 @@ class MessageUIPresenter: NSObject, Trackable {
         emailView.mailComposeDelegate = self
         present(emailView)
     }
-
-    private func presentMailCompose(string: String, image: UIImage) {
-        guard MFMailComposeViewController.canSendMail() else { showEmailUnavailableAlert(); return }
-        originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
-        UINavigationBar.appearance().titleTextAttributes = nil
-        let emailView = MFMailComposeViewController()
-        emailView.setMessageBody(string, isHTML: false)
-        if let data = UIImagePNGRepresentation(image) {
-            emailView.addAttachmentData(data, mimeType: "image/png", fileName: "bitcoinqr.png")
-        }
-        emailView.mailComposeDelegate = self
-        present(emailView)
-    }
-
+    
     func presentFeedbackCompose() {
         guard MFMailComposeViewController.canSendMail() else { showEmailUnavailableAlert(); return }
         originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
@@ -69,29 +57,16 @@ class MessageUIPresenter: NSObject, Trackable {
         present(emailView)
     }
 
-    func presentMessageCompose(uri: String, image: UIImage) {
-        presentMessage(string: uri, image: image)
+    // MARK: - Private
+
+    // Filters out the sharing options that don't make sense for sharing a wallet
+    // address and QR code. `saveToCameraRoll` is excluded because it crashes
+    // without adding `NSPhotoLibraryAddUsageDescription` to the plist.
+    private var shareAddressExclusions: [UIActivityType] {
+        return [.airDrop, .openInIBooks, .addToReadingList, .saveToCameraRoll, .assignToContact]
     }
 
-    func presentMessageCompose(bitcoinURL: String, image: UIImage) {
-        presentMessage(string: bitcoinURL, image: image)
-    }
-
-    private func presentMessage(string: String, image: UIImage) {
-        guard MFMessageComposeViewController.canSendText() else { showMessageUnavailableAlert(); return }
-        originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
-        UINavigationBar.appearance().titleTextAttributes = nil
-        let textView = MFMessageComposeViewController()
-        textView.body = string
-        if let data = UIImagePNGRepresentation(image) {
-            textView.addAttachmentData(data, typeIdentifier: "public.image", filename: "bitcoinqr.png")
-        }
-        textView.messageComposeDelegate = self
-        saveEvent("receive.presentMessage")
-        present(textView)
-    }
-
-    fileprivate var originalTitleTextAttributes: [NSAttributedStringKey: Any]?
+    private var originalTitleTextAttributes: [NSAttributedStringKey: Any]?
 
     private func present(_ viewController: UIViewController) {
         presenter?.view.isFrameChangeBlocked = true

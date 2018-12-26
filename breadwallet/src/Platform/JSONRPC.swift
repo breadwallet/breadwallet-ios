@@ -24,9 +24,9 @@ public struct JSONRPCRequest: Encodable {
 // MARK: Request Params
 
 public struct JSONRPCParams: Encodable {
-    public var params = Array<Encodable>()
+    public var params = [Encodable]()
     
-    public init(_ params: Array<Encodable>) {
+    public init(_ params: [Encodable]) {
         self.params = params
     }
     
@@ -98,7 +98,7 @@ public enum JSONRPCError: Error {
     }
 }
 
-// MARK:
+// MARK: 
 
 public struct APIResponse<ResultType: Codable>: Decodable {
     public let status: String

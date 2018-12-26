@@ -9,12 +9,12 @@
 import UIKit
 
 struct MenuItem {
-    let title: String
+    var title: String
     let icon: UIImage?
     let accessoryText: (() -> String)?
     let callback: () -> Void
     let faqButton: UIButton? = nil
-    var shouldShow: ()->Bool = { return true }
+    var shouldShow: () -> Bool = { return true }
     
     init(title: String, icon: UIImage? = nil, accessoryText: (() -> String)? = nil, callback: @escaping () -> Void) {
         self.title = title

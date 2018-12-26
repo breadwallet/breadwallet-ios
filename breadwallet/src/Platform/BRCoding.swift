@@ -20,7 +20,6 @@ protocol BREncodable {
     static func decode(_ value: AnyObject) -> Self
 }
 
-
 // An object which can encode and decode values
 open class BRCoder {
     var data: [String: AnyObject]
@@ -50,7 +49,7 @@ protocol BRCoding {
 // A basic analogue of NSKeyedArchiver, except it uses JSON and uses
 open class BRKeyedArchiver {
     static func archivedDataWithRootObject(_ obj: BRCoding, compressed: Bool = true) -> Data {
-        let coder = BRCoder(data: [String : AnyObject]())
+        let coder = BRCoder(data: [String: AnyObject]())
         obj.encode(coder)
         do {
             let j = try JSONSerialization.data(withJSONObject: coder.data, options: [])
@@ -101,8 +100,8 @@ extension Date: BREncodable {
         return dateFromTimeIntervalSince1970(d)
     }
     
-    static func dateFromTimeIntervalSince1970<T>(_ d: Double) -> T {
-        return Date(timeIntervalSince1970: d) as! T
+    static func dateFromTimeIntervalSince1970(_ d: Double) -> Date {
+        return Date(timeIntervalSince1970: d)
     }
 }
 
@@ -148,7 +147,7 @@ extension String: BREncodable {
     }
 }
 
-extension Array : BREncodable {
+extension Array: BREncodable {
     func encode() -> AnyObject {
         return self as AnyObject
     }

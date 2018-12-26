@@ -34,7 +34,7 @@ class PaymentRequestTests : XCTestCase {
         let request = PaymentRequest(string: uri, currency: Currencies.bch)
         XCTAssertNotNil(request)
         XCTAssertTrue(request?.toAddress == "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u".bitcoinAddr)
-        XCTAssertTrue(request?.displayAddress == "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u")
+        XCTAssertTrue(request?.displayAddress == "qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u")
     }
 
     func testBasicExampleETH() {
@@ -67,7 +67,7 @@ class PaymentRequestTests : XCTestCase {
         let request = PaymentRequest(string: uri, currency: Currencies.bch)
         XCTAssertNotNil(request)
         XCTAssertTrue(request?.toAddress == "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u".bitcoinAddr)
-        XCTAssertTrue(request?.displayAddress == "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u")
+        XCTAssertTrue(request?.displayAddress == "qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u")
         XCTAssertTrue(request?.amount?.rawValue == 120000000)
     }
 
@@ -85,7 +85,7 @@ class PaymentRequestTests : XCTestCase {
         let uri = "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u?amount=1.2&message=Payment&label=Satoshi"
         let request = PaymentRequest(string: uri, currency: Currencies.bch)
         XCTAssertTrue(request?.toAddress == "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u".bitcoinAddr)
-        XCTAssertTrue(request?.displayAddress == "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u")
+        XCTAssertTrue(request?.displayAddress == "qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u")
         XCTAssertTrue(request?.amount?.rawValue == 120000000)
         XCTAssertTrue(request?.message == "Payment")
         XCTAssertTrue(request?.label == "Satoshi")

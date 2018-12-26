@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ShareDataViewController : UIViewController {
+class ShareDataViewController: UIViewController {
 
     private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .white)
     private let body = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)

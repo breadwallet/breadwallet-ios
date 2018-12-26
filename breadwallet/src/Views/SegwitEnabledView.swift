@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SegwitEnabledView : UIView {
+class SegwitEnabledView: UIView {
     
     private let primaryLabel = UILabel.wrapping(font: .customBody(size: 13.0), color: .white)
     private let secondaryLabel = UILabel.wrapping(font: .customBody(size: 11.0), color: .white)
@@ -38,7 +38,7 @@ class SegwitEnabledView : UIView {
             checkView.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[2]),
             checkView.centerXAnchor.constraint(equalTo: centerXAnchor),
             checkView.heightAnchor.constraint(equalToConstant: 96.0),
-            checkView.widthAnchor.constraint(equalToConstant: 96.0),])
+            checkView.widthAnchor.constraint(equalToConstant: 96.0) ])
         primaryLabel.constrain([
             primaryLabel.topAnchor.constraint(equalTo: checkView.bottomAnchor, constant: C.padding[2]),
             primaryLabel.centerXAnchor.constraint(equalTo: centerXAnchor)])

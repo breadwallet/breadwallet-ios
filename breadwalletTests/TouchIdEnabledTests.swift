@@ -35,7 +35,7 @@ class TouchIdEnabledTests : XCTestCase {
 
     func testTouchIdAction() {
         UserDefaults.isBiometricsEnabled = true
-        Store.perform(action: Biometrics.setIsEnabled(false))
+        Store.perform(action: Biometrics.SetIsEnabled(false))
         XCTAssertFalse(UserDefaults.isBiometricsEnabled, "Actions should persist new value")
     }
 

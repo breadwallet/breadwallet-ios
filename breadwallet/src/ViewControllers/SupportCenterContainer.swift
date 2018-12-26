@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SupportCenterContainer : UIViewController {
+class SupportCenterContainer: UIViewController {
 
     func navigate(to: String) {
         webView.navigate(to: to)
@@ -53,7 +53,7 @@ class SupportCenterContainer : UIViewController {
     }
 }
 
-extension SupportCenterContainer : UIViewControllerTransitioningDelegate {
+extension SupportCenterContainer: UIViewControllerTransitioningDelegate {
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return DismissSupportCenterAnimator()
     }
@@ -63,7 +63,7 @@ extension SupportCenterContainer : UIViewControllerTransitioningDelegate {
     }
 }
 
-class PresentSupportCenterAnimator : NSObject, UIViewControllerAnimatedTransitioning {
+class PresentSupportCenterAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.4
     }
@@ -82,7 +82,6 @@ class PresentSupportCenterAnimator : NSObject, UIViewControllerAnimatedTransitio
         toView.frame = toView.frame.offsetBy(dx: 0, dy: toView.frame.height)
         container.addSubview(toView)
 
-
         UIView.spring(duration, animations: {
             blur.effect = UIBlurEffect(style: .dark)
             toView.frame = finalToViewFrame
@@ -93,7 +92,7 @@ class PresentSupportCenterAnimator : NSObject, UIViewControllerAnimatedTransitio
     }
 }
 
-class DismissSupportCenterAnimator : NSObject, UIViewControllerAnimatedTransitioning {
+class DismissSupportCenterAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.4
     }
@@ -102,7 +101,8 @@ class DismissSupportCenterAnimator : NSObject, UIViewControllerAnimatedTransitio
         guard transitionContext.isAnimated else { return }
         let duration = transitionDuration(using: transitionContext)
         guard let fromView = transitionContext.view(forKey: .from) else { assert(false, "Missing from view"); return }
-        guard let fromViewController = transitionContext.viewController(forKey: .from) as? SupportCenterContainer else { assert(false, "Missing to view controller"); return }
+        guard let fromViewController = transitionContext.viewController(forKey: .from) as? SupportCenterContainer
+            else { assert(false, "Missing to view controller"); return }
         let originalFrame = fromView.frame
         UIView.animate(withDuration: duration, animations: {
             fromViewController.blur.effect = nil

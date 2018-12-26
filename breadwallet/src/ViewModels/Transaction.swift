@@ -23,7 +23,7 @@ enum TransactionStatus {
 
 /// Coin-agnostic transaction model wrapper
 protocol Transaction {
-    var currency: CurrencyDef { get }
+    var currency: Currency { get }
     var hash: String { get }
     var blockHeight: UInt64 { get }
     var confirmations: UInt64 { get }
@@ -78,18 +78,18 @@ protocol EthLikeTransaction: Transaction {
 
 extension Equatable where Self: Transaction {}
 
-func ==(lhs: Transaction, rhs: Transaction) -> Bool {
+func == (lhs: Transaction, rhs: Transaction) -> Bool {
     return lhs.hash == rhs.hash &&
         lhs.status == rhs.status &&
         lhs.comment == rhs.comment &&
         lhs.hasKvStore == rhs.hasKvStore
 }
 
-func ==(lhs: [Transaction], rhs: [Transaction]) -> Bool {
+func == (lhs: [Transaction], rhs: [Transaction]) -> Bool {
     return lhs.elementsEqual(rhs, by: ==)
 }
 
-func !=(lhs: [Transaction], rhs: [Transaction]) -> Bool {
+func != (lhs: [Transaction], rhs: [Transaction]) -> Bool {
     return !lhs.elementsEqual(rhs, by: ==)
 }
 
@@ -98,12 +98,10 @@ func !=(lhs: [Transaction], rhs: [Transaction]) -> Bool {
 /// Encapsulates the transaction metadata in the KV store
 class MetaDataContainer {
     var metaData: TxMetaData? {
-        get {
-            guard metaDataCache == nil else { return metaDataCache }
-            guard let data = TxMetaData(txKey: key, store: kvStore) else { return nil }
-            metaDataCache = data
-            return metaDataCache
-        }
+        guard metaDataCache == nil else { return metaDataCache }
+        guard let data = TxMetaData(txKey: key, store: kvStore) else { return nil }
+        metaDataCache = data
+        return metaDataCache
     }
     
     var kvStore: BRReplicatedKVStore
@@ -129,7 +127,7 @@ class MetaDataContainer {
                                  comment: comment,
                                  tokenTransfer: tokenTransfer)
         do {
-            let _ = try kvStore.set(newData)
+            _ = try kvStore.set(newData)
         } catch let error {
             print("could not update metadata: \(error)")
         }
@@ -139,7 +137,7 @@ class MetaDataContainer {
         if let metaData = metaData {
             metaData.comment = comment
             do {
-                let _ = try kvStore.set(metaData)
+                _ = try kvStore.set(metaData)
             } catch let error {
                 print("could not update metadata: \(error)")
             }

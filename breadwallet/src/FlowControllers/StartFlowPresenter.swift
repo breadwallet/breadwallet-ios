@@ -8,9 +8,9 @@
 
 import UIKit
 
-class StartFlowPresenter : Subscriber {
+class StartFlowPresenter: Subscriber {
 
-    //MARK: - Public
+    // MARK: - Public
     init(walletManager: BTCWalletManager, rootViewController: RootNavigationController) {
         self.walletManager = walletManager
         self.rootViewController = rootViewController
@@ -18,7 +18,7 @@ class StartFlowPresenter : Subscriber {
         addSubscriptions()
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private let rootViewController: RootNavigationController
     private var navigationController: ModalNavigationController?
     private let navigationControllerDelegate: StartNavigationDelegate
@@ -90,7 +90,9 @@ class StartFlowPresenter : Subscriber {
     private var pushRecoverWalletView: () -> Void {
         return { [weak self] in
             guard let myself = self else { return }
-            let recoverWalletViewController = EnterPhraseViewController(walletManager: myself.walletManager, reason: .setSeed(myself.pushPinCreationViewForRecoveredWallet))
+            let recoverWalletViewController =
+                EnterPhraseViewController(walletManager: myself.walletManager,
+                                          reason: .setSeed(myself.pushPinCreationViewForRecoveredWallet))
             myself.navigationController?.pushViewController(recoverWalletViewController, animated: true)
         }
     }

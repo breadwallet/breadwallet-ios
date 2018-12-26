@@ -26,6 +26,8 @@
 import Foundation
 import BRCore
 
+// swiftlint:disable cyclomatic_complexity
+
 // BIP70 payment protocol: https://github.com/bitcoin/bips/blob/master/bip-0070.mediawiki
 // bitpay json payment protocol: https://github.com/bitpay/jsonPaymentProtocol/blob/master/specification.md
 
@@ -38,8 +40,13 @@ class PaymentProtocolDetails {
         self.isManaged = false
     }
     
-    init?(network: String = "main", outputs: [BRTxOutput], time: UInt64, expires: UInt64, memo: String? = nil,
-          paymentURL: String? = nil, merchantData: [UInt8]? = nil) {
+    init?(network: String = "main",
+          outputs: [BRTxOutput],
+          time: UInt64,
+          expires: UInt64,
+          memo: String? = nil,
+          paymentURL: String? = nil,
+          merchantData: [UInt8]? = nil) {
         guard let cPtr = BRPaymentProtocolDetailsNew(network, outputs, outputs.count, time, expires, memo, paymentURL,
                                                      merchantData, merchantData?.count ?? 0) else { return nil }
         cPtr.pointee.outCount = outputs.count
@@ -90,7 +97,7 @@ class PaymentProtocolDetails {
         return String(cString: cPtr.pointee.paymentURL)
     }
 
-    var paymentId: String? = nil // the invoice ID, can be kept for records (bitpay)
+    var paymentId: String? // the invoice ID, can be kept for records (bitpay)
     
     var merchantData: [UInt8]? { // arbitrary data to include in the payment message, optional
         guard cPtr.pointee.merchantData != nil else { return nil }
@@ -133,7 +140,10 @@ class PaymentProtocolRequest {
         self.isManaged = false
     }
 
-    init?(version: UInt32 = 1, pkiType: String = "none", pkiData: [UInt8]? = nil, details: PaymentProtocolDetails,
+    init?(version: UInt32 = 1,
+          pkiType: String = "none",
+          pkiData: [UInt8]? = nil,
+          details: PaymentProtocolDetails,
           signature: [UInt8]? = nil) {
         guard details.isManaged else { return nil } // request must be able take over memory management of details
         self.details = details
@@ -162,7 +172,7 @@ class PaymentProtocolRequest {
         let outputs = req.outputs.map {
             BRTxOutput(req.currency == "BCH" ? $0.address.bitcoinAddr : $0.address, $0.amount)
         }
-        guard outputs.count > 0 && outputs[0].amount > 0 && outputs[0].scriptLen > 0 else { return nil }
+        guard !outputs.isEmpty && outputs[0].amount > 0 && outputs[0].scriptLen > 0 else { return nil }
         guard let details = PaymentProtocolDetails(network: req.network, outputs: outputs,
                                                    time: UInt64(req.time.timeIntervalSince1970),
                                                    expires: UInt64(req.expires.timeIntervalSince1970),
@@ -212,7 +222,7 @@ class PaymentProtocolRequest {
         while BRPaymentProtocolRequestCert(cPtr, nil, 0, idx) > 0 {
             certs.append([UInt8](repeating: 0, count: BRPaymentProtocolRequestCert(cPtr, nil, 0, idx)))
             BRPaymentProtocolRequestCert(cPtr, UnsafeMutablePointer(mutating: certs[idx]), certs[idx].count, idx)
-            idx = idx + 1
+            idx += 1
         }
         
         return certs
@@ -223,7 +233,7 @@ class PaymentProtocolRequest {
         BRPaymentProtocolRequestDigest(cPtr, UnsafeMutablePointer(mutating: digest), digest.count)
         return digest
     }
-    
+
     func isValid() -> Bool {
         defer { didValidate = true }
         
@@ -237,7 +247,7 @@ class PaymentProtocolRequest {
                 if let cert = SecCertificateCreateWithData(nil, Data(bytes: c) as CFData) { certs.append(cert) }
             }
             
-            if certs.count > 0 {
+            if !certs.isEmpty {
                 cName = SecCertificateCopySubjectSummary(certs[0]) as String?
             }
             
@@ -246,12 +256,12 @@ class PaymentProtocolRequest {
             
             // .unspecified indicates a positive result that wasn't decided by the user
             guard trustResult == .unspecified || trustResult == .proceed else {
-                errMsg = certs.count > 0 ? S.PaymentProtocol.Errors.untrustedCertificate : S.PaymentProtocol.Errors.missingCertificate
+                errMsg = certs.isEmpty ? S.PaymentProtocol.Errors.missingCertificate : S.PaymentProtocol.Errors.untrustedCertificate
                 
-                if let trust = trust, let properties = SecTrustCopyProperties(trust) {
-                    for prop in properties as! [Dictionary<AnyHashable, Any>] {
+                if let trust = trust, let properties = SecTrustCopyProperties(trust) as? [[AnyHashable: Any]] {
+                    for prop in properties {
                         if prop["type"] as? String != kSecPropertyTypeError as String { continue }
-                        errMsg = errMsg! + " - " + (prop["value"] as! String)
+                        errMsg = errMsg! + " - " + (prop["value"] as? String ?? "")
                         break
                     }
                 }
@@ -260,14 +270,13 @@ class PaymentProtocolRequest {
             }
 
             var status = errSecUnimplemented
-            var pubKey: SecKey? = nil
+            var pubKey: SecKey?
             if let trust = trust { pubKey = SecTrustCopyPublicKey(trust) }
             
             if let pubKey = pubKey, let signature = signature {
                 if pkiType == "x509+sha256" {
                     status = SecKeyRawVerify(pubKey, .PKCS1SHA256, digest, digest.count, signature, signature.count)
-                }
-                else if pkiType == "x509+sha1" {
+                } else if pkiType == "x509+sha1" {
                     status = SecKeyRawVerify(pubKey, .PKCS1SHA1, digest, digest.count, signature, signature.count)
                 }
             }
@@ -276,16 +285,14 @@ class PaymentProtocolRequest {
                 if status == errSecUnimplemented {
                     errMsg = S.PaymentProtocol.Errors.unsupportedSignatureType
                     print(errMsg!)
-                }
-                else {
+                } else {
                     errMsg = NSError(domain: NSOSStatusErrorDomain, code: Int(status)).localizedDescription
                     print("SecKeyRawVerify error: " + errMsg!)
                 }
                 
                 return false
             }
-        }
-        else if (self.certs.count > 0) { // non-standard extention to include an un-certified request name
+        } else if !self.certs.isEmpty { // non-standard extention to include an un-certified request name
             cName = String(data: Data(self.certs[0]), encoding: .utf8)
         }
         
@@ -336,7 +343,9 @@ class PaymentProtocolPayment {
         self.isManaged = false
     }
 
-    init?(merchantData: [UInt8]? = nil, transactions: [BRTxRef?], refundTo: [(address: String, amount: UInt64)],
+    init?(merchantData: [UInt8]? = nil,
+          transactions: [BRTxRef?],
+          refundTo: [(address: String, amount: UInt64)],
           memo: String? = nil) {
         var txRefs = transactions
         guard let cPtr = BRPaymentProtocolPaymentNew(merchantData, merchantData?.count ?? 0, &txRefs, txRefs.count,

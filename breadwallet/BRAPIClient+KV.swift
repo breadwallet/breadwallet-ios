@@ -8,33 +8,31 @@
 
 import Foundation
 
-fileprivate var kvKey: UInt8 = 0
+private var kvKey: UInt8 = 0
 
 extension BRAPIClient {
     var kv: BRReplicatedKVStore? {
-        get {
-            return lazyAssociatedObject(self, key: &kvKey) {
-                var kv: BRReplicatedKVStore?
-                if let key = self.authKey {
-                    kv = try? BRReplicatedKVStore(encryptionKey: key, remoteAdaptor: KVStoreAdaptor(client: self))
-                }
-                return kv
+        return lazyAssociatedObject(self, key: &kvKey) {
+            var kv: BRReplicatedKVStore?
+            if let key = self.authKey {
+                kv = try? BRReplicatedKVStore(encryptionKey: key, remoteAdaptor: KVStoreAdaptor(client: self))
             }
+            return kv
         }
     }
 }
 
-fileprivate class KVStoreAdaptor: BRRemoteKVStoreAdaptor {
+private class KVStoreAdaptor: BRRemoteKVStoreAdaptor {
     let client: BRAPIClient
     
     init(client: BRAPIClient) {
         self.client = client
     }
     
-    func ver(key: String, completionFunc: @escaping (UInt64, Date, BRRemoteKVStoreError?) -> ()) {
+    func ver(key: String, completionFunc: @escaping (UInt64, Date, BRRemoteKVStoreError?) -> Void) {
         var req = URLRequest(url: client.url("/kv/1/\(key)"))
         req.httpMethod = "HEAD"
-        client.dataTaskWithRequest(req, authenticated: true, retryCount: 0) { (dat, resp, err) in
+        client.dataTaskWithRequest(req, authenticated: true, retryCount: 0) { (_, resp, err) in
             if let err = err {
                 self.client.log("[KV] HEAD key=\(key) err=\(err)")
                 return completionFunc(0, Date(timeIntervalSince1970: 0), .unknown)
@@ -46,7 +44,7 @@ fileprivate class KVStoreAdaptor: BRRemoteKVStoreAdaptor {
         }.resume()
     }
     
-    func put(_ key: String, value: [UInt8], version: UInt64, completionFunc: @escaping (UInt64, Date, BRRemoteKVStoreError?) -> ()) {
+    func put(_ key: String, value: [UInt8], version: UInt64, completionFunc: @escaping (UInt64, Date, BRRemoteKVStoreError?) -> Void) {
         var req = URLRequest(url: client.url("/kv/1/\(key)"))
         req.httpMethod = "PUT"
         req.addValue("\(version)", forHTTPHeaderField: "If-None-Match")
@@ -54,7 +52,7 @@ fileprivate class KVStoreAdaptor: BRRemoteKVStoreAdaptor {
         req.addValue("\(value.count)", forHTTPHeaderField: "Content-Length")
         var val = value
         req.httpBody = Data(bytes: &val, count: value.count)
-        client.dataTaskWithRequest(req, authenticated: true, retryCount: 0) { (dat, resp, err) in
+        client.dataTaskWithRequest(req, authenticated: true, retryCount: 0) { (_, resp, err) in
             if let err = err {
                 self.client.log("[KV] PUT key=\(key) err=\(err)")
                 return completionFunc(0, Date(timeIntervalSince1970: 0), .unknown)
@@ -66,11 +64,11 @@ fileprivate class KVStoreAdaptor: BRRemoteKVStoreAdaptor {
         }.resume()
     }
     
-    func del(_ key: String, version: UInt64, completionFunc: @escaping (UInt64, Date, BRRemoteKVStoreError?) -> ()) {
+    func del(_ key: String, version: UInt64, completionFunc: @escaping (UInt64, Date, BRRemoteKVStoreError?) -> Void) {
         var req = URLRequest(url: client.url("/kv/1/\(key)"))
         req.httpMethod = "DELETE"
         req.addValue("\(version)", forHTTPHeaderField: "If-None-Match")
-        client.dataTaskWithRequest(req, authenticated: true, retryCount: 0) { (dat, resp, err) in
+        client.dataTaskWithRequest(req, authenticated: true, retryCount: 0) { (_, resp, err) in
             if let err = err {
                 self.client.log("[KV] DELETE key=\(key) err=\(err)")
                 return completionFunc(0, Date(timeIntervalSince1970: 0), .unknown)
@@ -82,7 +80,7 @@ fileprivate class KVStoreAdaptor: BRRemoteKVStoreAdaptor {
         }.resume()
     }
     
-    func get(_ key: String, version: UInt64, completionFunc: @escaping (UInt64, Date, [UInt8], BRRemoteKVStoreError?) -> ()) {
+    func get(_ key: String, version: UInt64, completionFunc: @escaping (UInt64, Date, [UInt8], BRRemoteKVStoreError?) -> Void) {
         var req = URLRequest(url: client.url("/kv/1/\(key)"))
         req.httpMethod = "GET"
         req.addValue("\(version)", forHTTPHeaderField: "If-None-Match")
@@ -101,7 +99,7 @@ fileprivate class KVStoreAdaptor: BRRemoteKVStoreAdaptor {
         }.resume()
     }
     
-    func keys(_ completionFunc: @escaping ([(String, UInt64, Date, BRRemoteKVStoreError?)], BRRemoteKVStoreError?) -> ()) {
+    func keys(_ completionFunc: @escaping ([(String, UInt64, Date, BRRemoteKVStoreError?)], BRRemoteKVStoreError?) -> Void) {
         var req = URLRequest(url: client.url("/kv/_all_keys"))
         req.httpMethod = "GET"
         client.dataTaskWithRequest(req as URLRequest, authenticated: true, retryCount: 0) { (dat, resp, err) in
@@ -109,7 +107,7 @@ fileprivate class KVStoreAdaptor: BRRemoteKVStoreAdaptor {
                 self.client.log("[KV] KEYS err=\(err)")
                 return completionFunc([], .unknown)
             }
-            guard let resp = resp, let dat = dat , resp.statusCode == 200 else {
+            guard let resp = resp, let dat = dat, resp.statusCode == 200 else {
                 return completionFunc([], .unknown)
             }
             

@@ -10,7 +10,7 @@ import UIKit
 
 class AssetListTableView: UITableViewController, Subscriber {
 
-    var didSelectCurrency: ((CurrencyDef) -> Void)?
+    var didSelectCurrency: ((Currency) -> Void)?
     var didTapAddWallet: (() -> Void)?
     
     private let assetHeight: CGFloat = 90.0
@@ -107,8 +107,10 @@ class AssetListTableView: UITableViewController, Subscriber {
         let currency = Store.state.displayCurrencies[indexPath.row]
         let viewModel = AssetListViewModel(currency: currency)
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: HomeScreenCell.cellIdentifier, for: indexPath) as! HomeScreenCell
-        cell.set(viewModel: viewModel)
+        let cell = tableView.dequeueReusableCell(withIdentifier: HomeScreenCell.cellIdentifier, for: indexPath)
+        if let cell = cell as? HomeScreenCell {
+            cell.set(viewModel: viewModel)
+        }
         return cell
     }
     

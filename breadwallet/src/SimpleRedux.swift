@@ -37,10 +37,10 @@ struct Trigger {
 }
 
 enum TriggerName {
-    case presentFaq(String, CurrencyDef?)
+    case presentFaq(String, Currency?)
     case registerForPushNotificationToken
-    case retrySync(CurrencyDef)
-    case rescan(CurrencyDef)
+    case retrySync(Currency)
+    case rescan(Currency)
     case lock
     case promptBiometrics
     case promptEmail
@@ -50,12 +50,12 @@ enum TriggerName {
     case blockModalDismissal
     case unblockModalDismissal
     case openFile(Data)
-    case automaticRescan(CurrencyDef)
+    case automaticRescan(Currency)
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
     case copyWalletAddresses(String?, String?)
     case authenticateForPlatform(String, Bool, (PlatformAuthResult)->Void) // (prompt, allowBiometricAuth, callback)
-    case confirmTransaction(CurrencyDef, Amount, Amount, String, (Bool)->Void) // currency, amount, fee, address, callback
+    case confirmTransaction(Currency, Amount, Amount, String, (Bool)->Void) // currency, amount, fee, address, callback
     case hideStatusBar
     case showStatusBar
     case lightWeightAlert(String)
@@ -68,7 +68,7 @@ enum TriggerName {
     case didWritePaperKey
     case wipeWalletNoPrompt
     case didUpdateFeatureFlags
-    case showCurrency(CurrencyDef)
+    case showCurrency(Currency)
     case resetDisplayCurrencies
     case promptLinkWallet(WalletPairingRequest)
     case linkWallet(WalletPairingRequest, Bool, PairingCompletionHandler) // request, accepted, callback
@@ -76,11 +76,11 @@ enum TriggerName {
     case optInSegWit
 } //NB : remember to add to triggers to == fuction below
 
-extension TriggerName : Equatable {}
+extension TriggerName: Equatable {}
 
-func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
+func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     switch (lhs, rhs) {
-    case (.presentFaq(_,_), .presentFaq(_,_)):
+    case (.presentFaq, .presentFaq):
         return true
     case (.registerForPushNotificationToken, .registerForPushNotificationToken):
         return true
@@ -102,35 +102,35 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.unblockModalDismissal, .unblockModalDismissal):
         return true
-    case (.openFile(_), .openFile(_)):
+    case (.openFile, .openFile):
         return true
     case (.automaticRescan(let lhsCurrency), .automaticRescan(let rhsCurrency)):
         return lhsCurrency.code == rhsCurrency.code
-    case (.receivedPaymentRequest(_), .receivedPaymentRequest(_)):
+    case (.receivedPaymentRequest, .receivedPaymentRequest):
         return true
     case (.scanQr, .scanQr):
         return true
-    case (.copyWalletAddresses(_,_), .copyWalletAddresses(_,_)):
+    case (.copyWalletAddresses, .copyWalletAddresses):
         return true
-    case (.authenticateForPlatform(_,_,_), .authenticateForPlatform(_,_,_)):
+    case (.authenticateForPlatform, .authenticateForPlatform):
         return true
-    case (.confirmTransaction(_,_,_,_,_), .confirmTransaction(_,_,_,_,_)):
+    case (.confirmTransaction, .confirmTransaction):
         return true
     case (.showStatusBar, .showStatusBar):
         return true
     case (.hideStatusBar, .hideStatusBar):
         return true
-    case (.lightWeightAlert(_), .lightWeightAlert(_)):
+    case (.lightWeightAlert, .lightWeightAlert):
         return true
     case (.didCreateOrRecoverWallet, .didCreateOrRecoverWallet):
         return true
-    case (.showAlert(_), .showAlert(_)):
+    case (.showAlert, .showAlert):
         return true
-    case (.reinitWalletManager(_), .reinitWalletManager(_)):
+    case (.reinitWalletManager, .reinitWalletManager):
         return true
     case (.didUpgradePin, .didUpgradePin):
         return true
-    case (.txMemoUpdated(_), .txMemoUpdated(_)):
+    case (.txMemoUpdated, .txMemoUpdated):
         return true
     case (.promptShareData, .promptShareData):
         return true
@@ -140,13 +140,13 @@ func ==(lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.didUpdateFeatureFlags, .didUpdateFeatureFlags):
         return true
-    case (.showCurrency(_), .showCurrency(_)):
+    case (.showCurrency, .showCurrency):
         return true
     case (.resetDisplayCurrencies, .resetDisplayCurrencies):
         return true
-    case (.promptLinkWallet(_), .promptLinkWallet(_)):
+    case (.promptLinkWallet, .promptLinkWallet):
         return true
-    case (.linkWallet(_,_,_), .linkWallet(_,_,_)):
+    case (.linkWallet, .linkWallet):
         return true
     case (.fetchInbox, .fetchInbox):
         return true
@@ -164,7 +164,7 @@ class Store {
     
     private var isClearingSubscriptions = false
 
-    //MARK: - Public
+    // MARK: - Public
     static func perform(action: Action) {
         Store.shared.perform(action: action)
     }
@@ -197,7 +197,7 @@ class Store {
         Store.shared.removeAllSubscriptions()
     }
 
-    //MARK: - Private
+    // MARK: - Private
     func perform(action: Action) {
         assert(Thread.isMainThread)
         state = action.reduce(state)
@@ -248,7 +248,7 @@ class Store {
         self.triggers.removeValue(forKey: subscriber.hashValue)
     }
 
-    //MARK: - Private
+    // MARK: - Private
     private(set) var state = State.initial {
         didSet {
             subscriptions

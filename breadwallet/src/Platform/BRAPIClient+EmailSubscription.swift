@@ -23,12 +23,12 @@ extension BRAPIClient {
         req.setValue("application/json", forHTTPHeaderField: "Accept")
         req.httpMethod = "POST"
                 
-        let json = ["email" : emailAddress]
+        let json = ["email": emailAddress]
         let data = try? JSONSerialization.data(withJSONObject: json, options: [])
         
         req.httpBody = data
         
-        dataTaskWithRequest(req, authenticated: true, handler: { data, response, error in
+        dataTaskWithRequest(req, authenticated: true, handler: { _, response, error in
             guard error == nil, let response = response else {
                 print("/mailing-list-subscribe error: \(error?.localizedDescription ?? "nil repsonse")")
                 return callback(false)

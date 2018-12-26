@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MenuCell : SeparatorCell {
+class MenuCell: SeparatorCell {
     
     static let cellIdentifier = "MenuCell"
     

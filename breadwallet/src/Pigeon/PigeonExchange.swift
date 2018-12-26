@@ -10,6 +10,9 @@ import Foundation
 import BRCore
 import UIKit
 
+// swiftlint:disable type_body_length
+// swiftlint:disable cyclomatic_complexity
+
 struct WalletPairingRequest {
     let publicKey: String
     let identifier: String
@@ -72,7 +75,7 @@ class PigeonExchange: Subscriber {
     }
     
     // MARK: - Pairing
-    
+
     private func acceptPairingRequest(_ pairingRequest: WalletPairingRequest, completionHandler: @escaping PairingCompletionHandler) {
         guard let authKey = apiClient.authKey,
             let walletID = Store.state.walletID,
@@ -93,9 +96,15 @@ class PigeonExchange: Subscriber {
         link.id = localIdentifier
         link.publicKey = localPubKey
         link.status = .accepted
-        guard let envelope = try? MessageEnvelope(to: remotePubKey, from: localPubKey, message: link, type: .link, service: pairingRequest.service, crypto: PigeonCrypto(privateKey: pairingKey)) else {
-            print("[EME] envelope construction failed!")
-            return completionHandler(.error(message: "envelope construction failed"))
+        guard let envelope = try? MessageEnvelope(to: remotePubKey,
+                                                  from: localPubKey,
+                                                  message: link,
+                                                  type: .link,
+                                                  service: pairingRequest.service,
+                                                  crypto: PigeonCrypto(privateKey: pairingKey))
+            else {
+                print("[EME] envelope construction failed!")
+                return completionHandler(.error(message: "envelope construction failed"))
         }
         
         print("[EME] initiate LINK! remote pubkey: \(remotePubKey.base58), local pubkey: \(localPubKey.base58)")
@@ -165,7 +174,7 @@ class PigeonExchange: Subscriber {
                                 return true
                         }
 
-                        guard linkEntries.count > 0 else {
+                        guard !linkEntries.isEmpty else {
                             if !timer.isValid {
                                 print("[EME] timed out waiting for link response. pairing aborted!")
                                 finish(.error(message: "timed out waiting for link response. pairing aborted!"))
@@ -186,7 +195,10 @@ class PigeonExchange: Subscriber {
                                 continue
                             }
                             
-                            let decryptedData = PigeonCrypto(privateKey: pairingKey).decrypt(envelope.encryptedMessage, nonce: envelope.nonce, senderPublicKey: envelope.senderPublicKey)
+                            let decryptedData = PigeonCrypto(privateKey: pairingKey)
+                                .decrypt(envelope.encryptedMessage,
+                                         nonce: envelope.nonce,
+                                         senderPublicKey: envelope.senderPublicKey)
                             guard let link = try? MessageLink(serializedData: decryptedData) else {
                                 print("[EME] failed to decode link message")
                                 continue
@@ -228,7 +240,12 @@ class PigeonExchange: Subscriber {
         var link = MessageLink()
         link.status = .rejected
         link.error = .userDenied
-        guard let envelope = try? MessageEnvelope(to: remotePubKey, from: pairingKey.publicKey, message: link, type: .link, service: pairingRequest.service, crypto: PigeonCrypto(privateKey: pairingKey)) else {
+        guard let envelope = try? MessageEnvelope(to: remotePubKey,
+                                                  from: pairingKey.publicKey,
+                                                  message: link,
+                                                  type: .link,
+                                                  service: pairingRequest.service,
+                                                  crypto: PigeonCrypto(privateKey: pairingKey)) else {
             print("[EME] envelope construction failed!")
             return completionHandler(.error(message: "envelope construction failed!"))
         }
@@ -281,7 +298,7 @@ class PigeonExchange: Subscriber {
     
     /// returns the cursor of the last processed entry
     private func processEntries(_ entries: [InboxEntry]) -> String? {
-        var lastCursor: String? = nil
+        var lastCursor: String?
         var hasSkippedEntry = false
         entries.unacknowledged.forEach { entry in
             guard let envelope = entry.envelope else {
@@ -391,8 +408,12 @@ class PigeonExchange: Subscriber {
             response.status = .rejected
         }
         
-        guard let envelope = try? MessageEnvelope(replyTo: requestEnvelope, message: response, type: .accountResponse, crypto: PigeonCrypto(privateKey: pairingKey)) else {
-            return print("[EME] envelope construction failed!")
+        guard let envelope = try? MessageEnvelope(replyTo: requestEnvelope,
+                                                  message: response,
+                                                  type: .accountResponse,
+                                                  crypto: PigeonCrypto(privateKey: pairingKey))
+            else {
+                return print("[EME] envelope construction failed!")
         }
         apiClient.sendMessage(envelope: envelope)
     }
@@ -428,13 +449,13 @@ class PigeonExchange: Subscriber {
                 response.scope = forRequest.scope
                 response.status = .accepted
                 response.transactionID = txHash ?? "unknown txHash"
-            case .creationError(_):
+            case .creationError:
                 response.status = .rejected
                 response.error = .transactionFailed
-            case .publishFailure(_):
+            case .publishFailure:
                 response.status = .rejected
                 response.error = .transactionFailed
-            case .insufficientGas(_):
+            case .insufficientGas:
                 response.status = .rejected
                 response.error = .transactionFailed
             }
@@ -443,8 +464,12 @@ class PigeonExchange: Subscriber {
             response.error = .userDenied
         }
         
-        guard let envelope = try? MessageEnvelope(replyTo: requestEnvelope, message: response, type: .paymentResponse, crypto: PigeonCrypto(privateKey: pairingKey)) else {
-            return print("[EME] envelope construction failed!")
+        guard let envelope = try? MessageEnvelope(replyTo: requestEnvelope,
+                                                  message: response,
+                                                  type: .paymentResponse,
+                                                  crypto: PigeonCrypto(privateKey: pairingKey))
+            else {
+                return print("[EME] envelope construction failed!")
         }
         apiClient.sendMessage(envelope: envelope)
     }
@@ -455,6 +480,7 @@ class PigeonExchange: Subscriber {
             return
         }
         var response = MessageCallResponse()
+        var responseTxHash: String?
         switch result {
         case .accepted(let sendResult):
             switch sendResult {
@@ -462,31 +488,14 @@ class PigeonExchange: Subscriber {
                 response.scope = request.scope
                 response.status = .accepted
                 response.transactionID = txHash ?? "unknown txHash"
-                let requestWrapper = MessageCallRequestWrapper(callRequest: request)
-                requestWrapper.getToken { [unowned self] token in
-                    guard let token = token else { return }
-                    self.addTokenWallet(token: token)
-                    // exchange rate is in the currency's common units
-                    var amountToReceive = ""
-                    if let rate = token.defaultRate {
-                        let formatter = Amount(amount: 0, currency: token).tokenFormat
-                        let value: Decimal = requestWrapper.purchaseAmount.tokenValue / Decimal(rate)
-                        amountToReceive = formatter.string(from: value as NSDecimalNumber) ?? ""
-                    }
-                    self.apiClient.sendCheckoutEvent(txHash: txHash ?? "",
-                                                     fromCurrency: request.scope,
-                                                     fromAddress: Store.state.wallets[request.scope]?.receiveAddress ?? "",
-                                                     fromAmount: requestWrapper.purchaseAmount.tokenFormattedValue,
-                                                     toCurrency: token.code,
-                                                     toAmount: amountToReceive)
-                }
-            case .creationError(_):
+                responseTxHash = txHash
+            case .creationError:
                 response.status = .rejected
                 response.error = .transactionFailed
-            case .publishFailure(_):
+            case .publishFailure:
                 response.status = .rejected
                 response.error = .transactionFailed
-            case .insufficientGas(_):
+            case .insufficientGas:
                 response.status = .rejected
                 response.error = .transactionFailed
             }
@@ -499,6 +508,33 @@ class PigeonExchange: Subscriber {
             return print("[EME] envelope construction failed!")
         }
         apiClient.sendMessage(envelope: envelope)
+
+        let requestWrapper = MessageCallRequestWrapper(callRequest: request)
+        requestWrapper.getToken { [unowned self] token in
+            var amountToReceive = ""
+            var tokenCode = ""
+            if let token = token {
+                self.addTokenWallet(token: token)
+                tokenCode = token.code
+                if let rate = token.defaultRate {
+                    // exchange rate is in the currency's common units
+                    let formatter = Amount(amount: 0, currency: token).tokenFormat
+                    let value: Decimal = requestWrapper.purchaseAmount.tokenValue / Decimal(rate)
+                    amountToReceive = formatter.string(from: value as NSDecimalNumber) ?? ""
+                }
+            }
+            self.apiClient.sendCheckoutEvent(status: response.status.rawValue,
+                                             identifier: requestEnvelope.identifier,
+                                             service: requestEnvelope.service,
+                                             fromCurrency: request.scope,
+                                             fromAddress: Store.state.wallets[request.scope]?.receiveAddress ?? "",
+                                             fromAmount: requestWrapper.purchaseAmount.tokenFormattedValue,
+                                             toCurrency: tokenCode,
+                                             toAmount: amountToReceive,
+                                             toAddress: request.address,
+                                             txHash: responseTxHash,
+                                             error: (response.status == .rejected ) ? response.error.rawValue : nil)
+        }
     }
     
     // MARK: - Ping
@@ -571,12 +607,12 @@ class PigeonExchange: Subscriber {
         let metaData = CurrencyListMetaData(kvStore: self.kvStore)!
         metaData.addTokenAddresses(addresses: [token.address])
         do {
-            let _ = try self.kvStore.set(metaData)
+            _ = try self.kvStore.set(metaData)
         } catch let error {
             print("error setting wallet info: \(error)")
         }
         DispatchQueue.main.async {
-            Store.perform(action: ManageWallets.addWallets(walletDict))
+            Store.perform(action: ManageWallets.AddWallets(walletDict))
         }
     }
 }

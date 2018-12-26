@@ -10,8 +10,9 @@ import Foundation
 import UIKit
 import WebKit
 
-@available(iOS 8.0, *)
-fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigationDelegate {
+// swiftlint:disable block_based_kvo
+
+private class BRBrowserViewControllerInternal: UIViewController, WKNavigationDelegate {
     var didMakePostRequest = false
     var request: URLRequest? {
         didSet {
@@ -134,8 +135,10 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
         webView.removeObserver(self, forKeyPath: "loading")
     }
     
-    open override func observeValue(forKeyPath keyPath: String?, of object: Any?,
-                                    change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    open override func observeValue(forKeyPath keyPath: String?,
+                                    of object: Any?,
+                                    change: [NSKeyValueChangeKey: Any]?,
+                                    context: UnsafeMutableRawPointer?) {
         guard let keyPath = keyPath else { return }
         switch keyPath {
         case "estimatedProgress":
@@ -176,9 +179,9 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
     func showLoading(_ isLoading: Bool) {
         print("[BRBrowserViewController] showLoading \(isLoading)")
         if isLoading {
-            self.toolbarView.items = [backButtonItem, forwardButtonItem, flexibleSpace, stopButtonItem];
+            self.toolbarView.items = [backButtonItem, forwardButtonItem, flexibleSpace, stopButtonItem]
         } else {
-            self.toolbarView.items = [backButtonItem, forwardButtonItem, flexibleSpace, refreshButtonItem];
+            self.toolbarView.items = [backButtonItem, forwardButtonItem, flexibleSpace, refreshButtonItem]
         }
     }
     
@@ -253,7 +256,8 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
         showError(error.localizedDescription)
     }
     
-    open func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!,
+    open func webView(_ webView: WKWebView,
+                      didFailProvisionalNavigation navigation: WKNavigation!,
                       withError error: Error) {
         print("[BRBrowserViewController] webView didFailProvisionalNavigation navigation = \(String(describing: navigation)) error = \(error)")
         showLoading(false)
@@ -272,7 +276,8 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
         return false
     }
     
-    open func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+    open func webView(_ webView: WKWebView,
+                      decidePolicyFor navigationAction: WKNavigationAction,
                       decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if closeOnURLsMatch(navigationAction.request.url) {
             if let onClose = onClose { onClose() }
@@ -345,4 +350,3 @@ open class BRBrowserViewController: UINavigationController {
         super.dismiss(animated: flag, completion: completion)
     }
 }
-

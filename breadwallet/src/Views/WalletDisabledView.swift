@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WalletDisabledView : UIView {
+class WalletDisabledView: UIView {
 
     func setTimeLabel(string: String) {
         label.text = string

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AboutCell : UIView {
+class AboutCell: UIView {
 
     let button: UIButton
 
