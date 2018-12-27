@@ -49,6 +49,7 @@ class ApplicationController: Subscriber, Trackable {
     private var launchURL: URL?
     private var hasPerformedWalletDependentInitialization = false
     private var didInitWallet = false
+    private var rescanNeeded: [Currency]?
     private let notificationHandler = NotificationHandler()
     private var isReachable = true {
         didSet {
@@ -57,11 +58,24 @@ class ApplicationController: Subscriber, Trackable {
             }
         }
     }
+
     // MARK: -
 
     init() {
         isReachable = Reachability.isReachable
         guardProtected(queue: DispatchQueue.walletQueue) {
+
+            self.rescanNeeded = []
+            // queue auomatic rescan attempt triggered by db load to execute after wallet coordinator is started
+            Store.subscribe(self, name: .automaticRescan(Currencies.btc), callback: { [unowned self] in
+                if case .automaticRescan(let currency)? = $0 {
+                    guard let rescanNeeded = self.rescanNeeded else { return }
+                    if !rescanNeeded.contains(where: { $0.matches(currency) }) {
+                        self.rescanNeeded!.append(currency)
+                    }
+                }
+            })
+
             if UserDefaults.hasBchConnected {
                 self.initWallets(completion: self.didAttemptInitWallet)
             } else {
@@ -74,6 +88,7 @@ class ApplicationController: Subscriber, Trackable {
     private func initWalletsWithMigration(completion: @escaping () -> Void) {
         let btc = Currencies.btc
         let bch = Currencies.bch
+
         guard let btcWalletManager = try? BTCWalletManager(currency: btc, dbPath: btc.dbPath) else { return }
         walletManagers[btc.code] = btcWalletManager
         btcWalletManager.initWallet { [unowned self] success in
@@ -311,6 +326,16 @@ class ApplicationController: Subscriber, Trackable {
                 self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
             }
             startDataFetchers()
+
+            if let rescanNeeded = rescanNeeded {
+                for currency in rescanNeeded {
+                    // wait for peer manager to connect
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                        Store.trigger(name: .automaticRescan(currency))
+                    }
+                }
+            }
+            rescanNeeded = nil
         }
     }
     
