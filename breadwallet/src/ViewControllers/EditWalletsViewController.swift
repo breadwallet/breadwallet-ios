@@ -160,8 +160,9 @@ class EditWalletsViewController: UIViewController, Subscriber {
     }
 
     private func setAddModel(storedCurrencies: [ERC20Token]) {
+        // For adding wallets, filter out the ones that have already been added.
         wallets = storedCurrencies
-            .filter { !self.metaData.previouslyAddedTokenAddresses.contains($0.address) }
+            .filter { !self.metaData.isAddressAlreadyAdded(address: $0.address) }
             .map { Wallet(currency: $0, isHidden: true) }
         allWallets = wallets
     }
