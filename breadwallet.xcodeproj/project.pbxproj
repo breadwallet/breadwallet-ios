@@ -486,6 +486,9 @@
 		CEF3E8341DE57166007C0A9E /* AnimatableIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8331DE57166007C0A9E /* AnimatableIcon.swift */; };
 		CEF3E8361DE60222007C0A9E /* ModalNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E8351DE60222007C0A9E /* ModalNavigationController.swift */; };
 		CEF61B121ECF52C700C7EA6A /* AmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF61B111ECF52C700C7EA6A /* AmountViewController.swift */; };
+		E821D4CA21C16A8300B0907B /* AnalyticsEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E821D4C921C16A8300B0907B /* AnalyticsEventTests.swift */; };
+		E821D4CC21C16B2E00B0907B /* BRAnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E821D4CB21C16B2E00B0907B /* BRAnalyticsEvent.swift */; };
+		E821D4CD21C16B2E00B0907B /* BRAnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E821D4CB21C16B2E00B0907B /* BRAnalyticsEvent.swift */; };
 		E837FD00219D1C0600F59D99 /* onboarding-video-globe.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E837FCFC219D1C0600F59D99 /* onboarding-video-globe.mp4 */; };
 		E837FD01219D1C0600F59D99 /* onboarding-video-coins-out.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E837FCFD219D1C0600F59D99 /* onboarding-video-coins-out.mp4 */; };
 		E837FD02219D1C0600F59D99 /* onboarding-video-coins-in.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = E837FCFE219D1C0600F59D99 /* onboarding-video-coins-in.mp4 */; };
@@ -1687,6 +1690,8 @@
 		CEF3E8331DE57166007C0A9E /* AnimatableIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnimatableIcon.swift; path = src/Views/AnimatedIcons/AnimatableIcon.swift; sourceTree = "<group>"; };
 		CEF3E8351DE60222007C0A9E /* ModalNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModalNavigationController.swift; path = src/ViewControllers/ModalNavigationController.swift; sourceTree = "<group>"; };
 		CEF61B111ECF52C700C7EA6A /* AmountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = AmountViewController.swift; path = src/ViewControllers/AmountViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		E821D4C921C16A8300B0907B /* AnalyticsEventTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsEventTests.swift; sourceTree = "<group>"; };
+		E821D4CB21C16B2E00B0907B /* BRAnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BRAnalyticsEvent.swift; path = src/Platform/BRAnalyticsEvent.swift; sourceTree = "<group>"; };
 		E837FCFC219D1C0600F59D99 /* onboarding-video-globe.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = "onboarding-video-globe.mp4"; path = "Resources/onboarding-videos/onboarding-video-globe.mp4"; sourceTree = "<group>"; };
 		E837FCFD219D1C0600F59D99 /* onboarding-video-coins-out.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = "onboarding-video-coins-out.mp4"; path = "Resources/onboarding-videos/onboarding-video-coins-out.mp4"; sourceTree = "<group>"; };
 		E837FCFE219D1C0600F59D99 /* onboarding-video-coins-in.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = "onboarding-video-coins-in.mp4"; path = "Resources/onboarding-videos/onboarding-video-coins-in.mp4"; sourceTree = "<group>"; };
@@ -1815,6 +1820,7 @@
 				7C67B6352056FB13006487BE /* BRAPIClient+Ethereum.swift */,
 				7C67B6372056FBFA006487BE /* JSONRPC.swift */,
 				E89C0612216D79550012CE0D /* BRAPIClient+EmailSubscription.swift */,
+				E821D4CB21C16B2E00B0907B /* BRAnalyticsEvent.swift */,
 			);
 			name = Platform;
 			sourceTree = "<group>";
@@ -2752,6 +2758,7 @@
 		75A2A7A71DA5934300A983D8 /* breadwalletTests */ = {
 			isa = PBXGroup;
 			children = (
+				E821D4C921C16A8300B0907B /* AnalyticsEventTests.swift */,
 				75A2A7AA1DA5934300A983D8 /* Info.plist */,
 				CEC7F929208803FA0083DF64 /* CurrencyMetaDataTests.swift */,
 				CEEC70971E96BF8800EF788E /* DefaultCurrencyTests.swift */,
@@ -4192,6 +4199,7 @@
 				CEDB09331FEAA21C001AF56A /* TxDetailViewModel.swift in Sources */,
 				CEE20C361EA5B4620086F724 /* Constants.swift in Sources */,
 				CE65C663207B023F000C99C4 /* EditWalletsViewController.swift in Sources */,
+				E821D4CC21C16B2E00B0907B /* BRAnalyticsEvent.swift in Sources */,
 				CEEC707F1E8D6B4100EF788E /* MenuViewController.swift in Sources */,
 				CEEE92F11EBA7CBA00B7AC9C /* RequestAmountViewController.swift in Sources */,
 				CE8CD8DF1E2E825100785E02 /* VerifyPinViewController.swift in Sources */,
@@ -4310,6 +4318,7 @@
 				22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */,
 				CEDD8F101E575DD4007A4123 /* WalletAuthenticationTests.swift in Sources */,
 				CEC7F92A208803FA0083DF64 /* CurrencyMetaDataTests.swift in Sources */,
+				E821D4CD21C16B2E00B0907B /* BRAnalyticsEvent.swift in Sources */,
 				7CB3BCD52059B62200053687 /* UnitConversionTests.swift in Sources */,
 				CEF3D2D71E8AB9980070178E /* SpendingLimitTests.swift in Sources */,
 				22C431321DF89DDC0017CAEA /* NSDataExtensionTests.swift in Sources */,
@@ -4322,6 +4331,7 @@
 				CEEC70981E96BF8800EF788E /* DefaultCurrencyTests.swift in Sources */,
 				22C4312A1DF89D0A0017CAEA /* BRTarTests.swift in Sources */,
 				7C67B63A2057180E006487BE /* JSONRPCTests.swift in Sources */,
+				E821D4CA21C16A8300B0907B /* AnalyticsEventTests.swift in Sources */,
 				22C4312C1DF89D700017CAEA /* BRBSPatchTests.swift in Sources */,
 				CEE218BB21026BAB00399231 /* PigeonTest.swift in Sources */,
 				CEA7E6761F057D77001F8C27 /* WalletInfoTest.swift in Sources */,
