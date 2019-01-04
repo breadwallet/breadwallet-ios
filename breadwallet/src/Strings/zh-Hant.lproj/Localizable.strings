@@ -152,6 +152,8 @@
 "Confirmation.amountLabel" = "寄送金額：";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "網絡費：";
+/* Network Fee: (ETH) */
+"Confirmation.feeLabelETH" = "網路費用（ETH）:";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "處理時間：該筆交易預計在 %1$@ 後完成。";
 /* Label for "send" button on final confirmation screen */
@@ -576,6 +578,8 @@
 "Segwit.ConfirmChoiceLayout" = "啟用 SegWit 是不可逆轉的功能。確定要繼續嗎？";
 /* Segwit enableButton */
 "Segwit.Enable" = "啟用";
+/* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
+"Segwit.HomeButton" = "到月球";
 /* Send money amount label */
 "Send.amountLabel" = "金額";
 /* Balance: $4.00 */
@@ -684,6 +688,8 @@
 "Settings.resetCurrencies" = "重設為預設貨幣";
 /* Leave review button label */
 "Settings.review" = "為我們撰寫評論";
+/* Rewards menu item */
+"Settings.rewards" = "獎勵";
 /* Share anonymous data label */
 "Settings.shareData" = "分享匿名資料";
 /* Sync blockchain label */
