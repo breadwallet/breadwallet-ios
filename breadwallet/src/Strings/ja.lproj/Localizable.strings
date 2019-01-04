@@ -152,6 +152,8 @@
 "Confirmation.amountLabel" = "送る金額：";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "ネットワーク手数料：";
+/* Network Fee: (ETH) */
+"Confirmation.feeLabelETH" = "ネットワーク料金（ETH）:";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "処理時間: この取引は%1$@で完了する見込みです。";
 /* Label for "send" button on final confirmation screen */
@@ -576,6 +578,8 @@
 "Segwit.ConfirmChoiceLayout" = "「SegWitの有効化」は取り消しできない機能です。継続してよろしいですか？";
 /* Segwit enableButton */
 "Segwit.Enable" = "有効化する";
+/* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
+"Segwit.HomeButton" = "月へ";
 /* Send money amount label */
 "Send.amountLabel" = "金額";
 /* Balance: $4.00 */
@@ -684,6 +688,8 @@
 "Settings.resetCurrencies" = "デフォルトの通貨に戻す";
 /* Leave review button label */
 "Settings.review" = "レビューを書く";
+/* Rewards menu item */
+"Settings.rewards" = "リワード";
 /* Share anonymous data label */
 "Settings.shareData" = "匿名データをシェアする";
 /* Sync blockchain label */
