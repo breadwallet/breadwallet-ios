@@ -570,6 +570,14 @@ extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
     }
 }
 
+extension Array {
+    func chunked(by chunkSize: Int) -> [[Element]] {
+        return stride(from: 0, to: count, by: chunkSize).map {
+            Array(self[$0..<Swift.min($0 + chunkSize, count)])
+        }
+    }
+}
+
 //  Bases32 Encoding provided by:
 //  https://github.com/mattrubin/Bases
 //  Commit: 6b780caed18179a598ba574ce12e75674d6f4f1f
