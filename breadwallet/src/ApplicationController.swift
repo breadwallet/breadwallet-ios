@@ -291,8 +291,9 @@ class ApplicationController: Subscriber, Trackable {
                 }
             }
         }
-        
-        addTokenCountChangeListener()
+
+        initTokenWallets()
+        addTokenListChangeListener()
         Store.perform(action: PinLength.Set(primaryWalletManager.pinLength))
         rootViewController.walletManager = primaryWalletManager
         
@@ -655,8 +656,8 @@ class ApplicationController: Subscriber, Trackable {
         })
     }
 
-    private func addTokenCountChangeListener() {
-        Store.subscribe(self, selector: {
+    private func addTokenListChangeListener() {
+        Store.lazySubscribe(self, selector: {
             let oldTokens = Set($0.currencies.compactMap { ($0 as? ERC20Token)?.address })
             let newTokens = Set($1.currencies.compactMap { ($0 as? ERC20Token)?.address })
             return oldTokens != newTokens
