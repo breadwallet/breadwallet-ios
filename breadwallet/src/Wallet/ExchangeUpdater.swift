@@ -11,6 +11,8 @@ import Foundation
 class ExchangeUpdater: Subscriber {
 
     let currencies: [Currency]
+    var lastUpdate = Date.distantPast
+    let requestThrottleSeconds: TimeInterval = 5.0
     
     // MARK: - Public
     init(currencies: [Currency]) {
@@ -26,6 +28,9 @@ class ExchangeUpdater: Subscriber {
     }
 
     func refresh(completion: @escaping () -> Void) {
+        guard Date().timeIntervalSince(lastUpdate) > requestThrottleSeconds else { return }
+        lastUpdate = Date()
+        
         // get btc/fiat rates
         Backend.apiClient.exchangeRates(currencyCode: Currencies.btc.code) { [weak self] result in
             guard let `self` = self,
@@ -34,10 +39,11 @@ class ExchangeUpdater: Subscriber {
             Store.perform(action: WalletChange(Currencies.btc).setExchangeRates(currentRate: self.findCurrentRate(rates: btcFiatRates), rates: btcFiatRates))
             
             // get token/btc rates
-            Backend.apiClient.tokenExchangeRates { [weak self] result in
+            let tokens = Store.state.currencies.filter { !$0.matches(Currencies.btc) }
+            Backend.apiClient.tokenExchangeRates(tokens: tokens) { [weak self] result in
                 guard let `self` = self,
                     case .success(let tokenBtcRates) = result else { return }
-                
+
                 // calculate token/fiat rates
                 var tokenBtcDict = [String: Double]()
                 tokenBtcRates.forEach { tokenBtcDict[$0.reciprocalCode] = $0.rate }
