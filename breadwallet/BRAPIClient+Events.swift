@@ -49,9 +49,7 @@ extension BRAPIClient {
 }
 
 class EventManager {
-    
-    typealias Attributes = [String: String]
-    
+        
     fileprivate static let eventNotification = Notification.Name("__saveEvent__")
     fileprivate static let eventNameKey = "__event_name__"
     fileprivate static let eventAttributesKey = "__event_attributes__"
@@ -64,25 +62,11 @@ class EventManager {
         "foreground": .UIApplicationDidBecomeActive,
         "background": .UIApplicationDidEnterBackground
     ]
-    private var buffer = [Event]()
+    private var buffer = [BRAnalyticsEvent]()
     private let adaptor: BRAPIAdaptor
 
     private var notificationObservers = [String: NSObjectProtocol]()
-    
-    struct Event {
-        let sessionId: String
-        let time: TimeInterval
-        let eventName: String
-        let attributes: Attributes
         
-        var dictionary: [String: Any] {
-            return [ "sessionId": sessionId,
-                     "time": Int(time),
-                     "eventName": eventName,
-                     "metadata": attributes.map({ [$0: $1] }) ]
-        }
-    }
-    
     init(adaptor: BRAPIAdaptor) {
         self.adaptor = adaptor
         queue.maxConcurrentOperationCount = 1
@@ -153,7 +137,7 @@ class EventManager {
         queue.addOperation { [weak self] in
             guard let myself = self else { return }
             print("[EventManager] pushEvent name=\(eventName) attributes=\(attributes)")
-            myself.buffer.append(  Event(sessionId: myself.sessionId,
+            myself.buffer.append(  BRAnalyticsEvent(sessionId: myself.sessionId,
                                          time: Date().timeIntervalSince1970,
                                          eventName: eventName,
                                          attributes: attributes))

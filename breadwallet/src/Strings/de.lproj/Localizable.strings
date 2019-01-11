@@ -152,6 +152,8 @@
 "Confirmation.amountLabel" = "Betrag, welcher versendet werden soll:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Netzwerkgebühr:";
+/* Network Fee: (ETH) */
+"Confirmation.feeLabelETH" = "Netzgebühr (ETH):";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Bearbeitungszeit: Diese Transaktion ist voraussichtlich in %1$@ abgeschlossen.";
 /* Label for "send" button on final confirmation screen */
@@ -366,6 +368,30 @@
 "NodeSelector.statusLabel" = "Node-Verbindungsstatus";
 /* Node Selector view title */
 "NodeSelector.title" = "Bitcoin-Nodes";
+/* Onboarding screen 'I'll browse first' button */
+"Onboarding.browseFirst" = "Ich möchte mir zunächst alles anschauen";
+/* Onboarding screen 'Buy some coin' button */
+"Onboarding.buyCoin" = "Einige Coins kaufen";
+/* Onboarding screen 'Get started' (create new wallet) button */
+"Onboarding.getStarted" = "So geht's los";
+/* Onboarding screen 'Next' button */
+"Onboarding.next" = "Weiter";
+/* Onboarding screen restore an existing wallet. */
+"Onboarding.restoreWallet" = "Wallet wiederherstellen";
+/* Onboarding screen Skip button title that allows the user to exit the onboarding process. */
+"Onboarding.skip" = "Diesen Bereich verlassen";
+/* Onboarding screen Page 4 title */
+"OnboardingPageFour.title" = "Beginnen Sie noch heute mit einer Einlage von nur US$ 50!";
+/* Onboarding screen Page 1 title */
+"OnboardingPageOne.title" = "Herzlich willkommen bei Ihrer neuen globalen Wallet!";
+/* Onboarding screen Page 3 subtitle */
+"OnboardingPageThree.subtitle" = "Einfach und sicher - Mit BRD investieren und Investitionen diversifizieren";
+/* Onboarding screen Page 3 title */
+"OnboardingPageThree.title" = "Kaufen und handeln Sie Bitcoin, Token und andere digitale Währungen.";
+/* Onboarding screen Page 2 subtitle */
+"OnboardingPageTwo.subtitle" = "Bei uns sind Kapitalmittel im Wert von mehr 6 Milliarden US$ sicher verwahrt.";
+/* Onboarding screen Page 2 title */
+"OnboardingPageTwo.title" = "Gehören auch Sie zu den weltweit 1,5 Millionen Menschen, die BRD vertrauen.";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "%1$@ schicken, um %2$@ zu kaufen";
 /* Payment confirmation view title */
@@ -552,6 +578,8 @@
 "Segwit.ConfirmChoiceLayout" = "Die Aktivierung von SegWit ist eine Funktion, die nicht rückgängig gemacht werden kann. Sind Sie sicher, dass Sie fortfahren möchten?";
 /* Segwit enableButton */
 "Segwit.Enable" = "Aktivieren";
+/* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
+"Segwit.HomeButton" = "Zum Mond";
 /* Send money amount label */
 "Send.amountLabel" = "Betrag";
 /* Balance: $4.00 */
@@ -660,6 +688,8 @@
 "Settings.resetCurrencies" = "Auf Standardwährungen zurücksetzen";
 /* Leave review button label */
 "Settings.review" = "Schreibe eine Rezension für unsere App";
+/* Rewards menu item */
+"Settings.rewards" = "Belohnungen";
 /* Share anonymous data label */
 "Settings.shareData" = "Übermittle anonyme Nutzungsdaten";
 /* Sync blockchain label */

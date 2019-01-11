@@ -152,6 +152,8 @@
 "Confirmation.amountLabel" = "发送金额：";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "网络费：";
+/* Network Fee: (ETH) */
+"Confirmation.feeLabelETH" = "网络费 (ETH):";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "处理时间：预计此交易将在 %1$@ 后完成。";
 /* Label for "send" button on final confirmation screen */
@@ -366,6 +368,30 @@
 "NodeSelector.statusLabel" = "节点连接状态";
 /* Node Selector view title */
 "NodeSelector.title" = "比特币节点";
+/* Onboarding screen 'I'll browse first' button */
+"Onboarding.browseFirst" = "我要先浏览一下";
+/* Onboarding screen 'Buy some coin' button */
+"Onboarding.buyCoin" = "购买一些钱币";
+/* Onboarding screen 'Get started' (create new wallet) button */
+"Onboarding.getStarted" = "开始";
+/* Onboarding screen 'Next' button */
+"Onboarding.next" = "下一步";
+/* Onboarding screen restore an existing wallet. */
+"Onboarding.restoreWallet" = "恢复钱包";
+/* Onboarding screen Skip button title that allows the user to exit the onboarding process. */
+"Onboarding.skip" = "跳过";
+/* Onboarding screen Page 4 title */
+"OnboardingPageFour.title" = "今天就开始投资吧,只需 50 美元！";
+/* Onboarding screen Page 1 title */
+"OnboardingPageOne.title" = "欢迎来到你新的世界钱包！";
+/* Onboarding screen Page 3 subtitle */
+"OnboardingPageThree.subtitle" = "轻松又安全地与 BRD 进行投资和多样化";
+/* Onboarding screen Page 3 title */
+"OnboardingPageThree.title" = "购买并交易比特币,代币和其他数字货币。";
+/* Onboarding screen Page 2 subtitle */
+"OnboardingPageTwo.subtitle" = "我们有价值超过 600 亿美元的资产受到保护。";
+/* Onboarding screen Page 2 title */
+"OnboardingPageTwo.title" = "成为全世界信任 BRD 的 150 万人中的一员。";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "发送%1$@以购买%2$@";
 /* Payment confirmation view title */
@@ -552,6 +578,8 @@
 "Segwit.ConfirmChoiceLayout" = "启用 SegWit 是不可逆转的功能。是否确定要继续？";
 /* Segwit enableButton */
 "Segwit.Enable" = "启用";
+/* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
+"Segwit.HomeButton" = "去月球";
 /* Send money amount label */
 "Send.amountLabel" = "金额";
 /* Balance: $4.00 */
@@ -660,6 +688,8 @@
 "Settings.resetCurrencies" = "重置为默认货币";
 /* Leave review button label */
 "Settings.review" = "给我们评论";
+/* Rewards menu item */
+"Settings.rewards" = "奖励";
 /* Share anonymous data label */
 "Settings.shareData" = "分享匿名数据";
 /* Sync blockchain label */

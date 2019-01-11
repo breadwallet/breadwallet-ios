@@ -19,7 +19,7 @@ class URLController: Trackable, Subscriber {
     private var urlWaitingForUnlock: URL?
     private let walletManager: BTCWalletManager
     private var xSource, xSuccess, xError, uri: String?
-
+        
     func handleUrl(_ url: URL) -> Bool {
         guard !Store.state.isLoginRequired else {
             // defer url handling until wallet is unlocked
@@ -84,8 +84,9 @@ class URLController: Trackable, Subscriber {
             return true
             
         case "https" where url.isDeepLink:
-            guard url.pathComponents.count == 3 else { return false }
+            guard url.pathComponents.count >= 3 else { return false }
             let target = url.pathComponents[2]
+            
             switch target {
             case "scanqr":
                 Store.trigger(name: .scanQr)
@@ -97,12 +98,22 @@ class URLController: Trackable, Subscriber {
                     let service = params["service"] {
                     let returnToURL = URL(string: params["return-to"] ?? "")
                     print("[EME] PAIRING REQUEST | pubKey: \(pubKey) | identifier: \(identifier) | service: \(service)")
-                    Store.trigger(name: .promptLinkWallet(WalletPairingRequest(publicKey: pubKey, identifier: identifier, service: service, returnToURL: returnToURL)))
+                    Store.trigger(name: .promptLinkWallet(WalletPairingRequest(publicKey: pubKey, 
+                                                                               identifier: identifier, 
+                                                                               service: service,
+                                                                               returnToURL: returnToURL)))
                 }
+            case "platform":
+                // grab the rest of the URL, e.g., /exchange/buy/coinify
+                let path = url.pathComponents[3...].joined(separator: "/")
+                let link = path.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+                let platformUrl = String(format: "/link?to=%@", link ?? "")
+                Store.trigger(name: .openPlatformUrl(platformUrl))
                 
             default:
                 print("unknown deep link: \(target)")
             }
+            
             return true
             
         case "bitid":

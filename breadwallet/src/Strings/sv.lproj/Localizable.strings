@@ -152,6 +152,8 @@
 "Confirmation.amountLabel" = "Belopp att skicka:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Nätverks-avgift";
+/* Network Fee: (ETH) */
+"Confirmation.feeLabelETH" = "Nätverksavgift (ETH):";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Behandlingstid: Den här transaktionen beräknas slutföras om %1$@.";
 /* Label for "send" button on final confirmation screen */
@@ -366,6 +368,30 @@
 "NodeSelector.statusLabel" = "Nodens anslutningsstatus";
 /* Node Selector view title */
 "NodeSelector.title" = "Bitcoin-noder";
+/* Onboarding screen 'I'll browse first' button */
+"Onboarding.browseFirst" = "Jag ska titta runt först";
+/* Onboarding screen 'Buy some coin' button */
+"Onboarding.buyCoin" = "Köp mynt";
+/* Onboarding screen 'Get started' (create new wallet) button */
+"Onboarding.getStarted" = "Kom igång";
+/* Onboarding screen 'Next' button */
+"Onboarding.next" = "Nästa";
+/* Onboarding screen restore an existing wallet. */
+"Onboarding.restoreWallet" = "Återskapa plånbok";
+/* Onboarding screen Skip button title that allows the user to exit the onboarding process. */
+"Onboarding.skip" = "Hoppa över";
+/* Onboarding screen Page 4 title */
+"OnboardingPageFour.title" = "Börja investera idag med så lite som $50!";
+/* Onboarding screen Page 1 title */
+"OnboardingPageOne.title" = "Välkommen till din nya globala plånbok!";
+/* Onboarding screen Page 3 subtitle */
+"OnboardingPageThree.subtitle" = "Investera och bredda dig med BRD, lätt och tryggt.";
+/* Onboarding screen Page 3 title */
+"OnboardingPageThree.title" = "Köp och handla med bitcoin, jetonger och andra digitala valutor.";
+/* Onboarding screen Page 2 subtitle */
+"OnboardingPageTwo.subtitle" = "Vi har skyddade tillgångar värda över 6 miljarder  USD.";
+/* Onboarding screen Page 2 title */
+"OnboardingPageTwo.title" = "Anslut dig till de 1,5 miljoner människor världen runt som litar på BRD.";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "Skicka %1$@ för att köpa %2$@";
 /* Payment confirmation view title */
@@ -552,6 +578,8 @@
 "Segwit.ConfirmChoiceLayout" = "En aktivering av Segwit är oåterkallelig. Är du säker på att du vill fortsätta?";
 /* Segwit enableButton */
 "Segwit.Enable" = "Aktivera";
+/* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
+"Segwit.HomeButton" = "Till månen";
 /* Send money amount label */
 "Send.amountLabel" = "Belopp";
 /* Balance: $4.00 */
@@ -660,6 +688,8 @@
 "Settings.resetCurrencies" = "Återställ till förvalda valutor";
 /* Leave review button label */
 "Settings.review" = "Betygssätt oss";
+/* Rewards menu item */
+"Settings.rewards" = "Belöningar";
 /* Share anonymous data label */
 "Settings.shareData" = "Dela anonyma uppgifter";
 /* Sync blockchain label */
