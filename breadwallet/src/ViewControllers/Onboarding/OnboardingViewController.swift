@@ -143,8 +143,8 @@ class OnboardingViewController: UIViewController {
     var pageIndex: Int = 0 {
         didSet {
             // Show/hide the Back and Skip buttons.
-            let backAlpha: CGFloat = (pageIndex > 0) ? 1.0 : 0.0
-            let skipAlpha: CGFloat = (pageIndex > 0 && pageIndex < lastPageIndex) ? 1.0 : 0.0
+            let backAlpha: CGFloat = (pageIndex == 1) ? 1.0 : 0.0
+            let skipAlpha: CGFloat = (pageIndex == 1) ? 1.0 : 0.0
 
             let delay = (pageIndex == 1) ? firstTransitionDelay : 0.0
             
