@@ -152,6 +152,8 @@
 "Confirmation.amountLabel" = "Montante a enviar:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Comissão da rede:";
+/* Network Fee: (ETH) */
+"Confirmation.feeLabelETH" = "Taxa de Rede (ETH):";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Tempo de processamento: Prevê-se que esta transação esteja concluída dentro de %1$@.";
 /* Label for "send" button on final confirmation screen */
@@ -576,6 +578,8 @@
 "Segwit.ConfirmChoiceLayout" = "A ativação do SegWit é uma opção irreversível. Tem a certeza de que pretende continuar?";
 /* Segwit enableButton */
 "Segwit.Enable" = "Ativar";
+/* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
+"Segwit.HomeButton" = "Até à Lua";
 /* Send money amount label */
 "Send.amountLabel" = "Quantia";
 /* Balance: $4.00 */
@@ -684,6 +688,8 @@
 "Settings.resetCurrencies" = "Repor as moedas predefinidas";
 /* Leave review button label */
 "Settings.review" = "Deixe-nos uma avaliação";
+/* Rewards menu item */
+"Settings.rewards" = "Recompensas";
 /* Share anonymous data label */
 "Settings.shareData" = "Partilhar Dados Anónimos";
 /* Sync blockchain label */

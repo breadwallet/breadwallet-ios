@@ -152,6 +152,8 @@
 "Confirmation.amountLabel" = "보낼 금액:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "네트워크 수수료:";
+/* Network Fee: (ETH) */
+"Confirmation.feeLabelETH" = "네트워크 요금 (ETH):";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "처리 시간: 이 거래는 %1$@에 완료될 것으로 예상됩니다.";
 /* Label for "send" button on final confirmation screen */
@@ -576,6 +578,8 @@
 "Segwit.ConfirmChoiceLayout" = "SegWit을 활성화는 취소할 수 없는 기능입니다. 계속하시겠습니까?";
 /* Segwit enableButton */
 "Segwit.Enable" = "활성화";
+/* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
+"Segwit.HomeButton" = "투 더 문";
 /* Send money amount label */
 "Send.amountLabel" = "금액";
 /* Balance: $4.00 */
@@ -684,6 +688,8 @@
 "Settings.resetCurrencies" = "기본 통화로 초기화";
 /* Leave review button label */
 "Settings.review" = "후기를 남겨주세요";
+/* Rewards menu item */
+"Settings.rewards" = "보상";
 /* Share anonymous data label */
 "Settings.shareData" = "익명 데이터 공유";
 /* Sync blockchain label */
