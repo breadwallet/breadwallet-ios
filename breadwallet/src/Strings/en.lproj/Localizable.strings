@@ -152,6 +152,8 @@
 "Confirmation.amountLabel" = "Amount to Send:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Network Fee:";
+/* Network Fee: (ETH) */
+"Confirmation.feeLabelETH" = "Network Fee (ETH):";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Processing time: This transaction is predicted to complete in %1$@.";
 /* Label for "send" button on final confirmation screen */
@@ -366,6 +368,30 @@
 "NodeSelector.statusLabel" = "Node Connection Status";
 /* Node Selector view title */
 "NodeSelector.title" = "Bitcoin Nodes";
+/* Onboarding screen 'I'll browse first' button */
+"Onboarding.browseFirst" = "I'll browse first";
+/* Onboarding screen 'Buy some coin' button */
+"Onboarding.buyCoin" = "Buy some coin";
+/* Onboarding screen 'Get started' (create new wallet) button */
+"Onboarding.getStarted" = "Get started";
+/* Onboarding screen 'Next' button */
+"Onboarding.next" = "Next";
+/* Onboarding screen restore an existing wallet. */
+"Onboarding.restoreWallet" = "Restore wallet";
+/* Onboarding screen Skip button title that allows the user to exit the onboarding process. */
+"Onboarding.skip" = "Skip";
+/* Onboarding screen Page 4 title */
+"OnboardingPageFour.title" = "Start investing today with as little as $50!";
+/* Onboarding screen Page 1 title */
+"OnboardingPageOne.title" = "Welcome to your new global wallet!";
+/* Onboarding screen Page 3 subtitle */
+"OnboardingPageThree.subtitle" = "Invest and diversify with BRD, easily and securely.";
+/* Onboarding screen Page 3 title */
+"OnboardingPageThree.title" = "Buy and trade bitcoin, tokens, and other digital currencies.";
+/* Onboarding screen Page 2 subtitle */
+"OnboardingPageTwo.subtitle" = "We have over $6 billion USD worth of assets under protection.";
+/* Onboarding screen Page 2 title */
+"OnboardingPageTwo.title" = "Join the 1.5 million people around the world who trust BRD.";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "Send %1$@ to purchase %2$@";
 /* Payment confirmation view title */
@@ -552,6 +578,8 @@
 "Segwit.ConfirmChoiceLayout" = "Enabling SegWit is an irreversible feature. Are you sure you want to continue?";
 /* Segwit enableButton */
 "Segwit.Enable" = "Enable";
+/* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
+"Segwit.HomeButton" = "To the Moon";
 /* Send money amount label */
 "Send.amountLabel" = "Amount";
 /* Balance: $4.00 */
@@ -660,6 +688,8 @@
 "Settings.resetCurrencies" = "Reset to Default Currencies";
 /* Leave review button label */
 "Settings.review" = "Leave us a Review";
+/* Rewards menu item */
+"Settings.rewards" = "Rewards";
 /* Share anonymous data label */
 "Settings.shareData" = "Share Anonymous Data";
 /* Sync blockchain label */

@@ -56,4 +56,22 @@ class CurrencyMetaDataTests : XCTestCase {
         XCTAssert(metaData.enabledTokenAddresses == tokens, "Enabled token addresses should match")
         XCTAssert(metaData.hiddenTokenAddresses == [], "Hidden Token Addresses should match")
     }
+    
+    func testAddressAlreadyAddedIsCaseInsensitive() {
+        var metaData = CurrencyListMetaData()
+        let addressLowercase = "0x722dd3f80bac40c951b51bdd28dd19d435762180"
+        let addressUppercase = "0x722DD3F80BAC40C951B51BDD28DD19D435762180"
+        
+        // add lower, test upper
+        metaData.addTokenAddresses(addresses: [addressLowercase])
+        XCTAssertTrue(metaData.isAddressAlreadyAdded(address: addressUppercase))
+        
+        // add upper, test lower
+        metaData = CurrencyListMetaData()
+        metaData.addTokenAddresses(addresses: [addressUppercase])
+        XCTAssertTrue(metaData.isAddressAlreadyAdded(address: addressLowercase)) 
+        
+        // test an address not already added
+        XCTAssertFalse(metaData.isAddressAlreadyAdded(address: "0x722dd3f80bac40c951b51bdd28dd112345672180"))
+    }
 }

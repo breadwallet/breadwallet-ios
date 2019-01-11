@@ -89,30 +89,60 @@ extension BRAPIClient {
         task.resume()
     }
 
-    /// Fetches all token exchange rates in BTC from CoinMarketCap
-    func tokenExchangeRates(_ handler: @escaping (RatesResult) -> Void) {
-        let request = URLRequest(url: URL(string: "https://api.coinmarketcap.com/v1/ticker/?limit=1000&convert=BTC")!)
-        dataTaskWithRequest(request, handler: { data, _, error in
-            if error == nil, let data = data {
-                do {
-                    let codes = Store.state.currencies.map({ $0.code.lowercased() })
-                    let tickers = try JSONDecoder().decode([Ticker].self, from: data)
-                    let rates: [Rate] = tickers.compactMap({ ticker in
-                        guard ticker.btcRate != nil, let rate = Double(ticker.btcRate!) else { return nil }
-                        guard codes.contains(ticker.symbol.lowercased()) else { return nil }
-                        return Rate(code: Currencies.btc.code,
-                                    name: ticker.name,
-                                    rate: rate,
-                                    reciprocalCode: ticker.symbol.lowercased())
-                    })
-                    handler(.success(rates))
-                } catch let e {
-                    handler(.error(e.localizedDescription))
-                }
-            } else {
-                handler(.error(error?.localizedDescription ?? "unknown error"))
+    /// Fetches BTC exchange rates of given currencies from CryptoCompare API
+    func tokenExchangeRates(tokens: [Currency], _ handler: @escaping (RatesResult) -> Void) {
+        // fsyms param (comma-separated ticker symbols) max length is 300 characters
+        // requests are batched to ensure the length is not exceeded
+        let chunkSize = 50
+        let chunks = tokens.chunked(by: chunkSize)
+
+        var combinedRates: [Rate] = []
+        var errorResult: RatesResult?
+
+        let group = DispatchGroup()
+        for tokenChunk in chunks {
+            group.enter()
+            let codes = tokenChunk.map({ $0.code.uppercased() })
+            guard let codeList = codes.joined(separator: ",").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+                assertionFailure()
+                errorResult = .error("invalid token codes")
+                return group.leave()
             }
-        }).resume()
+            let request = URLRequest(url: URL(string: "https://min-api.cryptocompare.com/data/pricemulti?fsyms=\(codeList)&tsyms=BTC")!)
+            dataTaskWithRequest(request, handler: { data, _, error in
+                guard error == nil, let data = data else {
+                    errorResult = .error(error?.localizedDescription ?? "unknown error")
+                    return group.leave()
+                }
+                do {
+                    guard let prices = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                        errorResult = .error("exchange rate API error")
+                        return group.leave()
+                    }
+                    let rates: [Rate] = tokenChunk.compactMap({ currency in
+                        guard let rateContainer = prices[currency.code.uppercased()] as? [String: Double],
+                            let rate = rateContainer[Currencies.btc.code.uppercased()] else { return nil }
+                        return Rate(code: Currencies.btc.code,
+                                    name: currency.name,
+                                    rate: rate,
+                                    reciprocalCode: currency.code.lowercased())
+                    })
+                    combinedRates.append(contentsOf: rates)
+                    group.leave()
+                } catch let e {
+                    errorResult = .error(e.localizedDescription)
+                    group.leave()
+                }
+            }).resume()
+        }
+
+        group.notify(queue: .main) {
+            if let errorResult = errorResult {
+                handler(errorResult)
+            } else {
+                handler(.success(combinedRates))
+            }
+        }
     }
     
     func savePushNotificationToken(_ token: Data) {

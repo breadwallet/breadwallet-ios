@@ -152,6 +152,8 @@
 "Confirmation.amountLabel" = "보낼 금액:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "네트워크 수수료:";
+/* Network Fee: (ETH) */
+"Confirmation.feeLabelETH" = "네트워크 요금 (ETH):";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "처리 시간: 이 거래는 %1$@에 완료될 것으로 예상됩니다.";
 /* Label for "send" button on final confirmation screen */
@@ -366,6 +368,30 @@
 "NodeSelector.statusLabel" = "노드 연결 상태";
 /* Node Selector view title */
 "NodeSelector.title" = "비트코인 노드";
+/* Onboarding screen 'I'll browse first' button */
+"Onboarding.browseFirst" = "먼저 둘러볼게요";
+/* Onboarding screen 'Buy some coin' button */
+"Onboarding.buyCoin" = "코인을 조금 구매";
+/* Onboarding screen 'Get started' (create new wallet) button */
+"Onboarding.getStarted" = "시작";
+/* Onboarding screen 'Next' button */
+"Onboarding.next" = "다음";
+/* Onboarding screen restore an existing wallet. */
+"Onboarding.restoreWallet" = "월렛 복구";
+/* Onboarding screen Skip button title that allows the user to exit the onboarding process. */
+"Onboarding.skip" = "넘어가기";
+/* Onboarding screen Page 4 title */
+"OnboardingPageFour.title" = "50달러 소액부터 오늘 투자를 시작해 보세요!";
+/* Onboarding screen Page 1 title */
+"OnboardingPageOne.title" = "새로운 글로벌 월렛에 오신 것을 환영합니다!";
+/* Onboarding screen Page 3 subtitle */
+"OnboardingPageThree.subtitle" = "BRD와 함께 쉽고 안전하게 투자하고 다양하게 분산시키세요.";
+/* Onboarding screen Page 3 title */
+"OnboardingPageThree.title" = "비트코인, 토큰, 그리고 그 외 다른 가상 화폐들을 구매하고 거래하세요.";
+/* Onboarding screen Page 2 subtitle */
+"OnboardingPageTwo.subtitle" = "저희는 60억 달러 넘는 가치의 자산을 안전하게 보유하고 있습니다.";
+/* Onboarding screen Page 2 title */
+"OnboardingPageTwo.title" = "BRD를 신용하는 전 세계 150만 명의 사람들과 함께 하세요.";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "%2$@ 구매를 위해 %1$@ 전송";
 /* Payment confirmation view title */
@@ -552,6 +578,8 @@
 "Segwit.ConfirmChoiceLayout" = "SegWit을 활성화는 취소할 수 없는 기능입니다. 계속하시겠습니까?";
 /* Segwit enableButton */
 "Segwit.Enable" = "활성화";
+/* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
+"Segwit.HomeButton" = "투 더 문";
 /* Send money amount label */
 "Send.amountLabel" = "금액";
 /* Balance: $4.00 */
@@ -660,6 +688,8 @@
 "Settings.resetCurrencies" = "기본 통화로 초기화";
 /* Leave review button label */
 "Settings.review" = "후기를 남겨주세요";
+/* Rewards menu item */
+"Settings.rewards" = "보상";
 /* Share anonymous data label */
 "Settings.shareData" = "익명 데이터 공유";
 /* Sync blockchain label */

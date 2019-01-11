@@ -165,6 +165,13 @@ class ModalPresenter: Subscriber, Trackable {
                 }
             })
         }
+        
+        Store.subscribe(self, name: .openPlatformUrl("")) { [unowned self] in
+            guard let trigger = $0 else { return }
+            if case let .openPlatformUrl(url) = trigger {
+                self.presentPlatformWebViewController(url)
+            }
+        }
     }
 
     private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
@@ -397,7 +404,7 @@ class ModalPresenter: Subscriber, Trackable {
             }
         }
     }
-    
+        
     // MARK: Settings
     func presentMenu() {
         guard let top = topViewController else { return }
@@ -574,6 +581,11 @@ class ModalPresenter: Subscriber, Trackable {
                 }
             },
             
+            // Rewards
+            MenuItem(title: S.Settings.rewards, icon: #imageLiteral(resourceName: "Star")) {
+                self.presentPlatformWebViewController("/rewards")
+            },
+            
             // About
             MenuItem(title: S.Settings.about, icon: #imageLiteral(resourceName: "about")) {
                 menuNav.pushViewController(AboutViewController(), animated: true)
@@ -621,7 +633,7 @@ class ModalPresenter: Subscriber, Trackable {
                                                 (menuNav.topViewController as? MenuViewController)?.reloadMenu()
                 }))
             }
-            
+                        
             developerItems.append(MenuItem(title: "Reset User Defaults",
                                            callback: {
                                             UserDefaults.resetAll()
