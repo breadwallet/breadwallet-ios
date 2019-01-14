@@ -23,13 +23,22 @@ class BTCWalletManager: WalletManager, Subscriber {
     private let progressUpdateInterval: TimeInterval = 0.5
     private let updateDebounceInterval: TimeInterval = 0.4
     private var progressTimer: Timer?
-    private var lastBlockHeightKey: String {
-        return "LastBlockHeightKey-\(currency.code)"
-    }
+ 
+    // Last block height allows us to display the progress from where the sync stopped
+    // during the previous app life cycle to the last block in the chain. e.g., if the previous
+    // sync successfully sync'd up to block 100,000 and the current sync is at block 200,000 out of 
+    // 300,000 total blocks the percent will show 50% (half way between 100,000 and 300,000).
+    //
+    // 'lastBlockHeight' is updated in syncStopped() if there is no error.
     private var lastBlockHeight: UInt32 {
-        set { UserDefaults.standard.set(newValue, forKey: lastBlockHeightKey) }
-        get { return UInt32(UserDefaults.standard.integer(forKey: lastBlockHeightKey)) }
+        set { 
+            UserDefaults.setLastSyncedBlockHeight(height: newValue, for: currency)
+        }
+        get { 
+            return UserDefaults.lastSyncedBlockHeight(for: currency)
+        }
     }
+    
     private var retryTimer: RetryTimer?
     private var updateTimer: Timer?
     var kvStore: BRReplicatedKVStore? {
