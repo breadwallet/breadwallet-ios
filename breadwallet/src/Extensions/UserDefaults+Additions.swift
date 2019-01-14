@@ -216,6 +216,20 @@ extension UserDefaults {
         defaults.set(try? PropertyListEncoder().encode(state), forKey: key)
     }
     
+    private static func lastBlockHeightKey(for currency: Currency) -> String {
+        return "LastBlockHeightKey-\(currency.code)"
+    }
+    
+    // Returns the stored value for the height of the last block that was successfully sync'd for the given currency.
+    static func lastSyncedBlockHeight(for currency: Currency) -> UInt32 {
+        return UInt32(UserDefaults.standard.integer(forKey: lastBlockHeightKey(for: currency)))
+    }
+    
+    // Sets the stored value for the height of the last block that was successfully sync'd for the given currency.
+    static func setLastSyncedBlockHeight(height: UInt32, for currency: Currency) {
+        UserDefaults.standard.set(height, forKey: lastBlockHeightKey(for: currency))
+    }
+    
     static var hasOptedInSegwit: Bool {
         get {
             return defaults.bool(forKey: hasOptedInSegwitKey)
