@@ -152,7 +152,7 @@
 "Confirmation.amountLabel" = "Amount to Send:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Network Fee:";
-/* Network Fee: (ETH) */
+/* Network Fee (ETH): */
 "Confirmation.feeLabelETH" = "Network Fee (ETH):";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Processing time: This transaction is predicted to complete in %1$@.";
