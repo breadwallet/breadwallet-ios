@@ -141,7 +141,7 @@ extension String {
         return trimmed.isEmpty ? "0" : trimmed
     }
     
-    func leftPadding(toLength: Int, withPad character: Character) -> String {
+    public func leftPadding(toLength: Int, withPad character: Character) -> String {
         if count < toLength {
             return String(repeatElement(character, count: toLength - count)) + self
         } else {
