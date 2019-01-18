@@ -81,9 +81,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return applicationController.application(application, continue: userActivity, restorationHandler: restorationHandler)
     }
 
-    //stdout is redirected to C.logFilePath for testflight builds
+    // stdout is redirected to C.logFilePath for testflight and debug builds
     private func redirectStdOut() {
-        guard E.isTestFlight else { return }
+        guard E.isTestFlight || E.isDebug else { return }
+        
+        let logFilePath = C.logFilePath
+        let previousLogFilePath = C.previousLogFilePath
+        
+        // If there is already content at C.logFilePath from the previous run of the app,
+        // store that content in C.previousLogFilePath so that we can upload both the previous
+        // and current log from Menu / Developer / Send Logs.
+        if FileManager.default.fileExists(atPath: logFilePath.path) {
+            // save the logging data from the previous run of the app
+            if let logData = try? Data(contentsOf: C.logFilePath) {
+                try? logData.write(to: previousLogFilePath, options: Data.WritingOptions.atomic)
+            }
+        }
+        
         C.logFilePath.withUnsafeFileSystemRepresentation {
             _ = freopen($0, "w+", stdout)
         }
