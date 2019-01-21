@@ -44,7 +44,7 @@ class MessageUIPresenter: NSObject, Trackable {
         guard MFMailComposeViewController.canSendMail() else { showEmailUnavailableAlert(); return }
         
         let attachments = getLogAttachments()
-        guard attachments.count > 0 else { showErrorMessage(S.ErrorMessages.noLogsFound); return }
+        guard !attachments.isEmpty else { showErrorMessage(S.ErrorMessages.noLogsFound); return }
         
         originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
         UINavigationBar.appearance().titleTextAttributes = nil
