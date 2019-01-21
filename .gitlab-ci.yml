@@ -7,7 +7,7 @@ build_project:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
     - xcodebuild clean -project breadwallet.xcodeproj -scheme breadwallet | xcpretty
-    - xcodebuild test -project breadwallet.xcodeproj -scheme breadwallet -destination 'platform=iOS Simulator,name=iPhone XR,OS=12.0' | xcpretty -s
+    - xcodebuild test -project breadwallet.xcodeproj -scheme breadwallet -destination 'platform=iOS Simulator,name=iPhone XR,OS=12.1' | xcpretty -s
   tags:
     - ios-12
     - xcode-10

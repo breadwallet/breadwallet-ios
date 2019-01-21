@@ -22,12 +22,11 @@ public class BRUserAgentHeaderGenerator {
      *
      *  The server will focus on the app version string, in this case 3070390, which represents 3.7.0 (390).
      */
-    static let userAgentHeader:String = {
+    static let userAgentHeader: String = {
         let appName = appNameString()
         let appVersion = appVersionString(with: brdAppVersion())
         let darwinVersion = darwinVersionString()
         let cfNetworkVersion = cfNetworkVersionString()
-        
         
         let header = userAgentHeaderString(appName: appName,
                                            appVersion: appVersion,
@@ -57,7 +56,7 @@ public class BRUserAgentHeaderGenerator {
         
         let versionComponents = version.components(separatedBy: ".")
         
-        if versionComponents.count > 0 {
+        if !versionComponents.isEmpty {
             major = versionComponents[0]
         }
         
@@ -75,7 +74,7 @@ public class BRUserAgentHeaderGenerator {
     static func appVersionString(with appVersion: BRAppVersion) -> String {
         var header: String = ""
         
-        if appVersion.major.count > 0 {
+        if !appVersion.major.isEmpty {
             header += appVersion.major
         }
         
