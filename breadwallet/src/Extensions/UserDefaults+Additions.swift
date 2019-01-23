@@ -37,6 +37,8 @@ private let hasScannedForTokenBalancesKey = "hasScannedForTokenBalances"
 private let debugShouldAutoEnterPinKey = "shouldAutoEnterPIN"
 private let debugShouldSuppressPaperKeyPromptKey = "shouldSuppressPaperKeyPrompt"
 private let debugShouldShowPaperKeyPreviewKey = "debugShouldShowPaperKeyPreviewKey"
+private let debugShowAppRatingPromptOnEnterWalletKey = "debugShowAppRatingPromptOnEnterWalletKey"
+private let debugSuppressAppRatingPromptKey = "debugSuppressAppRatingPromptKey"
 
 typealias ResettableBooleanSetting = [String: Bool]
 typealias ResettableObjectSetting = String
@@ -54,7 +56,9 @@ extension UserDefaults {
         [hasOptedInSegwitKey: false],
         [debugShouldAutoEnterPinKey: false],
         [debugShouldSuppressPaperKeyPromptKey: false],
-        [debugShouldShowPaperKeyPreviewKey: false]
+        [debugShouldShowPaperKeyPreviewKey: false],
+        [debugSuppressAppRatingPromptKey: false],
+        [debugShowAppRatingPromptOnEnterWalletKey: false]
     ]
     
     static let resettableObjects: [ResettableObjectSetting] = [
@@ -402,5 +406,37 @@ extension UserDefaults {
         set {
             defaults.set(newValue, forKey: debugShouldShowPaperKeyPreviewKey)
         }        
+    }
+    
+    // option to always show the app rating prompt when entering a wallet
+    static func toggleShowAppRatingPromptOnEnterWallet() -> Bool {
+        return toggleBoolean(key: debugShowAppRatingPromptOnEnterWalletKey)
+    }
+
+    static var debugShowAppRatingOnEnterWallet: Bool {
+        
+        get {
+            return defaults.bool(forKey: debugShowAppRatingPromptOnEnterWalletKey)
+        }
+        
+        set {
+            defaults.set(newValue, forKey: debugShowAppRatingPromptOnEnterWalletKey)
+        }
+    }
+    
+    // option to always suppress showing the app rating prompt
+    static func toggleSuppressAppRatingPrompt() -> Bool {
+        return toggleBoolean(key: debugSuppressAppRatingPromptKey)
+    }
+
+    static var debugSuppressAppRatingPrompt: Bool {
+        
+        get {
+            return defaults.bool(forKey: debugSuppressAppRatingPromptKey)
+        }
+        
+        set {
+            defaults.set(newValue, forKey: debugSuppressAppRatingPromptKey)
+        }
     }
 }

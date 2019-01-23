@@ -86,6 +86,11 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
         setupSubscriptions()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        Store.trigger(name: .didViewTransactions(transactions))
+    }
+    
     private func setupSubscriptions() {
         Store.subscribe(self,
                         selector: { $0.isBtcSwapped != $1.isBtcSwapped },
