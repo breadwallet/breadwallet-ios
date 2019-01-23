@@ -577,14 +577,7 @@ class ModalPresenter: Subscriber, Trackable {
             MenuItem(title: S.MenuButton.support, icon: #imageLiteral(resourceName: "support")) { [unowned self] in
                 self.presentFaq()
             },
-            
-            // Review
-            MenuItem(title: S.Settings.review, icon: #imageLiteral(resourceName: "review")) {
-                if let url = URL(string: C.reviewLink) {
-                    UIApplication.shared.open(url)
-                }
-            },
-            
+                        
             // Rewards
             MenuItem(title: S.Settings.rewards, icon: #imageLiteral(resourceName: "Star")) {
                 self.presentPlatformWebViewController("/rewards")
@@ -626,6 +619,21 @@ class ModalPresenter: Subscriber, Trackable {
                                             (menuNav.topViewController as? MenuViewController)?.reloadMenu()
             }))
             
+            // always show the app rating when viewing transactions if 'ON' AND Suppress is 'OFF' (see below)
+            developerItems.append(MenuItem(title: "App rating on enter wallet",
+                                           accessoryText: { UserDefaults.debugShowAppRatingOnEnterWallet ? "ON" : "OFF" },
+                                           callback: {
+                                            _ = UserDefaults.toggleShowAppRatingPromptOnEnterWallet()
+                                            (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+            }))
+
+            developerItems.append(MenuItem(title: "Suppress app rating prompt",
+                                           accessoryText: { UserDefaults.debugSuppressAppRatingPrompt ? "ON" : "OFF" },
+                                           callback: {
+                                            _ = UserDefaults.toggleSuppressAppRatingPrompt()
+                                            (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+            }))
+
             // Shows a preview of the paper key.
             if let paperKey = self.keyStore.seedPhrase(pin: "111111") {
                 let words = paperKey.components(separatedBy: " ")

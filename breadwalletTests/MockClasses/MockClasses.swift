@@ -37,6 +37,13 @@ class MockTransaction: Transaction {
         return mockIsValid
     }
     
+    convenience init(timestamp: TimeInterval, direction: TransactionDirection, status: TransactionStatus) {
+        self.init(valid: true)
+        self.timestamp = timestamp
+        self.direction = direction
+        self.status = status
+    }
+    
     init(valid: Bool) {
         currency = MockCurrency()
         mockIsValid = valid
