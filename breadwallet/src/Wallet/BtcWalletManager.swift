@@ -23,6 +23,8 @@ class BTCWalletManager: WalletManager, Subscriber {
     private let progressUpdateInterval: TimeInterval = 0.5
     private let updateDebounceInterval: TimeInterval = 0.4
     private var progressTimer: Timer?
+    
+    let badTransactionChecker = BadTransactionChecker()
  
     // Last block height allows us to display the progress from where the sync stopped
     // during the previous app life cycle to the last block in the chain. e.g., if the previous
@@ -302,7 +304,11 @@ extension BTCWalletManager: BRWalletListener {
     }
 
     func makeTransactionViewModels(transactions: [BRTxRef?], rate: Rate?) -> [Transaction] {
-        return transactions.compactMap { $0 }.sorted {
+        // 'transactions' are retrieved from Core
+        //
+        // Map the these transactions to BtcTransaction objects, and log analytics for any
+        // bad transactions encountered.
+        let btcTransactions: [BtcTransaction] = transactions.compactMap { $0 }.sorted {
             if $0.pointee.timestamp == 0 {
                 return true
             } else if $1.pointee.timestamp == 0 {
@@ -313,5 +319,39 @@ extension BTCWalletManager: BRWalletListener {
             }.compactMap {
                 return BtcTransaction($0, walletManager: self, kvStore: kvStore, rate: rate)
         }
+        
+        // The transaction checker will only call us back with a non-empty list if it encounters new invalid transactions.
+        badTransactionChecker.checkTransactions(btcTransactions) { [unowned self] (badTransactions) in
+            guard !(badTransactions.isEmpty) else { return }
+            
+            Store.trigger(name: .automaticRescan(self.currency))
+            self.logAnalyticsEventsForBadBtcTransactions(badTransactions)
+        }
+        
+        return btcTransactions
     }
+    
+    private func logAnalyticsEventsForBadBtcTransactions(_  badTransactions: [Transaction]) {
+        let badTxs = badTransactions.enumerated()
+        
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            guard let self = `self` else { return }
+            for badTx in badTxs {
+                let event = "event.badBtcTxData"
+                let tx = badTx.element
+                
+                guard let btcTx = badTx.element as? BtcTransaction, let errorInfo = btcTx.errorInfo else {
+                    self.saveEvent(event, attributes: ["txHash": tx.hash])
+                    continue
+                }
+
+                self.saveEvent(event, attributes: ["txhash": tx.hash,
+                                                   "error": errorInfo.error.rawValue,
+                                                   "amtSent": String(describing: errorInfo.amountSent),
+                                                   "amtRcvd": String(describing: errorInfo.amountReceived),
+                                                   "fee": String(describing: errorInfo.fee)])
+            }
+        }
+    }
+    
 }
