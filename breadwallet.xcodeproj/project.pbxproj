@@ -64,6 +64,9 @@
 		71988B0821EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988B0721EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift */; };
 		71988B0921EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988B0721EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift */; };
 		71988B0B21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988B0A21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift */; };
+		710B035D21F6605C007E8A2A /* BadTransactionChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B035C21F6605C007E8A2A /* BadTransactionChecker.swift */; };
+		710B035F21F662F9007E8A2A /* BadTransactionCheckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B035E21F662F9007E8A2A /* BadTransactionCheckerTests.swift */; };
+		710B036221F67888007E8A2A /* MockClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B036121F67888007E8A2A /* MockClasses.swift */; };
 		7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */; };
 		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
 		752438751DAAC50800844BEC /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6761DAA0E400075898E /* alloc.c */; };
@@ -694,6 +697,9 @@
 		3C83B2912063187C001D08CE /* BRCoreTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BRCoreTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		71988B0721EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BRUserAgentHeaderGenerator.swift; path = src/Platform/BRUserAgentHeaderGenerator.swift; sourceTree = "<group>"; };
 		71988B0A21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BRUserAgentHeaderGeneratorTests.swift; sourceTree = "<group>"; };
+		710B035C21F6605C007E8A2A /* BadTransactionChecker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BadTransactionChecker.swift; path = src/Utilities/BadTransactionChecker.swift; sourceTree = "<group>"; };
+		710B035E21F662F9007E8A2A /* BadTransactionCheckerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadTransactionCheckerTests.swift; sourceTree = "<group>"; };
+		710B036121F67888007E8A2A /* MockClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MockClasses.swift; path = MockClasses/MockClasses.swift; sourceTree = "<group>"; };
 		7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WalletManager+Auth.swift"; sourceTree = "<group>"; };
 		7528D2971ECF655500925DBC /* PaymentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentProtocol.swift; path = src/PaymentProtocol.swift; sourceTree = "<group>"; };
 		752FB03B1DF8BE4B009086FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1897,6 +1903,22 @@
 			path = BRCoreTests;
 			sourceTree = "<group>";
 		};
+		710B035B21F6603C007E8A2A /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				710B035C21F6605C007E8A2A /* BadTransactionChecker.swift */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+		710B036021F67858007E8A2A /* MockClasses */ = {
+			isa = PBXGroup;
+			children = (
+				710B036121F67888007E8A2A /* MockClasses.swift */,
+			);
+			name = MockClasses;
+			sourceTree = "<group>";
+		};
 		755CD3191DAA0A110075898E /* secp256k1 */ = {
 			isa = PBXGroup;
 			children = (
@@ -2753,6 +2775,7 @@
 				22A9A9311DF61930000F0016 /* Platform */,
 				7C377EBC20F64C1200E8CF1C /* Resources */,
 				CE2990171EFD6DAF0093A0F2 /* Strings */,
+				710B035B21F6603C007E8A2A /* Utilities */,
 				CE20C8EF1DBAF6D300C8397A /* ViewControllers */,
 				CEBF33021DDE177F00348FC6 /* ViewModels */,
 				CE20C90F1DBE5B5100C8397A /* Views */,
@@ -2764,6 +2787,8 @@
 		75A2A7A71DA5934300A983D8 /* breadwalletTests */ = {
 			isa = PBXGroup;
 			children = (
+				710B036021F67858007E8A2A /* MockClasses */,
+				710B035E21F662F9007E8A2A /* BadTransactionCheckerTests.swift */,
 				E821D4C921C16A8300B0907B /* AnalyticsEventTests.swift */,
 				75A2A7AA1DA5934300A983D8 /* Info.plist */,
 				CEC7F929208803FA0083DF64 /* CurrencyMetaDataTests.swift */,
@@ -4082,6 +4107,7 @@
 				CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */,
 				222319B01F27985A00008F20 /* BRBrowserViewController.swift in Sources */,
 				CE74F58D1E3BA85600ED5FA9 /* ExchangeUpdater.swift in Sources */,
+				710B035D21F6605C007E8A2A /* BadTransactionChecker.swift in Sources */,
 				CE6DCC251E6001E50044257B /* UIControl+Callback.swift in Sources */,
 				CE0822641FCD1BD100EF371D /* HomeScreenViewController.swift in Sources */,
 				223DB2191DF691260076A151 /* BRSocketHelpers.c in Sources */,
@@ -4319,6 +4345,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				710B035F21F662F9007E8A2A /* BadTransactionCheckerTests.swift in Sources */,
 				7CA1C47620EC2BFA002E9E68 /* QRCodeTests.swift in Sources */,
 				22C4312E1DF89D970017CAEA /* BRHTTPServerTests.swift in Sources */,
 				CE6DCC2B1E63D6290044257B /* WalletCreationTests.swift in Sources */,
@@ -4330,6 +4357,7 @@
 				7CB3BCD52059B62200053687 /* UnitConversionTests.swift in Sources */,
 				CEF3D2D71E8AB9980070178E /* SpendingLimitTests.swift in Sources */,
 				22C431321DF89DDC0017CAEA /* NSDataExtensionTests.swift in Sources */,
+				710B036221F67888007E8A2A /* MockClasses.swift in Sources */,
 				CE6DCC291E63D0280044257B /* PhraseTests.swift in Sources */,
 				CEEC70881E943DC900EF788E /* TouchIdEnabledTests.swift in Sources */,
 				CE6DCC2D1E63D6B10044257B /* TestHelpers.swift in Sources */,
