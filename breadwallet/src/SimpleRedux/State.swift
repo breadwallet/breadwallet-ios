@@ -39,10 +39,6 @@ struct State {
     var currencies: [Currency] {
         return orderedWallets.map { $0.currency }
     }
-    
-    var primaryWallet: WalletState {
-        return wallets[Currencies.btc.code]!
-    }
 
     var displayCurrencies: [Currency] {
         return orderedWallets.filter { $0.displayOrder >= 0 }.map { $0.currency }
@@ -53,7 +49,7 @@ struct State {
     }
     
     var shouldShowOnboarding: Bool {
-        return isOnboardingEnabled && BTCWalletManager.staticNoWallet
+        return isOnboardingEnabled && KeyStore.staticNoWallet
     }
     
     var shouldShowBuyNotificationForDefaultCurrency: Bool {

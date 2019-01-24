@@ -10,9 +10,9 @@ import UIKit
 
 class ConfirmPaperPhraseViewController: UIViewController {
 
-    init(walletManager: BTCWalletManager, pin: String, callback: @escaping () -> Void) {
+    init(keyMaster: KeyMaster, pin: String, callback: @escaping () -> Void) {
         self.pin = pin
-        self.walletManager = walletManager
+        self.keyMaster = keyMaster
         self.callback = callback
         super.init(nibName: nil, bundle: nil)
         if !E.isIPhone4 {
@@ -33,7 +33,7 @@ class ConfirmPaperPhraseViewController: UIViewController {
     private let submit = BRDButton(title: S.Button.submit, type: .primary)
     private let header = RadialGradientView(backgroundColor: .pink)
     private let pin: String
-    private let walletManager: BTCWalletManager
+    private let keyMaster: KeyMaster
     private let callback: () -> Void
     
     //Select 2 random indices from 1 to 10. The second number must
@@ -48,7 +48,7 @@ class ConfirmPaperPhraseViewController: UIViewController {
         return (first, second)
     }()
     lazy private var words: [String] = {
-        guard let phraseString = self.walletManager.seedPhrase(pin: self.pin) else { return [] }
+        guard let phraseString = self.keyMaster.seedPhrase(pin: self.pin) else { return [] }
         return phraseString.components(separatedBy: " ")
     }()
 

@@ -15,7 +15,8 @@ class WalletDisabledView: UIView {
     }
 
     init() {
-        self.faq = UIButton.buildFaqButton(articleId: ArticleIds.walletDisabled)
+        faq = UIButton.buildFaqButton(articleId: ArticleIds.walletDisabled)
+        faq.tintColor = .whiteTint
         blur = UIVisualEffectView()
         super.init(frame: .zero)
         setup()
@@ -41,11 +42,11 @@ class WalletDisabledView: UIView {
         }
     }
 
-    private let label = UILabel(font: .customBold(size: 20.0), color: .darkText)
+    private let label = UILabel(font: .customBold(size: 20.0), color: .whiteTint)
     private let faq: UIButton
     private let blur: UIVisualEffectView
-    private let reset = BRDButton(title: S.UnlockScreen.resetPin, type: .blackTransparent)
-    private let effect = UIBlurEffect(style: .light)
+    private let reset = BRDButton(title: S.UnlockScreen.resetPin, type: .secondaryTransparent)
+    private let effect = UIBlurEffect(style: .regular)
 
     private func setup() {
         addSubviews()

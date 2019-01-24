@@ -9,18 +9,25 @@
 import XCTest
 @testable import breadwallet
 
-private var walletManager: BTCWalletManager?
-private var client: BRAPIClient?
-
 class WalletInfoTest : XCTestCase {
 
-    override class func setUp() {
+    private var walletManager: BTCWalletManager!
+    private var client: BRAPIClient?
+    private var keyStore: KeyStore!
+
+    override func setUp() {
+        super.setUp()
         clearKeychain()
         deleteKvStoreDb()
-        walletManager = try! BTCWalletManager(currency: Currencies.btc, dbPath: nil)
-        let _ = walletManager?.setRandomSeedPhrase()
-        initWallet(walletManager: walletManager!)
-        client = BRAPIClient(authenticator: walletManager!)
+        keyStore = try! KeyStore.create()
+        walletManager = setupNewWallet(keyStore: keyStore)
+        client = BRAPIClient(authenticator: keyStore)
+    }
+
+    override func tearDown() {
+        super.tearDown()
+        clearKeychain()
+        keyStore.destroy()
     }
 
     func testRecoverWalletInfo() {
@@ -33,11 +40,11 @@ class WalletInfoTest : XCTestCase {
         // 2. Sync new wallet info to server
         kv.syncAllKeys { error in
 
-            // 3. Delete Kv Store and simulatore restore wallet
-            client = nil
+            // 3. Delete Kv Store and simulate restore wallet
+            self.client = nil
             deleteKvStoreDb()
-            client = BRAPIClient(authenticator: walletManager!)
-            guard let newKv = client?.kv else { XCTFail("KV store should exist"); return }
+            self.client = BRAPIClient(authenticator: self.keyStore)
+            guard let newKv = self.client?.kv else { XCTFail("KV store should exist"); return }
 
             // 4. Fetch wallet info from remote
             newKv.syncAllKeys { error in

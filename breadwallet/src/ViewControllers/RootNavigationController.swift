@@ -10,30 +10,33 @@ import UIKit
 
 class RootNavigationController: UINavigationController {
 
-    var walletManager: BTCWalletManager? {
-        didSet {
-            guard let walletManager = walletManager else { return }
-            if !walletManager.noWallet && Store.state.isLoginRequired {
-                let loginView = LoginViewController(isPresentedForLock: false, walletManager: walletManager)
-                loginView.transitioningDelegate = loginTransitionDelegate
-                loginView.modalPresentationStyle = .overFullScreen
-                loginView.modalPresentationCapturesStatusBarAppearance = true
-                present(loginView, animated: false, completion: {
-                    self.tempLoginView.remove()
-                })
-            }
-        }
-    }
-
+    private let keyMaster: KeyMaster
     private var tempLoginView = LoginViewController(isPresentedForLock: false)
     private let loginTransitionDelegate = LoginTransitionDelegate()
+
+    init(keyMaster: KeyMaster) {
+        self.keyMaster = keyMaster
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    func showLoginIfNeeded() {
+        if !keyMaster.noWallet && Store.state.isLoginRequired {
+            let loginView = LoginViewController(isPresentedForLock: false, keyMaster: keyMaster)
+            loginView.transitioningDelegate = loginTransitionDelegate
+            loginView.modalPresentationStyle = .overFullScreen
+            loginView.modalPresentationCapturesStatusBarAppearance = true
+            present(loginView, animated: false, completion: {
+                self.tempLoginView.remove()
+            })
+        }
+    }
 
     private func addTempLoginAndStartViews() {
         self.addChildViewController(tempLoginView, layout: {
             tempLoginView.view.constrain(toSuperviewEdges: nil)
         })
         guardProtected(queue: DispatchQueue.main) {
-            if BTCWalletManager.staticNoWallet {
+            if self.keyMaster.noWallet {
                 self.tempLoginView.remove()
                 let tempStartView = StartViewController(didTapCreate: {}, didTapRecover: {})
                 self.addChildViewController(tempStartView, layout: {
@@ -62,6 +65,10 @@ class RootNavigationController: UINavigationController {
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 

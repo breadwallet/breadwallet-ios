@@ -23,9 +23,7 @@ class ApplicationController: Subscriber, Trackable {
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var walletManagers = [String: WalletManager]()
     private var walletCoordinator: WalletCoordinator?
-    private var primaryWalletManager: BTCWalletManager? {
-        return walletManagers[Currencies.btc.code] as? BTCWalletManager
-    }
+    private var keyStore: KeyStore!
     
     var rootNavigationController: RootNavigationController? {
         guard let root = window.rootViewController as? RootNavigationController else { return nil }
@@ -44,7 +42,7 @@ class ApplicationController: Subscriber, Trackable {
     private var kvStoreCoordinator: KVStoreCoordinator?
     fileprivate var application: UIApplication?
     private var urlController: URLController?
-    private var defaultsUpdater: UserDefaultsUpdater?
+    private let defaultsUpdater = UserDefaultsUpdater()
     private var fetchCompletionHandler: ((UIBackgroundFetchResult) -> Void)?
     private var launchURL: URL?
     private var hasPerformedWalletDependentInitialization = false
@@ -63,7 +61,13 @@ class ApplicationController: Subscriber, Trackable {
 
     init() {
         isReachable = Reachability.isReachable
-        guardProtected(queue: DispatchQueue.walletQueue) {
+        guardProtected(queue: DispatchQueue.main) {
+            do {
+                self.keyStore = try KeyStore.create()
+            } catch let error { // only possible exception here should be if the keychain is inaccessible
+                print("error initializing key store: \(error)")
+                fatalError("error initializing key store")
+            }
 
             self.rescanNeeded = []
             // queue auomatic rescan attempt triggered by db load to execute after wallet coordinator is started
@@ -76,20 +80,33 @@ class ApplicationController: Subscriber, Trackable {
                 }
             })
 
-            if UserDefaults.hasBchConnected {
-                self.initWallets(completion: self.didAttemptInitWallet)
+            if self.keyStore.noWallet {
+                self.didAttemptInitWallet()
             } else {
-                self.initWalletsWithMigration(completion: self.didAttemptInitWallet)
+                DispatchQueue.walletQueue.async {
+                    if UserDefaults.hasBchConnected {
+                        self.initWallets(completion: self.didAttemptInitWallet)
+                    } else {
+                        self.initWalletsWithMigration(completion: self.didAttemptInitWallet)
+                    }
+                }
             }
         }
     }
 
     /// Migrates pre-fork BTC transactions to BCH wallet then init all wallets
+    /// This only applies in the case where a BTC wallet with transaction history already exists on the device
+    /// and the wallet was created prior to the BCH fork.
     private func initWalletsWithMigration(completion: @escaping () -> Void) {
         let btc = Currencies.btc
         let bch = Currencies.bch
+        let creationTime = keyStore.creationTime
 
-        guard let btcWalletManager = try? BTCWalletManager(currency: btc, dbPath: btc.dbPath) else { return }
+        guard let mpk = keyStore.masterPubKey,
+            let btcWalletManager = try? BTCWalletManager(currency: btc,
+                                                         masterPubKey: mpk,
+                                                         earliestKeyTime: creationTime,
+                                                         dbPath: btc.dbPath) else { return }
         walletManagers[btc.code] = btcWalletManager
         btcWalletManager.initWallet { [unowned self] success in
             guard success else {
@@ -104,9 +121,15 @@ class ApplicationController: Subscriber, Trackable {
                         let preForkBlocks = blocks.compactMap {$0}.filter { $0.pointee.height < C.bCashForkBlockHeight }
                         var bchWalletManager: BTCWalletManager?
                         if !preForkBlocks.isEmpty || blocks.isEmpty {
-                            bchWalletManager = try? BTCWalletManager(currency: bch, dbPath: bch.dbPath)
+                            bchWalletManager = try? BTCWalletManager(currency: bch,
+                                                                     masterPubKey: mpk,
+                                                                     earliestKeyTime: creationTime,
+                                                                     dbPath: bch.dbPath)
                         } else {
-                            bchWalletManager = try? BTCWalletManager(currency: bch, dbPath: bch.dbPath, earliestKeyTimeOverride: C.bCashForkTimeStamp)
+                            bchWalletManager = try? BTCWalletManager(currency: bch,
+                                                                     masterPubKey: mpk,
+                                                                     earliestKeyTime: C.bCashForkTimeStamp,
+                                                                     dbPath: bch.dbPath)
                         }
                         self.walletManagers[bch.code] = bchWalletManager
                         bchWalletManager?.initWallet(transactions: preForkTransactions)
@@ -144,7 +167,7 @@ class ApplicationController: Subscriber, Trackable {
         guard !(currency is ERC20Token) else { return assertionFailure() }
         dispatchGroup.enter()
         if let currency = currency as? Ethereum {
-            guard let manager = EthWalletManager() else {
+            guard let publicKey = keyStore.ethPubKey, let manager = EthWalletManager(publicKey: publicKey) else {
                 dispatchGroup.leave()
                 return
             }
@@ -154,15 +177,16 @@ class ApplicationController: Subscriber, Trackable {
             }
             return
         }
-        guard let currency = currency as? Bitcoin else { return assertionFailure() }
-        guard let walletManager = try? BTCWalletManager(currency: currency, dbPath: currency.dbPath) else { return assertionFailure() }
+        guard let currency = currency as? Bitcoin,
+            let mpk = keyStore.masterPubKey,
+            let walletManager = try? BTCWalletManager(currency: currency,
+                                                      masterPubKey: mpk,
+                                                      earliestKeyTime: keyStore.creationTime,
+                                                      dbPath: currency.dbPath) else { return assertionFailure() }
         walletManagers[currency.code] = walletManager
         walletManager.initWallet { success in
             guard success else {
-                // always keep BTC wallet manager, even if not initialized, since it the primaryWalletManager and needed for onboarding
-                if !currency.matches(Currencies.btc) {
-                    self.walletManagers[currency.code] = nil
-                }
+                self.walletManagers[currency.code] = nil
                 dispatchGroup.leave()
                 return
             }
@@ -217,10 +241,10 @@ class ApplicationController: Subscriber, Trackable {
         setupRootViewController()
         window.makeKeyAndVisible()
         offMainInitialization()
-        
+
+        //TODO:AUTH rename to uninit
         Store.subscribe(self, name: .reinitWalletManager(nil), callback: {
-            guard let trigger = $0 else { return }
-            if case .reinitWalletManager(let callback) = trigger {
+            if case .reinitWalletManager(let callback)? = $0 {
                 if let callback = callback {
                     self.reinitWalletManager(callback: callback)
                 }
@@ -234,8 +258,7 @@ class ApplicationController: Subscriber, Trackable {
     }
     
     func willEnterForeground() {
-        guard let walletManager = primaryWalletManager,
-            !walletManager.noWallet else { return }
+        guard !keyStore.noWallet else { return }
         Backend.sendLaunchEvent()
         if shouldRequireLogin() {
             Store.perform(action: RequireLogin())
@@ -270,6 +293,10 @@ class ApplicationController: Subscriber, Trackable {
     
     func didUnlockWallet() {
         Backend.pigeonExchange?.fetchInbox()
+        //TODO:SL
+        if let btcWalletManager = walletManagers[Currencies.btc.code] as? BTCWalletManager {
+            btcWalletManager.updateSpendLimit()
+        }
     }
 
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -277,10 +304,11 @@ class ApplicationController: Subscriber, Trackable {
     }
 
     private func didInitWalletManager() {
-        guard let primaryWalletManager = primaryWalletManager else { return }
         guard let rootViewController = window.rootViewController as? RootNavigationController else { return }
         walletCoordinator = WalletCoordinator(walletManagers: walletManagers)
-        Backend.connectWallet(primaryWalletManager, currencies: Store.state.currencies, walletManagers: walletManagers.map { $0.1 })
+        Backend.connect(authenticator: keyStore as WalletAuthenticator,
+                        currencies: Store.state.currencies,
+                        walletManagers: walletManagers.map { $0.1 })
         Backend.sendLaunchEvent()
 
         if let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager {
@@ -291,14 +319,15 @@ class ApplicationController: Subscriber, Trackable {
                 }
             }
         }
-
+        
         initTokenWallets()
         addTokenListChangeListener()
-        Store.perform(action: PinLength.Set(primaryWalletManager.pinLength))
-        rootViewController.walletManager = primaryWalletManager
+        Store.perform(action: PinLength.Set(keyStore.pinLength))
+        rootViewController.showLoginIfNeeded()
         
         if let homeScreen = rootViewController.viewControllers.first as? HomeScreenViewController {
-            homeScreen.primaryWalletManager = primaryWalletManager
+            // TODO: why is this needed...
+            homeScreen.reload()
         }
         
         hasPerformedWalletDependentInitialization = true
@@ -306,20 +335,19 @@ class ApplicationController: Subscriber, Trackable {
             Store.unsubscribe(modalPresenter!)
         }
 
-        modalPresenter = ModalPresenter(primaryWalletManager: primaryWalletManager, walletManagers: walletManagers, window: window)
-        startFlowController = StartFlowPresenter(walletManager: primaryWalletManager, 
+        modalPresenter = ModalPresenter(keyStore: keyStore, walletManagers: walletManagers, window: window)
+        startFlowController = StartFlowPresenter(keyMaster: keyStore,
                                                  rootViewController: rootViewController,
                                                  createHomeScreen: createHomeScreen,
                                                  createBuyScreen: createBuyScreen)
-        
-        defaultsUpdater = UserDefaultsUpdater(walletManager: primaryWalletManager)
-        urlController = URLController(walletManager: primaryWalletManager)
+
+        urlController = URLController(walletAuthenticator: keyStore)
         if let url = launchURL {
             _ = urlController?.handleUrl(url)
             launchURL = nil
         }
         
-        if primaryWalletManager.noWallet {
+        if keyStore.noWallet {
             addWalletCreationListener()
             Store.perform(action: ShowStartFlow())
         } else {
@@ -349,11 +377,9 @@ class ApplicationController: Subscriber, Trackable {
             self.kvStoreCoordinator = nil
             self.walletManagers.values.forEach({ $0.resetForWipe() })
             self.walletManagers.removeAll()
-            self.initWallets {
-                DispatchQueue.main.async {
-                    self.didInitWalletManager()
-                    callback()
-                }
+            DispatchQueue.main.async {
+                self.didInitWalletManager()
+                callback()
             }
         }
     }
@@ -429,6 +455,7 @@ class ApplicationController: Subscriber, Trackable {
     private func createBuyScreen() -> BRWebViewController {
         let buyScreen = BRWebViewController(bundleName: C.webBundle, 
                                             mountPoint: "/buy",
+                                            walletAuthenticator: keyStore,
                                             walletManagers: walletManagers)
         buyScreen.startServer()
         buyScreen.preload()
@@ -438,7 +465,7 @@ class ApplicationController: Subscriber, Trackable {
     
     // Creates an instance of the home screen. This may be invoked from StartFlowPresenter.presentOnboardingFlow().
     private func createHomeScreen(navigationController: UINavigationController) -> HomeScreenViewController {
-        let homeScreen = HomeScreenViewController(primaryWalletManager: walletManagers[Currencies.btc.code] as? BTCWalletManager)
+        let homeScreen = HomeScreenViewController(walletAuthenticator: keyStore as WalletAuthenticator)
                 
         addHomeScreenHandlers(homeScreen: homeScreen, navigationController: navigationController)
         
@@ -446,7 +473,7 @@ class ApplicationController: Subscriber, Trackable {
     }
     
     private func setupRootViewController() {
-        let navigationController = RootNavigationController()
+        let navigationController = RootNavigationController(keyMaster: keyStore)
                 
         // If we're going to show the onboarding screen, the home screen will be created later
         // in StartFlowPresenter.presentOnboardingFlow(). Pushing the home screen here causes
@@ -459,7 +486,7 @@ class ApplicationController: Subscriber, Trackable {
             // State restoration
             if let currency = Store.state.currencies.first(where: { $0.code == UserDefaults.selectedCurrencyCode }),
                 let walletManager = self.walletManagers[currency.code],
-                primaryWalletManager?.noWallet == false {
+                keyStore.noWallet == false {
                 let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
                 navigationController.pushViewController(accountViewController, animated: true)
             }
@@ -473,7 +500,7 @@ class ApplicationController: Subscriber, Trackable {
         initKVStoreCoordinator()
         Backend.updateFees()
         Backend.updateExchangeRates()
-        defaultsUpdater?.refresh()
+        defaultsUpdater.refresh()
         Backend.apiClient.events?.up()
         if !Store.state.isPushNotificationsEnabled {
             Backend.pigeonExchange?.startPolling()
@@ -539,8 +566,7 @@ class ApplicationController: Subscriber, Trackable {
     }
     
     private func retryAfterIsReachable() {
-        guard let walletManager = primaryWalletManager,
-            !walletManager.noWallet else { return }
+        guard !keyStore.noWallet else { return }
         walletManagers.values.filter { $0 is BTCWalletManager }.map { $0.currency }.forEach {
             // reset sync state before re-connecting
             Store.perform(action: WalletChange($0).setSyncingState(.success))
