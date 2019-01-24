@@ -10,14 +10,14 @@ import UIKit
 
 class WritePaperPhraseViewController: UIViewController {
 
-    private let walletManager: BTCWalletManager
+    private let keyMaster: KeyMaster
     private let pin: String
     private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
     private let stepLabel = UILabel.wrapping(font: UIFont.customMedium(size: 13.0))
     private let header = RadialGradientView(backgroundColor: .pink)
     
     private lazy var phraseViews: [PhraseView] = {
-        guard let phraseString = self.walletManager.seedPhrase(pin: self.pin) else { return [] }
+        guard let phraseString = self.keyMaster.seedPhrase(pin: self.pin) else { return [] }
         let words = phraseString.components(separatedBy: " ")
         return words.map { PhraseView(phrase: $0) }
     }()
@@ -40,8 +40,8 @@ class WritePaperPhraseViewController: UIViewController {
 
     var lastWordSeen: (() -> Void)?
 
-    init(walletManager: BTCWalletManager, pin: String, callback: @escaping () -> Void) {
-        self.walletManager = walletManager
+    init(keyMaster: KeyMaster, pin: String, callback: @escaping () -> Void) {
+        self.keyMaster = keyMaster
         self.pin = pin
         self.callback = callback
         super.init(nibName: nil, bundle: nil)

@@ -17,12 +17,12 @@ protocol ContentBoxPresenter {
 
 class VerifyPinViewController: UIViewController, ContentBoxPresenter {
 
-    init(bodyText: String, pinLength: Int, walletManager: BTCWalletManager, success: @escaping (String) -> Void) {
+    init(bodyText: String, pinLength: Int, walletAuthenticator: WalletAuthenticator, success: @escaping (String) -> Void) {
         self.bodyText = bodyText
         self.success = success
         self.pinLength = pinLength
         self.pinView = PinView(style: .verify, length: pinLength)
-        self.walletManager = walletManager
+        self.walletAuthenticator = walletAuthenticator
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -39,7 +39,7 @@ class VerifyPinViewController: UIViewController, ContentBoxPresenter {
     private let cancel = UIButton(type: .system)
     private let bodyText: String
     private let pinLength: Int
-    private let walletManager: BTCWalletManager
+    private let walletAuthenticator: WalletAuthenticator
 
     override func viewDidLoad() {
         addSubviews()
@@ -111,7 +111,7 @@ class VerifyPinViewController: UIViewController, ContentBoxPresenter {
             myself.pinView.fill(attemptLength)
             myself.pinPad.isAppendingDisabled = attemptLength < myself.pinLength ? false : true
             if attemptLength == myself.pinLength {
-                if myself.walletManager.authenticate(pin: output) {
+                if myself.walletAuthenticator.authenticate(withPin: output) {
                     myself.dismiss(animated: true, completion: {
                         myself.success(output)
                     })
@@ -139,7 +139,7 @@ class VerifyPinViewController: UIViewController, ContentBoxPresenter {
     }
 
     private func lockIfNeeded() {
-        guard walletManager.walletIsDisabled else { return }
+        guard walletAuthenticator.walletIsDisabled else { return }
         dismiss(animated: true, completion: {
             Store.perform(action: RequireLogin())
         })

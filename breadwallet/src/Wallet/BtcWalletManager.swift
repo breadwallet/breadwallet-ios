@@ -11,6 +11,10 @@ import BRCore
 import SystemConfiguration
 import UIKit
 
+enum BTCWalletManagerError: Error {
+    case invalidKey
+}
+
 // A WalletManger instance manages a single wallet, and that wallet's individual connection to the bitcoin network.
 // After instantiating a WalletManager object, call myWalletManager.peerManager.connect() to begin syncing.
 class BTCWalletManager: WalletManager, Subscriber {
@@ -96,10 +100,10 @@ class BTCWalletManager: WalletManager, Subscriber {
     }
 
     init(currency: Currency, masterPubKey: BRMasterPubKey, earliestKeyTime: TimeInterval, dbPath: String? = nil) throws {
+        guard masterPubKey != BRMasterPubKey() else { throw BTCWalletManagerError.invalidKey }
         self.currency = currency
         self.masterPubKey = masterPubKey
-        self.earliestKeyTime = earliestKeyTime
-        guard self.masterPubKey != BRMasterPubKey() else { return }
+        self.earliestKeyTime = TimeInterval.maximum(earliestKeyTime, C.bip39CreationTime)
         if let path = dbPath {
             self.db = CoreDatabase(dbPath: path)
         } else {
@@ -122,6 +126,17 @@ class BTCWalletManager: WalletManager, Subscriber {
                 Store.perform(action: WalletChange(self.currency).set(self.currency.state!.mutate(receiveAddress: receiveAddress)))
             }
         })
+    }
+
+    func resetForWipe() {
+        peerManager?.clearCallbacks()
+        peerManager?.disconnect()
+        wallet = nil
+        peerManager = nil
+        db?.close()
+        db?.delete()
+        db = nil
+        earliestKeyTime = 0
     }
 }
 
