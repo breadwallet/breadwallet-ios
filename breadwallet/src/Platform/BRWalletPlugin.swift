@@ -36,6 +36,7 @@ enum PlatformAuthResult {
 
 class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     var sockets = [String: BRWebSocket]()
+    let walletAuthenticator: TransactionAuthenticator
     let walletManagers: [String: WalletManager]
     var tempBitIDKeys = [String: BRKey]() // this should only ever be mutated from the main thread
     private var tempBitIDResponses = [String: Int]()
@@ -46,7 +47,8 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         return walletManagers[Currencies.btc.code] as? BTCWalletManager
     }
 
-    init(walletManagers: [String: WalletManager]) {
+    init(walletAuthenticator: TransactionAuthenticator, walletManagers: [String: WalletManager]) {
+        self.walletAuthenticator = walletAuthenticator
         self.walletManagers = walletManagers
     }
     
@@ -139,21 +141,22 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                             asyncResp.provide(200, json: ["error": "proxy-shutdown"])
                         }
                         Store.trigger(name: .authenticateForPlatform(prompt, true, { [weak self] result in
-                            self?.isPresentingAuth = false
+                            guard let `self` = self else { request.queue.async { asyncResp.provide(500) }; return }
+                            self.isPresentingAuth = false
                             switch result {
                             case .success:
-                                if let key = self?.btcWalletManager?.buildBitIdKey(url: url, index: bitidIndex) {
-                                    self?.addKeyToCache(key, url: url)
-                                    self?.sendBitIDResponse(stringToSign, usingKey: key, request: request, asyncResp: asyncResp)
+                                if let key = self.walletAuthenticator.buildBitIdKey(url: url, index: bitidIndex) {
+                                    self.addKeyToCache(key, url: url)
+                                    self.sendBitIDResponse(stringToSign, usingKey: key, request: request, asyncResp: asyncResp)
                                 } else {
-                                    self?.tempBitIDResponses[stringToSign] = 401
+                                    self.tempBitIDResponses[stringToSign] = 401
                                     request.queue.async { asyncResp.provide(401) }
                                 }
                             case .cancelled:
-                                self?.tempBitIDResponses[stringToSign] = 403
+                                self.tempBitIDResponses[stringToSign] = 403
                                 request.queue.async { asyncResp.provide(403) }
                             case .failed:
-                                self?.tempBitIDResponses[stringToSign] = 401
+                                self.tempBitIDResponses[stringToSign] = 401
                                 request.queue.async { asyncResp.provide(401) }
                             }
                         }))
@@ -356,7 +359,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             
             guard let walletManager = self.walletManagers[currency.code],
                 let kvStore = Backend.kvStore,
-                let sender = currency.createSender(walletManager: walletManager, kvStore: kvStore) else {
+                let sender = currency.createSender(authenticator: self.walletAuthenticator, walletManager: walletManager, kvStore: kvStore) else {
                     return BRHTTPResponse(request: request, code: 500)
             }
             
@@ -499,7 +502,7 @@ extension BRWalletPlugin {
     func walletInfo() -> [String: Any] {
         var d = [String: Any]()
         guard let walletManager = btcWalletManager else { return d }
-        d["no_wallet"] = walletManager.noWallet
+        d["no_wallet"] = walletAuthenticator.noWallet
         if let wallet = walletManager.wallet {
             d["receive_address"] = wallet.legacyReceiveAddress // TODO: use segwit address when platform adds support
             //d["watch_only"] = TODO - add watch only

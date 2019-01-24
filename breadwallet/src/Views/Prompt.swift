@@ -20,8 +20,8 @@ enum PromptType {
         return [.upgradePin, .paperKey, .noPasscode, .biometrics, .email]
     }()
     
-    static func nextPrompt(walletManager: BTCWalletManager) -> PromptType? {
-        return defaultOrder.first(where: { $0.shouldPrompt(walletManager: walletManager) })
+    static func nextPrompt(walletAuthenticator: WalletAuthenticator) -> PromptType? {
+        return defaultOrder.first(where: { $0.shouldPrompt(walletAuthenticator: walletAuthenticator) })
     }
 
     var title: String {
@@ -65,14 +65,14 @@ enum PromptType {
         }
     }
 
-    func shouldPrompt(walletManager: BTCWalletManager) -> Bool {
+    func shouldPrompt(walletAuthenticator: WalletAuthenticator) -> Bool {
         switch self {
         case .biometrics:
             return !UserDefaults.hasPromptedBiometrics && LAContext.canUseBiometrics && !UserDefaults.isBiometricsEnabled
         case .paperKey:
             return UserDefaults.walletRequiresBackup && !UserDefaults.debugShouldSuppressPaperKeyPrompt
         case .upgradePin:
-            return walletManager.pinLength != 6
+            return walletAuthenticator.pinLength != 6
         case .noPasscode:
             return !LAContext.isPasscodeEnabled
         case .email:

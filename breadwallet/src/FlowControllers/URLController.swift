@@ -12,12 +12,12 @@ import UIKit
 
 class URLController: Trackable, Subscriber {
 
-    init(walletManager: BTCWalletManager) {
-        self.walletManager = walletManager
+    init(walletAuthenticator: WalletAuthenticator) {
+        self.walletAuthenticator = walletAuthenticator
     }
 
     private var urlWaitingForUnlock: URL?
-    private let walletManager: BTCWalletManager
+    private let walletAuthenticator: WalletAuthenticator
     private var xSource, xSuccess, xError, uri: String?
         
     func handleUrl(_ url: URL) -> Bool {
@@ -118,8 +118,7 @@ class URLController: Trackable, Subscriber {
             
         case "bitid":
             if BRBitID.isBitIDURL(url) {
-                handleBitId(url)
-                return true
+                return handleBitId(url)
             }
             
         default:
@@ -149,9 +148,9 @@ class URLController: Trackable, Subscriber {
     }
 
     private func copyAddress(callback: String) {
-        if let url = URL(string: callback), let wallet = walletManager.wallet {
+        if let url = URL(string: callback), let address = Store.state[Currencies.btc]?.receiveAddress {
             let queryLength = url.query?.utf8.count ?? 0
-            let callback = callback.appendingFormat("%@address=%@", queryLength > 0 ? "&" : "?", wallet.receiveAddress)
+            let callback = callback.appendingFormat("%@address=%@", queryLength > 0 ? "&" : "?", address)
             if let callbackURL = URL(string: callback) {
                 UIApplication.shared.open(callbackURL)
             }
@@ -167,8 +166,8 @@ class URLController: Trackable, Subscriber {
         }
     }
 
-    private func handleBitId(_ url: URL) {
-        let bitid = BRBitID(url: url, walletManager: walletManager)
+    private func handleBitId(_ url: URL) -> Bool {
+        let bitid = BRBitID(url: url, walletAuthenticator: walletAuthenticator)
         let message = String(format: S.BitID.authenticationRequest, bitid.siteName)
         let alert = UIAlertController(title: S.BitID.title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.BitID.deny, style: .cancel, handler: nil))
@@ -186,6 +185,7 @@ class URLController: Trackable, Subscriber {
             }
         }))
         present(alert: alert)
+        return true
     }
 
     private func present(alert: UIAlertController) {

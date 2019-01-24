@@ -18,9 +18,9 @@ typealias EnterPhraseCallback = (String) -> Void
 
 class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackable {
 
-    init(walletManager: BTCWalletManager, reason: PhraseEntryReason) {
-        self.walletManager = walletManager
-        self.enterPhrase = EnterPhraseCollectionViewController(walletManager: walletManager)
+    init(keyMaster: KeyMaster, reason: PhraseEntryReason) {
+        self.keyMaster = keyMaster
+        self.enterPhrase = EnterPhraseCollectionViewController(keyMaster: keyMaster)
         self.faq = UIButton.buildFaqButton(articleId: ArticleIds.recoverWallet)
         self.reason = reason
         super.init(nibName: nil, bundle: nil)
@@ -29,7 +29,7 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
     }
 
     // MARK: - Private
-    private let walletManager: BTCWalletManager
+    private let keyMaster: KeyMaster
     private let reason: PhraseEntryReason
     private let enterPhrase: EnterPhraseCollectionViewController
     private let errorLabel = UILabel.wrapping(font: .customBody(size: 16.0), color: .cameraGuideNegative)
@@ -45,6 +45,7 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
     }
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         addSubviews()
         addConstraints()
         setInitialData()
@@ -75,7 +76,7 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
             container.widthAnchor.constraint(equalTo: view.widthAnchor) ])
         subheader.constrain([
             subheader.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
-            subheader.topAnchor.constraint(equalTo: container.topAnchor),
+            subheader.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[1]),
             subheader.trailingAnchor.constraint(equalTo: faq.leadingAnchor, constant: -C.padding[2])])
         instruction.constrain([
             instruction.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: C.padding[3]),
@@ -136,7 +137,7 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
     }
 
     private func validatePhrase(_ phrase: String) {
-        guard walletManager.isPhraseValid(phrase) else {
+        guard keyMaster.isSeedPhraseValid(phrase) else {
             saveEvent("enterPhrase.invalid")
             errorLabel.isHidden = false
             return
@@ -146,18 +147,18 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
 
         switch reason {
         case .setSeed(let callback):
-            guard self.walletManager.setSeedPhrase(phrase) else { errorLabel.isHidden = false; return }
+            guard self.keyMaster.setSeedPhrase(phrase) else { errorLabel.isHidden = false; return }
             //Since we know that the user had their phrase at this point,
             //this counts as a write date
             UserDefaults.writePaperPhraseDate = Date()
             Store.perform(action: LoginSuccess())
             return callback(phrase)
         case .validateForResettingPin(let callback):
-            guard self.walletManager.authenticate(phrase: phrase) else { errorLabel.isHidden = false; return }
+            guard self.keyMaster.authenticate(withPhrase: phrase) else { errorLabel.isHidden = false; return }
             UserDefaults.writePaperPhraseDate = Date()
             return callback(phrase)
         case .validateForWipingWallet(let callback):
-            guard self.walletManager.authenticate(phrase: phrase) else { errorLabel.isHidden = false; return }
+            guard self.keyMaster.authenticate(withPhrase: phrase) else { errorLabel.isHidden = false; return }
             return callback()
         }
     }
@@ -178,10 +179,6 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
             contentInset.bottom = 0.0
         }
         scrollView.contentInset = contentInset
-    }
-
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
     }
 
     required init?(coder aDecoder: NSCoder) {
