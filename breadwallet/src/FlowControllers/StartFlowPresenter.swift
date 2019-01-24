@@ -10,11 +10,11 @@ import UIKit
 
 class StartFlowPresenter: Subscriber {
 
-    init(walletManager: BTCWalletManager, 
+    init(keyMaster: KeyMaster,
          rootViewController: RootNavigationController, 
          createHomeScreen: @escaping (UINavigationController) -> HomeScreenViewController,
          createBuyScreen: @escaping () -> BRWebViewController) {
-        self.walletManager = walletManager
+        self.keyMaster = keyMaster
         self.rootViewController = rootViewController
         self.navigationControllerDelegate = StartNavigationDelegate()
         self.createHomeScreen = createHomeScreen
@@ -26,7 +26,7 @@ class StartFlowPresenter: Subscriber {
     private let rootViewController: RootNavigationController
     private var navigationController: ModalNavigationController?
     private let navigationControllerDelegate: StartNavigationDelegate
-    private let walletManager: BTCWalletManager
+    private let keyMaster: KeyMaster
     private var loginViewController: UIViewController?
     private let loginTransitionDelegate = LoginTransitionDelegate()
     private var createHomeScreen: ((UINavigationController) -> HomeScreenViewController)?
@@ -141,24 +141,24 @@ class StartFlowPresenter: Subscriber {
 
     private var pushRecoverWalletView: () -> Void {
         return { [weak self] in
-            guard let myself = self else { return }
+            guard let `self` = self else { return }
             let recoverWalletViewController =
-                EnterPhraseViewController(walletManager: myself.walletManager,
-                                          reason: .setSeed(myself.pushPinCreationViewForRecoveredWallet))
-            myself.navigationController?.pushViewController(recoverWalletViewController, animated: true)
+                EnterPhraseViewController(keyMaster: self.keyMaster,
+                                          reason: .setSeed(self.pushPinCreationViewForRecoveredWallet))
+            self.navigationController?.pushViewController(recoverWalletViewController, animated: true)
         }
     }
 
     private var pushPinCreationViewForRecoveredWallet: (String) -> Void {
         return { [weak self] phrase in
-            guard let myself = self else { return }
-            let pinCreationView = UpdatePinViewController(walletManager: myself.walletManager, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
+            guard let `self` = self else { return }
+            let pinCreationView = UpdatePinViewController(keyMaster: self.keyMaster, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
             pinCreationView.setPinSuccess = { _ in
                 DispatchQueue.main.async {
                     Store.trigger(name: .didCreateOrRecoverWallet)
                 }
             }
-            myself.navigationController?.pushViewController(pinCreationView, animated: true)
+            self.navigationController?.pushViewController(pinCreationView, animated: true)
         }
     }
 
@@ -185,10 +185,10 @@ class StartFlowPresenter: Subscriber {
     }
 
     private func enterCreateWalletFlow() {
-        let pinCreationViewController = UpdatePinViewController(walletManager: walletManager, type: .creationNoPhrase, showsBackButton: true, phrase: nil)
+        let pinCreationViewController = UpdatePinViewController(keyMaster: keyMaster, type: .creationNoPhrase, showsBackButton: true, phrase: nil)
         pinCreationViewController.setPinSuccess = { [weak self] pin in
             autoreleasepool {
-                guard self?.walletManager.setRandomSeedPhrase() != nil else { self?.handleWalletCreationError(); return }
+                guard self?.keyMaster.setRandomSeedPhrase() != nil else { self?.handleWalletCreationError(); return }
                 //TODO:BCH multi-currency support
                 UserDefaults.selectedCurrencyCode = nil // to land on home screen after new wallet creation
                 Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(Date()))
@@ -230,7 +230,7 @@ class StartFlowPresenter: Subscriber {
     }
 
     private func pushWritePaperPhraseViewController(pin: String) {
-        let writeViewController = WritePaperPhraseViewController(walletManager: walletManager, pin: pin, callback: { [weak self] in
+        let writeViewController = WritePaperPhraseViewController(keyMaster: keyMaster, pin: pin, callback: { [weak self] in
             self?.pushConfirmPaperPhraseViewController(pin: pin)
         })
         writeViewController.title = S.SecurityCenter.Cells.paperKeyTitle
@@ -239,7 +239,7 @@ class StartFlowPresenter: Subscriber {
     }
 
     private func pushConfirmPaperPhraseViewController(pin: String) {
-        let confirmViewController = ConfirmPaperPhraseViewController(walletManager: walletManager, pin: pin, callback: {
+        let confirmViewController = ConfirmPaperPhraseViewController(keyMaster: keyMaster, pin: pin, callback: {
             Store.perform(action: Alert.Show(.paperKeySet(callback: {
                 Store.perform(action: HideStartFlow())
             })))
@@ -250,7 +250,7 @@ class StartFlowPresenter: Subscriber {
     }
 
     private func presentLoginFlow(isPresentedForLock: Bool) {
-        let loginView = LoginViewController(isPresentedForLock: isPresentedForLock, walletManager: walletManager)
+        let loginView = LoginViewController(isPresentedForLock: isPresentedForLock, keyMaster: keyMaster)
         loginView.transitioningDelegate = loginTransitionDelegate
         loginView.modalPresentationStyle = .overFullScreen
         loginView.modalPresentationCapturesStatusBarAppearance = true

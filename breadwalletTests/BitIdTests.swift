@@ -11,20 +11,23 @@ import XCTest
 
 class BitIdTests : XCTestCase {
 
-    private let walletManager: BTCWalletManager = try! BTCWalletManager(currency: Currencies.btc, dbPath: nil)
+    private var keyStore: KeyStore!
 
     override func setUp() {
         super.setUp()
         clearKeychain()
-        guard walletManager.noWallet else { XCTFail("Wallet should not exist"); return }
-        guard walletManager.setSeedPhrase("famous gesture ladder armor must taste afraid search stove panda grab deer") else { XCTFail("Setting seed should work"); return  }
+        keyStore = try! KeyStore.create()
+        guard keyStore.noWallet else { XCTFail("Wallet should not exist"); return }
+        guard keyStore.setSeedPhrase("famous gesture ladder armor must taste afraid search stove panda grab deer") else { XCTFail("Setting seed should work"); return  }
     }
 
     override func tearDown() {
         super.tearDown()
         clearKeychain()
+        keyStore.destroy()
     }
 
+    //TODO:AUTH
 //    func testBitIdResponse() {
 //        let url = URL(string: "bitid://bitid.bitcoin.blue/callback?x=f98f5e62d82b7086&u=1")!
 //        let response = walletManager.buildBitIdResponse(stringToSign: url.absoluteString,
