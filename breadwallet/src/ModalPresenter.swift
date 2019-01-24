@@ -819,7 +819,7 @@ class ModalPresenter: Subscriber, Trackable {
         let nc = ModalNavigationController()
         nc.setClearNavbar()
         nc.setWhiteStyle()
-        let start = StartImportViewController(walletManager: walletManager, scanResult: scanResult)
+        let start = StartImportViewController(walletManager: walletManager, initialQRCode: scanResult)
         start.addCloseNavigationItem(tintColor: .white)
         start.navigationItem.title = S.Import.title
         let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet, currency: walletManager.currency)

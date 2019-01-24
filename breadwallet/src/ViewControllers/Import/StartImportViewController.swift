@@ -9,12 +9,26 @@
 import UIKit
 import BRCore
 
+/**
+ *  Screen that allows the user to scan a QR code corresponding to a private key.
+ *
+ *  It can be displayed in response to the "Redeem Private Key" menu item under Bitcoin
+ *  preferences or in response to the user scanning a private key using the Scan QR Code
+ *  item in the main menu. In the latter case, an initial QR code is passed to the init() method.
+ */
 class StartImportViewController: UIViewController {
 
-    init(walletManager: BTCWalletManager, scanResult: QRCode? = nil) {
+    /**
+     *  Initializer
+     *
+     *  walletManager - Bitcoin wallet manager
+     *  initialQRCode - a QR code that was previously scanned, causing this import view controller to
+     *                  be displayed
+     */
+    init(walletManager: BTCWalletManager, initialQRCode: QRCode? = nil) {
         self.walletManager = walletManager
         self.currency = walletManager.currency
-        self.scanResult = scanResult
+        self.initialQRCode = initialQRCode
         assert(walletManager.currency is Bitcoin, "Importing only supports bitcoin")
         super.init(nibName: nil, bundle: nil)
     }
@@ -32,7 +46,9 @@ class StartImportViewController: UIViewController {
     private let balanceActivity = BRActivityViewController(message: S.Import.checking)
     private let importingActivity = BRActivityViewController(message: S.Import.importing)
     private let unlockingActivity = BRActivityViewController(message: S.Import.unlockingActivity)
-    private let scanResult: QRCode?
+    
+    // Previously scanned QR code passed to init()
+    private var initialQRCode: QRCode?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,11 +65,17 @@ class StartImportViewController: UIViewController {
             }
         }
         
-        if let scanResult = scanResult {
-            handleScanResult(scanResult)
+        if let code = initialQRCode {
+            handleScanResult(code)
+            
+            // Set this nil so that if the user tries to can another QR code via the
+            // Scan Private Key button we don't end up trying to process the initial
+            // code again. viewWillAppear() will get called again when the scanner/camera
+            // is dismissed.
+            initialQRCode = nil
         }
     }
-
+    
     private func addSubviews() {
         view.addSubview(header)
         header.addSubview(illustration)
@@ -112,6 +134,7 @@ class StartImportViewController: UIViewController {
         rightCaption.textAlignment = .center
         warning.text = S.Import.importWarning
 
+        // Set up the tap handler for the "Scan Private Key" button.
         button.tap = strongify(self) { myself in
             let scan = ScanViewController(forScanningPrivateKeys: true, completion: { result in
                 if let result = result {
