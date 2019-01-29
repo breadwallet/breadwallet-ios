@@ -11,7 +11,7 @@ import BRCore
 import MachO
 
 class AccountViewController: UIViewController, Subscriber {
-
+    
     // MARK: - Public
     let currency: Currency
     
@@ -59,7 +59,26 @@ class AccountViewController: UIViewController, Subscriber {
         }
     }
     private var notificationObservers = [String: NSObjectProtocol]()
+    private var tableViewTopConstraint: NSLayoutConstraint?
+    private var rewardsViewHeightConstraint: NSLayoutConstraint?
+    private var rewardsView: RewardsView?
+    private let rewardsAnimationDuration: TimeInterval = 0.5
+    private let rewardsShrinkTimerDuration: TimeInterval = 6.0
+    private let rewardsViewMargin: CGFloat = 16
 
+    private func tableViewTopConstraintConstant(for rewardsViewState: RewardsView.State) -> CGFloat {
+        let constant = rewardsViewState == .expanded ? RewardsView.expandedSize : RewardsView.normalSize
+        return constant + rewardsViewMargin
+    }
+    
+    private var shouldShowRewardsView: Bool {
+        return Currencies.brd.code == currency.code
+    }
+    
+    private var shouldAnimateRewardsView: Bool {
+        return shouldShowRewardsView && UserDefaults.shouldShowBRDRewardsAnimation
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
@@ -86,6 +105,10 @@ class AccountViewController: UIViewController, Subscriber {
         addTransactionsView()
         addSubscriptions()
         setInitialData()
+        
+        if shouldShowRewardsView {
+            addRewardsView()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -95,11 +118,17 @@ class AccountViewController: UIViewController, Subscriber {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         headerView.setBalances()
+        
         if walletManager.peerManager?.connectionStatus == BRPeerStatusDisconnected {
             DispatchQueue.walletQueue.async { [weak self] in
                 self?.walletManager.peerManager?.connect()
             }
+        }
+        
+        if shouldAnimateRewardsView {
+            expandRewardsView()
         }
     }
     
@@ -171,11 +200,17 @@ class AccountViewController: UIViewController, Subscriber {
     }
     
     private func addTransactionsView() {
-        view.backgroundColor = .whiteTint
+
+        // Store this constraint so it can be easily updated later when showing/hiding the rewards view.
+        tableViewTopConstraint = transactionsTableView.view.topAnchor.constraint(equalTo: headerContainer.bottomAnchor)
+        
+        transactionsTableView.view.backgroundColor = .clear
+
+        view.backgroundColor = .transactionsViewControllerBackground
         addChildViewController(transactionsTableView, layout: {
             if #available(iOS 11.0, *) {
                 transactionsTableView.view.constrain([
-                    transactionsTableView.view.topAnchor.constraint(equalTo: headerContainer.bottomAnchor),
+                    tableViewTopConstraint,
                     transactionsTableView.view.bottomAnchor.constraint(equalTo: footerView.topAnchor),
                     transactionsTableView.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
                     transactionsTableView.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)])
@@ -245,6 +280,69 @@ class AccountViewController: UIViewController, Subscriber {
                           completion: { _ in
                             self.setNeedsStatusBarAppearanceUpdate()
         })
+    }
+    
+    // The rewards view is a separate UIView that is displayed in the BRD wallet,
+    // under the table view header, above the transaction cells.
+    private func addRewardsView() {
+        
+        let rewards = RewardsView()
+        view.addSubview(rewards)
+        rewardsView = rewards
+
+        let rewardsViewTopConstraint = rewards.topAnchor.constraint(equalTo: headerView.bottomAnchor,
+                                                                        constant: rewardsViewMargin / 2)
+        
+        // Start the rewards view at a height of zero if animating, otherwise at the normal height.
+        let initialHeight = shouldAnimateRewardsView ? 0 : RewardsView.normalSize
+        rewardsViewHeightConstraint = rewards.heightAnchor.constraint(equalToConstant: initialHeight)
+        
+        rewards.constrain([
+            rewardsViewTopConstraint,
+            rewardsViewHeightConstraint,
+            rewards.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            rewards.trailingAnchor.constraint(equalTo: view.trailingAnchor)])
+        
+        tableViewTopConstraint?.constant = shouldAnimateRewardsView ? 0 : tableViewTopConstraintConstant(for: .normal)
+
+        view.layoutIfNeeded()
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self,
+                                                          action: #selector(rewardsViewTapped))
+        rewardsView?.addGestureRecognizer(tapGestureRecognizer)
+    }
+
+    private func expandRewardsView() {
+        let constants = (tableViewTopConstraintConstant(for: .expanded), RewardsView.expandedSize)
+        
+        UIView.animate(withDuration: rewardsAnimationDuration, animations: { [unowned self] in
+            self.tableViewTopConstraint?.constant = constants.0
+            self.rewardsViewHeightConstraint?.constant = constants.1
+            self.view.layoutIfNeeded()
+        }, completion: { [unowned self] _ in
+            self.rewardsView?.animateIcon()
+
+            Timer.scheduledTimer(withTimeInterval: self.rewardsShrinkTimerDuration, repeats: false) { [unowned self] _ in
+                self.shrinkRewardsView()
+            }
+        })
+    }
+    
+    private func shrinkRewardsView() {
+        let constants = (tableViewTopConstraintConstant(for: .normal), RewardsView.normalSize)
+
+        UIView.animate(withDuration: rewardsAnimationDuration, animations: {
+            self.rewardsView?.shrinkView()
+            self.tableViewTopConstraint?.constant = constants.0
+            self.rewardsViewHeightConstraint?.constant = constants.1
+            self.view.layoutIfNeeded()
+        }, completion: { _ in
+            UserDefaults.shouldShowBRDRewardsAnimation = false
+        })
+    }
+    
+    @objc private func rewardsViewTapped() {
+        Store.trigger(name: .openPlatformUrl("/rewards"))
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

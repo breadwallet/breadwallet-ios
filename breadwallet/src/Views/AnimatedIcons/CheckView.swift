@@ -10,7 +10,7 @@ import UIKit
 
 class CheckView: UIView, AnimatableIcon {
 
-    public func animate() {
+    func startAnimating() {
         let check = UIBezierPath()
         check.move(to: CGPoint(x: 32.5, y: 47.0))
         check.addLine(to: CGPoint(x: 43.0, y: 57.0))
@@ -37,6 +37,10 @@ class CheckView: UIView, AnimatableIcon {
         shape.add(animation, forKey: nil)
     }
 
+    func stopAnimating() {
+        
+    }
+    
     override func draw(_ rect: CGRect) {
 
         let checkcircle = UIBezierPath()
