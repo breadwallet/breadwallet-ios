@@ -664,9 +664,7 @@ enum S {
             static let callRequest = NSLocalizedString("EME.permissions.callRequest", value: "Request %1$@ smart contract call", comment: "Service capabilities description")
         }
     }
-    
-    
-    
+
     enum Segwit {
         static let confirmChoiceLayout = NSLocalizedString("Segwit.ConfirmChoiceLayout", value: "Enabling SegWit is an irreversible feature. Are you sure you want to continue?", comment: "")
         static let confirmationConfirmationTitle = NSLocalizedString("Segwit.ConfirmationConfirmationTitle", value: "You have enabled SegWit!", comment: "")
@@ -674,5 +672,11 @@ enum S {
         static let confirmationInstructionsInstructions = NSLocalizedString("Segwit.ConfirmationInstructionsInstructions" , value: "SegWit support is still a beta feature.\n\nOnce SegWit is enabled, it will not be possible to disable it. You will be able to find the legacy address under Settings. \n\nSome third-party services, including crypto trading, may be unavailable to users who have enabled SegWit. In case of emergency, you will be able to generate a legacy address from Preferences > Bitcoin Settings. \n\nSegWit will automatically be enabled for all users in a future update.", comment: "")
         static let homeButton = NSLocalizedString("Segwit.HomeButton", value: "To the Moon", comment: "")
         static let enable = NSLocalizedString("Segwit.Enable", value: "Enable", comment: "")
+    }
+
+    enum RewardsView {
+        static let normalTitle = NSLocalizedString("RewardsView.normalTitle", value: "Rewards", comment: "Rewards view normal title")
+        static let expandedTitle = NSLocalizedString("RewardsView.expandedTitle", value: "Introducing BRD\nRewards.", comment: "Rewards view expanded title")
+        static let expandedBody = NSLocalizedString("RewardsView.expandedBody", value: "Learn how you can save on trading fees and unlock future rewards", comment: "Rewards view expanded body")
     }
 }
