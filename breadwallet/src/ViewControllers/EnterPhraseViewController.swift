@@ -44,6 +44,10 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
         NotificationCenter.default.removeObserver(self)
     }
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubviews()
