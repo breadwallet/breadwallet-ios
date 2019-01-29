@@ -35,15 +35,19 @@ class SyncingIndicator: UIView {
             switch syncState {
             case .connecting:
                 circleWidth?.constant = 0.0
+                progressCircle.isHidden = true
                 switch style {
                 case .home:
                     self.text = S.SyncingView.connecting
                 case .account:
                     self.text = ""
                 }
+                setNeedsLayout()
             case .syncing:
+                progressCircle.isHidden = false
                 circleWidth?.constant = circleSize
                 self.text = S.SyncingView.syncing
+                setNeedsLayout()
             case .success:
                 self.text = ""
             }
