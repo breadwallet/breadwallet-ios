@@ -83,7 +83,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // stdout is redirected to C.logFilePath for testflight and debug builds
     private func redirectStdOut() {
-        guard E.isTestFlight || E.isDebug else { return }
+        guard E.isTestFlight else { return }
         
         let logFilePath = C.logFilePath
         let previousLogFilePath = C.previousLogFilePath
