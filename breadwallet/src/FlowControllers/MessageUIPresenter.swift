@@ -22,17 +22,47 @@ class MessageUIPresenter: NSObject, Trackable {
         present(shareVC)
     }
     
+    // Returns (name, data) pairs for the available logfile attachments.
+    private func getLogAttachments() -> [(String, Data)] {
+        var attachments: [(String, Data)] = [(String, Data)]()
+        
+        // We include the previous log since it may provide clues about crashes etc. affecting
+        // the current run of the app.
+        if let previousLogData = try? Data(contentsOf: C.previousLogFilePath) {
+            attachments.append(("brd_logs_previous.txt", previousLogData))
+        }
+        
+        if let currentLogData = try? Data(contentsOf: C.logFilePath) {
+            attachments.append(("brd_logs_current.txt", currentLogData))
+        }
+        
+        return attachments
+    }
+    
+    // Displays an email compose view controller, attaching the available console logs.
     func presentEmailLogs() {
         guard MFMailComposeViewController.canSendMail() else { showEmailUnavailableAlert(); return }
-        guard let logData = try? Data(contentsOf: C.logFilePath) else { showErrorMessage(S.ErrorMessages.noLogsFound); return }
+        
+        let attachments = getLogAttachments()
+        guard !attachments.isEmpty else { showErrorMessage(S.ErrorMessages.noLogsFound); return }
+        
         originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
         UINavigationBar.appearance().titleTextAttributes = nil
+        
         let emailView = MFMailComposeViewController()
+        
         emailView.setToRecipients([C.iosEmail])
         emailView.setSubject("BRD Logs")
         emailView.setMessageBody("BRD Logs", isHTML: false)
-        emailView.addAttachmentData(logData, mimeType: "text/plain", fileName: "brd_logs.txt")
+        
+        for attachment in attachments {
+            let filename = attachment.0
+            let data = attachment.1
+            emailView.addAttachmentData(data, mimeType: "text/plain", fileName: filename)
+        }
+        
         emailView.mailComposeDelegate = self
+        
         present(emailView)
     }
     

@@ -133,6 +133,14 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
             sendButton.bottomAnchor.constraint(equalTo: contentBox.bottomAnchor, constant: -C.padding[2]) ])
     }
 
+    private func confirmationFeeLabel() -> String {
+        if currency is ERC20Token {
+            return S.Confirmation.feeLabelETH
+        } else {
+            return S.Confirmation.feeLabel
+        }
+    }
+    
     private func setInitialData() {
         view.backgroundColor = .clear
         payLabel.text = S.Confirmation.send
@@ -162,7 +170,7 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
         sendLabel.text = S.Confirmation.amountLabel
         sendLabel.adjustsFontSizeToFitWidth = true
         send.text = amount.description
-        feeLabel.text = S.Confirmation.feeLabel
+        feeLabel.text = confirmationFeeLabel()
         fee.text = feeAmount.description
 
         totalLabel.text = S.Confirmation.totalLabel
