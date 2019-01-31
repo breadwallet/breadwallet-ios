@@ -9,6 +9,18 @@
 import Foundation
 import BRCore
 
+enum BtcTxError: String {
+    case none = "none"
+    case sentAmountLessThanReceived = "sentAmtLessThanRcvd"
+}
+
+struct BtcTransactionErrorInfo {
+    var error: BtcTxError = .none
+    var amountSent: UInt64
+    var amountReceived: UInt64
+    var fee: UInt64
+}
+
 /// Wrapper for BTC transaction model + metadata
 struct BtcTransaction: Transaction {
     
@@ -37,12 +49,13 @@ struct BtcTransaction: Transaction {
     let startingBalance: UInt64
     let endingBalance: UInt64
     
+    var errorInfo: BtcTransactionErrorInfo?
+    
     // MARK: Private
     
     private let tx: BRTxRef
-    
+        
     // MARK: - Init
-    
     init?(_ tx: BRTxRef, walletManager: BTCWalletManager, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         guard let wallet = walletManager.wallet,
             let peerManager = walletManager.peerManager else { return nil }
@@ -75,6 +88,8 @@ struct BtcTransaction: Transaction {
         }
         self.direction = direction
         
+        var validAmounts = true
+        
         let endingBalance: UInt64 = wallet.balanceAfterTx(tx)
         var startingBalance: UInt64
         var address: String
@@ -86,8 +101,24 @@ struct BtcTransaction: Transaction {
             startingBalance = endingBalance.subtractingReportingOverflow(amount).0.subtractingReportingOverflow(fee).0
         case .sent:
             address = otherAddress
-            amount = amountSent - amountReceived - fee
-            startingBalance = endingBalance.addingReportingOverflow(amount).0.addingReportingOverflow(fee).0
+            
+            // In rare circumstances we can end up with a sent amount that is less than the
+            // amount received, which results in a negative value for the unsigned int 'amount'
+            // and this crashes the app. If this happens, mark the transaction as bad so that
+            // the wallet manager can deal with it.
+            if amountSent < (amountReceived + fee) {
+                errorInfo = BtcTransactionErrorInfo(error: .sentAmountLessThanReceived,
+                                                    amountSent: amountSent,
+                                                    amountReceived: amountReceived,
+                                                    fee: fee)
+                amount = 0
+                startingBalance = 0
+                validAmounts = false
+            } else {
+                amount = amountSent - amountReceived - fee
+                startingBalance = endingBalance.addingReportingOverflow(amount).0.addingReportingOverflow(fee).0
+            }
+            
         case .moved:
             address = myAddress
             amount = amountSent
@@ -101,7 +132,7 @@ struct BtcTransaction: Transaction {
         
         hash = tx.pointee.txHash.description
         timestamp = TimeInterval(tx.pointee.timestamp)
-        isValid = wallet.transactionIsValid(tx)
+        isValid = validAmounts && wallet.transactionIsValid(tx)
         blockHeight = (tx.pointee.blockHeight == UInt32.max) ? UInt64.max :  UInt64(tx.pointee.blockHeight)
         
         let lastBlockHeight = UInt64(peerManager.lastBlockHeight)
