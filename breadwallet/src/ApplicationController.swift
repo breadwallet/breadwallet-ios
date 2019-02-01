@@ -24,6 +24,7 @@ class ApplicationController: Subscriber, Trackable {
     private var walletManagers = [String: WalletManager]()
     private var walletCoordinator: WalletCoordinator?
     private var keyStore: KeyStore!
+    private var appRatingManager: AppRatingManager = AppRatingManager()
     
     var rootNavigationController: RootNavigationController? {
         guard let root = window.rootViewController as? RootNavigationController else { return nil }
@@ -233,6 +234,7 @@ class ApplicationController: Subscriber, Trackable {
         if !hasPerformedWalletDependentInitialization && didInitWallet {
             didInitWalletManager()
         }
+        appRatingManager.start(UserDefaults.standard)
     }
     
     private func setup() {
@@ -259,6 +261,7 @@ class ApplicationController: Subscriber, Trackable {
     
     func willEnterForeground() {
         guard !keyStore.noWallet else { return }
+        appRatingManager.bumpLaunchCount()
         Backend.sendLaunchEvent()
         if shouldRequireLogin() {
             Store.perform(action: RequireLogin())
