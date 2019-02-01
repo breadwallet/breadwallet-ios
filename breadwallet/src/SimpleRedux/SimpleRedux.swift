@@ -75,6 +75,7 @@ enum TriggerName {
     case fetchInbox
     case optInSegWit
     case openPlatformUrl(String)
+    case didViewTransactions([Transaction]?)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName: Equatable {}
@@ -154,6 +155,8 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.optInSegWit, .optInSegWit):
         return true
     case (.openPlatformUrl, .openPlatformUrl):
+        return true
+    case (.didViewTransactions, .didViewTransactions):
         return true
     default:
         return false
