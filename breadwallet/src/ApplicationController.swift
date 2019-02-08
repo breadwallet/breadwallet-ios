@@ -234,7 +234,14 @@ class ApplicationController: Subscriber, Trackable {
         if !hasPerformedWalletDependentInitialization && didInitWallet {
             didInitWalletManager()
         }
+
         appRatingManager.start(UserDefaults.standard)
+        
+        // Set up the animation frames early during the startup process so that they're
+        // ready to roll by the time the home screen is displayed.
+        if UserDefaults.shouldShowBRDRewardsAnimation {
+            RewardsIconView.prepareAnimationFrames()
+        }
     }
     
     private func setup() {
