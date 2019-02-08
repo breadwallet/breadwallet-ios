@@ -98,7 +98,7 @@ class AlertView: UIView, GradientDrawable {
 
     func animate() {
         guard let animatableIcon = icon as? AnimatableIcon else { return }
-        animatableIcon.animate()
+        animatableIcon.startAnimating()
     }
 
     private func setupSubviews() {
