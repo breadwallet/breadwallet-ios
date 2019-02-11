@@ -278,7 +278,8 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
     private func sendWithPinVerification(tx: BRTxRef,
                                          pinVerifier: PinVerifier,
                                          completion: @escaping SendCompletion) {
-        pinVerifier { [unowned self] pin in
+        // this block requires a strong reference to self to ensure the Sender is not deallocated before completion
+        pinVerifier { pin in
             DispatchQueue.walletQueue.async {
                 guard let wallet = self.walletManager.wallet else { return assertionFailure() }
                 if self.authenticator.sign(transaction: tx, wallet: wallet, withPin: pin) {
@@ -509,8 +510,9 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
             let amount = amount else {
                 return completion(.creationError("not ready"))
         }
-        
-        pinVerifier { [unowned self] pin in
+
+        // this block requires a strong reference to self to ensure the Sender is not deallocated before completion
+        pinVerifier { pin in
             let (tx, wallet) = self.walletManager.createTransaction(currency: self.currency,
                                                                     toAddress: address,
                                                                     amount: amount,
@@ -594,7 +596,8 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
                                                            amount: amount,
                                                            gasLimit: self.gasLimit)
 
-        pinVerifier { [unowned self] pin in
+        // this block requires a strong reference to self to ensure the Sender is not deallocated before completion
+        pinVerifier { pin in
             guard self.authenticator.sign(transaction: tx, wallet: wallet, withPin: pin) else {
                 DispatchQueue.main.async {
                     completion(.creationError("authentication error"))
