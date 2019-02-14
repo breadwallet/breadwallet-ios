@@ -49,8 +49,7 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
     }
     private let emptyMessage = UILabel.wrapping(font: .customBody(size: 16.0), color: .grayTextTint)
     
-    //TODO:BCH replace with recommend rescan / tx failed prompt
-    private var currentPrompt: Prompt? {
+    private var currentPrompt: PromptView? {
         didSet {
             if currentPrompt != nil && oldValue == nil {
                 tableView.beginUpdates()
