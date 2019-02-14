@@ -74,6 +74,14 @@
 "Android.screenAlteringMessage" = "BRD will not function properly unless screen-altering apps (such as Twilight) are disabled.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Screen-Altering App Detected";
+/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
+"Announcement.glideraBodyOne" = "BTC and ETH purchases via your bank will have higher limits, expedited delivery times, and lower fees. Sign up to get notified when it's launched.";
+/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
+"Announcement.glideraBodyTwo" = "We will let you know about the changes.";
+/* Title for in-app announcement about our partner Glidera. */
+"Announcement.glideraTitleOne" = "New way to buy coming soon!";
+/* Title for in-app announcement about our partner Glidera. */
+"Announcement.glideraTitleTwo" = "Thank you!";
 /* JSON Serialization error message */
 "ApiClient.jsonError" = "JSON Serialization Error";
 /* Wallet not ready error message */
@@ -152,7 +160,7 @@
 "Confirmation.amountLabel" = "Amount to Send:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Network Fee:";
-/* Network Fee (ETH): */
+/* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "Network Fee (ETH):";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Processing time: This transaction is predicted to complete in %1$@.";
@@ -540,6 +548,12 @@
 "ReScan.subheader1" = "Estimated time";
 /* Subheader label */
 "ReScan.subheader2" = "When to Sync?";
+/* Rewards view expanded body. */
+"RewardsView.expandedBody" = "Learn how you can save on trading fees and unlock future rewards";
+/* Rewards view expanded title. */
+"RewardsView.expandedTitle" = "Introducing BRD Rewards.";
+/* Rewards view title */
+"RewardsView.normalTitle" = "Rewards";
 /* Scan bitcoin address camera flash toggle */
 "Scanner.flashButtonLabel" = "Camera Flash";
 /* Complete filter label */
