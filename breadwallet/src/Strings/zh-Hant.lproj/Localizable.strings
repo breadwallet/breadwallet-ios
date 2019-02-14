@@ -74,6 +74,14 @@
 "Android.screenAlteringMessage" = "除非停用螢幕改變應用程式（例如 Twilight），否則 BRD 無法正常運作。";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "偵測到螢幕改變應用程式";
+/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
+"Announcement.glideraBodyOne" = "通過您的銀行購買BTC和ETH將會有更高的限額，更短的交付時間和更低的費用。立即注冊以在其啓動時收到通知。";
+/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
+"Announcement.glideraBodyTwo" = "我們會讓您了解這些變化。";
+/* Title for in-app announcement about our partner Glidera. */
+"Announcement.glideraTitleOne" = "即將推出新的購買方式！";
+/* Title for in-app announcement about our partner Glidera. */
+"Announcement.glideraTitleTwo" = "謝謝！";
 /* JSON Serialization error message */
 "ApiClient.jsonError" = "JSON 序列化錯誤";
 /* Wallet not ready error message */
@@ -540,6 +548,12 @@
 "ReScan.subheader1" = "預估時間";
 /* Subheader label */
 "ReScan.subheader2" = "什麼時候該進行同步？";
+/* Rewards view expanded body. */
+"RewardsView.expandedBody" = "了解如何節省交易費用，解鎖未來的財富。";
+/* Rewards view expanded title. */
+"RewardsView.expandedTitle" = "我們為您介紹BRD Rewards。";
+/* Rewards view title */
+"RewardsView.normalTitle" = "獎勵";
 /* Scan bitcoin address camera flash toggle */
 "Scanner.flashButtonLabel" = "相機閃光";
 /* Complete filter label */
