@@ -1,5 +1,5 @@
 //
-//  GetUserEmailPrompt.swift
+//  GetUserEmailPromptView.swift
 //  breadwallet
 //
 //  Created by Ray Vander Veen on 2018-10-07.
@@ -9,27 +9,46 @@
 import UIKit
 
 //
-// Extends the Prompt view to provide an email input field and custom image.
+// Extends the Prompt view to include an email input field and custom image.
 //
-class GetUserEmailPrompt: Prompt {
+class GetUserEmailPromptView: PromptView {
     
     let emailInputHeight: CGFloat = 36.0
-    let continueButtonHeight: CGFloat = 36.0
+    let footerHeight: CGFloat = 36.0
+    let continueButtonHeight: CGFloat = 44.0
     let continueButtonWidth: CGFloat = 90.0
     let imageViewTrailingMargin: CGFloat = -50.0
+    let imageSize: CGFloat = 44
     
     let emailInput: UITextField = UITextField()
     let imageView: UIImageView = UIImageView()
     let successFootnoteLabel: UILabel = UILabel()
     
+    let footerView = UIView()
+    var footerViewHeightConstraint: NSLayoutConstraint?
+    
     var presenter: UIViewController?
     
-    init() {
-        super.init(type: .email)
+    var shouldShowFootnoteLabel: Bool {
+        if let footnote = prompt.successFootnote(), !footnote.isEmpty {
+            return true
+        }
+        return false
+    }
+    
+    init(prompt: Prompt, presenter: UIViewController?) {
+        super.init(prompt: prompt)
+        self.presenter = presenter
     }
     
     override var shouldHandleTap: Bool {
         return true
+    }
+    
+    override var shouldAddContinueButton: Bool {
+        // return false because we'll handle adding positioning the continue button rather
+        // than leaving it to the super view
+        return false
     }
     
     override func setup() {
@@ -39,7 +58,6 @@ class GetUserEmailPrompt: Prompt {
         body.textColor = .darkPromptBodyColor
         successFootnoteLabel.textColor = .darkPromptBodyColor
         
-        successFootnoteLabel.isHidden = true
         successFootnoteLabel.textColor = body.textColor
         successFootnoteLabel.font = body.font
 
@@ -64,7 +82,9 @@ class GetUserEmailPrompt: Prompt {
             // disable the submit button while we're hitting the API
             self.enableDisableSubmitButton(enable: false)
             
-            Backend.apiClient.subscribeToEmailUpdates(emailAddress: emailAddress, callback: { [unowned self] (successful) in
+            Backend.apiClient.subscribeToEmailUpdates(emailAddress: emailAddress,
+                                                      emailList: self.prompt.emailListParameter(),
+                                                      callback: { [unowned self] (successful) in
                 UserDefaults.hasSubscribedToEmailUpdates = successful
 
                 self.updateViewOnEmailSubmissionResult(successful: successful)
@@ -76,6 +96,8 @@ class GetUserEmailPrompt: Prompt {
                 }
             })
         }// continue tap handler
+        
+        footerView.backgroundColor = backgroundColor
         
         setUpEmailInput()
         setUpImageView()
@@ -106,13 +128,26 @@ class GetUserEmailPrompt: Prompt {
         
         continueButton.isHidden = true
         emailInput.isHidden = true
-        successFootnoteLabel.isHidden = false
         
-        title.text = S.Prompts.Email.successTitle
-        body.text = S.Prompts.Email.successBody
-        successFootnoteLabel.text = S.Prompts.Email.successFootnote
+        title.text = prompt.title(for: .confirmation)
+        body.text = prompt.body(for: .confirmation)
         
-        imageView.image = UIImage(named: "Partyhat")
+        if let imageName = prompt.imageName(for: .confirmation) {
+            imageView.image = UIImage(named: imageName)
+        }
+        
+        if shouldShowFootnoteLabel, let footnote = prompt.successFootnote() {
+            footerView.addSubview(successFootnoteLabel)
+            successFootnoteLabel.constrain([
+                successFootnoteLabel.leadingAnchor.constraint(equalTo: footerView.leadingAnchor),
+                successFootnoteLabel.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -(C.padding[1])),
+                successFootnoteLabel.centerYAnchor.constraint(equalTo: footerView.centerYAnchor)
+                ])
+            successFootnoteLabel.text = footnote
+        } else {
+            // shrink the footer view so we don't leave unnecessary blank space
+            footerViewHeightConstraint?.constant = 0
+        }
     }
     
     override var containerBackgroundColor: UIColor {
@@ -122,14 +157,20 @@ class GetUserEmailPrompt: Prompt {
     override func addSubviews() {
         super.addSubviews()
         
-        container.addSubview(emailInput)
         container.addSubview(imageView)
-        container.addSubview(successFootnoteLabel)
+
+        // The footer view contains the email input and the submit ('continue') button.
+        container.addSubview(footerView)
+        
+        footerView.addSubview(emailInput)
+        footerView.addSubview(continueButton)
     }
     
     private func setUpImageView() {
-        imageView.contentMode = .center
-        imageView.image = UIImage(named: "Loudspeaker")
+        imageView.contentMode = .scaleAspectFit
+        if let imageName = prompt.imageName(for: .initialDisplay) {
+            imageView.image = UIImage(named: imageName)
+        }
     }
         
     private func setUpEmailInput() {
@@ -158,15 +199,26 @@ class GetUserEmailPrompt: Prompt {
                                                            left: 10.0,
                                                            bottom: -C.padding[1],
                                                            right: -10.0))
+        
+        // The icon (defaults to loudspeaker) goes above the Submit button, slightly offset to the left.
+        // The 60x60 image size will accommodate both images that we display.
+        imageView.constrain([
+            imageView.widthAnchor.constraint(equalToConstant: imageSize),
+            imageView.heightAnchor.constraint(equalToConstant: imageSize),
+            imageView.topAnchor.constraint(equalTo: title.topAnchor, constant: 0),
+            imageView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: imageViewTrailingMargin)
+            ])
+
         title.constrain([
             title.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
-            title.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[2]),
+            title.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -(C.padding[3])),
             title.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[2])])
+        
         body.constrain([
             body.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
-            body.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -C.padding[1]),
-            body.topAnchor.constraint(equalTo: title.bottomAnchor, constant: C.padding[1])])
-        
+            body.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[3]),
+            body.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: C.padding[2])])
+
         // Place the Dismiss ('x') button in the top-right corner. The 'x' image is 12x12
         // but the button itself should be larger so there's a decent tappable area. The
         // padding (8) and dimensions below (24x24) will achieve this with visual top and 
@@ -178,37 +230,29 @@ class GetUserEmailPrompt: Prompt {
             dismissButton.heightAnchor.constraint(equalToConstant: 24)
             ])
         
+        //let heightConstraint = footerView.heightAnchor.constraint(equalToConstant: footerHeight)
+        let constraints = [
+            footerView.heightAnchor.constraint(equalToConstant: footerHeight),
+            footerView.topAnchor.constraint(equalTo: body.bottomAnchor, constant: C.padding[2]),
+            footerView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
+            footerView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -(C.padding[2])),
+            footerView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -(C.padding[1]))
+        ]
+        footerView.constrain(constraints)
+        footerViewHeightConstraint = constraints[0]   // save for later if we shrink the prompt height
+        
         continueButton.constrain([
-            continueButton.topAnchor.constraint(equalTo: body.bottomAnchor, 
-                                                constant: C.padding[2]),
-            continueButton.widthAnchor.constraint(equalToConstant: continueButtonWidth),
-            continueButton.heightAnchor.constraint(equalToConstant: continueButtonHeight),
-            continueButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, 
-                                                     constant: -C.padding[2]),
-            continueButton.bottomAnchor.constraint(equalTo: container.bottomAnchor, 
-                                                   constant: -C.padding[2])
+            continueButton.topAnchor.constraint(equalTo: footerView.topAnchor),
+            continueButton.bottomAnchor.constraint(equalTo: footerView.bottomAnchor),
+            continueButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor),
+            continueButton.widthAnchor.constraint(equalToConstant: continueButtonWidth)
             ])
-        
+
         emailInput.constrain([
-            emailInput.topAnchor.constraint(equalTo: body.bottomAnchor, constant: C.padding[2]),
-            emailInput.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
-            emailInput.trailingAnchor.constraint(equalTo: continueButton.leadingAnchor, constant: -10),
-            emailInput.heightAnchor.constraint(equalToConstant: emailInputHeight)
-            ])
-        
-        // The icon (defaults to loudspeaker) goes above the Submit button, slightly offset to the left.
-        // The 60x60 image size will accommodate both images that we display.
-        imageView.constrain([
-            imageView.widthAnchor.constraint(equalToConstant: 60),
-            imageView.heightAnchor.constraint(equalToConstant: 60),
-            imageView.bottomAnchor.constraint(equalTo: body.bottomAnchor),
-            imageView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: imageViewTrailingMargin),
-            imageView.leadingAnchor.constraint(equalTo: continueButton.leadingAnchor, constant: -(C.padding[1]))
-            ])
-        
-        successFootnoteLabel.constrain([
-            successFootnoteLabel.leftAnchor.constraint(equalTo: emailInput.leftAnchor, constant: 0),
-            successFootnoteLabel.centerYAnchor.constraint(equalTo: emailInput.centerYAnchor, constant: 0)
+            emailInput.topAnchor.constraint(equalTo: footerView.topAnchor),
+            emailInput.leadingAnchor.constraint(equalTo: footerView.leadingAnchor),
+            emailInput.bottomAnchor.constraint(equalTo: footerView.bottomAnchor),
+            emailInput.trailingAnchor.constraint(equalTo: continueButton.leadingAnchor, constant: -(C.padding[1]))
             ])
     }
     
@@ -244,7 +288,7 @@ class GetUserEmailPrompt: Prompt {
 
 // The main task of this extension is to enable or disable the Submit button
 // as the user types, based on whether a valid email address has been entered.
-extension GetUserEmailPrompt: UITextFieldDelegate {
+extension GetUserEmailPromptView: UITextFieldDelegate {
     
     private func enableOrDisableSubmitButton(emailAddressText: String?) {
         guard let text = emailAddressText, !text.isEmpty else {

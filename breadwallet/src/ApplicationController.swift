@@ -242,6 +242,8 @@ class ApplicationController: Subscriber, Trackable {
         if UserDefaults.shouldShowBRDRewardsAnimation {
             RewardsIconView.prepareAnimationFrames()
         }
+
+        PromptFactory.initialize()
     }
     
     private func setup() {
@@ -364,6 +366,7 @@ class ApplicationController: Subscriber, Trackable {
             DispatchQueue.walletQueue.async {
                 self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
             }
+            
             startDataFetchers()
 
             if let rescanNeeded = rescanNeeded {
@@ -507,6 +510,7 @@ class ApplicationController: Subscriber, Trackable {
 
     private func startDataFetchers() {
         Backend.apiClient.updateFeatureFlags()
+        Backend.apiClient.fetchAnnouncements()
         initKVStoreCoordinator()
         Backend.updateFees()
         Backend.updateExchangeRates()

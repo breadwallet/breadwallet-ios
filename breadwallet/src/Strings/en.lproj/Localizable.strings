@@ -74,6 +74,14 @@
 "Android.screenAlteringMessage" = "BRD will not function properly unless screen-altering apps (such as Twilight) are disabled.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Screen-Altering App Detected";
+/* Title for in-app announcement about our partner Glidera. */
+"Announcement.glideraTitleOne" = "New way to buy coming soon!";
+/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
+"Announcement.glideraBodyOne" = "BTC and ETH purchases via your bank will have higher limits, expedited delivery times, and lower fees. Sign up to get notified when it's launched.";
+/* Title for in-app announcement about our partner Glidera. */
+"Announcement.glideraTitleTwo" = "Thank you!";
+/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
+"Announcement.glideraBodyTwo" = "We will let you know about the changes.";
 /* JSON Serialization error message */
 "ApiClient.jsonError" = "JSON Serialization Error";
 /* Wallet not ready error message */

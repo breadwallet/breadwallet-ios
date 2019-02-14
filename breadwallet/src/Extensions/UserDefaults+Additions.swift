@@ -69,7 +69,8 @@ extension UserDefaults {
         writePaperPhraseDateKey
     ]
     
-    // Called from the Reset User Defaults menu item.
+    // Called from the Reset User Defaults menu item to allow the resetting of
+    // the UserDefaults state for showing/hiding elements, etc.
     static func resetAll() {
         
         for resettableBooelan in resettableBooleans {
@@ -77,6 +78,12 @@ extension UserDefaults {
                 let defaultValue = resettableBooelan[key]
                 defaults.set(defaultValue, forKey: key)
             }
+        }
+        
+        // Announcement-type prompts use a specific prefix when setting booleans indicating whether
+        // they have been shown yet.
+        defaults.dictionaryRepresentation().keys.filter({ return $0.hasPrefix(Announcement.hasShownKeyPrefix) }).forEach { (key) in
+            defaults.set(false, forKey: key)
         }
         
         for resettableObject in resettableObjects {
