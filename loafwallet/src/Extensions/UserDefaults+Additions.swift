@@ -15,7 +15,7 @@ private let hasAquiredShareDataPermissionKey = "has_acquired_permission"
 private let legacyWalletNeedsBackupKey = "WALLET_NEEDS_BACKUP"
 private let writePaperPhraseDateKey = "writepaperphrasedatekey"
 private let hasPromptedBiometricsKey = "haspromptedtouched"
-private let isBtcSwappedKey = "isBtcSwappedKey"
+private let isLtcSwappedKey = "isLtcSwappedKey"
 private let maxDigitsKey = "SETTINGS_MAX_DIGITS"
 private let pushTokenKey = "pushTokenKey"
 private let currentRateKey = "currentRateKey"
@@ -60,10 +60,10 @@ extension UserDefaults {
         set { defaults.set(newValue, forKey: hasAquiredShareDataPermissionKey) }
     }
 
-    static var isBtcSwapped: Bool {
-        get { return defaults.bool(forKey: isBtcSwappedKey)
+    static var isLtcSwapped: Bool {
+        get { return defaults.bool(forKey: isLtcSwappedKey)
         }
-        set { defaults.set(newValue, forKey: isBtcSwappedKey) }
+        set { defaults.set(newValue, forKey: isLtcSwappedKey) }
     }
 
     //

@@ -308,6 +308,10 @@
 		22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431331DF89DFE0017CAEA /* BRCoderTests.swift */; };
 		22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */; };
 		22E773041EE7813000397E0E /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E773031EE7813000397E0E /* Bonjour.swift */; };
+		24AF00FD221B331D00FF636F /* WarningConfirmation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24AF00FC221B331D00FF636F /* WarningConfirmation.storyboard */; };
+		24AF00FE221B331D00FF636F /* WarningConfirmation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24AF00FC221B331D00FF636F /* WarningConfirmation.storyboard */; };
+		24AF0100221B349100FF636F /* WarningConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF00FF221B349100FF636F /* WarningConfirmationViewController.swift */; };
+		24AF0101221B349100FF636F /* WarningConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF00FF221B349100FF636F /* WarningConfirmationViewController.swift */; };
 		24B8FAC12160497C00A155B1 /* BuyCenterTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC02160497B00A155B1 /* BuyCenterTableViewController.swift */; };
 		24B8FAC22160497C00A155B1 /* BuyCenterTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC02160497B00A155B1 /* BuyCenterTableViewController.swift */; };
 		24B8FAC4216128A000A155B1 /* PartnerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC3216128A000A155B1 /* PartnerData.swift */; };
@@ -1107,6 +1111,8 @@
 		22C431331DF89DFE0017CAEA /* BRCoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRCoderTests.swift; sourceTree = "<group>"; };
 		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bonjour.swift; sourceTree = "<group>"; };
+		24AF00FC221B331D00FF636F /* WarningConfirmation.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WarningConfirmation.storyboard; sourceTree = "<group>"; };
+		24AF00FF221B349100FF636F /* WarningConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningConfirmationViewController.swift; sourceTree = "<group>"; };
 		24B8FAC02160497B00A155B1 /* BuyCenterTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyCenterTableViewController.swift; sourceTree = "<group>"; };
 		24B8FAC3216128A000A155B1 /* PartnerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerData.swift; sourceTree = "<group>"; };
 		24B8FAC621615E3D00A155B1 /* BuyCenterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyCenterTableViewCell.swift; sourceTree = "<group>"; };
@@ -2498,6 +2504,14 @@
 			path = libbz2;
 			sourceTree = "<group>";
 		};
+		24AF00FB221B32EC00FF636F /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				24AF00FC221B331D00FF636F /* WarningConfirmation.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
 		24B8FAD52162B6D400A155B1 /* Bitrefill_Web */ = {
 			isa = PBXGroup;
 			children = (
@@ -3292,6 +3306,7 @@
 				CE3D4C561EF5D5740016B1C8 /* ReachabilityMonitor.swift */,
 				CE473D7B1F042F1E00C0ACFD /* coinflip.aiff */,
 				CE2990171EFD6DAF0093A0F2 /* Strings */,
+				24AF00FB221B32EC00FF636F /* Storyboards */,
 				CE30F0E41EB27821004B8EE5 /* Watch */,
 				CEE20C321EA5B2EC0086F724 /* Constants */,
 				CE20C90A1DBC59C500C8397A /* FlowControllers */,
@@ -3546,6 +3561,7 @@
 				1B3F74211FFB106200CCA50C /* BiometricsSettingsViewController.swift */,
 				1B3F74221FFB106200CCA50C /* BiometricsSpendingLimitViewController.swift */,
 				1BEA7DDA2142CAA00081602F /* WebViewContainer.swift */,
+				24AF00FF221B349100FF636F /* WarningConfirmationViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -4367,6 +4383,7 @@
 				1B86CE9F2091528B00BCE82E /* LaunchScreen.storyboard in Resources */,
 				1B86CEA02091528B00BCE82E /* CircularPro-Book.otf in Resources */,
 				1B86CEA12091528B00BCE82E /* POSTBouncer.html in Resources */,
+				24AF00FD221B331D00FF636F /* WarningConfirmation.storyboard in Resources */,
 				1B86CEA22091528B00BCE82E /* coinflip.aiff in Resources */,
 				1B86CEA32091528B00BCE82E /* Icon.xcassets in Resources */,
 				1B86CEA42091528B00BCE82E /* Localizable.strings in Resources */,
@@ -4425,6 +4442,7 @@
 				75A2A79E1DA5934300A983D8 /* LaunchScreen.storyboard in Resources */,
 				CEAA9EA31DC2FC700066731D /* CircularPro-Book.otf in Resources */,
 				222319B21F279B3C00008F20 /* POSTBouncer.html in Resources */,
+				24AF00FE221B331D00FF636F /* WarningConfirmation.storyboard in Resources */,
 				CE473D7C1F042F1E00C0ACFD /* coinflip.aiff in Resources */,
 				CE5E6C9A1EB9135000A476DB /* Icon.xcassets in Resources */,
 				CE29901A1EFD6DE50093A0F2 /* Localizable.strings in Resources */,
@@ -4770,6 +4788,7 @@
 				1B86CE062091528B00BCE82E /* StartPaperPhraseViewController.swift in Sources */,
 				1B86CE072091528B00BCE82E /* BiometricsSpendingLimitViewController.swift in Sources */,
 				1B86CE082091528B00BCE82E /* PaymentRequest.swift in Sources */,
+				24AF0100221B349100FF636F /* WarningConfirmationViewController.swift in Sources */,
 				1B86CE092091528B00BCE82E /* URLController.swift in Sources */,
 				1B86CE0A2091528B00BCE82E /* UIButton+BRWAdditions.swift in Sources */,
 				1B86CE0B2091528B00BCE82E /* WritePaperPhraseViewController.swift in Sources */,
@@ -5110,6 +5129,7 @@
 				CEBF32F61DDCEAF900348FC6 /* TransactionsTableViewController.swift in Sources */,
 				CE124CFC1E68932C00DFA146 /* FeeUpdater.swift in Sources */,
 				CEE20C381EA5B4680086F724 /* Strings.swift in Sources */,
+				24AF0101221B349100FF636F /* WarningConfirmationViewController.swift in Sources */,
 				CE25BF8D1DF3B8A500BC67B6 /* InViewAlert.swift in Sources */,
 				22A9A9511DF61945000F0016 /* TxMetaData.swift in Sources */,
 				CE8CD8E11E31976800785E02 /* LoginViewController.swift in Sources */,

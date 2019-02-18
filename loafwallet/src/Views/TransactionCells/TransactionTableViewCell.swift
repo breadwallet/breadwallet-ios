@@ -50,9 +50,9 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         }
     }
 
-    func setTransaction(_ transaction: Transaction, isBtcSwapped: Bool, rate: Rate, maxDigits: Int, isSyncing: Bool) {
+    func setTransaction(_ transaction: Transaction, isLtcSwapped: Bool, rate: Rate, maxDigits: Int, isSyncing: Bool) {
         self.transaction = transaction
-        transactionLabel.attributedText = transaction.descriptionString(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits)
+        transactionLabel.attributedText = transaction.descriptionString(isLtcSwapped: isLtcSwapped, rate: rate, maxDigits: maxDigits)
         address.text = String(format: transaction.direction.addressTextFormat, transaction.toAddress ?? "")
         status.text = transaction.status
         comment.text = transaction.comment

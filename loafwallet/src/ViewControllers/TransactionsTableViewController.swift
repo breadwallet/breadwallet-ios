@@ -16,7 +16,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     init(store: Store, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
         self.store = store
         self.didSelectTransaction = didSelectTransaction
-        self.isBtcSwapped = store.state.isBtcSwapped
+        self.isLtcSwapped = store.state.isLtcSwapped
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -66,7 +66,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             transactions = allTransactions
         }
     }
-    private var isBtcSwapped: Bool {
+    private var isLtcSwapped: Bool {
         didSet {
             reload()
         }
@@ -111,8 +111,8 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         })
 
         store.subscribe(self,
-                        selector: { $0.isBtcSwapped != $1.isBtcSwapped },
-                        callback: { self.isBtcSwapped = $0.isBtcSwapped })
+                        selector: { $0.isLtcSwapped != $1.isLtcSwapped },
+                        callback: { self.isLtcSwapped = $0.isLtcSwapped })
         store.subscribe(self,
                         selector: { $0.currentRate != $1.currentRate},
                         callback: { self.rate = $0.currentRate })
@@ -239,7 +239,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
             let cell = tableView.dequeueReusableCell(withIdentifier: transactionCellIdentifier, for: indexPath)
             if let transactionCell = cell as? TransactionTableViewCell, let rate = rate {
                 transactionCell.setStyle(style)
-                transactionCell.setTransaction(transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: store.state.maxDigits, isSyncing: store.state.walletState.syncState != .success)
+                transactionCell.setTransaction(transactions[indexPath.row], isLtcSwapped: isLtcSwapped, rate: rate, maxDigits: store.state.maxDigits, isSyncing: store.state.walletState.syncState != .success)
             }
             return cell
         }
