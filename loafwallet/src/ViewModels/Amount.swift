@@ -15,7 +15,7 @@ struct Amount {
     let rate: Rate
     let maxDigits: Int
     
-    var amountForBtcFormat: Double {
+    var amountForLtcFormat: Double {
         var decimal = Decimal(self.amount)
         var amount: Decimal = 0.0
         NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-maxDigits), .up)
@@ -31,7 +31,7 @@ struct Amount {
         var amount: Decimal = 0.0
         NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-maxDigits), .up)
         let number = NSDecimalNumber(decimal: amount)
-        guard let string = btcFormat.string(from: number) else { return "" }
+        guard let string = ltcFormat.string(from: number) else { return "" }
         return string
     }
 
@@ -51,11 +51,11 @@ struct Amount {
         return string
     }
 
-    func string(isBtcSwapped: Bool) -> String {
-        return isBtcSwapped ? localCurrency : bits
+    func string(isLtcSwapped: Bool) -> String {
+        return isLtcSwapped ? localCurrency : bits
     }
 
-    var btcFormat: NumberFormatter {
+    var ltcFormat: NumberFormatter {
         let format = NumberFormatter()
         format.isLenient = true
         format.numberStyle = .currency
@@ -102,11 +102,11 @@ struct DisplayAmount {
     let minimumFractionDigits: Int?
 
     var description: String {
-        return selectedRate != nil ? fiatDescription : bitcoinDescription
+        return selectedRate != nil ? fiatDescription : litecoinDescription
     }
 
     var combinedDescription: String {
-        return state.isBtcSwapped ? "\(fiatDescription) (\(bitcoinDescription))" : "\(bitcoinDescription) (\(fiatDescription))"
+        return state.isLtcSwapped ? "\(fiatDescription) (\(litecoinDescription))" : "\(litecoinDescription) (\(fiatDescription))"
     }
 
     private var fiatDescription: String {
@@ -115,12 +115,12 @@ struct DisplayAmount {
         return string
     }
 
-    private var bitcoinDescription: String {
+    private var litecoinDescription: String {
         var decimal = Decimal(self.amount.rawValue)
         var amount: Decimal = 0.0
         NSDecimalMultiplyByPowerOf10(&amount, &decimal, Int16(-state.maxDigits), .up)
         let number = NSDecimalNumber(decimal: amount)
-        guard let string = btcFormat.string(from: number) else { return "" }
+        guard let string = ltcFormat.string(from: number) else { return "" }
         return string
     }
 
@@ -141,7 +141,7 @@ struct DisplayAmount {
         return format
     }
 
-    var btcFormat: NumberFormatter {
+    var ltcFormat: NumberFormatter {
         let format = NumberFormatter()
         format.isLenient = true
         format.numberStyle = .currency

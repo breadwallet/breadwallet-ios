@@ -13,7 +13,7 @@ struct State {
     let isLoginRequired: Bool
     let rootModal: RootModal
     let walletState: WalletState
-    let isBtcSwapped: Bool
+    let isLtcSwapped: Bool
     let currentRate: Rate?
     let rates: [Rate]
     let alert: AlertType?
@@ -34,7 +34,7 @@ extension State {
                         isLoginRequired: true,
                         rootModal: .none,
                         walletState: WalletState.initial,
-                        isBtcSwapped: UserDefaults.isBtcSwapped,
+                        isLtcSwapped: UserDefaults.isLtcSwapped,
                         currentRate: UserDefaults.currentRate,
                         rates: [],
                         alert: nil,

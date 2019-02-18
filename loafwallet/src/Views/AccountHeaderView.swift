@@ -18,12 +18,12 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     //MARK: - Public
     init(store: Store) {
         self.store = store
-        self.isBtcSwapped = store.state.isBtcSwapped
+        self.isLtcSwapped = store.state.isLtcSwapped
         if let rate = store.state.currentRate {
             self.exchangeRate = rate
             let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: store.state.maxDigits)
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
-            self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.btcFormat)
+            self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.ltcFormat)
         } else {
             self.secondaryBalance = UpdatingLabel(formatter: NumberFormatter())
             self.primaryBalance = UpdatingLabel(formatter: NumberFormatter())
@@ -79,7 +79,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private var balance: UInt64 = 0 {
         didSet { setBalances() }
     }
-    private var isBtcSwapped: Bool {
+    private var isLtcSwapped: Bool {
         didSet { setBalances() }
     }
 
@@ -169,7 +169,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             primaryBalance.leadingAnchor.constraint(equalTo: equals.trailingAnchor, constant: C.padding[1]/2.0)
         ]
 
-        NSLayoutConstraint.activate(isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
+        NSLayoutConstraint.activate(isLtcSwapped ? self.swappedConstraints : self.regularConstraints)
 
         search.constrain([
             search.constraint(.trailing, toView: self, constant: -C.padding[2]),
@@ -216,15 +216,15 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
     private func addSubscriptions() {
         store.lazySubscribe(self,
-                        selector: { $0.isBtcSwapped != $1.isBtcSwapped },
-                        callback: { self.isBtcSwapped = $0.isBtcSwapped })
+                        selector: { $0.isLtcSwapped != $1.isLtcSwapped },
+                        callback: { self.isLtcSwapped = $0.isLtcSwapped })
         store.lazySubscribe(self,
                         selector: { $0.currentRate != $1.currentRate},
                         callback: {
                             if let rate = $0.currentRate {
                                 let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits)
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
-                                self.primaryBalance.formatter = placeholderAmount.btcFormat
+                                self.primaryBalance.formatter = placeholderAmount.ltcFormat
                             }
                             self.exchangeRate = $0.currentRate
                         })
@@ -235,7 +235,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                             if let rate = $0.currentRate {
                                 let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits)
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
-                                self.primaryBalance.formatter = placeholderAmount.btcFormat
+                                self.primaryBalance.formatter = placeholderAmount.ltcFormat
                                 self.setBalances()
                             }
         })
@@ -255,11 +255,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         let amount = Amount(amount: balance, rate: rate, maxDigits: store.state.maxDigits)
         if !hasInitialized {
             let amount = Amount(amount: balance, rate: exchangeRate!, maxDigits: store.state.maxDigits)
-            NSLayoutConstraint.deactivate(isBtcSwapped ? self.regularConstraints : self.swappedConstraints)
-            NSLayoutConstraint.activate(isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
-            primaryBalance.setValue(amount.amountForBtcFormat)
+            NSLayoutConstraint.deactivate(isLtcSwapped ? self.regularConstraints : self.swappedConstraints)
+            NSLayoutConstraint.activate(isLtcSwapped ? self.swappedConstraints : self.regularConstraints)
+            primaryBalance.setValue(amount.amountForLtcFormat)
             secondaryBalance.setValue(amount.localAmount)
-            if isBtcSwapped {
+            if isLtcSwapped {
                 primaryBalance.transform = transform(forView: primaryBalance)
             } else {
                 secondaryBalance.transform = transform(forView: secondaryBalance)
@@ -275,9 +275,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                 secondaryBalance.isHidden = false
             }
 
-            primaryBalance.setValueAnimated(amount.amountForBtcFormat, completion: { [weak self] in
+            primaryBalance.setValueAnimated(amount.amountForLtcFormat, completion: { [weak self] in
                 guard let myself = self else { return }
-                if !myself.isBtcSwapped {
+                if !myself.isLtcSwapped {
                     myself.primaryBalance.transform = .identity
                 } else {
                     myself.primaryBalance.transform = myself.transform(forView: myself.primaryBalance)
@@ -286,7 +286,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             })
             secondaryBalance.setValueAnimated(amount.localAmount, completion: { [weak self] in
                 guard let myself = self else { return }
-                if myself.isBtcSwapped {
+                if myself.isLtcSwapped {
                     myself.secondaryBalance.transform = .identity
                 } else {
                     myself.secondaryBalance.transform = myself.transform(forView: myself.secondaryBalance)
@@ -323,8 +323,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         UIView.spring(0.7, animations: {
             self.primaryBalance.transform = self.primaryBalance.transform.isIdentity ? self.transform(forView: self.primaryBalance) : .identity
             self.secondaryBalance.transform = self.secondaryBalance.transform.isIdentity ? self.transform(forView: self.secondaryBalance) : .identity
-            NSLayoutConstraint.deactivate(!self.isBtcSwapped ? self.regularConstraints : self.swappedConstraints)
-            NSLayoutConstraint.activate(!self.isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
+            NSLayoutConstraint.deactivate(!self.isLtcSwapped ? self.regularConstraints : self.swappedConstraints)
+            NSLayoutConstraint.activate(!self.isLtcSwapped ? self.swappedConstraints : self.regularConstraints)
             self.layoutIfNeeded()
         }) { _ in }
 

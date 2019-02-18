@@ -203,8 +203,8 @@ class WalletCoordinator : Subscriber, Trackable {
     private func showReceived(amount: UInt64) {
         if let rate = store.state.currentRate {
             let amount = Amount(amount: amount, rate: rate, maxDigits: store.state.maxDigits)
-            let primary = store.state.isBtcSwapped ? amount.localCurrency : amount.bits
-            let secondary = store.state.isBtcSwapped ? amount.bits : amount.localCurrency
+            let primary = store.state.isLtcSwapped ? amount.localCurrency : amount.bits
+            let secondary = store.state.isLtcSwapped ? amount.bits : amount.localCurrency
             let message = String(format: S.TransactionDetails.received, "\(primary) (\(secondary))")
             store.trigger(name: .lightWeightAlert(message))
             showLocalNotification(message: message)

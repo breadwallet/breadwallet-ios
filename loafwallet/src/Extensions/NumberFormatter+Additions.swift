@@ -23,7 +23,7 @@ extension NumberFormatter {
             let value = (Double(amount.rawValue)/Double(C.satoshis))*rate.rate
             output = formatter.string(from: value as NSNumber) ?? "error"
         } else {
-            formatter = displayAmount.btcFormat
+            formatter = displayAmount.ltcFormat
             if let minimumFractionDigits = minimumFractionDigits {
                 formatter.minimumFractionDigits = minimumFractionDigits
             }

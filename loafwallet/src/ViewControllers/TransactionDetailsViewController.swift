@@ -16,7 +16,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         self.transactions = transactions
         self.selectedIndex = selectedIndex
         self.kvStore = kvStore
-        self.isBtcSwapped = store.state.isBtcSwapped
+        self.isLtcSwapped = store.state.isLtcSwapped
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: UIScreen.main.safeWidth-C.padding[4], height: UIScreen.main.bounds.height - C.padding[1])
         layout.sectionInset = UIEdgeInsetsMake(C.padding[1], 0, 0, 0)
@@ -31,7 +31,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
     fileprivate let selectedIndex: Int
     fileprivate let kvStore: BRReplicatedKVStore
     fileprivate let cellIdentifier = "CellIdentifier"
-    fileprivate var isBtcSwapped: Bool
+    fileprivate var isLtcSwapped: Bool
     fileprivate var rate: Rate?
 
     //The secretScrollView is to help with the limitation where if isPagingEnabled
@@ -53,7 +53,7 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         collectionView?.backgroundColor = .clear
         collectionView?.contentInset = UIEdgeInsetsMake(C.padding[2], C.padding[2], C.padding[2], C.padding[2])
         setupScrolling()
-        store.subscribe(self, selector: { $0.isBtcSwapped != $1.isBtcSwapped }, callback: { self.isBtcSwapped = $0.isBtcSwapped })
+        store.subscribe(self, selector: { $0.isLtcSwapped != $1.isLtcSwapped }, callback: { self.isLtcSwapped = $0.isLtcSwapped })
         store.subscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: { self.rate = $0.currentRate })
         store.lazySubscribe(self, selector: { $0.walletState.transactions != $1.walletState.transactions }, callback: {
             self.transactions = $0.walletState.transactions
@@ -133,7 +133,7 @@ extension TransactionDetailsViewController {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
         guard let transactionDetailCell = item as? TransactionDetailCollectionViewCell else { return item }
         guard let rate = rate else { return item }
-        transactionDetailCell.set(transaction: transactions[indexPath.row], isBtcSwapped: isBtcSwapped, rate: rate, rates: store.state.rates, maxDigits: store.state.maxDigits)
+        transactionDetailCell.set(transaction: transactions[indexPath.row], isLtcSwapped: isLtcSwapped, rate: rate, rates: store.state.rates, maxDigits: store.state.maxDigits)
         transactionDetailCell.closeCallback = { [weak self] in
             if let delegate = self?.transitioningDelegate as? ModalTransitionDelegate {
                 delegate.reset()
