@@ -8,7 +8,6 @@ use_frameworks!
 #Shared Cocopods
 def shared_pods
   #Add when they debug for iOS v12: pod 'Mixpanel-swift' | KCW Oct 4,2018
- pod 'Crashlytics', '~>  3.10'
  pod 'Alamofire', '~> 4.7'
 end
 
