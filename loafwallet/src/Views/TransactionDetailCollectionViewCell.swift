@@ -22,13 +22,13 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         NotificationCenter.default.removeObserver(self)
     }
 
-    func set(transaction: Transaction, isBtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) {
+    func set(transaction: Transaction, isLtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) {
         timestamp.text = transaction.longTimestamp
-        amount.text = String(format: transaction.direction.amountFormat, "\(transaction.amountDescription(isBtcSwapped: isBtcSwapped, rate: rate, maxDigits: maxDigits))")
+        amount.text = String(format: transaction.direction.amountFormat, "\(transaction.amountDescription(isLtcSwapped: isLtcSwapped, rate: rate, maxDigits: maxDigits))")
         address.text = transaction.detailsAddressText
         status.text = transaction.status
         comment.text = transaction.comment
-        amountDetails.text = transaction.amountDetails(isBtcSwapped: isBtcSwapped, rate: rate, rates: rates, maxDigits: maxDigits)
+        amountDetails.text = transaction.amountDetails(isLtcSwapped: isLtcSwapped, rate: rate, rates: rates, maxDigits: maxDigits)
         addressHeader.text = transaction.direction.addressHeader.capitalized
         fullAddress.setTitle(transaction.toAddress ?? "", for: .normal)
         txHash.setTitle(transaction.hash, for: .normal)

@@ -368,7 +368,30 @@ class ModalPresenter : Subscriber, Trackable {
                     settingsNav.dismiss(animated: true, completion: {
                         myself.topViewController?.present(nc, animated: true, completion: nil)
                     })
-               })
+               }),
+              Setting(title: S.Settings.wipeZeroBalance, callback: { [weak self] in
+                guard let myself = self else { return }
+                guard let walletManager = myself.walletManager else { return }
+//                let nc = ModalNavigationController()
+//                nc.setClearNavbar()
+//                nc.setWhiteStyle()
+//                nc.delegate = myself.wipeNavigationDelegate
+//                let start = StartWipeWalletViewController {
+//                  let recover = EnterPhraseViewController(store: myself.store, walletManager: walletManager, reason: .validateForWipingWallet( {
+//                    myself.wipeWallet()
+//                  }))
+//                  nc.pushViewController(recover, animated: true)
+//                }
+//                start.addCloseNavigationItem(tintColor: .white)
+//                start.navigationItem.title = S.WipeWallet.title
+//                let faqButton = UIButton.buildFaqButton(store: myself.store, articleId: ArticleIds.wipeWallet)
+//                faqButton.tintColor = .white
+//                start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
+//                nc.viewControllers = [start]
+//                settingsNav.dismiss(animated: true, completion: {
+//                  myself.topViewController?.present(nc, animated: true, completion: nil)
+//                })
+              })
             ],
             "Manage": [
                 Setting(title: S.Settings.notifications, accessoryText: {
@@ -420,10 +443,6 @@ class ModalPresenter : Subscriber, Trackable {
                                 let nodeSelector = NodeSelectorViewController(walletManager: walletManager)
                                 settingsNav.pushViewController(nodeSelector, animated: true)
                             })
-//                            Setting(title: S.BCH.title, callback: {
-//                                let bCash = BCashTransactionViewController(walletManager: walletManager, store: myself.store)
-//                                settingsNav.pushViewController(bCash, animated: true)
-//                            })
                         ]
                     ]
 
