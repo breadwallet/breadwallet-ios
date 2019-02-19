@@ -141,11 +141,6 @@ struct KeyStore {
             throw KeyStoreError.alreadyInitialized
         }
 
-        // caller must ensure isProtectedDataAvailable is true before initializing KeyStore if this is done on another (non-main) thread
-        if Thread.isMainThread && !UIApplication.shared.isProtectedDataAvailable {
-            throw KeyStoreError.keychainError(NSError(domain: NSOSStatusErrorDomain, code: Int(errSecNotAvailable)))
-        }
-
         if try keychainItem(key: KeychainKey.seed) as Data? != nil { // upgrade from old keychain scheme
             let seedPhrase: String? = try keychainItem(key: KeychainKey.mnemonic)
             var seed = UInt512()
