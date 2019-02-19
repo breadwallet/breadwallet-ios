@@ -59,4 +59,8 @@ struct E {
     static let is32Bit: Bool = {
         return MemoryLayout<Int>.size == MemoryLayout<UInt32>.size
     }()
+  
+    static var screenHeight: CGFloat {
+      return UIScreen.main.bounds.size.height
+    }
 }
