@@ -18,22 +18,17 @@ private enum AppGroup {
     static let receiveAddressKey = "kBRSharedContainerDataWalletReceiveAddressKey"
 }
 
+// unused -- for showing address in watch/widget extensions
 class UserDefaultsUpdater {
 
-    init(walletManager: BTCWalletManager) {
-        self.walletManager = walletManager
-    }
-
     func refresh() {
-        guard let wallet = walletManager.wallet else { return }
-        defaults?.set(wallet.receiveAddress as NSString, forKey: AppGroup.receiveAddressKey)
-        defaults?.set(wallet.receiveAddress.data(using: .utf8), forKey: AppGroup.requestDataKey)
+        guard let receiveAddress = Store.state[Currencies.btc]?.receiveAddress else { return }
+        defaults?.set(receiveAddress as NSString, forKey: AppGroup.receiveAddressKey)
+        defaults?.set(receiveAddress.data(using: .utf8), forKey: AppGroup.requestDataKey)
     }
 
     private lazy var defaults: UserDefaults? = {
         return UserDefaults(suiteName: AppGroup.id)
     }()
-
-    private let walletManager: BTCWalletManager
 
 }

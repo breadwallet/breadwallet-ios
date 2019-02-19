@@ -37,6 +37,10 @@ private let hasScannedForTokenBalancesKey = "hasScannedForTokenBalances"
 private let debugShouldAutoEnterPinKey = "shouldAutoEnterPIN"
 private let debugShouldSuppressPaperKeyPromptKey = "shouldSuppressPaperKeyPrompt"
 private let debugShouldShowPaperKeyPreviewKey = "debugShouldShowPaperKeyPreviewKey"
+private let debugShowAppRatingPromptOnEnterWalletKey = "debugShowAppRatingPromptOnEnterWalletKey"
+private let debugSuppressAppRatingPromptKey = "debugSuppressAppRatingPromptKey"
+private let shouldHideBRDRewardsAnimationKey = "shouldHideBRDRewardsAnimationKey"
+private let shouldHideBRDCellHighlightKey = "shouldHideBRDCellHighlightKey"
 
 typealias ResettableBooleanSetting = [String: Bool]
 typealias ResettableObjectSetting = String
@@ -54,7 +58,11 @@ extension UserDefaults {
         [hasOptedInSegwitKey: false],
         [debugShouldAutoEnterPinKey: false],
         [debugShouldSuppressPaperKeyPromptKey: false],
-        [debugShouldShowPaperKeyPreviewKey: false]
+        [debugShouldShowPaperKeyPreviewKey: false],
+        [debugSuppressAppRatingPromptKey: false],
+        [debugShowAppRatingPromptOnEnterWalletKey: false],
+        [shouldHideBRDCellHighlightKey: false],
+        [shouldHideBRDRewardsAnimationKey: false]
     ]
     
     static let resettableObjects: [ResettableObjectSetting] = [
@@ -402,5 +410,50 @@ extension UserDefaults {
         set {
             defaults.set(newValue, forKey: debugShouldShowPaperKeyPreviewKey)
         }        
+    }
+    
+    // option to always show the app rating prompt when entering a wallet
+    static func toggleShowAppRatingPromptOnEnterWallet() -> Bool {
+        return toggleBoolean(key: debugShowAppRatingPromptOnEnterWalletKey)
+    }
+
+    static var debugShowAppRatingOnEnterWallet: Bool {
+        
+        get {
+            return defaults.bool(forKey: debugShowAppRatingPromptOnEnterWalletKey)
+        }
+        
+        set {
+            defaults.set(newValue, forKey: debugShowAppRatingPromptOnEnterWalletKey)
+        }
+    }
+    
+    // option to always suppress showing the app rating prompt
+    static func toggleSuppressAppRatingPrompt() -> Bool {
+        return toggleBoolean(key: debugSuppressAppRatingPromptKey)
+    }
+
+    static var debugSuppressAppRatingPrompt: Bool {
+        
+        get {
+            return defaults.bool(forKey: debugSuppressAppRatingPromptKey)
+        }
+        
+        set {
+            defaults.set(newValue, forKey: debugSuppressAppRatingPromptKey)
+        }
+    }
+
+    static var shouldShowBRDRewardsAnimation: Bool {
+        // boolean logic is flipped so that 'hide == false' is the default state,
+        // whereas the calling code can check whether to show, which has clearer semantics
+        // (same logic is employed for 'shouldShowBRDCellHighlight')
+        get { return !defaults.bool(forKey: shouldHideBRDRewardsAnimationKey)   }
+        set { defaults.set(!newValue, forKey: shouldHideBRDRewardsAnimationKey) }
+    }
+    
+    static var shouldShowBRDCellHighlight: Bool {
+        get { return !defaults.bool(forKey: shouldHideBRDCellHighlightKey)   }
+        set { defaults.set(!newValue, forKey: shouldHideBRDCellHighlightKey) }
     }
 }

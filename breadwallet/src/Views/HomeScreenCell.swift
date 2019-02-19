@@ -8,6 +8,16 @@
 
 import UIKit
 
+protocol HighlightableCell {
+    func highlight()
+    func unhighlight()
+}
+
+enum HomeScreenCellIds: String {
+    case regularCell        = "CurrencyCell"
+    case highlightableCell  = "HighlightableCurrencyCell"
+}
+
 class Background: UIView, GradientDrawable {
 
     var currency: Currency?
@@ -29,8 +39,6 @@ class Background: UIView, GradientDrawable {
 
 class HomeScreenCell: UITableViewCell, Subscriber {
     
-    static let cellIdentifier = "CurrencyCell"
-
     private let iconContainer = UIView(color: .transparentIconBackground)
     private let icon = UIImageView()
     private let currencyName = UILabel(font: .customBold(size: 18.0), color: .white)
@@ -38,20 +46,25 @@ class HomeScreenCell: UITableViewCell, Subscriber {
     private let fiatBalance = UILabel(font: .customBold(size: 18.0), color: .white)
     private let tokenBalance = UILabel(font: .customBold(size: 14.0), color: .transparentWhiteText)
     private let syncIndicator = SyncingIndicator(style: .home)
-    private let container = Background()
     
+    let container = Background()    // not private for inheritance
+        
     private var isSyncIndicatorVisible: Bool = false {
         didSet {
             UIView.crossfade(tokenBalance, syncIndicator, toRight: isSyncIndicatorVisible, duration: isSyncIndicatorVisible == oldValue ? 0.0 : 0.3)
             fiatBalance.textColor = (isSyncIndicatorVisible || !(container.currency?.isSupported ?? false)) ? .disabledWhiteText : .white
         }
     }
-
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
 
+    static func cellIdentifier() -> String {
+        return "CurrencyCell"
+    }
+    
     func set(viewModel: AssetListViewModel) {
         accessibilityIdentifier = viewModel.currency.name
         container.currency = viewModel.currency
@@ -64,7 +77,6 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         fiatBalance.textColor = viewModel.currency.isSupported ? .white : .disabledWhiteText
         tokenBalance.text = viewModel.tokenBalance
         container.setNeedsDisplay()
-        
         Store.subscribe(self, selector: { $0[viewModel.currency]?.syncState != $1[viewModel.currency]?.syncState },
                         callback: { state in
                             guard let syncState = state[viewModel.currency]?.syncState else { return }
@@ -88,9 +100,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         })
     }
     
-    func refreshAnimations() {}
-
-    private func setupViews() {
+    func setupViews() {
         addSubviews()
         addConstraints()
         setupStyle()
@@ -105,7 +115,6 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         container.addSubview(fiatBalance)
         container.addSubview(tokenBalance)
         container.addSubview(syncIndicator)
-        
         syncIndicator.isHidden = true
     }
 
@@ -150,6 +159,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
             syncIndicator.leadingAnchor.constraint(greaterThanOrEqualTo: price.trailingAnchor, constant: padding[2]),
             syncIndicator.bottomAnchor.constraint(equalTo: tokenBalance.bottomAnchor, constant: 5.0)
             ])
+        layoutIfNeeded()
     }
 
     private func setupStyle() {

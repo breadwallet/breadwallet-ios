@@ -41,17 +41,18 @@ mainBundleShortVersionString=$("${plistBuddy}" -c "Print CFBundleShortVersionStr
 echo "Current project version is ${mainBundleShortVersionString} (${mainBundleVersion})"
 
 # Increment the build number
-mainBundleVersion=$((${mainBundleVersion} + 2))
+mainBundleVersion=$((${mainBundleVersion} + 1))
 
 # Set version number if specified
 if [ ! -z "$1" ]; then
     echo "Setting new version: ${1}"
     mainBundleShortVersionString=${1}
+    mainBundleVersion=1
 fi
 
 for idx in ${!plists[*]}
 do
-    read -r thisPlist <<< "${plists[$idx]}"
+	read -r thisPlist <<< "${plists[$idx]}"
 	# Find out the current version
 	thisBundleVersion=$("${plistBuddy}" -c "Print CFBundleVersion" "${thisPlist}")
 	thisBundleShortVersionString=$("${plistBuddy}" -c "Print CFBundleShortVersionString" "${thisPlist}")

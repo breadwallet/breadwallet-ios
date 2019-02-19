@@ -59,15 +59,15 @@ open class BRBitID: NSObject {
     }
     
     let url: URL
-    let walletManager: BTCWalletManager
+    let walletAuthenticator: WalletAuthenticator
     
     open var siteName: String {
         return "\(url.host!)\(url.path)"
     }
     
-    init(url u: URL, walletManager wm: BTCWalletManager) {
-        walletManager = wm
-        url = u
+    init(url: URL, walletAuthenticator: WalletAuthenticator) {
+        self.walletAuthenticator = walletAuthenticator
+        self.url = url
     }
     
     func newNonce() -> String {
@@ -100,7 +100,7 @@ open class BRBitID: NSObject {
     }
     
     func runCallback(_ completionHandler: @escaping (Data?, URLResponse?, NSError?) -> Void) {
-        guard !walletManager.noWallet else {
+        guard !walletAuthenticator.noWallet else {
             DispatchQueue.main.async {
                 completionHandler(nil, nil, NSError(domain: "", code: -1001, userInfo:
                     [NSLocalizedDescriptionKey: NSLocalizedString("No wallet", comment: "")]))
@@ -135,7 +135,7 @@ open class BRBitID: NSObject {
             let uri = "\(scheme)://\(url.host!)\(url.path)"
 
             // build a payload consisting of the signature, address and signed uri
-            guard var priv = walletManager.buildBitIdKey(url: uri, index: Int(BRBitID.DEFAULT_INDEX)) else {
+            guard var priv = walletAuthenticator.buildBitIdKey(url: uri, index: Int(BRBitID.DEFAULT_INDEX)) else {
                 return
             }
 

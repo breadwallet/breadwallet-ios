@@ -77,7 +77,8 @@ protocol GasEstimator {
 // MARK: - Base Class
 
 class SenderBase<CurrencyType: Currency, WalletType: WalletManager> {
-    
+
+    fileprivate let authenticator: TransactionAuthenticator
     fileprivate let currency: CurrencyType
     fileprivate let walletManager: WalletType
     fileprivate let kvStore: BRReplicatedKVStore
@@ -86,7 +87,8 @@ class SenderBase<CurrencyType: Currency, WalletType: WalletManager> {
     
     // MARK: Init
     
-    fileprivate init(currency: CurrencyType, walletManager: WalletType, kvStore: BRReplicatedKVStore) {
+    fileprivate init(authenticator: TransactionAuthenticator, currency: CurrencyType, walletManager: WalletType, kvStore: BRReplicatedKVStore) {
+        self.authenticator = authenticator
         self.currency = currency
         self.walletManager = walletManager
         self.kvStore = kvStore
@@ -115,8 +117,8 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
     // MARK: Sender
     
     var canUseBiometrics: Bool {
-        guard let tx = transaction else { return false }
-        return walletManager.canUseBiometrics(forTx: tx)
+        guard let tx = transaction, let wallet = walletManager.wallet else { return false }
+        return authenticator.canUseBiometrics(forTransaction: tx, wallet: wallet)
     }
     
     func updateFeeRates(_ fees: Fees, level: FeeLevel?) {
@@ -215,9 +217,9 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
     }
     
     func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, abi: String? = nil, completion: @escaping SendCompletion) {
-        guard readyToSend, let tx = transaction else { return completion(.creationError("not ready")) }
+        guard readyToSend, let tx = transaction, let wallet = walletManager.wallet else { return completion(.creationError("not ready")) }
         
-        if allowBiometrics && UserDefaults.isBiometricsEnabled && walletManager.canUseBiometrics(forTx: tx) {
+        if allowBiometrics && UserDefaults.isBiometricsEnabled && authenticator.canUseBiometrics(forTransaction: tx, wallet: wallet) {
             sendWithBiometricVerification(tx: tx, pinVerifier: pinVerifier, completion: completion)
         } else {
             sendWithPinVerification(tx: tx, pinVerifier: pinVerifier, completion: completion)
@@ -257,8 +259,8 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         let biometricsPrompt = S.VerifyPin.touchIdMessage
         
         DispatchQueue.walletQueue.async { [weak self] in
-            guard let `self` = self else { return }
-            self.walletManager.signTransaction(tx, biometricsPrompt: biometricsPrompt, completion: { result in
+            guard let `self` = self, let wallet = self.walletManager.wallet else { return assertionFailure() }
+            self.authenticator.sign(transaction: tx, wallet: wallet, withBiometricsPrompt: biometricsPrompt) { result in
                 switch result {
                 case .success:
                     self.publish(tx: tx, completion: completion)
@@ -269,16 +271,18 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
                 default:
                     break
                 }
-            })
+            }
         }
     }
     
     private func sendWithPinVerification(tx: BRTxRef,
                                          pinVerifier: PinVerifier,
                                          completion: @escaping SendCompletion) {
+        // this block requires a strong reference to self to ensure the Sender is not deallocated before completion
         pinVerifier { pin in
             DispatchQueue.walletQueue.async {
-                if self.walletManager.signTransaction(tx, pin: pin) {
+                guard let wallet = self.walletManager.wallet else { return assertionFailure() }
+                if self.authenticator.sign(transaction: tx, wallet: wallet, withPin: pin) {
                     self.publish(tx: tx, completion: completion)
                 } else {
                     DispatchQueue.main.async {
@@ -506,30 +510,39 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
             let amount = amount else {
                 return completion(.creationError("not ready"))
         }
-        
-        pinVerifier { _ in
-            self.walletManager.sendTransaction(currency: self.currency,
-                                               toAddress: address,
-                                               amount: amount,
-                                               abi: abi,
-                                               gasPrice: self.gasPrice,
-                                               gasLimit: self.gasLimit) { result in
-                                                switch result {
-                                                case .success(let pendingTx, nil, let rawTx):
-                                                    self.setMetaData(tx: pendingTx)
-                                                    completion(.success(pendingTx.hash, rawTx))
-                                                case .error(let error):
-                                                    switch error {
-                                                    case .httpError(let e):
-                                                        completion(.creationError(e?.localizedDescription ?? ""))
-                                                    case .jsonError(let e):
-                                                        completion(.creationError(e?.localizedDescription ?? ""))
-                                                    case .rpcError(let e):
-                                                        completion(.creationError(e.message))
-                                                    }
-                                                default:
-                                                    assertionFailure("invalid parameters")
-                                                }
+
+        // this block requires a strong reference to self to ensure the Sender is not deallocated before completion
+        pinVerifier { pin in
+            let (tx, wallet) = self.walletManager.createTransaction(currency: self.currency,
+                                                                    toAddress: address,
+                                                                    amount: amount,
+                                                                    abi: abi,
+                                                                    gasPrice: self.gasPrice,
+                                                                    gasLimit: self.gasLimit)
+
+            guard self.authenticator.sign(transaction: tx, wallet: wallet, withPin: pin) else {
+                DispatchQueue.main.async {
+                    completion(.creationError("authentication error"))
+                }
+                return
+            }
+            self.walletManager.sendTransaction(tx) { result in
+                switch result {
+                case .success(let pendingTx, nil, let rawTx):
+                    self.setMetaData(tx: pendingTx)
+                    completion(.success(pendingTx.hash, rawTx))
+                case .error(let error):
+                    switch error {
+                    case .httpError(let e):
+                        completion(.creationError(e?.localizedDescription ?? ""))
+                    case .jsonError(let e):
+                        completion(.creationError(e?.localizedDescription ?? ""))
+                    case .rpcError(let e):
+                        completion(.creationError(e.message))
+                    }
+                default:
+                    assertionFailure("invalid parameters")
+                }
             }
         }
     }
@@ -578,8 +591,20 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
                 return completion(.creationError("not ready"))
         }
 
-        pinVerifier { _ in
-            self.walletManager.sendTransaction(currency: self.currency, toAddress: address, amount: amount, gasLimit: self.gasLimit) { result in
+        let (tx, wallet) = walletManager.createTransaction(currency: self.currency,
+                                                           toAddress: address,
+                                                           amount: amount,
+                                                           gasLimit: self.gasLimit)
+
+        // this block requires a strong reference to self to ensure the Sender is not deallocated before completion
+        pinVerifier { pin in
+            guard self.authenticator.sign(transaction: tx, wallet: wallet, withPin: pin) else {
+                DispatchQueue.main.async {
+                    completion(.creationError("authentication error"))
+                }
+                return
+            }
+            self.walletManager.sendTransaction(tx) { result in
                 switch result {
                 case .success(let pendingEthTx, let pendingTokenTx?, let rawTx):
                     self.setMetaData(ethTx: pendingEthTx, tokenTx: pendingTokenTx)
@@ -650,15 +675,15 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
 // MARK: -
 
 extension Currency {
-    func createSender(walletManager: WalletManager, kvStore: BRReplicatedKVStore) -> Sender? {
+    func createSender(authenticator: TransactionAuthenticator, walletManager: WalletManager, kvStore: BRReplicatedKVStore) -> Sender? {
         
         switch (self, walletManager) {
         case (let currency as Bitcoin, let btcWalletManager as BTCWalletManager):
-            return BitcoinSender(currency: currency, walletManager: btcWalletManager, kvStore: kvStore)
+            return BitcoinSender(authenticator: authenticator, currency: currency, walletManager: btcWalletManager, kvStore: kvStore)
         case (let currency as Ethereum, let ethWalletManager as EthWalletManager):
-            return EthereumSender(currency: currency, walletManager: ethWalletManager, kvStore: kvStore)
+            return EthereumSender(authenticator: authenticator, currency: currency, walletManager: ethWalletManager, kvStore: kvStore)
         case (let currency as ERC20Token, let ethWalletManager as EthWalletManager):
-            return ERC20Sender(currency: currency, walletManager: ethWalletManager, kvStore: kvStore)
+            return ERC20Sender(authenticator: authenticator, currency: currency, walletManager: ethWalletManager, kvStore: kvStore)
         default:
             assertionFailure("unsupporeted currency/wallet")
             return nil
