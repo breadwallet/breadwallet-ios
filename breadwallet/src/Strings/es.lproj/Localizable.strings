@@ -74,6 +74,14 @@
 "Android.screenAlteringMessage" = "BRD no funcionará correctamente a menos que las aplicaciones que alteran la pantalla (como Twilight) estén desactivadas.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Se ha detectado una aplicación de alteración de pantalla";
+/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
+"Announcement.glideraBodyOne" = "Las compras de BTC y ETH a través de su banco tendrán límites más altos, plazos de ejecución más cortos y comisiones más bajas. Suscríbase para ser notificado de su lanzamiento.";
+/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
+"Announcement.glideraBodyTwo" = "Le notificaremos sobre los cambios.";
+/* Title for in-app announcement about our partner Glidera. */
+"Announcement.glideraTitleOne" = "¡Próximamente una nueva forma de comprar!";
+/* Title for in-app announcement about our partner Glidera. */
+"Announcement.glideraTitleTwo" = "¡Gracias!";
 /* JSON Serialization error message */
 "ApiClient.jsonError" = "Error de serialización de JSON";
 /* Wallet not ready error message */
@@ -540,6 +548,12 @@
 "ReScan.subheader1" = "Hora prevista";
 /* Subheader label */
 "ReScan.subheader2" = "¿Cuándo sincronizar?";
+/* Rewards view expanded body. */
+"RewardsView.expandedBody" = "Descubra cómo puede ahorrar en comisiones de negociación y desbloquear futuras recompensas";
+/* Rewards view expanded title. */
+"RewardsView.expandedTitle" = "Presentamos BRD Rewards.";
+/* Rewards view title */
+"RewardsView.normalTitle" = "Recompensas";
 /* Scan bitcoin address camera flash toggle */
 "Scanner.flashButtonLabel" = "Flash de la cámara";
 /* Complete filter label */
