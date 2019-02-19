@@ -131,9 +131,9 @@ class ConfirmPaperPhraseViewController : UIViewController {
     }
   
     @objc private func showWarningConfirmation() {
-      if let warningVC = UIStoryboard(name: "WarningConfirmationViewController", bundle: nil).instantiateViewController(withIdentifier: "WarningConfirmationViewController") as? WarningConfirmationViewController {
-        self.present(warningVC, animated: true, completion: nil)
-      } 
+//      if let warningVC = UIStoryboard(name: "WarningConfirmationViewController", bundle: nil).instantiateViewController(withIdentifier: "WarningConfirmationViewController") as? WarningConfirmationViewController {
+//        self.present(warningVC, animated: true, completion: nil)
+//      } 
       
 //      UserDefaults.writePaperPhraseDate = Date()
 //      store.trigger(name: .didWritePaperKey)
