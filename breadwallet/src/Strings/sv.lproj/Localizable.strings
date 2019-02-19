@@ -74,6 +74,14 @@
 "Android.screenAlteringMessage" = "BRD fungerar inte korrekt om inte skärmskiftande appar (såsom Twilight) är inaktiverade.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Skärmskiftande app upptäckt";
+/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
+"Announcement.glideraBodyOne" = "BTC- och ETH-köp via din bank har högre gränser, snabbare leveranstider och lägre avgifter. Registrera dig för att få information när det lanseras.";
+/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
+"Announcement.glideraBodyTwo" = "Vi kommer att informera dig om ändringarna.";
+/* Title for in-app announcement about our partner Glidera. */
+"Announcement.glideraTitleOne" = "Det nya sättet att köpa lanseras snart!";
+/* Title for in-app announcement about our partner Glidera. */
+"Announcement.glideraTitleTwo" = "Tack!";
 /* JSON Serialization error message */
 "ApiClient.jsonError" = "Fel vid JSON-serialisering";
 /* Wallet not ready error message */
@@ -540,6 +548,12 @@
 "ReScan.subheader1" = "Uppskattad tid";
 /* Subheader label */
 "ReScan.subheader2" = "När ska man synka?";
+/* Rewards view expanded body. */
+"RewardsView.expandedBody" = "Se hur du kan spara in på handelsavgifter och frigöra framtida belöningar.";
+/* Rewards view expanded title. */
+"RewardsView.expandedTitle" = "Introduktion av BRD Rewards.";
+/* Rewards view title */
+"RewardsView.normalTitle" = "Belöningar";
 /* Scan bitcoin address camera flash toggle */
 "Scanner.flashButtonLabel" = "Kamerablixt";
 /* Complete filter label */

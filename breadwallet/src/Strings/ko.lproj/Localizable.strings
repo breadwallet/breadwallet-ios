@@ -74,6 +74,14 @@
 "Android.screenAlteringMessage" = "BRD는 (Twilight과 같은) 화면 변경 앱을 비활성화하지 않으면 제대로 동작하지 않습니다.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "화면 변경 앱이 탐지됨";
+/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
+"Announcement.glideraBodyOne" = "당신의 은행을 통해 BTC와 ETH를 구입하면 한도가 더 높으며, 인도가 더 신속할 뿐 아니라 수수료도 더 낮습니다. 지금 가입하여 출시 시점에 알림을 받으십시오.";
+/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
+"Announcement.glideraBodyTwo" = "변경 사항에 대해 알려드리겠습니다.";
+/* Title for in-app announcement about our partner Glidera. */
+"Announcement.glideraTitleOne" = "곧 새로운 구입 방식이 등장합니다!";
+/* Title for in-app announcement about our partner Glidera. */
+"Announcement.glideraTitleTwo" = "감사합니다.";
 /* JSON Serialization error message */
 "ApiClient.jsonError" = "JSON 직렬화 오류";
 /* Wallet not ready error message */
@@ -540,6 +548,12 @@
 "ReScan.subheader1" = "예상 시간";
 /* Subheader label */
 "ReScan.subheader2" = "동기화는 언제 해야 합니까?";
+/* Rewards view expanded body. */
+"RewardsView.expandedBody" = "거래 수수료를 절약하고 미래의 보상을 얻을 수 있는 방법을 배우십시오.";
+/* Rewards view expanded title. */
+"RewardsView.expandedTitle" = "BRD 리워즈를 소개합니다.";
+/* Rewards view title */
+"RewardsView.normalTitle" = "리워즈";
 /* Scan bitcoin address camera flash toggle */
 "Scanner.flashButtonLabel" = "카메라 플래시";
 /* Complete filter label */

@@ -30,7 +30,7 @@ class MultiframeAnimation: UIView {
                 guard
                     let location = Bundle.main.path(forResource: name, ofType: "\(fileType)"),
                     let frameImage = UIImage(contentsOfFile: location) else {
-                        assert(false, "A file with the this file name couldn't be found: \(name)")
+                        return assertionFailure("Missing animation frame file: \(name)")
                 }
 
                 // Setting up images this way with UIGraphics is much faster than using UIImage(named:).
