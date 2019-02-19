@@ -11,13 +11,11 @@ import BRCore
 
 class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackable {
 
-    init(walletManager: BTCWalletManager) {
-        self.walletManager = walletManager
+    init() {
         self.rates = Currencies.btc.state?.rates.filter { $0.code != Currencies.btc.code } ?? [Rate]()
         super.init(style: .plain)
     }
 
-    private let walletManager: BTCWalletManager
     private let cellIdentifier = "CellIdentifier"
     private var rates: [Rate] = [] {
         didSet {
@@ -65,7 +63,7 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
         titleLabel.sizeToFit()
         navigationItem.titleView = titleLabel
 
-        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.displayCurrency, currency: walletManager.currency)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.displayCurrency, currency: Currencies.btc)
         faqButton.tintColor = .navigationTint
         navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
         bitcoinSwitch.tintColor = .navigationTint

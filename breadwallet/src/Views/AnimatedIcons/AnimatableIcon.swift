@@ -9,5 +9,6 @@
 import UIKit
 
 protocol AnimatableIcon {
-    func animate()
+    func startAnimating()
+    func stopAnimating()
 }

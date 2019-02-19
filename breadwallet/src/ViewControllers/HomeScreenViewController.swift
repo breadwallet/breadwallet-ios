@@ -9,15 +9,8 @@
 import UIKit
 
 class HomeScreenViewController: UIViewController, Subscriber, Trackable {
-    
-    var primaryWalletManager: BTCWalletManager? {
-        didSet {
-            setInitialData()
-            setupSubscriptions()
-            assetList.reload()
-            attemptShowPrompt()
-        }
-    }
+
+    private let walletAuthenticator: WalletAuthenticator
     private let assetList = AssetListTableView()
     private let subHeaderView = UIView()
     private let logo = UIImageView(image: #imageLiteral(resourceName: "LogoGradient"))
@@ -46,9 +39,16 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
 
     // MARK: -
     
-    init(primaryWalletManager: BTCWalletManager?) {
-        self.primaryWalletManager = primaryWalletManager
+    init(walletAuthenticator: WalletAuthenticator) {
+        self.walletAuthenticator = walletAuthenticator
         super.init(nibName: nil, bundle: nil)
+    }
+
+    func reload() {
+        setInitialData()
+        setupSubscriptions()
+        assetList.reload()
+        attemptShowPrompt()
     }
 
     override func viewDidLoad() {
@@ -355,16 +355,11 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func attemptShowPrompt() {
-        guard let walletManager = primaryWalletManager else {
-            currentPrompt = nil
-            return
-        }
-        
         guard currentPrompt == nil else {
             return
         }
         
-        if let type = PromptType.nextPrompt(walletManager: walletManager) {
+        if let type = PromptType.nextPrompt(walletAuthenticator: walletAuthenticator) {
             self.saveEvent("prompt.\(type.name).displayed")
             currentPrompt = PromptFactory.createPrompt(type: type, presenter: self)
             

@@ -18,8 +18,8 @@ class EnterPhraseCollectionViewController: UICollectionViewController {
         return itemHeight * 4.0
     }
 
-    init(walletManager: BTCWalletManager) {
-        self.walletManager = walletManager
+    init(keyMaster: KeyMaster) {
+        self.keyMaster = keyMaster
         let layout = UICollectionViewFlowLayout()
         let screenWidth = UIScreen.main.safeWidth
         layout.itemSize = CGSize(width: (screenWidth - C.padding[4])/3.0, height: itemHeight)
@@ -31,7 +31,7 @@ class EnterPhraseCollectionViewController: UICollectionViewController {
 
     // MARK: - Private
     private let cellIdentifier = "CellIdentifier"
-    private let walletManager: BTCWalletManager
+    private let keyMaster: KeyMaster
     private var phrase: String {
         return (0...11).map { index in
                 guard let phraseCell = collectionView?.cellForItem(at: IndexPath(item: index, section: 0)) as? EnterPhraseCell else { return ""}
@@ -76,7 +76,7 @@ class EnterPhraseCollectionViewController: UICollectionViewController {
         }
         enterPhraseCell.isWordValid = { [weak self] word in
             guard let myself = self else { return false }
-            return myself.walletManager.isWordValid(word)
+            return myself.keyMaster.isSeedWordValid(word)
         }
         enterPhraseCell.didEnterSpace = {
             enterPhraseCell.didTapNext?()

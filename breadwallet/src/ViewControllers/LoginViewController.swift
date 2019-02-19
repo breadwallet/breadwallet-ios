@@ -14,23 +14,23 @@ private let topControlHeight: CGFloat = 32.0
 class LoginViewController: UIViewController, Subscriber, Trackable {
 
     // MARK: - Public
-    var walletManager: BTCWalletManager? {
+    var keyMaster: KeyMaster? {
         didSet {
-            guard walletManager != nil else { return }
+            guard keyMaster != nil else { return }
             pinView = PinView(style: .login, length: Store.state.pinLength)
         }
     }
     
-    init(isPresentedForLock: Bool, walletManager: BTCWalletManager? = nil) {
-        self.walletManager = walletManager
+    init(isPresentedForLock: Bool, keyMaster: KeyMaster? = nil) {
+        self.keyMaster = keyMaster
         self.isPresentedForLock = isPresentedForLock
         self.disabledView = WalletDisabledView()
         var shouldUseBiometrics = false
-        if let walletManager = walletManager, LAContext.canUseBiometrics && !walletManager.pinLoginRequired && Store.state.isBiometricsEnabled {
+        if let keyMaster = keyMaster, LAContext.canUseBiometrics && !keyMaster.pinLoginRequired && Store.state.isBiometricsEnabled {
             shouldUseBiometrics = true
         }
         self.pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0, shouldShowBiometrics: shouldUseBiometrics)
-        if walletManager != nil {
+        if keyMaster != nil {
             self.pinView = PinView(style: .login, length: Store.state.pinLength)
         }
         super.init(nibName: nil, bundle: nil)
@@ -66,31 +66,23 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
             addPinView()
         }
         disabledView.didTapReset = { [weak self] in
-            guard let walletManager = self?.walletManager else { return }
-            self?.isResetting = true
+            guard let `self` = self, let keyMaster = self.keyMaster else { return }
+            self.isResetting = true
             let nc = UINavigationController()
-            let recover = EnterPhraseViewController(walletManager: walletManager, reason: .validateForResettingPin({ phrase in
-                let updatePin = UpdatePinViewController(walletManager: walletManager, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
+            nc.setDarkStyle()
+            let recover = EnterPhraseViewController(keyMaster: keyMaster, reason: .validateForResettingPin({ phrase in
+                let updatePin = UpdatePinViewController(keyMaster: keyMaster, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
                 nc.pushViewController(updatePin, animated: true)
                 updatePin.resetFromDisabledWillSucceed = {
-                    self?.disabledView.isHidden = true
+                    self.disabledView.isHidden = true
                 }
                 updatePin.resetFromDisabledSuccess = {
-                    self?.authenticationSucceded()
+                    self.authenticationSucceded()
                 }
             }))
             recover.addCloseNavigationItem()
             nc.viewControllers = [recover]
-            nc.navigationBar.tintColor = .darkText
-            nc.navigationBar.titleTextAttributes = [
-                NSAttributedStringKey.foregroundColor: UIColor.darkText,
-                NSAttributedStringKey.font: UIFont.customBold(size: 17.0)
-            ]
-            nc.setClearNavbar()
-            nc.navigationBar.isTranslucent = false
-            nc.navigationBar.barTintColor = .whiteTint
-            nc.viewControllers = [recover]
-            self?.present(nc, animated: true, completion: nil)
+            self.present(nc, animated: true, completion: nil)
         }
         Store.subscribe(self, name: .loginFromSend, callback: {_ in
             self.authenticationSucceded()
@@ -131,7 +123,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         view.addSubview(pinViewContainer)
         view.addSubview(logoBackground)
         logoBackground.addSubview(logo)
-        if walletManager != nil {
+        if keyMaster != nil {
             view.addSubview(pinPadBackground)
         } else {
             view.addSubview(activityView)
@@ -154,7 +146,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
             logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.45) ])
         logo.constrain(toSuperviewEdges: nil)
 
-        if walletManager != nil {
+        if keyMaster != nil {
             pinPadPottom = pinPadBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[3] : 0.0)
             pinPadBackground.constrain([
                 pinPadBackground.widthAnchor.constraint(equalToConstant: floor(view.bounds.width/3.0)*3.0),
@@ -183,15 +175,15 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
             pinView.fill(attemptLength)
             self?.pinPad.isAppendingDisabled = attemptLength < Store.state.pinLength ? false : true
             if attemptLength == Store.state.pinLength {
-                self?.authenticate(pin: pin)
+                self?.authenticate(withPin: pin)
             }
         }
     }
 
-    private func authenticate(pin: String) {
-        guard let walletManager = walletManager else { return }
+    private func authenticate(withPin pin: String) {
+        guard let keyStore = keyMaster else { return }
         guard !E.isScreenshots else { return authenticationSucceded() }
-        guard walletManager.authenticate(pin: pin) else { return authenticationFailed() }
+        guard keyStore.authenticate(withPin: pin) else { return authenticationFailed() }
         authenticationSucceded()
     }
 
@@ -244,13 +236,13 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     }
 
     private var shouldUseBiometrics: Bool {
-        guard let walletManager = self.walletManager else { return false }
-        return LAContext.canUseBiometrics && !walletManager.pinLoginRequired && Store.state.isBiometricsEnabled
+        guard let keyStore = self.keyMaster else { return false }
+        return LAContext.canUseBiometrics && !keyStore.pinLoginRequired && Store.state.isBiometricsEnabled
     }
 
     @objc func biometricsTapped() {
         guard !isWalletDisabled else { return }
-        walletManager?.authenticate(biometricsPrompt: S.UnlockScreen.touchIdPrompt, completion: { result in
+        keyMaster?.authenticate(withBiometricsPrompt: S.UnlockScreen.touchIdPrompt, completion: { result in
             if result == .success {
                 self.authenticationSucceded()
             }
@@ -266,8 +258,8 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     }
 
     private func lockIfNeeded() {
-        guard let walletManager = walletManager else { return }
-        guard walletManager.walletIsDisabled else {
+        guard let keyStore = keyMaster else { return }
+        guard keyStore.walletIsDisabled else {
             pinPad.view.isUserInteractionEnabled = true
             disabledView.hide { [weak self] in
                 self?.disabledView.removeFromSuperview()
@@ -276,7 +268,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
             return
         }
         saveEvent("login.locked")
-        let disabledUntil = walletManager.walletDisabledUntil
+        let disabledUntil = keyStore.walletDisabledUntil
         let disabledUntilDate = Date(timeIntervalSince1970: disabledUntil)
         let unlockInterval = disabledUntil - Date().timeIntervalSince1970
         let df = DateFormatter()
@@ -297,9 +289,9 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     }
 
     private var isWalletDisabled: Bool {
-        guard let walletManager = walletManager else { return false }
+        guard let keyStore = keyMaster else { return false }
         let now = Date().timeIntervalSince1970
-        return walletManager.walletDisabledUntil > now
+        return keyStore.walletDisabledUntil > now
     }
 
     @objc private func unlock() {

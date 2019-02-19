@@ -15,7 +15,7 @@ class Backend {
     
     private static let shared = Backend()
     private init() {
-        apiClient = BRAPIClient(authenticator: NoAuthAuthenticator())
+        apiClient = BRAPIClient(authenticator: NoAuthWalletAuthenticator())
     }
     
     // MARK: - Private
@@ -64,7 +64,7 @@ class Backend {
     
     // MARK: Setup
     
-    static func connectWallet(_ authenticator: WalletAuthenticator, currencies: [Currency], walletManagers: [WalletManager]) {
+    static func connect(authenticator: WalletAuthenticator, currencies: [Currency], walletManagers: [WalletManager]) {
         shared.apiClient = BRAPIClient(authenticator: authenticator)
         shared.pigeonExchange = PigeonExchange()
         
@@ -84,7 +84,7 @@ class Backend {
         shared.feeUpdaters.removeAll()
         shared.exchangeUpdater = nil
         shared.pigeonExchange = nil
-        shared.apiClient = BRAPIClient(authenticator: NoAuthAuthenticator())
+        shared.apiClient = BRAPIClient(authenticator: NoAuthWalletAuthenticator())
     }
 }
 

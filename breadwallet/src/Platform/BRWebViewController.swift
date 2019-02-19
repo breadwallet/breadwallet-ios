@@ -36,9 +36,7 @@ import WebKit
     var debugEndpoint: String?
     var mountPoint: String
     var walletManagers: [String: WalletManager]
-    var btcWalletManager: WalletManager? {
-        return walletManagers[Currencies.btc.code]
-    }
+    var walletAuthenticator: TransactionAuthenticator
     
     var didClose: (() -> Void)?
 
@@ -75,11 +73,12 @@ import WebKit
 
     private var notificationObservers = [String: NSObjectProtocol]()
     
-    init(bundleName: String, mountPoint: String = "/", walletManagers: [String: WalletManager]) {
+    init(bundleName: String, mountPoint: String = "/", walletAuthenticator: TransactionAuthenticator, walletManagers: [String: WalletManager]) {
         wkProcessPool = WKProcessPool()
         self.bundleName = bundleName
         self.mountPoint = mountPoint
         self.walletManagers = walletManagers
+        self.walletAuthenticator = walletAuthenticator
         super.init(nibName: nil, bundle: nil)
         if debugOverBonjour {
             setupBonjour()
@@ -323,7 +322,7 @@ import WebKit
         router.plugin(BRCameraPlugin(fromViewController: self))
         
         // wallet plugin provides access to the wallet
-        router.plugin(BRWalletPlugin(walletManagers: walletManagers))
+        router.plugin(BRWalletPlugin(walletAuthenticator: walletAuthenticator, walletManagers: walletManagers))
         
         // link plugin which allows opening links to other apps
         router.plugin(BRLinkPlugin(fromViewController: self))

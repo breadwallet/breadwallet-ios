@@ -26,22 +26,14 @@ class AssetListTableView: UITableViewController, Subscriber {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.backgroundColor = .darkBackground
-        tableView.register(HomeScreenCell.self, forCellReuseIdentifier: HomeScreenCell.cellIdentifier)
+        tableView.register(HomeScreenCell.self, forCellReuseIdentifier: HomeScreenCellIds.regularCell.rawValue)
+        tableView.register(HomeScreenHiglightableCell.self, forCellReuseIdentifier: HomeScreenCellIds.highlightableCell.rawValue)
         tableView.separatorStyle = .none
         tableView.rowHeight = assetHeight
         
         setupAddWalletButton()
         setupSubscriptions()
         reload()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tableView.visibleCells.forEach {
-            if let cell = $0 as? HomeScreenCell {
-                cell.refreshAnimations()
-            }
-        }
     }
     
     private func setupAddWalletButton() {
@@ -94,7 +86,7 @@ class AssetListTableView: UITableViewController, Subscriber {
     }
     
     // MARK: - Data Source
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -107,7 +99,14 @@ class AssetListTableView: UITableViewController, Subscriber {
         let currency = Store.state.displayCurrencies[indexPath.row]
         let viewModel = AssetListViewModel(currency: currency)
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: HomeScreenCell.cellIdentifier, for: indexPath)
+        let cellIdentifier = (shouldHighlightCell(for: currency) ? HomeScreenCellIds.highlightableCell : HomeScreenCellIds.regularCell).rawValue
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
+        
+        if let highlightable: HighlightableCell = cell as? HighlightableCell {
+            handleCellHighlightingOnDisplay(cell: highlightable, currency: currency)
+        }
+        
         if let cell = cell as? HomeScreenCell {
             cell.set(viewModel: viewModel)
         }
@@ -117,6 +116,36 @@ class AssetListTableView: UITableViewController, Subscriber {
     // MARK: - Delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        didSelectCurrency?(Store.state.displayCurrencies[indexPath.row])
+        let currency = Store.state.displayCurrencies[indexPath.row]
+        didSelectCurrency?(currency)
+        handleCellHighlightingOnSelect(indexPath: indexPath, currency: currency)
+    }
+}
+
+// cell highlighting
+extension AssetListTableView {
+    
+    func shouldHighlightCell(for currency: Currency) -> Bool {
+        // Currently the only currency/wallet we highlight is BRD.
+        guard currency.code == Currencies.brd.code else { return false }
+        return UserDefaults.shouldShowBRDCellHighlight
+    }
+    
+    func clearShouldHighlightForCurrency(currency: Currency) {
+        guard currency.code == Currencies.brd.code else { return }
+        UserDefaults.shouldShowBRDCellHighlight = false
+    }
+    
+    func handleCellHighlightingOnDisplay(cell: HighlightableCell, currency: Currency) {
+        guard shouldHighlightCell(for: currency) else { return }
+        cell.highlight()
+    }
+    
+    func handleCellHighlightingOnSelect(indexPath: IndexPath, currency: Currency) {
+        guard shouldHighlightCell(for: currency) else { return }
+        guard let highlightable: HighlightableCell = tableView.cellForRow(at: indexPath) as? HighlightableCell else { return }
+        
+        highlightable.unhighlight()
+        clearShouldHighlightForCurrency(currency: currency)
     }
 }

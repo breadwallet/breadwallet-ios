@@ -69,13 +69,12 @@ class EthWalletManager: WalletManager {
 
     // MARK: -
     
-    init?() {
-        guard let pubKey = ethPubKey else { return nil }
+    init?(publicKey: BRKey) {
         let network: EthereumNetwork = (E.isTestnet || E.isRunningTests) ? .testnet : .mainnet
         node = EthereumLightNode(client: self,
                                  listener: self,
                                  network: network,
-                                 publicKey: pubKey)
+                                 publicKey: publicKey)
         _ = node.wallet(Currencies.eth) // create eth wallet
         let address = node.address
         self.address = address
@@ -154,23 +153,15 @@ class EthWalletManager: WalletManager {
         let wallet = node.wallet(currency)
         return wallet.defaultGasLimit
     }
-    
-    /// Creates, signs and submits an ETH transaction or ERC20 token transfer
-    /// Caller must authenticate
+
+    /// Creates an ETH transaction or ERC20 token transfer
     /// gasPrice and gasLimit parameters are only used for contract transactions
-    func sendTransaction(currency: Currency,
-                         toAddress: String,
-                         amount: UInt256,
-                         abi: String? = nil,
-                         gasPrice: UInt256? = nil,
-                         gasLimit: UInt256,
-                         callback: @escaping (SendTransactionResult) -> Void) {
-        guard let accountAddress = address, let apiClient = apiClient else { return assertionFailure() }
-        
-        guard ethPrivKey != nil, var privKey = BRKey(privKey: ethPrivKey!) else { return }
-        privKey.compressed = 0
-        defer { privKey.clean() }
-        
+    func createTransaction(currency: Currency,
+                           toAddress: String,
+                           amount: UInt256,
+                           abi: String? = nil,
+                           gasPrice: UInt256? = nil,
+                           gasLimit: UInt256) -> (EthereumTransaction, EthereumWallet) {
         let wallet = node.wallet(currency)
         let tx: EthereumTransaction
         if let abi = abi {
@@ -179,8 +170,16 @@ class EthWalletManager: WalletManager {
             tx = wallet.createTransaction(currency: currency, recvAddress: toAddress, amount: amount)
             lightNodeAnnounceGasEstimate(node.core, wallet.identifier, tx.identifier, gasLimit.hexString, 0)
         }
-        wallet.sign(transaction: tx, privateKey: privKey)
-        
+
+        return (tx, wallet)
+    }
+    
+    /// Publishes a signed ETH transaction or ERC20 token transfer
+    func sendTransaction(_ tx: EthereumTransaction,
+                         callback: @escaping (SendTransactionResult) -> Void) {
+        guard let accountAddress = address, let apiClient = apiClient else { return assertionFailure() }
+        let currency = tx.currency
+        let wallet = node.wallet(currency)
         let txRawHex = wallet.rawTransactionHexEncoded(tx)
         
         apiClient.sendRawTransaction(rawTx: txRawHex, handler: { [unowned self] result in
@@ -209,10 +208,6 @@ class EthWalletManager: WalletManager {
                 callback(.error(error))
             }
         })
-    }
-
-    func canUseBiometrics(forTx: BRTxRef) -> Bool {
-        return false
     }
 
     func isOwnAddress(_ address: String) -> Bool {
