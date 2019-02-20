@@ -86,7 +86,7 @@ open class BRHTTPFileMiddleware: BRHTTPMiddleware {
                     contentTypeHint = resp.allHeaderFields["Content-Type"] as? String
                 }
             }).resume()
-            _ = grp.wait(timeout: DispatchTime.now() + Double(Int64(30) * Int64(NSEC_PER_SEC)) / Double(NSEC_PER_SEC))
+            _ = grp.wait(timeout: .now() + .seconds(30))
             if body == nil {
                 print("[BRHTTPServer] DEBUG file not found \(String(describing: fileURL))")
                 return next(BRHTTPMiddlewareResponse(request: request, response: nil))

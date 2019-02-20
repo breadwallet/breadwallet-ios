@@ -16,7 +16,10 @@ class SupportCenterContainer: UIViewController {
 
     init(walletAuthenticator: TransactionAuthenticator, walletManagers: [String: WalletManager]) {
         let mountPoint = "/support"
-        webView = BRWebViewController(bundleName: C.webBundle, mountPoint: mountPoint, walletAuthenticator: walletAuthenticator, walletManagers: walletManagers)
+        webView = BRWebViewController(bundleName: C.webBundle,
+                                      mountPoint: mountPoint,
+                                      walletAuthenticator: walletAuthenticator,
+                                      walletManagers: walletManagers)
         webView.startServer()
         webView.preload()
         super.init(nibName: nil, bundle: nil)

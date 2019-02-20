@@ -27,8 +27,8 @@ import Foundation
 import UIKit
 import WebKit
 
-@available(iOS 8.0, *)
-@objc open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSocketClient {
+
+open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSocketClient {
     var wkProcessPool: WKProcessPool
     var webView: WKWebView?
     var bundleName: String
@@ -300,7 +300,7 @@ import WebKit
         
         if let archive = AssetArchive(name: bundleName, apiClient: Backend.apiClient) {
             // basic file server for static assets
-            let fileMw = BRHTTPFileMiddleware(baseURL: archive.extractedUrl)
+            let fileMw = BRHTTPFileMiddleware(baseURL: archive.extractedUrl, debugURL: UserDefaults.platformDebugURL)
             server.prependMiddleware(middleware: fileMw)
             
             // middleware to always return index.html for any unknown GET request (facilitates window.history style SPAs)
