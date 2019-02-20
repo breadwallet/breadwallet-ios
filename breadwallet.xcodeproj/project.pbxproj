@@ -244,6 +244,7 @@
 		7C6ACCB11FEB21580028ABFA /* TxDetailDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB01FEB21580028ABFA /* TxDetailDataSource.swift */; };
 		7C6ACCB41FEB34470028ABFA /* TxLabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */; };
 		7C6ACCB61FEB345E0028ABFA /* TxStatusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */; };
+		7C6E0D912214C9B700CA3BA5 /* AssetArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6E0D902214C9B700CA3BA5 /* AssetArchive.swift */; };
 		7C6FD3F4213F205400EFF35F /* InboxMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6FD3F3213F205400EFF35F /* InboxMetaData.swift */; };
 		7C705A0820C5E8E3008E75D2 /* BRKeyECIES.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C705A0620C5E8E2008E75D2 /* BRKeyECIES.c */; };
 		7C705A0F20C5E936008E75D2 /* BREthereumAccountState.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C705A0A20C5E935008E75D2 /* BREthereumAccountState.c */; };
@@ -1557,6 +1558,7 @@
 		7C6ACCB01FEB21580028ABFA /* TxDetailDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TxDetailDataSource.swift; sourceTree = "<group>"; };
 		7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxLabelCell.swift; path = src/Views/TransactionCells/TxLabelCell.swift; sourceTree = "<group>"; };
 		7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxStatusCell.swift; path = src/Views/TransactionCells/TxStatusCell.swift; sourceTree = "<group>"; };
+		7C6E0D902214C9B700CA3BA5 /* AssetArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AssetArchive.swift; path = src/Platform/AssetArchive.swift; sourceTree = "<group>"; };
 		7C6FD3F3213F205400EFF35F /* InboxMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InboxMetaData.swift; path = src/Platform/InboxMetaData.swift; sourceTree = "<group>"; };
 		7C705A0620C5E8E2008E75D2 /* BRKeyECIES.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRKeyECIES.c; sourceTree = "<group>"; };
 		7C705A0720C5E8E2008E75D2 /* BRKeyECIES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRKeyECIES.h; sourceTree = "<group>"; };
@@ -2164,6 +2166,7 @@
 				E89C0612216D79550012CE0D /* BRAPIClient+EmailSubscription.swift */,
 				E821D4CB21C16B2E00B0907B /* BRAnalyticsEvent.swift */,
 				71988B0721EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift */,
+				7C6E0D902214C9B700CA3BA5 /* AssetArchive.swift */,
 			);
 			name = Platform;
 			sourceTree = "<group>";
@@ -4913,6 +4916,7 @@
 				7CA238142011A97C00A4A59D /* TxDetailViewController.swift in Sources */,
 				CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */,
 				CE65C665207B0BEF000C99C4 /* TokenCell.swift in Sources */,
+				7C6E0D912214C9B700CA3BA5 /* AssetArchive.swift in Sources */,
 				CE977109216FA16300B9F621 /* SegwitViewController.swift in Sources */,
 				CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */,
 				223DB2151DF654940076A151 /* WalletManager.swift in Sources */,

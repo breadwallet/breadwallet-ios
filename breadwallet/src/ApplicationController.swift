@@ -472,7 +472,7 @@ class ApplicationController: Subscriber, Trackable {
     // Creates an instance of the buy screen. This may be invoked from the StartFlowPresenter if the user
     // goes through onboarding and decides to buy coin right away.
     private func createBuyScreen() -> BRWebViewController {
-        let buyScreen = BRWebViewController(bundleName: C.webBundle, 
+        let buyScreen = BRWebViewController(bundleName: C.webBundle,
                                             mountPoint: "/buy",
                                             walletAuthenticator: keyStore,
                                             walletManagers: walletManagers)
