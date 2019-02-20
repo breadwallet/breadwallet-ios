@@ -73,12 +73,23 @@ struct C {
     static let britishPoundCurrencyCode = "GBP"
     static let danishKroneCurrencyCode = "DKK"
     static let erc20Prefix = "erc20:"
-    
-    #if Debug || Testflight
-        static let webBundle = "brd-web-3-staging"
-    #else
-        static let webBundle = "brd-web-3" // should match AssetBundles.plist
-    #endif
+
+    static var backendHost: String {
+        if let debugBackendHost = UserDefaults.debugBackendHost {
+            return debugBackendHost
+        } else {
+            return (E.isDebug || E.isTestFlight) ? "stage2.breadwallet.com" : "api.breadwallet.com"
+        }
+    }
+
+    static var webBundle: String {
+        if let debugWebBundle = UserDefaults.debugWebBundleName {
+            return debugWebBundle
+        } else {
+            // names should match AssetBundles.plist
+            return (E.isDebug || E.isTestFlight) ? "brd-web-3-staging" : "brd-web-3"
+        }
+    }
 }
 
 enum Words {
