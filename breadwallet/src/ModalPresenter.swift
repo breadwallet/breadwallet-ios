@@ -656,25 +656,95 @@ class ModalPresenter: Subscriber, Trackable {
             developerItems.append(
                 MenuItem(title: "API Host",
                          accessoryText: { Backend.apiClient.host }, callback: {
-                            let alert = UIAlertController(title: "Set API Host", message: nil, preferredStyle: .alert)
+                            let alert = UIAlertController(title: "Set API Host", message: "Clear and save to reset", preferredStyle: .alert)
                             alert.addTextField(configurationHandler: { textField in
                                 textField.text = Backend.apiClient.host
                                 textField.keyboardType = .URL
                                 textField.clearButtonMode = .always
                             })
 
-                            alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { (_) in
-                                guard let newHost = alert.textFields?.first?.text else { return }
+                            alert.addAction(UIAlertAction(title: "Save", style: .default) { (_) in
+                                guard let newHost = alert.textFields?.first?.text, !newHost.isEmpty else {
+                                    UserDefaults.debugBackendHost = nil
+                                    Backend.apiClient.host = C.backendHost
+                                    (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                                    return
+                                }
                                 let originalHost = Backend.apiClient.host
                                 Backend.apiClient.host = newHost
-                                Backend.apiClient.me(handler: { (success, _, _) in
+                                Backend.apiClient.me { (success, _, _) in
                                     if success {
+                                        UserDefaults.debugBackendHost = newHost
                                         (menuNav.topViewController as? MenuViewController)?.reloadMenu()
                                     } else {
                                         Backend.apiClient.host = originalHost
                                     }
-                                })
-                            }))
+                                }
+                            })
+
+                            alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+
+                            menuNav.present(alert, animated: true, completion: nil)
+                }))
+
+            developerItems.append(
+                MenuItem(title: "Web Platform Bundle",
+                         accessoryText: { C.webBundle }, callback: {
+                            let alert = UIAlertController(title: "Set bundle name", message: "Clear and save to reset", preferredStyle: .alert)
+                            alert.addTextField(configurationHandler: { textField in
+                                textField.text = C.webBundle
+                                textField.keyboardType = .URL
+                                textField.clearButtonMode = .always
+                            })
+
+                            alert.addAction(UIAlertAction(title: "Save", style: .default) { (_) in
+                                guard let newBundleName = alert.textFields?.first?.text, !newBundleName.isEmpty else {
+                                    UserDefaults.debugWebBundleName = nil
+                                    (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                                    return
+                                }
+
+                                guard let bundle = AssetArchive(name: newBundleName, apiClient: Backend.apiClient) else { return assertionFailure() }
+                                bundle.update { error in
+                                    guard error == nil else {
+                                        let alert = UIAlertController(title: S.Alert.error,
+                                                                      message: "Unable to fetch bundle named \(newBundleName)",
+                                                                      preferredStyle: .alert)
+                                        alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
+                                        menuNav.present(alert, animated: true, completion: nil)
+                                        return
+                                    }
+                                    UserDefaults.debugWebBundleName = newBundleName
+                                    (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                                }
+                            })
+
+                            alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+
+                            menuNav.present(alert, animated: true, completion: nil)
+                }))
+
+            developerItems.append(
+                MenuItem(title: "Web Platform Debug URL",
+                         accessoryText: { UserDefaults.platformDebugURL?.absoluteString ?? "<not set>" }, callback: {
+                            let alert = UIAlertController(title: "Set debug URL", message: "Clear and save to reset", preferredStyle: .alert)
+                            alert.addTextField(configurationHandler: { textField in
+                                textField.text = UserDefaults.platformDebugURL?.absoluteString ?? ""
+                                textField.keyboardType = .URL
+                                textField.clearButtonMode = .always
+                            })
+
+                            alert.addAction(UIAlertAction(title: "Save", style: .default) { (_) in
+                                guard let input = alert.textFields?.first?.text,
+                                    !input.isEmpty,
+                                    let debugURL = URL(string: input) else {
+                                    UserDefaults.platformDebugURL = nil
+                                    (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                                    return
+                                }
+                                UserDefaults.platformDebugURL = debugURL
+                                (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                            })
 
                             alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
 
@@ -777,7 +847,10 @@ class ModalPresenter: Subscriber, Trackable {
     }
 
     private func presentPlatformWebViewController(_ mountPoint: String) {
-        let vc = BRWebViewController(bundleName: C.webBundle, mountPoint: mountPoint, walletAuthenticator: keyStore, walletManagers: walletManagers)
+        let vc = BRWebViewController(bundleName: C.webBundle,
+                                     mountPoint: mountPoint,
+                                     walletAuthenticator: keyStore,
+                                     walletManagers: walletManagers)
         vc.startServer()
         vc.preload()
         vc.modalPresentationStyle = .overFullScreen

@@ -69,11 +69,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
     var proto = "https"
     
     // host is the server(s) on which the API is hosted
-    #if Testflight || Debug
-    var host = "stage2.breadwallet.com"
-    #else
-    var host = "api.breadwallet.com"
-    #endif
+    var host = C.backendHost
     
     // isFetchingAuth is set to true when a request is currently trying to renew authentication (the token)
     // it is useful because fetching auth is not idempotent and not reentrant, so at most one auth attempt

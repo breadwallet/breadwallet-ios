@@ -80,6 +80,8 @@ class URLController: Trackable, Subscriber {
                 }
             } else if let uri = isBitcoinUri(url: url, uri: uri) {
                 return handlePaymentRequestUri(uri, currency: Currencies.btc)
+            } else if url.host == "debug" {
+                handleDebugLink(url)
             }
             return true
             
@@ -109,6 +111,9 @@ class URLController: Trackable, Subscriber {
                 let link = path.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
                 let platformUrl = String(format: "/link?to=%@", link ?? "")
                 Store.trigger(name: .openPlatformUrl(platformUrl))
+
+            case "debug":
+                handleDebugLink(url)
                 
             default:
                 print("unknown deep link: \(target)")
@@ -186,6 +191,24 @@ class URLController: Trackable, Subscriber {
         }))
         present(alert: alert)
         return true
+    }
+
+    /// Set debug overrides
+    private func handleDebugLink(_ url: URL) {
+        guard let params = url.queryParameters else { return }
+
+        if let backendHost = params["api_server"] {
+            UserDefaults.debugBackendHost = backendHost
+            Backend.apiClient.host = backendHost
+        }
+
+        if let webBundleName = params["web_bundle"] {
+            UserDefaults.debugWebBundleName = webBundleName
+        }
+
+        if let urlText = params["bundle_debug_url"], let platformDebugURL = URL(string: urlText) {
+            UserDefaults.platformDebugURL = platformDebugURL
+        }
     }
 
     private func present(alert: UIAlertController) {

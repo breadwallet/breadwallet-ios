@@ -116,8 +116,8 @@ open class BRReplicatedKVStore: NSObject {
     static var dbPath: URL {
         let fm = FileManager.default
         let docsUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let bundleDirUrl = docsUrl.appendingPathComponent("kvstore.sqlite3")
-        return bundleDirUrl
+        let path = docsUrl.appendingPathComponent("kvstore.sqlite3")
+        return path
     }
     
     init(encryptionKey: BRKey, remoteAdaptor: BRRemoteKVStoreAdaptor) throws {
