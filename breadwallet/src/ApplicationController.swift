@@ -61,35 +61,35 @@ class ApplicationController: Subscriber, Trackable {
     // MARK: -
 
     init() {
+        do {
+            self.keyStore = try KeyStore.create()
+        } catch let error { // only possible exception here should be if the keychain is inaccessible
+            print("error initializing key store: \(error)")
+            fatalError("error initializing key store")
+        }
+
         isReachable = Reachability.isReachable
-        guardProtected(queue: DispatchQueue.main) {
-            do {
-                self.keyStore = try KeyStore.create()
-            } catch let error { // only possible exception here should be if the keychain is inaccessible
-                print("error initializing key store: \(error)")
-                fatalError("error initializing key store")
-            }
-
-            self.rescanNeeded = []
-            // queue auomatic rescan attempt triggered by db load to execute after wallet coordinator is started
-            Store.subscribe(self, name: .automaticRescan(Currencies.btc), callback: { [unowned self] in
-                if case .automaticRescan(let currency)? = $0 {
-                    guard let rescanNeeded = self.rescanNeeded else { return }
-                    if !rescanNeeded.contains(where: { $0.matches(currency) }) {
-                        self.rescanNeeded!.append(currency)
-                    }
+        self.rescanNeeded = []
+        // queue auomatic rescan attempt triggered by db load to execute after wallet coordinator is started
+        Store.subscribe(self, name: .automaticRescan(Currencies.btc), callback: { [unowned self] in
+            if case .automaticRescan(let currency)? = $0 {
+                guard let rescanNeeded = self.rescanNeeded else { return }
+                if !rescanNeeded.contains(where: { $0.matches(currency) }) {
+                    self.rescanNeeded!.append(currency)
                 }
-            })
+            }
+        })
 
-            if self.keyStore.noWallet {
-                self.didAttemptInitWallet()
-            } else {
-                DispatchQueue.walletQueue.async {
-                    if UserDefaults.hasBchConnected {
-                        self.initWallets(completion: self.didAttemptInitWallet)
-                    } else {
-                        self.initWalletsWithMigration(completion: self.didAttemptInitWallet)
-                    }
+        if self.keyStore.noWallet {
+            // no seed present - onboarding
+            self.didAttemptInitWallet()
+        } else {
+            // wallet initialization will access protected stored data
+            guardProtected(queue: DispatchQueue.walletQueue) {
+                if UserDefaults.hasBchConnected {
+                    self.initWallets(completion: self.didAttemptInitWallet)
+                } else {
+                    self.initWalletsWithMigration(completion: self.didAttemptInitWallet)
                 }
             }
         }
@@ -98,7 +98,9 @@ class ApplicationController: Subscriber, Trackable {
     /// Migrates pre-fork BTC transactions to BCH wallet then init all wallets
     /// This only applies in the case where a BTC wallet with transaction history already exists on the device
     /// and the wallet was created prior to the BCH fork.
+    /// This method will access protected stored data and should only be called inside a `guardProtected` block and on the walletQueue.
     private func initWalletsWithMigration(completion: @escaping () -> Void) {
+        dispatchPrecondition(condition: .onQueue(DispatchQueue.walletQueue))
         let btc = Currencies.btc
         let bch = Currencies.bch
         let creationTime = keyStore.creationTime
@@ -143,7 +145,9 @@ class ApplicationController: Subscriber, Trackable {
                             }
                         }
                         // init other wallets
-                        self.initWallets(completion: completion)
+                        guardProtected(queue: DispatchQueue.walletQueue) {
+                            self.initWallets(completion: completion)
+                        }
                     }
                 }
             }
@@ -151,7 +155,9 @@ class ApplicationController: Subscriber, Trackable {
     }
 
     /// Inits all blockchain wallets
+    /// This method will access protected stored data and must be called inside a `guardProtected` block and on the walletQueue.
     private func initWallets(completion: @escaping () -> Void) {
+        dispatchPrecondition(condition: .onQueue(DispatchQueue.walletQueue))
         let dispatchGroup = DispatchGroup()
         Store.state.currencies.forEach { currency in
             if !(currency is ERC20Token) && walletManagers[currency.code] == nil {
@@ -595,7 +601,7 @@ class ApplicationController: Subscriber, Trackable {
     private func addWalletCreationListener() {
         Store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
             self.walletManagers.removeAll() // remove the empty wallet managers
-            DispatchQueue.walletQueue.async {
+            guardProtected(queue: DispatchQueue.walletQueue) {
                 self.initWallets(completion: self.didInitWalletManager)
             }
             Store.perform(action: LoginSuccess())
