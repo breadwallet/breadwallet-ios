@@ -800,7 +800,7 @@ class ModalPresenter: Subscriber, Trackable {
         paperPhraseNavigationController.setClearNavbar()
         paperPhraseNavigationController.setWhiteStyle()
         paperPhraseNavigationController.modalPresentationStyle = .overFullScreen
-        let start = StartPaperPhraseViewController(callback: { [weak self] in
+        let start = StartPaperPhraseViewController(eventContext: .none, dismissAction: nil, callback: { [weak self] in
             guard let `self` = self else { return }
             let verify = VerifyPinViewController(
                 bodyText: S.VerifyPin.continueBody,
@@ -813,7 +813,7 @@ class ModalPresenter: Subscriber, Trackable {
             verify.modalPresentationStyle = .overFullScreen
             verify.modalPresentationCapturesStatusBarAppearance = true
             paperPhraseNavigationController.present(verify, animated: true, completion: nil)
-        })
+            })
         start.addCloseNavigationItem(tintColor: .white)
         start.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
         let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.paperKey)
@@ -826,9 +826,13 @@ class ModalPresenter: Subscriber, Trackable {
     private func pushWritePaperPhrase(navigationController: UINavigationController, pin: String) {
         let keyStore = self.keyStore
         var writeViewController: WritePaperPhraseViewController?
-        writeViewController = WritePaperPhraseViewController(keyMaster: keyStore, pin: pin, callback: {
+        writeViewController = WritePaperPhraseViewController(keyMaster: keyStore,
+                                                             pin: pin,
+                                                             eventContext: .none,
+                                                             dismissAction: nil,
+                                                             callback: {
             var confirm: ConfirmPaperPhraseViewController?
-            confirm = ConfirmPaperPhraseViewController(keyMaster: keyStore, pin: pin, callback: {
+                                                                confirm = ConfirmPaperPhraseViewController(keyMaster: keyStore, pin: pin, eventContext: .none, callback: {
                 confirm?.dismiss(animated: true, completion: {
                     Store.perform(action: Alert.Show(.paperKeySet(callback: {
                         Store.perform(action: HideStartFlow())
