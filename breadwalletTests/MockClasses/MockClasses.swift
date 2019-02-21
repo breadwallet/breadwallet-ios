@@ -88,3 +88,7 @@ class MockCurrencyUnit: CurrencyUnit {
         
     }
 }
+
+class MockTrackable: Trackable {
+    
+}

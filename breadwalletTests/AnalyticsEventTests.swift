@@ -7,6 +7,7 @@
 //
 
 import XCTest
+@testable import breadwallet
 
 class AnalyticsEventTests: XCTestCase {
 
@@ -78,4 +79,56 @@ class AnalyticsEventTests: XCTestCase {
         }
         XCTAssertTrue(containsHeyWhatever)
     }
+    
+    func testEventContexts() {
+        let trackable = MockTrackable()
+        XCTAssertTrue(trackable.makeEventName(["onboarding"]) == "onboarding")
+        XCTAssertTrue(trackable.makeEventName(["onboarding", "landingPage"]) == "onboarding.landingPage")
+        XCTAssertTrue(trackable.makeEventName(["onboarding", "landingPage", "appeared"]) == "onboarding.landingPage.appeared")
+    }
+    
+    func testRegistrationAndDeregistration() {
+        let monitor = EventMonitor.shared
+        
+        XCTAssertFalse(monitor.include(.test))
+        
+        monitor.register(.test)
+        XCTAssertTrue(monitor.include(.test))
+        
+        monitor.deregister(.test)
+        XCTAssertFalse(monitor.include(.test))
+    }
+    
+    func testEventNotPostedIfContextNotRegistered() {
+        let trackable = MockTrackable()
+        let expectation = self.expectation(description: "expect event not saved")
+        
+        // do not register any contexts to have events saved
+        
+        trackable.saveEvent(context: .test, screen: .test, event: .appeared, callback: { (didSaveEvent) in
+            XCTAssertFalse(didSaveEvent)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectations(timeout: 1, handler: nil)
+    }
+
+    func testEventPostedIfContextIsRegistered() {
+        let monitor = EventMonitor.shared
+        
+        // Register the 'test' context to be included in saved events
+        monitor.register(.test)
+        
+        let trackable = MockTrackable()
+        let expectation = self.expectation(description: "expect event saved")
+        
+        trackable.saveEvent(context: .test, screen: .test, event: .appeared, callback: { (didSaveEvent) in
+            XCTAssertTrue(didSaveEvent)
+            monitor.deregister(.test)
+            expectation.fulfill()
+        })
+        
+        self.waitForExpectations(timeout: 1, handler: nil)
+    }
+    
 }

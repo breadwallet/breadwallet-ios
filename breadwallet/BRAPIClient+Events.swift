@@ -8,13 +8,39 @@
 
 import Foundation
 
-/// Implement Trackabble in your class to have access to these functions
+/// Implement Trackable in your class to have access to these functions
 public protocol Trackable {
+    /// Saves a basic named event.
     func saveEvent(_ eventName: String)
+    
+    /// Saves a named event with additional attributes.
     func saveEvent(_ eventName: String, attributes: [String: String])
+    
+    /// Saves an event and with a context.
+    func saveEvent(context: EventContext, event: Event)
+    
+    /**
+     *  Saves an event with a context and screen in which the event occurred. If a context is specified,
+     *  the event will only be propagated to the server if the given context has been registered via
+     *  EventMonitor.register().
+     */
+    func saveEvent(context: EventContext, screen: Screen, event: Event)
+    
+    /**
+     *  Saves an event with a context and screen in which it occurred, with an optional callback
+     *  that indicates whether the event was saved. Whether the event is saved depends on whether
+     *  the given context has been registered via EventMonitor.register().
+     *
+     *  This callback version of saveEvent() is included primarily to facilitate unit testing.
+     */
+    func saveEvent(context: EventContext, screen: Screen, event: Event, callback: ((Bool) -> Void)?)
+    
+    /// Saves an event with a context, and additional event attributes.
+    func saveEvent(context: EventContext, screen: Screen, event: Event, attributes: [String: String], callback: ((Bool) -> Void)?)
 }
 
 extension Trackable {
+    
     func saveEvent(_ eventName: String) {
         NotificationCenter.default.post(name: EventManager.eventNotification, object: nil, userInfo: [
             EventManager.eventNameKey: eventName
@@ -26,6 +52,42 @@ extension Trackable {
             EventManager.eventNameKey: eventName,
             EventManager.eventAttributesKey: attributes
         ])
+    }
+    
+    func makeEventName(_ components: [String]) -> String {
+        // This will return event strings in the format expected by the server, such as
+        // "onboarding.landingPage.appeared."
+        return components.filter({ return !$0.isEmpty }).joined(separator: ".")
+    }
+    
+    func saveEvent(context: EventContext, event: Event) {
+        saveEvent(context: context, screen: .none, event: event)
+    }
+    
+    func saveEvent(context: EventContext, screen: Screen, event: Event) {
+        saveEvent(context: context, screen: screen, event: event, callback: nil)
+    }
+    
+    func saveEvent(context: EventContext, screen: Screen, event: Event, callback: ((Bool) -> Void)?) {
+        guard EventMonitor.shared.include(context) else {
+            callback?(false)
+            return
+        }
+        
+        saveEvent(makeEventName([context.name, screen.name, event.name]))
+        
+        callback?(true)
+    }
+    
+    func saveEvent(context: EventContext, screen: Screen, event: Event, attributes: [String: String], callback: ((Bool) -> Void)?) {
+        guard EventMonitor.shared.include(context) else {
+            callback?(false)
+            return
+        }
+        
+        saveEvent(makeEventName([context.name, screen.name, event.name]), attributes: attributes)
+        
+        callback?(true)
     }
 }
 

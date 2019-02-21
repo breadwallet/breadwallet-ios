@@ -10,9 +10,10 @@ import UIKit
 
 class ConfirmPaperPhraseViewController: UIViewController {
 
-    init(keyMaster: KeyMaster, pin: String, callback: @escaping () -> Void) {
+    init(keyMaster: KeyMaster, pin: String, eventContext: EventContext, callback: @escaping () -> Void) {
         self.pin = pin
         self.keyMaster = keyMaster
+        self.eventContext = eventContext
         self.callback = callback
         super.init(nibName: nil, bundle: nil)
         if !E.isIPhone4 {
@@ -35,6 +36,7 @@ class ConfirmPaperPhraseViewController: UIViewController {
     private let pin: String
     private let keyMaster: KeyMaster
     private let callback: () -> Void
+    private var eventContext: EventContext = .none
     
     //Select 2 random indices from 1 to 10. The second number must
     //be at least one number away from the first.
@@ -60,6 +62,11 @@ class ConfirmPaperPhraseViewController: UIViewController {
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        trackEvent(event: .appeared)
+    }
+    
     override func viewDidLoad() {
         view.backgroundColor = .darkBackground
         label.text = S.ConfirmPaperPhrase.label
@@ -139,10 +146,12 @@ class ConfirmPaperPhraseViewController: UIViewController {
         if confirmFirstPhrase.textField.text == words[indices.0] && confirmSecondPhrase.textField.text == words[indices.1] {
             UserDefaults.writePaperPhraseDate = Date()
             Store.trigger(name: .didWritePaperKey)
+            trackEvent(event: .paperKeyCreated)
             callback()
         } else {
             confirmFirstPhrase.validate()
             confirmSecondPhrase.validate()
+            trackEvent(event: .paperKeyError)
             showErrorMessage(S.ConfirmPaperPhrase.error)
         }
     }
@@ -155,5 +164,11 @@ class ConfirmPaperPhraseViewController: UIViewController {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension ConfirmPaperPhraseViewController: Trackable {
+    func trackEvent(event: Event) {
+        saveEvent(context: eventContext, screen: .confirmPaperKey, event: event)
     }
 }
