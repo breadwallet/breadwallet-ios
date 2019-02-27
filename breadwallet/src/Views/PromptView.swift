@@ -30,7 +30,7 @@ class PromptView: UIView {
     let container = UIView()
     
     var type: PromptType {
-        return prompt.type ?? .none
+        return self.prompt.type
     }
     
     var shouldHandleTap: Bool {
@@ -48,8 +48,8 @@ class PromptView: UIView {
         
         title.numberOfLines = 0
         
-        title.text = prompt.title(for: .initialDisplay)
-        body.text = prompt.body(for: .initialDisplay)
+        title.text = prompt.title
+        body.text = prompt.body
     }
     
     var containerBackgroundColor: UIColor {

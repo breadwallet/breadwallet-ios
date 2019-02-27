@@ -25,7 +25,7 @@ extension BRAPIClient {
                 
         var json = ["email": emailAddress]
         
-        if let list = emailList {
+        if let list = emailList, !list.isEmpty {
             json["emailList"] = list
         }
                 
