@@ -114,7 +114,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
 
     private func addConstraints() {
         header.constrain([
-            header.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2]),
+            header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: C.padding[2]),
             header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             header.trailingAnchor.constraint(equalTo: faq.leadingAnchor, constant: -C.padding[1]) ])
         instruction.constrain([
@@ -142,7 +142,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
     }
 
     private func addPinPad() {
-        addChildViewController(pinPad)
+        addChild(pinPad)
         pinPadBackground.addSubview(pinPad.view)
         pinPadBackground.constrain([
             pinPadBackground.widthAnchor.constraint(equalToConstant: floor(view.bounds.width/3.0)*3.0),
@@ -150,7 +150,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
             pinPadBackground.heightAnchor.constraint(equalToConstant: pinPad.height),
             pinPadBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[3] : 0.0) ])
         pinPad.view.constrain(toSuperviewEdges: nil)
-        pinPad.didMove(toParentViewController: self)
+        pinPad.didMove(toParent: self)
     }
 
     private func setData() {

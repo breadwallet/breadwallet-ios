@@ -78,14 +78,9 @@ class EditWalletsViewController: UIViewController, Subscriber {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
-        if #available(iOS 11.0, *) {
-            tableView.constrain([
+        tableView.constrain([
                 tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)])
-        } else {
-            tableView.constrain([
-                tableView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor)])
-            automaticallyAdjustsScrollViewInsets = false
-        }
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(TokenCell.self, forCellReuseIdentifier: TokenCell.cellIdentifier)
@@ -313,7 +308,7 @@ extension EditWalletsViewController: UITableViewDelegate, UITableViewDataSource 
         return cell
     }
 
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .none
     }
 

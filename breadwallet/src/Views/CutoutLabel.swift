@@ -10,7 +10,7 @@ import UIKit
 
 class CutoutLabel: UILabel {
     override func drawText(in rect: CGRect) {
-        super.drawText(in: UIEdgeInsetsInsetRect(rect, .zero))
+        super.drawText(in: rect.inset(by: .zero))
         guard let context = UIGraphicsGetCurrentContext() else { return }
         context.saveGState()
         context.setBlendMode(.clear)

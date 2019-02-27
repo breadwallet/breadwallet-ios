@@ -27,7 +27,6 @@ import Foundation
 import UIKit
 import WebKit
 
-
 open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSocketClient {
     var wkProcessPool: WKProcessPool
     var webView: WKWebView?
@@ -116,22 +115,20 @@ open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSoc
         webView?.isOpaque = false   // prevents white background flash before web content is rendered  
         webView?.alpha = 0.0
         _ = webView?.load(request)
-        webView?.autoresizingMask = [UIViewAutoresizing.flexibleHeight, UIViewAutoresizing.flexibleWidth]
-        if #available(iOS 11, *) {
-            webView?.scrollView.contentInsetAdjustmentBehavior = .never
-        }
+        webView?.autoresizingMask = [UIView.AutoresizingMask.flexibleHeight, UIView.AutoresizingMask.flexibleWidth]
+        webView?.scrollView.contentInsetAdjustmentBehavior = .never
         view.addSubview(webView!)
         
         let center = NotificationCenter.default
-        notificationObservers[Notification.Name.UIApplicationDidBecomeActive.rawValue] =
-            center.addObserver(forName: .UIApplicationDidBecomeActive, object: nil, queue: .main) { [weak self] (_) in
+        notificationObservers[UIApplication.didBecomeActiveNotification.rawValue] =
+            center.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] (_) in
                 self?.didAppear = true
                 if let info = self?.webViewInfo {
                     self?.sendToAllSockets(data: info)
                 }
         }
-        notificationObservers[Notification.Name.UIApplicationWillResignActive.rawValue] =
-            center.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: .main) { [weak self] (_) in
+        notificationObservers[UIApplication.willResignActiveNotification.rawValue] =
+            center.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main) { [weak self] (_) in
                 self?.didAppear = false
                 if let info = self?.webViewInfo {
                     self?.sendToAllSockets(data: info)

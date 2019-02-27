@@ -8,6 +8,8 @@
 
 import UIKit
 
+// swiftlint:disable legacy_hashing
+
 typealias Reducer = (State) -> State
 typealias Selector = (_ oldState: State, _ newState: State) -> Bool
 

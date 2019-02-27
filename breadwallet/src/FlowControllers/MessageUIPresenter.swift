@@ -92,11 +92,11 @@ class MessageUIPresenter: NSObject, Trackable {
     // Filters out the sharing options that don't make sense for sharing a wallet
     // address and QR code. `saveToCameraRoll` is excluded because it crashes
     // without adding `NSPhotoLibraryAddUsageDescription` to the plist.
-    private var shareAddressExclusions: [UIActivityType] {
+    private var shareAddressExclusions: [UIActivity.ActivityType] {
         return [.airDrop, .openInIBooks, .addToReadingList, .saveToCameraRoll, .assignToContact]
     }
 
-    private var originalTitleTextAttributes: [NSAttributedStringKey: Any]?
+    private var originalTitleTextAttributes: [NSAttributedString.Key: Any]?
 
     private func present(_ viewController: UIViewController) {
         presenter?.view.isFrameChangeBlocked = true

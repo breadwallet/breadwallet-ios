@@ -142,7 +142,7 @@ class ProgressCircle: UIView {
         circle.fillColor = UIColor.clear.cgColor
         circle.strokeColor = startBackgroundColor.cgColor
         circle.lineWidth = 3.0
-        circle.lineCap = kCALineCapRound
+        circle.lineCap = CAShapeLayerLineCap.round
         layer.addSublayer(circle)
     }
 
