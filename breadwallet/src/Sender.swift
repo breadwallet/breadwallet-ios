@@ -257,20 +257,18 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
                                                pinVerifier: @escaping PinVerifier,
                                                completion: @escaping SendCompletion) {
         let biometricsPrompt = S.VerifyPin.touchIdMessage
-        
-        DispatchQueue.walletQueue.async { [weak self] in
-            guard let `self` = self, let wallet = self.walletManager.wallet else { return assertionFailure() }
-            self.authenticator.sign(transaction: tx, wallet: wallet, withBiometricsPrompt: biometricsPrompt) { result in
-                switch result {
-                case .success:
-                    self.publish(tx: tx, completion: completion)
-                case .failure, .fallback:
-                    self.sendWithPinVerification(tx: tx,
-                                                 pinVerifier: pinVerifier,
-                                                 completion: completion)
-                default:
-                    break
-                }
+
+        guard let wallet = walletManager.wallet else { return assertionFailure() }
+        self.authenticator.sign(transaction: tx, wallet: wallet, withBiometricsPrompt: biometricsPrompt) { result in
+            switch result {
+            case .success:
+                self.publish(tx: tx, completion: completion)
+            case .failure, .fallback:
+                self.sendWithPinVerification(tx: tx,
+                                             pinVerifier: pinVerifier,
+                                             completion: completion)
+            default:
+                break
             }
         }
     }
@@ -280,14 +278,12 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
                                          completion: @escaping SendCompletion) {
         // this block requires a strong reference to self to ensure the Sender is not deallocated before completion
         pinVerifier { pin in
-            DispatchQueue.walletQueue.async {
-                guard let wallet = self.walletManager.wallet else { return assertionFailure() }
-                if self.authenticator.sign(transaction: tx, wallet: wallet, withPin: pin) {
-                    self.publish(tx: tx, completion: completion)
-                } else {
-                    DispatchQueue.main.async {
-                        completion(.creationError("authentication error"))
-                    }
+            guard let wallet = self.walletManager.wallet else { return assertionFailure() }
+            if self.authenticator.sign(transaction: tx, wallet: wallet, withPin: pin) {
+                self.publish(tx: tx, completion: completion)
+            } else {
+                DispatchQueue.main.async {
+                    completion(.creationError("authentication error"))
                 }
             }
         }
