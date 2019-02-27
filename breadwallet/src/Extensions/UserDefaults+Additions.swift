@@ -83,17 +83,20 @@ extension UserDefaults {
             }
         }
         
-        // Announcement-type prompts use a specific prefix when setting booleans indicating whether
-        // they have been shown yet.
-        defaults.dictionaryRepresentation().keys.filter({ return $0.hasPrefix(Announcement.hasShownKeyPrefix) }).forEach { (key) in
-            defaults.set(false, forKey: key)
-        }
+        resetAnnouncementKeys()
         
         for resettableObject in resettableObjects {
             defaults.removeObject(forKey: resettableObject)
         }
     }
     
+    static func resetAnnouncementKeys() {
+        // Announcement-type prompts use a specific prefix when setting booleans indicating whether
+        // they have been shown yet.
+        defaults.dictionaryRepresentation().keys.filter({ return $0.hasPrefix(Announcement.hasShownKeyPrefix) }).forEach { (key) in
+            defaults.set(false, forKey: key)
+        }
+    }
 }
 
 extension UserDefaults {
