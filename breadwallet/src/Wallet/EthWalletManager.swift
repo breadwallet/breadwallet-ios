@@ -8,7 +8,6 @@
 
 import Foundation
 import BRCore
-import BRCore.Ethereum
 
 class EthWalletManager: WalletManager {
     

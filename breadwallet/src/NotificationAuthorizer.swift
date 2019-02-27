@@ -84,7 +84,7 @@ struct NotificationAuthorizer: Trackable {
                                       preferredStyle: .alert)
         
         let settingsAction = UIAlertAction(title: S.Button.settings, style: .default) { _ in
-            if let url = URL(string: UIApplicationOpenSettingsURLString) {
+            if let url = URL(string: UIApplication.openSettingsURLString) {
                 UIApplication.shared.open(url)
             }
             completion(false)
