@@ -227,9 +227,9 @@ class ApplicationController: Subscriber, Trackable {
         }
     }
 
-    func launch(application: UIApplication, options: [UIApplicationLaunchOptionsKey: Any]?) {
+    func launch(application: UIApplication, options: [UIApplication.LaunchOptionsKey: Any]?) {
         self.application = application
-        application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalNever)
+        application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalNever)
         UNUserNotificationCenter.current().delegate = notificationHandler
         setup()
         handleLaunchOptions(options)
@@ -427,16 +427,12 @@ class ApplicationController: Subscriber, Trackable {
     }
 
     private func setupAppearance() {
-        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.font: UIFont.header]
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.font: UIFont.header]
         let backImage = #imageLiteral(resourceName: "Back").image(withInsets: UIEdgeInsets(top: 0.0, left: 8.0, bottom: 2.0, right: 0.0))
         UINavigationBar.appearance().backIndicatorImage = backImage
         UINavigationBar.appearance().backIndicatorTransitionMaskImage = backImage
         // hide back button text
-        if #available(iOS 11, *) {
-            UIBarButtonItem.appearance().setBackButtonBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .normal, barMetrics: .default)
-        } else {
-            UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffset(horizontal: -200, vertical: 0), for: .default)
-        }
+        UIBarButtonItem.appearance().setBackButtonBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .normal, barMetrics: .default)
     }
     
     private func addHomeScreenHandlers(homeScreen: HomeScreenViewController, 
@@ -643,7 +639,7 @@ class ApplicationController: Subscriber, Trackable {
         }
     }
 
-    private func handleLaunchOptions(_ options: [UIApplicationLaunchOptionsKey: Any]?) {
+    private func handleLaunchOptions(_ options: [UIApplication.LaunchOptionsKey: Any]?) {
         if let url = options?[.url] as? URL {
             do {
                 let file = try Data(contentsOf: url)
@@ -722,7 +718,7 @@ extension ApplicationController {
         }
     }
     
-    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
             return open(url: userActivity.webpageURL!)
         }

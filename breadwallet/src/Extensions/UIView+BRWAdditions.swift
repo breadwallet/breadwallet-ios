@@ -12,7 +12,7 @@ enum Dimension {
     case width
     case height
 
-    var layoutAttribute: NSLayoutAttribute {
+    var layoutAttribute: NSLayoutConstraint.Attribute {
         switch self {
         case .width:
             return .width
@@ -66,13 +66,13 @@ extension UIView {
         NSLayoutConstraint.activate(constraints.compactMap { $0 })
     }
 
-    func constraint(_ attribute: NSLayoutAttribute, toView: UIView, constant: CGFloat?) -> NSLayoutConstraint? {
+    func constraint(_ attribute: NSLayoutConstraint.Attribute, toView: UIView, constant: CGFloat?) -> NSLayoutConstraint? {
         guard superview != nil else { assert(false, "Superview cannot be nil when adding contraints"); return nil}
         translatesAutoresizingMaskIntoConstraints = false
         return NSLayoutConstraint(item: self, attribute: attribute, relatedBy: .equal, toItem: toView, attribute: attribute, multiplier: 1.0, constant: constant ?? 0.0)
     }
 
-    func constraint(_ attribute: NSLayoutAttribute, toView: UIView) -> NSLayoutConstraint? {
+    func constraint(_ attribute: NSLayoutConstraint.Attribute, toView: UIView) -> NSLayoutConstraint? {
         guard superview != nil else { assert(false, "Superview cannot be nil when adding contraints"); return nil}
         translatesAutoresizingMaskIntoConstraints = false
         return NSLayoutConstraint(item: self, attribute: attribute, relatedBy: .equal, toItem: toView, attribute: attribute, multiplier: 1.0, constant: 0.0)
@@ -213,7 +213,6 @@ extension UIView {
             heightAnchor.constraint(equalToConstant: toSize.height)])
     }
 
-    //Post iOS 8
     func pinTopLeft(padding: CGFloat) {
         guard let view = superview else { assert(false, "Superview cannot be nil when adding contraints"); return }
         constrain([

@@ -64,11 +64,11 @@ class PinView: UIView {
     func shake(completion: (() -> Void)? = nil) {
         shakeCompletion = completion
         let translation = CAKeyframeAnimation(keyPath: "transform.translation.x")
-        translation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        translation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
         translation.values = [-5, 5, -5, 5, -3, 3, -2, 2, 0]
 
         let rotation = CAKeyframeAnimation(keyPath: "transform.rotation.y")
-        rotation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        rotation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
 
         rotation.values = [-5, 5, -5, 5, -3, 3, -2, 2, 0].map {
             self.toRadian(value: $0)

@@ -53,7 +53,7 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
             self.setExchangeRateLabel()
         })
 
-        tableView.sectionHeaderHeight = UITableViewAutomaticDimension
+        tableView.sectionHeaderHeight = UITableView.automaticDimension
         tableView.estimatedSectionHeaderHeight = 140.0
         tableView.separatorStyle = .none
         tableView.backgroundColor = .darkBackground

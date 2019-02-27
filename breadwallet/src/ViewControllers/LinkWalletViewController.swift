@@ -146,10 +146,8 @@ class LinkWalletViewController: UIViewController {
         header.layoutMargins = UIEdgeInsets(top: C.padding[2], left: C.padding[6], bottom: C.padding[1], right: C.padding[6])
         header.isLayoutMarginsRelativeArrangement = true
 
-        if #available(iOS 11.0, *) {
-            header.setCustomSpacing(C.padding[1], after: logoBackground)
-            header.setCustomSpacing(C.padding[1], after: note1)
-        }
+        header.setCustomSpacing(C.padding[1], after: logoBackground)
+        header.setCustomSpacing(C.padding[1], after: note1)
 
         body.axis = .vertical
         body.alignment = .center

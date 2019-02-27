@@ -25,6 +25,8 @@
 
 import Foundation
 
+// swiftlint:disable legacy_hashing
+
 public typealias BRHTTPRouteMatch = [String: [String]]
 
 public typealias BRHTTPRoute = (_ request: BRHTTPRequest, _ match: BRHTTPRouteMatch) throws -> BRHTTPResponse

@@ -40,7 +40,7 @@ class StatusPip: UIView {
         animation.fromValue = tintColor.withAlphaComponent(0.05).cgColor
         animation.toValue = tintColor.withAlphaComponent(0.4).cgColor
         animation.duration = 1.0
-        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
         animation.repeatCount = Float.greatestFiniteMagnitude
         animation.autoreverses = true
         
