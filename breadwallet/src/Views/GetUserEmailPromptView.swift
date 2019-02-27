@@ -27,18 +27,20 @@ class GetUserEmailPromptView: PromptView {
     let footerView = UIView()
     var footerViewHeightConstraint: NSLayoutConstraint?
     
-    var presenter: UIViewController?
+    let emailCollector: EmailCollectingPrompt
+    let presenter: UIViewController
     
     var shouldShowFootnoteLabel: Bool {
-        if let footnote = prompt.successFootnote(), !footnote.isEmpty {
+        if let footnote = emailCollector.confirmationFootnote, !footnote.isEmpty {
             return true
         }
         return false
     }
     
-    init(prompt: Prompt, presenter: UIViewController?) {
-        super.init(prompt: prompt)
+    init(prompt: EmailCollectingPrompt, presenter: UIViewController) {
         self.presenter = presenter
+        self.emailCollector = prompt
+        super.init(prompt: prompt)
     }
     
     override var shouldHandleTap: Bool {
@@ -83,10 +85,10 @@ class GetUserEmailPromptView: PromptView {
             self.enableDisableSubmitButton(enable: false)
             
             Backend.apiClient.subscribeToEmailUpdates(emailAddress: emailAddress,
-                                                      emailList: self.prompt.emailListParameter(),
+                                                      emailList: self.emailCollector.emailList ?? "",
                                                       callback: { [unowned self] (successful) in
-                UserDefaults.hasSubscribedToEmailUpdates = successful
-
+                self.emailCollector.didSubscribe()
+                
                 self.updateViewOnEmailSubmissionResult(successful: successful)
                 
                 if !successful {
@@ -114,9 +116,7 @@ class GetUserEmailPromptView: PromptView {
     }
     
     private func showErrorOnEmailSubscriptionFailure() {
-        if let presenter = self.presenter {
-            presenter.showErrorMessage(S.Alert.somethingWentWrong)
-        }
+        presenter.showErrorMessage(S.Alert.somethingWentWrong)
     }
         
     private func updateViewOnEmailSubmissionResult(successful: Bool) {
@@ -129,14 +129,14 @@ class GetUserEmailPromptView: PromptView {
         continueButton.isHidden = true
         emailInput.isHidden = true
         
-        title.text = prompt.title(for: .confirmation)
-        body.text = prompt.body(for: .confirmation)
+        title.text = emailCollector.confirmationTitle
+        body.text = emailCollector.confirmationBody
         
-        if let imageName = prompt.imageName(for: .confirmation) {
+        if let imageName = emailCollector.confirmationImageName {
             imageView.image = UIImage(named: imageName)
         }
-        
-        if shouldShowFootnoteLabel, let footnote = prompt.successFootnote() {
+
+        if shouldShowFootnoteLabel, let footnote = emailCollector.confirmationFootnote {
             footerView.addSubview(successFootnoteLabel)
             successFootnoteLabel.constrain([
                 successFootnoteLabel.leadingAnchor.constraint(equalTo: footerView.leadingAnchor),
@@ -168,7 +168,7 @@ class GetUserEmailPromptView: PromptView {
     
     private func setUpImageView() {
         imageView.contentMode = .scaleAspectFit
-        if let imageName = prompt.imageName(for: .initialDisplay) {
+        if let imageName = prompt.imageName {
             imageView.image = UIImage(named: imageName)
         }
     }

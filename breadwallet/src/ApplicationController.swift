@@ -248,8 +248,6 @@ class ApplicationController: Subscriber, Trackable {
         if UserDefaults.shouldShowBRDRewardsAnimation {
             RewardsIconView.prepareAnimationFrames()
         }
-
-        PromptFactory.initialize()
     }
     
     private func setup() {
