@@ -20,17 +20,14 @@ extension BRAPIClient {
             req.setValue("all-announcements", forHTTPHeaderField: "x-features")
         }
         
-        dataTaskWithRequest(req as URLRequest, authenticated: true) { [unowned self] (data, resp, err) in
-            if let resp = resp, resp.statusCode == 200, let data = data, !data.isEmpty {
+        dataTaskWithRequest(req as URLRequest, authenticated: true) { [unowned self] (data, response, err) in
+            if let response = response, response.statusCode == 200, let data = data, !data.isEmpty {
                 do {
-                    let json = try JSONSerialization.jsonObject(with: data, options: [])
-                    guard let jsonArray = json as? [[String: AnyObject]] else { return }
-                    guard !jsonArray.isEmpty else { return }
-                    
-                    self.announcementsFromJSONArray(jsonArray: jsonArray, completion: { (announcements) in
-                        Store.trigger(name: .didFetchAnnouncements(announcements))
-                    })
-                    
+                    let decoder = JSONDecoder()
+                    let announcements = try decoder.decode([Announcement].self, from: data)
+                    if !announcements.isEmpty {
+                        PromptFactory.didFetchAnnouncements(announcements: announcements)
+                    }
                 } catch let e {
                     self.log("error fetching announcements: \(e)")
                 }
@@ -39,15 +36,4 @@ extension BRAPIClient {
             }
             }.resume()
     }
-    
-    func announcementsFromJSONArray(jsonArray: [[String: AnyObject]], completion: (([Announcement]) -> Void)?) {
-        var result = [Announcement]()
-        
-        for announcement in jsonArray {
-            result.append(Announcement(json: announcement))
-        }
-        
-        completion?(result)
-    }
-    
 }
