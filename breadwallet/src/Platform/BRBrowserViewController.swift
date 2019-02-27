@@ -28,18 +28,18 @@ private class BRBrowserViewControllerInternal: UIViewController, WKNavigationDel
     let toolbarView = UIToolbar()
     let progressView = UIProgressView()
     let refreshButtonItem = UIBarButtonItem(
-        barButtonSystemItem: UIBarButtonSystemItem.refresh, target: self,
+        barButtonSystemItem: UIBarButtonItem.SystemItem.refresh, target: self,
         action: #selector(BRBrowserViewControllerInternal.refresh))
     var stopButtonItem = UIBarButtonItem(
-        barButtonSystemItem: UIBarButtonSystemItem.stop, target: self,
+        barButtonSystemItem: UIBarButtonItem.SystemItem.stop, target: self,
         action: #selector(BRBrowserViewControllerInternal.stop))
     var flexibleSpace = UIBarButtonItem(
-        barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil)
+        barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
     var backButtonItem = UIBarButtonItem(
-        title: "\u{25C0}\u{FE0E}", style: UIBarButtonItemStyle.plain, target: self,
+        title: "\u{25C0}\u{FE0E}", style: UIBarButtonItem.Style.plain, target: self,
         action: #selector(BRBrowserViewControllerInternal.goBack))
     var forwardButtonItem = UIBarButtonItem(
-        title: "\u{25B6}\u{FE0E}", style: UIBarButtonItemStyle.plain, target: self,
+        title: "\u{25B6}\u{FE0E}", style: UIBarButtonItem.Style.plain, target: self,
         action: #selector(BRBrowserViewControllerInternal.goForward))
     
     open override var edgesForExtendedLayout: UIRectEdge {
@@ -63,8 +63,8 @@ private class BRBrowserViewControllerInternal: UIViewController, WKNavigationDel
             views: ["progressView": progressView]))
         view.addConstraints(NSLayoutConstraint.constraints(
             withVisualFormat: "V:|[topGuide]-0-[progressView(2)]", options: [], metrics: nil,
-            views: ["progressView": progressView, "topGuide": self.topLayoutGuide]))
-        
+            views: ["progressView": progressView, "topGuide": view.safeAreaLayoutGuide.topAnchor]))
+
         // toolbar view
         view.addSubview(toolbarContainerView)
         self.view.addSubview(toolbarContainerView)
@@ -97,7 +97,7 @@ private class BRBrowserViewControllerInternal: UIViewController, WKNavigationDel
             views: ["webView": webView as WKWebView]))
         view.addConstraints(NSLayoutConstraint.constraints(
             withVisualFormat: "V:|[topGuide]-0-[webView]-0-[toolbarContainer]|", options: [], metrics: nil,
-            views: ["webView": webView, "toolbarContainer": toolbarContainerView, "topGuide": self.topLayoutGuide]))
+            views: ["webView": webView, "toolbarContainer": toolbarContainerView, "topGuide": view.safeAreaLayoutGuide.topAnchor]))
     }
     
     open override func viewWillAppear(_ animated: Bool) {

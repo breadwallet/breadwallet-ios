@@ -8,6 +8,8 @@
 
 import UIKit
 
+// swiftlint:disable unused_setter_value
+
 class GenericPinPadCell: UICollectionViewCell {
 
     var text: String? {
@@ -94,7 +96,7 @@ class GenericPinPadCell: UICollectionViewCell {
 
     override var accessibilityTraits: UIAccessibilityTraits {
         get {
-            return UIAccessibilityTraitStaticText
+            return UIAccessibilityTraits.staticText
         }
         set { }
     }

@@ -83,20 +83,12 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     private func addConstraints() {
         let headerHeight: CGFloat = 46.0
         let toolbarHeight: CGFloat = 74.0
-        
-        if #available(iOS 11.0, *) {
-            subHeaderView.constrain([
-                subHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                subHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
-                subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                subHeaderView.heightAnchor.constraint(equalToConstant: headerHeight) ])
-        } else {
-            subHeaderView.constrain([
-                subHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                subHeaderView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 0.0),
-                subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                subHeaderView.heightAnchor.constraint(equalToConstant: headerHeight) ])
-        }
+
+        subHeaderView.constrain([
+            subHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            subHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
+            subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            subHeaderView.heightAnchor.constraint(equalToConstant: headerHeight) ])
         
         logo.constrain([
             logo.leadingAnchor.constraint(equalTo: subHeaderView.leadingAnchor, constant: C.padding[2]),
@@ -135,19 +127,11 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
                 assetList.view.bottomAnchor.constraint(equalTo: toolbar.topAnchor)])
         })
         
-        if #available(iOS 11.0, *) {
-            toolbar.constrain([
-                toolbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-                toolbar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -C.padding[1]),
-                toolbar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: C.padding[1]),
-                toolbar.heightAnchor.constraint(equalToConstant: toolbarHeight) ])
-        } else {
-            toolbar.constrain([
-                toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                toolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -C.padding[1]),
-                toolbar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: C.padding[1]),
-                toolbar.heightAnchor.constraint(equalToConstant: toolbarHeight) ])
-        }
+        toolbar.constrain([
+            toolbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            toolbar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -C.padding[1]),
+            toolbar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: C.padding[1]),
+            toolbar.heightAnchor.constraint(equalToConstant: toolbarHeight) ])
     }
 
     private func setInitialData() {
