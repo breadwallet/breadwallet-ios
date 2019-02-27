@@ -1,9 +1,3 @@
 [submodule "Modules/breadwallet-core"]
 	path = Modules/breadwallet-core
 	url = https://github.com/breadwallet/breadwallet-core.git
-[submodule "Modules/unbound"]
-	path = Modules/unbound
-	url = https://github.com/breadwallet/unbound.git
-[submodule "Modules/nettle"]
-	path = Modules/nettle
-	url = https://github.com/breadwallet/nettle.git
