@@ -72,6 +72,11 @@ struct AnnouncementPage: Decodable {
  */
 struct Announcement: Decodable {
     
+    // N.B. Add supported types here otherwise they will be ignored by PromptFactory.
+    static var supportedTypes: [String] {
+        return [AnnouncementType.announcementEmail.rawValue]
+    }
+
     enum Keys: String, CodingKey {
         case id = "slug"    // the server sends 'slug' but we'll call it 'id'
         case type
@@ -83,7 +88,7 @@ struct Announcement: Decodable {
     var id: String?
     var type: String?
     var pages: [AnnouncementPage]?
-    
+        
     // default initializer to help unit testing
     init() {}
     
@@ -96,6 +101,10 @@ struct Announcement: Decodable {
         } catch { // missing element
             assert(false, "missing Announcement element")
         }
+    }
+    
+    var isSupported: Bool {
+        return Announcement.supportedTypes.contains(self.type ?? "")
     }
     
     var isGetEmailAnnouncement: Bool {
