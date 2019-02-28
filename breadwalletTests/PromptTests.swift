@@ -101,4 +101,22 @@ class PromptTests: XCTestCase {
         XCTAssertTrue(paperKeyPrompt.order < emailPrompt.order)
         XCTAssertTrue(announcementPrompt.order < emailPrompt.order)
     }
+    
+    func testSupportedAnnouncementTypes() {
+        // 'getAnnouncementsFromFile()' mimics how BRAPIClient+Announcements handles the /announcements endpoint response.
+        guard let announcements = getAnnouncementsFromFile(file: "announcement-supported"), !announcements.isEmpty else {
+            XCTFail()
+            return
+        }
+
+        let promptCount = PromptFactory.promptCount
+        let announcementsCount = announcements.count
+        
+        XCTAssertEqual(announcementsCount, 2)
+        
+        // add the new announcements; one should be filtered out
+        PromptFactory.didFetchAnnouncements(announcements: announcements)
+        
+        XCTAssertEqual(PromptFactory.promptCount, promptCount + 1)
+    }
 }
