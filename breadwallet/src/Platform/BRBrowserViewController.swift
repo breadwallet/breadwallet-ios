@@ -56,48 +56,38 @@ private class BRBrowserViewControllerInternal: UIViewController, WKNavigationDel
         
         // progress view
         progressView.alpha = 0
-        progressView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(progressView)
-        view.addConstraints(NSLayoutConstraint.constraints(
-            withVisualFormat: "|-0-[progressView]-0-|", options: [], metrics: nil,
-            views: ["progressView": progressView]))
-        view.addConstraints(NSLayoutConstraint.constraints(
-            withVisualFormat: "V:|[topGuide]-0-[progressView(2)]", options: [], metrics: nil,
-            views: ["progressView": progressView, "topGuide": view.safeAreaLayoutGuide.topAnchor]))
+        progressView.constrain([
+            progressView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            progressView.heightAnchor.constraint(equalToConstant: 2.0),
+            progressView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            progressView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            ])
 
         // toolbar view
         view.addSubview(toolbarContainerView)
-        self.view.addSubview(toolbarContainerView)
-        self.view.addConstraints(NSLayoutConstraint.constraints(
-            withVisualFormat: "|-0-[toolbarContainer]-0-|", options: [], metrics: nil,
-            views: ["toolbarContainer": toolbarContainerView]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(
-            withVisualFormat: "V:[toolbarContainer]-0-|", options: [], metrics: nil,
-            views: ["toolbarContainer": toolbarContainerView]))
-        toolbarContainerView.addConstraint(NSLayoutConstraint(
-            item: toolbarContainerView, attribute: .height, relatedBy: .equal, toItem: nil,
-            attribute: .notAnAttribute, multiplier: 1, constant: 44))
+        toolbarContainerView.constrain([
+            toolbarContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            toolbarContainerView.heightAnchor.constraint(equalToConstant: 44.0),
+            toolbarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            toolbarContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            ])
         
         toolbarView.isTranslucent = true
-        toolbarView.translatesAutoresizingMaskIntoConstraints = false
         toolbarView.items = [backButtonItem, forwardButtonItem, flexibleSpace, refreshButtonItem]
-        toolbarContainerView.translatesAutoresizingMaskIntoConstraints = false
         toolbarContainerView.addSubview(toolbarView)
-        toolbarContainerView.addConstraints(NSLayoutConstraint.constraints(
-            withVisualFormat: "|-0-[toolbar]-0-|", options: [], metrics: nil, views: ["toolbar": toolbarView]))
-        toolbarContainerView.addConstraints(NSLayoutConstraint.constraints(
-            withVisualFormat: "V:|-0-[toolbar]-0-|", options: [], metrics: nil, views: ["toolbar": toolbarView]))
+        toolbarView.constrain(toSuperviewEdges: nil)
         
         // webview
         webView.navigationDelegate = self
-        webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(webView)
-        view.addConstraints(NSLayoutConstraint.constraints(
-            withVisualFormat: "|-0-[webView]-0-|", options: [], metrics: nil,
-            views: ["webView": webView as WKWebView]))
-        view.addConstraints(NSLayoutConstraint.constraints(
-            withVisualFormat: "V:|[topGuide]-0-[webView]-0-[toolbarContainer]|", options: [], metrics: nil,
-            views: ["webView": webView, "toolbarContainer": toolbarContainerView, "topGuide": view.safeAreaLayoutGuide.topAnchor]))
+
+        webView.constrain([
+            webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            webView.bottomAnchor.constraint(equalTo: toolbarContainerView.topAnchor),
+            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            ])
     }
     
     open override func viewWillAppear(_ animated: Bool) {
