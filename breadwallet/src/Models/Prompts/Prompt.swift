@@ -352,9 +352,19 @@ class PromptFactory: Subscriber {
         addDefaultPrompts()
     }
     
+    static var promptCount: Int {
+        return shared.prompts.count
+    }
+    
     // Invoked from BRAPIClient.fetchAnnouncements()
     static func didFetchAnnouncements(announcements: [Announcement]) {
-        announcements.forEach({
+        let supported = announcements.filter({ $0.isSupported })
+        
+        if supported.isEmpty {
+            return
+        }
+
+        supported.forEach({
             if $0.isGetEmailAnnouncement {
                 shared.prompts.append(AnnouncementBasedEmailCollectingPrompt(announcement: $0))
             } else {
