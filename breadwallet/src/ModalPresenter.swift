@@ -814,7 +814,6 @@ class ModalPresenter: Subscriber, Trackable {
             verify.modalPresentationCapturesStatusBarAppearance = true
             paperPhraseNavigationController.present(verify, animated: true, completion: nil)
             })
-        start.addCloseNavigationItem(tintColor: .white)
         start.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
         let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.paperKey)
         faqButton.tintColor = .white
@@ -844,7 +843,6 @@ class ModalPresenter: Subscriber, Trackable {
                 navigationController.pushViewController(confirm, animated: true)
             }
         })
-        writeViewController?.addCloseNavigationItem(tintColor: .white)
         writeViewController?.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
         guard let writeVC = writeViewController else { return }
         navigationController.pushViewController(writeVC, animated: true)
