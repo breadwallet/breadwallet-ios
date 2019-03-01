@@ -440,6 +440,12 @@ class ApplicationController: Subscriber, Trackable {
         
         homeScreen.didSelectCurrency = { [unowned self] currency in
             guard let walletManager = self.walletManagers[currency.code] else { return }
+            
+            if Currencies.brd.code == currency.code, UserDefaults.shouldShowBRDRewardsAnimation {
+                let name = self.makeEventName([EventContext.rewards.name, Event.openWallet.name])
+                self.saveEvent(name, attributes: ["currency": currency.code])
+            }
+            
             let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
             navigationController.pushViewController(accountViewController, animated: true)
         }

@@ -10,7 +10,7 @@ import UIKit
 import BRCore
 import MachO
 
-class AccountViewController: UIViewController, Subscriber {
+class AccountViewController: UIViewController, Subscriber, Trackable {
     
     // MARK: - Public
     let currency: Currency
@@ -65,7 +65,10 @@ class AccountViewController: UIViewController, Subscriber {
     private let rewardsAnimationDuration: TimeInterval = 0.5
     private let rewardsShrinkTimerDuration: TimeInterval = 6.0
     private let rewardsViewMargin: CGFloat = 16
-
+    private var rewardsTappedEvent: String {
+        return makeEventName([EventContext.rewards.name, Event.banner.name])
+    }
+    
     private func tableViewTopConstraintConstant(for rewardsViewState: RewardsView.State) -> CGFloat {
         let constant = rewardsViewState == .expanded ? RewardsView.expandedSize : RewardsView.normalSize
         return constant + rewardsViewMargin
@@ -326,6 +329,7 @@ class AccountViewController: UIViewController, Subscriber {
     }
     
     @objc private func rewardsViewTapped() {
+        saveEvent(rewardsTappedEvent)
         Store.trigger(name: .openPlatformUrl("/rewards"))
     }
 
