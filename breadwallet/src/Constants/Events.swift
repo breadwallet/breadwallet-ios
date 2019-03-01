@@ -12,6 +12,7 @@ public enum EventContext: String {
     case none
     case test
     case onboarding
+    case rewards
     var name: String { return rawValue }
 }
 
@@ -42,6 +43,9 @@ public enum Event: String {
     case browseFirstButton
     case buyCoinButton
 
+    case openWallet
+    case banner
+    
     case test
     
     var name: String { return rawValue }
