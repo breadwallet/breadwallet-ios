@@ -65,6 +65,8 @@ class StartPaperPhraseViewController: UIViewController {
 
             if let action = self?.dismissAction {
                 Store.perform(action: action)
+            } else {
+                self?.dismiss(animated: true, completion: nil)
             }
         }
         
