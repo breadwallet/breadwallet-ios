@@ -133,16 +133,11 @@ class ConfirmPaperPhraseViewController: UIViewController {
 
     private func addSubmitButtonConstraints(keyboardHeight: CGFloat) {
         submit.constrain([
-            NSLayoutConstraint(item: submit,
-                               attribute: .bottom,
-                               relatedBy: .equal,
-                               toItem: view.safeAreaLayoutGuide.bottomAnchor,
-                               attribute: .top,
-                               multiplier: 1.0,
-                               constant: -C.padding[1] - keyboardHeight),
-            submit.constraint(.leading, toView: view, constant: C.padding[2]),
-            submit.constraint(.trailing, toView: view, constant: -C.padding[2]),
-            submit.constraint(.height, constant: C.Sizes.buttonHeight) ])
+            submit.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -C.padding[1] - keyboardHeight),
+            submit.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
+            submit.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+            submit.heightAnchor.constraint(equalToConstant: C.Sizes.buttonHeight)
+        ])
     }
 
     @objc private func checkTextFields() {
