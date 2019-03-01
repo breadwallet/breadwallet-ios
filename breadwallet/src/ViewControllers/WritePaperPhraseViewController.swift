@@ -99,6 +99,8 @@ class WritePaperPhraseViewController: UIViewController {
             self?.trackEvent(event: .dismissed, tracked: {
                 if let action = self?.dismissAction {
                     Store.perform(action: action)
+                } else {
+                    self?.dismiss(animated: true, completion: nil)
                 }
             })
         }
