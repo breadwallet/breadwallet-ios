@@ -384,7 +384,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             
             if shouldTransmit != 0 {
                 DispatchQueue.walletQueue.async {
-                    self.walletManagers[currency.code]?.peerManager?.connect()
+                    self.walletManagers[currency.code]?.connect()
                 }
                 
                 let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in

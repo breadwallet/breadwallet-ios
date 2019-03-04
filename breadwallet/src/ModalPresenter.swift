@@ -651,6 +651,21 @@ class ModalPresenter: Subscriber, Trackable {
                                             Backend.pigeonExchange?.resetPairedWallets()
                                             menuNav.showAlert(title: "", message: "Paired wallets reset")
             }))
+
+            developerItems.append(MenuItem(title: "Clear Ethereum wallet data (rescan)",
+                                           callback: { [unowned self] in
+                                            guard let ewm = self.walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
+                                            UserDefaults.hasScannedForTokenBalances = false
+                                            ewm.disconnect()
+                                            let fm = FileManager.default
+                                            let url = C.coreDataDirURL.appendingPathComponent("eth", isDirectory: true)
+                                            do {
+                                            try fm.removeItem(at: url)
+                                            } catch let error {
+                                                print("ERROR removing dir \(url.absoluteString): \(error)")
+                                            }
+                                            ewm.connect()
+            }))
             
             developerItems.append(
                 MenuItem(title: "API Host",
