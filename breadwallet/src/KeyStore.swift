@@ -28,7 +28,9 @@ import UIKit
 import LocalAuthentication
 import BRCore
 
-#if Internal
+#if TESTNET
+private let WalletSecAttrService = "com.brd.testnetQA"
+#elseif INTERNAL
 private let WalletSecAttrService = "com.brd.internalQA"
 #else
 private let WalletSecAttrService = "org.voisine.breadwallet"

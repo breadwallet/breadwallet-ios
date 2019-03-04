@@ -92,6 +92,10 @@ enum S {
         static let legacyAddressWarning = NSLocalizedString("Send.legacyAddressWarning", value: "Warning: this is a legacy bitcoin address. Are you sure you want to send Bitcoin Cash to it?", comment: "Attempting to send to ")
         static let insufficientGasTitle = NSLocalizedString("Send.insufficientGasTitle", value: "Insufficient Ethereum Balance", comment: "Insufficient gas alert title")
         static let insufficientGasMessage = NSLocalizedString("Send.insufficientGasMessage", value: "You must have at least %1$@ in your wallet in order to transfer this type of token. Would you like to go to your Ethereum wallet now?", comment: "Insufficient gas alert message")
+        enum Error {
+            static let authenticationError = NSLocalizedString("Send.Error.authenticationError", value: "Authentication Error", comment: "Sending error message")
+            static let notConnected = NSLocalizedString("Send.Error.notConnected", value: "Network not connected", comment: "Sending error message")
+        }
     }
 
     enum Receive {
