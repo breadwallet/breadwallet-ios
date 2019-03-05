@@ -620,7 +620,7 @@ class ApplicationController: Subscriber, Trackable {
                     print("Bundle \(n) ran update. err: \(String(describing: e))")
                 }
                 DispatchQueue.main.async {
-                    _ = self.modalPresenter?.supportCenter // Initialize support center
+                    self.modalPresenter?.preloadSupportCenter()
                 }
             }
         }
