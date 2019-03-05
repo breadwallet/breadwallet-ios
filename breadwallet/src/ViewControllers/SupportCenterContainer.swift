@@ -20,12 +20,11 @@ class SupportCenterContainer: UIViewController {
                                       mountPoint: mountPoint,
                                       walletAuthenticator: walletAuthenticator,
                                       walletManagers: walletManagers)
-        webView.startServer()
-        webView.preload()
         super.init(nibName: nil, bundle: nil)
+        loadWebView()
     }
 
-    private let webView: BRWebViewController
+    private var webView: BRWebViewController
     let blur = UIVisualEffectView()
 
     override func viewDidLoad() {
@@ -38,6 +37,13 @@ class SupportCenterContainer: UIViewController {
                 webView.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor) ])
         })
         addTopCorners()
+    }
+
+    func loadWebView() {
+        webView.stopServer()
+        webView.bundleName = C.webBundle // reset in case of developer override
+        webView.startServer()
+        webView.preload()
     }
 
     private func addTopCorners() {
