@@ -74,6 +74,14 @@
 "Android.screenAlteringMessage" = "BRD는 (Twilight과 같은) 화면 변경 앱을 비활성화하지 않으면 제대로 동작하지 않습니다.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "화면 변경 앱이 탐지됨";
+/* Body for an announcement promoting Coinify. */
+"Announcement.coinfyPromoBody" = "2019년 3월 31까지 100유로의 비트코인을 구매하시면 20유로 짜리 독일 아마존 기프트 카드를 제공해 드립니다.*";
+/* Button title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoActionTitle" = "기프트 카드를 드립니다.";
+/* Footnote text for an announcement promoting Coinify. */
+"Announcement.coinifyPromoFootnote" = "*고객 한 분 당 1장으로 한정됩니다. 오스트리아, 독일, 룩셈부르크, 네덜란드에서만 사용 가능합니다.";
+/* Title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoTitle" = "독일 아마존의 20유로 기프트 카드를 놓치지 마세요!";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
 "Announcement.glideraBodyOne" = "당신의 은행을 통해 BTC와 ETH를 구입하면 한도가 더 높으며, 인도가 더 신속할 뿐 아니라 수수료도 더 낮습니다. 지금 가입하여 출시 시점에 알림을 받으십시오.";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */

@@ -74,6 +74,14 @@
 "Android.screenAlteringMessage" = "BRD non funzionerà correttamente a meno che le app che alterano lo schermo (come Twilight) siano disabilitate.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "App che altera lo schermo rilevata";
+/* Body for an announcement promoting Coinify. */
+"Announcement.coinfyPromoBody" = "Acquista €100 di Bitcoin entro il 31 Marzo 2019, e ricevi un buono regalo di Amazon del valore di €20*";
+/* Button title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoActionTitle" = "Ricevi un buono regalo";
+/* Footnote text for an announcement promoting Coinify. */
+"Announcement.coinifyPromoFootnote" = "*Limite di un buono regalo per cliente. Disponibile solo in Austria, Germania, Lussemburgo e Paesi Bassi.";
+/* Title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoTitle" = "Ricevi un buono regalo Amazon del valore di €20!";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
 "Announcement.glideraBodyOne" = "Gli acquisti BTC ed ETH attraverso la tua banca avranno limiti maggiori, tempi di consegna accelerati e commissioni più basse. Registrati per ricevere la notifica quando viene lanciato.";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
