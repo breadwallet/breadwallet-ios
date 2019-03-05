@@ -74,6 +74,14 @@
 "Android.screenAlteringMessage" = "BRD zal niet goed werken tenzij schermveranderende apps (zoals Twilight) zijn uitgeschakeld.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Schermveranderende app gedetecteerd";
+/* Body for an announcement promoting Coinify. */
+"Announcement.coinfyPromoBody" = "Koop € 100 aan Bnitcoin vóór 31 maart 2019, en ontvang een Amazon.de-cadeaubon van € 20*";
+/* Button title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoActionTitle" = "Ontvang je cadeaubon";
+/* Footnote text for an announcement promoting Coinify. */
+"Announcement.coinifyPromoFootnote" = "⃰ Beperkt één cadeaubon per klant. Alleen beschikbaar in Oostenrijk, Duitsland, Luxemburg en Nederland.";
+/* Title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoTitle" = "Ontvang een Amazon.de-cadeaubon van € 20!";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
 "Announcement.glideraBodyOne" = "BTC- en ETH-aankopen via uw bank hebben hogere limieten, versnelde levertijden en lagere kosten. Meld je aan om op de hoogte te worden gebracht wanneer het gelanceerd wordt.";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
