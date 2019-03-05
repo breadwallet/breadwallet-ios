@@ -309,6 +309,8 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         }, completion: { [unowned self] _ in
             self.rewardsView?.animateIcon()
 
+            UserDefaults.shouldShowBRDRewardsAnimation = false
+
             Timer.scheduledTimer(withTimeInterval: self.rewardsShrinkTimerDuration, repeats: false) { [unowned self] _ in
                 self.shrinkRewardsView()
             }
@@ -323,8 +325,6 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             self.tableViewTopConstraint?.constant = constants.0
             self.rewardsViewHeightConstraint?.constant = constants.1
             self.view.layoutIfNeeded()
-        }, completion: { _ in
-            UserDefaults.shouldShowBRDRewardsAnimation = false
         })
     }
     
