@@ -235,6 +235,10 @@ class ModalPresenter: Subscriber, Trackable {
         })
     }
 
+    func preloadSupportCenter() {
+        supportCenter.loadWebView() // pre-load contents for faster access
+    }
+
     func presentFaq(articleId: String? = nil, currency: Currency? = nil) {
         supportCenter.modalPresentationStyle = .overFullScreen
         supportCenter.modalPresentationCapturesStatusBarAppearance = true
@@ -706,16 +710,18 @@ class ModalPresenter: Subscriber, Trackable {
 
                                 guard let bundle = AssetArchive(name: newBundleName, apiClient: Backend.apiClient) else { return assertionFailure() }
                                 bundle.update { error in
-                                    guard error == nil else {
-                                        let alert = UIAlertController(title: S.Alert.error,
-                                                                      message: "Unable to fetch bundle named \(newBundleName)",
-                                                                      preferredStyle: .alert)
-                                        alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
-                                        menuNav.present(alert, animated: true, completion: nil)
-                                        return
+                                    DispatchQueue.main.async {
+                                        guard error == nil else {
+                                            let alert = UIAlertController(title: S.Alert.error,
+                                                                          message: "Unable to fetch bundle named \(newBundleName)",
+                                                preferredStyle: .alert)
+                                            alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
+                                            menuNav.present(alert, animated: true, completion: nil)
+                                            return
+                                        }
+                                        UserDefaults.debugWebBundleName = newBundleName
+                                        (menuNav.topViewController as? MenuViewController)?.reloadMenu()
                                     }
-                                    UserDefaults.debugWebBundleName = newBundleName
-                                    (menuNav.topViewController as? MenuViewController)?.reloadMenu()
                                 }
                             })
 
