@@ -74,6 +74,14 @@
 "Android.screenAlteringMessage" = "BRD не сможет нормально работать, если не отключить изменяющие экран приложения (такие как Twilight).";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Обнаружено изменяющее экран приложение";
+/* Body for an announcement promoting Coinify. */
+"Announcement.coinfyPromoBody" = "Купите биткойны на 100 евро до 31 марта 2019 года и получите подарочный сертификат Amazon.de на 20 евро*";
+/* Button title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoActionTitle" = "Получите свой подарочный сертификат";
+/* Footnote text for an announcement promoting Coinify. */
+"Announcement.coinifyPromoFootnote" = "⃰ Максимум один подарочный сертификат на одного клиента. Доступен только в Австрии, Германии, Люксембурге и Нидерландах.";
+/* Title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoTitle" = "Получите подарочный сертификат Amazon.de на 20 евро!";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
 "Announcement.glideraBodyOne" = "При покупке BTC и ETH через ваш банк, у вас будут более высокие лимиты, ускоренные сроки расчетов и низкие комиссии. Подпишитесь чтобы получить уведомление о запуске.";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
