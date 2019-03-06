@@ -1,0 +1,9 @@
+[{ "type": "announcement-action",
+    "slug": "conify-promto",
+    "pages": [{"title": "Get a €20 Amazon.de gift card!", 
+		"body": "Buy €100 of Bitcoin by March 31, 2019 and get a €20 Amazon.de gift card*", 
+		"titleKey": "titleKey", 
+        	"bodyKey": "bodyKey", "imageName": "AmazonLogo", "imageUrl": "imageUrl",
+		"actions" : [ { "title" : "Get your gift card", "titleKey" : "titleKey", "url" : "/buy" } ]
+    }]
+}]

@@ -383,6 +383,8 @@ class PromptFactory: Subscriber {
     static func createPromptView(prompt: Prompt, presenter: UIViewController) -> PromptView {
         if let emailPrompt = prompt as? EmailCollectingPrompt {
             return GetUserEmailPromptView(prompt: emailPrompt, presenter: presenter)
+        } else if let announcementPrompt = prompt as? AnnouncementBasedPrompt {
+            return AnnouncementPromptView(prompt: announcementPrompt)
         } else {
             return PromptView(prompt: prompt)
         }
