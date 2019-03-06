@@ -460,12 +460,15 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             let amount = Amount(amount: UInt256(minOutput), currency: currency, rate: Rate.empty)
             let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.tokenDescription)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
+
+        case .insufficientFunds:
+            return showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
             
         case .ok:
             self.validatedProtoRequest = protoReq
             
         default:
-            // unhandled error
+            assertionFailure("unhandled error")
             print("[SEND] payment request validation error: \(result)")
             return
         }
