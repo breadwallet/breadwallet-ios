@@ -430,8 +430,10 @@ class PaymentProtocolACK {
     }
     
     init?(json: String) {
-        guard let ack = try? JSONDecoder().decode(Ack.self, from: json.data(using: .utf8)!) else { return nil }
+        guard let data = json.data(using: .utf8) else { return nil }
+        guard let ack = try? JSONDecoder().decode(Ack.self, from: data) else { return nil }
         guard let payment = PaymentProtocolPayment(transactions: [], refundTo: []) else { return nil }
+        payment.isManaged = false // payment lifecycle is managed by the ACK that contains it
         payment.currency = ack.payment.currency
         guard let cPtr = BRPaymentProtocolACKNew(payment.cPtr, ack.memo) else { return nil }
         self.cPtr = cPtr
