@@ -14,8 +14,47 @@ enum AnnouncementType: String {
     case announcement
     // Announcement that can obtain an email address from the user for a mailing list subscription.
     case announcementEmail = "announcement-email"
-    // Announcement that includes an action button.
-    case announcementAction = "announcement-action"
+    // A promotional announcement.
+    case announcementPromo = "announcement-promo"
+}
+
+/**
+ *  Represents an action that can be displayed as part of an announcement prompt.
+ */
+struct AnnouncementAction: Decodable {
+    enum Keys: String, CodingKey {
+        case title
+        case titleKey
+        case url
+    }
+    
+    // English title text for the action.
+    var title: String?
+    // Key for localized title.
+    var titleKey: String?
+    // URL to be invoked in response to the action.
+    var url: String?
+    
+    // Text to be displayed as a button title, either the raw title or a localized string based
+    // on the title key.
+    var titleText: String {
+        if let key = titleKey {
+            return NSLocalizedString(key, comment: "")
+        } else if let title = title {
+            return title
+        }
+        return ""
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: Keys.self)
+        do {
+            title = try container.decodeIfPresent(String.self, forKey: .title)
+            titleKey = try container.decodeIfPresent(String.self, forKey: .titleKey)
+            url = try container.decodeIfPresent(String.self, forKey: .url)
+        } catch {   // missing element
+        }
+    }
 }
 
 /**
@@ -28,25 +67,43 @@ struct AnnouncementPage: Decodable {
         case titleKey
         case body
         case bodyKey
+        case footnote
+        case footnoteKey
         case imageName
         case imageUrl
         case emailList
+        case actions
     }
     
     // English title text.
     var title: String?
+    
     // Key for a localized title.
     var titleKey: String?
+    
     // English body text.
     var body: String?
+    
     // Key for a localized body.
     var bodyKey: String?
+    
+    // English footnote text.
+    var footnote: String?
+    
+    // Key for a localized footnote.
+    var footnoteKey: String?
+    
     // Name of image asset included in our asset catalog.
     var imageName: String?
+    
     // URL for a downloadable image that may be used if 'imageName' is not available.
     var imageUrl: String?
+    
     // Name of a mailing list to be used if this announcement if of type 'announcement-email'.
     var emailList: String?
+    
+    // Actions associated with this announcement page.
+    var actions: [AnnouncementAction]?
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: Keys.self)
@@ -55,9 +112,12 @@ struct AnnouncementPage: Decodable {
             titleKey = try container.decodeIfPresent(String.self, forKey: .titleKey)
             body = try container.decodeIfPresent(String.self, forKey: .body)
             bodyKey = try container.decodeIfPresent(String.self, forKey: .bodyKey)
+            footnote = try container.decodeIfPresent(String.self, forKey: .footnote)
+            footnoteKey = try container.decodeIfPresent(String.self, forKey: .footnoteKey)
             imageName = try container.decodeIfPresent(String.self, forKey: .imageName)
             imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
             emailList = try container.decodeIfPresent(String.self, forKey: .emailList)
+            actions = try container.decodeIfPresent([AnnouncementAction].self, forKey: .actions)
         } catch {
             assert(false, "missing Announcement page element")
         }
@@ -74,7 +134,8 @@ struct Announcement: Decodable {
     
     // N.B. Add supported types here otherwise they will be ignored by PromptFactory.
     static var supportedTypes: [String] {
-        return [AnnouncementType.announcementEmail.rawValue]
+        return [AnnouncementType.announcementEmail.rawValue,
+                AnnouncementType.announcementPromo.rawValue]
     }
 
     enum Keys: String, CodingKey {
@@ -110,11 +171,7 @@ struct Announcement: Decodable {
     var isGetEmailAnnouncement: Bool {
         return self.type == AnnouncementType.announcementEmail.rawValue
     }
-    
-    var isActionAnnouncement: Bool {
-        return self.type == AnnouncementType.announcementAction.rawValue
-    }
-    
+        
     func page(at step: PromptPageStep) -> AnnouncementPage? {
         if let pages = pages, !pages.isEmpty && step.step < pages.count {
             return pages[step.rawValue]
@@ -128,6 +185,10 @@ struct Announcement: Decodable {
     
     var body: String {
         return body(for: .initialDisplay)
+    }
+    
+    var footnote: String {
+        return footnote(for: .initialDisplay)
     }
     
     var imageName: String? {
@@ -151,7 +212,15 @@ struct Announcement: Decodable {
         UserDefaults.standard.set(true, forKey: self.showHideKey)
     }
     
-    // convenience function for getting the title for any page/step
+    func actions(for step: PromptPageStep) -> [AnnouncementAction]? {
+        if let page = page(at: .initialDisplay) {
+            return page.actions
+        }
+        return nil
+    }
+    
+    // MARK: convenience functions
+
     func title(for step: PromptPageStep) -> String {
         if let page = page(at: step) {
             if let key = page.titleKey {
@@ -163,7 +232,6 @@ struct Announcement: Decodable {
         return ""
     }
     
-    // convenience function for getting the body for any page/step
     func body(for step: PromptPageStep) -> String {
         if let page = page(at: step) {
             if let key = page.bodyKey {
@@ -174,8 +242,18 @@ struct Announcement: Decodable {
         }
         return ""
     }
+
+    func footnote(for step: PromptPageStep) -> String {
+        if let page = page(at: step) {
+            if let key = page.footnoteKey {
+                return NSLocalizedString(key, comment: "")
+            } else if let footnote = page.footnote {
+                return footnote
+            }
+        }
+        return ""
+    }
     
-    // convenience function for getting the image name for any page/step
     func imageName(for step: PromptPageStep) -> String? {
         if let page = page(at: step), let name = page.imageName {
             return name
@@ -206,6 +284,10 @@ extension AnnouncementBasedPrompt {
     
     var body: String {
         return announcement.body
+    }
+    
+    var footnote: String? {
+        return announcement.footnote
     }
     
     var imageName: String? {
