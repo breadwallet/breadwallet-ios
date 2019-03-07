@@ -75,7 +75,7 @@
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "检测到屏幕更改应用";
 /* Body for an announcement promoting Coinify. */
-"Announcement.coinfyPromoBody" = "在2019年3月31日前购买100欧元的比特币并获得一张在Amazon.de网上消费的20欧元礼品卡 ⃰。";
+"Announcement.coinifyPromoBody" = "在2019年3月31日前购买100欧元的比特币并获得一张在Amazon.de网上消费的20欧元礼品卡 ⃰。";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "拿到你的礼品卡";
 /* Footnote text for an announcement promoting Coinify. */

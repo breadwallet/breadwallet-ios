@@ -75,7 +75,7 @@
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "偵測到螢幕改變應用程式";
 /* Body for an announcement promoting Coinify. */
-"Announcement.coinfyPromoBody" = "2019 年 3 月 31 日前購買 €100 比特幣，即可獲得 €20 Amazon.de 禮物卡*";
+"Announcement.coinifyPromoBody" = "2019 年 3 月 31 日前購買 €100 比特幣，即可獲得 €20 Amazon.de 禮物卡*";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "獲取您的禮物卡";
 /* Footnote text for an announcement promoting Coinify. */

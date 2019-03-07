@@ -75,7 +75,7 @@
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Application modifiant l'écran détectée";
 /* Body for an announcement promoting Coinify. */
-"Announcement.coinfyPromoBody" = "Achetez 100 € de Bitcoin avant le 31 mars 2019 et recevez une carte-cadeau Amazon.de de 20 €*";
+"Announcement.coinifyPromoBody" = "Achetez 100 € de Bitcoin avant le 31 mars 2019 et recevez une carte-cadeau Amazon.de de 20 €*";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "Obtenez votre carte-cadeau";
 /* Footnote text for an announcement promoting Coinify. */
