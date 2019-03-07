@@ -75,7 +75,7 @@
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Der er fundet en app der ændrer skærmbilledet";
 /* Body for an announcement promoting Coinify. */
-"Announcement.coinfyPromoBody" = "Køb for 100€ Bitcoins inden 31. marts 2019 og få et gavekort på 20€ til Amazon.de*";
+"Announcement.coinifyPromoBody" = "Køb for 100€ Bitcoins inden 31. marts 2019 og få et gavekort på 20€ til Amazon.de*";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "Få dit gavekort";
 /* Footnote text for an announcement promoting Coinify. */
