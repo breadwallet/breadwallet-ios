@@ -75,7 +75,7 @@
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "화면 변경 앱이 탐지됨";
 /* Body for an announcement promoting Coinify. */
-"Announcement.coinfyPromoBody" = "2019년 3월 31까지 100유로의 비트코인을 구매하시면 20유로 짜리 독일 아마존 기프트 카드를 제공해 드립니다.*";
+"Announcement.coinifyPromoBody" = "2019년 3월 31까지 100유로의 비트코인을 구매하시면 20유로 짜리 독일 아마존 기프트 카드를 제공해 드립니다.*";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "기프트 카드를 드립니다.";
 /* Footnote text for an announcement promoting Coinify. */

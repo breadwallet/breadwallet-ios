@@ -75,7 +75,7 @@
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "画面変更アプリが検出されました";
 /* Body for an announcement promoting Coinify. */
-"Announcement.coinfyPromoBody" = "2019年3月31日までにビットコインを100ユーロ購入して、20ユーロのAmazon.deギフトカードをもらおう*";
+"Announcement.coinifyPromoBody" = "2019年3月31日までにビットコインを100ユーロ購入して、20ユーロのAmazon.deギフトカードをもらおう*";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "ギフトカードをもらおう";
 /* Footnote text for an announcement promoting Coinify. */
