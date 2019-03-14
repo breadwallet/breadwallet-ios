@@ -257,6 +257,10 @@ class ApplicationController: Subscriber, Trackable {
         window.makeKeyAndVisible()
         offMainInitialization()
 
+        // Start collecting analytics events. Once we have a wallet, startDataFetchers() will
+        // notify `Backend.apiClient.analytics` so that it can upload events to the server.
+        Backend.apiClient.analytics?.startCollectingEvents()
+        
         //TODO:AUTH rename to uninit
         Store.subscribe(self, name: .reinitWalletManager(nil), callback: {
             if case .reinitWalletManager(let callback)? = $0 {
@@ -521,7 +525,7 @@ class ApplicationController: Subscriber, Trackable {
         Backend.updateFees()
         Backend.updateExchangeRates()
         defaultsUpdater.refresh()
-        Backend.apiClient.events?.up()
+        Backend.apiClient.analytics?.onWalletReady()    // fires up analytics uploading
         if !Store.state.isPushNotificationsEnabled {
             Backend.pigeonExchange?.startPolling()
         }
@@ -657,9 +661,9 @@ class ApplicationController: Subscriber, Trackable {
             }
         }
     }
-
+    
     func willResignActive() {
-        applyBlurEffect()
+        self.applyBlurEffect()        
         if !Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
             Backend.apiClient.deletePushNotificationToken(pushToken)
         }
