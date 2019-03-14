@@ -4,7 +4,7 @@
 function downloadBundle() {
     bundle_name="$1-staging"
     host="stage2.breadwallet.com"
-    if [ "${CONFIGURATION}" == "Release" ]; then
+    if [[ "${CONFIGURATION}" == "Release" || ! "${CONFIGURATION}" ]]; then
       bundle_name="$1"
       host="api.breadwallet.com"
     fi
