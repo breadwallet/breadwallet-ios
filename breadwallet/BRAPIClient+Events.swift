@@ -42,15 +42,15 @@ public protocol Trackable {
 extension Trackable {
     
     func saveEvent(_ eventName: String) {
-        NotificationCenter.default.post(name: EventManager.eventNotification, object: nil, userInfo: [
-            EventManager.eventNameKey: eventName
+        NotificationCenter.default.post(name: AnalyticsEventListener.eventNotification, object: nil, userInfo: [
+            AnalyticsEventListener.eventNameKey: eventName
         ])
     }
     
     func saveEvent(_ eventName: String, attributes: [String: String]) {
-        NotificationCenter.default.post(name: EventManager.eventNotification, object: nil, userInfo: [
-            EventManager.eventNameKey: eventName,
-            EventManager.eventAttributesKey: attributes
+        NotificationCenter.default.post(name: AnalyticsEventListener.eventNotification, object: nil, userInfo: [
+            AnalyticsEventListener.eventNameKey: eventName,
+            AnalyticsEventListener.eventAttributesKey: attributes
         ])
     }
     
@@ -95,43 +95,117 @@ private var emKey: UInt8 = 1
 
 // EventManager is attached to BRAPIClient
 extension BRAPIClient {
-    var events: EventManager? {
+    
+    var analytics: AnalyticsEventListener? {
+        return AnalyticsEventListener.shared
+    }
+    
+    // This is accessed by the ApplicationController once there is a valid wallet.
+    var eventManager: EventManager? {
         return lazyAssociatedObject(self, key: &emKey) {
             return EventManager(adaptor: self)
         }
     }
     
     func saveEvent(_ eventName: String) {
-        events?.saveEvent(eventName)
+        analytics?.saveEvent(eventName)
     }
     
     func saveEvent(_ eventName: String, attributes: [String: String]) {
-        events?.saveEvent(eventName, attributes: attributes)
+        analytics?.saveEvent(eventName, attributes: attributes)
     }
 }
 
-class EventManager {
-        
+// Responsible for listening for all analytics events posted by the app.
+//
+// When the app is backgrounded, buffered events are persisted to the file system,
+// then uploaded to the server if an EventManager is present.
+class AnalyticsEventListener {
+    
+    static let shared = AnalyticsEventListener()
+    
     fileprivate static let eventNotification = Notification.Name("__saveEvent__")
     fileprivate static let eventNameKey = "__event_name__"
     fileprivate static let eventAttributesKey = "__event_attributes__"
-    
+
     private let sessionId = NSUUID().uuidString
-    private let queue = OperationQueue()
-    private let sampleChance: UInt32 = 10
     private var isSubscribed = false
+    private var notificationObservers = [String: NSObjectProtocol]()
+    
     private let eventToNotifications: [String: NSNotification.Name] = [
         "foreground": UIApplication.didBecomeActiveNotification,
         "background": UIApplication.didEnterBackgroundNotification
     ]
-    private var buffer = [BRAnalyticsEvent]()
-    private let adaptor: BRAPIAdaptor
+    
+    static var eventDiskDirectory: String {
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentsDirectory = NSString(string: paths[0])
+        return documentsDirectory.appendingPathComponent("/event-data")
+    }
 
-    private var notificationObservers = [String: NSObjectProtocol]()
+    private var eventManager: EventManager? {
+        return Backend.apiClient.eventManager
+    }
+    
+    private var isWalletReady = false
+    
+    private let queue = OperationQueue()
+    private var buffer = [BRAnalyticsEvent]()
+    
+    private init() {
+        // private init to enforce singleton
+    }
+    
+    func startCollectingEvents() {
+        guard !isSubscribed else { return }
+        defer { isSubscribed = true }
         
-    init(adaptor: BRAPIAdaptor) {
-        self.adaptor = adaptor
-        queue.maxConcurrentOperationCount = 1
+        // Listener for the app-backgrounded event and persist the event to the file system
+        // and send to the server.
+        eventToNotifications.forEach { key, value in
+            notificationObservers[key] =
+                NotificationCenter.default
+                    .addObserver(forName: value,
+                                 object: nil,
+                                 queue: self.queue) { note in
+                                    self.saveEvent(key)
+                                    if note.name == UIApplication.didEnterBackgroundNotification {
+                                        self.persistToDisk()
+                                        self.syncEventsToServer()
+                                    }
+            }
+        }
+        
+        // Buffer analytics posted as notifications by the app.
+        notificationObservers[AnalyticsEventListener.eventNotification.rawValue] =
+            NotificationCenter.default
+                .addObserver(forName: AnalyticsEventListener.eventNotification,
+                             object: nil,
+                             queue: self.queue) { note in
+                                guard let eventName = note.userInfo?[AnalyticsEventListener.eventNameKey] as? String else {
+                                    print("[EventManager] received invalid userInfo dict: \(String(describing: note.userInfo))")
+                                    return
+                                }
+                                if let eventAttributes = note.userInfo?[AnalyticsEventListener.eventAttributesKey] as? Attributes {
+                                    self.saveEvent(eventName, attributes: eventAttributes)
+                                } else {
+                                    self.saveEvent(eventName)
+                                }
+        }
+    }
+    
+    // called by ApplicationController when we have a valid wallet (see `didSet`)
+    func onWalletReady() {
+        isWalletReady = true
+
+        // With a valid wallet it's safe to fire up the event manager so it can upload events.
+        syncEventsToServer()
+    }
+    
+    // called from the share data view controller when there is a change to the analytics sharing settings
+    func syncDataSharingPermissions() {
+        guard isWalletReady else { return }
+        syncEventsToServer()
     }
     
     func saveEvent(_ eventName: String) {
@@ -141,58 +215,10 @@ class EventManager {
     func saveEvent(_ eventName: String, attributes: [String: String]) {
         pushEvent(eventName: eventName, attributes: attributes)
     }
-    
-    func up() {
-        guard !isSubscribed else { return }
-        defer { isSubscribed = true }
-        
-        // slurp up app lifecycle events and save them as events
-        eventToNotifications.forEach { key, value in
-            notificationObservers[key] =
-                NotificationCenter.default
-                    .addObserver(forName: value,
-                                 object: nil,
-                                 queue: self.queue) { [weak self] note in
-                                    self?.saveEvent(key)
-                                    if note.name == UIApplication.didEnterBackgroundNotification {
-                                        self?.persistToDisk()
-                                        self?.sendToServer()
-                                    }
-            }
-        }
-        
-        // slurp up events sent as notifications
-        notificationObservers[EventManager.eventNotification.rawValue] =
-            NotificationCenter.default
-                .addObserver(forName: EventManager.eventNotification,
-                             object: nil,
-                             queue: self.queue) { [weak self] note in
-                                guard let eventName = note.userInfo?[EventManager.eventNameKey] as? String else {
-                                    print("[EventManager] received invalid userInfo dict: \(String(describing: note.userInfo))")
-                                    return
-                                }
-                                if let eventAttributes = note.userInfo?[EventManager.eventAttributesKey] as? Attributes {
-                                    self?.saveEvent(eventName, attributes: eventAttributes)
-                                } else {
-                                    self?.saveEvent(eventName)
-                                }
-        }
-    }
-    
-    func down() {
-        guard isSubscribed else { return }
-        notificationObservers.values.forEach { observer in
-            NotificationCenter.default.removeObserver(observer)
-        }
-    }
-    
-    private var shouldRecordData: Bool {
-        return UserDefaults.hasAquiredShareDataPermission
-    }
-    
-    func sync(completion: @escaping () -> Void) {
-        guard shouldRecordData else { removeData(); return }
-        sendToServer(completion: completion)
+
+    private func syncEventsToServer() {
+        guard isWalletReady else { return }
+        eventManager?.uploadEvents()
     }
     
     private func pushEvent(eventName: String, attributes: [String: String]) {
@@ -200,16 +226,16 @@ class EventManager {
             guard let myself = self else { return }
             print("[EventManager] pushEvent name=\(eventName) attributes=\(attributes)")
             myself.buffer.append(  BRAnalyticsEvent(sessionId: myself.sessionId,
-                                         time: Date().timeIntervalSince1970,
-                                         eventName: eventName,
-                                         attributes: attributes))
+                                                    time: Date().timeIntervalSince1970,
+                                                    eventName: eventName,
+                                                    attributes: attributes))
         }
     }
     
     private func persistToDisk() {
         queue.addOperation { [weak self] in
             guard let myself = self else { return }
-            let dataDirectory = myself.unsentDataDirectory
+            let dataDirectory = AnalyticsEventListener.eventDiskDirectory
             if !FileManager.default.fileExists(atPath: dataDirectory) {
                 do {
                     try FileManager.default.createDirectory(atPath: dataDirectory, withIntermediateDirectories: false, attributes: nil)
@@ -233,11 +259,33 @@ class EventManager {
             myself.buffer.removeAll()
         }
     }
+}
+
+// Uploads events that have been that have been persisted to the file system by the `AnalyticsEventListener` instance.
+class EventManager {
     
-    private func sendToServer(completion: (() -> Void)? = nil) {
+    private let queue = OperationQueue()
+    private let adaptor: BRAPIAdaptor
+
+    init(adaptor: BRAPIAdaptor) {
+        self.adaptor = adaptor
+        queue.maxConcurrentOperationCount = 1
+    }
+    
+    private var shouldRecordData: Bool {
+        return UserDefaults.hasAquiredShareDataPermission
+    }
+    
+    func uploadEvents() {
+
+        guard shouldRecordData else {
+            removeData()
+            return
+        }
+        
         queue.addOperation { [weak self] in
             guard let myself = self else { return }
-            let dataDirectory = myself.unsentDataDirectory
+            let dataDirectory = AnalyticsEventListener.eventDiskDirectory
             
             do {
                 try FileManager.default.contentsOfDirectory(atPath: dataDirectory)
@@ -290,7 +338,6 @@ class EventManager {
                             print("[EventManager] Unable to remove evnets file at path \(fileName) \(error)")
                         }
                     }
-                    completion?()
                 }).resume()
             }
         }
@@ -298,11 +345,11 @@ class EventManager {
     }
     
     private func removeData() {
-        queue.addOperation { [weak self] in
-            guard let myself = self else { return }
-            guard let files = try? FileManager.default.contentsOfDirectory(atPath: myself.unsentDataDirectory) else { return }
+        queue.addOperation {
+            let directory = AnalyticsEventListener.eventDiskDirectory
+            guard let files = try? FileManager.default.contentsOfDirectory(atPath: directory) else { return }
             files.forEach { baseName in
-                let fileName = NSString(string: myself.unsentDataDirectory).appendingPathComponent("/\(baseName)")
+                let fileName = NSString(string: directory).appendingPathComponent("/\(baseName)")
                 do {
                     try FileManager.default.removeItem(atPath: fileName)
                 } catch let error {
@@ -316,11 +363,5 @@ class EventManager {
         return [    "deviceType": 0,
                     "appVersion": Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? -1,
                     "events": events ]
-    }
-    
-    private var unsentDataDirectory: String {
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentsDirectory = NSString(string: paths[0])
-        return documentsDirectory.appendingPathComponent("/event-data")
     }
 }
