@@ -292,8 +292,8 @@ class ApplicationController: Subscriber, Trackable {
         Backend.updateFees()
         Backend.kvStore?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
         Backend.apiClient.updateFeatureFlags()
-        if !Store.state.isLoginRequired {
-            Backend.pigeonExchange?.fetchInbox()
+        if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired, !Store.state.isLoginRequired {
+            pigeonExchange.fetchInbox()
         }
     }
 
@@ -312,7 +312,9 @@ class ApplicationController: Subscriber, Trackable {
     }
     
     func didUnlockWallet() {
-        Backend.pigeonExchange?.fetchInbox()
+        if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired {
+            pigeonExchange.fetchInbox()
+        }
         //TODO:SL
         if let btcWalletManager = walletManagers[Currencies.btc.code] as? BTCWalletManager {
             btcWalletManager.updateSpendLimit()
@@ -526,8 +528,8 @@ class ApplicationController: Subscriber, Trackable {
         Backend.updateExchangeRates()
         defaultsUpdater.refresh()
         Backend.apiClient.analytics?.onWalletReady()    // fires up analytics uploading
-        if !Store.state.isPushNotificationsEnabled {
-            Backend.pigeonExchange?.startPolling()
+        if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired, !Store.state.isPushNotificationsEnabled {
+            pigeonExchange.startPolling()
         }
     }
     
