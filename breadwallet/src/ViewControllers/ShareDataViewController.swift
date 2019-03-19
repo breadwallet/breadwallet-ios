@@ -33,7 +33,7 @@ class ShareDataViewController: UIViewController {
     private func addConstraints() {
         titleLabel.constrain([
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            titleLabel.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2]) ])
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: C.padding[2]) ])
         body.constrain([
             body.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             body.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: C.padding[1]),
@@ -64,7 +64,7 @@ class ShareDataViewController: UIViewController {
 
         toggle.valueChanged = strongify(self) { myself in
             UserDefaults.hasAquiredShareDataPermission = myself.toggle.isOn
-            Backend.apiClient.events?.sync {}
+            Backend.apiClient.analytics?.syncDataSharingPermissions()
         }
     }
 }

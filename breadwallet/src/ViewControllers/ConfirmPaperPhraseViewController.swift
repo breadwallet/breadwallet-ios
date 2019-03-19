@@ -10,13 +10,17 @@ import UIKit
 
 class ConfirmPaperPhraseViewController: UIViewController {
 
-    init(keyMaster: KeyMaster, pin: String, callback: @escaping () -> Void) {
+    init(keyMaster: KeyMaster, pin: String, eventContext: EventContext, callback: @escaping () -> Void) {
         self.pin = pin
         self.keyMaster = keyMaster
+        self.eventContext = eventContext
         self.callback = callback
         super.init(nibName: nil, bundle: nil)
         if !E.isIPhone4 {
-            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(keyboardWillShow(notification:)),
+                                                   name: UIResponder.keyboardWillShowNotification,
+                                                   object: nil)
         }
     }
 
@@ -35,6 +39,7 @@ class ConfirmPaperPhraseViewController: UIViewController {
     private let pin: String
     private let keyMaster: KeyMaster
     private let callback: () -> Void
+    private var eventContext: EventContext = .none
     
     //Select 2 random indices from 1 to 10. The second number must
     //be at least one number away from the first.
@@ -60,6 +65,11 @@ class ConfirmPaperPhraseViewController: UIViewController {
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        trackEvent(event: .appeared)
+    }
+    
     override func viewDidLoad() {
         view.backgroundColor = .darkBackground
         label.text = S.ConfirmPaperPhrase.label
@@ -71,8 +81,8 @@ class ConfirmPaperPhraseViewController: UIViewController {
 
         confirmFirstPhrase.textField.becomeFirstResponder()
 
-        notificationObservers[NSNotification.Name.UIApplicationWillResignActive.rawValue] =
-            NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { [weak self] _ in
+        notificationObservers[UIApplication.willResignActiveNotification.rawValue] =
+            NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
         }
 
@@ -123,37 +133,40 @@ class ConfirmPaperPhraseViewController: UIViewController {
 
     private func addSubmitButtonConstraints(keyboardHeight: CGFloat) {
         submit.constrain([
-            NSLayoutConstraint(item: submit,
-                               attribute: .bottom,
-                               relatedBy: .equal,
-                               toItem: bottomLayoutGuide,
-                               attribute: .top,
-                               multiplier: 1.0,
-                               constant: -C.padding[1] - keyboardHeight),
-            submit.constraint(.leading, toView: view, constant: C.padding[2]),
-            submit.constraint(.trailing, toView: view, constant: -C.padding[2]),
-            submit.constraint(.height, constant: C.Sizes.buttonHeight) ])
+            submit.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -C.padding[1] - keyboardHeight),
+            submit.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
+            submit.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+            submit.heightAnchor.constraint(equalToConstant: C.Sizes.buttonHeight)
+        ])
     }
 
     @objc private func checkTextFields() {
         if confirmFirstPhrase.textField.text == words[indices.0] && confirmSecondPhrase.textField.text == words[indices.1] {
             UserDefaults.writePaperPhraseDate = Date()
             Store.trigger(name: .didWritePaperKey)
+            trackEvent(event: .paperKeyCreated)
             callback()
         } else {
             confirmFirstPhrase.validate()
             confirmSecondPhrase.validate()
+            trackEvent(event: .paperKeyError)
             showErrorMessage(S.ConfirmPaperPhrase.error)
         }
     }
 
     @objc private func keyboardWillShow(notification: Notification) {
         guard let userInfo = notification.userInfo else { return }
-        guard let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
+        guard let frameValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
         self.addSubmitButtonConstraints(keyboardHeight: frameValue.cgRectValue.height)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension ConfirmPaperPhraseViewController: Trackable {
+    func trackEvent(event: Event) {
+        saveEvent(context: eventContext, screen: .confirmPaperKey, event: event)
     }
 }

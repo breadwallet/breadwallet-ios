@@ -13,17 +13,17 @@ struct KeyboardNotificationInfo {
     var deltaY: CGFloat {
         return endFrame.minY - startFrame.minY
     }
-    var animationOptions: UIViewAnimationOptions {
-        return UIViewAnimationOptions(rawValue: animationCurve << 16)
+    var animationOptions: UIView.AnimationOptions {
+        return UIView.AnimationOptions(rawValue: animationCurve << 16)
     }
     let animationDuration: Double
 
     init?(_ userInfo: [AnyHashable: Any]?) {
         guard let userInfo = userInfo else { return nil }
-        guard let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue,
-            let startFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue,
-            let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber,
-            let animationCurve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber else {
+        guard let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
+            let startFrame = userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue,
+            let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber,
+            let animationCurve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber else {
             return nil
         }
 

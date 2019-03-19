@@ -52,7 +52,7 @@ class ReScanViewController: UIViewController, Subscriber {
     private func addConstraints() {
         header.constrain([
             header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            header.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2]) ])
+            header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: C.padding[2]) ])
         faq.constrain([
             faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             faq.centerYAnchor.constraint(equalTo: header.centerYAnchor),
@@ -65,7 +65,7 @@ class ReScanViewController: UIViewController, Subscriber {
         footer.constrain([
             footer.leadingAnchor.constraint(equalTo: header.leadingAnchor),
             footer.trailingAnchor.constraint(equalTo: faq.trailingAnchor),
-            footer.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor, constant: -C.padding[3]) ])
+            footer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -C.padding[3]) ])
         button.constrain([
             button.leadingAnchor.constraint(equalTo: footer.leadingAnchor),
             button.trailingAnchor.constraint(equalTo: footer.trailingAnchor),
@@ -96,10 +96,10 @@ class ReScanViewController: UIViewController, Subscriber {
 
     private var bodyText: NSAttributedString {
         let body = NSMutableAttributedString()
-        let headerAttributes = [ NSAttributedStringKey.font: UIFont.customBold(size: 16.0),
-                                 NSAttributedStringKey.foregroundColor: UIColor.white ]
-        let bodyAttributes = [ NSAttributedStringKey.font: UIFont.customBody(size: 16.0),
-                               NSAttributedStringKey.foregroundColor: UIColor.white ]
+        let headerAttributes = [ NSAttributedString.Key.font: UIFont.customBold(size: 16.0),
+                                 NSAttributedString.Key.foregroundColor: UIColor.white ]
+        let bodyAttributes = [ NSAttributedString.Key.font: UIFont.customBody(size: 16.0),
+                               NSAttributedString.Key.foregroundColor: UIColor.white ]
 
         body.append(NSAttributedString(string: "\(S.ReScan.subheader2)\n", attributes: headerAttributes))
         body.append(NSAttributedString(string: "\(S.ReScan.body2)\n\n\(S.ReScan.body3)", attributes: bodyAttributes))

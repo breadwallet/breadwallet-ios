@@ -16,13 +16,15 @@ class SupportCenterContainer: UIViewController {
 
     init(walletAuthenticator: TransactionAuthenticator, walletManagers: [String: WalletManager]) {
         let mountPoint = "/support"
-        webView = BRWebViewController(bundleName: C.webBundle, mountPoint: mountPoint, walletAuthenticator: walletAuthenticator, walletManagers: walletManagers)
-        webView.startServer()
-        webView.preload()
+        webView = BRWebViewController(bundleName: C.webBundle,
+                                      mountPoint: mountPoint,
+                                      walletAuthenticator: walletAuthenticator,
+                                      walletManagers: walletManagers)
         super.init(nibName: nil, bundle: nil)
+        loadWebView()
     }
 
-    private let webView: BRWebViewController
+    private var webView: BRWebViewController
     let blur = UIVisualEffectView()
 
     override func viewDidLoad() {
@@ -30,11 +32,18 @@ class SupportCenterContainer: UIViewController {
         addChildViewController(webView, layout: {
             webView.view.constrain([
                 webView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                webView.view.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
+                webView.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
                 webView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                webView.view.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor) ])
+                webView.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor) ])
         })
         addTopCorners()
+    }
+
+    func loadWebView() {
+        webView.stopServer()
+        webView.bundleName = C.webBundle // reset in case of developer override
+        webView.startServer()
+        webView.preload()
     }
 
     private func addTopCorners() {

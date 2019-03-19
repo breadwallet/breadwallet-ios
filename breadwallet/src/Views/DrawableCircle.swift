@@ -41,15 +41,15 @@ class DrawableCircle: UIView {
         checkLayer.strokeColor = C.defaultTintColor.cgColor
         checkLayer.fillColor = UIColor.clear.cgColor
         checkLayer.strokeEnd = 0.0
-        checkLayer.lineCap = "round"
-        checkLayer.lineJoin = "round"
+        checkLayer.lineCap = CAShapeLayerLineCap.round
+        checkLayer.lineJoin = CAShapeLayerLineJoin.round
         layer.addSublayer(checkLayer)
     }
 
     func show() {
         let circleAnimation = CABasicAnimation(keyPath: "opacity")
         circleAnimation.duration = animationDuration
-        circleAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        circleAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
         circleAnimation.fromValue = 0.0
         circleAnimation.toValue = 1.0
         circleLayer.opacity = 1.0
@@ -58,8 +58,8 @@ class DrawableCircle: UIView {
         let checkAnimation = CABasicAnimation(keyPath: "strokeEnd")
         checkAnimation.fromValue = 0.0
         checkAnimation.toValue = 1.0
-        checkAnimation.fillMode = kCAFillModeForwards
-        checkAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        checkAnimation.fillMode = CAMediaTimingFillMode.forwards
+        checkAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
         checkAnimation.duration = animationDuration
         checkLayer.strokeEnd = 1.0
         checkLayer.add(checkAnimation, forKey: "drawCheck")

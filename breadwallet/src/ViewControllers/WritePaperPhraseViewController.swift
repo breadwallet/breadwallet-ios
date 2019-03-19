@@ -21,11 +21,14 @@ class WritePaperPhraseViewController: UIViewController {
         let words = phraseString.components(separatedBy: " ")
         return words.map { PhraseView(phrase: $0) }
     }()
+    
     //This is awkwardly named because nextResponder is now named next is swift 3 :(,
     private let proceed = BRDButton(title: S.WritePaperPhrase.next, type: .primary)
     private let previous = BRDButton(title: S.WritePaperPhrase.previous, type: .secondaryTransparent)
     private var proceedWidth: NSLayoutConstraint?
     private var previousWidth: NSLayoutConstraint?
+    private var eventContext: EventContext
+    private var dismissAction: Action?
 
     private var phraseOffscreenOffset: CGFloat {
         return view.bounds.width/2.0 + PhraseView.defaultSize.width/2.0
@@ -39,10 +42,12 @@ class WritePaperPhraseViewController: UIViewController {
     private var notificationObservers = [String: NSObjectProtocol]()
 
     var lastWordSeen: (() -> Void)?
-
-    init(keyMaster: KeyMaster, pin: String, callback: @escaping () -> Void) {
+    
+    init(keyMaster: KeyMaster, pin: String, eventContext: EventContext, dismissAction: Action?, callback: @escaping () -> Void) {
         self.keyMaster = keyMaster
         self.pin = pin
+        self.eventContext = eventContext
+        self.dismissAction = dismissAction
         self.callback = callback
         super.init(nibName: nil, bundle: nil)
     }
@@ -55,6 +60,11 @@ class WritePaperPhraseViewController: UIViewController {
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        trackEvent(event: .appeared)
+    }
+    
     override func viewDidLoad() {
         view.backgroundColor = .darkBackground
         
@@ -70,16 +80,41 @@ class WritePaperPhraseViewController: UIViewController {
         addConstraints()
         addButtonTargets()
 
-        notificationObservers[NSNotification.Name.UIApplicationWillResignActive.rawValue] =
-            NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { [weak self] _ in
+        notificationObservers[UIApplication.willResignActiveNotification.rawValue] =
+            NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { [weak self] _ in
                 self?.dismiss(animated: true, completion: nil)
         }
 
-        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.writePhrase)
-        faqButton.tintColor = .white
-        navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
+        setUpCloseButton()
+        setUpFAQButton()
     }
 
+    private func setUpCloseButton() {
+        let close = UIButton.close
+        
+        close.tintColor = .white
+        close.tap = { [weak self] in
+            // Log the dismissed event before invoking the dismiss action
+            // or we could be deinit'd before the event is logged.
+            self?.trackEvent(event: .dismissed, tracked: {
+                if let action = self?.dismissAction {
+                    Store.perform(action: action)
+                } else {
+                    self?.dismiss(animated: true, completion: nil)
+                }
+            })
+        }
+        
+        navigationItem.leftBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: close)]
+    }
+    
+    private func setUpFAQButton() {
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.paperKey, currency: nil) { [unowned self] in
+            self.trackEvent(event: .helpButton)
+        }
+        navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
+    }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -203,5 +238,25 @@ class WritePaperPhraseViewController: UIViewController {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension WritePaperPhraseViewController: Trackable {
+    func trackEvent(event: Event) {
+        trackEvent(event: event, tracked: {})
+    }
+    
+    func trackEvent(event: Event, tracked: @escaping () -> Void) {
+        if event == .dismissed {
+            // bump the phrase index by one to be more user-friendly for the analytics folks since the phrase index is zero-based
+            let metaData = [ "step": String(currentPhraseIndex + 1) ]
+            saveEvent(context: eventContext, screen: .writePaperKey, event: event, attributes: metaData, callback: { _ in
+                tracked()
+            })
+        } else {
+            saveEvent(context: eventContext, screen: .writePaperKey, event: event, callback: { _ in
+                tracked()
+            })
+        }
     }
 }

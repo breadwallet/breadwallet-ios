@@ -27,7 +27,7 @@ extension UIColor {
     }
     
     static var darkPromptBackground: UIColor {
-        return UIColor.fromHex("1E1C41")
+        return UIColor.fromHex("3E334F")
     }
 
     static var darkPromptTitleColor: UIColor {

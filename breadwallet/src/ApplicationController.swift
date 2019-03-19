@@ -227,9 +227,9 @@ class ApplicationController: Subscriber, Trackable {
         }
     }
 
-    func launch(application: UIApplication, options: [UIApplicationLaunchOptionsKey: Any]?) {
+    func launch(application: UIApplication, options: [UIApplication.LaunchOptionsKey: Any]?) {
         self.application = application
-        application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalNever)
+        application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalNever)
         UNUserNotificationCenter.current().delegate = notificationHandler
         setup()
         handleLaunchOptions(options)
@@ -257,6 +257,10 @@ class ApplicationController: Subscriber, Trackable {
         window.makeKeyAndVisible()
         offMainInitialization()
 
+        // Start collecting analytics events. Once we have a wallet, startDataFetchers() will
+        // notify `Backend.apiClient.analytics` so that it can upload events to the server.
+        Backend.apiClient.analytics?.startCollectingEvents()
+        
         //TODO:AUTH rename to uninit
         Store.subscribe(self, name: .reinitWalletManager(nil), callback: {
             if case .reinitWalletManager(let callback)? = $0 {
@@ -370,6 +374,7 @@ class ApplicationController: Subscriber, Trackable {
             DispatchQueue.walletQueue.async {
                 self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
             }
+            
             startDataFetchers()
 
             if let rescanNeeded = rescanNeeded {
@@ -426,16 +431,12 @@ class ApplicationController: Subscriber, Trackable {
     }
 
     private func setupAppearance() {
-        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.font: UIFont.header]
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.font: UIFont.header]
         let backImage = #imageLiteral(resourceName: "Back").image(withInsets: UIEdgeInsets(top: 0.0, left: 8.0, bottom: 2.0, right: 0.0))
         UINavigationBar.appearance().backIndicatorImage = backImage
         UINavigationBar.appearance().backIndicatorTransitionMaskImage = backImage
         // hide back button text
-        if #available(iOS 11, *) {
-            UIBarButtonItem.appearance().setBackButtonBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .normal, barMetrics: .default)
-        } else {
-            UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffset(horizontal: -200, vertical: 0), for: .default)
-        }
+        UIBarButtonItem.appearance().setBackButtonBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .normal, barMetrics: .default)
     }
     
     private func addHomeScreenHandlers(homeScreen: HomeScreenViewController, 
@@ -443,6 +444,12 @@ class ApplicationController: Subscriber, Trackable {
         
         homeScreen.didSelectCurrency = { [unowned self] currency in
             guard let walletManager = self.walletManagers[currency.code] else { return }
+            
+            if Currencies.brd.code == currency.code, UserDefaults.shouldShowBRDRewardsAnimation {
+                let name = self.makeEventName([EventContext.rewards.name, Event.openWallet.name])
+                self.saveEvent(name, attributes: ["currency": currency.code])
+            }
+            
             let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
             navigationController.pushViewController(accountViewController, animated: true)
         }
@@ -469,7 +476,7 @@ class ApplicationController: Subscriber, Trackable {
     // Creates an instance of the buy screen. This may be invoked from the StartFlowPresenter if the user
     // goes through onboarding and decides to buy coin right away.
     private func createBuyScreen() -> BRWebViewController {
-        let buyScreen = BRWebViewController(bundleName: C.webBundle, 
+        let buyScreen = BRWebViewController(bundleName: C.webBundle,
                                             mountPoint: "/buy",
                                             walletAuthenticator: keyStore,
                                             walletManagers: walletManagers)
@@ -513,11 +520,12 @@ class ApplicationController: Subscriber, Trackable {
 
     private func startDataFetchers() {
         Backend.apiClient.updateFeatureFlags()
+        Backend.apiClient.fetchAnnouncements()
         initKVStoreCoordinator()
         Backend.updateFees()
         Backend.updateExchangeRates()
         defaultsUpdater.refresh()
-        Backend.apiClient.events?.up()
+        Backend.apiClient.analytics?.onWalletReady()    // fires up analytics uploading
         if !Store.state.isPushNotificationsEnabled {
             Backend.pigeonExchange?.startPolling()
         }
@@ -616,7 +624,7 @@ class ApplicationController: Subscriber, Trackable {
                     print("Bundle \(n) ran update. err: \(String(describing: e))")
                 }
                 DispatchQueue.main.async {
-                    _ = self.modalPresenter?.supportCenter // Initialize support center
+                    self.modalPresenter?.preloadSupportCenter()
                 }
             }
         }
@@ -641,7 +649,7 @@ class ApplicationController: Subscriber, Trackable {
         }
     }
 
-    private func handleLaunchOptions(_ options: [UIApplicationLaunchOptionsKey: Any]?) {
+    private func handleLaunchOptions(_ options: [UIApplication.LaunchOptionsKey: Any]?) {
         if let url = options?[.url] as? URL {
             do {
                 let file = try Data(contentsOf: url)
@@ -653,9 +661,9 @@ class ApplicationController: Subscriber, Trackable {
             }
         }
     }
-
+    
     func willResignActive() {
-        applyBlurEffect()
+        self.applyBlurEffect()        
         if !Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
             Backend.apiClient.deletePushNotificationToken(pushToken)
         }
@@ -720,7 +728,7 @@ extension ApplicationController {
         }
     }
     
-    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
             return open(url: userActivity.webpageURL!)
         }

@@ -180,6 +180,9 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         guard !isOutputTooSmall else {
             return .outputTooSmall(wallet.minOutputAmount)
         }
+        guard requestAmount <= (walletManager.wallet?.maxOutputAmount ?? 0) else {
+            return .insufficientFunds
+        }
         
         return .ok
     }
@@ -257,20 +260,18 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
                                                pinVerifier: @escaping PinVerifier,
                                                completion: @escaping SendCompletion) {
         let biometricsPrompt = S.VerifyPin.touchIdMessage
-        
-        DispatchQueue.walletQueue.async { [weak self] in
-            guard let `self` = self, let wallet = self.walletManager.wallet else { return assertionFailure() }
-            self.authenticator.sign(transaction: tx, wallet: wallet, withBiometricsPrompt: biometricsPrompt) { result in
-                switch result {
-                case .success:
-                    self.publish(tx: tx, completion: completion)
-                case .failure, .fallback:
-                    self.sendWithPinVerification(tx: tx,
-                                                 pinVerifier: pinVerifier,
-                                                 completion: completion)
-                default:
-                    break
-                }
+
+        guard let wallet = walletManager.wallet else { return assertionFailure() }
+        self.authenticator.sign(transaction: tx, wallet: wallet, withBiometricsPrompt: biometricsPrompt) { result in
+            switch result {
+            case .success:
+                self.publish(tx: tx, completion: completion)
+            case .failure, .fallback:
+                self.sendWithPinVerification(tx: tx,
+                                             pinVerifier: pinVerifier,
+                                             completion: completion)
+            default:
+                break
             }
         }
     }
@@ -280,14 +281,12 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
                                          completion: @escaping SendCompletion) {
         // this block requires a strong reference to self to ensure the Sender is not deallocated before completion
         pinVerifier { pin in
-            DispatchQueue.walletQueue.async {
-                guard let wallet = self.walletManager.wallet else { return assertionFailure() }
-                if self.authenticator.sign(transaction: tx, wallet: wallet, withPin: pin) {
-                    self.publish(tx: tx, completion: completion)
-                } else {
-                    DispatchQueue.main.async {
-                        completion(.creationError("authentication error"))
-                    }
+            guard let wallet = self.walletManager.wallet else { return assertionFailure() }
+            if self.authenticator.sign(transaction: tx, wallet: wallet, withPin: pin) {
+                self.publish(tx: tx, completion: completion)
+            } else {
+                DispatchQueue.main.async {
+                    completion(.creationError("authentication error"))
                 }
             }
         }
@@ -336,10 +335,10 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         guard let protoReq = protocolRequest else { return }
         guard let wallet = walletManager.wallet else { return }
         let amount = protoReq.amount
-        let payment = PaymentProtocolPayment(merchantData: protoReq.details.merchantData,
-                                             transactions: [transaction],
-                                             refundTo: [(address: wallet.receiveAddress, amount: amount)])
-        payment?.currency = currency.code
+        guard let payment = PaymentProtocolPayment(merchantData: protoReq.details.merchantData,
+                                                   transactions: [transaction],
+                                                   refundTo: [(address: wallet.receiveAddress, amount: amount)]) else { return }
+        payment.currency = currency.code
         guard let urlString = protoReq.details.paymentURL else { return }
         guard let url = URL(string: urlString) else { return }
         
@@ -349,53 +348,61 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         if protoReq.mimeType == "application/payment-request" {
             request.setValue("application/payment", forHTTPHeaderField: "Content-Type")
             request.addValue("application/payment-ack", forHTTPHeaderField: "Accept")
-            request.httpBody = payment?.json?.data(using: .utf8)
+            request.httpBody = payment.json?.data(using: .utf8)
         } else {
             request.setValue("application/bitcoin-payment", forHTTPHeaderField: "Content-Type")
             request.addValue("application/bitcoin-paymentack", forHTTPHeaderField: "Accept")
-            request.httpBody = Data(bytes: payment!.bytes)
+            request.httpBody = Data(bytes: payment.bytes)
         }
         
-        print("posting to: \(url)")
+        print("[PAY] posting to: \(url)")
         
-        URLSession.shared.dataTask(with: request as URLRequest) { [weak self] data, response, error in
+        URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
             DispatchQueue.main.async {
                 guard error == nil else {
-                    print("payment error: \(error!)")
+                    print("[PAY] payment error: \(error!)")
                     return completion(.publishFailure(.posixError(errorCode: 74, description: "\(error!)")))
                 }
                 
                 guard let response = response, let data = data else {
-                    print("no response or data")
+                    print("[PAY] no response or data")
                     return completion(.publishFailure(.posixError(errorCode: 74, description: "no response or data")))
+                }
+
+                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode >= 300 {
+                    print("[PAY] error response: \(httpResponse)")
+                    return completion(.publishFailure(.posixError(errorCode: Int32(httpResponse.statusCode), description: "request error")))
                 }
                 
                 if response.mimeType == "application/bitcoin-paymentack" && data.count <= 50000 {
                     if let ack = PaymentProtocolACK(data: data) {
-                        print("received ack: \(ack)") //TODO - show memo to user
+                        print("[PAY] received ack: \(ack)") //TODO - show memo to user
+                        if let tx = self.transaction {
+                            self.setMetaData(btcTx: tx)
+                        }
                         completion(.success(nil, nil))
                     } else {
-                        print("ack failed to deserialize")
+                        print("[PAY] ack failed to deserialize")
                         completion(.publishFailure(.posixError(errorCode: 74, description: "ack failed to deserialize")))
                     }
                 } else if response.mimeType == "application/payment-ack" && data.count <= 50000 {
                     if let ack = PaymentProtocolACK(json: String(data: data, encoding: .utf8) ?? "") {
-                        print("received ack: \(ack)") //TODO - show memo to user
+                        print("[PAY] received ack: \(ack)") //TODO - show memo to user
                         
-                        if let tx = self?.transaction {
-                            self?.setMetaData(btcTx: tx)
+                        if let tx = self.transaction {
+                            self.setMetaData(btcTx: tx)
                             completion(.success(nil, nil))
                         }
                     } else {
-                        print("ack failed to deserialize")
+                        print("[PAY] ack failed to deserialize")
                         completion(.publishFailure(.posixError(errorCode: 74, description: "ack failed to deserialize")))
                     }
                 } else {
-                    print("invalid data")
+                    print("[PAY] invalid data")
                     completion(.publishFailure(.posixError(errorCode: 74, description: "invalid data")))
                 }
                 
-                print("finished!!")
+                print("[PAY] finished!!")
             }
             }.resume()
     }
@@ -458,8 +465,7 @@ class EthSenderBase<CurrencyType: Currency> : SenderBase<CurrencyType, EthWallet
         estimate = nil
         guard let fromAddress = self.walletManager.address else { return }
         let params = transactionParams(fromAddress: fromAddress, toAddress: toAddress, forAmount: amount)
-        Backend.apiClient.estimateGas(transaction: params, handler: { [weak self] result in
-            guard let `self` = self else { return }
+        Backend.apiClient.estimateGas(transaction: params, handler: { result in
             switch result {
             case .success(let value):
                 self.estimate = GasEstimate(address: toAddress, amount: amount, estimate: value)

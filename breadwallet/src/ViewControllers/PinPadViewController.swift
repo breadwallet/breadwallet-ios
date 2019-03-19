@@ -132,8 +132,9 @@ class PinPadViewController: UICollectionViewController {
         //This prevents a delay in cells highlighting right when they are tapped
         collectionView?.isScrollEnabled = false
 
-#if targetEnvironment(simulator) || Debug || Testflight
-        if UserDefaults.debugShouldAutoEnterPIN {
+#if targetEnvironment(simulator)
+        // Only invoke the auto-enter PIN for the login case.
+        if UserDefaults.debugShouldAutoEnterPIN && Store.state.isLoginRequired {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 for _ in 0...5 {
                     self.handleInputAtItemIndex(index: 0)

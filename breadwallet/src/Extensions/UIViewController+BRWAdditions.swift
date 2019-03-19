@@ -15,16 +15,16 @@ enum CloseButtonSide {
 
 extension UIViewController {
     func addChildViewController(_ viewController: UIViewController, layout: () -> Void) {
-        addChildViewController(viewController)
+        addChild(viewController)
         view.addSubview(viewController.view)
         layout()
-        viewController.didMove(toParentViewController: self)
+        viewController.didMove(toParent: self)
     }
 
     func remove() {
-        willMove(toParentViewController: nil)
+        willMove(toParent: nil)
         view.removeFromSuperview()
-        removeFromParentViewController()
+        removeFromParent()
     }
 
     func addCloseNavigationItem(tintColor: UIColor? = nil, side: CloseButtonSide = .left) {
@@ -46,18 +46,10 @@ extension UIViewController {
     }
 
     var safeTopAnchor: NSLayoutYAxisAnchor {
-        if #available(iOS 11.0, *) {
-           return view.safeAreaLayoutGuide.topAnchor
-        } else {
-            return topLayoutGuide.bottomAnchor
-        }
+        return view.safeAreaLayoutGuide.topAnchor
     }
 
     var safeBottomAnchor: NSLayoutYAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return view.safeAreaLayoutGuide.bottomAnchor
-        } else {
-            return bottomLayoutGuide.topAnchor
-        }
+        return view.safeAreaLayoutGuide.bottomAnchor
     }
 }

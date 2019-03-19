@@ -47,7 +47,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     private var pinView: PinView?
     private let isPresentedForLock: Bool
     private let disabledView: WalletDisabledView
-    private let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    private let activityView = UIActivityIndicatorView(style: .whiteLarge)
     private var logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout").withRenderingMode(.alwaysTemplate))
     private var pinPadPottom: NSLayoutConstraint?
     private var topControlTop: NSLayoutConstraint?
@@ -153,10 +153,10 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
                 pinPadBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 pinPadBackground.heightAnchor.constraint(equalToConstant: pinPad.height),
                 pinPadPottom ])
-            addChildViewController(pinPad)
+            addChild(pinPad)
             pinPadBackground.addSubview(pinPad.view)
             pinPad.view.constrain(toSuperviewEdges: nil)
-            pinPad.didMove(toParentViewController: self)
+            pinPad.didMove(toParent: self)
         } else {
             activityView.constrain([
                 activityView.centerXAnchor.constraint(equalTo: view.centerXAnchor),

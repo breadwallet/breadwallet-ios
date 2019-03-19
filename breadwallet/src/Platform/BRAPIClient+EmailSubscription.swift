@@ -11,19 +11,24 @@ import Foundation
 extension BRAPIClient {
     
     /**
-     *  Sends the given email to the server so that the user can be subscribed to email updates.
+     *  Sends the given email to the server so that the user can be subscribed to email updates,
+     *  optionally including a specific email list to which to subscribe.
+     *
      *  The callback will be invoked and indicate whether the operation was successful.
      */
-    func subscribeToEmailUpdates(emailAddress: String?, callback: @escaping (Bool) -> Void) {
-        guard emailAddress != nil else { return }
-        
+    func subscribeToEmailUpdates(emailAddress: String, emailList: String?, callback: @escaping (Bool) -> Void) {
         var req = URLRequest(url: url("/me/mailing-list-subscribe"))
         
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.setValue("application/json", forHTTPHeaderField: "Accept")
         req.httpMethod = "POST"
                 
-        let json = ["email": emailAddress]
+        var json = ["email": emailAddress]
+        
+        if let list = emailList, !list.isEmpty {
+            json["emailList"] = list
+        }
+                
         let data = try? JSONSerialization.data(withJSONObject: json, options: [])
         
         req.httpBody = data

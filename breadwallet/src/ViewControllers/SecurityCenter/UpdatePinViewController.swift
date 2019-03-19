@@ -22,13 +22,17 @@ class UpdatePinViewController: UIViewController, Subscriber {
     var resetFromDisabledSuccess: (() -> Void)?
     var resetFromDisabledWillSucceed: (() -> Void)?
 
-    init(keyMaster: KeyMaster, type: UpdatePinType, showsBackButton: Bool = true, phrase: String? = nil) {
+    init(keyMaster: KeyMaster,
+         type: UpdatePinType,
+         showsBackButton: Bool = true,
+         phrase: String? = nil,
+         eventContext: EventContext = .none) {
         self.keyMaster = keyMaster
         self.phrase = phrase
         self.pinView = PinView(style: .create, length: Store.state.pinLength)
         self.showsBackButton = showsBackButton
-        self.faq = UIButton.buildFaqButton(articleId: ArticleIds.setPin)
         self.type = type
+        self.eventContext = eventContext
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -41,7 +45,11 @@ class UpdatePinViewController: UIViewController, Subscriber {
     private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0, shouldShowBiometrics: false)
     private let spacer = UIView()
     private let keyMaster: KeyMaster
-    private let faq: UIButton
+    
+    private lazy var faq = UIButton.buildFaqButton(articleId: ArticleIds.setPin, currency: nil, tapped: { [unowned self] in
+        self.trackEvent(event: .helpButton)
+    })
+    
     private var step: Step = .verify {
         didSet {
             switch step {
@@ -74,6 +82,8 @@ class UpdatePinViewController: UIViewController, Subscriber {
     }
     private let newPinLength = 6
     private let showsBackButton: Bool
+    
+    var eventContext: EventContext = .none
 
     private enum Step {
         case verify
@@ -87,6 +97,11 @@ class UpdatePinViewController: UIViewController, Subscriber {
         setData()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        trackEvent(event: .appeared)
+    }
+    
     private func addSubviews() {
         view.addSubview(header)
         view.addSubview(instruction)
@@ -99,7 +114,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
 
     private func addConstraints() {
         header.constrain([
-            header.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2]),
+            header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: C.padding[2]),
             header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             header.trailingAnchor.constraint(equalTo: faq.leadingAnchor, constant: -C.padding[1]) ])
         instruction.constrain([
@@ -127,7 +142,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
     }
 
     private func addPinPad() {
-        addChildViewController(pinPad)
+        addChild(pinPad)
         pinPadBackground.addSubview(pinPad.view)
         pinPadBackground.constrain([
             pinPadBackground.widthAnchor.constraint(equalToConstant: floor(view.bounds.width/3.0)*3.0),
@@ -135,13 +150,12 @@ class UpdatePinViewController: UIViewController, Subscriber {
             pinPadBackground.heightAnchor.constraint(equalToConstant: pinPad.height),
             pinPadBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[3] : 0.0) ])
         pinPad.view.constrain(toSuperviewEdges: nil)
-        pinPad.didMove(toParentViewController: self)
+        pinPad.didMove(toParent: self)
     }
 
     private func setData() {
         caption.text = S.UpdatePin.caption
         view.backgroundColor = .darkBackground
-        faq.tintColor = .white
         header.text = isCreatingPin ? S.UpdatePin.createTitle : S.UpdatePin.updateTitle
         instruction.text = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterCurrent
         pinPad.ouputDidUpdate = { [weak self] text in
@@ -191,6 +205,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
     private func didUpdateForNew(pin: String) {
         pinView.fill(pin.utf8.count)
         if pin.utf8.count == newPinLength {
+            trackEvent(event: .pinKeyed)
             newPin = pin
             pushNewStep(.confirmNew)
         }
@@ -201,6 +216,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
         pinView.fill(pin.utf8.count)
         if pin.utf8.count == newPinLength {
             if pin == newPin {
+                trackEvent(event: .pinCreated)
                 didSetNewPin()
             } else {
                 clearAfterFailure()
@@ -216,6 +232,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
             self?.pinView.fill(0)
         }
         pinPad.clear()
+        trackEvent(event: .pinCreationError)
     }
 
     private func replacePinView() {
@@ -284,5 +301,12 @@ class UpdatePinViewController: UIViewController, Subscriber {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// user events tracking
+extension UpdatePinViewController: Trackable {
+    func trackEvent(event: Event) {
+        saveEvent(context: eventContext, screen: .setPin, event: event)
     }
 }

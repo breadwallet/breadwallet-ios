@@ -45,17 +45,17 @@ extension UIFont {
         guard let font = UIFont(name: "CircularPro-Book", size: 14.0) else { return UIFont.preferredFont(forTextStyle: .body) }
         return font                
     }
-    static var regularAttributes: [NSAttributedStringKey: Any] {
+    static var regularAttributes: [NSAttributedString.Key: Any] {
         return [
-            NSAttributedStringKey.font: UIFont.customBody(size: 14.0),
-            NSAttributedStringKey.foregroundColor: UIColor.darkText
+            NSAttributedString.Key.font: UIFont.customBody(size: 14.0),
+            NSAttributedString.Key.foregroundColor: UIColor.darkText
         ]
     }
 
-    static var boldAttributes: [NSAttributedStringKey: Any] {
+    static var boldAttributes: [NSAttributedString.Key: Any] {
         return [
-            NSAttributedStringKey.font: UIFont.customBold(size: 14.0),
-            NSAttributedStringKey.foregroundColor: UIColor.darkText
+            NSAttributedString.Key.font: UIFont.customBold(size: 14.0),
+            NSAttributedString.Key.foregroundColor: UIColor.darkText
         ]
     }
 }
