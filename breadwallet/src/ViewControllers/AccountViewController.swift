@@ -10,7 +10,7 @@ import UIKit
 import BRCore
 import MachO
 
-class AccountViewController: UIViewController, Subscriber {
+class AccountViewController: UIViewController, Subscriber, Trackable {
     
     // MARK: - Public
     let currency: Currency
@@ -65,7 +65,10 @@ class AccountViewController: UIViewController, Subscriber {
     private let rewardsAnimationDuration: TimeInterval = 0.5
     private let rewardsShrinkTimerDuration: TimeInterval = 6.0
     private let rewardsViewMargin: CGFloat = 16
-
+    private var rewardsTappedEvent: String {
+        return makeEventName([EventContext.rewards.name, Event.banner.name])
+    }
+    
     private func tableViewTopConstraintConstant(for rewardsViewState: RewardsView.State) -> CGFloat {
         let constant = rewardsViewState == .expanded ? RewardsView.expandedSize : RewardsView.normalSize
         return constant + rewardsViewMargin
@@ -92,8 +95,8 @@ class AccountViewController: UIViewController, Subscriber {
                     isJailbroken = true
                 }
             }
-            notificationObservers[NSNotification.Name.UIApplicationWillEnterForeground.rawValue] =
-                NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: nil) { _ in
+            notificationObservers[UIApplication.willEnterForegroundNotification.rawValue] =
+                NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
                 self.showJailbreakWarnings(isJailbroken: isJailbroken)
             }
             showJailbreakWarnings(isJailbroken: isJailbroken)
@@ -168,19 +171,11 @@ class AccountViewController: UIViewController, Subscriber {
         searchHeaderview.constrain(toSuperviewEdges: nil)
 
         footerHeightConstraint = footerView.heightAnchor.constraint(equalToConstant: AccountFooterView.height)
-        if #available(iOS 11.0, *) {
-            footerView.constrain([
-                footerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                footerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -C.padding[1]),
-                footerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: C.padding[1]),
-                footerHeightConstraint ])
-        } else {
-            footerView.constrain([
-                footerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                footerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -C.padding[1]),
-                footerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: C.padding[1]),
-                footerHeightConstraint ])
-        }
+        footerView.constrain([
+            footerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            footerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -C.padding[1]),
+            footerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: C.padding[1]),
+            footerHeightConstraint ])
     }
 
     private func addSubscriptions() {
@@ -208,19 +203,11 @@ class AccountViewController: UIViewController, Subscriber {
 
         view.backgroundColor = .transactionsViewControllerBackground
         addChildViewController(transactionsTableView, layout: {
-            if #available(iOS 11.0, *) {
-                transactionsTableView.view.constrain([
-                    tableViewTopConstraint,
-                    transactionsTableView.view.bottomAnchor.constraint(equalTo: footerView.topAnchor),
-                    transactionsTableView.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-                    transactionsTableView.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)])
-            } else {
-                transactionsTableView.view.constrain([
-                    transactionsTableView.view.topAnchor.constraint(equalTo: headerContainer.bottomAnchor),
-                    transactionsTableView.view.bottomAnchor.constraint(equalTo: footerView.topAnchor),
-                    transactionsTableView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                    transactionsTableView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)])
-            }
+            transactionsTableView.view.constrain([
+                tableViewTopConstraint,
+                transactionsTableView.view.bottomAnchor.constraint(equalTo: footerView.topAnchor),
+                transactionsTableView.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                transactionsTableView.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)])
         })
     }
     
@@ -322,6 +309,8 @@ class AccountViewController: UIViewController, Subscriber {
         }, completion: { [unowned self] _ in
             self.rewardsView?.animateIcon()
 
+            UserDefaults.shouldShowBRDRewardsAnimation = false
+
             Timer.scheduledTimer(withTimeInterval: self.rewardsShrinkTimerDuration, repeats: false) { [unowned self] _ in
                 self.shrinkRewardsView()
             }
@@ -336,12 +325,11 @@ class AccountViewController: UIViewController, Subscriber {
             self.tableViewTopConstraint?.constant = constants.0
             self.rewardsViewHeightConstraint?.constant = constants.1
             self.view.layoutIfNeeded()
-        }, completion: { _ in
-            UserDefaults.shouldShowBRDRewardsAnimation = false
         })
     }
     
     @objc private func rewardsViewTapped() {
+        saveEvent(rewardsTappedEvent)
         Store.trigger(name: .openPlatformUrl("/rewards"))
     }
 

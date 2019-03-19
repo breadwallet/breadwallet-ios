@@ -30,7 +30,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
             selectedLimit = walletManager.spendingLimit
         }
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
-        tableView.sectionHeaderHeight = UITableViewAutomaticDimension
+        tableView.sectionHeaderHeight = UITableView.automaticDimension
         tableView.estimatedSectionHeaderHeight = 50.0
         tableView.backgroundColor = .whiteTint
         tableView.separatorStyle = .none

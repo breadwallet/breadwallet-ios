@@ -26,7 +26,7 @@ class TokenCell: SeparatorCell {
     var didAddIdentifier: ((String) -> Void)?
     var didRemoveIdentifier: ((String) -> Void)?
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }

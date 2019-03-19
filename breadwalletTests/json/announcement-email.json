@@ -1,0 +1,5 @@
+[{ "type": "announcement-email",
+    "slug": "glidera-banner",
+    "pages": [{"title": "title", "body": "body", "titleKey": "titleKey", 
+        "bodyKey": "bodyKey", "imageName": "imageName", "imageUrl": "imageUrl", "emailList": "emailList"} ]
+}]

@@ -79,7 +79,7 @@ fileprivate extension CABasicAnimation {
     class func motionAnimation(colors: [CGColor]) -> CABasicAnimation {
         let animation = CABasicAnimation(keyPath: "colors")
         animation.toValue = colors
-        animation.fillMode = kCAFillModeForwards
+        animation.fillMode = CAMediaTimingFillMode.forwards
         animation.isRemovedOnCompletion = false
         animation.duration = 1.0
         return animation

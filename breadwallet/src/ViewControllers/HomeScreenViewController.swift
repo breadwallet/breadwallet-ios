@@ -83,20 +83,12 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     private func addConstraints() {
         let headerHeight: CGFloat = 46.0
         let toolbarHeight: CGFloat = 74.0
-        
-        if #available(iOS 11.0, *) {
-            subHeaderView.constrain([
-                subHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                subHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
-                subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                subHeaderView.heightAnchor.constraint(equalToConstant: headerHeight) ])
-        } else {
-            subHeaderView.constrain([
-                subHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                subHeaderView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 0.0),
-                subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                subHeaderView.heightAnchor.constraint(equalToConstant: headerHeight) ])
-        }
+
+        subHeaderView.constrain([
+            subHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            subHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
+            subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            subHeaderView.heightAnchor.constraint(equalToConstant: headerHeight) ])
         
         logo.constrain([
             logo.leadingAnchor.constraint(equalTo: subHeaderView.leadingAnchor, constant: C.padding[2]),
@@ -135,19 +127,11 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
                 assetList.view.bottomAnchor.constraint(equalTo: toolbar.topAnchor)])
         })
         
-        if #available(iOS 11.0, *) {
-            toolbar.constrain([
-                toolbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-                toolbar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -C.padding[1]),
-                toolbar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: C.padding[1]),
-                toolbar.heightAnchor.constraint(equalToConstant: toolbarHeight) ])
-        } else {
-            toolbar.constrain([
-                toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                toolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -C.padding[1]),
-                toolbar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: C.padding[1]),
-                toolbar.heightAnchor.constraint(equalToConstant: toolbarHeight) ])
-        }
+        toolbar.constrain([
+            toolbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            toolbar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -C.padding[1]),
+            toolbar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: C.padding[1]),
+            toolbar.heightAnchor.constraint(equalToConstant: toolbarHeight) ])
     }
 
     private func setInitialData() {
@@ -259,13 +243,13 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         
         // prompts
         Store.subscribe(self, name: .didUpgradePin, callback: { _ in
-            if self.currentPrompt?.type == .upgradePin {
-                self.currentPrompt = nil
+            if self.currentPromptView?.type == .upgradePin {
+                self.currentPromptView = nil
             }
         })
         Store.subscribe(self, name: .didWritePaperKey, callback: { _ in
-            if self.currentPrompt?.type == .paperKey {
-                self.currentPrompt = nil
+            if self.currentPromptView?.type == .paperKey {
+                self.currentPromptView = nil
             }
         })
         
@@ -318,9 +302,9 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     
     private let promptDelay: TimeInterval = 0.6
     
-    private var currentPrompt: Prompt? {
+    private var currentPromptView: PromptView? {
         didSet {
-            if currentPrompt != oldValue {
+            if currentPromptView != oldValue {
                 var afterFadeOut: TimeInterval = 0.0
                 if let oldPrompt = oldValue {
                     afterFadeOut = 0.15
@@ -331,7 +315,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
                     })
                 }
                 
-                if let newPrompt = currentPrompt {
+                if let newPrompt = currentPromptView {
                     newPrompt.alpha = 0.0
                     prompt.addSubview(newPrompt)
                     newPrompt.constrain(toSuperviewEdges: .zero)
@@ -342,6 +326,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
                     UIView.animate(withDuration: 0.2, delay: afterFadeOut + 0.15, options: .curveEaseInOut, animations: {
                         newPrompt.alpha = 1.0
                     })
+                    
                 } else {
                     promptHiddenConstraint.isActive = true
                 }
@@ -355,40 +340,39 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func attemptShowPrompt() {
-        guard currentPrompt == nil else {
+        guard currentPromptView == nil else {
             return
         }
         
-        if let type = PromptType.nextPrompt(walletAuthenticator: walletAuthenticator) {
-            self.saveEvent("prompt.\(type.name).displayed")
-            currentPrompt = PromptFactory.createPrompt(type: type, presenter: self)
+        if let nextPrompt = PromptFactory.nextPrompt(walletAuthenticator: walletAuthenticator) {
+            self.saveEvent("prompt.\(nextPrompt.name).displayed")
             
-            guard let prompt = currentPrompt else { return }
+            // didSet {} for 'currentPromptView' will display the prompt view
+            currentPromptView = PromptFactory.createPromptView(prompt: nextPrompt, presenter: self)
+            
+            nextPrompt.didPrompt()
+            
+            guard let prompt = currentPromptView else { return }
             
             prompt.dismissButton.tap = { [unowned self] in
-                self.saveEvent("prompt.\(type.name).dismissed")
-                self.currentPrompt = nil
+                self.saveEvent("prompt.\(nextPrompt.name).dismissed")
+                self.currentPromptView = nil
             }
             
             if !prompt.shouldHandleTap {
                 prompt.continueButton.tap = { [unowned self] in
                     // TODO:BCH move out of home screen
-                    if let trigger = type.trigger(currency: Currencies.btc) {
+                    
+                    if let trigger = nextPrompt.trigger(for: Currencies.btc) {
                         Store.trigger(name: trigger)
                     }
-                    self.saveEvent("prompt.\(type.name).trigger")
-                    self.currentPrompt = nil
+                    self.saveEvent("prompt.\(nextPrompt.name).trigger")
+                    self.currentPromptView = nil
                 }                
             }
             
-            if type == .biometrics {
-                UserDefaults.hasPromptedBiometrics = true
-            }
-            if type == .email {
-                UserDefaults.hasPromptedForEmail = true
-            }
         } else {
-            currentPrompt = nil
+            currentPromptView = nil
         }
     }
     

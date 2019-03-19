@@ -24,8 +24,8 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
         self.faq = UIButton.buildFaqButton(articleId: ArticleIds.recoverWallet)
         self.reason = reason
         super.init(nibName: nil, bundle: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
     // MARK: - Private
@@ -64,15 +64,15 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
         container.addSubview(faq)
         container.addSubview(moreInfoButton)
 
-        addChildViewController(enterPhrase)
+        addChild(enterPhrase)
         container.addSubview(enterPhrase.view)
-        enterPhrase.didMove(toParentViewController: self)
+        enterPhrase.didMove(toParent: self)
     }
 
     private func addConstraints() {
         scrollView.constrain([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor) ])
         container.constrain(toSuperviewEdges: nil)
@@ -169,7 +169,7 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
 
     @objc private func keyboardWillShow(notification: Notification) {
         guard let userInfo = notification.userInfo else { return }
-        guard let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
+        guard let frameValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
         var contentInset = scrollView.contentInset
         if contentInset.bottom == 0.0 {
             contentInset.bottom = frameValue.cgRectValue.height + 44.0

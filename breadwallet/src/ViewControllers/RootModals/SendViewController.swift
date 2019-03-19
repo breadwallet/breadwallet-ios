@@ -36,8 +36,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
 
         super.init(nibName: nil, bundle: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
     // MARK: - Private
@@ -216,14 +216,14 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             }
         }
         
-        let attributes: [NSAttributedStringKey: Any] = [
-            NSAttributedStringKey.font: UIFont.customBody(size: 14.0),
-            NSAttributedStringKey.foregroundColor: color
+        let attributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.font: UIFont.customBody(size: 14.0),
+            NSAttributedString.Key.foregroundColor: color
         ]
         
-        let feeAttributes: [NSAttributedStringKey: Any] = [
-            NSAttributedStringKey.font: UIFont.customBody(size: 14.0),
-            NSAttributedStringKey.foregroundColor: feeColor
+        let feeAttributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.font: UIFont.customBody(size: 14.0),
+            NSAttributedString.Key.foregroundColor: feeColor
         ]
         
         if sender is GasEstimator {
@@ -460,12 +460,15 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             let amount = Amount(amount: UInt256(minOutput), currency: currency, rate: Rate.empty)
             let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.tokenDescription)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
+
+        case .insufficientFunds:
+            return showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
             
         case .ok:
             self.validatedProtoRequest = protoReq
             
         default:
-            // unhandled error
+            assertionFailure("unhandled error")
             print("[SEND] payment request validation error: \(result)")
             return
         }

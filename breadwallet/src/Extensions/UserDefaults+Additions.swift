@@ -41,6 +41,9 @@ private let debugShowAppRatingPromptOnEnterWalletKey = "debugShowAppRatingPrompt
 private let debugSuppressAppRatingPromptKey = "debugSuppressAppRatingPromptKey"
 private let shouldHideBRDRewardsAnimationKey = "shouldHideBRDRewardsAnimationKey"
 private let shouldHideBRDCellHighlightKey = "shouldHideBRDCellHighlightKey"
+private let debugBackendHostKey = "debugBackendHostKey"
+private let debugWebBundleNameKey = "debugWebBundleNameKey"
+private let platformDebugURLKey = "platformDebugURLKey"
 
 typealias ResettableBooleanSetting = [String: Bool]
 typealias ResettableObjectSetting = String
@@ -69,7 +72,8 @@ extension UserDefaults {
         writePaperPhraseDateKey
     ]
     
-    // Called from the Reset User Defaults menu item.
+    // Called from the Reset User Defaults menu item to allow the resetting of
+    // the UserDefaults state for showing/hiding elements, etc.
     static func resetAll() {
         
         for resettableBooelan in resettableBooleans {
@@ -79,11 +83,20 @@ extension UserDefaults {
             }
         }
         
+        resetAnnouncementKeys()
+        
         for resettableObject in resettableObjects {
             defaults.removeObject(forKey: resettableObject)
         }
     }
     
+    static func resetAnnouncementKeys() {
+        // Announcement-type prompts use a specific prefix when setting booleans indicating whether
+        // they have been shown yet.
+        defaults.dictionaryRepresentation().keys.filter({ return $0.hasPrefix(Announcement.hasShownKeyPrefix) }).forEach { (key) in
+            defaults.set(false, forKey: key)
+        }
+    }
 }
 
 extension UserDefaults {
@@ -305,6 +318,19 @@ extension UserDefaults {
         get { return defaults.bool(forKey: hasSubscribedToEmailUpdatesKey ) }
         set { defaults.set(newValue, forKey: hasSubscribedToEmailUpdatesKey ) }
     }
+
+    static var shouldShowBRDRewardsAnimation: Bool {
+        // boolean logic is flipped so that 'hide == false' is the default state,
+        // whereas the calling code can check whether to show, which has clearer semantics
+        // (same logic is employed for 'shouldShowBRDCellHighlight')
+        get { return !defaults.bool(forKey: shouldHideBRDRewardsAnimationKey)   }
+        set { defaults.set(!newValue, forKey: shouldHideBRDRewardsAnimationKey) }
+    }
+
+    static var shouldShowBRDCellHighlight: Bool {
+        get { return !defaults.bool(forKey: shouldHideBRDCellHighlightKey)   }
+        set { defaults.set(!newValue, forKey: shouldHideBRDCellHighlightKey) }
+    }
 }
 
 // MARK: - State Restoration
@@ -343,6 +369,7 @@ extension UserDefaults {
     }
 }
 
+// Dev Settings
 extension UserDefaults {
     
     // Toggles the UserDefaults boolean setting for the given key and returns the new value.
@@ -444,16 +471,33 @@ extension UserDefaults {
         }
     }
 
-    static var shouldShowBRDRewardsAnimation: Bool {
-        // boolean logic is flipped so that 'hide == false' is the default state,
-        // whereas the calling code can check whether to show, which has clearer semantics
-        // (same logic is employed for 'shouldShowBRDCellHighlight')
-        get { return !defaults.bool(forKey: shouldHideBRDRewardsAnimationKey)   }
-        set { defaults.set(!newValue, forKey: shouldHideBRDRewardsAnimationKey) }
+    static var debugBackendHost: String? {
+        get {
+            return defaults.string(forKey: debugBackendHostKey)
+        }
+
+        set {
+            defaults.set(newValue, forKey: debugBackendHostKey)
+        }
     }
-    
-    static var shouldShowBRDCellHighlight: Bool {
-        get { return !defaults.bool(forKey: shouldHideBRDCellHighlightKey)   }
-        set { defaults.set(!newValue, forKey: shouldHideBRDCellHighlightKey) }
+
+    static var debugWebBundleName: String? {
+        get {
+            return defaults.string(forKey: debugWebBundleNameKey)
+        }
+
+        set {
+            defaults.set(newValue, forKey: debugWebBundleNameKey)
+        }
+    }
+
+    static var platformDebugURL: URL? {
+        get {
+            return defaults.url(forKey: platformDebugURLKey)
+        }
+
+        set {
+            defaults.set(newValue, forKey: platformDebugURLKey)
+        }
     }
 }

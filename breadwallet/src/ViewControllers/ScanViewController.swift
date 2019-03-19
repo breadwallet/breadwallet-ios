@@ -17,7 +17,7 @@ class ScanViewController: UIViewController, Trackable {
         let alertController = UIAlertController(title: S.Send.cameraUnavailableTitle, message: S.Send.cameraUnavailableMessage, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         alertController.addAction(UIAlertAction(title: S.Button.settings, style: .`default`, handler: { _ in
-            if let appSettings = URL(string: UIApplicationOpenSettingsURLString), UIApplication.shared.canOpenURL(appSettings) {
+            if let appSettings = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(appSettings) {
                 UIApplication.shared.open(appSettings)
             }
         }))

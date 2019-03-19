@@ -50,8 +50,8 @@ class LinkStatusCircle: UIView {
         checkLayer.strokeColor = colour.cgColor
         checkLayer.fillColor = UIColor.clear.cgColor
         checkLayer.strokeEnd = 0.0
-        checkLayer.lineCap = "round"
-        checkLayer.lineJoin = "round"
+        checkLayer.lineCap = CAShapeLayerLineCap.round
+        checkLayer.lineJoin = CAShapeLayerLineJoin.round
 
         layer.addSublayer(checkLayer)
     }
@@ -76,8 +76,8 @@ class LinkStatusCircle: UIView {
         let checkAnimation = CABasicAnimation(keyPath: "strokeEnd")
         checkAnimation.fromValue = 0.0
         checkAnimation.toValue = 1.0
-        checkAnimation.fillMode = kCAFillModeForwards
-        checkAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        checkAnimation.fillMode = CAMediaTimingFillMode.forwards
+        checkAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
         checkAnimation.duration = checkBoxAnimationDuration
         checkLayer.strokeEnd = 1.0
         checkLayer.add(checkAnimation, forKey: "drawCheck")
@@ -88,7 +88,7 @@ class LinkStatusCircle: UIView {
         animation.fromValue = 0
         animation.toValue = 1
         animation.duration = animationDuration
-        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
 
         let group = CAAnimationGroup()
         group.duration = animationDuration + animationDurationOffset
@@ -103,7 +103,7 @@ class LinkStatusCircle: UIView {
         animation.fromValue = 0
         animation.toValue = 1
         animation.duration = animationDuration
-        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
 
         let group = CAAnimationGroup()
         group.duration = animationDuration + animationDurationOffset

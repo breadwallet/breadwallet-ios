@@ -74,6 +74,14 @@
 "Android.screenAlteringMessage" = "您应禁用屏幕更改应用（如 Twilight），否则 BRD 将无法正常工作。";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "检测到屏幕更改应用";
+/* Body for an announcement promoting Coinify. */
+"Announcement.coinifyPromoBody" = "在2019年3月31日前购买100欧元的比特币并获得一张在Amazon.de网上消费的20欧元礼品卡 ⃰。";
+/* Button title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoActionTitle" = "拿到你的礼品卡";
+/* Footnote text for an announcement promoting Coinify. */
+"Announcement.coinifyPromoFootnote" = "每位客户限拿一张礼品卡。仅适用于奥地利，德国，卢森堡和荷兰";
+/* Title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoTitle" = "获得一张20欧元的Amazon.de礼品卡！";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
 "Announcement.glideraBodyOne" = "通过你的银行购买BTC和ETH会有较高的限额，且可加快送货时间并降低费用。登记注册后，在计划启动或上线时会收到通知。";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */

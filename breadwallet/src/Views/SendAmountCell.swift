@@ -12,9 +12,9 @@ class SendAmountCell: SendCell {
 
     init(placeholder: String) {
         super.init()
-        let attributes: [NSAttributedStringKey: Any] = [
-            NSAttributedStringKey.foregroundColor: UIColor.grayTextTint,
-            NSAttributedStringKey.font: placeholderFont
+        let attributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.foregroundColor: UIColor.grayTextTint,
+            NSAttributedString.Key.font: placeholderFont
         ]
         textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: attributes)
         textField.delegate = self

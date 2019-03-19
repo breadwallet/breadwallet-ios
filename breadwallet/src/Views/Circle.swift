@@ -70,7 +70,7 @@ class ClearCircle: UIView {
         overlayPath.usesEvenOddFillRule = true
         let fillLayer = CAShapeLayer()
         fillLayer.path = overlayPath.cgPath
-        fillLayer.fillRule = kCAFillRuleEvenOdd
+        fillLayer.fillRule = CAShapeLayerFillRule.evenOdd
         fillLayer.fillColor = UIColor.darkBackground.cgColor
         layer.sublayers?.forEach {
             $0.removeFromSuperlayer()

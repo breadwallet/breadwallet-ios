@@ -19,7 +19,7 @@ extension UIButton {
         if let imageSize = button.imageView?.image?.size,
             let font = button.titleLabel?.font {
             let spacing: CGFloat = C.padding[1]/2.0
-            let titleSize = NSString(string: title).size(withAttributes: [NSAttributedStringKey.font: font])
+            let titleSize = NSString(string: title).size(withAttributes: [NSAttributedString.Key.font: font])
 
             // These edge insets place the image vertically above the title label
             button.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: -imageSize.width, bottom: -(26.0 + spacing), right: 0.0)
@@ -34,6 +34,7 @@ extension UIButton {
         button.titleLabel?.font = UIFont.customMedium(size: 16.0)
         button.backgroundColor = .red
         button.layer.cornerRadius = 5
+        button.layer.masksToBounds = true
         return button
     }
 
@@ -54,11 +55,13 @@ extension UIButton {
         let accessibilityLabel = E.isScreenshots ? "Close" : S.AccessibilityLabels.close
         return UIButton.icon(image: #imageLiteral(resourceName: "Close"), accessibilityLabel: accessibilityLabel)
     }
-
-    static func buildFaqButton(articleId: String, currency: Currency? = nil) -> UIButton {
+    
+    static func buildFaqButton(articleId: String, currency: Currency? = nil, tapped: (() -> Void)? = nil) -> UIButton {
         let button = UIButton.icon(image: #imageLiteral(resourceName: "Faq"), accessibilityLabel: S.AccessibilityLabels.faq)
+        button.tintColor = .white
         button.tap = {
             Store.trigger(name: .presentFaq(articleId, currency))
+            tapped?()
         }
         return button
     }

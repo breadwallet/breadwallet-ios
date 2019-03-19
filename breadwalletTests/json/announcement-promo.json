@@ -1,0 +1,8 @@
+[{ "type": "announcement-promo",
+    "slug": "coinify-promo",
+    "pages": [{"title": "title", "body": "body", "titleKey": "titleKey", 
+        "bodyKey": "bodyKey", "footnote": "footnote", "footnoteKey": "footnoteKey",
+        "imageName": "imageName", "imageUrl": "imageUrl",
+        "actions" : [ { "title" : "title", "titleKey" : "titleKey", "url" : "url" } ]
+    }]
+}]

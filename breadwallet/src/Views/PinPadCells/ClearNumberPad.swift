@@ -8,6 +8,8 @@
 
 import UIKit
 
+// swiftlint:disable unused_setter_value
+
 class ClearNumberPad: GenericPinPadCell {
 
     override var style: PinPadStyle {

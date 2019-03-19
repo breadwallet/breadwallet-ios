@@ -8,6 +8,8 @@
 
 import UIKit
 
+// swiftlint:disable legacy_hashing
+
 typealias Reducer = (State) -> State
 typealias Selector = (_ oldState: State, _ newState: State) -> Bool
 
@@ -68,6 +70,7 @@ enum TriggerName {
     case didWritePaperKey
     case wipeWalletNoPrompt
     case didUpdateFeatureFlags
+    case didFetchAnnouncements([Announcement])
     case showCurrency(Currency)
     case resetDisplayCurrencies
     case promptLinkWallet(WalletPairingRequest)
@@ -141,6 +144,8 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.wipeWalletNoPrompt, .wipeWalletNoPrompt):
         return true
     case (.didUpdateFeatureFlags, .didUpdateFeatureFlags):
+        return true
+    case (.didFetchAnnouncements, .didFetchAnnouncements):
         return true
     case (.showCurrency, .showCurrency):
         return true

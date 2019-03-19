@@ -74,6 +74,14 @@
 "Android.screenAlteringMessage" = "画面変更アプリ(例: Twilight) が無効になっていなければ、BRDは正常に動作しません。";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "画面変更アプリが検出されました";
+/* Body for an announcement promoting Coinify. */
+"Announcement.coinifyPromoBody" = "2019年3月31日までにビットコインを100ユーロ購入して、20ユーロのAmazon.deギフトカードをもらおう*";
+/* Button title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoActionTitle" = "ギフトカードをもらおう";
+/* Footnote text for an announcement promoting Coinify. */
+"Announcement.coinifyPromoFootnote" = "*ギフトカードはお一人様1枚まで。オーストリア、ドイツ、ルクセンブルク、オランダでのみ利用可能";
+/* Title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoTitle" = "20ユーロのAmazon.deギフトカードをもらおう！";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
 "Announcement.glideraBodyOne" = "銀行経由のBTCとETHの購入はより高い上限額となり、デリバリーも迅速かつ低手数料となります。登録を行ってローンチの際通知を受け取りましょう。";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */

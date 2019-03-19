@@ -133,12 +133,12 @@ class BiometricsSettingsViewController: UIViewController, Subscriber {
         let linkText = LAContext.biometricType() == .face ? S.FaceIDSettings.linkText : S.TouchIdSettings.linkText
         let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.tokenDescription, amount.fiatDescription))\n\n\(String(format: customizeText, linkText))"
         let attributedString = NSMutableAttributedString(string: string, attributes: [
-                NSAttributedStringKey.font: UIFont.customBody(size: 13.0),
-                NSAttributedStringKey.foregroundColor: UIColor.darkText
+                NSAttributedString.Key.font: UIFont.customBody(size: 13.0),
+                NSAttributedString.Key.foregroundColor: UIColor.darkText
             ])
         let linkAttributes = [
-                NSAttributedStringKey.font: UIFont.customMedium(size: 13.0),
-                NSAttributedStringKey.link: NSURL(string: "http://spending-limit")!]
+                NSAttributedString.Key.font: UIFont.customMedium(size: 13.0),
+                NSAttributedString.Key.link: NSURL(string: "http://spending-limit")!]
 
         if let range = string.range(of: linkText, options: [], range: nil, locale: nil) {
             let from = range.lowerBound.samePosition(in: string.utf16)!

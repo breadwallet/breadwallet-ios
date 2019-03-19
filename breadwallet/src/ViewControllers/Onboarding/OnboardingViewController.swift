@@ -23,21 +23,6 @@ struct OnboardingPage {
     var videoClip: String
 }
 
-enum OnboardingEvent: String {
-    case landingPageAppeared        = "onboarding.landingPage"
-    case landingPageGetStarted      = "onboarding.landingPage.getStartedButton"
-    case landingPageRestoreWallet   = "onboarding.landingPage.restoreWalletButton"
-    case globePageAppeared          = "onboarding.globePage"
-    case globePageNext              = "onboarding.globePage.nextButton"
-    case coinsPageAppeared          = "onboarding.coinsPage"
-    case coinsPageNext              = "onboarding.coinsPage.nextButton"
-    case finalPageAppeared          = "onboarding.finalPage"
-    case finalPageBuyCoin           = "onboarding.finalPage.buyCoin"
-    case finalPageBrowseFirst       = "onboarding.finalPage.browseFirst"
-    case skipButton                 = "onboarding.skipButton"
-    case backButton                 = "onboarding.backButton"
-}
-
 /**
  *  Takes the user through a sequence of onboarding screens (product walkthrough)
  *  and allows the user to either create a new wallet or restore an existing wallet.
@@ -155,11 +140,11 @@ class OnboardingViewController: UIViewController {
             
             switch pageIndex {
             case globePageIndex:
-                logEvent(.globePageAppeared)
+                logEvent(.appeared, screen: .globePage)
             case coinsPageIndex:
-                logEvent(.coinsPageAppeared)
+                logEvent(.appeared, screen: .coinsPage)
             case finalPageIndex:
-                logEvent(.finalPageAppeared)
+                logEvent(.appeared, screen: .finalPage)
             default:
                 break
             }
@@ -236,13 +221,13 @@ class OnboardingViewController: UIViewController {
                 self.animateLandingPage()
             })
         })
-                
-        logEvent(.backButton)
+        
+        logEvent(.backButton, screen: .globePage)
     }
     
     @objc private func skipTapped(sender: Any) {
         exitWith(action: .createWallet)
-        logEvent(.skipButton)
+        logEvent(.skipButton, screen: .globePage)
     }
     
     private func reset(completion: @escaping () -> Void) {
@@ -423,18 +408,10 @@ class OnboardingViewController: UIViewController {
         
         // Position the top button just below the bottom of the view (or safe area / notch) to start with
         // so that we can animate it up into view.
-        if #available(iOS 11.0, *) {
-            topButtonAnimationConstraint = topButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                                                                          constant: buttonsHiddenYOffset)
-            nextButtonAnimationConstraint = nextButton.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                                                                                constant: buttonsHiddenYOffset)
-
-        } else {
-            topButtonAnimationConstraint = topButton.topAnchor.constraint(equalTo: view.bottomAnchor,
-                                                                          constant: buttonsHiddenYOffset)  
-            nextButtonAnimationConstraint = nextButton.centerYAnchor.constraint(equalTo: view.bottomAnchor,
-                                                                                constant: buttonsHiddenYOffset)
-        }
+        topButtonAnimationConstraint = topButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                                                                      constant: buttonsHiddenYOffset)
+        nextButtonAnimationConstraint = nextButton.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                                                                            constant: buttonsHiddenYOffset)
         
         bottomButtonAnimationConstraint = bottomButton.topAnchor.constraint(equalTo: topButton.bottomAnchor,
                                                                             constant: buttonsVerticalMargin)
@@ -552,13 +529,8 @@ class OnboardingViewController: UIViewController {
         var topAnchor: NSLayoutYAxisAnchor?
         var leadingAnchor: NSLayoutXAxisAnchor?
         
-        if #available(iOS 11.0, *) {
-            topAnchor = view.safeAreaLayoutGuide.topAnchor
-            leadingAnchor = view.safeAreaLayoutGuide.leadingAnchor
-        } else {
-            topAnchor = view.topAnchor
-            leadingAnchor = view.leadingAnchor
-        }
+        topAnchor = view.safeAreaLayoutGuide.topAnchor
+        leadingAnchor = view.safeAreaLayoutGuide.leadingAnchor
 
         backButton.constrain([
             backButton.topAnchor.constraint(equalTo: topAnchor!, constant: 30),
@@ -576,11 +548,7 @@ class OnboardingViewController: UIViewController {
         
         var trailingAnchor: NSLayoutXAxisAnchor?
         
-        if #available(iOS 11.0, *) {
-            trailingAnchor = view.safeAreaLayoutGuide.trailingAnchor
-        } else {
-            trailingAnchor = view.trailingAnchor
-        }
+        trailingAnchor = view.safeAreaLayoutGuide.trailingAnchor
         
         skipButton.constrain([
             skipButton.trailingAnchor.constraint(equalTo: trailingAnchor!, constant: -30),
@@ -595,13 +563,13 @@ class OnboardingViewController: UIViewController {
                 
         // animate heading position
         let constraint = headingConstraints[0]
-        UIView.animate(withDuration: duration, delay: delay, options: UIViewAnimationOptions.curveEaseInOut, animations: {
+        UIView.animate(withDuration: duration, delay: delay, options: UIView.AnimationOptions.curveEaseInOut, animations: {
             constraint.constant = -(self.headingLabelAnimationOffset)
         })            
             
         // animate heading fade-in
         let label = headingLabels[0]
-        UIView.animate(withDuration: duration + 0.2, delay: delay * 2.0, options: UIViewAnimationOptions.curveEaseInOut, animations: {
+        UIView.animate(withDuration: duration + 0.2, delay: delay * 2.0, options: UIView.AnimationOptions.curveEaseInOut, animations: {
             label.alpha = 1
         })            
         
@@ -609,13 +577,13 @@ class OnboardingViewController: UIViewController {
         bottomButton.alpha = 0
         
         // fade-in animation for the buttons
-        UIView.animate(withDuration: (duration * 1.5), delay: (delay * 2.0), options: UIViewAnimationOptions.curveEaseIn, animations: { 
+        UIView.animate(withDuration: (duration * 1.5), delay: (delay * 2.0), options: UIView.AnimationOptions.curveEaseIn, animations: { 
             self.topButton.alpha = 1
             self.bottomButton.alpha = 1
         })
 
         // slide-up animation for the top button
-        UIView.animate(withDuration: (duration * 1.5), delay: delay, options: UIViewAnimationOptions.curveEaseInOut, animations: { 
+        UIView.animate(withDuration: (duration * 1.5), delay: delay, options: UIView.AnimationOptions.curveEaseInOut, animations: { 
             self.topButtonAnimationConstraint?.constant = self.buttonsVisibleYOffset
             self.view.layoutIfNeeded()
         })
@@ -624,7 +592,7 @@ class OnboardingViewController: UIViewController {
         view.layoutIfNeeded()
         
         // slide-up animation for the bottom button
-        UIView.animate(withDuration: (duration * 1.5), delay: (delay * 2.0), options: UIViewAnimationOptions.curveEaseInOut, animations: { 
+        UIView.animate(withDuration: (duration * 1.5), delay: (delay * 2.0), options: UIView.AnimationOptions.curveEaseInOut, animations: { 
             // animate the bottom button up to its correct offset relative to the top button
             self.bottomButtonAnimationConstraint?.constant = self.buttonsVerticalMargin
             self.view.layoutIfNeeded()
@@ -742,11 +710,11 @@ class OnboardingViewController: UIViewController {
         if self.pageIndex == 0 {
             // 'Create new wallet'
             self.animateToNextPage()
-            logEvent(.landingPageGetStarted)
+            logEvent(.getStartedButton, screen: .landingPage)
         } else if self.pageIndex == self.lastPageIndex {
             // 'Buy some coin'
             exitWith(action: .createWalletBuyCoin)
-            logEvent(.finalPageBuyCoin)
+            logEvent(.buyCoinButton, screen: .finalPage)
         }
     }
     
@@ -755,11 +723,11 @@ class OnboardingViewController: UIViewController {
         if pageIndex == 0 {
             // 'Restore wallet'
             exitWith(action: .restoreWallet)
-            logEvent(.landingPageRestoreWallet)
+            logEvent(.restoreWalletButton, screen: .landingPage)
         } else if pageIndex == self.lastPageIndex {
             // 'I'll browse first'
             exitWith(action: .createWallet)
-            logEvent(.finalPageBrowseFirst)
+            logEvent(.browseFirstButton, screen: .finalPage)
         }
     }
                          
@@ -779,7 +747,7 @@ class OnboardingViewController: UIViewController {
         super.viewDidAppear(animated)
         if appearanceCount == 0 {
             animateLandingPage()
-            logEvent(.landingPageAppeared)
+            logEvent(.appeared, screen: .landingPage)
         }
         appearanceCount += 1
         
@@ -819,7 +787,7 @@ class OnboardingViewController: UIViewController {
 // analytics
 extension OnboardingViewController: Trackable {
     
-    func logEvent(_ event: OnboardingEvent) {
-        saveEvent(event.rawValue)
+    func logEvent(_ event: Event, screen: Screen) {
+        saveEvent(context: .onboarding, screen: screen, event: event)
     }
 }

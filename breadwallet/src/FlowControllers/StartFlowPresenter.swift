@@ -8,7 +8,9 @@
 
 import UIKit
 
-class StartFlowPresenter: Subscriber {
+typealias StartFlowCallback = (() -> Void)
+
+class StartFlowPresenter: Subscriber, Trackable {
 
     init(keyMaster: KeyMaster,
          rootViewController: RootNavigationController, 
@@ -87,6 +89,11 @@ class StartFlowPresenter: Subscriber {
     // Displays the onboarding screen (app landing page) that allows the user to either create
     // a new wallet or restore an existing wallet. 
     private func presentOnboardingFlow() {
+        
+        // Register the onboarding event context so that events are logged to the server throughout
+        // the onboarding process, including post-walkthrough events such as PIN entry and paper-key entry.
+        EventMonitor.shared.register(.onboarding)
+        
         let onboardingScreen = OnboardingViewController(didExitOnboarding: { [weak self] (action) in
             guard let `self` = self else { return }
             
@@ -94,18 +101,18 @@ class StartFlowPresenter: Subscriber {
             case .restoreWallet:
                 self.enterRecoverWalletFlow()
             case .createWallet:
-                self.enterCreateWalletFlow()
+                self.enterCreateWalletFlow(eventContext: .onboarding)
             case .createWalletBuyCoin:
                 // This will be checked in dismissStartFlow(), which is called after the PIN
                 // and paper key flows are finished.
                 self.shouldBuyCoinAfterOnboarding = true
-                self.enterCreateWalletFlow()
+                self.enterCreateWalletFlow(eventContext: .onboarding)
             }
         })
         
         navigationController = ModalNavigationController(rootViewController: onboardingScreen)
         navigationController?.delegate = navigationControllerDelegate
-
+        
         if let onboardingFlow = navigationController {            
             onboardingFlow.setNavigationBarHidden(true, animated: false)
             
@@ -175,6 +182,12 @@ class StartFlowPresenter: Subscriber {
     }
     
     private func dismissStartFlow() {
+        
+        saveEvent(context: .onboarding, event: .complete)
+        
+        // Onboarding is finished.
+        EventMonitor.shared.deregister(.onboarding)
+        
         if self.shouldBuyCoinAfterOnboarding {
             self.presentPostOnboardingBuyScreen()
         } else {
@@ -183,9 +196,19 @@ class StartFlowPresenter: Subscriber {
             }
         }
     }
-
+    
     private func enterCreateWalletFlow() {
-        let pinCreationViewController = UpdatePinViewController(keyMaster: keyMaster, type: .creationNoPhrase, showsBackButton: true, phrase: nil)
+        enterCreateWalletFlow(eventContext: .none)
+    }
+    
+    private func enterCreateWalletFlow(eventContext: EventContext) {
+        let pinCreationViewController = UpdatePinViewController(keyMaster: keyMaster,
+                                                                type: .creationNoPhrase,
+                                                                showsBackButton: true,
+                                                                phrase: nil,
+                                                                eventContext: eventContext)
+        let context = eventContext
+        
         pinCreationViewController.setPinSuccess = { [weak self] pin in
             autoreleasepool {
                 guard self?.keyMaster.setRandomSeedPhrase() != nil else { self?.handleWalletCreationError(); return }
@@ -193,7 +216,7 @@ class StartFlowPresenter: Subscriber {
                 UserDefaults.selectedCurrencyCode = nil // to land on home screen after new wallet creation
                 Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(Date()))
                 DispatchQueue.main.async {
-                    self?.pushStartPaperPhraseCreationViewController(pin: pin)
+                    self?.pushStartPaperPhraseCreationViewController(pin: pin, eventContext: context)
                     Store.trigger(name: .didCreateOrRecoverWallet)
                 }
             }
@@ -210,36 +233,43 @@ class StartFlowPresenter: Subscriber {
         navigationController?.present(alert, animated: true, completion: nil)
     }
     
-    private func pushStartPaperPhraseCreationViewController(pin: String) {
-        let paperPhraseViewController = StartPaperPhraseViewController(callback: { [weak self] in
-            self?.pushWritePaperPhraseViewController(pin: pin)
-        })
+    private func pushStartPaperPhraseCreationViewController(pin: String, eventContext: EventContext = .none) {
+        let startPhraseCallback: StartFlowCallback = { [weak self] in
+            self?.pushWritePaperPhraseViewController(pin: pin, eventContext: eventContext)
+        }
+        
+        let paperPhraseViewController = StartPaperPhraseViewController(eventContext: eventContext,
+                                                                       dismissAction: HideStartFlow(),
+                                                                       callback: startPhraseCallback)
+        
         paperPhraseViewController.title = S.SecurityCenter.Cells.paperKeyTitle
         paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
-        paperPhraseViewController.navigationItem.leftBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: closeButton)]
-
-        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.paperKey)
-        faqButton.tintColor = .white
-        paperPhraseViewController.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
-
+        
         navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.foregroundColor: UIColor.white,
-            NSAttributedStringKey.font: UIFont.customBold(size: 17.0)
+            NSAttributedString.Key.foregroundColor: UIColor.white,
+            NSAttributedString.Key.font: UIFont.customBold(size: 17.0)
         ]
         navigationController?.pushViewController(paperPhraseViewController, animated: true)
     }
 
-    private func pushWritePaperPhraseViewController(pin: String) {
-        let writeViewController = WritePaperPhraseViewController(keyMaster: keyMaster, pin: pin, callback: { [weak self] in
-            self?.pushConfirmPaperPhraseViewController(pin: pin)
+    private func pushWritePaperPhraseViewController(pin: String, eventContext: EventContext = .none) {
+        let writeViewController = WritePaperPhraseViewController(keyMaster: keyMaster,
+                                                                 pin: pin,
+                                                                 eventContext: eventContext,
+                                                                 dismissAction: HideStartFlow(),
+                                                                 callback: { [weak self] in
+                                                                    self?.pushConfirmPaperPhraseViewController(pin: pin, eventContext: eventContext)
         })
+        
         writeViewController.title = S.SecurityCenter.Cells.paperKeyTitle
-        writeViewController.navigationItem.leftBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: closeButton)]
         navigationController?.pushViewController(writeViewController, animated: true)
     }
 
-    private func pushConfirmPaperPhraseViewController(pin: String) {
-        let confirmViewController = ConfirmPaperPhraseViewController(keyMaster: keyMaster, pin: pin, callback: {
+    private func pushConfirmPaperPhraseViewController(pin: String, eventContext: EventContext) {
+        let confirmViewController = ConfirmPaperPhraseViewController(keyMaster: keyMaster,
+                                                                     pin: pin,
+                                                                     eventContext: eventContext,
+                                                                     callback: {
             Store.perform(action: Alert.Show(.paperKeySet(callback: {
                 Store.perform(action: HideStartFlow())
             })))

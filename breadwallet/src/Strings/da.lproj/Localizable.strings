@@ -74,6 +74,14 @@
 "Android.screenAlteringMessage" = "BRD fungerer ikke korrekt medmindre apps der ændrer skærmbilledet (så som Twilight) er deaktiveret.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Der er fundet en app der ændrer skærmbilledet";
+/* Body for an announcement promoting Coinify. */
+"Announcement.coinifyPromoBody" = "Køb for 100€ Bitcoins inden 31. marts 2019 og få et gavekort på 20€ til Amazon.de*";
+/* Button title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoActionTitle" = "Få dit gavekort";
+/* Footnote text for an announcement promoting Coinify. */
+"Announcement.coinifyPromoFootnote" = "*Begrænset: kun et gavekort per kunde. Kun tilgængelig i Østrig, Tyskland, Luxembourg og Holland.";
+/* Title for an announcement promoting Coinify. */
+"Announcement.coinifyPromoTitle" = "Få et gavekort på 20€ til Amazon.de!";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
 "Announcement.glideraBodyOne" = "Køb af BTC og ETH via din bank vil have højere grænser, hurtigere leveringstider og lavere gebyrer. Tilmeld dig for at få besked, når den lanceres.";
 /* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
