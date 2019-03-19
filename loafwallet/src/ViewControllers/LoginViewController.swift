@@ -275,6 +275,8 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         view.addSubview(wipeBannerButton)
         wipeBannerButton.translatesAutoresizingMaskIntoConstraints = true
         wipeBannerButton.backgroundColor = UIColor.gray
+        wipeBannerButton.adjustsImageWhenHighlighted = true
+        
         wipeBannerButton.constrain([
           wipeBannerButton.topAnchor.constraint(equalTo:version.bottomAnchor, constant: 5),
           wipeBannerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -406,6 +408,8 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     }
   
     @objc func wipeTapped() {
+      store.perform(action: RootModalActions.Present(modal: .wipeEmptyWallet))
+      
 
     }
 
