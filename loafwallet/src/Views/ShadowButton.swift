@@ -14,6 +14,8 @@ enum ButtonType {
     case tertiary
     case blackTransparent
     case search
+    case warning
+    case boldWarning 
 }
 
 private let minTargetSize: CGFloat = 48.0
@@ -195,6 +197,23 @@ class ShadowButton: UIControl {
             shadowView.layer.shadowColor = UIColor.black.cgColor
             shadowView.layer.shadowOpacity = 0.15
             imageView?.tintColor = .grayTextTint
+        case .warning:
+          label.font = UIFont.customBody(size: 13.0)
+          container.backgroundColor = .pink
+          label.textColor = .white
+          container.layer.borderColor = UIColor.secondaryBorder.cgColor
+          container.layer.borderWidth = 1.0
+          shadowView.layer.shadowColor = UIColor.black.cgColor
+          shadowView.layer.shadowOpacity = 0.15
+          //imageView?.tintColor = .grayTextTint
+        case .boldWarning:
+          label.font = UIFont.customBold(size: 15.0)
+          container.backgroundColor = .pink
+          label.textColor = .white
+          container.layer.borderColor = UIColor.secondaryBorder.cgColor
+          container.layer.borderWidth = 1.0
+          shadowView.layer.shadowColor = UIColor.black.cgColor
+          shadowView.layer.shadowOpacity = 0.15
         }
     }
 

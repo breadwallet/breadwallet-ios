@@ -544,6 +544,11 @@ enum S {
         static let startMessage = NSLocalizedString("WipeWallet.startMessage", value: "Starting or recovering another wallet allows you to access and manage a different LoafWallet wallet on this device.", comment: "Start wipe wallet view message")
         static let startWarning = NSLocalizedString("WipeWallet.startWarning", value: "Your current wallet will be removed from this device. If you wish to restore it in the future, you will need to enter your Paper Key.", comment: "Start wipe wallet view warning")
         static let emptyWallet = NSLocalizedString("WipeWallet.emptyWallet", value: "Forget your seed phrase or PIN?", comment: "Warning if user lost phrase")
+        static let resetTitle = NSLocalizedString("resetTitle", value: "Empty Wallet Reset", comment: "Warning Empty Wipe title")
+        static let resetButton = NSLocalizedString("resetButton", value: "Yes, reset wallet", comment: "Reset walet button  title")
+        static let warningTitle = NSLocalizedString("WipeWallet.warningTitle", value: "PLEASE READ!", comment: "Warning title")
+        static let warningDescription = NSLocalizedString("WipeWallet.warningDescription", value: "Your Loafwallet is empty. Reseting will delete the old private key and wipe the app data.\n\nAfter the reset, be prepared to record the new 12 words and keep them in a very secure place.\n\nNo Loafwallet developers can retrieve this seed for you.", comment: "Warning description")
+        static let warningAlert = NSLocalizedString("WipeWallet.warningAlert", value: "DO NOT LOSE IT!", comment: "Warning Alert")
     }
 
     enum FeeSelector {

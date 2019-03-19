@@ -59,6 +59,7 @@ enum RootModal {
     case loginScan
     case manageWallet
     case requestAmount
+    case wipeEmptyWallet
 }
 
 enum SyncState {
