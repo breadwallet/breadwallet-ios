@@ -215,6 +215,10 @@ class ModalPresenter : Subscriber, Trackable {
             return receiveView(isRequestAmountVisible: false)
         case .manageWallet:
             return ModalViewController(childViewController: ManageWalletViewController(store: store), store: store)
+        case .wipeEmptyWallet:
+          guard let walletManager = walletManager else {return nil}
+          let wipeEmptyvc = WipeEmptyWalletViewController(walletManager: walletManager, store: store)
+          return ModalViewController(childViewController: wipeEmptyvc, store: store)
         case .requestAmount:
             guard let wallet = walletManager?.wallet else { return nil }
             let requestVc = RequestAmountViewController(wallet: wallet, store: store)
@@ -228,6 +232,7 @@ class ModalPresenter : Subscriber, Trackable {
             }
             return ModalViewController(childViewController: requestVc, store: store)
         }
+      
     }
 
     private func makeSendView() -> UIViewController? {
