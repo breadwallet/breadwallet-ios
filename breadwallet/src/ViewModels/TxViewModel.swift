@@ -48,6 +48,10 @@ extension TxViewModel {
             : "\(tx.blockHeight)"
     }
     
+    var confirmations: String {
+        return "\(tx.confirmations)"
+    }
+    
     var longTimestamp: String {
         guard tx.timestamp > 0 else { return tx.isValid ? S.Transaction.justNow : "" }
         let date = Date(timeIntervalSince1970: tx.timestamp)
