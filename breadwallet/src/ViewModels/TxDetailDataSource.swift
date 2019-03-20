@@ -20,6 +20,7 @@ class TxDetailDataSource: NSObject {
         case address
         case exchangeRate
         case blockHeight
+        case confirmations
         case transactionId
         case gasPrice
         case gasLimit
@@ -74,6 +75,7 @@ class TxDetailDataSource: NSObject {
         if viewModel.exchangeRate != nil { fields.append(.exchangeRate) }
         
         fields.append(.blockHeight)
+        fields.append(.confirmations)
         fields.append(.transactionId)
     }
     
@@ -103,6 +105,8 @@ class TxDetailDataSource: NSObject {
             return S.TransactionDetails.feeHeader
         case .total:
             return S.TransactionDetails.totalHeader
+        case .confirmations:
+            return S.TransactionDetails.confirmationsLabel
         default:
             return ""
         }
@@ -175,6 +179,9 @@ extension TxDetailDataSource: UITableViewDataSource {
         case .total:
             guard let labelCell = cell as? TxLabelCell else { return cell }
             labelCell.value = viewModel.total ?? ""
+        case .confirmations:
+            guard let labelCell = cell as? TxLabelCell else { return cell }
+            labelCell.value = viewModel.confirmations
         }
         
         return cell
