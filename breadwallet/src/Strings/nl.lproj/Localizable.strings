@@ -75,7 +75,7 @@
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Schermveranderende app gedetecteerd";
 /* Body for an announcement promoting Coinify. */
-"Announcement.coinifyPromoBody" = "Koop € 100 aan Bnitcoin vóór 15 april 2019, en ontvang een Amazon.de-cadeaubon van € 20*";
+"Announcement.coinifyPromoBody" = "Koop € 100 aan Bnitcoin vóór 16 april 2019, en ontvang een Amazon.de-cadeaubon van € 20*";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "Ontvang je cadeaubon";
 /* Footnote text for an announcement promoting Coinify. */
