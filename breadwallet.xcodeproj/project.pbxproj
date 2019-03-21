@@ -55,6 +55,7 @@
 		22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431331DF89DFE0017CAEA /* BRCoderTests.swift */; };
 		22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */; };
 		22E773041EE7813000397E0E /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E773031EE7813000397E0E /* Bonjour.swift */; };
+		3A211D1D2242AF0500C2A906 /* Bip38Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */; };
 		3C83B27620631739001D08CE /* BRRlpCoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11614205C943700C03D42 /* BRRlpCoder.c */; };
 		3C83B27720631740001D08CE /* BRUtilMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11600205C943500C03D42 /* BRUtilMath.c */; };
 		3C83B27820631740001D08CE /* BRUtilMathParse.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FE205C943500C03D42 /* BRUtilMathParse.c */; };
@@ -714,6 +715,7 @@
 		22C431331DF89DFE0017CAEA /* BRCoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRCoderTests.swift; sourceTree = "<group>"; };
 		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bonjour.swift; sourceTree = "<group>"; };
+		3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip38Tests.swift; sourceTree = "<group>"; };
 		3C83B27D206317A7001D08CE /* BRCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BRCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C83B27F206317A7001D08CE /* BRCoreTests.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = BRCoreTests.swift; sourceTree = "<group>"; };
 		3C83B281206317A7001D08CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1757,6 +1759,7 @@
 				716F824221F91D9A0064E6F4 /* AppRatingManagerTests.swift */,
 				71249917222046EB00BEA491 /* PromptTests.swift */,
 				7138BABA223062F40059091E /* NotificationTests.swift */,
+				3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */,
 			);
 			path = breadwalletTests;
 			sourceTree = "<group>";
@@ -3552,6 +3555,7 @@
 				22C4312C1DF89D700017CAEA /* BRBSPatchTests.swift in Sources */,
 				CEE218BB21026BAB00399231 /* PigeonTest.swift in Sources */,
 				CEA7E6761F057D77001F8C27 /* WalletInfoTest.swift in Sources */,
+				3A211D1D2242AF0500C2A906 /* Bip38Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
