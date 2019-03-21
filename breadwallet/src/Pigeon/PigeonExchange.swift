@@ -573,6 +573,28 @@ class PigeonExchange: Subscriber {
     var isPaired: Bool {
         return pairedWallets?.hasPairedWallets ?? false
     }
+
+    /// Removes all paired wallets
+    func resetPairedWallets() {
+        guard let index = PairedWalletIndex(store: kvStore) else { return }
+
+        stopPolling()
+
+        let pwdToRemove = index.pubKeys.compactMap { PairedWalletData(remotePubKey: $0, store: kvStore) }
+        index.pubKeys.removeAll()
+        index.services.removeAll()
+
+        do {
+            try _ = kvStore.set(index)
+            for pwd in pwdToRemove {
+                try _ = kvStore.del(pwd)
+            }
+            try _ = kvStore.del(index)
+            print("[EME] removed all paired wallet data")
+        } catch let error {
+            print("[EME] error saving paired wallet info: \(error.localizedDescription)")
+        }
+    }
     
     private func addRemoteEntity(remotePubKey: Data, identifier: String, service: String) {
         let existingIndex = PairedWalletIndex(store: kvStore)
