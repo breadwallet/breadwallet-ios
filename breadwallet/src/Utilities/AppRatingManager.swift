@@ -20,19 +20,15 @@ class AppRatingManager: NSObject, Subscriber, Trackable {
     // Make sure the user has freshly opened the app at least this many times before we trigger a rating prompt.
     public let minimumLaunchCountForRating: Int = 10
 
-    private let launchCountKey = "com.breadwallet.app.launch.count"
     private let ratingPromptAnalyticsEvent = "prompt.review.displayed"
     private let ratingPromptReasonViewedTransactions = "viewedTransactions"
-    
-    // This is passed to the start() method to facilitate unit testing.
-    var userDefaults: UserDefaults = UserDefaults.standard
     
     var haveSufficientLaunchesToShowPrompt: Bool {
         return launchCount >= minimumLaunchCountForRating
     }
     
     var launchCount: Int {
-        return userDefaults.integer(forKey: launchCountKey)
+        return UserDefaults.appLaunchCount
     }
     
     func shouldTriggerPrompt(transactions: [Transaction]) -> Bool {
@@ -72,9 +68,7 @@ class AppRatingManager: NSObject, Subscriber, Trackable {
         setLaunchCount(0)
     }
     
-    public func start(_ userDefaults: UserDefaults) {
-        self.userDefaults = userDefaults
-        
+    public func start() {
         bumpLaunchCount()
         
         Store.subscribe(self, name: .didViewTransactions(nil), callback: { (trigger) in
@@ -105,6 +99,6 @@ class AppRatingManager: NSObject, Subscriber, Trackable {
     }
     
     func setLaunchCount(_ count: Int) {
-        userDefaults.set(count, forKey: launchCountKey)
+        UserDefaults.appLaunchCount = count
     }
 }

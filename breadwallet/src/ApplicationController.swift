@@ -241,7 +241,7 @@ class ApplicationController: Subscriber, Trackable {
             didInitWalletManager()
         }
 
-        appRatingManager.start(UserDefaults.standard)
+        appRatingManager.start()
         
         // Set up the animation frames early during the startup process so that they're
         // ready to roll by the time the home screen is displayed.

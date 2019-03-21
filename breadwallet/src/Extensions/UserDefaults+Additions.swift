@@ -44,6 +44,9 @@ private let shouldHideBRDCellHighlightKey = "shouldHideBRDCellHighlightKey"
 private let debugBackendHostKey = "debugBackendHostKey"
 private let debugWebBundleNameKey = "debugWebBundleNameKey"
 private let platformDebugURLKey = "platformDebugURLKey"
+private let appLaunchCountKey = "appLaunchCountKey"
+private let notificationOptInDeferralCountKey = "notificationOptInDeferCountKey"
+private let appLaunchesAtLastNotificationDeferralKey = "appLaunchesAtLastNotificationDeferralKey"
 
 typealias ResettableBooleanSetting = [String: Bool]
 typealias ResettableObjectSetting = String
@@ -88,6 +91,10 @@ extension UserDefaults {
         for resettableObject in resettableObjects {
             defaults.removeObject(forKey: resettableObject)
         }
+        
+        appLaunchCount = 0
+        notificationOptInDeferralCount = 0
+        appLaunchesAtLastNotificationDeferral = 0
     }
     
     static func resetAnnouncementKeys() {
@@ -330,6 +337,25 @@ extension UserDefaults {
     static var shouldShowBRDCellHighlight: Bool {
         get { return !defaults.bool(forKey: shouldHideBRDCellHighlightKey)   }
         set { defaults.set(!newValue, forKey: shouldHideBRDCellHighlightKey) }
+    }
+    
+    // Returns the number of times the user has deferred the notifications opt-in decision.
+    static var notificationOptInDeferralCount: Int {
+        get { return defaults.integer(forKey: notificationOptInDeferralCountKey) }
+        set { defaults.set(newValue, forKey: notificationOptInDeferralCountKey) }
+    }
+    
+    // Returns the number of times the user has deferred the notifications opt-in decision.
+    static var appLaunchesAtLastNotificationDeferral: Int {
+        get { return defaults.integer(forKey: appLaunchesAtLastNotificationDeferralKey) }
+        set { defaults.set(newValue, forKey: appLaunchesAtLastNotificationDeferralKey) }
+    }
+    
+    // The count of app-foreground events. This is used in part for determining when to show the app-rating
+    // prompt, as well as when to ask the user to opt into push notifications.
+    static var appLaunchCount: Int {
+        get { return defaults.integer(forKey: appLaunchCountKey ) }
+        set { defaults.set(newValue, forKey: appLaunchCountKey )}
     }
 }
 

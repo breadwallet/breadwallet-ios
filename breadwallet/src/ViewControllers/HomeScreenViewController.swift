@@ -62,8 +62,9 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        DispatchQueue.main.asyncAfter(deadline: .now() + promptDelay) { [weak self] in
-            self?.attemptShowPrompt()
+        DispatchQueue.main.asyncAfter(deadline: .now() + promptDelay) { [unowned self] in
+            self.attemptShowPrompt()
+            NotificationAuthorizer().showNotificationsOptInAlert(from: self)
         }
         updateTotalAssets()
     }
