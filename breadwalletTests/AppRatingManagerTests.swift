@@ -13,17 +13,13 @@ import XCTest
 
 class AppRatingManagerTests: XCTestCase {
 
-    var suiteName: String {
-        return "AppRatingManagerTests-\(Date().timeIntervalSince1970)"
-    }
-    
-    var mockUserDefaults: UserDefaults {
-        return UserDefaults(suiteName: suiteName) ?? UserDefaults.standard
+    override func setUp() {
+        UserDefaults.resetAll()
     }
     
     private func makeRatingManager() -> AppRatingManager {
         let mgr = AppRatingManager()
-        mgr.start(mockUserDefaults)
+        mgr.start()
         return mgr
     }
     
