@@ -481,19 +481,21 @@
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "Upgrade PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
-"PushNotifications.body" = "Turn on notifications to receive special messages from BRD in the future.";
+"PushNotifications.body" = "Turn on push notifcation and be the first to hear about new features and special offers.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Notifications Disabled";
 /* Push notifications settings instructions */
 "PushNotifications.enableInstructions" = "Turn on notifications in Settings to receive alerts";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push Notifications";
+/* Push notifications 'Maybe Later' button */
+"PushNotifications.maybeLater" = "Maybe Later";
 /* Push notifications are off label */
 "PushNotifications.off" = "Off";
 /* Push notifications are on label */
 "PushNotifications.on" = "On";
 /* Push notifications settings view title label */
-"PushNotifications.title" = "Notifications";
+"PushNotifications.title" = "Get in the loop";
 /* Address copied message. */
 "Receive.copied" = "Copied to clipboard.";
 /* Share via email button label */

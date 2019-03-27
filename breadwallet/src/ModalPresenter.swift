@@ -656,6 +656,13 @@ class ModalPresenter: Subscriber, Trackable {
                                             menuNav.showAlert(title: "", message: "User defaults reset")
                                             (menuNav.topViewController as? MenuViewController)?.reloadMenu()
             }))
+
+            developerItems.append(MenuItem(title: "Reset EME Paired Wallets",
+                                           accessoryText: { "\(Backend.pigeonExchange?.pairedWallets?.pubKeys.count ?? 0)" },
+                                           callback: {
+                                            Backend.pigeonExchange?.resetPairedWallets()
+                                            menuNav.showAlert(title: "", message: "Paired wallets reset")
+            }))
             
             developerItems.append(
                 MenuItem(title: "API Host",

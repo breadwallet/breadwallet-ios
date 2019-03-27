@@ -175,6 +175,7 @@ enum S {
         static let received = NSLocalizedString("TransactionDetails.received", value:"Received %1$@", comment: "Received $5.00 (received title 1/2)")
         static let moved = NSLocalizedString("TransactionDetails.moved", value:"Moved %1$@", comment: "Moved $5.00")
         static let blockHeightLabel = NSLocalizedString("TransactionDetails.blockHeightLabel", value: "Confirmed in Block", comment: "Block height label")
+        static let confirmationsLabel = NSLocalizedString("TransactionDetails.confirmationsLabel", value: "Confirmations", comment: "Confirmations label")
         static let notConfirmedBlockHeightLabel = NSLocalizedString("TransactionDetails.notConfirmedBlockHeightLabel", value: "Not Confirmed", comment: "eg. Confirmed in Block: Not Confirmed")
         
         static let initializedTimestampHeader = NSLocalizedString("TransactionDetails.initializedTimestampHeader", value:"Initialized", comment: "Timestamp section header for incomplete tx")
@@ -320,8 +321,9 @@ enum S {
     }
 
     enum PushNotifications {
-        static let title = NSLocalizedString("PushNotifications.title", value:"Notifications", comment: "Push notifications settings view title label")
-        static let body = NSLocalizedString("PushNotifications.body", value:"Turn on notifications to receive special messages from BRD in the future.", comment: "Push notifications settings view body")
+        static let title = NSLocalizedString("PushNotifications.title", value:"Get in the loop", comment: "Push notifications settings view title label")
+        static let body = NSLocalizedString("PushNotifications.body", value:"Turn on push notifcation and be the first to hear about new features and special offers.", comment: "Push notifications settings view body")
+        static let maybeLater = NSLocalizedString("PushNotifications.maybeLater", value: "Maybe Later", comment: "Button title for the 'Maybe Later' option")
         static let label = NSLocalizedString("PushNotifications.label", value:"Push Notifications", comment: "Push notifications toggle switch label")
         static let on = NSLocalizedString("PushNotifications.on", value: "On", comment: "Push notifications are on label")
         static let off = NSLocalizedString("PushNotifications.off", value: "Off", comment: "Push notifications are off label")
