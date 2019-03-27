@@ -75,11 +75,7 @@
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Обнаружено изменяющее экран приложение";
 /* Body for an announcement promoting Coinify. */
-<<<<<<< HEAD
-"Announcement.coinifyPromoBody" = "Купите биткойны на 100 евро до 31 марта 2019 года и получите подарочный сертификат Amazon.de на 20 евро*";
-=======
 "Announcement.coinifyPromoBody" = "Купите биткойны на 100 евро до 15 апрель 2019 года и получите подарочный сертификат Amazon.de на 20 евро*";
->>>>>>> release/3.10
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "Получите свой подарочный сертификат";
 /* Footnote text for an announcement promoting Coinify. */
