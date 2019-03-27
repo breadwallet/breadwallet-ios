@@ -75,11 +75,7 @@
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Foi Detetada uma Aplicação que Altera o Ecrã";
 /* Body for an announcement promoting Coinify. */
-<<<<<<< HEAD
-"Announcement.coinifyPromoBody" = "Compre €100 até 31 de março, 2019, e obtenha um cartão presente Amazon.de de €20*";
-=======
 "Announcement.coinifyPromoBody" = "Compre €100 até 15 de abril, 2019, e obtenha um cartão presente Amazon.de de €20*";
->>>>>>> release/3.10
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "Obtenha o seu cartão presente";
 /* Footnote text for an announcement promoting Coinify. */
