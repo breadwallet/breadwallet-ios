@@ -106,9 +106,9 @@ open class BRGeoLocationPlugin: NSObject, BRHTTPRouterPlugin, CLLocationManagerD
         // "location_enabled" indicates whether or not the user has geo location enabled on their phone
         router.get("/_permissions/geo") { (request, _) -> BRHTTPResponse in
             let userDefaults = UserDefaults.standard
-            let authzStatus = CLLocationManager.authorizationStatus()
+            let authStatus = CLLocationManager.authorizationStatus()
             var retJson = [String: Any]()
-            switch authzStatus {
+            switch authStatus {
             case .denied:
                 retJson["status"] = "denied"
             case .restricted:
@@ -119,6 +119,9 @@ open class BRGeoLocationPlugin: NSObject, BRHTTPRouterPlugin, CLLocationManagerD
                 retJson["status"] = "inuse"
             case .authorizedAlways:
                 retJson["status"] = "always"
+            @unknown default:
+                assertionFailure("unknown location auth status")
+                retJson["status"] = "undetermined"
             }
             retJson["user_queried"] = userDefaults.bool(forKey: "geo_permission_was_queried")
             retJson["location_enabled"] = CLLocationManager.locationServicesEnabled()
@@ -161,7 +164,7 @@ open class BRGeoLocationPlugin: NSObject, BRHTTPRouterPlugin, CLLocationManagerD
             let del = BRGeoLocationDelegate(response: resp)
             del.remove = {
                 objc_sync_enter(self)
-                if let idx = self.outstanding.index(where: { (d) -> Bool in return d == del }) {
+                if let idx = self.outstanding.firstIndex(where: { (d) -> Bool in return d == del }) {
                     self.outstanding.remove(at: idx)
                 }
                 objc_sync_exit(self)

@@ -70,6 +70,9 @@ struct NotificationAuthorizer: Trackable {
                     self.showAlertForInitialAuthorization(fromViewController: viewController, completion: completion)
                 case .denied:
                     self.showAlertForDisabledNotifications(fromViewController: viewController, completion: completion)
+                @unknown default:
+                    assertionFailure("unknown notification auth status")
+                    completion(false)
                 }
             }
         }
@@ -81,6 +84,9 @@ struct NotificationAuthorizer: Trackable {
             case .authorized, .provisional:
                 completion(true)
             case .notDetermined, .denied:
+                completion(false)
+            @unknown default:
+                assertionFailure("unknown notification auth status")
                 completion(false)
             }
         }
