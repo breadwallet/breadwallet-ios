@@ -420,7 +420,7 @@ class BRWebSocketImpl: BRWebSocket {
             }
             lengtharray[lengtharrayWritten - 1] = byte
             if lengtharrayWritten == 2 {
-                let ll = Data(bytes: lengtharray).withUnsafeBytes({ (p: UnsafePointer<UInt16>) -> UInt16 in
+                let ll = Data(lengtharray).withUnsafeBytes({ (p: UnsafePointer<UInt16>) -> UInt16 in
                     if Int(OSHostByteOrder()) != OSBigEndian {
                         return CFSwapInt16BigToHost(p.pointee)
                     }
@@ -453,7 +453,7 @@ class BRWebSocketImpl: BRWebSocket {
             }
             lengtharray[lengtharrayWritten - 1] = byte
             if lengtharrayWritten == 8 {
-                let ll = Data(bytes: lengtharray).withUnsafeBytes({ (p: UnsafePointer<UInt64>) -> UInt64 in
+                let ll = Data(lengtharray).withUnsafeBytes({ (p: UnsafePointer<UInt64>) -> UInt64 in
                     if Int(OSHostByteOrder()) != OSBigEndian {
                         return CFSwapInt64BigToHost(p.pointee)
                     }
@@ -544,7 +544,7 @@ class BRWebSocketImpl: BRWebSocket {
             var reason = ""
             if dataWritten >= 2 {
                 let lt = Array(data.prefix(2))
-                let ll = Data(bytes: lt).withUnsafeBytes({ (p: UnsafePointer<UInt16>) -> UInt16 in
+                let ll = Data(lt).withUnsafeBytes({ (p: UnsafePointer<UInt16>) -> UInt16 in
                     return CFSwapInt16BigToHost(p.pointee)
                 })
                 if let ss = SocketCloseEventCode(rawValue: ll) {
@@ -666,8 +666,8 @@ extension UInt16 {
     func toNetwork() -> [UInt8] {
         var selfBig = CFSwapInt16HostToBig(self)
         let size = MemoryLayout<UInt16>.size
-        return Data(bytes: &selfBig, count: size).withUnsafeBytes({ (p: UnsafePointer<UInt8>) -> [UInt8] in
-            return Array(UnsafeBufferPointer(start: p, count: size))
+        return Data(bytes: &selfBig, count: size).withUnsafeBytes({ (p: UnsafeRawBufferPointer) -> [UInt8] in
+            return Array(p)
         })
     }
 }
@@ -676,8 +676,8 @@ extension UInt64 {
     func toNetwork() -> [UInt8] {
         var selfBig = CFSwapInt64HostToBig(self)
         let size = MemoryLayout<UInt64>.size
-        return Data(bytes: &selfBig, count: size).withUnsafeBytes({ (p: UnsafePointer<UInt8>) -> [UInt8] in
-            return Array(UnsafeBufferPointer(start: p, count: size))
+        return Data(bytes: &selfBig, count: size).withUnsafeBytes({ (p: UnsafeRawBufferPointer) -> [UInt8] in
+            return Array(p)
         })
     }
 }
