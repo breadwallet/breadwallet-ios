@@ -75,11 +75,7 @@
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Bildschirmverändernde App erkannt";
 /* Body for an announcement promoting Coinify. */
-<<<<<<< HEAD
-"Announcement.coinifyPromoBody" = "Kaufen Sie bis zum 31. März 2019 für 100 € Bitcoins ein und Sie erhalten einen Amazon.de-Geschengutschein im Wert von 20 € ⃰";
-=======
-"Announcement.coinifyPromoBody" = "Kaufen Sie bis zum 15. April 2019 für 100 € Bitcoins ein und Sie erhalten einen Amazon.de-Geschengutschein im Wert von 20 € ⃰";
->>>>>>> release/3.10
+"Announcement.coinifyPromoBody" = "Kaufen Sie bis zum 16. April 2019 für 100 € Bitcoins ein und Sie erhalten einen Amazon.de-Geschengutschein im Wert von 20 € ⃰";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "Jetzt Geschenkgutschein erhalten";
 /* Footnote text for an announcement promoting Coinify. */
@@ -146,6 +142,8 @@
 "Button.Home" = "Start";
 /* Ignore button label */
 "Button.ignore" = "Ignorieren";
+/* Maybe Later button label */
+"Button.maybeLater" = "Vielleicht später";
 /* menu button */
 "Button.menu" = "Menü";
 /* More information button */
@@ -880,6 +878,9 @@
 "TransactionDetails.commentsPlaceholder" = "Notiz hinzufügen ...";
 /* Timestamp section header for complete tx */
 "TransactionDetails.completeTimestampHeader" = "Abgeschlossen";
+/* Block height and confirmations label
+eg. 182930 (45061 confirmations) */
+"TransactionDetails.confirmationsLabel" = "%1$@ (%2$@ confirmations)";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Hier werden deine Transaktionen angezeigt.";
 /* e.g. the users balance after the transaction was compeleted */

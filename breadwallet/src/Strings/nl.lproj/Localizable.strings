@@ -75,11 +75,7 @@
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Schermveranderende app gedetecteerd";
 /* Body for an announcement promoting Coinify. */
-<<<<<<< HEAD
-"Announcement.coinifyPromoBody" = "Koop € 100 aan Bnitcoin vóór 31 maart 2019, en ontvang een Amazon.de-cadeaubon van € 20*";
-=======
-"Announcement.coinifyPromoBody" = "Koop € 100 aan Bnitcoin vóór 15 april 2019, en ontvang een Amazon.de-cadeaubon van € 20*";
->>>>>>> release/3.10
+"Announcement.coinifyPromoBody" = "Koop € 100 aan Bnitcoin vóór 16 april 2019, en ontvang een Amazon.de-cadeaubon van € 20*";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "Ontvang je cadeaubon";
 /* Footnote text for an announcement promoting Coinify. */
@@ -146,6 +142,8 @@
 "Button.Home" = "Startpagina";
 /* Ignore button label */
 "Button.ignore" = "Negeren";
+/* Maybe Later button label */
+"Button.maybeLater" = "Misschien later";
 /* menu button */
 "Button.menu" = "Menu";
 /* More information button */
@@ -880,6 +878,9 @@
 "TransactionDetails.commentsPlaceholder" = "Voeg memo toe...";
 /* Timestamp section header for complete tx */
 "TransactionDetails.completeTimestampHeader" = "Voltooid";
+/* Block height and confirmations label
+eg. 182930 (45061 confirmations) */
+"TransactionDetails.confirmationsLabel" = "%1$@ (%2$@ bevestigingen)";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Je transacties zullen hier verschijnen.";
 /* e.g. the users balance after the transaction was compeleted */

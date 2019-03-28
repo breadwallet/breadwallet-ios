@@ -78,6 +78,8 @@
 "Announcement.coinifyPromoBody" = "在2019年3月31日前购买100欧元的比特币并获得一张在Amazon.de网上消费的20欧元礼品卡 ⃰。";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "拿到你的礼品卡";
+/* Body for an announcement promoting Coinify. */
+"Announcement.coinifyPromoBody" = "在2019年4月15日之前购买100欧元的比特币以获得20欧元的Amazon.de礼品卡*";
 /* Footnote text for an announcement promoting Coinify. */
 "Announcement.coinifyPromoFootnote" = "每位客户限拿一张礼品卡。仅适用于奥地利，德国，卢森堡和荷兰";
 /* Title for an announcement promoting Coinify. */
@@ -142,6 +144,8 @@
 "Button.Home" = "主页";
 /* Ignore button label */
 "Button.ignore" = "忽略";
+/* Maybe Later button label */
+"Button.maybeLater" = "也许以后";
 /* menu button */
 "Button.menu" = "菜单";
 /* More information button */
@@ -876,6 +880,9 @@
 "TransactionDetails.commentsPlaceholder" = "添加备忘录...";
 /* Timestamp section header for complete tx */
 "TransactionDetails.completeTimestampHeader" = "完成";
+/* Block height and confirmations label
+eg. 182930 (45061 confirmations) */
+"TransactionDetails.confirmationsLabel" = "%1$@ (%2$@ 确认）";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "您的交易将显示在这里。";
 /* e.g. the users balance after the transaction was compeleted */

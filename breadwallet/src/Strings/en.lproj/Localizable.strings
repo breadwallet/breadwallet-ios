@@ -75,7 +75,7 @@
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Screen-Altering App Detected";
 /* Body for an announcement promoting Coinify. */
-"Announcement.coinifyPromoBody" = "Buy €100 of Bitcoin by April 15, 2019 and get a €20 Amazon.de gift card  ⃰";
+"Announcement.coinifyPromoBody" = "Buy €100 of Bitcoin by April 16, 2019 and get a €20 Amazon.de gift card  ⃰";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "Get your gift card";
 /* Footnote text for an announcement promoting Coinify. */
@@ -142,6 +142,8 @@
 "Button.Home" = "Home";
 /* Ignore button label */
 "Button.ignore" = "Ignore";
+/* Maybe Later button label */
+"Button.maybeLater" = "Maybe Later";
 /* menu button */
 "Button.menu" = "Menu";
 /* More information button */
@@ -481,21 +483,19 @@
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "Upgrade PIN";
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
-"PushNotifications.body" = "Turn on push notifcation and be the first to hear about new features and special offers.";
+"PushNotifications.body" = "Turn on notifications to receive special messages from BRD in the future.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Notifications Disabled";
 /* Push notifications settings instructions */
 "PushNotifications.enableInstructions" = "Turn on notifications in Settings to receive alerts";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push Notifications";
-/* Push notifications 'Maybe Later' button */
-"PushNotifications.maybeLater" = "Maybe Later";
 /* Push notifications are off label */
 "PushNotifications.off" = "Off";
 /* Push notifications are on label */
 "PushNotifications.on" = "On";
 /* Push notifications settings view title label */
-"PushNotifications.title" = "Get in the loop";
+"PushNotifications.title" = "Notifications";
 /* Address copied message. */
 "Receive.copied" = "Copied to clipboard.";
 /* Share via email button label */
@@ -878,6 +878,9 @@
 "TransactionDetails.commentsPlaceholder" = "Add memo...";
 /* Timestamp section header for complete tx */
 "TransactionDetails.completeTimestampHeader" = "Complete";
+/* Block height and confirmations label
+eg. 182930 (45061 confirmations) */
+"TransactionDetails.confirmationsLabel" = "%1$@ (%2$@ confirmations)";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Your transactions will appear here.";
 /* e.g. the users balance after the transaction was compeleted */

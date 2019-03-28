@@ -78,6 +78,8 @@
 "Announcement.coinifyPromoBody" = "2019年3月31日までにビットコインを100ユーロ購入して、20ユーロのAmazon.deギフトカードをもらおう*";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "ギフトカードをもらおう";
+/* Body for an announcement promoting Coinify. */
+"Announcement.coinifyPromoBody" = "2019年4月15日までに€100のビットコインを購入すると€20 のAmazon.deギフトカードがゲットできます";
 /* Footnote text for an announcement promoting Coinify. */
 "Announcement.coinifyPromoFootnote" = "*ギフトカードはお一人様1枚まで。オーストリア、ドイツ、ルクセンブルク、オランダでのみ利用可能";
 /* Title for an announcement promoting Coinify. */
@@ -142,6 +144,8 @@
 "Button.Home" = "ホーム";
 /* Ignore button label */
 "Button.ignore" = "無視する";
+/* Maybe Later button label */
+"Button.maybeLater" = "また後で";
 /* menu button */
 "Button.menu" = "メニュー";
 /* More information button */
@@ -876,6 +880,9 @@
 "TransactionDetails.commentsPlaceholder" = "メモを追加する...";
 /* Timestamp section header for complete tx */
 "TransactionDetails.completeTimestampHeader" = "完了";
+/* Block height and confirmations label
+eg. 182930 (45061 confirmations) */
+"TransactionDetails.confirmationsLabel" = "%1$@ (%2$@ 確認)";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "あなたの取引はこちらに表示されます。";
 /* e.g. the users balance after the transaction was compeleted */
