@@ -191,7 +191,7 @@ extension KeyStore: WalletAuthenticator {
         do {
             if let creationTimeData: Data = try keychainItem(key: KeychainKey.creationTime),
                 creationTimeData.count == MemoryLayout<TimeInterval>.stride {
-                creationTimeData.withUnsafeBytes { creationTime = $0.pointee }
+                creationTimeData.withUnsafeBytes { creationTime = $0.load(as: TimeInterval.self) }
             }
             return creationTime
         } catch {
@@ -222,7 +222,7 @@ extension KeyStore: WalletAuthenticator {
     fileprivate var ethPrivKey: String? {
         return autoreleasepool {
             do {
-                if let ethKey: String? = try? keychainItem(key: KeychainKey.ethPrivKey) {
+                if let ethKey: String? = ((try? keychainItem(key: KeychainKey.ethPrivKey)) as String??) {
                     if ethKey != nil { return ethKey }
                 }
                 // TODO: move to setSeedPhrase?
@@ -253,7 +253,7 @@ extension KeyStore: WalletAuthenticator {
     var apiAuthKey: String? {
         return autoreleasepool {
             do {
-                if let apiKey: String? = try? keychainItem(key: KeychainKey.apiAuthKey) {
+                if let apiKey: String? = ((try? keychainItem(key: KeychainKey.apiAuthKey)) as String??) {
                     if apiKey != nil {
                         return apiKey
                     }
@@ -811,7 +811,7 @@ private func keychainItem<T>(key: String) throws -> T? {
                                                         CFStringBuiltInEncodings.UTF8.rawValue) as? T
     case is Int64.Type:
         guard data.count == MemoryLayout<T>.stride else { return nil }
-        return data.withUnsafeBytes { $0.pointee }
+        return data.withUnsafeBytes({ $0.load(as: T.self) })
     case is Dictionary<AnyHashable, Any>.Type:
         return NSKeyedUnarchiver.unarchiveObject(with: data) as? T
     default:

@@ -58,7 +58,7 @@ public extension Currency {
         return self.code == other.code
     }
     
-    public func addressURI(_ address: String) -> String? {
+    func addressURI(_ address: String) -> String? {
         guard let scheme = urlSchemes?.first, isValidAddress(address) else { return nil }
         return "\(scheme):\(address)"
     }
