@@ -78,6 +78,8 @@
 "Announcement.coinifyPromoBody" = "Köp Bitcoin till ett värde av 100 € senast den 31 mars 2019 och få ett presentkort på 20 € hos Amazon.de ⃰";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "Få ditt presentkort";
+/* Body for an announcement promoting Coinify. */
+"Announcement.coinifyPromoBody" = "Köp Bitcoin till ett värde av €100 före den 15 april 2019 och få ett €20 Amazon.de presentkort ⃰";
 /* Footnote text for an announcement promoting Coinify. */
 "Announcement.coinifyPromoFootnote" = "⃰ Begränsning, ett presentkort per kund. Tillgängligt endast i Österrike, Tyskland, Luxemburg och Nederländerna.";
 /* Title for an announcement promoting Coinify. */
@@ -142,6 +144,8 @@
 "Button.Home" = "Hem";
 /* Ignore button label */
 "Button.ignore" = "Ignorera";
+/* Maybe Later button label */
+"Button.maybeLater" = "Kanske senare";
 /* menu button */
 "Button.menu" = "Meny";
 /* More information button */
@@ -876,6 +880,9 @@
 "TransactionDetails.commentsPlaceholder" = "Lägg till promemoria ...";
 /* Timestamp section header for complete tx */
 "TransactionDetails.completeTimestampHeader" = "Slutför";
+/* Block height and confirmations label
+eg. 182930 (45061 confirmations) */
+"TransactionDetails.confirmationsLabel" = "%1$@ (%2$@ bekräftelser)";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Dina transaktioner visas här.";
 /* e.g. the users balance after the transaction was compeleted */

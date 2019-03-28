@@ -42,6 +42,9 @@ extension LAContext {
             return .touch
         case .faceID:
             return .face
+        @unknown default:
+            assertionFailure("unknown biometry type")
+            return .none
         }
     }
     

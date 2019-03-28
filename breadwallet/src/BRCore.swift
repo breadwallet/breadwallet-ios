@@ -112,9 +112,9 @@ extension BRAddress: CustomStringConvertible, Hashable {
     public var description: String {
         return String(cString: UnsafeRawPointer([self.s]).assumingMemoryBound(to: CChar.self))
     }
-    
-    public var hashValue: Int {
-        return BRAddressHash([self.s])
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(BRAddressHash([self.s]))
     }
     
     static public func == (l: BRAddress, r: BRAddress) -> Bool {

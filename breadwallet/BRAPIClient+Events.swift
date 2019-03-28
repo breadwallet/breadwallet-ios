@@ -300,9 +300,8 @@ class EventManager {
                 guard let inputStream = InputStream(fileAtPath: fileName) else { return }
                 inputStream.open()
                 guard let fileContents = try? JSONSerialization.jsonObject(with: inputStream, options: []) as? [[String: Any]] else { return }
-                guard let inArray = fileContents else { return }
                 // 2: transform it into the json data the server expects
-                let eventDump = myself.eventTupleArrayToDictionary(inArray)
+                let eventDump = myself.eventTupleArrayToDictionary(fileContents)
                 guard let body = try? JSONSerialization.data(withJSONObject: eventDump, options: []) else { return }
                 
                 // 3: send off the request and await response

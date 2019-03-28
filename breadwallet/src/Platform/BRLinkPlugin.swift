@@ -122,18 +122,18 @@ class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate
                 print("[BRLinkPlugin] POST /_browser could not deserialize json object")
                 return BRHTTPResponse(request: request, code: 400)
             }
-            guard let toURL = json?["url"] as? String, let url = URL(string: toURL) else {
+            guard let toURL = json["url"] as? String, let url = URL(string: toURL) else {
                 print("[BRLinkPlugin] POST /_browser request body did not contain a valid URL")
                 return BRHTTPResponse(request: request, code: 400)
             }
             var req = URLRequest(url: url)
-            if let method = json?["method"] as? String {
+            if let method = json["method"] as? String {
                 req.httpMethod = method
             }
-            if let body = json?["body"] as? String {
+            if let body = json["body"] as? String {
                 req.httpBody = Data(body.utf8)
             }
-            if let headers = json?["headers"] as? [String: String] {
+            if let headers = json["headers"] as? [String: String] {
                 for (k, v) in headers {
                     req.addValue(v, forHTTPHeaderField: k)
                 }
@@ -142,7 +142,7 @@ class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate
             DispatchQueue.main.async {
                 let browser = BRBrowserViewController()
                 browser.load(req)
-                if let closeOn = json?["closeOn"] as? String {
+                if let closeOn = json["closeOn"] as? String {
                     browser.closeOnURL = closeOn
                 }
                 browser.onDone = {

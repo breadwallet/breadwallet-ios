@@ -301,6 +301,6 @@ class StartImportViewController: UIViewController {
 extension Data {
     var reverse: Data {
         let tempBytes = Array(([UInt8](self)).reversed())
-        return Data(bytes: tempBytes)
+        return Data(tempBytes)
     }
 }

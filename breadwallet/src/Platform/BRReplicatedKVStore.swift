@@ -768,8 +768,7 @@ open class BRReplicatedKVStore: NSObject {
         gettimeofday(&tv, nil)
         var t = UInt64(tv.tv_usec) * 1_000_000 + UInt64(tv.tv_usec)
         let p = [UInt8](repeating: 0, count: 4)
-        return Data(bytes: &t, count: MemoryLayout<UInt64>.size).withUnsafeBytes { (dat: UnsafePointer<UInt8>) -> [UInt8] in
-            let buf = UnsafeBufferPointer(start: dat, count: MemoryLayout<UInt64>.size)
+        return Data(bytes: &t, count: MemoryLayout<UInt64>.size).withUnsafeBytes { (buf: UnsafeRawBufferPointer) -> [UInt8] in
             return p + Array(buf)
         }
     }
