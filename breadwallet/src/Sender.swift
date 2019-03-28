@@ -312,7 +312,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
                         completion(.publishFailure(error))
                     } else {
                         self.setMetaData(btcTx: tx)
-                        let txData = Data(bytes: tx.bytes ?? [])
+                        let txData = Data(tx.bytes ?? [])
                         completion(.success(tx.pointee.txHash.description, txData.hexString))
                         self.postProtocolPaymentIfNeeded()
                     }
@@ -352,7 +352,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         } else {
             request.setValue("application/bitcoin-payment", forHTTPHeaderField: "Content-Type")
             request.addValue("application/bitcoin-paymentack", forHTTPHeaderField: "Accept")
-            request.httpBody = Data(bytes: payment.bytes)
+            request.httpBody = Data(payment.bytes)
         }
         
         print("[PAY] posting to: \(url)")
