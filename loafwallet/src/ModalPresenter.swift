@@ -216,9 +216,7 @@ class ModalPresenter : Subscriber, Trackable {
         case .manageWallet:
             return ModalViewController(childViewController: ManageWalletViewController(store: store), store: store)
         case .wipeEmptyWallet:
-          guard let walletManager = walletManager else {return nil}
-          let wipeEmptyvc = WipeEmptyWalletViewController(walletManager: walletManager, store: store)
-          return ModalViewController(childViewController: wipeEmptyvc, store: store)
+            return wipeEmptyView()
         case .requestAmount:
             guard let wallet = walletManager?.wallet else { return nil }
             let requestVc = RequestAmountViewController(wallet: wallet, store: store)
@@ -233,6 +231,17 @@ class ModalPresenter : Subscriber, Trackable {
             return ModalViewController(childViewController: requestVc, store: store)
         }
       
+    }
+    private func wipeEmptyView() -> UIViewController? {
+      //TODO: refactor model to wipe wallet
+       guard let myself = self else { return }
+       guard let walletManager = walletManager else {return nil}
+       let wipeEmptyvc = WipeEmptyWalletViewController(walletManager: walletManager, store: store)
+       return ModalViewController(childViewController: wipeEmptyvc, store: store)
+      
+       let root = ModalViewController(childViewController: wipeEmptyvc, store: store)
+
+       return root
     }
 
     private func makeSendView() -> UIViewController? {
@@ -374,29 +383,6 @@ class ModalPresenter : Subscriber, Trackable {
                         myself.topViewController?.present(nc, animated: true, completion: nil)
                     })
                }),
-              Setting(title: S.Settings.wipeZeroBalance, callback: { [weak self] in
-                guard let myself = self else { return }
-                guard let walletManager = myself.walletManager else { return }
-//                let nc = ModalNavigationController()
-//                nc.setClearNavbar()
-//                nc.setWhiteStyle()
-//                nc.delegate = myself.wipeNavigationDelegate
-//                let start = StartWipeWalletViewController {
-//                  let recover = EnterPhraseViewController(store: myself.store, walletManager: walletManager, reason: .validateForWipingWallet( {
-//                    myself.wipeWallet()
-//                  }))
-//                  nc.pushViewController(recover, animated: true)
-//                }
-//                start.addCloseNavigationItem(tintColor: .white)
-//                start.navigationItem.title = S.WipeWallet.title
-//                let faqButton = UIButton.buildFaqButton(store: myself.store, articleId: ArticleIds.wipeWallet)
-//                faqButton.tintColor = .white
-//                start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
-//                nc.viewControllers = [start]
-//                settingsNav.dismiss(animated: true, completion: {
-//                  myself.topViewController?.present(nc, animated: true, completion: nil)
-//                })
-              })
             ],
             "Manage": [
                 Setting(title: S.Settings.notifications, accessoryText: {

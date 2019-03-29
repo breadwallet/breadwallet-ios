@@ -43,14 +43,10 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         tableView.separatorStyle = .none
         tableView.backgroundColor = .whiteTint
         addCustomTitle()
-        checkWalletStatus()
-        addWalletObserver()
-
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        refreshTableData()
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -126,48 +122,6 @@ class SettingsViewController : UITableViewController, CustomTitleView {
 
     override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         scrollViewWillEndDraggingForCustomTitle(yOffset: targetContentOffset.pointee.y)
-    }
-  
-  
-    private func refreshTableData() {
-      var indexPaths: [IndexPath] = []
-      sections.enumerated().forEach { i, key in
-        rows[key]?.enumerated().forEach { j, setting in
-          if setting.accessoryText != nil {
-            indexPaths.append(IndexPath(row: j, section: i))
-          }
-        }
-      }
-      tableView.beginUpdates()
-      tableView.reloadRows(at: indexPaths, with: .automatic)
-      tableView.endUpdates()
-    }
-  
-    private func checkWalletStatus() {
-      if walletIsEmpty {
-        var tempRows = rows
-        tempRows["Wallet"] = tempRows["Wallet"]?.filter { $0.title != S.Settings.wipe}
-        self.rows = tempRows
-      } else {
-        var tempRows = rows
-        tempRows["Wallet"] = tempRows["Wallet"]?.filter { $0.title != S.Settings.wipeZeroBalance}
-        self.rows = tempRows
-      }
-    }
-  
-    private func addWalletObserver() {
-        NotificationCenter.default.addObserver(forName: .WalletBalanceChangedNotification, object: nil, queue: nil, using: { (note) in
-          
-            if let balance = note.userInfo?["balance"] as? Int {
-              
-              if balance == 0 {
-                self.walletIsEmpty = true
-              } else {
-                self.walletIsEmpty = false
-              }
-              self.refreshTableData()
-            }
-        })
     }
 
     required init?(coder aDecoder: NSCoder) {
