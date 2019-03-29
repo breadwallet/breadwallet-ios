@@ -109,7 +109,6 @@ class WipeEmptyWalletViewController : UIViewController, Subscriber, Trackable {
         self?.store.perform(action: RootModalActions.Present(modal: .requestAmount))
       })
     }
-    
   }
   
   @objc private func resetTapped() {
