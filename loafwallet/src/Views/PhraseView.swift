@@ -13,7 +13,7 @@ class PhraseView: UIView {
     private let phrase: String
     private let label = UILabel()
 
-    static let defaultSize = CGSize(width: 128.0, height: 88.0)
+    static let defaultSize = CGSize(width: 150, height: 88.0)
 
     var xConstraint: NSLayoutConstraint?
 
@@ -27,6 +27,7 @@ class PhraseView: UIView {
         addSubview(label)
         label.constrainToCenter()
         label.textColor = .white
+        label.adjustsFontSizeToFitWidth = true
         label.text = phrase
         label.font = UIFont.customBold(size: 16.0)
         backgroundColor = .pink
