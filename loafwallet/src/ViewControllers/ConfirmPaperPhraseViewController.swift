@@ -122,23 +122,14 @@ class ConfirmPaperPhraseViewController : UIViewController {
 
     @objc private func checkTextFields() {
         if confirmFirstPhrase.textField.text == words[indices.0] && confirmSecondPhrase.textField.text == words[indices.1] {
-          self.showWarningConfirmation()
+          UserDefaults.writePaperPhraseDate = Date()
+          store.trigger(name: .didWritePaperKey)
+          callback()
         } else {
             confirmFirstPhrase.validate()
             confirmSecondPhrase.validate()
             showErrorMessage(S.ConfirmPaperPhrase.error)
         }
-    }
-  
-    @objc private func showWarningConfirmation() {
-//      if let warningVC = UIStoryboard(name: "WarningConfirmationViewController", bundle: nil).instantiateViewController(withIdentifier: "WarningConfirmationViewController") as? WarningConfirmationViewController {
-//        self.present(warningVC, animated: true, completion: nil)
-//      } 
-      
-//      UserDefaults.writePaperPhraseDate = Date()
-//      store.trigger(name: .didWritePaperKey)
-//      callback()
-      
     }
   
     @objc private func keyboardWillShow(notification: Notification) {
