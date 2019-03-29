@@ -287,7 +287,6 @@ enum S {
         static let review = NSLocalizedString("Settings.review", value: "Leave us a Review", comment: "Leave review button label")
         static let enjoying = NSLocalizedString("Settings.enjoying", value: "Are you enjoying LoafWallet?", comment: "Are you enjoying LoafWallet alert message body")
         static let wipe = NSLocalizedString("Settings.wipe", value: "Start/Recover Another Wallet", comment: "Start or recover another wallet menu label.")
-        static let wipeZeroBalance = NSLocalizedString("Settings.wipeZeroBalance", value: "Wipe Zero-Balance Wallet", comment: "Wipe Zero Balance menu label.")
         static let advancedTitle = NSLocalizedString("Settings.advancedTitle", value: "Advanced Settings", comment: "Advanced Settings title")
         static let faceIdLimit = NSLocalizedString("Settings.faceIdLimit", value:"Face ID Spending Limit", comment: "Face ID spending limit label")
     }
