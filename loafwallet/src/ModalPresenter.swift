@@ -233,15 +233,14 @@ class ModalPresenter : Subscriber, Trackable {
       
     }
     private func wipeEmptyView() -> UIViewController? {
-      //TODO: refactor model to wipe wallet
-       guard let myself = self else { return }
-       guard let walletManager = walletManager else {return nil}
-       let wipeEmptyvc = WipeEmptyWalletViewController(walletManager: walletManager, store: store)
-       return ModalViewController(childViewController: wipeEmptyvc, store: store)
       
-       let root = ModalViewController(childViewController: wipeEmptyvc, store: store)
+      guard let walletManager = walletManager else { return nil }
 
-       return root
+      let wipeEmptyvc = WipeEmptyWalletViewController(walletManager: walletManager, store: store, didTapNext: ({ [weak self] in
+        guard let myself = self else { return }
+        myself.wipeWallet()
+      }))
+      return ModalViewController(childViewController: wipeEmptyvc, store: store)
     }
 
     private func makeSendView() -> UIViewController? {
@@ -634,15 +633,15 @@ class ModalPresenter : Subscriber, Trackable {
                 DispatchQueue.walletQueue.async {
                     self.walletManager?.peerManager?.disconnect()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-                        activity.dismiss(animated: true, completion: {
-                            if (self.walletManager?.wipeWallet(pin: "forceWipe"))! {
-                                self.store.trigger(name: .reinitWalletManager({}))
-                            } else {
-                                let failure = UIAlertController(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage, preferredStyle: .alert)
-                                failure.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
-                                self.topViewController?.present(failure, animated: true, completion: nil)
-                            }
-                        })
+                        if (self.walletManager?.wipeWallet(pin: "forceWipe"))! {
+                            self.store.trigger(name: .reinitWalletManager({
+                              activity.dismiss(animated: true, completion: {})
+                            }))
+                         } else {
+                            let failure = UIAlertController(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage, preferredStyle: .alert)
+                            failure.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
+                            self.topViewController?.present(failure, animated: true, completion: nil)
+                         }
                     })
                 }
             })
