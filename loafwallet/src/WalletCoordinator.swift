@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import AVFoundation 
+import AVFoundation
 
 private let lastBlockHeightKey = "LastBlockHeightKey"
 private let progressUpdateInterval: TimeInterval = 0.5
