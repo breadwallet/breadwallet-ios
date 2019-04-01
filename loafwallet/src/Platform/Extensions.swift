@@ -304,7 +304,7 @@ public extension Data {
         }
     }
     
-    public func uInt8(atOffset offset: UInt) -> UInt8 {
+    func uInt8(atOffset offset: UInt) -> UInt8 {
         let offt = Int(offset)
         let size = MemoryLayout<UInt8>.size
         if self.count < offt + size { return 0 }
@@ -313,7 +313,7 @@ public extension Data {
         }
     }
     
-    public func uInt32(atOffset offset: UInt) -> UInt32 {
+    func uInt32(atOffset offset: UInt) -> UInt32 {
         let offt = Int(offset)
         let size = MemoryLayout<UInt32>.size
         if self.count < offt + size { return 0 }
@@ -322,7 +322,7 @@ public extension Data {
         }
     }
     
-    public func uInt64(atOffset offset: UInt) -> UInt64 {
+    func uInt64(atOffset offset: UInt) -> UInt64 {
         let offt = Int(offset)
         let size = MemoryLayout<UInt64>.size
         if self.count < offt + size { return 0 }
@@ -331,7 +331,7 @@ public extension Data {
         }
     }
     
-    public func compactSign(key: BRKey) -> Data {
+    func compactSign(key: BRKey) -> Data {
         return self.withUnsafeBytes({ (selfBytes: UnsafePointer<UInt8>) -> Data in
             var data = Data(count: 65)
             var k = key
@@ -351,7 +351,7 @@ public extension Data {
         }
     }
     
-    public func chacha20Poly1305AEADEncrypt(key: BRKey) -> Data {
+    func chacha20Poly1305AEADEncrypt(key: BRKey) -> Data {
         let data = [UInt8](self)
         let inData = UnsafePointer<UInt8>(data)
         let nonce = genNonce()
@@ -365,7 +365,7 @@ public extension Data {
         }
     }
     
-    public func chacha20Poly1305AEADDecrypt(key: BRKey) throws -> Data {
+    func chacha20Poly1305AEADDecrypt(key: BRKey) throws -> Data {
         let data = [UInt8](self)
         guard data.count > 12 else { throw BRReplicatedKVStoreError.malformedData }
         let nonce = Array(data[data.startIndex...data.startIndex.advanced(by: 12)])
@@ -492,7 +492,7 @@ public extension Date {
 }
 
 public extension BRKey {
-    public var publicKey: Data {
+    var publicKey: Data {
         var k = self
         let len = BRKeyPubKey(&k, nil, 0)
         var data = Data(count: len)

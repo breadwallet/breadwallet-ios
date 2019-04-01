@@ -894,7 +894,7 @@ class SecurityCenterNavigationDelegate : NSObject, UINavigationControllerDelegat
         guard let coordinator = navigationController.topViewController?.transitionCoordinator else { return }
 
         if coordinator.isInteractive {
-            coordinator.notifyWhenInteractionEnds { context in
+          coordinator.notifyWhenInteractionChanges { context in
                 //We only want to style the view controller if the
                 //pop animation wasn't cancelled
                 if !context.isCancelled {
