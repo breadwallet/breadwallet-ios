@@ -215,12 +215,20 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
     }
     
     // MARK: - WKNavigationDelegate
-    open func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+    open func webView(_ webView: WKWebView, didCommit navigation: WKNavigation?) {
+      if let navigation = navigation {
         print("[BRBrowserViewController] webView didCommit navigation = \(navigation)")
+      } else {
+        print("[BRBrowserViewController] webView didCommit navigation empty")
+      }
     }
     
-    open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation?) {
+      if let navigation = navigation {
         print("[BRBrowserViewController] webView didFinish navigation = \(navigation)")
+      } else {
+        print("[BRBrowserViewController] webView didFinish navigation empty")
+      }
         // this is part two of executing a POST request when loading the initial request 
         // since WKWebView looses the POST body when calling load(request:) we have to use our
         // custom POST bouncer, an html file with a javascript function called `post(url:,body:)` 
@@ -246,16 +254,24 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
     open func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
         print("[BRBrowserViewController] webViewContentProcessDidTerminate")
     }
-    
-    open func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+  
+    open func webView(_ webView: WKWebView, didFail navigation: WKNavigation?, withError error: Error) {
+      if let navigation = navigation {
         print("[BRBrowserViewController] webView didFail navigation = \(navigation) error = \(error)")
-        showLoading(false)
-        showError(error.localizedDescription)
+      } else {
+        print("[BRBrowserViewController] webView didFail navigation = no WKNavigation error = \(error)")
+      }
+      showLoading(false)
+      showError(error.localizedDescription)
     }
     
-    open func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!,
+    open func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation?,
                       withError error: Error) {
-        print("[BRBrowserViewController] webView didFailProvisionalNavigation navigation = \(navigation) error = \(error)")
+      if let navigation = navigation {
+      print("[BRBrowserViewController] webView didFailProvisionalNavigation navigation = \(navigation) error = \(error)")
+      } else {
+        print("[BRBrowserViewController] webView didFailProvisionalNavigation no WKNavigation error = \(error)")
+      }
         showLoading(false)
         showError(error.localizedDescription)
     }
@@ -281,8 +297,12 @@ fileprivate class BRBrowserViewControllerInternal: UIViewController, WKNavigatio
         decisionHandler(.allow)
     }
     
-    open func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+    open func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation?) {
+      if let navigation = navigation {
         print("[BRBrowserViewController] webView didStartProfisionalNavigation navigation = \(navigation)")
+      } else {
+        print("[BRBrowserViewController] webView didStartProfisionalNavigation navigation = NO WKNavigation")
+      }
         showLoading(true)
     }
     

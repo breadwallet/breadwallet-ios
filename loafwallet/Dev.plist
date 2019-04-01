@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key></key>
+	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -116,7 +118,9 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>Used to Unlock app &amp; Authorize payments</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Used to determine where you are - never recorded or shared with anyone</string>
+	<string>Used to determine the closest node to you - never recorded or shared with anyone</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Used to determine the closest node to you - never recorded or shared with anyone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used to scan barcodes</string>
 	<key>UIAppFonts</key>

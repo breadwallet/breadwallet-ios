@@ -236,7 +236,7 @@ class BRWebSocketServer {
                     if Int32(serr) == EWOULDBLOCK || Int32(serr) == EAGAIN {
                         return
                     } else {
-                        self.log("socket write failed fd=\(fd) err=\(strerror(serr))")
+                      self.log("socket write failed fd=\(fd) err=\(String(describing: strerror(serr)))")
                         throw BRHTTPServerError.socketWriteFailed
                     }
                 }
