@@ -9,6 +9,10 @@
 import UIKit
 
 class TransactionDetailCollectionViewCell : UICollectionViewCell {
+  
+  enum DeviceIdiom {
+    
+  }
 
     //MARK: - Public
     override init(frame: CGRect) {
@@ -74,7 +78,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     private let amountDetails = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
     private let addressHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
     private let fullAddress = UIButton(type: .system)
-    private let headerHeight: CGFloat = 48.0
+    private let headerHeight: CGFloat = 70
     private let scrollViewContent = UIView()
     private let scrollView = UIScrollView()
     private let moreButton = UIButton(type: .system)

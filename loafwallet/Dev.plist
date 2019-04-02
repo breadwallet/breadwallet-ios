@@ -52,7 +52,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.3.2</string>
+	<string>2.3.4</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -87,7 +87,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>21</string>
+	<string>1</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -117,9 +117,9 @@
 	<string>Used to scan barcodes</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Used to Unlock app &amp; Authorize payments</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Used to determine the closest node to you - never recorded or shared with anyone</string>
 	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Used to determine the closest node to you - never recorded or shared with anyone</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Used to determine the closest node to you - never recorded or shared with anyone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used to scan barcodes</string>
