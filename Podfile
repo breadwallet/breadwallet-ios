@@ -19,12 +19,6 @@ target 'loafwallet' do
   shared_pods  
 end
 
-target 'loafwallet WatchKit App' do
-  platform :watchos, '4.0'
-  inherit! :search_paths
-  shared_watchOS_pods
-end
-
 target 'loafwallet-dev' do
   platform :ios, '10.0'
   shared_pods
