@@ -9,6 +9,7 @@
 import UIKit
 import LocalAuthentication
 
+
 private let biometricsSize: CGFloat = 32.0
 private let topControlHeight: CGFloat = 32.0
 

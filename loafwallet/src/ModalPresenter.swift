@@ -9,6 +9,7 @@
 import UIKit
 import LocalAuthentication
 
+
 class ModalPresenter : Subscriber, Trackable {
 
     //MARK: - Public
@@ -449,21 +450,6 @@ class ModalPresenter : Subscriber, Trackable {
                 })
             }), at: 1)
         }
-
-        rows["LoafWallet"]?.append( Setting(title: S.Settings.review, callback: {
-                let alert = UIAlertController(title: S.Settings.review, message: S.Settings.enjoying, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: S.Button.no, style: .default, handler: { _ in
-                    self.messagePresenter.presenter = self.topViewController
-                    self.messagePresenter.presentFeedbackCompose()
-                }))
-                alert.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
-                    if let url = URL(string: C.reviewLink) {
-                      UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                    }
-                }))
-                self.topViewController?.present(alert, animated: true, completion: nil)
-            })
-        )
 
         let settings = SettingsViewController(sections: sections, rows: rows)
         settings.addCloseNavigationItem()
