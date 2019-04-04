@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import StoreKit
 
 private let promptDelay: TimeInterval = 0.6
 
@@ -173,6 +174,16 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
         })
     }
 
+    private func checkTransactionCountForReview(transactions: [Transaction]) {
+      
+      if  transactions.count % 3 == 0 &&
+          transactions.count < 7 {
+        
+        if #available( iOS 10.3,*){
+          SKStoreReviewController.requestReview()
+        }
+      }
+    }
     private func reload(txHash: String) {
         self.transactions.enumerated().forEach { i, tx in
             if tx.hash == txHash {
@@ -180,6 +191,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
                     self.tableView.beginUpdates()
                     self.tableView.reloadRows(at: [IndexPath(row: i, section: self.hasExtraSection ? 1 : 0)], with: .automatic)
                     self.tableView.endUpdates()
+                    self.checkTransactionCountForReview(transactions: self.transactions)
                 }
             }
         }
