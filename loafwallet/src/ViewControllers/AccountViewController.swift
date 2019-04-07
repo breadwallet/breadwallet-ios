@@ -10,7 +10,7 @@ import UIKit
 import BRCore
 import MachO
 
-let accountHeaderHeight: CGFloat = 136.0
+let accountHeaderHeight: CGFloat = 120.0
 private let transactionsLoadingViewHeightConstant: CGFloat = 48.0
 
 class AccountViewController : UIViewController, Subscriber {

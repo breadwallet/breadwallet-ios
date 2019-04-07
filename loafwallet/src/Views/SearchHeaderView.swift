@@ -148,11 +148,15 @@ class SearchHeaderView : UIView {
         backgroundColor = .whiteTint
         searchBar.backgroundImage = UIImage()
         searchBar.delegate = self
+      
         cancel.tap = { [weak self] in
             self?.didChangeFilters?([])
             self?.searchBar.resignFirstResponder()
             self?.didCancel?()
         }
+        cancel.tintColor = UIColor(red: 52.0/255.0, green: 52.0/255.0, blue: 157.0/255.0, alpha: 1.0)
+        cancel.titleLabel?.font = UIFont.customBody(size: 14.0)
+      
         sent.isToggleable = true
         received.isToggleable = true
         pending.isToggleable = true

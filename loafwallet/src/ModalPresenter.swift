@@ -588,17 +588,7 @@ class ModalPresenter : Subscriber, Trackable {
     private func presentBuyController() -> UIViewController {
 
       let buyVC = BuyCenterTableViewController(store: store, walletManager: walletManager!, mountPoint:"/buy")
-      
-      
-      return self.pr
-//
-//
-//      let wipeEmptyvc = WipeEmptyWalletViewController(walletManager: walletManager, store: store, didTapNext: ({ [weak self] in
-//        guard let myself = self else { return }
-//        myself.wipeWallet()
-//      }))
-//      return ModalViewController(childViewController: wipeEmptyvc, store: store)
-//
+      return buyVC
     }
 
     private func presentRescan() {

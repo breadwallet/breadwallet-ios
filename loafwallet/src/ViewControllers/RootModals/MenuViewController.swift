@@ -15,12 +15,11 @@ class MenuViewController : UIViewController, Trackable {
     var didTapSupport: (() -> Void)?
     var didTapSettings: (() -> Void)?
     var didTapLock: (() -> Void)?
-    var didTapBuy: (() -> Void)?
 
     //MARK: - Private
     fileprivate let buttonHeight: CGFloat = 72.0
     fileprivate let buttons: [MenuButton] = {
-        let types: [MenuButtonType] = [.security, .support, .settings, .lock, .buy]
+        let types: [MenuButtonType] = [.security, .support, .settings, .lock]
         return types.compactMap {
             return MenuButton(type: $0)
         }
@@ -51,10 +50,6 @@ class MenuViewController : UIViewController, Trackable {
             previousButton?.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
 
         view.backgroundColor = .white
-
-        //if BRAPIClient.featureEnabled(.buyLitecoin) {
-            saveEvent("menu.buyLitecoinIsVisible")
-        //}
     }
 
     @objc private func didTapButton(button: MenuButton) {
@@ -66,10 +61,7 @@ class MenuViewController : UIViewController, Trackable {
         case .settings:
             didTapSettings?()
         case .lock:
-            didTapLock?()
-        case .buy:
-            saveEvent("menu.didTapBuyLitecoin")
-            didTapBuy?()
+            didTapLock?() 
         }
     }
 }
