@@ -9,6 +9,12 @@
 import UIKit
 
 extension UIColor {
+  
+  // TODO: New Color Scheme
+  // #A6A9AA, Silver C
+  // #4D4D4E, Cool Gray 11 C
+  // #FFFFFF, White
+  // #345D9D, Blue, 7684 C
 
     // MARK: Buttons
     static var primaryButton: UIColor {

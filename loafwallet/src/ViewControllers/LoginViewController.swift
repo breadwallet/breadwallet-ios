@@ -201,7 +201,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         backgroundView.constrain(toSuperviewEdges: nil)
         if walletManager != nil {
             addChildViewController(pinPad, layout: {
-                pinPadBottom = pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[3] : 0.0)
+                pinPadBottom = pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant:  -10.0)
                 pinPad.view.constrain([
                     pinPad.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                     pinPad.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),

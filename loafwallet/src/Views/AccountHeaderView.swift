@@ -8,10 +8,8 @@
 
 import UIKit
 
-private let largeFontSize: CGFloat = 26.0
+private let largeFontSize: CGFloat = 28.0
 private let smallFontSize: CGFloat = 13.0
-private let logoWidth: CGFloat = 0.22 //percentage of width
-private let logoWidthTablet: CGFloat = 0.11 // percentage of width - smaller for iPads
 
 class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
@@ -71,11 +69,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private var exchangeRate: Rate? {
         didSet { setBalances() }
     }
-    private var logo: UIImageView = {
-        let image = UIImageView(image: #imageLiteral(resourceName: "Logo"))
-        image.contentMode = .scaleAspectFit
-        return image
-    }()
     private var balance: UInt64 = 0 {
         didSet { setBalances() }
     }
@@ -107,10 +100,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             self.store.perform(action: RootModalActions.Present(modal: .manageWallet))
         }
         primaryBalance.textColor = .whiteTint
-        primaryBalance.font = UIFont.customBody(size: largeFontSize)
-
+        primaryBalance.font = UIFont.customBold(size: largeFontSize)
+ 
         secondaryBalance.textColor = .whiteTint
-        secondaryBalance.font = UIFont.customBody(size: largeFontSize)
+        secondaryBalance.font = UIFont.customBold(size: largeFontSize)
 
         search.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
         search.tintColor = .white
@@ -134,7 +127,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         addSubview(search)
         addSubview(currencyTapView)
         addSubview(equals)
-        addSubview(logo)
         addSubview(modeLabel)
     }
 
@@ -173,10 +165,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
         search.constrain([
             search.constraint(.trailing, toView: self, constant: -C.padding[2]),
-            search.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[4]),
-            search.constraint(.width, constant: 44.0),
-            search.constraint(.height, constant: 44.0) ])
-        search.imageEdgeInsets = UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0)
+            search.bottomAnchor.constraint(equalTo: primaryBalance.bottomAnchor, constant: -10),
+            search.constraint(.width, constant: 34.0),
+            search.constraint(.height, constant: 34.0) ])
+            search.imageEdgeInsets = UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0)
 
         currencyTapView.constrain([
             currencyTapView.leadingAnchor.constraint(equalTo: name.leadingAnchor, constant: -C.padding[1]),
@@ -186,16 +178,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
         let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
         currencyTapView.addGestureRecognizer(gr)
-
-        logo.constrain([
-            logo.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
-            logo.leftAnchor.constraint(equalTo: leftAnchor, constant: -10.0),
-            logo.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[10]),
-            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: C.Sizes.logoAspectRatio),
-            logo.widthAnchor.constraint(equalTo: widthAnchor, multiplier: (E.isIPad ? logoWidthTablet : logoWidth)) ])
-        modeLabel.constrain([
-            modeLabel.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: C.padding[1]/2.0),
-            modeLabel.firstBaselineAnchor.constraint(equalTo: logo.bottomAnchor, constant: -2.0) ])
     }
 
     private func transform(forView: UIView) ->  CGAffineTransform {

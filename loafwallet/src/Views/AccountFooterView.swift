@@ -13,6 +13,8 @@ class AccountFooterView: UIView {
     var sendCallback: (() -> Void)?
     var receiveCallback: (() -> Void)?
     var menuCallback: (() -> Void)?
+    var buyCallback: (() -> Void)?
+ 
     var hasSetup = false
 
     init() {
@@ -38,7 +40,11 @@ class AccountFooterView: UIView {
         let receive = UIButton.vertical(title: S.Button.receive.uppercased(), image: #imageLiteral(resourceName: "ReceiveButtonIcon"))
         receive.tintColor = .grayTextTint
         receive.addTarget(self, action: #selector(AccountFooterView.receive), for: .touchUpInside)
-
+      
+        let buy = UIButton.vertical(title: S.Button.buy.uppercased(), image: #imageLiteral(resourceName: "BuyIcon"))
+        buy.tintColor = .grayTextTint
+        buy.addTarget(self, action: #selector(AccountFooterView.buy), for: .touchUpInside)
+      
         let menu = UIButton.vertical(title: S.Button.menu.uppercased(), image: #imageLiteral(resourceName: "MenuButtonIcon"))
         menu.tintColor = .grayTextTint
         menu.addTarget(self, action: #selector(AccountFooterView.menu), for: .touchUpInside)
@@ -49,25 +55,32 @@ class AccountFooterView: UIView {
 
         addSubview(send)
         addSubview(receive)
+        addSubview(buy)
         addSubview(menu)
         
         send.isEnabled = checkPaperKeyStatus()
         receive.isEnabled = checkPaperKeyStatus()
+        buy.isEnabled = checkPaperKeyStatus()
 
         send.constrain([
                 send.constraint(.leading, toView: self, constant: 0.0),
                 send.constraint(.top, toView: self, constant: C.padding[2]),
-                NSLayoutConstraint(item: send, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/3.0, constant: 0.0)
+                NSLayoutConstraint(item: send, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/4.0, constant: 0.0)
             ])
         receive.constrain([
                 NSLayoutConstraint(item: receive, attribute: .leading, relatedBy: .equal, toItem: send, attribute: .trailing, multiplier: 1.0, constant: 0.0),
                 receive.constraint(.top, toView: self, constant: C.padding[2]),
-                NSLayoutConstraint(item: receive, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/3.0, constant: 1.0)
+                NSLayoutConstraint(item: receive, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/4.0, constant: 1.0)
             ])
+        buy.constrain([
+          NSLayoutConstraint(item: buy, attribute: .leading, relatedBy: .equal, toItem: receive, attribute: .trailing, multiplier: 1.0, constant: 1.0),
+          buy.constraint(.top, toView: self, constant: C.padding[2]),
+          NSLayoutConstraint(item: buy, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/4.0, constant: 1.0)
+          ])
         menu.constrain([
-                NSLayoutConstraint(item: menu, attribute: .leading, relatedBy: .equal, toItem: receive, attribute: .trailing, multiplier: 1.0, constant: 1.0),
+                NSLayoutConstraint(item: menu, attribute: .leading, relatedBy: .equal, toItem: buy, attribute: .trailing, multiplier: 1.0, constant: 1.0),
                 menu.constraint(.top, toView: self, constant: C.padding[2]),
-                NSLayoutConstraint(item: menu, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/3.0, constant: 1.0)
+                NSLayoutConstraint(item: menu, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/4.0, constant: 1.0)
             ])
     }
     
@@ -85,6 +98,7 @@ class AccountFooterView: UIView {
 
     @objc private func send() { sendCallback?() }
     @objc private func receive() { receiveCallback?() }
+    @objc private func buy() { buyCallback?() }
     @objc private func menu() { menuCallback?() }
 
     required init(coder aDecoder: NSCoder) {

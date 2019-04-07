@@ -53,6 +53,12 @@ struct E {
     static var isIPhoneX: Bool {
         return (UIScreen.main.bounds.size.height == 812.0)
     }
+    static var isIPhone8Plus: Bool {
+      return (UIScreen.main.bounds.size.height == 736.0)
+    }
+    static var isIPhoneXsMax: Bool {
+      return (UIScreen.main.bounds.size.height == 812.0)
+    }
     static var isIPad: Bool {
         return (UIDevice.current.userInterfaceIdiom == .pad)
     }

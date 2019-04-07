@@ -42,6 +42,8 @@ enum S {
         static let send = NSLocalizedString("Button.send", value: "send", comment: "send button")
         static let receive = NSLocalizedString("Button.receive", value: "receive", comment: "receive button")
         static let menu = NSLocalizedString("Button.menu", value: "menu", comment: "menu button")
+        static let buy = NSLocalizedString("Button.buy", value: "buy", comment: "buy button")
+
     }
 
     enum Alert {
