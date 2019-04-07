@@ -168,6 +168,7 @@ enum S {
   
     enum BuyCenter {
       static let title = NSLocalizedString("BuyCenter.title", value:"Buy Litecoin", comment: "Buy Center Title")
+      static let buyModalTitle = NSLocalizedString("BuyCenter.ModalTitle", value: "Buy Łitecoin", comment: "Buy Modal Title")
       enum Cells {
         static let simplexTitle = NSLocalizedString("BuyCenter.simplexTitle", value: "Simplex", comment: "Simplex Title")
         static let simplexFinancialDetails = NSLocalizedString("BuyCenter.simplexFinancialDetails", value: "• Use ID or Passport\n• Buy Litecoin via credit card\n• Buy with USD or EUR", comment: "Simplex buy financial details")

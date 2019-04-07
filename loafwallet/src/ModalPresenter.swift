@@ -204,6 +204,8 @@ class ModalPresenter : Subscriber, Trackable {
         switch type {
         case .none:
             return nil
+        case .buy:
+            return presentBuyController()
         case .send:
             return makeSendView()
         case .receive:
@@ -317,11 +319,6 @@ class ModalPresenter : Subscriber, Trackable {
             menu?.dismiss(animated: true) {
                 self?.presentSettings()
             }
-        }
-        menu.didTapBuy = { [weak self, weak menu] in
-            menu?.dismiss(animated: true, completion: {
-               self?.presentBuyController("/buy")
-            })
         }
         return root
     }
@@ -588,17 +585,20 @@ class ModalPresenter : Subscriber, Trackable {
         vc.present(paperPhraseNavigationController, animated: true, completion: nil)
     }
 
-    private func presentBuyController(_ mountPoint: String) {
-        guard let walletManager = self.walletManager else { return }
+    private func presentBuyController() -> UIViewController {
+
+      let buyVC = BuyCenterTableViewController(store: store, walletManager: walletManager!, mountPoint:"/buy")
       
-      let vc : BuyCenterTableViewController
-        #if Debug || Testflight
-         vc = BuyCenterTableViewController(store: store, walletManager: walletManager, mountPoint: mountPoint)
-        #else
-         vc = BuyCenterTableViewController(store: store, walletManager: walletManager, mountPoint: mountPoint)
-        #endif
       
-         topViewController?.present(vc, animated: true, completion: nil)
+      return self.pr
+//
+//
+//      let wipeEmptyvc = WipeEmptyWalletViewController(walletManager: walletManager, store: store, didTapNext: ({ [weak self] in
+//        guard let myself = self else { return }
+//        myself.wipeWallet()
+//      }))
+//      return ModalViewController(childViewController: wipeEmptyvc, store: store)
+//
     }
 
     private func presentRescan() {

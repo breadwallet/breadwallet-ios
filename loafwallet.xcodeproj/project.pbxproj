@@ -350,6 +350,8 @@
 		24D5F26422599C0B00225462 /* BarlowSemiCondensed-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24D5F23422599C0B00225462 /* BarlowSemiCondensed-SemiBold.ttf */; };
 		24D5F26522599C0B00225462 /* BarlowSemiCondensed-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24D5F23422599C0B00225462 /* BarlowSemiCondensed-SemiBold.ttf */; };
 		24D5F26622599C0B00225462 /* BarlowSemiCondensed-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24D5F23422599C0B00225462 /* BarlowSemiCondensed-SemiBold.ttf */; };
+		24D5F26E225A5BEA00225462 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D5F26D225A5BEA00225462 /* ContainerViewController.swift */; };
+		24D5F26F225A5BEA00225462 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D5F26D225A5BEA00225462 /* ContainerViewController.swift */; };
 		24D91D0B2166923E0077A619 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24D91D0A2166923E0077A619 /* UserNotifications.framework */; };
 		24D91D0C216692450077A619 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24D91D0A2166923E0077A619 /* UserNotifications.framework */; };
 		24D91D0E2166A5480077A619 /* TestnetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D91D0D2166A5480077A619 /* TestnetData.swift */; };
@@ -1147,6 +1149,7 @@
 		24D5F23022599C0B00225462 /* BarlowSemiCondensed-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BarlowSemiCondensed-Medium.ttf"; sourceTree = "<group>"; };
 		24D5F23222599C0B00225462 /* BarlowSemiCondensed-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BarlowSemiCondensed-Regular.ttf"; sourceTree = "<group>"; };
 		24D5F23422599C0B00225462 /* BarlowSemiCondensed-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BarlowSemiCondensed-SemiBold.ttf"; sourceTree = "<group>"; };
+		24D5F26D225A5BEA00225462 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		24D91D0A2166923E0077A619 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		24D91D0D2166A5480077A619 /* TestnetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestnetData.swift; sourceTree = "<group>"; };
 		3BC8557E3049BD3648E832EA /* Pods-loafwallet-dev.testflight.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwallet-dev.testflight.xcconfig"; path = "Pods/Target Support Files/Pods-loafwallet-dev/Pods-loafwallet-dev.testflight.xcconfig"; sourceTree = "<group>"; };
@@ -3568,6 +3571,7 @@
 				1B3F74221FFB106200CCA50C /* BiometricsSpendingLimitViewController.swift */,
 				1BEA7DDA2142CAA00081602F /* WebViewContainer.swift */,
 				24AF00FF221B349100FF636F /* WarningConfirmationViewController.swift */,
+				24D5F26D225A5BEA00225462 /* ContainerViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -4859,6 +4863,7 @@
 				1B86CE4D2091528B00BCE82E /* WalletManager+BCash.swift in Sources */,
 				1B86CE4E2091528B00BCE82E /* SearchHeaderView.swift in Sources */,
 				1B86CE4F2091528B00BCE82E /* BRTar.swift in Sources */,
+				24D5F26E225A5BEA00225462 /* ContainerViewController.swift in Sources */,
 				1B86CE502091528B00BCE82E /* TransactionDetailsViewController.swift in Sources */,
 				1B86CE512091528B00BCE82E /* PhraseView.swift in Sources */,
 				1B86CE522091528B00BCE82E /* GradientView.swift in Sources */,
@@ -5144,6 +5149,7 @@
 				CE20C9171DBE6F2A00C8397A /* UIButton+BRWAdditions.swift in Sources */,
 				CEAA9E931DC110E70066731D /* WritePaperPhraseViewController.swift in Sources */,
 				CE92F9F41DED59E80046B516 /* UIView+AnimationAdditions.swift in Sources */,
+				24D5F26F225A5BEA00225462 /* ContainerViewController.swift in Sources */,
 				CEEC70941E96A24F00EF788E /* DefaultCurrencyViewController.swift in Sources */,
 				24B8FAC4216128A000A155B1 /* PartnerData.swift in Sources */,
 				CECB9DB61E4985CE0081A172 /* LoginBackgroundView.swift in Sources */,

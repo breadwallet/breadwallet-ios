@@ -22,6 +22,9 @@ class AccountViewController : UIViewController, Subscriber {
     var receiveCallback: (() -> Void)? {
         didSet { footerView.receiveCallback = receiveCallback }
     }
+    var buyCallback: (() -> Void)? {
+      didSet { footerView.buyCallback = buyCallback }
+    }
     var menuCallback: (() -> Void)? {
         didSet { footerView.menuCallback = menuCallback }
     }

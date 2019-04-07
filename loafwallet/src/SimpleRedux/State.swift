@@ -52,6 +52,7 @@ extension State {
 
 enum RootModal {
     case none
+    case buy
     case send
     case receive
     case menu
