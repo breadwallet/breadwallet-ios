@@ -321,8 +321,8 @@ enum S {
     }
 
     enum PushNotifications {
-        static let title = NSLocalizedString("PushNotifications.title", value:"Get in the loop", comment: "Push notifications settings view title label")
-        static let body = NSLocalizedString("PushNotifications.body", value:"Turn on push notifcation and be the first to hear about new features and special offers.", comment: "Push notifications settings view body")
+        static let title = NSLocalizedString("PushNotifications.title", value:"Stay in the Loop", comment: "Push notifications settings view title label")
+        static let body = NSLocalizedString("PushNotifications.body", value:"Turn on push notifications and be the first to hear about new features and special offers.", comment: "Push notifications settings view body")
         static let maybeLater = NSLocalizedString("PushNotifications.maybeLater", value: "Maybe Later", comment: "Button title for the 'Maybe Later' option")
         static let label = NSLocalizedString("PushNotifications.label", value:"Push Notifications", comment: "Push notifications toggle switch label")
         static let on = NSLocalizedString("PushNotifications.on", value: "On", comment: "Push notifications are on label")
