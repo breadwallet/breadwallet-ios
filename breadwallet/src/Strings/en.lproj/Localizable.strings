@@ -482,8 +482,8 @@
 "Prompts.UpgradePin.body" = "BRD has upgraded to using a 6-digit PIN. Tap Continue to upgrade.";
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "Upgrade PIN";
-/* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
-"PushNotifications.body" = "Turn on notifications to receive special messages from BRD in the future.";
+/* Body text for the push notifications prompt. */
+"PushNotifications.body" = "Turn on push notifications and be the first to hear about new features and special offers.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Notifications Disabled";
 /* Push notifications settings instructions */
@@ -495,7 +495,7 @@
 /* Push notifications are on label */
 "PushNotifications.on" = "On";
 /* Push notifications settings view title label */
-"PushNotifications.title" = "Notifications";
+"PushNotifications.title" = "Stay in the Loop";
 /* Address copied message. */
 "Receive.copied" = "Copied to clipboard.";
 /* Share via email button label */
