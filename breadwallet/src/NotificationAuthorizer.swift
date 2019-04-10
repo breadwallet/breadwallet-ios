@@ -176,7 +176,7 @@ struct NotificationAuthorizer: Trackable {
             }
         }
         
-        let deferAction = UIAlertAction(title: S.PushNotifications.maybeLater, style: .cancel) { _ in
+        let deferAction = UIAlertAction(title: S.Button.maybeLater, style: .cancel) { _ in
             // Logging this here rather than in `userDidDeferNotificationsOptIn()` so that it's not logged
             // during unit testing; however, at this point 'optInDeferralCount' won't be updated yet, so
             // add 1 when logging the event.
