@@ -35,6 +35,7 @@ enum S {
         static let dismiss = NSLocalizedString("Button.dismiss", value: "Dismiss", comment: "prompt dismiss button")
         static let home = NSLocalizedString("Button.home", value: "Home", comment: "prompt home button")
         static let moreInfo = NSLocalizedString("Button.moreInfo", value: "More info", comment: "More information button")
+        static let maybeLater = NSLocalizedString("Button.maybeLater", value: "Maybe Later", comment: "Maybe later button")
     }
 
     enum Alert {
