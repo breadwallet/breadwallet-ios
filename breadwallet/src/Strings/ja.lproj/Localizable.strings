@@ -38,6 +38,10 @@
 "Alert.keystore.generic.android" = "Android OSのKeystoreに問題があります。support@breadwallet.com にお問い合わせください。";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "お使いのAndroidロック画面が無効にされたため、暗号化されたブレッドのデータはつい最近無効になりました。";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
+"Alert.keystore.invalidated.uninstall.android" = "画面ロック設定が変更されたため（パスワードが無効になった、指紋が変更されたなど）、進めることができません。セキュリティ上の理由から、Androidはキーストアを永久にロックしました。したがって、BRDアプリのデータをアンインストールして消去する必要があります。\n\n心配はいりません、あなたの資金は今でも安全です！アプリを再インストールし、ペーパーキーを使用してウォレットを復元してください。";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
+"Alert.keystore.invalidated.wipe.android" = "画面ロック設定が変更されたため（パスワードが無効になった、指紋が変更されたなど）、進めることができません。セキュリティ上の理由から、Androidはキーストアを永久にロックしました。したがって、BRDアプリのデータを消去する必要があります。\n\n心配はいりません、あなたの資金は今でも安全です！ペーパーキーを使用してウォレットを復元してください。";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android KeyStoreエラー";
 /* No internet alert message */
@@ -136,6 +140,8 @@
 "Button.buy" = "購入する";
 /* Cancel button label */
 "Button.cancel" = "キャンセル";
+/* Button label to open a email compose window with our support email in the to field. */
+"Button.contactSupport.android" = "サポートに問い合わせ";
 /* prompt continue button */
 "Button.continueAction" = "続行する";
 /* prompt dismiss button */
@@ -156,6 +162,8 @@
 "Button.ok" = "OK";
 /* receive button */
 "Button.receive" = "受取";
+/* Button label to open Security Settings. */
+"Button.securitySettings.android" = "セキュリティ設定";
 /* Click this button to sell an asset */
 "Button.sell" = "売る";
 /* send button */
@@ -164,6 +172,10 @@
 "Button.settings" = "設定";
 /* Settings button label */
 "Button.submit" = "確認";
+/* Button label to uninstall the app. */
+"Button.uninstall.android" = "アンインストール";
+/* Button label to wipe the user's application data. */
+"Button.wipe.android" = "消去";
 /* Yes button */
 "Button.yes" = "はい";
 /* Camera plugin instruction */
@@ -882,7 +894,7 @@
 "TransactionDetails.completeTimestampHeader" = "完了";
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
-"TransactionDetails.confirmationsLabel" = "%1$@ (%2$@ 確認)";
+"TransactionDetails.confirmationsLabel" = "確認";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "あなたの取引はこちらに表示されます。";
 /* e.g. the users balance after the transaction was compeleted */

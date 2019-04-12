@@ -38,6 +38,10 @@
 "Alert.keystore.generic.android" = "Имеется проблема с хранилищем ключей в вашей ОС Android, обратитесь по адресу: support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Ваши зашифрованные данные приложения BRD были недавно аннулированы, так как была отключена блокировка экрана вашего устройства Android.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
+"Alert.keystore.invalidated.uninstall.android" = "Мы не можем продолжить, потому что ваши настройки блокировки экрана были изменены (например, пароль отключен, отпечатки пальцев изменены). В целях безопасности Android навсегда заблокировал ваше хранилище ключей. Поэтому ваши данные BRD следует стереть путем удаления приложения.\n\nНе волнуйтесь, ваши средства в безопасности! Переустановите приложение и восстановите свой кошелек с помощью бумажного ключа.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
+"Alert.keystore.invalidated.wipe.android" = "Мы не можем продолжить, потому что ваши настройки блокировки экрана были изменены (например, пароль отключен, отпечатки пальцев изменены). В целях безопасности Android навсегда заблокировал ваше хранилище ключей. Поэтому данные вашего приложения BRD необходимо стереть. \nНе волнуйтесь, ваши средства в безопасности! Восстановите свой кошелек, используя бумажный ключ.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Ошибка хранилища ключей Android";
 /* No internet alert message */
@@ -134,6 +138,8 @@
 "Button.buy" = "Купить";
 /* Cancel button label */
 "Button.cancel" = "Отменить";
+/* Button label to open a email compose window with our support email in the to field. */
+"Button.contactSupport.android" = "Связаться со службой поддержки";
 /* prompt continue button */
 "Button.continueAction" = "Продолжить";
 /* prompt dismiss button */
@@ -154,6 +160,8 @@
 "Button.ok" = "ОК";
 /* receive button */
 "Button.receive" = "Получить";
+/* Button label to open Security Settings. */
+"Button.securitySettings.android" = "Настройки безопасности";
 /* Click this button to sell an asset */
 "Button.sell" = "Продать";
 /* send button */
@@ -162,6 +170,10 @@
 "Button.settings" = "Настройки";
 /* Settings button label */
 "Button.submit" = "Отправить";
+/* Button label to uninstall the app. */
+"Button.uninstall.android" = "Удалить";
+/* Button label to wipe the user's application data. */
+"Button.wipe.android" = "Стереть";
 /* Yes button */
 "Button.yes" = "Да";
 /* Camera plugin instruction */
@@ -880,7 +892,7 @@
 "TransactionDetails.completeTimestampHeader" = "Завершить";
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
-"TransactionDetails.confirmationsLabel" = "%1$@ (%2$@ подтверждений/-ия)";
+"TransactionDetails.confirmationsLabel" = "Подтверждений/-ия";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Ваши транзакции будут отображаться здесь.";
 /* e.g. the users balance after the transaction was compeleted */
