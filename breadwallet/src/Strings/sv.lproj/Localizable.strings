@@ -38,6 +38,10 @@
 "Alert.keystore.generic.android" = "Det har uppstått ett problem med KeyStore till Android OS. Kontakta support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Dina krypterade BRD-uppgifter har nyligen ogiltigförklarats på grund av att Androids skärmlås inaktiverades.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
+"Alert.keystore.invalidated.uninstall.android" = "Vi kan inte fortsätta eftersom dina skärmslåsinställningar har ändrats (t.ex. lösenordet inaktiverades, fingeravtryck ändrades). Av säkerhetsskäl har Android låst din nyckelförvaring. Därför måste dina BRD-appdata tas bort genom att avinstallera appen.\n\nOroa dig inte, dina pengar är fortfarande säkra! Installera om appen och återställ din plånbok med din pappersnyckel.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
+"Alert.keystore.invalidated.wipe.android" = "Vi kan inte fortsätta eftersom dina skärmslåsinställningar har ändrats (t.ex. lösenordet inaktiverades, fingeravtryck ändrades). Av säkerhetsskäl har Android låst din nyckelförvaring. Därför måste dina BRD-appdata tas bort.\n\nOroa dig inte, dina pengar är fortfarande säkra! Återställ din plånbok med pappersnyckeln.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "KeyStore-fel för Android";
 /* No internet alert message */
@@ -136,6 +140,8 @@
 "Button.buy" = "Köp";
 /* Cancel button label */
 "Button.cancel" = "Avbryt";
+/* Button label to open a email compose window with our support email in the to field. */
+"Button.contactSupport.android" = "Kontakta Support";
 /* prompt continue button */
 "Button.continueAction" = "Fortsätt";
 /* prompt dismiss button */
@@ -156,6 +162,8 @@
 "Button.ok" = "OK";
 /* receive button */
 "Button.receive" = "Ta emot";
+/* Button label to open Security Settings. */
+"Button.securitySettings.android" = "Säkerhetscenter";
 /* Click this button to sell an asset */
 "Button.sell" = "Sälj";
 /* send button */
@@ -164,6 +172,10 @@
 "Button.settings" = "Inställningar";
 /* Settings button label */
 "Button.submit" = "Överlämna";
+/* Button label to uninstall the app. */
+"Button.uninstall.android" = "Avinstallera";
+/* Button label to wipe the user's application data. */
+"Button.wipe.android" = "Ta bort";
 /* Yes button */
 "Button.yes" = "Ja";
 /* Camera plugin instruction */
@@ -882,7 +894,7 @@
 "TransactionDetails.completeTimestampHeader" = "Slutför";
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
-"TransactionDetails.confirmationsLabel" = "%1$@ (%2$@ bekräftelser)";
+"TransactionDetails.confirmationsLabel" = "Bekräftelser";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Dina transaktioner visas här.";
 /* e.g. the users balance after the transaction was compeleted */

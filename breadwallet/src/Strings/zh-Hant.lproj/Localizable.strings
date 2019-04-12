@@ -38,6 +38,10 @@
 "Alert.keystore.generic.android" = "您的 Android OS 金鑰儲存區有問題，請聯絡 support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "您的 BRD 加密資料最近已被判定為無效，因爲您的 Android 螢幕鎖定已被停用。";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
+"Alert.keystore.invalidated.uninstall.android" = "無法繼續執行動作，因為您的螢幕鎖定設置有變動（例如，密碼關閉、指紋變動）。基於安全考量，Android 已永久關鎖您的密鑰庫。因此，必須透過解除安裝來消除您的 BRD 應用程式資料。\n\n別擔心，您的資金仍然安全！ 重新安裝應用程式，並使用紙密鑰來復原您的錢包。";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
+"Alert.keystore.invalidated.wipe.android" = "無法繼續執行動作，因為您的螢幕鎖定設置有變動（例如，密碼關閉、指紋變動）。基於安全考量，Android 已永久關鎖您的密鑰庫。因此，您的 BRD 應用程式資料必須消除。\n\n別擔心，您的資金仍然安全！使用紙密鑰來復原您的錢包。";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android 金鑰儲存區錯誤";
 /* No internet alert message */
@@ -136,6 +140,8 @@
 "Button.buy" = "購買";
 /* Cancel button label */
 "Button.cancel" = "取消";
+/* Button label to open a email compose window with our support email in the to field. */
+"Button.contactSupport.android" = "聯絡支援";
 /* prompt continue button */
 "Button.continueAction" = "繼續";
 /* prompt dismiss button */
@@ -156,6 +162,8 @@
 "Button.ok" = "確定";
 /* receive button */
 "Button.receive" = "接收";
+/* Button label to open Security Settings. */
+"Button.securitySettings.android" = "資訊安全中心";
 /* Click this button to sell an asset */
 "Button.sell" = "賣出";
 /* send button */
@@ -164,6 +172,10 @@
 "Button.settings" = "設定";
 /* Settings button label */
 "Button.submit" = "提交";
+/* Button label to uninstall the app. */
+"Button.uninstall.android" = "解除安裝";
+/* Button label to wipe the user's application data. */
+"Button.wipe.android" = "消除";
 /* Yes button */
 "Button.yes" = "要";
 /* Camera plugin instruction */
@@ -882,7 +894,7 @@
 "TransactionDetails.completeTimestampHeader" = "完成";
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
-"TransactionDetails.confirmationsLabel" = "%1$@ (%2$@ 確認)";
+"TransactionDetails.confirmationsLabel" = "確認";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "您的交易會顯示於此。";
 /* e.g. the users balance after the transaction was compeleted */

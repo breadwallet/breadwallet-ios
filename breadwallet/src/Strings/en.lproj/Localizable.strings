@@ -38,6 +38,10 @@
 "Alert.keystore.generic.android" = "There is a problem with your Android OS keystore, please contact support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Your BRD encrypted data was recently invalidated because your Android lock screen was disabled.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
+"Alert.keystore.invalidated.uninstall.android" = "We can't proceed because your screen lock settings have been changed (e.g. password was disabled, fingerprints were changed). For security purposes, Android has permanently locked your key store. Therefore, your BRD app data must be wiped by uninstalling.\n\nDon’t worry, your funds are still secure! Reinstall the app and recover your wallet using your paper key.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
+"Alert.keystore.invalidated.wipe.android" = "We can't proceed because your screen lock settings have been changed (e.g. password was disabled, fingerprints were changed). For security purposes, Android has permanently locked your key store. Therefore, your BRD app data must be wiped.\n\nDon’t worry, your funds are still secure! Recover your wallet using your paper key.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android KeyStore Error";
 /* No internet alert message */
@@ -134,6 +138,8 @@
 "Button.buy" = "Buy";
 /* Cancel button label */
 "Button.cancel" = "Cancel";
+/* Button label to open a email compose window with our support email in the to field. */
+"Button.contactSupport.android" = "Contact Support";
 /* prompt continue button */
 "Button.continueAction" = "Continue";
 /* prompt dismiss button */
@@ -154,6 +160,8 @@
 "Button.ok" = "OK";
 /* receive button */
 "Button.receive" = "Receive";
+/* Button label to open Security Settings. */
+"Button.securitySettings.android" = "Security Settings";
 /* Click this button to sell an asset */
 "Button.sell" = "Sell";
 /* send button */
@@ -162,6 +170,10 @@
 "Button.settings" = "Settings";
 /* Settings button label */
 "Button.submit" = "Submit";
+/* Button label to uninstall the app. */
+"Button.uninstall.android" = "Uninstall";
+/* Button label to wipe the user's application data. */
+"Button.wipe.android" = "Wipe";
 /* Yes button */
 "Button.yes" = "Yes";
 /* Camera plugin instruction */
@@ -880,7 +892,7 @@
 "TransactionDetails.completeTimestampHeader" = "Complete";
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
-"TransactionDetails.confirmationsLabel" = "%1$@ (%2$@ confirmations)";
+"TransactionDetails.confirmationsLabel" = "Confirmations";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Your transactions will appear here.";
 /* e.g. the users balance after the transaction was compeleted */

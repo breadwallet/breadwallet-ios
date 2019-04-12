@@ -38,6 +38,10 @@
 "Alert.keystore.generic.android" = "Há um problema com a KeyStore do seu SO Android. Por favor, contacte support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Os seus dados encriptados pelo BRD foram recentemente invalidados porque o seu ecrã de bloqueio do Android estava desativado.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
+"Alert.keystore.invalidated.uninstall.android" = "Não podemos continuar porque as configurações de bloqueio de tela foram alteradas (por exemplo, a senha foi desativada, as impressões digitais foram alteradas). Por motivos de segurança, o Android bloqueou permanentemente seu armazenamento de chaves. Portanto, os dados do seu aplicativo BRD devem ser limpos pela desinstalação. \n\nNão se preocupe, seus fundos continuam seguros! Reinstale o aplicativo e recupere sua carteira usando a chave de papel.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
+"Alert.keystore.invalidated.wipe.android" = "Não podemos continuar porque as configurações de bloqueio de tela foram alteradas (por exemplo, a senha foi desativada, as impressões digitais foram alteradas). Por motivos de segurança, o Android bloqueou permanentemente seu armazenamento de chaves. Portanto, os dados do seu aplicativo BRD devem ser apagados. \n\nNão se preocupe, seus fundos continuam seguros! Recupere sua carteira usando sua chave de papel.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Erro na KeyStore do Android";
 /* No internet alert message */
@@ -134,6 +138,8 @@
 "Button.buy" = "Comprar";
 /* Cancel button label */
 "Button.cancel" = "Cancelar";
+/* Button label to open a email compose window with our support email in the to field. */
+"Button.contactSupport.android" = "Entre em contato com o suporte";
 /* prompt continue button */
 "Button.continueAction" = "Continuar";
 /* prompt dismiss button */
@@ -154,6 +160,8 @@
 "Button.ok" = "OK";
 /* receive button */
 "Button.receive" = "Receber";
+/* Button label to open Security Settings. */
+"Button.securitySettings.android" = "Centro de Segurança";
 /* Click this button to sell an asset */
 "Button.sell" = "Vender";
 /* send button */
@@ -162,6 +170,10 @@
 "Button.settings" = "Definições";
 /* Settings button label */
 "Button.submit" = "Submeter";
+/* Button label to uninstall the app. */
+"Button.uninstall.android" = "Desinstalar";
+/* Button label to wipe the user's application data. */
+"Button.wipe.android" = "Limpar";
 /* Yes button */
 "Button.yes" = "Sim";
 /* Camera plugin instruction */
@@ -880,7 +892,7 @@
 "TransactionDetails.completeTimestampHeader" = "Concluído";
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
-"TransactionDetails.confirmationsLabel" = "%1$@ (%2$@ confirmações)";
+"TransactionDetails.confirmationsLabel" = "Confirmações";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "As suas transações aparecerão aqui.";
 /* e.g. the users balance after the transaction was compeleted */

@@ -38,6 +38,10 @@
 "Alert.keystore.generic.android" = "귀하의 안드로이드 OS 키스토어에 문제가 있습니다, support@breadwallet.com로 연락해 주세요";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "귀하의 안드로이드 잠금 화면이 꺼져서 귀하의 암호화 된 데이터가 최근 무효화 되었습니다.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
+"Alert.keystore.invalidated.uninstall.android" = "화면 잠금 설정이 변경되어 진행할 수 없습니다 (예: 암호가 비활성화되거나 지문이 변경된 경우). 보안을 위해, 안드로이가 키 입력을 영구적으로 잠갔습니다. 따라서, 당신의 BRD 앱 데이터는 앱을 제거하여 지워야 합니다.\n\n걱정하지 마세요. 고객님의 자금은 매우 안전합니다! 종이 키를 사용하여 앱을 재설치하고 월렛을 복구하십시오.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
+"Alert.keystore.invalidated.wipe.android" = "화면 잠금 설정이 변경되어 진행할 수 없습니다 (예: 암호가 비활성화되거나 지문이 변경된 경우). 보안을 위해, 안드로이가 키 입력을 영구적으로 잠갔습니다. 따라서, 당신의 BRD 앱 데이터는 지워야 합니다.\n\n걱정하지 마세요. 고객님의 자금은 매우 안전합니다! 종이 키를 사용하여 월렛을 복구하십시오.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "안드로이드 키스토어 오류";
 /* No internet alert message */
@@ -136,6 +140,8 @@
 "Button.buy" = "구매하기";
 /* Cancel button label */
 "Button.cancel" = "취소";
+/* Button label to open a email compose window with our support email in the to field. */
+"Button.contactSupport.android" = "지원 요청";
 /* prompt continue button */
 "Button.continueAction" = "계획하기";
 /* prompt dismiss button */
@@ -156,6 +162,8 @@
 "Button.ok" = "오케이";
 /* receive button */
 "Button.receive" = "받기";
+/* Button label to open Security Settings. */
+"Button.securitySettings.android" = "보안 센터";
 /* Click this button to sell an asset */
 "Button.sell" = "팔기";
 /* send button */
@@ -164,6 +172,10 @@
 "Button.settings" = "설정";
 /* Settings button label */
 "Button.submit" = "전송";
+/* Button label to uninstall the app. */
+"Button.uninstall.android" = "앱 제거";
+/* Button label to wipe the user's application data. */
+"Button.wipe.android" = "지우기";
 /* Yes button */
 "Button.yes" = "예";
 /* Camera plugin instruction */
@@ -882,7 +894,7 @@
 "TransactionDetails.completeTimestampHeader" = "완료";
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
-"TransactionDetails.confirmationsLabel" = "%1$@ (%2$@ confirmations)";
+"TransactionDetails.confirmationsLabel" = "Confirmations";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "귀하의 트랜잭션이 여기에 표시됩니다.";
 /* e.g. the users balance after the transaction was compeleted */
