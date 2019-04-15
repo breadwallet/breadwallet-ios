@@ -31,6 +31,13 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         return toolbarButtons[buyButtonIndex]
     }
     
+    private var tradeButton: UIButton? {
+        guard toolbarButtons.count == 3 else { return nil }
+        return toolbarButtons[tradeButtonIndex]
+    }
+    
+    private var tradeNotificationImage: UIImageView?
+    
     var didSelectCurrency: ((Currency) -> Void)?
     var didTapAddWallet: (() -> Void)?
     var didTapBuy: (() -> Void)?
@@ -162,11 +169,11 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         updateTotalAssets()
     }
     
-    private func addNotificationIndicatorToButton(button: UIButton) {
-        guard let buttonImageView = button.imageView else { return }
-        guard (buttonImageView.subviews.last as? UIImageView) == nil else { return }    // make sure we didn't already add the bell
-
-        let buyImageFrame = buttonImageView.frame
+    //Returns the added image view so that it can be kept track of for removing later
+    private func addNotificationIndicatorToButton(button: UIButton) -> UIImageView? {
+        guard (button.subviews.last as? UIImageView) == nil else { return nil }    // make sure we didn't already add the bell
+        guard let buttonImageView = button.imageView else { return nil }
+        let buyImageFrame = buttonImageView
         let bellImage = UIImage(named: "notification-bell")
 
         let bellImageView = UIImageView(image: bellImage)
@@ -181,6 +188,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         bellImageView.frame = CGRect(x: bellXOffset, y: bellYOffset, width: bellWidth, height: bellHeight)
         
         button.addSubview(bellImageView)
+        return bellImageView
     }
     
     private func setupToolbar() {
@@ -219,7 +227,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             }
         }
 
-        self.addBuyNotificationIndicatorIfNeeded()
+        addBuyNotificationIndicatorIfNeeded()
+        addTradeNotificationIndicatorIfNeeded()
         
         toolbar.isTranslucent = false
         toolbar.barTintColor = .navigationBackground
@@ -256,6 +265,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         
         Store.subscribe(self, name: .didUpdateFeatureFlags, callback: { [unowned self] _ in
             self.addBuyNotificationIndicatorIfNeeded()
+            self.addTradeNotificationIndicatorIfNeeded()
         })
     }
     
@@ -264,7 +274,16 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         guard BRAPIClient.featureEnabled(.buyNotification) else { return }
         guard Store.state.shouldShowBuyNotificationForDefaultCurrency else { return }
         
-        self.addNotificationIndicatorToButton(button: buy)
+        _ = addNotificationIndicatorToButton(button: buy)
+    }
+    
+    private func addTradeNotificationIndicatorIfNeeded() {
+        guard let trade = tradeButton else { return }
+        guard !UserDefaults.didTapTradeNotification else { return }
+        guard BRAPIClient.featureEnabled(.tradeNotification) else { return }
+        if let image = addNotificationIndicatorToButton(button: trade) {
+            tradeNotificationImage = image
+        }
     }
     
     private func updateTotalAssets() {
@@ -294,7 +313,10 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     
     @objc private func trade() {
         saveEvent("currency.didTapTrade", attributes: [:])
+        UserDefaults.didTapTradeNotification = true
         didTapTrade?()
+        tradeNotificationImage?.removeFromSuperview()
+        tradeNotificationImage = nil
     }
     
     @objc private func menu() { didTapMenu?() }

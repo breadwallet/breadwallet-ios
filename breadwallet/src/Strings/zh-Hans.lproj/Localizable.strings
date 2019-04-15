@@ -38,6 +38,10 @@
 "Alert.keystore.generic.android" = "您的安卓操作系统密钥库存在问题，请联系support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "您的 BRD 加密数据最近因为您的安卓系统屏幕锁定被禁用而失效。";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
+"Alert.keystore.invalidated.uninstall.android" = "我们无法继续，因为您的屏幕锁定设置已更改(例如，密码已禁用，指纹已更改)。出于安全考虑，安卓已永久锁定了您的密钥存储。因此，您必须通过卸载删除BRD应用数据。\n\n请放心，您的资金很安全！ 重新安装应用后才能用纸质密匙还原您的钱包。";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
+"Alert.keystore.invalidated.wipe.android" = "我们无法继续，因为您的屏幕锁定设置已更改(例如，密码已禁用，指纹已更改)。出于安全考虑，安卓已永久锁定了您的密钥存储。因此，必须擦除您的BRD应用数据。\n\n请放心，您的资金很安全！ 用你的纸质密匙还原您的钱包。";
 /* Keystore error title */
 "Alert.keystore.title.android" = "安卓系统密钥库错误";
 /* No internet alert message */
@@ -78,6 +82,8 @@
 "Announcement.coinifyPromoBody" = "在2019年3月31日前购买100欧元的比特币并获得一张在Amazon.de网上消费的20欧元礼品卡 ⃰。";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "拿到你的礼品卡";
+/* Body for an announcement promoting Coinify. */
+"Announcement.coinifyPromoBody" = "在2019年4月15日之前购买100欧元的比特币以获得20欧元的Amazon.de礼品卡*";
 /* Footnote text for an announcement promoting Coinify. */
 "Announcement.coinifyPromoFootnote" = "每位客户限拿一张礼品卡。仅适用于奥地利，德国，卢森堡和荷兰";
 /* Title for an announcement promoting Coinify. */
@@ -134,6 +140,8 @@
 "Button.buy" = "购买";
 /* Cancel button label */
 "Button.cancel" = "取消";
+/* Button label to open a email compose window with our support email in the to field. */
+"Button.contactSupport.android" = "联系支持人员";
 /* prompt continue button */
 "Button.continueAction" = "继续";
 /* prompt dismiss button */
@@ -142,6 +150,8 @@
 "Button.Home" = "主页";
 /* Ignore button label */
 "Button.ignore" = "忽略";
+/* Maybe Later button label */
+"Button.maybeLater" = "也许以后";
 /* menu button */
 "Button.menu" = "菜单";
 /* More information button */
@@ -152,6 +162,8 @@
 "Button.ok" = "好";
 /* receive button */
 "Button.receive" = "收到";
+/* Button label to open Security Settings. */
+"Button.securitySettings.android" = "安全中心";
 /* Click this button to sell an asset */
 "Button.sell" = "出售";
 /* send button */
@@ -160,6 +172,10 @@
 "Button.settings" = "设置";
 /* Settings button label */
 "Button.submit" = "提交";
+/* Button label to uninstall the app. */
+"Button.uninstall.android" = "卸载";
+/* Button label to wipe the user's application data. */
+"Button.wipe.android" = "擦除";
 /* Yes button */
 "Button.yes" = "是";
 /* Camera plugin instruction */
@@ -876,6 +892,9 @@
 "TransactionDetails.commentsPlaceholder" = "添加备忘录...";
 /* Timestamp section header for complete tx */
 "TransactionDetails.completeTimestampHeader" = "完成";
+/* Block height and confirmations label
+eg. 182930 (45061 confirmations) */
+"TransactionDetails.confirmationsLabel" = "确认";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "您的交易将显示在这里。";
 /* e.g. the users balance after the transaction was compeleted */

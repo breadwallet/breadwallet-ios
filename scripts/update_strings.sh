@@ -1,9 +1,13 @@
+#!/bin/bash
+# Copies localized strings from in-app-i18n repo (assumes it's located one folder up)
 here=`pwd`
+i18n_repo="$here/../in-app-i18n"
+project_strings="$here/breadwallet/src/Strings"
 
 echo "Pulling latest in-app-i18n repo..."
 sleep 1
 
-cd ../../in-app-i18n
+cd $i18n_repo
 git checkout master
 git pull origin master
 cd $here
@@ -11,9 +15,8 @@ cd $here
 echo "Copying new strings..."
 sleep 1
 
-cp -rf ../../in-app-i18n/native/ios/* ../breadwallet/src/Strings
-git add ../breadwallet/src/Strings
+cp -rf $i18n_repo/native/ios/* $project_strings
+git add $project_strings
 
-echo "\n\n"
+echo -e "\n\n"
 git status
-
