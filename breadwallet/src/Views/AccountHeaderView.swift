@@ -160,6 +160,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
         syncViewHeight?.constant = SyncingHeaderView.height
         UIView.spring(C.animationDuration, animations: {
             self.superview?.superview?.layoutIfNeeded()
+            self.syncView.syncIndicator.isHidden = false
         }, completion: {_ in})
     }
 
@@ -167,6 +168,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
         syncViewHeight?.constant = 0.0
         UIView.spring(C.animationDuration, animations: {
             self.superview?.superview?.layoutIfNeeded()
+            self.syncView.syncIndicator.isHidden = true
         }, completion: {_ in})
     }
 
