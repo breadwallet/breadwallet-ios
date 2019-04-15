@@ -38,6 +38,10 @@
 "Alert.keystore.generic.android" = "There is a problem with your Android OS keystore, please contact support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Your BRD encrypted data was recently invalidated because your Android lock screen was disabled.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
+"Alert.keystore.invalidated.uninstall.android" = "We can't proceed because your screen lock settings have been changed (e.g. password was disabled, fingerprints were changed). For security purposes, Android has permanently locked your key store. Therefore, your BRD app data must be wiped by uninstalling.\n\nDon’t worry, your funds are still secure! Reinstall the app and recover your wallet using your paper key.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
+"Alert.keystore.invalidated.wipe.android" = "We can't proceed because your screen lock settings have been changed (e.g. password was disabled, fingerprints were changed). For security purposes, Android has permanently locked your key store. Therefore, your BRD app data must be wiped.\n\nDon’t worry, your funds are still secure! Recover your wallet using your paper key.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android KeyStore Error";
 /* No internet alert message */
@@ -75,7 +79,7 @@
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Screen-Altering App Detected";
 /* Body for an announcement promoting Coinify. */
-"Announcement.coinifyPromoBody" = "Buy €100 of Bitcoin by April 15, 2019 and get a €20 Amazon.de gift card  ⃰";
+"Announcement.coinifyPromoBody" = "Buy €100 of Bitcoin by April 16, 2019 and get a €20 Amazon.de gift card  ⃰";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "Get your gift card";
 /* Footnote text for an announcement promoting Coinify. */
@@ -134,6 +138,8 @@
 "Button.buy" = "Buy";
 /* Cancel button label */
 "Button.cancel" = "Cancel";
+/* Button label to open a email compose window with our support email in the to field. */
+"Button.contactSupport.android" = "Contact Support";
 /* prompt continue button */
 "Button.continueAction" = "Continue";
 /* prompt dismiss button */
@@ -142,6 +148,8 @@
 "Button.Home" = "Home";
 /* Ignore button label */
 "Button.ignore" = "Ignore";
+/* Maybe Later button label */
+"Button.maybeLater" = "Maybe Later";
 /* menu button */
 "Button.menu" = "Menu";
 /* More information button */
@@ -152,6 +160,8 @@
 "Button.ok" = "OK";
 /* receive button */
 "Button.receive" = "Receive";
+/* Button label to open Security Settings. */
+"Button.securitySettings.android" = "Security Settings";
 /* Click this button to sell an asset */
 "Button.sell" = "Sell";
 /* send button */
@@ -160,6 +170,10 @@
 "Button.settings" = "Settings";
 /* Settings button label */
 "Button.submit" = "Submit";
+/* Button label to uninstall the app. */
+"Button.uninstall.android" = "Uninstall";
+/* Button label to wipe the user's application data. */
+"Button.wipe.android" = "Wipe";
 /* Yes button */
 "Button.yes" = "Yes";
 /* Camera plugin instruction */
@@ -480,22 +494,20 @@
 "Prompts.UpgradePin.body" = "BRD has upgraded to using a 6-digit PIN. Tap Continue to upgrade.";
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "Upgrade PIN";
-/* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
-"PushNotifications.body" = "Turn on push notifcation and be the first to hear about new features and special offers.";
+/* Body text for the push notifications prompt. */
+"PushNotifications.body" = "Turn on push notifications and be the first to hear about new features and special offers.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Notifications Disabled";
 /* Push notifications settings instructions */
 "PushNotifications.enableInstructions" = "Turn on notifications in Settings to receive alerts";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Push Notifications";
-/* Push notifications 'Maybe Later' button */
-"PushNotifications.maybeLater" = "Maybe Later";
 /* Push notifications are off label */
 "PushNotifications.off" = "Off";
 /* Push notifications are on label */
 "PushNotifications.on" = "On";
 /* Push notifications settings view title label */
-"PushNotifications.title" = "Get in the loop";
+"PushNotifications.title" = "Stay in the Loop";
 /* Address copied message. */
 "Receive.copied" = "Copied to clipboard.";
 /* Share via email button label */
@@ -878,6 +890,9 @@
 "TransactionDetails.commentsPlaceholder" = "Add memo...";
 /* Timestamp section header for complete tx */
 "TransactionDetails.completeTimestampHeader" = "Complete";
+/* Block height and confirmations label
+eg. 182930 (45061 confirmations) */
+"TransactionDetails.confirmationsLabel" = "Confirmations";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Your transactions will appear here.";
 /* e.g. the users balance after the transaction was compeleted */
