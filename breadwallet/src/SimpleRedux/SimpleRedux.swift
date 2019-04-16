@@ -57,7 +57,7 @@ enum TriggerName {
     case scanQr
     case copyWalletAddresses(String?, String?)
     case authenticateForPlatform(String, Bool, (PlatformAuthResult)->Void) // (prompt, allowBiometricAuth, callback)
-    case confirmTransaction(Currency, Amount, Amount, String, (Bool)->Void) // currency, amount, fee, address, callback
+    case confirmTransaction(Currency?, Amount?, Amount?, String, (Bool)->Void) // currency, amount, fee, address, callback
     case hideStatusBar
     case showStatusBar
     case lightWeightAlert(String)
@@ -71,7 +71,7 @@ enum TriggerName {
     case wipeWalletNoPrompt
     case didUpdateFeatureFlags
     case didFetchAnnouncements([Announcement])
-    case showCurrency(Currency)
+    case showCurrency(Currency?)
     case resetDisplayCurrencies
     case promptLinkWallet(WalletPairingRequest)
     case linkWallet(WalletPairingRequest, Bool, PairingCompletionHandler) // request, accepted, callback

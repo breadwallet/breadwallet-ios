@@ -50,7 +50,8 @@ class EditWalletsViewController: UIViewController, Subscriber {
     private let type: TokenListType
     private let kvStore: BRReplicatedKVStore
     private var metaData: CurrencyListMetaData
-    private let localCurrencies: [Currency] = [Currencies.btc, Currencies.bch, Currencies.eth, Currencies.brd]
+    //TODO:CRYPTO default currencies
+    private let localCurrencies: [Currency] = []//[Currencies.btc, Currencies.bch, Currencies.eth, Currencies.brd]
     private let tableView = UITableView()
     private let searchBar = UISearchBar()
 
@@ -154,10 +155,10 @@ class EditWalletsViewController: UIViewController, Subscriber {
         wallets = enabledCurrencies.map { Wallet(currency: $0, isHidden: false) } + hiddenCurrencies.map { Wallet(currency: $0, isHidden: true) }
     }
 
-    private func setAddModel(storedCurrencies: [ERC20Token]) {
+    private func setAddModel(storedCurrencies: [Currency]) {
         // For adding wallets, filter out the ones that have already been added.
         wallets = storedCurrencies
-            .filter { !self.metaData.isAddressAlreadyAdded(address: $0.address) }
+            .filter { !self.metaData.isAddressAlreadyAdded(address: $0.tokenAddress ?? "") }
             .map { Wallet(currency: $0, isHidden: true) }
         allWallets = wallets
     }
@@ -196,9 +197,9 @@ class EditWalletsViewController: UIViewController, Subscriber {
     }
 
     private func addAddedTokens() {
-        let tokensToBeAdded: [ERC20Token] = allWallets
-            .filter { $0.isHidden == false }
-            .compactMap { $0.currency as? ERC20Token }
+        let tokensToBeAdded: [Currency] = allWallets
+            .filter { $0.isHidden == false && $0.currency.isERC20Token }
+            .map { $0.currency }
         var displayOrder = Store.state.displayCurrencies.count
         let newWallets: [String: WalletState] = tokensToBeAdded.reduce([String: WalletState]()) { (dictionary, currency) -> [String: WalletState] in
             var dictionary = dictionary
@@ -206,7 +207,8 @@ class EditWalletsViewController: UIViewController, Subscriber {
             displayOrder += 1
             return dictionary
         }
-        metaData.addTokenAddresses(addresses: tokensToBeAdded.map { $0.address })
+        //TODO:CRYPTO token address
+        metaData.addTokenAddresses(addresses: tokensToBeAdded.map { $0.tokenAddress! })
         save()
         Store.perform(action: ManageWallets.AddWallets(newWallets))
     }
@@ -254,16 +256,16 @@ class EditWalletsViewController: UIViewController, Subscriber {
         //Save new metadata
         metaData.enabledCurrencies = wallets.compactMap {
             guard $0.isHidden == false else { return nil}
-            if let token = $0.currency as? ERC20Token {
-                return C.erc20Prefix + token.address
+            if let tokenAddress = $0.currency.tokenAddress {
+                return C.erc20Prefix + tokenAddress
             } else {
                 return $0.currency.code
             }
         }
         metaData.hiddenCurrencies = wallets.compactMap {
             guard $0.isHidden == true else { return nil}
-            if let token = $0.currency as? ERC20Token {
-                return C.erc20Prefix + token.address
+            if let tokenAddress = $0.currency.tokenAddress {
+                return C.erc20Prefix + tokenAddress
             } else {
                 return $0.currency.code
             }
@@ -354,10 +356,8 @@ extension EditWalletsViewController {
         if currency.code.lowercased() == identifier.lowercased() {
             return true
         }
-        if let token = currency as? ERC20Token {
-            if token.address.lowercased() == identifier.lowercased() {
-                return true
-            }
+        if let tokenAddress = currency.tokenAddress, tokenAddress.lowercased() == identifier.lowercased() {
+            return true
         }
         return false
     }

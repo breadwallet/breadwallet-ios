@@ -71,7 +71,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     private var address: String? {
         if let protoRequest = validatedProtoRequest {
-            return currency.matches(Currencies.bch) ? protoRequest.address.bCashAddr : protoRequest.address
+            return currency.isBitcoinCash ? protoRequest.address.bCashAddr : protoRequest.address
         } else {
             return addressCell.address
         }
@@ -112,20 +112,20 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         Store.subscribe(self, selector: { $0[self.currency]?.balance != $1[self.currency]?.balance },
                         callback: { [unowned self] in
                             if let balance = $0[self.currency]?.balance {
-                                self.balance = balance
+                                self.balance = balance.rawValue //TODO:CRYPTO rawValue
                             }
         })
         Store.subscribe(self, selector: { $0[self.currency]?.fees != $1[self.currency]?.fees }, callback: { [unowned self] in
             guard let fees = $0[self.currency]?.fees else { return }
             self.sender.updateFeeRates(fees, level: self.feeSelection)
-            if self.currency is Bitcoin {
-                self.amountView.canEditFee = (fees.regular != fees.economy) || self.currency.matches(Currencies.btc)
+            if self.currency.isBitcoinCompatible {
+                self.amountView.canEditFee = (fees.regular != fees.economy) || self.currency.isBitcoin
             } else {
                 self.amountView.canEditFee = false
             }
         })
         
-        if currency.matches(Currencies.eth) || currency is ERC20Token {
+        if currency.isEthereumCompatible {
             addEstimateGasListener()
         }
     }
@@ -179,7 +179,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             self?.amount = amount
         }
         amountView.didUpdateFee = strongify(self) { myself, fee in
-            guard myself.currency is Bitcoin else { return }
+            guard myself.currency.isBitcoinCompatible else { return }
             myself.feeSelection = fee
             if let fees = myself.currency.state?.fees {
                 myself.sender.updateFeeRates(fees, level: fee)
@@ -196,7 +196,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     
     private func balanceTextForAmount(_ amount: Amount?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount = Amount(amount: balance, currency: currency, rate: rate, minimumFractionDigits: 0)
+        let balanceAmount = Amount(value: balance, currency: currency, rate: rate, minimumFractionDigits: 0)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
@@ -205,8 +205,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         
         if let amount = amount, amount.rawValue > UInt256(0) {
             if let fee = sender.fee(forAmount: amount.rawValue) {
-                let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
-                let feeAmount = Amount(amount: fee, currency: feeCurrency, rate: rate)
+                //TODO:CRYPTO fee currency
+                let feeCurrency = currency//(currency is ERC20Token) ? Currencies.eth : currency
+                let feeAmount = Amount(value: fee, currency: feeCurrency, rate: rate)
                 let feeText = feeAmount.description
                 feeOutput = String(format: S.Send.fee, feeText)
                 if feeCurrency.matches(currency) && (balance >= fee) && amount.rawValue > (balance - fee) {
@@ -284,7 +285,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
             
         case .outputTooSmall(let minOutput):
-            let minOutputAmount = Amount(amount: UInt256(minOutput), currency: currency, rate: Rate.empty)
+            let minOutputAmount = Amount(value: UInt256(minOutput), currency: currency, rate: Rate.empty)
             let text = Store.state.isBtcSwapped ? minOutputAmount.fiatDescription : minOutputAmount.tokenDescription
             let message = String(format: S.PaymentProtocol.Errors.smallPayment, text)
             showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
@@ -319,13 +320,13 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             let address = address else { return }
         
         let fee = sender.fee(forAmount: amount.rawValue) ?? UInt256(0)
-        let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
+        //TODO:CRYPTO fee currency
+        let feeCurrency = currency//(currency is ERC20Token) ? Currencies.eth : currency
         
-        let displyAmount = Amount(amount: amount.rawValue,
-                                  currency: currency,
+        let displyAmount = Amount(amount: amount,
                                   rate: amountView.selectedRate,
                                   maximumFractionDigits: Amount.highPrecisionDigits)
-        let feeAmount = Amount(amount: fee,
+        let feeAmount = Amount(value: fee,
                                currency: feeCurrency,
                                rate: (amountView.selectedRate != nil) ? feeCurrency.state?.currentRate : nil,
                                maximumFractionDigits: Amount.highPrecisionDigits)
@@ -454,12 +455,12 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             })
             
         case .paymentTooSmall(let minOutput):
-            let amount = Amount(amount: UInt256(minOutput), currency: currency, rate: Rate.empty)
+            let amount = Amount(value: UInt256(minOutput), currency: currency, rate: Rate.empty)
             let message = String(format: S.PaymentProtocol.Errors.smallPayment, amount.tokenDescription)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
             
         case .outputTooSmall(let minOutput):
-            let amount = Amount(amount: UInt256(minOutput), currency: currency, rate: Rate.empty)
+            let amount = Amount(value: UInt256(minOutput), currency: currency, rate: Rate.empty)
             let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.tokenDescription)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
 
@@ -481,11 +482,11 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         if let name = protoReq.commonName {
             addressCell.setContent(protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized)
         } else {
-            addressCell.setContent(currency.matches(Currencies.bch) ? address.bCashAddr : address)
+            addressCell.setContent(currency.isBitcoinCash ? address.bCashAddr : address)
         }
         
         if requestAmount > UInt256(0) {
-            amountView.forceUpdateAmount(amount: Amount(amount: requestAmount, currency: currency))
+            amountView.forceUpdateAmount(amount: Amount(value: requestAmount, currency: currency))
         }
         memoCell.content = protoReq.details.memo
 
@@ -516,13 +517,15 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private func showInsufficientGasError() {
         guard let amount = self.amount,
             let fee = self.sender.fee(forAmount: amount.rawValue) else { return assertionFailure() }
-        let feeAmount = Amount(amount: fee, currency: Currencies.eth, rate: nil)
-        let message = String(format: S.Send.insufficientGasMessage, feeAmount.description)
-        
+        //TODO:CRYPTO fee currency
+//        let feeAmount = Amount(value: fee, currency: Currencies.eth, rate: nil)
+        let message = ""//String(format: S.Send.insufficientGasMessage, feeAmount.description)
+
         let alertController = UIAlertController(title: S.Send.insufficientGasTitle, message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
-            Store.trigger(name: .showCurrency(Currencies.eth))
-        }))
+        //TODO:CRYPTO show specific wallet
+//        alertController.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
+//            Store.trigger(name: .showCurrency(Currencies.eth))
+//        }))
         alertController.addAction(UIAlertAction(title: S.Button.no, style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
     }

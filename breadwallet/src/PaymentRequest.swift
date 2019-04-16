@@ -27,7 +27,8 @@ struct PaymentRequest {
                 if let scheme = url.scheme, let currencySchemes = currency.urlSchemes, currencySchemes.contains(scheme) {
                     let host = url.host
                     if let host = host {
-                        if currency.matches(Currencies.bch) {
+                        //TODO:CRYPTO payment uri
+                        if currency.isBitcoinCash {
                             // BCH CashAddr includes the bitcoincash: prefix in the address format
                             // the payment request stores the address in legacy address format
                             let cashAddr = "\(scheme):\(host)"
@@ -83,7 +84,7 @@ struct PaymentRequest {
         
         // core internally uses bitcoin address format but PaymentRequest will only accept the currency-specific address format
         if currency.isValidAddress(string) {
-            if currency.matches(Currencies.bch) {
+            if currency.isBitcoinCash {
                 toAddress = string.bitcoinAddr
             } else {
                 toAddress = string
@@ -114,7 +115,9 @@ struct PaymentRequest {
         } else {
             request = NSMutableURLRequest(url: remoteRequest! as URL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0) //TODO - fix !
         }
-        
+
+        //TODO:CRYPTO btc payment request
+        /*
         if self.currency.matches(Currencies.btc) {
             request.setValue("application/bitcoin-paymentrequest", forHTTPHeaderField: "Accept")
             //request.addValue("application/payment-request", forHTTPHeaderField: "Accept") // this breaks bitpay :(
@@ -147,10 +150,11 @@ struct PaymentRequest {
                 completion(nil)
             }
         }.resume()
+        */
     }
 
     static func requestString(withAddress address: String, forAmount amount: UInt256, currency: Currency) -> String {
-        let amountString = amount.string(decimals: currency.commonUnit.decimals)
+        let amountString = amount.string(decimals: currency.defaultUnit.decimals)
         guard let uri = currency.addressURI(address) else { return "" }
         return "\(uri)?amount=\(amountString)"
     }
@@ -158,7 +162,7 @@ struct PaymentRequest {
     let currency: Currency
     var toAddress: String?
     var displayAddress: String? {
-        if currency.matches(Currencies.bch) {
+        if currency.isBitcoinCash {
             return toAddress?.bCashAddr
         } else {
             return toAddress

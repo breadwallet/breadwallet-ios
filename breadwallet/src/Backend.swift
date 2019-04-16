@@ -23,7 +23,8 @@ class Backend {
     private var apiClient: BRAPIClient
     private var pigeonExchange: PigeonExchange?
     private var exchangeUpdater: ExchangeUpdater?
-    private var feeUpdaters = [FeeUpdater]()
+    //TODO:CRYPTO
+//    private var feeUpdaters = [FeeUpdater]()
     private let userAgentFetcher = UserAgentFetcher()
     
     // MARK: - Public
@@ -50,8 +51,9 @@ class Backend {
         }
     }
 
+    //TODO:CRYPTO
     static func updateFees() {
-        shared.feeUpdaters.forEach { $0.refresh() }
+//        shared.feeUpdaters.forEach { $0.refresh() }
     }
     
     static func sendLaunchEvent() {
@@ -64,24 +66,26 @@ class Backend {
     
     // MARK: Setup
     
-    static func connect(authenticator: WalletAuthenticator, currencies: [Currency], walletManagers: [WalletManager]) {
+    static func connect(authenticator: WalletAuthenticator) {
         shared.apiClient = BRAPIClient(authenticator: authenticator)
         shared.pigeonExchange = PigeonExchange()
-        
-        shared.exchangeUpdater = ExchangeUpdater(currencies: Store.state.currencies)
-        
-        var added = [String]()
-        walletManagers.forEach {
-            if !added.contains($0.currency.code) {
-                added.append($0.currency.code)
-                shared.feeUpdaters.append(FeeUpdater(walletManager: $0))
-            }
-        }
+
+        shared.exchangeUpdater = ExchangeUpdater()
+
+        //TODO:CRYPTO confirm fee updater to be replaced by BlockchainDB
+//        var added = [String]()
+//        walletManagers.forEach {
+//            if !added.contains($0.currency.code) {
+//                added.append($0.currency.code)
+//                shared.feeUpdaters.append(FeeUpdater(walletManager: $0))
+//            }
+//        }
     }
     
     static func disconnectWallet() {
-        shared.feeUpdaters.forEach { $0.stop() }
-        shared.feeUpdaters.removeAll()
+        //TODO:CRYPTO 
+//        shared.feeUpdaters.forEach { $0.stop() }
+//        shared.feeUpdaters.removeAll()
         shared.exchangeUpdater = nil
         shared.pigeonExchange = nil
         shared.apiClient = BRAPIClient(authenticator: NoAuthWalletAuthenticator())

@@ -23,7 +23,7 @@ struct State {
     let pinLength: Int
     let walletID: String?
     let wallets: [String: WalletState]
-    let availableTokens: [ERC20Token]
+    let availableTokens: [Currency]
     
     subscript(currency: Currency) -> WalletState? {
         guard let walletState = wallets[currency.code] else {
@@ -44,7 +44,7 @@ struct State {
         return orderedWallets.filter { $0.displayOrder >= 0 }.map { $0.currency }
     }
     
-    var supportedTokens: [ERC20Token] {
+    var supportedTokens: [Currency] {
         return availableTokens.filter { $0.isSupported }
     }
     
@@ -79,11 +79,14 @@ extension State {
                         isPromptingBiometrics: false,
                         pinLength: 6,
                         walletID: nil,
-                        wallets: [Currencies.btc.code: WalletState.initial(Currencies.btc, displayOrder: -1),
-                                  Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: -1),
-                                  Currencies.eth.code: WalletState.initial(Currencies.eth, displayOrder: -1),
-                                  Currencies.brd.code: WalletState.initial(Currencies.brd, displayOrder: -1)],
-                        availableTokens: [Currencies.brd]
+                        //TODO:CRYPTO default wallets
+                        wallets: [:],
+//                        wallets: [Currencies.btc.code: WalletState.initial(Currencies.btc, displayOrder: -1),
+//                                  Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: -1),
+//                                  Currencies.eth.code: WalletState.initial(Currencies.eth, displayOrder: -1),
+//                                  Currencies.brd.code: WalletState.initial(Currencies.brd, displayOrder: -1)],
+                        //availableTokens: [Currencies.brd]
+                        availableTokens: []
         )
     }
     
@@ -100,7 +103,7 @@ extension State {
                    pinLength: Int? = nil,
                    walletID: String? = nil,
                    wallets: [String: WalletState]? = nil,
-                   availableTokens: [ERC20Token]? = nil) -> State {
+                   availableTokens: [Currency]? = nil) -> State {
         return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible,
                      isOnboardingEnabled: isOnboardingEnabled ?? self.isOnboardingEnabled,
                      isLoginRequired: isLoginRequired ?? self.isLoginRequired,
@@ -131,7 +134,6 @@ enum RootModal {
     case send(currency: Currency)
     case sendForRequest(request: PigeonRequest)
     case receive(currency: Currency)
-    case loginAddress
     case loginScan
     case requestAmount(currency: Currency, address: String)
     case buy(currency: Currency?)
@@ -150,10 +152,11 @@ enum SyncState {
 
 struct WalletState {
     let currency: Currency
+    let wallet: WalletController?
     let displayOrder: Int // -1 for hidden
     let syncProgress: Double
     let syncState: SyncState
-    let balance: UInt256?
+    let balance: Amount?
     let transactions: [Transaction]
     let lastBlockTimestamp: UInt32
     let name: String
@@ -167,8 +170,9 @@ struct WalletState {
     let maxDigits: Int // this is bits vs bitcoin setting
     let connectionStatus: BRPeerStatus
     
-    static func initial(_ currency: Currency, displayOrder: Int) -> WalletState {
+    static func initial(_ currency: Currency, wallet: WalletController? = nil, displayOrder: Int) -> WalletState {
         return WalletState(currency: currency,
+                           wallet: wallet,
                            displayOrder: displayOrder,
                            syncProgress: 0.0,
                            syncState: .success,
@@ -183,14 +187,16 @@ struct WalletState {
                            rates: [],
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
                            fees: nil,
-                           maxDigits: (currency is Bitcoin) ? UserDefaults.maxDigits : currency.commonUnit.decimals,
+                           //TODO:CRYPTO maxdigits
+                           maxDigits: currency.defaultUnit.decimals,
+                           //maxDigits: (currency is Bitcoin) ? UserDefaults.maxDigits : currency.commonUnit.decimals,
                            connectionStatus: BRPeerStatusDisconnected)
     }
 
     func mutate(    displayOrder: Int? = nil,
                     syncProgress: Double? = nil,
                     syncState: SyncState? = nil,
-                    balance: UInt256? = nil,
+                    balance: Amount? = nil,
                     transactions: [Transaction]? = nil,
                     lastBlockTimestamp: UInt32? = nil,
                     name: String? = nil,
@@ -205,6 +211,7 @@ struct WalletState {
                     connectionStatus: BRPeerStatus? = nil) -> WalletState {
 
         return WalletState(currency: self.currency,
+                           wallet: self.wallet,
                            displayOrder: displayOrder ?? self.displayOrder,
                            syncProgress: syncProgress ?? self.syncProgress,
                            syncState: syncState ?? self.syncState,
@@ -255,8 +262,6 @@ func == (lhs: RootModal, rhs: RootModal) -> Bool {
         return lhsRequest.address == rhsRequest.address
     case (.receive(let lhsCurrency), .receive(let rhsCurrency)):
         return lhsCurrency.code == rhsCurrency.code
-    case (.loginAddress, .loginAddress):
-        return true
     case (.loginScan, .loginScan):
         return true
     case (.requestAmount(let lhsCurrency, let lhsAddress), .requestAmount(let rhsCurrency, let rhsAddress)):

@@ -44,6 +44,8 @@ struct Fees: Codable {
     }
 }
 
+//TODO:CRYPTO confirm fee updater to be replaced by BlockchainDB
+/*
 class FeeUpdater: Trackable {
 
     // MARK: - Public
@@ -52,7 +54,7 @@ class FeeUpdater: Trackable {
         self.walletManager = walletManager
         
         // set default fee for BCH
-        if walletManager.currency.matches(Currencies.bch) {
+        if walletManager.currency.isBitcoinCash {
             walletManager.wallet?.feePerKb = 1000
         }
     }
@@ -128,3 +130,4 @@ class FeeUpdater: Trackable {
         }
     }
 }
+*/

@@ -9,6 +9,7 @@
 import XCTest
 @testable import breadwallet
 import BRCore
+import BRCrypto
 
 class FakeAuthenticator: WalletAuthenticator {
     var secret: UInt256
@@ -70,6 +71,14 @@ class FakeAuthenticator: WalletAuthenticator {
     func authenticate(withBiometricsPrompt: String, completion: @escaping (BiometricsResult) -> Void) {
         assertionFailure()
         completion(.failure)
+    }
+
+    func login(withPin: String) -> Account? {
+        return nil
+    }
+
+    func login(withBiometricsPrompt: String, completion: @escaping (Account?) -> Void) {
+        completion(nil)
     }
 
     func buildBitIdKey(url: String, index: Int) -> BRKey? {

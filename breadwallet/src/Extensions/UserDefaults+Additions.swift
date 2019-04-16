@@ -157,7 +157,8 @@ extension UserDefaults {
     static var maxDigits: Int {
         get {
             guard defaults.object(forKey: maxDigitsKey) != nil else {
-                return Currencies.btc.commonUnit.decimals
+                //TODO:CRYPTO maxdigits
+                return 8//Currencies.btc.commonUnit.decimals
             }
             let maxDigits = defaults.integer(forKey: maxDigitsKey)
             if maxDigits == 5 {

@@ -8,6 +8,7 @@
 
 import Foundation
 import BRCore
+import BRCrypto
 
 /// Transacton status
 enum TransactionStatus {
@@ -21,62 +22,141 @@ enum TransactionStatus {
     case invalid
 }
 
-/// Coin-agnostic transaction model wrapper
-protocol Transaction {
-    var currency: Currency { get }
-    var hash: String { get }
-    var blockHeight: UInt64 { get }
-    var confirmations: UInt64 { get }
-    var status: TransactionStatus { get }
-    var direction: TransactionDirection { get }
-    var timestamp: TimeInterval { get }
-    var toAddress: String { get }
-    var amount: UInt256 { get }
-    
-    var metaData: TxMetaData? { get }
-    var comment: String? { get }
-    var metaDataContainer: MetaDataContainer? { get }
-    var kvStore: BRReplicatedKVStore? { get }
-    var hasKvStore: Bool { get }
-    
-    var isPending: Bool { get }
-    var isValid: Bool { get }
+enum TransactionDirection: String {
+    case sent = "Sent"
+    case received = "Received"
+    case moved = "Moved"
 }
 
-// MARK: Default Values
+/// Wrapper for BRCrypto TransferFeeBasis
+enum FeeBasis {
+    case bitcoin(feePerKB: Amount)
+    case ethereum(gasPrice: Amount, gasLimit: UInt64)
+}
+
+// MARK: -
+
+/// Wrapper for BRCrypto Transfer
+class Transaction {
+    private let transfer: BRCrypto.Transfer
+    let wallet: WalletController
+
+    var currency: Currency { return wallet.currency }
+    var confirmations: UInt64 {
+        return transfer.confirmations ?? 0
+    }
+    var blockNumber: UInt64? {
+        return transfer.confirmation?.blockNumber
+    }
+    //TODO:CRYPTO used as non-optional by tx metadata and rescan
+    var blockHeight: UInt64 {
+        return blockNumber ?? 0
+    }
+
+    var targetAddress: String { return transfer.target?.description ?? "" }
+    var sourceAddress: String { return transfer.source?.description ?? "" }
+    //TODO:CRYPTO legacy support
+    var toAddress: String { return targetAddress }
+    var fromAddress: String { return sourceAddress }
+
+    var amount: Amount { return Amount(coreAmount: transfer.amount, currency: currency) }
+    var fee: Amount { return Amount(coreAmount: transfer.fee, currency: currency) }
+    var feeBasis: FeeBasis? {
+        switch transfer.feeBasis {
+        case .bitcoin(let feePerKB):
+            return .bitcoin(feePerKB: Amount(value: UInt256(feePerKB), currency: currency))
+        case .ethereum(let gasPrice, let gasLimit):
+            guard let currency = wallet.manager.currency(from: gasPrice.currency) else { assertionFailure(); return nil }
+            return .ethereum(gasPrice: Amount(coreAmount: gasPrice, currency: currency), gasLimit: gasLimit)
+        }
+    }
+
+    var created: Date? {
+        if let confirmationTime = transfer.confirmation?.timestamp {
+            return Date(timeIntervalSince1970: TimeInterval(confirmationTime))
+        } else {
+            return nil
+        }
+    }
+    //TODO:CRYPTO legacy
+    var timestamp: TimeInterval {
+        if let timestamp = transfer.confirmation?.timestamp {
+            return TimeInterval(timestamp)
+        } else {
+            return 0
+        }
+    }
+
+    var hash: String { return transfer.hash?.description ?? "" }
+
+    //TODO:CRYPTO refactor
+    var status: TransactionStatus {
+        switch transfer.state {
+        case .created, .signed, .submitted, .pending:
+            return .pending
+        case .included:
+            switch confirmations {
+            case 0:
+                return .pending
+            case 1..<6:
+                return .confirmed
+            default:
+                return .complete
+            }
+        case .failed, .deleted:
+            return .invalid
+        }
+    }
+
+    //TODO:CRYPTO refactor -- this wrapper is not needed
+    var direction: TransactionDirection {
+        switch transfer.direction {
+        case .sent: return .sent
+        case .received: return .received
+        case .recovered: return .moved
+        }
+    }
+
+    // MARK: Init
+
+    init(transfer: BRCrypto.Transfer, wallet: WalletController) {
+        self.transfer = transfer
+        self.wallet = wallet
+    }
+}
+
 extension Transaction {
-    
+
     var metaData: TxMetaData? { return metaDataContainer?.metaData }
     var comment: String? { return metaData?.comment }
+
+    //TODO:CRYPTO tx metadata
     var metaDataContainer: MetaDataContainer? { return nil }
+
+    //TODO:CRYPTO remove this dependency
     var kvStore: BRReplicatedKVStore? { return nil }
     var hasKvStore: Bool { return kvStore != nil }
-    
+
     var isPending: Bool { return status == .pending }
     var isValid: Bool { return status != .invalid }
-    
+
     func createMetaData(rate: Rate, comment: String? = nil, feeRate: Double? = nil, tokenTransfer: String? = nil) {
         metaDataContainer?.createMetaData(tx: self, rate: rate, comment: comment, feeRate: feeRate, tokenTransfer: tokenTransfer)
     }
-    
+
     func saveComment(comment: String, rate: Rate) {
         guard let metaDataContainer = metaDataContainer else { return }
         metaDataContainer.save(comment: comment, tx: self, rate: rate)
     }
 }
 
-// MARK: -
-
-protocol EthLikeTransaction: Transaction {
-    var fromAddress: String { get }
-    var gasPrice: UInt256 { get }
-    var gasLimit: UInt64 { get }
-    var gasUsed: UInt64 { get }
+extension Transaction: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(transfer.hash)
+    }
 }
 
 // MARK: - Equatable support
-
-extension Equatable where Self: Transaction {}
 
 func == (lhs: Transaction, rhs: Transaction) -> Bool {
     return lhs.hash == rhs.hash &&

@@ -78,8 +78,9 @@ class URLController: Trackable, Subscriber {
                 if let success = xSuccess {
                     copyAddress(callback: success)
                 }
-            } else if let uri = isBitcoinUri(url: url, uri: uri) {
-                return handlePaymentRequestUri(uri, currency: Currencies.btc)
+                //TODO:CRYPTO payment uri
+//            } else if let uri = isBitcoinUri(url: url, uri: uri) {
+//                return handlePaymentRequestUri(uri, currency: Currencies.btc)
             } else if url.host == "debug" {
                 handleDebugLink(url)
             }
@@ -153,13 +154,14 @@ class URLController: Trackable, Subscriber {
     }
 
     private func copyAddress(callback: String) {
-        if let url = URL(string: callback), let address = Store.state[Currencies.btc]?.receiveAddress {
-            let queryLength = url.query?.utf8.count ?? 0
-            let callback = callback.appendingFormat("%@address=%@", queryLength > 0 ? "&" : "?", address)
-            if let callbackURL = URL(string: callback) {
-                UIApplication.shared.open(callbackURL)
-            }
-        }
+        //TODO:CRYPTO btc receive address
+//        if let url = URL(string: callback), let address = Store.state[Currencies.btc]?.receiveAddress {
+//            let queryLength = url.query?.utf8.count ?? 0
+//            let callback = callback.appendingFormat("%@address=%@", queryLength > 0 ? "&" : "?", address)
+//            if let callbackURL = URL(string: callback) {
+//                UIApplication.shared.open(callbackURL)
+//            }
+//        }
     }
 
     private func handlePaymentRequestUri(_ uri: URL, currency: Currency) -> Bool {

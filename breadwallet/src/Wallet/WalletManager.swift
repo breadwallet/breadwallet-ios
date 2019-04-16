@@ -32,8 +32,8 @@ import BRCore
 
 protocol WalletManager: class {
     var currency: Currency { get }
-    var peerManager: BRPeerManager? { get }
-    var wallet: BRWallet? { get }
+//    var peerManager: BRPeerManager? { get }
+//    var wallet: BRWallet? { get }
     var kvStore: BRReplicatedKVStore? { get set }
     var isConnected: Bool { get }
 
@@ -45,11 +45,12 @@ protocol WalletManager: class {
 
 extension WalletManager {
 
-    var peerManager: BRPeerManager? { return nil }
-    var wallet: BRWallet? { return nil }
-    
+//    var peerManager: BRPeerManager? { return nil }
+//    var wallet: BRWallet? { return nil }
+
     func isOwnAddress(_ address: String) -> Bool {
-        return wallet?.containsAddress(address) ?? false
+        return false //TODO:CRYPTO
+        //return wallet?.containsAddress(address) ?? false
     }
 }
 

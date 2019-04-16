@@ -293,7 +293,6 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             guard let balance = Store.state[$0]?.balance,
                 let rate = Store.state[$0]?.currentRate else { return 0.0 }
             let amount = Amount(amount: balance,
-                                currency: $0,
                                 rate: rate)
             return amount.fiatValue
             }.reduce(0.0, +)
@@ -302,7 +301,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencySymbol = Store.state[Currencies.btc]?.currentRate?.currencySymbol ?? ""
+        format.currencySymbol = Store.state.orderedWallets.first?.currentRate?.currencySymbol ?? ""
         self.total.text = format.string(from: fiatTotal as NSDecimalNumber)
     }
     
@@ -388,7 +387,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
                 prompt.continueButton.tap = { [unowned self] in
                     // TODO:BCH move out of home screen
                     
-                    if let trigger = nextPrompt.trigger(for: Currencies.btc) {
+                    if let trigger = nextPrompt.trigger {
                         Store.trigger(name: trigger)
                     }
                     self.saveEvent("prompt.\(nextPrompt.name).trigger")

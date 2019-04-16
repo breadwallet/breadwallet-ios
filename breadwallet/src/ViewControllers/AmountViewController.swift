@@ -23,15 +23,15 @@ class AmountViewController: UIViewController, Trackable {
         if let rate = currency.state?.currentRate, Store.state.isBtcSwapped {
             self.currencyToggle = BRDButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
-            let title = currency.unitName(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals)
+            let title = currency.unitName(forDecimals: currency.state?.maxDigits ?? currency.defaultUnit.decimals)
             self.currencyToggle = BRDButton(title: title, type: .tertiary)
         }
         self.feeSelector = FeeSelector()
         self.pinPad = PinPadViewController(style: .white,
                                            keyboardType: .decimalPad,
-                                           maxDigits: currency.state?.maxDigits ?? currency.commonUnit.decimals,
+                                           maxDigits: currency.state?.maxDigits ?? currency.defaultUnit.decimals,
                                            shouldShowBiometrics: false)
-        self.canEditFee = (currency is Bitcoin)
+        self.canEditFee = (currency.isBitcoinCompatible)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -255,7 +255,7 @@ class AmountViewController: UIViewController, Trackable {
             amount = Amount(fiatString: output,
                             currency: currency,
                             rate: rate)
-        } else if let unit = currency.unit(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals) {
+        } else if let unit = currency.unit(forDecimals: currency.state?.maxDigits ?? currency.defaultUnit.decimals) {
             amount = Amount(tokenString: output,
                             currency: currency,
                             unit: unit,
@@ -267,8 +267,7 @@ class AmountViewController: UIViewController, Trackable {
 
     private func updateAmountLabel() {
         guard let amount = amount else { amountLabel.text = ""; return }
-        let displayAmount = Amount(amount: amount.rawValue,
-                                   currency: currency,
+        let displayAmount = Amount(amount: amount,
                                    rate: selectedRate,
                                    minimumFractionDigits: minimumFractionDigits)
         var output = (selectedRate == nil) ? displayAmount.tokenFormattedValue : displayAmount.fiatDescription

@@ -27,6 +27,7 @@ import Foundation
 import UIKit
 import LocalAuthentication
 import BRCore
+import BRCrypto
 
 #if TESTNET
 private let WalletSecAttrService = "com.brd.testnetQA"
@@ -67,10 +68,15 @@ protocol WalletAuthenticator {
     func authenticate(withPhrase: String) -> Bool
     func authenticate(withBiometricsPrompt: String, completion: @escaping (BiometricsResult) -> Void)
 
+    func login(withPin: String) -> Account?
+    func login(withBiometricsPrompt: String, completion: @escaping (Account?) -> Void)
+
+    // LEGACY
     var masterPubKey: BRMasterPubKey? { get }
     var ethPubKey: BRKey? { get }
-    var apiAuthKey: String? { get }
+    // ... LEGACY
 
+    var apiAuthKey: String? { get }
     var userAccount: [AnyHashable: Any]? { get set }
 
     func buildBitIdKey(url: String, index: Int) -> BRKey?
@@ -84,12 +90,13 @@ extension WalletAuthenticator {
 
 /// Protocol for signing transactions
 protocol TransactionAuthenticator: WalletAuthenticator {
-    func canUseBiometrics(forTransaction tx: BRTxRef, wallet: BRWallet) -> Bool
-    func canUseBiometrics(forTransaction tx: EthereumTransaction, wallet: EthereumWallet) -> Bool
-    func sign(transaction: BRTxRef, wallet: BRWallet, withPin: String) -> Bool
-    func sign(transaction: BRTxRef, wallet: BRWallet, withBiometricsPrompt: String, completion: @escaping (BiometricsResult) -> Void)
-    func sign(transaction: EthereumTransaction, wallet: EthereumWallet, withPin: String) -> Bool
-    func sign(transaction: EthereumTransaction, wallet: EthereumWallet, withBiometricsPrompt: String, completion: (BiometricsResult) -> Void) // TODO
+    //TODO:CRYPTO sending
+//    func canUseBiometrics(forTransaction tx: BRTxRef, wallet: BRWallet) -> Bool
+//    func canUseBiometrics(forTransaction tx: EthereumTransaction, wallet: EthereumWallet) -> Bool
+//    func sign(transaction: BRTxRef, wallet: BRWallet, withPin: String) -> Bool
+//    func sign(transaction: BRTxRef, wallet: BRWallet, withBiometricsPrompt: String, completion: @escaping (BiometricsResult) -> Void)
+//    func sign(transaction: EthereumTransaction, wallet: EthereumWallet, withPin: String) -> Bool
+//    func sign(transaction: EthereumTransaction, wallet: EthereumWallet, withBiometricsPrompt: String, completion: (BiometricsResult) -> Void) // TODO
 }
 
 /// Protocol for setting and changing the seed and PIN in the keychain
@@ -137,6 +144,12 @@ struct KeyStore {
     private var allBip39WordLists: [[NSString]] = []
     private var allBip39Words: Set<String> = []
 
+    private var account: Account? {
+        guard !noWallet, !walletIsDisabled else { return nil }
+        guard let seedPhrase: String = try? keychainItem(key: KeychainKey.mnemonic) else { return nil }
+        return Account.createFrom(phrase: seedPhrase)
+    }
+
     /// Creates the singleton instance of the KeyStore and returns it
     static func create() throws -> KeyStore {
         guard KeyStore.instance == nil else {
@@ -183,6 +196,7 @@ struct KeyStore {
 // MARK: - WalletAuthenticator
 
 extension KeyStore: WalletAuthenticator {
+
     /// true if keychain is available and we know that no wallet exists on it
     var noWallet: Bool {
         return KeyStore.staticNoWallet
@@ -458,12 +472,29 @@ extension KeyStore: WalletAuthenticator {
             }
         })
     }
+
+    /// authenticates with pin and returns the Account if successful, otherwise returns nil
+    func login(withPin pin: String) -> Account? {
+        return authenticate(withPin: pin) ? account : nil
+    }
+
+    /// show biometric dialog and call completion block with the Account if successful or nil otherwise
+    func login(withBiometricsPrompt prompt: String, completion: @escaping (Account?) -> Void) {
+        authenticate(withBiometricsPrompt: prompt) { result in
+            if result == .success {
+                completion(self.account)
+            } else {
+                completion(nil)
+            }
+        }
+    }
 }
 
 // MARK: - TransactionAuthenticator
 
 extension KeyStore: TransactionAuthenticator {
-
+//TODO:CRYPTO
+/*
     // MARK: Bitcoin
 
     // TODO:SL
@@ -527,6 +558,7 @@ extension KeyStore: TransactionAuthenticator {
             } catch { return false }
         }
     }
+ */
 }
 
 // MARK: - KeyMaster
@@ -735,6 +767,16 @@ struct NoAuthWalletAuthenticator: WalletAuthenticator {
         completion(.failure)
     }
 
+    func login(withPin: String) -> Account? {
+        assertionFailure()
+        return nil
+    }
+
+    func login(withBiometricsPrompt: String, completion: @escaping (Account?) -> Void) {
+        assertionFailure()
+        completion(nil)
+    }
+
     func buildBitIdKey(url: String, index: Int) -> BRKey? {
         assertionFailure()
         return nil
@@ -743,6 +785,8 @@ struct NoAuthWalletAuthenticator: WalletAuthenticator {
 
 // MARK: -
 
+//TODO:CRYPTO spend limit
+/*
 extension BTCWalletManager {
     // TODO:SL
     func updateSpendLimit() {
@@ -776,6 +820,7 @@ extension BTCWalletManager {
         }
     }
 }
+ */
 
 // MARK: - Keychain Support
 

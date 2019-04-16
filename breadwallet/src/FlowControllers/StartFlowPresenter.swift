@@ -219,7 +219,8 @@ class StartFlowPresenter: Subscriber, Trackable {
                 guard self?.keyMaster.setRandomSeedPhrase() != nil else { self?.handleWalletCreationError(); return }
                 //TODO:BCH multi-currency support
                 UserDefaults.selectedCurrencyCode = nil // to land on home screen after new wallet creation
-                Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(Date()))
+                //TODO:CRYPTO wallet info
+                //Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(Date()))
                 DispatchQueue.main.async {
                     self?.pushStartPaperPhraseCreationViewController(pin: pin, eventContext: context)
                     Store.trigger(name: .didCreateOrRecoverWallet)

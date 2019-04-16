@@ -9,6 +9,8 @@
 import UIKit
 import BRCore
 
+//TODO:CRYPTO node selection
+/*
 class NodeSelectorViewController: UIViewController, Trackable {
 
     private let titleLabel = UILabel(font: .customBold(size: 22.0), color: .white)
@@ -157,3 +159,4 @@ class NodeSelectorViewController: UIViewController, Trackable {
         fatalError("init(coder:) has not been implemented")
     }
 }
+*/

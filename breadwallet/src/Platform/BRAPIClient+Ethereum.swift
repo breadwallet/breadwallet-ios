@@ -44,7 +44,7 @@ extension BRAPIClient {
     }
     
     // MARK: Tokens
-    
+    /*
     public func getTokenBalance(address: EthAddress, token: ERC20Token, handler: @escaping (APIResult<String>) -> Void) {
         let req = URLRequest(url: url("/ethq/\(network)/query?module=account&action=tokenbalance&address=\(address)&contractaddress=\(token.address)"))
         send(apiRequest: req, handler: handler)
@@ -62,9 +62,16 @@ extension BRAPIClient {
         let req = URLRequest(url: url("/ethq/\(network)/query?module=logs&action=getLogs\(blockParams)\(tokenAddressParam)\(topicParams)"))
         send(apiRequest: req, handler: handler)
     }
+ */
     
     // MARK: Token List
-    
+
+    public func getCurrencyMetaData(handler: @escaping (APIResult<[CurrencyMetaData]>) -> Void) {
+        let req = URLRequest(url: url("/currencies"))
+        send(request: req, handler: handler)
+    }
+
+    /*
     public func getTokenList(handler: @escaping (APIResult<[ERC20Token]>) -> Void) {
         let req = URLRequest(url: url("/currencies?type=erc20"))
         send(request: req, handler: handler)
@@ -74,7 +81,7 @@ extension BRAPIClient {
         let req = URLRequest(url: url("/currencies?saleAddress=\(saleAddress.lowercased())"))
         send(request: req, handler: handler)
     }
-
+*/
     // MARK: -
     
     private func send<ResultType>(rpcRequest: JSONRPCRequest, handler: @escaping (JSONRPCResult<ResultType>) -> Void) {

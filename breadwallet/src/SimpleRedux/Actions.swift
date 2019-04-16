@@ -75,8 +75,8 @@ enum ManageWallets {
         init(_ removedTokenAddresses: [String]) {
             reduce = {
                 let newWallets = $0.wallets.filter {
-                    guard let token = $0.value.currency as? ERC20Token else { return true }
-                    return !removedTokenAddresses.contains(token.address)
+                    guard let tokenAddress = $0.value.currency.tokenAddress else { return true }
+                    return !removedTokenAddresses.contains(tokenAddress)
                 }
                 return $0.mutate(wallets: newWallets)
             }
@@ -85,7 +85,7 @@ enum ManageWallets {
     
     struct SetAvailableTokens: Action {
         let reduce: Reducer
-        init(_ availableTokens: [ERC20Token]) {
+        init(_ availableTokens: [Currency]) {
             reduce = {
                 return $0.mutate(availableTokens: availableTokens)
             }
@@ -115,7 +115,7 @@ struct WalletChange: Trackable {
             guard let state = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: state.mutate(syncState: syncState)) })
     }
-    func setBalance(_ balance: UInt256) -> WalletAction {
+    func setBalance(_ balance: Amount) -> WalletAction {
         return WalletAction(reduce: {
             guard let walletState = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: walletState.mutate(balance: balance)) })
@@ -161,7 +161,7 @@ struct WalletChange: Trackable {
     }
 
     func setMaxDigits(_ maxDigits: Int) -> WalletAction {
-        if self.currency is Bitcoin {
+        if self.currency.isBitcoinCompatible {
             UserDefaults.maxDigits = maxDigits
         }
         return WalletAction(reduce: {

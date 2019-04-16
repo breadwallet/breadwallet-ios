@@ -421,7 +421,9 @@ class PigeonExchange: Subscriber {
     // MARK: - Purchase/Call Request
     
     private func handlePaymentRequest(_ paymentRequest: MessagePaymentRequest, from requestEnvelope: MessageEnvelope) {
-        var request = MessagePaymentRequestWrapper(paymentRequest: paymentRequest)
+        //TODO:CRYPTO cleanup
+        guard let currency = Store.state.currencies.first(where: { $0.isEthereum }) else { return assertionFailure() }
+        var request = MessagePaymentRequestWrapper(paymentRequest: paymentRequest, currency: currency)
         request.responseCallback = { result in
             self.sendPaymentResponse(result: result, forRequest: paymentRequest, from: requestEnvelope)
         }
@@ -429,7 +431,9 @@ class PigeonExchange: Subscriber {
     }
     
     private func handleCallRequest(_ callRequest: MessageCallRequest, from requestEnvelope: MessageEnvelope) {
-        var request = MessageCallRequestWrapper(callRequest: callRequest)
+        //TODO:CRYPTO cleanup
+        guard let currency = Store.state.currencies.first(where: { $0.isEthereum }) else { return assertionFailure() }
+        var request = MessageCallRequestWrapper(callRequest: callRequest, currency: currency)
         request.responseCallback = { result in
             self.sendCallResponse(result: result, forRequest: callRequest, from: requestEnvelope)
         }
@@ -509,7 +513,10 @@ class PigeonExchange: Subscriber {
         }
         apiClient.sendMessage(envelope: envelope)
 
-        let requestWrapper = MessageCallRequestWrapper(callRequest: request)
+        //TODO:CRYPTO cleanup
+        guard let currency = Store.state.currencies.first(where: { $0.isEthereum }) else { return assertionFailure() }
+
+        let requestWrapper = MessageCallRequestWrapper(callRequest: request, currency: currency)
         requestWrapper.getToken { [unowned self] token in
             var amountToReceive = ""
             var tokenCode = ""
@@ -518,7 +525,7 @@ class PigeonExchange: Subscriber {
                 tokenCode = token.code
                 if let rate = token.defaultRate {
                     // exchange rate is in the currency's common units
-                    let formatter = Amount(amount: 0, currency: token).tokenFormat
+                    let formatter = Amount(value: 0, currency: token).tokenFormat
                     let value: Decimal = requestWrapper.purchaseAmount.tokenValue / Decimal(rate)
                     amountToReceive = formatter.string(from: value as NSDecimalNumber) ?? ""
                 }
@@ -627,12 +634,15 @@ class PigeonExchange: Subscriber {
         return PigeonCrypto.pairingKey(forIdentifier: pwd.identifier, authKey: apiClient.authKey!)
     }
 
-    private func addTokenWallet(token: ERC20Token) {
+    private func addTokenWallet(token: Currency) {
+        //TODO:CRYPTO to add a wallet need access to System wallets
+        /*
         guard !Store.state.displayCurrencies.contains(where: {$0.code.lowercased() == token.code.lowercased()}) else { return }
         var walletDict = [String: WalletState]()
         walletDict[token.code] = WalletState.initial(token, displayOrder: Store.state.displayCurrencies.count)
         let metaData = CurrencyListMetaData(kvStore: self.kvStore)!
-        metaData.addTokenAddresses(addresses: [token.address])
+        //TODO:CRYPTO token address / user wallets
+        //metaData.addTokenAddresses(addresses: [token.address])
         do {
             _ = try self.kvStore.set(metaData)
         } catch let error {
@@ -641,5 +651,6 @@ class PigeonExchange: Subscriber {
         DispatchQueue.main.async {
             Store.perform(action: ManageWallets.AddWallets(walletDict))
         }
+         */
     }
 }

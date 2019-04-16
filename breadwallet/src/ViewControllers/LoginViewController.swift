@@ -253,10 +253,6 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         })
     }
 
-    @objc func addressTapped() {
-        Store.perform(action: RootModalActions.Present(modal: .loginAddress))
-    }
-
     @objc func scanTapped() {
         Store.perform(action: RootModalActions.Present(modal: .loginScan))
     }

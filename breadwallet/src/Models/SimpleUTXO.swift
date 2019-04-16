@@ -30,3 +30,10 @@ struct SimpleUTXO {
         self.satoshis = satoshis
     }
 }
+
+extension Data {
+    var reverse: Data {
+        let tempBytes = Array(([UInt8](self)).reversed())
+        return Data(tempBytes)
+    }
+}

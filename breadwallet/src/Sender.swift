@@ -110,6 +110,9 @@ class SenderBase<CurrencyType: Currency, WalletType: WalletManager> {
     }
 }
 
+//TODO:CRYPTO sending
+/*
+
 // MARK: -
 
 class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
@@ -131,7 +134,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
     }
     
     func createTransaction(address: String, amount: UInt256, comment: String?) -> SenderValidationResult {
-        let btcAddress = currency.matches(Currencies.bch) ? address.bitcoinAddr : address
+        let btcAddress = currency.isBitcoinCash ? address.bitcoinAddr : address
         let result = validate(address: btcAddress, amount: amount)
         guard case .ok = result else { return result }
         
@@ -327,6 +330,8 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         
         tx.createMetaData(rate: rate, comment: comment, feeRate: Double(feePerKb))
         Store.trigger(name: .txMemoUpdated(tx.hash))
+        #else
+        assertionFailure()
     }
     
     private func postProtocolPaymentIfNeeded(completion: @escaping (SendResult) -> Void = { (nil) in }) {
@@ -480,7 +485,7 @@ class EthSenderBase<CurrencyType: Currency> : SenderBase<CurrencyType, EthWallet
     
     func transactionParams(fromAddress: String, toAddress: String, forAmount: Amount) -> TransactionParams {
         var params = TransactionParams(from: fromAddress, to: toAddress)
-        params.value = forAmount.amount
+        params.value = forAmount.rawValue //TODO:CRYPTO rawValue
         return params
     }
 }
@@ -581,7 +586,7 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
         guard currency.isValidAddress(address) else { return .invalidAddress }
         guard !walletManager.isOwnAddress(address) else { return .ownAddress }
         if let balance = currency.state?.balance {
-            guard amount < balance else { return .insufficientFunds }
+            guard amount < balance.rawValue else { return .insufficientFunds } //TODO:CRYPTO rawValue
         }
         //guard currency.state.currentRate != nil else { return .noExchangeRate } // allow sending without exchange rate
         return .ok
@@ -591,7 +596,8 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
     
     private func setMetaData(tx: EthTransaction) {
         guard let rate = currency.state?.currentRate else { print("Incomplete tx metadata"); return }
-        tx.createMetaData(rate: rate, comment: comment)
+        //TODO:CRYPTO
+        //tx.createMetaData(rate: rate, comment: comment)
     }
 }
 
@@ -683,11 +689,11 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
         guard currency.isValidAddress(address) else { return .invalidAddress }
         guard !walletManager.isOwnAddress(address) else { return .ownAddress }
         if let balance = currency.state?.balance {
-            guard amount <= balance else { return .insufficientFunds }
+            guard amount <= balance.rawValue else { return .insufficientFunds } //TODO:CRYPTO rawValue
         }
         // ERC20 token transfers require ETH for gas
         if let ethBalance = Currencies.eth.state?.balance {
-            guard ethBalance > UInt256(0) else { return .insufficientGas }
+            guard ethBalance.rawValue > UInt256(0) else { return .insufficientGas } //TODO:CRYPTO rawValue
         }
         //guard currency.state.currentRate != nil else { return .noExchangeRate } // allow sending without exchange rate
         return .ok
@@ -698,10 +704,11 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
     private func setMetaData(ethTx: EthTransaction, tokenTx: ERC20Transaction) {
         guard let ethRate = Currencies.eth.state?.currentRate,
             let tokenRate = currency.state?.currentRate else { print("Incomplete tx metadata"); return }
-        
+
+        //TODO:CRYPTO
         // the ETH transaction (token transfer contract execution) is flagged as a token transfer with the token code
-        ethTx.createMetaData(rate: ethRate, tokenTransfer: currency.code)
-        tokenTx.createMetaData(rate: tokenRate, comment: comment)
+        //ethTx.createMetaData(rate: ethRate, tokenTransfer: currency.code)
+        //tokenTx.createMetaData(rate: tokenRate, comment: comment)
     }
     
     // MARK: GasEstimator override
@@ -723,7 +730,6 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
 
 extension Currency {
     func createSender(authenticator: TransactionAuthenticator, walletManager: WalletManager, kvStore: BRReplicatedKVStore) -> Sender? {
-        
         switch (self, walletManager) {
         case (let currency as Bitcoin, let btcWalletManager as BTCWalletManager):
             return BitcoinSender(authenticator: authenticator, currency: currency, walletManager: btcWalletManager, kvStore: kvStore)
@@ -737,3 +743,5 @@ extension Currency {
         }
     }
 }
+
+*/

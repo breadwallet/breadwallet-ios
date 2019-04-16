@@ -11,7 +11,8 @@ import LocalAuthentication
 import BRCore
 
 class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
-
+//TODO:CRYPTO spend limit
+    /*
     private let cellIdentifier = "CellIdentifier"
     private let walletManager: BTCWalletManager
     private let limits: [UInt64] = [0, 1000000, 10000000, 100000000, 1000000000]
@@ -50,7 +51,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
         //If the user has a limit that is not a current option, we display their limit
         if !limits.contains(walletManager.spendingLimit) {
             if let rate = Currencies.btc.state?.currentRate {
-                let spendingLimit = Amount(amount: UInt256(walletManager.spendingLimit), currency: Currencies.btc, rate: rate)
+                let spendingLimit = Amount(value: UInt256(walletManager.spendingLimit), currency: Currencies.btc, rate: rate)
                 setAmount(limitAmount: spendingLimit)
             }
         }
@@ -70,7 +71,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
         if limit == 0 {
             cell.textLabel?.text = S.TouchIdSpendingLimit.requirePasscode
         } else {
-            let displayAmount = Amount(amount: UInt256(limit), currency: Currencies.btc, rate: nil, minimumFractionDigits: 0)
+            let displayAmount = Amount(value: UInt256(limit), currency: Currencies.btc, rate: nil, minimumFractionDigits: 0)
             cell.textLabel?.text = displayAmount.combinedDescription
         }
         if limits[indexPath.row] == selectedLimit {
@@ -115,4 +116,5 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+ */
 }
