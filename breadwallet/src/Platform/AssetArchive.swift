@@ -74,7 +74,7 @@ open class AssetArchive {
                 guard let versions = versions, let version = self.version else {
                     return completionHandler(BRAPIClientError.unknownError)
                 }
-                if versions.index(of: version) == versions.count - 1 {
+                if versions.firstIndex(of: version) == versions.count - 1 {
                     // have the most recent version
                     print("[AssetArchive] already at most recent version of bundle \(self.name)")
                     do {

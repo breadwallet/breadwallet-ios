@@ -92,8 +92,8 @@ class BRReplicatedKVStoreTest: XCTestCase {
     var key: BRKey {
         var key = BRKey()
         let privKey = "S6c56bnXQiBjk9mqSYE7ykVQ7NzrRy"
-        _ = privKey.data(using: .utf8)?.withUnsafeBytes({ (pkPtr: UnsafePointer<Int8>) in
-            BRKeySetPrivKey(&key, pkPtr)
+        _ = privKey.data(using: .utf8)?.withUnsafeBytes({ (pkPtr: UnsafeRawBufferPointer) in
+            BRKeySetPrivKey(&key, pkPtr.baseAddress!.assumingMemoryBound(to: Int8.self))
         })
         return key
     }
