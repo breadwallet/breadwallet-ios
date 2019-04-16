@@ -45,23 +45,6 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
         }
     }
 
-    var isWatchOnly: Bool = false {
-        didSet {
-            if E.isTestnet || isWatchOnly {
-                if E.isTestnet && isWatchOnly {
-                    modeLabel.text = "(Testnet - Watch Only)"
-                } else if E.isTestnet {
-                    modeLabel.text = "(Testnet)"
-                } else if isWatchOnly {
-                    modeLabel.text = "(Watch Only)"
-                }
-                modeLabel.isHidden = false
-            }
-            if E.isScreenshots {
-                modeLabel.isHidden = true
-            }
-        }
-    }
     private var exchangeRate: Rate? {
         didSet {
             DispatchQueue.main.async {
@@ -93,7 +76,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
         self.syncView =  SyncingHeaderView(currency: currency)
         self.isBtcSwapped = Store.state.isBtcSwapped
         if let rate = currency.state?.currentRate {
-            let placeholderAmount = Amount(amount: 0, currency: currency, rate: rate)
+            let placeholderAmount = Amount(value: 0, currency: currency, rate: rate)
             self.exchangeRate = rate
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
             self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.tokenFormat)
@@ -101,7 +84,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
             self.secondaryBalance = UpdatingLabel(formatter: NumberFormatter())
             self.primaryBalance = UpdatingLabel(formatter: NumberFormatter())
         }
-        if let token = currency as? ERC20Token, token.isSupported == false {
+        if currency.isSupported == false {
             self.delistedTokenView = DelistedTokenView(currency: currency)
         }
         super.init(frame: CGRect())
@@ -136,7 +119,12 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
         swapLabels()
 
         modeLabel.isHidden = true
-        
+
+        if E.isTestnet && !E.isScreenshots {
+            modeLabel.text = "(Testnet)"
+            modeLabel.isHidden = false
+        }
+
         let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
         currencyTapView.addGestureRecognizer(gr)
     }
@@ -236,7 +224,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
                             selector: { $0[self.currency]?.currentRate != $1[self.currency]?.currentRate},
                             callback: {
                                 if let rate = $0[self.currency]?.currentRate {
-                                    let placeholderAmount = Amount(amount: 0, currency: self.currency, rate: rate)
+                                    let placeholderAmount = Amount(value: 0, currency: self.currency, rate: rate)
                                     self.secondaryBalance.formatter = placeholderAmount.localFormat
                                     self.primaryBalance.formatter = placeholderAmount.tokenFormat
                                 }
@@ -247,7 +235,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
                             selector: { $0[self.currency]?.maxDigits != $1[self.currency]?.maxDigits},
                             callback: {
                                 if let rate = $0[self.currency]?.currentRate {
-                                    let placeholderAmount = Amount(amount: 0, currency: self.currency, rate: rate)
+                                    let placeholderAmount = Amount(value: 0, currency: self.currency, rate: rate)
                                     self.secondaryBalance.formatter = placeholderAmount.localFormat
                                     self.primaryBalance.formatter = placeholderAmount.tokenFormat
                                     self.setBalances()
@@ -257,7 +245,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
                         selector: { $0[self.currency]?.balance != $1[self.currency]?.balance },
                         callback: { state in
                             if let balance = state[self.currency]?.balance {
-                                self.balance = balance
+                                self.balance = balance.rawValue //TODO:CRYPTO rawValue
                             } })
         
         Store.subscribe(self, selector: { $0[self.currency]?.syncState != $1[self.currency]?.syncState },
@@ -283,7 +271,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
     }
 
     private func setCryptoOnlyBalance() {
-        let amount = Amount(amount: balance, currency: currency, rate: nil)
+        let amount = Amount(value: balance, currency: currency, rate: nil)
         primaryBalance.text = amount.description
         secondaryBalance.isHidden = true
         conversionSymbol.isHidden = true
@@ -297,7 +285,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
         
         exchangeRateLabel.text = String(format: S.AccountHeader.exchangeRate, rate.localString, currency.code)
         
-        let amount = Amount(amount: balance, currency: currency, rate: rate)
+        let amount = Amount(value: balance, currency: currency, rate: rate)
         
         if !hasInitialized {
             primaryBalance.setValue(amount.tokenValue)

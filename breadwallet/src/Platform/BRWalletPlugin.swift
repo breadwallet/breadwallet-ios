@@ -43,9 +43,11 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     private var tempAuthResponses = [String: Int]()
     private var tempAuthResults = [String: Bool]()
     private var isPresentingAuth = false
-    private var btcWalletManager: BTCWalletManager? {
-        return walletManagers[Currencies.btc.code] as? BTCWalletManager
-    }
+    //TODO:CRYPTO
+    private var btcWalletManager: WalletManager? { return nil }
+//    private var btcWalletManager: BTCWalletManager? {
+//        return walletManagers[Currencies.btc.code] as? BTCWalletManager
+//    }
 
     init(walletAuthenticator: TransactionAuthenticator, walletManagers: [String: WalletManager]) {
         self.walletAuthenticator = walletAuthenticator
@@ -355,7 +357,9 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                     asyncResp.provide(400, json: ["error": "params-error"])
                     return asyncResp
             }
-            
+
+            //TODO:CRYPTO sending
+            /*
             guard let walletManager = self.walletManagers[currency.code],
                 let kvStore = Backend.kvStore,
                 let sender = currency.createSender(authenticator: self.walletAuthenticator, walletManager: walletManager, kvStore: kvStore) else {
@@ -370,8 +374,9 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                     asyncResp.provide(500, json: ["error": "fee-error"])
                     return asyncResp
             }
-            
-            if !(currency is ERC20Token) && (amount <= balance) && (amount + fee) > balance {
+
+            //TODO:CRYPTO rawValue / token type check
+            if !(currency.isERC20Token) && (amount <= balance.rawValue) && (amount + fee) > balance.rawValue {
                 // amount is close to balance and fee puts it over, subtract the fee
                 amount -= fee
             }
@@ -405,11 +410,11 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 
                 let fee = sender.fee(forAmount: amount) ?? UInt256(0)
                 let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
-                let confirmAmount = Amount(amount: amount,
+                let confirmAmount = Amount(value: amount,
                                            currency: currency,
                                            rate: nil, //currency.state?.currentRate,
                                            maximumFractionDigits: Amount.highPrecisionDigits)
-                let feeAmount = Amount(amount: fee,
+                let feeAmount = Amount(value: fee,
                                        currency: feeCurrency,
                                        rate: nil, //feeCurrency.state?.currentRate,
                                        maximumFractionDigits: Amount.highPrecisionDigits)
@@ -442,6 +447,9 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 //                                              "transaction": "",
                 //                                              "transmitted": false])
             }
+            return asyncResp
+            */
+            asyncResp.provide(501)
             return asyncResp
         }
     }
@@ -500,6 +508,8 @@ extension BRWalletPlugin {
     // MARK: - basic wallet functions
     func walletInfo() -> [String: Any] {
         var d = [String: Any]()
+        //TODO:CRYPTO btc-specific properties
+        /*
         guard let walletManager = btcWalletManager else { return d }
         d["no_wallet"] = walletAuthenticator.noWallet
         if let wallet = walletManager.wallet {
@@ -508,9 +518,10 @@ extension BRWalletPlugin {
         }
         d["btc_denomination_digits"] = walletManager.currency.state?.maxDigits
         d["local_currency_code"] = Store.state.defaultCurrencyCode
-        let amount = Amount(amount: UInt256(0), currency: Currencies.btc, rate: Currencies.btc.state?.currentRate)
+        let amount = Amount(value: UInt256(0), currency: Currencies.btc, rate: Currencies.btc.state?.currentRate)
         d["local_currency_precision"] = amount.localFormat.maximumFractionDigits
         d["local_currency_symbol"] = amount.localFormat.currencySymbol
+        */
         return d
     }
     
@@ -519,7 +530,7 @@ extension BRWalletPlugin {
         var d = [String: Any]()
         guard let walletManager = btcWalletManager else { return d }
         if let rate = walletManager.currency.state?.currentRate {
-            let amount = Amount(amount: UInt256(amount),
+            let amount = Amount(value: UInt256(amount),
                                 currency: walletManager.currency,
                                 rate: rate)
             d["local_currency_amount"] = amount.fiatDescription
@@ -535,8 +546,8 @@ extension BRWalletPlugin {
         d["name"] = currency.name
         d["colors"] = [currency.colors.0.toHex, currency.colors.1.toHex]
         if let balance = currency.state?.balance {
-            var numerator = balance.string(radix: 10)
-            var denomiator = UInt256(power: currency.commonUnit.decimals).string(radix: 10)
+            var numerator = balance.rawValue.string(radix: 10) //TODO:CRYPTO rawValue
+            var denomiator = UInt256(power: currency.defaultUnit.decimals).string(radix: 10)
             d["balance"] = ["currency": currency.code,
                             "numerator": numerator,
                             "denominator": denomiator]
@@ -549,7 +560,7 @@ extension BRWalletPlugin {
             }
             
             if let rate = rate {
-                let amount = Amount(amount: balance, currency: currency, rate: currency.state?.currentRate)
+                let amount = Amount(amount: balance, rate: currency.state?.currentRate)
                 let decimals = amount.localFormat.maximumFractionDigits
                 let denominatorValue = (pow(10, decimals) as NSDecimalNumber).doubleValue
                 

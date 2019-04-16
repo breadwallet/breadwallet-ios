@@ -12,7 +12,8 @@ class KVStoreCoordinator: Subscriber {
 
     init(kvStore: BRReplicatedKVStore) {
         self.kvStore = kvStore
-        setupStoredCurrencyList()
+        //TODO:CRYPTO availableTokens is not populated until later, after System creates all the wallets
+        //setupStoredCurrencyList()
     }
 
     func setupStoredCurrencyList() {
@@ -31,7 +32,9 @@ class KVStoreCoordinator: Subscriber {
             try? kvStore.syncKey(tokenListMetaDataKey, completionHandler: {_ in })
         }
 
-        assert(Store.state.availableTokens.count > 1, "missing token list")
+        //TODO:CRYPTO availableTokens is not populated until later, after System creates all the wallets
+        //assert(Store.state.availableTokens.count > 1, "missing token list")
+        guard Store.state.availableTokens.count > 1 else { return }
         if currencyMetaData.enabledCurrencies.isEmpty {
             print("no wallets enabled in metadata, reverting to default")
             currencyMetaData.enabledCurrencies = CurrencyListMetaData.defaultCurrencies
@@ -55,7 +58,8 @@ class KVStoreCoordinator: Subscriber {
         setInitialDisplayWallets(metaData: currencyMetaData, tokens: [])
     }
 
-    private func setInitialDisplayWallets(metaData: CurrencyListMetaData, tokens: [ERC20Token]) {
+    //TODO:CRYPTO user token list / token address
+    private func setInitialDisplayWallets(metaData: CurrencyListMetaData, tokens: [Currency]) {
         //skip this setup if stored wallets are the same as wallets in the state
         guard walletsHaveChanged(displayCurrencies: Store.state.displayCurrencies, enabledCurrencies: metaData.enabledCurrencies) else { return }
 
@@ -75,7 +79,7 @@ class KVStoreCoordinator: Subscriber {
                     newWallets[Currencies.brd.code] = oldWallets[Currencies.brd.code]!.mutate(displayOrder: displayOrder)
                     displayOrder += 1
                 } else {
-                    let filteredTokens = tokens.filter { $0.address.lowercased() == tokenAddress.lowercased() }
+                    let filteredTokens = tokens.filter { $0.tokenAddress?.lowercased() == tokenAddress.lowercased() }
                     if let token = filteredTokens.first {
                         if let oldWallet = oldWallets[token.code] {
                             newWallets[token.code] = oldWallet.mutate(displayOrder: displayOrder)
@@ -117,8 +121,8 @@ class KVStoreCoordinator: Subscriber {
 
     private func walletsHaveChanged(displayCurrencies: [Currency], enabledCurrencies: [String]) -> Bool {
         let identifiers: [String] = displayCurrencies.map {
-            if let token = $0 as? ERC20Token {
-                return C.erc20Prefix + token.address
+            if let tokenAddress = $0.tokenAddress {
+                return C.erc20Prefix + tokenAddress
             } else {
                 return $0.code
             }
@@ -128,9 +132,10 @@ class KVStoreCoordinator: Subscriber {
     
     func retreiveStoredWalletInfo() {
         guard !hasRetreivedInitialWalletInfo else { return }
+        //TODO:CRYPTO refactor, what's the purpose of wallet name / creation date in Store?
         if let walletInfo = WalletInfo(kvStore: kvStore) {
-            Store.perform(action: WalletChange(Currencies.btc).setWalletName(walletInfo.name))
-            Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(walletInfo.creationDate))
+//            Store.perform(action: WalletChange(Currencies.btc).setWalletName(walletInfo.name))
+//            Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(walletInfo.creationDate))
         } else {
             print("no wallet info found")
         }
@@ -138,18 +143,19 @@ class KVStoreCoordinator: Subscriber {
     }
 
     func listenForWalletChanges() {
-        Store.subscribe(self,
-                        selector: { $0[Currencies.btc]?.creationDate != $1[Currencies.btc]?.creationDate },
-                            callback: {
-                                if let existingInfo = WalletInfo(kvStore: self.kvStore) {
-                                    Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(existingInfo.creationDate))
-                                } else {
-                                    guard let btcState = $0[Currencies.btc] else { return }
-                                    let newInfo = WalletInfo(name: btcState.name)
-                                    newInfo.creationDate = btcState.creationDate
-                                    self.set(newInfo)
-                                }
-        })
+        //TODO:CRYPTO wallet info
+//        Store.subscribe(self,
+//                        selector: { $0[Currencies.btc]?.creationDate != $1[Currencies.btc]?.creationDate },
+//                            callback: {
+//                                if let existingInfo = WalletInfo(kvStore: self.kvStore) {
+//                                    Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(existingInfo.creationDate))
+//                                } else {
+//                                    guard let btcState = $0[Currencies.btc] else { return }
+//                                    let newInfo = WalletInfo(name: btcState.name)
+//                                    newInfo.creationDate = btcState.creationDate
+//                                    self.set(newInfo)
+//                                }
+//        })
     }
 
     private func set(_ info: BRKVStoreObject) {

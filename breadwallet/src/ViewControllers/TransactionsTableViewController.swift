@@ -14,9 +14,8 @@ private let promptDelay: TimeInterval = 0.6
 class TransactionsTableViewController: UITableViewController, Subscriber, Trackable {
 
     // MARK: - Public
-    init(currency: Currency, walletManager: WalletManager, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
-        self.currency = currency
-        self.walletManager = walletManager
+    init(wallet: WalletController, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
+        self.wallet = wallet
         self.didSelectTransaction = didSelectTransaction
         self.isBtcSwapped = Store.state.isBtcSwapped
         super.init(nibName: nil, bundle: nil)
@@ -32,8 +31,8 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
     }
 
     // MARK: - Private
-    private let walletManager: WalletManager
-    private let currency: Currency
+    private let wallet: WalletController
+    private var currency: Currency { return wallet.currency }
     
     private let headerCellIdentifier = "HeaderCellIdentifier"
     private let transactionCellIdentifier = "TransactionCellIdentifier"
@@ -66,6 +65,14 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
         return (currentPrompt != nil)
     }
 
+    //TODO:CRYPTO use events instead?
+    private let transactionUpdateInterval = 5.0 // seconds between transaction list UI updates
+    private var txUpdateTimer: Timer? {
+        willSet {
+            txUpdateTimer?.invalidate()
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -83,6 +90,12 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
         //setContentInset()
 
         setupSubscriptions()
+
+        self.txUpdateTimer = Timer.scheduledTimer(withTimeInterval: self.transactionUpdateInterval, repeats: true) { [unowned self] _ in
+            self.updateTransactions()
+        }
+
+        updateTransactions()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -128,6 +141,12 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
                 }
             }
         }
+    }
+
+    private func updateTransactions() {
+        //TODO:CRYPTO table reload interrupts user interaction?
+        allTransactions = wallet.transfers
+        reload()
     }
 
     // MARK: - Table view data source
@@ -215,7 +234,6 @@ extension TransactionsTableViewController {
         cell.setTransaction(viewModel,
                             isBtcSwapped: isBtcSwapped,
                             rate: rate,
-                            maxDigits: currency.state?.maxDigits ?? currency.commonUnit.decimals,
                             isSyncing: currency.state?.syncState != .success)
         return cell
     }

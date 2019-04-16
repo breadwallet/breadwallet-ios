@@ -9,6 +9,7 @@
 import UIKit
 import BRCore
 
+// swiftlint:disable force_cast
 /// View model of a transaction in detail view
 struct TxDetailViewModel: TxViewModel {
     
@@ -62,7 +63,8 @@ struct TxDetailViewModel: TxViewModel {
         if direction == .sent {
             return S.TransactionDetails.addressToHeader
         } else {
-            if tx is BtcTransaction {
+            //TODO:CRYPTO via/from
+            if tx.currency.isBitcoinCompatible {
                 return S.TransactionDetails.addressViaHeader
             } else {
                 return S.TransactionDetails.addressFromHeader
@@ -82,43 +84,52 @@ extension TxDetailViewModel {
         exchangeRate = TxDetailViewModel.exchangeRateText(tx: tx)
         transactionHash = tx.hash
         self.tx = tx
-        
-        if let tx = tx as? EthLikeTransaction {
+
+        var feeAmount = tx.fee
+        feeAmount.maximumFractionDigits = Amount.highPrecisionDigits
+        feeAmount.rate = rate
+        fee = Store.state.isBtcSwapped ? feeAmount.fiatDescription : feeAmount.tokenDescription
+
+        if case .ethereum(let gasPriceAmount, let gasLimitValue)? = tx.feeBasis {
             let gasFormatter = NumberFormatter()
             gasFormatter.numberStyle = .decimal
             gasFormatter.maximumFractionDigits = 0
-            gasLimit = (currency is ERC20Token) ? nil : gasFormatter.string(from: tx.gasLimit as NSNumber)
+            self.gasLimit = gasFormatter.string(from: gasLimitValue as NSNumber)
+
+            //let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
+
+            //TODO:CRYPTO need a way to specify GWEI units
+            //gasPrice = Amount(amount: tx.gasPrice, currency: feeCurrency, rate: rate).tokenDescription(inUnit: Ethereum.Units.gwei)
+            let gasUnit = currency.unit(named: "gwei") ?? currency.defaultUnit
+            gasPrice = gasPriceAmount.tokenDescription(in: gasUnit)//Amount(value: tx.gasPrice, currency: feeCurrency, rate: rate).tokenDescription
             
-            let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
-            
-            gasPrice = Amount(amount: tx.gasPrice, currency: feeCurrency, rate: rate).tokenDescription(inUnit: Ethereum.Units.gwei)
-            
-            let totalFee = tx.gasPrice * UInt256(tx.gasUsed)
-            let feeAmount = Amount(amount: totalFee, currency: feeCurrency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
+            //let totalFee = tx.gasPrice * UInt256(tx.gasUsed)
+            //let feeAmount = Amount(value: totalFee, currency: feeCurrency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
             
             // gas used is unknown until confirmed
             if tx.direction == .sent && tx.confirmations > 0 {
                 // omit total for ERC20
-                let totalAmount: Amount? = (currency is ERC20Token) ? nil
-                    : Amount(amount: tx.amount + totalFee,
-                             currency: tx.currency,
-                             rate: rate,
-                             maximumFractionDigits: Amount.highPrecisionDigits)
-                
-                if Store.state.isBtcSwapped {
-                    fee = feeAmount.fiatDescription
-                    total = totalAmount?.fiatDescription
-                } else {
-                    fee = feeAmount.tokenDescription
-                    total = totalAmount?.tokenDescription
-                }
+                //TODO:CRYPTO ???
+//                let totalAmount: Amount? = (currency is ERC20Token) ? nil
+//                    : Amount(value: tx.amount + totalFee,
+//                             currency: tx.currency,
+//                             rate: rate,
+//                             maximumFractionDigits: Amount.highPrecisionDigits)
+
+//                if Store.state.isBtcSwapped {
+//                    fee = feeAmount.fiatDescription
+//                    total = totalAmount?.fiatDescription
+//                } else {
+//                    fee = feeAmount.tokenDescription
+//                    total = totalAmount?.tokenDescription
+//                }
             }
         }
         
-        if let tx = tx as? BtcTransaction, tx.direction == .sent {
-            let feeAmount = Amount(amount: UInt256(tx.fee), currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
-            fee = Store.state.isBtcSwapped ? feeAmount.fiatDescription : feeAmount.tokenDescription
-        }
+//        if let tx = tx as? BtcTransaction, tx.direction == .sent {
+//            let feeAmount = Amount(value: UInt256(tx.fee), currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
+//            fee = Store.state.isBtcSwapped ? feeAmount.fiatDescription : feeAmount.tokenDescription
+//        }
     }
     
     /// The fiat exchange rate at the time of transaction
@@ -135,7 +146,6 @@ extension TxDetailViewModel {
     
     private static func tokenAmount(tx: Transaction) -> String? {
         let amount = Amount(amount: tx.amount,
-                            currency: tx.currency,
                             rate: nil,
                             maximumFractionDigits: Amount.highPrecisionDigits,
                             negative: (tx.direction == .sent))
@@ -150,21 +160,16 @@ extension TxDetailViewModel {
                                     name: currentRate.name,
                                     rate: txRate,
                                     reciprocalCode: currentRate.reciprocalCode)
+            //TODO:CRYPTO sent amounts negative?
             let currentAmount = Amount(amount: tx.amount,
-                                       currency: tx.currency,
-                                       rate: currentRate,
-                                       negative: false).description
+                                       rate: currentRate).description
             let originalAmount = Amount(amount: tx.amount,
-                                        currency: tx.currency,
-                                        rate: originalRate,
-                                        negative: false).description
+                                        rate: originalRate).description
             return (currentAmount, originalAmount)
         } else {
             // no tx-time rate
             let currentAmount = Amount(amount: tx.amount,
-                                       currency: tx.currency,
-                                       rate: currentRate,
-                                       negative: false)
+                                       rate: currentRate)
             return (currentAmount.description, nil)
         }
     }

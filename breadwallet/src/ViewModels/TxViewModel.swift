@@ -31,7 +31,8 @@ extension TxViewModel {
     
     // BTC does not have "from" address, only "sent to" or "received at"
     var displayAddress: String {
-        if let tx = tx as? EthLikeTransaction {
+        //TODO:CRYPTO via/from
+        if tx.currency.isEthereumCompatible {
             if direction == .sent {
                 return tx.toAddress
             } else {
@@ -43,9 +44,10 @@ extension TxViewModel {
     }
     
     var blockHeight: String {
-        return (tx.blockHeight == C.txUnconfirmedHeight || tx.confirmations == 0)
-            ? S.TransactionDetails.notConfirmedBlockHeightLabel
-            : "\(tx.blockHeight)"
+        return tx.blockNumber?.description ?? S.TransactionDetails.notConfirmedBlockHeightLabel
+//        return (tx.blockHeight == C.txUnconfirmedHeight || tx.confirmations == 0)
+//            ? S.TransactionDetails.notConfirmedBlockHeightLabel
+//            : "\(tx.blockHeight)"
     }
     
     var confirmations: String {

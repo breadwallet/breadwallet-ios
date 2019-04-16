@@ -17,7 +17,8 @@ import BRCore
  *  item in the main menu. In the latter case, an initial QR code is passed to the init() method.
  */
 class StartImportViewController: UIViewController {
-
+//TODO:CRYPTO import keys
+    /*
     /**
      *  Initializer
      *
@@ -218,7 +219,9 @@ class StartImportViewController: UIViewController {
         guard let tx = UnsafeMutablePointer<BRTransaction>() else { return }
         guard let wallet = walletManager.wallet else { return }
         guard let address = key.address() else { return }
-        guard let fees = Currencies.btc.state?.fees else { return }
+        //TODO:CRYPTO access fees from WalletController
+        let fees = Fees(regular: 0, economy: 0, timestamp: 0)
+        //guard let fees = Currencies.btc.state?.fees else { return }
         guard !wallet.containsAddress(address) else {
             return showErrorMessage(S.Import.Error.duplicate)
         }
@@ -238,9 +241,9 @@ class StartImportViewController: UIViewController {
             guard fee + wallet.minOutputAmount <= balance else {
                 return self.showErrorMessage(S.Import.Error.highFees)
             }
-            guard let rate = Currencies.btc.state?.currentRate else { return }
-            let balanceAmount = Amount(amount: UInt256(balance), currency: Currencies.btc, rate: rate)
-            let feeAmount = Amount(amount: UInt256(fee), currency: Currencies.btc, rate: rate)
+            guard let rate = self.currency.state?.currentRate else { return }
+            let balanceAmount = Amount(value: UInt256(balance), currency: self.currency, rate: rate)
+            let feeAmount = Amount(value: UInt256(fee), currency: self.currency, rate: rate)
             let balanceText = Store.state.isBtcSwapped ? balanceAmount.fiatDescription : balanceAmount.tokenDescription
             let feeText = Store.state.isBtcSwapped ? feeAmount.fiatDescription : feeAmount.tokenDescription
             let message = String(format: S.Import.confirm, balanceText, feeText)
@@ -296,11 +299,5 @@ class StartImportViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-extension Data {
-    var reverse: Data {
-        let tempBytes = Array(([UInt8](self)).reversed())
-        return Data(tempBytes)
-    }
+ */
 }

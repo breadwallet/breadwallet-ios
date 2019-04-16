@@ -33,9 +33,9 @@ class CoreDatabase {
     private var peerEnt: Int32 = 0
     private let queue = DispatchQueue(label: "com.breadwallet.corecbqueue")
 
-    private var currency: Currency {
-        return [Currencies.btc, Currencies.bch].first { $0.dbPath == dbPath } ?? Currencies.btc
-    }
+//    private var currency: Currency {
+//        return [Currencies.btc, Currencies.bch].first { $0.dbPath == dbPath } ?? Currencies.btc
+//    }
 
     init(dbPath: String = "BreadWallet.sqlite") {
         let docsUrl = try? FileManager.default.url(for: .documentDirectory,
@@ -454,7 +454,7 @@ class CoreDatabase {
                 guard let tx = BRTransactionParse(buf, off) else {
                     // unable to parse tx in db -- rescan from last sent (or earlier)
                     print("failed to parse transaction from db")
-                    Store.trigger(name: .automaticRescan(self.currency))
+                    //Store.trigger(name: .automaticRescan(self.currency))
                     continue
                 }
                 tx.pointee.blockHeight =

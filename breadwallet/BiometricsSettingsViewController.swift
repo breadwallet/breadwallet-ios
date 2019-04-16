@@ -11,7 +11,8 @@ import LocalAuthentication
 import BRCore
 
 class BiometricsSettingsViewController: UIViewController, Subscriber {
-
+//TODO:CRYPTO spend limit
+    /*
     var presentSpendingLimit: (() -> Void)?
 
     init(walletManager: BTCWalletManager) {
@@ -128,7 +129,7 @@ class BiometricsSettingsViewController: UIViewController, Subscriber {
 
     private var textViewText: NSAttributedString {
         guard let rate = rate else { return NSAttributedString(string: "") }
-        let amount = Amount(amount: UInt256(walletManager.spendingLimit), currency: Currencies.btc, rate: rate)
+        let amount = Amount(value: UInt256(walletManager.spendingLimit), currency: Currencies.btc, rate: rate)
         let customizeText = LAContext.biometricType() == .face ? S.FaceIDSettings.customizeText : S.TouchIdSettings.customizeText
         let linkText = LAContext.biometricType() == .face ? S.FaceIDSettings.linkText : S.TouchIdSettings.linkText
         let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.tokenDescription, amount.fiatDescription))\n\n\(String(format: customizeText, linkText))"
@@ -177,4 +178,5 @@ extension BiometricsSettingsViewController: UITextViewDelegate {
         }
         return false
     }
+ */
 }

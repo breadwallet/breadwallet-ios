@@ -92,7 +92,7 @@ enum PromptType: Int {
     }
 
     // This is the trigger that happens when the prompt is tapped
-    func trigger(currency: Currency) -> TriggerName? {
+    var trigger: TriggerName? {
         switch self {
         case .biometrics: return .promptBiometrics
         case .paperKey: return .promptPaperKey
@@ -153,7 +153,7 @@ protocol Prompt {
     /**
      *  The trigger that should be invoked when this prompt is tapped.
      */
-    func trigger(for currency: Currency) -> TriggerName?
+    var trigger: TriggerName? { get }
     
     /**
      *  Returns whether this prompt should be presented to the user.
@@ -204,8 +204,8 @@ extension Prompt {
         return nil
     }
     
-    func trigger(for currency: Currency) -> TriggerName? {
-        return type.trigger(currency: currency)
+    var trigger: TriggerName? {
+        return type.trigger
     }
     
     // default implementation based on the type of prompt

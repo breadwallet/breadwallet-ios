@@ -30,7 +30,8 @@ struct TxListViewModel: TxViewModel {
             case .sent, .moved:
                 format = isComplete ? S.Transaction.sentTo : S.Transaction.sendingTo
             case .received:
-                if let tx = tx as? EthLikeTransaction {
+                //TODO:CRYPTO via/from
+                if tx.currency.isEthereumCompatible {
                     format = isComplete ? S.Transaction.receivedFrom : S.Transaction.receivingFrom
                     address = tx.fromAddress
                 } else {
@@ -43,13 +44,14 @@ struct TxListViewModel: TxViewModel {
 
     func amount(isBtcSwapped: Bool, rate: Rate) -> NSAttributedString {
         var amount = tx.amount
-        
-        if let tx = tx as? EthTransaction, tokenTransferCode != nil {
-            amount = tx.gasPrice * UInt256(tx.gasUsed)
+
+        if tokenTransferCode != nil {
+            //TODO:CRYPTO originating tx
+            // this is the originating tx of a token transfer, so the amount is 0 but we want to show the fee
+            amount = tx.fee
         }
-        
+
         let text = Amount(amount: amount,
-                          currency: tx.currency,
                           rate: isBtcSwapped ? rate : nil,
                           negative: (tx.direction == .sent)).description
         let color: UIColor = (tx.direction == .received) ? .receivedGreen : .darkGray

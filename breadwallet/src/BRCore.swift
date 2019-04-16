@@ -372,7 +372,7 @@ extension UnsafeMutablePointer where Pointee == BRTransaction {
         return BRTransactionEq(l, r) != 0
     }
 }
-
+/*
 protocol BRWalletListener {
     func balanceChanged(_ balance: UInt64)
     func txAdded(_ tx: BRTxRef)
@@ -419,7 +419,7 @@ class BRWallet {
     
     // the first unused external address
     var receiveAddress:  String {
-        if currency.matches(Currencies.bch) {
+        if currency.isBitcoinCash {
             return BRWalletLegacyAddress(cPtr).description
         } else {
             return UserDefaults.hasOptedInSegwit ? BRWalletReceiveAddress(cPtr).description : BRWalletLegacyAddress(cPtr).description
@@ -737,6 +737,7 @@ class BRPeerManager {
         }
     }
 }
+*/
 
 extension UInt256 : CustomStringConvertible {    
     public var description: String {

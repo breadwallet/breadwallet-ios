@@ -55,7 +55,10 @@ extension PigeonRequest {
         }
     }
     
-    func getToken(completion: @escaping (ERC20Token?) -> Void) {
+    func getToken(completion: @escaping (Currency?) -> Void) {
+        //TODO:CRYPTO pigeon
+        fatalError()
+        /*
         Backend.apiClient.getToken(withSaleAddress: address) { result in
             guard case .success(let data) = result, let token = data.first else {
                 print("[EME] error fetching token by sale address")
@@ -64,22 +67,22 @@ extension PigeonRequest {
             }
             completion(token)
         }
+        */
     }
 }
 
 class MessagePaymentRequestWrapper: PigeonRequest {
     private let paymentRequest: MessagePaymentRequest
 
-    init(paymentRequest: MessagePaymentRequest) {
+    init(paymentRequest: MessagePaymentRequest, currency: Currency) {
         self.paymentRequest = paymentRequest
+        self.currency = currency
     }
 
-    var currency: Currency {
-        return Currencies.eth
-    }
+    var currency: Currency
 
     var purchaseAmount: Amount {
-        return Amount(amount: UInt256(string: paymentRequest.amount), currency: currency)
+        return Amount(value: UInt256(string: paymentRequest.amount), currency: currency)
     }
 
     var type: PigeonRequestType {
@@ -103,7 +106,7 @@ class MessagePaymentRequestWrapper: PigeonRequest {
     }
     
     var txFee: Amount? {
-        return paymentRequest.hasTransactionFee ? Amount(amount: UInt256(string: paymentRequest.transactionFee), currency: currency) : nil
+        return paymentRequest.hasTransactionFee ? Amount(value: UInt256(string: paymentRequest.transactionFee), currency: currency) : nil
     }
 }
 
@@ -111,16 +114,15 @@ class MessageCallRequestWrapper: PigeonRequest {
 
     private let callRequest: MessageCallRequest
 
-    init(callRequest: MessageCallRequest) {
+    init(callRequest: MessageCallRequest, currency: Currency) {
         self.callRequest = callRequest
+        self.currency = currency
     }
 
-    var currency: Currency {
-        return Currencies.eth
-    }
+    var currency: Currency
 
     var purchaseAmount: Amount {
-        return Amount(amount: UInt256(string: callRequest.amount), currency: currency)
+        return Amount(value: UInt256(string: callRequest.amount), currency: currency)
     }
 
     var type: PigeonRequestType {
@@ -144,6 +146,6 @@ class MessageCallRequestWrapper: PigeonRequest {
     }
     
     var txFee: Amount? {
-        return callRequest.hasTransactionFee ? Amount(amount: UInt256(string: callRequest.transactionFee), currency: currency) : nil
+        return callRequest.hasTransactionFee ? Amount(value: UInt256(string: callRequest.transactionFee), currency: currency) : nil
     }
 }

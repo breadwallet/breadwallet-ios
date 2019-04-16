@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCrypto
 
 class RootNavigationController: UINavigationController {
 
@@ -17,6 +18,12 @@ class RootNavigationController: UINavigationController {
     init(keyMaster: KeyMaster) {
         self.keyMaster = keyMaster
         super.init(nibName: nil, bundle: nil)
+    }
+
+    func promptForLogin(completion: @escaping (Account?) -> Void) {
+        DispatchQueue.main.async { //TODO:CRYPTO TESTING
+            completion(self.keyMaster.login(withPin: "111111"))
+        }
     }
 
     func showLoginIfNeeded() {
@@ -79,9 +86,10 @@ extension RootNavigationController: UINavigationControllerDelegate {
             navigationBar.tintColor = .navigationTint
         } else if let accountView = viewController as? AccountViewController {
             UserDefaults.selectedCurrencyCode = accountView.currency.code
-            if accountView.currency is Bitcoin {
-                UserDefaults.mostRecentSelectedCurrencyCode = accountView.currency.code
-            }
+            //TODO:CRYPTO p2p sync management
+//            if accountView.currency is Bitcoin {
+//                UserDefaults.mostRecentSelectedCurrencyCode = accountView.currency.code
+//            }
         }
     }
     

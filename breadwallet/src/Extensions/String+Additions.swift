@@ -33,12 +33,15 @@ extension String {
         BRBCashAddrEncode(&addr, self)
         let prefixedAddr = String(cString: addr)
         var cashAddr = prefixedAddr
+        //TODO:CRYPTO url schemes
+        /*
         // drop "bitcoincash:" prefix
         if let prefixes = Currencies.bch.urlSchemes {
             for prefix in prefixes where prefixedAddr.hasPrefix(prefix) {
                 cashAddr = String(prefixedAddr.dropFirst(prefix.count+1)) // +1 for :
             }
         }
+        */
         return cashAddr
     }
     
@@ -77,6 +80,15 @@ extension String {
         let location = utf16.distance(from: utf16.startIndex, to: range.lowerBound)
         let length = utf16.distance(from: range.lowerBound, to: range.upperBound)
         return NSRange(location: location, length: length)
+    }
+
+    func truncateMiddle(to length: Int = 8) -> String {
+        guard count > length else { return self }
+
+        let headLength = length / 2
+        let trailLength = (length - headLength) - 1
+
+        return "\(self.prefix(headLength))…\(self.suffix(trailLength))"
     }
 }
 

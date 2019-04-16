@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+//TODO:CRYPTO rescan
+/*
 /// Coordinates the sync state of all wallet managers to
 /// display the activity indicator and control backtround tasks
 class WalletCoordinator: Subscriber, Trackable {
@@ -145,7 +147,7 @@ class WalletCoordinator: Subscriber, Trackable {
             UserDefaults.setLastSyncedBlockHeight(height: peerManager.lastBlockHeight, for: currency)
         }
     }
-    
+
     private func syncStateDidChange(state: State) {
         let allWalletsFinishedSyncing = state.wallets.values.filter { $0.syncState == .success}.count == state.wallets.values.count
         if allWalletsFinishedSyncing {
@@ -204,6 +206,7 @@ class WalletCoordinator: Subscriber, Trackable {
         Store.unsubscribe(self)
     }
 }
+*/
 
 /// Rescan state of a currency - stored in UserDefaults
 struct RescanState: Codable {

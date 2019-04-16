@@ -12,7 +12,9 @@ import BRCore
 class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackable {
 
     init() {
-        self.rates = Currencies.btc.state?.rates.filter { $0.code != Currencies.btc.code } ?? [Rate]()
+        //TODO:CRYPTO rates / wallet state
+        self.rates = [Rate]()
+        //self.rates = Currencies.btc.state?.rates.filter { $0.code != Currencies.btc.code } ?? [Rate]()
         super.init(style: .plain)
     }
 
@@ -49,9 +51,12 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
         Store.subscribe(self, selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode }, callback: {
             self.defaultCurrencyCode = $0.defaultCurrencyCode
         })
+        //TODO:CRYPTO maxdigits
+        /*
         Store.subscribe(self, selector: { $0[Currencies.btc]?.maxDigits != $1[Currencies.btc]?.maxDigits }, callback: { _ in
             self.setExchangeRateLabel()
         })
+        */
 
         tableView.sectionHeaderHeight = UITableView.automaticDimension
         tableView.estimatedSectionHeaderHeight = 140.0
@@ -63,18 +68,24 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
         titleLabel.sizeToFit()
         navigationItem.titleView = titleLabel
 
+        //TODO:CRYPTO hardcoded btc
+        /*
         let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.displayCurrency, currency: Currencies.btc)
         faqButton.tintColor = .navigationTint
         navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
+        */
         bitcoinSwitch.tintColor = .navigationTint
     }
 
     private func setExchangeRateLabel() {
+        //TODO:CRYPTO hard-coded currency/unit
+        /*
         if let currentRate = rates.filter({ $0.code == defaultCurrencyCode }).first {
-            let amount = Amount(amount: UInt256(C.satoshis), currency: Currencies.btc, rate: currentRate)
+            let amount = Amount(value: UInt256(C.satoshis), currency: Currencies.btc, rate: currentRate)
             rateLabel.textColor = .white
             rateLabel.text = "\(amount.tokenDescription) = \(amount.fiatDescription(forLocale: currentRate.locale))"
         }
+         */
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -130,6 +141,8 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
             bitcoinSwitch.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -C.padding[2]),
             bitcoinSwitch.widthAnchor.constraint(equalTo: header.widthAnchor, constant: -C.padding[4]) ])
 
+        //TODO:CRYPTO maxdigits
+        /*
         if Currencies.btc.state?.maxDigits == 8 {
             bitcoinSwitch.selectedSegmentIndex = 1
         } else {
@@ -143,6 +156,7 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
             Store.perform(action: WalletChange(Currencies.bch).setMaxDigits(value))
             myself.saveEvent("maxDigits.set", attributes: ["maxDigits": "\(value)"])
         }
+         */
 
         bitcoinLabel.text = S.DefaultCurrency.bitcoinLabel
         rateLabelTitle.text = S.DefaultCurrency.rateLabel

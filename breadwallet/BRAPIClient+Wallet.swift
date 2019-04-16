@@ -185,7 +185,8 @@ extension BRAPIClient {
     }
 
     func fetchUTXOS(address: String, currency: Currency, completion: @escaping ([[String: Any]]?) -> Void) {
-        let path = currency.matches(Currencies.btc) ? "/q/addrs/utxo" : "/q/addrs/utxo?currency=bch"
+        //TODO:CRYPTO currency-type check
+        let path = currency.isBitcoin ? "/q/addrs/utxo" : "/q/addrs/utxo?currency=bch"
         var req = URLRequest(url: url(path))
         req.httpMethod = "POST"
         req.httpBody = "addrs=\(address)".data(using: .utf8)

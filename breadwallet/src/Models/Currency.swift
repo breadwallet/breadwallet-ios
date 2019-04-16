@@ -8,98 +8,142 @@
 
 import Foundation
 import BRCore
+import BRCrypto
 import UIKit
 
-// MARK: - Protocols
+/// Combination of the Core Currency model and its metadata properties
+class Currency {
+    public enum TokenType: String {
+        case native
+        case erc20
+        case unknown
+    }
 
-/// Represents common properties of cryptocurrency types
-public protocol Currency {
-    /// Ticker code -- assumed to be unique
-    var code: String { get }
-    /// Primary unit symbol
-    var symbol: String { get }
-    var name: String { get }
-    /// The common unit used for fiat exchange rate and amount display
-    var commonUnit: CurrencyUnit { get }
-    /// Primary + secondary color
-    var colors: (UIColor, UIColor) { get }
-    /// URL scheme for payment requests
-    var urlSchemes: [String]? { get }
-    /// Returns true if the currency ticker codes match
-    func matches(_ other: Currency) -> Bool
-    /// Checks address validity in currency-specific format
-    func isValidAddress(_ address: String) -> Bool
-    /// Returns a URI with the given address
-    func addressURI(_ address: String) -> String?
-    
-    /// Icon image with square color background
-    var imageSquareBackground: UIImage? { get }
-    /// Icon image with no background using template rendering mode
-    var imageNoBackground: UIImage? { get }
-    /// False if ERC20 token has been delisted, true otherwise
-    var isSupported: Bool { get }
-    
-    /// Returns the unit associated with the number of decimals
-    func unit(forDecimals decimals: Int) -> CurrencyUnit?
-    /// Returns the abbreviated name for given unit
-    func name(forUnit unit: CurrencyUnit) -> String
-    /// Returns the abbreviated unit name for given decimals
-    func unitName(forDecimals decimals: Int) -> String
-    /// Returns the symbol for given unit or its name if no symbol defined
-    func symbol(forUnit unit: CurrencyUnit) -> String
-}
+    let core: BRCrypto.Currency
 
-public extension Currency {
-    var urlSchemes: [String]? {
-        return nil
-    }
-    
-    func matches(_ other: Currency) -> Bool {
-        return self.code == other.code
-    }
-    
-    func addressURI(_ address: String) -> String? {
-        guard let scheme = urlSchemes?.first, isValidAddress(address) else { return nil }
-        return "\(scheme):\(address)"
-    }
-    
+    /// Ticker code (e.g. BTC) -- assumed to be unique
+    var code: String { return core.code.uppercased() }
+    /// Display name (e.g. Bitcoin)
+    var name: String { return core.name }
+
+    var tokenType: TokenType { return TokenType(rawValue: core.type) ?? .unknown }
+
+    /// The smallest divisible unit (e.g. satoshi)
+    let baseUnit: CurrencyUnit
+    /// The default unit used for fiat exchange rate and amount display (e.g. bitcoin)
+    let defaultUnit: CurrencyUnit
+    /// All available units for this currency by name
+    private let units: [String: CurrencyUnit]
+
+    /// Returns the unit associated with the number of decimals if available
     func unit(forDecimals decimals: Int) -> CurrencyUnit? {
-        return TokenUnit(decimals: decimals, name: code)
+        return units.values.first { $0.decimals == decimals }
     }
-    
+
+    func unit(named name: String) -> CurrencyUnit? {
+        return units[name.lowercased()]
+    }
+
     func name(forUnit unit: CurrencyUnit) -> String {
-        if unit.decimals == commonUnit.decimals {
+        if unit.decimals == defaultUnit.decimals {
             return code.uppercased()
         } else {
             return unit.name
         }
     }
 
-    func symbol(forUnit unit: CurrencyUnit) -> String {
-        if unit.decimals == commonUnit.decimals {
-            return symbol
-        } else {
-            return name(forUnit: unit)
-        }
-    }
-    
     func unitName(forDecimals decimals: Int) -> String {
         guard let unit = unit(forDecimals: decimals) else { return "" }
         return name(forUnit: unit)
     }
-    
-    var supportCurrencyCode: String {
-        if self is ERC20Token {
+
+    // MARK: Metadata
+
+    let metaData: CurrencyMetaData
+
+    /// Primary + secondary color
+    var colors: (UIColor, UIColor) { return metaData.colors }
+    /// False if a token has been delisted, true otherwise
+    var isSupported: Bool { return metaData.isSupported }
+    var defaultRate: Double? { return metaData.defaultRate }
+    var tokenAddress: String? { return metaData.tokenAddress }
+
+    /// URL scheme for payment requests
+    var urlSchemes: [String]? {
+        //TODO:CRYPTO url schemes
+        return nil
+    }
+
+    /// Returns a URI with the given address
+    func addressURI(_ address: String) -> String? {
+        guard let scheme = urlSchemes?.first, isValidAddress(address) else { return nil }
+        return "\(scheme):\(address)"
+    }
+
+    // MARK: Init
+
+    init?(core: BRCrypto.Currency,
+          metaData: CurrencyMetaData,
+          units: Set<BRCrypto.Unit>,
+          baseUnit: BRCrypto.Unit,
+          defaultUnit: BRCrypto.Unit) {
+        guard core.code.caseInsensitiveCompare(metaData.code) == .orderedSame else { return nil }
+        self.core = core
+        self.metaData = metaData
+        self.units = Dictionary(uniqueKeysWithValues: units.lazy.map { ($0.name.lowercased(), CurrencyUnit(core: $0)) })
+        self.baseUnit = CurrencyUnit(core: baseUnit)
+        self.defaultUnit = CurrencyUnit(core: defaultUnit)
+    }
+}
+
+extension Currency: Hashable {
+    static func == (lhs: Currency, rhs: Currency) -> Bool {
+        return lhs.core == rhs.core && lhs.metaData == rhs.metaData
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(core)
+        hasher.combine(metaData)
+    }
+}
+
+// MARK: - Convenience Accessors
+
+extension Currency {
+    //TODO:CRYPTO move to wallet(manager)
+    func isValidAddress(_ address: String) -> Bool {
+        return false
+    }
+
+    /// Returns true if the currency ticker codes match
+    //TODO:CRYPTO replace with ==
+    func matches(_ other: Currency) -> Bool {
+        return self.code.caseInsensitiveCompare(other.code) == .orderedSame
+    }
+
+    /// Ticker code for support pages
+    var supportCode: String {
+        if tokenType == .erc20 {
             return "erc20"
         } else {
             return code.lowercased()
         }
     }
+
+    //TODO:CRYPTO placeholder
+    var isBitcoin: Bool { return code == Currencies.btc.code }
+    var isBitcoinCash: Bool { return code == Currencies.bch.code }
+    var isEthereum: Bool { return code == Currencies.eth.code }
+    var isERC20Token: Bool { return tokenType == .erc20 }
+    var isBRDToken: Bool { return code == Currencies.brd.code }
+    var isBitcoinCompatible: Bool { return isBitcoin || isBitcoinCash }
+    var isEthereumCompatible: Bool { return isEthereum || isERC20Token }
 }
 
 // MARK: - Images
 
 extension Currency {
+    /// Icon image with square color background
     public var imageSquareBackground: UIImage? {
         if let baseURL = AssetArchive(name: imageBundleName, apiClient: Backend.apiClient)?.extractedUrl {
             let path = baseURL.appendingPathComponent("white-square-bg").appendingPathComponent(code.lowercased()).appendingPathExtension("png")
@@ -109,7 +153,8 @@ extension Currency {
         }
         return TokenImageSquareBackground(currency: self).renderedImage
     }
-    
+
+    /// Icon image with no background using template rendering mode
     public var imageNoBackground: UIImage? {
         if let baseURL = AssetArchive(name: imageBundleName, apiClient: Backend.apiClient)?.extractedUrl {
             let path = baseURL.appendingPathComponent("white-no-bg").appendingPathComponent(code.lowercased()).appendingPathExtension("png")
@@ -126,185 +171,30 @@ extension Currency {
     }
 }
 
-// MARK: - Units
+// MARK: - Metadata Model
 
-/// Represents the unit of account for a token
-public protocol CurrencyUnit {
-    /// Base unit (e.g. Satoshis) multiplier, as a power of 10
-    var decimals: Int { get }
-    var name: String { get }
-}
+public struct CurrencyMetaData: Codable {
+    let code: String
+    let isSupported: Bool
+    let colors: (UIColor, UIColor)
+    var defaultRate: Double? { return nil } //TODO:CRYPTO
+    var tokenAddress: String?
 
-public extension CurrencyUnit where Self: RawRepresentable, Self.RawValue == Int {
-    var decimals: Int { return rawValue }
-    var name: String { return String(describing: self) }
-}
-
-/// A generic token unit with variable decimals
-public struct TokenUnit: CurrencyUnit {
-    public var decimals: Int
-    public var name: String
-}
-
-/// MARK: - Currency Definitions
-
-/// Bitcoin-compatible currency type
-public struct Bitcoin: Currency {
-    
-    public enum Units: Int, CurrencyUnit {
-        case satoshi = 0
-        case bit = 2
-        case millibitcoin = 5
-        case bitcoin = 8 // 1 Satoshi = 1e-8 BTC
-    }
-    
-    public let name: String
-    public let code: String
-    public let symbol: String
-    public let colors: (UIColor, UIColor)
-    let dbPath: String
-    let forkId: Int
-    public let urlSchemes: [String]?
-    
-    public var isSupported: Bool {
-        return true
-    }
-    
-    public var commonUnit: CurrencyUnit {
-        return Units.bitcoin
-    }
-    
-    public func isValidAddress(_ address: String) -> Bool {
-        if self.matches(Currencies.bch) {
-            return address.isValidBCHAddress
-        } else {
-            return address.isValidAddress
-        }
-    }
-    
-    public func unit(forDecimals decimals: Int) -> CurrencyUnit? {
-        return Units(rawValue: decimals)
-    }
-    
-    public func name(forUnit unit: CurrencyUnit) -> String {
-        guard let unit = unit as? Units else { return "" }
-        switch unit {
-        case .satoshi:
-            return "sat"
-        case .bit:
-            return (self.code == Currencies.btc.code) ? "bits" : "μ\(code.uppercased())"
-        case .millibitcoin:
-            return "m\(code.uppercased())"
-        case .bitcoin:
-            return code.uppercased()
-        }
-    }
-    
-    public func symbol(forUnit unit: CurrencyUnit) -> String {
-        guard let unit = unit as? Units else { return "" }
-        switch unit {
-        case .bit:
-            return S.Symbols.bits
-        case .millibitcoin:
-            return "m\(symbol)"
-        case .bitcoin:
-            return symbol
-        default:
-            return name(forUnit: unit)
-        }
-    }
-}
-
-/// Ethereum-compatible currency type
-public struct Ethereum: Currency {
-    
-    enum Units: Int, CurrencyUnit {
-        case wei = 0
-        case kwei = 3
-        case mwei = 6
-        case gwei = 9
-        case micro = 12
-        case milli = 15
-        case eth = 18 // 1 Wei = 1e-18 ETH
-    }
-    
-    public let name: String
-    public let code: String
-    public let symbol: String
-    public let colors: (UIColor, UIColor)
-    public let urlSchemes: [String]?
-    
-    public var isSupported: Bool {
-        return true
-    }
-    
-    public var commonUnit: CurrencyUnit {
-        return Units.eth
-    }
-    
-    public func isValidAddress(_ address: String) -> Bool {
-        return address.isValidEthAddress
-    }
-    
-    public func unit(forDecimals decimals: Int) -> CurrencyUnit? {
-        return Units(rawValue: decimals)
-    }
-}
-
-/// Ethereum ERC20 token currency type
-public struct ERC20Token: Currency {
-    public let name: String
-    public let code: String
-    public let symbol: String
-    public let colors: (UIColor, UIColor)
-    
-    /// token contract address
-    public let address: String
-    public let abi: String
-    public let decimals: Int
-    
-    public let isSupported: Bool
-    public let saleAddress: String?
-    public let defaultRate: Double?
-    
-    public var commonUnit: CurrencyUnit {
-        return TokenUnit(decimals: decimals, name: code)
-    }
-    
-    public func isValidAddress(_ address: String) -> Bool {
-        return address.isValidEthAddress
-    }
-    
-    public var urlSchemes: [String]? {
-        return Currencies.eth.urlSchemes
-    }
-}
-
-extension ERC20Token: Codable {
     enum CodingKeys: String, CodingKey {
         case code
-        case address = "contract_address"
-        case name
-        case decimals = "scale"
         case isSupported = "is_supported"
-        case saleAddress = "sale_address"
-        case defaultRate = "contract_initial_value"
         case colors
+        case tokenAddress = "contract_address"
+        //        case name
+        //        case type
+        //        case decimals = "scale"
+        //        case saleAddress = "sale_address"
+        //        case defaultRate = "contract_initial_value"
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        // on testnet all tokens get the BRD testnet address
-        let contractAddress = E.isTestnet ? Currencies.brd.address : try container.decode(String.self, forKey: .address)
-        guard !contractAddress.isEmpty else {
-            throw DecodingError.dataCorruptedError(forKey: .address, in: container, debugDescription: "Invalid contract address")
-        }
-        address = contractAddress
-        name = try container.decode(String.self, forKey: .name)
         code = try container.decode(String.self, forKey: .code)
-        symbol = code
-        abi = ERC20Token.standardAbi
-        decimals = try container.decode(Int.self, forKey: .decimals)
         var colorValues = try container.decode([String].self, forKey: .colors)
         if colorValues.count == 2 {
             colors = (UIColor.fromHex(colorValues[0]), UIColor.fromHex(colorValues[1]))
@@ -315,78 +205,50 @@ extension ERC20Token: Codable {
             colors = (UIColor.black, UIColor.black)
         }
         isSupported = try container.decode(Bool.self, forKey: .isSupported)
-        saleAddress = (try? container.decode(String.self, forKey: .saleAddress)) ?? nil
-        // contains currency code prefix e.g. "ETH 0.00125000"
-        if let rateText = (try? container.decode(String.self, forKey: .defaultRate)) {
-            defaultRate = Double(String(rateText.trimmingCharacters(in: CharacterSet(charactersIn: "01234567890.").inverted)))
-        } else {
-            defaultRate = nil
-        }
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(address, forKey: .address)
-        try container.encode(name, forKey: .name)
         try container.encode(code, forKey: .code)
-        try container.encode(decimals, forKey: .decimals)
         var colorValues = [String]()
         colorValues.append(colors.0.toHex)
         colorValues.append(colors.1.toHex)
         try container.encode(colorValues, forKey: .colors)
         try container.encode(isSupported, forKey: .isSupported)
-        try container.encode(saleAddress, forKey: .saleAddress)
-        try container.encode(defaultRate, forKey: .defaultRate)
     }
 }
 
-// MARK: Instances
+extension CurrencyMetaData: Hashable {
+    public static func == (lhs: CurrencyMetaData, rhs: CurrencyMetaData) -> Bool {
+        return lhs.code == rhs.code
+    }
 
-public struct Currencies {
-    static let btc = Bitcoin(name: "Bitcoin",
-                             code: "BTC",
-                             symbol: S.Symbols.btc,
-                             colors: (UIColor(red: 0.972549, green: 0.623529, blue: 0.200000, alpha: 1.0),
-                                      UIColor(red: 0.898039, green: 0.505882, blue: 0.031373, alpha: 1.0)),
-                             dbPath: "BreadWallet.sqlite",
-                             forkId: 0,
-                             urlSchemes: ["bitcoin"])
-    
-    static let bch = Bitcoin(name: "Bitcoin Cash",
-                             code: "BCH",
-                             symbol: S.Symbols.btc,
-                             colors: (UIColor(red: 0.278431, green: 0.521569, blue: 0.349020, alpha: 1.0),
-                                      UIColor(red: 0.278431, green: 0.521569, blue: 0.349020, alpha: 1.0)),
-                             dbPath: "BreadWallet-bch.sqlite",
-                             forkId: 0x40,
-                             urlSchemes: E.isTestnet ? ["bchtest", "bitcoincash"] :  ["bitcoincash"])
-    
-    static let eth = Ethereum(name: "Ethereum",
-                              code: "ETH",
-                              symbol: S.Symbols.eth,
-                              colors: (UIColor(red: 0.37, green: 0.44, blue: 0.64, alpha: 1.0),
-                                       UIColor(red: 0.37, green: 0.44, blue: 0.64, alpha: 1.0)),
-                              urlSchemes: ["ethereum", "ether"])
-    
-    static let brd = ERC20Token(name: "BRD",
-                                code: "BRD",
-                                symbol: "🍞",
-                                colors: (UIColor.fromHex("ff5193"), UIColor.fromHex("f9a43a")),
-                                address: E.isTestnet ? "0x7108ca7c4718efa810457f228305c9c71390931a" : "0x558Ec3152e2Eb2174905CD19aeA4e34A23De9ad6",
-                                abi: ERC20Token.standardAbi,
-                                decimals: 18,
-                                isSupported: true,
-                                saleAddress: nil,
-                                defaultRate: nil)
-    
-    static let tst = ERC20Token(name: "Test Token",
-                                code: "TST",
-                                symbol: "TST",
-                                colors: (UIColor.fromHex("2FB8E6"), UIColor.fromHex("2FB8E6")),
-                                address: E.isTestnet ?  "0x722dd3f80bac40c951b51bdd28dd19d435762180" : "0x3efd578b271d034a69499e4a2d933c631d44b9ad",
-                                abi: ERC20Token.standardAbi,
-                                decimals: 18,
-                                isSupported: true,
-                                saleAddress: nil,
-                                defaultRate: nil)
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(code)
+    }
+}
+
+// MARK: -
+
+//TODO:CRYPTO remove all hard-coded currency references
+struct Currencies {
+    // swiftlint:disable type_name
+    struct btc {
+        static var code: String { return "BTC" }
+        static var name: String { return "Bitcoin" }
+    }
+
+    struct eth {
+        static var code: String { return "ETH" }
+    }
+
+    struct bch {
+        static var code: String { return "BCH" }
+        static var name: String { return "Bitcoin Cash" }
+    }
+
+    struct brd {
+        static var code: String { return "BRD" }
+        static var address: String { return "0x558Ec3152e2Eb2174905CD19aeA4e34A23De9ad6" }
+    }
 }

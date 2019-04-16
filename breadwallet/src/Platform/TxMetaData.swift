@@ -122,17 +122,18 @@ open class TxMetaData: BRKVStoreObject, BRCoding {
         
         self.deviceId = deviceId
         self.comment = comment ?? ""
-        
-        if let transaction = transaction as? BtcTransaction {
-            var rawTx = transaction.rawTransaction
-            self.size = BRTransactionSize(&rawTx)
-        }
-        
-        if transaction is EthTransaction {
+
+        //TODO:CRYPTO btc tx size
+//        if let transaction = transaction as? BtcTransaction {
+//            var rawTx = transaction.rawTransaction
+//            self.size = BRTransactionSize(&rawTx)
+//        }
+
+//        if transaction is EthTransaction {
             self.tokenTransfer = tokenTransfer ?? ""
-        } else {
-            self.tokenTransfer = ""
-        }
+//        } else {
+//            self.tokenTransfer = ""
+//        }
     }
     
     override func getData() -> Data? {

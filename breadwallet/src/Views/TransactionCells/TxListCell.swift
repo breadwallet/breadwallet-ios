@@ -32,7 +32,7 @@ class TxListCell: UITableViewCell {
         setupViews()
     }
     
-    func setTransaction(_ viewModel: TxListViewModel, isBtcSwapped: Bool, rate: Rate, maxDigits: Int, isSyncing: Bool) {
+    func setTransaction(_ viewModel: TxListViewModel, isBtcSwapped: Bool, rate: Rate, isSyncing: Bool) {
         self.viewModel = viewModel
         
         timestamp.text = viewModel.shortTimestamp

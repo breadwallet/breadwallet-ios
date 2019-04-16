@@ -9,6 +9,38 @@
 import Foundation
 import XCTest
 @testable import breadwallet
+@testable import BRCrypto
+
+struct Currencies {
+    private let btcMetaData = Data("""
+{
+  "code": "BTC",
+  "name": "Bitcoin",
+  "type": "",
+  "scale": 8,
+  "is_supported": true,
+  "contract_address": "",
+  "sale_address": "",
+  "aliases": [],
+  "colors": [
+    "#f29500",
+    "#f29500"
+  ]
+}
+""".utf8)
+
+    var btc: Currency? {
+        let btc = BRCrypto.Currency(uids: "Bitcoin", name: "Bitcoin", code: "BTC", type: "native")
+        let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: btcMetaData)
+        let BTC_SATOSHI = BRCrypto.Unit (currency: btc, uids: "BTC-SAT",  name: "Satoshi", symbol: "SAT")
+        let BTC_BTC = BRCrypto.Unit (currency: btc, uids: "BTC-BTC",  name: "Bitcoin", symbol: "B", base: BTC_SATOSHI, decimals: 8)
+        return CurrencyViewModel(model: btc,
+                                 metaData: metaData,
+                                 units: Set([BTC_SATOSHI, BTC_BTC]),
+                                 baseUnit: BTC_SATOSHI,
+                                 defaultUnit: BTC_BTC)
+    }
+}
 
 func clearKeychain() {
     let classes = [kSecClassGenericPassword as String,
