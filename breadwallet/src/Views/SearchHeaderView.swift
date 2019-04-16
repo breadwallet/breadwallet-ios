@@ -54,6 +54,11 @@ enum SearchFilterType {
                         return true
                     }
                 }
+                //BTC transactions don't have a fromAddress, so just look
+                //for fromAddresses for eth like transactions
+                if let ethLikeTxn = transaction as? EthLikeTransaction, ethLikeTxn.fromAddress.lowercased().contains(loweredText) {
+                    return true
+                }
                 return false
             }
         }
