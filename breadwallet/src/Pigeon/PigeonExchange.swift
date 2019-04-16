@@ -215,7 +215,7 @@ class PigeonExchange: Subscriber {
                             }
                             
                             self.addRemoteEntity(remotePubKey: link.publicKey, identifier: remoteID, service: pairingRequest.service)
-                            self.startPolling() // poll until account request is processed
+                            self.startPolling(forPairing: true) // poll until account request is processed
                             finish(.success)
                             break
                         }
@@ -282,9 +282,9 @@ class PigeonExchange: Subscriber {
         }
     }
 
-    func startPolling() {
+    func startPolling(forPairing isPairing: Bool = false) {
         print("[EME] start polling")
-        guard let pairedWallets = pairedWallets, pairedWallets.hasPairedWallets else { return }
+        guard isPairing || isPaired else { return }
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: fetchInterval, repeats: true, block: { [weak self] _ in
             self?.fetchInbox()
@@ -567,6 +567,33 @@ class PigeonExchange: Subscriber {
     
     var pairedWallets: PairedWalletIndex? {
         return PairedWalletIndex(store: kvStore)
+    }
+
+    // returns true if wallet is paired with any EME services
+    var isPaired: Bool {
+        return pairedWallets?.hasPairedWallets ?? false
+    }
+
+    /// Removes all paired wallets
+    func resetPairedWallets() {
+        guard let index = PairedWalletIndex(store: kvStore) else { return }
+
+        stopPolling()
+
+        let pwdToRemove = index.pubKeys.compactMap { PairedWalletData(remotePubKey: $0, store: kvStore) }
+        index.pubKeys.removeAll()
+        index.services.removeAll()
+
+        do {
+            try _ = kvStore.set(index)
+            for pwd in pwdToRemove {
+                try _ = kvStore.del(pwd)
+            }
+            try _ = kvStore.del(index)
+            print("[EME] removed all paired wallet data")
+        } catch let error {
+            print("[EME] error saving paired wallet info: \(error.localizedDescription)")
+        }
     }
     
     private func addRemoteEntity(remotePubKey: Data, identifier: String, service: String) {

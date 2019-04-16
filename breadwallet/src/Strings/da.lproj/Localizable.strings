@@ -38,6 +38,10 @@
 "Alert.keystore.generic.android" = "Der er et problem med din Android OS keystore, kontakt venligst support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Dine BRD-krypterede data blev for nyligt ugyldiggjort, eftersom din Android skærmlås blev deaktiveret.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
+"Alert.keystore.invalidated.uninstall.android" = "Vi kan ikke fortsætte, fordi dine indstillinger for skærmlåsen er blevet ændret (f.eks. adgangskoden deaktiveret, fingeraftryk ændret). Af sikkerhedshensyn har Android permanent låst din nøglelager. Derfor skal dine BRD-appdata fjernes fuldstændigt ved at afinstallere.\n\nBare rolig, dine midler er stadig sikre! Geninstallr appen og gendan din pung vha. din papirnøgle.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
+"Alert.keystore.invalidated.wipe.android" = "Vi kan ikke fortsætte, fordi dine indstillinger for skærmlåsen er blevet ændret (f.eks. adgangskoden deaktiveret, fingeraftryk ændret). Af sikkerhedshensyn har Android permanent låst din nøglelager. Derfor skal dine BRD-appdata fjernes fuldstændugt.\n\nBare rolig, dine midler er stadig sikre! Gendan din pung vha. din papirtast.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android KeyStore fejl";
 /* No internet alert message */
@@ -78,6 +82,8 @@
 "Announcement.coinifyPromoBody" = "Køb for 100€ Bitcoins inden 31. marts 2019 og få et gavekort på 20€ til Amazon.de*";
 /* Button title for an announcement promoting Coinify. */
 "Announcement.coinifyPromoActionTitle" = "Få dit gavekort";
+/* Body for an announcement promoting Coinify. */
+"Announcement.coinifyPromoBody" = "Køb for 100 € af Bitcoin senest den 15. april 2019 og få et gavekort på 20 € til Amazon.de gavekort ⃰";
 /* Footnote text for an announcement promoting Coinify. */
 "Announcement.coinifyPromoFootnote" = "*Begrænset: kun et gavekort per kunde. Kun tilgængelig i Østrig, Tyskland, Luxembourg og Holland.";
 /* Title for an announcement promoting Coinify. */
@@ -134,6 +140,8 @@
 "Button.buy" = "Køb";
 /* Cancel button label */
 "Button.cancel" = "Annuller";
+/* Button label to open a email compose window with our support email in the to field. */
+"Button.contactSupport.android" = "Kontakt support";
 /* prompt continue button */
 "Button.continueAction" = "Fortsæt";
 /* prompt dismiss button */
@@ -142,6 +150,8 @@
 "Button.Home" = "Hjem";
 /* Ignore button label */
 "Button.ignore" = "Ignorer";
+/* Maybe Later button label */
+"Button.maybeLater" = "Måske senere";
 /* menu button */
 "Button.menu" = "Menu";
 /* More information button */
@@ -152,6 +162,8 @@
 "Button.ok" = "OK";
 /* receive button */
 "Button.receive" = "Modtag";
+/* Button label to open Security Settings. */
+"Button.securitySettings.android" = "Sikkerhedscenter";
 /* Click this button to sell an asset */
 "Button.sell" = "Sælg";
 /* send button */
@@ -160,6 +172,10 @@
 "Button.settings" = "Indstillinger";
 /* Settings button label */
 "Button.submit" = "Send";
+/* Button label to uninstall the app. */
+"Button.uninstall.android" = "Afinstaller";
+/* Button label to wipe the user's application data. */
+"Button.wipe.android" = "Fjern fuldstændigt";
 /* Yes button */
 "Button.yes" = "Ja";
 /* Camera plugin instruction */
@@ -876,6 +892,9 @@
 "TransactionDetails.commentsPlaceholder" = "Tilføj memo...";
 /* Timestamp section header for complete tx */
 "TransactionDetails.completeTimestampHeader" = "Gennemført";
+/* Block height and confirmations label
+eg. 182930 (45061 confirmations) */
+"TransactionDetails.confirmationsLabel" = "Bekræftelser";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Dine transaktioner vil vises her.";
 /* e.g. the users balance after the transaction was compeleted */

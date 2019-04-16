@@ -55,6 +55,7 @@
 		22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431331DF89DFE0017CAEA /* BRCoderTests.swift */; };
 		22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */; };
 		22E773041EE7813000397E0E /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E773031EE7813000397E0E /* Bonjour.swift */; };
+		3A211D1D2242AF0500C2A906 /* Bip38Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */; };
 		3C83B27620631739001D08CE /* BRRlpCoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11614205C943700C03D42 /* BRRlpCoder.c */; };
 		3C83B27720631740001D08CE /* BRUtilMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11600205C943500C03D42 /* BRUtilMath.c */; };
 		3C83B27820631740001D08CE /* BRUtilMathParse.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FE205C943500C03D42 /* BRUtilMathParse.c */; };
@@ -72,11 +73,12 @@
 		71249916221F466800BEA491 /* Prompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71249915221F466800BEA491 /* Prompt.swift */; };
 		71249918222046EB00BEA491 /* PromptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71249917222046EB00BEA491 /* PromptTests.swift */; };
 		7124991B22204E6C00BEA491 /* announcement-email.json in Resources */ = {isa = PBXBuildFile; fileRef = 7124991A22204E6C00BEA491 /* announcement-email.json */; };
+		7138BABB223062F50059091E /* NotificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7138BABA223062F40059091E /* NotificationTests.swift */; };
 		714F5D6E22037F2400F7CA70 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714F5D6D22037F2400F7CA70 /* EventMonitor.swift */; };
 		716F824321F91D9A0064E6F4 /* AppRatingManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716F824221F91D9A0064E6F4 /* AppRatingManagerTests.swift */; };
-		71904FBB2228132100A6D027 /* announcement-supported.json in Resources */ = {isa = PBXBuildFile; fileRef = 71904FBA2228132100A6D027 /* announcement-supported.json */; };
 		71904FB72225A1F900A6D027 /* announcement-promo.json in Resources */ = {isa = PBXBuildFile; fileRef = 71904FB62225A1F800A6D027 /* announcement-promo.json */; };
 		71904FB92225AB3900A6D027 /* AnnouncementPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71904FB82225AB3900A6D027 /* AnnouncementPromptView.swift */; };
+		71904FBB2228132100A6D027 /* announcement-supported.json in Resources */ = {isa = PBXBuildFile; fileRef = 71904FBA2228132100A6D027 /* announcement-supported.json */; };
 		71988B0821EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988B0721EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift */; };
 		71988B0921EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988B0721EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift */; };
 		71988B0B21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988B0A21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift */; };
@@ -713,6 +715,7 @@
 		22C431331DF89DFE0017CAEA /* BRCoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRCoderTests.swift; sourceTree = "<group>"; };
 		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bonjour.swift; sourceTree = "<group>"; };
+		3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip38Tests.swift; sourceTree = "<group>"; };
 		3C83B27D206317A7001D08CE /* BRCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BRCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C83B27F206317A7001D08CE /* BRCoreTests.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = BRCoreTests.swift; sourceTree = "<group>"; };
 		3C83B281206317A7001D08CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -728,11 +731,12 @@
 		71249915221F466800BEA491 /* Prompt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Prompt.swift; path = src/Models/Prompts/Prompt.swift; sourceTree = "<group>"; };
 		71249917222046EB00BEA491 /* PromptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptTests.swift; sourceTree = "<group>"; };
 		7124991A22204E6C00BEA491 /* announcement-email.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "announcement-email.json"; path = "json/announcement-email.json"; sourceTree = "<group>"; };
+		7138BABA223062F40059091E /* NotificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTests.swift; sourceTree = "<group>"; };
 		714F5D6D22037F2400F7CA70 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EventMonitor.swift; path = src/Utilities/EventMonitor.swift; sourceTree = "<group>"; };
 		716F824221F91D9A0064E6F4 /* AppRatingManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRatingManagerTests.swift; sourceTree = "<group>"; };
-		71904FBA2228132100A6D027 /* announcement-supported.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "announcement-supported.json"; path = "json/announcement-supported.json"; sourceTree = "<group>"; };
 		71904FB62225A1F800A6D027 /* announcement-promo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "announcement-promo.json"; path = "json/announcement-promo.json"; sourceTree = "<group>"; };
 		71904FB82225AB3900A6D027 /* AnnouncementPromptView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnnouncementPromptView.swift; path = src/Views/AnnouncementPromptView.swift; sourceTree = "<group>"; };
+		71904FBA2228132100A6D027 /* announcement-supported.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "announcement-supported.json"; path = "json/announcement-supported.json"; sourceTree = "<group>"; };
 		71988B0721EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BRUserAgentHeaderGenerator.swift; path = src/Platform/BRUserAgentHeaderGenerator.swift; sourceTree = "<group>"; };
 		71988B0A21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BRUserAgentHeaderGeneratorTests.swift; sourceTree = "<group>"; };
 		71999FDC22147CD90024271F /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Events.swift; path = src/Constants/Events.swift; sourceTree = "<group>"; };
@@ -1754,6 +1758,8 @@
 				CE4CA7B81EE0C89F00373F11 /* Platform */,
 				716F824221F91D9A0064E6F4 /* AppRatingManagerTests.swift */,
 				71249917222046EB00BEA491 /* PromptTests.swift */,
+				7138BABA223062F40059091E /* NotificationTests.swift */,
+				3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */,
 			);
 			path = breadwalletTests;
 			sourceTree = "<group>";
@@ -2784,7 +2790,7 @@
 					};
 					75A2A78F1DA5934300A983D8 = {
 						CreatedOnToolsVersion = 8.0;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -2806,19 +2812,19 @@
 					};
 					75A2A7A31DA5934300A983D8 = {
 						CreatedOnToolsVersion = 8.0;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 75A2A78F1DA5934300A983D8;
 					};
 					75A2A7AE1DA5934300A983D8 = {
 						CreatedOnToolsVersion = 8.0;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 75A2A78F1DA5934300A983D8;
 					};
 					CEA7E67A1F09A9D2001F8C27 = {
 						CreatedOnToolsVersion = 8.3.3;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 75A2A78F1DA5934300A983D8;
 					};
@@ -2826,7 +2832,7 @@
 			};
 			buildConfigurationList = 75A2A78B1DA5934300A983D8 /* Build configuration list for PBXProject "breadwallet" */;
 			compatibilityVersion = "Xcode 8.0";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -2843,6 +2849,7 @@
 				pt,
 				ko,
 				"zh-Hant",
+				sv,
 			);
 			mainGroup = 75A2A7871DA5934300A983D8;
 			productRefGroup = 75A2A7911DA5934300A983D8 /* Products */;
@@ -3541,6 +3548,7 @@
 				22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */,
 				CEEC70981E96BF8800EF788E /* DefaultCurrencyTests.swift in Sources */,
 				22C4312A1DF89D0A0017CAEA /* BRTarTests.swift in Sources */,
+				7138BABB223062F50059091E /* NotificationTests.swift in Sources */,
 				71249918222046EB00BEA491 /* PromptTests.swift in Sources */,
 				7C67B63A2057180E006487BE /* JSONRPCTests.swift in Sources */,
 				71988B0B21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift in Sources */,
@@ -3548,6 +3556,7 @@
 				22C4312C1DF89D700017CAEA /* BRBSPatchTests.swift in Sources */,
 				CEE218BB21026BAB00399231 /* PigeonTest.swift in Sources */,
 				CEA7E6761F057D77001F8C27 /* WalletInfoTest.swift in Sources */,
+				3A211D1D2242AF0500C2A906 /* Bip38Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4069,7 +4078,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -4094,7 +4103,7 @@
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -4113,7 +4122,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
 			};
 			name = Debug;
@@ -4132,7 +4141,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
 			};
 			name = Release;
@@ -4146,7 +4155,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = Debug;
@@ -4160,7 +4169,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = Release;
@@ -4244,7 +4253,7 @@
 				OTHER_SWIFT_FLAGS = "-DTestflight -DTestnet";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = "Testnet-Testflight";
@@ -4263,7 +4272,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
 			};
 			name = "Testnet-Testflight";
@@ -4277,7 +4286,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = "Testnet-Testflight";
@@ -4393,7 +4402,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = "Testnet-Testflight";
@@ -4480,7 +4489,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = "Debug-Internal";
@@ -4499,7 +4508,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
 			};
 			name = "Debug-Internal";
@@ -4513,7 +4522,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.UITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = "Debug-Internal";
@@ -4628,7 +4637,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = "Debug-Internal";
@@ -4711,7 +4720,7 @@
 				OTHER_SWIFT_FLAGS = "-DTestflight -DInternal";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = "Testflight-Internal";
@@ -4730,7 +4739,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
 			};
 			name = "Testflight-Internal";
@@ -4744,7 +4753,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.UITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = "Testflight-Internal";
@@ -4855,7 +4864,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = "Testflight-Internal";
@@ -4939,7 +4948,7 @@
 				OTHER_SWIFT_FLAGS = "-DTestflight -DTestnet -DInternal";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = "Testnet-Testflight-Internal";
@@ -4958,7 +4967,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
 			};
 			name = "Testnet-Testflight-Internal";
@@ -4972,7 +4981,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.UITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = "Testnet-Testflight-Internal";
@@ -5088,7 +5097,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = "Testnet-Testflight-Internal";
@@ -5103,7 +5112,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = Debug;
@@ -5118,7 +5127,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = Release;
@@ -5133,7 +5142,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = Testflight;
@@ -5220,7 +5229,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Screenshots;
@@ -5239,7 +5248,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
 			};
 			name = Screenshots;
@@ -5253,7 +5262,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = Screenshots;
@@ -5346,7 +5355,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = Screenshots;
@@ -5433,7 +5442,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Testnet;
@@ -5452,7 +5461,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
 			};
 			name = Testnet;
@@ -5466,7 +5475,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = Testnet;
@@ -5560,7 +5569,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = Testnet;
@@ -5643,7 +5652,7 @@
 				OTHER_SWIFT_FLAGS = "-DTestflight";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Testflight;
@@ -5662,7 +5671,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
 			};
 			name = Testflight;
@@ -5676,7 +5685,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
 			name = Testflight;
