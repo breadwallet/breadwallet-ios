@@ -161,8 +161,10 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
         actualRequest.setValue("\(E.isTestnet ? 1 : 0)", forHTTPHeaderField: "X-Bitcoin-Testnet")
         actualRequest.setValue("\((E.isTestFlight || E.isDebug) ? 1 : 0)", forHTTPHeaderField: "X-Testflight")
         actualRequest.setValue(Locale.current.identifier, forHTTPHeaderField: "Accept-Language")
-        actualRequest.setValue(Store.state.walletID ?? "", forHTTPHeaderField: "X-Wallet-Id")
         actualRequest.setValue(BRUserAgentHeaderGenerator.userAgentHeader, forHTTPHeaderField: "User-Agent")
+        if let walletID = Store.state.walletID {
+            actualRequest.setValue(walletID, forHTTPHeaderField: "X-Wallet-Id")
+        }
         return actualRequest
     }
     
