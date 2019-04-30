@@ -10,6 +10,22 @@ import UIKit
 
 extension UIColor {
 
+    static var primaryBackground: UIColor {
+        return UIColor.fromHex("141233")
+    }
+    
+    static var secondaryBackground: UIColor {
+        return UIColor.fromHex("211F3F")
+    }
+    
+    static var tertiaryBackground: UIColor {
+        return UIColor.fromHex("312F4C")
+    }
+    
+    static var uiError: UIColor {
+        return UIColor.fromHex("EA6654")
+    }
+    
     static var newGradientStart: UIColor {
         return UIColor.fromHex("FB5491")
     }
@@ -19,7 +35,7 @@ extension UIColor {
     }
 
     static var darkBackground: UIColor {
-        return UIColor.fromHex("302442")
+        return primaryBackground
     }
 
     static var darkerBackground: UIColor {
@@ -64,15 +80,11 @@ extension UIColor {
 
     // MARK: Buttons
     static var primaryButton: UIColor {
-        return .navigationTint
+        return UIColor.fromHex("5B6DEE")
     }
     
     static var orangeButton: UIColor {
         return UIColor.fromHex("E7AA41")
-    }
-
-    static var primaryText: UIColor {
-        return .white
     }
 
     static var secondaryButton: UIColor {
@@ -83,6 +95,20 @@ extension UIColor {
         return UIColor(red: 213.0/255.0, green: 218.0/255.0, blue: 224.0/255.0, alpha: 1.0)
     }
 
+    // MARK: text color
+    
+    static var primaryText: UIColor {
+        return .white
+    }
+    
+    static var secondaryText: UIColor {
+        return UIColor.init(white: 1.0, alpha: 0.75)
+    }
+
+    static var tertiaryText: UIColor {
+        return UIColor.init(white: 1.0, alpha: 0.60)
+    }
+    
     static var darkText: UIColor {
         return UIColor.fromHex("4F4F4F")
     }
@@ -261,11 +287,11 @@ extension UIColor {
     }
     
     static var navigationTint: UIColor {
-        return UIColor.fromHex("29ABE2")
+        return .white
     }
     
     static var navigationBackground: UIColor {
-        return UIColor.fromHex("251935")
+        return primaryBackground
     }
     
     static var transparentCellBackground: UIColor {
@@ -318,6 +344,10 @@ extension UIColor {
 
     static var transactionsViewControllerBackground: UIColor {
         return UIColor.fromHex("#E5E5E5")
+    }
+    
+    static var uiAccent: UIColor {
+        return UIColor.fromHex("#5B6DEE")
     }
 }
 

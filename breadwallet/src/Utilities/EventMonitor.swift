@@ -25,6 +25,7 @@ class EventMonitor {
     }
     
     func register(_ context: EventContext) {
+        guard context != .none else { return }
         activeContexts.append(context)
     }
     

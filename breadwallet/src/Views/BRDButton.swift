@@ -53,7 +53,7 @@ class BRDButton: UIControl {
     private let type: ButtonType
     private let container = UIView()
     private let label = UILabel()
-    private let cornerRadius: CGFloat = 6.0
+    private let cornerRadius: CGFloat = 2.0
     private var imageView: UIImageView?
 
     override var isHighlighted: Bool {
@@ -155,7 +155,8 @@ class BRDButton: UIControl {
     private func setColors() {
         switch type {
         case .primary:
-            container.backgroundColor = isEnabled ? .primaryButton : UIColor.lightGray
+            let bgColor = isEnabled ? UIColor.primaryButton : UIColor.primaryButton.withAlphaComponent(0.5)
+            container.backgroundColor = bgColor
             label.textColor = isEnabled ? .primaryText : UIColor.primaryText.withAlphaComponent(0.75)
             container.layer.borderColor = nil
             container.layer.borderWidth = 0.0

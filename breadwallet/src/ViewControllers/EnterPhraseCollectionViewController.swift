@@ -8,27 +8,39 @@
 
 import UIKit
 
-private let itemHeight: CGFloat = 50.0
+private let itemHeight: CGFloat = 32
 
-class EnterPhraseCollectionViewController: UICollectionViewController {
+class EnterPhraseCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
     // MARK: - Public
     var didFinishPhraseEntry: ((String) -> Void)?
     var height: CGFloat {
-        return itemHeight * 4.0
+        return (itemHeight * 4.0) + (2 * sectionInsets) + (3 * interItemSpacing)
     }
 
     init(keyMaster: KeyMaster) {
         self.keyMaster = keyMaster
-        let layout = UICollectionViewFlowLayout()
-        let screenWidth = UIScreen.main.safeWidth
-        layout.itemSize = CGSize(width: (screenWidth - C.padding[4])/3.0, height: itemHeight)
-        layout.minimumLineSpacing = 0.0
-        layout.minimumInteritemSpacing = 0.0
-        layout.sectionInset = .zero
-        super.init(collectionViewLayout: layout)
+        super.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
-
+    
+    private let cellHeight: CGFloat = 32
+    
+    var interItemSpacing: CGFloat {
+        return E.isSmallScreen ? 6 : C.padding[1]
+    }
+    
+    var sectionInsets: CGFloat {
+        return E.isSmallScreen ? 0 : C.padding[2]
+    }
+    
+    private lazy var cellSize: CGSize = {
+        let margins = sectionInsets * 2            // left and right section insets
+        let spacing = interItemSpacing * 2
+        let widthAvailableForCells = collectionView.frame.width - margins - spacing
+        let cellsPerRow: CGFloat = 3
+        return CGSize(width: widthAvailableForCells / cellsPerRow, height: cellHeight)
+    }()
+    
     // MARK: - Private
     private let cellIdentifier = "CellIdentifier"
     private let keyMaster: KeyMaster
@@ -41,14 +53,21 @@ class EnterPhraseCollectionViewController: UICollectionViewController {
 
     override func viewDidLoad() {
         collectionView = NonScrollingCollectionView(frame: view.bounds, collectionViewLayout: collectionViewLayout)
-        collectionView?.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.1)
+        collectionView.backgroundColor = .primaryBackground
         collectionView?.register(EnterPhraseCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView?.delegate = self
         collectionView?.dataSource = self
-        collectionView?.layer.cornerRadius = 8.0
+        
+        // Omit the rounded border on small screens due to space constraints.
+        if !E.isSmallScreen {
+            collectionView.layer.cornerRadius = 8.0
+            collectionView.layer.borderColor = UIColor.secondaryBackground.cgColor
+            collectionView.layer.borderWidth = 2.0
+        }
+        
         collectionView?.isScrollEnabled = false
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         becomeFirstResponder(atIndex: 0)
@@ -58,7 +77,13 @@ class EnterPhraseCollectionViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 12
     }
-
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return cellSize
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
@@ -98,6 +123,25 @@ class EnterPhraseCollectionViewController: UICollectionViewController {
         return item
     }
 
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+        let insets = sectionInsets
+        return UIEdgeInsets(top: insets, left: insets, bottom: insets, right: insets)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return interItemSpacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return interItemSpacing
+    }
+    
     // MARK: - Extras
     private func becomeFirstResponder(atIndex: Int) {
         guard let phraseCell = collectionView?.cellForItem(at: IndexPath(item: atIndex, section: 0)) as? EnterPhraseCell else { return }
