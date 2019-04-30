@@ -421,7 +421,7 @@
 /* Onboarding screen Page 2 subtitle */
 "OnboardingPageTwo.subtitle" = "We have over $6 billion USD worth of assets under protection.";
 /* Onboarding screen Page 2 title */
-"OnboardingPageTwo.title" = "Join the 1.5 million people around the world who trust BRD.";
+"OnboardingPageTwo.title" = "Join millions of people around the world who trust BRD.";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "Send %1$@ to purchase %2$@";
 /* Payment confirmation view title */
@@ -759,7 +759,7 @@
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Write Down Paper Key";
 /* Argument is date */
-"StartPaperPhrase.date" = "You last wrote down your paper key on %1$@";
+"StartPaperPhrase.date" = "Last written down on\n %1$@";
 /* button label */
 "StartViewController.createButton" = "Create New Wallet";
 /* Start view message */

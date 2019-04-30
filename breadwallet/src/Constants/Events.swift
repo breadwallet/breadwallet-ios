@@ -12,6 +12,8 @@ public enum EventContext: String {
     case none
     case test
     case onboarding
+    case generateKey
+    case writeKey
     case rewards
     case pushNotifications
     var name: String { return rawValue }
@@ -34,6 +36,7 @@ public enum Event: String {
     // general buttons (tapped)
     case helpButton
     case writeDownButton
+    case generateRecoveryKeyButton
     
     // onboarding buttons (tapped)
     case getStartedButton
@@ -67,6 +70,10 @@ public enum Screen: String {
     case paperKeyIntro
     case writePaperKey
     case confirmPaperKey
+    
+    case recoveryKeyIntroScreen
+    case writeRecoveryKeyScreen
+    case confirmRecoveryKeyScreen
 
     // onboarding screens
     case landingPage

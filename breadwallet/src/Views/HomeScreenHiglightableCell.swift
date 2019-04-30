@@ -2,7 +2,7 @@
 //  HomeScreenHiglightableCell.swift
 //  breadwallet
 //
-//  Created by rrrrray-BRD-mac on 2019-02-01.
+//  Created by Ray Vander Veen on 2019-02-01.
 //  Copyright © 2019 breadwallet LLC. All rights reserved.
 //
 
