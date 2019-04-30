@@ -511,25 +511,13 @@ class ModalPresenter: Subscriber, Trackable {
         let securityItems: [MenuItem] = [
             // Unlink
             MenuItem(title: S.Settings.wipe) { [unowned self] in
-                let nc = ModalNavigationController()
-                nc.setClearNavbar()
-                nc.setWhiteStyle()
-                nc.delegate = self.wipeNavigationDelegate
-                let start = StartWipeWalletViewController { [unowned self] in
-                    let recover = EnterPhraseViewController(keyMaster: self.keyStore, reason: .validateForWipingWallet({
-                        self.wipeWallet()
-                    }))
-                    nc.pushViewController(recover, animated: true)
-                }
-                start.addCloseNavigationItem(tintColor: .white)
-                start.navigationItem.title = S.WipeWallet.title
-                let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.wipeWallet)
-                faqButton.tintColor = .white
-                start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
-                nc.viewControllers = [start]
-                menuNav.dismiss(animated: true) {
-                    self.topViewController?.present(nc, animated: true, completion: nil)
-                }
+                guard let vc = self.topViewController else { return }
+
+                RecoveryKeyFlowController.enterUnlinkWalletFlow(from: vc,
+                                                                keyMaster: self.keyStore,
+                                                                phraseEntryReason: .validateForWipingWallet({
+                                                                    self.wipeWallet()
+                                                                }))
             },
             
             // Update PIN
@@ -763,7 +751,7 @@ class ModalPresenter: Subscriber, Trackable {
 
                             menuNav.present(alert, animated: true, completion: nil)
                 }))
-            
+
             rootItems.append(MenuItem(title: "Developer Options", icon: nil, subMenu: developerItems, rootNav: menuNav, faqButton: nil))
         }
         
@@ -807,58 +795,13 @@ class ModalPresenter: Subscriber, Trackable {
         verify.modalPresentationCapturesStatusBarAppearance = true
         onNc.present(verify, animated: true, completion: nil)
     }
-
+    
     private func presentWritePaperKey(fromViewController vc: UIViewController) {
-        let paperPhraseNavigationController = UINavigationController()
-        paperPhraseNavigationController.setClearNavbar()
-        paperPhraseNavigationController.setWhiteStyle()
-        paperPhraseNavigationController.modalPresentationStyle = .overFullScreen
-        let start = StartPaperPhraseViewController(eventContext: .none, dismissAction: nil, callback: { [weak self] in
-            guard let `self` = self else { return }
-            let verify = VerifyPinViewController(
-                bodyText: S.VerifyPin.continueBody,
-                pinLength: Store.state.pinLength,
-                walletAuthenticator: self.keyStore,
-                success: { pin in
-                    self.pushWritePaperPhrase(navigationController: paperPhraseNavigationController, pin: pin)
-            })
-            verify.transitioningDelegate = self.verifyPinTransitionDelegate
-            verify.modalPresentationStyle = .overFullScreen
-            verify.modalPresentationCapturesStatusBarAppearance = true
-            paperPhraseNavigationController.present(verify, animated: true, completion: nil)
-            })
-        start.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.paperKey)
-        faqButton.tintColor = .white
-        start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
-        paperPhraseNavigationController.viewControllers = [start]
-        vc.present(paperPhraseNavigationController, animated: true, completion: nil)
-    }
-
-    private func pushWritePaperPhrase(navigationController: UINavigationController, pin: String) {
-        let keyStore = self.keyStore
-        var writeViewController: WritePaperPhraseViewController?
-        writeViewController = WritePaperPhraseViewController(keyMaster: keyStore,
-                                                             pin: pin,
-                                                             eventContext: .none,
-                                                             dismissAction: nil,
-                                                             callback: {
-            var confirm: ConfirmPaperPhraseViewController?
-                                                                confirm = ConfirmPaperPhraseViewController(keyMaster: keyStore, pin: pin, eventContext: .none, callback: {
-                confirm?.dismiss(animated: true, completion: {
-                    Store.perform(action: Alert.Show(.paperKeySet(callback: {
-                        Store.perform(action: HideStartFlow())
-                    })))
-                })
-            })
-            writeViewController?.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-            if let confirm = confirm {
-                navigationController.pushViewController(confirm, animated: true)
-            }
-        })
-        writeViewController?.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-        guard let writeVC = writeViewController else { return }
-        navigationController.pushViewController(writeVC, animated: true)
+        RecoveryKeyFlowController.enterRecoveryKeyFlow(pin: nil,
+                                                       keyMaster: self.keyStore,
+                                                       from: vc,
+                                                       context: .none,
+                                                       dismissAction: nil)
     }
 
     private func presentPlatformWebViewController(_ mountPoint: String) {

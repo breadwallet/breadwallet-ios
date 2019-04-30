@@ -53,9 +53,14 @@ extension UIButton {
 
     static var close: UIButton {
         let accessibilityLabel = E.isScreenshots ? "Close" : S.AccessibilityLabels.close
-        return UIButton.icon(image: #imageLiteral(resourceName: "Close"), accessibilityLabel: accessibilityLabel)
+        return UIButton.icon(image: #imageLiteral(resourceName: "CloseModern"), accessibilityLabel: accessibilityLabel)
     }
-    
+
+    static var closeSmall: UIButton {
+        let accessibilityLabel = E.isScreenshots ? "Close" : S.AccessibilityLabels.close
+        return UIButton.icon(image: #imageLiteral(resourceName: "Close-X-small"), accessibilityLabel: accessibilityLabel)
+    }
+
     static func buildFaqButton(articleId: String, currency: Currency? = nil, tapped: (() -> Void)? = nil) -> UIButton {
         let button = UIButton.icon(image: #imageLiteral(resourceName: "Faq"), accessibilityLabel: S.AccessibilityLabels.faq)
         button.tintColor = .white
@@ -96,5 +101,16 @@ extension UIButton {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: { [weak self] in
             self?.isEnabled = true
         })
+    }    
+}
+
+extension UIBarButtonItem {
+    
+    static func skipBarButtonItem() -> UIBarButtonItem {
+        let skip = UIBarButtonItem(title: S.Button.skip, style: .plain, target: nil, action: nil)
+        skip.tintColor = .tertiaryText
+        skip.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.body2], for: .normal)
+        skip.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.body2], for: .highlighted)
+        return skip
     }
 }

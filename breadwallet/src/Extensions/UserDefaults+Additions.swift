@@ -297,6 +297,13 @@ extension UserDefaults {
         set { defaults.set(newValue, forKey: writePaperPhraseDateKey) }
     }
 
+    static var writePaperPhraseDateString: String {
+        guard let date = writePaperPhraseDate else { return "" }
+        let df = DateFormatter()
+        df.setLocalizedDateFormatFromTemplate("MMMM d, yyyy")
+        return String(format: S.StartPaperPhrase.date, df.string(from: date))
+    }
+    
     static var walletRequiresBackup: Bool {
         if UserDefaults.writePaperPhraseDate != nil {
             return false

@@ -36,6 +36,9 @@ enum S {
         static let home = NSLocalizedString("Button.home", value: "Home", comment: "prompt home button")
         static let moreInfo = NSLocalizedString("Button.moreInfo", value: "More info", comment: "More information button")
         static let maybeLater = NSLocalizedString("Button.maybeLater", value: "Maybe Later", comment: "Maybe later button")
+        static let doneAction = NSLocalizedString("Button.done", value: "Done", comment: "Done button title")
+        static let skip = NSLocalizedString("Button.skip", value: "Skip", comment: "Skip button title")
+        static let confirm = NSLocalizedString("Button.confirm", value: "Confirm", comment: "Confirm button title")
     }
 
     enum Alert {
@@ -371,17 +374,7 @@ enum S {
     }
 
     enum StartPaperPhrase {
-        static let body = NSLocalizedString("StartPaperPhrase.body", value:"Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.", comment: "Paper key explanation text.")
-        static let buttonTitle = NSLocalizedString("StartPaperPhrase.buttonTitle", value:"Write Down Paper Key", comment: "button label")
-        static let againButtonTitle = NSLocalizedString("StartPaperPhrase.againButtonTitle", value:"Write Down Paper Key Again", comment: "button label")
-        static let date = NSLocalizedString("StartPaperPhrase.date", value:"You last wrote down your paper key on %1$@", comment: "Argument is date")
-    }
-
-    enum WritePaperPhrase {
-        static let instruction = NSLocalizedString("WritePaperPhrase.instruction", value:"Write down each word in order and store it in a safe place.", comment: "Paper key instructions.")
-        static let step = NSLocalizedString("WritePaperPhrase.step", value:"%1$d of %2$d", comment: "1 of 3")
-        static let next = NSLocalizedString("WritePaperPhrase.next", value:"Next", comment: "button label")
-        static let previous = NSLocalizedString("WritePaperPhrase.previous", value:"Previous", comment: "button label")
+        static let date = NSLocalizedString("StartPaperPhrase.date", value:"Last written down on\n %1$@", comment: "Argument is date")
     }
 
     enum RequestAnAmount {
@@ -433,7 +426,7 @@ enum S {
         static let restoreWallet = NSLocalizedString("Onboarding.restoreWallet", value: "Restore wallet", comment: "Button that allows the user to restore an existing crypto wallet")
         static let skip = NSLocalizedString("Onboarding.skip", value: "Skip", comment: "Button that allows the user to skip to the end of the onboarding flow.")
         static let pageOneTitle = NSLocalizedString("OnboardingPageOne.title", value: "Welcome to your new global wallet!", comment: "Title displayed on the first page of the onboarding flow.")
-        static let pageTwoTitle = NSLocalizedString("OnboardingPageTwo.title", value: "Join the 1.5 million people around the world who trust BRD.", comment: "Title displayed on the second page of the onboarding flow.")
+        static let pageTwoTitle = NSLocalizedString("OnboardingPageTwo.title", value: "Join millions of people around the world who trust BRD.", comment: "Title displayed on the second page of the onboarding flow.")
         static let pageTwoSubtitle = NSLocalizedString("OnboardingPageTwo.subtitle", value: "Join the 1.5 million people around the world who trust BRD.", comment: "Subtitle displayed on the second page of the onboarding flow.")  
         static let pageThreeTitle = NSLocalizedString("OnboardingPageThree.title", value: "Buy and trade bitcoin, tokens, and other digital currencies.", comment: "Title displayed on the third page of the onboarding flow.")  
         static let pageThreeSubtitle = NSLocalizedString("OnboardingPageThree.subtitle", value: "Invest and diversify with BRD, easily and securely.", comment: "Subtitle displayed on the third page of the onboarding flow.")   
@@ -681,5 +674,142 @@ enum S {
         static let normalTitle = NSLocalizedString("RewardsView.normalTitle", value: "Rewards", comment: "Rewards view normal title")
         static let expandedTitle = NSLocalizedString("RewardsView.expandedTitle", value: "Introducing BRD\nRewards.", comment: "Rewards view expanded title")
         static let expandedBody = NSLocalizedString("RewardsView.expandedBody", value: "Learn how you can save on trading fees and unlock future rewards", comment: "Rewards view expanded body")
+    }
+    
+    enum RecoverKeyFlow {
+        static let generateKey = NSLocalizedString("RecoveryKeyFlow.generateKeyTitle",
+                                                   value: "Generate your private recovery key",
+                                                   comment: "Default title for the recovery key landing page.")
+        
+        static let writeKeyAgain = NSLocalizedString("RecoveryKeyFlow.writeKeyAgain",
+                                                   value: "Write down your recovery key again",
+                                                   comment: "Title for the recovery key landing page if the key has already been generated.")
+        
+        static let generateKeyExplanation = NSLocalizedString("RecoveryKeyFlow.generateKeyExplanation",
+                                                     value: "This key is required to recover your money if you upgrade or lose your phone.",
+                                                     comment: "Subtext for the recovery key landing page.")
+
+        static let howItWorksStepLabel = NSLocalizedString("RecoveryKeyFlow.howItWorksStep",
+                                                           value: "How it works - Step %1$@",
+                                                           comment: "Hint text for recovery key intro page, e.g., Step 2")
+
+        static let writeItDown = NSLocalizedString("RecoveryKeyFlow.writeItDown",
+                                                           value: "Write down your key",
+                                                           comment: "Title for recovery key intro page")
+
+        static let keepSecure = NSLocalizedString("RecoveryKeyFlow.keepSecure",
+                                                    value: "Keep it secure",
+                                                    comment: "Title for recovery key intro page")
+
+        static let relaxBuyTrade = NSLocalizedString("RecoveryKeyFlow.relaxBuyTrade",
+                                                     value: "Relax, buy, and trade",
+                                                     comment: "Title for recovery key intro page")
+        
+        static let noScreenshotsRecommendation = NSLocalizedString("RecoveryKeyFlow.noScreenshotsRecommendation",
+                                                                   value: "Write down your key on paper & confirm it. Screenshots are not recommended for security reasons.",
+                                                                   comment: "Recommends that the user avoids capturing the paper key with a screenshot")
+        
+        static let storeSecurelyRecommendation = NSLocalizedString("RecoveryKeyFlow.storeSecurelyRecommendation",
+                                                                   value: "Store your key in a secure location. This is the only way to recover your wallet. BRD does not keep a copy.",
+                                                                   comment: "Recommends that the user stores the recovery key in a secure location")
+        
+        static let securityAssurance = NSLocalizedString("RecoveryKeyFlow.securityAssurance",
+                                                         value: "Buy and trade knowing that your funds are protected by the best security and privacy in the business.",
+                                                         comment: "Assures the user that BRD will keep the user's funds secure.")
+        
+        static let generateKeyButton = NSLocalizedString("RecoveryKeyFlow.generateKeyButton",
+                                                         value: "Generate Recovery Key",
+                                                         comment: "Button text for the 'Generate Recovery Key' button")
+        
+        static let keyUseInfoHint = NSLocalizedString("RecoveryKeyFlow.keyUseHint",
+                                                      value: "Your key is only needed for recovery, not for everyday wallet access.",
+                                                      comment: "Informs the user that the recovery is only required for recovering a wallet.")
+        
+        static let writeKeyScreenTitle = NSLocalizedString("RecoveryKeyFlow.writeKeyScreenTitle",
+                                                           value: "Your Recovery Key",
+                                                           comment: "Title for the write recovery key screen")
+        
+        static let writeKeyScreenSubtitle = NSLocalizedString("RecoveryKeyFlow.writeKeyScreenSubtitle",
+                                                              value: "Write down the following words in order.",
+                                                              comment: "Subtitle for the write recovery key screen")
+
+        static let writeKeyStepTitle = NSLocalizedString("RecoveryKeyFlow.writeKeyStepTitle",
+                                                         value: "%1$@ of %2$@",
+                                                         comment: "Title for the write recovery key screen")
+        
+        static let noScreenshotsOrEmailReminder = NSLocalizedString("RecoveryKeyFlow.noScreenshotsOrEmailWarning",
+                                                                    value: "For security purposes, do not screenshot or email these words",
+                                                                    comment: "Reminds the user not to take screenshots or email the recovery key words")
+
+        static let rememberToWriteDownReminder = NSLocalizedString("RecoveryKeyFlow.rememberToWriteDownReminder",
+                                                                   value: "Remember to write these words down. Swipe back if you forgot.",
+                                                                   comment: "Reminds the user to write down the recovery key words.")
+        
+        static let confirmRecoveryKeyTitle = NSLocalizedString("RecoveryKeyFlow.confirmRecoveryKeyTitle",
+                                                               value: "Confirm Recovery Key",
+                                                               comment: "Title for the confirmation step of the recovery key flow.")
+        
+        static let confirmRecoveryKeySubtitle = NSLocalizedString("RecoveryKeyFlow.confirmRecoveryKeySubtitle",
+                                                               value: "Almost done! Enter the following words from your recovery key.",
+                                                               comment: "Instructs the user to enter words from the set of recovery key words.")
+        static let confirmRecoveryInputError = NSLocalizedString("RecoveryKeyFlow.confirmRecoveryInputError",
+                                                                  value: "The word you entered is incorrect. Please try again.",
+                                                                  comment: "Instructs the user to enter words from the set of recovery key words.")
+        
+        static let goToWalletButtonTitle = NSLocalizedString("RecoveryKeyFlow.goToWalletButtonTitle",
+                                                             value: "Go to Wallet",
+                                                             comment: "Title for a button that takes the user to the wallet after setting up the recovery key.")
+        
+        static let successHeading = NSLocalizedString("RecoveryKeyFlow.successHeading",
+                                                             value: "Congratulations! You completed your recovery key setup.",
+                                                             comment: "Title for the success page after the recovery key has been set up.")
+
+        static let successSubheading = NSLocalizedString("RecoveryKeyFlow.successSubheading",
+                                                         value: "You're all set to deposit, trade, and buy crypto from your BRD wallet.",
+                                                         comment: "Subtitle for the success page after the recovery key has been set up.")
+        
+        static let invalidPhrase = NSLocalizedString("RecoveryKeyFlow.invalidPhrase",
+                                                     value: "Some of the words you entered do not match your recovery key. Please try again.",
+                                                     comment: "Error text displayed when the user enters an incorrect recovery key.")
+        
+        static let unlinkWallet = NSLocalizedString("RecoveryKeyFlow.unlinkWallet",
+                                                     value: "Unlink your wallet from this device.",
+                                                     comment: "Title displayed to the user on the intro screen when unlinking a wallet.")
+        
+        static let unlinkWalletSubtitle = NSLocalizedString("RecoveryKeyFlow.unlinkWalletSubtext",
+                                                            value: "Start a new wallet by unlinking your device from the currently installed wallet.",
+                                                            comment: "Subtitle displayed to the user on the intro screen when unlinking a wallet.")
+
+        static let recoverYourWallet = NSLocalizedString("RecoveryKeyFlow.recoveryYourWallet",
+                                                            value: "Recover Your Wallet",
+                                                            comment: "Title displayed when the user starts the process of recovering a wallet.")
+
+        static let recoverYourWalletSubtitle = NSLocalizedString("RecoveryKeyFlow.recoveryYourWalletSubtitle",
+                                                                 value: "Please enter the recovery key of the wallet you want to recover.",
+                                                                 comment: "Subtitle displayed when the user starts the process of recovering a wallet.")
+
+        static let enterRecoveryKey = NSLocalizedString("RecoveryKeyFlow.enterRecoveryKey",
+                                                         value: "Enter Recovery Key",
+                                                         comment: "Title displayed when the user starts the process of entering a recovery key.")
+
+        static let enterRecoveryKeySubtitle = NSLocalizedString("RecoveryKeyFlow.enterRecoveryKeySubtitle",
+                                                        value: "Please enter your recovery key to unlink this wallet from your device.",
+                                                        comment: "Subtitle displayed when the user starts the process of entering a recovery key.")
+        
+        static let unlinkWalletWarning = NSLocalizedString("RecoveryKeyFlow.unlinkWalletWarning",
+                                                           value: "Wallet must be recovered to regain access.",
+                                                           comment: "Warning displayed when the user starts the process of unlinking a wallet.")
+
+        static let resetPINInstruction = NSLocalizedString("RecoveryKeyFlow.resetPINInstruction",
+                                                           value: "Please enter your recovery key to reset your PIN.",
+                                                           comment: "Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered.")
+        
+        static let exitRecoveryKeyPromptTitle = NSLocalizedString("RecoveryKeyFlow.exitRecoveryKeyPromptTitle",
+                                                                  value: "Set Up Later",
+                                                                  comment: "Title for an alert dialog asking the user whether to set up the recovery key later.")
+
+        static let exitRecoveryKeyPromptBody = NSLocalizedString("RecoveryKeyFlow.exitRecoveryKeyPromptBody",
+                                                                  value: "Are you sure you want to set up your recovery key later?",
+                                                                  comment: "Body text for an alert dialog asking the user whether to set up the recovery key later.")
     }
 }
