@@ -27,9 +27,11 @@ class PinView: UIView {
             return 24.0
         }
     }
+    
     var width: CGFloat {
         return (itemSize + C.padding[1]) * CGFloat(length)
     }
+    
     let shakeDuration: CFTimeInterval = 0.6
     fileprivate var shakeCompletion: (() -> Void)?
 

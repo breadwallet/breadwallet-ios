@@ -2,7 +2,7 @@
 //  BRUserAgentHeaderGeneratorTests.swift
 //  breadwalletTests
 //
-//  Created by rrrrray-BRD-mac on 2019-01-16.
+//  Created by Ray Vander Veen on 2019-01-16.
 //  Copyright © 2019 breadwallet LLC. All rights reserved.
 //
 
