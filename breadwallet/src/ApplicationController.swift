@@ -14,8 +14,6 @@ import UserNotifications
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 
-// swiftlint:disable type_body_length
-
 class ApplicationController: Subscriber, Trackable {
 
     fileprivate var application: UIApplication?
@@ -76,25 +74,15 @@ class ApplicationController: Subscriber, Trackable {
     }
 
     /// setup existing wallets on initial launch
-    private func openExistingWallet() {
-//        guard let rootNavigationController = rootNavigationController else { return assertionFailure() }
-        guard let rootViewController = window.rootViewController as? RootNavigationController else { return assertionFailure() }
-        rootViewController.showLoginIfNeeded()
-        //TODO:CRYPTO
-        // in the old setup the WMs would be connected prior to login
-        // but now since coreSystem creation requires the account and needs login to get it we can't do anything
-        // until after login
-        // that is fine for the initial launch, I think
-
-        //TODO:CRYPTO launch refactor / prompt to unlock
-        rootViewController.promptForLogin { [unowned self] account in
-            guard let account = account else { return assertionFailure() }
-            self.setupSystem(account: account)
+    private func openExistingAccount() {
+        guard let rootNavigationController = rootNavigationController else { return assertionFailure() }
+        rootNavigationController.promptForLogin(keyMaster: keyStore) { [unowned self] account in
+            self.setupSystem(with: account)
         }
     }
 
     /// initial setup of an existing wallet
-    private func setupSystem(account: Account) {
+    private func setupSystem(with account: Account) {
         coreSystem.create(account: account)
 
         Backend.connect(authenticator: keyStore as WalletAuthenticator)
@@ -150,7 +138,7 @@ class ApplicationController: Subscriber, Trackable {
         if keyStore.noWallet {
             enterOnboarding()
         } else {
-            openExistingWallet()
+            openExistingAccount()
         }
     }
     
@@ -359,7 +347,7 @@ class ApplicationController: Subscriber, Trackable {
     }
     
     private func setupRootViewController() {
-        let navigationController = RootNavigationController(keyMaster: keyStore)
+        let navigationController = RootNavigationController()
                 
         // If we're going to show the onboarding screen, the home screen will be created later
         // in StartFlowPresenter.presentOnboardingFlow(). Pushing the home screen here causes
@@ -379,6 +367,11 @@ class ApplicationController: Subscriber, Trackable {
         }
                 
         window.rootViewController = navigationController
+
+        startFlowController = StartFlowPresenter(keyMaster: keyStore,
+                                                 rootViewController: navigationController,
+                                                 createHomeScreen: createHomeScreen,
+                                                 createBuyScreen: createBuyScreen)
     }
 
     private func connectWallets() {

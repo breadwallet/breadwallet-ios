@@ -19,7 +19,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
 
     // MARK: - Public
     var setPinSuccess: ((String) -> Void)?
-    var resetFromDisabledSuccess: (() -> Void)?
+    var resetFromDisabledSuccess: ((String) -> Void)?
     var resetFromDisabledWillSucceed: (() -> Void)?
 
     init(keyMaster: KeyMaster,
@@ -274,7 +274,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
                     self.resetFromDisabledWillSucceed?()
                     Store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
                         self?.dismiss(animated: true, completion: {
-                            self?.resetFromDisabledSuccess?()
+                            self?.resetFromDisabledSuccess?(newPin)
                         })
                     })))
                 } else {
