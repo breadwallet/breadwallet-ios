@@ -611,6 +611,10 @@ class ModalPresenter: Subscriber, Trackable {
             developerItems.append(MenuItem(title: S.Settings.sendLogs) { [unowned self] in
                 self.showEmailLogsModal()
             })
+
+            developerItems.append(MenuItem(title: "Lock Wallet") {
+                Store.trigger(name: .lock)
+            })
             
             developerItems.append(MenuItem(title: "Unlink Wallet (no prompt)") { [unowned self] in
                 self.wipeWalletNoPrompt()

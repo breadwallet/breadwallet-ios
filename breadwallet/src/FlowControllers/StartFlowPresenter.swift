@@ -53,7 +53,7 @@ class StartFlowPresenter: Subscriber, Trackable {
                         callback: { self.handleLoginRequiredChange(state: $0)
         })
         Store.subscribe(self, name: .lock, callback: { _ in
-            self.presentLoginFlow(isPresentedForLock: true)
+            self.presentLoginFlow(forManualLock: true)
         })
     }
 
@@ -73,7 +73,7 @@ class StartFlowPresenter: Subscriber, Trackable {
 
     private func handleLoginRequiredChange(state: State) {
         if state.isLoginRequired {
-            presentLoginFlow(isPresentedForLock: false)
+            presentLoginFlow()
         } else {
             dismissLoginFlow()
         }
@@ -251,8 +251,9 @@ class StartFlowPresenter: Subscriber, Trackable {
                                                        canExit: false)
     }
 
-    private func presentLoginFlow(isPresentedForLock: Bool) {
-        let loginView = LoginViewController(isPresentedForLock: isPresentedForLock, keyMaster: keyMaster)
+    private func presentLoginFlow(forManualLock isManualLock: Bool = false) {
+        let loginView = LoginViewController(for: isManualLock ? .manualLock : .automaticLock,
+                                            keyMaster: keyMaster)
         loginView.transitioningDelegate = loginTransitionDelegate
         loginView.modalPresentationStyle = .overFullScreen
         loginView.modalPresentationCapturesStatusBarAppearance = true

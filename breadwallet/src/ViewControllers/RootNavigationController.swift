@@ -19,7 +19,7 @@ class RootNavigationController: UINavigationController {
 
     func promptForLogin(keyMaster: KeyMaster, completion: @escaping LoginCompletionHandler) {
         assert(!keyMaster.noWallet && Store.state.isLoginRequired)
-        let loginView = LoginViewController(isPresentedForLock: false, keyMaster: keyMaster, loginHandler: completion)
+        let loginView = LoginViewController(for: .initialLaunch(loginHandler: completion), keyMaster: keyMaster)
         loginView.transitioningDelegate = loginTransitionDelegate
         loginView.modalPresentationStyle = .overFullScreen
         loginView.modalPresentationCapturesStatusBarAppearance = true
