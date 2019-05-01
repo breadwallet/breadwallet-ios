@@ -16,28 +16,25 @@ typealias LoginCompletionHandler = ((Account) -> Void)
 
 class LoginViewController: UIViewController, Subscriber, Trackable {
 
-    enum Purpose {
-        case initialLaunch
+    enum Context {
+        case initialLaunch(loginHandler: LoginCompletionHandler)
         case automaticLock
         case manualLock
+
+        var shouldAttemptBiometricUnlock: Bool {
+            switch self {
+            case .manualLock:
+                return false
+            default:
+                return true
+            }
+        }
     }
 
-    /// if isPresentedForLock is true (manually locked), automatic biometric unlocking is skipped
-    init(isPresentedForLock: Bool, keyMaster: KeyMaster, loginHandler: LoginCompletionHandler? = nil) {
+    init(for context: Context, keyMaster: KeyMaster) {
+        self.context = context
         self.keyMaster = keyMaster
-        self.loginCompletionHandler = loginHandler
         self.disabledView = WalletDisabledView()
-        let shouldUseBiometrics = LAContext.canUseBiometrics && !keyMaster.pinLoginRequired && Store.state.isBiometricsEnabled
-        self.pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0, shouldShowBiometrics: shouldUseBiometrics)
-        self.pinView = PinView(style: .login, length: Store.state.pinLength)
-        assert(loginHandler == nil || !isPresentedForLock)
-        if loginHandler != nil {
-            purpose = .initialLaunch
-        } else if isPresentedForLock {
-            purpose = .manualLock
-        } else {
-            purpose = .automaticLock
-        }
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -47,11 +44,14 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
 
     // MARK: - Private
     private let keyMaster: KeyMaster
-    private let loginCompletionHandler: LoginCompletionHandler?
     private let backgroundView = UIView()
-    private let pinPad: PinPadViewController
     private let pinViewContainer = UIView()
-    private var pinView: PinView?
+    private lazy var pinPad: PinPadViewController = {
+        return PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0, shouldShowBiometrics: shouldUseBiometrics)
+    }()
+    private lazy var pinView: PinView = {
+        return PinView(style: .login, length: Store.state.pinLength)
+    }()
     private let disabledView: WalletDisabledView
     private var logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout").withRenderingMode(.alwaysTemplate))
     private var pinPadPottom: NSLayoutConstraint?
@@ -62,15 +62,14 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     private var hasAttemptedToShowBiometrics = false
     private let lockedOverlay = UIVisualEffectView()
     private var isResetting = false
-    private let purpose: Purpose
+    private let context: Context
 
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
         addPinPadCallbacks()
-        if pinView != nil {
-            addPinView()
-        }
+        addPinView()
+
         disabledView.didTapReset = { [weak self] in
             guard let `self` = self else { return }
             self.isResetting = true
@@ -90,7 +89,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
                                                             }
                                                             
                                                             updatePin.resetFromDisabledSuccess = { pin in
-                                                                if self.purpose == .initialLaunch {
+                                                                if case .initialLaunch = self.context {
                                                                     guard let account = self.keyMaster.login(withPin: pin) else { return assertionFailure() }
                                                                     self.authenticationSucceded(forLoginWithAccount: account)
                                                                 } else {
@@ -109,7 +108,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         super.viewDidAppear(animated)
         guard UIApplication.shared.applicationState != .background else { return }
 
-        if shouldUseBiometrics && !hasAttemptedToShowBiometrics && (purpose != .manualLock) {
+        if shouldUseBiometrics && !hasAttemptedToShowBiometrics && context.shouldAttemptBiometricUnlock {
             hasAttemptedToShowBiometrics = true
             biometricsTapped()
         }
@@ -124,7 +123,6 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     }
 
     private func addPinView() {
-        guard let pinView = pinView else { return }
         pinViewContainer.addSubview(pinView)
         pinView.constrain([
             pinView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: E.isIPhone4 ? -C.padding[2] : 0.0),
@@ -186,7 +184,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
 
     private func authenticate(withPin pin: String) {
         guard !E.isScreenshots else { return authenticationSucceded() }
-        if purpose == .initialLaunch {
+        if case .initialLaunch = context {
             guard let account = keyMaster.login(withPin: pin) else { return authenticationFailed() }
             authenticationSucceded(forLoginWithAccount: account)
         } else {
@@ -219,14 +217,14 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
             self.topControlTop?.constant = -100.0
             lock.alpha = 1.0
             label.alpha = 1.0
-            self.pinView?.alpha = 0.0
+            self.pinView.alpha = 0.0
             self.view.layoutIfNeeded()
         }, completion: { _ in
             self.dismiss(animated: true, completion: {
                 Store.perform(action: LoginSuccess())
-                if self.purpose == .initialLaunch {
-                    guard let loginHandler = self.loginCompletionHandler, let account = account else { return assertionFailure() }
-loginHandler(account)
+                if case .initialLaunch(let loginHandler) = self.context {
+                    guard let account = account else { return assertionFailure() }
+                    loginHandler(account)
                 }
             })
             Store.trigger(name: .showStatusBar)
@@ -235,15 +233,14 @@ loginHandler(account)
 
     private func authenticationFailed() {
         saveEvent("login.failed")
-        guard let pinView = pinView else { return }
         pinPad.view.isUserInteractionEnabled = false
         pinView.shake { [weak self] in
             self?.pinPad.view.isUserInteractionEnabled = true
         }
         pinPad.clear()
-        DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
-            pinView.fill(0)
-            self?.lockIfNeeded()
+        DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) {
+            self.pinView.fill(0)
+            self.lockIfNeeded()
         }
     }
 
@@ -253,7 +250,7 @@ loginHandler(account)
 
     @objc func biometricsTapped() {
         guard !isWalletDisabled else { return }
-        if purpose == .initialLaunch {
+        if case .initialLaunch = context {
             keyMaster.login(withBiometricsPrompt: S.UnlockScreen.touchIdPrompt, completion: { account in
                 if let account = account {
                     self.authenticationSucceded(forLoginWithAccount: account)
