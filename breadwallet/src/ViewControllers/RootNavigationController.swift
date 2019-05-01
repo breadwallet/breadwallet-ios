@@ -11,62 +11,26 @@ import BRCrypto
 
 class RootNavigationController: UINavigationController {
 
-    private let keyMaster: KeyMaster
-    private var tempLoginView = LoginViewController(isPresentedForLock: false)
     private let loginTransitionDelegate = LoginTransitionDelegate()
 
-    init(keyMaster: KeyMaster) {
-        self.keyMaster = keyMaster
+    init() {
         super.init(nibName: nil, bundle: nil)
     }
 
-    func promptForLogin(completion: @escaping (Account?) -> Void) {
-        DispatchQueue.main.async { //TODO:CRYPTO TESTING
-            completion(self.keyMaster.login(withPin: "111111"))
-        }
+    func promptForLogin(keyMaster: KeyMaster, completion: @escaping LoginCompletionHandler) {
+        assert(!keyMaster.noWallet && Store.state.isLoginRequired)
+        let loginView = LoginViewController(isPresentedForLock: false, keyMaster: keyMaster, loginHandler: completion)
+        loginView.transitioningDelegate = loginTransitionDelegate
+        loginView.modalPresentationStyle = .overFullScreen
+        loginView.modalPresentationCapturesStatusBarAppearance = true
+        present(loginView, animated: false)
     }
 
-    func showLoginIfNeeded() {
-        if !keyMaster.noWallet && Store.state.isLoginRequired {
-            let loginView = LoginViewController(isPresentedForLock: false, keyMaster: keyMaster)
-            loginView.transitioningDelegate = loginTransitionDelegate
-            loginView.modalPresentationStyle = .overFullScreen
-            loginView.modalPresentationCapturesStatusBarAppearance = true
-            present(loginView, animated: false, completion: {
-                self.tempLoginView.remove()
-            })
-        }
-    }
-
-    private func addTempLoginAndStartViews() {
-        self.addChildViewController(tempLoginView, layout: {
-            tempLoginView.view.constrain(toSuperviewEdges: nil)
-        })
-        guardProtected(queue: DispatchQueue.main) {
-            if self.keyMaster.noWallet {
-                self.tempLoginView.remove()
-                let tempStartView = StartViewController(didTapCreate: {}, didTapRecover: {})
-                self.addChildViewController(tempStartView, layout: {
-                    tempStartView.view.constrain(toSuperviewEdges: nil)
-                    tempStartView.view.isUserInteractionEnabled = false
-                })
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                    tempStartView.remove()
-                })
-            }
-        }
-    }
-    
     override func viewDidLoad() {
         setDarkStyle()
         
-        view.backgroundColor = .navigationBackground
-        
-        // The temp views are not required when we're presenting the onboarding startup flow.
-        if !Store.state.shouldShowOnboarding {
-            addTempLoginAndStartViews()
-        }
-        
+        view.backgroundColor = .primaryBackground
+
         self.delegate = self
     }
 
