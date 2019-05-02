@@ -56,6 +56,8 @@
 		22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */; };
 		22E773041EE7813000397E0E /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E773031EE7813000397E0E /* Bonjour.swift */; };
 		3A211D1D2242AF0500C2A906 /* Bip38Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */; };
+		3AB3EE0F227A23B400414616 /* ASADataFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */; };
+		3AB3EE11227A27DD00414616 /* ASADataFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */; };
 		3C83B27620631739001D08CE /* BRRlpCoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11614205C943700C03D42 /* BRRlpCoder.c */; };
 		3C83B27720631740001D08CE /* BRUtilMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11600205C943500C03D42 /* BRUtilMath.c */; };
 		3C83B27820631740001D08CE /* BRUtilMathParse.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FE205C943500C03D42 /* BRUtilMathParse.c */; };
@@ -721,6 +723,8 @@
 		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bonjour.swift; sourceTree = "<group>"; };
 		3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip38Tests.swift; sourceTree = "<group>"; };
+		3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ASADataFormatter.swift; path = src/Utilities/ASADataFormatter.swift; sourceTree = "<group>"; };
+		3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASADataFormatterTests.swift; sourceTree = "<group>"; };
 		3C83B27D206317A7001D08CE /* BRCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BRCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C83B27F206317A7001D08CE /* BRCoreTests.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = BRCoreTests.swift; sourceTree = "<group>"; };
 		3C83B281206317A7001D08CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1541,6 +1545,7 @@
 				710B035C21F6605C007E8A2A /* BadTransactionChecker.swift */,
 				710B036321F8C208007E8A2A /* AppRatingManager.swift */,
 				714F5D6D22037F2400F7CA70 /* EventMonitor.swift */,
+				3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -1782,6 +1787,7 @@
 				71249917222046EB00BEA491 /* PromptTests.swift */,
 				7138BABA223062F40059091E /* NotificationTests.swift */,
 				3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */,
+				3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */,
 			);
 			path = breadwalletTests;
 			sourceTree = "<group>";
@@ -3481,6 +3487,7 @@
 				CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */,
 				22E773041EE7813000397E0E /* Bonjour.swift in Sources */,
 				7CE940E61FEB8A5F005A2B53 /* TxDetailRowCell.swift in Sources */,
+				3AB3EE0F227A23B400414616 /* ASADataFormatter.swift in Sources */,
 				CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */,
 				CEF61B121ECF52C700C7EA6A /* AmountViewController.swift in Sources */,
 				CEBF32F21DDCE10D00348FC6 /* AccountHeaderView.swift in Sources */,
@@ -3554,6 +3561,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				710B035F21F662F9007E8A2A /* BadTransactionCheckerTests.swift in Sources */,
+				3AB3EE11227A27DD00414616 /* ASADataFormatterTests.swift in Sources */,
 				7CA1C47620EC2BFA002E9E68 /* QRCodeTests.swift in Sources */,
 				22C4312E1DF89D970017CAEA /* BRHTTPServerTests.swift in Sources */,
 				CE6DCC2B1E63D6290044257B /* WalletCreationTests.swift in Sources */,
