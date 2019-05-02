@@ -78,24 +78,6 @@
 "Android.screenAlteringMessage" = "BRD fungerar inte korrekt om inte skärmskiftande appar (såsom Twilight) är inaktiverade.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Skärmskiftande app upptäckt";
-/* Body for an announcement promoting Coinify. */
-"Announcement.coinifyPromoBody" = "Köp Bitcoin till ett värde av 100 € senast den 31 mars 2019 och få ett presentkort på 20 € hos Amazon.de ⃰";
-/* Button title for an announcement promoting Coinify. */
-"Announcement.coinifyPromoActionTitle" = "Få ditt presentkort";
-/* Body for an announcement promoting Coinify. */
-"Announcement.coinifyPromoBody" = "Köp Bitcoin till ett värde av €100 före den 15 april 2019 och få ett €20 Amazon.de presentkort ⃰";
-/* Footnote text for an announcement promoting Coinify. */
-"Announcement.coinifyPromoFootnote" = "⃰ Begränsning, ett presentkort per kund. Tillgängligt endast i Österrike, Tyskland, Luxemburg och Nederländerna.";
-/* Title for an announcement promoting Coinify. */
-"Announcement.coinifyPromoTitle" = "Få ett presentkort på 20€ hos Amazon.de!";
-/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
-"Announcement.glideraBodyOne" = "BTC- och ETH-köp via din bank har högre gränser, snabbare leveranstider och lägre avgifter. Registrera dig för att få information när det lanseras.";
-/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
-"Announcement.glideraBodyTwo" = "Vi kommer att informera dig om ändringarna.";
-/* Title for in-app announcement about our partner Glidera. */
-"Announcement.glideraTitleOne" = "Det nya sättet att köpa lanseras snart!";
-/* Title for in-app announcement about our partner Glidera. */
-"Announcement.glideraTitleTwo" = "Tack!";
 /* JSON Serialization error message */
 "ApiClient.jsonError" = "Fel vid JSON-serialisering";
 /* Wallet not ready error message */
@@ -140,12 +122,16 @@
 "Button.buy" = "Köp";
 /* Cancel button label */
 "Button.cancel" = "Avbryt";
+/* Confirm button title */
+"Button.confirm" = "Bekräfta";
 /* Button label to open a email compose window with our support email in the to field. */
 "Button.contactSupport.android" = "Kontakta Support";
 /* prompt continue button */
 "Button.continueAction" = "Fortsätt";
 /* prompt dismiss button */
 "Button.dismiss" = "Avvisa";
+/* Done button title */
+"Button.done" = "Klar";
 /* Button to return to the "home" screen (the home screen is the top menu). */
 "Button.Home" = "Hem";
 /* Ignore button label */
@@ -170,6 +156,8 @@
 "Button.send" = "skicka";
 /* Settings button label */
 "Button.settings" = "Inställningar";
+/* Skip button title */
+"Button.skip" = "Hoppa över";
 /* Settings button label */
 "Button.submit" = "Överlämna";
 /* Button label to uninstall the app. */
@@ -423,7 +411,7 @@
 /* Onboarding screen Page 2 subtitle */
 "OnboardingPageTwo.subtitle" = "Vi har skyddade tillgångar värda över 6 miljarder  USD.";
 /* Onboarding screen Page 2 title */
-"OnboardingPageTwo.title" = "Anslut dig till de 1,5 miljoner människor världen runt som litar på BRD.";
+"OnboardingPageTwo.title" = "Bli en av miljontals människor runt om i världen som litar på BRD.";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "Skicka %1$@ för att köpa %2$@";
 /* Payment confirmation view title */
@@ -466,7 +454,7 @@
 "Prompts.NoPasscode.body" = "Ett enhets-lösenord behövs för att skydda din plånbok. Gå till inställningar och aktivera lösenord.";
 /* No Passcode set warning title */
 "Prompts.NoPasscode.title" = "Aktivera enhets-lösenord";
-/* Instruction how to enable device encryption */
+/* Instructions on how to enable screen lock settings */
 "Prompts.NoScreenLock.body.android" = "Ett skärmlås krävs på enheten för att skydda din plånbok. Gå till Inställningar > Säkerhet > Skärmlås och aktivera för att fortsätta.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Skärmlås inaktiverat";
@@ -496,8 +484,8 @@
 "Prompts.UpgradePin.body" = "BRD har uppgraderat till att använda 6-siffrig PIN-kod. Klicka här för att uppgradera.";
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "Uppgradera PIN-kod";
-/* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
-"PushNotifications.body" = "Slå på aviseringar för att få särskilda meddelanden från BRD i framtiden.";
+/* Body text for the push notifications prompt. */
+"PushNotifications.body" = "Slå på push-meddelanden och var den första att höra om nya funktioner och specialerbjudanden.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Meddelanden avaktiverade";
 /* Push notifications settings instructions */
@@ -509,7 +497,7 @@
 /* Push notifications are on label */
 "PushNotifications.on" = "På";
 /* Push notifications settings view title label */
-"PushNotifications.title" = "Meddelanden";
+"PushNotifications.title" = "Håll dig uppdaterad";
 /* Address copied message. */
 "Receive.copied" = "Kopierad till urklipp.";
 /* Share via email button label */
@@ -546,6 +534,74 @@
 "RecoverWallet.subheader" = "Ange ordnyckel till den plånbok du vill återställ.";
 /* Reset PIN with paper key: sub-header */
 "RecoverWallet.subheader_reset_pin" = "För att återställa din PIN-kod anger du orden från din ordnyckel i boxarna nedan.";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryInputError" = "Ordet du skrev in är felaktigt. Var god försök igen.";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Nästan klar! Ange följande ord från din återställningsnyckel.";
+/* Title for the confirmation step of the recovery key flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Bekräfta återställningsnyckel";
+/* Title displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKey" = "Ange återställningsnyckel";
+/* Subtitle displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Ange din återställningsnyckel för att ta bort länken till denna plånbok från din enhet.";
+/* Body text for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Är du säker på att du vill ställa in din återställningsnyckel vid ett senare tillfälle?";
+/* Title for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Ställ in senare";
+/* Button text for the 'Generate Recovery Key' button */
+"RecoveryKeyFlow.generateKeyButton" = "Generera återställningsnyckel";
+/* Subtext for the recovery key landing page. */
+"RecoveryKeyFlow.generateKeyExplanation" = "Den här nyckeln krävs för att återställa dina pengar om du uppgraderar eller förlorar din telefon.";
+/* Default title for the recovery key landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "Skapa din privata återställningsnyckel";
+/* Title for a button that takes the user to the wallet after setting up the recovery key. */
+"RecoveryKeyFlow.goToWalletButtonTitle" = "Gå till plånbok";
+/* Hint text for recovery key intro page, e.g., Step 2 */
+"RecoveryKeyFlow.howItWorksStep" = "Hur det fungerar - Steg %1$@";
+/* Error text displayed when the user enters an incorrect recovery key */
+"RecoveryKeyFlow.invalidPhrase" = "Några av orden du skrev in matchar inte din återställningsnyckel. Var god försök igen.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.keepSecure" = "Förvara den säkert";
+/* Informs the user that the recovery is only required for recovering a wallet. */
+"RecoveryKeyFlow.keyUseHint" = "Din nyckel behövs endast för återställning, inte för daglig tillgång till plånboken";
+/* Reminds the user not to take screenshots or email the recovery key words */
+"RecoveryKeyFlow.noScreenshotsOrEmailWarning" = "Av säkerhetsskäl bör du undvika att ta en skärmdump eller mejla dessa ord";
+/* Recommends that the user avoids capturing the paper key with a screenshot */
+"RecoveryKeyFlow.noScreenshotsRecommendation" = "Skriv ner din nyckel på ett papper och bekräfta den. Skärmdumpar rekommenderas inte av säkerhetsskäl.";
+/* Title displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWallet" = "Återställ din plånbok";
+/* Subtitle displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Ange återställningsnyckeln för den plånbok du vill återställa.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.relaxBuyTrade" = "Slappna av, köp, och handla";
+/* Reminds the user to write down the recovery key words. */
+"RecoveryKeyFlow.rememberToWriteDownReminder" = "Kom ihåg att skriva ner dessa ord. Svep tillbaka om du glömt att göra det.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "Ange din återställningsnyckel för att återställa din PIN-kod.";
+/* Assures the user that BRD will keep the user's funds secure. */
+"RecoveryKeyFlow.securityAssurance" = "Köp och handla med vetskapen att dina tillgångar skyddas av den bästa säkerheten och integriteten i branschen";
+/* Recommends that the user stores the recovery key in a secure location */
+"RecoveryKeyFlow.storeSecurelyRecommendation" = "Förvara din nyckel på en säker plats. Detta är det enda sättet att återställa din plånbok. BRD tillhandahåller inte någon kopia.";
+/* Title for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successHeading" = "Gratulerar! Du är nu klar med att ställa in din återställningsnyckel.";
+/* Subtitle for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successSubheading" = "Du är nu redo att börja sätta in, handla med och köpa krypto från din BRD-plånbok";
+/* Title displayed to the user on the intro screen when unlinking a wallet */
+"RecoveryKeyFlow.unlinkWallet" = "Ta bort länken till din plånbok från denna enhet.";
+/* Subtitle displayed to the user on the intro screen when unlinking a wallet. */
+"RecoveryKeyFlow.unlinkWalletSubtext" = "Starta en ny plånbok genom att ta bort länken till den för närvarande installerade plånboken från denna enhet.";
+/* Warning displayed when the user starts the process of unlinking a wallet */
+"RecoveryKeyFlow.unlinkWalletWarning" = "Plånboken måste återställas för att du ska återfå tillgång till den.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.writeItDown" = "Skriv ner din nyckel";
+/* Title for the recovery key landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "Skriv ner din återställningsnyckel igen";
+/* Subtitle for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenSubtitle" = "Skriv ner följande ord i ordning.";
+/* Title for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "Din återställningsnyckel";
+/* Title for the step number when the user pages through the recovery words */
+"RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ av %2$@";
 /* No amount entered error message. */
 "RequestAnAmount.noAmount" = "Var god ange ett belopp först.";
 /* Request a specific amount of bitcoin */
@@ -611,7 +667,7 @@
 /* Segwit enabled confirmation description */
 "Segwit.ConfirmationInstructionsDescription" = "Tack för att du hjälper bitcoin framåt. ";
 /* Segwit instructions */
-"Segwit.ConfirmationInstructionsInstructions" = "Segwit-support är fortfarande på betastadiet. \nNär Segwit väl har aktiverats är det inte möjligt att avaktivera det. Du kan hitta den gamla adressen under Inställningar. \nVissa tredjepartstjänster, inklusive kryptohandel, kanske inte är tillgängliga för användare som har aktiverat Segwit. I nödfall har du möjlighet att skapa en gammal adress i Preferenser > Bitcoininställningar. \nSegwit kommer automatiskt att vara aktiverat för alla användare i en framtida uppdatering. ";
+"Segwit.ConfirmationInstructionsInstructions" = "Segwit-support är fortfarande på betastadiet. \nNär Segwit väl har aktiverats är det inte möjligt att avaktivera det. Du kan hitta den gamla adressen under Inställningar. \nVissa tredjepartstjänster, inklusive kryptohandel, kanske inte är tillgängliga för användare som har aktiverat Segwit. I nödfall har du möjlighet att skapa en gammal adress i Preferenser > Bitcoininställningar. \nSegwit kommer automatiskt att vara aktiverat för alla användare i en framtida uppdatering.";
 /* Segwit extra confirmation title. */
 "Segwit.ConfirmChoiceLayout" = "En aktivering av Segwit är oåterkallelig. Är du säker på att du vill fortsätta?";
 /* Segwit enableButton */
