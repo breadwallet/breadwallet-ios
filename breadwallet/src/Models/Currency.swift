@@ -71,6 +71,15 @@ class Currency {
     /// URL scheme for payment requests
     var urlSchemes: [String]? {
         //TODO:CRYPTO url schemes
+        if isBitcoin {
+            return ["bitcoin"]
+        }
+        if isBitcoinCash {
+            return ["bitcoincash"]
+        }
+        if isEthereumCompatible {
+            return ["ethereum", "ether"]
+        }
         return nil
     }
 
@@ -112,7 +121,7 @@ extension Currency: Hashable {
 extension Currency {
     //TODO:CRYPTO move to wallet(manager)
     func isValidAddress(_ address: String) -> Bool {
-        return false
+        return Store.state[self]?.wallet?.isValidAddress(address) ?? false
     }
 
     /// Returns true if the currency ticker codes match

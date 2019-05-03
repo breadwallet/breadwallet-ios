@@ -120,11 +120,12 @@ class CoreSystem: Subscriber {
         guard walletControllers[wallet.currency] == nil else { return assertionFailure() }
         guard let currency = currencies[wallet.currency],
         let manager = managers[manager.network] else { return assertionFailure() }
-        walletControllers[wallet.currency] = WalletController(wallet: wallet, currency: currency, manager: manager)
+        let walletController = WalletController(wallet: wallet, currency: currency, manager: manager)
+        walletControllers[wallet.currency] = walletController
 
         //TODO:CRYPTO need to filter System wallets with list of user-selected wallets
         // hack to add wallet to home screen
-        let newWallet = WalletState.initial(currency, displayOrder: 0)
+        let newWallet = WalletState.initial(currency, wallet: walletController, displayOrder: 0)
         DispatchQueue.main.async {
             Store.perform(action: ManageWallets.AddWallets([currency.code: newWallet]))
         }

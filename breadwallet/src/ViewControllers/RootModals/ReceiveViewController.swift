@@ -149,7 +149,6 @@ class ReceiveViewController: UIViewController, Subscriber, Trackable {
 
     private func setReceiveAddress() {
         //TODO:CRYPTO use address schemes -- how to specify legacy vs. segwit?
-        /*
         guard var addressText = isBTCLegacy ? currency.state?.legacyReceiveAddress : currency.state?.receiveAddress else { return }
         if currency.isBitcoinCash {
             addressText = addressText.bCashAddr
@@ -160,7 +159,6 @@ class ReceiveViewController: UIViewController, Subscriber, Trackable {
             let qrImage = UIImage.qrCode(data: uriData) {
             qrCode.image = qrImage.resize(CGSize(width: qrSize, height: qrSize))
         }
-        */
     }
 
     private func addActions() {
