@@ -22,6 +22,14 @@ class WalletController {
         return wallet.transfers.map { Transaction(transfer: $0, wallet: self) }.sorted(by: { $0.timestamp > $1.timestamp })
     }
 
+    var receiveAddress: String {
+        return wallet.target.description
+    }
+
+    func isValidAddress(_ address: String) -> Bool {
+        return Address.create(string: address, network: wallet.manager.network) != nil
+    }
+
     init(wallet: Wallet, currency: Currency, manager: WalletManagerWrapper) {
         self.wallet = wallet
         self.currency = currency

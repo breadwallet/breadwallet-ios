@@ -162,7 +162,9 @@ struct WalletState {
     let name: String
     let creationDate: Date
     let isRescanning: Bool
-    let receiveAddress: String?
+    var receiveAddress: String? {
+        return wallet?.receiveAddress
+    }
     let legacyReceiveAddress: String?
     let rates: [Rate]
     let currentRate: Rate?
@@ -182,7 +184,6 @@ struct WalletState {
                            name: S.AccountHeader.defaultWalletName,
                            creationDate: Date.zeroValue(),
                            isRescanning: false,
-                           receiveAddress: nil,
                            legacyReceiveAddress: nil,
                            rates: [],
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
@@ -221,7 +222,6 @@ struct WalletState {
                            name: name ?? self.name,
                            creationDate: creationDate ?? self.creationDate,
                            isRescanning: isRescanning ?? self.isRescanning,
-                           receiveAddress: receiveAddress ?? self.receiveAddress,
                            legacyReceiveAddress: legacyReceiveAddress ?? self.legacyReceiveAddress,
                            rates: rates ?? self.rates,
                            currentRate: currentRate ?? self.currentRate,
