@@ -307,7 +307,7 @@ class RecoveryKeyIntroViewController: BaseRecoveryKeyViewController {
         self.exitButtonType = exitButtonType
         self.exitCallback = exitCallback
         
-        super.init(eventContext, .recoveryKeyIntroScreen)
+        super.init(eventContext, .paperKeyIntro)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -448,7 +448,7 @@ class RecoveryKeyIntroViewController: BaseRecoveryKeyViewController {
         if let exit = exitCallback {
             
             if action == .generateKey {
-                trackEvent(event: .generateRecoveryKeyButton, metaData: nil, tracked: {
+                trackEvent(event: .generatePaperKeyButton, metaData: nil, tracked: {
                     exit(action)
                 })
             } else {

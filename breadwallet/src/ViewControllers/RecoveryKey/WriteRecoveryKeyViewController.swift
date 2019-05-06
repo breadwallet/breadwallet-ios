@@ -119,7 +119,7 @@ class WriteRecoveryKeyViewController: BaseRecoveryKeyViewController {
         self.dismissAction = dismissAction
         self.exitCallback = exitCallback
         
-        super.init(eventContext, .writeRecoveryKeyScreen)
+        super.init(eventContext, .writePaperKey)
     }
     
     required init?(coder aDecoder: NSCoder) {
