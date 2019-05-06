@@ -47,7 +47,7 @@ class ConfirmRecoveryKeyViewController: BaseRecoveryKeyViewController {
         self.words = words
         self.onConfirmedWords = confirmed
         self.keyMaster = keyMaster
-        super.init(eventContext, .confirmRecoveryKeyScreen)
+        super.init(eventContext, .confirmPaperKey)
     }
     
     required init?(coder aDecoder: NSCoder) {
