@@ -26,16 +26,20 @@ class CoreSystem: Subscriber {
     // MARK: Wallets + Currencies
 
     private var managers = [Network: WalletManagerWrapper]()
-    fileprivate var walletControllers = [BRCrypto.Currency: WalletController]()
+    fileprivate var wallets = [BRCrypto.Currency: Wallet]()
 
     // Currency view models indexed by Core Currency
     fileprivate var currencies = [BRCrypto.Currency: Currency]()
 
+    func currency(forCoreCurrency core: BRCrypto.Currency) -> Currency? {
+        return currencies[core]
+    }
+
     // assume meta data is only additive -- delisted coins are marked unsupported but not removed
     private var currencyMetaData = [String: CurrencyMetaData]()
 
-    func walletController(for currency: Currency) -> WalletController? {
-        return walletControllers[currency.core]
+    func wallet(for currency: Currency) -> Wallet? {
+        return wallets[currency.core]
     }
 
     private func addCurrencies(for network: Network) {
@@ -48,15 +52,19 @@ class CoreSystem: Subscriber {
                 let baseUnit = network.baseUnitFor(currency: coreCurrency),
                 let defaultUnit = network.defaultUnitFor(currency: coreCurrency),
                 let currency = Currency(core: coreCurrency,
-                                         metaData: metaData,
-                                         units: units,
-                                         baseUnit: baseUnit,
-                                         defaultUnit: defaultUnit) else {
+                                        metaData: metaData,
+                                        units: units,
+                                        baseUnit: baseUnit,
+                                        defaultUnit: defaultUnit) else {
                                             assertionFailure("unable to create view model for \(coreCurrency.code)")
                                             continue
             }
             print("[CRYPTO] \(network) network currency added: \(currency.code)")
             currencies[coreCurrency] = currency
+            if coreCurrency == network.currency {
+                //TODO:CRYPTO fee updater to be replaced
+                Backend.setupFeeUpdater(for: currency)
+            }
         }
         DispatchQueue.main.async {
             Store.perform(action: ManageWallets.SetAvailableTokens(Array(self.currencies.values)))
@@ -105,7 +113,7 @@ class CoreSystem: Subscriber {
             self.system!.stop()
             //TODO:CRYPTO remove account / wipe persistent store
             self.managers.removeAll()
-            self.walletControllers.removeAll()
+            self.wallets.removeAll()
             self.currencies.removeAll()
             self.system = nil
             self.state = .uninitialized
@@ -116,25 +124,25 @@ class CoreSystem: Subscriber {
 
     // MARK: Wallet Management
 
-    private func addWalletController(_ wallet: Wallet, manager: BRCrypto.WalletManager) {
-        guard walletControllers[wallet.currency] == nil else { return assertionFailure() }
-        guard let currency = currencies[wallet.currency],
+    private func addWallet(_ coreWallet: BRCrypto.Wallet, manager: BRCrypto.WalletManager) {
+        guard wallets[coreWallet.currency] == nil else { return assertionFailure() }
+        guard let currency = currencies[coreWallet.currency],
         let manager = managers[manager.network] else { return assertionFailure() }
-        let walletController = WalletController(wallet: wallet, currency: currency, manager: manager)
-        walletControllers[wallet.currency] = walletController
+        let wallet = Wallet(core: coreWallet, currency: currency, manager: manager)
+        wallets[coreWallet.currency] = wallet
 
         //TODO:CRYPTO need to filter System wallets with list of user-selected wallets
         // hack to add wallet to home screen
-        let newWallet = WalletState.initial(currency, wallet: walletController, displayOrder: 0)
+        let walletState = WalletState.initial(currency, wallet: wallet, displayOrder: 0)
         DispatchQueue.main.async {
-            Store.perform(action: ManageWallets.AddWallets([currency.code: newWallet]))
+            Store.perform(action: ManageWallets.AddWallets([currency.code: walletState]))
         }
     }
 
-    private func removeWalletController(_ wallet: Wallet) {
+    private func removeWallet(_ coreWallet: BRCrypto.Wallet) {
         //TODO:CRYPTO when does this happen? can it happen without user intervention?
-        guard self.walletControllers[wallet.currency] != nil else { return assertionFailure() }
-        self.walletControllers[wallet.currency] = nil
+        guard self.wallets[coreWallet.currency] != nil else { return assertionFailure() }
+        self.wallets[coreWallet.currency] = nil
     }
 
     // MARK: Currency Management
@@ -280,35 +288,28 @@ extension CoreSystem: SystemListener {
         }
     }
 
-    func handleWalletEvent(system: System, manager: BRCrypto.WalletManager, wallet: Wallet, event: WalletEvent) {
+    func handleWalletEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, event: WalletEvent) {
         queue.async {
             print("[CRYPTO] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
             switch event {
             case .created:
-                self.addWalletController(wallet, manager: manager)
+                self.addWallet(wallet, manager: manager)
 
             case .deleted:
-                self.removeWalletController(wallet)
+                self.removeWallet(wallet)
 
             default:
-                guard let walletController = self.walletControllers[wallet.currency] else { return assertionFailure() }
-                walletController.handleWalletEvent(system: system,
-                                                   manager: manager,
-                                                   wallet: wallet,
-                                                   event: event)
+                guard let wallet = self.wallets[wallet.currency] else { return assertionFailure() }
+                wallet.handleWalletEvent(event)
             }
         }
     }
 
-    func handleTransferEvent(system: System, manager: BRCrypto.WalletManager, wallet: Wallet, transfer: Transfer, event: TransferEvent) {
+    func handleTransferEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, transfer: Transfer, event: TransferEvent) {
         queue.async {
             print("[CRYPTO] \(manager.network) \(wallet.currency.code) transfer \(transfer.hash?.description.truncateMiddle() ?? "") event: \(event)")
-            guard let walletController = self.walletControllers[wallet.currency] else { return assertionFailure() }
-            walletController.handleTransferEvent(system: system,
-                                                 manager: manager,
-                                                 wallet: wallet,
-                                                 transfer: transfer,
-                                                 event: event)
+            guard let wallet = self.wallets[wallet.currency] else { return assertionFailure() }
+            wallet.handleTransferEvent(event, transfer: transfer)
         }
     }
 
@@ -332,12 +333,12 @@ class WalletManagerWrapper {
         return core.wallets.map { $0.currency }.compactMap { system.currencies[$0] }
     }
 
-    var wallets: [WalletController] {
-        return core.wallets.compactMap { system.walletControllers[$0.currency] }
+    var wallets: [Wallet] {
+        return core.wallets.compactMap { system.wallets[$0.currency] }
     }
 
-    var primaryWallet: WalletController {
-        return system.walletControllers[primaryCurrency.core]!
+    var primaryWallet: Wallet {
+        return system.wallets[primaryCurrency.core]!
     }
 
     func currency(from core: BRCrypto.Currency) -> Currency? {

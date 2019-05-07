@@ -44,28 +44,27 @@ struct Fees: Codable {
     }
 }
 
-//TODO:CRYPTO confirm fee updater to be replaced by BlockchainDB
-/*
+//TODO:CRYPTO fee updater to be replaced by BlockchainDB
 class FeeUpdater: Trackable {
 
     // MARK: - Public
     
-    init(walletManager: WalletManager) {
-        self.walletManager = walletManager
-        
+    init(currency: Currency) {
+        self.currency = currency
+
+        //TODO:CRYPTO
         // set default fee for BCH
-        if walletManager.currency.isBitcoinCash {
-            walletManager.wallet?.feePerKb = 1000
-        }
+//        if walletManager.currency.isBitcoinCash {
+//            walletManager.wallet?.feePerKb = 1000
+//        }
     }
 
     func refresh(completion: @escaping () -> Void) {
-        switch walletManager.currency {
-        case is Bitcoin:
+        if currency.isBitcoin {
             refreshBitcoin(completion: completion)
-        case is Ethereum:
+        } else if currency.isEthereumCompatible {
             refreshEthereum(completion: completion)
-        default:
+        } else {
             completion()
         }
         
@@ -89,7 +88,7 @@ class FeeUpdater: Trackable {
 
     // MARK: - Private
     
-    private let walletManager: WalletManager
+    private let currency: Currency
     private var timer: Timer?
     private let feeUpdateInterval: TimeInterval = 15
     
@@ -99,17 +98,17 @@ class FeeUpdater: Trackable {
         let minFeePerKB: UInt64 = txFeePerKb
         let maxFeePerKB: UInt64 = ((txFeePerKb*1000100 + 190)/191) // slightly higher than a 10,000bit fee on a 191byte tx
         
-        Backend.apiClient.feePerKb(code: walletManager.currency.code) { [weak self] newFees, error in
+        Backend.apiClient.feePerKb(code: currency.code) { [weak self] newFees, error in
             guard let `self` = self else { return }
             guard error == nil else { print("feePerKb error: \(String(describing: error))"); completion(); return }
-            print("\(self.walletManager.currency.code) fees updated: \(newFees.regular) / \(newFees.economy)")
-            if self.walletManager.currency is Bitcoin {
+            print("\(self.currency.code) fees updated: \(newFees.regular) / \(newFees.economy)")
+            if self.currency.isBitcoin {
                 guard newFees.regular < maxFeePerKB && newFees.economy > minFeePerKB else {
                     self.saveEvent("wallet.didUseDefaultFeePerKB")
                     return
                 }
             }
-            Store.perform(action: WalletChange(self.walletManager.currency).setFees(newFees))
+            Store.perform(action: WalletChange(self.currency).setFees(newFees))
             completion()
         }
     }
@@ -119,9 +118,9 @@ class FeeUpdater: Trackable {
             guard let `self` = self else { return }
             if case .success(let gasPrice) = result {
                 let newFees = Fees(gasPrice: gasPrice, timestamp: Date().timeIntervalSince1970)
-                print("gas price updated: \(newFees.gasPrice.string(decimals: Ethereum.Units.gwei.decimals)) gwei")
-                (self.walletManager as? EthWalletManager)?.gasPrice = gasPrice
-                Store.perform(action: WalletChange(self.walletManager.currency).setFees(newFees))
+//                print("gas price updated: \(newFees.gasPrice.string(decimals: Ethereum.Units.gwei.decimals)) gwei")
+//                (self.walletManager as? EthWalletManager)?.gasPrice = gasPrice
+                Store.perform(action: WalletChange(self.currency).setFees(newFees))
                 completion()
             } else if case .error(let error) = result {
                 print("getGasPrice error: \(String(describing: error))")
@@ -130,4 +129,3 @@ class FeeUpdater: Trackable {
         }
     }
 }
-*/

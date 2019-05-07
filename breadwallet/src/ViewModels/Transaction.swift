@@ -39,7 +39,7 @@ enum FeeBasis {
 /// Wrapper for BRCrypto Transfer
 class Transaction {
     private let transfer: BRCrypto.Transfer
-    let wallet: WalletController
+    let wallet: Wallet
 
     var currency: Currency { return wallet.currency }
     var confirmations: UInt64 {
@@ -83,7 +83,7 @@ class Transaction {
         if let timestamp = transfer.confirmation?.timestamp {
             return TimeInterval(timestamp)
         } else {
-            return 0
+            return Date().timeIntervalSince1970
         }
     }
 
@@ -119,7 +119,7 @@ class Transaction {
 
     // MARK: Init
 
-    init(transfer: BRCrypto.Transfer, wallet: WalletController) {
+    init(transfer: BRCrypto.Transfer, wallet: Wallet) {
         self.transfer = transfer
         self.wallet = wallet
     }

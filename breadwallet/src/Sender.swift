@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import BRCore
+import BRCrypto
 
 // MARK: Types/Constants
 
@@ -44,6 +45,204 @@ enum SenderValidationResult {
 typealias PinVerifier = (@escaping (String) -> Void) -> Void
 typealias SendCompletion = (SendResult) -> Void
 
+class Sender {
+    let wallet: Wallet
+    private let kvStore: BRReplicatedKVStore
+    private let authenticator: TransactionAuthenticator
+
+    private var comment: String?
+    private var transfer: BRCrypto.Transfer?
+    private var feeBasis: BRCrypto.TransferFeeBasis
+
+    private var completionHandler: SendCompletion?
+    private var submitTimeoutTimer: Timer? {
+        willSet {
+            submitTimeoutTimer?.invalidate()
+        }
+    }
+    private let submitTimeout: TimeInterval = 10.0
+
+    // MARK: Init
+
+    init(wallet: Wallet, authenticator: TransactionAuthenticator, kvStore: BRReplicatedKVStore) {
+        self.wallet = wallet
+        self.authenticator = authenticator
+        self.kvStore = kvStore
+        self.feeBasis = wallet.core.defaultFeeBasis
+    }
+
+    func updateFeeRates(_ fees: Fees, level: FeeLevel?) {
+        if wallet.currency.isBitcoinCompatible {
+            feeBasis = .bitcoin(feePerKB: fees.fee(forLevel: level ?? .regular))
+        } else if wallet.currency.isEthereumCompatible {
+            guard case .ethereum(_, let gasLimit) = feeBasis,
+                let gasPrice = BRCrypto.Amount.create(string: fees.gasPrice.string(radix: 10), unit: wallet.feeUnit) else { return assertionFailure() }
+            feeBasis = .ethereum(gasPrice: gasPrice, gasLimit: gasLimit)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    func reset() {
+        transfer = nil
+        comment = nil
+        feeBasis = wallet.core.defaultFeeBasis
+    }
+
+    // MARK: Create/Submit
+
+    func validate(paymentRequest req: PaymentProtocolRequest, ignoreUsedAddress: Bool, ignoreIdentityNotCertified: Bool) -> SenderValidationResult {
+        //TODO:CRYPTO payment request
+        return .failed
+    }
+
+    func createTransaction(forPaymentProtocol: PaymentProtocolRequest) -> SenderValidationResult {
+        //TODO:CRYPTO payment request
+        return .failed
+    }
+
+    private func validate(address: String, amount: Amount) -> SenderValidationResult {
+        guard wallet.isValidAddress(address) else { return .invalidAddress }
+        guard !wallet.isOwnAddress(address) else { return .ownAddress }
+
+        //TODO:CRYPTO
+//        if let minOutput = walletManager.wallet?.minOutputAmount {
+//            guard amount >= minOutput else { return .outputTooSmall(minOutput) }
+//        }
+//
+//        guard amount <= (walletManager.wallet?.maxOutputAmount ?? 0) else {
+//            return .insufficientFunds
+//        }
+//
+//        if currency.matches(Currencies.btc) {
+//            guard currency.state?.fees != nil else {
+//                return .noFees
+//            }
+//        }
+
+        if let balance = wallet.currency.state?.balance {
+            guard amount <= balance else { return .insufficientFunds }
+        }
+        if wallet.feeCurrency != wallet.currency {
+            guard let feeBalance = wallet.feeCurrency.state?.balance, !feeBalance.isZero else { return .insufficientGas }
+        }
+        //guard wallet.currency.state.currentRate != nil else { return .noExchangeRate } // allow sending without exchange rate
+        return .ok
+    }
+
+    func createTransaction(address: String, amount: Amount, comment: String?) -> SenderValidationResult {
+        assert(transfer == nil)
+        let result = validate(address: address, amount: amount)
+        guard case .ok = result else { return result }
+
+        switch wallet.createTransfer(to: address, amount: amount, feeBasis: feeBasis) {
+        case .success(let transfer):
+            self.comment = comment
+            self.transfer = transfer
+            return .ok
+        case .failure(let error) where error == .invalidAddress:
+            return .invalidAddress
+        default:
+            return .failed
+        }
+    }
+
+    func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, abi: String? = nil, completion: @escaping SendCompletion) {
+        guard let transfer = transfer else { return completion(.creationError(message: "no tx")) }
+        // this block requires a strong reference to self to ensure the Sender is not deallocated before completion
+        pinVerifier { pin in
+            self.startSubmitTimer()
+            guard self.authenticator.signAndSubmit(transfer: transfer, wallet: self.wallet.core, pin: pin) else {
+                return completion(.creationError(message: ""))
+            }
+            //TODO:CRYPTO wait for send events?
+            //completion(.success(hash: nil, rawTx: nil))
+            self.completionHandler = completion
+            self.wallet.subscribe(sendListener: self)
+        }
+    }
+
+    private func startSubmitTimer() {
+        DispatchQueue.main.async {
+            self.submitTimeoutTimer = Timer.scheduledTimer(withTimeInterval: self.submitTimeout, repeats: false) { [weak self] _ in
+                guard let `self` = self else { return }
+                self.completionHandler?(.publishFailure(code: 0, message: S.Alert.timedOut))
+                self.wallet.unsubscribe(sendListener: self)
+                self.completionHandler = nil
+            }
+        }
+    }
+
+    // MARK: -
+
+    //TODO:CRYPTO spend limit
+    var canUseBiometrics: Bool { return false }
+
+    func fee(forAmount amount: Amount) -> Amount {
+        return Amount(coreAmount: wallet.core.estimateFee(amount: amount.core, feeBasis: feeBasis), currency: wallet.feeCurrency)
+    }
+
+    // MARK: - Gas Estimation
+
+    fileprivate struct GasEstimate {
+        let address: String
+        let amount: Amount
+        let limit: UInt64
+    }
+
+    fileprivate var gasEstimate: GasEstimate?
+
+    func hasEstimate(forAddress address: String, amount: Amount) -> Bool {
+        guard wallet.currency.isEthereumCompatible else { assertionFailure(); return false }
+        return gasEstimate?.address == address && gasEstimate?.amount.rawValue == amount.rawValue
+    }
+
+    func estimateGas(targetAddress: String, amount: Amount) {
+        guard wallet.currency.isEthereumCompatible,
+            case .ethereum(let gasPrice, _) = self.feeBasis else { return assertionFailure() }
+        gasEstimate = nil
+        let params = transactionParams(fromAddress: wallet.sourceAddress, toAddress: targetAddress, forAmount: amount)
+        Backend.apiClient.estimateGas(transaction: params, handler: { result in
+            switch result {
+            case .success(let value):
+                self.gasEstimate = GasEstimate(address: targetAddress, amount: amount, limit: value.asUInt64)
+                self.feeBasis = .ethereum(gasPrice: gasPrice, gasLimit: value.asUInt64)
+            case .error(let error):
+                print("estimate gas error: \(error)")
+                self.gasEstimate = nil
+            }
+        })
+    }
+
+    func transactionParams(fromAddress: String, toAddress: String, forAmount: Amount) -> TransactionParams {
+        var params = TransactionParams(from: fromAddress, to: toAddress)
+        params.value = forAmount.rawValue //TODO:CRYPTO rawValue
+        return params
+    }
+}
+
+protocol SendListener {
+    var pendingTransfer: Transfer { get }
+    func transferSubmitted(success: Bool)
+}
+
+extension Sender: SendListener {
+    var pendingTransfer: Transfer { return transfer! }
+
+    func transferSubmitted(success: Bool) {
+        self.submitTimeoutTimer = nil
+        if success {
+            //TODO:CRYPTO raw tx
+            completionHandler?(.success(hash: pendingTransfer.hash?.description, rawTx: nil))
+        } else {
+            //TODO:CRYPTO send error
+            completionHandler?(.publishFailure(code: 0, message: ""))
+        }
+    }
+}
+
+//TODO:CRYPTO sending
+/*
 // MARK: - Protocol
 
 protocol Sender: class {
@@ -74,6 +273,7 @@ protocol GasEstimator {
     func hasFeeForAddress(_ address: String, amount: Amount) -> Bool
     func estimateGas(toAddress: String, amount: Amount)
 }
+
 // MARK: - Base Class
 
 class SenderBase<CurrencyType: Currency, WalletType: WalletManager> {
@@ -109,9 +309,6 @@ class SenderBase<CurrencyType: Currency, WalletType: WalletManager> {
         readyToSend = false
     }
 }
-
-//TODO:CRYPTO sending
-/*
 
 // MARK: -
 

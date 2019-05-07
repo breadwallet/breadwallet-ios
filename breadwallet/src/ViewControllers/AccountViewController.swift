@@ -15,7 +15,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     // MARK: - Public
     var currency: Currency { return wallet.currency }
     
-    init(wallet: WalletController) {
+    init(wallet: Wallet) {
         self.wallet = wallet
         self.headerView = AccountHeaderView(currency: wallet.currency)
         self.footerView = AccountFooterView(currency: wallet.currency)
@@ -29,7 +29,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
 
     // MARK: - Private
-    private let wallet: WalletController
+    private let wallet: Wallet
     private let headerView: AccountHeaderView
     private let footerView: AccountFooterView
     private var footerHeightConstraint: NSLayoutConstraint?

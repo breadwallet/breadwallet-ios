@@ -293,7 +293,7 @@ class ApplicationController: Subscriber, Trackable {
                                        navigationController: UINavigationController) {
         
         homeScreen.didSelectCurrency = { [unowned self] currency in
-            guard let wallet = self.coreSystem.walletController(for: currency) else { return }
+            guard let wallet = self.coreSystem.wallet(for: currency) else { return }
 
             //TODO:CRYPTO need a new way of checking for BRD
             if currency.isBRDToken, UserDefaults.shouldShowBRDRewardsAnimation {
@@ -359,7 +359,7 @@ class ApplicationController: Subscriber, Trackable {
             
             // State restoration
             if let currency = Store.state.currencies.first(where: { $0.code == UserDefaults.selectedCurrencyCode }),
-                let wallet = self.coreSystem.walletController(for: currency),
+                let wallet = self.coreSystem.wallet(for: currency),
                 keyStore.noWallet == false {
                 let accountViewController = AccountViewController(wallet: wallet)
                 navigationController.pushViewController(accountViewController, animated: true)

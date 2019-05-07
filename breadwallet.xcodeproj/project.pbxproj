@@ -125,7 +125,7 @@
 		7C6E0D912214C9B700CA3BA5 /* AssetArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6E0D902214C9B700CA3BA5 /* AssetArchive.swift */; };
 		7C6FD3F4213F205400EFF35F /* InboxMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6FD3F3213F205400EFF35F /* InboxMetaData.swift */; };
 		7C72D134226625130091B185 /* CoreSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C72D133226625120091B185 /* CoreSystem.swift */; };
-		7C72D13622662BB40091B185 /* WalletController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C72D13522662BB40091B185 /* WalletController.swift */; };
+		7C72D13622662BB40091B185 /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C72D13522662BB40091B185 /* Wallet.swift */; };
 		7C787AE221ED89510017EA7E /* KeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C787AE121ED89510017EA7E /* KeyStore.swift */; };
 		7C787AE421ED8BB40017EA7E /* SimpleRedux.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C787AE321ED8BB40017EA7E /* SimpleRedux.swift */; };
 		7C7F18ED1FED9A3B0030230E /* TxStatusIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7F18EC1FED9A3B0030230E /* TxStatusIndicator.swift */; };
@@ -711,7 +711,7 @@
 		7C6E0D902214C9B700CA3BA5 /* AssetArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AssetArchive.swift; path = src/Platform/AssetArchive.swift; sourceTree = "<group>"; };
 		7C6FD3F3213F205400EFF35F /* InboxMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InboxMetaData.swift; path = src/Platform/InboxMetaData.swift; sourceTree = "<group>"; };
 		7C72D133226625120091B185 /* CoreSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreSystem.swift; sourceTree = "<group>"; };
-		7C72D13522662BB40091B185 /* WalletController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletController.swift; sourceTree = "<group>"; };
+		7C72D13522662BB40091B185 /* Wallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallet.swift; sourceTree = "<group>"; };
 		7C787AE121ED89510017EA7E /* KeyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = KeyStore.swift; path = src/KeyStore.swift; sourceTree = "<group>"; };
 		7C787AE321ED8BB40017EA7E /* SimpleRedux.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleRedux.swift; path = src/SimpleRedux/SimpleRedux.swift; sourceTree = "<group>"; };
 		7C7F18EC1FED9A3B0030230E /* TxStatusIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxStatusIndicator.swift; path = src/Views/TxStatusIndicator.swift; sourceTree = "<group>"; };
@@ -1373,7 +1373,7 @@
 				CE20C90F1DBE5B5100C8397A /* Views */,
 				CE7B40981FA03C9900BA4196 /* Wallet */,
 				7C72D133226625120091B185 /* CoreSystem.swift */,
-				7C72D13522662BB40091B185 /* WalletController.swift */,
+				7C72D13522662BB40091B185 /* Wallet.swift */,
 			);
 			path = breadwallet;
 			sourceTree = "<group>";
@@ -2717,7 +2717,7 @@
 				7C35E719200AF3940064808F /* TxListViewModel.swift in Sources */,
 				CE6314831E08E5BB00D4AFE0 /* UIView+InitAdditions.swift in Sources */,
 				CEC6AA401DEFC87300EE5AFD /* SendViewController.swift in Sources */,
-				7C72D13622662BB40091B185 /* WalletController.swift in Sources */,
+				7C72D13622662BB40091B185 /* Wallet.swift in Sources */,
 				CEC6F8451E886723000795B8 /* PaymentRequest.swift in Sources */,
 				CE274A611FD7C902000A4E62 /* RootNavigationController.swift in Sources */,
 				CE4C1CC81ED88B600063E184 /* URLController.swift in Sources */,

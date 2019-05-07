@@ -337,18 +337,18 @@ class ModalPresenter: Subscriber, Trackable {
     }
 
     private func makeSendView(currency: Currency) -> UIViewController? {
-        //TODO:CRYPTO send
-        return nil
-        /*
-        guard !(currency.state?.isRescanning ?? false) else {
-            let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
-            topViewController?.present(alert, animated: true, completion: nil)
-            return nil
-        }
-        guard let walletManager = walletManagers[currency.code] else { return nil }
-        guard let kvStore = Backend.kvStore else { return nil }
-        guard let sender = currency.createSender(authenticator: keyStore, walletManager: walletManager, kvStore: kvStore) else { return nil }
+        guard let wallet = system.wallet(for: currency),
+            let kvStore = Backend.kvStore else { assertionFailure(); return nil }
+
+        //TODO:CRYPTO is this necessary?
+//        guard !(currency.state?.isRescanning ?? false) else {
+//            let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
+//            topViewController?.present(alert, animated: true, completion: nil)
+//            return nil
+//        }
+
+        let sender = Sender(wallet: wallet, authenticator: keyStore, kvStore: kvStore)
         let sendVC = SendViewController(sender: sender,
                                         currency: currency,
                                         initialRequest: currentRequest)
@@ -376,7 +376,6 @@ class ModalPresenter: Subscriber, Trackable {
             self?.presentAlert(.sendSuccess, completion: {})
         }
         return root
- */
     }
 
     private func makeReceiveView(currency: Currency, isRequestAmountVisible: Bool, isBTCLegacy: Bool = false) -> UIViewController? {
@@ -1014,7 +1013,7 @@ class ModalPresenter: Subscriber, Trackable {
         let pushAccountView = {
             guard let nc = self.topViewController?.navigationController as? RootNavigationController,
                 nc.viewControllers.count == 1 else { return }
-            guard let wallet = self.system.walletController(for: currency) else { return }
+            guard let wallet = self.system.wallet(for: currency) else { return }
             let accountViewController = AccountViewController(wallet: wallet)
             nc.pushViewController(accountViewController, animated: animated)
             completion?()
