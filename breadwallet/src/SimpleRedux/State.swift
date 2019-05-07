@@ -152,7 +152,7 @@ enum SyncState {
 
 struct WalletState {
     let currency: Currency
-    let wallet: WalletController?
+    let wallet: Wallet?
     let displayOrder: Int // -1 for hidden
     let syncProgress: Double
     let syncState: SyncState
@@ -172,7 +172,7 @@ struct WalletState {
     let maxDigits: Int // this is bits vs bitcoin setting
     let connectionStatus: BRPeerStatus
     
-    static func initial(_ currency: Currency, wallet: WalletController? = nil, displayOrder: Int) -> WalletState {
+    static func initial(_ currency: Currency, wallet: Wallet? = nil, displayOrder: Int) -> WalletState {
         return WalletState(currency: currency,
                            wallet: wallet,
                            displayOrder: displayOrder,

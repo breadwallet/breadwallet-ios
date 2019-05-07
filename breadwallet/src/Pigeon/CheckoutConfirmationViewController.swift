@@ -124,17 +124,12 @@ class CheckoutConfirmationViewController: UIViewController {
         let address = request.address
         let currency = request.currency
 
-        let fee = sender.fee(forAmount: amount.rawValue) ?? UInt256(0)
-        //TODO:CRYPTO fee currency
-        let feeCurrency = currency//(currency is ERC20Token) ? Currencies.eth : currency
+        var feeAmount = sender.fee(forAmount: amount)
+        feeAmount.maximumFractionDigits = Amount.highPrecisionDigits
 
         let displyAmount = Amount(amount: amount,
                                   rate: nil,
                                   maximumFractionDigits: Amount.highPrecisionDigits)
-        let feeAmount = Amount(value: fee,
-                               currency: feeCurrency,
-                               rate: nil,
-                               maximumFractionDigits: Amount.highPrecisionDigits)
 
         let confirm = ConfirmationViewController(amount: displyAmount,
                                                  fee: feeAmount,
@@ -155,7 +150,7 @@ class CheckoutConfirmationViewController: UIViewController {
     
     private func validateTransaction() -> Bool {
         let validationResult = sender.createTransaction(address: request.address,
-                                                        amount: request.purchaseAmount.rawValue,
+                                                        amount: request.purchaseAmount,
                                                         comment: request.memo)
         switch validationResult {
         case .ok, .noExchangeRate:
@@ -203,10 +198,8 @@ class CheckoutConfirmationViewController: UIViewController {
 
     /// Insufficient gas for ERC20 token transfer
     private func showInsufficientGasError() {
-        guard let fee = sender.fee(forAmount: request.purchaseAmount.rawValue) else { return assertionFailure() }
-        //TODO:CRYPTO fee currency
-//        let feeAmount = Amount(value: fee, currency: Currencies.eth, rate: nil)
-        let message = ""//String(format: S.Send.insufficientGasMessage, feeAmount.description)
+        let fee = sender.fee(forAmount: request.purchaseAmount)
+        let message = String(format: S.Send.insufficientGasMessage, fee.description)
 
         let alertController = UIAlertController(title: S.Send.insufficientGasTitle, message: message, preferredStyle: .alert)
         //TODO:CRYPTO show specific wallet

@@ -82,7 +82,7 @@ extension String {
         return NSRange(location: location, length: length)
     }
 
-    func truncateMiddle(to length: Int = 8) -> String {
+    func truncateMiddle(to length: Int = 10) -> String {
         guard count > length else { return self }
 
         let headLength = length / 2

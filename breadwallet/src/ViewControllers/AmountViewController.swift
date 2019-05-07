@@ -258,8 +258,7 @@ class AmountViewController: UIViewController, Trackable {
         } else if let unit = currency.unit(forDecimals: currency.state?.maxDigits ?? currency.defaultUnit.decimals) {
             amount = Amount(tokenString: output,
                             currency: currency,
-                            unit: unit,
-                            rate: selectedRate)
+                            unit: unit)
         } else {
             amount = nil
         }
@@ -282,7 +281,7 @@ class AmountViewController: UIViewController, Trackable {
         if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
             balanceLabel.attributedText = balance
             feeLabel.attributedText = fee
-            if let amount = amount, amount.rawValue > UInt256(0), !isRequesting {
+            if let amount = amount, !amount.isZero, !isRequesting {
                 editFee.isHidden = !canEditFee
             } else {
                 editFee.isHidden = true
@@ -332,7 +331,7 @@ class AmountViewController: UIViewController, Trackable {
     }
 
     private func updateBalanceAndFeeLabels() {
-        if let amount = amount, amount.rawValue > UInt256(0) {
+        if let amount = amount, !amount.isZero {
             balanceLabel.isHidden = false
             if !isRequesting {
                 editFee.isHidden = !canEditFee

@@ -32,6 +32,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         self.currency = currency
         self.sender = sender
         self.initialRequest = initialRequest
+        self.balance = currency.state?.balance ?? Amount.zero(currency)
         addressCell = AddressCell(currency: currency)
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
 
@@ -63,7 +64,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
     private var feeSelection: FeeLevel?
-    private var balance: UInt256 = 0
+    private var balance: Amount
     private var amount: Amount? {
         didSet {
             attemptEstimateGas()
@@ -112,7 +113,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         Store.subscribe(self, selector: { $0[self.currency]?.balance != $1[self.currency]?.balance },
                         callback: { [unowned self] in
                             if let balance = $0[self.currency]?.balance {
-                                self.balance = balance.rawValue //TODO:CRYPTO rawValue
+                                self.balance = balance
                             }
         })
         Store.subscribe(self, selector: { $0[self.currency]?.fees != $1[self.currency]?.fees }, callback: { [unowned self] in
@@ -147,11 +148,10 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     
     private func attemptEstimateGas() {
-        guard let gasEstimator = self.sender as? GasEstimator else { return }
         guard let address = addressCell.address else { return }
         guard let amount = amount else { return }
-        guard !gasEstimator.hasFeeForAddress(address, amount: amount) else { return }
-        gasEstimator.estimateGas(toAddress: address, amount: amount)
+        guard !sender.hasEstimate(forAddress: address, amount: amount) else { return }
+        sender.estimateGas(targetAddress: address, amount: amount)
     }
 
     // MARK: - Actions
@@ -196,26 +196,21 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     
     private func balanceTextForAmount(_ amount: Amount?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount = Amount(value: balance, currency: currency, rate: rate, minimumFractionDigits: 0)
+        let balanceAmount = Amount(amount: balance, rate: rate, minimumFractionDigits: 0)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
         var color: UIColor = .grayTextTint
-        var feeColor: UIColor = .grayTextTint
-        
-        if let amount = amount, amount.rawValue > UInt256(0) {
-            if let fee = sender.fee(forAmount: amount.rawValue) {
-                //TODO:CRYPTO fee currency
-                let feeCurrency = currency//(currency is ERC20Token) ? Currencies.eth : currency
-                let feeAmount = Amount(value: fee, currency: feeCurrency, rate: rate)
-                let feeText = feeAmount.description
-                feeOutput = String(format: S.Send.fee, feeText)
-                if feeCurrency.matches(currency) && (balance >= fee) && amount.rawValue > (balance - fee) {
-                    color = .cameraGuideNegative
-                }
-            } else {
-                feeOutput = S.Send.nilFeeError
-                feeColor = .cameraGuideNegative
+        let feeColor: UIColor = .grayTextTint
+
+        if let amount = amount, !amount.isZero {
+            var feeAmount = sender.fee(forAmount: amount)
+            feeAmount.rate = rate
+            let feeText = feeAmount.description
+            feeOutput = String(format: S.Send.fee, feeText)
+
+            if feeAmount.currency.matches(currency) && (balance >= feeAmount) && amount > (balance - feeAmount) {
+                color = .cameraGuideNegative
             }
         }
         
@@ -229,11 +224,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             NSAttributedString.Key.foregroundColor: feeColor
         ]
         
-        if sender is GasEstimator {
-            return (NSAttributedString(string: balanceOutput, attributes: attributes), nil)
-        } else {
-            return (NSAttributedString(string: balanceOutput, attributes: attributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))
-        }
+        return (NSAttributedString(string: balanceOutput, attributes: attributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))
     }
     
     @objc private func pasteTapped() {
@@ -265,13 +256,13 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             return false
         }
         
-        guard let amount = amount, amount.rawValue > UInt256(0) else {
+        guard let amount = amount, !amount.isZero else {
             showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
             return false
         }
 
         let validationResult = sender.createTransaction(address: address,
-                                                        amount: amount.rawValue,
+                                                        amount: amount,
                                                         comment: memoCell.textView.text)
         switch validationResult {
         case .noFees:
@@ -319,15 +310,13 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             let amount = amount,
             let address = address else { return }
         
-        let fee = sender.fee(forAmount: amount.rawValue) ?? UInt256(0)
-        //TODO:CRYPTO fee currency
-        let feeCurrency = currency//(currency is ERC20Token) ? Currencies.eth : currency
+        let fee = sender.fee(forAmount: amount)
+        let feeCurrency = sender.wallet.feeCurrency
         
         let displyAmount = Amount(amount: amount,
                                   rate: amountView.selectedRate,
                                   maximumFractionDigits: Amount.highPrecisionDigits)
-        let feeAmount = Amount(value: fee,
-                               currency: feeCurrency,
+        let feeAmount = Amount(amount: fee,
                                rate: (amountView.selectedRate != nil) ? feeCurrency.state?.currentRate : nil,
                                maximumFractionDigits: Amount.highPrecisionDigits)
 
@@ -492,7 +481,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
 
         if requestAmount == 0 {
             if let amount = amount {
-                guard case .ok = sender.createTransaction(address: address, amount: amount.rawValue, comment: nil) else {
+                guard case .ok = sender.createTransaction(address: address, amount: amount, comment: nil) else {
                     return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
                 }
             }
@@ -515,11 +504,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     
     /// Insufficient gas for ERC20 token transfer
     private func showInsufficientGasError() {
-        guard let amount = self.amount,
-            let fee = self.sender.fee(forAmount: amount.rawValue) else { return assertionFailure() }
-        //TODO:CRYPTO fee currency
-//        let feeAmount = Amount(value: fee, currency: Currencies.eth, rate: nil)
-        let message = ""//String(format: S.Send.insufficientGasMessage, feeAmount.description)
+        guard let amount = self.amount else { return assertionFailure() }
+        let feeAmount = self.sender.fee(forAmount: amount)
+        let message = String(format: S.Send.insufficientGasMessage, feeAmount.description)
 
         let alertController = UIAlertController(title: S.Send.insufficientGasTitle, message: message, preferredStyle: .alert)
         //TODO:CRYPTO show specific wallet

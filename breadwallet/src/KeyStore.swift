@@ -97,6 +97,7 @@ protocol TransactionAuthenticator: WalletAuthenticator {
 //    func sign(transaction: BRTxRef, wallet: BRWallet, withBiometricsPrompt: String, completion: @escaping (BiometricsResult) -> Void)
 //    func sign(transaction: EthereumTransaction, wallet: EthereumWallet, withPin: String) -> Bool
 //    func sign(transaction: EthereumTransaction, wallet: EthereumWallet, withBiometricsPrompt: String, completion: (BiometricsResult) -> Void) // TODO
+    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: BRCrypto.Wallet, pin: String) -> Bool //TODO:CRYPTO hack
 }
 
 /// Protocol for setting and changing the seed and PIN in the keychain
@@ -559,6 +560,16 @@ extension KeyStore: TransactionAuthenticator {
         }
     }
  */
+    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: BRCrypto.Wallet, pin: String) -> Bool {
+        guard authenticate(withPin: pin) else { return false }
+        return autoreleasepool {
+            do {
+                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return false }
+                wallet.manager.submit(transfer: transfer, paperKey: phrase)
+                return true
+            } catch { return false }
+        }
+    }
 }
 
 // MARK: - KeyMaster

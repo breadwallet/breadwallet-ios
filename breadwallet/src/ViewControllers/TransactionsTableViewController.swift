@@ -14,7 +14,7 @@ private let promptDelay: TimeInterval = 0.6
 class TransactionsTableViewController: UITableViewController, Subscriber, Trackable {
 
     // MARK: - Public
-    init(wallet: WalletController, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
+    init(wallet: Wallet, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
         self.wallet = wallet
         self.didSelectTransaction = didSelectTransaction
         self.isBtcSwapped = Store.state.isBtcSwapped
@@ -31,7 +31,7 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
     }
 
     // MARK: - Private
-    private let wallet: WalletController
+    private let wallet: Wallet
     private var currency: Currency { return wallet.currency }
     
     private let headerCellIdentifier = "HeaderCellIdentifier"

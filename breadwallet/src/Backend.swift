@@ -23,8 +23,8 @@ class Backend {
     private var apiClient: BRAPIClient
     private var pigeonExchange: PigeonExchange?
     private var exchangeUpdater: ExchangeUpdater?
-    //TODO:CRYPTO
-//    private var feeUpdaters = [FeeUpdater]()
+    //TODO:CRYPTO fee updater
+    private var feeUpdaters = [FeeUpdater]()
     private let userAgentFetcher = UserAgentFetcher()
     
     // MARK: - Public
@@ -51,9 +51,9 @@ class Backend {
         }
     }
 
-    //TODO:CRYPTO
+    //TODO:CRYPTO fee updater
     static func updateFees() {
-//        shared.feeUpdaters.forEach { $0.refresh() }
+        shared.feeUpdaters.forEach { $0.refresh() }
     }
     
     static func sendLaunchEvent() {
@@ -71,21 +71,18 @@ class Backend {
         shared.pigeonExchange = PigeonExchange()
 
         shared.exchangeUpdater = ExchangeUpdater()
+    }
 
-        //TODO:CRYPTO confirm fee updater to be replaced by BlockchainDB
-//        var added = [String]()
-//        walletManagers.forEach {
-//            if !added.contains($0.currency.code) {
-//                added.append($0.currency.code)
-//                shared.feeUpdaters.append(FeeUpdater(walletManager: $0))
-//            }
-//        }
+    //TODO:CRYPTO fee updater
+    static func setupFeeUpdater(for currency: Currency) {
+        let feeUpdater = FeeUpdater(currency: currency)
+        shared.feeUpdaters.append(feeUpdater)
+        feeUpdater.refresh()
     }
     
     static func disconnectWallet() {
-        //TODO:CRYPTO 
-//        shared.feeUpdaters.forEach { $0.stop() }
-//        shared.feeUpdaters.removeAll()
+        shared.feeUpdaters.forEach { $0.stop() }
+        shared.feeUpdaters.removeAll()
         shared.exchangeUpdater = nil
         shared.pigeonExchange = nil
         shared.apiClient = BRAPIClient(authenticator: NoAuthWalletAuthenticator())

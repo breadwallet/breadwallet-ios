@@ -53,7 +53,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
         }
     }
     
-    private var balance: UInt256 = 0 {
+    private var balance: Amount {
         didSet {
             DispatchQueue.main.async {
                 self.setBalances()
@@ -87,6 +87,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
         if currency.isSupported == false {
             self.delistedTokenView = DelistedTokenView(currency: currency)
         }
+        self.balance = Amount.zero(currency)
         super.init(frame: CGRect())
         
         setup()
@@ -245,7 +246,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
                         selector: { $0[self.currency]?.balance != $1[self.currency]?.balance },
                         callback: { state in
                             if let balance = state[self.currency]?.balance {
-                                self.balance = balance.rawValue //TODO:CRYPTO rawValue
+                                self.balance = balance
                             } })
         
         Store.subscribe(self, selector: { $0[self.currency]?.syncState != $1[self.currency]?.syncState },
@@ -271,8 +272,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
     }
 
     private func setCryptoOnlyBalance() {
-        let amount = Amount(value: balance, currency: currency, rate: nil)
-        primaryBalance.text = amount.description
+        primaryBalance.text = balance.description
         secondaryBalance.isHidden = true
         conversionSymbol.isHidden = true
     }
@@ -285,7 +285,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
         
         exchangeRateLabel.text = String(format: S.AccountHeader.exchangeRate, rate.localString, currency.code)
         
-        let amount = Amount(value: balance, currency: currency, rate: rate)
+        let amount = Amount(amount: balance, rate: rate)
         
         if !hasInitialized {
             primaryBalance.setValue(amount.tokenValue)
