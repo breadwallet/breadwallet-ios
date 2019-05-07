@@ -393,6 +393,8 @@ class EthWalletManager: WalletManager {
     /// Updates wallet state with transactions from core
     private func updateTransactions(currency: Currency) {
         guard let accountAddress = address else { return assertionFailure() }
+        guard self.node.wallet(for: currency) != nil else { return }  // wallet not created yet
+        
         node.serialAsync {
             guard let txs = self.node.wallet(for: currency)?.transactions else { return assertionFailure("missing wallet") }
 
@@ -747,7 +749,19 @@ extension EthWalletManager {
         }
 
         func didFinishSync() {
-            guard state != .waitingForInitialSync else { return } // ignore until syncing has started
+            // N.B. The order of events we receive from Core for ETH and ERC20 tokens can be slightly unpredicatable,
+            // such that the balance could be updated, resulting in a call to `didFinishSync()` *before* we've moved
+            // to the `initialSync` state. The result is that didFinishSync() is not called again, and the wallet won't
+            // move out of the "connecting" state at the UI layer.
+            //
+            // The guard below was intended to ensure that we don't prematurely show a balane of zero before the wallet
+            // has been sync'd. For the initial LES release, we're skipping the guard to ensure the wallets are not stuck
+            // connecting, with the understanding that an unsync'd wallet may briefly display a zero balance.
+            //
+            // (ray vander veen, May 7/19)
+            
+            //guard state != .waitingForInitialSync else { return } // ignore until syncing has started
+            
             DispatchQueue.main.async {
                 Store.perform(action: WalletChange(self.currency).setProgress(progress: 1.0, timestamp: 0))
                 Store.perform(action: WalletChange(self.currency).setSyncingState(.success))
