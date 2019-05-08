@@ -881,10 +881,10 @@ class ModalPresenter: Subscriber, Trackable {
     private func wipeWalletNoPrompt() {
         let activity = BRActivityViewController(message: S.WipeWallet.wiping)
         self.topViewController?.present(activity, animated: true, completion: nil)
+        //TODO:CRYPTO wipe
         DispatchQueue.walletQueue.async {
-            self.walletManagers.values.forEach({
-                $0.resetForWipe()
-            })
+            self.system.shutdown()
+            //TODO:CRYPTO hack
             DispatchQueue.walletQueue.asyncAfter(deadline: .now() + 2.0, execute: {
                 let success = self.keyStore.wipeWallet()
                 Backend.disconnectWallet()

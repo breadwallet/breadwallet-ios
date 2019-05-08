@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCrypto
 
 // swiftlint:disable legacy_hashing
 
@@ -61,7 +62,7 @@ enum TriggerName {
     case hideStatusBar
     case showStatusBar
     case lightWeightAlert(String)
-    case didCreateOrRecoverWallet
+    case didCreateOrRecoverWallet(Account?)
     case showAlert(UIAlertController?)
     case reinitWalletManager((()->Void)?)
     case didUpgradePin
