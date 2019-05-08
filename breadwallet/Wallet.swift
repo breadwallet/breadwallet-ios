@@ -88,7 +88,7 @@ class Wallet {
 
 extension Wallet {
     func handleWalletEvent(_ event: WalletEvent) {
-        print("[CRYPTO] \(currency.code) wallet event: \(event)")
+        print("[SYS] \(currency.code) wallet event: \(event)")
         switch event {
             
         case .transferAdded(let transfer):
@@ -115,7 +115,7 @@ extension Wallet {
     }
 
     func handleTransferEvent(_ event: TransferEvent, transfer: BRCrypto.Transfer) {
-        //print("[CRYPTO] \(currency.code) transfer \(transfer.hash?.description.truncateMiddle() ?? "") event: \(event)")
+        //print("[SYS] \(currency.code) transfer \(transfer.hash?.description.truncateMiddle() ?? "") event: \(event)")
         //TODO:CRYPTO should use wallet transferSubmitted event but it never arrives
         if case .changed(let old, let new) = event,
             case .signed = old, case .submitted = new {

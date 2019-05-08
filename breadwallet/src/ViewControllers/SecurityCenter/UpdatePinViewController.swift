@@ -258,7 +258,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
 
     private func didSetNewPin() {
         guard let newPin = newPin else { return }
-        var success: Bool? = false
+        var success = false
         if let seedPhrase = phrase {
             success = keyMaster.resetPin(newPin: newPin, seedPhrase: seedPhrase)
         } else if let currentPin = currentPin {
@@ -269,7 +269,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
         }
 
         DispatchQueue.main.async {
-            if let success = success, success == true {
+            if success {
                 if self.resetFromDisabledSuccess != nil {
                     self.resetFromDisabledWillSucceed?()
                     Store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
@@ -278,12 +278,14 @@ class UpdatePinViewController: UIViewController, Subscriber {
                         })
                     })))
                 } else {
-                    Store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
-                        self?.setPinSuccess?(newPin)
-                        if self?.type != .creationNoPhrase {
-                            self?.parent?.dismiss(animated: true, completion: nil)
+                    //TODO:CRYPTO this would normally trigger ModalPresenter's `handleAlertChange`
+                    // but the ModalPresenter isn't created yet
+                    //Store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
+                        self.setPinSuccess?(newPin)
+                        if self.type != .creationNoPhrase {
+                            self.parent?.dismiss(animated: true, completion: nil)
                         }
-                    })))
+                    //})))
                 }
 
             } else {

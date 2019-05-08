@@ -20,6 +20,7 @@ class CoreSystem: Subscriber {
     private var system: System?
     private let backend = BlockChainDB()
     private (set) var state: State = .uninitialized //TODO:CRYPTO is this needed, if so should it come from System?
+    private var isInitialized: Bool { return state != .uninitialized }
 
     private let queue = DispatchQueue(label: "com.brd.CoreSystem")
 
@@ -59,7 +60,7 @@ class CoreSystem: Subscriber {
                                             assertionFailure("unable to create view model for \(coreCurrency.code)")
                                             continue
             }
-            print("[CRYPTO] \(network) network currency added: \(currency.code)")
+            print("[SYS] \(network) network currency added: \(currency.code)")
             currencies[coreCurrency] = currency
             if coreCurrency == network.currency {
                 //TODO:CRYPTO fee updater to be replaced
@@ -108,15 +109,22 @@ class CoreSystem: Subscriber {
 
     // shutdown -- wallet unlinked / account removed
     func shutdown() {
-        queue.async {
-            guard self.system != nil else { return assertionFailure() }
-            self.system!.stop()
-            //TODO:CRYPTO remove account / wipe persistent store
+        queue.sync {
+            guard let system = self.system else { return assertionFailure() }
+            self.state = .uninitialized
+            system.stop()
+            //TODO:CRYPTO need interface to reset system, otherwise cannot create a new one in the same session
             self.managers.removeAll()
             self.wallets.removeAll()
             self.currencies.removeAll()
             self.system = nil
-            self.state = .uninitialized
+
+            let url = C.coreDataDirURL
+            do {
+                try FileManager.default.removeItem(at: url)
+            } catch let error {
+                print("[SYS] ERROR removing dir \(url.absoluteString): \(error)")
+            }
         }
     }
 
@@ -203,8 +211,9 @@ class CoreSystem: Subscriber {
 extension CoreSystem: SystemListener {
 
     func handleSystemEvent(system: System, event: SystemEvent) {
+        guard isInitialized else { return }
         queue.async {
-            print("[CRYPTO] system event: \(event)")
+            print("[SYS] system event: \(event)")
             switch event {
             case .created:
                 DispatchQueue.main.async {
@@ -233,7 +242,8 @@ extension CoreSystem: SystemListener {
     }
 
     func handleManagerEvent(system: System, manager: BRCrypto.WalletManager, event: WalletManagerEvent) {
-        print("[CRYPTO] manager event: \(manager.network) \(event)")
+        guard isInitialized else { return }
+        print("[SYS] manager event: \(manager.network) \(event)")
         queue.async {
             guard let walletManager = self.managers[manager.network] else {
                 if case .created = event {
@@ -274,7 +284,7 @@ extension CoreSystem: SystemListener {
 
             case .syncEnded(let error):
                 if let error = error {
-                    print("[CRYPTO] \(manager.network) sync error: \(error)")
+                    print("[SYS] \(manager.network) sync error: \(error)")
                 }
                 DispatchQueue.main.async {
                     walletManager.currencies.forEach {
@@ -289,8 +299,9 @@ extension CoreSystem: SystemListener {
     }
 
     func handleWalletEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, event: WalletEvent) {
+        guard isInitialized else { return }
         queue.async {
-            print("[CRYPTO] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
+            print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
             switch event {
             case .created:
                 self.addWallet(wallet, manager: manager)
@@ -306,16 +317,18 @@ extension CoreSystem: SystemListener {
     }
 
     func handleTransferEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, transfer: Transfer, event: TransferEvent) {
+        guard isInitialized else { return }
         queue.async {
-            print("[CRYPTO] \(manager.network) \(wallet.currency.code) transfer \(transfer.hash?.description.truncateMiddle() ?? "") event: \(event)")
+            print("[SYS] \(manager.network) \(wallet.currency.code) transfer \(transfer.hash?.description.truncateMiddle() ?? "") event: \(event)")
             guard let wallet = self.wallets[wallet.currency] else { return assertionFailure() }
             wallet.handleTransferEvent(event, transfer: transfer)
         }
     }
 
     func handleNetworkEvent(system: System, network: Network, event: NetworkEvent) {
+        guard isInitialized else { return }
         queue.async {
-            print("[CRYPTO] network event: \(network) \(event)")
+            print("[SYS] network event: \(network) \(event)")
         }
     }
 }

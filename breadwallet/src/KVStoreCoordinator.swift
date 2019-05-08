@@ -75,10 +75,11 @@ class KVStoreCoordinator: Subscriber {
             } else {
                 //Since a WalletState wasn't found, it must be a token address
                 let tokenAddress = $0.replacingOccurrences(of: C.erc20Prefix, with: "")
-                if tokenAddress.lowercased() == Currencies.brd.address.lowercased() {
-                    newWallets[Currencies.brd.code] = oldWallets[Currencies.brd.code]!.mutate(displayOrder: displayOrder)
-                    displayOrder += 1
-                } else {
+                //TODO:CRYPTO
+//                if tokenAddress.lowercased() == Currencies.brd.address.lowercased() {
+//                    newWallets[Currencies.brd.code] = oldWallets[Currencies.brd.code]!.mutate(displayOrder: displayOrder)
+//                    displayOrder += 1
+//                } else {
                     let filteredTokens = tokens.filter { $0.tokenAddress?.lowercased() == tokenAddress.lowercased() }
                     if let token = filteredTokens.first {
                         if let oldWallet = oldWallets[token.code] {
@@ -91,7 +92,7 @@ class KVStoreCoordinator: Subscriber {
                         unknownTokensToRemove.append($0)
                         print("unknown token \(tokenAddress) in metadata will be removed")
                     }
-                }
+//                }
             }
         }
         

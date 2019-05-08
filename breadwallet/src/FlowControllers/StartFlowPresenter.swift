@@ -165,9 +165,11 @@ class StartFlowPresenter: Subscriber, Trackable {
         return { [weak self] phrase in
             guard let `self` = self else { return }
             let pinCreationView = UpdatePinViewController(keyMaster: self.keyMaster, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
-            pinCreationView.setPinSuccess = { _ in
+            //TODO:CRYPTO refactor
+            pinCreationView.setPinSuccess = { pin in
+                guard let account = self.keyMaster.login(withPin: pin) else { return assertionFailure() }
                 DispatchQueue.main.async {
-                    Store.trigger(name: .didCreateOrRecoverWallet)
+                    Store.trigger(name: .didCreateOrRecoverWallet(account))
                 }
             }
             self.navigationController?.pushViewController(pinCreationView, animated: true)
@@ -214,16 +216,18 @@ class StartFlowPresenter: Subscriber, Trackable {
                                                                 eventContext: eventContext)
         let context = eventContext
         
-        pinCreationViewController.setPinSuccess = { [weak self] pin in
+        pinCreationViewController.setPinSuccess = { [unowned self] pin in
             autoreleasepool {
-                guard self?.keyMaster.setRandomSeedPhrase() != nil else { self?.handleWalletCreationError(); return }
+                guard self.keyMaster.setRandomSeedPhrase() != nil else { self.handleWalletCreationError(); return }
                 //TODO:BCH multi-currency support
                 UserDefaults.selectedCurrencyCode = nil // to land on home screen after new wallet creation
                 //TODO:CRYPTO wallet info
                 //Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(Date()))
                 DispatchQueue.main.async {
-                    self?.pushStartPaperPhraseCreationViewController(pin: pin, eventContext: context)
-                    Store.trigger(name: .didCreateOrRecoverWallet)
+                    self.pushStartPaperPhraseCreationViewController(pin: pin, eventContext: context)
+                    //TODO:CRYPTO refactor
+                    guard let account = self.keyMaster.login(withPin: pin) else { return assertionFailure() }
+                    Store.trigger(name: .didCreateOrRecoverWallet(account))
                 }
             }
         }

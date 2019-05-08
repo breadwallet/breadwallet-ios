@@ -69,19 +69,20 @@ class ApplicationController: Subscriber, Trackable {
 
     private func enterOnboarding() {
         assert(keyStore.noWallet)
-        //TODO:CRYPTO onboarding
-        assertionFailure("not implemented")
+        //TODO:CRYPTO no need for this to be a global action
+        Store.perform(action: ShowStartFlow())
     }
 
-    /// setup existing wallets on initial launch
-    private func openExistingAccount() {
+    /// Prompts to unlock the wallet for initial launch, then setup the system
+    private func unlockExistingAccount() {
+        assert(!keyStore.noWallet)
         guard let rootNavigationController = rootNavigationController else { return assertionFailure() }
         rootNavigationController.promptForLogin(keyMaster: keyStore) { [unowned self] account in
             self.setupSystem(with: account)
         }
     }
 
-    /// initial setup of an existing wallet
+    /// Initialize the core system with an account
     private func setupSystem(with account: Account) {
         coreSystem.create(account: account)
 
@@ -122,13 +123,30 @@ class ApplicationController: Subscriber, Trackable {
         setupAppearance()
         setupRootViewController()
         window.makeKeyAndVisible()
-        offMainInitialization()
+        initializeAssets()
 
         // Start collecting analytics events. Once we have a wallet, startDataFetchers() will
         // notify `Backend.apiClient.analytics` so that it can upload events to the server.
         Backend.apiClient.analytics?.startCollectingEvents()
 
         appRatingManager.start()
+
+        //TODO:CRYPTO refactor create/recover
+        Store.subscribe(self, name: .didCreateOrRecoverWallet(nil), callback: {
+            guard case .didCreateOrRecoverWallet(let account?)? = $0 else { return assertionFailure() }
+            assert(self.coreSystem.state == .uninitialized)
+            self.setupSystem(with: account)
+            Store.perform(action: LoginSuccess())
+        })
+
+        //TODO:CRYPTO refactor wipe
+        Store.subscribe(self, name: .reinitWalletManager(nil), callback: {
+            guard case .reinitWalletManager(_)? = $0 else { return assertionFailure() }
+            Store.perform(action: Reset())
+            self.kvStoreCoordinator = nil
+            self.setupRootViewController()
+            self.enterOnboarding()
+        })
         
         Store.lazySubscribe(self,
                             selector: { $0.isLoginRequired != $1.isLoginRequired && $1.isLoginRequired == false },
@@ -138,7 +156,7 @@ class ApplicationController: Subscriber, Trackable {
         if keyStore.noWallet {
             enterOnboarding()
         } else {
-            openExistingAccount()
+            unlockExistingAccount()
         }
     }
     
@@ -409,20 +427,6 @@ class ApplicationController: Subscriber, Trackable {
         Backend.kvStore?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
         Backend.apiClient.updateFeatureFlags()
     }
-
-    //TODO:CRYPTO
-    /*
-    /// Handles new wallet creation or recovery
-    private func addWalletCreationListener() {
-        Store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
-            self.walletManagers.removeAll() // remove the empty wallet managers
-            guardProtected(queue: DispatchQueue.walletQueue) {
-                self.initWallets(completion: self.didInitWalletManager)
-            }
-            Store.perform(action: LoginSuccess())
-        })
-    }
-    */
     
     private func updateAssetBundles() {
         DispatchQueue.global(qos: .utility).async { [weak self] in
@@ -452,7 +456,8 @@ class ApplicationController: Subscriber, Trackable {
         }
     }
 
-    private func offMainInitialization() {
+    /// background init of assets / animations
+    private func initializeAssets() {
         DispatchQueue.global(qos: .background).async {
             _ = Rate.symbolMap //Initialize currency symbol map
         }
