@@ -80,10 +80,15 @@ class StartFlowPresenter: Subscriber, Trackable {
     }
 
     private func enterRecoverWalletFlow() {
-        let recoverIntro = RecoverWalletIntroViewController(didTapNext: self.pushRecoverWalletView)
+
         navigationController?.setClearNavbar()
         navigationController?.setNavigationBarHidden(false, animated: false)
-        navigationController?.pushViewController(recoverIntro, animated: true)
+        
+        let recoverWalletViewController =
+            EnterPhraseViewController(keyMaster: self.keyMaster,
+                                      reason: .setSeed(self.pushPinCreationViewForRecoveredWallet))
+        
+        self.navigationController?.pushViewController(recoverWalletViewController, animated: true)
     }
 
     // Displays the onboarding screen (app landing page) that allows the user to either create
@@ -234,49 +239,15 @@ class StartFlowPresenter: Subscriber, Trackable {
     }
     
     private func pushStartPaperPhraseCreationViewController(pin: String, eventContext: EventContext = .none) {
-        let startPhraseCallback: StartFlowCallback = { [weak self] in
-            self?.pushWritePaperPhraseViewController(pin: pin, eventContext: eventContext)
-        }
+        guard let navController = navigationController else { return }
         
-        let paperPhraseViewController = StartPaperPhraseViewController(eventContext: eventContext,
-                                                                       dismissAction: HideStartFlow(),
-                                                                       callback: startPhraseCallback)
-        
-        paperPhraseViewController.title = S.SecurityCenter.Cells.paperKeyTitle
-        paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
-        
-        navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedString.Key.foregroundColor: UIColor.white,
-            NSAttributedString.Key.font: UIFont.customBold(size: 17.0)
-        ]
-        navigationController?.pushViewController(paperPhraseViewController, animated: true)
-    }
-
-    private func pushWritePaperPhraseViewController(pin: String, eventContext: EventContext = .none) {
-        let writeViewController = WritePaperPhraseViewController(keyMaster: keyMaster,
-                                                                 pin: pin,
-                                                                 eventContext: eventContext,
-                                                                 dismissAction: HideStartFlow(),
-                                                                 callback: { [weak self] in
-                                                                    self?.pushConfirmPaperPhraseViewController(pin: pin, eventContext: eventContext)
-        })
-        
-        writeViewController.title = S.SecurityCenter.Cells.paperKeyTitle
-        navigationController?.pushViewController(writeViewController, animated: true)
-    }
-
-    private func pushConfirmPaperPhraseViewController(pin: String, eventContext: EventContext) {
-        let confirmViewController = ConfirmPaperPhraseViewController(keyMaster: keyMaster,
-                                                                     pin: pin,
-                                                                     eventContext: eventContext,
-                                                                     callback: {
-            Store.perform(action: Alert.Show(.paperKeySet(callback: {
-                Store.perform(action: HideStartFlow())
-            })))
-        })
-        confirmViewController.title = S.SecurityCenter.Cells.paperKeyTitle
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.pushViewController(confirmViewController, animated: true)
+        RecoveryKeyFlowController.enterRecoveryKeyFlow(pin: pin,
+                                                       keyMaster: self.keyMaster,
+                                                       from: navController,
+                                                       context: eventContext,
+                                                       dismissAction: HideStartFlow(),
+                                                       modalPresentation: false,
+                                                       canExit: false)
     }
 
     private func presentLoginFlow(isPresentedForLock: Bool) {

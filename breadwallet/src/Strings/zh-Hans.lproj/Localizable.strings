@@ -78,24 +78,6 @@
 "Android.screenAlteringMessage" = "您应禁用屏幕更改应用（如 Twilight），否则 BRD 将无法正常工作。";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "检测到屏幕更改应用";
-/* Body for an announcement promoting Coinify. */
-"Announcement.coinifyPromoBody" = "在2019年3月31日前购买100欧元的比特币并获得一张在Amazon.de网上消费的20欧元礼品卡 ⃰。";
-/* Button title for an announcement promoting Coinify. */
-"Announcement.coinifyPromoActionTitle" = "拿到你的礼品卡";
-/* Body for an announcement promoting Coinify. */
-"Announcement.coinifyPromoBody" = "在2019年4月15日之前购买100欧元的比特币以获得20欧元的Amazon.de礼品卡*";
-/* Footnote text for an announcement promoting Coinify. */
-"Announcement.coinifyPromoFootnote" = "每位客户限拿一张礼品卡。仅适用于奥地利，德国，卢森堡和荷兰";
-/* Title for an announcement promoting Coinify. */
-"Announcement.coinifyPromoTitle" = "获得一张20欧元的Amazon.de礼品卡！";
-/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
-"Announcement.glideraBodyOne" = "通过你的银行购买BTC和ETH会有较高的限额，且可加快送货时间并降低费用。登记注册后，在计划启动或上线时会收到通知。";
-/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
-"Announcement.glideraBodyTwo" = "如果有任何更改，我们将让你知道。";
-/* Title for in-app announcement about our partner Glidera. */
-"Announcement.glideraTitleOne" = "即将推出新的购买方式！";
-/* Title for in-app announcement about our partner Glidera. */
-"Announcement.glideraTitleTwo" = "谢谢你！";
 /* JSON Serialization error message */
 "ApiClient.jsonError" = "JSON 串行化错误";
 /* Wallet not ready error message */
@@ -140,12 +122,16 @@
 "Button.buy" = "购买";
 /* Cancel button label */
 "Button.cancel" = "取消";
+/* Confirm button title */
+"Button.confirm" = "确认";
 /* Button label to open a email compose window with our support email in the to field. */
 "Button.contactSupport.android" = "联系支持人员";
 /* prompt continue button */
 "Button.continueAction" = "继续";
 /* prompt dismiss button */
 "Button.dismiss" = "撤销";
+/* Done button title */
+"Button.done" = "完成";
 /* Button to return to the "home" screen (the home screen is the top menu). */
 "Button.Home" = "主页";
 /* Ignore button label */
@@ -170,6 +156,8 @@
 "Button.send" = "发送";
 /* Settings button label */
 "Button.settings" = "设置";
+/* Skip button title */
+"Button.skip" = "跳过";
 /* Settings button label */
 "Button.submit" = "提交";
 /* Button label to uninstall the app. */
@@ -423,7 +411,7 @@
 /* Onboarding screen Page 2 subtitle */
 "OnboardingPageTwo.subtitle" = "我们有价值超过 600 亿美元的资产受到保护。";
 /* Onboarding screen Page 2 title */
-"OnboardingPageTwo.title" = "成为全世界信任 BRD 的 150 万人中的一员。";
+"OnboardingPageTwo.title" = "加入全球数百万人信赖的BRD。";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "发送%1$@以购买%2$@";
 /* Payment confirmation view title */
@@ -466,7 +454,7 @@
 "Prompts.NoPasscode.body" = "需要设备密码才能保护您的钱包。转到设置并开启密码。";
 /* No Passcode set warning title */
 "Prompts.NoPasscode.title" = "开启设备密码";
-/* Instruction how to enable device encryption */
+/* Instructions on how to enable screen lock settings */
 "Prompts.NoScreenLock.body.android" = "需要设备屏幕锁定才能保护您的钱包。在“设置”>“安全”>“屏幕锁定”中启用它以便继续。";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "屏幕锁定已禁用";
@@ -496,8 +484,8 @@
 "Prompts.UpgradePin.body" = "BRD 已升级到使用 6 位 PIN。点击此处升级。";
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "升级 PIN";
-/* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
-"PushNotifications.body" = "打开推送通知，以便将来从 BRD 接收特殊消息。";
+/* Body text for the push notifications prompt. */
+"PushNotifications.body" = "打开推送通知，抢先了解新功能和特惠。";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "提示已禁用";
 /* Push notifications settings instructions */
@@ -509,7 +497,7 @@
 /* Push notifications are on label */
 "PushNotifications.on" = "开启";
 /* Push notifications settings view title label */
-"PushNotifications.title" = "通知";
+"PushNotifications.title" = "敬请保持同步";
 /* Address copied message. */
 "Receive.copied" = "已复制到剪贴板。";
 /* Share via email button label */
@@ -546,6 +534,74 @@
 "RecoverWallet.subheader" = "输入您想恢复的钱包的纸键。";
 /* Reset PIN with paper key: sub-header */
 "RecoverWallet.subheader_reset_pin" = "要重置 PIN 码，请在下面的框中输入纸上密钥中的单词。";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryInputError" = "您输入的字词不正确。请再试一次。";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "就快完成了！请输入以下来自您的恢复密钥中的字词。";
+/* Title for the confirmation step of the recovery key flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "确认恢复密钥";
+/* Title displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKey" = "输入恢复密钥";
+/* Subtitle displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "请输入恢复密钥以取消此钱包与设备的关联。";
+/* Body text for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "您确定要稍后设置恢复密钥吗？";
+/* Title for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "稍后设置";
+/* Button text for the 'Generate Recovery Key' button */
+"RecoveryKeyFlow.generateKeyButton" = "生成恢复密钥";
+/* Subtext for the recovery key landing page. */
+"RecoveryKeyFlow.generateKeyExplanation" = "如果您升级或丢失手机,需要使用此密钥来恢复您的财产。";
+/* Default title for the recovery key landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "生成您的私有恢复密钥";
+/* Title for a button that takes the user to the wallet after setting up the recovery key. */
+"RecoveryKeyFlow.goToWalletButtonTitle" = "前往钱包";
+/* Hint text for recovery key intro page, e.g., Step 2 */
+"RecoveryKeyFlow.howItWorksStep" = "如何进行 - 第 %1$@ 步";
+/* Error text displayed when the user enters an incorrect recovery key */
+"RecoveryKeyFlow.invalidPhrase" = "您输入的部分字词与恢复密钥不匹配。请再试一次。";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.keepSecure" = "妥善保管";
+/* Informs the user that the recovery is only required for recovering a wallet. */
+"RecoveryKeyFlow.keyUseHint" = "您的密钥仅用于恢复时,日常访问钱包时无需此密钥。";
+/* Reminds the user not to take screenshots or email the recovery key words */
+"RecoveryKeyFlow.noScreenshotsOrEmailWarning" = "出于安全考虑,请勿截图或通过电子邮件发送这些字词";
+/* Recommends that the user avoids capturing the paper key with a screenshot */
+"RecoveryKeyFlow.noScreenshotsRecommendation" = "请将您的密钥记录在纸上并确认无误。为安全起见,不建议使用屏幕截图。";
+/* Title displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWallet" = "恢复您的钱包";
+/* Subtitle displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "请输入您想要恢复的钱包的恢复密钥。";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.relaxBuyTrade" = "放心,购买和交易";
+/* Reminds the user to write down the recovery key words. */
+"RecoveryKeyFlow.rememberToWriteDownReminder" = "请记得将这些字词写下来。如果您忘记了,请滑动以返回。";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "请输入恢复密钥以重置您的 PIN 码。";
+/* Assures the user that BRD will keep the user's funds secure. */
+"RecoveryKeyFlow.securityAssurance" = "鉴于在交易中您的资金可得到最佳的安全和隐私保障,您可放心购买和交易。";
+/* Recommends that the user stores the recovery key in a secure location */
+"RecoveryKeyFlow.storeSecurelyRecommendation" = "请将您的密钥存放在安全的地方。此密钥为恢复您的钱包的唯一方法。BRD 不会保留副本。";
+/* Title for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successHeading" = "恭喜！您已完成恢复密钥设置。";
+/* Subtitle for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successSubheading" = "您现已可以在您的 BRD 钱包中进行存款,交易以及购买加密货币。";
+/* Title displayed to the user on the intro screen when unlinking a wallet */
+"RecoveryKeyFlow.unlinkWallet" = "取消钱包与此设备的关联。";
+/* Subtitle displayed to the user on the intro screen when unlinking a wallet. */
+"RecoveryKeyFlow.unlinkWalletSubtext" = "要启用新钱包,请取消您的设备与当前设置的钱包间的关联。";
+/* Warning displayed when the user starts the process of unlinking a wallet */
+"RecoveryKeyFlow.unlinkWalletWarning" = "必须恢复钱包才能重新获得访问权限。";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.writeItDown" = "记下您的密钥";
+/* Title for the recovery key landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "再次记下您的恢复密钥";
+/* Subtitle for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenSubtitle" = "按顺序记下下列字词。";
+/* Title for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "您的恢复密钥";
+/* Title for the step number when the user pages through the recovery words */
+"RecoveryKeyFlow.writeKeyStepTitle" = "共 %2$@ 步,第 %1$@ 步";
 /* No amount entered error message. */
 "RequestAnAmount.noAmount" = "请先输入金额。";
 /* Request a specific amount of bitcoin */

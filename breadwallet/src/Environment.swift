@@ -82,6 +82,11 @@ struct E {
         return isIPhone6 || isIPhone5 || isIPhone4
     }
     
+    static var isSmallScreen: Bool {
+        let bounds = UIApplication.shared.keyWindow?.bounds
+        return bounds?.width == 320
+    }
+    
     static let osVersion: String = {
         let os = ProcessInfo().operatingSystemVersion
         return String(os.majorVersion) + "." + String(os.minorVersion) + "." + String(os.patchVersion)

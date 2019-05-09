@@ -68,21 +68,25 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         disabledView.didTapReset = { [weak self] in
             guard let `self` = self, let keyMaster = self.keyMaster else { return }
             self.isResetting = true
-            let nc = UINavigationController()
-            nc.setDarkStyle()
-            let recover = EnterPhraseViewController(keyMaster: keyMaster, reason: .validateForResettingPin({ phrase in
-                let updatePin = UpdatePinViewController(keyMaster: keyMaster, type: .creationWithPhrase, showsBackButton: false, phrase: phrase)
-                nc.pushViewController(updatePin, animated: true)
-                updatePin.resetFromDisabledWillSucceed = {
-                    self.disabledView.isHidden = true
-                }
-                updatePin.resetFromDisabledSuccess = {
-                    self.authenticationSucceded()
-                }
-            }))
-            recover.addCloseNavigationItem()
-            nc.viewControllers = [recover]
-            self.present(nc, animated: true, completion: nil)
+            
+            RecoveryKeyFlowController.enterResetPinFlow(from: self,
+                                                        keyMaster: keyMaster,
+                                                        callback: { (phrase, navController) in
+                                                            let updatePin = UpdatePinViewController(keyMaster: keyMaster,
+                                                                                                    type: .creationWithPhrase,
+                                                                                                    showsBackButton: false,
+                                                                                                    phrase: phrase)
+                                                            
+                                                            navController.pushViewController(updatePin, animated: true)
+                                                            
+                                                            updatePin.resetFromDisabledWillSucceed = {
+                                                                self.disabledView.isHidden = true
+                                                            }
+                                                            
+                                                            updatePin.resetFromDisabledSuccess = {
+                                                                self.authenticationSucceded()
+                                                            }
+            })            
         }
         Store.subscribe(self, name: .loginFromSend, callback: {_ in
             self.authenticationSucceded()
@@ -132,7 +136,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
 
     private func addConstraints() {
         backgroundView.constrain(toSuperviewEdges: nil)
-        backgroundView.backgroundColor = .darkBackground
+        backgroundView.backgroundColor = .primaryBackground
         pinViewContainer.constrain(toSuperviewEdges: nil)
         topControlTop = logoBackground.topAnchor.constraint(equalTo: view.topAnchor,
                                                             constant: topControlHeight
@@ -280,10 +284,14 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         unlockTimer?.invalidate()
         unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)
 
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.walletDisabled)
+        faqButton.tintColor = .primaryText
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: faqButton)
+        
         if disabledView.superview == nil {
             view.addSubview(disabledView)
             setNeedsStatusBarAppearanceUpdate()
-            disabledView.constrain(toSuperviewEdges: nil)
+            disabledView.constrain(toSuperviewEdges: .zero)
             disabledView.show()
         }
     }
@@ -305,11 +313,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        if disabledView.superview == nil {
-            return .lightContent
-        } else {
-            return .default
-        }
+        return .lightContent
     }
 
     required init?(coder aDecoder: NSCoder) {

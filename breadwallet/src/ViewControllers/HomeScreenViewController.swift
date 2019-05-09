@@ -69,10 +69,12 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
         DispatchQueue.main.asyncAfter(deadline: .now() + promptDelay) { [unowned self] in
             self.attemptShowPrompt()
             NotificationAuthorizer().showNotificationsOptInAlert(from: self)
         }
+        
         updateTotalAssets()
     }
     
@@ -231,7 +233,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         addTradeNotificationIndicatorIfNeeded()
         
         toolbar.isTranslucent = false
-        toolbar.barTintColor = .navigationBackground
+        toolbar.barTintColor = .secondaryBackground
     }
     
     private func setupSubscriptions() {
