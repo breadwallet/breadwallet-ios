@@ -18,7 +18,7 @@ class Wallet {
     
     let core: BRCrypto.Wallet
     let currency: Currency
-    let manager: WalletManagerWrapper
+    let manager: WalletManager
 
     private var sendListener: SendListener?
 
@@ -55,6 +55,11 @@ class Wallet {
         return Address.create(string: address, network: core.manager.network) != nil
     }
 
+    func isOwnAddress(_ address: String) -> Bool {
+        //TODO:CRYPTO need BRCrypto.Wallet interface
+        return false
+    }
+
     func createTransfer(to address: String, amount: Amount, feeBasis: TransferFeeBasis) -> Result<Transfer, CreateTransferError> {
         guard let target = Address.create(string: address, network: core.manager.network) else {
             return .failure(.invalidAddress)
@@ -79,7 +84,7 @@ class Wallet {
         self.sendListener = nil
     }
 
-    init(core: BRCrypto.Wallet, currency: Currency, manager: WalletManagerWrapper) {
+    init(core: BRCrypto.Wallet, currency: Currency, manager: WalletManager) {
         self.core = core
         self.currency = currency
         self.manager = manager
@@ -88,7 +93,7 @@ class Wallet {
 
 extension Wallet {
     func handleWalletEvent(_ event: WalletEvent) {
-        print("[SYS] \(currency.code) wallet event: \(event)")
+        //print("[SYS] \(currency.code) wallet event: \(event)")
         switch event {
             
         case .transferAdded(let transfer):
@@ -123,26 +128,6 @@ extension Wallet {
             sendListener.transferSubmitted(success: true) // must assume true?
             unsubscribe(sendListener: sendListener)
         }
-    }
-}
-
-//TODO:CRYPTO temp hack for backward compatibility
-extension Wallet: WalletManager {
-
-    var isConnected: Bool {
-        return core.manager.state == .connected
-    }
-
-    func connect() {
-        return
-    }
-
-    func disconnect() {
-        return
-    }
-
-    func resetForWipe() {
-        return
     }
 }
 

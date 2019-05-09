@@ -31,7 +31,7 @@ class CoreSystem: Subscriber {
 
     // MARK: Wallets + Currencies
 
-    private var managers = [Network: WalletManagerWrapper]()
+    private var managers = [Network: WalletManager]()
     fileprivate var wallets = [BRCrypto.Currency: Wallet]()
 
     // Currency view models indexed by Core Currency
@@ -247,7 +247,7 @@ extension CoreSystem: SystemListener {
 
             case .managerAdded(let manager):
                 assert(self.managers[manager.network] == nil)
-                self.managers[manager.network] = WalletManagerWrapper(core: manager, system: self)
+                self.managers[manager.network] = WalletManager(core: manager, system: self)
                 manager.connect()
             }
         }
@@ -313,7 +313,7 @@ extension CoreSystem: SystemListener {
     func handleWalletEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, event: WalletEvent) {
         guard isInitialized else { return }
         queue.async {
-            print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
+            print("[SYS] \(manager.network) \(wallet.currency.code) wallet event: \(event)")
             switch event {
             case .created:
                 self.addWallet(wallet, manager: manager)
@@ -345,8 +345,8 @@ extension CoreSystem: SystemListener {
     }
 }
 
-//TODO:CRYPTO rename this to WalletManager after removing the old protocol
-class WalletManagerWrapper {
+/// Wrapper for BRCrypto WalletManager
+class WalletManager {
     private let core: BRCrypto.WalletManager
     unowned var system: CoreSystem
 
@@ -390,3 +390,51 @@ extension Network: Hashable {
         hasher.combine(name)
     }
 }
+
+extension WalletManagerEvent: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .created:
+            return "created"
+        case .changed(let oldState, let newState):
+            return "changed(\(oldState) -> \(newState))"
+        case .deleted:
+            return "deleted"
+        case .walletAdded(let wallet):
+            return "walletAdded(\(wallet.currency.code))"
+        case .walletChanged(let wallet):
+            return "walletChanged(\(wallet.currency.code))"
+        case .walletDeleted(let wallet):
+            return "walletDeleted(\(wallet.currency.code))"
+        case .syncStarted:
+            return "syncStarted"
+        case .syncProgress(let percentComplete):
+            return "syncProgress(\(percentComplete))"
+        case .syncEnded(let error):
+            return "syncEnded(\(error ?? ""))"
+        case .blockUpdated(let height):
+            return "blockUpdated(\(height))"
+        }
+    }
+}
+
+//TODO:CRYPTO hook up to notifications?
+// MARK: - Sounds
+/*
+extension WalletManager {
+    func ping() {
+        guard let url = Bundle.main.url(forResource: "coinflip", withExtension: "aiff") else { return }
+        var id: SystemSoundID = 0
+        AudioServicesCreateSystemSoundID(url as CFURL, &id)
+        AudioServicesAddSystemSoundCompletion(id, nil, nil, { soundId, _ in
+            AudioServicesDisposeSystemSoundID(soundId)
+        }, nil)
+        AudioServicesPlaySystemSound(id)
+    }
+
+    func showLocalNotification(message: String) {
+        guard UIApplication.shared.applicationState == .background || UIApplication.shared.applicationState == .inactive else { return }
+        guard Store.state.isPushNotificationsEnabled else { return }
+    }
+}
+*/
