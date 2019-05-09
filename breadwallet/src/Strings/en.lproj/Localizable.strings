@@ -455,7 +455,7 @@
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Screen lock disabled";
 /* Warning about paper key. */
-"Prompts.PaperKey.body" = "Your Paper Key must be saved in case you ever lose or change your phone.";
+"Prompts.PaperKey.body" = "Your recovery key must be saved in case you lose or change your phone.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Action Required";
 /* Transaction rejected prompt body */
@@ -647,7 +647,7 @@
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "The only way to access your assets if you lose or upgrade your phone.";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle" = "Paper Key";
+"SecurityCenter.paperKeyTitle" = "Recovery Key";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Protects your BRD from unauthorized users.";
 /* PIN button title */
