@@ -17,15 +17,13 @@ class ModalPresenter: Subscriber, Trackable {
 
     // MARK: - Public
     let keyStore: KeyStore
-    var walletManagers: [String: WalletManager]
     lazy var supportCenter: SupportCenterContainer = {
-        return SupportCenterContainer(walletAuthenticator: keyStore, walletManagers: self.walletManagers)
+        return SupportCenterContainer(walletAuthenticator: keyStore)
     }()
     
-    init(keyStore: KeyStore, walletManagers: [String: WalletManager], system: CoreSystem, window: UIWindow) {
+    init(keyStore: KeyStore, system: CoreSystem, window: UIWindow) {
         self.system = system
         self.window = window
-        self.walletManagers = walletManagers
         self.keyStore = keyStore
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular)
         self.wipeNavigationDelegate = StartNavigationDelegate()
@@ -849,8 +847,7 @@ class ModalPresenter: Subscriber, Trackable {
     private func presentPlatformWebViewController(_ mountPoint: String) {
         let vc = BRWebViewController(bundleName: C.webBundle,
                                      mountPoint: mountPoint,
-                                     walletAuthenticator: keyStore,
-                                     walletManagers: walletManagers)
+                                     walletAuthenticator: keyStore)
         vc.startServer()
         vc.preload()
         vc.modalPresentationStyle = .overFullScreen

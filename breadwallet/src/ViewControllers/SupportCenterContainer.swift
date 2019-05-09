@@ -14,12 +14,11 @@ class SupportCenterContainer: UIViewController {
         webView.navigate(to: to)
     }
 
-    init(walletAuthenticator: TransactionAuthenticator, walletManagers: [String: WalletManager]) {
+    init(walletAuthenticator: TransactionAuthenticator) {
         let mountPoint = "/support"
         webView = BRWebViewController(bundleName: C.webBundle,
                                       mountPoint: mountPoint,
-                                      walletAuthenticator: walletAuthenticator,
-                                      walletManagers: walletManagers)
+                                      walletAuthenticator: walletAuthenticator)
         super.init(nibName: nil, bundle: nil)
         loadWebView()
     }

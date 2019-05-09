@@ -91,7 +91,6 @@ class ApplicationController: Subscriber, Trackable {
 
         //TODO:CRYPTO
         modalPresenter = ModalPresenter(keyStore: keyStore,
-                                        walletManagers: [:], //TODO:CRYPTO 
                                         system: coreSystem,
                                         window: window)
 
@@ -346,8 +345,7 @@ class ApplicationController: Subscriber, Trackable {
     private func createBuyScreen() -> BRWebViewController {
         let buyScreen = BRWebViewController(bundleName: C.webBundle,
                                             mountPoint: "/buy",
-                                            walletAuthenticator: keyStore,
-                                            walletManagers: [:]) //TODO:CRYPTO
+                                            walletAuthenticator: keyStore)
         buyScreen.startServer()
         buyScreen.preload()
 
@@ -416,11 +414,6 @@ class ApplicationController: Subscriber, Trackable {
     
     private func retryAfterIsReachable() {
         guard !keyStore.noWallet else { return }
-        //TODO:CRYPTO sync state
-//        walletManagers.values.filter { $0 is BTCWalletManager }.map { $0.currency }.forEach {
-//            // reset sync state before re-connecting
-//            Store.perform(action: WalletChange($0).setSyncingState(.success))
-//        }
         connectWallets()
         Backend.updateExchangeRates()
         Backend.updateFees()
@@ -446,8 +439,6 @@ class ApplicationController: Subscriber, Trackable {
         guard let kvStore = Backend.kvStore else { return }
         guard kvStoreCoordinator == nil else { return }
         self.kvStoreCoordinator = KVStoreCoordinator(kvStore: kvStore)
-        //TODO:CRYPTO kv store
-        //self.walletManagers.values.forEach({ $0.kvStore = kvStore })
         kvStore.syncAllKeys { [unowned self] error in
             print("KV finished syncing. err: \(String(describing: error))")
             self.kvStoreCoordinator?.setupStoredCurrencyList()

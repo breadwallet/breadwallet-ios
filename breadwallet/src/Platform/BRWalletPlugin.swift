@@ -37,21 +37,14 @@ enum PlatformAuthResult {
 class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     var sockets = [String: BRWebSocket]()
     let walletAuthenticator: TransactionAuthenticator
-    let walletManagers: [String: WalletManager]
     var tempBitIDKeys = [String: BRKey]() // this should only ever be mutated from the main thread
     private var tempBitIDResponses = [String: Int]()
     private var tempAuthResponses = [String: Int]()
     private var tempAuthResults = [String: Bool]()
     private var isPresentingAuth = false
-    //TODO:CRYPTO
-    private var btcWalletManager: WalletManager? { return nil }
-//    private var btcWalletManager: BTCWalletManager? {
-//        return walletManagers[Currencies.btc.code] as? BTCWalletManager
-//    }
 
-    init(walletAuthenticator: TransactionAuthenticator, walletManagers: [String: WalletManager]) {
+    init(walletAuthenticator: TransactionAuthenticator) {
         self.walletAuthenticator = walletAuthenticator
-        self.walletManagers = walletManagers
     }
     
     func announce(_ json: [String: Any]) {
@@ -358,27 +351,22 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                     return asyncResp
             }
 
-            //TODO:CRYPTO sending
-            /*
-            guard let walletManager = self.walletManagers[currency.code],
-                let kvStore = Backend.kvStore,
-                let sender = currency.createSender(authenticator: self.walletAuthenticator, walletManager: walletManager, kvStore: kvStore) else {
-                    return BRHTTPResponse(request: request, code: 500)
-            }
-            
+            guard let wallet = Store.state[currency]?.wallet,
+            let kvStore = Backend.kvStore else { return BRHTTPResponse(request: request, code: 500) }
+            let sender = Sender(wallet: wallet, authenticator: self.walletAuthenticator, kvStore: kvStore)
+
             // assume the numerator is in currency's base units
-            var amount = UInt256(string: numerator, radix: 10)
-            
-            guard let fee = sender.fee(forAmount: amount),
-                let balance = currency.state?.balance else {
+            var amount = Amount(tokenString: numerator, currency: currency, unit: currency.baseUnit)
+
+            let fee = sender.fee(forAmount: amount)
+            guard let balance = currency.state?.balance else {
                     asyncResp.provide(500, json: ["error": "fee-error"])
                     return asyncResp
             }
 
-            //TODO:CRYPTO rawValue / token type check
-            if !(currency.isERC20Token) && (amount <= balance.rawValue) && (amount + fee) > balance.rawValue {
+            if !(currency.isERC20Token) && (amount <= balance) && (amount + fee) > balance {
                 // amount is close to balance and fee puts it over, subtract the fee
-                amount -= fee
+                amount = balance - fee
             }
             
             let result = sender.createTransaction(address: toAddress, amount: amount, comment: comment)
@@ -388,10 +376,6 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             }
             
             if shouldTransmit != 0 {
-                DispatchQueue.walletQueue.async {
-                    self.walletManagers[currency.code]?.connect()
-                }
-                
                 let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
                     let prompt = S.VerifyPin.authorize
                     self?.isPresentingAuth = true
@@ -408,14 +392,12 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                     }))
                 }
                 
-                let fee = sender.fee(forAmount: amount) ?? UInt256(0)
-                let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
-                let confirmAmount = Amount(value: amount,
-                                           currency: currency,
+                let fee = sender.fee(forAmount: amount)
+                //let feeCurrency = sender.wallet.feeCurrency
+                let confirmAmount = Amount(amount: amount,
                                            rate: nil, //currency.state?.currentRate,
                                            maximumFractionDigits: Amount.highPrecisionDigits)
-                let feeAmount = Amount(value: fee,
-                                       currency: feeCurrency,
+                let feeAmount = Amount(amount: fee,
                                        rate: nil, //feeCurrency.state?.currentRate,
                                        maximumFractionDigits: Amount.highPrecisionDigits)
                 
@@ -447,9 +429,6 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 //                                              "transaction": "",
                 //                                              "transmitted": false])
             }
-            return asyncResp
-            */
-            asyncResp.provide(501)
             return asyncResp
         }
     }
@@ -508,30 +487,29 @@ extension BRWalletPlugin {
     // MARK: - basic wallet functions
     func walletInfo() -> [String: Any] {
         var d = [String: Any]()
-        //TODO:CRYPTO btc-specific properties
-        /*
-        guard let walletManager = btcWalletManager else { return d }
         d["no_wallet"] = walletAuthenticator.noWallet
-        if let wallet = walletManager.wallet {
-            d["receive_address"] = wallet.legacyReceiveAddress // TODO: use segwit address when platform adds support
-            //d["watch_only"] = TODO - add watch only
+        guard let btcWalletState = Store.state.wallets[Currencies.btc.code] else {
+            return d
         }
-        d["btc_denomination_digits"] = walletManager.currency.state?.maxDigits
+        d["receive_address"] = btcWalletState.legacyReceiveAddress // TODO: use segwit address when platform adds support
+            //d["watch_only"] = TODO - add watch only
+        d["btc_denomination_digits"] = btcWalletState.maxDigits
         d["local_currency_code"] = Store.state.defaultCurrencyCode
-        let amount = Amount(value: UInt256(0), currency: Currencies.btc, rate: Currencies.btc.state?.currentRate)
+        let amount = Amount(tokenString: "0",
+                            currency: btcWalletState.currency,
+                            rate: btcWalletState.currentRate)
         d["local_currency_precision"] = amount.localFormat.maximumFractionDigits
         d["local_currency_symbol"] = amount.localFormat.currencySymbol
-        */
         return d
     }
     
-    //TODO: multi-currency support
+    //TODO:CRYPTO refactor to use Amount string parsing
     func currencyFormat(_ amount: UInt64) -> [String: Any] {
         var d = [String: Any]()
-        guard let walletManager = btcWalletManager else { return d }
-        if let rate = walletManager.currency.state?.currentRate {
+        guard let btcWalletState = Store.state.wallets[Currencies.btc.code] else { return d }
+        if let rate = btcWalletState.currentRate {
             let amount = Amount(value: UInt256(amount),
-                                currency: walletManager.currency,
+                                currency: btcWalletState.currency,
                                 rate: rate)
             d["local_currency_amount"] = amount.fiatDescription
             d["currency_amount"] = amount.tokenDescription
@@ -546,8 +524,8 @@ extension BRWalletPlugin {
         d["name"] = currency.name
         d["colors"] = [currency.colors.0.toHex, currency.colors.1.toHex]
         if let balance = currency.state?.balance {
-            var numerator = balance.rawValue.string(radix: 10) //TODO:CRYPTO rawValue
-            var denomiator = UInt256(power: currency.defaultUnit.decimals).string(radix: 10)
+            var numerator = balance.tokenFormattedValue(inUnit: currency.baseUnit)
+            var denomiator = Amount(tokenString: "1", currency: currency).tokenFormattedValue(inUnit: currency.baseUnit)
             d["balance"] = ["currency": currency.code,
                             "numerator": numerator,
                             "denominator": denomiator]
