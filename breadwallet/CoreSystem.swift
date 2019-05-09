@@ -17,6 +17,11 @@ class CoreSystem: Subscriber {
         case active
     }
 
+    private var supportedNetworks: [String] {
+        let variant = E.isTestnet ? "testnet" : "mainnet"
+        return ["bitcoin", "ethereum"].map { "\($0)-\(variant)" }
+    }
+
     private var system: System?
     private let backend = BlockChainDB()
     private (set) var state: State = .uninitialized //TODO:CRYPTO is this needed, if so should it come from System?
@@ -76,6 +81,7 @@ class CoreSystem: Subscriber {
 
     // create -- on launch w/ acount present and wallet unlocked
     func create(account: Account) {
+        print("[SYS] create")
         queue.async {
             assert(self.system == nil)
             self.system = SystemBase.create(listener: self,
@@ -88,11 +94,12 @@ class CoreSystem: Subscriber {
 
     // connect/start -- foreground / reachable
     func connect() {
+        print("[SYS] connect")
         queue.async {
             guard let system = self.system else { return assertionFailure() }
             self.updateCurrencyMetaData {
                 //TODO:CRYPTO where should this list come from?
-                system.start(networksNeeded: ["bitcoin-mainnet", "ethereum-mainnet"])
+                system.start(networksNeeded: self.supportedNetworks)
                 self.state = .active
             }
         }
@@ -100,6 +107,7 @@ class CoreSystem: Subscriber {
 
     // disconnect/stop -- background / unreachable
     func disconnect() {
+        print("[SYS] disconnect")
         queue.async {
             guard let system = self.system else { return assertionFailure() }
             system.stop()
@@ -109,6 +117,7 @@ class CoreSystem: Subscriber {
 
     // shutdown -- wallet unlinked / account removed
     func shutdown() {
+        print("[SYS] shutdown / wipe")
         queue.sync {
             guard let system = self.system else { return assertionFailure() }
             self.state = .uninitialized
@@ -144,6 +153,9 @@ class CoreSystem: Subscriber {
         let walletState = WalletState.initial(currency, wallet: wallet, displayOrder: 0)
         DispatchQueue.main.async {
             Store.perform(action: ManageWallets.AddWallets([currency.code: walletState]))
+
+            //TODO:CRYPTO optimize to avoid making a new exchange rate request for each wallet added on launch
+            Backend.updateExchangeRates()
         }
     }
 

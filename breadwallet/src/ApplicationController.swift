@@ -103,7 +103,6 @@ class ApplicationController: Subscriber, Trackable {
 //        }
 
         connectWallets()
-        startDataFetchers()
     }
 
     /// didFinishLaunchingWithOptions
@@ -396,6 +395,7 @@ class ApplicationController: Subscriber, Trackable {
         //TODO:CRYPTO p2p sync management
         // connect only one of BTC or BCH depending on which was last used (to save bandwidth)
         coreSystem.connect()
+        startDataFetchers()
     }
 
     private func disconnectWallets() {
